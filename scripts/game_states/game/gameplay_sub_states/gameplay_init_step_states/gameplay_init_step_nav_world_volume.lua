@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nav_world_volume.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNavSpawnPoints = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nav_spawn_points")
 local GameplayInitStepNavWorldVolume = class("GameplayInitStepNavWorldVolume")
@@ -27,7 +29,7 @@ GameplayInitStepNavWorldVolume.update = function (self, main_dt, main_t)
 	end
 
 	local next_step_params = {
-		shared_state = self._shared_state
+		shared_state = self._shared_state,
 	}
 
 	return GameplayInitStepNavSpawnPoints, next_step_params

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_mourningstar_confessor_a.lua
+
 local conversations_hub_mourningstar_confessor_a = {
 	mourningstar_announcement_a = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local conversations_hub_mourningstar_confessor_a = {
 			"loc_mourningstar_confessor_a__mourningstar_announcement_a_17",
 			"loc_mourningstar_confessor_a__mourningstar_announcement_a_18",
 			"loc_mourningstar_confessor_a__mourningstar_announcement_a_19",
-			"loc_mourningstar_confessor_a__mourningstar_announcement_a_20"
+			"loc_mourningstar_confessor_a__mourningstar_announcement_a_20",
 		},
 		sound_events_duration = {
 			7.871979,
@@ -44,10 +46,10 @@ local conversations_hub_mourningstar_confessor_a = {
 			8.912709,
 			8.86325,
 			8.104167,
-			7.502563
+			7.502563,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_mourningstar_confessor_a", conversations_hub_mourningstar_confessor_a)

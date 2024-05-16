@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_guard_flamer_a.lua
+
 local enemy_vo_enemy_traitor_guard_flamer_a = {
 	traitor_guard_flamer_spawned = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_traitor_guard_flamer_a = {
 			"loc_enemy_traitor_guard_flamer_a__taunt_07",
 			"loc_enemy_traitor_guard_flamer_a__taunt_08",
 			"loc_enemy_traitor_guard_flamer_a__taunt_09",
-			"loc_enemy_traitor_guard_flamer_a__taunt_10"
+			"loc_enemy_traitor_guard_flamer_a__taunt_10",
 		},
 		sound_events_duration = {
 			2.591708,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_traitor_guard_flamer_a = {
 			2.035688,
 			1.531521,
 			2.253729,
-			1.973042
+			1.973042,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_traitor_guard_flamer_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_flamer_start_shooting = {
 		randomize_indexes_n = 0,
@@ -52,7 +54,7 @@ local enemy_vo_enemy_traitor_guard_flamer_a = {
 			"loc_enemy_traitor_guard_flamer_a__attack_06",
 			"loc_enemy_traitor_guard_flamer_a__attack_08",
 			"loc_enemy_traitor_guard_flamer_a__attack_09",
-			"loc_enemy_traitor_guard_flamer_a__attack_10"
+			"loc_enemy_traitor_guard_flamer_a__attack_10",
 		},
 		sound_events_duration = {
 			1.924667,
@@ -63,7 +65,7 @@ local enemy_vo_enemy_traitor_guard_flamer_a = {
 			2.046396,
 			2.363146,
 			3.410542,
-			1.794167
+			1.794167,
 		},
 		sound_event_weights = {
 			0.1111111,
@@ -74,10 +76,10 @@ local enemy_vo_enemy_traitor_guard_flamer_a = {
 			0.1111111,
 			0.1111111,
 			0.1111111,
-			0.1111111
+			0.1111111,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_traitor_guard_flamer_a", enemy_vo_enemy_traitor_guard_flamer_a)

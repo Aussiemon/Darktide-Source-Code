@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/bot_behavior_extension.lua
+
 local AiBrain = require("scripts/extension_systems/behavior/ai_brain")
 local Ammo = require("scripts/utilities/ammo")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -9,17 +11,15 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local BotBehaviorExtension = class("BotBehaviorExtension")
-local FOLLOW_TIMER_LOWER_BOUND = 1
-local FOLLOW_TIMER_UPPER_BOUND = 1.5
+local FOLLOW_TIMER_LOWER_BOUND, FOLLOW_TIMER_UPPER_BOUND = 1, 1.5
 local behavior_gestalts = BotSettings.behavior_gestalts
 
 BotBehaviorExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	self._unit = unit
 	self._nav_world = extension_init_context.nav_world
 	self._player = extension_init_data.player
-	local blackboard = BLACKBOARDS[unit]
-	local physics_world = extension_init_context.physics_world
-	local gestalts_or_nil = extension_init_data.optional_gestalts
+
+	local blackboard, physics_world, gestalts_or_nil = BLACKBOARDS[unit], extension_init_context.physics_world, extension_init_data.optional_gestalts
 
 	self:_init_blackboard_components(blackboard, physics_world, gestalts_or_nil)
 
@@ -28,33 +28,32 @@ BotBehaviorExtension.init = function (self, extension_init_context, unit, extens
 		cover_position = Vector3Box(Vector3.invalid_vector()),
 		threats = {},
 		active_threats = {},
-		failed_cover_positions = {}
+		failed_cover_positions = {},
 	}
 	self._using_navigation_destination_override = false
 	self._hold_position = nil
 	self._hold_position_max_distance_sq = math.huge
 	self._follow_timer = math.lerp(FOLLOW_TIMER_LOWER_BOUND, FOLLOW_TIMER_UPPER_BOUND, math.random())
-	self._stay_near_player_range = math.huge
-	self._stay_near_player = false
-	self._attempted_enemy_paths = {}
-	self._attempted_ally_paths = {}
+	self._stay_near_player, self._stay_near_player_range = false, math.huge
+	self._attempted_ally_paths, self._attempted_enemy_paths = {}, {}
 	self._last_health_pickup_attempt = {
-		path_failed = false,
+		blacklist = false,
 		distance = 0,
 		index = 1,
-		blacklist = false,
+		path_failed = false,
 		rotation = QuaternionBox(),
-		path_position = Vector3Box()
+		path_position = Vector3Box(),
 	}
 	self._last_mule_pickup_attempt = {
-		path_failed = false,
+		blacklist = false,
 		distance = 0,
 		index = 1,
-		blacklist = false,
+		path_failed = false,
 		rotation = QuaternionBox(),
-		path_position = Vector3Box()
+		path_position = Vector3Box(),
 	}
 	self._hit_by_projectile = {}
+
 	local breed = extension_init_data.breed
 	local behavior_tree_name = extension_init_data.behavior_tree_name
 
@@ -69,22 +68,25 @@ end
 BotBehaviorExtension._set_nav_spawn_points = function (self)
 	local main_path_manager = Managers.state.main_path
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
+
 	self._nav_spawn_points = nav_spawn_points
 end
 
 BotBehaviorExtension._init_brain = function (self, unit, breed, blackboard, behavior_tree_name)
 	local behavior_system = Managers.state.extension:system("behavior_system")
 	local behavior_tree = behavior_system:behavior_tree(behavior_tree_name)
+
 	self._brain = AiBrain:new(unit, breed, blackboard, behavior_tree)
 end
 
 local NO_GESTALTS = {
 	melee = behavior_gestalts.none,
-	ranged = behavior_gestalts.none
+	ranged = behavior_gestalts.none,
 }
 
 local function _gestalts_or_default(gestalts_or_nil)
 	local gestalts = gestalts_or_nil or NO_GESTALTS
+
 	gestalts.melee = gestalts.melee or NO_GESTALTS.melee
 	gestalts.ranged = gestalts.ranged or NO_GESTALTS.ranged
 
@@ -94,6 +96,7 @@ end
 BotBehaviorExtension._init_blackboard_components = function (self, blackboard, physics_world, gestalts_or_nil)
 	local gestalts = _gestalts_or_default(gestalts_or_nil)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.current_interaction_unit = nil
 	behavior_component.forced_pickup_unit = nil
 	behavior_component.melee_gestalt = gestalts.melee
@@ -116,6 +119,7 @@ BotBehaviorExtension._init_blackboard_components = function (self, blackboard, p
 	follow_component.level_forced_teleport_position:store(Vector3.zero())
 
 	local pickup_component = Blackboard.write_component(blackboard, "pickup")
+
 	pickup_component.allowed_to_take_health_pickup = false
 	pickup_component.ammo_pickup = nil
 	pickup_component.ammo_pickup_distance = math.huge
@@ -128,14 +132,20 @@ BotBehaviorExtension._init_blackboard_components = function (self, blackboard, p
 	pickup_component.mule_pickup_distance = math.huge
 	pickup_component.needs_ammo = false
 	pickup_component.needs_non_permanent_health = false
+
 	local health_station_component = Blackboard.write_component(blackboard, "health_station")
+
 	health_station_component.needs_health = false
 	health_station_component.needs_health_queue_number = 0
 	health_station_component.time_in_proximity = 0
+
 	local ranged_obstructed_by_static_component = Blackboard.write_component(blackboard, "ranged_obstructed_by_static")
+
 	ranged_obstructed_by_static_component.t = -math.huge
 	ranged_obstructed_by_static_component.target_unit = nil
+
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
+
 	spawn_component.physics_world = physics_world
 	self._behavior_component = behavior_component
 	self._follow_component = follow_component
@@ -163,18 +173,25 @@ end
 
 BotBehaviorExtension.extensions_ready = function (self, world, unit)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._inair_state_component = unit_data_extension:read_component("inair_state")
 	self._interaction_component = unit_data_extension:read_component("interaction")
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
+
 	local group_extension = ScriptUnit.extension(unit, "group_system")
+
 	self._group_extension = group_extension
 	self._bot_group = group_extension:bot_group()
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	self._navigation_extension = navigation_extension
 	self._traverse_logic = navigation_extension:traverse_logic()
+
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[self._unit]
+
 	self._side = side
 end
 
@@ -190,8 +207,7 @@ BotBehaviorExtension.update = function (self, unit, dt, t, ...)
 		self:_verify_target_ally_aid_destination(unit)
 		self._brain:update(unit, dt, t)
 
-		local locomotion_component = self._locomotion_component
-		local in_air_state_component = self._inair_state_component
+		local locomotion_component, in_air_state_component = self._locomotion_component, self._inair_state_component
 		local is_disabled = PlayerUnitStatus.is_disabled(self._character_state_component)
 		local is_on_moveable_platform = locomotion_component.parent_unit ~= nil
 
@@ -249,6 +265,7 @@ BotBehaviorExtension._update_ammo = function (self, unit)
 			local perception_component = self._perception_component
 			local target_enemy = perception_component.priority_target_enemy or perception_component.target_enemy
 			local max_ammo_percentage = target_enemy and NEEDS_AMMO_PERCENTAGE_COMBAT or NEEDS_AMMO_PERCENTAGE
+
 			pickup_component.needs_ammo = ammo_percentage < max_ammo_percentage
 		end
 	elseif pickup_component.needs_ammo then
@@ -285,14 +302,16 @@ BotBehaviorExtension._update_health_stations = function (self, unit, dt, t)
 		return
 	end
 
-	local damage_taken_required = nil
+	local damage_taken_required
 	local distance = perception_component.target_level_unit_distance
 
 	if distance * distance < PROXIMITY_DISTANCE then
 		health_station_component.time_in_proximity = health_station_component.time_in_proximity + dt
+
 		local time_in_proximity = health_station_component.time_in_proximity
 		local damage_taken_dif = DAMAGE_TAKEN_VALUE_REQUIRED - TIME_IN_PROIXMITY_DAMAGE_TAKEN_VALUE_REQUIRED
 		local fraction = math.clamp(time_in_proximity / TIME_IN_PROXIMITY_MAX_T, 0, 1)
+
 		damage_taken_required = DAMAGE_TAKEN_VALUE_REQUIRED - damage_taken_dif * fraction
 	else
 		damage_taken_required = DAMAGE_TAKEN_VALUE_REQUIRED
@@ -336,6 +355,7 @@ BotBehaviorExtension._update_health_stations = function (self, unit, dt, t)
 		end
 
 		local needs_health_queue_number = players_with_less_health + 1
+
 		health_station_component.needs_health_queue_number = needs_health_queue_number
 		health_station_component.needs_health = true
 	else
@@ -344,17 +364,14 @@ BotBehaviorExtension._update_health_stations = function (self, unit, dt, t)
 end
 
 BotBehaviorExtension._verify_target_ally_aid_destination = function (self, unit)
-	local behavior_component = self._behavior_component
-	local perception_component = self._perception_component
-	local interaction_unit = behavior_component.interaction_unit
-	local target_ally = perception_component.target_ally
+	local behavior_component, perception_component = self._behavior_component, self._perception_component
+	local interaction_unit, target_ally = behavior_component.interaction_unit, perception_component.target_ally
 
 	if interaction_unit ~= target_ally or interaction_unit == nil and target_ally == nil then
 		return
 	end
 
-	local target_ally_needs_aid = perception_component.target_ally_needs_aid
-	local target_ally_need_type = perception_component.target_ally_need_type
+	local target_ally_needs_aid, target_ally_need_type = perception_component.target_ally_needs_aid, perception_component.target_ally_need_type
 
 	if target_ally_needs_aid and target_ally_need_type ~= "in_need_of_attention_look" and target_ally_need_type ~= "in_need_of_attention_stop" then
 		return
@@ -389,8 +406,7 @@ local FLAT_MOVE_TO_PREVIOUS_POS_EPSILON_SQ = FLAT_MOVE_TO_PREVIOUS_POS_EPSILON^2
 local Z_MOVE_TO_EPSILON = BotSettings.z_move_to_epsilon
 
 BotBehaviorExtension._update_movement_target = function (self, unit, dt, t)
-	local self_position = POSITION_LOOKUP[unit]
-	local follow_component = self._follow_component
+	local self_position, follow_component = POSITION_LOOKUP[unit], self._follow_component
 	local cover_position, cover_hash = self:_update_cover(unit, self_position, follow_component)
 	local melee_component = self._melee_component
 	local override_melee_destination = melee_component.engage_position_set and melee_component.engage_position:unbox()
@@ -405,9 +421,9 @@ BotBehaviorExtension._update_movement_target = function (self, unit, dt, t)
 	elseif cover_position or override_melee_destination then
 		local override_destination = cover_position or override_melee_destination
 		local offset = override_destination - previous_destination
-		local override_allowed = hold_position == nil or Vector3.distance_squared(hold_position, override_destination) <= hold_position_max_distance_sq
+		local override_allowed = hold_position == nil or hold_position_max_distance_sq >= Vector3.distance_squared(hold_position, override_destination)
 
-		if override_allowed and (Z_MOVE_TO_EPSILON < math.abs(offset.z) or FLAT_MOVE_TO_EPSILON < Vector3.length(Vector3.flat(offset))) then
+		if override_allowed and (math.abs(offset.z) > Z_MOVE_TO_EPSILON or Vector3.length(Vector3.flat(offset)) > FLAT_MOVE_TO_EPSILON) then
 			local should_stop = override_melee_destination and melee_component.stop_at_current_position
 
 			if should_stop then
@@ -422,11 +438,10 @@ BotBehaviorExtension._update_movement_target = function (self, unit, dt, t)
 		end
 	else
 		self._follow_timer = self._follow_timer - dt
-		local interaction_component = self._interaction_component
-		local perception_component = self._perception_component
+
+		local interaction_component, perception_component = self._interaction_component, self._perception_component
 		local is_interacting = interaction_component.state == InteractionSettings.states.is_interacting
-		local target_ally_need_type = perception_component.target_ally_need_type
-		local target_ally_needs_aid = perception_component.target_ally_needs_aid
+		local target_ally_need_type, target_ally_needs_aid = perception_component.target_ally_need_type, perception_component.target_ally_needs_aid
 		local need_to_stop = target_ally_need_type == "in_need_of_attention_stop"
 
 		if not follow_component.needs_destination_refresh and (self._follow_timer < 0 or need_to_stop or target_ally_needs_aid and not is_interacting and navigation_extension:destination_reached()) then
@@ -466,16 +481,15 @@ local function _to_hash(vector3)
 end
 
 BotBehaviorExtension._update_cover = function (self, unit, self_position, follow_component)
-	local cover_position, cover_hash = nil
+	local cover_position, cover_hash
 	local bot_group = self._bot_group
 	local cover_data = self._cover_data
-	local threats = cover_data.threats
-	local active_threats = cover_data.active_threats
+	local threats, active_threats = cover_data.threats, cover_data.active_threats
 	local in_line_of_fire, changed = self:_in_line_of_fire(unit, self_position, threats, active_threats)
 
 	if in_line_of_fire and changed then
 		local num_cover_positions, cover_positions = self:_find_cover(active_threats, self_position)
-		local found_position, found_hash, occupied_cover_hash, occupied_cover_position = nil
+		local found_position, found_hash, occupied_cover_hash, occupied_cover_position
 
 		for i = 1, num_cover_positions do
 			local position = cover_positions[i]
@@ -498,8 +512,7 @@ BotBehaviorExtension._update_cover = function (self, unit, self_position, follow
 		found_hash = found_hash or occupied_cover_hash
 
 		if found_position then
-			cover_hash = found_hash
-			cover_position = found_position
+			cover_position, cover_hash = found_position, found_hash
 
 			cover_data.cover_position:store(cover_position)
 
@@ -521,8 +534,7 @@ BotBehaviorExtension._update_cover = function (self, unit, self_position, follow
 
 		bot_group:set_in_cover(unit, nil)
 	elseif in_line_of_fire then
-		cover_hash = cover_data.cover_hash
-		cover_position = cover_data.cover_position:unbox()
+		cover_position, cover_hash = cover_data.cover_position:unbox(), cover_data.cover_hash
 	end
 
 	local ranged_obstructed_by_static_component = self._ranged_obstructed_by_static_component
@@ -547,7 +559,7 @@ local function _line_of_fire_check(from, to, position, width, length)
 
 	local direct_distance = Vector3.length(diff - lateral_distance * direction)
 
-	if math.min(lateral_distance, width) < direct_distance then
+	if direct_distance > math.min(lateral_distance, width) then
 		return false
 	else
 		return true
@@ -555,15 +567,12 @@ local function _line_of_fire_check(from, to, position, width, length)
 end
 
 local LINE_OF_FIRE_CHECK_LENGTH = 40
-local LINE_OF_FIRE_CHECK_WIDTH = 2.5
-local LINE_OF_FIRE_CHECK_STICKY_WIDTH = 6
+local LINE_OF_FIRE_CHECK_WIDTH, LINE_OF_FIRE_CHECK_STICKY_WIDTH = 2.5, 6
 local TAKE_COVER_TEMP_TABLE = {}
 
 BotBehaviorExtension._in_line_of_fire = function (self, self_unit, self_position, take_cover_targets, taking_cover_from)
-	local changed = false
-	local in_line_of_fire = false
-	local ALIVE = ALIVE
-	local POSITION_LOOKUP = POSITION_LOOKUP
+	local changed, in_line_of_fire = false, false
+	local ALIVE, POSITION_LOOKUP = ALIVE, POSITION_LOOKUP
 
 	for attacker_unit, victim_unit in pairs(take_cover_targets) do
 		local already_in_cover_from = taking_cover_from[attacker_unit]
@@ -602,6 +611,7 @@ BotBehaviorExtension._find_cover = function (self, taking_cover_from, self_posit
 
 	for attacker_unit, _ in pairs(taking_cover_from) do
 		local unit_position = POSITION_LOOKUP[attacker_unit]
+
 		AVOID_POSITIONS_TEMP_TABLE[#AVOID_POSITIONS_TEMP_TABLE + 1] = unit_position
 	end
 
@@ -616,50 +626,35 @@ BotBehaviorExtension._find_cover = function (self, taking_cover_from, self_posit
 	return num_occluded_positions, occluded_positions
 end
 
-local TARGET_NAV_MESH_ABOVE = 0.5
-local TARGET_NAV_MESH_BELOW = 0.5
-local TARGET_NAV_MESH_LATERAL = 2.5
-local TARGET_DISTANCE_FROM_NAV_MESH = 0.1
-local AMMO_NAV_MESH_ABOVE = 0.5
-local AMMO_NAV_MESH_BELOW = 1.5
-local AMMO_DISTANCE_FROM_NAV_MESH = 0
-local HEALTH_DEPLOYABLE_NAV_MESH_ABOVE = 0.5
-local HEALTH_DEPLOYABLE_NAV_MESH_BELOW = 1.5
-local HEALTH_DEPLOYABLE_DISTANCE_FROM_NAV_MESH = 1
-local HEALTH_DEPLOYABLE_OFFSET_DISTANCE = 4
+local TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, TARGET_NAV_MESH_LATERAL, TARGET_DISTANCE_FROM_NAV_MESH = 0.5, 0.5, 2.5, 0.1
+local AMMO_NAV_MESH_ABOVE, AMMO_NAV_MESH_BELOW, AMMO_DISTANCE_FROM_NAV_MESH = 0.5, 1.5, 0
+local HEALTH_DEPLOYABLE_NAV_MESH_ABOVE, HEALTH_DEPLOYABLE_NAV_MESH_BELOW, HEALTH_DEPLOYABLE_DISTANCE_FROM_NAV_MESH, HEALTH_DEPLOYABLE_OFFSET_DISTANCE = 0.5, 1.5, 1, 4
 local PICKUP_OFFSET_DISTANCE = 2.7
 local HEALTH_STATION_MAX_DISTANCE_SQUARED = 400
 
 BotBehaviorExtension._refresh_destination = function (self, t, self_position, previous_destination, hold_position, hold_position_max_distance_sq, bot_group_data, navigation_extension, follow_component, perception_component)
 	local ALIVE = ALIVE
-	local target_position, should_stop, path_callback = nil
-	local nav_world = self._nav_world
-	local traverse_logic = self._traverse_logic
+	local target_position, should_stop, path_callback
+	local nav_world, traverse_logic = self._nav_world, self._traverse_logic
 	local target_ally = perception_component.target_ally
 	local target_ally_position = POSITION_LOOKUP[target_ally]
-	local target_ally_needs_aid = perception_component.target_ally_needs_aid
-	local target_ally_need_type = perception_component.target_ally_need_type
-	local target_enemy = perception_component.target_enemy
-	local priority_target_enemy = perception_component.priority_target_enemy
+	local target_ally_needs_aid, target_ally_need_type = perception_component.target_ally_needs_aid, perception_component.target_ally_need_type
+	local target_enemy, priority_target_enemy = perception_component.target_enemy, perception_component.priority_target_enemy
 	local target_level_unit = perception_component.target_level_unit
 	local target_level_unit_position = target_level_unit and POSITION_LOOKUP[target_level_unit]
 	local target_level_unit_distance = perception_component.target_level_unit_distance
 	local behavior_component = self._behavior_component
 	local revive_with_urgent_target = behavior_component.revive_with_urgent_target
-	local self_unit = self._unit
-	local bot_group = self._bot_group
+	local self_unit, bot_group = self._unit, self._bot_group
 	local health_slot_pickup_order = bot_group:pickup_order(self_unit, "slot_healthkit")
 	local health_slot_pickup_order_unit = health_slot_pickup_order and health_slot_pickup_order.unit or nil
 	local potion_slot_pickup_order = bot_group:pickup_order(self_unit, "slot_potion")
 	local potion_slot_pickup_order_unit = potion_slot_pickup_order and potion_slot_pickup_order.unit or nil
 	local pickup_component = self._pickup_component
-	local health_pickup = pickup_component.health_deployable
-	local mule_pickup = pickup_component.mule_pickup
-	local last_health_pickup_attempt = self._last_health_pickup_attempt
-	local last_mule_pickup_attempt = self._last_mule_pickup_attempt
+	local health_pickup, mule_pickup = pickup_component.health_deployable, pickup_component.mule_pickup
+	local last_health_pickup_attempt, last_mule_pickup_attempt = self._last_health_pickup_attempt, self._last_mule_pickup_attempt
 	local health_station_component = self._health_station_component
-	local needs_health = health_station_component.needs_health
-	local needs_health_queue_number = health_station_component.needs_health_queue_number
+	local needs_health, needs_health_queue_number = health_station_component.needs_health, health_station_component.needs_health_queue_number
 	local health_station_extension = target_level_unit and ScriptUnit.has_extension(target_level_unit, "health_station_system")
 	local health_station_charges = 0
 
@@ -676,10 +671,12 @@ BotBehaviorExtension._refresh_destination = function (self, t, self_position, pr
 		path_callback = callback(self, "cb_ally_path_result", target_ally)
 	elseif priority_target_enemy and target_enemy ~= priority_target_enemy and self:_enemy_path_allowed(priority_target_enemy) then
 		local wanted_position = POSITION_LOOKUP[priority_target_enemy]
+
 		target_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, wanted_position, TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, TARGET_NAV_MESH_LATERAL, TARGET_DISTANCE_FROM_NAV_MESH)
 		path_callback = callback(self, "cb_enemy_path_result", priority_target_enemy)
 	elseif target_enemy and (target_enemy == priority_target_enemy or target_enemy == perception_component.urgent_target_enemy) and self:_enemy_path_allowed(target_enemy) then
 		local wanted_position = POSITION_LOOKUP[target_enemy]
+
 		target_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, wanted_position, TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, TARGET_NAV_MESH_LATERAL, TARGET_DISTANCE_FROM_NAV_MESH)
 		path_callback = callback(self, "cb_enemy_path_result", target_enemy)
 	elseif target_ally_needs_aid and target_ally_need_type ~= "in_need_of_attention_look" then
@@ -691,6 +688,7 @@ BotBehaviorExtension._refresh_destination = function (self, t, self_position, pr
 		path_callback = callback(self, "cb_ally_path_result", target_ally)
 	elseif ALIVE[mule_pickup] and (potion_slot_pickup_order_unit == mule_pickup or last_mule_pickup_attempt.unit ~= mule_pickup or not last_mule_pickup_attempt.blacklist) then
 		target_position = self:_find_pickup_position_on_nav_mesh(nav_world, traverse_logic, self_position, mule_pickup, last_mule_pickup_attempt)
+
 		local allowed_to_take_without_path = mule_pickup == potion_slot_pickup_order_unit
 
 		if target_position then
@@ -704,6 +702,7 @@ BotBehaviorExtension._refresh_destination = function (self, t, self_position, pr
 		local target_level_unit_transform = Unit.world_pose(target_level_unit, 1)
 		local forward_vector = Matrix4x4.forward(target_level_unit_transform)
 		local wanted_position = target_level_unit_position - forward_vector
+
 		target_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, wanted_position, TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, TARGET_NAV_MESH_LATERAL, TARGET_DISTANCE_FROM_NAV_MESH)
 
 		if target_position then
@@ -713,25 +712,24 @@ BotBehaviorExtension._refresh_destination = function (self, t, self_position, pr
 		end
 	end
 
-	local health_deployable = pickup_component.health_deployable
-	local needs_non_permanent_health = pickup_component.needs_non_permanent_health
+	local health_deployable, needs_non_permanent_health = pickup_component.health_deployable, pickup_component.needs_non_permanent_health
 
 	if not target_position and not target_enemy and ALIVE[health_deployable] and needs_non_permanent_health and health_deployable then
 		local health_position = POSITION_LOOKUP[health_deployable]
 		local direction = Vector3.normalize(self_position - health_position)
 		local offset_position = health_position + direction
+
 		target_position = NavQueries.position_on_mesh(nav_world, offset_position, HEALTH_DEPLOYABLE_NAV_MESH_ABOVE, HEALTH_DEPLOYABLE_NAV_MESH_BELOW, traverse_logic)
 		target_position = target_position or NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, health_position, HEALTH_DEPLOYABLE_NAV_MESH_ABOVE, HEALTH_DEPLOYABLE_NAV_MESH_BELOW, HEALTH_DEPLOYABLE_OFFSET_DISTANCE, HEALTH_DEPLOYABLE_DISTANCE_FROM_NAV_MESH)
 	end
 
-	local ammo_pickup = pickup_component.ammo_pickup
-	local needs_ammo = pickup_component.needs_ammo
-	local ammo_pickup_valid_until = pickup_component.ammo_pickup_valid_until
+	local ammo_pickup, needs_ammo, ammo_pickup_valid_until = pickup_component.ammo_pickup, pickup_component.needs_ammo, pickup_component.ammo_pickup_valid_until
 
 	if not target_position and ALIVE[ammo_pickup] and needs_ammo and t < ammo_pickup_valid_until then
 		local ammo_position = POSITION_LOOKUP[ammo_pickup]
 		local direction = Vector3.normalize(self_position - ammo_position)
 		local offset_position = ammo_position + direction
+
 		target_position = NavQueries.position_on_mesh(nav_world, offset_position, AMMO_NAV_MESH_ABOVE, AMMO_NAV_MESH_BELOW, traverse_logic)
 		target_position = target_position or NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, ammo_position, AMMO_NAV_MESH_ABOVE, AMMO_NAV_MESH_BELOW, PICKUP_OFFSET_DISTANCE, AMMO_DISTANCE_FROM_NAV_MESH)
 
@@ -744,12 +742,10 @@ BotBehaviorExtension._refresh_destination = function (self, t, self_position, pr
 		target_position = nil
 	end
 
-	local moving_towards_follow_position = false
-	local follow_position = bot_group_data.follow_position
+	local moving_towards_follow_position, follow_position = false, bot_group_data.follow_position
 
 	if not target_position and follow_position then
-		moving_towards_follow_position = true
-		target_position = follow_position
+		target_position, moving_towards_follow_position = follow_position, true
 	end
 
 	if should_stop then
@@ -770,24 +766,22 @@ BotBehaviorExtension._refresh_destination = function (self, t, self_position, pr
 end
 
 local TARGET_SPEED_SQ = 2.25
-local NAV_MESH_ABOVE = 0.5
-local NAV_MESH_BELOW = 3
-local NAV_MESH_HORIZONTAL = 2
-local DISTANCE_FROM_NAV_MESH = 0.1
+local NAV_MESH_ABOVE, NAV_MESH_BELOW, NAV_MESH_HORIZONTAL, DISTANCE_FROM_NAV_MESH = 0.5, 3, 2, 0.1
 
 BotBehaviorExtension._alter_target_position = function (self, nav_world, traverse_logic, perception_component, self_position, target_unit, target_position, reason)
-	local wanted_position = nil
+	local wanted_position
 
 	if reason == "ledge" then
 		local rotation = Unit.local_rotation(target_unit, 1)
 		local forward_vector_flat = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
+
 		wanted_position = target_position - forward_vector_flat * 0.5
 	elseif reason == "in_need_of_heal" or reason == "can_accept_grenade" or reason == "can_accept_potion" or reason == "can_accept_heal_item" then
 		local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 		local target_locomotion_component = target_unit_data_extension:read_component("locomotion")
 		local target_velocity = target_locomotion_component.velocity_current
 
-		if TARGET_SPEED_SQ < Vector3.length_squared(target_velocity) then
+		if Vector3.length_squared(target_velocity) > TARGET_SPEED_SQ then
 			wanted_position = target_position + target_velocity
 		else
 			wanted_position = target_position + Vector3.normalize(self_position - target_position)
@@ -833,7 +827,7 @@ BotBehaviorExtension._enemy_path_allowed = function (self, enemy_unit)
 	local last_path_destination = path_status.last_path_destination:unbox()
 	local distance_from_last_destination_sq = Vector3.distance_squared(enemy_position, last_path_destination)
 
-	if ENEMY_PATH_FAILED_REPATH_THRESHOLD_SQ <= distance_from_last_destination_sq or ENEMY_PATH_FAILED_REPATH_VERTICAL_THRESHOLD <= math.abs(enemy_position.z - last_path_destination.z) then
+	if distance_from_last_destination_sq >= ENEMY_PATH_FAILED_REPATH_THRESHOLD_SQ or math.abs(enemy_position.z - last_path_destination.z) >= ENEMY_PATH_FAILED_REPATH_VERTICAL_THRESHOLD then
 		return true
 	end
 
@@ -848,10 +842,9 @@ local PICKUP_ROTATIONS = {
 	QuaternionBox(Quaternion(Vector3.up(), -math.pi * 0.5)),
 	QuaternionBox(Quaternion(Vector3.up(), math.pi * 0.75)),
 	QuaternionBox(Quaternion(Vector3.up(), -math.pi * 0.75)),
-	QuaternionBox(Quaternion(Vector3.up(), math.pi))
+	QuaternionBox(Quaternion(Vector3.up(), math.pi)),
 }
-local PICKUP_NAV_MESH_ABOVE = 1.5
-local PICKUP_NAV_MESH_BELOW = 2.2
+local PICKUP_NAV_MESH_ABOVE, PICKUP_NAV_MESH_BELOW = 1.5, 2.2
 local PICKUP_ATTEMPT_DISTANCE = 0.1
 
 BotBehaviorExtension._find_pickup_position_on_nav_mesh = function (self, nav_world, traverse_logic, self_position, pickup_unit, pickup_attempt)
@@ -872,20 +865,15 @@ BotBehaviorExtension._find_pickup_position_on_nav_mesh = function (self, nav_wor
 		pickup_attempt.blacklist = false
 	end
 
-	local GwNavQueries_triangle_from_position = GwNavQueries.triangle_from_position
-	local GwNavQueries_raycast = GwNavQueries.raycast
-	local Quaternion_multiply = Quaternion.multiply
-	local Quaternion_forward = Quaternion.forward
-	local Vector3_dot = Vector3.dot
-	local Vector3_flat = Vector3.flat
-	local found_position = nil
-	local attempt_rotation = pickup_attempt.rotation:unbox()
-	local distance = pickup_attempt.distance
-	local index = pickup_attempt.index
-	local max_index = #PICKUP_ROTATIONS
+	local GwNavQueries_triangle_from_position, GwNavQueries_raycast = GwNavQueries.triangle_from_position, GwNavQueries.raycast
+	local Quaternion_multiply, Quaternion_forward, Vector3_dot, Vector3_flat = Quaternion.multiply, Quaternion.forward, Vector3.dot, Vector3.flat
+	local found_position
+	local attempt_rotation, distance = pickup_attempt.rotation:unbox(), pickup_attempt.distance
+	local index, max_index = pickup_attempt.index, #PICKUP_ROTATIONS
 
 	while index <= max_index and not found_position do
 		distance = math.min(distance + PICKUP_ATTEMPT_DISTANCE, 1)
+
 		local iteration_rotation = PICKUP_ROTATIONS[index]:unbox()
 		local rotation = Quaternion_multiply(iteration_rotation, attempt_rotation)
 		local direction = Quaternion_forward(rotation)
@@ -935,14 +923,14 @@ end
 
 BotBehaviorExtension.new_destination_distance_check = function (self, self_position, previous_destination, new_destination, navigation_extension)
 	local destination_offset = new_destination - previous_destination
-	local destination_offset_ok = Z_MOVE_TO_EPSILON < math.abs(destination_offset.z) or FLAT_MOVE_TO_EPSILON_SQ < Vector3.length_squared(Vector3.flat(destination_offset))
+	local destination_offset_ok = math.abs(destination_offset.z) > Z_MOVE_TO_EPSILON or Vector3.length_squared(Vector3.flat(destination_offset)) > FLAT_MOVE_TO_EPSILON_SQ
 
 	if navigation_extension:destination_reached() then
 		local position_when_destination_reached = navigation_extension:position_when_destination_reached()
 		local previous_pos_offset = self_position - position_when_destination_reached
-		local previous_pos_offset_ok = Z_MOVE_TO_EPSILON < math.abs(previous_pos_offset.z) or FLAT_MOVE_TO_PREVIOUS_POS_EPSILON_SQ < Vector3.length_squared(Vector3.flat(previous_pos_offset))
+		local previous_pos_offset_ok = math.abs(previous_pos_offset.z) > Z_MOVE_TO_EPSILON or Vector3.length_squared(Vector3.flat(previous_pos_offset)) > FLAT_MOVE_TO_PREVIOUS_POS_EPSILON_SQ
 		local new_destination_offset = new_destination - self_position
-		local new_destination_offset_ok = Z_MOVE_TO_EPSILON < math.abs(new_destination_offset.z) or FLAT_MOVE_TO_EPSILON_SQ < Vector3.length_squared(Vector3.flat(new_destination_offset))
+		local new_destination_offset_ok = math.abs(new_destination_offset.z) > Z_MOVE_TO_EPSILON or Vector3.length_squared(Vector3.flat(new_destination_offset)) > FLAT_MOVE_TO_EPSILON_SQ
 
 		return (previous_pos_offset_ok or destination_offset_ok) and new_destination_offset_ok
 	else
@@ -958,6 +946,7 @@ end
 BotBehaviorExtension.cb_cover_path_result = function (self, cover_hash, success, destination)
 	if not success then
 		local cover_data = self._cover_data
+
 		cover_data.failed_cover_positions[cover_hash] = true
 
 		table.clear(cover_data.active_threats)
@@ -976,12 +965,13 @@ BotBehaviorExtension.cb_ally_path_result = function (self, ally_unit, success, d
 
 	if not path_status then
 		path_status = {
-			last_path_destination = Vector3Box()
+			last_path_destination = Vector3Box(),
 		}
 		paths[ally_unit] = path_status
 	end
 
 	local fail = not success
+
 	path_status.failed = fail
 
 	path_status.last_path_destination:store(destination)
@@ -1007,7 +997,7 @@ BotBehaviorExtension.cb_enemy_path_result = function (self, enemy_unit, success,
 
 	if not path_status then
 		path_status = {
-			last_path_destination = Vector3Box()
+			last_path_destination = Vector3Box(),
 		}
 		paths[enemy_unit] = path_status
 	end
@@ -1100,8 +1090,7 @@ BotBehaviorExtension.hold_position = function (self)
 	local hold_position_box = self._hold_position
 
 	if hold_position_box then
-		local hold_position = hold_position_box:unbox()
-		local distance_sq = self._hold_position_max_distance_sq
+		local hold_position, distance_sq = hold_position_box:unbox(), self._hold_position_max_distance_sq
 
 		return hold_position, distance_sq
 	else

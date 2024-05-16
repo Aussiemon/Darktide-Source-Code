@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_target/mission_objective_target_extension.lua
+
 local MissionObjectiveTargetExtension = class("MissionObjectiveTargetExtension")
 
 MissionObjectiveTargetExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -62,6 +64,7 @@ MissionObjectiveTargetExtension._setup = function (self)
 
 	if objective_name ~= "default" and not self._registered_objective then
 		local unit = self._unit
+
 		self._registered_objective = objective_name
 
 		self._mission_objective_system:register_objective_unit(objective_name, unit, objective_stage)

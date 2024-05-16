@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/utilities/pocketable.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Pocketable = {}
 local abort_data = {}
-local _drop_pickup = nil
+local _drop_pickup
 
 Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit, inventory_component, visual_loadout_extension, slot_name)
 	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, slot_name) then
@@ -30,8 +32,10 @@ Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit,
 		local random_length = math.random() * 0.25 + 0.75
 		local x = math.sin(random_rotation) * random_length
 		local y = math.cos(random_rotation) * random_length
+
 		position.x = position.x + x
 		position.y = position.y + y
+
 		local hit, hit_position = PhysicsWorld.raycast(physics_world, position + Vector3.up() * 0.5, Vector3.down(), 1, "closest", "collision_filter", "filter_player_place_deployable")
 
 		if hit then

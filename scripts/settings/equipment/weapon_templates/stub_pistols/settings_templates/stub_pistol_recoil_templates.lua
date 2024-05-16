@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_recoil_templates.lua
+
 local recoil_templates = {}
 local overrides = {}
 
@@ -13,64 +15,64 @@ recoil_templates.default_stub_pistol_assault = {
 		rise = {
 			0.1,
 			0.04,
-			0.025
+			0.025,
 		},
 		decay = {
+			idle = 2,
 			shooting = 1.5,
-			idle = 2
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.065,
-					0.085
+					0.085,
 				},
 				yaw = {
 					-0.02,
-					0.02
-				}
+					0.02,
+				},
 			},
 			{
 				pitch = {
 					0.05,
-					0.075
+					0.075,
 				},
 				yaw = {
 					-0.03,
-					0.03
-				}
-			}
+					0.03,
+				},
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 1,
-			lerp_scalar = 1
-		}
+			lerp_scalar = 1,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.65,
 		inherits = {
 			"default_stub_pistol_assault",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_stub_pistol_assault",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_stub_pistol_assault",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 recoil_templates.default_stub_pistol_killshot = {
 	still = {
@@ -84,55 +86,55 @@ recoil_templates.default_stub_pistol_killshot = {
 			0.3,
 			0.45,
 			0.2,
-			0.35
+			0.35,
 		},
 		decay = {
+			idle = 2,
 			shooting = 1.2,
-			idle = 2
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.0375,
-					0.04375
+					0.04375,
 				},
 				yaw = {
 					-0.02,
-					0.02
-				}
-			}
+					0.02,
+				},
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 12,
 			lerp_scalar = 1,
-			yaw_intensity = 8
-		}
+			yaw_intensity = 8,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.75,
 		inherits = {
 			"default_stub_pistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"default_stub_pistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.8,
 		inherits = {
 			"default_stub_pistol_killshot",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 recoil_templates.default_stub_pistol_bfg = {
 	still = {
@@ -141,54 +143,54 @@ recoil_templates.default_stub_pistol_bfg = {
 		new_influence_percent = 0.6,
 		rise_duration = 0.05,
 		rise = {
-			1
+			1,
 		},
 		decay = {
+			idle = 2,
 			shooting = 1,
-			idle = 2
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.15,
-					0.175
+					0.175,
 				},
 				yaw = {
 					-0,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 1
-		}
+			lerp_scalar = 1,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 recoil_templates.default_stub_pistol_bfg_p1_m3 = {
 	still = {
@@ -197,54 +199,54 @@ recoil_templates.default_stub_pistol_bfg_p1_m3 = {
 		new_influence_percent = 0.8,
 		rise_duration = 0.25,
 		rise = {
-			3
+			3,
 		},
 		decay = {
+			idle = 2,
 			shooting = 1,
-			idle = 2
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.15,
-					0.175
+					0.175,
 				},
 				yaw = {
 					-0,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 1
-		}
+			lerp_scalar = 1,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 recoil_templates.stub_pistol_p1_m2_hip = {
 	still = {
@@ -258,55 +260,55 @@ recoil_templates.stub_pistol_p1_m2_hip = {
 			0.3,
 			0.45,
 			0.2,
-			0.35
+			0.35,
 		},
 		decay = {
+			idle = 2,
 			shooting = 1.2,
-			idle = 2
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.0375,
-					0.04375
+					0.04375,
 				},
 				yaw = {
 					-0.02,
-					0.02
-				}
-			}
+					0.02,
+				},
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 12,
 			lerp_scalar = 1,
-			yaw_intensity = 8
-		}
+			yaw_intensity = 8,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.75,
 		inherits = {
 			"default_stub_pistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"default_stub_pistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.8,
 		inherits = {
 			"default_stub_pistol_killshot",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 recoil_templates.stub_pistol_p1_m2_ads = {
 	still = {
@@ -319,55 +321,55 @@ recoil_templates.stub_pistol_p1_m2_ads = {
 			0.2,
 			0.2,
 			0.1,
-			0.3
+			0.3,
 		},
 		decay = {
+			idle = 2,
 			shooting = 1.2,
-			idle = 2
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.0375,
-					0.04375
+					0.04375,
 				},
 				yaw = {
 					-0.02,
-					0.02
-				}
-			}
+					0.02,
+				},
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 4,
 			lerp_scalar = 0.1,
-			yaw_intensity = 4
-		}
+			yaw_intensity = 4,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.75,
 		inherits = {
 			"stub_pistol_p1_m2_ads",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.6,
 		inherits = {
 			"stub_pistol_p1_m2_ads",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.8,
 		inherits = {
 			"stub_pistol_p1_m2_ads",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 recoil_templates.stub_pistol_p1_m3_hip = {
 	still = {
@@ -376,61 +378,61 @@ recoil_templates.stub_pistol_p1_m3_hip = {
 		new_influence_percent = 0.8,
 		rise_duration = 0.25,
 		rise = {
-			3
+			3,
 		},
 		decay = {
+			idle = 2,
 			shooting = 1,
-			idle = 2
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.15,
-					0.175
+					0.175,
 				},
 				yaw = {
 					-0,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 1
-		}
+			lerp_scalar = 1,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.7,
 		inherits = {
 			"default_stub_pistol_bfg",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 overrides.stub_pistol_p1_m3_ads = {
 	parent_template_name = "stub_pistol_p1_m3_hip",
-	overrides = {}
+	overrides = {},
 }
 
 return {
 	base_templates = recoil_templates,
-	overrides = overrides
+	overrides = overrides,
 }

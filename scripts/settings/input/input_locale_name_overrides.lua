@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/input_locale_name_overrides.lua
+
 local input_locale_name_overrides = {
 	keyboard = {
 		["numpad 0"] = Localize("loc_keyboard_input_numpad_0"),
@@ -23,38 +25,38 @@ local input_locale_name_overrides = {
 		left = Localize("loc_keyboard_input_arrow_left"),
 		right = Localize("loc_keyboard_input_arrow_right"),
 		up = Localize("loc_keyboard_input_arrow_up"),
-		down = Localize("loc_keyboard_input_arrow_down")
+		down = Localize("loc_keyboard_input_arrow_down"),
 	},
 	mouse = {
 		extra_1 = "",
 		extra_2 = "",
+		left = "",
+		middle = "",
+		right = "",
 		wheel = "",
 		wheel_down = "",
 		wheel_up = "",
-		middle = "",
-		left = "",
-		right = ""
 	},
 	xbox_controller = {
-		left = "",
 		a = "",
-		left_thumb = "",
-		left_shoulder = "",
+		b = "",
+		back = "",
 		d_down = "",
-		right_thumb = "",
-		right_shoulder = "",
-		left_trigger = "",
+		d_left = "",
 		d_right = "",
 		d_up = "",
-		start = "",
-		back = "",
-		d_left = "",
-		b = "",
-		y = "",
+		left = "",
+		left_shoulder = "",
+		left_thumb = "",
+		left_trigger = "",
+		right = "",
+		right_shoulder = "",
+		right_thumb = "",
 		right_trigger = "",
+		start = "",
 		x = "",
-		right = ""
-	}
+		y = "",
+	},
 }
 
 return settings("InputLocaleNameOverrides", input_locale_name_overrides)

@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/tag_query_database.lua
+
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
 local TagQueryDatabase = class("TagQueryDatabase")
+
 TagQueryDatabase.NUM_DATABASE_RULES = 4095
 
 TagQueryDatabase.init = function (self, dialogue_system)
@@ -23,6 +26,7 @@ end
 
 TagQueryDatabase.add_object_context = function (self, object, context_name, context)
 	local object_context_list = self._contexts_by_object[object] or {}
+
 	self._contexts_by_object[object] = object_context_list
 	object_context_list[context_name] = context
 end
@@ -42,7 +46,7 @@ end
 TagQueryDatabase.create_query = function (self)
 	return setmetatable({
 		query_context = {},
-		tagquery_database = self
+		tagquery_database = self,
 	}, TagQuery)
 end
 
@@ -68,7 +72,7 @@ local operator_lookup = {
 	SET_INCLUDES = RuleDatabase.OPERATOR_SET_INCLUDES,
 	SET_INTERSECTS = RuleDatabase.OPERATOR_SET_INTERSECTS,
 	SET_NOT_INTERSECTS = RuleDatabase.OPERATOR_SET_NOT_INTERSECTS,
-	SET_NOT_INCLUDES = RuleDatabase.OPERATOR_SET_NOT_INCLUDES
+	SET_NOT_INCLUDES = RuleDatabase.OPERATOR_SET_NOT_INCLUDES,
 }
 local context_indexes = table.mirror_array_inplace({
 	"global_context",
@@ -76,23 +80,26 @@ local context_indexes = table.mirror_array_inplace({
 	"user_context",
 	"user_memory",
 	"faction_memory",
-	"faction_context"
+	"faction_context",
 })
 
 TagQueryDatabase.define_rule = function (self, rule_definition)
 	local dialogue_name = rule_definition.name
 	local criterias = rule_definition.criterias
 	local real_criterias = table.clone(criterias)
+
 	rule_definition.real_criterias = real_criterias
+
 	local num_criterias = #criterias
 	local context_indexes = context_indexes
+
 	rule_definition.n_criterias = num_criterias
 
 	for i = 1, num_criterias do
 		local criteria = criterias[i]
 		local context_name = criteria[1]
 		local operator = criteria[3]
-		local value = nil
+		local value
 
 		if operator == "TIMEDIFF" then
 			operator = criteria[4]
@@ -109,18 +116,15 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 		end
 
 		local operator_index = operator_lookup[operator]
+
 		criteria[3] = operator_index
+
 		local value_type = type(value)
 
 		if value_type == "string" then
 			criteria[4] = value
 		elseif value_type == "boolean" then
-			if value then
-				value = 1
-			else
-				value = 0
-			end
-
+			value = value and 1 or 0
 			criteria[4] = value
 		elseif value_type == "number" then
 			criteria[4] = value
@@ -130,6 +134,7 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 	end
 
 	local rule_id = RuleDatabase.add_rule(self._database, dialogue_name, num_criterias, criterias)
+
 	self._rule_id_mapping[rule_id] = rule_definition
 	self._rule_id_mapping[rule_definition.name] = rule_id
 	self._rules_n = self._rules_n + 1
@@ -137,6 +142,7 @@ end
 
 TagQueryDatabase.remove_rule = function (self, rule_name)
 	local rule_id = self._rule_id_mapping[rule_name]
+
 	self._rule_id_mapping[rule_id] = nil
 	self._rule_id_mapping[rule_name] = nil
 	self._rules_n = self._rules_n - 1
@@ -155,11 +161,8 @@ TagQueryDatabase.iterate_queries = function (self, t)
 	table.clear_array(best_queries, #best_queries)
 	table.clear_array(temp_queries, #temp_queries)
 
-	local num_iterations = #self._queries
-	local num_temp_queries = 0
-	local best_query = nil
-	local best_query_value = 0
-	local best_query_category, best_query_category_name = nil
+	local num_iterations, num_temp_queries = #self._queries, 0
+	local best_query, best_query_value, best_query_category, best_query_category_name = nil, 0
 
 	for i = 1, num_iterations do
 		local query = self:_iterate_query(t)
@@ -179,15 +182,9 @@ TagQueryDatabase.iterate_queries = function (self, t)
 			local value = validated_rule.n_criterias + category_score
 
 			if best_query_value < value then
-				best_query_category_name = category_name
-				best_query_category = category
-				best_query_value = value
-				best_query = query
+				best_query, best_query_value, best_query_category, best_query_category_name = query, value, category, category_name
 			elseif value == best_query_value and math.random() > 0.5 then
-				best_query_category_name = category_name
-				best_query_category = category
-				best_query_value = value
-				best_query = query
+				best_query, best_query_value, best_query_category, best_query_category_name = query, value, category, category_name
 			end
 		end
 	end
@@ -229,14 +226,15 @@ TagQueryDatabase._iterate_query = function (self, t)
 		return query
 	end
 
-	local nice_array = {
-		self.global_context or dummy_table,
-		query_context or dummy_table,
-		user_context_list.user_context or dummy_table,
-		user_context_list.user_memory or dummy_table,
-		user_context_list.faction_memory or dummy_table,
-		0
-	}
+	local nice_array = {}
+
+	nice_array[1] = self.global_context or dummy_table
+	nice_array[2] = query_context or dummy_table
+	nice_array[3] = user_context_list.user_context or dummy_table
+	nice_array[4] = user_context_list.user_memory or dummy_table
+	nice_array[5] = user_context_list.faction_memory or dummy_table
+	nice_array[6] = 0
+
 	local dialogue_extension = ScriptUnit.extension_input(source, "dialogue_system")
 
 	if dialogue_extension and dialogue_extension:faction_name() and dialogue_extension:faction_name() == "imperium" then

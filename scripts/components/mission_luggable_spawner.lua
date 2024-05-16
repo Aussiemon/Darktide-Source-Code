@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/mission_luggable_spawner.lua
+
 local MissionLuggableSpawner = component("MissionLuggableSpawner")
 
 MissionLuggableSpawner.init = function (self, unit, is_server)
@@ -55,13 +57,13 @@ MissionLuggableSpawner.component_data = {
 	inputs = {
 		spawn_mission_luggable = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		activate_objective_target_on_luggable = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return MissionLuggableSpawner

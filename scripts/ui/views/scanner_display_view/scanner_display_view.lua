@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view.lua
+
 local MinigameDecodeSymbolsView = require("scripts/ui/views/scanner_display_view/minigame_decode_symbols_view")
 local MinigameDrillView = require("scripts/ui/views/scanner_display_view/minigame_drill_view")
 local MinigameNoneView = require("scripts/ui/views/scanner_display_view/minigame_none_view")
@@ -8,21 +10,24 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local DEBUG_RENDERING = false
 local ScannerDisplayView = class("ScannerDisplayView", "BaseView")
+
 ScannerDisplayView.MINIGAMES = {
 	[MinigameSettings.types.none] = MinigameNoneView,
 	[MinigameSettings.types.scan] = MinigameScanView,
 	[MinigameSettings.types.decode_symbols] = MinigameDecodeSymbolsView,
-	[MinigameSettings.types.drill] = MinigameDrillView
+	[MinigameSettings.types.drill] = MinigameDrillView,
 }
 
 ScannerDisplayView.init = function (self, settings, context)
 	local class_name = self.__class_name
+
 	self._viewport_name = class_name .. "_ui_offscreen_world_viewport"
 	self._render_name = class_name .. "_offscreen_ui_renderer"
 	self._no_cursor = true
 	self._material_linked = false
 	self._auspex_unit = context.auspex_unit
 	self._minigame = ScannerDisplayView.MINIGAMES[context.minigame_type]:new(context)
+
 	local definitions = ScannerDisplayViewDefinitions[context.minigame_type]
 
 	ScannerDisplayView.super.init(self, definitions, settings, context)
@@ -81,11 +86,14 @@ end
 ScannerDisplayView._setup_offscreen_gui = function (self)
 	local ui_manager = Managers.ui
 	local world = self:_create_offscreen_world()
+
 	self._offscreen_world = world
+
 	local viewport_name = self._viewport_name
 	local viewport_type = "overlay_offscreen"
 	local viewport_layer = 1
 	local renderer_name = self._render_name
+
 	self._offscreen_viewport = ui_manager:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	self._offscreen_ui_renderer = Managers.ui:create_renderer(renderer_name, nil, true, self._ui_renderer.gui, self._ui_renderer.gui_retained, "content/ui/materials/mission_board/render_target_scanlines", 1920, 1080, true)
 end
@@ -155,6 +163,7 @@ ScannerDisplayView.draw = function (self, dt, t, input_service, layer)
 		local render_settings = self._render_settings
 		local ui_scenegraph = self._ui_scenegraph
 		local ui_resource_renderer = self:_begin_render_offscreen()
+
 		render_settings.start_layer = layer
 		render_settings.scale = render_scale
 		render_settings.inverse_scale = render_scale and 1 / render_scale

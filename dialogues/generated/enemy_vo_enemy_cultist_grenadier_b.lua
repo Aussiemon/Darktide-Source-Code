@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_grenadier_b.lua
+
 local enemy_vo_enemy_cultist_grenadier_b = {
 	cultist_grenadier_skulking = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			"loc_enemy_cultist_grenadier_b__skulking_17",
 			"loc_enemy_cultist_grenadier_b__skulking_18",
 			"loc_enemy_cultist_grenadier_b__skulking_19",
-			"loc_enemy_cultist_grenadier_b__skulking_20"
+			"loc_enemy_cultist_grenadier_b__skulking_20",
 		},
 		sound_events_duration = {
 			5.385,
@@ -44,7 +46,7 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			3.082,
 			4.567,
 			6.38,
-			3.248
+			3.248,
 		},
 		sound_event_weights = {
 			0.05,
@@ -66,9 +68,9 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_grenadier_spawned = {
 		randomize_indexes_n = 0,
@@ -93,7 +95,7 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			"loc_enemy_cultist_grenadier_b__spawned_17",
 			"loc_enemy_cultist_grenadier_b__spawned_18",
 			"loc_enemy_cultist_grenadier_b__spawned_19",
-			"loc_enemy_cultist_grenadier_b__spawned_20"
+			"loc_enemy_cultist_grenadier_b__spawned_20",
 		},
 		sound_events_duration = {
 			3.104,
@@ -115,7 +117,7 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			3.068,
 			1.684,
 			1.758,
-			3.575
+			3.575,
 		},
 		sound_event_weights = {
 			0.05,
@@ -137,9 +139,9 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_grenadier_throwing_grenade = {
 		randomize_indexes_n = 0,
@@ -164,7 +166,7 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			"loc_enemy_cultist_grenadier_b__throwing_grenade_17",
 			"loc_enemy_cultist_grenadier_b__throwing_grenade_18",
 			"loc_enemy_cultist_grenadier_b__throwing_grenade_19",
-			"loc_enemy_cultist_grenadier_b__throwing_grenade_20"
+			"loc_enemy_cultist_grenadier_b__throwing_grenade_20",
 		},
 		sound_events_duration = {
 			0.836,
@@ -186,7 +188,7 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			2.198,
 			3.491,
 			3.043,
-			2.882
+			2.882,
 		},
 		sound_event_weights = {
 			0.05,
@@ -208,10 +210,10 @@ local enemy_vo_enemy_cultist_grenadier_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_cultist_grenadier_b", enemy_vo_enemy_cultist_grenadier_b)

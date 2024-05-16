@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 
@@ -24,176 +26,176 @@ end
 sway_templates.default_shotgun_killshot = {
 	still = {
 		horizontal_speed = 0.5,
-		visual_pitch_impact_mod = 7,
 		rotation_speed = 0.25,
+		visual_pitch_impact_mod = 7,
 		visual_yaw_impact_mod = 5.5,
 		max_sway = {
+			pitch = 2.5,
 			yaw = 2.5,
-			pitch = 2.5
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.5,
 			shooting = {
+				pitch = 0.15,
 				yaw = 0.15,
-				pitch = 0.15
 			},
 			idle = {
+				pitch = 0.5,
 				yaw = 0.5,
-				pitch = 0.5
 			},
 			player_event = {
+				pitch = 1.5,
 				yaw = 1.5,
-				pitch = 1.5
-			}
+			},
 		},
 		continuous_sway = {
 			pitch = {
+				lerp_basic = 0.4,
 				lerp_perfect = 0.2,
-				lerp_basic = 0.4
 			},
 			yaw = {
+				lerp_basic = 0.35,
 				lerp_perfect = 0.15,
-				lerp_basic = 0.35
-			}
+			},
 		},
 		immediate_sway = {
 			num_shots_clear_time = 0.6,
 			crouch_transition = {
 				{
+					pitch = 0.25,
 					yaw = 0.25,
-					pitch = 0.25
-				}
+				},
 			},
 			alternate_fire_start = {
 				{
+					pitch = 1,
 					yaw = 1,
-					pitch = 1
-				}
+				},
 			},
 			suppression_hit = {
 				{
+					pitch = 0.2,
 					yaw = 0.2,
-					pitch = 0.2
-				}
+				},
 			},
 			damage_hit = {
 				{
+					pitch = 0.25,
 					yaw = 0.25,
-					pitch = 0.25
-				}
+				},
 			},
 			shooting = {
 				{
+					pitch = 0.25,
 					yaw = 0.1,
-					pitch = 0.25
-				}
-			}
+				},
+			},
 		},
-		sway_pattern = default_shotgun_sway_pattern
+		sway_pattern = default_shotgun_sway_pattern,
 	},
 	moving = {
 		rotation_speed = 0.4,
 		inherits = {
 			"default_shotgun_killshot",
-			"still"
+			"still",
 		},
 		continuous_sway = {
 			pitch = {
+				lerp_basic = 0.45,
 				lerp_perfect = 0.23,
-				lerp_basic = 0.45
 			},
 			yaw = {
+				lerp_basic = 0.4,
 				lerp_perfect = 0.2,
-				lerp_basic = 0.4
-			}
+			},
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
+				pitch = 0.15,
 				yaw = 0.15,
-				pitch = 0.15
 			},
 			idle = {
+				pitch = 0.5,
 				yaw = 0.75,
-				pitch = 0.5
 			},
 			player_event = {
+				pitch = 3,
 				yaw = 3,
-				pitch = 3
-			}
-		}
+			},
+		},
 	},
 	crouch_still = {
 		rotation_speed = 0.2,
 		inherits = {
 			"default_shotgun_killshot",
-			"still"
+			"still",
 		},
 		continuous_sway = {
 			pitch = {
+				lerp_basic = 0.3,
 				lerp_perfect = 0.1,
-				lerp_basic = 0.3
 			},
 			yaw = {
+				lerp_basic = 0.25,
 				lerp_perfect = 0.05,
-				lerp_basic = 0.25
-			}
+			},
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
+				pitch = 0.15,
 				yaw = 0.15,
-				pitch = 0.15
 			},
 			idle = {
+				pitch = 0.5,
 				yaw = 0.75,
-				pitch = 0.5
 			},
 			player_event = {
+				pitch = 3,
 				yaw = 3,
-				pitch = 3
-			}
-		}
+			},
+		},
 	},
 	crouch_moving = {
 		rotation_speed = 0.5,
 		inherits = {
 			"default_shotgun_killshot",
-			"still"
+			"still",
 		},
 		continuous_sway = {
 			pitch = {
+				lerp_basic = 0.5,
 				lerp_perfect = 0.3,
-				lerp_basic = 0.5
 			},
 			yaw = {
+				lerp_basic = 0.45,
 				lerp_perfect = 0.25,
-				lerp_basic = 0.45
-			}
+			},
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
+				pitch = 0.15,
 				yaw = 0.15,
-				pitch = 0.15
 			},
 			idle = {
+				pitch = 0.5,
 				yaw = 0.75,
-				pitch = 0.5
 			},
 			player_event = {
+				pitch = 3,
 				yaw = 3,
-				pitch = 3
-			}
-		}
-	}
+			},
+		},
+	},
 }
 
 return {
 	base_templates = sway_templates,
-	overrides = overrides
+	overrides = overrides,
 }

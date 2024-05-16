@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactor_extension.lua
+
 local Component = require("scripts/utilities/component")
 local Interactions = require("scripts/settings/interaction/interactions")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
@@ -16,10 +18,11 @@ local LINE_OF_SIGHT_FILTER = "filter_interactable_line_of_sight_check"
 local INDEX_DISTANCE = 2
 local INDEX_ACTOR = 4
 local Intersect_ray_box = Intersect.ray_box
-local _distance_to_world_bounds = nil
+local _distance_to_world_bounds
 
 InteractorExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, ...)
 	local world = extension_init_context.world
+
 	self._is_server = extension_init_context.is_server
 	self._world = world
 	self._unit = unit
@@ -33,11 +36,11 @@ InteractorExtension.init = function (self, extension_init_context, unit, extensi
 	self._show_counter_ui = false
 	self._detection_radius = InteractionSettings.detection_radius
 	self._sphere_offset = InteractionSettings.sphere_offset
-	self._bot_interaction_type = nil
-	self._bot_interaction_actor_index = 0
-	self._bot_interaction_unit = nil
+	self._bot_interaction_unit, self._bot_interaction_actor_index, self._bot_interaction_type = nil, 0
 	self._interaction_objects = {}
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
 
 	self:_init_action_components(unit_data_extension)
@@ -66,6 +69,7 @@ end
 
 InteractorExtension._reset_interaction = function (self)
 	local interaction_component = self._interaction_component
+
 	interaction_component.target_unit = nil
 	interaction_component.target_actor_node_index = 0
 	interaction_component.type = "default"
@@ -100,6 +104,7 @@ InteractorExtension.set_bot_interaction_unit = function (self, target_unit, targ
 
 	if target_actor then
 		local _, target_actor_node_index = Actor.unit(target_actor)
+
 		self._bot_interaction_actor_index = target_actor_node_index
 	end
 
@@ -141,15 +146,16 @@ InteractorExtension.calculate_duration = function (self, interactee_extension)
 	local buff_mod = self:calculate_duration_buff(interactee_extension)
 	local duration = interaction_duration * buff_mod
 	local speed_buff_mod = self:calculate_speed_buff(interactee_extension)
+
 	duration = duration / speed_buff_mod
 
 	return duration
 end
 
 InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context)
-	local chosen_target = nil
+	local chosen_target
 	local chosen_target_actor_node_index = 0
-	local focus_target = nil
+	local focus_target
 	local focus_target_actor_node_index = 0
 	local interaction_component = self._interaction_component
 	local state = interaction_component.state
@@ -179,12 +185,10 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 				chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index = self:_find_interaction_object(unit)
 			end
 		else
-			local bot_interaction_unit = self._bot_interaction_unit
-			local bot_interaction_type = self._bot_interaction_type
+			local bot_interaction_unit, bot_interaction_type = self._bot_interaction_unit, self._bot_interaction_type
 
 			if ALIVE[bot_interaction_unit] and self:_can_interact(bot_interaction_unit, bot_interaction_type) then
-				chosen_target_actor_node_index = self._bot_interaction_actor_index
-				chosen_target = bot_interaction_unit
+				chosen_target, chosen_target_actor_node_index = bot_interaction_unit, self._bot_interaction_actor_index
 			end
 		end
 	end
@@ -207,6 +211,7 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 	elseif chosen_target and chosen_target == interaction_component.target_unit then
 		local interactee_extension = ScriptUnit.extension(chosen_target, "interactee_system")
 		local interaction_duration = self:calculate_duration(interactee_extension)
+
 		interaction_component.duration = interaction_duration
 	end
 
@@ -224,6 +229,7 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 		self:_check_current_state(unit, dt, t, chosen_target, state)
 
 		local ready_to_interact = chosen_target and state == interaction_states.waiting_to_interact
+
 		self._show_interaction_ui = ready_to_interact
 		self._show_counter_ui = state == interaction_states.is_interacting
 	end
@@ -231,7 +237,7 @@ end
 
 local ACTION_KINDS_TO_CONSUME = {
 	reload_shotgun = true,
-	reload_state = true
+	reload_state = true,
 }
 
 InteractorExtension._consume_conflicting_gamepad_inputs = function (self, t)
@@ -259,8 +265,7 @@ end
 
 InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_target, state)
 	local input_extension = self._input_extension
-	local world = self._world
-	local is_server = self._is_server
+	local world, is_server = self._world, self._is_server
 
 	if chosen_target and state == interaction_states.waiting_to_interact then
 		local interaction = self:interaction()
@@ -303,7 +308,7 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 			local ui_interaction = interactee_extension.ui_interaction and interactee_extension:ui_interaction()
 			local holding = input_extension:get("interact_hold")
 			local can_interact = self:_check_valid_ongoing_interaction(target_unit, target_node)
-			local interaction_result = nil
+			local interaction_result
 
 			if hold_required and not holding then
 				interaction_result = interaction_results.stopped_holding
@@ -315,7 +320,7 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 				end
 			elseif not can_interact then
 				interaction_result = interaction_results.interaction_cancelled
-			elseif interaction_component.done_time <= t then
+			elseif t >= interaction_component.done_time then
 				interaction_result = interaction_results.success
 			else
 				interaction_result = interaction_results.ongoing
@@ -375,6 +380,7 @@ end
 
 InteractorExtension._start_interaction_timer = function (self, t)
 	local interaction_component = self._interaction_component
+
 	interaction_component.start_time = t
 	interaction_component.done_time = t + interaction_component.duration
 end
@@ -384,10 +390,8 @@ InteractorExtension._find_object_in_direct_line_of_sight = function (self, inter
 	local max_interact_distance = self:_max_interaction_distance()
 	local hits, _ = PhysicsWorld.raycast(physics_world, fp_position, fp_forward, max_interact_distance, "all", "collision_filter", INTERACTABLE_FILTER)
 	local ALIVE = ALIVE
-	local los_distance, los_position, target_positon, chosen_target = nil
-	local chosen_target_actor_node_index = 0
-	local focus_target = nil
-	local focus_target_actor_node_index = 0
+	local los_distance, los_position, target_positon
+	local chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index = nil, 0, nil, 0
 
 	if hits then
 		for hit_idx = 1, #hits do
@@ -400,6 +404,7 @@ InteractorExtension._find_object_in_direct_line_of_sight = function (self, inter
 
 				if not los_distance then
 					local los_hit, los_pos, los_dist, _ = PhysicsWorld.raycast(physics_world, fp_position, fp_forward, max_interact_distance, "closest", "collision_filter", LINE_OF_SIGHT_FILTER)
+
 					los_distance = los_hit and los_dist or math.huge
 				end
 
@@ -436,22 +441,19 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 	local best_priority = math.huge
 	local closest_cos_angle_to_chosen = -math.huge
 	local closest_cos_angle_to_focus = -math.huge
-	local chosen_target = nil
-	local chosen_target_actor_node_index = 0
-	local focus_target = nil
-	local focus_target_actor_node_index = 0
+	local chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index = nil, 0, nil, 0
 
 	for i = 1, num_actors do
 		local unit_actor = actors[i]
 		local target_unit, target_node = Actor.unit(unit_actor)
-		local valid_target = target_unit and target_unit ~= interactor_unit and not not ALIVE[target_unit]
+		local valid_target = not not target_unit and target_unit ~= interactor_unit and not not ALIVE[target_unit]
 
 		if valid_target then
 			local can_interact, interactee_extension = self:_check_valid_interaction_target(target_unit)
 			local target_position, target_bounds = Actor.world_bounds(unit_actor)
 			local obj_direction, distance_to_center = Vector3.direction_length(target_position - fp_position)
 			local cos_angle_to_sight = Vector3.dot(fp_forward, obj_direction)
-			local closest_angle = nil
+			local closest_angle
 
 			if can_interact then
 				closest_angle = closest_cos_angle_to_chosen
@@ -460,7 +462,7 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 			end
 
 			local priority_approved = true
-			local current_interaction_priority = nil
+			local current_interaction_priority
 
 			if use_priorities then
 				priority_approved = false
@@ -475,7 +477,7 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 				end
 			end
 
-			if priority_approved and closest_angle < cos_angle_to_sight and (optional_max_interaction_cos_angle or MAX_INTERACTION_COS_ANGLE) <= cos_angle_to_sight then
+			if priority_approved and closest_angle < cos_angle_to_sight and cos_angle_to_sight >= (optional_max_interaction_cos_angle or MAX_INTERACTION_COS_ANGLE) then
 				local distance_to_hit = distance_to_center
 
 				if max_interact_distance < distance_to_center then
@@ -731,6 +733,7 @@ InteractorExtension.interaction = function (self, optional_interaction_template_
 	if not interaction_objects[interaction_template_name] then
 		local interaction_template = InteractionTemplates[interaction_template_name]
 		local interaction_class_name = interaction_template.interaction_class_name
+
 		interaction_objects[interaction_template_name] = Interactions[interaction_class_name]:new(interaction_template)
 	end
 
@@ -779,7 +782,9 @@ InteractorExtension.interaction_progress = function (self)
 
 	local current_time = Managers.time:time("gameplay")
 	local delta_time = current_time - interaction_start_time
+
 	delta_time = math.min(delta_time, interaction_duration)
+
 	local result = delta_time / interaction_duration
 
 	return math.clamp01(result), delta_time, interaction_duration
@@ -810,7 +815,9 @@ InteractorExtension.hud_block_text = function (self)
 	if not target_unit then
 		target_unit = self._focus_unit
 		actor_node_index = self._focus_actor_node_index
+
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
+
 		interaction_type = interactee_extension:interaction_type()
 
 		if interaction_type == "none" then

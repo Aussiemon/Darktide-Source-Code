@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/voting/voting_templates/mission_lobby_ready_voting_template.lua
+
 local OPTIONS = table.enum("yes", "no")
 local RESULTS = table.enum("approved", "empty")
 
@@ -6,10 +8,10 @@ local function _update_voting_view(context)
 end
 
 local function _open_voting_view(context)
-	local transition_time = nil
+	local transition_time
 	local close_previous = false
 	local close_all = true
-	local close_transition_time = nil
+	local close_transition_time
 
 	Managers.ui:open_view("lobby_view", transition_time, close_previous, close_all, close_transition_time, context)
 end
@@ -23,26 +25,26 @@ local function _close_voting_view()
 end
 
 local mission_lobby_ready_voting_template = {
-	name = "mission_lobby_ready",
-	can_change_vote = true,
-	force_timeout_option = true,
-	abort_on_member_left = false,
-	rpc_start_voting = "rpc_start_voting_mission_lobby_ready",
 	abort_on_member_joined = false,
+	abort_on_member_left = false,
+	can_change_vote = true,
 	duration = 60,
-	voting_impl = "network",
 	evaluate_delay = 10,
+	force_timeout_option = true,
+	name = "mission_lobby_ready",
+	rpc_start_voting = "rpc_start_voting_mission_lobby_ready",
+	voting_impl = "network",
 	options = {
 		OPTIONS.yes,
-		OPTIONS.no
+		OPTIONS.no,
 	},
 	results = {
 		RESULTS.approved,
-		RESULTS.empty
+		RESULTS.empty,
 	},
 	timeout_option = OPTIONS.yes,
 	required_params = {
-		"mission_data"
+		"mission_data",
 	},
 	pack_params = function (params)
 		local mission_data = params.mission_data
@@ -60,8 +62,8 @@ local mission_lobby_ready_voting_template = {
 		return {
 			mission_data = {
 				mission_name = mission_name,
-				circumstance_name = circumstance_name
-			}
+				circumstance_name = circumstance_name,
+			},
 		}
 	end,
 	evaluate = function (votes)
@@ -87,7 +89,7 @@ local mission_lobby_ready_voting_template = {
 
 		local view_context = {
 			mission_data = params.mission_data,
-			voting_id = voting_id
+			voting_id = voting_id,
 		}
 
 		if Managers.ui:view_active("lobby_view") then
@@ -120,7 +122,7 @@ local mission_lobby_ready_voting_template = {
 		end
 
 		Managers.event:trigger("event_lobby_ready_vote_casted")
-	end
+	end,
 }
 
 return mission_lobby_ready_voting_template

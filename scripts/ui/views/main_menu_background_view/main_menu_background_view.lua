@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/main_menu_background_view/main_menu_background_view.lua
+
 local definition_path = "scripts/ui/views/main_menu_background_view/main_menu_background_view_definitions"
 local MainMenuBackgroundViewSettings = require("scripts/ui/views/main_menu_background_view/main_menu_background_view_settings")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
@@ -11,6 +13,7 @@ local MainMenuBackgroundView = class("MainMenuBackgroundView", "BaseView")
 
 MainMenuBackgroundView.init = function (self, settings, context)
 	local definitions = require(definition_path)
+
 	self._context = context or {}
 	self._loading_profile_queue = {}
 	self._profiles_loading_data = {}
@@ -42,6 +45,7 @@ MainMenuBackgroundView._setup_background_world = function (self)
 	local world_name = MainMenuBackgroundViewSettings.world_name
 	local world_layer = MainMenuBackgroundViewSettings.world_layer
 	local world_timer_name = MainMenuBackgroundViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	if self._context then
@@ -87,6 +91,7 @@ end
 
 MainMenuBackgroundView.event_main_menu_set_presentation_profile = function (self, profile)
 	self._presentation_profile = profile
+
 	local loaded = false
 	local loading = false
 	local profiles_loading_data = self._profiles_loading_data
@@ -142,6 +147,7 @@ MainMenuBackgroundView._spawn_profile = function (self, profile)
 		local world = self._world_spawner:world()
 		local camera = self._world_spawner:camera()
 		local unit_spawner = self._world_spawner:unit_spawner()
+
 		self._profile_spawner = UIProfileSpawner:new("MainMenuBackgroundView", world, camera, unit_spawner)
 	end
 
@@ -205,6 +211,7 @@ end
 
 MainMenuBackgroundView._load_profile = function (self, profile)
 	self._profile_loader_index = (self._profile_loader_index or 0) + 1
+
 	local reference_name = self.__class_name .. "characters_profile_loader_" .. tostring(self._profile_loader_index)
 	local profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions)
 
@@ -213,7 +220,7 @@ MainMenuBackgroundView._load_profile = function (self, profile)
 	self._profiles_loading_data[#self._profiles_loading_data + 1] = {
 		profile = profile,
 		loader = profile_loader,
-		loader_index = self._profile_loader_index
+		loader_index = self._profile_loader_index,
 	}
 end
 
@@ -223,13 +230,14 @@ MainMenuBackgroundView._unload_profile = function (self, profile)
 	if loading_queue_index then
 		table.remove(self._loading_profile_queue, loading_queue_index)
 	else
-		local loading_data_index = nil
+		local loading_data_index
 
 		for i = 1, #self._profiles_loading_data do
 			local loading_data = self._profiles_loading_data[i]
 
 			if loading_data.profile == profile then
 				loading_data_index = i
+
 				local loader = loading_data.loader
 
 				loader:destroy()
@@ -282,6 +290,7 @@ MainMenuBackgroundView._handle_background_blur = function (self)
 	if apply_blur ~= self._game_world_fullscreen_blur_enabled or self._game_world_fullscreen_blur_amount ~= blur_amount then
 		local world_name = MainMenuBackgroundViewSettings.world_name
 		local viewport_name = MainMenuBackgroundViewSettings.viewport_name
+
 		self._game_world_fullscreen_blur_enabled = apply_blur
 		self._game_world_fullscreen_blur_amount = blur_amount
 

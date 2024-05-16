@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/social_local.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = require("scripts/backend/social_interface")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
@@ -26,7 +28,7 @@ SocialLocal.fetch_friends = function (self)
 
 		local response_data = {
 			friends = friends,
-			maxFriends = max_number_friends
+			maxFriends = max_number_friends,
 		}
 
 		promise:resolve(response_data)
@@ -47,16 +49,20 @@ SocialLocal.send_friend_request = function (self, account_id, method)
 
 			if not method or method == "POST" then
 				local is_sent = not self._is_sent_friend_request
+
 				self._is_sent_friend_request = is_sent
+
 				local friend = {
 					accountName = "DummyData",
 					accountId = account_id,
 					status = is_sent and FriendStatus.invited or FriendStatus.invite,
-					invitedTime = tostring(server_time)
+					invitedTime = tostring(server_time),
 				}
+
 				self._friends[account_id] = friend
 			elseif method == "PUT" then
 				local friend = self._friends[account_id]
+
 				friend.status = FriendStatus.friend
 				friend.friendedTime = tostring(server_time)
 			elseif method == "PATCH" or method == "DELETE" then
@@ -79,7 +85,7 @@ SocialLocal.fetch_recently_played = function (self, character_id)
 		promise:reject({})
 	else
 		local response_data = {
-			recentParticipants = {}
+			recentParticipants = {},
 		}
 
 		promise:resolve(response_data)
@@ -124,7 +130,7 @@ SocialLocal.fetch_blocked_accounts = function (self)
 	else
 		local response_data = {
 			maxBlocks = 10,
-			blockList = table.clone(self._temp_block_list)
+			blockList = table.clone(self._temp_block_list),
 		}
 
 		promise:resolve(response_data)

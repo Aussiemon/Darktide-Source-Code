@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/bot/bot_spawning.lua
+
 local BotSpawning = {}
 local ProfileUtils = require("scripts/utilities/profile_utils")
 
@@ -16,6 +18,7 @@ BotSpawning.spawn_bot_character = function (profile_name)
 		end
 
 		local profile = ProfileUtils.get_bot_profile(profile_name)
+
 		profile.identifier = profile_name
 
 		bot_synchronizer_host:add_bot(local_player_id, profile)

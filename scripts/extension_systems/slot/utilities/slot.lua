@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/slot/utilities/slot.lua
+
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
 local SlotPosition = require("scripts/extension_systems/slot/utilities/slot_position")
@@ -38,8 +40,9 @@ Slot.create_slots = function (target_unit)
 				type = slot_type,
 				radians = radians_per_slot,
 				priority = setting.priority,
-				position_check_index = check_middle_index
+				position_check_index = check_middle_index,
 			}
+
 			slots[i] = slot
 		end
 
@@ -47,8 +50,9 @@ Slot.create_slots = function (target_unit)
 			disabled_slots_count = 0,
 			slots_count = 0,
 			total_slots_count = total_slots_count,
-			slots = slots
+			slots = slots,
 		}
+
 		all_slots[slot_type] = slot_data
 	end
 
@@ -60,6 +64,7 @@ Slot.remove = function (slot, unit_extension_data)
 
 	if user_unit then
 		local user_slot_extension = unit_extension_data[user_unit]
+
 		user_slot_extension.slot = nil
 	end
 
@@ -69,16 +74,17 @@ Slot.remove = function (slot, unit_extension_data)
 	for i = 1, queue_n do
 		local waiting_user_unit = queue[i]
 		local waiting_user_slot_extension = unit_extension_data[waiting_user_unit]
+
 		waiting_user_slot_extension.wait_slot = nil
 	end
 
 	local target_unit = slot.target_unit
 	local target_slot_extension = unit_extension_data[target_unit]
-	local slot_type = slot.type
-	local slot_index = slot.index
+	local slot_type, slot_index = slot.type, slot.index
 	local slot_data = target_slot_extension.all_slots[slot_type]
 	local slots = slot_data.slots
 	local slots_n = #slots
+
 	slots[slot_index] = slots[slots_n]
 	slots[slot_index].index = slot_index
 	slots[slots_n] = nil
@@ -103,8 +109,7 @@ local function _slots_count(slot_data)
 end
 
 Slot.detach_user_unit = function (user_unit, user_slot_extension, unit_extension_data)
-	local slot = user_slot_extension.slot
-	local waiting_on_slot = user_slot_extension.wait_slot
+	local slot, waiting_on_slot = user_slot_extension.slot, user_slot_extension.wait_slot
 
 	if slot then
 		local queue = slot.queue
@@ -128,6 +133,7 @@ Slot.detach_user_unit = function (user_unit, user_slot_extension, unit_extension
 		local target_slot_extension = unit_extension_data[target_unit]
 		local slot_type = slot.type
 		local slot_data = target_slot_extension.all_slots[slot_type]
+
 		slot_data.slots_count = _slots_count(slot_data)
 	elseif waiting_on_slot then
 		local queue = waiting_on_slot.queue
@@ -168,8 +174,7 @@ Slot.queue_position = function (unit_extension_data, slot, nav_world, distance_m
 	local queue_distance = SlotTypeSettings[slot_type].queue_distance
 	local slot_queue_distance = queue_distance + slot_queue_distance_modifier
 	local slot_queue_position = target_unit_position + slot_queue_direction * slot_queue_distance
-	local max_queue_z_diff_above = SlotSystemSettings.slot_queue_max_z_diff_above
-	local max_queue_z_diff_below = SlotSystemSettings.slot_queue_max_z_diff_below
+	local max_queue_z_diff_above, max_queue_z_diff_below = SlotSystemSettings.slot_queue_max_z_diff_above, SlotSystemSettings.slot_queue_max_z_diff_below
 	local slot_queue_position_on_navmesh = NavQueries.position_on_mesh(nav_world, slot_queue_position, max_queue_z_diff_above, max_queue_z_diff_below, traverse_logic)
 	local max_tries = 5
 	local i = 1
@@ -181,7 +186,7 @@ Slot.queue_position = function (unit_extension_data, slot, nav_world, distance_m
 		i = i + 1
 	end
 
-	local can_go = nil
+	local can_go
 
 	if slot_queue_position_on_navmesh then
 		local target_position_on_navmesh = NavQueries.position_on_mesh(nav_world, target_unit_position, max_queue_z_diff_above, max_queue_z_diff_below, traverse_logic)
@@ -228,7 +233,7 @@ local Vector3_length = Vector3.length
 local Vector3_dot = Vector3.dot
 
 local function _offset_slot(target_unit, target_unit_extension, slot_absolute_position, target_unit_position)
-	local target_velocity = nil
+	local target_velocity
 
 	if target_unit_extension.locomotion_component then
 		target_velocity = target_unit_extension.locomotion_component.velocity_current
@@ -263,17 +268,19 @@ end
 local Quaternion_rotate = Quaternion.rotate
 
 local function _get_slot_position_on_navmesh_from_outside_target(target_position, slot_direction, radians, distance, nav_world, traverse_logic, above, below)
-	local position_on_navmesh = nil
+	local position_on_navmesh
 	local max_tries = 10
 	local dist_per_try = 0.15
 
 	if radians then
 		local rotation = Quaternion(-Vector3.up(), radians)
+
 		slot_direction = Quaternion_rotate(rotation, slot_direction)
 	end
 
 	for i = 0, max_tries - 1 do
 		local wanted_position = target_position + slot_direction * (i * dist_per_try + distance)
+
 		position_on_navmesh = NavQueries.position_on_mesh(nav_world, wanted_position, above, below, traverse_logic)
 
 		if position_on_navmesh then
@@ -294,7 +301,7 @@ local function _get_reachable_slot_position_on_navmesh(slot, target_unit, target
 	local default_slot_radius = SlotTypeSettings.normal.radius
 
 	if position_on_navmesh then
-		local check_position = nil
+		local check_position
 
 		if is_using_middle_check then
 			check_position = position_on_navmesh
@@ -310,6 +317,7 @@ local function _get_reachable_slot_position_on_navmesh(slot, target_unit, target
 		end
 	elseif not is_using_middle_check then
 		local check_position = SlotPosition.rotated_around_origin(wanted_position, target_position, check_radians, default_slot_radius)
+
 		position_on_navmesh, original_position = _get_slot_position_on_navmesh(target_unit, target_unit_extension, target_position, check_position, radians, distance, should_offset_slot, nav_world, above, below, traverse_logic)
 
 		if position_on_navmesh then
@@ -460,8 +468,10 @@ local function _disable_slot(slot, unit_extension_data)
 
 	if user_unit then
 		local user_unit_extension = unit_extension_data[user_unit]
+
 		user_unit_extension.slot = nil
 		slot.user_unit = nil
+
 		local queue = slot.queue
 		local queue_n = #queue
 
@@ -561,8 +571,7 @@ Slot.set_ghost_position = function (target_unit_extension, slot, nav_world, trav
 	local target_unit_position = target_unit_extension.position:unbox()
 	local distance = math.min(Vector3_distance(target_unit_position, user_unit_position), SlotSystemSettings.ghost_position_distance)
 	local ghost_radians = SlotSystemSettings.slot_ghost_radians
-	local above = SlotSystemSettings.z_max_difference_above
-	local below = SlotSystemSettings.z_max_difference_below
+	local above, below = SlotSystemSettings.z_max_difference_above, SlotSystemSettings.z_max_difference_below
 	local ghost_position_left = SlotPosition.rotated_around_origin(slot_position, user_unit_position, -ghost_radians, distance)
 	local ghost_position_right = SlotPosition.rotated_around_origin(slot_position, user_unit_position, ghost_radians, distance)
 	local distance_ghost_position_left = Vector3_distance_sq(target_unit_position, ghost_position_left)
@@ -570,7 +579,7 @@ Slot.set_ghost_position = function (target_unit_extension, slot, nav_world, trav
 	local use_ghost_position_left = distance_ghost_position_right < distance_ghost_position_left
 	local ghost_position = use_ghost_position_left and ghost_position_left or ghost_position_right
 	local ghost_position_on_navmesh = NavQueries.position_on_mesh(nav_world, ghost_position, above, below, traverse_logic)
-	local ghost_position_direction = nil
+	local ghost_position_direction
 
 	if ghost_position_on_navmesh then
 		ghost_position_direction = Vector3_normalize(ghost_position_on_navmesh - slot_position)
@@ -594,6 +603,7 @@ Slot.set_ghost_position = function (target_unit_extension, slot, nav_world, trav
 		local slot_type = slot.type
 		local slot_distance = SlotTypeSettings[slot_type].distance
 		local ghost_position_distance = slot_distance + (distance - slot_distance) * (max_tries - i) / max_tries
+
 		ghost_position = target_unit_position + ghost_position_direction * ghost_position_distance
 		ghost_position_on_navmesh = NavQueries.position_on_mesh(nav_world, ghost_position, above, below, traverse_logic)
 	end
@@ -610,6 +620,7 @@ local function _update_slot_anchor_weight(slot, target_unit, unit_extension_data
 	local total_slots_count = slot_data.total_slots_count
 	local score = 128
 	local slot_valid = slot.user_unit and not slot.released
+
 	slot.anchor_weight = slot_valid and 256 or 0
 
 	for i = 1, total_slots_count do
@@ -697,7 +708,8 @@ Slot.release_check = function (slot, unit_extension_data)
 		local user_unit_position = POSITION_LOOKUP[user_unit]
 		local slot_position = slot.absolute_position:unbox()
 		local distance_to_slot_position = Vector3_distance_sq(user_unit_position, slot_position)
-		local slot_released = SlotSystemSettings.slot_release_distance_sq < distance_to_slot_position
+		local slot_released = distance_to_slot_position > SlotSystemSettings.slot_release_distance_sq
+
 		slot.released = slot_released
 	else
 		slot.released = false
@@ -743,7 +755,7 @@ local function _update_anchor_slot_position(slot, unit_extension_data, should_of
 	local slot_type = slot.type
 	local slot_distance = SlotTypeSettings[slot_type].distance
 	local wanted_position = target_position + direction_vector * slot_distance
-	local position_on_navmesh, original_position = nil
+	local position_on_navmesh, original_position
 
 	if target_outside_navmesh then
 		position_on_navmesh, original_position = _get_slot_position_on_navmesh_from_outside_target(target_position, direction_vector, nil, slot_distance, nav_world, traverse_logic, above, below)
@@ -783,7 +795,7 @@ end
 local function _update_slot_position(target_unit, slot, slot_position, unit_extension_data, should_offset_slot, nav_world, traverse_logic, above, below, target_outside_navmesh)
 	local target_unit_extension = unit_extension_data[target_unit]
 	local target_position = target_unit_extension.position:unbox()
-	local position_on_navmesh, original_position = nil
+	local position_on_navmesh, original_position
 	local slot_type = slot.type
 	local slot_distance = SlotTypeSettings[slot_type].distance
 
@@ -888,7 +900,7 @@ Slot.update_target_slots_status = function (target_unit, target_units, unit_exte
 		local disabled_slots_count = slot_data.disabled_slots_count
 		local occupied_slots = target_unit_extension.num_occupied_slots
 		local enabled_slots_count = total_slots_count - disabled_slots_count
-		local has_all_slots_occupied = occupied_slots >= enabled_slots_count
+		local has_all_slots_occupied = enabled_slots_count <= occupied_slots
 
 		if has_all_slots_occupied and not target_unit_extension.full_slots_at_t[slot_type] then
 			target_unit_extension.full_slots_at_t[slot_type] = t
@@ -933,6 +945,7 @@ local function _update_target_slots_positions_on_ladder(target_unit, target_unit
 		local bottom_anchor_index = top_half + math.ceil((total_slots_count - top_half) / 2)
 		local bottom_anchor_slot = target_slots[bottom_anchor_index]
 		local bottom_pos_on_navmesh = _get_slot_position_on_navmesh_from_outside_target(bottom, inverse_ladder_dir, nil, slot_offset_dist, nav_world, traverse_logic, 0.5, 0.5)
+
 		last_pos = bottom_pos_on_navmesh or bottom
 
 		bottom_anchor_slot.original_absolute_position:store(last_pos)
@@ -962,14 +975,12 @@ Slot.update_target_slots_positions = function (target_unit, target_units, unit_e
 		return
 	end
 
-	local above, below = nil
+	local above, below
 
 	if target_outside_navmesh then
-		below = SlotSystemSettings.slot_z_max_down
-		above = SlotSystemSettings.slot_z_max_up
+		above, below = SlotSystemSettings.slot_z_max_up, SlotSystemSettings.slot_z_max_down
 	else
-		below = SlotSystemSettings.z_max_difference_below
-		above = SlotSystemSettings.z_max_difference_above
+		above, below = SlotSystemSettings.z_max_difference_above, SlotSystemSettings.z_max_difference_below
 	end
 
 	local target_unit_extension = unit_extension_data[target_unit]
@@ -991,6 +1002,7 @@ Slot.update_target_slots_positions = function (target_unit, target_units, unit_e
 			local slot = target_slots[j]
 			local slot_left = target_slots[j - 1]
 			local position = slot_left.position_right:unbox()
+
 			is_on_navmesh = _update_slot_position(target_unit, slot, position, unit_extension_data, should_offset_slot, nav_world, traverse_logic, above, below, target_outside_navmesh)
 
 			_update_slot_status(slot, is_on_navmesh, target_units, unit_extension_data)
@@ -1001,6 +1013,7 @@ Slot.update_target_slots_positions = function (target_unit, target_units, unit_e
 			local slot = target_slots[j]
 			local slot_right = target_slots[j + 1]
 			local position = slot_right.position_left:unbox()
+
 			is_on_navmesh = _update_slot_position(target_unit, slot, position, unit_extension_data, should_offset_slot, nav_world, traverse_logic, above, below, target_outside_navmesh)
 
 			_update_slot_status(slot, is_on_navmesh, target_units, unit_extension_data)
@@ -1020,7 +1033,7 @@ Slot.find_best_slot = function (target_unit, target_units, user_unit, unit_exten
 	local slot_type = user_unit_extension.use_slot_type
 	local slot_data = target_unit_extension.all_slots[slot_type]
 	local target_slots = slot_data.slots
-	local best_slot = nil
+	local best_slot
 	local best_score = math.huge
 	local previous_slot = user_unit_extension.slot
 	local disabled_slots_count = slot_data.disabled_slots_count
@@ -1080,6 +1093,7 @@ Slot.find_best_slot = function (target_unit, target_units, user_unit, unit_exten
 	if best_slot then
 		repeat
 			user_unit_extension.temporary_wait_position = false
+
 			local current_slot = user_unit_extension.slot
 
 			if current_slot and current_slot == best_slot then
@@ -1096,6 +1110,7 @@ Slot.find_best_slot = function (target_unit, target_units, user_unit, unit_exten
 
 			if previous_slot_owner then
 				local previous_slot_owner_extension = unit_extension_data[previous_slot_owner]
+
 				previous_slot_owner_extension.slot = nil
 			end
 
@@ -1137,7 +1152,7 @@ Slot.find_best_slot_to_wait_on = function (target_unit, user_unit, unit_extensio
 
 	local user_unit_position = POSITION_LOOKUP[user_unit]
 	local best_distance = math.huge
-	local best_slot = nil
+	local best_slot
 	local all_slots = target_unit_extension.all_slots
 	local slot_queue_penalty_multiplier = SlotSystemSettings.slot_queue_penalty_multiplier
 
@@ -1166,7 +1181,7 @@ Slot.find_best_slot_to_wait_on = function (target_unit, user_unit, unit_extensio
 				local slot_queue_position = slot.queue_position:unbox()
 				local slot_queue_distance = Vector3_distance_sq(slot_queue_position, user_unit_position) + queue_n * queue_n * slot_queue_penalty_multiplier + slot_is_behind_penalty
 
-				if best_distance > slot_queue_distance then
+				if slot_queue_distance < best_distance then
 					best_distance = slot_queue_distance
 					best_slot = slot
 				end
@@ -1177,6 +1192,7 @@ Slot.find_best_slot_to_wait_on = function (target_unit, user_unit, unit_extensio
 	if best_slot then
 		local queue = best_slot.queue
 		local queue_n = #queue
+
 		queue[queue_n + 1] = user_unit
 		user_unit_extension.wait_slot = best_slot
 	else
@@ -1220,7 +1236,7 @@ Slot.update_slot_sound = function (target_units)
 		local slot_extension = ScriptUnit.extension(target_unit, "slot_system")
 		local slot_occupancy_percent = slot_extension.slot_occupancy_percent
 
-		if DialogueSettings.surrounded_vo_slot_percent < slot_occupancy_percent then
+		if slot_occupancy_percent > DialogueSettings.surrounded_vo_slot_percent then
 			local trigger_id = "surrounded"
 
 			Vo.generic_mission_vo_event(target_unit, trigger_id)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/taskbar_flash.lua
+
 local TaskbarFlash = {}
 local DEFAULT_NUM_FLASHES = 3
 
@@ -15,6 +17,7 @@ TaskbarFlash.flash_window = function (override_num_flashes)
 
 	if save_manager then
 		local account_data = save_manager:account_data()
+
 		flash_taskbar = account_data and account_data.interface_settings.flash_taskbar_enabled
 	end
 

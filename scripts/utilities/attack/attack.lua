@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/attack.lua
+
 local Armor = require("scripts/utilities/attack/armor")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local AttackPositioning = require("scripts/utilities/attack/attack_positioning")
@@ -32,7 +34,7 @@ local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
 local damage_types = DamageSettings.damage_types
 local toughness_replenish_types = ToughnessSettings.replenish_types
-local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, _trigger_flank_interfacing, _trigger_training_grounds_events, ARGS, NUM_ARGS = nil
+local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, _trigger_flank_interfacing, _trigger_training_grounds_events, ARGS, NUM_ARGS
 local Attack = {}
 local attack_args_temp = {}
 
@@ -43,6 +45,7 @@ Attack.execute = function (attacked_unit, damage_profile, ...)
 
 	for i = 1, num_args, 2 do
 		local arg, val = select(i, ...)
+
 		attack_args_temp[ARGS[arg]] = val
 	end
 
@@ -60,8 +63,7 @@ Attack.execute = function (attacked_unit, damage_profile, ...)
 			end
 		end
 
-		local min = setting.min
-		local max = setting.max
+		local min, max = setting.min, setting.max
 
 		if min and max then
 			val = math.clamp(val, min, max)
@@ -78,89 +80,91 @@ Attack.execute = function (attacked_unit, damage_profile, ...)
 end
 
 local damage_types_no_proc = {
-	grimoire = true
+	grimoire = true,
 }
 local min_power_level = PowerLevelSettings.min_power_level
 local max_power_level = PowerLevelSettings.max_power_level
+
 ARGS = {
 	{
 		default = 0,
-		name = "target_index"
+		name = "target_index",
 	},
 	{
 		default = 0,
-		name = "target_number"
+		name = "target_number",
 	},
 	{
 		name = "power_level",
 		default = min_power_level,
 		min = min_power_level,
-		max = max_power_level
+		max = max_power_level,
 	},
 	{
-		name = "charge_level"
+		name = "charge_level",
 	},
 	{
 		default = false,
-		name = "is_critical_strike"
+		name = "is_critical_strike",
 	},
 	{
-		name = "dropoff_scalar"
+		name = "dropoff_scalar",
 	},
 	{
 		default = "Vector3",
-		name = "attack_direction"
+		name = "attack_direction",
 	},
 	{
 		default = false,
-		name = "instakill"
+		name = "instakill",
 	},
 	{
-		name = "hit_zone_name"
+		name = "hit_zone_name",
 	},
 	{
-		name = "hit_world_position"
+		name = "hit_world_position",
 	},
 	{
-		name = "hit_actor"
+		name = "hit_actor",
 	},
 	{
-		name = "attacking_unit"
+		name = "attacking_unit",
 	},
 	{
-		name = "attacking_unit_owner_unit"
+		name = "attacking_unit_owner_unit",
 	},
 	{
 		default = false,
-		name = "apply_owner_buffs"
+		name = "apply_owner_buffs",
 	},
 	{
-		name = "attack_type"
+		name = "attack_type",
 	},
 	{
-		name = "herding_template"
+		name = "herding_template",
 	},
 	{
-		name = "damage_type"
+		name = "damage_type",
 	},
 	{
-		name = "auto_completed_action"
+		name = "auto_completed_action",
 	},
 	{
-		name = "item"
+		name = "item",
 	},
 	{
-		name = "wounds_shape"
+		name = "wounds_shape",
 	},
 	{
-		name = "triggered_proc_events"
-	}
+		name = "triggered_proc_events",
+	},
 }
 NUM_ARGS = #ARGS
 
 for i = 1, NUM_ARGS do
 	local argument = ARGS[i]
 	local arg_name = argument.name
+
 	ARGS[arg_name] = i
 end
 
@@ -168,7 +172,9 @@ local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 function _execute(attacked_unit, damage_profile, target_index, target_number, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attacking_unit_owner_unit, apply_owner_buffs, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape, triggered_proc_events_or_nil)
 	local was_alive_at_attack_start = HEALTH_ALIVE[attacked_unit]
+
 	attacking_unit = ALIVE[attacking_unit] and attacking_unit
+
 	local target_settings = DamageProfile.target_settings(damage_profile, target_index)
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, attacking_unit, target_index)
 	local unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
@@ -191,9 +197,11 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	local is_flanking, effective_flanking = AttackPositioning.is_flanking(attacked_unit, attacking_unit, attack_type, attack_direction)
-	local attacked_action = nil
+	local attacked_action
 	local behaviour_extension = ScriptUnit.has_extension(attacked_unit, "behavior_system")
+
 	attacked_action = behaviour_extension and behaviour_extension:running_action()
+
 	local hit_weakspot = false
 	local hit_shield = false
 
@@ -206,12 +214,12 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	local is_server = Managers.state.game_session:is_server()
-	local calculated_damage, damage_efficiency = nil
+	local calculated_damage, damage_efficiency
 
 	if instakill then
 		local target_health_extension = ScriptUnit.extension(attacked_unit, "health_system")
-		damage_efficiency = damage_efficiencies.full
-		calculated_damage = target_health_extension:max_health()
+
+		calculated_damage, damage_efficiency = target_health_extension:max_health(), damage_efficiencies.full
 	else
 		local target_blackboard = BLACKBOARDS[attacked_unit]
 		local target_stagger_count = 0
@@ -220,10 +228,13 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 
 		if not is_player_character and target_blackboard then
 			local stagger_component = target_blackboard.stagger
+
 			target_stagger_count = stagger_component.count
 			num_triggered_staggers = stagger_component.num_triggered_staggers
+
 			local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
 			local current_stagger_type = stagger_component.type
+
 			current_stagger_impact = stagger_impact_comparison[current_stagger_type]
 		end
 
@@ -249,26 +260,28 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 				power_level_damage_multiplier = target_breed_or_nil.explosion_power_multiplier
 			end
 
-			local stagger_impact_bonus = nil
+			local stagger_impact_bonus
+
 			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, effective_backstab, effective_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action, current_stagger_impact, stagger_impact_bonus)
 		end
 	end
 
-	local damage_dealt, attack_result, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt, stagger_result, stagger_type = nil
-	local target_is_assisted = false
-	local target_is_hogtied = false
+	local damage_dealt, attack_result, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt, stagger_result, stagger_type
+	local target_is_assisted, target_is_hogtied = false, false
 
 	if is_player_character then
 		local assisted_state_input_component = unit_data_extension:read_component("assisted_state_input")
 		local character_state_component = unit_data_extension:read_component("character_state")
+
 		target_is_assisted = PlayerUnitStatus.is_assisted(assisted_state_input_component)
 		target_is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
 	end
 
-	local target_weapon_template = nil
+	local target_weapon_template
 
 	if is_player_character then
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 		target_weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 	end
 
@@ -343,9 +356,9 @@ function _has_armor_penetrating_buff(attacker_buff_extension, attack_type, is_we
 end
 
 function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template_or_nil, is_critical_strike, hit_world_position_or_nil, damage_type, target_weapon_template, unit_data_extension, wounds_shape, attacker_buff_extension)
-	local damage_dealt, actual_damage_dealt, result, damage_absorbed, damage, permanent_damage, one_hit_kill = nil
+	local damage_dealt, actual_damage_dealt, result, damage_absorbed, damage, permanent_damage, one_hit_kill
 	local past_blocking = true
-	local damage_through_block = nil
+	local damage_through_block
 
 	if not instakill and Block.is_blocking(attacked_unit, attacking_unit, attack_type, target_weapon_template, is_server) then
 		local side_system = Managers.state.extension:system("side_system")
@@ -375,6 +388,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 
 		if is_server and unit_data_extension and damage_allowed then
 			local block_component = unit_data_extension:write_component("block")
+
 			block_component.has_blocked = true
 		end
 	end
@@ -394,7 +408,8 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 			result = attack_results.dodged
 		else
 			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, hit_zone_name)
-			local tougness_damage = nil
+			local tougness_damage
+
 			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs)
 			damage_dealt = damage + permanent_damage
 			one_hit_kill = result == attack_results.died and max_health <= damage_dealt and current_health_damage <= 0
@@ -445,6 +460,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 
 	if attacker_is_player then
 		local alternate_fire_component = attacker_unit_data_extension:read_component("alternate_fire")
+
 		alternative_fire = alternate_fire_component.is_active
 	end
 
@@ -714,8 +730,8 @@ function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_
 	local attack_weapon_name = attack_weapon and _format_weapon_name(attack_weapon.name)
 	local attacked_player = attacked_unit and Managers.state.player_unit_spawn:owner(attacked_unit)
 	local data = {
-		reason = "damage",
 		is_boss = false,
+		reason = "damage",
 		attack_type = attack_type,
 		weapon = attack_weapon_name,
 		damage_profile = damage_profile.name,
@@ -723,7 +739,7 @@ function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_
 		damage = damage,
 		permanent_damage = permanent_damage,
 		actual_damage = actual_damage_dealt or 0,
-		damage_absorbed = damage_absorbed
+		damage_absorbed = damage_absorbed,
 	}
 
 	if attacking_player then
@@ -818,7 +834,8 @@ function _trigger_backstab_interfacing(attacking_unit, attack_type)
 		table.clear(_backstab_gear_wwise_event_options)
 
 		_backstab_gear_wwise_event_options.attack_type = attack_type
-		local optional_position = nil
+
+		local optional_position
 
 		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("backstab_interfacing", _backstab_gear_wwise_event_options, optional_position, except_sender)
 	end
@@ -835,7 +852,8 @@ function _trigger_flank_interfacing(attacking_unit, attack_type)
 		table.clear(_flank_gear_wwise_event_options)
 
 		_flank_gear_wwise_event_options.attack_type = attack_type
-		local optional_position = nil
+
+		local optional_position
 
 		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("flank_interfacing", _flank_gear_wwise_event_options, optional_position, except_sender)
 	end
@@ -863,8 +881,9 @@ function _trigger_elite_special_kill_interfacing(attacking_unit, attacker_breed_
 		table.clear(_elite_special_killed_gear_wwise_event_options)
 
 		_elite_special_killed_gear_wwise_event_options.enemy_type = enemy_type
+
 		local except_sender = false
-		local optional_position = nil
+		local optional_position
 
 		if is_captain or is_monster then
 			local players = Managers.player:players()

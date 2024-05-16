@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/local_states/local_wait_for_mission_briefing_done_state.lua
+
 local LocalWaitForMissionBriefingDoneState = class("LocalWaitForMissionBriefingDoneState")
 
 LocalWaitForMissionBriefingDoneState.init = function (self, state_machine, shared_state)

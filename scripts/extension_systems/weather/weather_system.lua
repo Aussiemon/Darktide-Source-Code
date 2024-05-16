@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weather/weather_system.lua
+
 require("scripts/extension_systems/weather/weather_extension")
 
 local WeatherSystem = class("WeatherSystem", "ExtensionSystemBase")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/player_info.lua
+
 local FriendInterface = require("scripts/managers/data_service/services/social/friend_interface")
 local PresenceInterface = require("scripts/managers/presence/presence_entry")
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
@@ -74,7 +76,9 @@ PlayerInfo.user_display_name = function (self, use_stale)
 
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
+
 	name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
+
 	local platform_icon = self:platform_icon()
 
 	if platform_icon then
@@ -127,7 +131,7 @@ end
 PlayerInfo.is_friend = function (self)
 	local platform_social = self._platform_social
 
-	return not self._is_blocked and self._friend_status ~= FriendStatus.friend and platform_social and platform_social:is_friend() or false
+	return not self._is_blocked and (self._friend_status == FriendStatus.friend or platform_social and platform_social:is_friend()) or false
 end
 
 PlayerInfo.friend_status = function (self)
@@ -369,7 +373,8 @@ PlayerInfo._update_presence = function (self)
 	if self._account_id then
 		self._presence = Managers.presence:get_presence(self._account_id)
 	elseif platform_social and (platform_social:online_status() == OnlineStatus.platform_online or platform_social:platform() == Platforms.xbox) then
-		local promise = nil
+		local promise
+
 		self._presence, promise = Managers.presence:get_presence_by_platform(self._platform_social:platform(), self._platform_social:id())
 
 		promise:next(function ()
@@ -380,7 +385,7 @@ PlayerInfo._update_presence = function (self)
 				self._account_id = presence:account_id()
 				self._account_name = presence:account_name()
 
-				self:_presence_account_id_change_callback()
+				self._presence_account_id_change_callback(self)
 			end
 		end)
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/boss/boss_templates/chaos_beast_of_nurgle_boss_template.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
@@ -18,15 +20,10 @@ local WEAKSPOT_COLOR = {
 	0.104,
 	0.036,
 	0,
-	0.2
+	0.2,
 }
-local _num_nearby_enemies = nil
-local FORCE = 12
-local Z_FORCE = 4
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5
-local MAX_STEPS = 20
-local MAX_TIME = 1.75
+local _num_nearby_enemies
+local FORCE, Z_FORCE, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME = 12, 4, 1.5, 1.5, 20, 1.75
 local THROW_TEST_DISTANCE = 8
 local template = {
 	name = "chaos_beast_of_nurgle",
@@ -37,9 +34,12 @@ local template = {
 
 		local unit = template_data.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.breed = unit_data_extension:breed()
+
 		local blackboard = BLACKBOARDS[unit]
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 		template_data.behavior_component = behavior_component
 		template_data.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 		template_data.next_paint_update_t = 0
@@ -55,7 +55,7 @@ local template = {
 
 		local behavior_component = template_data.behavior_component
 
-		if template_data.next_paint_update_t <= t then
+		if t >= template_data.next_paint_update_t then
 			local unit = template_data.unit
 			local side_system = Managers.state.extension:system("side_system")
 			local side = side_system.side_by_unit[unit]
@@ -109,7 +109,9 @@ local template = {
 							local catapult_force = FORCE
 							local catapult_z_force = Z_FORCE
 							local velocity = new_direction * catapult_force
+
 							velocity.z = catapult_z_force
+
 							local catapulted_state_input = consumed_unit_data_extension:write_component("catapulted_state_input")
 
 							Catapulted.apply(catapulted_state_input, velocity)
@@ -156,6 +158,7 @@ local template = {
 
 				local consumed_unit_data_extension = ScriptUnit.extension(consumed_unit, "unit_data_system")
 				local disabled_state_input = consumed_unit_data_extension:write_component("disabled_state_input")
+
 				disabled_state_input.trigger_animation = "none"
 				disabled_state_input.disabling_unit = nil
 				behavior_component.consumed_unit = nil
@@ -174,7 +177,7 @@ local template = {
 
 			Unit.set_scalar_for_material(body_slot_unit, weakspot_material_name, material_variable_name, 0)
 		end
-	end
+	end,
 }
 local BROADPHASE_RESULTS = {}
 
@@ -185,9 +188,8 @@ function _num_nearby_enemies(unit)
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
 	local target_side_names = side:relation_side_names(relation)
-	local from = POSITION_LOOKUP[unit]
-	local radius = TARGET_CHANGED_MAX_NEARBY_ENEMIES_RADIUS
-	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names)
+	local from, radius = POSITION_LOOKUP[unit], TARGET_CHANGED_MAX_NEARBY_ENEMIES_RADIUS
+	local num_results = broadphase.query(broadphase, from, radius, BROADPHASE_RESULTS, target_side_names)
 
 	return num_results
 end

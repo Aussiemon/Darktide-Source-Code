@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/cultist/cultist_shocktrooper_actions.lua
+
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -10,16 +12,16 @@ local shooting_difficulty_settings = MinionDifficultySettings.shooting.renegade_
 local action_data = {
 	name = "cultist_shocktrooper",
 	idle = {
+		anim_events = "idle",
 		rotate_towards_target = true,
-		anim_events = "idle"
 	},
 	patrol = {
 		anim_events = {
-			"move_fwd_1"
+			"move_fwd_1",
 		},
 		speeds = {
-			move_fwd_1 = 0.89
-		}
+			move_fwd_1 = 0.89,
+		},
 	},
 	death = {
 		instant_ragdoll_chance = 0.5,
@@ -30,7 +32,7 @@ local action_data = {
 				"death_shot_head_left",
 				"death_shot_head_right",
 				"death_shot_head_bwd",
-				"death_decapitate_3"
+				"death_decapitate_3",
 			},
 			[hit_zone_names.torso] = {
 				"death_stab_chest_front",
@@ -40,562 +42,562 @@ local action_data = {
 				"death_strike_chest_front",
 				"death_strike_chest_back",
 				"death_strike_chest_left",
-				"death_strike_chest_right"
+				"death_strike_chest_right",
 			},
 			[hit_zone_names.upper_left_arm] = {
 				"death_arm_left",
 				"death_arm_left_2",
-				"death_arm_left_3"
+				"death_arm_left_3",
 			},
 			[hit_zone_names.lower_left_arm] = {
 				"death_arm_left",
 				"death_arm_left_2",
-				"death_arm_left_3"
+				"death_arm_left_3",
 			},
 			[hit_zone_names.upper_right_arm] = {
 				"death_arm_right",
 				"death_arm_right_2",
-				"death_arm_right_3"
+				"death_arm_right_3",
 			},
 			[hit_zone_names.lower_right_arm] = {
 				"death_arm_right",
 				"death_arm_right_2",
-				"death_arm_right_3"
+				"death_arm_right_3",
 			},
 			[hit_zone_names.upper_left_leg] = {
-				"death_leg_left"
+				"death_leg_left",
 			},
 			[hit_zone_names.lower_left_leg] = {
-				"death_leg_left"
+				"death_leg_left",
 			},
 			[hit_zone_names.upper_right_leg] = {
-				"death_leg_right"
+				"death_leg_right",
 			},
 			[hit_zone_names.lower_right_leg] = {
-				"death_leg_right"
-			}
+				"death_leg_right",
+			},
 		},
 		ragdoll_timings = {
-			death_shot_head_right = 4.566666666666666,
-			death_slash_left = 3.2666666666666666,
-			death_strike_chest_back = 3.1666666666666665,
-			death_strike_chest_right = 1.2666666666666666,
-			death_decapitate_3 = 1.4,
-			death_strike_chest_left = 3.2,
-			death_leg_right = 4.5,
-			death_slash_right = 2.6666666666666665,
 			death_arm_left = 3.033333333333333,
-			death_arm_left_3 = 3.9,
 			death_arm_left_2 = 4,
-			death_strike_chest_front = 1.6666666666666667,
-			death_arm_right_3 = 2.566666666666667,
-			death_stab_chest_front = 3.6333333333333333,
-			death_leg_left = 3.066666666666667,
-			death_stab_chest_back = 2.5,
+			death_arm_left_3 = 3.9,
+			death_arm_right = 5.1,
 			death_arm_right_2 = 4.233333333333333,
+			death_arm_right_3 = 2.566666666666667,
+			death_decapitate_3 = 1.4,
+			death_leg_left = 3.066666666666667,
+			death_leg_right = 4.5,
 			death_shot_head_bwd = 3.3333333333333335,
-			death_shot_head_left = 2.1,
 			death_shot_head_front = 1.4666666666666666,
 			death_shot_head_fwd = 2.3666666666666667,
-			death_arm_right = 5.1
-		}
+			death_shot_head_left = 2.1,
+			death_shot_head_right = 4.566666666666666,
+			death_slash_left = 3.2666666666666666,
+			death_slash_right = 2.6666666666666665,
+			death_stab_chest_back = 2.5,
+			death_stab_chest_front = 3.6333333333333333,
+			death_strike_chest_back = 3.1666666666666665,
+			death_strike_chest_front = 1.6666666666666667,
+			death_strike_chest_left = 3.2,
+			death_strike_chest_right = 1.2666666666666666,
+		},
 	},
 	melee_combat_idle = {
-		utility_weight = 1,
 		rotate_towards_target = true,
+		utility_weight = 1,
 		vo_event = "melee_combat_idle",
 		considerations = UtilityConsiderations.melee_combat_idle,
 		anim_events = {
 			"idle",
 			"idle_2",
-			"idle_3"
-		}
+			"idle_3",
+		},
 	},
 	close_combat_idle = {
-		utility_weight = 2,
-		rotate_towards_target = true,
-		vo_event = "melee_idle",
 		anim_events = "close_ranged_idle",
-		considerations = UtilityConsiderations.close_combat_idle
+		rotate_towards_target = true,
+		utility_weight = 2,
+		vo_event = "melee_idle",
+		considerations = UtilityConsiderations.close_combat_idle,
 	},
 	alerted = {
-		hesitate_chance = 0,
-		override_aggro_distance = 8,
 		alert_spread_max_distance_to_target = 30,
-		vo_event = "alerted_idle",
-		instant_aggro_chance = 0,
 		alert_spread_radius = 8,
+		hesitate_chance = 0,
+		instant_aggro_chance = 0,
+		override_aggro_distance = 8,
+		vo_event = "alerted_idle",
 		alerted_anim_events = {
 			"alerted",
-			"alerted_2"
+			"alerted_2",
 		},
 		directional_alerted_anim_events = {
 			fwd = {
 				"alerted_fwd",
-				"alerted_fwd_2"
+				"alerted_fwd_2",
 			},
 			bwd = {
-				"alerted_bwd"
+				"alerted_bwd",
 			},
 			left = {
-				"alerted_left"
+				"alerted_left",
 			},
 			right = {
-				"alerted_right"
-			}
+				"alerted_right",
+			},
 		},
 		start_move_anim_data = {
 			alerted_bwd = {
 				sign = -1,
-				rad = math.pi
+				rad = math.pi,
 			},
 			alerted_fwd = {},
 			alerted_fwd_2 = {},
 			alerted_left = {
 				sign = 1,
-				rad = math.pi / 2
+				rad = math.pi / 2,
 			},
 			alerted_right = {
 				sign = -1,
-				rad = math.pi / 2
-			}
+				rad = math.pi / 2,
+			},
 		},
 		start_move_rotation_timings = {
-			alerted_right_3 = 0,
-			alerted_bwd_2 = 0,
-			alerted_right_2 = 0,
-			alerted_right = 0,
-			alerted_left = 0,
 			alerted_bwd = 0,
-			alerted_left_2 = 0,
+			alerted_bwd_2 = 0,
 			alerted_bwd_3 = 0,
-			alerted_left_3 = 0
+			alerted_left = 0,
+			alerted_left_2 = 0,
+			alerted_left_3 = 0,
+			alerted_right = 0,
+			alerted_right_2 = 0,
+			alerted_right_3 = 0,
 		},
 		start_rotation_durations = {
 			alerted_bwd = 1.0333333333333334,
+			alerted_left = 1,
 			alerted_right = 0.9666666666666667,
-			alerted_left = 1
 		},
 		alerted_durations = {
 			alerted_bwd = 1.2333333333333334,
+			alerted_fwd = 1.6666666666666667,
 			alerted_fwd_2 = 2.466666666666667,
 			alerted_left = 1.2666666666666666,
 			alerted_right = 2.566666666666667,
-			alerted_fwd = 1.6666666666666667,
 			alerted = {
 				2,
-				6.666666666666667
+				6.666666666666667,
 			},
 			alerted_2 = {
 				2.6666666666666665,
-				6.666666666666667
-			}
-		}
+				6.666666666666667,
+			},
+		},
 	},
 	jump_across = {
-		stagger_immune = true,
 		rotation_duration = 0.1,
+		stagger_immune = true,
 		anim_timings = {
+			jump_over_gap_4m = 1.2333333333333334,
 			jump_over_gap_4m_2 = 1.4,
-			jump_over_gap_4m = 1.2333333333333334
 		},
 		ending_move_states = {
+			jump_over_gap_4m = "jumping",
 			jump_over_gap_4m_2 = "jumping",
-			jump_over_gap_4m = "jumping"
-		}
+		},
 	},
 	climb = {
-		stagger_immune = true,
 		rotation_duration = 0.1,
+		stagger_immune = true,
 		anim_timings = {
+			jump_down_land = 1.3333333333333333,
+			jump_up_1m = 1.2424242424242424,
+			jump_up_1m_2 = 1.0303030303030303,
 			jump_up_3m = 2.923076923076923,
 			jump_up_3m_2 = 3.051282051282051,
-			jump_down_land = 1.3333333333333333,
-			jump_up_1m_2 = 1.0303030303030303,
+			jump_up_5m = 4.166666666666667,
 			jump_up_fence_1m = 0.6,
 			jump_up_fence_3m = 1.4,
-			jump_up_5m = 4.166666666666667,
 			jump_up_fence_5m = 1.3,
-			jump_up_1m = 1.2424242424242424
 		},
 		land_timings = {
-			jump_down_1m_2 = 0.16666666666666666,
-			jump_down_fence_3m = 0.3333333333333333,
-			jump_down_3m = 0.3333333333333333,
-			jump_down_fence_5m = 0.3333333333333333,
 			jump_down_1m = 0.2,
+			jump_down_1m_2 = 0.16666666666666666,
+			jump_down_3m = 0.3333333333333333,
 			jump_down_3m_2 = 0.5,
-			jump_down_fence_1m = 0.26666666666666666
+			jump_down_fence_1m = 0.26666666666666666,
+			jump_down_fence_3m = 0.3333333333333333,
+			jump_down_fence_5m = 0.3333333333333333,
 		},
 		ending_move_states = {
+			jump_down_land = "jumping",
+			jump_up_1m = "jumping",
+			jump_up_1m_2 = "jumping",
 			jump_up_3m = "jumping",
 			jump_up_3m_2 = "jumping",
 			jump_up_5m = "jumping",
-			jump_up_1m_2 = "jumping",
-			jump_down_land = "jumping",
-			jump_up_1m = "jumping"
 		},
 		blend_timings = {
-			jump_up_3m = 0.1,
-			jump_up_3m_2 = 0.1,
-			jump_down_land = 0,
-			jump_up_1m_2 = 0.1,
+			jump_down_1m = 0.1,
+			jump_down_1m_2 = 0.1,
 			jump_down_3m = 0.1,
 			jump_down_3m_2 = 0.1,
-			jump_down_1m_2 = 0.1,
+			jump_down_land = 0,
+			jump_up_1m = 0.1,
+			jump_up_1m_2 = 0.1,
+			jump_up_3m = 0.1,
+			jump_up_3m_2 = 0.1,
+			jump_up_5m = 0.1,
 			jump_up_fence_1m = 0.2,
 			jump_up_fence_3m = 0.2,
-			jump_up_5m = 0.1,
 			jump_up_fence_5m = 0.2,
-			jump_down_1m = 0.1,
-			jump_up_1m = 0.1
-		}
+		},
 	},
 	move_to_combat_vector = {
+		attack_intensity_type = "elite_shotgun",
+		controlled_stagger = true,
+		controlled_stagger_min_speed = 2,
+		degree_per_direction = 10,
+		idle_anim_events = "idle",
 		max_distance_to_target = 10,
 		min_distance_to_target = 6,
-		utility_weight = 1,
-		idle_anim_events = "idle",
-		degree_per_direction = 10,
-		controlled_stagger = true,
 		move_anim_events = "move_fwd",
-		controlled_stagger_min_speed = 2,
-		attack_intensity_type = "elite_shotgun",
-		range = "close",
-		use_animation_running_stagger_speed = true,
+		move_to_cooldown = 0.25,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
+		range = "close",
 		speed = 4.2,
-		move_to_cooldown = 0.25,
+		use_animation_running_stagger_speed = true,
+		utility_weight = 1,
 		considerations = UtilityConsiderations.move_to_combat_vector,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
 			left = "move_start_left",
-			right = "move_start_right"
+			right = "move_start_right",
 		},
 		start_move_anim_data = {
 			move_start_fwd = {},
 			move_start_bwd = {
 				sign = -1,
-				rad = math.pi
+				rad = math.pi,
 			},
 			move_start_left = {
 				sign = 1,
-				rad = math.pi / 2
+				rad = math.pi / 2,
 			},
 			move_start_right = {
 				sign = -1,
-				rad = math.pi / 2
-			}
+				rad = math.pi / 2,
+			},
 		},
 		start_move_rotation_timings = {
-			move_start_right = 0,
-			move_start_fwd = 0,
 			move_start_bwd = 0,
-			move_start_left = 0
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
 		},
 		start_rotation_durations = {
-			move_start_right = 0.26666666666666666,
-			move_start_fwd = 0.26666666666666666,
 			move_start_bwd = 0.26666666666666666,
-			move_start_left = 0.26666666666666666
+			move_start_fwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666,
+			move_start_right = 0.26666666666666666,
 		},
 		running_stagger_anim_left = {
 			"run_stagger_right",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_anim_right = {
 			"run_stagger_left",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_duration = {
-			shotgun_run_stagger_01 = 1.5333333333333334,
-			shotgun_run_stagger_04 = 2,
 			run_stagger_left = 1.8333333333333333,
 			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333,
 			shotgun_run_stagger_03 = 1.7333333333333334,
-			shotgun_run_stagger_02 = 1.6333333333333333
+			shotgun_run_stagger_04 = 2,
 		},
 		running_stagger_min_duration = {
-			shotgun_run_stagger_04 = 1.6666666666666667
-		}
+			shotgun_run_stagger_04 = 1.6666666666666667,
+		},
 	},
 	ranged_follow_no_los = {
+		anim_events = "idle",
+		controlled_stagger = true,
+		controlled_stagger_min_speed = 2,
+		degree_per_direction = 10,
 		max_distance_to_target = 18,
 		min_distance_to_target = 10,
-		utility_weight = 1,
-		vo_event = "ranged_idle",
-		degree_per_direction = 10,
-		controlled_stagger = true,
 		move_anim_events = "move_fwd",
-		controlled_stagger_min_speed = 2,
-		anim_events = "idle",
-		use_animation_running_stagger_speed = true,
+		move_to_cooldown = 0.25,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
 		speed = 4.2,
-		move_to_cooldown = 0.25,
+		use_animation_running_stagger_speed = true,
+		utility_weight = 1,
+		vo_event = "ranged_idle",
 		considerations = UtilityConsiderations.ranged_follow_no_los,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
 			left = "move_start_left",
-			right = "move_start_right"
+			right = "move_start_right",
 		},
 		start_move_anim_data = {
 			move_start_fwd = {},
 			move_start_bwd = {
 				sign = -1,
-				rad = math.pi
+				rad = math.pi,
 			},
 			move_start_left = {
 				sign = 1,
-				rad = math.pi / 2
+				rad = math.pi / 2,
 			},
 			move_start_right = {
 				sign = -1,
-				rad = math.pi / 2
-			}
+				rad = math.pi / 2,
+			},
 		},
 		start_move_rotation_timings = {
-			move_start_right = 0,
-			move_start_fwd = 0,
 			move_start_bwd = 0,
-			move_start_left = 0
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
 		},
 		start_rotation_durations = {
-			move_start_right = 0.7333333333333333,
-			move_start_fwd = 0.4666666666666667,
 			move_start_bwd = 1,
-			move_start_left = 0.8
+			move_start_fwd = 0.4666666666666667,
+			move_start_left = 0.8,
+			move_start_right = 0.7333333333333333,
 		},
 		running_stagger_anim_left = {
 			"run_stagger_right",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_anim_right = {
 			"run_stagger_left",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_duration = {
-			shotgun_run_stagger_01 = 1.5333333333333334,
-			shotgun_run_stagger_04 = 2,
 			run_stagger_left = 1.8333333333333333,
 			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333,
 			shotgun_run_stagger_03 = 1.7333333333333334,
-			shotgun_run_stagger_02 = 1.6333333333333333
+			shotgun_run_stagger_04 = 2,
 		},
 		running_stagger_min_duration = {
-			shotgun_run_stagger_04 = 1.6666666666666667
-		}
+			shotgun_run_stagger_04 = 1.6666666666666667,
+		},
 	},
 	assault = {
-		idle_anim_events = "idle",
-		max_distance_to_target = 7,
-		utility_weight = 10,
 		controlled_stagger = true,
 		controlled_stagger_min_speed = 2,
 		degree_per_direction = 10,
+		idle_anim_events = "idle",
 		is_assaulting = true,
-		use_animation_running_stagger_speed = true,
+		max_distance_to_target = 7,
+		min_distance_to_target = 4,
+		move_anim_event = "assault_fwd",
+		move_to_cooldown = 0.25,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 60,
-		move_anim_event = "assault_fwd",
 		speed = 6.2,
-		move_to_cooldown = 0.25,
-		min_distance_to_target = 4,
+		use_animation_running_stagger_speed = true,
+		utility_weight = 10,
 		considerations = UtilityConsiderations.assault_far,
 		running_stagger_anim_left = {
 			"run_stagger_right",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_anim_right = {
 			"run_stagger_left",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_duration = {
-			shotgun_run_stagger_01 = 1.5333333333333334,
-			shotgun_run_stagger_04 = 2,
 			run_stagger_left = 1.8333333333333333,
 			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333,
 			shotgun_run_stagger_03 = 1.7333333333333334,
-			shotgun_run_stagger_02 = 1.6333333333333333
+			shotgun_run_stagger_04 = 2,
 		},
 		running_stagger_min_duration = {
-			shotgun_run_stagger_04 = 1.6666666666666667
-		}
+			shotgun_run_stagger_04 = 1.6666666666666667,
+		},
 	},
 	assault_close = {
+		controlled_stagger = true,
+		controlled_stagger_min_speed = 2,
+		degree_per_direction = 10,
+		idle_anim_events = "idle",
 		max_distance_to_target = 10,
 		min_distance_to_target = 6,
-		utility_weight = 1,
-		idle_anim_events = "idle",
-		degree_per_direction = 10,
-		controlled_stagger = true,
 		move_anim_events = "move_fwd",
-		controlled_stagger_min_speed = 2,
-		use_animation_running_stagger_speed = true,
+		move_to_cooldown = 0.25,
 		move_to_fail_cooldown = 1,
 		randomized_direction_degree_range = 120,
 		speed = 4.2,
-		move_to_cooldown = 0.25,
+		use_animation_running_stagger_speed = true,
+		utility_weight = 1,
 		considerations = UtilityConsiderations.assault_close,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
 			left = "move_start_left",
-			right = "move_start_right"
+			right = "move_start_right",
 		},
 		start_move_anim_data = {
 			move_start_fwd = {},
 			move_start_bwd = {
 				sign = -1,
-				rad = math.pi
+				rad = math.pi,
 			},
 			move_start_left = {
 				sign = 1,
-				rad = math.pi / 2
+				rad = math.pi / 2,
 			},
 			move_start_right = {
 				sign = -1,
-				rad = math.pi / 2
-			}
+				rad = math.pi / 2,
+			},
 		},
 		start_move_rotation_timings = {
-			move_start_right = 0,
-			move_start_fwd = 0,
 			move_start_bwd = 0,
-			move_start_left = 0
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
 		},
 		start_rotation_durations = {
-			move_start_right = 0.26666666666666666,
-			move_start_fwd = 0.26666666666666666,
 			move_start_bwd = 0.26666666666666666,
-			move_start_left = 0.26666666666666666
+			move_start_fwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666,
+			move_start_right = 0.26666666666666666,
 		},
 		running_stagger_anim_left = {
 			"run_stagger_right",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_anim_right = {
 			"run_stagger_left",
 			"shotgun_run_stagger_01",
 			"shotgun_run_stagger_02",
 			"shotgun_run_stagger_03",
-			"shotgun_run_stagger_04"
+			"shotgun_run_stagger_04",
 		},
 		running_stagger_duration = {
-			shotgun_run_stagger_01 = 1.5333333333333334,
-			shotgun_run_stagger_04 = 2,
 			run_stagger_left = 1.8333333333333333,
 			run_stagger_right = 1.7333333333333334,
+			shotgun_run_stagger_01 = 1.5333333333333334,
+			shotgun_run_stagger_02 = 1.6333333333333333,
 			shotgun_run_stagger_03 = 1.7333333333333334,
-			shotgun_run_stagger_02 = 1.6333333333333333
+			shotgun_run_stagger_04 = 2,
 		},
 		running_stagger_min_duration = {
-			shotgun_run_stagger_04 = 1.6666666666666667
-		}
+			shotgun_run_stagger_04 = 1.6666666666666667,
+		},
 	},
 	shoot = {
-		dodge_tell_sfx_delay = 0.13333333333333333,
-		ignore_backstab_sfx = true,
+		attack_intensity_type = "elite_shotgun",
 		can_strafe_shoot = true,
 		degree_per_direction = 10,
-		randomized_direction_degree_range = 180,
-		max_distance_to_target = 11,
-		vo_event = "start_shooting",
-		strafe_end_anim_event = "hip_fire",
-		not_allowed_cooldown = 0.25,
-		move_to_fail_cooldown = 1,
-		attack_intensity_type = "elite_shotgun",
-		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
-		inventory_slot = "slot_ranged_weapon",
-		first_shoot_timing = 1.2,
-		strafe_speed = 2.3,
-		utility_weight = 10,
 		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
-		strafe_shoot_distance = 3,
-		trigger_shoot_sound_event_once = true,
-		strafe_shoot_ranged_position_fallback = true,
-		suppressive_fire = true,
-		move_to_cooldown = 0.25,
-		min_distance_to_target = 5,
+		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
+		dodge_tell_sfx_delay = 0.13333333333333333,
+		first_shoot_timing = 1.2,
 		fx_source_name = "muzzle",
+		ignore_backstab_sfx = true,
+		inventory_slot = "slot_ranged_weapon",
+		max_distance_to_target = 11,
+		min_distance_to_target = 5,
+		move_to_cooldown = 0.25,
+		move_to_fail_cooldown = 1,
+		not_allowed_cooldown = 0.25,
+		randomized_direction_degree_range = 180,
+		strafe_end_anim_event = "hip_fire",
+		strafe_shoot_distance = 3,
+		strafe_shoot_ranged_position_fallback = true,
+		strafe_speed = 2.3,
+		suppressive_fire = true,
+		trigger_shoot_sound_event_once = true,
+		utility_weight = 10,
+		vo_event = "start_shooting",
 		considerations = UtilityConsiderations.renegade_shocktrooper_shoot,
 		aim_anim_events = {
-			"hip_fire"
+			"hip_fire",
 		},
 		aim_duration = {
 			hip_fire = shooting_difficulty_settings.aim_durations,
 			turn_shoot_bwd = shooting_difficulty_settings.aim_durations,
 			turn_shoot_left = shooting_difficulty_settings.aim_durations,
-			turn_shoot_right = shooting_difficulty_settings.aim_durations
+			turn_shoot_right = shooting_difficulty_settings.aim_durations,
 		},
 		shoot_turn_anims = {
 			bwd = "turn_shoot_bwd",
 			left = "turn_shoot_left",
-			right = "turn_shoot_right"
+			right = "turn_shoot_right",
 		},
 		start_move_anim_data = {
 			turn_shoot_bwd = {
 				sign = -1,
-				rad = math.pi
+				rad = math.pi,
 			},
 			turn_shoot_left = {
 				sign = 1,
-				rad = math.pi / 2
+				rad = math.pi / 2,
 			},
 			turn_shoot_right = {
 				sign = -1,
-				rad = math.pi / 2
-			}
+				rad = math.pi / 2,
+			},
 		},
 		start_move_rotation_timings = {
-			turn_shoot_right = 0,
 			turn_shoot_bwd = 0,
-			turn_shoot_left = 0
+			turn_shoot_left = 0,
+			turn_shoot_right = 0,
 		},
 		start_rotation_durations = {
-			turn_shoot_right = 0.6410256410256411,
 			turn_shoot_bwd = 0.5714285714285714,
-			turn_shoot_left = 0.6410256410256411
+			turn_shoot_left = 0.6410256410256411,
+			turn_shoot_right = 0.6410256410256411,
 		},
 		aim_stances = {
-			turn_shoot_right = "standing",
-			turn_shoot_left = "standing",
+			hip_fire = "standing",
+			move_bwd_walk_aim = "standing",
 			move_fwd_walk_aim = "standing",
 			move_left_walk_aim = "standing",
 			move_right_walk_aim = "standing",
 			turn_shoot_bwd = "standing",
-			move_bwd_walk_aim = "standing",
-			hip_fire = "standing"
+			turn_shoot_left = "standing",
+			turn_shoot_right = "standing",
 		},
 		attack_intensities = {
+			elite_ranged = 5,
 			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 5
 		},
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,
@@ -606,53 +608,53 @@ local action_data = {
 			bwd = "move_bwd_walk_aim",
 			fwd = "move_fwd_walk_aim",
 			left = "move_left_walk_aim",
-			right = "move_right_walk_aim"
-		}
+			right = "move_right_walk_aim",
+		},
 	},
 	step_shoot = {
-		inventory_slot = "slot_ranged_weapon",
-		utility_weight = 1,
-		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
-		ignore_backstab_sfx = true,
-		suppressive_fire = true,
-		step_speed = 2.5,
-		vo_event = "start_shooting",
-		trigger_shoot_sound_event_once = true,
-		step_anim_distance = 2,
 		attack_intensity_type = "elite_shotgun",
-		dodge_tell_sfx_delay = 0.13333333333333333,
+		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
+		dodge_tell_sfx_delay = 0.13333333333333333,
 		fx_source_name = "muzzle",
+		ignore_backstab_sfx = true,
+		inventory_slot = "slot_ranged_weapon",
+		step_anim_distance = 2,
+		step_speed = 2.5,
+		suppressive_fire = true,
+		trigger_shoot_sound_event_once = true,
+		utility_weight = 1,
+		vo_event = "start_shooting",
 		considerations = UtilityConsiderations.renegade_shocktrooper_step_shoot,
 		step_anim_events = {
 			fwd = "step_fwd_shoot",
 			left = "step_left_shoot",
-			right = "step_right_shoot"
+			right = "step_right_shoot",
 		},
 		step_anim_durations = {
-			step_left_shoot = 1.6666666666666667,
 			step_fwd_shoot = 1.6666666666666667,
-			step_right_shoot = 1.6666666666666667
+			step_left_shoot = 1.6666666666666667,
+			step_right_shoot = 1.6666666666666667,
 		},
 		shoot_timing = {
-			step_left_shoot = 1.1666666666666667,
 			step_fwd_shoot = 1.1666666666666667,
-			step_right_shoot = 1.1666666666666667
+			step_left_shoot = 1.1666666666666667,
+			step_right_shoot = 1.1666666666666667,
 		},
 		step_move_timing = {
-			step_left_shoot = 0.16666666666666666,
 			step_fwd_shoot = 0.03333333333333333,
-			step_right_shoot = 0.03333333333333333
+			step_left_shoot = 0.16666666666666666,
+			step_right_shoot = 0.03333333333333333,
 		},
 		aim_stances = {
-			step_left_shoot = "standing",
 			step_fwd_shoot = "standing",
-			step_right_shoot = "standing"
+			step_left_shoot = "standing",
+			step_right_shoot = "standing",
 		},
 		attack_intensities = {
+			elite_ranged = 5,
 			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 5
 		},
 		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
@@ -660,400 +662,400 @@ local action_data = {
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		shoot_template = BreedShootTemplates.renegade_shocktrooper_default,
 		stagger_type_reduction = {
-			ranged = 10
-		}
+			ranged = 10,
+		},
 	},
 	run_stop_and_shoot = {
-		move_distance = 3.75,
-		dodge_tell_sfx_delay = 0.13333333333333333,
-		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
-		ignore_backstab_sfx = true,
-		vo_event = "start_shooting",
-		trigger_shoot_sound_event_once = true,
-		suppressive_fire = true,
 		attack_intensity_type = "elite_shotgun",
+		dodge_tell_animation = "offset_shotgun_standing_shoot_pump",
 		dodge_tell_sfx = "wwise/events/weapon/play_minion_shotgun_pump",
-		inventory_slot = "slot_ranged_weapon",
+		dodge_tell_sfx_delay = 0.13333333333333333,
 		fx_source_name = "muzzle",
+		ignore_backstab_sfx = true,
+		inventory_slot = "slot_ranged_weapon",
+		move_distance = 3.75,
+		suppressive_fire = true,
+		trigger_shoot_sound_event_once = true,
+		vo_event = "start_shooting",
 		start_move_anim_events = {
 			bwd = "run_into_shoot_bwd",
 			fwd = "run_into_shoot_fwd",
 			left = "run_into_shoot_left",
-			right = "run_into_shoot_right"
+			right = "run_into_shoot_right",
 		},
 		start_move_anim_data = {
 			run_into_shoot_fwd = {},
 			run_into_shoot_bwd = {
 				sign = -1,
-				rad = math.pi
+				rad = math.pi,
 			},
 			run_into_shoot_left = {
 				sign = 1,
-				rad = math.pi / 2
+				rad = math.pi / 2,
 			},
 			run_into_shoot_right = {
 				sign = -1,
-				rad = math.pi / 2
-			}
+				rad = math.pi / 2,
+			},
 		},
 		start_move_rotation_timings = {
 			run_into_shoot_bwd = 0.6333333333333333,
-			run_into_shoot_left = 0.7666666666666667,
 			run_into_shoot_fwd = 0,
-			run_into_shoot_right = 0.5
+			run_into_shoot_left = 0.7666666666666667,
+			run_into_shoot_right = 0.5,
 		},
 		start_rotation_durations = {
 			run_into_shoot_bwd = 0.4,
-			run_into_shoot_left = 0.3,
 			run_into_shoot_fwd = 0,
-			run_into_shoot_right = 0.3333333333333333
+			run_into_shoot_left = 0.3,
+			run_into_shoot_right = 0.3333333333333333,
 		},
 		blend_timings = {
 			run_into_shoot_bwd = 0.2,
-			run_into_shoot_left = 0.2,
 			run_into_shoot_fwd = 0.2,
-			run_into_shoot_right = 0.2
+			run_into_shoot_left = 0.2,
+			run_into_shoot_right = 0.2,
 		},
 		aim_stances = {
 			run_into_shoot_bwd = "standing",
-			run_into_shoot_left = "standing",
 			run_into_shoot_fwd = "standing",
-			run_into_shoot_right = "standing"
+			run_into_shoot_left = "standing",
+			run_into_shoot_right = "standing",
 		},
 		move_durations = {
 			run_into_shoot_bwd = 1.6666666666666667,
-			run_into_shoot_left = 1.6,
 			run_into_shoot_fwd = 1.2333333333333334,
-			run_into_shoot_right = 1.4666666666666666
+			run_into_shoot_left = 1.6,
+			run_into_shoot_right = 1.4666666666666666,
 		},
 		action_duration = {
 			run_into_shoot_bwd = 2.6666666666666665,
-			run_into_shoot_left = 2.6666666666666665,
 			run_into_shoot_fwd = 2.6666666666666665,
-			run_into_shoot_right = 2.6666666666666665
+			run_into_shoot_left = 2.6666666666666665,
+			run_into_shoot_right = 2.6666666666666665,
 		},
 		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		attack_intensities = {
+			elite_ranged = 5,
 			elite_shotgun = 3,
 			ranged = 2,
-			elite_ranged = 5
 		},
 		shoot_template = BreedShootTemplates.renegade_shocktrooper_default,
 		stagger_type_reduction = {
-			ranged = 10
-		}
+			ranged = 10,
+		},
 	},
 	melee_follow = {
 		enter_walk_distance = 3,
-		leave_walk_distance = 5,
-		utility_weight = 1,
-		run_anim_event = "bayonet_charge_start",
 		force_move_anim_event = "bayonet_charge_start",
+		leave_walk_distance = 5,
+		run_anim_event = "bayonet_charge_start",
+		utility_weight = 1,
 		walk_anim_event = "move_fwd_walk",
 		considerations = UtilityConsiderations.melee_follow,
 		idle_anim_events = {
 			"idle",
 			"idle_2",
-			"idle_3"
+			"idle_3",
 		},
 		start_move_anim_events = {
 			walking = {
 				bwd = "combat_walk_bayonet_bwd",
 				fwd = "combat_walk_bayonet_fwd",
 				left = "combat_walk_bayonet_left",
-				right = "combat_walk_bayonet_right"
-			}
+				right = "combat_walk_bayonet_right",
+			},
 		},
 		start_move_event_anim_speed_durations = {
-			bayonet_charge_start = 1.2666666666666666
-		}
+			bayonet_charge_start = 1.2666666666666666,
+		},
 	},
 	melee_attack = {
-		weapon_reach = 3.5,
 		utility_weight = 1,
+		weapon_reach = 3.5,
 		considerations = UtilityConsiderations.melee_attack,
 		attack_anim_events = {
 			normal = {
 				"attack_04",
 				"attack_05",
 				"attack_06",
-				"attack_07"
+				"attack_07",
 			},
 			up = {
-				"attack_reach_up"
+				"attack_reach_up",
 			},
 			down = {
-				"attack_down_01"
-			}
+				"attack_down_01",
+			},
 		},
 		attack_anim_damage_timings = {
-			attack_05 = 0.8148148148148148,
-			attack_down_01 = 1.3333333333333333,
 			attack_04 = 0.7654320987654321,
+			attack_05 = 0.8148148148148148,
+			attack_06 = 0.7126436781609196,
 			attack_07 = 0.7,
+			attack_down_01 = 1.3333333333333333,
 			attack_reach_up = 1.1794871794871795,
-			attack_06 = 0.7126436781609196
 		},
 		attack_anim_durations = {
-			attack_05 = 1.5402298850574712,
-			attack_down_01 = 3.3333333333333335,
 			attack_04 = 1.3793103448275863,
+			attack_05 = 1.5402298850574712,
+			attack_06 = 1.3793103448275863,
 			attack_07 = 1.8333333333333333,
+			attack_down_01 = 3.3333333333333335,
 			attack_reach_up = 2.6923076923076925,
-			attack_06 = 1.3793103448275863
 		},
 		attack_intensities = {
+			melee = 0.25,
 			ranged = 1,
-			melee = 0.25
 		},
 		stagger_type_reduction = {
+			killshot = 20,
 			ranged = 20,
-			killshot = 20
 		},
 		damage_profile = DamageProfileTemplates.melee_fighter_default,
-		damage_type = damage_types.minion_melee_blunt_elite
+		damage_type = damage_types.minion_melee_blunt_elite,
 	},
 	moving_melee_attack = {
 		move_speed = 4,
+		move_speed_variable_lerp_speed = 4,
+		move_speed_variable_name = "moving_attack_fwd_speed",
+		moving_attack = true,
 		utility_weight = 1,
 		weapon_reach = 3,
-		move_speed_variable_lerp_speed = 4,
-		moving_attack = true,
-		move_speed_variable_name = "moving_attack_fwd_speed",
 		considerations = UtilityConsiderations.renegade_melee_moving_melee_attack,
 		attack_anim_events = {
 			"attack_move_01",
 			"attack_move_02",
 			"attack_move_03",
-			"attack_move_04"
+			"attack_move_04",
 		},
 		attack_anim_damage_timings = {
-			attack_move_03 = 1.1111111111111112,
 			attack_move_01 = 0.9382716049382716,
+			attack_move_02 = 1.1111111111111112,
+			attack_move_03 = 1.1111111111111112,
 			attack_move_04 = 1.0617283950617284,
-			attack_move_02 = 1.1111111111111112
 		},
 		attack_anim_durations = {
-			attack_move_03 = 2.2222222222222223,
 			attack_move_01 = 2.123456790123457,
+			attack_move_02 = 2.049382716049383,
+			attack_move_03 = 2.2222222222222223,
 			attack_move_04 = 1.9259259259259258,
-			attack_move_02 = 2.049382716049383
 		},
 		attack_intensities = {
 			melee = 0.25,
-			running_melee = 1,
 			moving_melee = 0.5,
-			ranged = 1
+			ranged = 1,
+			running_melee = 1,
 		},
 		move_start_timings = {
-			attack_move_03 = 0.12345679012345678,
 			attack_move_01 = 0.12345679012345678,
+			attack_move_02 = 0.12345679012345678,
+			attack_move_03 = 0.12345679012345678,
 			attack_move_04 = 0.12345679012345678,
-			attack_move_02 = 0.12345679012345678
 		},
 		damage_profile = DamageProfileTemplates.melee_roamer_default,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		stagger_type_reduction = {
-			ranged = 20
+			ranged = 20,
 		},
 		animation_move_speed_configs = {
 			attack_move_01 = {
 				{
+					distance = 4.61,
 					value = 4,
-					distance = 4.61
 				},
 				{
+					distance = 3.39,
 					value = 3,
-					distance = 3.39
 				},
 				{
+					distance = 2.12,
 					value = 2,
-					distance = 2.12
 				},
 				{
+					distance = 1.12,
 					value = 1,
-					distance = 1.12
 				},
 				{
+					distance = 0.35,
 					value = 0,
-					distance = 0.35
-				}
+				},
 			},
 			attack_move_02 = {
 				{
+					distance = 4.64,
 					value = 4,
-					distance = 4.64
 				},
 				{
+					distance = 3.31,
 					value = 3,
-					distance = 3.31
 				},
 				{
+					distance = 2.14,
 					value = 2,
-					distance = 2.14
 				},
 				{
+					distance = 1.13,
 					value = 1,
-					distance = 1.13
 				},
 				{
+					distance = 0.35,
 					value = 0,
-					distance = 0.35
-				}
+				},
 			},
 			attack_move_03 = {
 				{
+					distance = 4.53,
 					value = 4,
-					distance = 4.53
 				},
 				{
+					distance = 3.02,
 					value = 3,
-					distance = 3.02
 				},
 				{
+					distance = 2.12,
 					value = 2,
-					distance = 2.12
 				},
 				{
+					distance = 1.09,
 					value = 1,
-					distance = 1.09
 				},
 				{
+					distance = 0.35,
 					value = 0,
-					distance = 0.35
-				}
+				},
 			},
 			attack_move_04 = {
 				{
+					distance = 4.5,
 					value = 4,
-					distance = 4.5
 				},
 				{
+					distance = 3.42,
 					value = 3,
-					distance = 3.42
 				},
 				{
+					distance = 2.12,
 					value = 2,
-					distance = 2.12
 				},
 				{
+					distance = 1,
 					value = 1,
-					distance = 1
 				},
 				{
+					distance = 0.35,
 					value = 0,
-					distance = 0.35
-				}
-			}
-		}
+				},
+			},
+		},
 	},
 	bayonet_melee_attack = {
-		weapon_reach = 3.5,
 		utility_weight = 10,
+		weapon_reach = 3.5,
 		considerations = UtilityConsiderations.melee_attack_bayonet,
 		attack_anim_events = {
 			"attack_bayonet_01",
 			"attack_bayonet_02",
 			"attack_bayonet_04",
-			"attack_bayonet_05"
+			"attack_bayonet_05",
 		},
 		attack_anim_damage_timings = {
 			attack_bayonet_01 = 0.5747126436781609,
 			attack_bayonet_02 = 0.7586206896551724,
 			attack_bayonet_04 = 1.2222222222222223,
-			attack_bayonet_05 = 1.3333333333333333
+			attack_bayonet_05 = 1.3333333333333333,
 		},
 		attack_anim_durations = {
 			attack_bayonet_01 = 1.4444444444444444,
 			attack_bayonet_02 = 2.0689655172413794,
 			attack_bayonet_04 = 2.2222222222222223,
-			attack_bayonet_05 = 2.6
+			attack_bayonet_05 = 2.6,
 		},
 		attack_intensities = {
+			melee = 0.75,
 			ranged = 1,
-			melee = 0.75
 		},
 		damage_profile = DamageProfileTemplates.melee_roamer_default,
-		damage_type = damage_types.minion_melee_sharp
+		damage_type = damage_types.minion_melee_sharp,
 	},
 	bayonet_charge_attack = {
 		move_speed = 4,
+		moving_attack = true,
 		utility_weight = 10,
 		weapon_reach = 3,
-		moving_attack = true,
 		considerations = UtilityConsiderations.renegade_rifleman_bayonet_attack,
 		attack_anim_events = {
 			"bayonet_charge_hit",
 			"bayonet_charge_hit_02",
 			"bayonet_charge_hit_03",
 			"bayonet_charge_hit_04",
-			"bayonet_charge_hit_05"
+			"bayonet_charge_hit_05",
 		},
 		attack_anim_damage_timings = {
-			bayonet_charge_hit_04 = 1.3888888888888888,
 			bayonet_charge_hit = 0.4666666666666667,
-			bayonet_charge_hit_05 = 1.2222222222222223,
 			bayonet_charge_hit_02 = 0.7222222222222222,
-			bayonet_charge_hit_03 = 0.6666666666666666
+			bayonet_charge_hit_03 = 0.6666666666666666,
+			bayonet_charge_hit_04 = 1.3888888888888888,
+			bayonet_charge_hit_05 = 1.2222222222222223,
 		},
 		attack_anim_durations = {
-			bayonet_charge_hit_04 = 2.5,
 			bayonet_charge_hit = 2.1666666666666665,
-			bayonet_charge_hit_05 = 2.361111111111111,
 			bayonet_charge_hit_02 = 1.6666666666666667,
-			bayonet_charge_hit_03 = 1.6111111111111112
+			bayonet_charge_hit_03 = 1.6111111111111112,
+			bayonet_charge_hit_04 = 2.5,
+			bayonet_charge_hit_05 = 2.361111111111111,
 		},
 		attack_intensities = {
 			melee = 0.25,
-			running_melee = 1,
 			moving_melee = 2,
-			ranged = 1
+			ranged = 1,
+			running_melee = 1,
 		},
 		move_start_timings = {
-			bayonet_charge_hit = 0
+			bayonet_charge_hit = 0,
 		},
 		damage_profile = DamageProfileTemplates.melee_roamer_default,
 		damage_type = damage_types.minion_melee_sharp,
 		stagger_type_reduction = {
-			ranged = 20
-		}
+			ranged = 20,
+		},
 	},
 	switch_weapon = {
 		slot_melee_weapon = {
 			switch_anim_events = {
-				"equip_sword"
+				"equip_sword",
 			},
 			switch_anim_equip_timings = {
-				equip_sword = 0.2833333333333333
+				equip_sword = 0.2833333333333333,
 			},
 			switch_anim_durations = {
-				equip_sword = 0.5833333333333334
-			}
+				equip_sword = 0.5833333333333334,
+			},
 		},
 		slot_ranged_weapon = {
 			switch_anim_events = {
-				"equip_gun"
+				"equip_gun",
 			},
 			switch_anim_equip_timings = {
-				equip_gun = 0.2
+				equip_gun = 0.2,
 			},
 			switch_anim_durations = {
-				equip_gun = 0.8333333333333334
-			}
-		}
+				equip_gun = 0.8333333333333334,
+			},
+		},
 	},
 	blocked = {
 		blocked_duration = 1.6666666666666667,
 		blocked_anims = {
-			"blocked"
-		}
+			"blocked",
+		},
 	},
 	stagger = {
 		stagger_duration_mods = {
-			stagger_explosion_front_2 = 0.8
+			stagger_explosion_front_2 = 0.8,
 		},
 		stagger_anims = {
 			light = {
@@ -1063,7 +1065,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6"
+					"stagger_fwd_light_6",
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -1073,63 +1075,63 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8"
+					"stagger_bwd_light_8",
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4"
+					"stagger_left_light_4",
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4"
+					"stagger_right_light_4",
 				},
 				dwn = {
-					"stun_down"
-				}
+					"stun_down",
+				},
 			},
 			medium = {
 				fwd = {
 					"stagger_fwd",
 					"stagger_fwd_2",
 					"stagger_fwd_3",
-					"stagger_fwd_4"
+					"stagger_fwd_4",
 				},
 				bwd = {
 					"stagger_bwd",
 					"stagger_bwd_2",
 					"stagger_bwd_3",
-					"stagger_bwd_4"
+					"stagger_bwd_4",
 				},
 				left = {
 					"stagger_left",
 					"stagger_left_2",
 					"stagger_left_3",
 					"stagger_left_4",
-					"stagger_left_5"
+					"stagger_left_5",
 				},
 				right = {
 					"stagger_right",
 					"stagger_right_2",
 					"stagger_right_3",
 					"stagger_right_4",
-					"stagger_right_5"
+					"stagger_right_5",
 				},
 				dwn = {
 					"stagger_medium_downward",
 					"stagger_medium_downward_2",
-					"stagger_medium_downward_3"
-				}
+					"stagger_medium_downward_3",
+				},
 			},
 			heavy = {
 				fwd = {
 					"stagger_fwd_heavy",
 					"stagger_fwd_heavy_2",
 					"stagger_fwd_heavy_3",
-					"stagger_fwd_heavy_4"
+					"stagger_fwd_heavy_4",
 				},
 				bwd = {
 					"stagger_up_heavy",
@@ -1138,62 +1140,62 @@ local action_data = {
 					"stagger_bwd_heavy",
 					"stagger_bwd_heavy_2",
 					"stagger_bwd_heavy_3",
-					"stagger_bwd_heavy_4"
+					"stagger_bwd_heavy_4",
 				},
 				left = {
 					"stagger_left_heavy",
 					"stagger_left_heavy_2",
 					"stagger_left_heavy_3",
-					"stagger_left_heavy_4"
+					"stagger_left_heavy_4",
 				},
 				right = {
 					"stagger_right_heavy",
 					"stagger_right_heavy_2",
 					"stagger_right_heavy_3",
-					"stagger_right_heavy_4"
+					"stagger_right_heavy_4",
 				},
 				dwn = {
 					"stagger_dwn_heavy",
 					"stagger_dwn_heavy_2",
-					"stagger_dwn_heavy_3"
-				}
+					"stagger_dwn_heavy_3",
+				},
 			},
 			light_ranged = {
 				fwd = {
 					"stun_fwd_ranged_light",
 					"stun_fwd_ranged_light_2",
-					"stun_fwd_ranged_light_3"
+					"stun_fwd_ranged_light_3",
 				},
 				bwd = {
 					"stun_bwd_ranged_light",
 					"stun_bwd_ranged_light_2",
-					"stun_bwd_ranged_light_3"
+					"stun_bwd_ranged_light_3",
 				},
 				left = {
 					"stun_left_ranged_light",
 					"stun_left_ranged_light_2",
-					"stun_left_ranged_light_3"
+					"stun_left_ranged_light_3",
 				},
 				right = {
 					"stun_right_ranged_light",
 					"stun_right_ranged_light_2",
-					"stun_right_ranged_light_3"
-				}
+					"stun_right_ranged_light_3",
+				},
 			},
 			explosion = {
 				fwd = {
 					"stagger_explosion_front",
-					"stagger_explosion_front_2"
+					"stagger_explosion_front_2",
 				},
 				bwd = {
-					"stagger_explosion_back"
+					"stagger_explosion_back",
 				},
 				left = {
-					"stagger_explosion_left"
+					"stagger_explosion_left",
 				},
 				right = {
-					"stagger_explosion_right"
-				}
+					"stagger_explosion_right",
+				},
 			},
 			killshot = {
 				fwd = {
@@ -1202,7 +1204,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6"
+					"stagger_fwd_light_6",
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -1212,77 +1214,77 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8"
+					"stagger_bwd_light_8",
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4"
+					"stagger_left_light_4",
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4"
+					"stagger_right_light_4",
 				},
 				dwn = {
-					"stun_down"
-				}
+					"stun_down",
+				},
 			},
 			sticky = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",
-					"stagger_front_sticky_3"
+					"stagger_front_sticky_3",
 				},
 				fwd = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3"
+					"stagger_bwd_sticky_3",
 				},
 				left = {
 					"stagger_left_sticky",
 					"stagger_left_sticky_2",
-					"stagger_left_sticky_3"
+					"stagger_left_sticky_3",
 				},
 				right = {
 					"stagger_right_sticky",
 					"stagger_right_sticky_2",
-					"stagger_right_sticky_3"
+					"stagger_right_sticky_3",
 				},
 				dwn = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3"
-				}
+					"stagger_bwd_sticky_3",
+				},
 			},
 			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",
-					"stagger_front_sticky_3"
+					"stagger_front_sticky_3",
 				},
 				fwd = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3"
+					"stagger_bwd_sticky_3",
 				},
 				left = {
 					"stagger_left_sticky",
 					"stagger_left_sticky_2",
-					"stagger_left_sticky_3"
+					"stagger_left_sticky_3",
 				},
 				right = {
 					"stagger_right_sticky",
 					"stagger_right_sticky_2",
-					"stagger_right_sticky_3"
+					"stagger_right_sticky_3",
 				},
 				dwn = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
-					"stagger_bwd_sticky_3"
-				}
+					"stagger_bwd_sticky_3",
+				},
 			},
 			blinding = {
 				fwd = {
@@ -1291,7 +1293,7 @@ local action_data = {
 					"stagger_fwd_light_3",
 					"stagger_fwd_light_4",
 					"stagger_fwd_light_5",
-					"stagger_fwd_light_6"
+					"stagger_fwd_light_6",
 				},
 				bwd = {
 					"stagger_bwd_light",
@@ -1301,33 +1303,33 @@ local action_data = {
 					"stagger_bwd_light_5",
 					"stagger_bwd_light_6",
 					"stagger_bwd_light_7",
-					"stagger_bwd_light_8"
+					"stagger_bwd_light_8",
 				},
 				left = {
 					"stagger_left_light",
 					"stagger_left_light_2",
 					"stagger_left_light_3",
-					"stagger_left_light_4"
+					"stagger_left_light_4",
 				},
 				right = {
 					"stagger_right_light",
 					"stagger_right_light_2",
 					"stagger_right_light_3",
-					"stagger_right_light_4"
+					"stagger_right_light_4",
 				},
 				dwn = {
-					"stun_down"
-				}
-			}
-		}
+					"stun_down",
+				},
+			},
+		},
 	},
 	open_door = {
 		rotation_duration = 0.1,
-		stagger_immune = true
+		stagger_immune = true,
 	},
 	exit_spawner = {
-		run_anim_event = "move_fwd"
-	}
+		run_anim_event = "move_fwd",
+	},
 }
 
 return action_data

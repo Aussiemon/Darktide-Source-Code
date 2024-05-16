@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/profiles_service.lua
+
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local MasterItems = require("scripts/backend/master_items")
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
@@ -32,17 +34,18 @@ local function _fetch_all_backend_profiles(backend_interface)
 
 		if not characters or #characters == 0 then
 			return Promise.resolved({
-				profiles = {}
+				profiles = {},
 			})
 		end
 
 		local profiles = {}
-		local selected_profile = nil
+		local selected_profile
 
 		for i = 1, #characters do
 			local character = characters[i]
 			local progression = _find_character_progression(character, characters_progression)
 			local profile = ProfileUtils.character_to_profile(character, gear_list, progression)
+
 			profiles[#profiles + 1] = profile
 
 			if selected_character_id and character.id == selected_character_id then
@@ -55,7 +58,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 		return Promise.resolved({
 			profiles = profiles,
 			selected_profile = selected_profile,
-			gear = gear_list
+			gear = gear_list,
 		})
 	end)
 end
@@ -172,7 +175,7 @@ ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_n
 			"Thomas",
 			"Jane",
 			"Niki",
-			"Marie"
+			"Marie",
 		})
 	end)
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_adventure.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -12,6 +14,7 @@ MechanismAdventure.init = function (self, ...)
 	MechanismAdventure.super.init(self, ...)
 
 	self._pending_state_change = false
+
 	local context = self._context
 
 	if context.server_channel then
@@ -25,8 +28,9 @@ MechanismAdventure.init = function (self, ...)
 	else
 		self._is_owner = true
 		self._is_owner_mission_server = Managers.connection:is_dedicated_mission_server()
+
 		local mission_name = context.mission_name
-		local challenge, resistance, circumstance_name, side_mission, backend_mission_id = nil
+		local challenge, resistance, circumstance_name, side_mission, backend_mission_id
 		local host_type = Managers.connection:host_type()
 
 		if self._is_owner_mission_server then
@@ -48,6 +52,7 @@ MechanismAdventure.init = function (self, ...)
 		end
 
 		local data = self._mechanism_data
+
 		data.mission_name = mission_name
 		data.circumstance_name = circumstance_name
 		data.side_mission = side_mission
@@ -63,11 +68,12 @@ MechanismAdventure.init = function (self, ...)
 		data.backend_mission_id = backend_mission_id
 		data.ready_voting_completed = false
 		data.pacing_control = context.pacing_control
+
 		local do_vote = self._is_owner_mission_server
 
 		if do_vote then
 			local voting_params = {
-				mission_data = data
+				mission_data = data,
 			}
 
 			Managers.voting:start_voting("mission_lobby_ready", voting_params):next(function (voting_id)
@@ -107,8 +113,10 @@ MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_i
 	local circumstance_name = NetworkLookup.circumstance_templates[circumstance_name_id]
 	local side_mission = NetworkLookup.mission_objective_names[side_mission_id]
 	local mission_giver_vo_override = NetworkLookup.mission_giver_vo_overrides[mission_giver_vo_override_id]
+
 	self._state_index = state_index
 	self._state = self._states_lookup[state_index]
+
 	local end_result = NetworkLookup.game_mode_outcomes[end_result_id]
 
 	if end_result == "n/a" then
@@ -116,6 +124,7 @@ MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_i
 	end
 
 	local data = self._mechanism_data
+
 	data.level_name = Missions[mission_name].level
 	data.mission_name = mission_name
 	data.circumstance_name = circumstance_name
@@ -160,6 +169,7 @@ MechanismAdventure.game_mode_end = function (self, reason, session_id)
 	if self._is_owner then
 		self._peers_ready_for_score = {}
 		self._peers_ready_for_score_timeout = Managers.time:time("main") + READY_FOR_SCORE_TIMEOUT
+
 		local peer_ids = {}
 
 		for channel_id, _ in pairs(Managers.mechanism:clients()) do
@@ -182,7 +192,7 @@ MechanismAdventure.profile_changes_are_allowed = function (self)
 	if self._mission_ready_voting_id then
 		return true
 	elseif self._profiles_allowed_changes_end_time then
-		if Managers.time:time("main") < self._profiles_allowed_changes_end_time then
+		if self._profiles_allowed_changes_end_time > Managers.time:time("main") then
 			return true
 		end
 
@@ -214,7 +224,7 @@ MechanismAdventure._on_vote_finished = function (self, result)
 end
 
 MechanismAdventure._check_state_change = function (self, state, data)
-	local changed, done = nil
+	local changed, done
 
 	if state == "adventure_selected" then
 		if self._mission_ready_voting_id then
@@ -251,7 +261,7 @@ MechanismAdventure._check_state_change = function (self, state, data)
 
 					return Managers.voting:start_voting("stay_in_party", {
 						new_party_id = response.party_id,
-						new_party_invite_token = response.invite_token
+						new_party_invite_token = response.invite_token,
 					}):next(function (voting_id)
 						Log.info("MechanismAdventure", "stay_in_party_voting_id:%s", voting_id)
 
@@ -333,7 +343,7 @@ MechanismAdventure.wanted_transition = function (self)
 	local data = self._mechanism_data
 	local state = self._state
 	local state_change = self._pending_state_change
-	local done = nil
+	local done
 	local needs_load = false
 
 	if state_change then
@@ -352,7 +362,7 @@ MechanismAdventure.wanted_transition = function (self)
 				mission_name = data.mission_name,
 				circumstance_name = data.circumstance_name,
 				mission_giver_vo = data.mission_giver_vo_override,
-				side_mission = data.side_mission
+				side_mission = data.side_mission,
 			}
 
 			return false, StateLoading, next_state_context
@@ -365,8 +375,8 @@ MechanismAdventure.wanted_transition = function (self)
 				side_mission = data.side_mission,
 				next_state = StateGameplay,
 				next_state_params = {
-					mechanism_data = self._mechanism_data
-				}
+					mechanism_data = self._mechanism_data,
+				},
 			}
 
 			return false, StateLoading, next_state_context
@@ -379,15 +389,15 @@ MechanismAdventure.wanted_transition = function (self)
 				next_state = self._game_states[state],
 				next_state_params = {
 					mission_name = data.mission_name,
-					mechanism_data = self._mechanism_data
-				}
+					mechanism_data = self._mechanism_data,
+				},
 			}
 
 			return false, StateLoading, next_state_context
 		else
 			local next_state_context = {
 				mission_name = data.mission_name,
-				mechanism_data = self._mechanism_data
+				mechanism_data = self._mechanism_data,
 			}
 
 			return false, self._game_states[state], next_state_context
@@ -422,13 +432,14 @@ end
 
 MechanismAdventure._show_retry_popup = function (self)
 	self._retrying = true
+
 	local context = {
-		title_text = "loc_popup_header_failed_joining_session",
 		description_text = "loc_popup_description_failed_joining_session",
+		title_text = "loc_popup_header_failed_joining_session",
 		options = {
 			{
-				text = "loc_popup_failed_joining_session_retry_button",
 				close_on_pressed = true,
+				text = "loc_popup_failed_joining_session_retry_button",
 				callback = function ()
 					self._retry_popup_id = nil
 					self._retrying = nil
@@ -440,28 +451,28 @@ MechanismAdventure._show_retry_popup = function (self)
 
 						self._joining_party_game_session = nil
 					end
-				end
+				end,
 			},
 			{
-				text = "loc_popup_failed_joining_session_stay_button",
 				close_on_pressed = true,
 				hotkey = "back",
+				text = "loc_popup_failed_joining_session_stay_button",
 				callback = function ()
 					self._retry_popup_id = nil
 					self._joining_party_game_session = nil
 
 					Managers.party_immaterium:join_party({
 						party_id = "",
-						current_game_session_id = self._game_session_id
+						current_game_session_id = self._game_session_id,
 					}):next(function ()
 						self._retrying = nil
 					end):catch(function (error)
 						Log.info("MechanismAdventure", "Failed joining party in old game session, leaving to hub")
 						Managers.multiplayer_session:leave("leave_mission")
 					end)
-				end
-			}
-		}
+				end,
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

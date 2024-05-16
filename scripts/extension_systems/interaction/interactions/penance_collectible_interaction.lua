@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/penance_collectible_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local PenanceCollectibleInteraction = class("PenanceCollectibleInteraction", "BaseInteraction")

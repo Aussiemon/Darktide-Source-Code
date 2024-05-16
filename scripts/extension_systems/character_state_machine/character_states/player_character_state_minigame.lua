@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_minigame.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
@@ -19,6 +21,7 @@ PlayerCharacterStateMinigame.init = function (self, character_state_init_context
 
 	local unit = self._unit
 	local minigame_character_state_component = character_state_init_context.unit_data:write_component("minigame_character_state")
+
 	minigame_character_state_component.interface_unit_id = NetworkConstants.invalid_level_unit_id
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
 	self._minigame_extension = nil
@@ -37,9 +40,11 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
 
 	local locomotion_steering_component = self._locomotion_steering_component
+
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
 	locomotion_steering_component.calculate_fall_velocity = true
 	locomotion_steering_component.disable_push_velocity = true
+
 	local movement_state_component = self._movement_state_component
 	local is_crouching = self._movement_state_component.is_crouching
 
@@ -65,6 +70,7 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local interaction_component = unit_data_extension:write_component("interaction")
+
 	interaction_component.state = INTERACTION_STATES.none
 end
 
@@ -73,6 +79,7 @@ PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
 
 	self._minigame_character_state_component.interface_unit_id = NetworkConstants.invalid_level_unit_id
 	self._locomotion_steering_component.disable_push_velocity = false
+
 	local inventory_component = self._inventory_component
 
 	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
@@ -83,11 +90,13 @@ PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local interaction_component = unit_data_extension:write_component("interaction")
+
 	interaction_component.state = INTERACTION_STATES.waiting_to_interact
 end
 
 PlayerCharacterStateMinigame.on_enter_server_corrected_state = function (self, unit)
 	local locomotion_steering_component = self._locomotion_steering_component
+
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
 	locomotion_steering_component.calculate_fall_velocity = true
 

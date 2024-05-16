@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_archive_servitor_a.lua
+
 local gameplay_vo_archive_servitor_a = {
 	mission_archives_activate_from_hibernation_a = {
 		randomize_indexes_n = 0,
@@ -10,7 +12,7 @@ local gameplay_vo_archive_servitor_a = {
 			"loc_archive_servitor_a__player_interact_a_01",
 			"loc_archive_servitor_a__player_interact_a_03",
 			"loc_archive_servitor_a__player_interact_a_04",
-			"loc_archive_servitor_a__player_interact_a_05"
+			"loc_archive_servitor_a__player_interact_a_05",
 		},
 		sound_events_duration = {
 			6.368375,
@@ -20,9 +22,9 @@ local gameplay_vo_archive_servitor_a = {
 			5.570604,
 			7.93776,
 			7.012552,
-			5.430448
+			5.430448,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_archives_task_complete_a = {
 		randomize_indexes_n = 0,
@@ -32,17 +34,17 @@ local gameplay_vo_archive_servitor_a = {
 			"loc_archive_servitor_a__task_complete_a_02",
 			"loc_archive_servitor_a__task_complete_a_03",
 			"loc_archive_servitor_a__task_complete_a_04",
-			"loc_archive_servitor_a__task_complete_a_05"
+			"loc_archive_servitor_a__task_complete_a_05",
 		},
 		sound_events_duration = {
 			1.435031,
 			2.928156,
 			3.964063,
 			3.28001,
-			2.433292
+			2.433292,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("gameplay_vo_archive_servitor_a", gameplay_vo_archive_servitor_a)

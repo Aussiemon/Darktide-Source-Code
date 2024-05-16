@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/syringe_effects.lua
+
 local Component = require("scripts/utilities/component")
 local SyringeEffects = class("SyringeEffects")
 local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
@@ -7,36 +9,41 @@ local CONFIG = {
 	syringe_corruption_pocketable = {
 		decal_index = 1,
 		glass_color = Vector3Box(0.3, 0.6, 0.4),
-		liquid_color = Vector3Box(0.117, 0.6, 0.197)
+		liquid_color = Vector3Box(0.117, 0.6, 0.197),
 	},
 	syringe_ability_boost_pocketable = {
 		decal_index = 4,
 		glass_color = Vector3Box(1, 0.5, 0),
-		liquid_color = Vector3Box(1, 0.5, 0)
+		liquid_color = Vector3Box(1, 0.5, 0),
 	},
 	syringe_power_boost_pocketable = {
 		decal_index = 3,
 		glass_color = Vector3Box(0.389, 0, 0),
-		liquid_color = Vector3Box(0.389, 0, 0)
+		liquid_color = Vector3Box(0.389, 0, 0),
 	},
 	syringe_speed_boost_pocketable = {
 		decal_index = 2,
 		glass_color = Vector3Box(0.221, 0.49, 1),
-		liquid_color = Vector3Box(0.221, 0.49, 1)
-	}
+		liquid_color = Vector3Box(0.221, 0.49, 1),
+	},
 }
 
 SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._world = context.world
 	self._weapon_template = weapon_template
+
 	local fx_extension = context.fx_extension
 	local visual_loadout_extension = context.visual_loadout_extension
+
 	self._fx_extension = fx_extension
 	self._visual_loadout_extension = visual_loadout_extension
+
 	local fx_source_name = fx_sources[FX_SOURCE_NAME]
+
 	self._fx_source_name = fx_source_name
 	self._vfx_link_unit, self._vfx_link_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
 	self._looping_effect_id = nil
+
 	local unit_components = {}
 	local unit_1p = slot.unit_1p
 
@@ -46,7 +53,7 @@ SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = unit_1p,
-				component = component
+				component = component,
 			}
 		end
 	end
@@ -59,7 +66,7 @@ SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = unit_3p,
-				component = component
+				component = component,
 			}
 		end
 	end

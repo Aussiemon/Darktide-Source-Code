@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/utilities/archetype_resource_dependencies.lua
+
 local ArchetypeResourceDependencies = {}
-local _resolve_data_recursive, _is_valid_wwise_resource_name, _is_valid_fx_resource_name = nil
+local _resolve_data_recursive, _is_valid_wwise_resource_name, _is_valid_fx_resource_name
 local TEMP_SOUND_RESOURCE_PACKAGES = {}
 local TEMP_PARTICLE_RESOURCE_PACKAGES = {}
 

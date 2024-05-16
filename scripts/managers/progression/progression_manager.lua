@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/progression/progression_manager.lua
+
 local BackendInterface = require("scripts/backend/backend_interface")
 local EndPlayerViewAnimations = require("scripts/ui/views/end_player_view/end_player_view_animations")
 local EndPlayerViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
@@ -20,7 +22,7 @@ local ProgressionManager = class("ProgressionManager")
 local FETCH_DUMMY_SESSION_REPORT = false
 local FETCH_DUMMY_SESSION_REPORT_DELAY = {
 	max = 5,
-	min = 0
+	min = 0,
 }
 local SESSION_REPORT_STATES = table.enum("none", "fetching", "success", "fail")
 local SET_TRAITS_STATES = table.enum("none", "updating", "success", "fail")
@@ -65,14 +67,12 @@ ProgressionManager.is_using_dummy_report = function (self)
 end
 
 ProgressionManager.fetch_session_report = function (self, session_id)
-	self._session_report = {
-		team = {},
-		character = {}
-	}
+	self._session_report = {}
+	self._session_report.team = {}
+	self._session_report.character = {}
 	self._session_report.character.rewards = {}
-	self._session_report.account = {
-		rewards = {}
-	}
+	self._session_report.account = {}
+	self._session_report.account.rewards = {}
 	self._game_score_end_time = nil
 	self._session_report_is_dummy = false
 	self._session_report_state = SESSION_REPORT_STATES.fetching
@@ -93,6 +93,7 @@ ProgressionManager.fetch_session_report = function (self, session_id)
 	Promise.all(session_report_promise, character_xp_settings_promise, account_xp_settings_promise, account_wallet_promise):next(function (results)
 		local session_report, character_xp_settings, account_xp_settings, account_wallets = unpack(results, 1, 4)
 		local eor = session_report.eor
+
 		self._session_report.eor = eor
 
 		_info("Got session report, parsing it...")
@@ -104,10 +105,11 @@ ProgressionManager.fetch_session_report = function (self, session_id)
 
 		self:_parse_report(eor, account_wallets)
 	end):catch(function (errors)
-		local error_string = nil
+		local error_string
 
 		if type(errors) == "table" then
 			local session_report_error, character_xp_error, account_xp_error = unpack(errors)
+
 			error_string = tostring(session_report_error) .. tostring(character_xp_error) .. tostring(account_xp_error)
 		else
 			error_string = errors
@@ -138,6 +140,7 @@ ProgressionManager.fetch_session_report_server = function (self, session_id)
 	_info("Fetching session report server...")
 	self._backend_interface.gameplay_session:poll_for_end_of_round(session_id):next(function (session_report)
 		local eor = session_report.eor
+
 		self._session_report.eor = eor
 
 		_info("Got session report, parsing it...")
@@ -150,8 +153,10 @@ ProgressionManager.fetch_session_report_server = function (self, session_id)
 		Log.error("ProgressionManager", "Error fetching session_report_server: %s", error)
 
 		self._session_report_state = SESSION_REPORT_STATES.fail
+
 		local t = Managers.time:time("main")
 		local server_time = math.floor(Managers.backend:get_server_time(t) / 1000)
+
 		self._game_score_end_time = server_time + EndViewSettings.max_duration
 
 		self:_sync_game_score_end_time()
@@ -189,7 +194,7 @@ ProgressionManager._parse_experience_settings = function (self, unparsed_xp_sett
 	local experience_settings = {
 		experience_table = unparsed_xp_settings,
 		max_level_experience = unparsed_xp_settings[max_level],
-		max_level = max_level
+		max_level = max_level,
 	}
 
 	return experience_settings
@@ -229,6 +234,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 	end
 
 	self._session_report.character.inventory = inventory
+
 	local character_stats = self:_get_progression_stats(progression, "character")
 
 	if not character_stats then
@@ -258,6 +264,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 	self:_parse_reward_cards(account_data, item_rewards)
 
 	local credits_reward = self:_get_credits_reward(account_data.missionRewards)
+
 	self._session_report.credits_reward = credits_reward
 
 	if account_wallets then
@@ -315,7 +322,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			end
 		end
 	end):catch(function (errors)
-		local error_string = nil
+		local error_string
 
 		if type(errors) == "table" then
 			error_string = table.tostring(errors, 5)
@@ -341,7 +348,7 @@ end
 
 ProgressionManager._parse_wallets = function (self, wallets)
 	local session_report_rewards = self._session_report.character.rewards
-	local salary_card = nil
+	local salary_card
 
 	for i = 1, #session_report_rewards do
 		local reward_card = session_report_rewards[i]
@@ -427,6 +434,7 @@ ProgressionManager._parse_stats = function (self, stats)
 	local current_xp = stats.currentXp
 	local experience_gained = current_xp - start_xp
 	local report_sheet = self._session_report[stats.type]
+
 	report_sheet.starting_experience = start_xp
 	report_sheet.current_experience = current_xp
 	report_sheet.experience_gained = experience_gained
@@ -437,6 +445,7 @@ ProgressionManager._get_profile = function (self)
 
 	if self._session_report_is_dummy and not profile then
 		local player = Managers.player:player(Network.peer_id(), 1)
+
 		profile = player:profile()
 	end
 
@@ -455,6 +464,7 @@ ProgressionManager._parse_team_stats = function (self, account_data)
 	local session_statistics = account_data.sessionStatistics
 	local total_kills = self:_get_session_stat(session_statistics, "team_kills") or 0
 	local total_deaths = self:_get_session_stat(session_statistics, "team_deaths") or 0
+
 	self._session_report.team.total_kills = total_kills
 	self._session_report.team.total_deaths = total_deaths
 end
@@ -488,6 +498,7 @@ end
 ProgressionManager._parse_mission_stats = function (self, eor)
 	local mission = eor.mission
 	local play_time_seconds = mission.playTimeSeconds
+
 	self._session_report.team.play_time_seconds = play_time_seconds
 end
 
@@ -508,14 +519,20 @@ ProgressionManager._parse_reward_cards = function (self, account_data, item_rewa
 
 		for j = 1, #reward_card_rewards do
 			local reward = reward_card_rewards[j]
+
 			reward.amount_gained = reward.amount or 0
 			reward.amount = nil
+
 			local reward_type = reward.rewardType
+
 			reward.reward_type = reward_type
 			reward.rewardType = nil
+
 			local master_id = reward.masterId
+
 			reward.master_id = master_id
 			reward.masterId = nil
+
 			local gear_id = reward.gearId
 
 			if gear_id then
@@ -523,7 +540,7 @@ ProgressionManager._parse_reward_cards = function (self, account_data, item_rewa
 				reward.gearId = nil
 				item_rewards[#item_rewards + 1] = {
 					gear_id = gear_id,
-					item_type = reward_type
+					item_type = reward_type,
 				}
 			end
 
@@ -586,7 +603,7 @@ ProgressionManager._add_unlocked_weapons_to_card = function (self, reward_card, 
 		for i = 1, #weapons_unlocks_at_level do
 			self:_append_reward_to_card(reward_card, {
 				reward_type = "weapon_unlock",
-				master_id = weapons_unlocks_at_level[i]
+				master_id = weapons_unlocks_at_level[i],
 			})
 		end
 	end
@@ -639,7 +656,7 @@ ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, 
 					text = "testing testing",
 					type = reward_type,
 					reward_item_id = reward_item_id,
-					level = reward_info.level
+					level = reward_info.level,
 				}
 
 				table.insert(rewards, reward_data)
@@ -651,9 +668,10 @@ ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, 
 
 					if gear_id then
 						local item_type = item.item_type
+
 						item_rewards[#item_rewards + 1] = {
 							gear_id = gear_id,
-							item_type = item_type
+							item_type = item_type,
 						}
 					end
 				end
@@ -666,6 +684,7 @@ end
 
 ProgressionManager._find_level_up_card = function (self, target_level, experience_type)
 	experience_type = experience_type or "character"
+
 	local reward_cards = self._session_report.character.rewards
 
 	if not reward_cards then
@@ -693,6 +712,7 @@ ProgressionManager._append_reward_to_card = function (self, reward_card, reward)
 	end
 
 	local rewards = reward_card.rewards
+
 	rewards[#rewards + 1] = reward
 	reward_card.rewards = rewards
 end
@@ -706,6 +726,7 @@ ProgressionManager._cap_xp = function (self, stats)
 	local starting_experience = math.min(session_starting_experience, max_experience)
 	local current_experience = math.min(stats.currentXp, max_experience)
 	local experience_gained = current_experience - starting_experience
+
 	report_sheet.starting_experience = starting_experience
 	report_sheet.current_experience = current_experience
 	report_sheet.experience_gained = experience_gained
@@ -771,8 +792,7 @@ ProgressionManager._calculate_game_score_end = function (self)
 
 	for i = 1, #participant_reports do
 		local report = participant_reports[i]
-		local character_id = report.characterId
-		local associated_profile = nil
+		local character_id, associated_profile = report.characterId
 
 		for _, player in pairs(Managers.player:human_players()) do
 			if player:character_id() == character_id then
@@ -790,7 +810,9 @@ ProgressionManager._calculate_game_score_end = function (self)
 	end
 
 	max_report_time = max_report_time + EndViewSettings.delay_before_summary + EndViewSettings.delay_after_summary
+
 	local end_time = server_time + max_report_time
+
 	self._game_score_end_time = end_time
 end
 
@@ -813,7 +835,7 @@ local _card_animations = {
 	xp = EndPlayerViewAnimations.experience_card_show_content,
 	levelUp = EndPlayerViewAnimations.level_up_show_content,
 	salary = EndPlayerViewAnimations.salary_card_show_content,
-	weaponDrop = EndPlayerViewAnimations.item_reward_show_content
+	weaponDrop = EndPlayerViewAnimations.item_reward_show_content,
 }
 
 ProgressionManager._calculate_report_time = function (self, profile, participant_report)
@@ -906,36 +928,40 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 	local character_xp = DummySessionReport.fetch_xp_table("character")
 	local account_xp = DummySessionReport.fetch_xp_table("account")
 	local inventory = DummySessionReport.fetch_inventory(session_report)
+
 	self._session_report.eor = session_report
 	self._session_report.dummy = true
+
 	local dummy_character_data = session_report.team.participants and session_report.team.participants[1]
 	local start_level = dummy_character_data and dummy_character_data.progression[1].startLevel
 	local current_level = dummy_character_data and dummy_character_data.progression[1].currentLevel
+
 	self._session_report.character.start_character_level = start_level or 1
 	self._session_report.character.current_character_level = current_level or 1
 	self._session_report.character.inventory = inventory
 	self._session_report.character.experience_settings = self:_parse_experience_settings(character_xp)
 	self._session_report.account.experience_settings = self:_parse_experience_settings(account_xp)
+
 	local dummy_wallet = {
 		wallets = {
 			{
 				balance = {
 					amount = 12345,
-					type = "credits"
-				}
+					type = "credits",
+				},
 			},
 			{
 				balance = {
 					amount = 2345,
-					type = "plasteel"
-				}
+					type = "plasteel",
+				},
 			},
 			{
 				balance = {
 					amount = 25,
-					type = "diamantine"
-				}
-			}
+					type = "diamantine",
+				},
+			},
 		},
 		by_type = function (self, wallet_type)
 			if wallet_type == "credits" then
@@ -945,7 +971,7 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 			elseif wallet_type == "diamantine" then
 				return self.wallets[3]
 			end
-		end
+		end,
 	}
 
 	self:_parse_report(session_report, dummy_wallet)
@@ -956,14 +982,12 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 end
 
 ProgressionManager.fetch_dummy_session_report = function (self)
-	self._session_report = {
-		team = {},
-		character = {}
-	}
+	self._session_report = {}
+	self._session_report.team = {}
+	self._session_report.character = {}
 	self._session_report.character.rewards = {}
-	self._session_report.account = {
-		rewards = {}
-	}
+	self._session_report.account = {}
+	self._session_report.account.rewards = {}
 	self._session_report_is_dummy = true
 
 	self:_fetch_dummy_session_report()
@@ -973,6 +997,7 @@ end
 
 ProgressionManager._use_dummy_session_report_server = function (self)
 	local session_report = DummySessionReport.fetch_session_report()
+
 	self._session_report.eor = session_report
 	self._session_report.dummy = true
 	self._session_report_state = SESSION_REPORT_STATES.success

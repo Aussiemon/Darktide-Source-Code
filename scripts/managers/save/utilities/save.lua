@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/save/utilities/save.lua
+
 local ScriptSaveToken = require("scripts/managers/save/script_save_token")
 local Save = {}
 local SaveDummy = {
@@ -10,12 +12,12 @@ local SaveDummy = {
 	progress = function ()
 		return {
 			done = true,
-			data = {}
+			data = {},
 		}
 	end,
 	close = function ()
 		return
-	end
+	end,
 }
 
 Save.implementation = function (use_cloud)

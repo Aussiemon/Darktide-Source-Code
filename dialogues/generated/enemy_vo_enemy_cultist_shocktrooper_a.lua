@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_shocktrooper_a.lua
+
 local enemy_vo_enemy_cultist_shocktrooper_a = {
 	cultist_shocktrooper_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -21,7 +23,7 @@ local enemy_vo_enemy_cultist_shocktrooper_a = {
 			"loc_enemy_cultist_shocktrooper_a__alerted_idle_17",
 			"loc_enemy_cultist_shocktrooper_a__alerted_idle_18",
 			"loc_enemy_cultist_shocktrooper_a__alerted_idle_19",
-			"loc_enemy_cultist_shocktrooper_a__alerted_idle_20"
+			"loc_enemy_cultist_shocktrooper_a__alerted_idle_20",
 		},
 		sound_events_duration = {
 			0.813938,
@@ -42,7 +44,7 @@ local enemy_vo_enemy_cultist_shocktrooper_a = {
 			1.313104,
 			2.986146,
 			2.070625,
-			2.203063
+			2.203063,
 		},
 		sound_event_weights = {
 			0.05263158,
@@ -63,9 +65,9 @@ local enemy_vo_enemy_cultist_shocktrooper_a = {
 			0.05263158,
 			0.05263158,
 			0.05263158,
-			0.05263158
+			0.05263158,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_shocktrooper_shooting = {
 		randomize_indexes_n = 0,
@@ -90,7 +92,7 @@ local enemy_vo_enemy_cultist_shocktrooper_a = {
 			"loc_enemy_cultist_shocktrooper_a__shooting_17",
 			"loc_enemy_cultist_shocktrooper_a__shooting_18",
 			"loc_enemy_cultist_shocktrooper_a__shooting_19",
-			"loc_enemy_cultist_shocktrooper_a__shooting_20"
+			"loc_enemy_cultist_shocktrooper_a__shooting_20",
 		},
 		sound_events_duration = {
 			2.335354,
@@ -112,7 +114,7 @@ local enemy_vo_enemy_cultist_shocktrooper_a = {
 			2.826458,
 			2.261458,
 			1.985313,
-			2.303625
+			2.303625,
 		},
 		sound_event_weights = {
 			0.05,
@@ -134,10 +136,10 @@ local enemy_vo_enemy_cultist_shocktrooper_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_cultist_shocktrooper_a", enemy_vo_enemy_cultist_shocktrooper_a)

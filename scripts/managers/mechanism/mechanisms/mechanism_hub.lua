@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_hub.lua
+
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerVOStoryStage = require("scripts/utilities/player_vo_story_stage")
@@ -10,6 +12,7 @@ MechanismHub.init = function (self, ...)
 	MechanismHub.super.init(self, ...)
 
 	local mission_name = "hub_ship"
+
 	self._hub_mission_name = mission_name
 	self._hub_level_name = Missions[mission_name].level
 	self._hub_circumstance_name = "default"
@@ -36,7 +39,7 @@ MechanismHub.failed_fetching_session_report = function (self)
 end
 
 local function _fetch_client_data()
-	local narrative_promise = nil
+	local narrative_promise
 
 	if Managers.narrative then
 		narrative_promise = Managers.narrative:_get_missions()
@@ -44,11 +47,12 @@ local function _fetch_client_data()
 
 	local player = Managers.player:local_player(1)
 	local character_id = player:character_id()
-	local contracts_promise = nil
+	local contracts_promise
 
 	if math.is_uuid(character_id) then
 		local contract_service = Managers.data_service.contracts
 		local contract_exists_promise = contract_service:has_contract(character_id)
+
 		contracts_promise = Promise.all(contract_exists_promise, narrative_promise):next(function (results)
 			local contract_exist = results[1]
 			local should_create_contract = Managers.narrative:is_event_complete("level_unlock_contract_store_visited")
@@ -68,7 +72,7 @@ local function _fetch_client_data()
 				Managers.event:trigger("event_add_notification_message", "currency", {
 					reason = reason,
 					currency = reward.type,
-					amount = reward.amount
+					amount = reward.amount,
 				})
 
 				return contract_service:complete_contract(character_id)
@@ -76,10 +80,10 @@ local function _fetch_client_data()
 		end)
 	end
 
-	local promises = {
-		[#promises + 1] = narrative_promise,
-		[#promises + 1] = contracts_promise
-	}
+	local promises = {}
+
+	promises[#promises + 1] = narrative_promise
+	promises[#promises + 1] = contracts_promise
 
 	Managers.data_service.store:invalidate_wallets_cache()
 
@@ -168,7 +172,7 @@ MechanismHub.wanted_transition = function (self)
 			challenge = challenge,
 			resistance = resistance,
 			circumstance_name = self._hub_circumstance_name,
-			side_mission = side_mission
+			side_mission = side_mission,
 		}
 
 		return false, StateLoading, {
@@ -178,8 +182,8 @@ MechanismHub.wanted_transition = function (self)
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {
-				mechanism_data = mechanism_data
-			}
+				mechanism_data = mechanism_data,
+			},
 		}
 	elseif state == "in_hub" then
 		local party_immaterium = Managers.party_immaterium
@@ -244,29 +248,29 @@ end
 
 MechanismHub._show_retry_popup = function (self)
 	local context = {
-		title_text = "loc_popup_header_reconnect_to_session",
 		description_text = "loc_popup_description_reconnect_to_session",
+		title_text = "loc_popup_header_reconnect_to_session",
 		options = {
 			{
-				text = "loc_popup_reconnect_to_session_reconnect_button",
 				close_on_pressed = true,
+				text = "loc_popup_reconnect_to_session_reconnect_button",
 				callback = function ()
 					self._retry_popup_id = nil
 
 					self:_retry_join()
-				end
+				end,
 			},
 			{
-				text = "loc_popup_reconnect_to_session_leave_button",
 				close_on_pressed = true,
 				hotkey = "back",
+				text = "loc_popup_reconnect_to_session_leave_button",
 				callback = function ()
 					self._retry_popup_id = nil
 
 					Managers.party_immaterium:leave_party()
-				end
-			}
-		}
+				end,
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

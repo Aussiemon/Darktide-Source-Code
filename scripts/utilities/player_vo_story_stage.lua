@@ -1,18 +1,20 @@
-local PlayerVOStoryStage = {
-	set_story_stage = function (stage)
-		local local_player_id = 1
-		local player = Managers.player:local_player(local_player_id)
+﻿-- chunkname: @scripts/utilities/player_vo_story_stage.lua
 
-		if player and player:unit_is_alive() then
-			local player_unit = player.player_unit
-			local dialogue_extension = ScriptUnit.has_extension(player_unit, "dialogue_system")
+local PlayerVOStoryStage = {}
 
-			if dialogue_extension then
-				dialogue_extension:set_story_stage(stage)
-			end
+PlayerVOStoryStage.set_story_stage = function (stage)
+	local local_player_id = 1
+	local player = Managers.player:local_player(local_player_id)
+
+	if player and player:unit_is_alive() then
+		local player_unit = player.player_unit
+		local dialogue_extension = ScriptUnit.has_extension(player_unit, "dialogue_system")
+
+		if dialogue_extension then
+			dialogue_extension:set_story_stage(stage)
 		end
 	end
-}
+end
 
 PlayerVOStoryStage.refresh_hub_story_stage = function ()
 	local pot_chapter = Managers.narrative:current_chapter(Managers.narrative.STORIES.path_of_trust)

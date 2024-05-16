@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_medicae_servitor_a.lua
+
 local gameplay_vo_medicae_servitor_a = {
 	medicae_servitor_idle_empty_a = {
 		randomize_indexes_n = 0,
@@ -17,7 +19,7 @@ local gameplay_vo_medicae_servitor_a = {
 			"loc_medicae_servitor_a__medicae_servitor_idle_empty_a_12",
 			"loc_medicae_servitor_a__medicae_servitor_idle_empty_a_13",
 			"loc_medicae_servitor_a__medicae_servitor_idle_empty_a_14",
-			"loc_medicae_servitor_a__medicae_servitor_idle_empty_a_15"
+			"loc_medicae_servitor_a__medicae_servitor_idle_empty_a_15",
 		},
 		sound_events_duration = {
 			2.382083,
@@ -34,9 +36,9 @@ local gameplay_vo_medicae_servitor_a = {
 			6.264042,
 			6.796229,
 			9.261542,
-			9.662854
+			9.662854,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	medicae_servitor_idle_full_a = {
 		randomize_indexes_n = 0,
@@ -61,7 +63,7 @@ local gameplay_vo_medicae_servitor_a = {
 			"loc_medicae_servitor_a__medicae_servitor_idle_full_a_17",
 			"loc_medicae_servitor_a__medicae_servitor_idle_full_a_18",
 			"loc_medicae_servitor_a__medicae_servitor_idle_full_a_19",
-			"loc_medicae_servitor_a__medicae_servitor_idle_full_a_20"
+			"loc_medicae_servitor_a__medicae_servitor_idle_full_a_20",
 		},
 		sound_events_duration = {
 			3.0315,
@@ -83,9 +85,9 @@ local gameplay_vo_medicae_servitor_a = {
 			4.430813,
 			7.244458,
 			6.196604,
-			2.956771
+			2.956771,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	medicae_servitor_recharge_a = {
 		randomize_indexes_n = 0,
@@ -100,7 +102,7 @@ local gameplay_vo_medicae_servitor_a = {
 			"loc_medicae_servitor_a__medicae_servitor_recharge_a_07",
 			"loc_medicae_servitor_a__medicae_servitor_recharge_a_08",
 			"loc_medicae_servitor_a__medicae_servitor_recharge_a_09",
-			"loc_medicae_servitor_a__medicae_servitor_recharge_a_10"
+			"loc_medicae_servitor_a__medicae_servitor_recharge_a_10",
 		},
 		sound_events_duration = {
 			2.675,
@@ -112,9 +114,9 @@ local gameplay_vo_medicae_servitor_a = {
 			2.590292,
 			2.615292,
 			1.634833,
-			1.765771
+			1.765771,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	medicae_servitor_working_a = {
 		randomize_indexes_n = 0,
@@ -139,7 +141,7 @@ local gameplay_vo_medicae_servitor_a = {
 			"loc_medicae_servitor_a__medicae_servitor_working_a_17",
 			"loc_medicae_servitor_a__medicae_servitor_working_a_18",
 			"loc_medicae_servitor_a__medicae_servitor_working_a_19",
-			"loc_medicae_servitor_a__medicae_servitor_working_a_20"
+			"loc_medicae_servitor_a__medicae_servitor_working_a_20",
 		},
 		sound_events_duration = {
 			2.531604,
@@ -161,10 +163,10 @@ local gameplay_vo_medicae_servitor_a = {
 			4.072792,
 			8.661875,
 			6.578125,
-			7.525
+			7.525,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("gameplay_vo_medicae_servitor_a", gameplay_vo_medicae_servitor_a)

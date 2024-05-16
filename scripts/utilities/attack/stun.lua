@@ -1,40 +1,42 @@
+﻿-- chunkname: @scripts/utilities/attack/stun.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local buff_keywords = BuffSettings.keywords
-local _is_stun_immune_from_current_action, _is_stun_immune_from_buff, _is_stun_immune_from_character_state, _apply_stun = nil
-local Stun = {
-	apply = function (unit, disorientation_type, hit_direction, weapon_template, ignore_stun_immunity, is_predicted, toughness_broken)
-		if not disorientation_type then
-			return
-		end
+local _is_stun_immune_from_current_action, _is_stun_immune_from_buff, _is_stun_immune_from_character_state, _apply_stun
+local Stun = {}
 
-		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
-
-		if not unit_data_extension then
-			return
-		end
-
-		local breed = unit_data_extension:breed()
-
-		if not Breed.is_player(breed) then
-			return
-		end
-
-		local character_state_component = unit_data_extension:read_component("character_state")
-
-		if PlayerUnitStatus.is_disabled(character_state_component) then
-			return
-		end
-
-		if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit) or _is_stun_immune_from_buff(unit, toughness_broken) or _is_stun_immune_from_character_state(unit_data_extension)) then
-			return
-		end
-
-		_apply_stun(unit_data_extension, disorientation_type, hit_direction, unit, is_predicted)
+Stun.apply = function (unit, disorientation_type, hit_direction, weapon_template, ignore_stun_immunity, is_predicted, toughness_broken)
+	if not disorientation_type then
+		return
 	end
-}
+
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+
+	if not unit_data_extension then
+		return
+	end
+
+	local breed = unit_data_extension:breed()
+
+	if not Breed.is_player(breed) then
+		return
+	end
+
+	local character_state_component = unit_data_extension:read_component("character_state")
+
+	if PlayerUnitStatus.is_disabled(character_state_component) then
+		return
+	end
+
+	if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit) or _is_stun_immune_from_buff(unit, toughness_broken) or _is_stun_immune_from_character_state(unit_data_extension)) then
+		return
+	end
+
+	_apply_stun(unit_data_extension, disorientation_type, hit_direction, unit, is_predicted)
+end
 
 function _is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit)
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -100,8 +102,10 @@ end
 
 function _apply_stun(unit_data_extension, disorientation_type, push_direction, unit, is_predicted)
 	local stun_state_input = unit_data_extension:write_component("stun_state_input")
+
 	stun_state_input.disorientation_type = disorientation_type
 	stun_state_input.push_direction = push_direction
+
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local player = player_unit_spawn_manager:owner(unit)
 	local frame_offset = 0
@@ -111,6 +115,7 @@ function _apply_stun(unit_data_extension, disorientation_type, push_direction, u
 	end
 
 	local current_fixed_frame = unit_data_extension:last_fixed_frame()
+
 	stun_state_input.stun_frame = current_fixed_frame + frame_offset
 end
 

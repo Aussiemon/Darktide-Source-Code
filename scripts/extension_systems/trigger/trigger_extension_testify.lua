@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_extension_testify.lua
+
 local TriggerSettings = require("scripts/extension_systems/trigger/trigger_settings")
 local ACTION_TARGETS = TriggerSettings.action_targets
 local TriggerExtensionTestify = {
@@ -15,7 +17,7 @@ local TriggerExtensionTestify = {
 
 			return {
 				is_triggered_on_server = action:action_on_server(),
-				is_on_player_side = action_target == ACTION_TARGETS.player_side
+				is_on_player_side = action_target == ACTION_TARGETS.player_side,
 			}
 		end
 
@@ -29,7 +31,7 @@ local TriggerExtensionTestify = {
 		end
 
 		return Testify.RETRY
-	end
+	end,
 }
 
 return TriggerExtensionTestify

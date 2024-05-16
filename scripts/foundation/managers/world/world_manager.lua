@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/world/world_manager.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WorldManager = class("WorldManager")
 
@@ -67,7 +69,7 @@ WorldManager.destroy_world = function (self, world_or_name)
 		return
 	end
 
-	local name = nil
+	local name
 
 	if type(world_or_name) == "string" then
 		name = world_or_name
@@ -101,6 +103,7 @@ end
 
 WorldManager.world_name = function (self, world)
 	local world_name = table.find(self._worlds, world)
+
 	world_name = world_name or table.find(self._disabled_worlds, world)
 
 	return world_name
@@ -126,6 +129,7 @@ end
 
 WorldManager.update = function (self, dt, t)
 	self.locked = true
+
 	local time_manager = Managers.time
 	local update_queue = self._update_queue
 
@@ -138,6 +142,7 @@ WorldManager.update = function (self, dt, t)
 
 			if has_timer then
 				local delta_time = time_manager:delta_time(timer_name)
+
 				delta_time = delta_time * self._scale
 
 				ScriptWorld.update(world, delta_time, self._anim_update_callbacks[world], self._scene_update_callbacks[world])
@@ -188,16 +193,19 @@ end
 
 WorldManager.world_reset_dlss = function (self, world_name)
 	local world = self:world(world_name)
+
 	self._dlss_reset_by_world[world] = true
 end
 
 WorldManager.enable_world = function (self, name, enabled)
 	if enabled then
 		local world = self._disabled_worlds[name]
+
 		self._worlds[name] = world
 		self._disabled_worlds[name] = nil
 	else
 		local world = self._worlds[name]
+
 		self._disabled_worlds[name] = world
 		self._worlds[name] = nil
 	end

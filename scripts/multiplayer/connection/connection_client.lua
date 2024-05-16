@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/multiplayer/connection/connection_client.lua
+
 local RPCS = {
 	"rpc_player_connected",
 	"rpc_player_disconnected",
 	"rpc_sync_host_local_players",
-	"rpc_kicked"
+	"rpc_kicked",
 }
 local ConnectionLocalStateMachine = require("scripts/multiplayer/connection/connection_local_state_machine")
 local JWTTicketUtils = require("scripts/multiplayer/utilities/jwt_ticket_utils")
@@ -18,7 +20,9 @@ ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lo
 	self._matched_game_session_id = optional_matched_game_session_id
 	self._accelerated_endpoint = optional_accelerated_endpoint
 	self._initial_party_id = optional_initial_party_id
+
 	local profile_synchronizer_client = ProfileSynchronizerClient:new(event_delegate)
+
 	self._profile_synchronizer_client = profile_synchronizer_client
 	self._region = nil
 	self._deployment_id = nil
@@ -185,7 +189,7 @@ end
 
 ConnectionClient.server_name = function (self)
 	local engine_lobby = self._engine_lobby
-	local server_name = nil
+	local server_name
 
 	if engine_lobby.server_name then
 		server_name = engine_lobby:server_name()
@@ -241,7 +245,7 @@ ConnectionClient.rpc_player_connected = function (self, channel_id, peer_id, loc
 
 	self._events[#self._events + 1] = function ()
 		observers[#observers + 1] = {
-			peer_id = peer_id
+			peer_id = peer_id,
 		}
 
 		return {
@@ -254,9 +258,9 @@ ConnectionClient.rpc_player_connected = function (self, channel_id, peer_id, loc
 					account_id_array = account_id_array,
 					profile_chunks_array = profile_chunks_array,
 					player_session_id_array = player_session_id_array,
-					slot_array = slot_array
-				}
-			}
+					slot_array = slot_array,
+				},
+			},
 		}
 	end
 end
@@ -276,8 +280,8 @@ ConnectionClient.rpc_player_disconnected = function (self, channel_id, peer_id)
 		return {
 			name = "player_disconnected",
 			parameters = {
-				peer_id = peer_id
-			}
+				peer_id = peer_id,
+			},
 		}
 	end
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_dm_propaganda.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_propaganda_bypass_security"
 DialogueLookup[DialogueLookup_n + 2] = "mission_propaganda_complex_heart"
 DialogueLookup[DialogueLookup_n + 3] = "mission_propaganda_consulate"

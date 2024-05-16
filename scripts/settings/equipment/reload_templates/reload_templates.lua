@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/reload_templates.lua
+
 local reload_templates = {}
 
 local function _create_reload_template_entry(path)
 	local reload_template_data = require(path)
 	local reload_template_name = reload_template_data.name
+
 	reload_templates[reload_template_name] = reload_template_data
 end
 
@@ -28,6 +31,7 @@ for reload_template_name, reload_template in pairs(reload_templates) do
 	for i = 1, #states do
 		local state_name = states[i]
 		local state = reload_template[state_name]
+
 		state.state_index = i
 	end
 end

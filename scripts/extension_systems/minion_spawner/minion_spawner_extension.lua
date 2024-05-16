@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minion_spawner/minion_spawner_extension.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local Component = require("scripts/utilities/component")
 local MinionSpawnerQueue = require("scripts/extension_systems/minion_spawner/utilities/minion_spawner_queue")
@@ -6,7 +8,9 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local aggro_states = PerceptionSettings.aggro_states
 local MinionSpawnerExtension = class("MinionSpawnerExtension")
+
 MinionSpawnerExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
 local DEFAULT_SPAWN_DELAY = 0.25
 
 MinionSpawnerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -22,13 +26,10 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._spawned_minions_by_queue_id = {}
 end
 
-local NAV_MESH_ABOVE = 1
-local NAV_MESH_BELOW = 1
+local NAV_MESH_ABOVE, NAV_MESH_BELOW = 1, 1
 
 MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position, exclude_from_pacing, exclude_from_specials_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range)
-	local unit = self._unit
-	local nav_world = self._nav_world
-	local traverse_logic = self._traverse_logic
+	local unit, nav_world, traverse_logic = self._unit, self._nav_world, self._traverse_logic
 	local exit_position_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(nav_world, spawn_position, exit_position, traverse_logic)
 
 	if not exit_position_on_nav_mesh then
@@ -39,9 +40,11 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 
 	self._spawner_groups = spawner_groups
 	self._spawn_position = Vector3Box(spawn_position)
+
 	local to_exit_on_navmesh = exit_position_on_nav_mesh - spawn_position
 	local spawn_direction = Vector3.flat(Vector3.normalize(to_exit_on_navmesh))
 	local spawn_rotation = Quaternion.look(spawn_direction, Vector3.up())
+
 	self._spawn_rotation = QuaternionBox(spawn_rotation)
 	self._exit_position = Vector3Box(exit_position_on_nav_mesh)
 
@@ -49,11 +52,12 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 		local degree_per_direction = exit_rotation_random_degree_range / exit_rotation_num_directions
 		local current_degree = -exit_rotation_random_degree_range / 2
 		local randomized_spawn_data = {}
-		local unit_position = nil
+		local unit_position
 		local has_spawn_node = Unit.has_node(unit, "spawn_node")
 
 		if has_spawn_node then
 			local spawn_node = Unit.node(unit, "spawn_node")
+
 			unit_position = Unit.world_position(unit, spawn_node)
 		else
 			unit_position = POSITION_LOOKUP[unit]
@@ -70,7 +74,9 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 			local rotated_direction = Quaternion.rotate(spawn_rotation, direction)
 			local wanted_direction = Vector3.normalize(0.5 * spawn_direction + rotated_direction)
 			local exit_pos = unit_position + wanted_direction * to_exit_on_navmesh_flat_length
+
 			exit_pos.z = exit_position_on_nav_mesh.z
+
 			local exit_pos_on_nav_mesh = NavQueries.position_on_mesh(nav_world, exit_pos, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic)
 
 			if exit_pos_on_nav_mesh then
@@ -80,8 +86,9 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 					rotation = QuaternionBox(Quaternion.look(wanted_direction)),
 					position = Vector3Box(spawn_pos),
 					height = spawn_height,
-					horizontal_length = spawn_horizontal_length
+					horizontal_length = spawn_horizontal_length,
 				}
+
 				randomized_spawn_data[#randomized_spawn_data + 1] = spawn_data
 			end
 
@@ -156,7 +163,7 @@ MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, o
 		group_id = optional_group_id,
 		attack_selection_template_name = optional_attack_selection_template_name,
 		aggro_state = optional_aggro_state,
-		max_health_modifier = optional_max_health_modifier
+		max_health_modifier = optional_max_health_modifier,
 	}
 	local queue_id = queue:enqueue(breed_list, spawn_data)
 
@@ -237,8 +244,7 @@ end
 
 MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	local breed = Breeds[breed_name]
-	local unit = self._unit
-	local exit_position = self._exit_position:unbox()
+	local unit, exit_position = self._unit, self._exit_position:unbox()
 	local exit_position_valid = MinionSpawnerSpawnPosition.validate_exit_position(self._nav_world, exit_position, self._traverse_logic)
 
 	if not exit_position_valid then
@@ -247,24 +253,24 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 		return
 	end
 
-	local spawn_position, spawn_rotation = nil
+	local spawn_position, spawn_rotation
 	local randomized_spawn_data = self._randomized_spawn_data
 
 	if randomized_spawn_data then
 		self._randomized_index = self._randomized_index % #randomized_spawn_data + 1
+
 		local current_randomized_spawn_data = randomized_spawn_data[self._randomized_index]
-		spawn_rotation = current_randomized_spawn_data.rotation:unbox()
-		spawn_position = current_randomized_spawn_data.position:unbox()
+
+		spawn_position, spawn_rotation = current_randomized_spawn_data.position:unbox(), current_randomized_spawn_data.rotation:unbox()
 	else
-		spawn_rotation = self._spawn_rotation:unbox()
-		spawn_position = self._spawn_position:unbox()
+		spawn_position, spawn_rotation = self._spawn_position:unbox(), self._spawn_rotation:unbox()
 	end
 
 	local mission_objective_id = spawn_data.mission_objective_id
 	local spawn_side_id = spawn_data.spawn_side_id
 	local target_side_id = spawn_data.target_side_id
 	local aggro_state = spawn_data.aggro_state or aggro_states.aggroed
-	local target_unit = nil
+	local target_unit
 
 	if target_side_id and aggro_state == aggro_states.aggroed then
 		local main_path_manager = Managers.state.main_path
@@ -274,9 +280,7 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 		end
 	end
 
-	local max_health_modifier = spawn_data.max_health_modifier
-	local group_id = spawn_data.group_id
-	local attack_selection_template_name = spawn_data.attack_selection_template_name
+	local max_health_modifier, group_id, attack_selection_template_name = spawn_data.max_health_modifier, spawn_data.group_id, spawn_data.attack_selection_template_name
 	local spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_state, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name, max_health_modifier, self._randomized_index)
 
 	return spawned_unit

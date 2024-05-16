@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_temperature_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local WeaponTemperatureEffects = class("WeaponTemperatureEffects")
@@ -11,19 +13,19 @@ local GRACE_TIME = 1.8
 local BARREL_THRESHOLD = 0
 local CHARGE_INCREASE_RATE = 0.05
 local SHOOTING_ACTIONS = {
-	shoot_pellets = true,
-	shoot_hit_scan = true,
-	shoot_projectile = true,
 	flamer_gas = true,
-	flamer_gas_burst = true
+	flamer_gas_burst = true,
+	shoot_hit_scan = true,
+	shoot_pellets = true,
+	shoot_projectile = true,
 }
 local CHARGE_ACTIONS = {
-	charge_ammo = true,
 	chain_lightning = true,
 	charge = true,
-	overload_charge_target_finder = true,
+	charge_ammo = true,
+	overload_charge = true,
 	overload_charge_position_finder = true,
-	overload_charge = true
+	overload_charge_target_finder = true,
 }
 local sfx_external_properties = {}
 
@@ -35,8 +37,10 @@ WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, 
 	self._temperature_fx_settings = weapon_template.temperature_fx
 	self._slot = slot
 	self._equipment_component = context.equipment_component
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	self._visual_loadout_extension = context.visual_loadout_extension
 	self._fx_source_name = fx_sources[FX_SOURCE_NAME]
@@ -77,7 +81,9 @@ end
 WeaponTemperatureEffects.update = function (self, unit, dt, t)
 	if self._unwielded then
 		self._unwielded = false
+
 		local time_since_unwield = t - self._unwield_t
+
 		dt = time_since_unwield
 	end
 
@@ -103,6 +109,7 @@ WeaponTemperatureEffects._update_overheat = function (self, unit, dt, t)
 	local weapon_temperature_settings = weapon_template.weapon_temperature_settings
 	local barrel_threshold = weapon_temperature_settings and weapon_temperature_settings.barrel_threshold or BARREL_THRESHOLD
 	local barrel_value = math.clamp01((parameter_value - barrel_threshold) / (1 - barrel_threshold))
+
 	barrel_value = math.ease_sine(barrel_value)
 
 	self._equipment_component.send_component_event(self._slot, "set_barrel_overheat", barrel_value)
@@ -138,6 +145,7 @@ WeaponTemperatureEffects._update_temperature_parameter = function (self, action_
 
 	if use_charge and is_charge_action then
 		local charge_value = charge_level * charge_increase_rate * dt
+
 		parameter_value = math.clamp01(parameter_value + charge_value)
 	elseif is_shoot_action and current_ammunition_clip > 0 then
 		parameter_value = math.min(1, parameter_value + dt * increase_rate)
@@ -165,23 +173,20 @@ WeaponTemperatureEffects._start_sfx_loop = function (self)
 	local stop_config = LOOPING_SFX_CONFIG.stop
 	local start_event_alias = start_config.event_alias
 	local stop_event_alias = stop_config.event_alias
-	local resolved, has_husk_events, event_name = nil
+	local resolved, has_husk_events, event_name
+
 	resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, sfx_external_properties)
 
 	if resolved then
-		if use_husk_event and has_husk_events then
-			event_name = event_name .. "_husk" or event_name
-		end
+		event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
 
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
+
 		self._looping_playing_id = new_playing_id
 		resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, sfx_external_properties)
 
 		if resolved then
-			if use_husk_event and has_husk_events then
-				event_name = event_name .. "_husk" or event_name
-			end
-
+			event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
 			self._looping_stop_event_name = event_name
 		end
 	end

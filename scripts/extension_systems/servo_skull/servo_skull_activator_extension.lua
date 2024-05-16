@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/servo_skull/servo_skull_activator_extension.lua
+
 local ServoSkullActivatorExtension = class("ServoSkullActivatorExtension")
 
 ServoSkullActivatorExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -15,6 +17,7 @@ ServoSkullActivatorExtension.extensions_ready = function (self, world, unit)
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 	local interaction_type = interactee_extension:interaction_type()
 	local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
+
 	self._objective_name = mission_objective_target_extension:objective_name()
 	self._interactee_extension = interactee_extension
 	self._mission_objective_target_extension = mission_objective_target_extension

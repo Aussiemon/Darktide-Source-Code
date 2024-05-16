@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/video_view/video_view.lua
+
 local Definitions = require("scripts/ui/views/video_view/video_view_definitions")
 local VideoViewSettings = require("scripts/ui/views/video_view/video_view_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -9,7 +11,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1
+	Pad1,
 }
 local VideoView = class("VideoView", "BaseView")
 
@@ -50,11 +52,13 @@ end
 VideoView._load_template = function (self, template)
 	if not template then
 		local template_name = self._context.template
+
 		template = VideoViewSettings.templates[template_name]
 	end
 
 	self._video_name = template.video_name
 	self._loop_video = template.loop_video or false
+
 	local sound_name = template.start_sound_name
 	local subtitles = template.subtitles
 	local post_video_action = template.post_video_action
@@ -82,6 +86,7 @@ VideoView.on_enter = function (self)
 	self._packages_loaded = {}
 	self._current_sound_id = nil
 	self._loading = false
+
 	local context = self._context
 	local template_name = context.template
 	local template = VideoViewSettings.templates[template_name]
@@ -96,6 +101,7 @@ VideoView.on_enter = function (self)
 
 		for i = 1, #packages do
 			local package_id = package_manager:load(packages[i], "VideoView", callback, true)
+
 			self._packages_loaded[package_id] = false
 		end
 
@@ -151,7 +157,7 @@ VideoView.on_exit = function (self)
 
 		if action.action_type == "open_hub_view" then
 			local hub_view_context = {
-				hub_interaction = true
+				hub_interaction = true,
 			}
 
 			Managers.ui:open_view(action.view_name, nil, nil, nil, nil, hub_view_context)
@@ -242,14 +248,14 @@ VideoView.update = function (self, dt, t, input_service)
 			end
 		end
 
-		if UISettings.cutscenes_skip.hold_time < self._hold_timer then
+		if self._hold_timer > UISettings.cutscenes_skip.hold_time then
 			self._legend_active = 0
 			self._hold_timer = 0
 
 			self:_on_skip_pressed()
 
 			self._show_skip = false
-		elseif UISettings.cutscenes_skip.fade_inactivity_time < self._legend_active then
+		elseif self._legend_active > UISettings.cutscenes_skip.fade_inactivity_time then
 			self._show_skip = false
 			self._legend_active = 0
 			self._hold_timer = 0
@@ -302,6 +308,7 @@ VideoView._setup_video = function (self, video_name, loop_video)
 
 	local widget = self._widgets_by_name.video
 	local widget_content = widget.content
+
 	widget_content.video_path = video_name
 	widget_content.video_player_reference = video_player_reference
 
@@ -343,6 +350,7 @@ VideoView._update_subtitles = function (self, dt, t)
 		end
 
 		local current_subtitle_start = current_subtitle.subtitle_start
+
 		self._time_for_next_subtitle = video_start_time + current_subtitle_start
 	end
 end
@@ -358,6 +366,7 @@ VideoView._setup_background_world = function (self)
 	local world_name = VideoViewSettings.world_name
 	local world_layer = VideoViewSettings.world_layer
 	local world_timer_name = VideoViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	if self._context then
@@ -407,6 +416,7 @@ end
 
 VideoView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 100)
+
 	local legend_inputs = Definitions.legend_inputs
 	local input_legends_by_key = {}
 
@@ -419,34 +429,36 @@ VideoView._setup_input_legend = function (self)
 		if key then
 			input_legends_by_key[key] = {
 				id = id,
-				settings = legend_input
+				settings = legend_input,
 			}
 		end
 	end
 
 	self._input_legends_by_key = input_legends_by_key
+
 	local id = self._input_legends_by_key.hold_skip.id
 	local entry = self._input_legend_element:_get_entry_by_id(id)
 	local entry_widget = entry.widget
 	local widget_definition = UIWidget.create_definition({
 		{
-			style_id = "background",
 			pass_type = "rect",
+			style_id = "background",
 			style = {
-				color = Color.ui_grey_medium(255, true)
-			}
+				color = Color.ui_grey_medium(255, true),
+			},
 		},
 		{
-			style_id = "fill",
 			pass_type = "rect",
+			style_id = "fill",
 			style = {
 				color = Color.ui_terminal(255, true),
 				size = {
-					0
-				}
-			}
-		}
+					0,
+				},
+			},
+		},
 	}, entry_widget.scenegraph_id)
+
 	self._skip_bar_widget = self:_create_widget("skip", widget_definition)
 end
 
@@ -479,17 +491,20 @@ VideoView.draw = function (self, dt, t, input_service, layer)
 		local position = self._input_legend_element:scenegraph_position(entry_widget.scenegraph_id)
 		local width = 100
 		local z_offset = render_settings.draw_layer or 0
+
 		z_offset = z_offset + self._input_legend_element._draw_layer + 1
 		self._skip_bar_widget.offset = {
 			position[1] + entry_widget.offset[1] + (entry_widget.content.size[1] - width) * 0.5,
 			position[2] + entry_widget.offset[2] + entry_widget.content.size[2] - bar_margin,
-			z_offset
+			z_offset,
 		}
 		self._skip_bar_widget.content.size = {
 			width,
-			5
+			5,
 		}
+
 		local progress = UISettings.cutscenes_skip.hold_time and math.min(self._hold_timer / UISettings.cutscenes_skip.hold_time, 1) or 1
+
 		self._skip_bar_widget.style.fill.size[1] = width * progress
 
 		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)

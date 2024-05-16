@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_sandbox.lua
+
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
@@ -8,8 +10,10 @@ MechanismSandbox.init = function (self, ...)
 	MechanismSandbox.super.init(self, ...)
 
 	local mission_name = GameParameters.mission
+
 	self._mission_name = mission_name
-	local level_name = nil
+
+	local level_name
 
 	if LEVEL_EDITOR_TEST then
 		level_name = Application.get_data("LevelEditor", "level_resource_name") or "__level_editor_test"
@@ -59,7 +63,7 @@ MechanismSandbox.wanted_transition = function (self)
 			challenge = challenge,
 			resistance = resistance,
 			circumstance_name = circumstance,
-			side_mission = side_mission
+			side_mission = side_mission,
 		}
 
 		return false, StateLoading, {
@@ -69,8 +73,8 @@ MechanismSandbox.wanted_transition = function (self)
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {
-				mechanism_data = mechanism_data
-			}
+				mechanism_data = mechanism_data,
+			},
 		}
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/renegade_flamer_mutator_approach.lua
+
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local APPROACH_SOUND_EVENT = "wwise/events//ui/play_ui_silence"
@@ -6,9 +8,9 @@ local TRIGGER_DISTANCE = 25
 local RESTART_TRIGGER_DISTANCE = 28
 local TIME_BETWEEN_TRIGGERS = 10
 local resources = {
-	approach_sound_event = APPROACH_SOUND_EVENT
+	approach_sound_event = APPROACH_SOUND_EVENT,
 }
-local _trigger_sound = nil
+local _trigger_sound
 local effect_template = {
 	name = "renegade_flamer_mutator_approach",
 	resources = resources,
@@ -20,7 +22,7 @@ local effect_template = {
 	end,
 	stop = function (template_data, template_context)
 		return
-	end
+	end,
 }
 
 return effect_template

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_aim.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AlternateFire = require("scripts/utilities/alternate_fire")
@@ -7,6 +9,7 @@ ActionAim.init = function (self, action_context, action_params, action_settings)
 	ActionAim.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
 	self._sway_component = unit_data_extension:read_component("sway")

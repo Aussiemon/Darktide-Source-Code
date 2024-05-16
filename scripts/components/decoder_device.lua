@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/decoder_device.lua
+
 local DecoderDevice = component("DecoderDevice")
 
 DecoderDevice.init = function (self, unit, is_server)
@@ -64,33 +66,33 @@ end
 
 DecoderDevice.component_data = {
 	material_slot = {
+		category = "Material",
+		ui_name = "Material Slot",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Material Slot",
-		category = "Material"
 	},
 	main_material = {
-		ui_type = "resource",
 		category = "Material",
-		value = "",
+		filter = "material",
 		ui_name = "Main Material",
-		filter = "material"
+		ui_type = "resource",
+		value = "",
 	},
 	ghost_material = {
-		ui_type = "resource",
 		category = "Material",
-		value = "",
+		filter = "material",
 		ui_name = "Ghost Material",
-		filter = "material"
+		ui_type = "resource",
+		value = "",
 	},
 	install_anim_event = {
+		ui_name = "Install Anim Event",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Install Anim Event"
 	},
 	extensions = {
-		"DecoderDeviceExtension"
-	}
+		"DecoderDeviceExtension",
+	},
 }
 
 return DecoderDevice

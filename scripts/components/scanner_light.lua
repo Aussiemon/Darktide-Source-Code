@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/scanner_light.lua
+
 local ScannerLight = component("ScannerLight")
 
 ScannerLight.init = function (self, unit)
@@ -13,6 +15,7 @@ ScannerLight.init = function (self, unit)
 
 			if has_light then
 				local light = Unit.light(unit, light_name)
+
 				lights[#lights + 1] = light
 			end
 		end
@@ -107,16 +110,16 @@ end
 
 ScannerLight.component_data = {
 	lights = {
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Lights"
+		ui_name = "Lights",
+		ui_type = "text_box_array",
 	},
 	inputs = {
 		function_example = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return ScannerLight

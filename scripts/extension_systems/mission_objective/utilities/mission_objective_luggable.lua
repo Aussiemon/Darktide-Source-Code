@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_luggable.lua
+
 require("scripts/extension_systems/mission_objective/utilities/mission_objective_base")
 
 local MissionObjectiveLuggable = class("MissionObjectiveLuggable", "MissionObjectiveBase")
@@ -35,6 +37,7 @@ MissionObjectiveLuggable.update_progression = function (self)
 	if socket_targets > 0 then
 		local current_amount = self:incremented_progression()
 		local progression = current_amount / socket_targets
+
 		progression = math.clamp(progression, 0, 1)
 
 		self:set_progression(progression)
@@ -53,6 +56,7 @@ MissionObjectiveLuggable.display_socket_markers = function (self, show_markers)
 	if show_markers then
 		local luggable_synchronizer_extension = self:synchronizer_extension()
 		local socket_units = luggable_synchronizer_extension:active_socket_units()
+
 		self._override_marked_units = {}
 
 		for i = 1, #socket_units do

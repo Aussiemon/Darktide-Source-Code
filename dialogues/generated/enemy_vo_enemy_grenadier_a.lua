@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_grenadier_a.lua
+
 local enemy_vo_enemy_grenadier_a = {
 	renegade_grenadier_skulking = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_grenadier_a = {
 			"loc_enemy_grenadier_a__skulking_07",
 			"loc_enemy_grenadier_a__skulking_08",
 			"loc_enemy_grenadier_a__skulking_09",
-			"loc_enemy_grenadier_a__skulking_10"
+			"loc_enemy_grenadier_a__skulking_10",
 		},
 		sound_events_duration = {
 			2.177438,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_grenadier_a = {
 			1.605833,
 			1.265521,
 			1.632938,
-			2.683208
+			2.683208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_grenadier_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_grenadier_spawned = {
 		randomize_indexes_n = 0,
@@ -47,21 +49,21 @@ local enemy_vo_enemy_grenadier_a = {
 			"loc_enemy_grenadier_a__spawned_01",
 			"loc_enemy_grenadier_a__spawned_02",
 			"loc_enemy_grenadier_a__spawned_03",
-			"loc_enemy_grenadier_a__spawned_04"
+			"loc_enemy_grenadier_a__spawned_04",
 		},
 		sound_events_duration = {
 			1.157188,
 			1.583333,
 			0.988958,
-			1.319625
+			1.319625,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_grenadier_throwing_grenade = {
 		randomize_indexes_n = 0,
@@ -76,7 +78,7 @@ local enemy_vo_enemy_grenadier_a = {
 			"loc_enemy_grenadier_a__throwing_grenade_07",
 			"loc_enemy_grenadier_a__throwing_grenade_08",
 			"loc_enemy_grenadier_a__throwing_grenade_09",
-			"loc_enemy_grenadier_a__throwing_grenade_10"
+			"loc_enemy_grenadier_a__throwing_grenade_10",
 		},
 		sound_events_duration = {
 			1.185313,
@@ -88,7 +90,7 @@ local enemy_vo_enemy_grenadier_a = {
 			1.425896,
 			1.500917,
 			1.408458,
-			0.952417
+			0.952417,
 		},
 		sound_event_weights = {
 			0.1,
@@ -100,10 +102,10 @@ local enemy_vo_enemy_grenadier_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_grenadier_a", enemy_vo_enemy_grenadier_a)

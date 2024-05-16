@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_berzerker_a.lua
+
 local enemy_vo_enemy_traitor_berzerker_a = {
 	traitor_berzerker_assault = {
 		randomize_indexes_n = 0,
@@ -15,7 +17,7 @@ local enemy_vo_enemy_traitor_berzerker_a = {
 			"loc_enemy_traitor_berzerker_a__assault_17",
 			"loc_enemy_traitor_berzerker_a__assault_19",
 			"loc_enemy_traitor_berzerker_a__assault_20",
-			"loc_enemy_traitor_berzerker_a__assault_21"
+			"loc_enemy_traitor_berzerker_a__assault_21",
 		},
 		sound_events_duration = {
 			2.012,
@@ -30,7 +32,7 @@ local enemy_vo_enemy_traitor_berzerker_a = {
 			2.887292,
 			2.577125,
 			2.561667,
-			1.274063
+			1.274063,
 		},
 		sound_event_weights = {
 			0.07692308,
@@ -45,10 +47,10 @@ local enemy_vo_enemy_traitor_berzerker_a = {
 			0.07692308,
 			0.07692308,
 			0.07692308,
-			0.07692308
+			0.07692308,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_traitor_berzerker_a", enemy_vo_enemy_traitor_berzerker_a)

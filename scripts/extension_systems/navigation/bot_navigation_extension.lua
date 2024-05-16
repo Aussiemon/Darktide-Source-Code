@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/navigation/bot_navigation_extension.lua
+
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerMovement = require("scripts/utilities/player_movement")
@@ -6,12 +8,10 @@ local BotNavigationExtension = class("BotNavigationExtension")
 
 BotNavigationExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local nav_world = extension_init_context.nav_world
-	local nav_tag_allowed_layers = extension_init_data.nav_tag_allowed_layers
-	local nav_cost_map_multipliers = extension_init_data.nav_cost_map_multipliers
+	local nav_tag_allowed_layers, nav_cost_map_multipliers = extension_init_data.nav_tag_allowed_layers, extension_init_data.nav_cost_map_multipliers
 	local traverse_logic, nav_tag_cost_table, nav_cost_map_multiplier_table = Navigation.create_traverse_logic(nav_world, nav_tag_allowed_layers, nav_cost_map_multipliers, false)
-	self._nav_cost_map_multiplier_table = nav_cost_map_multiplier_table
-	self._nav_tag_cost_table = nav_tag_cost_table
-	self._traverse_logic = traverse_logic
+
+	self._traverse_logic, self._nav_tag_cost_table, self._nav_cost_map_multiplier_table = traverse_logic, nav_tag_cost_table, nav_cost_map_multiplier_table
 	self._unit = unit
 	self._nav_world = nav_world
 	self._player_nav_transition_generator = PlayerNavTransitionGenerator:new(unit, nav_world, traverse_logic)
@@ -22,8 +22,7 @@ BotNavigationExtension.init = function (self, extension_init_context, unit, exte
 	self._destination = Vector3Box(0, 0, 0)
 	self._has_queued_target = false
 	self._queued_target_position = Vector3Box(0, 0, 0)
-	self._live_path = GwNavAStar.create_live_path()
-	self._astar = GwNavAStar.create()
+	self._astar, self._live_path = GwNavAStar.create(), GwNavAStar.create_live_path()
 	self._running_astar = false
 	self._astar_cancelled = false
 	self._path = nil
@@ -31,8 +30,7 @@ BotNavigationExtension.init = function (self, extension_init_context, unit, exte
 	self._last_successful_path_t = 0
 	self._num_successive_failed_paths = 0
 	self.is_on_nav_mesh = nil
-	self._is_latest_position_on_nav_mesh_valid = false
-	self._latest_position_on_nav_mesh = Vector3Box(Vector3.invalid_vector())
+	self._latest_position_on_nav_mesh, self._is_latest_position_on_nav_mesh_valid = Vector3Box(Vector3.invalid_vector()), false
 
 	self:update_position(unit)
 end
@@ -63,8 +61,7 @@ BotNavigationExtension.update = function (self, unit, t)
 end
 
 BotNavigationExtension.fixed_update = function (self, unit, dt, t, ...)
-	local is_on_nav_mesh = self.is_on_nav_mesh
-	local latest_position_on_nav_mesh = self:latest_position_on_nav_mesh()
+	local is_on_nav_mesh, latest_position_on_nav_mesh = self.is_on_nav_mesh, self:latest_position_on_nav_mesh()
 
 	self._player_nav_transition_generator:fixed_update(unit, is_on_nav_mesh, latest_position_on_nav_mesh)
 end
@@ -91,8 +88,7 @@ BotNavigationExtension._update_astar = function (self, t)
 	if result then
 		if GwNavAStar.path_found(astar) then
 			local num_nodes = GwNavAStar.node_count(astar)
-			local nav_world = self._nav_world
-			local traverse_logic = self._traverse_logic
+			local nav_world, traverse_logic = self._nav_world, self._traverse_logic
 			local path_last_node_position = GwNavAStar.node_at_index(astar, num_nodes)
 			local last_node_position = NavQueries.position_on_mesh(nav_world, path_last_node_position, LAST_NODE_NAV_MESH_CHECK_ABOVE, LAST_NODE_NAV_MESH_CHECK_BELOW, traverse_logic)
 
@@ -108,6 +104,7 @@ BotNavigationExtension._update_astar = function (self, t)
 
 				for i = 1, num_nodes - 1 do
 					local position = GwNavAStar_node_at_index(astar, i)
+
 					self._path[i] = Vector3Box(position)
 				end
 
@@ -137,6 +134,7 @@ end
 
 BotNavigationExtension._path_failed = function (self, t)
 	self._num_successive_failed_paths = self._num_successive_failed_paths + 1
+
 	local cb = self._path_callback
 
 	if cb then
@@ -147,6 +145,7 @@ end
 BotNavigationExtension._path_successful = function (self, t)
 	self._last_successful_path_t = t
 	self._num_successive_failed_paths = 0
+
 	local cb = self._path_callback
 
 	if cb then
@@ -185,7 +184,7 @@ BotNavigationExtension._update_path = function (self, unit, t)
 	local teleport_friendly_transition = transition_type == "bot_jumps" or transition_type == "bot_drops" or transition_type == "bot_leap_of_faith"
 	local time_in_transition = transition_type and t - current_transition.t
 
-	if current_transition == nil or not teleport_friendly_transition and MAX_TIME_IN_TRANSITION <= time_in_transition then
+	if current_transition == nil or not teleport_friendly_transition and time_in_transition >= MAX_TIME_IN_TRANSITION then
 		local is_path_valid = GwNavAStar.is_valid(self._live_path, self._astar)
 
 		if not is_path_valid then
@@ -193,7 +192,7 @@ BotNavigationExtension._update_path = function (self, unit, t)
 
 			return
 		end
-	elseif teleport_friendly_transition and MAX_TIME_IN_TELEPORT_FRIENDLY_TRANSITION <= time_in_transition then
+	elseif teleport_friendly_transition and time_in_transition >= MAX_TIME_IN_TELEPORT_FRIENDLY_TRANSITION then
 		PlayerMovement.teleport(self._player, current_transition.transition_end:unbox(), Quaternion.identity())
 
 		return
@@ -204,8 +203,11 @@ BotNavigationExtension._update_path = function (self, unit, t)
 
 	if goal_reached then
 		local new_path_index = current_path_index + 1
+
 		self._path_index = new_path_index
+
 		local final_reached = new_path_index > #path
+
 		self._final_goal_reached = final_reached
 
 		if final_reached then
@@ -279,7 +281,7 @@ BotNavigationExtension._reevaluate_current_nav_transition = function (self, path
 			local layer_name = Managers.state.nav_mesh:nav_tag_layer_id(layer_id)
 			local new_transition = {
 				type = layer_name,
-				t = t
+				t = t,
 			}
 			local nav_graph_system = Managers.state.extension:system("nav_graph_system")
 			local smart_object_unit = nav_graph_system:unit_from_smart_object_id(smart_object_id)
@@ -289,9 +291,8 @@ BotNavigationExtension._reevaluate_current_nav_transition = function (self, path
 			else
 				local bot_nav_transition_manager = Managers.state.bot_nav_transition
 				local transition_data = bot_nav_transition_manager:transition_data(smart_object_id)
-				new_transition.transition_end = transition_data.to
-				new_transition.waypoint = transition_data.waypoint
-				new_transition.is_following_waypoint = true
+
+				new_transition.is_following_waypoint, new_transition.waypoint, new_transition.transition_end = true, transition_data.waypoint, transition_data.to
 			end
 
 			return new_transition
@@ -299,13 +300,11 @@ BotNavigationExtension._reevaluate_current_nav_transition = function (self, path
 	end
 end
 
-local NAV_MESH_POSITION_ABOVE = 1.1
-local NAV_MESH_POSITION_BELOW = 0.5
+local NAV_MESH_POSITION_ABOVE, NAV_MESH_POSITION_BELOW = 1.1, 0.5
 
 BotNavigationExtension.update_position = function (self, unit)
 	local position = Unit.local_position(unit, 1)
-	local nav_world = self._nav_world
-	local traverse_logic = self._traverse_logic
+	local nav_world, traverse_logic = self._nav_world, self._traverse_logic
 	local position_on_navmesh = NavQueries.position_on_mesh(nav_world, position, NAV_MESH_POSITION_ABOVE, NAV_MESH_POSITION_BELOW, traverse_logic)
 
 	if position_on_navmesh then
@@ -355,8 +354,7 @@ BotNavigationExtension.move_to = function (self, target_position, callback)
 
 	local unit = self._unit
 	local position = POSITION_LOOKUP[unit]
-	local nav_world = self._nav_world
-	local traverse_logic = self._traverse_logic
+	local nav_world, traverse_logic = self._nav_world, self._traverse_logic
 	local position_on_mesh = NavQueries.position_on_mesh(nav_world, position, NAV_MESH_CHECK_ABOVE, NAV_MESH_CHECK_BELOW, traverse_logic)
 
 	if position_on_mesh then
@@ -373,7 +371,7 @@ BotNavigationExtension.move_to = function (self, target_position, callback)
 
 	self._running_astar = true
 
-	if not self._final_goal_reached and SAME_DIRECTION_THRESHOLD < Vector3.dot(Vector3.normalize(target_position - position), Vector3.normalize(self._destination:unbox() - position)) then
+	if not self._final_goal_reached and Vector3.dot(Vector3.normalize(target_position - position), Vector3.normalize(self._destination:unbox() - position)) > SAME_DIRECTION_THRESHOLD then
 		self._last_path = self._path
 		self._last_path_index = self._path_index
 	end

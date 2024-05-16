@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/settings/voting/voting_templates.lua
+
 local voting_templates = {
 	network = {},
-	party_immaterium = {}
+	party_immaterium = {},
 }
 
 local function _validate_template_data(data)

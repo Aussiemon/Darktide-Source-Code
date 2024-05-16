@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_actions/trigger_action_send_flow.lua
+
 require("scripts/extension_systems/trigger/trigger_actions/trigger_action_base")
 
 local TriggerActionSendFlow = class("TriggerActionSendFlow", "TriggerActionBase")

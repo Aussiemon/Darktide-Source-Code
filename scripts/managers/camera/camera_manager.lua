@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/camera_manager.lua
+
 require("scripts/managers/camera/cameras/aim_camera")
 require("scripts/managers/camera/cameras/aim_down_sight_camera")
 require("scripts/managers/camera/cameras/base_camera")
@@ -34,6 +36,7 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WorldInteractionSettings = require("scripts/managers/world_interaction/world_interaction_settings")
 local debug = false
 local CameraManager = class("CameraManager")
+
 CameraManager.NODE_PROPERTY_MAP = {
 	"position",
 	"rotation",
@@ -43,7 +46,7 @@ CameraManager.NODE_PROPERTY_MAP = {
 	"far_range",
 	"shading_environment",
 	"fade_to_black",
-	"exposure_snap"
+	"exposure_snap",
 }
 
 CameraManager.init = function (self, world)
@@ -64,9 +67,9 @@ CameraManager.init = function (self, world)
 	self._listener_elevation_min = -math.huge
 	self._listener_elevation_max = math.huge
 	self._sequence_event_settings = {
-		time_to_recover = 0,
 		end_time = 0,
-		start_time = 0
+		start_time = 0,
+		time_to_recover = 0,
 	}
 	self._shake_event_settings = {}
 	self._active_events = {}
@@ -78,7 +81,9 @@ CameraManager.init = function (self, world)
 	self._viewport_camera_data = {}
 	self._shading_callback = callback(self, "shading_callback")
 	self._camera_shake_enabled = true
+
 	local vertical_fov = Application.user_setting("render_settings", "vertical_fov") or GameParameters.vertical_fov
+
 	self._fov_multiplier = vertical_fov / GameParameters.vertical_fov
 end
 
@@ -100,7 +105,9 @@ end
 
 CameraManager._add_environment_blender = function (self, viewport_name)
 	local new_blender = EnvironmentBlend:new(self._world)
+
 	self._environment_blenders[viewport_name] = new_blender
+
 	local shading_environment_extensions = self._shading_environment_extensions
 
 	for environment_extension, _ in pairs(shading_environment_extensions) do
@@ -158,8 +165,9 @@ CameraManager.load_node_tree = function (self, viewport_name, tree_id, tree_name
 	local root_node = self:_setup_child_nodes(node_table, viewport_name, tree_id, nil, tree_settings)
 	local tree_table = {
 		root_node = root_node,
-		nodes = node_table
+		nodes = node_table,
 	}
+
 	self._node_trees[viewport_name][tree_id] = tree_table
 end
 
@@ -333,19 +341,22 @@ end
 
 CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_name)
 	local old_tree_id = self._current_trees[viewport_name]
+
 	self._current_trees[viewport_name] = tree_id
+
 	local camera_nodes = self._camera_nodes[viewport_name]
 	local current_node = camera_nodes[#camera_nodes]
 	local tree = self._node_trees[viewport_name][tree_id]
 	local next_node = {
-		node = tree.nodes[node_name]
+		node = tree.nodes[node_name],
 	}
 
 	if current_node then
-		local transition_template = nil
+		local transition_template
 
 		if old_tree_id ~= tree_id then
 			local tree_transitions = current_node.node:tree_transitions()
+
 			transition_template = tree_transitions[tree_id] or tree_transitions.default
 
 			if next_node then
@@ -357,6 +368,7 @@ CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_nam
 			end
 		else
 			local node_transitions = current_node.node:node_transitions()
+
 			transition_template = node_transitions[next_node.node:name()] or node_transitions.default
 		end
 
@@ -464,6 +476,7 @@ end
 CameraManager._setup_child_nodes = function (self, node_table, viewport_name, tree_id, parent_node, settings, root_node)
 	local node_settings = settings._node
 	local node = self:_setup_node(node_settings, parent_node, root_node)
+
 	root_node = root_node or node
 	node_table[node:name()] = node
 
@@ -559,11 +572,11 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 		return cast_to
 	end
 
-	local drawer = nil
+	local drawer
 
 	if debug and Managers.state.debug then
 		drawer = Managers.state.debug:drawer({
-			name = "Intersection"
+			name = "Intersection",
 		})
 
 		drawer:reset()
@@ -587,7 +600,7 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 		end
 
 		local hits = PhysicsWorld.linear_sphere_sweep(physics_world, cast_from, cast_to, cast_radius, 1, "types", "statics", "collision_filter", "filter_camera_sweep")
-		local hit = nil
+		local hit
 
 		if hits and #hits > 0 then
 			if debug then
@@ -602,6 +615,7 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 			end
 
 			hit = hits[1]
+
 			local x = Vector3.dot(dir, hit.position - cast_from)
 			local y = Vector3.length(hit.position - cast_from - x * dir)
 
@@ -611,7 +625,7 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 				return pos
 			end
 
-			local cd = nil
+			local cd
 
 			if y < near_radius then
 				cd = x - cast_radius
@@ -619,7 +633,7 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 				cd = x + (y - near_radius) / (smooth_radius - near_radius) * (len - x) - cast_radius
 			end
 
-			if cast_distance > cd then
+			if cd < cast_distance then
 				cast_distance = cd
 				cast_to = cast_from + dir * cast_distance
 			end
@@ -665,7 +679,7 @@ CameraManager.camera_effect_sequence_event = function (self, event, start_time)
 	end
 
 	local sequence_event_settings = self._sequence_event_settings
-	local previous_values = nil
+	local previous_values
 
 	if sequence_event_settings.event then
 		previous_values = sequence_event_settings.current_values
@@ -674,6 +688,7 @@ CameraManager.camera_effect_sequence_event = function (self, event, start_time)
 	sequence_event_settings.start_time = start_time
 	sequence_event_settings.event = CameraEffectSettings.sequence[event]
 	sequence_event_settings.transition_function = CameraEffectSettings.transition_functions.lerp
+
 	local duration = 0
 
 	for modifier_type, modifiers in pairs(sequence_event_settings.event.values) do
@@ -689,6 +704,7 @@ CameraManager.camera_effect_sequence_event = function (self, event, start_time)
 	if previous_values then
 		local recuperate_percentage = sequence_event_settings.event.time_to_recuperate_to
 		local time_to_recover = recuperate_percentage / 100 * duration
+
 		sequence_event_settings.time_to_recover = time_to_recover
 		sequence_event_settings.recovery_values = self:_calculate_sequence_event_values_normal(sequence_event_settings.event.values, time_to_recover)
 		sequence_event_settings.previous_values = previous_values
@@ -717,6 +733,7 @@ CameraManager._apply_offset = function (self, current_data, t)
 	local y = offset_y * Quaternion.forward(current_data.rotation)
 	local z = Vector3(0, 0, offset_z)
 	local new_pos = current_data.position + x + y + z
+
 	new_data.position = new_pos
 
 	return new_data
@@ -758,7 +775,7 @@ end
 
 CameraManager._apply_sequence_event = function (self, camera_data, t)
 	local sequence_event_settings = self._sequence_event_settings
-	local new_values = nil
+	local new_values
 	local time_to_recover = sequence_event_settings.time_to_recover
 	local start_time = sequence_event_settings.start_time
 
@@ -767,13 +784,14 @@ CameraManager._apply_sequence_event = function (self, camera_data, t)
 	else
 		local total_progress = t - sequence_event_settings.start_time
 		local event_values = sequence_event_settings.event.values
+
 		new_values = self:_calculate_sequence_event_values_normal(event_values, total_progress)
 	end
 
 	camera_data.position = self:_calculate_sequence_event_position(camera_data, new_values)
 	sequence_event_settings.current_values = new_values
 
-	if self._sequence_event_settings.end_time <= t then
+	if t >= self._sequence_event_settings.end_time then
 		sequence_event_settings.start_time = 0
 		sequence_event_settings.end_time = 0
 		sequence_event_settings.event = nil
@@ -786,12 +804,12 @@ end
 
 CameraManager._calculate_sequence_event_values_recovery = function (self, t)
 	local new_values = {
+		pitch = 0,
+		roll = 0,
+		x = 0,
+		y = 0,
 		yaw = 0,
 		z = 0,
-		roll = 0,
-		y = 0,
-		pitch = 0,
-		x = 0
 	}
 	local sequence_event_settings = self._sequence_event_settings
 	local time_to_recover = sequence_event_settings.time_to_recover
@@ -814,12 +832,12 @@ end
 
 CameraManager._calculate_sequence_event_values_normal = function (self, event_values, total_progress)
 	local new_values = {
+		pitch = 0,
+		roll = 0,
+		x = 0,
+		y = 0,
 		yaw = 0,
 		z = 0,
-		roll = 0,
-		y = 0,
-		pitch = 0,
-		x = 0
 	}
 
 	for modifier_type, modifiers in pairs(event_values) do
@@ -836,6 +854,7 @@ CameraManager._calculate_sequence_event_values_normal = function (self, event_va
 				end
 
 				local lerp_progress = progress / time_stamp_difference
+
 				new_values[modifier_type] = self._sequence_event_settings.transition_function(current_settings.value, next_settings.value, lerp_progress)
 
 				break
@@ -871,6 +890,7 @@ CameraManager.apply_level_particle_effects = function (self, effects, viewport_n
 	for _, effect in ipairs(effects) do
 		local world = self._world
 		local effect_id = World.create_particles(world, effect, self:position(viewport_name))
+
 		self._level_particle_effect_ids[effect_id] = true
 	end
 end
@@ -879,6 +899,7 @@ CameraManager.apply_level_screen_effects = function (self, effects, viewport_nam
 	for _, effect in ipairs(effects) do
 		local world = self._world
 		local effect_id = World.create_particles(world, effect, Vector3(0, 0, 0))
+
 		self._level_screen_effect_ids[effect_id] = true
 	end
 end
@@ -890,13 +911,14 @@ end
 CameraManager._update_camera_properties = function (self, camera, shadow_cull_camera, camera_nodes, camera_data, viewport_name)
 	local current_node = self:_current_node(camera_nodes)
 	local current_transition = self:_current_transition(camera_nodes)
+
 	camera_data.root_unit = current_node:root_unit()
 
 	if camera_data.position then
 		local root_unit, root_object = current_node:root_unit()
 		local pos = camera_data.position
 		local use_collision = false
-		local safe_pos_offset = nil
+		local safe_pos_offset
 
 		if current_node:use_collision() then
 			use_collision = true
@@ -907,8 +929,14 @@ CameraManager._update_camera_properties = function (self, camera, shadow_cull_ca
 		end
 
 		if use_collision then
-			local safe_pos = nil
-			safe_pos = root_unit and ALIVE[root_unit] and Unit.world_position(root_unit, root_object or 1) + safe_pos_offset or camera_data.position + safe_pos_offset
+			local safe_pos
+
+			if root_unit and ALIVE[root_unit] then
+				safe_pos = Unit.world_position(root_unit, root_object or 1) + safe_pos_offset
+			else
+				safe_pos = camera_data.position + safe_pos_offset
+			end
+
 			pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
 		end
 
@@ -964,6 +992,7 @@ CameraManager._update_camera_properties = function (self, camera, shadow_cull_ca
 	end
 
 	local viewport = ScriptWorld.viewport(self._world, viewport_name)
+
 	self._viewport_camera_data[viewport] = camera_data
 end
 
@@ -974,6 +1003,7 @@ CameraManager._update_angular_velocity = function (self, dt, viewport_name)
 	if Quaternion.is_valid(camera_rot) and Quaternion.is_valid(last_rot) then
 		local rotation_delta = Quaternion.multiply(Quaternion.inverse(camera_rot), last_rot)
 		local angular_velocity_vector, angular_delta = Quaternion.decompose(rotation_delta)
+
 		self._angular_velocity = Vector3Box(angular_velocity_vector * angular_delta / dt)
 	end
 
@@ -1017,6 +1047,7 @@ CameraManager._add_transition = function (self, viewport_name, from_node, to_nod
 			local speed = settings.speed
 			local transition_class = CLASSES[settings.class]
 			local instance = transition_class:new(from_node.node, to_node.node, duration, speed, settings)
+
 			transition[property] = instance
 		end
 	end
@@ -1029,7 +1060,7 @@ CameraManager._update_transition = function (self, viewport_name, nodes, dt)
 
 	table.clear(values)
 
-	local value = nil
+	local value
 	local node_property_map = self.NODE_PROPERTY_MAP
 
 	for _prop_index, property in ipairs(node_property_map) do
@@ -1038,8 +1069,9 @@ CameraManager._update_transition = function (self, viewport_name, nodes, dt)
 			local transition_class = transition[property]
 
 			if transition_class then
-				local done = nil
+				local done
 				local update_time = _node_index == #nodes
+
 				value, done = transition_class:update(dt, value, update_time)
 
 				if done then
@@ -1056,7 +1088,7 @@ CameraManager._update_transition = function (self, viewport_name, nodes, dt)
 		value = nil
 	end
 
-	local remove_from_index = nil
+	local remove_from_index
 
 	for index, node_table in ipairs(nodes) do
 		if not next(node_table.transition) then

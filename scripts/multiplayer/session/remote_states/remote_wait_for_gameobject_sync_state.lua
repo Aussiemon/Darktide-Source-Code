@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/multiplayer/session/remote_states/remote_wait_for_gameobject_sync_state.lua
+
 local RPCS = {
-	"rpc_gameobject_sync"
+	"rpc_gameobject_sync",
 }
 local RemoteWaitForGameObjectSyncState = class("RemoteWaitForGameObjectSyncState")
 
@@ -19,6 +21,7 @@ end
 
 RemoteWaitForGameObjectSyncState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
 	if shared_state.game_object_sync_done and self._got_sync_rpc then
@@ -27,7 +30,7 @@ RemoteWaitForGameObjectSyncState.update = function (self, dt)
 		return "synchronized"
 	end
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		if self._got_sync_rpc then
 			Log.info("RemoteWaitForGameObjectSyncState", "Timeout waiting for game object sync %s", shared_state.peer_id)
 		else
@@ -35,7 +38,7 @@ RemoteWaitForGameObjectSyncState.update = function (self, dt)
 		end
 
 		return "timeout", {
-			game_reason = "timeout"
+			game_reason = "timeout",
 		}
 	end
 
@@ -43,7 +46,7 @@ RemoteWaitForGameObjectSyncState.update = function (self, dt)
 
 	if state == "disconnected" then
 		return "disconnect", {
-			engine_reason = reason
+			engine_reason = reason,
 		}
 	end
 end

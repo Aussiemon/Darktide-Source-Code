@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/servo_skull_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")

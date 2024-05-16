@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_vent_warp_charge.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
@@ -25,7 +27,7 @@ ActionVentWarpCharge.start = function (self, action_settings, t, time_scale, act
 
 	local current_warp_charge = self._warp_charge_component.current_percentage
 
-	if vo_threshold <= current_warp_charge then
+	if current_warp_charge >= vo_threshold then
 		local vo_tag = action_settings.vo_tag
 
 		if vo_tag then

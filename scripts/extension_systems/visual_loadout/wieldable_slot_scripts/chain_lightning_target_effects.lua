@@ -1,16 +1,21 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_target_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local ChainLightningTargetEffects = class("ChainLightningTargetEffects")
 local Unit_world_position = Unit.world_position
 
 ChainLightningTargetEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local wwise_world = context.wwise_world
+
 	self._world = context.world
 	self._wwise_world = wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bot/bt_bot_activate_ability_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
@@ -13,6 +15,7 @@ BtBotActivateAbilityAction.enter = function (self, unit, breed, blackboard, scra
 	local activation_data = ability_meta_data.activation
 	local wait_action_data = ability_meta_data.wait_action
 	local end_condition_data = ability_meta_data.end_condition
+
 	scratchpad.ability_component_name = ability_component_name
 	scratchpad.do_start_input = true
 	scratchpad.started = false
@@ -20,10 +23,14 @@ BtBotActivateAbilityAction.enter = function (self, unit, breed, blackboard, scra
 	scratchpad.activation_data = activation_data
 	scratchpad.wait_action_data = wait_action_data
 	scratchpad.end_condition_data = end_condition_data
+
 	local action_input_extension = ScriptUnit.extension(unit, "action_input_system")
+
 	scratchpad.action_input_extension = action_input_extension
+
 	local input_extension = ScriptUnit.extension(unit, "input_system")
 	local bot_unit_input = input_extension:bot_unit_input()
+
 	scratchpad.bot_unit_input = bot_unit_input
 
 	if end_condition_data then
@@ -49,7 +56,7 @@ BtBotActivateAbilityAction.run = function (self, unit, breed, blackboard, scratc
 end
 
 BtBotActivateAbilityAction._start_ability = function (self, scratchpad, t)
-	local started = nil
+	local started
 	local do_start_input = scratchpad.do_start_input
 
 	if do_start_input then
@@ -57,9 +64,7 @@ BtBotActivateAbilityAction._start_ability = function (self, scratchpad, t)
 
 		if not scratchpad.activate_action_started then
 			local action_input_extension = scratchpad.action_input_extension
-			local ability_component_name = scratchpad.ability_component_name
-			local activate_action_input = activation_data.action_input
-			local raw_input = nil
+			local ability_component_name, activate_action_input, raw_input = scratchpad.ability_component_name, activation_data.action_input
 
 			action_input_extension:bot_queue_action_input(ability_component_name, activate_action_input, raw_input)
 
@@ -70,15 +75,12 @@ BtBotActivateAbilityAction._start_ability = function (self, scratchpad, t)
 		local min_hold_time = activation_data.min_hold_time or 0
 
 		if t >= enter_time + min_hold_time then
-			started = false
-			do_start_input = false
+			do_start_input, started = false, false
 		else
-			started = false
-			do_start_input = true
+			do_start_input, started = true, false
 		end
 	else
-		started = true
-		do_start_input = false
+		do_start_input, started = false, true
 	end
 
 	return do_start_input, started
@@ -90,7 +92,7 @@ BtBotActivateAbilityAction._perform_wait_action = function (self, wait_action_da
 	if wait_action_input and not scratchpad.wait_action_started then
 		local action_input_extension = scratchpad.action_input_extension
 		local ability_component_name = action_data.ability_component_name
-		local raw_input = nil
+		local raw_input
 
 		action_input_extension:bot_queue_action_input(ability_component_name, wait_action_input, raw_input)
 
@@ -111,15 +113,14 @@ BtBotActivateAbilityAction._evaluate_end_condition = function (self, scratchpad,
 	local done = false
 	local done_when_arriving_at_destination = end_condition_data.done_when_arriving_at_destination
 	local elapsed_time = t - scratchpad.enter_time
-	local navigation_extension = scratchpad.navigation_extension
-	local locomotion_component = scratchpad.locomotion_component
+	local navigation_extension, locomotion_component = scratchpad.navigation_extension, scratchpad.locomotion_component
 
 	if not done and done_when_arriving_at_destination then
 		local current_velocity = locomotion_component.velocity_current
 		local speed_sq = Vector3.length_squared(current_velocity)
 		local destination_reached = navigation_extension:destination_reached()
 
-		if MIN_DURATION < elapsed_time and (destination_reached or speed_sq <= MIN_SPEED_SQ) then
+		if elapsed_time > MIN_DURATION and (destination_reached or speed_sq <= MIN_SPEED_SQ) then
 			done = true
 		end
 	end

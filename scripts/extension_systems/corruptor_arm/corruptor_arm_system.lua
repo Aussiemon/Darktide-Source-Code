@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/corruptor_arm/corruptor_arm_system.lua
+
 require("scripts/extension_systems/corruptor_arm/corruptor_arm_extension")
 
 local CorruptorArmSystem = class("CorruptorArmSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
-	"rpc_set_animation_target"
+	"rpc_set_animation_target",
 }
 
 CorruptorArmSystem.init = function (self, context, ...)

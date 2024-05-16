@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/contract_criteria_parser.lua
+
 local ContractSettings = require("scripts/settings/contracts/contract_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ContractCriteriaParser = {}
@@ -5,7 +7,7 @@ local _task_reserved_words = {
 	"count",
 	"complexity",
 	"value",
-	"taskType"
+	"taskType",
 }
 local contract_lookup = {}
 
@@ -15,7 +17,7 @@ end
 
 local function default_parameters(target_value, specifiers)
 	return {
-		count = target_value
+		count = target_value,
 	}
 end
 
@@ -26,7 +28,7 @@ ContractCriteriaParser.parse_backend_criteria = function (backend_criteria)
 		target = backend_criteria.count,
 		complexity = backend_criteria.complexity,
 		specifiers = {},
-		task_type = task_type
+		task_type = task_type,
 	}
 
 	for name, value in pairs(backend_criteria) do
@@ -53,8 +55,7 @@ ContractCriteriaParser.localize_criteria = function (backend_criteria)
 	local specifiers = parsed_task.specifiers
 	local task_type = parsed_task.task_type
 	local contract_setting = ContractSettings[task_type]
-	local title_key = contract_setting.title
-	local description_key = contract_setting.description
+	local title_key, description_key = contract_setting.title, contract_setting.description
 	local parameter_function = contract_setting.localization_parameters or default_parameters
 	local parameters = parameter_function(target_value, specifiers)
 	local title = Localize(title_key, true, parameters)

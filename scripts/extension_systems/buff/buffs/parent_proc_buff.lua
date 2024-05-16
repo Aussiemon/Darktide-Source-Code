@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/parent_proc_buff.lua
+
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -12,14 +14,21 @@ ParentProcBuff.init = function (self, context, template, start_time, instance_id
 
 	local template_context = self._template_context
 	local is_server = template_context.is_server
+
 	self._is_server = is_server
 	self._buff_extension = template_context.buff_extension
+
 	local unit_data_extension = ScriptUnit.has_extension(self._unit, "unit_data_system")
+
 	self._character_state_component = unit_data_extension:read_component("character_state")
+
 	local child_buff_template = template.child_buff_template
+
 	self._child_buff_template = child_buff_template
+
 	local child_template = BuffTemplates[child_buff_template]
 	local max_child_stacks = (self._template_override_data.max_stacks or child_template.max_stacks or 1 or 1) + math.abs(child_template.stack_offset or 0)
+
 	self._max_child_stacks = max_child_stacks
 	self._restore_child_duration = template.restore_child_duration
 
@@ -142,12 +151,15 @@ ParentProcBuff._add_child_buff_stack = function (self, t, num_children_to_add)
 
 	for i = 1, num_children_to_add do
 		num_child_stacks = num_child_stacks + 1
+
 		local _, index = buff_extension:add_externally_controlled_buff(child_buff_template, t, "parent_buff_template", template_name)
+
 		child_buff_indicies[num_child_stacks] = index
 	end
 
 	self._num_child_stacks = num_child_stacks
 	self._add_child_stack_t = t
+
 	local on_stacks_added_func = template.on_stacks_added_func
 
 	if on_stacks_added_func then
@@ -170,6 +182,7 @@ ParentProcBuff._remove_child_buff_stack = function (self, t, num_children_to_rem
 
 	self._num_child_stacks = num_child_stacks
 	self._remove_child_stack_t = t
+
 	local template = self._template
 	local on_stacks_removed_func = template.on_stacks_removed_func
 
@@ -225,7 +238,7 @@ ParentProcBuff.duration_progress = function (self)
 	local child_template_name = template.child_buff_template
 	local number_of_buffs = child_template_name and buff_extension:current_stacks(child_template_name)
 
-	if self._max_child_stacks <= number_of_buffs then
+	if number_of_buffs >= self._max_child_stacks then
 		return 1
 	end
 

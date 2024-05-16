@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/bt_node.lua
+
 local BtConditions = require("scripts/extension_systems/behavior/utilities/bt_conditions")
 local BtEnterHooks = require("scripts/extension_systems/behavior/utilities/bt_enter_hooks")
 local BtLeaveHooks = require("scripts/extension_systems/behavior/utilities/bt_leave_hooks")
@@ -7,7 +9,9 @@ BtNode.init = function (self, identifier, parent, condition_name, enter_hook, le
 	self.tree_node = tree_node
 	self.parent = parent
 	self.identifier = identifier
+
 	local condition = BtConditions[condition_name]
+
 	self.condition_name = condition_name
 
 	self:_init_enter_function(enter_hook)
@@ -21,7 +25,7 @@ local function _should_visit_node(node, old_running_child_nodes, new_running_chi
 end
 
 BtNode._init_enter_function = function (self, enter_hook)
-	local enter_hook_name, args_or_nil = nil
+	local enter_hook_name, args_or_nil
 
 	if enter_hook then
 		enter_hook_name = enter_hook
@@ -68,7 +72,7 @@ BtNode._init_enter_function = function (self, enter_hook)
 end
 
 BtNode._init_leave_function = function (self, leave_hook)
-	local leave_hook_name, args_or_nil = nil
+	local leave_hook_name, args_or_nil
 
 	if leave_hook then
 		leave_hook_name = leave_hook

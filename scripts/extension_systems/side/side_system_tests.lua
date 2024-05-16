@@ -1,4 +1,6 @@
-local SideSystem = nil
+﻿-- chunkname: @scripts/extension_systems/side/side_system_tests.lua
+
+local SideSystem
 
 local function dummy_update_frame_tables(side)
 	local human_units = side.valid_human_units
@@ -21,6 +23,7 @@ local function dummy_update_frame_tables(side)
 	for i = 1, num_player_units do
 		local unit = player_units[i]
 		local position = Vector3.zero()
+
 		num_human_and_bot_units = num_human_and_bot_units + 1
 		human_and_bot_units[num_human_and_bot_units] = unit
 		human_and_bot_unit_positions[num_human_and_bot_units] = position
@@ -53,6 +56,7 @@ local function dummy_update_enemy_frame_tables(side)
 	for i = 1, num_enemy_player_units do
 		local unit = enemy_player_units[i]
 		local position = Vector3.zero()
+
 		num_human_and_bot_units = num_human_and_bot_units + 1
 		human_and_bot_units[num_human_and_bot_units] = unit
 		human_and_bot_unit_positions[num_human_and_bot_units] = position
@@ -73,6 +77,7 @@ local function dummy_update_enemy_frame_tables(side)
 
 	for i = 1, num_enemy_units do
 		local unit = enemy_units[i]
+
 		num_ai_target_units = num_ai_target_units + 1
 		ai_target_units[num_ai_target_units] = unit
 		ai_target_units[unit] = num_ai_target_units
@@ -81,12 +86,14 @@ end
 
 local function dummy_create_side_system(side_compositions)
 	local dummy_object = {}
+
 	dummy_object._sides, dummy_object._side_lookup, dummy_object._side_names = SideSystem._create_sides(dummy_object, side_compositions)
 
 	SideSystem._setup_relations(dummy_object, side_compositions, dummy_object._sides, dummy_object._side_lookup)
 
 	dummy_object.side_by_unit = {}
 	dummy_object._unit_extension_data = {}
+
 	local class_table = CLASSES.SideSystem
 
 	setmetatable(dummy_object, class_table)
@@ -96,74 +103,75 @@ end
 
 local function init_and_run_tests(side_system_object)
 	SideSystem = side_system_object
+
 	local side_compositions = {
 		{
-			name = "test1",
 			color_name = "red",
+			name = "test1",
 			relations = {
 				enemy = {
 					"test2",
-					"test3"
-				}
-			}
+					"test3",
+				},
+			},
 		},
 		{
-			name = "test2",
 			color_name = "blue",
+			name = "test2",
 			relations = {
 				enemy = {
-					"test1"
-				}
-			}
+					"test1",
+				},
+			},
 		},
 		{
-			name = "test3",
 			color_name = "green",
+			name = "test3",
 			relations = {
 				enemy = {
-					"test1"
-				}
-			}
-		}
+					"test1",
+				},
+			},
+		},
 	}
 	local side_system = dummy_create_side_system(side_compositions)
 	local unit_extension_data = side_system._unit_extension_data
+
 	unit_extension_data.player_unit_1 = {
 		is_player_unit = true,
-		breed_tags = {}
+		breed_tags = {},
 	}
 	unit_extension_data.player_unit_2 = {
 		is_player_unit = true,
-		breed_tags = {}
+		breed_tags = {},
 	}
 	unit_extension_data.player_unit_3 = {
 		is_player_unit = true,
-		breed_tags = {}
+		breed_tags = {},
 	}
 	unit_extension_data.minion_1 = {
 		is_player_unit = false,
-		breed_tags = {}
+		breed_tags = {},
 	}
 	unit_extension_data.minion_2 = {
 		is_player_unit = false,
-		breed_tags = {}
+		breed_tags = {},
 	}
 	unit_extension_data.minion_3 = {
 		is_player_unit = false,
-		breed_tags = {}
+		breed_tags = {},
 	}
 	unit_extension_data.minion_4 = {
 		is_player_unit = false,
-		breed_tags = {}
+		breed_tags = {},
 	}
 	unit_extension_data.minion_5 = {
 		is_player_unit = false,
-		breed_tags = {}
+		breed_tags = {},
 	}
+
 	local sides = side_system._sides
-	local side_1 = sides[1]
-	local side_2 = sides[2]
-	local side_3 = sides[3]
+	local side_1, side_2, side_3 = sides[1], sides[2], sides[3]
 
 	side_system:_add_unit_to_side("player_unit_1", 1)
 	side_system:_add_unit_to_side("player_unit_2", 1)

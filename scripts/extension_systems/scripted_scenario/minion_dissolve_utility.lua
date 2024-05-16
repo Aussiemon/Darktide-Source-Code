@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/scripted_scenario/minion_dissolve_utility.lua
+
 local Breed = require("scripts/utilities/breed")
 local WoundMaterials = require("scripts/extension_systems/wounds/utilities/wound_materials")
 local MinionDissolveUtility = {}
@@ -6,34 +8,34 @@ local MIN_DISSOLVE_RADIUS = 0.01
 local radius_material_keys = {
 	"wound_radius_01",
 	"wound_radius_02",
-	"wound_radius_03"
+	"wound_radius_03",
 }
 local shape_scale_material_keys = {
 	"wound_shape_scaling_01",
 	"wound_shape_scaling_02",
-	"wound_shape_scaling_03"
+	"wound_shape_scaling_03",
 }
 local hide_on_dissolve_slots = {
-	slot_shield = 0.6,
 	slot_beard = 0.25,
 	slot_gear_attachment = 0.4,
-	slot_melee_weapon = 0.6,
 	slot_hair = 0.2,
-	slot_ranged_weapon = 0.6
+	slot_melee_weapon = 0.6,
+	slot_ranged_weapon = 0.6,
+	slot_shield = 0.6,
 }
 local breed_hide_on_dissolve_slots = {
 	renegade_gunner = {
-		slot_head = 0.25
+		slot_head = 0.25,
 	},
 	renegade_shocktrooper = {
-		slot_head = 0.25
+		slot_head = 0.25,
 	},
 	renegade_berzerker = {
-		slot_head = 0.25
+		slot_head = 0.25,
 	},
 	cultist_assault = {
-		slot_head = 0.25
-	}
+		slot_head = 0.25,
+	},
 }
 
 local function get_shape_scale(radius)
@@ -56,8 +58,10 @@ MinionDissolveUtility.start_dissolve = function (unit, t, reverted)
 	local duration = 1.15
 	local wounds_extension = ScriptUnit.extension(unit, "wounds_system")
 	local wounds_data = wounds_extension:wounds_data()
+
 	wounds_data.last_write_index = math.max(WOUND_INDEX, wounds_data.last_write_index)
 	wounds_data.num_wounds = math.max(WOUND_INDEX, wounds_data.num_wounds)
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
 	local dissolve_height = Breed.height(unit, breed) * 1.1
@@ -100,6 +104,7 @@ MinionDissolveUtility.start_dissolve = function (unit, t, reverted)
 	local inventory_slots = inventory.slots
 	local start_t = t
 	local done_t = t + duration
+
 	dissolve_data.start_t = start_t
 	dissolve_data.duration = duration
 	dissolve_data.done_t = done_t
@@ -122,14 +127,17 @@ MinionDissolveUtility.update_dissolve = function (unit, dissolve_data, t)
 	local lerp_t = math.clamp01((t - dissolve_data.start_t) / dissolve_data.duration)
 	local lerped_radius = math.lerp(from_radius, to_radius, lerp_t)
 	local shape_scale = get_shape_scale(lerped_radius)
+
 	dissolve_data.wound.radii[WOUND_INDEX] = lerped_radius
 	dissolve_data.wound.shape_scales[WOUND_INDEX] = shape_scale
+
 	local wounds_data = dissolve_data.wounds_data
 	local visual_loadout_extension = dissolve_data.visual_loadout_extension
 
 	WoundMaterials.apply(unit, wounds_data, WOUND_INDEX, visual_loadout_extension:slot_items())
 
 	local flesh_is_visible = visual_loadout_extension:is_slot_visible("slot_flesh")
+
 	dissolve_data.show_flesh = reverted and (dissolve_data.show_flesh or flesh_is_visible)
 
 	if flesh_is_visible then
@@ -142,6 +150,7 @@ MinionDissolveUtility.update_dissolve = function (unit, dissolve_data, t)
 
 	for slot_name, _ in pairs(inventory_slots) do
 		local toggle_percentage_t = breed_hide_slots and breed_hide_slots[slot_name]
+
 		toggle_percentage_t = toggle_percentage_t or hide_on_dissolve_slots[slot_name]
 
 		if toggle_percentage_t then
@@ -151,7 +160,7 @@ MinionDissolveUtility.update_dissolve = function (unit, dissolve_data, t)
 
 			local toggle_t = dissolve_data.start_t + dissolve_data.duration * toggle_percentage_t
 
-			if t > toggle_t then
+			if toggle_t < t then
 				local has_equipped_slot = visual_loadout_extension:can_unequip_slot(slot_name)
 				local is_not_toggled = has_equipped_slot and show_slots ~= visual_loadout_extension:is_slot_visible(slot_name)
 
@@ -162,7 +171,7 @@ MinionDissolveUtility.update_dissolve = function (unit, dissolve_data, t)
 		end
 	end
 
-	if dissolve_data.done_t < t then
+	if t > dissolve_data.done_t then
 		if dissolve_data.show_flesh then
 			local flesh_is_visible = visual_loadout_extension:is_slot_visible("slot_flesh")
 
@@ -186,6 +195,7 @@ MinionDissolveUtility.inherit_progress = function (old_dissolve_data, new_dissol
 	end
 
 	local duration = new_dissolve_data.duration
+
 	new_dissolve_data.start_t = new_dissolve_data.start_t - duration * new_percentage_done
 	new_dissolve_data.done_t = new_dissolve_data.done_t - duration * new_percentage_done
 end

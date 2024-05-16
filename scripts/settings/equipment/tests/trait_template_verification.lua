@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/tests/trait_template_verification.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local RecoilTemplates = require("scripts/settings/equipment/recoil_templates")
 local SpreadTemplates = require("scripts/settings/equipment/spread_templates")
@@ -27,9 +29,9 @@ local BASE_TEMPLATES = {
 	[template_types.damage] = DamageProfileTemplates,
 	[template_types.ammo] = WeaponAmmoTemplates,
 	[template_types.burninating] = WeaponBurninatingTemplates,
-	[template_types.size_of_flame] = WeaponSizeOfFlameTemplates
+	[template_types.size_of_flame] = WeaponSizeOfFlameTemplates,
 }
-local _verify_trait_templates, _verify_trait_template, _verify_trait_template_entry, _verify_damage_trait_template_entries, _verify_damage_trait_template_entry, _verify_trait_template_entries, _check_lerp_value = nil
+local _verify_trait_templates, _verify_trait_template, _verify_trait_template_entry, _verify_damage_trait_template_entries, _verify_damage_trait_template_entry, _verify_trait_template_entries, _check_lerp_value
 
 local function _trait_template_verification()
 	for template_type, _ in pairs(template_types) do
@@ -44,8 +46,7 @@ end
 
 function _verify_trait_templates(template_type, trait_templates)
 	local base_templates = BASE_TEMPLATES[template_type]
-	local success = true
-	local error_msg = ""
+	local success, error_msg = true, ""
 
 	for name, trait_template in pairs(trait_templates) do
 		local template_success, template_error_msgs = _verify_trait_template(template_type, trait_template, base_templates)
@@ -53,6 +54,7 @@ function _verify_trait_templates(template_type, trait_templates)
 		if not template_success then
 			success = false
 			error_msg = string.format("%s%q failed:\n", error_msg, name)
+
 			local num_error_msgs = #template_error_msgs
 
 			for i = 1, num_error_msgs do
@@ -148,6 +150,7 @@ function _verify_damage_trait_template_entry(entry, damage_profile)
 
 	for i = 1, depth - 1 do
 		local path = entry[i]
+
 		test_template = test_template[path]
 
 		if not test_template then
@@ -176,6 +179,7 @@ function _verify_trait_template_entry(trait_template_entry, base_template)
 
 	for i = 1, depth - 1 do
 		local path = trait_template_entry[i]
+
 		test_template = test_template[path]
 
 		if not test_template then

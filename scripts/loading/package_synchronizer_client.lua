@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/package_synchronizer_client.lua
+
 local ArchetypeResourceDependencies = require("scripts/utilities/archetype_resource_dependencies")
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
@@ -18,9 +20,10 @@ local RPCS = {
 	"rpc_reevaluate_all_profile_packages",
 	"rpc_package_synchronizer_set_mission_name",
 	"rpc_set_alias_version",
-	"rpc_cache_player_profile"
+	"rpc_cache_player_profile",
 }
 local PACKAGE_MANAGER_REFERENCE = "PackageSynchronizer"
+
 PackageSynchronizerClient.DEBUG_TAG = "Package Sync Client"
 
 local function _debug_print(str, ...)
@@ -50,6 +53,7 @@ end
 
 PackageSynchronizerClient.init_item_definitions = function (self, item_definitions)
 	self._item_definitions = item_definitions
+
 	local pending_peers = self._pending_peers
 
 	for i = 1, #self._pending_peers do
@@ -78,12 +82,15 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 
 	local players = Managers.player:players_at_peer(peer_id)
 	local packages = {}
+
 	self._player_profile_cache[peer_id] = {}
 
 	for local_player_id, player in pairs(players) do
 		local profile = player:profile()
 		local profile_packages = self:resolve_profile_packages(profile)
+
 		packages[local_player_id] = profile_packages
+
 		local profile_clone = table.clone_instance(profile)
 
 		_debug_print("Player Profile Initial Cache, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
@@ -93,8 +100,9 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 
 	local data = {
 		enabled = false,
-		peer_packages = packages
+		peer_packages = packages,
 	}
+
 	self._packages[peer_id] = data
 end
 
@@ -122,14 +130,16 @@ PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
 	if not data then
 		self:add_peer(peer_id)
 		self:enable_peers({
-			peer_id
+			peer_id,
 		})
 	else
 		local player = Managers.player:player(peer_id, local_player_id)
 		local profile = player:profile()
 		local profile_packages = self:resolve_profile_packages(profile)
 		local peer_packages = data.peer_packages
+
 		peer_packages[local_player_id] = profile_packages
+
 		local profile_clone = table.clone_instance(profile)
 
 		_debug_print("Bot Player Profile Initial Cache, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
@@ -153,6 +163,7 @@ PackageSynchronizerClient.remove_bot = function (self, peer_id, local_player_id)
 	self:_add_to_unload_delayer(package_ids)
 
 	peer_packages[local_player_id] = nil
+
 	local player_alias_versions = self._player_alias_versions[peer_id]
 
 	if player_alias_versions then
@@ -177,20 +188,23 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 
 	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
+
 		profile_packages[alias] = {
 			dependencies = {},
-			state = LOADING_STATES.ready_to_load
+			state = LOADING_STATES.ready_to_load,
 		}
 	end
 
 	local archetype = profile.archetype
 	local archetype_name = archetype.name
 	local selected_voice = profile.selected_voice
-	local game_mode_settings, mission = nil
+	local game_mode_settings, mission
 
 	if self._mission_name then
 		mission = MissionTemplates[self._mission_name]
+
 		local game_mode_name = mission.game_mode_name
+
 		game_mode_settings = GameModeSettings[game_mode_name]
 	end
 
@@ -255,6 +269,7 @@ PackageSynchronizerClient._resolve_base_units = function (self, items, profile_p
 
 		if base_unit then
 			dependencies[base_unit] = false
+
 			local base_unit_1p = item.base_unit_1p
 
 			if base_unit_1p then
@@ -271,7 +286,7 @@ local temp_abilities_items = {}
 local class_loadout = {}
 
 PackageSynchronizerClient._resolve_ability_packages = function (self, archetype, talents, profile_packages, mission, game_mode_settings, profile)
-	local combat_ability, grenade_ability = nil
+	local combat_ability, grenade_ability
 	local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 	local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
@@ -313,10 +328,10 @@ PackageSynchronizerClient._resolve_ability_packages = function (self, archetype,
 end
 
 PackageSynchronizerClient._resolve_profile_properties = function (self, items, archetype, selected_voice, sound_dependencies, particle_dependencies)
-	local profile_properties = {
-		archetype = archetype.name,
-		selected_voice = selected_voice
-	}
+	local profile_properties = {}
+
+	profile_properties.archetype = archetype.name
+	profile_properties.selected_voice = selected_voice
 
 	for slot_name, item in pairs(items) do
 		local item_properties = item.profile_properties
@@ -338,6 +353,7 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 
 			if has_husk_events then
 				local husk_event = string.format("%s_husk", event)
+
 				sound_dependencies[husk_event] = false
 			end
 		end
@@ -358,6 +374,7 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 
 		if weapon_template and weapon_template ~= "" then
 			profile_properties.wielded_weapon_template = weapon_template
+
 			local relevant_events = PlayerCharacterSounds.find_relevant_events(profile_properties)
 			local relevant_particles = PlayerCharacterParticles.find_relevant_particles(profile_properties)
 
@@ -496,7 +513,7 @@ PackageSynchronizerClient._handle_dependency_loading = function (self, package_d
 end
 
 PackageSynchronizerClient._load_dependencies = function (self, dependencies, prioritize)
-	local no_callback = nil
+	local no_callback
 
 	for package_name, _ in pairs(dependencies) do
 		dependencies[package_name] = Managers.package:load(package_name, PACKAGE_MANAGER_REFERENCE, no_callback, prioritize)
@@ -628,7 +645,7 @@ PackageSynchronizerClient._handle_dependency_differences = function (self, new_p
 		end
 	end
 
-	local no_callback = nil
+	local no_callback
 	local loading_new_dependencies = false
 	local package_manager = Managers.package
 
@@ -689,9 +706,10 @@ local UNLOAD_DELAY = 3
 
 PackageSynchronizerClient._add_to_unload_delayer = function (self, package_ids)
 	local unload_delayer = self._unload_delayer
+
 	unload_delayer[#unload_delayer + 1] = {
 		time = UNLOAD_DELAY,
-		package_ids = package_ids
+		package_ids = package_ids,
 	}
 end
 

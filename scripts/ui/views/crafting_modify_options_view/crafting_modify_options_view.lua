@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view.lua
+
 local Definitions = require("scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_definitions")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -19,14 +21,14 @@ require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
 local crafting_options = {
 	{
-		type = "upgrade"
+		type = "upgrade",
 	},
 	{
-		type = "replace"
+		type = "replace",
 	},
 	{
-		type = "extract"
-	}
+		type = "extract",
+	},
 }
 local CraftingModifyOptionsView = class("CraftingModifyOptionsView", "ItemGridViewBase")
 
@@ -58,7 +60,7 @@ CraftingModifyOptionsView.on_enter = function (self)
 	self._weapon_preview:center_align(0, {
 		0,
 		0,
-		0
+		0,
 	})
 	self._parent:set_active_view_instance(self)
 	self._parent:set_is_handling_navigation_input(true)
@@ -76,15 +78,16 @@ CraftingModifyOptionsView.on_enter = function (self)
 			end
 
 			self._selected_tab_index = nil
+
 			local local_player_id = 1
 			local local_player = Managers.player:local_player(local_player_id)
 			local profile = local_player:profile()
 			local search_slot = {
 				"slot_primary",
-				"slot_secondary"
+				"slot_secondary",
 			}
 			local weapon_equipped = false
-			local weapon_slot = nil
+			local weapon_slot
 
 			for i = 1, #search_slot do
 				local slot = search_slot[i]
@@ -126,6 +129,7 @@ CraftingModifyOptionsView._fetch_inventory = function (self)
 
 				if trait_exists then
 					local trait_item = MasterItems.get_item(trait_name)
+
 					traits[#traits + 1] = {
 						rarity = item.rarity,
 						trait_categories = trait_item.weapon_type_restriction,
@@ -135,7 +139,7 @@ CraftingModifyOptionsView._fetch_inventory = function (self)
 						trait_category = trait_item.weapon_type_restriction[1],
 						item_id = item.gear_id,
 						trait_id = trait_item.name,
-						trait_index = #traits + 1
+						trait_index = #traits + 1,
 					}
 				end
 			end
@@ -160,6 +164,7 @@ CraftingModifyOptionsView._get_wallet = function (self)
 				local currency = wallets_data.wallets[i].balance
 				local type = currency.type
 				local amount = currency.amount
+
 				wallets_values[type] = amount
 			end
 
@@ -182,6 +187,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 	local sub_display_name = ItemUtils.sub_display_name(item)
 	local rarity_color = ItemUtils.rarity_color(item)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.modify_sub_display_name.content.text = sub_display_name
 	widgets_by_name.modify_display_name.content.text = display_name
 	widgets_by_name.modify_divider_glow.style.texture.color = table.clone(rarity_color)
@@ -196,11 +202,13 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 		end
 
 		self._wallet_promise = nil
+
 		local disable_auto_spin = true
 
 		self._weapon_preview:present_item(item, disable_auto_spin)
 
 		local options_type = crafting_options[index].type
+
 		self._widgets_by_name.modify_divider.content.visible = true
 		self._widgets_by_name.modify_divider_glow.content.visible = true
 		self._widgets_by_name.modify_display_name.content.visible = true
@@ -222,40 +230,45 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 				else
 					local next_rarity = item.rarity + 1
 					local currrent_rarity_name = ItemUtils.rarity_display_name({
-						rarity = item.rarity
+						rarity = item.rarity,
 					})
 					local current_rarity_color = ItemUtils.rarity_color({
-						rarity = item.rarity
+						rarity = item.rarity,
 					})
 					local next_rarity_name = ItemUtils.rarity_display_name({
-						rarity = next_rarity
+						rarity = next_rarity,
 					})
 					local next_rarity_color = ItemUtils.rarity_color({
-						rarity = next_rarity
+						rarity = next_rarity,
 					})
 					local current_rarity_localization_context = {
 						rarity_color_b = 0,
-						rarity_name = "n/a",
 						rarity_color_g = 0,
 						rarity_color_r = 0,
-						rarity_color_r = current_rarity_color[2],
-						rarity_color_g = current_rarity_color[3],
-						rarity_color_b = current_rarity_color[4],
-						rarity_name = currrent_rarity_name
+						rarity_name = "n/a",
 					}
+
+					current_rarity_localization_context.rarity_color_r = current_rarity_color[2]
+					current_rarity_localization_context.rarity_color_g = current_rarity_color[3]
+					current_rarity_localization_context.rarity_color_b = current_rarity_color[4]
+					current_rarity_localization_context.rarity_name = currrent_rarity_name
+
 					local next_rarity_localization_context = {
 						rarity_color_b = 0,
-						rarity_name = "n/a",
 						rarity_color_g = 0,
 						rarity_color_r = 0,
-						rarity_color_r = next_rarity_color[2],
-						rarity_color_g = next_rarity_color[3],
-						rarity_color_b = next_rarity_color[4],
-						rarity_name = next_rarity_name
+						rarity_name = "n/a",
 					}
+
+					next_rarity_localization_context.rarity_color_r = next_rarity_color[2]
+					next_rarity_localization_context.rarity_color_g = next_rarity_color[3]
+					next_rarity_localization_context.rarity_color_b = next_rarity_color[4]
+					next_rarity_localization_context.rarity_name = next_rarity_name
+
 					local no_cache = true
 					local current_rarity_text = Localize("loc_crafting_upgrade_rarity", no_cache, current_rarity_localization_context)
 					local next_rarity_text = Localize("loc_crafting_upgrade_rarity", no_cache, next_rarity_localization_context)
+
 					self._widgets_by_name.upgrade_next_rarity_text.content.text = string.format("%s  %s", current_rarity_text, next_rarity_text)
 					self._widgets_by_name.upgrade_item_button.content.visible = true
 					self._widgets_by_name.upgrade_next_rarity_text.content.visible = true
@@ -271,6 +284,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 
 					self._widgets_by_name.upgrade_item_button.content.hotspot.pressed_callback = function ()
 						local gear_id = self._preview_item.gear_id
+
 						self._crafting_promise = self._crafting_backend:upgrade_weapon_rarity(gear_id):next(function ()
 							if self._weapon_equipped then
 								ItemUtils.equip_item_in_slot(self._weapon_slot, self._preview_item)
@@ -293,7 +307,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 							local notification_string = Localize("loc_crafting_failure")
 
 							Managers.event:trigger("event_add_notification_message", "alert", {
-								text = notification_string
+								text = notification_string,
 							})
 							self:_on_panel_option_pressed(index)
 
@@ -325,7 +339,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 					local widget_data = {
 						interactable = true,
 						trait = trait,
-						wallet_type = self._wallet_type
+						wallet_type = self._wallet_type,
 					}
 
 					local function callback()
@@ -336,7 +350,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 
 					traits[#traits + 1] = {
 						widget = widget,
-						widget_data = widget_data
+						widget_data = widget_data,
 					}
 				end
 
@@ -365,6 +379,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 				for i = 1, num_traits do
 					local trait = self._weapon_traits[i]
 					local costs = self._costs.extractTrait[tostring(trait.rarity)]
+
 					widgets_promise[#widgets_promise + 1] = self:_can_afford(costs)
 				end
 
@@ -384,7 +399,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 							costs = operation_cost or nil,
 							cost_data = cost,
 							trait = trait,
-							wallet_type = self._wallet_type
+							wallet_type = self._wallet_type,
 						}
 
 						template.init(self, widget, widget_data, i)
@@ -399,7 +414,7 @@ CraftingModifyOptionsView._on_panel_option_pressed = function (self, index)
 
 						traits[#traits + 1] = {
 							widget = widget,
-							widget_data = widget_data
+							widget_data = widget_data,
 						}
 					end
 
@@ -435,7 +450,7 @@ CraftingModifyOptionsView.setup_prices_widget = function (self, costs, afford_by
 	local scenegraph_name = "action_cost"
 	local currency_order = {
 		"diamantine",
-		"plasteel"
+		"plasteel",
 	}
 	local ordered_currency = {}
 	local currency = {}
@@ -469,9 +484,11 @@ CraftingModifyOptionsView.setup_prices_widget = function (self, costs, afford_by
 		local font_gradient_material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 		local icon_texture_big = wallet_settings.icon_texture_small
 		local text = tostring(price)
+
 		widget.style.text.material = font_gradient_material
 		widget.content.texture = icon_texture_big
 		widget.content.text = text
+
 		local text_style = widget.style.text
 		local text_width, _ = self:_text_size(text, text_style.font_type, text_style.font_size)
 		local texture_width = widget.style.texture.size[1]
@@ -479,6 +496,7 @@ CraftingModifyOptionsView.setup_prices_widget = function (self, costs, afford_by
 		local texture_offset = widget.style.texture.offset
 		local text_margin = 5
 		local price_margin = i < #ordered_currency and 30 or 0
+
 		texture_offset[1] = texture_offset[1] + previous_width
 		text_offset[1] = text_offset[1] + text_margin + texture_width + previous_width
 		previous_width = text_width + texture_width + text_margin + previous_width + price_margin
@@ -500,6 +518,7 @@ CraftingModifyOptionsView._can_afford = function (self, costs)
 		local type = cost.type
 		local amount = cost.amount
 		local wallet_amount = wallets[type]
+
 		afford_by_type[type] = amount <= wallet_amount
 
 		if can_afford == true then
@@ -509,7 +528,7 @@ CraftingModifyOptionsView._can_afford = function (self, costs)
 
 	return Promise.resolved({
 		can_afford = can_afford,
-		afford_by_type = afford_by_type
+		afford_by_type = afford_by_type,
 	})
 end
 
@@ -609,7 +628,7 @@ CraftingModifyOptionsView._set_tooltip_position = function (self, parent_widget,
 	local parent_widget_offset = parent_widget.offset or {
 		0,
 		0,
-		0
+		0,
 	}
 	local parent_scenegraph_id = parent_widget.scenegraph_id
 	local parent_scenegraph_position = self:_scenegraph_world_position(parent_scenegraph_id)
@@ -620,6 +639,7 @@ CraftingModifyOptionsView._set_tooltip_position = function (self, parent_widget,
 		self._ui_scenegraph[scenegraph_id].horizontal_alignment = "center"
 		self._ui_scenegraph[scenegraph_id].vertical_alignment = "top"
 		margin_vertical = margin_value
+
 		local pivot_x = parent_scenegraph_position[1] + parent_widget_offset[1] + parent_scenegraph_size[1] * 0.5
 		local pivot_y = parent_scenegraph_position[2] + parent_scenegraph_size[2] + parent_widget_offset[2] + margin_vertical
 
@@ -628,6 +648,7 @@ CraftingModifyOptionsView._set_tooltip_position = function (self, parent_widget,
 		self._ui_scenegraph[scenegraph_id].horizontal_alignment = "center"
 		self._ui_scenegraph[scenegraph_id].vertical_alignment = "bottom"
 		margin_vertical = margin_value
+
 		local pivot_x = parent_scenegraph_position[1] + parent_widget_offset[1] + parent_scenegraph_size[1] * 0.5
 		local pivot_y = parent_scenegraph_position[2] + parent_widget_offset[2] - margin_vertical
 
@@ -636,6 +657,7 @@ CraftingModifyOptionsView._set_tooltip_position = function (self, parent_widget,
 		self._ui_scenegraph[scenegraph_id].horizontal_alignment = "left"
 		self._ui_scenegraph[scenegraph_id].vertical_alignment = "center"
 		margin_horizontal = margin_value
+
 		local pivot_x = parent_scenegraph_position[1] + parent_widget_offset[1] + parent_scenegraph_size[1] + margin_horizontal
 		local pivot_y = parent_scenegraph_position[2] + parent_widget_offset[2] + parent_scenegraph_size[2] * 0.5
 
@@ -644,6 +666,7 @@ CraftingModifyOptionsView._set_tooltip_position = function (self, parent_widget,
 		self._ui_scenegraph[scenegraph_id].horizontal_alignment = "right"
 		self._ui_scenegraph[scenegraph_id].vertical_alignment = "center"
 		margin_horizontal = margin_value
+
 		local pivot_x = parent_scenegraph_position[1] + parent_widget_offset[1] - margin_horizontal
 		local pivot_y = parent_scenegraph_position[2] + parent_widget_offset[2] + parent_scenegraph_size[2] * 0.5
 
@@ -660,6 +683,7 @@ CraftingModifyOptionsView._select_trait_extract = function (self, selected_widge
 	local scenegraph_name = "selected_trait"
 	local target_scenegraph = "extract_trait_pivot"
 	local target_pos_x, target_pos_y = self:_scenegraph_position(target_scenegraph)
+
 	self._ui_scenegraph[scenegraph_name].horizontal_alignment = self._ui_scenegraph[target_scenegraph].horizontal_alignment
 	self._ui_scenegraph[scenegraph_name].vertical_alignment = self._ui_scenegraph[target_scenegraph].vertical_alignment
 
@@ -674,14 +698,14 @@ CraftingModifyOptionsView._select_trait_extract = function (self, selected_widge
 	local widget_data = {
 		interactable = false,
 		trait = trait,
-		wallet_type = self._wallet_type
+		wallet_type = self._wallet_type,
 	}
 
 	template.init(self, widget, widget_data)
 
 	self._selected_trait = {
 		widget = widget,
-		widget_data = widget_data
+		widget_data = widget_data,
 	}
 
 	self:_set_trait_tooltip(self._selected_trait, "down")
@@ -698,15 +722,16 @@ CraftingModifyOptionsView._select_trait_extract = function (self, selected_widge
 
 	self._widgets_by_name.extract_trait_button.content.hotspot.pressed_callback = function ()
 		local context = {
-			title_text = "loc_popup_header_destroy_weapon",
 			description_text = "loc_popup_description_destroy_weapon",
+			title_text = "loc_popup_header_destroy_weapon",
 			type = "warning",
 			options = {
 				{
-					text = "loc_popup_button_destroy_weapon",
 					close_on_pressed = true,
+					text = "loc_popup_button_destroy_weapon",
 					callback = callback(function ()
 						local gear_id = self._preview_item.gear_id
+
 						self._crafting_promise = self._crafting_backend:extract_trait_from_weapon(gear_id, trait.trait_index):next(function ()
 							if self._destroyed then
 								return
@@ -723,21 +748,21 @@ CraftingModifyOptionsView._select_trait_extract = function (self, selected_widge
 							local notification_string = Localize("loc_crafting_failure")
 
 							Managers.event:trigger("event_add_notification_message", "alert", {
-								text = notification_string
+								text = notification_string,
 							})
 							self:on_back_pressed()
 
 							self._crafting_promise = nil
 						end)
-					end)
+					end),
 				},
 				{
-					text = "loc_popup_button_cancel_destroy_weapon",
-					template_type = "terminal_button_small",
 					close_on_pressed = true,
-					hotkey = "back"
-				}
-			}
+					hotkey = "back",
+					template_type = "terminal_button_small",
+					text = "loc_popup_button_cancel_destroy_weapon",
+				},
+			},
 		}
 
 		Managers.event:trigger("event_show_ui_popup", context)
@@ -755,6 +780,7 @@ CraftingModifyOptionsView._select_trait_modify = function (self, selected_widget
 		local context = Definitions.grid_settings
 		local reference_name = "inventory_traits_grid"
 		local layer = 10
+
 		self._inventory_traits_grid = self:_add_element(ViewElementGrid, reference_name, layer, context)
 	end
 
@@ -765,6 +791,7 @@ CraftingModifyOptionsView._select_trait_modify = function (self, selected_widget
 
 	self._ui_scenegraph[scenegraph_name].vertical_alignment = self._ui_scenegraph[target_scenegraph].vertical_alignment
 	self._ui_scenegraph[scenegraph_name].horizontal_alignment = self._ui_scenegraph[target_scenegraph].horizontal_alignment
+
 	local target_pos_x, target_pos_y = self:_scenegraph_position(target_scenegraph)
 
 	self:_set_scenegraph_position(scenegraph_name, target_pos_x, target_pos_y)
@@ -778,14 +805,14 @@ CraftingModifyOptionsView._select_trait_modify = function (self, selected_widget
 	local widget_data = {
 		interactable = false,
 		trait = trait,
-		wallet_type = self._wallet_type
+		wallet_type = self._wallet_type,
 	}
 
 	template.init(self, widget, widget_data)
 
 	self._selected_trait = {
 		widget = widget,
-		widget_data = widget_data
+		widget_data = widget_data,
 	}
 
 	self:_set_trait_tooltip(self._selected_trait, "left")
@@ -838,6 +865,7 @@ CraftingModifyOptionsView._generate_weapon_traits = function (self)
 
 				if trait_exists then
 					local trait_item = MasterItems.get_item(trait_id)
+
 					traits[#traits + 1] = {
 						rarity = trait.rarity,
 						trait_categories = trait_item.weapon_type_restriction,
@@ -846,7 +874,7 @@ CraftingModifyOptionsView._generate_weapon_traits = function (self)
 						icon = trait_item.icon,
 						trait_category = trait_item.weapon_type_restriction[1],
 						trait_id = trait_id,
-						trait_index = #traits + 1
+						trait_index = #traits + 1,
 					}
 				end
 			end
@@ -860,32 +888,37 @@ CraftingModifyOptionsView._setup_trait_tabs = function (self)
 	local id = "traits_tab_menu"
 	local layer = 1
 	local tab_menu_settings = {
+		button_spacing = 20,
 		fixed_button_size = true,
 		horizontal_alignment = "center",
-		button_spacing = 20,
 		button_size = {
 			100,
-			50
-		}
+			50,
+		},
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
+
 	self._tab_menu_element = tab_menu_element
+
 	local input_action_left = "navigate_primary_left_pressed"
 	local input_action_right = "navigate_primary_right_pressed"
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 
 	local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button)
+
 	tab_button_template[1].style = {
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}
+
 	local tab_ids = {}
 
 	for i = 1, 4 do
 		local pressed_callback = callback(self, "cb_switch_trait_tab", i)
 		local name = TextUtilities.convert_to_roman_numerals(i)
 		local tab_id = tab_menu_element:add_entry(name, pressed_callback, tab_button_template, nil, nil, true)
+
 		tab_ids[i] = tab_id
 	end
 
@@ -959,7 +992,7 @@ CraftingModifyOptionsView._present_layout_by_trait_rarity = function (self, trai
 						trait = trait,
 						disabled = already_available or selected_slot_rarity < trait_rarity or slot_category ~= trait.trait_category,
 						costs = costs,
-						wallet_type = self._wallet_type
+						wallet_type = self._wallet_type,
 					}
 					wallet_promise[#wallet_promise + 1] = self:_can_afford(costs)
 				end
@@ -970,6 +1003,7 @@ CraftingModifyOptionsView._present_layout_by_trait_rarity = function (self, trai
 	Promise.all(unpack(wallet_promise)):next(function (cost_data)
 		for i = 1, #cost_data do
 			local trait = traits[i]
+
 			trait.cost_data = cost_data[i]
 		end
 
@@ -1010,7 +1044,7 @@ CraftingModifyOptionsView.cb_on_grid_entry_left_pressed = function (self, widget
 			local notification_string = Localize("loc_crafting_failure")
 
 			Managers.event:trigger("event_add_notification_message", "alert", {
-				text = notification_string
+				text = notification_string,
 			})
 			self:on_back_pressed()
 
@@ -1034,7 +1068,7 @@ CraftingModifyOptionsView._set_preview_widgets_visibility = function (self, visi
 end
 
 CraftingModifyOptionsView.update = function (self, dt, t, input_service)
-	local show_loading = self._wallet_promise or not not self._crafting_promise
+	local show_loading = not not self._wallet_promise or not not self._crafting_promise
 
 	if self._loading_view ~= show_loading then
 		self._loading_view = show_loading
@@ -1051,6 +1085,7 @@ CraftingModifyOptionsView.update = function (self, dt, t, input_service)
 	Definitions.modify_arrow_animation.update(self, dt, self._current_progress)
 
 	self._current_progress = self._current_progress + dt
+
 	local wanted_tab_index = self._wanted_tab_index
 
 	if self._selected_tab_index ~= wanted_tab_index and not show_loading then
@@ -1104,14 +1139,16 @@ CraftingModifyOptionsView.draw = function (self, dt, t, input_service, layer)
 	local ui_renderer = self._ui_default_renderer
 	local ui_scenegraph = self._ui_scenegraph
 	local render_scale = self._render_scale
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local price_widgets = self._price_widgets
 	local traits = self._traits
 	local selected_trait = self._selected_trait
 	local tooltip_widget = self._tooltip_widget
-	local focused_trait = nil
+	local focused_trait
 
 	CraftingModifyOptionsView.super._draw_elements(self, dt, t, ui_renderer, render_settings, input_service)
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -1155,6 +1192,7 @@ CraftingModifyOptionsView.draw = function (self, dt, t, input_service, layer)
 
 	if not self._selected_trait and focused_trait ~= self._focused_trait then
 		self._focused_trait = focused_trait
+
 		local index = self._wanted_tab_index
 		local options_type = crafting_options[index].type
 
@@ -1267,7 +1305,7 @@ CraftingModifyOptionsView._handle_input = function (self, input_service)
 			local focused_widget = selected_index and widgets[selected_index]
 			local widgets_changed = {
 				unfocused_widget,
-				focused_widget
+				focused_widget,
 			}
 
 			if unfocused_widget then

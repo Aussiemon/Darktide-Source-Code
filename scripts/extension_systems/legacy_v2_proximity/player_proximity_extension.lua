@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/legacy_v2_proximity/player_proximity_extension.lua
+
 local PlayerProximityExtension = class("PlayerProximityExtension")
 
 PlayerProximityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)

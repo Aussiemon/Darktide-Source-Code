@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -6,197 +8,200 @@ local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
-		vertical_alignment = "center",
-		parent = "screen",
 		horizontal_alignment = "center",
+		parent = "screen",
+		vertical_alignment = "center",
 		size = {
 			1920,
-			1080
+			1080,
 		},
 		position = {
 			0,
 			0,
-			0
-		}
+			0,
+		},
 	},
 	options_area = {
-		vertical_alignment = "center",
-		parent = "canvas",
 		horizontal_alignment = "center",
+		parent = "canvas",
+		vertical_alignment = "center",
 		size = {
 			1400,
-			600
+			600,
 		},
 		position = {
 			0,
 			0,
-			1
-		}
+			1,
+		},
 	},
 	options_title = {
-		vertical_alignment = "top",
-		parent = "options_area",
 		horizontal_alignment = "center",
+		parent = "options_area",
+		vertical_alignment = "top",
 		size = {
 			1400,
-			50
+			50,
 		},
 		position = {
 			0,
 			-70,
-			5
-		}
+			5,
+		},
 	},
 	options_grid = {
-		vertical_alignment = "center",
-		parent = "options_area",
 		horizontal_alignment = "left",
+		parent = "options_area",
+		vertical_alignment = "center",
 		size = {
 			850,
-			550
+			550,
 		},
 		position = {
 			0,
 			0,
-			5
-		}
+			5,
+		},
 	},
 	options_grid_content_pivot = {
-		vertical_alignment = "top",
-		parent = "options_grid",
 		horizontal_alignment = "left",
+		parent = "options_grid",
+		vertical_alignment = "top",
 		size = {
 			0,
-			0
+			0,
 		},
 		position = {
 			0,
 			0,
-			1
-		}
+			1,
+		},
 	},
 	options_grid_scrollbar = {
-		vertical_alignment = "top",
-		parent = "options_grid",
 		horizontal_alignment = "right",
+		parent = "options_grid",
+		vertical_alignment = "top",
 		size = {
 			8,
-			550
+			550,
 		},
 		position = {
 			30,
 			0,
-			2
-		}
+			2,
+		},
 	},
 	options_grid_interaction = {
-		vertical_alignment = "top",
-		parent = "options_grid",
 		horizontal_alignment = "left",
+		parent = "options_grid",
+		vertical_alignment = "top",
 		size = {
 			850,
-			550
+			550,
 		},
 		position = {
 			0,
 			0,
-			2
-		}
+			2,
+		},
 	},
 	options_grid_mask = {
-		vertical_alignment = "center",
-		parent = "options_grid",
 		horizontal_alignment = "center",
+		parent = "options_grid",
+		vertical_alignment = "center",
 		size = {
 			870,
-			570
+			570,
 		},
 		position = {
 			0,
 			0,
-			1
-		}
+			1,
+		},
 	},
 	tooltip = {
-		vertical_alignment = "top",
-		parent = "options_area",
 		horizontal_alignment = "right",
+		parent = "options_area",
+		vertical_alignment = "top",
 		size = {
 			400,
-			520
+			520,
 		},
 		position = {
 			0,
 			40,
-			200
-		}
+			200,
+		},
 	},
 	button_pivot = {
-		vertical_alignment = "center",
-		parent = "canvas",
 		horizontal_alignment = "center",
+		parent = "canvas",
+		vertical_alignment = "center",
 		size = ButtonPassTemplates.terminal_button.size,
 		position = {
 			0,
 			330,
-			5
-		}
-	}
+			5,
+		},
+	},
 }
 local popup_type_style = {
 	warning = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			92,
-			72
+			72,
 		},
 		icon_color = {
 			255,
 			162,
 			6,
-			6
+			6,
 		},
 		background_color = {
 			50,
 			100,
 			0,
-			0
+			0,
 		},
 		terminal_background_color = {
 			255,
 			100,
 			6,
-			6
+			6,
 		},
 		title_text_color = {
 			255,
 			162,
 			6,
-			6
+			6,
 		},
 		description_text_color = {
 			255,
 			212,
 			194,
-			194
-		}
+			194,
+		},
 	},
 	default = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			0,
-			0
+			0,
 		},
 		icon_color = Color.blue(127.5, true),
 		background_color = Color.terminal_grid_background(50, true),
 		terminal_background_color = Color.terminal_grid_background(255, true),
 		title_text_color = Color.terminal_text_header(255, true),
-		description_text_color = Color.terminal_text_body(255, true)
-	}
+		description_text_color = Color.terminal_text_body(255, true),
+	},
 }
 local title_style = table.clone(UIFontSettings.header_1)
+
 title_style.text_horizontal_alignment = "center"
+
 local tooltip_text_style = table.clone(UIFontSettings.body)
+
 tooltip_text_style.text_horizontal_alignment = "left"
 tooltip_text_style.text_vertical_alignment = "top"
 tooltip_text_style.horizontal_alignment = "left"
@@ -205,264 +210,265 @@ tooltip_text_style.color = Color.white(255, true)
 tooltip_text_style.offset = {
 	0,
 	0,
-	2
+	2,
 }
+
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(76.5, true)
-			}
-		}
+				color = Color.black(76.5, true),
+			},
+		},
 	}, "screen"),
 	options_grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "options_grid_scrollbar"),
 	options_grid_interaction = UIWidget.create_definition({
 		{
+			content_id = "hotspot",
 			pass_type = "hotspot",
-			content_id = "hotspot"
-		}
+		},
 	}, "options_grid_interaction"),
 	options_grid_mask = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_viewport_3",
 			pass_type = "texture",
+			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_viewport_3",
 			style = {
 				color = {
 					255,
 					255,
 					255,
-					255
-				}
-			}
-		}
+					255,
+				},
+			},
+		},
 	}, "options_grid_mask"),
 	popup_background = UIWidget.create_definition({
 		{
-			style_id = "background",
 			pass_type = "rect",
+			style_id = "background",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				size = {
 					nil,
-					0
+					0,
 				},
 				size_addition = {
 					0,
-					-26
+					-26,
 				},
-				color = Color.black(178.5, true)
-			}
+				color = Color.black(178.5, true),
+			},
 		},
 		{
-			value = "content/ui/materials/backgrounds/terminal_basic",
-			style_id = "terminal",
 			pass_type = "texture_uv",
+			style_id = "terminal",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
 				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					0
+					0,
 				},
 				size = {
 					nil,
-					0
+					0,
 				},
 				size_addition = {
 					40,
-					150
+					150,
 				},
 				uvs = {
 					{
 						0,
-						0
+						0,
 					},
 					{
 						1,
-						1
-					}
+						1,
+					},
 				},
-				color = Color.terminal_grid_background(255, true)
-			}
+				color = Color.terminal_grid_background(255, true),
+			},
 		},
 		{
-			value = "content/ui/materials/backgrounds/popups/screen_takeover_01",
-			style_id = "texture",
 			pass_type = "texture_uv",
+			style_id = "texture",
+			value = "content/ui/materials/backgrounds/popups/screen_takeover_01",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				color = Color.terminal_background(255, true),
 				size_addition = {
 					0,
-					0
+					0,
 				},
 				offset = {
 					0,
 					0,
-					1
+					1,
 				},
 				size = {
 					1822,
-					430
+					430,
 				},
 				uvs = {
 					{
 						0,
-						0
+						0,
 					},
 					{
 						1,
-						1
-					}
-				}
-			}
-		}
+						1,
+					},
+				},
+			},
+		},
 	}, "screen"),
 	title_text = UIWidget.create_definition({
 		{
-			value_id = "text",
-			style_id = "text",
 			pass_type = "text",
+			style_id = "text",
+			value_id = "text",
 			value = Managers.localization:localize("loc_settings_menu_header"),
-			style = title_style
-		}
+			style = title_style,
+		},
 	}, "options_title"),
 	edge_top = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
-			style_id = "texture",
 			pass_type = "texture_uv",
+			style_id = "texture",
+			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
+				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0
+					0,
 				},
 				offset = {
 					0,
 					0,
-					2
+					2,
 				},
 				size = {
 					252,
-					10
-				}
-			}
+					10,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/dividers/skull_rendered_center_01",
-			style_id = "texture_center",
 			pass_type = "texture",
+			style_id = "texture_center",
+			value = "content/ui/materials/dividers/skull_rendered_center_01",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
+				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0
+					0,
 				},
 				offset = {
 					0,
 					0,
-					3
+					3,
 				},
 				size = {
 					140,
-					18
-				}
-			}
-		}
+					18,
+				},
+			},
+		},
 	}, "screen"),
 	edge_bottom = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
-			style_id = "texture",
 			pass_type = "texture_uv",
+			style_id = "texture",
+			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
+				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0
+					0,
 				},
 				offset = {
 					0,
 					0,
-					2
+					2,
 				},
 				size = {
 					252,
-					10
-				}
-			}
+					10,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/dividers/skull_rendered_center_02",
-			style_id = "texture_center",
 			pass_type = "texture",
+			style_id = "texture_center",
+			value = "content/ui/materials/dividers/skull_rendered_center_02",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
+				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0
+					0,
 				},
 				offset = {
 					0,
 					10,
-					3
+					3,
 				},
 				size = {
 					306,
-					48
-				}
-			}
-		}
+					48,
+				},
+			},
+		},
 	}, "screen"),
 	button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "button_pivot", {
 		alpha_multiplier = 0,
 		gamepad_action = "back",
 		original_text = Localize("loc_popup_button_close"),
 		hotspot = {
-			use_is_focused = true
-		}
+			use_is_focused = true,
+		},
 	}),
 	tooltip = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					1
+					1,
 				},
 				color = Color.black(120, true),
 				size_addition = {
 					50,
-					50
-				}
-			}
+					50,
+				},
+			},
 		},
 		{
-			value_id = "text",
-			style_id = "text",
 			pass_type = "text",
+			style_id = "text",
 			value = "",
-			style = tooltip_text_style
-		}
+			value_id = "text",
+			style = tooltip_text_style,
+		},
 	}, "tooltip", {
-		visible = false
+		visible = false,
 	}),
 	settings_overlay = UIWidget.create_definition({
 		{
@@ -471,139 +477,151 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					20
+					20,
 				},
 				color = {
 					160,
 					0,
 					0,
-					0
-				}
-			}
-		}
-	}, "screen")
+					0,
+				},
+			},
+		},
+	}, "screen"),
 }
 local anim_start_delay = 0
-local animations = {}
-animations.on_enter = {
-	{
-		name = "init",
-		end_time = 0,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			local alpha_multiplier = 0
-			parent._animated_alpha_multiplier = alpha_multiplier
+local animations = {
+	on_enter = {
+		{
+			end_time = 0,
+			name = "init",
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				local alpha_multiplier = 0
 
-			if params.additional_widgets then
-				for i = 1, #params.additional_widgets do
-					local widget = params.additional_widgets[i]
-					widget.alpha_multiplier = alpha_multiplier
-				end
-			end
+				parent._animated_alpha_multiplier = alpha_multiplier
 
-			widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
-			widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
-			local popup_type = "default"
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
 
-			if parent._popup_type then
-				for name, _ in pairs(popup_type_style) do
-					if parent._popup_type == name then
-						popup_type = name
-
-						break
+						widget.alpha_multiplier = alpha_multiplier
 					end
 				end
-			end
 
-			widgets.popup_background.style.texture.color = popup_type_style[popup_type].background_color
-			widgets.popup_background.style.terminal.color = popup_type_style[popup_type].terminal_background_color
-			widgets.button.alpha_multiplier = 0
-		end
-	},
-	{
-		name = "open",
-		start_time = anim_start_delay + 0,
-		end_time = anim_start_delay + 0.3,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
-			parent._animated_alpha_multiplier = anim_progress
-			local popup_height = params.popup_height
-			local window_height = popup_height * anim_progress
-			local background_height = widgets.popup_background.style.texture.size[2]
-			local background_limit = math.min(popup_height, background_height)
-			local normalized_end_height = background_limit / background_height
-			local uv_v_mid_value = normalized_end_height * 0.5
-			widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
-			widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
-			widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
-			widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
-			widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
-			widgets.edge_bottom.offset[2] = window_height * 0.5
-			widgets.edge_top.offset[2] = -window_height * 0.5
-		end
-	},
-	{
-		name = "fade_in",
-		start_time = anim_start_delay + 0.2,
-		end_time = anim_start_delay + 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
+				widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
+				widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
 
-			if params.additional_widgets then
-				for i = 1, #params.additional_widgets do
-					local widget = params.additional_widgets[i]
-					widget.alpha_multiplier = anim_progress
+				local popup_type = "default"
+
+				if parent._popup_type then
+					for name, _ in pairs(popup_type_style) do
+						if parent._popup_type == name then
+							popup_type = name
+
+							break
+						end
+					end
 				end
-			end
 
-			widgets.button.alpha_multiplier = anim_progress
-		end
-	}
-}
-animations.on_exit = {
-	{
-		name = "fade_out",
-		start_time = anim_start_delay + 0,
-		end_time = anim_start_delay + 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeInCubic(1 - progress)
+				widgets.popup_background.style.texture.color = popup_type_style[popup_type].background_color
+				widgets.popup_background.style.terminal.color = popup_type_style[popup_type].terminal_background_color
+				widgets.button.alpha_multiplier = 0
+			end,
+		},
+		{
+			name = "open",
+			start_time = anim_start_delay + 0,
+			end_time = anim_start_delay + 0.3,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
 
-			if params.additional_widgets then
-				for i = 1, #params.additional_widgets do
-					local widget = params.additional_widgets[i]
-					widget.alpha_multiplier = anim_progress
+				parent._animated_alpha_multiplier = anim_progress
+
+				local popup_height = params.popup_height
+				local window_height = popup_height * anim_progress
+				local background_height = widgets.popup_background.style.texture.size[2]
+				local background_limit = math.min(popup_height, background_height)
+				local normalized_end_height = background_limit / background_height
+				local uv_v_mid_value = normalized_end_height * 0.5
+
+				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
+				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
+				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
+				widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
+				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
+				widgets.edge_bottom.offset[2] = window_height * 0.5
+				widgets.edge_top.offset[2] = -window_height * 0.5
+			end,
+		},
+		{
+			name = "fade_in",
+			start_time = anim_start_delay + 0.2,
+			end_time = anim_start_delay + 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
+
+						widget.alpha_multiplier = anim_progress
+					end
 				end
-			end
 
-			widgets.button.alpha_multiplier = anim_progress
-		end
+				widgets.button.alpha_multiplier = anim_progress
+			end,
+		},
 	},
-	{
-		name = "close",
-		start_time = anim_start_delay + 0.2,
-		end_time = anim_start_delay + 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeInCubic(1 - progress)
-			parent._animated_alpha_multiplier = anim_progress
-			local popup_height = params.popup_height
-			local window_height = popup_height * anim_progress
-			local background_height = widgets.popup_background.style.texture.size[2]
-			local background_limit = math.min(popup_height, background_height)
-			local normalized_end_height = background_limit / background_height
-			local uv_v_mid_value = normalized_end_height * 0.5
-			widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
-			widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
-			widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
-			widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
-			widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
-			widgets.edge_bottom.offset[2] = window_height * 0.5
-			widgets.edge_top.offset[2] = -window_height * 0.5
-		end
-	}
+	on_exit = {
+		{
+			name = "fade_out",
+			start_time = anim_start_delay + 0,
+			end_time = anim_start_delay + 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeInCubic(1 - progress)
+
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
+
+						widget.alpha_multiplier = anim_progress
+					end
+				end
+
+				widgets.button.alpha_multiplier = anim_progress
+			end,
+		},
+		{
+			name = "close",
+			start_time = anim_start_delay + 0.2,
+			end_time = anim_start_delay + 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeInCubic(1 - progress)
+
+				parent._animated_alpha_multiplier = anim_progress
+
+				local popup_height = params.popup_height
+				local window_height = popup_height * anim_progress
+				local background_height = widgets.popup_background.style.texture.size[2]
+				local background_limit = math.min(popup_height, background_height)
+				local normalized_end_height = background_limit / background_height
+				local uv_v_mid_value = normalized_end_height * 0.5
+
+				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
+				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
+				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
+				widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
+				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
+				widgets.edge_bottom.offset[2] = window_height * 0.5
+				widgets.edge_top.offset[2] = -window_height * 0.5
+			end,
+		},
+	},
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition
+	scenegraph_definition = scenegraph_definition,
 }

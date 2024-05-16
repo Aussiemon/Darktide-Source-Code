@@ -1,63 +1,65 @@
+﻿-- chunkname: @dialogues/generated/event_vo_fortification.lua
+
 return function ()
 	define_rule({
+		category = "player_prio_0",
+		database = "event_vo_fortification",
 		name = "event_fortification_beacon_deployed",
-		category = "player_prio_0",
-		wwise_route = 0,
 		response = "event_fortification_beacon_deployed",
-		database = "event_vo_fortification",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_fortification_beacon_deployed"
+				"event_fortification_beacon_deployed",
 			},
 			{
 				"faction_memory",
 				"event_fortification_beacon_deployed",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_fortification_beacon_deployed",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default"
-		}
+			target = "mission_giver_default",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "event_vo_fortification",
 		name = "event_fortification_disable_the_skyfire",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "event_fortification_disable_the_skyfire",
-		database = "event_vo_fortification",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_fortification_disable_the_skyfire"
+				"event_fortification_disable_the_skyfire",
 			},
 			{
 				"user_context",
@@ -67,51 +69,51 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
-					"explicator"
-				}
+					"explicator",
+				},
 			},
 			{
 				"faction_memory",
 				"event_fortification_disable_the_skyfire",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_fortification_disable_the_skyfire",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "event_vo_fortification",
 		name = "event_fortification_fortification_survive",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "event_fortification_fortification_survive",
-		database = "event_vo_fortification",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"event_fortification_beacon_deployed"
-				}
+					"event_fortification_beacon_deployed",
+				},
 			},
 			{
 				"user_context",
@@ -121,76 +123,76 @@ return function ()
 					"explicator",
 					"sergeant",
 					"pilot",
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
+		category = "player_prio_0",
+		database = "event_vo_fortification",
 		name = "event_fortification_gate_powered",
-		category = "player_prio_0",
-		wwise_route = 0,
 		response = "event_fortification_gate_powered",
-		database = "event_vo_fortification",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_fortification_gate_powered"
+				"event_fortification_gate_powered",
 			},
 			{
 				"faction_memory",
 				"event_fortification_gate_powered",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_fortification_gate_powered",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "event_fortification_kill_stragglers",
-		response = "event_fortification_kill_stragglers",
-		database = "event_vo_fortification",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "event_vo_fortification",
+		name = "event_fortification_kill_stragglers",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "event_fortification_kill_stragglers",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_fortification_kill_stragglers"
+				"event_fortification_kill_stragglers",
 			},
 			{
 				"user_context",
@@ -200,49 +202,49 @@ return function ()
 					"pilot",
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"event_fortification_kill_stragglers",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_fortification_kill_stragglers",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "event_fortification_power_up_gate",
-		response = "event_fortification_power_up_gate",
-		database = "event_vo_fortification",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "event_vo_fortification",
+		name = "event_fortification_power_up_gate",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "event_fortification_power_up_gate",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_fortification_power_up_gate"
+				"event_fortification_power_up_gate",
 			},
 			{
 				"user_context",
@@ -252,51 +254,51 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
-					"explicator"
-				}
+					"explicator",
+				},
 			},
 			{
 				"faction_memory",
 				"event_fortification_power_up_gate",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_fortification_power_up_gate",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "event_fortification_set_landing_beacon",
-		response = "event_fortification_set_landing_beacon",
-		database = "event_vo_fortification",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "event_vo_fortification",
+		name = "event_fortification_set_landing_beacon",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "event_fortification_set_landing_beacon",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"event_fortification_skyfire_disabled"
-				}
+					"event_fortification_skyfire_disabled",
+				},
 			},
 			{
 				"user_context",
@@ -306,56 +308,56 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
-					"explicator"
-				}
-			}
+					"explicator",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "event_fortification_skyfire_disabled",
 		category = "player_prio_0",
-		wwise_route = 0,
-		response = "event_fortification_skyfire_disabled",
 		database = "event_vo_fortification",
+		name = "event_fortification_skyfire_disabled",
+		response = "event_fortification_skyfire_disabled",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"event_fortification_skyfire_disabled"
+				"event_fortification_skyfire_disabled",
 			},
 			{
 				"faction_memory",
 				"event_fortification_skyfire_disabled",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"event_fortification_skyfire_disabled",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default"
-		}
+			target = "mission_giver_default",
+		},
 	})
 end

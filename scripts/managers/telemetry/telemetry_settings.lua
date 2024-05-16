@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/telemetry_settings.lua
+
 local Crashify = require("scripts/settings/crashify/crashify")
 local settings = {
 	enabled = true,
@@ -8,27 +10,27 @@ local settings = {
 		version = {
 			game = APPLICATION_SETTINGS.game_version,
 			engine_revision = string.value_or_nil(BUILD_IDENTIFIER),
-			content_revision = string.value_or_nil(APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION)
+			content_revision = string.value_or_nil(APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION),
 		},
 		data = {
 			server = string.value_or_nil(DEDICATED_SERVER),
 			testify = string.value_or_nil(GameParameters.testify),
 			testify_test_suite_id = string.value_or_nil(DevParameters.testify_test_suite_id),
 			steam_branch = string.value_or_nil(GameParameters.steam_branch),
-			svn_branch = string.value_or_nil(GameParameters.svn_branch)
+			svn_branch = string.value_or_nil(GameParameters.svn_branch),
 		},
 		crashify = {
-			project_branch = string.value_or_nil(Crashify.branch)
-		}
+			project_branch = string.value_or_nil(Crashify.branch),
+		},
 	},
 	batch = {
-		size = 2000,
-		max_size = 16000,
 		full_post_interval = 30,
-		post_interval = 300
+		max_size = 16000,
+		post_interval = 300,
+		size = 2000,
 	},
 	heartbeat = {
-		interval = 300
+		interval = 300,
 	},
 	blacklisted_views = {
 		"blank_view",
@@ -50,8 +52,8 @@ local settings = {
 		"store_view",
 		"system_view",
 		"title_view",
-		"video_view"
-	}
+		"video_view",
+	},
 }
 
 return settings

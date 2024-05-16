@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview.lua
+
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -13,6 +15,7 @@ local ViewElementInventoryWeaponPreview = class("ViewElementInventoryWeaponPrevi
 
 ViewElementInventoryWeaponPreview.init = function (self, parent, draw_layer, start_scale, context)
 	local definitions = require(definition_path)
+
 	self._reference_name = "ViewElementInventoryWeaponPreview_" .. tostring(self)
 
 	ViewElementInventoryWeaponPreview.super.init(self, parent, draw_layer, start_scale, definitions)
@@ -27,6 +30,7 @@ ViewElementInventoryWeaponPreview.init = function (self, parent, draw_layer, sta
 	self:_setup_background_gui()
 
 	local on_enter_animation_callback = callback(self, "cb_start_experience_presentation")
+
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self, on_enter_animation_callback)
 end
 
@@ -37,16 +41,21 @@ ViewElementInventoryWeaponPreview._setup_background_gui = function (self)
 	local world_layer = WORLD_LAYER_BACKGROUND + self._draw_layer
 	local world_name = reference_name .. "_ui_background_world"
 	local view_name = self._parent.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_background_shading_callback")
 	local viewport_name = reference_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_background_renderer = ui_manager:create_renderer(reference_name .. "_ui_background_renderer", self._background_world)
+
 	local background_widget_definition = self._definitions.background_widget_definition
+
 	self._background_widget = self:_create_widget("background_widget", background_widget_definition)
 
 	if not self._ignore_blur then
@@ -86,6 +95,7 @@ ViewElementInventoryWeaponPreview._initialize_preview_world = function (self)
 	local world_layer = WORLD_LAYER_ITEM + self._draw_layer
 	local world_timer_name = "ui"
 	local view_name = self._parent.view_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, view_name)
 
 	self:_register_event("event_register_item_camera")
@@ -129,7 +139,9 @@ ViewElementInventoryWeaponPreview.center_align = function (self, duration, addit
 	local world_spawner = self._world_spawner
 	local time = duration or 1
 	local func_ptr = math.easeOutCubic
+
 	self._camera_center_aligned = not self._camera_center_aligned
+
 	local extra_position_x = additional_position_offset[1] or 0
 	local extra_position_y = additional_position_offset[2] or 0
 	local extra_position_z = additional_position_offset[3] or 0
@@ -150,8 +162,9 @@ ViewElementInventoryWeaponPreview.center_align = function (self, duration, addit
 	self._default_camera_position_offset = {
 		target_world_position.x - camera_world_position.x + extra_position_x,
 		target_world_position.y - camera_world_position.y + extra_position_y,
-		target_world_position.z - camera_world_position.z + extra_position_z
+		target_world_position.z - camera_world_position.z + extra_position_z,
 	}
+
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
 	local target_world_rotation_x, target_world_rotation_y, target_world_rotation_z = Quaternion.to_euler_angles_xyz(target_world_rotation)
 
@@ -217,7 +230,9 @@ ViewElementInventoryWeaponPreview._get_spawn_position = function (self)
 	local depth_multiplier = 1.8
 	local weapon_spawn_depth = ViewElementInventoryWeaponPreviewSettings.weapon_spawn_depth * depth_multiplier
 	local world_depth = linear_to_clip_depth(weapon_spawn_depth, Camera.near_range(camera), Camera.far_range(camera))
+
 	world_depth = world_depth * (self._weapon_zoom_fraction or 1)
+
 	local screen_width = RESOLUTION_LOOKUP.width
 	local screen_height = RESOLUTION_LOOKUP.height
 	local scale_x = self._weapon_spawn_scale_x or 0
@@ -231,7 +246,9 @@ end
 ViewElementInventoryWeaponPreview.set_weapon_zoom = function (self, fraction, use_custom_zoom, optional_node_name, optional_pos, optional_min_zoom, optional_max_zoom)
 	local world_spawner = self._world_spawner
 	local ui_weapon_spawner = self._ui_weapon_spawner
+
 	self._weapon_zoom_fraction = fraction
+
 	local amount = fraction * 1
 
 	if use_custom_zoom and ui_weapon_spawner then
@@ -239,7 +256,7 @@ ViewElementInventoryWeaponPreview.set_weapon_zoom = function (self, fraction, us
 
 		if spawn_data then
 			local unit = spawn_data.item_unit_3p
-			local offset_pos = nil
+			local offset_pos
 
 			if optional_node_name then
 				local node_index = Unit.has_node(unit, optional_node_name) and Unit.node(unit, optional_node_name)
@@ -400,12 +417,15 @@ ViewElementInventoryWeaponPreview.draw = function (self, dt, t, ui_renderer, ren
 
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = alpha_multiplier
 
 	ViewElementInventoryWeaponPreview.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_background_renderer = self._ui_background_renderer
 
@@ -427,6 +447,7 @@ ViewElementInventoryWeaponPreview.update = function (self, dt, t, input_service)
 
 	if self._queued_presentation_item and self._level_spawned then
 		local item = self._queued_presentation_item
+
 		self._queued_presentation_item = nil
 
 		self:present_item(item)

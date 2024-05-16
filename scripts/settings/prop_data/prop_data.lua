@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/settings/prop_data/prop_data.lua
+
 local prop_data = {}
 
 local function _create_prop_data_entry(path)
 	local data = require(path)
 	local name = data.name
+
 	prop_data[name] = data
 end
 

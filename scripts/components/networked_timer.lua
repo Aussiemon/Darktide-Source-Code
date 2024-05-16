@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/networked_timer.lua
+
 local NetworkedTimer = component("NetworkedTimer")
 
 NetworkedTimer.init = function (self, unit, is_server)
@@ -82,47 +84,47 @@ end
 
 NetworkedTimer.component_data = {
 	duration = {
+		step = 0.01,
+		ui_name = "Duration (in sec.)",
 		ui_type = "number",
 		value = 1,
-		ui_name = "Duration (in sec.)",
-		step = 0.01
 	},
 	hud_description = {
+		ui_name = "HUD Description",
 		ui_type = "text_box",
 		value = "loc_description",
-		ui_name = "HUD Description"
 	},
 	max_speed_modifier = {
+		step = 0.01,
+		ui_name = "Max Speed Modifier",
 		ui_type = "number",
 		value = 1,
-		ui_name = "Max Speed Modifier",
-		step = 0.01
 	},
 	inputs = {
 		start = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		pause = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		stop = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		fast_forward = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		rewind = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"NetworkedTimerExtension"
-	}
+		"NetworkedTimerExtension",
+	},
 }
 
 return NetworkedTimer

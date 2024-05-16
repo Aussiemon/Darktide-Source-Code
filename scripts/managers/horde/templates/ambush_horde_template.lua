@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/horde/templates/ambush_horde_template.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
@@ -10,8 +12,8 @@ local horde_template = {
 		8,
 		12,
 		15,
-		25
-	}
+		25,
+	},
 }
 local breeds_to_spawn = {}
 
@@ -24,8 +26,7 @@ local function _compose_spawn_list(composition)
 
 	for i = 1, #breeds do
 		local breed_data = breeds[i]
-		local breed_name = breed_data.name
-		local amount = breed_data.amount
+		local breed_name, amount = breed_data.name, breed_data.amount
 		local num_to_spawn = Math_random(amount[1], amount[2])
 
 		for j = 1, num_to_spawn do
@@ -38,11 +39,9 @@ local function _compose_spawn_list(composition)
 	return breeds_to_spawn, #breeds_to_spawn
 end
 
-local MIN_DISTANCE_FROM_PLAYERS = 12
-local MAX_DISTANCE_FROM_PLAYERS = 25
+local MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS = 12, 25
 local INITIAL_GROUP_OFFSET = 2
-local nearby_spawners = {}
-local nearby_occluded_positions = {}
+local nearby_spawners, nearby_occluded_positions = {}, {}
 
 horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
 	local target_side_id = target_side.side_id
@@ -61,6 +60,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local minion_spawner_radius_checks = horde_template.minion_spawner_radius_checks
 	local max_spawn_locations = horde_template.max_spawn_locations
 	local target_unit = optional_target_unit
+
 	target_unit = target_unit or main_path_manager:ahead_unit(target_side_id)
 
 	if not target_unit then
@@ -96,7 +96,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local horde = {
 		template_name = horde_template.name,
 		side = side,
-		target_side = target_side
+		target_side = target_side,
 	}
 
 	table.clear(nearby_spawners)
@@ -131,6 +131,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 			if occluded_positions then
 				for j = 1, #occluded_positions do
 					local occluded_position = occluded_positions[j]
+
 					nearby_occluded_positions[#nearby_occluded_positions + 1] = occluded_position
 					spawn_locations_left = spawn_locations_left - 1
 					num_spawn_locations = math.min(num_spawn_locations + 1, max_spawn_locations)
@@ -151,7 +152,9 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
+
 	horde.group_id = group_id
+
 	local num_spawned = 0
 	local spawns_per_location = math.floor(num_to_spawn / num_spawn_locations)
 
@@ -161,6 +164,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 		for j = 1, spawns_per_location do
 			local breed_name = spawn_list[num_spawned + 1]
+
 			num_spawned = num_spawned + 1
 			breed_list[#breed_list + 1] = breed_name
 		end

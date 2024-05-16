@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/account_service.lua
+
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local ErrorCodes = require("scripts/managers/error/error_codes")
 local GameVersionError = require("scripts/managers/error/errors/game_version_error")
@@ -44,7 +46,7 @@ AccountService.signin = function (self)
 
 		if not _init_network_client(account_id) then
 			return Promise.rejected({
-				description = "INITIALIZE_WAN_ERROR"
+				description = "INITIALIZE_WAN_ERROR",
 			})
 		end
 
@@ -88,7 +90,7 @@ AccountService.signin = function (self)
 			return Promise.all(profiles_promise, has_created_first_character_promise, has_completed_onboarding_promise, auth_data_promise, immaterium_connect_promise, migration_data_promise)
 		else
 			return Promise.rejected({
-				description = "VERSION_ERROR"
+				description = "VERSION_ERROR",
 			})
 		end
 	end):next(function (results)
@@ -96,7 +98,7 @@ AccountService.signin = function (self)
 
 		if immaterium_connect_error then
 			return Promise.rejected({
-				description = "IMMATERIUM_CONNECT_ERROR"
+				description = "IMMATERIUM_CONNECT_ERROR",
 			})
 		end
 
@@ -109,7 +111,7 @@ AccountService.signin = function (self)
 			account_id = auth_data.sub,
 			vivox_token = auth_data.vivox_token,
 			gear = profile_data.gear,
-			migration_data = migration_data
+			migration_data = migration_data,
 		})
 	end):catch(function (error_data)
 		if error_data.description == "VERSION_ERROR" then

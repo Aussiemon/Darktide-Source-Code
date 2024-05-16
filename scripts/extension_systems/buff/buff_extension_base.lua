@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buff_extension_base.lua
+
 local BuffClasses = require("scripts/settings/buff/buff_classes")
 local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_extension_interface")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -19,24 +21,28 @@ local RPCS = {
 	"rpc_remove_buff",
 	"rpc_buff_proc_set_active_time",
 	"rpc_buff_set_start_time",
-	"rpc_add_buff_with_stacks"
+	"rpc_add_buff_with_stacks",
 }
 local _stat_buff_base_values = BuffSettings.stat_buff_type_base_values
 local _stat_buff_lazy_mt = {
 	__index = function (self, key)
 		local val = _stat_buff_base_values[key]
+
 		self[key] = val
 
 		return val
-	end
+	end,
 }
 
 BuffExtensionBase.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, pre_allocate_event_param_tables)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._unit = unit
 	self._player = extension_init_data.player
+
 	local seed = extension_init_data.buff_seed
+
 	self._portable_random = PortableRandom:new(seed)
 	self._local_portable_random = PortableRandom:new(seed)
 	self._buff_system = Managers.state.extension:system("buff_system")
@@ -50,7 +56,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		is_local_unit = extension_init_data.is_local_unit,
 		is_server = is_server,
 		breed = extension_init_data.breed,
-		fixed_time_step = Managers.state.game_session.fixed_time_step
+		fixed_time_step = Managers.state.game_session.fixed_time_step,
 	}
 	self._index = 0
 	self._buffs = {}
@@ -59,7 +65,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._stacking_buffs = {}
 	self._buffs_by_index = {}
 	self._stat_buffs = setmetatable({
-		_modified_stats = {}
+		_modified_stats = {},
 	}, _stat_buff_lazy_mt)
 	self._keywords = {}
 	self._had_keywords = {}
@@ -82,6 +88,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 
 	if is_server then
 		self._buffs_added_before_game_object_creation = {}
+
 		local initial_buffs = extension_init_data.initial_buffs
 
 		if initial_buffs then
@@ -95,6 +102,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		end
 	else
 		local network_event_delegate = extension_init_context.network_event_delegate
+
 		self._network_event_delegate = network_event_delegate
 		self._game_object_id = nil_or_game_object_id
 
@@ -130,7 +138,9 @@ end
 
 BuffExtensionBase.set_unit_local = function (self)
 	local buff_context = self._buff_context
+
 	buff_context.is_local_unit = true
+
 	local buffs = self._buffs_by_index
 
 	for index, buff_instance in pairs(buffs) do
@@ -261,8 +271,7 @@ BuffExtensionBase._update_stat_buffs_and_keywords = function (self, t, on_remove
 
 	table.clear(keywords)
 
-	local buffs = self._buffs
-	local current_stat_buffs = self._stat_buffs
+	local buffs, current_stat_buffs = self._buffs, self._stat_buffs
 
 	for i = 1, #buffs do
 		local buff = buffs[i]
@@ -346,6 +355,7 @@ end
 
 BuffExtensionBase._next_local_index = function (self)
 	local local_index = self._index + 1
+
 	self._index = local_index
 
 	return local_index
@@ -355,7 +365,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 	local local_index = self:_next_local_index()
 	local template_name = template.name
 	local can_stack = template.max_stacks and true or false
-	local buff_instance = nil
+	local buff_instance
 
 	if can_stack then
 		local existing_buff_instance = self._stacking_buffs[template_name]
@@ -381,6 +391,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 		local buff_class = BuffClasses[class_name]
 		local buff_context = self._buff_context
 		local buff_instance_id = self._buff_instance_id + 1
+
 		buff_instance = buff_class:new(buff_context, template, t, buff_instance_id, ...)
 
 		if not self._is_hub then
@@ -551,11 +562,12 @@ BuffExtensionBase._remove_buff = function (self, index, extension_destroyed)
 
 		if can_stack then
 			local template_name = template.name
+
 			self._stacking_buffs[template_name] = nil
 		end
 
 		local buffs = self._buffs
-		local instance_index = nil
+		local instance_index
 
 		for i = 1, #buffs do
 			local instance = buffs[i]
@@ -794,6 +806,7 @@ BuffExtensionBase.had_keyword = function (self, keyword, interval)
 	end
 
 	interval = interval or 1
+
 	local t = FixedFrame.get_latest_fixed_time()
 
 	return interval > t - added_t
@@ -830,7 +843,7 @@ end
 BuffExtensionBase.request_proc_event_param_table = function (self)
 	local param_table_index = self._param_table_index + 1
 
-	if MAX_PROC_EVENTS <= param_table_index then
+	if param_table_index >= MAX_PROC_EVENTS then
 		Log.warning("BuffExtensionBase", "Out of proc event tables, ignoring proc!")
 
 		return nil
@@ -851,6 +864,7 @@ end
 BuffExtensionBase.add_proc_event = function (self, event, params)
 	local num_proc_events = self._num_proc_events
 	local proc_events = self._proc_events
+
 	proc_events[num_proc_events * PROC_EVENTS_STRIDE + 1] = event
 	proc_events[num_proc_events * PROC_EVENTS_STRIDE + 2] = params
 	self._num_proc_events = num_proc_events + 1
@@ -915,9 +929,10 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 			if sfx then
 				if not active_node_sfx_effects[node_index] then
 					local wwise_source_id = WwiseWorld.make_manual_source(wwise_world, node_position, Quaternion.identity())
+
 					active_node_sfx_effects[node_index] = {
 						wwise_source_id = wwise_source_id,
-						active_wwise_events = {}
+						active_wwise_events = {},
 					}
 				end
 
@@ -960,10 +975,12 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 					end
 
 					local stop_type = vfx.stop_type or "destroy"
+
 					active_node_vfx[particle_effect] = {
 						particle_id = effect_id,
-						stop_type = stop_type
+						stop_type = stop_type,
 					}
+
 					local material_variables = vfx.material_variables
 
 					if material_variables then
@@ -981,6 +998,7 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 
 				local active_particle_node_effect = active_node_vfx[particle_effect]
 				local new_ref_count = (active_particle_node_effect.ref_count or 0) + 1
+
 				active_particle_node_effect.ref_count = new_ref_count
 			end
 		until true
@@ -1011,7 +1029,9 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 				local looping_wwise_start_event = sfx.looping_wwise_start_event
 				local active_wwise_events = active_node_sfx.active_wwise_events
 				local new_ref_count = active_wwise_events[looping_wwise_start_event] - 1
+
 				active_wwise_events[looping_wwise_start_event] = new_ref_count
+
 				local wwise_source_id = active_node_sfx.wwise_source_id
 
 				if new_ref_count < 1 then
@@ -1036,6 +1056,7 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 				local particle_effect = vfx.particle_effect
 				local active_particle_effect = active_node_vfx[particle_effect]
 				local new_ref_count = (active_particle_effect.ref_count or 0) - 1
+
 				active_particle_effect.ref_count = new_ref_count
 
 				if new_ref_count < 1 then
@@ -1071,7 +1092,9 @@ BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects
 			if should_start_effect then
 				for i = 1, #node_effects do
 					index = index + 1
+
 					local effect = node_effects[i]
+
 					TEMP_STACK_NODE_EFFECTS[index] = effect
 				end
 			end
@@ -1090,7 +1113,9 @@ BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects
 			if should_stop_effect then
 				for i = 1, #node_effects do
 					index = index + 1
+
 					local effect = node_effects[i]
+
 					TEMP_STACK_NODE_EFFECTS[index] = effect
 				end
 			end
@@ -1110,6 +1135,7 @@ BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buf
 	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
 	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
 	local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template, "from_talent", from_talent)
+
 	self._buff_index_map[server_index] = index
 end
 
@@ -1128,6 +1154,7 @@ BuffExtensionBase.rpc_add_buff_with_stacks = function (self, channel_id, game_ob
 	for i = 1, num_index do
 		local server_index = server_index_array[i]
 		local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template)
+
 		self._buff_index_map[server_index] = index
 	end
 end

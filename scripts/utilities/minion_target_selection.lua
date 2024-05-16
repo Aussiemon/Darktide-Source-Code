@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/minion_target_selection.lua
+
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Breed = require("scripts/utilities/breed")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -18,8 +20,8 @@ end
 
 local DEFAULT_TARGET_DISABLED_WEIGHT = -2
 local DEFAULT_DISABLING_TYPE_WEIGHTS = {
+	consumed = -8000,
 	grabbed = -8000,
-	consumed = -8000
 }
 
 MinionTargetSelection.disabled_weight = function (target_selection_weights, target_unit, target_breed)
@@ -64,7 +66,7 @@ end
 local DEFAULT_DISTANCE_WEIGHT = 1
 
 MinionTargetSelection.distance_weight = function (target_selection_weights, distance_sq, attacker_breed, optional_use_quadratic_falloff)
-	local distance_weight = nil
+	local distance_weight
 	local max_distance = target_selection_weights.max_distance or MinionTargetSelection.detection_radius(attacker_breed)
 	local max_distance_sq = max_distance * max_distance
 	local inverse_radius = math.clamp(1 - distance_sq / max_distance_sq, 0, 1)
@@ -83,6 +85,7 @@ MinionTargetSelection.distance_weight = function (target_selection_weights, dist
 
 		if distance_sq <= near_distance_sq then
 			local near_distance_bonus = target_selection_weights.near_distance_bonus
+
 			distance_weight = distance_weight + near_distance_bonus
 		end
 	end
@@ -112,6 +115,7 @@ MinionTargetSelection.threat_weight = function (target_selection_weights, target
 	if threat_units[target_unit] then
 		local threat = threat_units[target_unit]
 		local threat_multiplier = target_selection_weights.threat_multiplier or DEFAULT_THREAT_WEIGHT_MULTIPLIER
+
 		threat_weight = threat * threat_multiplier
 	end
 
@@ -127,6 +131,7 @@ MinionTargetSelection.occupied_slots_weight = function (target_selection_weights
 		if Breed.is_player(target_breed) then
 			local slot_extension = ScriptUnit.extension(target_unit, "slot_system")
 			local num_occupied_slots = slot_extension.num_occupied_slots
+
 			total_occupied_slots_weight = num_occupied_slots * occupied_slot_weight
 		elseif is_new_target and target_breed.count_num_enemies_targeting then
 			-- Nothing
@@ -204,6 +209,7 @@ MinionTargetSelection.weight_multiplier = function (target_unit)
 	if buff_extension then
 		local stat_buffs = buff_extension:stat_buffs()
 		local threat_weight_multiplier = stat_buffs.threat_weight_multiplier
+
 		multiplier = multiplier * threat_weight_multiplier
 	end
 
@@ -253,8 +259,8 @@ end
 local DARKNESS_LOS_MODIFIER_NAME = "mutator_darkness_los"
 local VENTILATION_PURGE_LOS_MODIFIER_NAME = "mutator_ventilation_purge_los"
 local CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS = {
+	mutator_darkness_los = 0.5,
 	mutator_ventilation_purge_los = 0.7,
-	mutator_darkness_los = 0.5
 }
 
 MinionTargetSelection.detection_radius = function (breed)

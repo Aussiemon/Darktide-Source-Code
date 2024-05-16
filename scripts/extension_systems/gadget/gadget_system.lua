@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/gadget/gadget_system.lua
+
 require("scripts/extension_systems/gadget/player_unit_gadget_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -9,7 +11,7 @@ local GadgetSystem = class("GadgetSystem", "ExtensionSystemBase")
 local MAX_META_BUFFS = PlayerCharacterConstants.max_meta_buffs
 local RPCS_CLIENT = {
 	"rpc_add_meta_buff",
-	"rpc_remove_meta_buff"
+	"rpc_remove_meta_buff",
 }
 
 GadgetSystem.init = function (self, context, system_init_data, ...)
@@ -58,6 +60,7 @@ end
 
 GadgetSystem.add_meta_buff = function (self, player, buff_name, start_time, lerp_value, slot_name)
 	local buff_instance_id = self._buff_instance_id + 1
+
 	self._buff_instance_id = buff_instance_id
 
 	self:_add_meta_buff(player, buff_name, buff_instance_id, start_time, lerp_value, slot_name)
@@ -86,9 +89,9 @@ end
 GadgetSystem._add_meta_buff = function (self, player, buff_name, buff_instance_id, start_time, lerp_value, slot_name)
 	local template = BuffTemplates[buff_name]
 	local context = {
-		player = player
+		player = player,
 	}
-	local meta_buff = nil
+	local meta_buff
 
 	if slot_name then
 		meta_buff = MetaBuff:new(context, template, start_time, buff_instance_id, "buff_lerp_value", lerp_value, "item_slot_name", slot_name)
@@ -173,7 +176,7 @@ end
 
 GadgetSystem._init_stat_buffs = function (self, player)
 	local current_stat_buffs = {
-		_modified_stats = {}
+		_modified_stats = {},
 	}
 	local stat_buff_types = BuffSettings.meta_stat_buff_types
 	local stat_buff_base_values = BuffSettings.meta_stat_buff_type_base_values
@@ -183,6 +186,7 @@ GadgetSystem._init_stat_buffs = function (self, player)
 	end
 
 	local player_id = player:unique_id()
+
 	self._stat_buffs[player_id] = current_stat_buffs
 end
 

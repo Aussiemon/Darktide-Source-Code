@@ -1,68 +1,70 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_hunting_grounds_zealot_male_c.lua
+
 local circumstance_vo_hunting_grounds_zealot_male_c = {
 	combat_pause_circumstance_ogryn_a_hound_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_circumstance_ogryn_a_hound_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_circumstance_ogryn_a_hound_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_circumstance_ogryn_a_hound_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_circumstance_ogryn_a_hound_b_02",
 		},
 		sound_events_duration = {
-			[1.0] = 6.704292,
-			[2.0] = 3.807083
+			[1] = 6.704292,
+			[2] = 3.807083,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	combat_pause_circumstance_psyker_a_hound_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_circumstance_psyker_a_hound_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_circumstance_psyker_a_hound_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_circumstance_psyker_a_hound_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_circumstance_psyker_a_hound_b_02",
 		},
 		sound_events_duration = {
-			[1.0] = 4.426552,
-			[2.0] = 3.438198
+			[1] = 4.426552,
+			[2] = 3.438198,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	combat_pause_circumstance_veteran_a_hound_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_circumstance_veteran_a_hound_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_circumstance_veteran_a_hound_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_circumstance_veteran_a_hound_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_circumstance_veteran_a_hound_b_02",
 		},
 		sound_events_duration = {
-			[1.0] = 3.437396,
-			[2.0] = 5.178323
+			[1] = 3.437396,
+			[2] = 5.178323,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	combat_pause_circumstance_zealot_a_hound_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_circumstance_zealot_a_hound_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_circumstance_zealot_a_hound_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_circumstance_zealot_a_hound_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_circumstance_zealot_a_hound_b_02",
 		},
 		sound_events_duration = {
-			[1.0] = 6.420531,
-			[2.0] = 4.229708
+			[1] = 6.420531,
+			[2] = 4.229708,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	combat_pause_circumstance_zealot_c_hound_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_circumstance_zealot_c_hound_a_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_circumstance_zealot_c_hound_a_02"
+			[1] = "loc_zealot_male_c__combat_pause_circumstance_zealot_c_hound_a_01",
+			[2] = "loc_zealot_male_c__combat_pause_circumstance_zealot_c_hound_a_02",
 		},
 		sound_events_duration = {
-			[1.0] = 5.239656,
-			[2.0] = 5.901188
+			[1] = 5.239656,
+			[2] = 5.901188,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	disabled_by_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
@@ -77,7 +79,7 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			"loc_zealot_male_c__disabled_by_chaos_hound_07",
 			"loc_zealot_male_c__disabled_by_chaos_hound_08",
 			"loc_zealot_male_c__disabled_by_chaos_hound_09",
-			"loc_zealot_male_c__disabled_by_chaos_hound_10"
+			"loc_zealot_male_c__disabled_by_chaos_hound_10",
 		},
 		sound_events_duration = {
 			0.815813,
@@ -89,7 +91,7 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			1.937188,
 			0.642323,
 			1.386188,
-			1.306625
+			1.306625,
 		},
 		sound_event_weights = {
 			0.1,
@@ -101,9 +103,9 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	heard_enemy_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
@@ -118,7 +120,7 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			"loc_zealot_male_c__heard_enemy_chaos_hound_07",
 			"loc_zealot_male_c__heard_enemy_chaos_hound_08",
 			"loc_zealot_male_c__heard_enemy_chaos_hound_09",
-			"loc_zealot_male_c__heard_enemy_chaos_hound_10"
+			"loc_zealot_male_c__heard_enemy_chaos_hound_10",
 		},
 		sound_events_duration = {
 			0.885708,
@@ -130,7 +132,7 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			1.630073,
 			1.983833,
 			1.993958,
-			2.43549
+			2.43549,
 		},
 		sound_event_weights = {
 			0.1,
@@ -142,9 +144,9 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hunting_circumstance_start_b = {
 		randomize_indexes_n = 0,
@@ -153,21 +155,21 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			"loc_zealot_male_c__hunting_circumstance_start_b_01",
 			"loc_zealot_male_c__hunting_circumstance_start_b_02",
 			"loc_zealot_male_c__hunting_circumstance_start_b_03",
-			"loc_zealot_male_c__hunting_circumstance_start_b_04"
+			"loc_zealot_male_c__hunting_circumstance_start_b_04",
 		},
 		sound_events_duration = {
 			3.953844,
 			3.944146,
 			4.530667,
-			3.994365
+			3.994365,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	smart_tag_vo_enemy_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
@@ -176,22 +178,22 @@ local circumstance_vo_hunting_grounds_zealot_male_c = {
 			"loc_zealot_male_c__smart_tag_vo_enemy_chaos_hound_01",
 			"loc_zealot_male_c__smart_tag_vo_enemy_chaos_hound_02",
 			"loc_zealot_male_c__smart_tag_vo_enemy_chaos_hound_03",
-			"loc_zealot_male_c__smart_tag_vo_enemy_chaos_hound_04"
+			"loc_zealot_male_c__smart_tag_vo_enemy_chaos_hound_04",
 		},
 		sound_events_duration = {
 			0.693917,
 			0.767719,
 			0.610948,
-			0.550083
+			0.550083,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("circumstance_vo_hunting_grounds_zealot_male_c", circumstance_vo_hunting_grounds_zealot_male_c)

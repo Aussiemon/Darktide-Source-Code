@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_beast_of_nurgle_align_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -9,15 +11,23 @@ local BtBeastOfNurgleAlignAction = class("BtBeastOfNurgleAlignAction", "BtNode")
 BtBeastOfNurgleAlignAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
+
 	local nav_world = navigation_extension:nav_world()
+
 	scratchpad.nav_world = nav_world
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	scratchpad.behavior_component = behavior_component
+
 	local perception_component = blackboard.perception
+
 	scratchpad.perception_component = perception_component
+
 	local rotation_speed = action_data.rotation_speed
 
 	if rotation_speed then
@@ -27,6 +37,7 @@ BtBeastOfNurgleAlignAction.enter = function (self, unit, breed, blackboard, scra
 	end
 
 	scratchpad.behavior_component.move_state = "idle"
+
 	local self_flat_fwd = Vector3.flat(Quaternion.forward(Unit.local_rotation(unit, 1)))
 
 	Unit.set_local_rotation(unit, 1, Quaternion.look(self_flat_fwd))
@@ -57,7 +68,7 @@ BtBeastOfNurgleAlignAction.run = function (self, unit, breed, blackboard, scratc
 
 	local is_anim_driven = scratchpad.is_anim_driven
 
-	if is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		local done = self:_update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 
 		if done then
@@ -65,9 +76,9 @@ BtBeastOfNurgleAlignAction.run = function (self, unit, breed, blackboard, scratc
 		end
 	end
 
-	if scratchpad.align_duration and scratchpad.align_duration <= t then
+	if scratchpad.align_duration and t >= scratchpad.align_duration then
 		return "done"
-	elseif scratchpad.align_duration and scratchpad.align_rotation_duration < t then
+	elseif scratchpad.align_duration and t > scratchpad.align_rotation_duration then
 		self:_rotate_towards_target_unit(unit, scratchpad)
 	end
 
@@ -95,6 +106,7 @@ BtBeastOfNurgleAlignAction._start_align_anim = function (self, unit, breed, t, s
 
 		local start_move_rotation_timings = action_data.start_move_rotation_timings
 		local start_rotation_timing = start_move_rotation_timings[align_anim_event]
+
 		scratchpad.start_rotation_timing = t + start_rotation_timing
 		scratchpad.move_start_anim_event_name = align_anim_event
 	else
@@ -118,15 +130,15 @@ BtBeastOfNurgleAlignAction._update_anim_driven_start_rotation = function (self, 
 		local destination = POSITION_LOOKUP[scratchpad.perception_component.target_unit]
 		local start_move_event_name = scratchpad.move_start_anim_event_name
 		local start_move_anim_data = action_data.start_move_anim_data[start_move_event_name]
-		local rotation_sign = start_move_anim_data.sign
-		local rotation_radians = start_move_anim_data.rad
+		local rotation_sign, rotation_radians = start_move_anim_data.sign, start_move_anim_data.rad
 		local rotation_scale = Animation.calculate_anim_rotation_scale(unit, destination, rotation_sign, rotation_radians)
 
 		scratchpad.locomotion_extension:set_anim_rotation_scale(rotation_scale)
 
 		local rotation_duration = action_data.start_rotation_durations[start_move_event_name]
+
 		scratchpad.rotation_duration = t + rotation_duration
-	elseif scratchpad.rotation_duration <= t then
+	elseif t >= scratchpad.rotation_duration then
 		scratchpad.start_rotation_timing = nil
 		scratchpad.rotation_duration = nil
 

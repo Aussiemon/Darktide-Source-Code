@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/action_modules.lua
+
 local BallisticRaycastPositionFinderActionModule = require("scripts/extension_systems/weapon/actions/modules/ballistic_raycast_position_finder_action_module")
 local ChainLightningTargetingActionModule = require("scripts/extension_systems/weapon/actions/modules/chain_lightning_targeting_action_module")
 local ClosestTargetingActionModule = require("scripts/extension_systems/weapon/actions/modules/closest_targeting_action_module")
@@ -18,7 +20,7 @@ local action_modules = {
 	psyker_smite_targeting = PsykerSmiteTargetingActionModule,
 	raycast_targeting = RaycastTargetingActionModule,
 	smart_target_targeting = SmartTargetingActionModule,
-	warp_charge = WarpChargeActionModule
+	warp_charge = WarpChargeActionModule,
 }
 
 return settings("ActionModules", action_modules)

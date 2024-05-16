@@ -1,6 +1,8 @@
-local DefaultPassValues = {
-	texture = "content/ui/materials/base/ui_default_base"
-}
+﻿-- chunkname: @scripts/ui/default_pass_values.lua
+
+local DefaultPassValues = {}
+
+DefaultPassValues.texture = "content/ui/materials/base/ui_default_base"
 DefaultPassValues.texture_uv = DefaultPassValues.texture
 DefaultPassValues.rotated_texture = DefaultPassValues.texture
 DefaultPassValues.multi_texture = DefaultPassValues.texture

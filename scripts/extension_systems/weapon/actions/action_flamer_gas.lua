@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_flamer_gas.lua
+
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -27,9 +29,12 @@ ActionFlamerGas.init = function (self, action_context, action_params, action_set
 	self._target_damage_times = {}
 	self._target_frame_counts = {}
 	self._dot_targets = {}
+
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_module_position_finder_component = unit_data_extension:write_component("action_module_position_finder")
 	self._action_flamer_gas_component = unit_data_extension:write_component("action_flamer_gas")
+
 	local fire_config = action_settings.fire_configuration
 
 	if fire_config.charge_duration then
@@ -42,25 +47,38 @@ end
 ActionFlamerGas._setup_flame_data = function (self, action_settings)
 	local fire_config = action_settings.fire_configuration
 	local flamer_gas_template = fire_config.flamer_gas_template
+
 	self._flamer_gas_template = flamer_gas_template
+
 	local weapon_extension = self._weapon_extension
 	local burninating_template = weapon_extension:burninating_template()
+
 	self._dot_max_stacks = math.ceil(burninating_template.max_stacks)
 	self._dot_stack_application_rate = burninating_template.stack_application_rate
+
 	local size_of_flame_template = weapon_extension:size_of_flame_template()
+
 	self._spread_angle = size_of_flame_template.spread_angle
 	self._suppression_cone_radius = size_of_flame_template.suppression_cone_radius
+
 	local weapon_handling_template = weapon_extension:weapon_handling_template()
+
 	self._damage_times = weapon_handling_template.flamer_ramp_up_times or {
-		weapon_handling_template.fire_rate.fire_time
+		weapon_handling_template.fire_rate.fire_time,
 	}
+
 	local damage_config = flamer_gas_template.damage
 	local damage_profile = damage_config.impact.damage_profile
 	local num_targets = table.size(damage_profile.targets)
+
 	self._max_target_index = math.max(#self._damage_times, num_targets)
+
 	local initial_burn_delay = burninating_template.initial_burn_delay or 0.25
+
 	self._burn_time = self._dot_stack_application_rate + initial_burn_delay
+
 	local range = size_of_flame_template.range
+
 	self._range = range
 	self._action_flamer_gas_component.range = range
 	self._killing_blow = false
@@ -161,7 +179,7 @@ ActionFlamerGas._do_raycast = function (self, i, position, rotation, max_range, 
 	local direction = Quaternion.forward(ray_rotation)
 	local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_range)
 	local hits = HitScan.raycast(self._physics_world, position, direction, max_range, nil, "filter_player_character_shooting_raycast", rewind_ms)
-	local stop, stop_position, stop_normal = nil
+	local stop, stop_position, stop_normal
 
 	if hits then
 		local num_hit_results = #hits
@@ -169,6 +187,7 @@ ActionFlamerGas._do_raycast = function (self, i, position, rotation, max_range, 
 		for j = 1, num_hit_results do
 			repeat
 				local hit = hits[j]
+
 				stop, stop_position, stop_normal = self:_process_hit(hit, player_unit, player_pos, side_system, t, hit_units_this_frame, is_server)
 			until true
 
@@ -221,6 +240,7 @@ ActionFlamerGas._hit_target = function (self, hit_unit, hit_pos)
 	if not index then
 		local player_pos = POSITION_LOOKUP[self._player_unit]
 		local distance = Vector3.distance(hit_pos, player_pos)
+
 		index = 1
 		damage_time = self._damage_times[index] + distance / self._range * 0.4
 		frame_count = 1
@@ -258,37 +278,50 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 				target_frame_counts[target_unit] = nil
 				target_indexes[target_unit] = nil
 				target_actors[target_unit] = nil
-			elseif current_damage_time <= 0 or force_damage then
-				local damage_time_index = math.min(current_index, #damage_times)
-				local damage_time = damage_times[damage_time_index]
-				local aim_at_percent = frame_count / (damage_time / fixed_time_step)
-				local new_damage_time, new_frame_count, new_target_index, new_actor = nil
 
-				if aim_at_percent > 0.33 then
-					self:_damage_target(target_unit)
+				break
+			end
 
-					local new_damage_time_index = math.min(current_index + 1, #damage_times)
-					new_damage_time = damage_times[new_damage_time_index]
-					new_frame_count = 0
-					new_target_index = math.min(self._max_target_index, current_index + 1)
-					new_actor = hit_actor
-				elseif current_index > 1 then
-					local new_damage_time_index = math.min(current_index - 1, #damage_times)
-					new_damage_time = damage_times[new_damage_time_index]
-					new_frame_count = 0
-					new_target_index = current_index - 1
-					new_actor = hit_actor
-				else
-					new_damage_time, new_frame_count, new_target_index, new_actor = nil
+			if current_damage_time <= 0 or force_damage then
+				do
+					local damage_time_index = math.min(current_index, #damage_times)
+					local damage_time = damage_times[damage_time_index]
+					local aim_at_percent = frame_count / (damage_time / fixed_time_step)
+					local new_damage_time, new_frame_count, new_target_index, new_actor
+
+					if aim_at_percent > 0.33 then
+						self:_damage_target(target_unit)
+
+						local new_damage_time_index = math.min(current_index + 1, #damage_times)
+
+						new_damage_time = damage_times[new_damage_time_index]
+						new_frame_count = 0
+						new_target_index = math.min(self._max_target_index, current_index + 1)
+						new_actor = hit_actor
+					elseif current_index > 1 then
+						local new_damage_time_index = math.min(current_index - 1, #damage_times)
+
+						new_damage_time = damage_times[new_damage_time_index]
+						new_frame_count = 0
+						new_target_index = current_index - 1
+						new_actor = hit_actor
+					else
+						new_damage_time = nil
+						new_frame_count = nil
+						new_target_index = nil
+						new_actor = nil
+					end
+
+					target_damage_times[target_unit] = new_damage_time
+					target_frame_counts[target_unit] = new_frame_count
+					target_indexes[target_unit] = new_target_index
+					target_actors[target_unit] = new_actor
 				end
 
-				target_damage_times[target_unit] = new_damage_time
-				target_frame_counts[target_unit] = new_frame_count
-				target_indexes[target_unit] = new_target_index
-				target_actors[target_unit] = new_actor
-			else
-				target_damage_times[target_unit] = current_damage_time - dt
+				break
 			end
+
+			target_damage_times[target_unit] = current_damage_time - dt
 		until true
 	end
 end
@@ -300,11 +333,11 @@ ActionFlamerGas._damage_target = function (self, target_unit)
 	local player_pos = POSITION_LOOKUP[player_unit]
 	local target_pos = POSITION_LOOKUP[target_unit]
 	local target_index = self._target_indexes[target_unit]
-	local actor = nil
+	local actor
 	local hit_position = target_pos
 	local hit_distance = Vector3.distance(target_pos, player_pos)
 	local direction = Vector3.normalize(target_pos - player_pos)
-	local hit_normal, hit_zone_name = nil
+	local hit_normal, hit_zone_name
 	local penetrated = false
 	local instakill = false
 	local damage_type = self._damage_type
@@ -317,12 +350,14 @@ ActionFlamerGas._damage_target = function (self, target_unit)
 	if damage_dealt then
 		local buff_extension = self._buff_extension
 		local param_table = buff_extension:request_proc_event_param_table()
+
 		param_table.attacked_unit = target_unit
 
 		buff_extension:add_proc_event(proc_events.on_direct_flamer_hit, param_table)
 	end
 
 	local killing_blow = attack_result == AttackSettings.attack_results.died
+
 	self._killing_blow = self._killing_blow or killing_blow
 end
 
@@ -382,6 +417,7 @@ ActionFlamerGas._shoot = function (self, position, rotation, power_level, charge
 		local killing_blow = self._killing_blow
 		local has_targets = killing_blow or not table.is_empty(self._target_indexes) or not table.is_empty(self._dot_targets)
 		local shot_result = self._shot_result
+
 		shot_result.data_valid = true
 		shot_result.hit_minion = has_targets
 		shot_result.hit_weakspot = false
@@ -423,7 +459,7 @@ ActionFlamerGas._acquire_suppressed_units = function (self, t)
 	local player_position = POSITION_LOOKUP[self._player_unit]
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(player_position, suppression_cone_radius, broadphase_results, enemy_side_names)
+	local num_hits = broadphase.query(broadphase, player_position, suppression_cone_radius, broadphase_results, enemy_side_names)
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
@@ -457,8 +493,10 @@ ActionFlamerGas.finish = function (self, reason, data, t, time_in_action)
 	ActionFlamerGas.super.finish(self, reason, data, t, time_in_action)
 
 	local position_finder_component = self._action_module_position_finder_component
+
 	position_finder_component.position = Vector3.zero()
 	position_finder_component.position_valid = false
+
 	local action_settings = self._action_settings
 	local fire_config = action_settings.fire_configuration
 

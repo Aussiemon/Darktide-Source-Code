@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/game_mode/game_modes/game_mode_prologue.lua
+
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local GameModePrologue = class("GameModePrologue", "GameModeBase")

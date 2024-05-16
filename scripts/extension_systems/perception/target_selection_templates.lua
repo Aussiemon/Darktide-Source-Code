@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/perception/target_selection_templates.lua
+
 local TargetSelectionTemplates = {}
 
 local function _create_target_selection_template_entry(path)

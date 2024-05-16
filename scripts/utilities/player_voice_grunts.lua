@@ -1,11 +1,14 @@
-local PlayerVoiceGrunts = {
-	SOURCE_NAME = "voice"
-}
+﻿-- chunkname: @scripts/utilities/player_voice_grunts.lua
+
+local PlayerVoiceGrunts = {}
+
+PlayerVoiceGrunts.SOURCE_NAME = "voice"
+
 local SOURCE_NAME = PlayerVoiceGrunts.SOURCE_NAME
 
 PlayerVoiceGrunts.create_voice = function (fx_extension, unit, node_name)
 	local attachments = {
-		unit
+		unit,
 	}
 
 	fx_extension:register_sound_source(SOURCE_NAME, unit, attachments, node_name)
@@ -77,6 +80,7 @@ local temp_voice_data = {}
 PlayerVoiceGrunts.voice_data = function (unit)
 	local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 	local wwise_switch_group, selected_voice, voice_fx_preset = dialogue_extension:voice_data()
+
 	temp_voice_data.switch_group = wwise_switch_group
 	temp_voice_data.selected_voice = selected_voice
 	temp_voice_data.selected_voice_fx_preset = voice_fx_preset

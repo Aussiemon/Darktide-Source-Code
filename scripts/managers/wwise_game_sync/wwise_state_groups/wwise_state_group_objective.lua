@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_objective.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
@@ -17,6 +19,7 @@ WwiseStateGroupObjective.on_gameplay_post_init = function (self, level)
 	WwiseStateGroupObjective.super.on_gameplay_post_init(self, level)
 
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
 	self._mission_objective_system = mission_objective_system
 end
 
@@ -34,7 +37,7 @@ WwiseStateGroupObjective.update = function (self, dt, t)
 	local player_unit = self._player_unit
 	local mission_objective_system = self._mission_objective_system
 	local music_parameter_extension = self._music_parameter_extension
-	local wwise_state = nil
+	local wwise_state
 	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
 	local is_valid_game_mode = game_mode_name == "coop_complete_objective"
 

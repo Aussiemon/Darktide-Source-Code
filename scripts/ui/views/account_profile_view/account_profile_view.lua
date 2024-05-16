@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/account_profile_view/account_profile_view.lua
+
 local TabbedMenuViewBase = require("scripts/ui/views/tabbed_menu_view_base")
 local Definitions = require("scripts/ui/views/account_profile_view/account_profile_view_definitions")
 local AccountProfileView = class("AccountProfileView", "TabbedMenuViewBase")

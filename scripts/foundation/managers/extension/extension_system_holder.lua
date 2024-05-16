@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/extension/extension_system_holder.lua
+
 require("scripts/foundation/managers/extension/extension_system_base")
 
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
@@ -12,36 +14,39 @@ ExtensionSystemHolder.init = function (self, extension_system_creation_context, 
 	self._t = nil
 	self._systems = {}
 	self._num_systems = 0
-	local update_lists = {
-		pre_update = {},
-		fixed_update = {},
-		update = {},
-		post_update = {},
-		physics_async_update = {}
-	}
+
+	local update_lists = {}
+
+	update_lists.pre_update = {}
+	update_lists.fixed_update = {}
+	update_lists.update = {}
+	update_lists.post_update = {}
+	update_lists.physics_async_update = {}
 	self._update_lists = update_lists
-	local system_update_context = {
-		world = self._world,
-		extension_manager = self._extension_manager,
-		fixed_frame = 0
-	}
+
+	local system_update_context = {}
+
+	system_update_context.world = self._world
+	system_update_context.extension_manager = self._extension_manager
+	system_update_context.fixed_frame = 0
 	self._system_update_context = system_update_context
 
 	if use_time_slice then
-		local init_data = {
-			last_index = 0,
-			ready = false,
-			parameters = {}
-		}
+		local init_data = {}
+
+		init_data.last_index = 0
+		init_data.ready = false
+		init_data.parameters = {}
 		init_data.parameters.extension_system_creation_context = extension_system_creation_context
 		init_data.parameters.system_configuration = system_configuration
 		init_data.parameters.system_init_data = system_init_data
 		self._init_data = init_data
-		local post_init_data = {
-			last_index = 0,
-			ready = false,
-			parameters = {}
-		}
+
+		local post_init_data = {}
+
+		post_init_data.last_index = 0
+		post_init_data.ready = false
+		post_init_data.parameters = {}
 		post_init_data.parameters.level = nil
 		post_init_data.parameters.themes = nil
 		self._post_init_data = post_init_data
@@ -134,6 +139,7 @@ end
 
 ExtensionSystemHolder.fixed_update = function (self, dt, t, frame)
 	local context = self._system_update_context
+
 	context.fixed_frame = frame
 
 	self:_system_update("fixed_update", context, dt, t)
@@ -209,11 +215,13 @@ ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_
 	end
 
 	local dt = self._fixed_time_step
+
 	context.resimulate_from_frame = from_frame
 	context.resimulate_to_frame = to_frame
 
 	for frame = from_frame, to_frame do
 		context.fixed_frame = frame
+
 		local t = dt * frame
 		local temp_byte_count = Script.temp_byte_count()
 
@@ -298,6 +306,7 @@ end
 
 ExtensionSystemHolder.init_time_slice_on_gameplay_post_init = function (self, level, themes)
 	local post_init_data = self._post_init_data
+
 	post_init_data.last_index = 0
 	post_init_data.ready = false
 	post_init_data.parameters.level = level

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/level_props_broadphase/level_props_broadphase_manager.lua
+
 local LevelPropsBroadphaseManager = class("LevelPropsBroadphaseManager")
 local CHECK_INTERVAL = 3
 
@@ -11,7 +13,7 @@ LevelPropsBroadphaseManager.destroy = function (self)
 end
 
 LevelPropsBroadphaseManager.update = function (self, dt, t)
-	if self._check_timer < t then
+	if t > self._check_timer then
 		for _, extension_system in ipairs(self._extension_systems) do
 			if extension_system.update_level_props_broadphase then
 				extension_system:update_level_props_broadphase()

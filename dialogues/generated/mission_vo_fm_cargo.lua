@@ -1,72 +1,74 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_cargo.lua
+
 return function ()
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_armor_plating",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_cargo_armor_plating",
-		database = "mission_vo_fm_cargo",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_cargo_armor_plating"
+				"mission_cargo_armor_plating",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"faction_memory",
 				"mission_cargo_armor_plating",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_armor_plating",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_consignment_yard",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_consignment_yard",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_cargo_consignment_yard"
+				"mission_cargo_consignment_yard",
 			},
 			{
 				"user_context",
@@ -75,49 +77,49 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_coolant_control",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_coolant_control",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_cargo_coolant_control"
+				"mission_cargo_coolant_control",
 			},
 			{
 				"user_context",
@@ -126,387 +128,387 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_cargo_coolant_control",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_coolant_control",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_end_event_conversation_one_a",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_cargo_end_event_conversation_one_a",
-		database = "mission_vo_fm_cargo",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_cargo_end_event_conversation_one_a"
+				"mission_cargo_end_event_conversation_one_a",
 			},
 			{
 				"faction_memory",
 				"mission_cargo_end_event_conversation",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_end_event_conversation",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_end_event_conversation_one_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_end_event_conversation_one_b",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_end_event_conversation_one_a"
-				}
+					"mission_cargo_end_event_conversation_one_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_end_event_conversation_one_c",
-		wwise_route = 0,
 		response = "mission_cargo_end_event_conversation_one_c",
-		database = "mission_vo_fm_cargo",
-		category = "conversations_prio_0",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_end_event_conversation_one_b"
-				}
-			}
+					"mission_cargo_end_event_conversation_one_b",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_end_event_conversation_three_a",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_cargo_end_event_conversation_three_a",
-		database = "mission_vo_fm_cargo",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_cargo_end_event_conversation_three_a"
+				"mission_cargo_end_event_conversation_three_a",
 			},
 			{
 				"faction_memory",
 				"mission_cargo_end_event_conversation",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_end_event_conversation",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_end_event_conversation_three_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_end_event_conversation_three_b",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_end_event_conversation_three_a"
-				}
+					"mission_cargo_end_event_conversation_three_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_cargo_end_event_conversation_three_c",
-		wwise_route = 0,
-		response = "mission_cargo_end_event_conversation_three_c",
-		database = "mission_vo_fm_cargo",
 		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_end_event_conversation_three_c",
+		response = "mission_cargo_end_event_conversation_three_c",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_end_event_conversation_three_b"
-				}
-			}
+					"mission_cargo_end_event_conversation_three_b",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_cargo_end_event_conversation_two_a",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_cargo_end_event_conversation_two_a",
 		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_end_event_conversation_two_a",
+		response = "mission_cargo_end_event_conversation_two_a",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_cargo_end_event_conversation_two_a"
+				"mission_cargo_end_event_conversation_two_a",
 			},
 			{
 				"faction_memory",
 				"mission_cargo_end_event_conversation",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_end_event_conversation",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_end_event_conversation_two_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_end_event_conversation_two_b",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_end_event_conversation_two_a"
-				}
+					"mission_cargo_end_event_conversation_two_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_end_event_conversation_two_c",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_cargo_end_event_conversation_two_c",
-		database = "mission_vo_fm_cargo",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_end_event_conversation_two_b"
-				}
-			}
+					"mission_cargo_end_event_conversation_two_b",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_first_objective",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_first_objective",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_start_banter_d"
-				}
+					"mission_cargo_start_banter_d",
+				},
 			},
 			{
 				"user_context",
@@ -515,170 +517,170 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_first_objective_response",
-		wwise_route = 0,
 		response = "mission_cargo_first_objective_response",
-		database = "mission_vo_fm_cargo",
-		category = "conversations_prio_0",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_first_objective"
-				}
-			}
+					"mission_cargo_first_objective",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_hab_feed_lines",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_cargo_hab_feed_lines",
-		database = "mission_vo_fm_cargo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at"
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"mission_cargo_hab_feed_lines"
-			},
-			{
-				"query_context",
-				"distance",
-				OP.GT,
-				1
-			},
-			{
-				"query_context",
-				"distance",
-				OP.LT,
-				25
-			},
-			{
-				"faction_memory",
-				"mission_cargo_hab_feed_lines",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"mission_cargo_hab_feed_lines",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "disabled"
-		}
-	})
-	define_rule({
-		name = "mission_cargo_labyrinth",
-		category = "player_prio_0",
 		wwise_route = 0,
-		response = "mission_cargo_labyrinth",
-		database = "mission_vo_fm_cargo",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_cargo_labyrinth"
+				"mission_cargo_hab_feed_lines",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				25,
+			},
+			{
+				"faction_memory",
+				"mission_cargo_hab_feed_lines",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_cargo_hab_feed_lines",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "player_prio_0",
+		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_labyrinth",
+		response = "mission_cargo_labyrinth",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at",
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"mission_cargo_labyrinth",
+			},
+			{
+				"query_context",
+				"distance",
+				OP.GT,
+				1,
+			},
+			{
+				"query_context",
+				"distance",
+				OP.LT,
+				17,
 			},
 			{
 				"faction_memory",
 				"mission_cargo_labyrinth",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_labyrinth",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_mid_event_end",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_mid_event_end",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_cargo_mid_event_end"
+				"mission_cargo_mid_event_end",
 			},
 			{
 				"user_context",
@@ -687,49 +689,49 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_cargo_mid_event_end",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_mid_event_end",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_mid_event_start",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_mid_event_start",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_cargo_mid_event_start"
+				"mission_cargo_mid_event_start",
 			},
 			{
 				"user_context",
@@ -738,49 +740,49 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_cargo_mid_event_start",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_mid_event_start",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_production_line",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_cargo_production_line",
-		database = "mission_vo_fm_cargo",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_cargo_production_line"
+				"mission_cargo_production_line",
 			},
 			{
 				"user_context",
@@ -789,49 +791,49 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_cargo_production_line",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_production_line",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_cargo_reinforcements",
-		response = "mission_cargo_reinforcements",
 		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_reinforcements",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_cargo_reinforcements",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_cargo_reinforcements"
+				"mission_cargo_reinforcements",
 			},
 			{
 				"user_context",
@@ -840,289 +842,289 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_cargo_reinforcements",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_reinforcements",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		name = "mission_cargo_reinforcements_response",
-		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
-		response = "mission_cargo_reinforcements_response",
-		database = "mission_vo_fm_cargo",
 		category = "vox_prio_0",
+		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_reinforcements_response",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_cargo_reinforcements_response",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_reinforcements"
-				}
+					"mission_cargo_reinforcements",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot"
-				}
-			}
+					"pilot",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_cargo_something_big",
 		category = "player_prio_0",
-		wwise_route = 0,
-		response = "mission_cargo_something_big",
 		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_something_big",
+		response = "mission_cargo_something_big",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_cargo_something_big"
+				"mission_cargo_something_big",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"faction_memory",
 				"mission_cargo_something_big",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_something_big",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_cargo_start_banter_a",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_cargo_start_banter_a",
 		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_start_banter_a",
+		response = "mission_cargo_start_banter_a",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"start_banter"
+				"start_banter",
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.EQ,
-				"fm_cargo"
+				"fm_cargo",
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.NEQ,
-				"thischeckisdisabled"
+				"thischeckisdisabled",
 			},
 			{
 				"faction_memory",
 				"mission_cargo_start_banter_a",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_start_banter_a",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_cargo_start_banter_b",
-		response = "mission_cargo_start_banter_b",
-		database = "mission_vo_fm_cargo",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_start_banter_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_cargo_start_banter_b",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_start_banter_a"
-				}
+					"mission_cargo_start_banter_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_fm_cargo",
 		name = "mission_cargo_start_banter_c",
-		wwise_route = 0,
 		response = "mission_cargo_start_banter_c",
-		database = "mission_vo_fm_cargo",
-		category = "conversations_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"mission_cargo_start_banter_b"
-				}
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "mission_cargo_start_banter_d",
 		wwise_route = 0,
-		response = "mission_cargo_start_banter_d",
-		database = "mission_vo_fm_cargo",
-		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_cargo_start_banter_c"
-				}
-			}
+					"mission_cargo_start_banter_b",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_cargo_worker_cloister",
-		response = "mission_cargo_worker_cloister",
+		category = "conversations_prio_0",
 		database = "mission_vo_fm_cargo",
-		wwise_route = 1,
-		category = "vox_prio_0",
+		name = "mission_cargo_start_banter_d",
+		response = "mission_cargo_start_banter_d",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_cargo_start_banter_c",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_worker_cloister",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_cargo_worker_cloister",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_cargo_worker_cloister"
+				"mission_cargo_worker_cloister",
 			},
 			{
 				"user_context",
@@ -1131,26 +1133,26 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_cargo_worker_cloister",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_cargo_worker_cloister",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 end

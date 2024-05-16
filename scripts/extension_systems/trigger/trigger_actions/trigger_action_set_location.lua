@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_actions/trigger_action_set_location.lua
+
 require("scripts/extension_systems/trigger/trigger_actions/trigger_action_base")
 
 local TriggerActionSetLocation = class("TriggerActionSetLocation", "TriggerActionBase")

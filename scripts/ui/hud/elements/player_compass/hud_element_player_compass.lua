@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_compass/hud_element_player_compass.lua
+
 local Definitions = require("scripts/ui/hud/elements/player_compass/hud_element_player_compass_definitions")
 local HudElementPlayerCompassSettings = require("scripts/ui/hud/elements/player_compass/hud_element_player_compass_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -11,15 +13,20 @@ HudElementPlayerCompass.init = function (self, parent, draw_layer, start_scale)
 	HudElementPlayerCompass.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	self._registered_world_markers = false
+
 	local my_player = parent:player()
+
 	self._my_player = my_player
+
 	local game_mode_manager = Managers.state.game_mode
 	local hud_settings = game_mode_manager:hud_settings()
+
 	self._player_composition_name = hud_settings.player_composition
 end
 
 HudElementPlayerCompass._register_world_markers = function (self)
 	self._registered_world_markers = true
+
 	local cb = callback(self, "_cb_register_world_markers_list")
 
 	Managers.event:trigger("request_world_markers_list", cb)
@@ -27,6 +34,7 @@ end
 
 HudElementPlayerCompass._cb_register_world_markers_list = function (self, world_markers)
 	self._world_markers_list = world_markers
+
 	local active_presentation_data = self._active_presentation_data
 
 	if active_presentation_data then
@@ -62,7 +70,7 @@ local temp_team_player_color = {
 	50,
 	0,
 	255,
-	0
+	0,
 }
 
 HudElementPlayerCompass._draw_party_icon = function (self, dt, t, ui_renderer, marker, x, y, alpha)
@@ -81,10 +89,12 @@ HudElementPlayerCompass._draw_party_icon = function (self, dt, t, ui_renderer, m
 	local font_type = icon_text_style.font_type
 	local text_color = icon_text_style.text_color
 	local text_options = UIFonts.get_font_options_by_style(icon_text_style)
+
 	temp_team_player_color[1] = alpha
 	temp_team_player_color[2] = text_color[2]
 	temp_team_player_color[3] = text_color[3]
 	temp_team_player_color[4] = text_color[4]
+
 	local font_size = 42
 
 	UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, size, temp_team_player_color, text_options)
@@ -107,9 +117,10 @@ HudElementPlayerCompass._get_party_icons_render_buffer = function (self, dt, t, 
 
 			if marker then
 				local angle = self:_get_marker_direction_angle(marker)
+
 				temp_team_player_render_data[#temp_team_player_render_data + 1] = {
 					angle = angle,
-					marker = marker
+					marker = marker,
 				}
 			end
 		end
@@ -135,8 +146,10 @@ HudElementPlayerCompass._get_camera_direction_angle = function (self)
 
 	local camera_rotation = Camera.local_rotation(camera)
 	local camera_forward = Quaternion.forward(camera_rotation)
+
 	camera_forward.z = 0
 	camera_forward = Vector3.normalize(camera_forward)
+
 	local camera_right = Vector3.cross(camera_forward, Vector3.up())
 	local direction = Vector3.forward()
 	local forward_dot_dir = Vector3.dot(camera_forward, direction)
@@ -158,8 +171,10 @@ HudElementPlayerCompass._get_marker_direction_angle = function (self, marker)
 
 		local camera_position = ScriptCamera.position(camera)
 		local diff_vector = marker_position - camera_position
+
 		diff_vector.z = 0
 		diff_vector = Vector3.normalize(diff_vector)
+
 		local diff_right = Vector3.cross(diff_vector, Vector3.up())
 		local direction = Vector3.forward()
 		local forward_dot_dir = Vector3.dot(diff_vector, direction)
@@ -182,13 +197,17 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 	local scale = ui_renderer.scale
 	local inverse_scale = ui_renderer.inverse_scale
 	local step_color = HudElementPlayerCompassSettings.step_color
+
 	step_color_table[2] = step_color[2]
 	step_color_table[3] = step_color[3]
 	step_color_table[4] = step_color[4]
+
 	local direction_icon_color = HudElementPlayerCompassSettings.direction_icon_color
+
 	direction_icon_color_table[2] = direction_icon_color[2]
 	direction_icon_color_table[3] = direction_icon_color[3]
 	direction_icon_color_table[4] = direction_icon_color[4]
+
 	local area_scenegraph = ui_scenegraph.area
 	local area_size = area_scenegraph.size
 	local area_position = area_scenegraph.world_position
@@ -207,7 +226,9 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 	local rotation_progress = player_direction_degree / degrees
 	local start_offset = -total_length * rotation_progress
 	local start_index = math.floor(math.abs(start_offset) / marker_spacing)
+
 	start_offset = start_offset + area_size[1] * 0.5 + marker_spacing
+
 	local step_height_small = HudElementPlayerCompassSettings.step_height_small
 	local step_height_large = HudElementPlayerCompassSettings.step_height_large
 	local font_type = HudElementPlayerCompassSettings.step_font_type
@@ -227,17 +248,20 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 		local next_read_index = (draw_index - 1) % num_steps + 2
 		local local_x = start_offset + (draw_index - 1) * marker_spacing + area_position[1]
 
-		if area_position[1] <= local_x + size[1] and local_x <= area_position[1] + area_size[1] then
+		if local_x + size[1] >= area_position[1] and local_x <= area_position[1] + area_size[1] then
 			local distance_from_center = math.abs(local_x - area_middle_x)
 			local distance_from_center_norm = distance_from_center / (area_size[1] * 0.5)
 			local alpha_fraction = step_fade_start <= distance_from_center_norm and 1 - math.min((distance_from_center_norm - step_fade_start) / (1 - step_fade_start), 1) or 1
 			local alpha = 255 * alpha_fraction
+
 			step_color_table[1] = alpha
 			direction_icon_color_table[1] = alpha
+
 			local current_degree = read_index * degrees_per_step
-			local degree_icon = nil
+			local degree_icon
 			local degree_abbreviation = not degree_icon and degree_direction_abbreviations[current_degree]
 			local font_size = degree_abbreviation and font_size_big or font_size_small
+
 			size[2] = degree_abbreviation and step_height_large or step_height_small
 			position[1] = local_x + step_width_offset
 			position[2] = area_position[2]
@@ -247,6 +271,7 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 			if read_index % 2 == 0 then
 				local text = degree_abbreviation or tostring(current_degree)
 				local text_width = UIRenderer.text_size(ui_renderer, text, font_type, font_size)
+
 				position[2] = position[2] + size[2] + 5
 				position[1] = local_x - text_width * inverse_scale * 0.5 - 1
 				size[1] = text_width + 20
@@ -261,7 +286,9 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 					local icon_render_buffer = party_icons_render_buffer[j]
 					local marker_angle = icon_render_buffer.angle
 					local marker_degrees = math.radians_to_degrees(marker_angle)
+
 					current_degree = current_degree % degrees
+
 					local degree_difference = marker_degrees - current_degree
 
 					if degree_difference >= 0 and degree_difference <= degrees_per_step then

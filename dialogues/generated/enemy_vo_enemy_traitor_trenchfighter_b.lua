@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_trenchfighter_b.lua
+
 local enemy_vo_enemy_traitor_trenchfighter_b = {
 	traitor_trenchfighter_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			"loc_enemy_traitor_trenchfighter_b__alerted_idle_17",
 			"loc_enemy_traitor_trenchfighter_b__alerted_idle_18",
 			"loc_enemy_traitor_trenchfighter_b__alerted_idle_19",
-			"loc_enemy_traitor_trenchfighter_b__alerted_idle_20"
+			"loc_enemy_traitor_trenchfighter_b__alerted_idle_20",
 		},
 		sound_events_duration = {
 			1.99175,
@@ -44,7 +46,7 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			1.192458,
 			2.698854,
 			1.411625,
-			2.316875
+			2.316875,
 		},
 		sound_event_weights = {
 			0.05,
@@ -66,9 +68,9 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_trenchfighter_assault = {
 		randomize_indexes_n = 0,
@@ -93,7 +95,7 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			"loc_enemy_traitor_trenchfighter_b__assault_17",
 			"loc_enemy_traitor_trenchfighter_b__assault_18",
 			"loc_enemy_traitor_trenchfighter_b__assault_19",
-			"loc_enemy_traitor_trenchfighter_b__assault_20"
+			"loc_enemy_traitor_trenchfighter_b__assault_20",
 		},
 		sound_events_duration = {
 			2.584854,
@@ -115,7 +117,7 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			1.891021,
 			1.659646,
 			3.044417,
-			2.078208
+			2.078208,
 		},
 		sound_event_weights = {
 			0.05,
@@ -137,9 +139,9 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_trenchfighter_melee_idle = {
 		randomize_indexes_n = 0,
@@ -164,7 +166,7 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			"loc_enemy_traitor_trenchfighter_b__melee_idle_17",
 			"loc_enemy_traitor_trenchfighter_b__melee_idle_18",
 			"loc_enemy_traitor_trenchfighter_b__melee_idle_19",
-			"loc_enemy_traitor_trenchfighter_b__melee_idle_20"
+			"loc_enemy_traitor_trenchfighter_b__melee_idle_20",
 		},
 		sound_events_duration = {
 			2.875958,
@@ -186,7 +188,7 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			7.254292,
 			7.943521,
 			6.106271,
-			6.502354
+			6.502354,
 		},
 		sound_event_weights = {
 			0.05,
@@ -208,10 +210,10 @@ local enemy_vo_enemy_traitor_trenchfighter_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_traitor_trenchfighter_b", enemy_vo_enemy_traitor_trenchfighter_b)

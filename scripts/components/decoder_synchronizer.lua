@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/decoder_synchronizer.lua
+
 local DecoderSynchronizer = component("DecoderSynchronizer")
 
 DecoderSynchronizer.init = function (self, unit, is_server)
@@ -52,50 +54,50 @@ end
 
 DecoderSynchronizer.component_data = {
 	min_time_until_stalling = {
+		ui_name = "Min time until stalling (in sec.)",
 		ui_type = "number",
 		value = 20,
-		ui_name = "Min time until stalling (in sec.)"
 	},
 	max_time_until_stalling = {
+		ui_name = "Max time until stalling (in sec.)",
 		ui_type = "number",
 		value = 30,
-		ui_name = "Max time until stalling (in sec.)"
 	},
 	num_active_units = {
+		ui_name = "Num. of Active Units",
 		ui_type = "number",
 		value = 1,
-		ui_name = "Num. of Active Units"
 	},
 	stall_once_per_device = {
+		ui_name = "Stall only once per device",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Stall only once per device"
 	},
 	objective_name = {
+		ui_name = "Objective Name",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Objective Name"
 	},
 	automatic_start = {
+		ui_name = "Auto Start On Mission Start",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Auto Start On Mission Start"
 	},
 	setup_only = {
+		ui_name = "Setup Only",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Setup Only"
 	},
 	inputs = {
 		start_decoding_event = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
 		"DecoderSynchronizerExtension",
-		"NetworkedTimerExtension"
-	}
+		"NetworkedTimerExtension",
+	},
 }
 
 return DecoderSynchronizer

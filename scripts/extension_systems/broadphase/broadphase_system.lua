@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/broadphase/broadphase_system.lua
+
 require("scripts/extension_systems/broadphase/broadphase_extension")
 
 local BreedSettings = require("scripts/settings/breed/breed_settings")
@@ -8,7 +10,7 @@ local function _generate_broadphase_categories(system_init_data)
 	local side_names = system_init_data.side_names
 	local broadphase_categories = table.append({
 		"doors",
-		"pickups"
+		"pickups",
 	}, side_names)
 	local pickup_groups = Pickups.by_group
 
@@ -32,6 +34,7 @@ BroadphaseSystem.init = function (self, extension_system_creation_context, syste
 	BroadphaseSystem.super.init(self, extension_system_creation_context, system_init_data, ...)
 
 	local broadphase_categories = _generate_broadphase_categories(system_init_data)
+
 	self.broadphase = Broadphase(BROADPHASE_CELL_RADIUS, MAX_EXPECTED_ENTITIES, broadphase_categories)
 	self._extension_init_context.broadphase = self.broadphase
 	self._moving_units = Script.new_map(256)

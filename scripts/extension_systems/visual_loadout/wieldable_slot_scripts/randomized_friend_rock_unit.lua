@@ -1,11 +1,15 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/randomized_friend_rock_unit.lua
+
 local Component = require("scripts/utilities/component")
 local RandomizedFriendRockUnit = class("RandomizedFriendRockUnit")
 
 RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._weapon_actions = weapon_template.actions
 	self._ability_extension = ScriptUnit.extension(owner_unit, "ability_system")
 	self._slot = slot
+
 	local unit_components = {}
 	local base_unit_1p = slot.unit_1p
 	local components_1p = Component.get_components_by_name(base_unit_1p, "RandomizedFriendRockUnit")
@@ -13,7 +17,7 @@ RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, 
 	for _, component in ipairs(components_1p) do
 		unit_components[#unit_components + 1] = {
 			unit = base_unit_1p,
-			component = component
+			component = component,
 		}
 	end
 
@@ -23,7 +27,7 @@ RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, 
 	for _, component in ipairs(components_3p) do
 		unit_components[#unit_components + 1] = {
 			unit = base_unit_3p,
-			component = component
+			component = component,
 		}
 	end
 
@@ -69,11 +73,13 @@ RandomizedFriendRockUnit._update_next_visibility_group_index = function (self)
 
 	if current_num_remaining_charges ~= num_remaining_charges then
 		self._num_remaining_charges = num_remaining_charges
-		local next_visibility_group_index = nil
+
+		local next_visibility_group_index
 		local unit_components = self._unit_components
 
 		for ii = 1, #unit_components do
 			local random_visual_unit = unit_components[ii]
+
 			next_visibility_group_index = next_visibility_group_index or random_visual_unit.component:random_visibility_group_index()
 		end
 

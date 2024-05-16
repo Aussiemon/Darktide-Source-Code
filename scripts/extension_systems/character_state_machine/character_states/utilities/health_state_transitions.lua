@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions.lua
+
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local HealthStateTransitions = {}
 

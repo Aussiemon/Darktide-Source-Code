@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/holo_sight.lua
+
 local HoloSight = component("HoloSight")
 
 HoloSight.editor_init = function (self, unit)
@@ -54,10 +56,10 @@ end
 
 HoloSight.component_data = {
 	glass_visibility_group_name = {
+		ui_name = "Glass Visibility Group",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Glass Visibility Group"
-	}
+	},
 }
 
 return HoloSight

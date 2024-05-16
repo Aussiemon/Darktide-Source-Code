@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cinematic_scene/cinematic_scene_system.lua
+
 require("scripts/extension_systems/cinematic_scene/cinematic_scene_extension")
 
 local Breeds = require("scripts/settings/breed/breeds")
@@ -11,10 +13,10 @@ local CinematicSceneSystem = class("CinematicSceneSystem", "ExtensionSystemBase"
 local NUM_CPT_PER_UNIT = 1
 local CLIENT_RPCS = {
 	"rpc_play_cutscene",
-	"rpc_cinematic_intro_played"
+	"rpc_cinematic_intro_played",
 }
 local SERVER_RPCS = {
-	"rpc_request_play_cutscene"
+	"rpc_request_play_cutscene",
 }
 local CINEMATIC_VIEWS = {
 	[CINEMATIC_NAMES.intro_abc] = "cutscene_view",
@@ -46,7 +48,7 @@ local CINEMATIC_VIEWS = {
 	[CINEMATIC_NAMES.hub_location_intro_training_grounds] = "cutscene_view",
 	[CINEMATIC_NAMES.hub_location_intro_contracts] = "cutscene_view",
 	[CINEMATIC_NAMES.hub_location_intro_crafting] = "cutscene_view",
-	[CINEMATIC_NAMES.hub_location_intro_gun_shop] = "cutscene_view"
+	[CINEMATIC_NAMES.hub_location_intro_gun_shop] = "cutscene_view",
 }
 
 local function get_origin_level_names(cinematic_name)
@@ -73,9 +75,12 @@ CinematicSceneSystem.init = function (self, extension_init_context, system_init_
 	CinematicSceneSystem.super.init(self, extension_init_context, system_init_data, ...)
 
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._in_hub = Managers.connection:host_type() == HOST_TYPES.hub_server
+
 	local world = extension_init_context.world
+
 	self._world = world
 	self._level = nil
 	self._cinematics = self:_fetch_settings(system_init_data.mission, extension_init_context.circumstance_name)
@@ -84,6 +89,7 @@ CinematicSceneSystem.init = function (self, extension_init_context, system_init_
 	self._current_cinematic_name = CINEMATIC_NAMES.none
 	self._intro_played = false
 	self._intro_loading_started = false
+
 	local network_event_delegate = self._network_event_delegate
 
 	if network_event_delegate then
@@ -385,6 +391,7 @@ CinematicSceneSystem._initialize_cinematic = function (self, cinematic_name)
 
 	if sub_cinematics then
 		local sub_cinematics_setup = self:_initialize_sub_cinematics(cinematic_name, sub_cinematics)
+
 		self._cinematics_setups[cinematic_name] = sub_cinematics_setup
 	else
 		self._cinematics_setups[cinematic_name] = {}
@@ -400,15 +407,15 @@ CinematicSceneSystem._initialize_sub_cinematics = function (self, cinematic_name
 	local sub_cinematics_setup = {}
 
 	for _, cinematic_category in ipairs(sub_cinematics) do
-		local new_cinematic_setup = {
-			scene_unit_origin = nil,
-			scene_unit_destination = nil,
-			scene_level_destination = self._level,
-			scene_level_origin = nil,
-			camera_unit = nil,
-			camera = nil,
-			is_valid = true
-		}
+		local new_cinematic_setup = {}
+
+		new_cinematic_setup.scene_unit_origin = nil
+		new_cinematic_setup.scene_unit_destination = nil
+		new_cinematic_setup.scene_level_destination = self._level
+		new_cinematic_setup.scene_level_origin = nil
+		new_cinematic_setup.camera_unit = nil
+		new_cinematic_setup.camera = nil
+		new_cinematic_setup.is_valid = true
 		sub_cinematics_setup[cinematic_category] = new_cinematic_setup
 	end
 
@@ -533,7 +540,7 @@ CinematicSceneSystem._activate_view = function (self, cinematic_name)
 				local use_transition_ui = template.use_transition_ui
 				local no_transition_ui = use_transition_ui == false
 				local view_settings_override = no_transition_ui and {
-					use_transition_ui = false
+					use_transition_ui = false,
 				}
 
 				ui_manager:open_view(view, nil, nil, nil, nil, view_context, view_settings_override)

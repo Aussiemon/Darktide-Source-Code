@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/social_menu_view/social_menu_view.lua
+
 local TabbedMenuViewBase = require("scripts/ui/views/tabbed_menu_view_base")
 local Definitions = require("scripts/ui/views/social_menu_view/social_menu_view_definitions")
 local SocialMenuView = class("SocialMenuView", "TabbedMenuViewBase")

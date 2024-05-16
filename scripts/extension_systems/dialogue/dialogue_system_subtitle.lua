@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_system_subtitle.lua
+
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local DialogueSystemSubtitle = class("DialogueSystemSubtitle")
@@ -60,7 +62,7 @@ DialogueSystemSubtitle.create_subtitle = function (self, currently_playing_subti
 		is_audible = true,
 		currently_playing_subtitle = currently_playing_subtitle,
 		speaker_name = speaker_name,
-		duration = duration
+		duration = duration,
 	}
 
 	if optional_delay then
@@ -139,6 +141,7 @@ DialogueSystemSubtitle.subtitle_prio = function (self, dialogue)
 		if playing_category then
 			local playing_category_setting = DialogueCategoryConfig[playing_category]
 			local playing_query_score = playing_category_setting.query_score
+
 			highest_prio_vo = playing_query_score
 		end
 	end

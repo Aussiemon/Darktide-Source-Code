@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_context_system.lua
+
 local DialogueContextExtension = require("scripts/extension_systems/dialogue/dialogue_context_extension")
 local extensions = {
-	"DialogueContextExtension"
+	"DialogueContextExtension",
 }
 local DialogueContextSystem = class("DialogueContextSystem", "ExtensionSystemBase")
 
@@ -13,6 +15,7 @@ DialogueContextSystem.init = function (self, extension_system_creation_context, 
 	self._next_player_key = nil
 	self._unit_extension_data = {}
 	self._start_dialogue_modifier = nil
+
 	local mission = system_init_data.mission
 
 	if mission and mission.dialogue_settings and mission.dialogue_settings.on_start_dialogue_modifier then
@@ -58,6 +61,7 @@ DialogueContextSystem.update = function (self, system_context, t)
 	end
 
 	local next_player_key, extension = next(self._unit_extension_data, self._next_player_key)
+
 	self._next_player_key = next_player_key
 
 	if not next_player_key then

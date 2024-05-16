@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/special_classes/weapon_special_explode_on_impact.lua
+
 require("scripts/extension_systems/weapon/special_classes/weapon_special_self_disorientation")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -15,6 +17,7 @@ local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 
 WeaponSpecialExplodeOnImpact.init = function (self, context, init_data)
 	local player_unit = context.player_unit
+
 	self._player_unit = player_unit
 	self._is_server = context.is_server
 	self._world = context.world
@@ -22,7 +25,9 @@ WeaponSpecialExplodeOnImpact.init = function (self, context, init_data)
 	self._input_extension = context.input_extension
 	self._tweak_data = init_data.tweak_data
 	self._weapon_template = init_data.weapon_template
+
 	local unit_data_extension = context.unit_data_extension
+
 	self._unit_data_extension = unit_data_extension
 	self._locomotion_push_component = unit_data_extension:write_component("locomotion_push")
 	self._inventory_slot_component = init_data.inventory_slot_component
@@ -38,11 +43,12 @@ end
 
 local extra_explosion_armortype = {
 	[armor_types.armored] = true,
-	[armor_types.super_armor] = true
+	[armor_types.super_armor] = true,
 }
 
 WeaponSpecialExplodeOnImpact.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
 	self._num_hit_enemies = num_hit_enemies
+
 	local inventory_slot_component = self._inventory_slot_component
 	local special_active = inventory_slot_component.special_active
 	local num_special_activations = inventory_slot_component.num_special_activations
@@ -70,7 +76,9 @@ end
 
 WeaponSpecialExplodeOnImpact.on_special_activation = function (self, t, num_hit_enemies)
 	self._num_hit_enemies = 0
+
 	local inventory_slot_component = self._inventory_slot_component
+
 	inventory_slot_component.num_special_activations = 0
 end
 
@@ -81,6 +89,7 @@ end
 WeaponSpecialExplodeOnImpact.on_sweep_action_finish = function (self, t, num_hit_enemies)
 	if num_hit_enemies and num_hit_enemies > 0 then
 		local inventory_slot_component = self._inventory_slot_component
+
 		inventory_slot_component.special_active = false
 		inventory_slot_component.num_special_activations = 0
 	end
@@ -91,6 +100,7 @@ end
 WeaponSpecialExplodeOnImpact.on_exit_damage_window = function (self, t, num_hit_enemies)
 	if num_hit_enemies and num_hit_enemies > 0 then
 		local inventory_slot_component = self._inventory_slot_component
+
 		inventory_slot_component.special_active = false
 		inventory_slot_component.num_special_activations = 0
 	end

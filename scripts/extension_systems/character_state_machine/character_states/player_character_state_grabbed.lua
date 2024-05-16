@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_grabbed.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
@@ -12,7 +14,7 @@ local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "mutant_charge"
+	stinger_type = "mutant_charge",
 }
 local VCE = "scream_long_vce"
 local PlayerCharacterStateGrabbed = class("PlayerCharacterStateGrabbed", "PlayerCharacterStateBase")
@@ -22,6 +24,7 @@ PlayerCharacterStateGrabbed.init = function (self, character_state_init_context,
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	self._disabled_character_state_component = disabled_character_state_component
@@ -35,7 +38,7 @@ local DISABLING_UNIT_LINK_NODE = "j_lefthand"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
 local START_EAT_TIMING = {
 	human = 1.2,
-	ogryn = 1.5666666666666667
+	ogryn = 1.5666666666666667,
 }
 
 PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -49,23 +52,29 @@ PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_sta
 		self._animation_extension:anim_event("to_chaos_spawn")
 
 		local locomotion_steering_component = self._locomotion_steering_component
+
 		locomotion_steering_component.move_method = "script_driven"
 		locomotion_steering_component.velocity_wanted = Vector3.zero()
 		locomotion_steering_component.calculate_fall_velocity = false
 		locomotion_steering_component.disable_minion_collision = true
 		self._movement_state_component.method = "idle"
+
 		local disabling_unit = self._disabled_state_input.disabling_unit
 		local disabled_character_state_component = self._disabled_character_state_component
+
 		disabled_character_state_component.is_disabled = true
 		disabled_character_state_component.disabling_unit = disabling_unit
 		disabled_character_state_component.disabling_type = "grabbed"
+
 		local is_server = self._is_server
 
 		if is_server then
 			local link_node = Unit.node(disabling_unit, ENTER_TELEPORT_NODE)
 			local teleport_position = Unit.world_position(disabling_unit, link_node)
 			local unit_forward = Quaternion.forward(Unit.world_rotation(disabling_unit, link_node))
+
 			teleport_position = teleport_position + unit_forward * 0.75
+
 			local lookat_override = Quaternion.look(-Quaternion.forward(Unit.local_rotation(disabling_unit, 1)))
 
 			PlayerMovement.teleport_fixed_update(unit, teleport_position, lookat_override)
@@ -108,7 +117,7 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
-	local teleport_position = nil
+	local teleport_position
 
 	if ALIVE[disabling_unit] then
 		teleport_position = disabled_character_state_component.target_drag_position
@@ -117,6 +126,7 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 
 		local first_person_component = self._unit_data_extension:write_component("first_person")
 		local flat_rotation = Unit.local_rotation(disabling_unit, 1)
+
 		first_person_component.rotation = flat_rotation
 	end
 
@@ -135,6 +145,7 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.disabling_type = "none"
 	self._locomotion_steering_component.disable_minion_collision = false
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 	locomotion_extension:set_parent_unit(nil)
@@ -207,7 +218,7 @@ PlayerCharacterStateGrabbed.fixed_update = function (self, unit, dt, t, next_sta
 		self._smash_played = true
 	end
 
-	if not self._smash_played and self._start_eat_timing and self._start_eat_timing <= t then
+	if not self._smash_played and self._start_eat_timing and t >= self._start_eat_timing then
 		self._animation_extension:anim_event(START_EAT_ANIM_EVENT)
 
 		self._start_eat_timing = nil

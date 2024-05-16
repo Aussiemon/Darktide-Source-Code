@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/perception/target_selection_templates/renegade_captain_target_selection_template.lua
+
 local Breed = require("scripts/utilities/breed")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionTargetSelection = require("scripts/utilities/minion_target_selection")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local _is_valid_target = nil
+local _is_valid_target
 
 local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, taunter_unit_or_nil, threat_units, t, perception_component, debug_target_weighting_or_nil)
 	local target_selection_weights = breed.target_selection_weights
@@ -11,18 +13,31 @@ local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_ta
 	local score = 0
 	local use_quadratic_falloff = true
 	local distance_weight, inverse_radius = MinionTargetSelection.distance_weight(target_selection_weights, distance_sq, breed, use_quadratic_falloff)
+
 	score = score + distance_weight
+
 	local occupied_slots_weight = MinionTargetSelection.occupied_slots_weight(target_selection_weights, target_unit, target_breed, is_new_target, inverse_radius)
+
 	score = score + occupied_slots_weight
+
 	local threat_weight = MinionTargetSelection.threat_weight(target_selection_weights, target_unit, threat_units)
+
 	score = score + threat_weight
+
 	local stickiness_weight = MinionTargetSelection.stickiness_weight(target_selection_weights, is_new_target, perception_component, t)
+
 	score = score + stickiness_weight
+
 	local targeted_by_monster_weight = MinionTargetSelection.targeted_by_monster_weight(target_selection_weights, target_unit, unit)
+
 	score = score + targeted_by_monster_weight
+
 	local weight_multiplier = MinionTargetSelection.weight_multiplier(target_unit)
+
 	score = score * weight_multiplier
+
 	local taunt_weight_multiplier = MinionTargetSelection.taunt_weight_multiplier(target_selection_weights, target_unit, taunter_unit_or_nil)
+
 	score = score * taunt_weight_multiplier
 
 	return math.max(score, 0)
@@ -34,7 +49,7 @@ target_selection_template.renegade_captain = function (unit, side, perception_co
 	local current_target_unit = perception_component.target_unit
 	local position = POSITION_LOOKUP[unit]
 	local taunter_unit = buff_extension:owner_of_buff_with_id("taunted")
-	local best_score, best_target_unit, closest_distance_sq, closest_z_distance = nil
+	local best_score, best_target_unit, closest_distance_sq, closest_z_distance
 	local vector3_distance_squared = Vector3.distance_squared
 	local blackboard = BLACKBOARDS[unit]
 	local behavior_component = blackboard.behavior
@@ -47,26 +62,22 @@ target_selection_template.renegade_captain = function (unit, side, perception_co
 			local target_position = POSITION_LOOKUP[current_target_unit]
 			local distance_sq = vector3_distance_squared(position, target_position)
 			local z_distance = math.abs(position.z - target_position.z)
-			closest_z_distance = z_distance
-			closest_distance_sq = distance_sq
-			best_target_unit = current_target_unit
+
+			best_target_unit, closest_distance_sq, closest_z_distance = current_target_unit, distance_sq, z_distance
 
 			if force_new_target_attempt then
 				best_score = -math.huge
 			else
 				local is_new_target = false
+
 				best_score = _calculate_score(breed, unit, current_target_unit, distance_sq, is_new_target, taunter_unit, threat_units, t, perception_component, debug_target_weighting_or_nil)
 			end
 		else
-			closest_z_distance = math.huge
-			closest_distance_sq = math.huge
-			best_target_unit = nil
+			best_target_unit, closest_distance_sq, closest_z_distance = nil, math.huge, math.huge
 			best_score = -math.huge
 		end
 	else
-		closest_z_distance = math.huge
-		closest_distance_sq = math.huge
-		best_target_unit = nil
+		best_target_unit, closest_distance_sq, closest_z_distance = nil, math.huge, math.huge
 		best_score = -math.huge
 	end
 
@@ -75,16 +86,14 @@ target_selection_template.renegade_captain = function (unit, side, perception_co
 	if not lock_target then
 		local rotation = Unit.world_rotation(unit, 1)
 		local forward_direction = Quaternion.forward(rotation)
-		local vector3_normalize = Vector3.normalize
-		local vector3_angle = Vector3.angle
+		local vector3_normalize, vector3_angle = Vector3.normalize, Vector3.angle
 
 		for i = 1, #target_units do
 			local target_unit = target_units[i]
 
 			if target_unit ~= current_target_unit then
 				local target_position = POSITION_LOOKUP[target_unit]
-				local distance_sq = vector3_distance_squared(position, target_position)
-				local target_direction = vector3_normalize(target_position - position)
+				local distance_sq, target_direction = vector3_distance_squared(position, target_position), vector3_normalize(target_position - position)
 				local angle = distance_sq > 0 and vector3_angle(target_direction, forward_direction) or math.huge
 				local is_valid_target = _is_valid_target(unit, target_unit, behavior_component, distance_sq, angle, force_new_target_attempt_config_or_nil)
 
@@ -94,9 +103,8 @@ target_selection_template.renegade_captain = function (unit, side, perception_co
 
 					if best_score < score then
 						local z_distance = math.abs(position.z - target_position.z)
-						closest_z_distance = z_distance
-						closest_distance_sq = distance_sq
-						best_target_unit = target_unit
+
+						best_target_unit, closest_distance_sq, closest_z_distance = target_unit, distance_sq, z_distance
 						best_score = score
 					end
 				end
@@ -106,6 +114,7 @@ target_selection_template.renegade_captain = function (unit, side, perception_co
 
 	if best_target_unit then
 		local has_line_of_sight = line_of_sight_lookup[best_target_unit]
+
 		perception_component.has_line_of_sight = has_line_of_sight
 		perception_component.target_distance = math.sqrt(closest_distance_sq)
 		perception_component.target_distance_z = closest_z_distance
@@ -119,7 +128,7 @@ function _is_valid_target(attacking_unit, target_unit, attacking_unit_behavior_c
 	if force_new_target_attempt_config_or_nil then
 		local max_distance_sq = force_new_target_attempt_config_or_nil.max_distance^2
 
-		if target_distance_sq > max_distance_sq then
+		if max_distance_sq < target_distance_sq then
 			return false
 		end
 

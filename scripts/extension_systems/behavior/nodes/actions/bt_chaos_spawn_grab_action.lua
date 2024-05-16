@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_chaos_spawn_grab_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -22,12 +24,17 @@ local BtChaosSpawnGrabAction = class("BtChaosSpawnGrabAction", "BtNode")
 
 BtChaosSpawnGrabAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
+
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
 	scratchpad.behavior_component.move_state = "attacking"
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -35,12 +42,15 @@ BtChaosSpawnGrabAction.enter = function (self, unit, breed, blackboard, scratchp
 	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
 	scratchpad.side_system = Managers.state.extension:system("side_system")
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
+
 	local throw_directions = self:_calculate_randomized_throw_directions(action_data)
+
 	scratchpad.throw_directions = throw_directions
 
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
 	local original_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = original_rotation_speed
 	scratchpad.initial_distance_to_target = perception_component.target_distance
 	scratchpad.sweep_hit_units_cache = {}
@@ -56,6 +66,7 @@ end
 BtChaosSpawnGrabAction.init_values = function (self, blackboard)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	local statistics_component = Blackboard.write_component(blackboard, "statistics")
+
 	behavior_component.grabbed_unit = nil
 	behavior_component.wants_to_catapult_grabbed_unit = false
 	behavior_component.grab_cooldown = 0
@@ -65,7 +76,9 @@ end
 BtChaosSpawnGrabAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local grabbed_unit = scratchpad.grabbed_unit
 	local cooldown = action_data.cooldown
+
 	scratchpad.behavior_component.grab_cooldown = t + cooldown
+
 	local disabled_state_component = scratchpad.hit_unit_disabled_character_state_component
 
 	if reason ~= "done" and ALIVE[grabbed_unit] then
@@ -123,13 +136,13 @@ BtChaosSpawnGrabAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		self:_update_grabbing(unit, scratchpad, action_data, t, dt)
 
-		if not scratchpad.grabbed_unit and scratchpad.grab_duration_missed < t then
+		if not scratchpad.grabbed_unit and t > scratchpad.grab_duration_missed then
 			return "done"
-		elseif scratchpad.grabbed_unit and scratchpad.grab_duration < t then
+		elseif scratchpad.grabbed_unit and t > scratchpad.grab_duration then
 			self:_check_if_want_to_smash(unit, scratchpad, action_data, t)
 		end
 
-		if scratchpad.start_eat_timing and scratchpad.start_eat_timing <= t then
+		if scratchpad.start_eat_timing and t >= scratchpad.start_eat_timing then
 			scratchpad.animation_extension:anim_event(action_data.start_eat_anim)
 
 			scratchpad.start_eat_timing = nil
@@ -143,7 +156,7 @@ BtChaosSpawnGrabAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		self:_update_smashing(unit, scratchpad, action_data, blackboard, breed, t)
 
-		if scratchpad.smash_duration <= t then
+		if t >= scratchpad.smash_duration then
 			self:_align_throwing(unit, scratchpad, action_data)
 
 			scratchpad.throw_type = "from_smashing"
@@ -161,27 +174,38 @@ end
 
 BtChaosSpawnGrabAction._start_grabbing = function (self, unit, scratchpad, action_data, t)
 	scratchpad.state = "grabbing"
+
 	local target_unit = scratchpad.perception_component.target_unit
 	local breed_name = ScriptUnit.extension(target_unit, "unit_data_system"):breed().name
 	local grab_anim = action_data.grab_anims[breed_name]
+
 	scratchpad.target_unit = target_unit
 	scratchpad.grabbed_unit_breed_name = breed_name
 
 	scratchpad.animation_extension:anim_event(grab_anim)
 
 	local total_grab_duration = action_data.total_grab_durations[breed_name]
+
 	scratchpad.total_grab_duration = t + total_grab_duration
+
 	local grab_duration = action_data.grab_durations[breed_name]
+
 	scratchpad.grab_duration = t + grab_duration
+
 	local grab_duration_missed = action_data.grab_durations_missed[breed_name]
+
 	scratchpad.grab_duration_missed = t + grab_duration_missed
+
 	local next_damage_t = action_data.damage_timings[breed_name][1]
+
 	scratchpad.next_damage_t = t + next_damage_t
 	scratchpad.damage_timing_index = 1
 	scratchpad.initial_grab_timing = t
 	scratchpad.grab_timing = t + action_data.grab_timings[breed_name][1]
 	scratchpad.grab_stop_timing = t + action_data.grab_timings[breed_name][2]
+
 	local rotation_duration = action_data.rotation_durations[grab_anim]
+
 	scratchpad.rotation_duration = t + rotation_duration
 end
 
@@ -206,8 +230,8 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 
 	local target_unit = scratchpad.perception_component.target_unit
 
-	if scratchpad.grab_timing and scratchpad.grab_timing <= t and scratchpad.perception_component.has_line_of_sight then
-		if scratchpad.grab_stop_timing and scratchpad.grab_stop_timing <= t then
+	if scratchpad.grab_timing and t >= scratchpad.grab_timing and scratchpad.perception_component.has_line_of_sight then
+		if scratchpad.grab_stop_timing and t >= scratchpad.grab_stop_timing then
 			scratchpad.grab_timing = nil
 			scratchpad.grab_stop_timing = nil
 		else
@@ -243,7 +267,7 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 		end
 	end
 
-	if scratchpad.total_grab_duration < t then
+	if t > scratchpad.total_grab_duration then
 		self:_align_throwing(unit, scratchpad, action_data)
 
 		scratchpad.throw_type = "from_eating"
@@ -253,7 +277,7 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 		return
 	end
 
-	if scratchpad.next_damage_t and scratchpad.next_damage_t < t then
+	if scratchpad.next_damage_t and t > scratchpad.next_damage_t then
 		local target = scratchpad.grabbed_unit
 		local damage_profile = action_data.eat_damage_profile
 		local damage_type = action_data.eat_damage_type[scratchpad.grabbed_unit_breed_name]
@@ -266,7 +290,7 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 		ImpactEffect.play(target, nil, damage, damage_type, nil, result, hit_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
 		local heal_amount = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_amount)
-		local heal_type = nil
+		local heal_type
 
 		Health.add(unit, heal_amount, heal_type)
 
@@ -275,6 +299,7 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 
 		if damage_index <= #damage_timings then
 			local next_damage_t = damage_timings[damage_index]
+
 			scratchpad.next_damage_t = scratchpad.initial_grab_timing + next_damage_t
 			scratchpad.damage_timing_index = damage_index
 		else
@@ -294,13 +319,14 @@ BtChaosSpawnGrabAction._check_if_want_to_smash = function (self, unit, scratchpa
 	local target_side_names = side:relation_side_names(broadphase_relation)
 	local radius = action_data.check_for_smash_radius
 	local from = POSITION_LOOKUP[unit]
-	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names)
+	local num_results = broadphase.query(broadphase, from, radius, BROADPHASE_RESULTS, target_side_names)
 
 	if num_results <= 1 then
 		return
 	end
 
 	local target_unit = BROADPHASE_RESULTS[num_results]
+
 	scratchpad.smash_target = target_unit
 
 	self:_start_smashing(unit, scratchpad, action_data, t)
@@ -316,6 +342,7 @@ BtChaosSpawnGrabAction._start_smashing = function (self, unit, scratchpad, actio
 	scratchpad.smash_start_t = t
 	scratchpad.smash_index = 1
 	scratchpad.smash_anim = smash_anim
+
 	local smash_sweep_start_timings = action_data.smash_sweep_start_timings
 
 	if smash_sweep_start_timings and smash_sweep_start_timings[grab_unit_name] then
@@ -324,22 +351,26 @@ BtChaosSpawnGrabAction._start_smashing = function (self, unit, scratchpad, actio
 		scratchpad.stop_sweep_t = t + smash_sweep_start_timings[grab_unit_name][1][2]
 	else
 		local smash_timings = action_data.smash_timings[grab_unit_name]
+
 		scratchpad.next_smash_t = t + smash_timings[1]
 		scratchpad.smash_timings = smash_timings
 	end
 
 	scratchpad.smash_duration = t + action_data.smash_durations[grab_unit_name]
+
 	local ground_impact_fx_template = action_data.ground_impact_fx_template
 
 	if ground_impact_fx_template and action_data.sweep_ground_impact_fx_timing[grab_unit_name] then
 		local ground_impact_fx_timings = action_data.sweep_ground_impact_fx_timing[grab_unit_name]
 		local ground_impact_fx_timing = ground_impact_fx_timings[1]
+
 		scratchpad.sweep_ground_impact_at_t = t + ground_impact_fx_timing
 		scratchpad.ground_impact_index = 1
 		scratchpad.ground_impact_start_time = t
 	end
 
 	local disabled_state_input = scratchpad.hit_unit_disabled_state_input
+
 	disabled_state_input.trigger_animation = "smash"
 end
 
@@ -357,7 +388,7 @@ BtChaosSpawnGrabAction._update_smashing = function (self, unit, scratchpad, acti
 		end
 	end
 
-	if scratchpad.sweep_ground_impact_at_t and scratchpad.sweep_ground_impact_at_t <= t then
+	if scratchpad.sweep_ground_impact_at_t and t >= scratchpad.sweep_ground_impact_at_t then
 		local ground_impact_fx_template = action_data.ground_impact_fx_template
 
 		if ground_impact_fx_template then
@@ -370,7 +401,9 @@ BtChaosSpawnGrabAction._update_smashing = function (self, unit, scratchpad, acti
 
 		if ground_impact_index <= #ground_impact_fx_timings then
 			scratchpad.ground_impact_index = ground_impact_index
+
 			local ground_impact_fx_timing = ground_impact_fx_timings[ground_impact_index]
+
 			scratchpad.sweep_ground_impact_at_t = scratchpad.ground_impact_start_time + ground_impact_fx_timing
 		else
 			scratchpad.sweep_ground_impact_at_t = nil
@@ -378,7 +411,7 @@ BtChaosSpawnGrabAction._update_smashing = function (self, unit, scratchpad, acti
 	end
 
 	if scratchpad.start_sweep_t then
-		if scratchpad.start_sweep_t <= t and t < scratchpad.stop_sweep_t then
+		if t >= scratchpad.start_sweep_t and t < scratchpad.stop_sweep_t then
 			local physics_world = scratchpad.physics_world
 			local sweep_hit_units_cache = scratchpad.sweep_hit_units_cache
 			local attack_event = scratchpad.attack_event
@@ -389,7 +422,7 @@ BtChaosSpawnGrabAction._update_smashing = function (self, unit, scratchpad, acti
 			local smash_damage_profile = action_data.smash_damage_profile[grab_unit_name]
 
 			MinionAttack.sweep(unit, breed, sweep_node, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, smash_damage_profile, nil, attack_event, optional_ignore_target_unit)
-		elseif scratchpad.stop_sweep_t and scratchpad.stop_sweep_t <= t then
+		elseif scratchpad.stop_sweep_t and t >= scratchpad.stop_sweep_t then
 			local smash_sweep_start_timings = action_data.smash_sweep_start_timings
 			local grab_unit_name = scratchpad.grabbed_unit_breed_name
 			local smash_timings = smash_sweep_start_timings[grab_unit_name]
@@ -409,7 +442,7 @@ BtChaosSpawnGrabAction._update_smashing = function (self, unit, scratchpad, acti
 				scratchpad.stop_sweep_t = nil
 			end
 		end
-	elseif scratchpad.next_smash_t and scratchpad.next_smash_t <= t then
+	elseif scratchpad.next_smash_t and t >= scratchpad.next_smash_t then
 		local smash_timings = action_data.smash_timings[scratchpad.grabbed_unit_breed_name]
 		local index = scratchpad.smash_index + 1
 
@@ -433,10 +466,12 @@ BtChaosSpawnGrabAction._start_throwing_target = function (self, unit, scratchpad
 	if scratchpad.throw_type == "from_smashing" and scratchpad.grabbed_unit_breed_name ~= "human" then
 		local fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
 		local right = Vector3.cross(fwd, Vector3.up())
+
 		relative_direction_name = MinionMovement.get_relative_direction_name(right, fwd, throw_direction)
 	end
 
 	scratchpad.state = "throwing"
+
 	local throw_anim = action_data.throw_anims[scratchpad.grabbed_unit_breed_name][relative_direction_name]
 
 	scratchpad.animation_extension:anim_event(throw_anim)
@@ -448,8 +483,7 @@ BtChaosSpawnGrabAction._start_throwing_target = function (self, unit, scratchpad
 		MinionMovement.set_anim_driven(scratchpad, true)
 
 		local anim_data = action_data.anim_data[throw_anim]
-		local rotation_sign = anim_data.sign
-		local rotation_radians = anim_data.rad
+		local rotation_sign, rotation_radians = anim_data.sign, anim_data.rad
 		local destination = POSITION_LOOKUP[unit] + throw_direction
 		local rotation_scale = Animation.calculate_anim_rotation_scale(unit, destination, rotation_sign, rotation_radians)
 
@@ -461,6 +495,7 @@ BtChaosSpawnGrabAction._start_throwing_target = function (self, unit, scratchpad
 	end
 
 	scratchpad.throw_direction = Vector3Box(throw_direction)
+
 	local throw_timings = action_data.throw_timing[scratchpad.grabbed_unit_breed_name]
 
 	if type(throw_timings) == "table" then
@@ -509,15 +544,20 @@ BtChaosSpawnGrabAction._align_throwing = function (self, unit, scratchpad, actio
 	end
 
 	local throw_rotation = Quaternion.inverse(Unit.local_rotation(unit, 1))
+
 	scratchpad.throw_rotation = QuaternionBox(throw_rotation)
+
 	local navigation_extension = scratchpad.navigation_extension
 	local traverse_logic = navigation_extension:traverse_logic()
 	local pos = POSITION_LOOKUP[unit] + Quaternion.forward(throw_rotation) * 2
 	local fallback_throw_position = NavQueries.position_on_mesh_with_outside_position(scratchpad.nav_world, traverse_logic, pos, 1, 2, 2) or POSITION_LOOKUP[unit]
+
 	scratchpad.fallback_throw_position = Vector3Box(fallback_throw_position)
+
 	local target_unit = scratchpad.grabbed_unit
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local disabled_character_state_component = target_unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.target_drag_position = fallback_throw_position
 end
 
@@ -535,11 +575,15 @@ BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, acti
 
 	local target_unit = scratchpad.grabbed_unit
 
-	if scratchpad.throw_at_t and scratchpad.throw_at_t < t then
+	if scratchpad.throw_at_t and t > scratchpad.throw_at_t then
 		scratchpad.throw_at_t = nil
+
 		local hit_unit_disabled_state_input = scratchpad.hit_unit_disabled_state_input
+
 		hit_unit_disabled_state_input.trigger_animation = "none"
+
 		local wants_catapult = not scratchpad.fallback_throw_position
+
 		scratchpad.wants_catapult = wants_catapult
 
 		if wants_catapult then
@@ -547,6 +591,7 @@ BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, acti
 			local wanted_node = Unit.node(unit, DISABLING_UNIT_LINK_NODE)
 			local teleport_position = Unit.world_position(unit, wanted_node)
 			local disabled_character_state_component = target_unit_data_extension:write_component("disabled_character_state")
+
 			disabled_character_state_component.target_drag_position = teleport_position
 		end
 
@@ -558,18 +603,22 @@ BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, acti
 			local catapult_z_force = action_data.catapult_z_force[scratchpad.grabbed_unit_breed_name]
 			local direction = Vector3.normalize(throw_direction)
 			local velocity = direction * catapult_force
+
 			velocity.z = catapult_z_force
+
 			local catapulted_state_input = target_unit_data_extension:write_component("catapulted_state_input")
 
 			Catapulted.apply(catapulted_state_input, velocity)
 
 			scratchpad.wants_catapult = nil
 			scratchpad.behavior_component.grabbed_unit = nil
+
 			local hit_unit_disabled_state_input = scratchpad.hit_unit_disabled_state_input
+
 			hit_unit_disabled_state_input.disabling_unit = nil
 		end
 
-		if scratchpad.throw_duration and scratchpad.throw_duration < t then
+		if scratchpad.throw_duration and t > scratchpad.throw_duration then
 			MinionMovement.set_anim_driven(scratchpad, false)
 
 			if scratchpad.skip_taunt then
@@ -580,6 +629,7 @@ BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, acti
 				scratchpad.animation_extension:anim_event(after_throw_taunt_anim_event)
 
 				local after_throw_taunt_duration = action_data.after_throw_taunt_duration
+
 				scratchpad.after_throw_taunt_duration = t + after_throw_taunt_duration
 				scratchpad.throw_duration = nil
 
@@ -590,7 +640,7 @@ BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, acti
 
 			locomotion_extension:set_wanted_rotation(flat_rotation)
 
-			if scratchpad.after_throw_taunt_duration <= t then
+			if t >= scratchpad.after_throw_taunt_duration then
 				scratchpad.state = "done"
 			end
 		end
@@ -600,29 +650,28 @@ end
 local ABOVE = 1
 local BELOW = 2
 local LATERAL = 2
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 2.7
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 2.15
-local MAX_STEPS = 20
-local MAX_TIME = 1.25
-local THROW_LEFT_OFFSET_HUMAN = 1.65
-local THROW_LEFT_OFFSET_OGRYN = 2
-local THROW_FWD_OFFSET_HUMAN = 2
-local THROW_FWD_OFFSET_OGRYN = 2
+local THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME = 2.7, 2.15, 20, 1.25
+local THROW_LEFT_OFFSET_HUMAN, THROW_LEFT_OFFSET_OGRYN = 1.65, 2
+local THROW_FWD_OFFSET_HUMAN, THROW_FWD_OFFSET_OGRYN = 2, 2
 
 BtChaosSpawnGrabAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local unit_position = POSITION_LOOKUP[unit]
 	local is_human = scratchpad.grabbed_unit_breed_name == "human"
 	local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
 	local left = -Vector3.cross(test_direction, Vector3.up())
+
 	left = is_human and left * THROW_LEFT_OFFSET_HUMAN or left * THROW_LEFT_OFFSET_OGRYN
 	to = to + left
+
 	local fwd_offset = Vector3.normalize(test_direction) * (is_human and THROW_FWD_OFFSET_HUMAN or THROW_FWD_OFFSET_OGRYN)
 	local from = unit_position + up + left + fwd_offset
 	local catapult_force = action_data.catapult_force[scratchpad.grabbed_unit_breed_name]
 	local catapult_z_force = action_data.catapult_z_force[scratchpad.grabbed_unit_breed_name]
 	local direction = Vector3.normalize(to - from)
 	local catapult_velocity = direction * catapult_force
+
 	catapult_velocity.z = catapult_z_force
+
 	local speed = Vector3.length(catapult_velocity)
 	local target_velocity = Vector3(0, 0, 0)
 	local gravity = PlayerCharacterConstants.gravity
@@ -657,17 +706,24 @@ end
 BtChaosSpawnGrabAction._grab_target = function (self, unit, target_unit, scratchpad, action_data, t)
 	local hit_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local disabled_state_input = hit_unit_data_extension:write_component("disabled_state_input")
+
 	disabled_state_input.wants_disable = true
 	disabled_state_input.disabling_unit = unit
 	disabled_state_input.disabling_type = "grabbed"
 	scratchpad.grabbed_unit = target_unit
 	scratchpad.hit_unit_disabled_state_input = disabled_state_input
+
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.grabbed_unit = target_unit
+
 	local disabled_character_state_component = hit_unit_data_extension:write_component("disabled_character_state")
+
 	scratchpad.hit_unit_disabled_character_state_component = disabled_character_state_component
+
 	local disabled_character_state_write_component = hit_unit_data_extension:write_component("disabled_character_state")
 	local init_target_drag_position = POSITION_LOOKUP[unit]
+
 	disabled_character_state_write_component.target_drag_position = init_target_drag_position
 
 	if scratchpad.is_anim_driven then
@@ -693,8 +749,10 @@ BtChaosSpawnGrabAction._calculate_randomized_throw_directions = function (self, 
 
 	for i = 1, num_directions do
 		current_degree = current_degree + degree_per_direction
+
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = Vector3(math.sin(radians), math.cos(radians), 0)
+
 		directions[i] = Vector3Box(direction)
 	end
 

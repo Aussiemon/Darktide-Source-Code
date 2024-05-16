@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/initialize_wan_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local InitializeWanError = class("InitializeWanError")

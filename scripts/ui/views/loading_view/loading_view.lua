@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/loading_view/loading_view.lua
+
 local definition_path = "scripts/ui/views/loading_view/loading_view_definitions"
 local InputUtils = require("scripts/managers/input/input_utils")
 local LoadingViewSettings = require("scripts/ui/views/loading_view/loading_view_settings")
@@ -314,7 +316,7 @@ local temp_loading_hints = {
 	"loc_loading_hint_307",
 	"loc_loading_hint_308",
 	"loc_loading_hint_309",
-	"loc_loading_hint_310"
+	"loc_loading_hint_310",
 }
 local LoadingView = class("LoadingView", "BaseView")
 local Views = require("scripts/ui/views/views")
@@ -332,17 +334,19 @@ LoadingView.init = function (self, settings, context)
 	self._entry_duration = nil
 	self._text_cycle_duration = nil
 	self._update_hint_text = nil
+
 	local background, background_package = self:select_background()
 	local definitions = require(definition_path)
+
 	definitions.widget_definitions.background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/loading/" .. background,
 			style = {
 				horizontal_alignment = "center",
-				vertical_alignment = "center"
-			}
-		}
+				vertical_alignment = "center",
+			},
+		},
 	}, "loading_image")
 
 	LoadingView.super.init(self, definitions, settings, context, background_package)
@@ -393,6 +397,7 @@ LoadingView._update_input_display = function (self)
 	local alias_name = "next_hint"
 	local color_tint_text = true
 	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
+
 	text_widget.content.text = input_key .. " " .. localized_text
 end
 
@@ -405,7 +410,7 @@ LoadingView._widget_text_length = function (self, widget_id)
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local text_length, _ = UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, {
 		widget_width,
-		widget_height
+		widget_height,
 	}, text_options)
 
 	return text_length
@@ -428,12 +433,15 @@ end
 
 LoadingView._set_hint_text_opacity = function (self, opacity)
 	local widget = self._widgets_by_name.hint_text
+
 	widget.alpha_multiplier = opacity
 end
 
 LoadingView._update_next_hint = function (self)
 	local num_hints = #temp_loading_hints
+
 	self._hint_index = self._hint_index and self._hint_index % num_hints + 1 or math.random(1, num_hints)
+
 	local next_hint = temp_loading_hints[self._hint_index]
 
 	self:_set_hint_text(next_hint)
@@ -443,11 +451,13 @@ end
 
 LoadingView._set_hint_text = function (self, text)
 	local widget = self._widgets_by_name.hint_text
+
 	widget.content.text = self:_localize(text)
 end
 
 LoadingView._set_overlay_opacity = function (self, opacity)
 	local widget = self._widgets_by_name.overlay
+
 	widget.alpha_multiplier = opacity
 end
 

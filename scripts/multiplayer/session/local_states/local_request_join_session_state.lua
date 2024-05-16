@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/local_states/local_request_join_session_state.lua
+
 local LocalRequestJoinSessionState = class("LocalRequestJoinSessionState")
 
 LocalRequestJoinSessionState.init = function (self, state_machine, shared_state)
@@ -17,13 +19,14 @@ end
 
 LocalRequestJoinSessionState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
 	if Network.channel_state(shared_state.channel_id) ~= "connected" then
 		Log.info("LocalRequestJoinSessionState", "Lost game session")
 
 		return "lost_session", {
-			game_reason = "lost_session"
+			game_reason = "lost_session",
 		}
 	end
 
@@ -31,11 +34,11 @@ LocalRequestJoinSessionState.update = function (self, dt)
 		return "in_session"
 	end
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalRequestJoinSessionState", "Timeout while waiting for in_session")
 
 		return "timeout", {
-			game_reason = "timeout"
+			game_reason = "timeout",
 		}
 	end
 end

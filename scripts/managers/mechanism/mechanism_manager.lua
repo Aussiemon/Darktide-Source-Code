@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanism_manager.lua
+
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local MechanismSettings = require("scripts/settings/mechanism/mechanism_settings")
 local StateTitle = require("scripts/game_states/game/state_title")
@@ -10,101 +12,106 @@ for name, settings in pairs(MechanismSettings) do
 end
 
 local MechanismManager = class("MechanismManager")
+
 MechanismManager.LOOKUP = {}
+
 local EVENT_TYPES = table.enum("all", "server", "locally")
+
 MechanismManager.EVENTS = {
 	game_mode_end = {
 		rpc_name = "rpc_mechanism_event_game_mode_end",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, result, session_id)
 			return NetworkLookup.game_mode_outcomes[result], session_id
-		end
+		end,
 	},
 	all_players_ready = {
 		rpc_name = "rpc_mechanism_event",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, ...)
 			return self.id
-		end
+		end,
 	},
 	victory_defeat_done = {
 		rpc_name = "rpc_mechanism_event",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, ...)
 			return self.id
-		end
+		end,
 	},
 	game_score_done = {
 		rpc_name = "rpc_mechanism_event",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, ...)
 			return self.id
-		end
+		end,
 	},
 	client_exit_gameplay = {
-		type = EVENT_TYPES.locally
+		type = EVENT_TYPES.locally,
 	},
 	failed_fetching_session_report = {
 		rpc_name = "rpc_mechanism_event_failed_fetching_session_report",
 		type = EVENT_TYPES.server,
 		pack_function = function (self, peer_id)
 			return peer_id
-		end
+		end,
 	},
 	game_score_end_time = {
 		rpc_name = "rpc_mechanism_event_game_score_end_time",
 		type = EVENT_TYPES.all,
 		pack_function = function (self, time)
 			return time
-		end
-	}
+		end,
+	},
 }
 MechanismManager.EVENT_LOOKUP = {}
 MechanismManager.CLIENT_RPCS = {
-	"rpc_set_mechanism"
+	"rpc_set_mechanism",
 }
 MechanismManager.SERVER_RPCS = {}
-local i = 1
-local lookup = MechanismManager.LOOKUP
 
-for name, mechanism_settings in pairs(MechanismSettings) do
-	local mechanism_class = CLASSES[mechanism_settings.class_name]
+do
+	local i = 1
+	local lookup = MechanismManager.LOOKUP
 
-	assert_interface(mechanism_class, MechanismBase.INTERFACE)
+	for name, mechanism_settings in pairs(MechanismSettings) do
+		local mechanism_class = CLASSES[mechanism_settings.class_name]
 
-	lookup[name] = i
-	lookup[i] = name
-	i = i + 1
-end
+		assert_interface(mechanism_class, MechanismBase.INTERFACE)
 
-local j = 1
-local client_rpcs = {}
-local server_rpcs = {}
+		lookup[name] = i
+		lookup[i] = name
+		i = i + 1
+	end
 
-for event_name, event_config in pairs(MechanismManager.EVENTS) do
-	local rpc_name = event_config.rpc_name
-	local event_type = event_config.type
-	local local_side = event_type == EVENT_TYPES.locally
+	local j = 1
+	local client_rpcs, server_rpcs = {}, {}
 
-	if not local_side then
-		event_config.id = j
-		MechanismManager.EVENT_LOOKUP[j] = event_name
-		j = j + 1
+	for event_name, event_config in pairs(MechanismManager.EVENTS) do
+		local rpc_name = event_config.rpc_name
+		local event_type = event_config.type
+		local local_side = event_type == EVENT_TYPES.locally
 
-		if event_type == EVENT_TYPES.all then
-			client_rpcs[rpc_name] = true
-		else
-			server_rpcs[rpc_name] = true
+		if not local_side then
+			event_config.id = j
+			MechanismManager.EVENT_LOOKUP[j] = event_name
+			j = j + 1
+
+			if event_type == EVENT_TYPES.all then
+				client_rpcs[rpc_name] = true
+			else
+				server_rpcs[rpc_name] = true
+			end
 		end
 	end
-end
 
-for rpc_name in pairs(client_rpcs) do
-	MechanismManager.CLIENT_RPCS[#MechanismManager.CLIENT_RPCS + 1] = rpc_name
-end
+	for rpc_name in pairs(client_rpcs) do
+		MechanismManager.CLIENT_RPCS[#MechanismManager.CLIENT_RPCS + 1] = rpc_name
+	end
 
-for rpc_name in pairs(server_rpcs) do
-	MechanismManager.SERVER_RPCS[#MechanismManager.SERVER_RPCS + 1] = rpc_name
+	for rpc_name in pairs(server_rpcs) do
+		MechanismManager.SERVER_RPCS[#MechanismManager.SERVER_RPCS + 1] = rpc_name
+	end
 end
 
 local function _info(...)
@@ -144,10 +151,11 @@ MechanismManager.mechanism_name = function (self)
 end
 
 MechanismManager.player_package_synchronization_settings = function (self)
-	local package_settings = nil
+	local package_settings
 
 	if self._mechanism then
 		local settings = self._mechanism:settings()
+
 		package_settings = settings.player_package_synchronization_settings
 	end
 
@@ -215,7 +223,7 @@ MechanismManager.rpc_set_mechanism = function (self, channel_id, lookup_id)
 
 	_info("Received mechanism %q from host.", mechanism_name)
 	self:change_mechanism(mechanism_name, {
-		server_channel = channel_id
+		server_channel = channel_id,
 	})
 end
 
@@ -237,6 +245,7 @@ MechanismManager.change_mechanism = function (self, mechanism_name, context)
 	end
 
 	self._mechanism_name = mechanism_name
+
 	local team_settings = settings.team_settings
 
 	if team_settings then
@@ -308,7 +317,7 @@ MechanismManager.trigger_event = function (self, event, ...)
 		if host_channel then
 			local rpc_name = event_data.rpc_name
 
-			RPC[rpc_name](host_channel, event_data:pack_function(...))
+			RPC[rpc_name](host_channel, event_data.pack_function(event_data, ...))
 		else
 			event_function(mechanism, ...)
 		end
@@ -321,7 +330,7 @@ MechanismManager.trigger_event = function (self, event, ...)
 
 		local rpc_name = event_data.rpc_name
 
-		_send_event_rpc(rpc_name, self._clients, event_data:pack_function(...))
+		_send_event_rpc(rpc_name, self._clients, event_data.pack_function(event_data, ...))
 		event_function(mechanism, ...)
 	end
 end

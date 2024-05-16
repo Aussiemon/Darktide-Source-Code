@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_talents/archetype_talents.lua
+
 local archetype_talents_name = "ArchetypeTalents"
 local talents = {}
 
@@ -19,6 +21,7 @@ local function _include_talents_definition(file_name, base_talents)
 
 	for talent_name, entry_data in pairs(definition.talents) do
 		local entry = entry_data
+
 		archetype_talents[talent_name] = entry
 	end
 

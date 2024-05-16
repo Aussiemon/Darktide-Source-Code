@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/singleplayer_session_boot.lua
+
 local ConnectionSingleplayer = require("scripts/multiplayer/connection/connection_singleplayer")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local SessionBootBase = require("scripts/multiplayer/session_boot_base")
@@ -10,6 +12,7 @@ SingleplayerSessionBoot.init = function (self, event_object)
 
 	local connection_manager = Managers.connection
 	local event_delegate = connection_manager:network_event_delegate()
+
 	self._connection_singleplayer = ConnectionSingleplayer:new(event_delegate, HOST_TYPES.singleplay, GameParameters.tick_rate)
 
 	self:_set_state(STATES.ready)
@@ -23,6 +26,7 @@ SingleplayerSessionBoot.result = function (self)
 	self:_set_window_title("singleplayer %s", Network.peer_id())
 
 	local connection_singleplayer = self._connection_singleplayer
+
 	self._connection_singleplayer = nil
 
 	return connection_singleplayer

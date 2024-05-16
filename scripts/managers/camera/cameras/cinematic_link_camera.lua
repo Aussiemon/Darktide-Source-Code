@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/cinematic_link_camera.lua
+
 local RootCamera = require("scripts/managers/camera/cameras/root_camera")
 local CinematicLinkCamera = class("CinematicLinkCamera", "RootCamera")
+
 CinematicLinkCamera.CAMERA_NODE_ID = 1
 CinematicLinkCamera.CROPPED_ASPECT_RATIO = 2.35
 
@@ -9,30 +12,30 @@ end
 
 local DOF_PARAMETERS = {
 	{
-		use_ceil = true,
 		environment_parameter = "dof_enabled",
-		unit_node_name = "Enabled"
+		unit_node_name = "Enabled",
+		use_ceil = true,
 	},
 	{
-		use_ceil = false,
 		environment_parameter = "focal_distance",
-		unit_node_name = "Distance"
+		unit_node_name = "Distance",
+		use_ceil = false,
 	},
 	{
-		use_ceil = false,
 		environment_parameter = "focal_region",
-		unit_node_name = "Region"
+		unit_node_name = "Region",
+		use_ceil = false,
 	},
 	{
-		use_ceil = false,
 		environment_parameter = "focal_padding",
-		unit_node_name = "Padding"
+		unit_node_name = "Padding",
+		use_ceil = false,
 	},
 	{
-		use_ceil = false,
 		environment_parameter = "focal_scale",
-		unit_node_name = "Scale"
-	}
+		unit_node_name = "Scale",
+		use_ceil = false,
+	},
 }
 
 CinematicLinkCamera.update = function (self, dt, data)
@@ -41,7 +44,7 @@ CinematicLinkCamera.update = function (self, dt, data)
 	if ALIVE[root_unit] then
 		local cinematic_manager = Managers.state.cinematic
 		local alignment_inverse_pose_boxed = cinematic_manager:alignment_inverse_pose()
-		local alignment_inverse_pose = nil
+		local alignment_inverse_pose
 
 		if alignment_inverse_pose_boxed then
 			alignment_inverse_pose = alignment_inverse_pose_boxed:unbox()
@@ -54,7 +57,9 @@ CinematicLinkCamera.update = function (self, dt, data)
 			local unit_node_name = dof_parameter.unit_node_name
 			local node_id = Unit.node(root_unit, unit_node_name)
 			local node_position = Unit.local_position(root_unit, node_id)
+
 			node_position = Matrix4x4.transform(alignment_inverse_pose, node_position)
+
 			local environment_parameter = dof_parameter.environment_parameter
 
 			if dof_parameter.use_ceil then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/world_level_despawn/world_level_despawn_manager.lua
+
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
 local WorldLevelDespawnManager = class("WorldLevelDespawnManager")
 local Unit_alive = Unit.alive
@@ -109,6 +111,7 @@ WorldLevelDespawnManager.update = function (self, dt, t)
 
 		self._world_name = nil
 		self._state = STATES.idle
+
 		local total_time = Managers.time:time("main") - self._start_time
 
 		Log.info("WorldLevelDespawnManager", "total despawn time: %s", total_time)
@@ -124,11 +127,11 @@ end
 WorldLevelDespawnManager._init_timeslice_despawn_units = function (self, level)
 	Log.info("WorldLevelDespawnManager", "despawning units")
 
-	local time_slice_unit_despawn_data = {
-		last_index = 0,
-		ready = false,
-		parameters = {}
-	}
+	local time_slice_unit_despawn_data = {}
+
+	time_slice_unit_despawn_data.last_index = 0
+	time_slice_unit_despawn_data.ready = false
+	time_slice_unit_despawn_data.parameters = {}
 	time_slice_unit_despawn_data.parameters.unit_list_to_despawn = Level.units(level, true)
 	self._time_slice_unit_despawn_data = time_slice_unit_despawn_data
 end

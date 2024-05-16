@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/loading/remote_states/remote_determine_spawn_group_state.lua
+
 local RPCS = {
-	"rpc_request_spawn_group"
+	"rpc_request_spawn_group",
 }
 local RemoteDetermineSpawnGroupState = class("RemoteDetermineSpawnGroupState")
 
@@ -30,6 +32,7 @@ end
 
 RemoteDetermineSpawnGroupState.rpc_request_spawn_group = function (self, channel_id)
 	local shared_state = self._shared_state
+
 	self._got_request = true
 
 	local function callback(spawn_group)

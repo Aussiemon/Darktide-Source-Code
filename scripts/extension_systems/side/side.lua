@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/side/side.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local Side = class("Side")
+
 Side.SIDE_RELATION_TYPES = table.mirror_array_inplace({
 	"enemy",
 	"allied",
-	"neutral"
+	"neutral",
 })
 
 Side.init = function (self, definition, side_id)
@@ -15,12 +18,12 @@ Side.init = function (self, definition, side_id)
 	self.units_by_relation_tag = {
 		enemy = {},
 		allied = {},
-		neutral = {}
+		neutral = {},
 	}
 	self.units_by_relation_tag_lookup = {
 		enemy = {},
 		allied = {},
-		neutral = {}
+		neutral = {},
 	}
 
 	self:_create_relation_tables()
@@ -44,14 +47,13 @@ Side.init = function (self, definition, side_id)
 end
 
 Side._create_tag_tables = function (self)
-	local list = {}
-	local list_lookup = {}
+	local list, list_lookup = {}, {}
 
 	for _, breed in pairs(Breeds) do
 		if breed.tags then
 			for tag_name, _ in pairs(breed.tags) do
 				list[tag_name] = {
-					size = 0
+					size = 0,
 				}
 				list_lookup[tag_name] = {}
 			end
@@ -73,14 +75,17 @@ Side._create_relation_tables = function (self)
 
 	for i = 1, num_relations do
 		local relation = relations[i]
+
 		relation_sides[relation] = {}
 		relation_sides_lookup[relation] = {}
 		relation_side_names[relation] = {}
 		relation_units[relation] = {}
 		relation_units_lookup[relation] = {}
 		relation_player_units[relation] = {}
+
 		local sides_lookup_name = string.format("%s_sides_lookup", relation)
 		local units_lookup_name = string.format("%s_units_lookup", relation)
+
 		self[sides_lookup_name] = relation_sides_lookup[relation]
 		self[units_lookup_name] = relation_units_lookup[relation]
 		self.units_by_relation_tag[relation], self.units_by_relation_tag_lookup[relation] = self:_create_tag_tables()
@@ -102,6 +107,7 @@ Side.set_relation = function (self, relation, sides)
 	for i = 1, #sides do
 		local side = sides[i]
 		local side_name = side:name()
+
 		relation_sides[i] = side
 		relation_side_names[i] = side_name
 		relation_side_lookup[side] = true
@@ -114,11 +120,13 @@ Side.add_unit = function (self, unit, side_extension)
 	if side_extension.is_player_unit then
 		local player_units = self._added_player_units
 		local new_index = #player_units + 1
+
 		player_units[new_index] = unit
 	end
 
 	local units = self._units
 	local new_index = #units + 1
+
 	units[new_index] = unit
 	units_lookup[unit] = new_index
 end
@@ -126,6 +134,7 @@ end
 local function _swap_delete_lookup(t, index, unit)
 	local table_length = #t
 	local keep_unit = t[table_length]
+
 	t[index] = keep_unit
 	t[keep_unit] = index
 	t[table_length] = nil
@@ -175,11 +184,13 @@ Side.add_relation_unit = function (self, unit, side_extension, relation)
 	if side_extension.is_player_unit then
 		local player_units = self._relation_player_units[relation]
 		local index = #player_units + 1
+
 		player_units[index] = unit
 	end
 
 	local units = self._relation_units[relation]
 	local index = #units + 1
+
 	units[index] = unit
 	units_lookup[unit] = index
 end
@@ -212,8 +223,11 @@ Side.add_tag_unit = function (self, unit, side_extension, relation)
 	for tag_name, _ in pairs(side_extension.breed_tags) do
 		local unit_list = units_by_tag[tag_name]
 		local new_index = unit_list.size + 1
+
 		unit_list[new_index] = unit
+
 		local units_lookup = units_by_tag_lookup[tag_name]
+
 		units_lookup[unit] = new_index
 		unit_list.size = new_index
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_sliding.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local Attack = require("scripts/utilities/attack/attack")
@@ -25,26 +27,31 @@ local HIT_WEAKSPOT = false
 local slide_knock_down_damage_settings = {
 	radius = 2,
 	damage_profile = DamageProfileTemplates.slide_knockdown,
-	damage_type = damage_types.physical
+	damage_type = damage_types.physical,
 }
 local PlayerCharacterStateSliding = class("PlayerCharacterStateSliding", "PlayerCharacterStateBase")
-local _max_hit_mass = nil
+local _max_hit_mass
 
 PlayerCharacterStateSliding.init = function (self, character_state_init_context, ...)
 	PlayerCharacterStateSliding.super.init(self, character_state_init_context, ...)
 
 	local unit_data = character_state_init_context.unit_data
 	local slide_character_state_component = unit_data:write_component("slide_character_state")
+
 	slide_character_state_component.friction_function = "default"
 	slide_character_state_component.was_in_dodge_cooldown = false
 	self._slide_character_state_component = slide_character_state_component
 	self._sway_control_component = unit_data:write_component("sway_control")
 	self._spread_control_component = unit_data:write_component("spread_control")
+
 	local character_state_hit_mass_component = unit_data:write_component("character_state_hit_mass")
+
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
 	self._character_state_hit_mass_component = character_state_hit_mass_component
 	self._dodge_character_state_component = unit_data:write_component("dodge_character_state")
+
 	local breed = unit_data:breed()
+
 	self._sliding_loop_alias = breed.sfx.sliding_alias
 	self._peeking_component = unit_data:write_component("peeking")
 	self._hit_enemy_units = {}
@@ -55,9 +62,11 @@ local FX_SOURCE_NAME = "rightfoot"
 
 PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
 	self._slide_character_state_component.friction_function = params.friction_function or "default"
+
 	local first_person_extension = self._first_person_extension
 
 	first_person_extension:set_wanted_player_height("slide", 0.3)
@@ -72,8 +81,10 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 	animation_extension:anim_event("slide_in")
 
 	local movement_state_component = self._movement_state_component
+
 	movement_state_component.method = "sliding"
 	movement_state_component.is_dodging = true
+
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
 	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
@@ -81,11 +92,13 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 	end
 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
+
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
 
 	table.clear(self._hit_enemy_units)
 
 	self._slide_character_state_component.was_in_dodge_cooldown = t < self._dodge_character_state_component.consecutive_dodges_cooldown
+
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
@@ -99,7 +112,9 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 	self._animation_extension:anim_event_1p("slide_out")
 
 	local movement_state_component = self._movement_state_component
+
 	movement_state_component.is_dodging = false
+
 	local buff_extension = self._buff_extension
 	local base_dodge_template = self._archetype_dodge_template
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
@@ -154,7 +169,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	local is_crouching = true
 	local character_state_component = self._character_state_component
 	local time_in_action = t - character_state_component.entered_t
-	local commit_period_over = constants.slide_commit_time < time_in_action
+	local commit_period_over = time_in_action > constants.slide_commit_time
 	local flat_move_speed_sq = Vector3.length_squared(Vector3.flat(self._locomotion_component.velocity_current))
 
 	if commit_period_over or flat_move_speed_sq < 4 then
@@ -165,10 +180,10 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 
 	local speed = Vector3.length(Vector3.flat(velocity_current))
 
-	if SPEED_EPSILON < speed then
+	if speed > SPEED_EPSILON then
 		local weapon_template_or_nil = weapon_extension:weapon_template()
 		local friction_function = self._slide_character_state_component.friction_function
-		local friction_speed = nil
+		local friction_speed
 
 		if buff_extension:has_keyword(buff_keywords.zero_slide_friction) then
 			friction_speed = 0
@@ -179,6 +194,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 		end
 
 		local friction = math.min(speed, friction_speed * dt) / speed * velocity_current
+
 		locomotion_steering.velocity_wanted = velocity_current - friction
 	end
 
@@ -255,12 +271,11 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	local max_hit_mass = _max_hit_mass(damage_settings, unit)
 	local used_hit_mass_percentage = character_state_hit_mass_component.used_hit_mass_percentage
-	local current_mass_hit = math.huge <= max_hit_mass and 0 or max_hit_mass * used_hit_mass_percentage
+	local current_mass_hit = max_hit_mass >= math.huge and 0 or max_hit_mass * used_hit_mass_percentage
 	local fp_position = self._first_person_component.position
 	local lunge_direction = self._lunge_character_state_component.direction
 	local lunge_dir_right = Vector3.cross(lunge_direction, Vector3.up())
-	local forward = Vector3.forward()
-	local right = Vector3.right()
+	local forward, right = Vector3.forward(), Vector3.right()
 	local lunge_rotation = Quaternion.look(lunge_direction)
 	local left_attack_direction = Quaternion.rotate(lunge_rotation, Vector3.normalize(forward - right))
 	local right_attack_direction = Quaternion.rotate(lunge_rotation, Vector3.normalize(forward + right))
@@ -273,9 +288,10 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 		if side_system:is_enemy(unit, hit_unit) and not hit_enemy_units[hit_unit] then
 			hit_enemy_units[hit_unit] = true
 			self._last_hit_unit = hit_unit
+
 			local hit_position = POSITION_LOOKUP[hit_unit]
 			local hit_direction = Vector3.normalize(Vector3.flat(hit_position - fp_position))
-			local attack_direction = nil
+			local attack_direction
 			local dot = Vector3.dot(hit_direction, lunge_dir_right)
 
 			if dot > 0 then

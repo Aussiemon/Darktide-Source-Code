@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/level_prop_customization.lua
+
 local LevelPropCustomization = component("LevelPropCustomization")
 
 LevelPropCustomization.init = function (self, unit)
@@ -89,7 +91,7 @@ LevelPropCustomization._spawn_children = function (self)
 
 			local full_pose = Matrix4x4.multiply(child_pose, parent_pose)
 			local world = self._world
-			local child_unit = nil
+			local child_unit
 
 			if child_unit_spawn_info.is_static then
 				child_unit = World.spawn_unit_ex(world, child_unit_name, nil, full_pose, nil, true)
@@ -181,49 +183,49 @@ end
 
 LevelPropCustomization.component_data = {
 	children_units = {
-		ui_type = "struct_array",
 		category = "Attached Units",
 		ui_name = "Linked Units",
+		ui_type = "struct_array",
 		definition = {
 			parent_node_name = {
+				category = "Parent",
+				ui_name = "Node Name",
 				ui_type = "text_box",
 				value = "",
-				ui_name = "Node Name",
-				category = "Parent"
 			},
 			child_unit = {
-				ui_type = "resource",
-				preview = true,
 				category = "Child",
-				value = "",
+				filter = "unit",
+				preview = true,
 				ui_name = "Unit",
-				filter = "unit"
+				ui_type = "resource",
+				value = "",
 			},
 			child_scale = {
-				ui_type = "vector",
 				category = "Child",
-				ui_name = "Scale",
 				step = 0.1,
-				value = Vector3Box(1, 1, 1)
+				ui_name = "Scale",
+				ui_type = "vector",
+				value = Vector3Box(1, 1, 1),
 			},
 			is_static = {
+				category = "Child",
+				ui_name = "Static",
 				ui_type = "check_box",
 				value = true,
-				ui_name = "Static",
-				category = "Child"
 			},
 			cast_shadows = {
+				category = "Child",
+				ui_name = "Cast Shadows",
 				ui_type = "check_box",
 				value = true,
-				ui_name = "Cast Shadows",
-				category = "Child"
 			},
 			enabled = {
+				category = "Child",
+				ui_name = "Enabled",
 				ui_type = "check_box",
 				value = true,
-				ui_name = "Enabled",
-				category = "Child"
-			}
+			},
 		},
 		control_order = {
 			"parent_node_name",
@@ -231,54 +233,54 @@ LevelPropCustomization.component_data = {
 			"child_scale",
 			"is_static",
 			"cast_shadows",
-			"enabled"
-		}
+			"enabled",
+		},
 	},
 	set_material_variables = {
-		ui_type = "struct_array",
 		category = "Material Variables",
 		ui_name = "Set Material Variables",
+		ui_type = "struct_array",
 		definition = {
 			material = {
+				ui_name = "Material",
 				ui_type = "text_box",
 				value = "",
-				ui_name = "Material"
 			},
 			variable = {
+				ui_name = "Variable",
 				ui_type = "text_box",
 				value = "",
-				ui_name = "Variable"
 			},
 			use_scalar = {
+				ui_name = "Use Scalar",
 				ui_type = "check_box",
 				value = false,
-				ui_name = "Use Scalar"
 			},
 			scalar = {
+				ui_name = "Scalar",
 				ui_type = "number",
 				value = 0,
-				ui_name = "Scalar"
 			},
 			use_vector = {
+				ui_name = "Use Vector",
 				ui_type = "check_box",
 				value = false,
-				ui_name = "Use Vector"
 			},
 			vector = {
-				ui_type = "vector",
 				ui_name = "Vector",
-				value = Vector3Box(1, 0, 0)
+				ui_type = "vector",
+				value = Vector3Box(1, 0, 0),
 			},
 			use_color = {
+				ui_name = "Use Color",
 				ui_type = "check_box",
 				value = false,
-				ui_name = "Use Color"
 			},
 			color = {
-				ui_type = "color",
 				ui_name = "Color",
-				value = QuaternionBox(1, 0, 0, 0)
-			}
+				ui_type = "color",
+				value = QuaternionBox(1, 0, 0, 0),
+			},
 		},
 		control_order = {
 			"material",
@@ -288,9 +290,9 @@ LevelPropCustomization.component_data = {
 			"use_vector",
 			"vector",
 			"use_color",
-			"color"
-		}
-	}
+			"color",
+		},
+	},
 }
 
 return LevelPropCustomization

@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/utilities/weapon_template_resource_dependencies.lua
+
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local WeaponTemplateResourceDependencies = {}
-local _resolve_data_recursive, _is_valid_resource_name_exclude_items = nil
+local _resolve_data_recursive, _is_valid_resource_name_exclude_items
 local _cached_templates = {}
 local TEMP_RESOURCE_PACKAGES = {}
 
@@ -13,7 +15,9 @@ WeaponTemplateResourceDependencies.generate = function (weapon_template_name)
 	end
 
 	local resource_packages = {}
+
 	_cached_templates[weapon_template_name] = resource_packages
+
 	local weapon_template = WeaponTemplates[weapon_template_name]
 
 	_resolve_data_recursive(weapon_template, TEMP_RESOURCE_PACKAGES)

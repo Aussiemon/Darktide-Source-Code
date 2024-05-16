@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/shading_environment/shading_environment_extension.lua
+
 local ShadingEnvironmentExtension = class("ShadingEnvironmentExtension")
 
 ShadingEnvironmentExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, ...)
 	local world = extension_init_context.world
+
 	self._world = world
 	self._unit = unit
 	self._weight = 0
@@ -111,6 +114,7 @@ ShadingEnvironmentExtension.weight = function (self, observer_position)
 
 	if inside then
 		local distance_to_border = Unit.distance_to_volume(self._unit, "env_volume", observer_position)
+
 		self._weight = math.clamp(distance_to_border / self._fade_in_distance, 0, 1)
 	else
 		self._weight = 0

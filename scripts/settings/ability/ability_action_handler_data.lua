@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/ability_action_handler_data.lua
+
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local special_rules = SpecialRulesSetting.special_rules
 
@@ -9,20 +11,20 @@ local function _require_ability_action(action)
 	return class
 end
 
-local ability_action_data = {
-	actions = {
-		character_state_change = _require_ability_action("action_character_state_change"),
-		directional_dash_aim = _require_ability_action("action_directional_dash_aim"),
-		ogryn_shout = _require_ability_action("action_ogryn_shout"),
-		psyker_shout = _require_ability_action("action_psyker_shout"),
-		shout_aim = _require_ability_action("action_shout_aim"),
-		veteran_shout_aim = _require_ability_action("action_shout_aim"),
-		veteran_immediate_use = _require_ability_action("action_shout_aim"),
-		stance_change = _require_ability_action("action_stance_change"),
-		stance_change_gunlugger = _require_ability_action("action_stance_change"),
-		targeted_dash_aim = _require_ability_action("action_targeted_dash_aim"),
-		veteran_combat_ability = _require_ability_action("action_veteran_combat_ability")
-	}
+local ability_action_data = {}
+
+ability_action_data.actions = {
+	character_state_change = _require_ability_action("action_character_state_change"),
+	directional_dash_aim = _require_ability_action("action_directional_dash_aim"),
+	ogryn_shout = _require_ability_action("action_ogryn_shout"),
+	psyker_shout = _require_ability_action("action_psyker_shout"),
+	shout_aim = _require_ability_action("action_shout_aim"),
+	veteran_shout_aim = _require_ability_action("action_shout_aim"),
+	veteran_immediate_use = _require_ability_action("action_shout_aim"),
+	stance_change = _require_ability_action("action_stance_change"),
+	stance_change_gunlugger = _require_ability_action("action_stance_change"),
+	targeted_dash_aim = _require_ability_action("action_targeted_dash_aim"),
+	veteran_combat_ability = _require_ability_action("action_veteran_combat_ability"),
 }
 
 local function _can_use_ability_check(action_settings, condition_func_params, used_input)
@@ -99,7 +101,7 @@ ability_action_data.action_kind_condition_funcs = {
 		end
 
 		return true
-	end
+	end,
 }
 ability_action_data.action_kind_total_time_funcs = {}
 ability_action_data.conditional_state_functions = {
@@ -107,7 +109,7 @@ ability_action_data.conditional_state_functions = {
 		local no_time_left = remaining_time <= 0
 
 		return no_time_left
-	end
+	end,
 }
 
 for name, _ in pairs(ability_action_data.action_kind_condition_funcs) do

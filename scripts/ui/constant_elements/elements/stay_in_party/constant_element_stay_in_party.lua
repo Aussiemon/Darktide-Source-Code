@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/stay_in_party/constant_element_stay_in_party.lua
+
 local definition_path = "scripts/ui/constant_elements/elements/stay_in_party/constant_element_stay_in_party_definitions"
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -92,9 +94,11 @@ ConstantElementStayInParty._sync_votes = function (self)
 
 	local num_votes_text = yes_votes .. "/" .. num_votes
 	local text_widget = self._widgets_by_name.vote_count_text
+
 	text_widget.content.text = num_votes_text
+
 	local all_voted_yes = yes_votes == num_votes
-	local rect_color, text_color = nil
+	local rect_color, text_color
 
 	if all_voted_yes then
 		rect_color = "pale_golden_rod"
@@ -108,6 +112,7 @@ ConstantElementStayInParty._sync_votes = function (self)
 	end
 
 	local vote_count_rect_widget = self._widgets_by_name.vote_count_rect
+
 	vote_count_rect_widget.style.frame.color = Color[rect_color](255, true)
 	text_widget.style.style_id_1.text_color = Color[text_color](255, true)
 end
@@ -122,9 +127,11 @@ end
 
 ConstantElementStayInParty._setup_input_legend = function (self)
 	self._render_scale = Managers.ui:view_render_scale()
+
 	local parent = self
 	local draw_layer = 10
 	local scale = RESOLUTION_LOOKUP.scale
+
 	self._input_legend_element = ViewElementInputLegend:new(parent, draw_layer, scale)
 
 	self._input_legend_element:set_render_scale(self._render_scale)
@@ -141,7 +148,7 @@ ConstantElementStayInParty._setup_input_legend = function (self)
 		if key then
 			input_legends_by_key[key] = {
 				id = id,
-				settings = legend_input
+				settings = legend_input,
 			}
 		end
 	end
@@ -183,6 +190,7 @@ ConstantElementStayInParty._update_warning_text = function (self)
 	local all_party_members_in_mission = party_manager:are_all_members_in_mission()
 	local party_member_not_in_mission = not all_party_members_in_mission
 	local warning_text_widget = self._widgets_by_name.warning_text
+
 	warning_text_widget.content.visible = party_member_not_in_mission
 end
 

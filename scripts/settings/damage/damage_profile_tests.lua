@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profile_tests.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
-local _check_power_distribution, _check_power_distribution_ranged, _check_cleave_distribution, _check_armor_damage_modifier, _check_armor_damage_modifier_ranged, _check_critical_strike, _check_crit_mod, _check_target, _check_power_level = nil
+local _check_power_distribution, _check_power_distribution_ranged, _check_cleave_distribution, _check_armor_damage_modifier, _check_armor_damage_modifier_ranged, _check_critical_strike, _check_crit_mod, _check_target, _check_power_level
 
 local function damage_profile_tests(damage_profiles)
 	local success = true

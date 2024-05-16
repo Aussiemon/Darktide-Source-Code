@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_target/mission_objective_target_system.lua
+
 require("scripts/extension_systems/mission_objective_target/mission_objective_target_extension")
 
 local MissionObjectiveTargetSystem = class("MissionObjectiveTargetSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_mission_objective_target_set_objective_name",
-	"rpc_mission_objective_target_setup"
+	"rpc_mission_objective_target_setup",
 }
 
 MissionObjectiveTargetSystem.init = function (self, extension_system_creation_context, ...)

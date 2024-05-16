@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/smart_tag/smart_tag_system.lua
+
 require("scripts/extension_systems/smart_tag/smart_tag_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -11,13 +13,13 @@ local REMOVE_TAG_REASONS_LOOKUP = table.mirror_array_inplace(table.keys(REMOVE_T
 local SERVER_RPCS = {
 	"rpc_request_set_smart_tag",
 	"rpc_request_cancel_smart_tag",
-	"rpc_request_smart_tag_reply"
+	"rpc_request_smart_tag_reply",
 }
 local CLIENT_RPCS = {
 	"rpc_set_smart_tag",
 	"rpc_set_smart_tag_hot_join",
 	"rpc_remove_smart_tag",
-	"rpc_smart_tag_reply"
+	"rpc_smart_tag_reply",
 }
 
 local function _warning(...)
@@ -28,6 +30,7 @@ SmartTagSystem.init = function (self, extension_system_creation_context, ...)
 	SmartTagSystem.super.init(self, extension_system_creation_context, ...)
 
 	local network_event_delegate = extension_system_creation_context.network_event_delegate
+
 	self._network_event_delegate = network_event_delegate
 
 	if self._is_server then
@@ -50,6 +53,7 @@ SmartTagSystem.destroy = function (self)
 	end
 
 	self._network_event_delegate = nil
+
 	local tag_ids = table.keys(self._all_tags)
 
 	for i = 1, #tag_ids do
@@ -108,6 +112,7 @@ end
 
 SmartTagSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	local extension = SmartTagSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
+
 	self._unit_extension_data[unit] = extension
 
 	return extension
@@ -146,14 +151,15 @@ local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit, target_location)
 	local template = SmartTagSettings.templates[template_name]
-	local tagger_game_object_id = nil
+	local tagger_game_object_id
 
 	if tagger_unit then
 		local tagger_extension = self._unit_extension_data[tagger_unit]
+
 		tagger_game_object_id = Managers.state.unit_spawner:game_object_id(tagger_unit)
 	end
 
-	local target_game_object_id, target_level_index = nil
+	local target_game_object_id, target_level_index
 
 	if target_unit then
 		local target_extension = self._unit_extension_data[target_unit]
@@ -304,7 +310,7 @@ end
 
 SmartTagSystem.location_tag_at_position = function (self, position, max_distance)
 	local max_distance_sq = max_distance * max_distance
-	local best_tag = nil
+	local best_tag
 	local best_tag_distance_sq = math.huge
 	local Vector3_distance_squared = Vector3.distance_squared
 
@@ -338,6 +344,7 @@ end
 
 SmartTagSystem._generate_tag_id = function (self)
 	local id = self._tag_id + 1
+
 	self._tag_id = id
 
 	return id
@@ -346,6 +353,7 @@ end
 SmartTagSystem._create_tag_locally = function (self, tag_id, template_name, tagger_unit, target_unit, target_location, replies, is_hotjoin_synced)
 	local template = SmartTagSettings.templates[template_name]
 	local tag = SmartTag:new(tag_id, template, tagger_unit, target_unit, target_location, replies)
+
 	self._all_tags[tag_id] = tag
 
 	if self._is_server then
@@ -519,7 +527,7 @@ SmartTagSystem.hot_join_sync = function (self, sender, channel)
 		local tagger_unit = tag:tagger_unit()
 		local tagger_game_object_id = tagger_unit and unit_spawner_manager:game_object_id(tagger_unit)
 		local target_unit = tag:target_unit()
-		local target_game_object_id, target_level_index, target_location = nil
+		local target_game_object_id, target_level_index, target_location
 
 		if target_unit then
 			local is_level_unit, target_unit_id = unit_spawner_manager:game_object_id_or_level_index(target_unit)
@@ -564,7 +572,7 @@ SmartTagSystem.rpc_request_set_smart_tag = function (self, channel_id, template_
 		return
 	end
 
-	local target_unit = nil
+	local target_unit
 
 	if target_game_object_id then
 		target_unit = Managers.state.unit_spawner:unit(target_game_object_id, false)
@@ -603,7 +611,7 @@ SmartTagSystem.rpc_set_smart_tag = function (self, channel_id, tag_id, template_
 	local template_name = NetworkLookup.smart_tag_templates[template_name_id]
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local tagger_unit = tagger_game_object_id and unit_spawner_manager:unit(tagger_game_object_id)
-	local target_unit = nil
+	local target_unit
 
 	if target_game_object_id then
 		target_unit = unit_spawner_manager:unit(target_game_object_id, false)
@@ -618,7 +626,7 @@ SmartTagSystem.rpc_set_smart_tag_hot_join = function (self, channel_id, tag_id, 
 	local template_name = NetworkLookup.smart_tag_templates[template_name_id]
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local tagger_unit = tagger_game_object_id and unit_spawner_manager:unit(tagger_game_object_id)
-	local target_unit = nil
+	local target_unit
 
 	if target_game_object_id then
 		target_unit = unit_spawner_manager:unit(target_game_object_id, false)
@@ -634,6 +642,7 @@ SmartTagSystem.rpc_set_smart_tag_hot_join = function (self, channel_id, tag_id, 
 		local reply_name_id = reply_name_id_array[i]
 		local reply_name = NetworkLookup.smart_tag_replies[reply_name_id]
 		local reply = SmartTagSettings.replies[reply_name]
+
 		replies[replier_unit] = reply
 	end
 

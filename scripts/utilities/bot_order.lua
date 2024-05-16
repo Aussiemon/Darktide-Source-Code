@@ -1,11 +1,14 @@
+﻿-- chunkname: @scripts/utilities/bot_order.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Pickups = require("scripts/settings/pickup/pickups")
-local BotOrder = {
-	lookup = {
-		drop = "pickup_names"
-	}
+local BotOrder = {}
+
+BotOrder.lookup = {
+	drop = "pickup_names",
 }
+
 local AMMO_PICKUP_VALID_DURATION = 5
 
 local function _order_ammo_pickup(bot_unit, pickup_unit, ordering_player)
@@ -15,18 +18,22 @@ local function _order_ammo_pickup(bot_unit, pickup_unit, ordering_player)
 	if bot_group_data then
 		local has_full_ammo = Ammo.reserve_ammo_is_full(bot_unit)
 
-		if not has_full_ammo then
+		if has_full_ammo then
+			-- Nothing
+		else
 			local time_manager = Managers.time
 			local t = time_manager:time("gameplay")
-			local bot_position = POSITION_LOOKUP[bot_unit]
-			local pickup_position = POSITION_LOOKUP[pickup_unit]
+			local bot_position, pickup_position = POSITION_LOOKUP[bot_unit], POSITION_LOOKUP[pickup_unit]
 			local pickup_distance = Vector3.distance(bot_position, pickup_position)
 			local pickup_component = bot_group_data.pickup_component
+
 			pickup_component.ammo_pickup = pickup_unit
 			pickup_component.ammo_pickup_distance = pickup_distance
 			pickup_component.ammo_pickup_valid_until = t + AMMO_PICKUP_VALID_DURATION
+
 			local blackboard = BLACKBOARDS[bot_unit]
 			local follow_component = Blackboard.write_component(blackboard, "follow")
+
 			follow_component.needs_destination_refresh = true
 			bot_group_data.ammo_pickup_order_unit = pickup_unit
 		end
@@ -39,11 +46,14 @@ local function _order_ammo_pickup(bot_unit, pickup_unit, ordering_player)
 
 			if order_unit == pickup_unit then
 				local pickup_component = data.pickup_component
+
 				pickup_component.ammo_pickup = nil
 				pickup_component.ammo_pickup_distance = math.huge
 				pickup_component.ammo_pickup_valid_until = -math.huge
+
 				local blackboard = BLACKBOARDS[unit]
 				local follow_component = Blackboard.write_component(blackboard, "follow")
+
 				follow_component.needs_destination_refresh = true
 				data.ammo_pickup_order_unit = nil
 			end
@@ -65,8 +75,7 @@ BotOrder.pickup = function (bot_unit, pickup_unit, ordering_player)
 		elseif slot_name then
 			local group_extension = ScriptUnit.extension(bot_unit, "group_system")
 			local bot_group = group_extension:bot_group()
-			local bot_group_data = group_extension:bot_group_data()
-			local bot_data = bot_group:data()
+			local bot_group_data, bot_data = group_extension:bot_group_data(), bot_group:data()
 
 			if bot_group_data then
 				for unit, data in pairs(bot_data) do
@@ -77,8 +86,10 @@ BotOrder.pickup = function (bot_unit, pickup_unit, ordering_player)
 							return
 						else
 							data.pickup_orders[slot_name] = nil
+
 							local blackboard = BLACKBOARDS[unit]
 							local follow_component = Blackboard.write_component(blackboard, "follow")
+
 							follow_component.needs_destination_refresh = true
 						end
 					end
@@ -86,10 +97,12 @@ BotOrder.pickup = function (bot_unit, pickup_unit, ordering_player)
 
 				bot_group_data.pickup_orders[slot_name] = {
 					unit = pickup_unit,
-					pickup_name = pickup_name
+					pickup_name = pickup_name,
 				}
+
 				local blackboard = BLACKBOARDS[bot_unit]
 				local follow_component = Blackboard.write_component(blackboard, "follow")
+
 				follow_component.needs_destination_refresh = true
 			else
 				for unit, data in pairs(bot_data) do
@@ -97,8 +110,10 @@ BotOrder.pickup = function (bot_unit, pickup_unit, ordering_player)
 
 					if order and order.unit == pickup_unit then
 						data.pickup_orders[slot_name] = nil
+
 						local blackboard = BLACKBOARDS[unit]
 						local follow_component = Blackboard.write_component(blackboard, "follow")
+
 						follow_component.needs_destination_refresh = true
 					end
 				end
@@ -110,10 +125,8 @@ BotOrder.pickup = function (bot_unit, pickup_unit, ordering_player)
 		local side_id = side.side_id
 		local order_type_id = NetworkLookup.bot_orders.pickup
 		local unit_spawner_manager = Managers.state.unit_spawner
-		local bot_unit_id = unit_spawner_manager:game_object_id(bot_unit)
-		local pickup_unit_id = unit_spawner_manager:game_object_id(pickup_unit)
-		local ordering_player_peer_id = ordering_player:peer_id()
-		local ordering_player_local_id = ordering_player:local_player_id()
+		local bot_unit_id, pickup_unit_id = unit_spawner_manager:game_object_id(bot_unit), unit_spawner_manager:game_object_id(pickup_unit)
+		local ordering_player_peer_id, ordering_player_local_id = ordering_player:peer_id(), ordering_player:local_player_id()
 
 		game_session_manager:send_rpc_server("rpc_bot_unit_order", side_id, order_type_id, bot_unit_id, pickup_unit_id, ordering_player_peer_id, ordering_player_local_id)
 	end
@@ -143,10 +156,8 @@ BotOrder.drop = function (bot_unit, pickup_name, ordering_player)
 		local side = side_system.side_by_unit[bot_unit]
 		local side_id = side.side_id
 		local order_type_id = NetworkLookup.bot_orders.drop
-		local bot_unit_id = Managers.state.unit_spawner:game_object_id(bot_unit)
-		local pickup_id = NetworkLookup.pickup_names[pickup_name]
-		local ordering_player_peer_id = ordering_player:peer_id()
-		local ordering_player_local_id = ordering_player:local_player_id()
+		local bot_unit_id, pickup_id = Managers.state.unit_spawner:game_object_id(bot_unit), NetworkLookup.pickup_names[pickup_name]
+		local ordering_player_peer_id, ordering_player_local_id = ordering_player:peer_id(), ordering_player:local_player_id()
 
 		game_session_manager:send_rpc_server("rpc_bot_lookup_order", side_id, order_type_id, bot_unit_id, pickup_id, ordering_player_peer_id, ordering_player_local_id)
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/scanning_camera.lua
+
 local BaseCamera = require("scripts/managers/camera/cameras/base_camera")
 local ScanningCamera = class("ScanningCamera", "BaseCamera")
 
@@ -38,6 +40,7 @@ ScanningCamera.update = function (self, dt, position, rotation, data)
 	if angle_tolerance < angle then
 		local angle_differnce = angle - angle_tolerance
 		local lerp_t = math.clamp01(angle_differnce / math.pi)
+
 		current_rotation = Quaternion.lerp(current_rotation, rotation, lerp_t)
 	end
 

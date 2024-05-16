@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/ui/widget_logic/ui_widget_grid.lua
+
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local DIRECTION = {
+	DOWN = "down",
+	LEFT = "left",
 	RIGHT = "right",
 	UP = "up",
-	LEFT = "left",
-	DOWN = "down"
 }
 local UIWidgetGrid = class("UIWidgetGrid")
 
@@ -13,22 +15,26 @@ UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_sc
 	self._scenegraph = scenegraph
 	self._spacing = spacing or {
 		0,
-		0
+		0,
 	}
 	self._bottom_chin = bottom_chin or 0
 	self._top_padding = top_padding or 0
 	self._area_scenegraph_id = area_scenegraph_id
 	self._handle_grid_navigation = true
 	alignment_list = alignment_list or widgets
+
 	local axis = (direction == DIRECTION.LEFT or direction == DIRECTION.RIGHT) and 1 or 2
 	local negative_direction = direction == DIRECTION.LEFT or direction == DIRECTION.UP
+
 	self._using_negative_direction = negative_direction
 	self._fill_section_spacing = fill_section_spacing
 	self._use_is_focused_for_navigation = use_is_focused_for_navigation
 	self._use_select_on_focused = use_select_on_focused
 	self._axis = axis
 	self._scroll_direction_multiplier = negative_direction and 1 or -1
+
 	local area_size = self:_get_area_size()
+
 	self._start_offset = negative_direction and area_size[axis] - self._top_padding or self._top_padding
 	self._widgets = widgets
 	self._alignment_list = alignment_list
@@ -49,9 +55,10 @@ UIWidgetGrid._get_area_size = function (self)
 		local area_scenegraph_id = self._area_scenegraph_id
 		local scenegraph_size = UIScenegraph.size_scaled(scenegraph, area_scenegraph_id)
 		local size = Vector3.to_array(scenegraph_size)
+
 		self._area_size = {
 			size[1],
-			size[2] - self._bottom_chin - self._top_padding
+			size[2] - self._bottom_chin - self._top_padding,
 		}
 
 		return size
@@ -90,6 +97,7 @@ UIWidgetGrid.set_scrollbar_progress = function (self, progress, animate_scroll)
 	if self._scrollbar_active then
 		local scrollbar_widget = self._scrollbar_widget
 		local scrollbar_content = scrollbar_widget.content
+
 		scrollbar_content.scroll_value = nil
 		scrollbar_content.scroll_add = 0
 		scrollbar_content.focused = self._selected_grid_index ~= nil
@@ -102,6 +110,7 @@ UIWidgetGrid.set_scrollbar_progress = function (self, progress, animate_scroll)
 			local to = progress
 			local duration = 0.3
 			local easing = math.easeOutCubic
+
 			self._ui_animations.scrollbar = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 		else
 			scrollbar_content.value = progress or 0
@@ -159,16 +168,20 @@ UIWidgetGrid._update_scrollbar_sizes = function (self)
 
 	if scrollbar_widget then
 		local scroll_length = self:scroll_length()
+
 		scrollbar_widget.content.scroll_length = scroll_length
+
 		local area_size = self._area_size
 		local axis = self._axis
 		local area_length = area_size[axis]
+
 		scrollbar_widget.content.area_length = area_length
 
 		if not self._use_custom_scroll_amount then
 			local spacing = self._spacing
 			local scroll_step_length = 100
 			local scroll_amount = (scroll_step_length + spacing[axis]) / scroll_length
+
 			scrollbar_widget.content.scroll_amount = scroll_amount
 		end
 	end
@@ -199,6 +212,7 @@ UIWidgetGrid._update_grid_position = function (self, dt, t)
 
 	if self._scrollbar_active then
 		local scrollbar_widget = self._scrollbar_widget
+
 		scroll_progress = scrollbar_widget.content.value or 0
 	end
 
@@ -206,6 +220,7 @@ UIWidgetGrid._update_grid_position = function (self, dt, t)
 		local axis = self._axis
 		local scroll_length = self:scroll_length()
 		local scroll_direction_multiplier = self._scroll_direction_multiplier
+
 		grid_scenegraph.position[axis] = scroll_length * scroll_progress * scroll_direction_multiplier
 
 		UIScenegraph.update_scenegraph(scenegraph, self._render_scale)
@@ -258,7 +273,7 @@ end
 UIWidgetGrid.can_move_vertical = function (self, input_direction)
 	local current_index = self._selected_grid_index
 	local using_negative_direction = self._using_negative_direction
-	local direction = nil
+	local direction
 
 	if input_direction == "up" then
 		direction = using_negative_direction and DIRECTION.DOWN or DIRECTION.UP
@@ -282,11 +297,11 @@ UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_dir
 	local current_size = current_widget.size or current_content.size
 	local current_row = current_content.row
 	local current_column = current_content.column
-	local current_coordinate_x = current_offset[1] + current_offset[1] + current_size[1] * 0.5
-	local current_coordinate_y = current_offset[2] + current_offset[1] + current_size[2] * 0.5
-	local best_index, closest_index, closest_index_distance = nil
+	local current_coordinate_x = current_offset[1] + (current_offset[1] + current_size[1] * 0.5)
+	local current_coordinate_y = current_offset[2] + (current_offset[1] + current_size[2] * 0.5)
+	local best_index, closest_index, closest_index_distance
 	local shortest_distance = math.huge
-	local closest_widget = nil
+	local closest_widget
 	local num_widgets = #widgets
 
 	local function is_widget_closest(start_index, widget, widget_index)
@@ -294,11 +309,12 @@ UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_dir
 		local content = widget.content
 		local size = widget.size or content.size
 		local row = content.row
-		local coordinate_x = offset[1] + offset[1] + size[1] * 0.5
+		local coordinate_x = offset[1] + (offset[1] + size[1] * 0.5)
 		local distance = math.abs(coordinate_x - current_coordinate_x)
 
 		if growing_vertically and row ~= current_row and distance <= shortest_distance then
 			local same_distance = distance == shortest_distance
+
 			shortest_distance = distance
 
 			if same_distance then
@@ -317,7 +333,7 @@ UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_dir
 			local content = widget.content
 			local row = content.row
 
-			if row and closest_widget and closest_widget.content.row and closest_widget.content.row < row then
+			if row and closest_widget and closest_widget.content.row and row > closest_widget.content.row then
 				break
 			end
 
@@ -360,7 +376,7 @@ UIWidgetGrid._find_closest_neighbour_horizontal = function (self, index, input_d
 	local current_column = current_content.column
 	local current_coordinate_x = current_offset[1] + current_size[1] * 0.5
 	local current_coordinate_y = current_offset[2] + current_size[2] * 0.5
-	local best_index, closest_index, closest_index_distance = nil
+	local best_index, closest_index, closest_index_distance
 	local shortest_distance = math.huge
 	local num_widgets = #widgets
 
@@ -388,7 +404,7 @@ UIWidgetGrid._find_closest_neighbour_horizontal = function (self, index, input_d
 					break
 				end
 
-				if not closest_index_distance or math.abs(index - i) < closest_index_distance then
+				if not closest_index_distance or closest_index_distance > math.abs(index - i) then
 					closest_index_distance = math.abs(index - i)
 					closest_index = i
 				end
@@ -406,7 +422,7 @@ UIWidgetGrid._find_closest_neighbour_horizontal = function (self, index, input_d
 					break
 				end
 
-				if not closest_index_distance or math.abs(index - i) < closest_index_distance then
+				if not closest_index_distance or closest_index_distance > math.abs(index - i) then
 					closest_index_distance = math.abs(index - i)
 					closest_index = i
 				end
@@ -423,6 +439,7 @@ UIWidgetGrid.force_update_list_size = function (self)
 	self:_get_area_size()
 
 	local alignment_list = self._alignment_list
+
 	self._total_grid_length, self._smallest_widget_length = self:_align_grid_widgets(alignment_list)
 
 	self:_update_scrollbar_sizes()
@@ -468,12 +485,14 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 	local position = {
 		0,
 		0,
-		[axis] = start_offset
 	}
+
+	position[axis] = start_offset
+
 	local row = 1
 	local column = 1
 	local total_length = 0
-	local first_interactable_widget, last_interactable_widget = nil
+	local first_interactable_widget, last_interactable_widget
 	local grid_section_largest_direction_axis = 0
 	local grid_smallest_direction_axis = math.huge
 	local grid_section_entry_positions = {}
@@ -484,7 +503,7 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 	local num_alignments = #alignment_list
 
 	for i, alignment in ipairs(alignment_list) do
-		local widget = nil
+		local widget
 
 		if alignment.name then
 			for f = 1, #self._widgets do
@@ -497,6 +516,7 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 		end
 
 		widget = widget or alignment
+
 		local first_widget = i == 1
 		local last_widget = i == num_alignments
 		local alignment_same_as_widget = alignment == widget
@@ -506,10 +526,11 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 		if not size then
 			local scenegraph_id = widget.scenegraph_id
 			local widget_scenegraph = scenegraph[scenegraph_id]
+
 			size = widget_scenegraph.size
 		end
 
-		local change_grid_section = area_size[stale_axis] < position[stale_axis] + size[stale_axis] or false
+		local change_grid_section = position[stale_axis] + size[stale_axis] > area_size[stale_axis] or false
 
 		if change_grid_section then
 			if growing_vertically then
@@ -540,12 +561,12 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 				if negative_direction then
 					position[axis] = position[axis] - (direction_axis + spacing[axis])
 				else
-					position[axis] = position[axis] + direction_axis + spacing[axis]
+					position[axis] = position[axis] + (direction_axis + spacing[axis])
 				end
 			elseif negative_direction then
 				position[axis] = position[axis] - (grid_section_largest_direction_axis + spacing[axis])
 			else
-				position[axis] = position[axis] + grid_section_largest_direction_axis + spacing[axis]
+				position[axis] = position[axis] + (grid_section_largest_direction_axis + spacing[axis])
 			end
 
 			position[stale_axis] = 0
@@ -563,13 +584,15 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 		end
 
 		widget.offset = widget.offset or {}
+
 		local offset = widget.offset
 		local alignment_offset = not alignment_same_as_widget and alignment.offset or {
 			0,
-			0
+			0,
 		}
 		local horizontal_alignment = alignment.horizontal_alignment or "left"
 		local vertical_alignment = alignment.vertical_alignment or "top"
+
 		offset[1] = position[1] + alignment_offset[1]
 		offset[2] = position[2] + alignment_offset[2]
 
@@ -613,13 +636,13 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 			end
 		end
 
-		position[stale_axis] = position[stale_axis] + size[stale_axis] + spacing[stale_axis]
+		position[stale_axis] = position[stale_axis] + (size[stale_axis] + spacing[stale_axis])
 
 		if grid_section_largest_direction_axis < size[axis] then
 			grid_section_largest_direction_axis = size[axis]
 		end
 
-		if size[axis] < grid_smallest_direction_axis then
+		if grid_smallest_direction_axis > size[axis] then
 			grid_smallest_direction_axis = size[axis]
 		end
 
@@ -649,13 +672,15 @@ UIWidgetGrid.handle_grid_selection = function (self, input_service)
 	local widgets = self._widgets
 	local selected_widget = widgets[current_index]
 	local using_negative_direction = self._using_negative_direction
-	local new_selection_index = nil
+	local new_selection_index
 
 	if input_service:get("navigate_up_continuous") then
 		local direction = using_negative_direction and DIRECTION.DOWN or DIRECTION.UP
+
 		new_selection_index = self:_find_closest_neighbour_vertical(current_index, direction)
 	elseif input_service:get("navigate_down_continuous") then
 		local direction = using_negative_direction and DIRECTION.UP or DIRECTION.DOWN
+
 		new_selection_index = self:_find_closest_neighbour_vertical(current_index, direction)
 	elseif input_service:get("navigate_left_continuous") then
 		new_selection_index = self:_find_closest_neighbour_horizontal(current_index, DIRECTION.LEFT)
@@ -664,11 +689,11 @@ UIWidgetGrid.handle_grid_selection = function (self, input_service)
 	end
 
 	if new_selection_index then
-		local scroll_progress = nil
+		local scroll_progress
 		local current_widget = self:widget_by_index(new_selection_index)
 		local first_element = self._widgets[self._first_interactable_widget_index]
 		local last_element = self._widgets[self._last_interactable_widget_index]
-		local is_widget_first_grid_position, is_widget_last_grid_position = nil
+		local is_widget_first_grid_position, is_widget_last_grid_position
 
 		if DIRECTION.UP or DIRECTION.DOWN then
 			is_widget_first_grid_position = first_element.content.row == current_widget.content.row
@@ -678,13 +703,7 @@ UIWidgetGrid.handle_grid_selection = function (self, input_service)
 			is_widget_last_grid_position = last_element.content.column == current_widget.content.column
 		end
 
-		if is_widget_first_grid_position then
-			scroll_progress = 0
-		elseif is_widget_last_grid_position then
-			scroll_progress = 1
-		else
-			scroll_progress = self:get_scrollbar_percentage_by_index(new_selection_index)
-		end
+		scroll_progress = is_widget_first_grid_position and 0 or is_widget_last_grid_position and 1 or self:get_scrollbar_percentage_by_index(new_selection_index)
 
 		self:select_grid_index(new_selection_index, scroll_progress, false, self._use_is_focused_for_navigation)
 	end
@@ -795,6 +814,7 @@ UIWidgetGrid.select_grid_index = function (self, index, scrollbar_animation_prog
 
 				if is_selected and not focus_only then
 					hotspot._is_selected = hotspot._is_selected or is_instant
+
 					local selected_callback = hotspot.selected_callback
 
 					if selected_callback then
@@ -820,13 +840,9 @@ end
 
 UIWidgetGrid.get_scrollbar_percentage_by_index = function (self, index, start_from_bottom)
 	if self._scrollbar_active and index then
-		local scroll_progress = nil
+		local scroll_progress
 
-		if start_from_bottom then
-			scroll_progress = 1
-		else
-			scroll_progress = self:scrollbar_progress()
-		end
+		scroll_progress = start_from_bottom and 1 or self:scrollbar_progress()
 
 		local scroll_length = self:scroll_length()
 		local scrolled_length = scroll_length * scroll_progress + self._top_padding
@@ -849,9 +865,11 @@ UIWidgetGrid.get_scrollbar_percentage_by_index = function (self, index, start_fr
 
 			if draw_end_height < start_position_bottom + self._scroll_start_margin then
 				local height_missing = start_position_bottom - draw_end_height + self._scroll_start_margin
+
 				percentage_difference = math.clamp(height_missing / scroll_length, 0, 1)
 			elseif start_position_top < draw_start_height + self._scroll_start_margin then
 				local height_missing = draw_start_height - start_position_top + self._scroll_start_margin
+
 				percentage_difference = -math.clamp(height_missing / scroll_length, 0, 1)
 			end
 

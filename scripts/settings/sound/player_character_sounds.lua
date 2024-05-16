@@ -1,8 +1,12 @@
+﻿-- chunkname: @scripts/settings/sound/player_character_sounds.lua
+
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local player_character_sounds = {
-	events = require("scripts/settings/sound/player_character_sound_event_aliases")
-}
+local player_character_sounds = {}
+
+player_character_sounds.events = require("scripts/settings/sound/player_character_sound_event_aliases")
+
 local resource_events = {}
+
 player_character_sounds.resource_events = resource_events
 
 local function _create_resource_events_lookup(root)
@@ -82,7 +86,7 @@ player_character_sounds.resolve_sound = function (sound_alias, properties, optio
 
 	local allow_default = settings and not settings.no_default
 	local event = allow_default and settings.events.default
-	local has_husk_events = settings and not not settings.has_husk_events
+	local has_husk_events = not not settings and not not settings.has_husk_events
 
 	return allow_default, event, has_husk_events
 end
@@ -113,6 +117,7 @@ player_character_sounds.find_relevant_events = function (profile_properties)
 
 		if num_switches == 0 then
 			local resource_name = events.default
+
 			sound_alias_relevant_events_temp[resource_name] = true
 		else
 			for i = 1, num_switches do
@@ -121,6 +126,7 @@ player_character_sounds.find_relevant_events = function (profile_properties)
 
 				if switch_property then
 					local default_events = events.default
+
 					events = events[switch_property] or default_events or events
 				else
 					_valid_events_recursive(events, sound_alias_relevant_events_temp)
@@ -143,6 +149,7 @@ player_character_sounds.find_relevant_events = function (profile_properties)
 
 			if has_husk_events then
 				local husk_event = string.format("%s_husk", event)
+
 				temp_relevant_events[husk_event] = true
 			end
 		end

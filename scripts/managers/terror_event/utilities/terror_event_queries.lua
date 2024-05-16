@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/terror_event/utilities/terror_event_queries.lua
+
 local TerrorEventQueries = {}
 
 local function _count_num_alive_minions_in_spawners(spawner_queue_id)

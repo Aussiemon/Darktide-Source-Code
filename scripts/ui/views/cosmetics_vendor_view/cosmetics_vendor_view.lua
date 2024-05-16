@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view.lua
+
 require("scripts/ui/views/vendor_view_base/vendor_view_base")
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -21,6 +23,7 @@ local CosmeticsVendorView = class("CosmeticsVendorView", "VendorViewBase")
 
 CosmeticsVendorView.init = function (self, settings, context)
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._optional_store_service = context and context.optional_store_service
 	self._disable_equipped_status = true
@@ -33,6 +36,7 @@ CosmeticsVendorView.on_enter = function (self)
 	CosmeticsVendorView.super.on_enter(self)
 
 	self._render_settings.alpha_multiplier = 0
+
 	local context = self._context
 	local option_button_definitions = context.option_button_definitions
 
@@ -42,18 +46,18 @@ CosmeticsVendorView.on_enter = function (self)
 
 	self._item_grid:update_dividers("content/ui/materials/frames/cosmetics_vendor/details_upper_cosmetic", {
 		654,
-		80
+		80,
 	}, {
 		0,
 		-55,
-		20
+		20,
 	}, "content/ui/materials/frames/cosmetics_vendor/details_lower_cosmetic", {
 		470,
-		50
+		50,
 	}, {
 		0,
 		13,
-		20
+		20,
 	})
 	self:_setup_background_world()
 	self._item_grid:set_sort_button_offset(0, 40)
@@ -67,6 +71,7 @@ CosmeticsVendorView._set_preview_widgets_visibility = function (self, visible)
 
 	for i = 1, side_panel_widget_count do
 		local widget = side_panel_widgets[i]
+
 		widget.content.visible = visible
 	end
 
@@ -75,6 +80,7 @@ CosmeticsVendorView._set_preview_widgets_visibility = function (self, visible)
 
 	for i = 1, set_item_parts_representation_widgets_count do
 		local widget = set_item_parts_representation_widgets[i]
+
 		widget.content.visible = visible
 	end
 end
@@ -103,6 +109,7 @@ CosmeticsVendorView._reset_mannequin = function (self)
 
 					if item_definition then
 						local slot_item = table.clone(item_definition)
+
 						self._mannequin_loadout[required_item_slot_name] = slot_item
 					end
 				end
@@ -224,36 +231,36 @@ CosmeticsVendorView._setup_set_item_parts_representation = function (self, items
 	local item_type_material_lookup = UISettings.item_type_material_lookup
 	local widget_definition = UIWidget.create_definition({
 		{
-			value_id = "icon",
-			style_id = "icon",
 			pass_type = "texture",
+			style_id = "icon",
+			value_id = "icon",
 			style = {
-				color = Color.text_default(255, true)
-			}
+				color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "text",
-			value_id = "text",
 			pass_type = "text",
+			style_id = "text",
 			value = "",
+			value_id = "text",
 			style = {
-				vertical_alignment = "center",
 				font_size = 28,
-				horizontal_alignment = "center",
 				font_type = "proxima_nova_bold",
-				text_vertical_alignment = "center",
+				horizontal_alignment = "center",
 				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
+				vertical_alignment = "center",
 				text_color = Color.terminal_text_body(255, true),
 				offset = {
 					20,
 					20,
-					1
-				}
+					1,
+				},
 			},
 			visibility_function = function (content)
 				return content.owned
-			end
-		}
+			end,
+		},
 	}, "set_item_parts_representation")
 	local set_item_parts_representation_widgets = {}
 
@@ -266,9 +273,12 @@ CosmeticsVendorView._setup_set_item_parts_representation = function (self, items
 			local owned = self:is_item_owned(gear_id)
 			local widget = self:_create_widget("item_part_" .. i, widget_definition)
 			local content = widget.content
+
 			content.icon = icon
 			content.owned = owned
+
 			local offset = widget.offset
+
 			offset[1] = (i - 1) * 70
 			set_item_parts_representation_widgets[#set_item_parts_representation_widgets + 1] = widget
 		end
@@ -305,7 +315,7 @@ CosmeticsVendorView._setup_item_texts = function (self, item)
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 	local item_size = {
 		700,
-		60
+		60,
 	}
 	local ui_renderer = self._ui_default_renderer
 	local scenegraph_id = "item_name_pivot"
@@ -313,21 +323,23 @@ CosmeticsVendorView._setup_item_texts = function (self, item)
 	local ContentBlueprints = generate_blueprints_function(item_size)
 	local template = ContentBlueprints[widget_type]
 	local config = {
-		vertical_alignment = "bottom",
 		horizontal_alignment = "right",
+		vertical_alignment = "bottom",
 		size = item_size,
-		item = item
+		item = item,
 	}
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
 	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
-	local widget = nil
+	local widget
 
 	if widget_definition then
 		local name = "item_name"
+
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
+
 		local init = template.init
 
 		if init then
@@ -358,6 +370,7 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 	local scenegraph_id = "side_panel_area"
 	local max_width = self._ui_scenegraph[scenegraph_id].size[1]
 	local widgets = {}
+
 	self._side_panel_widgets = widgets
 
 	if not item then
@@ -367,17 +380,20 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 	local function _add_text_widget(pass_template, text)
 		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
 			max_width,
-			0
+			0,
 		})
 		local widget = self:_create_widget(string.format("side_panel_widget_%d", #widgets), widget_definition)
+
 		widget.content.text = text
 		widget.offset[2] = y_offset
+
 		local widget_text_style = widget.style.text
 		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
 		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
 			max_width,
-			math.huge
+			math.huge,
 		}, text_options)
+
 		y_offset = y_offset + text_height
 		widget.content.size[2] = text_height
 		widgets[#widgets + 1] = widget
@@ -422,6 +438,7 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 
 	for i = 1, #widgets do
 		local widget_offset = widgets[i].offset
+
 		widget_offset[1] = 0
 		widget_offset[2] = widget_offset[2] - y_offset
 	end
@@ -458,7 +475,7 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 		self._profile_spawner = nil
 	end
 
-	local profile = nil
+	local profile
 	local player = self:_player()
 	local player_profile = player and player:profile()
 
@@ -476,12 +493,14 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 		end
 
 		local loadout = {}
+
 		profile = {
 			loadout = loadout,
 			archetype = archetype,
 			gender = gender_name,
-			breed = breed_name
+			breed = breed_name,
 		}
+
 		local slot_items_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name][gender_name]
 
 		for slot_name, item_path in pairs(slot_items_per_slot) do
@@ -499,6 +518,7 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 
 	if player_profile and player_profile.archetype.name == self._preview_profile.archetype.name then
 		local gear_profile = table.clone_instance(player_profile)
+
 		self._default_gear_loadout = table.clone_instance(gear_profile.loadout)
 		self._gear_loadout = table.clone_instance(gear_profile.loadout)
 		gear_profile.loadout = self._gear_loadout
@@ -534,10 +554,11 @@ CosmeticsVendorView._cb_on_purchase_pressed = function (self)
 end
 
 CosmeticsVendorView.present_items = function (self, optional_context)
-	local optional_archetype_name = nil
+	local optional_archetype_name
 
 	if optional_context then
 		local archetype_name = optional_context.archetype_name
+
 		optional_archetype_name = archetype_name
 	end
 
@@ -545,11 +566,13 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	self:_initialize_background_profile(optional_archetype_name)
 
 	local presentation_profile = self._store_presentation_profile
+
 	self._active_archetype_name = presentation_profile.archetype.name
+
 	local ignore_focus_on_offer = true
 	local promises = {
 		self:_update_wallets(),
-		self:_fetch_store_items(ignore_focus_on_offer, optional_context)
+		self:_fetch_store_items(ignore_focus_on_offer, optional_context),
 	}
 
 	if not self._player_available_archetypes then
@@ -565,6 +588,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 			for i = 1, #profiles_data.profiles do
 				local profile = profiles_data.profiles[i]
 				local archetype_name = profile.archetype.name
+
 				self._player_available_archetypes[archetype_name] = true
 			end
 		end
@@ -586,6 +610,7 @@ CosmeticsVendorView._fetch_store_items = function (self, ignore_focus_on_offer, 
 	return CosmeticsVendorView.super._fetch_store_items(self, ignore_focus_on_offer):next(function (data)
 		if not self._spawned_profile then
 			local context = self._context
+
 			self._spawn_player = context and context.spawn_player
 			self._initial_rotation = nil
 		end
@@ -651,7 +676,7 @@ end
 CosmeticsVendorView._get_store = function (self)
 	local active_archetype_name = self._active_archetype_name
 	local store_service = Managers.data_service.store
-	local store_promise = nil
+	local store_promise
 	local optional_store_service = self._optional_store_service
 
 	if optional_store_service and store_service[optional_store_service] then
@@ -750,10 +775,10 @@ CosmeticsVendorView._purchase_item = function (self, offer)
 
 		self:present_items({
 			archetype_name = self._active_archetype_name,
-			option_index = self._selected_option_button_index
+			option_index = self._selected_option_button_index,
 		})
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_notification_acqusition_failed")
+			text = Localize("loc_notification_acqusition_failed"),
 		}, nil, UISoundEvents.notification_join_party_failed)
 	end)
 
@@ -823,7 +848,7 @@ CosmeticsVendorView.on_resolution_modified = function (self, scale)
 end
 
 CosmeticsVendorView._spawn_profile = function (self, profile, initial_rotation, disable_rotation_input, keep_current_rotation)
-	local current_rotation_angle = nil
+	local current_rotation_angle
 
 	if self._profile_spawner then
 		if keep_current_rotation then
@@ -842,6 +867,7 @@ CosmeticsVendorView._spawn_profile = function (self, profile, initial_rotation, 
 	local world = self._world_spawner:world()
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
+
 	self._profile_spawner = UIProfileSpawner:new("CosmeticsVendorView", world, camera, unit_spawner)
 
 	if initial_rotation then
@@ -875,7 +901,9 @@ end
 CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 	local render_settings = self._render_settings
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self.animated_alpha_multiplier or 0
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_renderer = self._ui_default_renderer
 
@@ -921,18 +949,18 @@ end
 CosmeticsVendorView._setup_option_buttons = function (self, options)
 	local button_size = {
 		80,
-		80
+		80,
 	}
 	local button_spacing = 10
 	local settings = {
-		vertical_alignment = "top",
 		grow_vertically = true,
+		vertical_alignment = "top",
 		button_size = button_size,
 		button_spacing = button_spacing,
 		input_label_offset = {
 			25,
-			30
-		}
+			30,
+		},
 	}
 	local options_tab_bar = self:_add_element(ViewElementTabMenu, "options_tab_bar", 10, settings)
 	local item_category_sort_button = table.clone(ButtonPassTemplates.item_category_sort_button)
@@ -940,9 +968,11 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 	for i = 1, #options do
 		local option = options[i]
 		local pressed_callback = callback(self, "on_option_button_pressed", i, option)
+
 		item_category_sort_button[1].style = {
-			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
+			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 		}
+
 		local display_name = option.display_name
 
 		options_tab_bar:add_entry(display_name, pressed_callback, item_category_sort_button, option.icon)
@@ -980,6 +1010,7 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 	end
 
 	self._selected_option_button_index = index
+
 	local slot_names = option.slot_names
 	local slot_name = option.slot_name or slot_names and slot_names[1]
 	local item_types = option.item_types
@@ -987,6 +1018,7 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 	self._options_tab_bar:set_selected_index(index)
 
 	local instant_zoom = self._next_zoom_instant or self._selected_slot == nil
+
 	self._next_zoom_instant = nil
 	self._selected_slot = ItemSlotSettings[slot_name]
 
@@ -1000,7 +1032,7 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 	local profile_spawner = self._profile_spawner
 
 	if profile_spawner then
-		local initial_rotation = nil
+		local initial_rotation
 
 		if slot_name == "slot_gear_extra_cosmetic" then
 			initial_rotation = math.pi
@@ -1021,15 +1053,18 @@ end
 CosmeticsVendorView._set_layout_display_name = function (self, display_name)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.title_text
+
 	widget.content.text = display_name and Localize(display_name) or "n/a"
 end
 
 CosmeticsVendorView._setup_background_world = function (self)
 	local context = self._context
 	local level_settings = context and context.spawn_player and CosmeticsVendorViewSettings.gear_level_settings or CosmeticsVendorViewSettings.weapon_level_settings
+
 	self._breeds_item_camera_by_slot_id = {}
 	self._breeds_default_camera_settings = {}
-	local starting_camera_unit = nil
+
+	local starting_camera_unit
 
 	for breed_name, settings in pairs(Breeds) do
 		if settings.breed_type == "player" then
@@ -1042,10 +1077,11 @@ CosmeticsVendorView._setup_background_world = function (self)
 
 				local camera_position = Unit.world_position(camera_unit, 1)
 				local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 				instance._breeds_default_camera_settings[breed_name] = {
 					camera_unit = camera_unit,
 					original_position_boxed = Vector3Box(camera_position),
-					original_rotation_boxed = QuaternionBox(camera_rotation)
+					original_rotation_boxed = QuaternionBox(camera_rotation),
 				}
 
 				instance:_unregister_event(default_camera_event_id)
@@ -1082,7 +1118,9 @@ CosmeticsVendorView._setup_background_world = function (self)
 	local world_name = level_settings.world_name
 	local world_layer = level_settings.world_layer
 	local world_timer_name = CosmeticsVendorViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = level_settings.level_name
 
 	self._world_spawner:spawn_level(level_name)

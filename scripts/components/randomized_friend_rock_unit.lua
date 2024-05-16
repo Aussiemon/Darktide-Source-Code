@@ -1,15 +1,21 @@
+﻿-- chunkname: @scripts/components/randomized_friend_rock_unit.lua
+
 local RandomizedFriendRockUnit = component("RandomizedFriendRockUnit")
 
 RandomizedFriendRockUnit.init = function (self, unit)
 	self._unit = unit
+
 	local visiblity_group_names = {}
+
 	self._visiblity_group_names = visiblity_group_names
+
 	local visiblity_groups = self:get_data(unit, "visiblity_groups")
 	local num_visiblity_groups = #visiblity_groups
 
 	for ii = 1, num_visiblity_groups do
 		local entry = visiblity_groups[ii]
 		local visiblity_group_name = entry.visiblity_group_name
+
 		visiblity_group_names[#visiblity_group_names + 1] = visiblity_group_name
 	end
 
@@ -79,19 +85,19 @@ end
 
 RandomizedFriendRockUnit.component_data = {
 	visiblity_groups = {
-		ui_type = "struct_array",
 		ui_name = "Visiblity Groups",
+		ui_type = "struct_array",
 		definition = {
 			visiblity_group_name = {
+				ui_name = "Visiblity Group Name",
 				ui_type = "text_box",
 				value = "",
-				ui_name = "Visiblity Group Name"
-			}
+			},
 		},
 		control_order = {
-			"visiblity_group_name"
-		}
-	}
+			"visiblity_group_name",
+		},
+	},
 }
 
 return RandomizedFriendRockUnit

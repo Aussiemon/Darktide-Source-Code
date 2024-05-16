@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/frame_time_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local FrameTimeReporter = class("FrameTimeReporter")
 local SAMPLE_INTERVAL = 1
@@ -13,7 +15,7 @@ FrameTimeReporter.destroy = function (self)
 end
 
 FrameTimeReporter.update = function (self, dt, t)
-	if SAMPLE_INTERVAL < t - self._last_sample_time then
+	if t - self._last_sample_time > SAMPLE_INTERVAL then
 		self:_take_measure(dt)
 
 		self._last_sample_time = math.floor(t)
@@ -22,6 +24,7 @@ end
 
 FrameTimeReporter._take_measure = function (self, dt)
 	local dt_ms = dt * 1000
+
 	self._measures[#self._measures + 1] = dt_ms
 end
 

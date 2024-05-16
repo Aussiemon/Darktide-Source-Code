@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view.lua
+
 local VendorViewBase = require("scripts/ui/views/vendor_view_base/vendor_view_base")
 local Definitions = require("scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view_definitions")
 local MarksGoodsVendorViewSettings = require("scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view_settings")
@@ -9,6 +11,7 @@ MarksGoodsVendorView.init = function (self, settings, context)
 	MarksGoodsVendorView.super.init(self, Definitions, settings, context)
 
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._debug = context and context.debug
 
@@ -26,6 +29,7 @@ MarksGoodsVendorView._setup_result_overlay = function (self, result_data)
 
 	local reference_name = "result_overlay"
 	local layer = 40
+
 	self._result_overlay = self:_add_element(ViewElementItemResultOverlay, reference_name, layer)
 
 	self:_update_result_overlay_position()
@@ -40,7 +44,7 @@ end
 
 MarksGoodsVendorView._get_store = function (self)
 	local store_service = Managers.data_service.store
-	local store_promise = nil
+	local store_promise
 
 	if self._show_temporary_store_items then
 		store_promise = store_service:get_marks_store_temporary()
@@ -88,32 +92,32 @@ local general_goods_offer_display_information = {
 		background_icon = "content/ui/materials/icons/items/general_melee_weapon",
 		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_melee_weapon"),
-		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc")
+		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_range_weapon",
 		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_ranged_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_ranged_weapon"),
-		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc")
+		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_curio_01",
 		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_gadget_defensive"),
-		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc")
+		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_curio_02",
 		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_gadget_teamplay"),
-		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc")
+		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_curio_03",
 		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_gadget_utility"),
-		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc")
-	}
+		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
+	},
 }
 
 MarksGoodsVendorView._convert_offers_to_layout_entries = function (self, item_offers)
@@ -132,7 +136,7 @@ MarksGoodsVendorView._convert_offers_to_layout_entries = function (self, item_of
 				widget_type = "general_goods_item",
 				offer = offer,
 				offer_id = offer_id,
-				display_information = display_information
+				display_information = display_information,
 			})
 		end
 	end
@@ -205,18 +209,18 @@ MarksGoodsVendorView._on_purchase_complete = function (self, items)
 
 	if randomize_vo < 0.2 then
 		self._parent:play_vo_events({
-			"credit_store_servitor_purchase_c"
+			"credit_store_servitor_purchase_c",
 		}, "credit_store_servitor_c", nil, 1.4)
 	elseif randomize_vo > 0.85 then
 		self._parent:play_vo_events({
-			"credit_store_servitor_purchase_c"
+			"credit_store_servitor_purchase_c",
 		}, "credit_store_servitor_c", nil, 1.4)
 		self._parent:play_vo_events({
-			"contract_vendor_servitor_purchase_b"
+			"contract_vendor_servitor_purchase_b",
 		}, "contract_vendor_a", nil, 1)
 	else
 		self._parent:play_vo_events({
-			"contract_vendor_purchase_a"
+			"contract_vendor_purchase_a",
 		}, "contract_vendor_a", nil, 1.4)
 	end
 end
@@ -231,6 +235,7 @@ end
 
 MarksGoodsVendorView._preview_item = function (self, item)
 	self._previewed_item = item
+
 	local visible = true
 
 	self:_set_preview_widgets_visibility(visible)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_aim_projectile.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AimProjectile = require("scripts/utilities/aim_projectile")
@@ -10,6 +12,7 @@ ActionAimProjectile.init = function (self, action_context, ...)
 	ActionAimProjectile.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_aim_projectile_component = unit_data_extension:write_component("action_aim_projectile")
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
 end
@@ -18,10 +21,11 @@ ActionAimProjectile.start = function (self, action_settings, t, time_scale, acti
 	local locomotion_template = self:_locomotion_template()
 	local throw_type = action_settings.throw_type or "throw"
 	local throw_config = locomotion_template.trajectory_parameters[throw_type]
-	local momentum = nil
+	local momentum
 
 	if throw_config.randomized_angular_velocity then
 		local max = throw_config.randomized_angular_velocity
+
 		momentum = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
 	elseif throw_config.momentum then
 		momentum = throw_config.momentum:unbox()
@@ -46,6 +50,7 @@ ActionAimProjectile.fixed_update = function (self, dt, t, time_in_action)
 	local _, radius = ProjectileIntegrationData.mass_radius(projectile_locomotion_template, locomotion_extension)
 	local throw_position = AimProjectile.check_throw_position(aim_parameters.position, look_position, projectile_locomotion_template, radius, self._physics_world)
 	local action_aim_projectile_component = self._action_aim_projectile_component
+
 	action_aim_projectile_component.position = throw_position
 	action_aim_projectile_component.rotation = aim_parameters.rotation
 	action_aim_projectile_component.direction = aim_parameters.direction
@@ -65,15 +70,17 @@ ActionAimProjectile._locomotion_template = function (self)
 	local existing_unit, locomotion_extension = self:_existing_unit()
 	local action_settings = self._action_settings
 	local weapon_template = self._weapon_template
-	local locomotion_template = nil
+	local locomotion_template
 
 	if locomotion_extension then
 		locomotion_template = locomotion_extension:locomotion_template()
 	elseif action_settings.projectile_locomotion_template then
 		local template_name_from_action = action_settings.projectile_locomotion_template
+
 		locomotion_template = ProjectileLocomotionTemplates[template_name_from_action]
 	elseif weapon_template.projectile_template then
 		local projectile_templates = weapon_template.projectile_template
+
 		locomotion_template = projectile_templates.locomotion_template
 	end
 

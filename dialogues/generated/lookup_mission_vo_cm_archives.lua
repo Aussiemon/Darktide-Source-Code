@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_cm_archives.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_archives_alarm"
 DialogueLookup[DialogueLookup_n + 2] = "mission_archives_alarm_off"
 DialogueLookup[DialogueLookup_n + 3] = "mission_archives_cogitator_hall"

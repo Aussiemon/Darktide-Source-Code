@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_warp_echo_moebian_a.lua
+
 local gameplay_vo_warp_echo_moebian_a = {
 	martyr_skull_pickup = {
 		randomize_indexes_n = 0,
@@ -62,7 +64,7 @@ local gameplay_vo_warp_echo_moebian_a = {
 			"loc_warp_echo_moebian_a__martyr_skull_pickup_wolfer_a_02",
 			"loc_warp_echo_moebian_a__martyr_skull_pickup_wolfer_a_03",
 			"loc_warp_echo_moebian_a__martyr_skull_pickup_wolfer_a_04",
-			"loc_warp_echo_moebian_a__martyr_skull_pickup_wolfer_a_05"
+			"loc_warp_echo_moebian_a__martyr_skull_pickup_wolfer_a_05",
 		},
 		sound_events_duration = {
 			2.946271,
@@ -124,10 +126,10 @@ local gameplay_vo_warp_echo_moebian_a = {
 			5.598521,
 			4.596646,
 			5.697313,
-			6.182563
+			6.182563,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("gameplay_vo_warp_echo_moebian_a", gameplay_vo_warp_echo_moebian_a)

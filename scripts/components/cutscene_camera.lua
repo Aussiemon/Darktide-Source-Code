@@ -1,13 +1,14 @@
+﻿-- chunkname: @scripts/components/cutscene_camera.lua
+
 local CutsceneCamera = component("CutsceneCamera")
 
 CutsceneCamera.init = function (self, unit)
-	self._data = {
-		dof_enabled = math.ceil(Unit.local_position(unit, Unit.node(unit, "Enabled")).y),
-		focal_distance = Unit.local_position(unit, Unit.node(unit, "Distance")).y,
-		focal_region = Unit.local_position(unit, Unit.node(unit, "Region")).y,
-		focal_padding = Unit.local_position(unit, Unit.node(unit, "Padding")).y,
-		focal_scale = Unit.local_position(unit, Unit.node(unit, "Scale")).y
-	}
+	self._data = {}
+	self._data.dof_enabled = math.ceil(Unit.local_position(unit, Unit.node(unit, "Enabled")).y)
+	self._data.focal_distance = Unit.local_position(unit, Unit.node(unit, "Distance")).y
+	self._data.focal_region = Unit.local_position(unit, Unit.node(unit, "Region")).y
+	self._data.focal_padding = Unit.local_position(unit, Unit.node(unit, "Padding")).y
+	self._data.focal_scale = Unit.local_position(unit, Unit.node(unit, "Scale")).y
 
 	if rawget(_G, "LevelEditor") and Unit.has_data(unit, "dof_planes") and not Unit.get_data(unit, "dof_planes") then
 		Unit.set_visibility(unit, "dof_planes", false)
@@ -82,9 +83,9 @@ end
 
 CutsceneCamera.component_data = {
 	cinematic_category = {
-		value = "none",
-		ui_type = "combo_box",
 		ui_name = "Cinematic Category",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"None",
 			"Camera A",
@@ -136,7 +137,7 @@ CutsceneCamera.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop"
+			"Hub Location Intro Gun Shop",
 		},
 		options_values = {
 			"none",
@@ -189,9 +190,9 @@ CutsceneCamera.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop"
-		}
-	}
+			"hub_location_intro_gun_shop",
+		},
+	},
 }
 
 return CutsceneCamera

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/decoder_device/decoder_device_extension.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local DecoderDeviceExtension = class("DecoderDeviceExtension")
 local minigame_states = MinigameSettings.states
@@ -36,7 +38,9 @@ end
 DecoderDeviceExtension.extensions_ready = function (self, world, unit)
 	self._minigame_extension = ScriptUnit.has_extension(unit, "minigame_system")
 	self._animation_extension = ScriptUnit.has_extension(unit, "animation_system")
+
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
+
 	self._interactee_extension = interactee_extension
 	self._mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 end
@@ -46,6 +50,7 @@ DecoderDeviceExtension.hot_join_sync = function (self, unit_is_enabled, is_place
 	self._is_placed = is_placed
 	self._started_decode = started_decode
 	self._decoding_interrupted = decoding_interrupted
+
 	local unit = self._unit
 
 	if unit_is_enabled then
@@ -92,6 +97,7 @@ end
 
 DecoderDeviceExtension.register_synchronizer = function (self, synchronizer_extension)
 	self._decoder_synchronizer_extension = synchronizer_extension
+
 	local unit = self._unit
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 

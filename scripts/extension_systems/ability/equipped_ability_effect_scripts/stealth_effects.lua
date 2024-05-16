@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/equipped_ability_effect_scripts/stealth_effects.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local keywords = BuffSettings.keywords
 local INVISIBLE_MIN_FADE = 0.5
@@ -6,6 +8,7 @@ local StealthEffects = class("StealthEffects")
 
 StealthEffects.init = function (self, context, ability_template)
 	local unit = context.unit
+
 	self._unit = unit
 	self._fade_system = Managers.state.extension:system("fade_system")
 	self._buff_extension = ScriptUnit.has_extension(unit, "buff_system")

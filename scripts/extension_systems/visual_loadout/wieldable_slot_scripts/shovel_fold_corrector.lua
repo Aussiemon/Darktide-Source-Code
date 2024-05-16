@@ -1,12 +1,18 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shovel_fold_corrector.lua
+
 local ShovelFoldCorrector = class("ShovelFoldCorrector")
 
 ShovelFoldCorrector.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_server = context.is_server
 	self._is_local_unit = context.is_local_unit
+
 	local owner_unit = context.owner_unit
+
 	self._owner_unit = owner_unit
 	self._animation_extension = ScriptUnit.extension(owner_unit, "animation_system")
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 end
 

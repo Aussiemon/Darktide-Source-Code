@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_veteran_male_b.lua
+
 local class_rework_veteran_male_b = {
 	ability_shock_trooper = {
 		randomize_indexes_n = 0,
@@ -13,7 +15,7 @@ local class_rework_veteran_male_b = {
 			"loc_veteran_male_b__ability_shock_trooper_11",
 			"loc_veteran_male_b__ability_shock_trooper_12",
 			"loc_veteran_male_b__ability_shock_trooper_13",
-			"loc_veteran_male_b__ability_shock_trooper_14"
+			"loc_veteran_male_b__ability_shock_trooper_14",
 		},
 		sound_events_duration = {
 			4.052417,
@@ -26,9 +28,9 @@ local class_rework_veteran_male_b = {
 			2.706688,
 			2.655188,
 			3.087646,
-			1.542688
+			1.542688,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_squad_leader = {
 		randomize_indexes_n = 0,
@@ -48,7 +50,7 @@ local class_rework_veteran_male_b = {
 			"loc_veteran_male_b__ability_squad_leader_12",
 			"loc_veteran_male_b__ability_squad_leader_13",
 			"loc_veteran_male_b__ability_squad_leader_14",
-			"loc_veteran_male_b__ability_squad_leader_15"
+			"loc_veteran_male_b__ability_squad_leader_15",
 		},
 		sound_events_duration = {
 			3.232146,
@@ -65,10 +67,10 @@ local class_rework_veteran_male_b = {
 			2.460667,
 			3.151917,
 			3.091188,
-			3.013375
+			3.013375,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("class_rework_veteran_male_b", class_rework_veteran_male_b)

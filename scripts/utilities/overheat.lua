@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/overheat.lua
+
 local SharedOverheatAndWarpChargeFunctions = require("scripts/utilities/shared_overheat_and_warp_charge_functions")
 local SharedFunctions = SharedOverheatAndWarpChargeFunctions
 local Overheat = {}
@@ -17,6 +19,7 @@ Overheat.increase_immediate = function (t, charge_level, inventory_slot_componen
 	local base_add_percentage = charge_template.overheat_percent or 0
 	local add_percentage = buff_multiplier * base_add_percentage
 	local new_heat, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage)
+
 	inventory_slot_component.overheat_last_charge_at_t = t
 	inventory_slot_component.overheat_current_percentage = new_heat
 	inventory_slot_component.overheat_state = new_state or current_state
@@ -26,6 +29,7 @@ Overheat.decrease_immediate = function (remove_percentage, inventory_slot_compon
 	local current_percentage = inventory_slot_component.overheat_current_percentage
 	local current_state = inventory_slot_component.overheat_state
 	local new_percentage, new_state = SharedFunctions.remove_immediate(remove_percentage, current_percentage)
+
 	inventory_slot_component.overheat_current_percentage = new_percentage
 	inventory_slot_component.overheat_state = new_state or current_state
 end
@@ -39,6 +43,7 @@ Overheat.increase_over_time = function (dt, t, charge_level, inventory_slot_comp
 	local duration = charge_template.charge_duration
 	local current_percentage = inventory_slot_component.overheat_current_percentage
 	local new_heat = SharedFunctions.increase_over_time(dt, charge_level, add_percentage, extra_add_percentage, duration, current_percentage)
+
 	inventory_slot_component.overheat_current_percentage = new_heat
 	inventory_slot_component.overheat_last_charge_at_t = t
 end
@@ -91,6 +96,7 @@ Overheat.update = function (dt, t, inventory_slot_component, overheat_configurat
 	local critical_threshold_decay_rate_modifier = overheat_configuration.critical_threshold_decay_rate_modifier
 	local auto_vent_duration = overheat_configuration.auto_vent_duration
 	local new_heat = SharedFunctions.update(dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate_modifier, high_threshold_decay_rate_modifier, critical_threshold_decay_rate_modifier)
+
 	inventory_slot_component.overheat_current_percentage = new_heat
 end
 
@@ -103,6 +109,7 @@ end
 
 Overheat.start_venting = function (t, inventory_slot_component, vent_configuration)
 	local vent_interval = vent_configuration.vent_interval
+
 	inventory_slot_component.overheat_state = "decreasing"
 	inventory_slot_component.overheat_remove_at_t = t + vent_interval
 	inventory_slot_component.overheat_starting_percentage = inventory_slot_component.overheat_current_percentage
@@ -125,6 +132,7 @@ Overheat.update_venting = function (dt, t, player, inventory_slot_component, ven
 	local vent_interval = vent_configuration.vent_interval * buff_vent_speed
 	local fixed_starting_percentage = vent_configuration.fixed_starting_percentage or starting_percentage
 	local next_remove_t, new_percentage = SharedOverheatAndWarpChargeFunctions.update_venting(t, current_percentage, fixed_starting_percentage, vent_interval, vent_duration)
+
 	inventory_slot_component.overheat_remove_at_t = next_remove_t
 	inventory_slot_component.overheat_current_percentage = new_percentage
 

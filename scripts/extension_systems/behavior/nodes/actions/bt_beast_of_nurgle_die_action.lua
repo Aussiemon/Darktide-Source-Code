@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_beast_of_nurgle_die_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -9,7 +11,9 @@ local BtBeastOfNurgleDieAction = class("BtBeastOfNurgleDieAction", "BtNode")
 
 BtBeastOfNurgleDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local death_component = Blackboard.write_component(blackboard, "death")
+
 	scratchpad.death_component = death_component
+
 	local explosion_timing = action_data.explosion_timing
 
 	if explosion_timing then
@@ -21,11 +25,12 @@ BtBeastOfNurgleDieAction.enter = function (self, unit, breed, blackboard, scratc
 	end
 
 	local death_animations = action_data.death_animations
-	local death_animation_events = nil
+	local death_animation_events
 
 	if not death_animation_events then
 		local hit_zone_name = death_component.hit_zone_name
 		local death_animation_identifier = hit_zone_name and death_animations[hit_zone_name] or "default"
+
 		death_animation_events = death_animations[death_animation_identifier]
 	end
 
@@ -35,7 +40,9 @@ BtBeastOfNurgleDieAction.enter = function (self, unit, breed, blackboard, scratc
 	animation_extension:anim_event(death_animation_event)
 
 	local death_timing = action_data.death_timings[death_animation_event]
+
 	scratchpad.death_t = t + death_timing
+
 	local death_animation_vo = action_data.death_animation_vo and action_data.death_animation_vo[death_animation_event]
 
 	if death_animation_vo then
@@ -122,11 +129,8 @@ BtBeastOfNurgleDieAction._explode = function (self, unit, action_data, blackboar
 	local explode_position_node = action_data.explode_position_node
 	local position = Unit.world_position(unit, Unit.node(unit, explode_position_node))
 	local spawn_component = blackboard.spawn
-	local world = spawn_component.world
-	local physics_world = spawn_component.physics_world
-	local impact_normal = Vector3.up()
-	local charge_level = 1
-	local attack_type = nil
+	local world, physics_world = spawn_component.world, spawn_component.physics_world
+	local impact_normal, charge_level, attack_type = Vector3.up(), 1
 	local power_level = action_data.explosion_template_power_level
 	local explosion_template = action_data.explosion_template
 

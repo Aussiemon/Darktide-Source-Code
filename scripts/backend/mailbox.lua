@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/mailbox.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local MailBox = class("MailBox")
@@ -25,7 +27,7 @@ local function _patch_mail(mail, body)
 
 	return Managers.backend:title_request(BackendUtilities.url_builder(self_url):to_string(), {
 		method = "PATCH",
-		body = body
+		body = body,
 	}):next(function (data)
 		local result = data.body
 
@@ -41,7 +43,7 @@ local function _patch_mail(mail, body)
 end
 
 MailBox.get_mail_paged = function (self, character_id, limit, include_unread_global, include_translation, source)
-	local promise = nil
+	local promise
 
 	if character_id then
 		promise = BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/mail"):query("source", source):query("includeUnreadGlobal", include_unread_global):query("includeTranslation", include_translation):query("limit", limit))
@@ -51,6 +53,7 @@ MailBox.get_mail_paged = function (self, character_id, limit, include_unread_glo
 
 	return promise:next(function (data)
 		local result = BackendUtilities.wrap_paged_response(data.body)
+
 		result.globals = data.body._embedded.globals
 
 		for i, v in ipairs(result.items) do
@@ -76,7 +79,7 @@ MailBox.mark_mail_read_and_claimed = function (self, mail)
 
 	return _patch_mail(mail, {
 		claimed = true,
-		read = true
+		read = true,
 	}):next(function (reward)
 		mail.isRead = true
 		mail.claimed = true
@@ -93,7 +96,7 @@ MailBox.mark_mail_read = function (self, mail)
 	end
 
 	return _patch_mail(mail, {
-		read = true
+		read = true,
 	}):next(function ()
 		mail.isRead = true
 	end)
@@ -105,7 +108,7 @@ MailBox.mark_mail_unread = function (self, mail)
 	end
 
 	return _patch_mail(mail, {
-		read = false
+		read = false,
 	}):next(function ()
 		mail.isRead = false
 	end)
@@ -118,7 +121,7 @@ MailBox.mark_mail_claimed = function (self, mail, reward_idx)
 
 	return _patch_mail(mail, {
 		claimed = true,
-		rewardIndex = reward_idx
+		rewardIndex = reward_idx,
 	}):next(function ()
 		mail.claimed = true
 		mail.rewardIndex = reward_idx

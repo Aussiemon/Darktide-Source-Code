@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/helper_functions/shared_buff_functions.lua
+
 local WarpCharge = require("scripts/utilities/warp_charge")
 local shared_functions = {}
 
@@ -6,6 +8,7 @@ shared_functions.regain_toughness_proc_func = function (params, template_data, t
 
 	if not toughness_extension then
 		local unit = template_context.unit
+
 		toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 		template_data.toughness_extension = toughness_extension
 	end
@@ -23,6 +26,7 @@ shared_functions.vent_warp_charge_start_func = function (template_data, template
 	local unit = template_context.unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local warp_charge_component = unit_data_extension:write_component("warp_charge")
+
 	template_data.warp_charge_component = warp_charge_component
 	template_data.counter = 0
 end

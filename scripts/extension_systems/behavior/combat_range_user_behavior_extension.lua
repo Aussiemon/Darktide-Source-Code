@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/combat_range_user_behavior_extension.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Breed = require("scripts/utilities/breed")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local CombatRangeUserBehaviorExtension = class("CombatRangeUserBehaviorExtension", "MinionBehaviorExtension")
 local buff_keywords = BuffSettings.keywords
-local _get_combat_range_switch_distance, _should_switch_combat_range = nil
+local _get_combat_range_switch_distance, _should_switch_combat_range
 
 CombatRangeUserBehaviorExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._phase_template = extension_init_data.phase_template
@@ -13,13 +15,17 @@ CombatRangeUserBehaviorExtension.init = function (self, extension_init_context, 
 
 	self._unit = unit
 	self._fx_system = Managers.state.extension:system("fx_system")
+
 	local breed = self._breed
 	local combat_range_data = breed.combat_range_data
+
 	self._start_effect_template = combat_range_data.start_effect_template
+
 	local multi_config = combat_range_data.multi_config
 
 	if multi_config then
 		local combat_range_multi_config_key = extension_init_data.combat_range_multi_config_key
+
 		self._combat_range_config = multi_config[combat_range_multi_config_key]
 	else
 		self._combat_range_config = combat_range_data.config
@@ -34,6 +40,7 @@ end
 
 CombatRangeUserBehaviorExtension.extensions_ready = function (self, world, unit)
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
 	self._buff_extension = buff_extension
 end
 
@@ -44,14 +51,17 @@ CombatRangeUserBehaviorExtension._init_blackboard_components = function (self, b
 
 	local spawn_inventory_slot = breed.spawn_inventory_slot or DEFAULT_SPAWN_INVENTORY_SLOT
 	local weapon_switch_component = Blackboard.write_component(blackboard, "weapon_switch")
+
 	weapon_switch_component.wanted_weapon_slot = spawn_inventory_slot
 	weapon_switch_component.wanted_combat_range = ""
 	weapon_switch_component.is_switching_weapons = false
 	weapon_switch_component.last_weapon_switch_t = -math.huge
 	self._weapon_switch_component = weapon_switch_component
+
 	local combat_range_data = breed.combat_range_data
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	local starting_combat_range = combat_range_data.starting_combat_range
+
 	behavior_component.combat_range = starting_combat_range
 	behavior_component.combat_range_sticky_time = 0
 	behavior_component.enter_combat_range_flag = false
@@ -62,16 +72,19 @@ CombatRangeUserBehaviorExtension._init_blackboard_components = function (self, b
 
 	if self._phase_template then
 		local phase_component = Blackboard.write_component(blackboard, "phase")
+
 		phase_component.current_phase = ""
 		phase_component.exit_phase_t = math.huge
 		phase_component.lock = false
 		phase_component.wanted_phase = ""
 		phase_component.force_next_phase = false
 		self._phase_component = phase_component
+
 		local wanted_phase_name = self._phase_template[starting_combat_range].entry_phase
 
 		if type(wanted_phase_name) == "table" then
 			local index = math.random(#wanted_phase_name)
+
 			wanted_phase_name = wanted_phase_name[index]
 		end
 
@@ -90,8 +103,7 @@ CombatRangeUserBehaviorExtension.game_object_initialized = function (self, game_
 end
 
 CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, blackboard, dt, t)
-	local behavior_component = self._behavior_component
-	local perception_component = self._perception_component
+	local behavior_component, perception_component = self._behavior_component, self._perception_component
 	local target_unit = perception_component.target_unit
 	local switch_is_locked = behavior_component.lock_combat_range_switch or t <= behavior_component.combat_range_sticky_time
 	local current_combat_range = behavior_component.combat_range
@@ -112,7 +124,7 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 		else
 			self._target_velocity_dot_reset_timer = self._target_velocity_dot_reset_timer + dt
 
-			if self._target_velocity_dot_reset <= self._target_velocity_dot_reset_timer then
+			if self._target_velocity_dot_reset_timer >= self._target_velocity_dot_reset then
 				self._target_velocity_dot_duration = 0
 				self._target_velocity_dot_reset_timer = 0
 			end
@@ -141,8 +153,7 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 		return
 	end
 
-	local target_distance = perception_component.target_distance
-	local has_line_of_sight = perception_component.has_line_of_sight
+	local target_distance, has_line_of_sight = perception_component.target_distance, perception_component.has_line_of_sight
 
 	for i = 1, #combat_range_config do
 		repeat
@@ -166,8 +177,7 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 end
 
 CombatRangeUserBehaviorExtension._switch_combat_range = function (self, unit, blackboard, config, weapon_switch_component, behavior_component, t)
-	local switch_weapon_slot = config.switch_weapon_slot
-	local wanted_combat_range = config.switch_combat_range
+	local switch_weapon_slot, wanted_combat_range = config.switch_weapon_slot, config.switch_combat_range
 
 	if switch_weapon_slot then
 		weapon_switch_component.wanted_weapon_slot = switch_weapon_slot
@@ -182,6 +192,7 @@ CombatRangeUserBehaviorExtension._switch_combat_range = function (self, unit, bl
 
 		if type(wanted_phase_name) == "table" then
 			local index = math.random(#wanted_phase_name)
+
 			wanted_phase_name = wanted_phase_name[index]
 		end
 
@@ -196,8 +207,7 @@ CombatRangeUserBehaviorExtension._switch_combat_range = function (self, unit, bl
 		animation_extension:anim_event(switch_anim_state)
 	end
 
-	local fx_system = self._fx_system
-	local global_effect_id = self._global_effect_id
+	local fx_system, global_effect_id = self._fx_system, self._global_effect_id
 
 	if global_effect_id then
 		fx_system:stop_template_effect(global_effect_id)
@@ -247,8 +257,7 @@ function _get_combat_range_switch_distance(config, target_unit)
 		local target_breed = unit_data_extension:breed()
 
 		if Breed.is_player(target_breed) then
-			local visual_loadout_extension = ScriptUnit.extension(target_unit, "visual_loadout_system")
-			local inventory_component = unit_data_extension:read_component("inventory")
+			local visual_loadout_extension, inventory_component = ScriptUnit.extension(target_unit, "visual_loadout_system"), unit_data_extension:read_component("inventory")
 
 			for weapon_type, distance in pairs(target_weapon_type_distance) do
 				local equipped = PlayerUnitVisualLoadout.has_wielded_weapon_keyword(visual_loadout_extension, inventory_component, weapon_type)
@@ -281,7 +290,7 @@ function _should_switch_combat_range(unit, blackboard, current_combat_range, tar
 			if diff_switch_on_target_velocity_dot < target_velocity_dot_duration then
 				return false
 			end
-		elseif config.target_velocity_dot_duration_inverted < target_velocity_dot_duration then
+		elseif target_velocity_dot_duration > config.target_velocity_dot_duration_inverted then
 			return false
 		end
 	end
@@ -307,7 +316,7 @@ function _should_switch_combat_range(unit, blackboard, current_combat_range, tar
 		end
 	end
 
-	local switch_by_z_distance = config.z_distance and config.z_distance <= z_distance
+	local switch_by_z_distance = config.z_distance and z_distance >= config.z_distance
 
 	if switch_by_z_distance then
 		return true
@@ -315,13 +324,13 @@ function _should_switch_combat_range(unit, blackboard, current_combat_range, tar
 
 	local should_switch_on_velocity_dot = target_velocity_dot_duration and config.target_velocity_dot_duration and config.target_velocity_dot_distance
 
-	if should_switch_on_velocity_dot and config.target_velocity_dot_distance <= target_distance then
+	if should_switch_on_velocity_dot and target_distance >= config.target_velocity_dot_distance then
 		if type(config.target_velocity_dot_duration) == "table" then
 			local diff_switch_on_target_velocity_dot = Managers.state.difficulty:get_table_entry_by_challenge(config.target_velocity_dot_duration)
 
 			return diff_switch_on_target_velocity_dot <= target_velocity_dot_duration
 		else
-			return config.target_velocity_dot_duration <= target_velocity_dot_duration
+			return target_velocity_dot_duration >= config.target_velocity_dot_duration
 		end
 	end
 end
@@ -343,12 +352,13 @@ CombatRangeUserBehaviorExtension.update_minion_phase = function (self, unit, bla
 		self:_switch_phase(t, phases, wanted_phase_name, current_combat_range)
 	elseif phase_component.force_next_phase then
 		phase_component.force_next_phase = false
+
 		local next_phase_name = self:_get_next_phase(phases, current_phase_name)
 
 		if next_phase_name then
 			self:_switch_phase(t, phases, next_phase_name, current_combat_range)
 		end
-	elseif phase_component.exit_phase_t < t then
+	elseif t > phase_component.exit_phase_t then
 		local next_phase_name = self:_get_next_phase(phases, current_phase_name)
 
 		if next_phase_name then
@@ -388,6 +398,7 @@ CombatRangeUserBehaviorExtension._switch_phase = function (self, t, phases, want
 
 	if wanted_weapon_slot then
 		local weapon_switch_component = self._weapon_switch_component
+
 		weapon_switch_component.wanted_weapon_slot = wanted_weapon_slot
 		weapon_switch_component.wanted_combat_range = wanted_combat_range
 	end
@@ -400,6 +411,7 @@ CombatRangeUserBehaviorExtension._switch_phase = function (self, t, phases, want
 
 	local exit_phase_t = t + duration
 	local phase_component = self._phase_component
+
 	phase_component.exit_phase_t = exit_phase_t
 	phase_component.current_phase = wanted_phase_name
 	phase_component.wanted_phase = wanted_phase_name

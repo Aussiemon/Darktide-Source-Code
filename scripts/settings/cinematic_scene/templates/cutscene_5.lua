@@ -1,15 +1,17 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/cutscene_5.lua
+
 local cinematic_scene_templates = {
 	cutscene_5 = {
-		is_skippable = true,
-		use_transition_ui = true,
-		local_player_only = true,
-		instant_black_screen_during_cutscene_loading = false,
-		music = "cinematic",
 		hide_players = false,
-		set_random_weapon_event = false,
-		randomize_equipped_weapon = false,
 		include_bots = false,
+		instant_black_screen_during_cutscene_loading = false,
+		is_skippable = true,
+		local_player_only = true,
 		mission_outro = true,
+		music = "cinematic",
+		randomize_equipped_weapon = false,
+		set_random_weapon_event = false,
+		use_transition_ui = true,
 		ignored_slots = {
 			"slot_primary",
 			"slot_secondary",
@@ -21,9 +23,9 @@ local cinematic_scene_templates = {
 			"slot_grenade_ability",
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3"
-		}
-	}
+			"slot_attachment_3",
+		},
+	},
 }
 
 return cinematic_scene_templates

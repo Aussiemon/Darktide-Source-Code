@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/weather_volume.lua
+
 local WeatherVolume = component("WeatherVolume")
 
 WeatherVolume.init = function (self, unit)
@@ -48,31 +50,31 @@ end
 
 WeatherVolume.component_data = {
 	world_particles = {
-		ui_type = "resource",
+		filter = "particles",
 		preview = false,
-		value = "",
 		ui_name = "World Particles",
-		filter = "particles"
+		ui_type = "resource",
+		value = "",
 	},
 	screen_particles = {
-		ui_type = "resource",
+		filter = "particles",
 		preview = false,
-		value = "",
 		ui_name = "Screen Particles",
-		filter = "particles"
+		ui_type = "resource",
+		value = "",
 	},
 	priority = {
-		ui_type = "number",
-		min = 1,
-		max = 10,
 		decimals = 0,
-		value = 1,
+		max = 10,
+		min = 1,
+		step = 1,
 		ui_name = "Priority",
-		step = 1
+		ui_type = "number",
+		value = 1,
 	},
 	extensions = {
-		"WeatherExtension"
-	}
+		"WeatherExtension",
+	},
 }
 
 return WeatherVolume

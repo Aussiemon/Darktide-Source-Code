@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/contracts_service.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local ContractsService = class("ContractsService")
 

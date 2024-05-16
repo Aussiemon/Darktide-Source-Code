@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/title_view/title_view.lua
+
 local definition_path = "scripts/ui/views/title_view/title_view_definitions"
 local TitleViewSettings = require("scripts/ui/views/title_view/title_view_settings")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -7,7 +9,7 @@ local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1
+	Pad1,
 }
 local TitleView = class("TitleView", "BaseView")
 
@@ -42,7 +44,9 @@ TitleView._setup_background_world = function (self)
 	local world_name = TitleViewSettings.world_name
 	local world_layer = TitleViewSettings.world_layer
 	local world_timer_name = TitleViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = TitleViewSettings.level_name
 	local ignore_level_background = TitleViewSettings.ignore_level_background
 
@@ -78,9 +82,10 @@ TitleView._apply_title_text = function (self)
 	local color_tint_text = true
 	local input_key = InputUtils.input_text_for_current_input_device(service_type, input_alias_name, color_tint_text)
 	local context = {
-		input = input_key
+		input = input_key,
 	}
 	local text = Localize("loc_title_view_input_description", true, context)
+
 	self._widgets_by_name.title_text.content.text = text
 end
 
@@ -154,6 +159,7 @@ TitleView._continue = function (self, ignore_sound, optional_input_device)
 	end
 
 	self._widgets_by_name.title_text.content.ready_to_continue = true
+
 	local event_name = "event_state_title_continue"
 
 	Managers.event:trigger(event_name, optional_input_device)

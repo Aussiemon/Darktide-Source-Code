@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/extension_systems/toughness/player_husk_toughness_extension.lua
+
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PlayerHuskToughnessExtension = class("PlayerHuskToughnessExtension")
-local _max_toughness_and_toughness_damage = nil
+local _max_toughness_and_toughness_damage
 
 PlayerHuskToughnessExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id, owner_id)
 	self._unit = unit
@@ -9,14 +11,19 @@ PlayerHuskToughnessExtension.init = function (self, extension_init_context, unit
 	self._world = extension_init_context.world
 	self._wwise_world = Wwise.wwise_world(self._world)
 	self._fx_extension = ScriptUnit.extension(unit, "fx_system")
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local toughness_template = extension_init_data.toughness_template
+
 	self._toughness_template = toughness_template
+
 	local is_local_unit = extension_init_data.is_local_unit
+
 	self._is_local_unit = is_local_unit
 
 	if is_local_unit then
 		local component_name = PlayerUnitData.looping_sound_component_name("toughness_loop")
+
 		self._looping_sound_component = unit_data_extension:read_component(component_name)
 	end
 end
@@ -44,6 +51,7 @@ PlayerHuskToughnessExtension.current_toughness_percent_visual = function (self)
 	local max_toughness = self:max_toughness()
 	local bonus_toughness = max_toughness - max_toughness_visual
 	local toughness_damage = self:toughness_damage()
+
 	toughness_damage = math.clamp(toughness_damage - bonus_toughness, 0, toughness_damage)
 
 	return 1 - toughness_damage / self:max_toughness_visual()

@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/utilities/attack/suppression.lua
+
 local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local Suppression = {}
-local _apply_suppression_falloff, _apply_suppression_minion, _apply_suppression_player, _get_breed = nil
+local _apply_suppression_falloff, _apply_suppression_minion, _apply_suppression_player, _get_breed
 local breed_types = BreedSettings.types
 local DEFAULT_SUPPRESSION_VALUE = 1
 local DEFAULT_SUPPRESSION_ATTACK_DELAY = 0.35
@@ -33,6 +35,7 @@ Suppression.apply_suppression = function (hit_unit, attacking_unit, damage_profi
 
 	if attacking_unit_buff_extension then
 		local stat_buffs = attacking_unit_buff_extension:stat_buffs()
+
 		suppression_value = suppression_value * stat_buffs.suppression_dealt
 	end
 
@@ -78,7 +81,7 @@ local NO_LERP_VALUES = {}
 local DEFAULT_RELATION = "enemy"
 local DEFAULT_COVER_DISABLE_RANGE = {
 	3,
-	8
+	8,
 }
 
 Suppression.apply_area_minion_suppression = function (attacking_unit, suppression_settings, from_position, optional_relation, optional_include_self, optional_lerp_values)
@@ -98,6 +101,7 @@ Suppression.apply_area_minion_suppression = function (attacking_unit, suppressio
 
 	if type(broadphase_radius) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "distance")
+
 		broadphase_radius = DamageProfile.lerp_damage_profile_entry(broadphase_radius, lerp_value)
 	end
 
@@ -105,6 +109,7 @@ Suppression.apply_area_minion_suppression = function (attacking_unit, suppressio
 
 	if type(suppression_value) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "suppression_value")
+
 		suppression_value = DamageProfile.lerp_damage_profile_entry(suppression_value, lerp_value)
 	end
 
@@ -112,12 +117,13 @@ Suppression.apply_area_minion_suppression = function (attacking_unit, suppressio
 
 	if type(suppression_attack_delay) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "suppression_attack_delay")
+
 		suppression_attack_delay = DamageProfile.lerp_damage_profile_entry(suppression_attack_delay, lerp_value)
 	end
 
 	local apply_suppression_falloff = suppression_settings.suppression_falloff
 	local instant_aggro = suppression_settings.instant_aggro
-	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
+	local num_results = broadphase.query(broadphase, from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
 
 	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
@@ -159,6 +165,7 @@ Suppression.apply_area_player_suppression = function (attacking_unit, suppressio
 
 	if type(broadphase_radius) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "distance")
+
 		broadphase_radius = DamageProfile.lerp_damage_profile_entry(broadphase_radius, lerp_value)
 	end
 
@@ -166,12 +173,13 @@ Suppression.apply_area_player_suppression = function (attacking_unit, suppressio
 
 	if type(suppression_value) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "suppression_value")
+
 		suppression_value = DamageProfile.lerp_damage_profile_entry(suppression_value, lerp_value)
 	end
 
 	local afro_radius = 2
 	local apply_suppression_falloff = suppression_settings.suppression_falloff
-	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names, PLAYER_BREED_TYPE)
+	local num_results = broadphase.query(broadphase, from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names, PLAYER_BREED_TYPE)
 
 	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
@@ -182,6 +190,7 @@ Suppression.apply_area_player_suppression = function (attacking_unit, suppressio
 
 			if apply_suppression_falloff then
 				local distance_from_source = Vector3.distance(from_position, hit_unit_position)
+
 				suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, hit_unit_position, distance_from_source)
 			end
 
@@ -199,6 +208,7 @@ Suppression.add_immediate_suppression = function (t, suppression_movement_templa
 	if immediate_sway then
 		local sway_index = math.min(suppression_index, #immediate_sway)
 		local sway_settings = immediate_sway[sway_index]
+
 		suppression_component.sway_pitch = sway_settings.pitch
 		suppression_component.sway_yaw = sway_settings.yaw
 	end
@@ -206,6 +216,7 @@ Suppression.add_immediate_suppression = function (t, suppression_movement_templa
 	if immediate_spread then
 		local spread_index = math.min(suppression_index, #immediate_spread)
 		local spread_settings = immediate_spread[spread_index]
+
 		suppression_component.spread_pitch = spread_settings.pitch
 		suppression_component.spread_yaw = spread_settings.yaw
 	end
@@ -223,6 +234,7 @@ Suppression.apply_suppression_offsets_to_sway = function (suppression_component,
 
 	if t < suppression_t + decay_time then
 		local decay_amount = (suppression_t + decay_time - t) / decay_time
+
 		suppression_pitch = suppression_pitch * decay_amount
 		suppression_yaw = suppression_yaw * decay_amount
 		pitch = pitch + suppression_pitch
@@ -241,6 +253,7 @@ Suppression.apply_suppression_offsets_to_spread = function (suppression_componen
 
 	if t < suppression_t + decay_time then
 		local decay_amount = (suppression_t + decay_time - t) / decay_time
+
 		suppression_pitch = suppression_pitch * decay_amount
 		suppression_yaw = suppression_yaw * decay_amount
 		pitch = pitch + suppression_pitch

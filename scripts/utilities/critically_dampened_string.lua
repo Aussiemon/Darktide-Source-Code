@@ -1,14 +1,15 @@
+﻿-- chunkname: @scripts/utilities/critically_dampened_string.lua
+
 local CriticallyDampenedString = {}
-local _critical_spring_damper_implicit, _halflife_to_damping, _fast_negexp = nil
+local _critical_spring_damper_implicit, _halflife_to_damping, _fast_negexp
 
 CriticallyDampenedString.step = function (position, velocity, target_position, target_velocity, halflife, dt)
 	local damping = _halflife_to_damping(halflife)
 
 	for i = 1, 3 do
-		local p = position[i]
-		local v = velocity[i]
-		local p_goal = target_position[i]
-		local v_goal = target_velocity[i]
+		local p, v = position[i], velocity[i]
+		local p_goal, v_goal = target_position[i], target_velocity[i]
+
 		position[i], velocity[i] = _critical_spring_damper_implicit(p, v, p_goal, v_goal, damping, dt)
 	end
 end

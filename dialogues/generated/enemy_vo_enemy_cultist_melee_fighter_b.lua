@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_melee_fighter_b.lua
+
 local enemy_vo_enemy_cultist_melee_fighter_b = {
 	cultist_melee_fighter_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			"loc_enemy_cultist_melee_fighter_b__alerted_idle_17",
 			"loc_enemy_cultist_melee_fighter_b__alerted_idle_18",
 			"loc_enemy_cultist_melee_fighter_b__alerted_idle_19",
-			"loc_enemy_cultist_melee_fighter_b__alerted_idle_20"
+			"loc_enemy_cultist_melee_fighter_b__alerted_idle_20",
 		},
 		sound_events_duration = {
 			3.027896,
@@ -44,7 +46,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			2.880063,
 			2.078958,
 			2.053875,
-			2.658917
+			2.658917,
 		},
 		sound_event_weights = {
 			0.05,
@@ -66,9 +68,9 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_melee_fighter_assault = {
 		randomize_indexes_n = 0,
@@ -93,7 +95,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			"loc_enemy_cultist_melee_fighter_b__assault_17",
 			"loc_enemy_cultist_melee_fighter_b__assault_18",
 			"loc_enemy_cultist_melee_fighter_b__assault_19",
-			"loc_enemy_cultist_melee_fighter_b__assault_20"
+			"loc_enemy_cultist_melee_fighter_b__assault_20",
 		},
 		sound_events_duration = {
 			2.002292,
@@ -115,7 +117,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			3.709208,
 			2.434646,
 			3.579208,
-			2.869313
+			2.869313,
 		},
 		sound_event_weights = {
 			0.05,
@@ -137,9 +139,9 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_melee_fighter_long_death = {
 		randomize_indexes_n = 0,
@@ -164,7 +166,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			"loc_enemy_cultist_melee_fighter_b__long_death_17",
 			"loc_enemy_cultist_melee_fighter_b__long_death_18",
 			"loc_enemy_cultist_melee_fighter_b__long_death_19",
-			"loc_enemy_cultist_melee_fighter_b__long_death_20"
+			"loc_enemy_cultist_melee_fighter_b__long_death_20",
 		},
 		sound_events_duration = {
 			4.987583,
@@ -186,7 +188,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			4.726542,
 			3.964125,
 			3.469188,
-			4.355458
+			4.355458,
 		},
 		sound_event_weights = {
 			0.05,
@@ -208,9 +210,9 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_melee_fighter_melee_idle = {
 		randomize_indexes_n = 0,
@@ -235,7 +237,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			"loc_enemy_cultist_melee_fighter_b__melee_idle_17",
 			"loc_enemy_cultist_melee_fighter_b__melee_idle_18",
 			"loc_enemy_cultist_melee_fighter_b__melee_idle_19",
-			"loc_enemy_cultist_melee_fighter_b__melee_idle_20"
+			"loc_enemy_cultist_melee_fighter_b__melee_idle_20",
 		},
 		sound_events_duration = {
 			2.7985,
@@ -257,7 +259,7 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			3.790188,
 			4.448854,
 			3.471917,
-			3.535708
+			3.535708,
 		},
 		sound_event_weights = {
 			0.05,
@@ -279,10 +281,10 @@ local enemy_vo_enemy_cultist_melee_fighter_b = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_cultist_melee_fighter_b", enemy_vo_enemy_cultist_melee_fighter_b)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/camera/fov.lua
+
 local Fov = {}
 local PI = math.pi
 local SENSITIVITY_CALIBRATE_VALUE = math.tan(PI / 3 * 0.5)

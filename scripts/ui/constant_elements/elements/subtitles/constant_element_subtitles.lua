@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles.lua
+
 local Definitions = require("scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_definitions")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local ConstantElementSubtitlesSettings = require("scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_settings")
@@ -7,21 +9,21 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local Views = require("scripts/ui/views/views")
 local debug_subtitles = {
 	{
+		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 1 This is a placeholder subtitle line 1",
-		duration = 2
 	},
 	{
+		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 2 This is a placeholder subtitle line 2",
-		duration = 2
 	},
 	{
+		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 3 This is a placeholder subtitle line 3",
-		duration = 2
 	},
 	{
+		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 4 This is a placeholder subtitle line 4",
-		duration = 2
-	}
+	},
 }
 local DUMMY_MEASURE_TEXT_LINE = "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
 local ConstantElementSubtitles = class("ConstantElementSubtitles", "ConstantElementBase")
@@ -86,6 +88,7 @@ ConstantElementSubtitles._setup_subtitles_enabled = function (self)
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
 	local subtitle_enabled = interface_settings.subtitle_enabled
+
 	self._subtitle_enabled = subtitle_enabled
 end
 
@@ -112,6 +115,7 @@ ConstantElementSubtitles._setup_secondary_subtitles_enabled = function (self)
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
 	local secondary_subtitle_enabled = interface_settings.secondary_subtitle_enabled
+
 	self._secondary_subtitle_enabled = secondary_subtitle_enabled
 end
 
@@ -138,6 +142,7 @@ ConstantElementSubtitles._update_letterbox_size = function (self)
 			local width = letterbox_lines_width[i]
 			local widget = self._letterbox_widget
 			local rect_size = widget.style.rect.size
+
 			rect_size[1] = width
 			rect_size[2] = text_height
 		end
@@ -149,7 +154,7 @@ ConstantElementSubtitles._setup_letterbox = function (self)
 	local interface_settings = save_data.interface_settings
 	local subtitle_background_opacity = interface_settings.subtitle_background_opacity
 	local subtitle_background_enabled = subtitle_background_opacity > 0
-	local alpha = subtitle_background_enabled and 255 * subtitle_background_opacity * 0.01 or nil
+	local alpha = subtitle_background_enabled and 255 * (subtitle_background_opacity * 0.01) or nil
 
 	self:_set_letterbox_opacity(alpha)
 end
@@ -158,7 +163,7 @@ ConstantElementSubtitles._setup_text_opacity = function (self)
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
 	local subtitle_text_opacity = interface_settings.subtitle_text_opacity or 100
-	local alpha = 255 * subtitle_text_opacity * 0.01
+	local alpha = 255 * (subtitle_text_opacity * 0.01)
 
 	self:_set_text_opacity(alpha)
 end
@@ -167,6 +172,7 @@ ConstantElementSubtitles._setup_subtitle_speaker_enabled = function (self)
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
 	local subtitle_speaker_enabled = interface_settings.subtitle_speaker_enabled
+
 	self._subtitle_speaker_enabled = subtitle_speaker_enabled
 
 	if self._line_duration then
@@ -186,15 +192,19 @@ ConstantElementSubtitles._set_text_opacity = function (self, alpha)
 	local widget = widgets_by_name.subtitles
 	local style = widget.style
 	local text_style = style.text
+
 	text_style.text_color[1] = alpha or 0
+
 	local secondary_widget = widgets_by_name.secondary_subtitles
 	local secondary_style = secondary_widget.style
 	local secondary_text_style = secondary_style.text
+
 	secondary_text_style.text_color[1] = alpha or 0
 end
 
 ConstantElementSubtitles._set_letterbox_opacity = function (self, alpha)
 	local widget = self._letterbox_widget
+
 	widget.style.rect.color[1] = alpha or 0
 	self._draw_letterbox = alpha ~= nil
 end
@@ -214,7 +224,7 @@ end
 
 local subtitle_format_context = {
 	speaker = "n/a",
-	subtitle = "n/a"
+	subtitle = "n/a",
 }
 
 ConstantElementSubtitles._get_active_dialogue_system = function (self)
@@ -338,17 +348,18 @@ ConstantElementSubtitles._add_subtitle = function (self, currently_playing, seco
 			self._line_currently_playing = currently_playing_subtitle
 		end
 
-		local player = nil
+		local player
 		local currently_playing_unit = currently_playing.currently_playing_unit
 
 		if currently_playing_unit then
 			local state_manager = Managers.state
 			local player_unit_spawn_manager = state_manager and state_manager.player_unit_spawn
+
 			player = player_unit_spawn_manager and player_unit_spawn_manager:is_player_unit(currently_playing_unit) and player_unit_spawn_manager:owner(currently_playing_unit)
 		end
 
 		local subtitle_format = "loc_subtitle_speaker_format"
-		local speaker_display_name = nil
+		local speaker_display_name
 
 		if player then
 			local player_slot = player and player.slot and player:slot()
@@ -364,11 +375,13 @@ ConstantElementSubtitles._add_subtitle = function (self, currently_playing, seco
 			local speaker_name = currently_playing.speaker_name
 			local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
 			local character_short_name = speaker_voice_settings.short_name
+
 			speaker_display_name = self:_localize(character_short_name)
 		end
 
 		local no_cache = true
 		local currently_playing_subtitle_localized = self:_localize(currently_playing_subtitle, no_cache)
+
 		subtitle_format_context.speaker = speaker_display_name
 		subtitle_format_context.subtitle = currently_playing_subtitle_localized
 
@@ -409,7 +422,7 @@ ConstantElementSubtitles._debug_trigger_subtitle = function (self, text, duratio
 	if self._line_duration then
 		table.insert(self._line_queue, 1, {
 			text = text,
-			duration = duration
+			duration = duration,
 		})
 	else
 		self:_display_text_line(text, duration)
@@ -419,7 +432,7 @@ end
 
 local dummy_text_size = {
 	2000,
-	20
+	20,
 }
 
 ConstantElementSubtitles._set_font_size = function (self, new_size)
@@ -427,11 +440,14 @@ ConstantElementSubtitles._set_font_size = function (self, new_size)
 	local widget = widgets_by_name.subtitles
 	local style = widget.style
 	local text_style = style.text
+
 	text_style.font_size = new_size
+
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local text_width, text_height, _, _ = UIRenderer.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
+
 	text_style.size[1] = text_width
 	text_style.size[2] = text_height
 end
@@ -441,11 +457,14 @@ ConstantElementSubtitles._set_secondary_font_size = function (self, new_size)
 	local secondary_widget = widgets_by_name.secondary_subtitles
 	local secondary_style = secondary_widget.style
 	local secondary_text_style = secondary_style.text
+
 	secondary_text_style.font_size = new_size
+
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
 	local secondary_text_options = UIFonts.get_font_options_by_style(secondary_text_style)
 	local secondary_text_width, secondary_text_height, _, _ = UIRenderer.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, secondary_text_style.font_type, secondary_text_style.font_size, dummy_text_size, secondary_text_options)
+
 	secondary_text_style.size[1] = secondary_text_width
 	secondary_text_style.size[2] = secondary_text_height
 end
@@ -467,7 +486,9 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration, se
 	end
 
 	local content = widget.content
+
 	content.text = text
+
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
 	local style = widget.style
@@ -510,6 +531,7 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration, se
 		local subtitle_text_max_height = self._subtitle_text_max_height or 0
 		local subtitle_total_height = subtitle_text_max_height * #self._letterbox_lines_width
 		local secondary_subtitle_total_height = text_max_height * #self._secondary_letterbox_lines_width
+
 		text_style.offset[2] = subtitle_total_height / 2 + secondary_subtitle_total_height / 2
 
 		table.append(self._letterbox_lines_width, self._secondary_letterbox_lines_width)
@@ -561,6 +583,7 @@ ConstantElementSubtitles._draw_widgets = function (self, dt, t, input_service, u
 			local widget = self._letterbox_widget
 			local offset = widget.offset
 			local rect_size = widget.style.rect.size
+
 			rect_size[1] = width
 			rect_size[2] = text_height
 

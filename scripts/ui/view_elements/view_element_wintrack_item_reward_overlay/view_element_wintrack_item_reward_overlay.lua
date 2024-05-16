@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_wintrack_item_reward_overlay/view_element_wintrack_item_reward_overlay.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -30,6 +32,7 @@ ViewElementWintrackItemRewardOverlay.init = function (self, parent, draw_layer, 
 	self:_setup_default_gui()
 
 	local background_widget_definition = self._definitions.background_widget_definition
+
 	self._background_widget = self:_create_widget("background_widget", background_widget_definition)
 end
 
@@ -40,10 +43,13 @@ ViewElementWintrackItemRewardOverlay._setup_default_gui = function (self)
 	local world_layer = WORLD_LAYER_TOP_GUI + self._draw_layer
 	local world_name = reference_name .. "_ui_default_world"
 	local view_name = self._parent.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = reference_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(reference_name .. "_ui_default_renderer", self._world)
@@ -61,7 +67,9 @@ ViewElementWintrackItemRewardOverlay._setup_background_world = function (self)
 	local world_name = ViewElementWintrackItemRewardOverlaySettings.world_name
 	local world_layer = ViewElementWintrackItemRewardOverlaySettings.world_layer
 	local world_timer_name = ViewElementWintrackItemRewardOverlaySettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = ViewElementWintrackItemRewardOverlaySettings.level_name
 	local ignore_level_background = ViewElementWintrackItemRewardOverlaySettings.ignore_level_background
 
@@ -86,12 +94,15 @@ ViewElementWintrackItemRewardOverlay._setup_background_gui = function (self)
 	local world_layer = WORLD_LAYER_BACKGROUND + self._draw_layer
 	local world_name = reference_name .. "_ui_background_world"
 	local view_name = self._parent.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_background_shading_callback")
 	local viewport_name = reference_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_popup_background_renderer = ui_manager:create_renderer(reference_name .. "_ui_popup_background_renderer", self._background_world)
@@ -150,6 +161,7 @@ end
 
 ViewElementWintrackItemRewardOverlay.start = function (self, presentation_data)
 	self._presentation_data = presentation_data
+
 	local widgets_by_name = self._widgets_by_name
 
 	self:_setup_background_gui()
@@ -157,6 +169,7 @@ ViewElementWintrackItemRewardOverlay.start = function (self, presentation_data)
 	self._duration = presentation_data.duration or 0
 	self._time = 0
 	self._started = true
+
 	local sound_event = ViewElementWintrackItemRewardOverlaySettings.sound_events_by_item_rarity[1]
 	local item = presentation_data.item
 
@@ -167,6 +180,7 @@ ViewElementWintrackItemRewardOverlay.start = function (self, presentation_data)
 		local item_rarity = item.rarity
 		local effect_textures_by_rarity = ViewElementWintrackItemRewardOverlaySettings.effect_textures_by_rarity
 		local rarity_glow_textures = effect_textures_by_rarity[item_rarity]
+
 		sound_event = ViewElementWintrackItemRewardOverlaySettings.sound_events_by_item_rarity[item_rarity]
 
 		if rarity_glow_textures then
@@ -178,6 +192,7 @@ ViewElementWintrackItemRewardOverlay.start = function (self, presentation_data)
 		local sub_display_name = ItemUtils.sub_display_name(item)
 		local rarity_color = ItemUtils.rarity_color(item)
 		local widgets_by_name = self._widgets_by_name
+
 		widgets_by_name.sub_display_name.content.text = sub_display_name
 		widgets_by_name.display_name.content.text = display_name
 		self._widgets_by_name.element.style.background_gradient.color = table.clone(rarity_color)
@@ -196,7 +211,9 @@ end
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon_style = widget.style.icon
 	local widget_content = widget.content
+
 	widget_content.icon = "content/ui/materials/icons/items/containers/item_container_square_masked_circle"
+
 	local item_slot = ItemUtils.item_slot(item)
 	local item_icon_size = item_slot and table.clone(item_slot.item_icon_size)
 	local material_values = icon_style.material_values
@@ -230,9 +247,12 @@ local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, true)
 
 	local material_values = widget.style.icon.material_values
+
 	material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
+
 	local icon_style = widget.style.icon
+
 	icon_style.size = widget.style.icon_original_size or icon_style.size
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 
@@ -245,9 +265,12 @@ end
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local widget_style = widget.style
 	local widget_content = widget.content
+
 	widget_content.icon = "content/ui/materials/icons/items/containers/item_container_landscape_masked_circle"
+
 	local icon_style = widget_style.icon
 	local material_values = icon_style.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
 	material_values.rows = rows
@@ -262,6 +285,7 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, true)
 
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 1
 	material_values.render_target = nil
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -284,10 +308,10 @@ ViewElementWintrackItemRewardOverlay._load_item_icon = function (self, item)
 			animation_event = item_animation_event,
 			size = {
 				1024,
-				1024
-			}
+				1024,
+			},
 		}
-		local cb, unload_cb = nil
+		local cb, unload_cb
 
 		if item_group == "nameplates" or item_group == "emotes" or item_group == "titles" then
 			cb = callback(_apply_package_item_icon_cb_func, widget, item)
@@ -373,14 +397,18 @@ ViewElementWintrackItemRewardOverlay.draw = function (self, dt, t, ui_renderer, 
 	end
 
 	ui_renderer = self._ui_default_renderer
+
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = alpha_multiplier
 
 	ViewElementWintrackItemRewardOverlay.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_popup_background_renderer = self._ui_popup_background_renderer
 
@@ -423,7 +451,7 @@ ViewElementWintrackItemRewardOverlay.update = function (self, dt, t, input_servi
 	end
 
 	if self._time and self._duration > 0 then
-		if self._duration <= self._time then
+		if self._time >= self._duration then
 			self._done = true
 		else
 			self._time = self._time + dt
@@ -460,26 +488,27 @@ ViewElementWintrackItemRewardOverlay._setup_weapon_stats = function (self)
 		local grid_height = 840
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height
+			grid_height,
 		}
 		local grid_spacing = {
 			0,
-			0
+			0,
 		}
 		local mask_size = {
 			grid_width + 40,
-			grid_height
+			grid_height,
 		}
 		local context = {
-			scrollbar_width = 7,
 			ignore_blur = true,
+			scrollbar_width = 7,
 			grid_spacing = grid_spacing,
 			grid_size = grid_size,
 			mask_size = mask_size,
 			title_height = title_height,
-			edge_padding = edge_padding
+			edge_padding = edge_padding,
 		}
 		local scale = self:render_scale()
+
 		self._weapon_stats = ViewElementWeaponStats:new(self, layer, scale, context)
 	end
 end

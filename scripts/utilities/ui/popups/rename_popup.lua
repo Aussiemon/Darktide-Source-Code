@@ -1,28 +1,30 @@
+﻿-- chunkname: @scripts/utilities/ui/popups/rename_popup.lua
+
 local _rename_states = {
 	initial = {
 		text = "loc_rename_account_state_initial_label",
-		color = Color.text_default(255, true)
+		color = Color.text_default(255, true),
 	},
 	pending = {
 		text = "loc_rename_account_state_pending_label",
-		color = Color.text_default(255, true)
+		color = Color.text_default(255, true),
 	},
 	error = {
 		text = "loc_rename_account_state_error_label",
-		color = Color.ui_red_medium(255, true)
-	}
+		color = Color.ui_red_medium(255, true),
+	},
 }
 
 local function show_failure()
 	local context = {
-		title_text = "loc_rename_failure_title",
 		description_text = "loc_rename_failure_description",
+		title_text = "loc_rename_failure_title",
 		options = {
 			{
+				close_on_pressed = true,
 				text = "loc_rename_account_cancel_label",
-				close_on_pressed = true
-			}
-		}
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -34,32 +36,31 @@ end
 
 local function show_popup(on_success, is_forced)
 	local next_state = "initial"
-	local popup_id = nil
+	local popup_id
 	local options = {
 		{
-			margin_bottom = -4,
-			template_type = "terminal_input_field",
 			keyboard_title = "loc_rename_account_virtual_keyboard_label",
+			margin_bottom = -4,
 			max_length = 18,
-			width = 512
+			template_type = "terminal_input_field",
+			width = 512,
 		},
 		{
-			template_type = "text",
-			margin_bottom = 20,
 			font_name = "body_small",
+			margin_bottom = 20,
+			template_type = "text",
 			update = function ()
 				if next_state ~= nil then
 					local _next = _rename_states[next_state]
-					local _text = _next.text
-					local _color = _next.color
+					local _text, _color = _next.text, _next.color
 
 					return _text, _color
 				end
-			end
+			end,
 		},
 		{
-			text = "loc_popup_button_confirm",
 			template_type = "terminal_button_hold_small",
+			text = "loc_popup_button_confirm",
 			callback = function (text_input)
 				if not local_check(text_input) then
 					next_state = "error"
@@ -70,6 +71,7 @@ local function show_popup(on_success, is_forced)
 				Managers.ui:event_pause_popup_input(popup_id, true)
 
 				next_state = "pending"
+
 				local promise = Managers.backend.interfaces.account:rename_account(text_input)
 
 				promise:next(function ()
@@ -81,25 +83,25 @@ local function show_popup(on_success, is_forced)
 
 					next_state = "error"
 				end)
-			end
-		}
+			end,
+		},
 	}
 
 	if not is_forced then
 		options[#options + 1] = {
-			text = "loc_rename_account_cancel_label",
 			close_on_pressed = true,
-			force_same_row = true
+			force_same_row = true,
+			text = "loc_rename_account_cancel_label",
 		}
 	else
 		options[#options + 1] = {
-			text = "loc_forced_rename_note",
+			margin_bottom = 20,
 			template_type = "text",
-			margin_bottom = 20
+			text = "loc_forced_rename_note",
 		}
 	end
 
-	local title_text, description_text = nil
+	local title_text, description_text
 
 	if is_forced then
 		title_text = "loc_forced_rename_account_title"
@@ -112,7 +114,7 @@ local function show_popup(on_success, is_forced)
 	local context = {
 		title_text = title_text,
 		description_text = description_text,
-		options = options
+		options = options,
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (_popup_id)

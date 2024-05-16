@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_animations.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
@@ -37,6 +39,7 @@ animations.carousel_state_slide_cards_to_the_left = function (parent, state_data
 
 			local previous_card_widget = card_widgets[current_card - 1]
 			local animation_name = previous_card_widget.content.dim_out_animation
+
 			state_data.animation_id = parent:start_card_animation(previous_card_widget, animation_name)
 		end
 	elseif state_data.animation_id and parent:is_animation_done(state_data.animation_id) then
@@ -49,6 +52,7 @@ animations.carousel_state_slide_cards_to_the_left = function (parent, state_data
 		local widget = card_widgets[i]
 		local widget_offset = widget.offset
 		local x_offset = (i - current_card) * card_distance_x + card_offset_x
+
 		widget_offset[1] = x_offset
 
 		if i == current_card - 1 then
@@ -64,8 +68,11 @@ animations.carousel_state_slide_cards_to_the_left = function (parent, state_data
 			local retract_progress = math_ilerp(start_time, start_time + retract_duration, t)
 			local eased_progress = math_ease_sine(retract_progress)
 			local y_offset = math_lerp(ViewStyles.card_fully_expanded_offset_y, 0, eased_progress)
+
 			widget_offset[2] = y_offset
+
 			local height = math_lerp(ViewStyles.card_fully_expanded_height, ViewStyles.card_normal_height, eased_progress)
+
 			widget.content.size[2] = height
 		elseif i == current_card then
 			widget.alpha_multiplier = color_progress
@@ -81,10 +88,14 @@ animations.carousel_state_expand_current_card = function (parent, state_data, ca
 	local math_lerp = _math_lerp
 	local card_widget = card_widgets[current_card]
 	local progress = _math_ease_sine(math.ilerp(state_data.start_time, state_data.end_time, t))
+
 	card_widget.offset[2] = ViewStyles.card_fully_expanded_offset_y * progress
+
 	local widget_size = card_widget.content.size
 	local widget_style = card_widget.style
+
 	widget_size[2] = math_lerp(widget_style.card_folded_height, widget_style.card_fully_expanded_height, progress)
+
 	local start_color = widget_style.start_color
 	local dimmed_out_color = widget_style.dimmed_out_color
 	local in_focus_color = widget_style.in_focus_color
@@ -100,11 +111,14 @@ animations.carousel_state_expand_current_card = function (parent, state_data, ca
 		color_utils_color_lerp(start_color, in_focus_color, color_progress, widget_style.frame_levelup_effect.color)
 
 		local spires_style = widget_style.spires
+
 		spires_style.offset[2] = math_lerp(spires_style.start_offset_y, spires_style.target_offset_y, color_progress)
+
 		local frame_detail_progress = _math_ease_sine(2 * progress)
 		local frame_detail_layer = progress < 0.5 and 2 or 5
 		local frame_detail_style = widget_style.frame_detail
 		local frame_detail_offset = frame_detail_style.offset
+
 		frame_detail_offset[2] = math_lerp(frame_detail_style.start_offset_y, frame_detail_style.target_offset_y, frame_detail_progress)
 		frame_detail_offset[3] = frame_detail_layer
 	end
@@ -127,6 +141,7 @@ animations.carousel_state_fade_in_card_content = function (parent, state_data, c
 
 	if not animation_id and not is_done then
 		local animation_name = card_widget.content.content_animation
+
 		state_data.animation_id = parent:start_card_animation(card_widget, animation_name)
 	elseif is_done then
 		state_data.animation_id = nil
@@ -137,7 +152,7 @@ animations.carousel_state_fade_in_card_content = function (parent, state_data, c
 end
 
 animations.carousel_state_show_card_content = function (parent, state_data, card_widgets, current_card, t)
-	return state_data.end_time <= t
+	return t >= state_data.end_time
 end
 
 local _text_fade_in_time = ViewSettings.animation_times.text_row_fade_in_time
@@ -146,9 +161,10 @@ local function _create_icon_animation(animation_table, icons)
 	local _passes_to_dim = animation_table._passes_to_dim or {}
 	local _passes_to_hide = animation_table._passes_to_hide or {}
 	local _icon_styles = {}
+
 	animation_table[#animation_table + 1] = {
-		name = "fade_in_icons",
 		end_time = 0.1,
+		name = "fade_in_icons",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			local widget_style = widget.style
@@ -157,6 +173,7 @@ local function _create_icon_animation(animation_table, icons)
 			for i = 1, #icons, 2 do
 				local icon_id = icons[i] .. "_icon"
 				local icon_style = widget_style[icon_id]
+
 				icon_styles[#icon_styles + 1] = icon_style
 			end
 
@@ -174,13 +191,14 @@ local function _create_icon_animation(animation_table, icons)
 
 				_color_utils_color_lerp(start_color, dimmed_out_color, eased_progress, icon_style.color)
 			end
-		end
+		end,
 	}
 
 	for i = 1, #icons, 2 do
 		local icon_id = icons[i] .. "_icon"
 		local background_id = icon_id .. "_background"
 		local start_time = icons[i + 1]
+
 		animation_table[#animation_table + 1] = {
 			start_time = start_time,
 			end_time = start_time + _text_fade_in_time,
@@ -200,11 +218,15 @@ local function _create_icon_animation(animation_table, icons)
 				local eased_progress = math_ease_out_elastic(progress)
 				local background_width = math_lerp(icon_bg_style.start_width, icon_bg_target_width, eased_progress)
 				local icon_bg_size = icon_bg_style.size
+
 				icon_bg_size[1] = background_width
 				icon_bg_size[2] = background_width
+
 				local icon_offset = (icon_bg_target_width - background_width) / 2
 				local icon_bg_offset = icon_bg_style.offset
+
 				icon_bg_offset[2] = icon_offset
+
 				local color_progress = math_ease_sine(progress)
 				local dimmed_out_color = widget_style.dimmed_out_color
 				local in_focus_color = widget_style.in_focus_color
@@ -218,7 +240,7 @@ local function _create_icon_animation(animation_table, icons)
 
 					color_utils_color_lerp(in_focus_color, dimmed_out_color, color_progress, prev_icon_bg_style.color)
 				end
-			end
+			end,
 		}
 		_passes_to_dim[#_passes_to_dim + 1] = icon_id
 		_passes_to_hide[#_passes_to_hide + 1] = background_id
@@ -230,15 +252,18 @@ end
 
 local function _create_count_up_animation(animation_table, value_name, value_group, start_time, end_time)
 	local sound_events = ViewSettings.currency_sounds[value_group]
+
 	animation_table[#animation_table + 1] = {
 		start_time = start_time,
 		end_time = start_time + _text_fade_in_time,
 		name = "fade_in_" .. value_name,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params.value_name = value_name
+
 			local widget_style = widget.style
 			local content = widget.content
 			local content_value = content[value_name] or 0
+
 			params.target_color = content_value > 0 and widget_style.in_focus_text_color or widget_style.dimmed_out_text_color
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
@@ -261,7 +286,7 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params._label_name = nil
-		end
+		end,
 	}
 	animation_table[#animation_table + 1] = {
 		start_time = animation_table[#animation_table].end_time,
@@ -271,8 +296,10 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 			params.current_value = 0
 			params.value_name = value_name
 			params.value_text_name = value_name .. "_text"
+
 			local previous_stat_name = value_name .. "_previous_value"
 			local previous_stat_value = widget.content[previous_stat_name]
+
 			params.previous_value = previous_stat_value
 
 			if widget.content[value_name] > 0 then
@@ -293,7 +320,9 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 			end
 
 			local value = _math_floor(target_value * eased_progress)
+
 			content[value_text_name] = value
+
 			local update_progress_func = content.update_progress_func
 
 			if update_progress_func then
@@ -304,6 +333,7 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params._value_text_name = nil
+
 			local target_value = widget.content[value_name]
 
 			if target_value > 0 then
@@ -315,7 +345,7 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 
 				parent:play_sound(sound_events.stop)
 			end
-		end
+		end,
 	}
 
 	if not animation_table._passes_to_dim then
@@ -327,12 +357,12 @@ end
 
 local function _create_progress_bar_animation(animation_table, start_time, end_time)
 	animation_table[#animation_table + 1] = {
-		name = "fade_in_experience_gain_text",
 		end_time = 0.1,
+		name = "fade_in_experience_gain_text",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			parent:update_xp_bar(0)
-		end
+		end,
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_progress_bar",
@@ -354,11 +384,12 @@ local function _create_progress_bar_animation(animation_table, start_time, end_t
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params._value_text_name = nil
+
 			local target_value = widget.content.total_xp_gained
 
 			parent:update_xp_bar(target_value)
 			parent:play_sound(UISoundEvents.end_screen_summary_xp_bar_stop)
-		end
+		end,
 	}
 end
 
@@ -374,7 +405,7 @@ local function _create_consolidate_wallet_animation(animation_table, retract_sta
 			local eased_progress = _math_ease_in_cubic(progress)
 
 			parent:retract_currency_gain_widgets(eased_progress)
-		end
+		end,
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_belated_wallet",
@@ -390,7 +421,7 @@ local function _create_consolidate_wallet_animation(animation_table, retract_sta
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			parent:update_belated_wallet(1)
-		end
+		end,
 	}
 end
 
@@ -404,6 +435,7 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 			local widget_style = widget.style
 			local pass_style = widget_style[style_name]
 			local pass_color = pass_style.text_color or pass_style.color
+
 			pass_params.pass_color = pass_color
 			pass_params.start_color = pass_style.start_color or widget_style.start_color
 
@@ -432,8 +464,9 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 			local color_progress = _math_ease_sine(progress)
 
 			color_utils_color_lerp(start_color, target_color, color_progress, pass_color)
-		end
+		end,
 	}
+
 	local passes_to_dim = animation_table._passes_to_dim
 
 	if not passes_to_dim then
@@ -478,8 +511,11 @@ end
 
 local function _create_dim_out_animation(animation_table, show_content_animation_table)
 	local passes_to_dim = show_content_animation_table._passes_to_dim or {}
+
 	show_content_animation_table._passes_to_dim = nil
+
 	local passes_to_hide = show_content_animation_table._passes_to_hide or {}
+
 	show_content_animation_table._passes_to_hide = nil
 	animation_table[#animation_table + 1] = {
 		name = "fade_out",
@@ -512,7 +548,9 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 					gradiented_text_color[#gradiented_text_color + 1] = pass_style.text_color
 				elseif pass_style.text_color then
 					text_color_index = text_color_index + 1
+
 					local text_color = pass_style.text_color
+
 					text_colors[text_color_index] = text_color
 					custom_text_colors[2 * text_color_index - 1] = pass_style.in_focus_text_color
 					custom_text_colors[2 * text_color_index] = pass_style.dimmed_out_text_color
@@ -526,6 +564,7 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 
 			for i = 1, #passes_to_hide do
 				local value_id = passes_to_hide[i]
+
 				icon_backgrounds[#icon_backgrounds + 1] = widget_style[value_id]
 			end
 
@@ -588,16 +627,20 @@ local function _create_dim_out_animation(animation_table, show_content_animation
 				local icon_bg_target_width = icon_bg_style.target_width
 				local background_width = _math_lerp(icon_bg_target_width, icon_bg_style.start_width, eased_progress)
 				local icon_bg_size = icon_bg_style.size
+
 				icon_bg_size[1] = background_width
 				icon_bg_size[2] = background_width
+
 				local icon_offset = (icon_bg_target_width - background_width) / 2
 				local icon_bg_offset = icon_bg_style.offset
+
 				icon_bg_offset[2] = icon_offset
+
 				local bg_start_color = i == num_icons and in_focus_color or dimmed_out_color
 
 				color_utils_color_lerp(bg_start_color, bg_target_color, eased_progress, icon_bg_style.color)
 			end
-		end
+		end,
 	}
 end
 
@@ -618,7 +661,9 @@ local function _create_compress_content_animation(animation_table)
 				if type(style) == "table" then
 					if style.can_compress then
 						compress_index = compress_index + 1
+
 						local size = style.size
+
 						styles_to_compress[compress_index] = style
 						original_icon_sizes[compress_index * 2 - 1] = size[1]
 						original_icon_sizes[compress_index * 2] = size[2]
@@ -649,6 +694,7 @@ local function _create_compress_content_animation(animation_table)
 				local icon_start_height = original_icon_sizes[i * 2]
 				local icon_target_width = math_floor(icon_start_width / 2)
 				local icon_target_height = math_floor(icon_start_height / 2)
+
 				icon_size[1] = math_lerp(icon_start_width, icon_target_width, eased_progress)
 				icon_size[2] = math_lerp(icon_start_height, icon_target_height, eased_progress)
 			end
@@ -659,10 +705,11 @@ local function _create_compress_content_animation(animation_table)
 				local style = styles_to_move[i]
 				local offset_original = style.offset_original
 				local offset_compressed = style.offset_compressed
+
 				style.offset[1] = math_lerp(offset_original[1], offset_compressed[1], eased_progress)
 				style.offset[2] = math_lerp(offset_original[2], offset_compressed[2], eased_progress)
 			end
-		end
+		end,
 	}
 end
 
@@ -671,7 +718,7 @@ animations.experience_card_dim_out_content = {}
 
 _create_icon_animation(animations.experience_card_show_content, {
 	"experience",
-	0.25
+	0.25,
 })
 _create_count_up_animation(animations.experience_card_show_content, "base_xp", "experience", 0.25, 3)
 _create_count_up_animation(animations.experience_card_show_content, "side_mission_xp", "experience", 3.25, 4)
@@ -690,7 +737,7 @@ _create_icon_animation(animations.salary_card_show_content, {
 	"plasteel",
 	4.25,
 	"diamantine",
-	5.25
+	5.25,
 })
 _create_count_up_animation(animations.salary_card_show_content, "credits", "credits", 0.25, 2)
 _create_count_up_animation(animations.salary_card_show_content, "side_mission_credits", "credits", 2.25, 3)
@@ -724,8 +771,8 @@ _create_dim_out_animation(animations.item_reward_dim_out_content, animations.ite
 
 animations.test = {
 	{
-		name = "test",
 		end_time = 1,
+		name = "test",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			return
@@ -735,8 +782,8 @@ animations.test = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			return
-		end
-	}
+		end,
+	},
 }
 
 animations.wallet_change_function = function (content, style, animation, dt)
@@ -766,13 +813,14 @@ animations.experience_gain_change_function = function (content, style)
 	local bar_length = content.bar_length
 	local width = style.size[1]
 	local internal_offset_x = style.internal_offset_x
+
 	style.offset[1] = internal_offset_x + bar_length * progress - width
 end
 
 animations.weapon_level_up = {
 	{
-		name = "level_up_mastery",
 		end_time = 1,
+		name = "level_up_mastery",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			return
@@ -796,20 +844,24 @@ animations.weapon_level_up = {
 
 			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
 			local slug_text = string.format("Mastery: {#size(%d);color(%d, %d, %d)}%d{#reset()}", current_font_size, text_style.highlight_text_color[2], text_style.highlight_text_color[3], text_style.highlight_text_color[4], current_mastery_level)
+
 			widget.content["weapon_level_" .. slot] = slug_text
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			local slot = params.slot
 			local text_style = widget.style["weapon_level_" .. slot]
 			local bar_style = widget.style["weapon_experience_bar_" .. slot]
+
 			text_style.text_color = table.clone(text_style.default_text_color)
 			bar_style.color[2] = bar_style.default_color[2]
 			bar_style.color[3] = bar_style.default_color[3]
 			bar_style.color[4] = bar_style.default_color[4]
+
 			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
+
 			widget.content["weapon_level_" .. slot] = string.format("Mastery: %d", current_mastery_level)
-		end
-	}
+		end,
+	},
 }
 
 return settings("EndPlayerViewAnimations", animations)

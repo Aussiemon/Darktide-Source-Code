@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_constant_elements.lua
+
 require("scripts/ui/constant_elements/constant_element_base")
 
 local Hud = require("scripts/utilities/ui/hud")
@@ -11,9 +13,11 @@ UIConstantElements.init = function (self, parent, elements)
 	self._render_settings = {}
 	self._world_name = self.__class_name .. "_ui_world"
 	self._world = parent:create_world(self._world_name, 900)
+
 	local viewport_name = self.__class_name .. "_ui_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = parent:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_renderer_name = self.__class_name .. "_ui_renderer"
@@ -23,6 +27,7 @@ UIConstantElements.init = function (self, parent, elements)
 	self._elements_hud_scale_lookup = {}
 	self._visibility_groups = table.clone(VisibilityGroups)
 	self._visibility_group_parameters = {}
+
 	local element_definitions = table.clone(elements)
 
 	self:_setup_visiblity_groups(element_definitions)
@@ -66,6 +71,7 @@ UIConstantElements._setup_visiblity_groups = function (self, element_definitions
 
 	for _, settings in ipairs(self._visibility_groups) do
 		local name = settings.name
+
 		visibility_groups_lookup[name] = settings
 	end
 
@@ -87,7 +93,9 @@ UIConstantElements._setup_visiblity_groups = function (self, element_definitions
 			end
 
 			local visible_elements = visibility_group.visible_elements
+
 			visible_elements[class_name] = true
+
 			local group_parameters = self._visibility_group_parameters[group_name]
 
 			if not group_parameters then
@@ -133,8 +141,11 @@ UIConstantElements._add_element = function (self, definition, elements, elements
 		local class = require(filename)
 		local draw_layer = 0
 		local element = class:new(self, draw_layer)
+
 		elements[class_name] = element
+
 		local id = #elements_array + 1
+
 		elements_array[id] = element
 	end
 end
@@ -161,10 +172,12 @@ UIConstantElements.update = function (self, dt, t, input_service)
 	local hud_scale_applied = false
 	local render_settings = self._render_settings
 	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key] or self._hud_scale_modified
+
 	self._hud_scale_modified = nil
 
 	if resolution_modified then
 		local scale = RESOLUTION_LOOKUP.scale
+
 		render_settings.scale = scale
 		render_settings.inverse_scale = 1 / scale
 		render_settings.using_hud_scale = nil
@@ -224,6 +237,7 @@ UIConstantElements.draw = function (self, dt, t, input_service)
 
 		if element:should_draw() then
 			render_settings.alpha_multiplier = 1
+
 			local handle_input = not using_input or element.using_input and element:using_input()
 
 			element:draw(dt, t, ui_renderer, render_settings, handle_input and input_service or input_service:null_service())
@@ -245,6 +259,7 @@ end
 UIConstantElements._apply_hud_scale = function (self)
 	local new_scale = Hud.hud_scale()
 	local render_settings = self._render_settings
+
 	render_settings.scale = new_scale
 	render_settings.inverse_scale = 1 / new_scale
 	render_settings.using_hud_scale = true
@@ -253,6 +268,7 @@ end
 UIConstantElements._abort_hud_scale = function (self)
 	local render_settings = self._render_settings
 	local scale = RESOLUTION_LOOKUP.scale
+
 	render_settings.scale = scale
 	render_settings.inverse_scale = 1 / scale
 	render_settings.using_hud_scale = nil

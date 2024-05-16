@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/ladder.lua
+
 local LadderNavTransition = require("scripts/managers/bot_nav_transition/utilities/ladder_nav_transition")
 local SharedNav = require("scripts/components/utilities/shared_nav")
 local Ladder = component("Ladder")
 
 Ladder.init = function (self, unit, is_server)
 	self._is_server = is_server
+
 	local run_update = false
 
 	return run_update
@@ -37,9 +40,12 @@ Ladder.editor_init = function (self, unit)
 	end
 
 	local world = Application.main_world()
+
 	self._world = world
 	self._physics_world = World.physics_world(world)
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._top_node = Unit.node(unit, "node_top")
@@ -111,14 +117,10 @@ Ladder._editor_debug_draw = function (self, unit)
 
 	if nav_world and self._should_debug_draw then
 		local rotation = Unit.local_rotation(unit, 1)
-		local down_direction = -Quaternion.up(rotation)
-		local backward_direction = -Quaternion.forward(rotation)
-		local bottom_node = self._bottom_node
-		local top_node = self._top_node
-		local bottom_position = Unit.world_position(unit, bottom_node)
-		local top_position = Unit.world_position(unit, top_node)
-		local ladder_length = Vector3.distance(bottom_position, top_position)
-		local physics_world = self._physics_world
+		local down_direction, backward_direction = -Quaternion.up(rotation), -Quaternion.forward(rotation)
+		local bottom_node, top_node = self._bottom_node, self._top_node
+		local bottom_position, top_position = Unit.world_position(unit, bottom_node), Unit.world_position(unit, top_node)
+		local ladder_length, physics_world = Vector3.distance(bottom_position, top_position), self._physics_world
 		local ground_position = LadderNavTransition.find_ground_position(top_position, ladder_length, backward_direction, down_direction, physics_world, drawer)
 
 		if ground_position then
@@ -129,10 +131,11 @@ Ladder._editor_debug_draw = function (self, unit)
 		local flat_forward_direction = -flat_backward_direction
 		local traverse_logic = self._traverse_logic
 		local top_on_nav_mesh_postion = LadderNavTransition.find_position_on_nav_mesh(top_position, nav_world, flat_forward_direction, traverse_logic, drawer)
-		local ground_on_nav_mesh_position = nil
+		local ground_on_nav_mesh_position
 
 		if ground_position then
 			ground_on_nav_mesh_position = LadderNavTransition.find_position_on_nav_mesh(ground_position, nav_world, flat_backward_direction, traverse_logic, drawer)
+
 			local midway_position = (bottom_position + top_position) / 2
 
 			drawer:vector(midway_position, down_direction * 0.5, Color.blue())

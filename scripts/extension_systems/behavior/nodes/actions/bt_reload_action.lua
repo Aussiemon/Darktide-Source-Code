@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_reload_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -9,18 +11,25 @@ local BtReloadAction = class("BtReloadAction", "BtNode")
 BtReloadAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.perception_component = blackboard.perception
+
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	scratchpad.animation_extension = animation_extension
+
 	local anim_events = action_data.anim_events
 	local anim_event = Animation.random_event(anim_events)
 
 	animation_extension:anim_event(anim_event)
 
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "idle"
+
 	local anim_durations = action_data.anim_durations
 	local duration = anim_durations[anim_event]
+
 	scratchpad.reload_exit_t = t + duration
+
 	local enter_vo_event = action_data.enter_vo_event
 
 	if enter_vo_event then
@@ -47,7 +56,7 @@ BtReloadAction.leave = function (self, unit, breed, blackboard, scratchpad, acti
 end
 
 BtReloadAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	if scratchpad.reload_exit_t and scratchpad.reload_exit_t < t then
+	if scratchpad.reload_exit_t and t > scratchpad.reload_exit_t then
 		return "done"
 	end
 

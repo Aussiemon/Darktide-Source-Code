@@ -1,16 +1,18 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/side_mission/consumable_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_side_mission_consumable_01",
-	name = "consumable",
-	smart_tag_target_type = "pickup",
-	spawn_weighting = 1,
 	game_object_type = "pickup",
+	group = "side_mission_collect",
+	interaction_type = "side_mission",
 	is_side_mission_pickup = true,
 	look_at_tag = "none",
-	unit_name = "content/pickups/consumables/side_mission/relic_01",
-	interaction_type = "side_mission",
-	unit_template_name = "pickup",
+	name = "consumable",
 	pickup_sound = "wwise/events/player/play_pick_up_forge_material_small",
-	group = "side_mission_collect",
+	smart_tag_target_type = "pickup",
+	spawn_weighting = 1,
+	unit_name = "content/pickups/consumables/side_mission/relic_01",
+	unit_template_name = "pickup",
 	on_pickup_func = function (unit)
 		local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 		local objective_name = mission_objective_target_extension:objective_name()
@@ -22,7 +24,7 @@ local pickup_data = {
 
 			synchronizer_extension:add_progression(1)
 		end
-	end
+	end,
 }
 
 return pickup_data

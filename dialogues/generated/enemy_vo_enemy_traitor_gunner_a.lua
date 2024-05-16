@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_gunner_a.lua
+
 local enemy_vo_enemy_traitor_gunner_a = {
 	ranged_idle_player_low_on_health = {
 		randomize_indexes_n = 0,
@@ -6,21 +8,21 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_01",
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_02",
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_03",
-			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_04"
+			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_04",
 		},
 		sound_events_duration = {
 			4.096833,
 			3.443438,
 			2.213625,
-			2.677542
+			2.677542,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ranged_idle_player_out_of_ammo = {
 		randomize_indexes_n = 0,
@@ -45,7 +47,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__take_cover_17",
 			"loc_enemy_traitor_gunner_a__take_cover_18",
 			"loc_enemy_traitor_gunner_a__take_cover_19",
-			"loc_enemy_traitor_gunner_a__take_cover_20"
+			"loc_enemy_traitor_gunner_a__take_cover_20",
 		},
 		sound_events_duration = {
 			1.758583,
@@ -67,7 +69,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			1.486042,
 			1.057,
 			1.900917,
-			1.64975
+			1.64975,
 		},
 		sound_event_weights = {
 			0.05,
@@ -89,9 +91,9 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_gunner_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -106,7 +108,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__alerted_idle_07",
 			"loc_enemy_traitor_gunner_a__alerted_idle_08",
 			"loc_enemy_traitor_gunner_a__alerted_idle_09",
-			"loc_enemy_traitor_gunner_a__alerted_idle_10"
+			"loc_enemy_traitor_gunner_a__alerted_idle_10",
 		},
 		sound_events_duration = {
 			1.234354,
@@ -118,7 +120,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			2.791,
 			2.091854,
 			1.861104,
-			1.827292
+			1.827292,
 		},
 		sound_event_weights = {
 			0.1,
@@ -130,9 +132,9 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_gunner_ranged_idle = {
 		randomize_indexes_n = 0,
@@ -157,7 +159,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__ranged_idle_17",
 			"loc_enemy_traitor_gunner_a__ranged_idle_18",
 			"loc_enemy_traitor_gunner_a__ranged_idle_19",
-			"loc_enemy_traitor_gunner_a__ranged_idle_20"
+			"loc_enemy_traitor_gunner_a__ranged_idle_20",
 		},
 		sound_events_duration = {
 			1.467688,
@@ -179,7 +181,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			2.708396,
 			1.551917,
 			2.475896,
-			4.428688
+			4.428688,
 		},
 		sound_event_weights = {
 			0.05,
@@ -201,9 +203,9 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_gunner_ranged_idle_player_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -212,21 +214,21 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_out_of_ammo_01",
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_out_of_ammo_02",
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_out_of_ammo_03",
-			"loc_enemy_traitor_gunner_a__ranged_idle_player_out_of_ammo_04"
+			"loc_enemy_traitor_gunner_a__ranged_idle_player_out_of_ammo_04",
 		},
 		sound_events_duration = {
 			2.70825,
 			2.169188,
 			1.49925,
-			1.112604
+			1.112604,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_gunner_ranged_idle_player_low_on_health = {
 		randomize_indexes_n = 0,
@@ -235,21 +237,21 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_01",
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_02",
 			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_03",
-			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_04"
+			"loc_enemy_traitor_gunner_a__ranged_idle_player_low_on_health_04",
 		},
 		sound_events_duration = {
 			4.096833,
 			3.443438,
 			2.213625,
-			2.677542
+			2.677542,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_gunner_start_shooting = {
 		randomize_indexes_n = 0,
@@ -264,7 +266,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__start_shooting_07",
 			"loc_enemy_traitor_gunner_a__start_shooting_08",
 			"loc_enemy_traitor_gunner_a__start_shooting_09",
-			"loc_enemy_traitor_gunner_a__start_shooting_10"
+			"loc_enemy_traitor_gunner_a__start_shooting_10",
 		},
 		sound_events_duration = {
 			5.024813,
@@ -276,7 +278,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			2.155104,
 			1.388396,
 			1.464917,
-			3.908271
+			3.908271,
 		},
 		sound_event_weights = {
 			0.1,
@@ -288,9 +290,9 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_gunner_take_cover = {
 		randomize_indexes_n = 0,
@@ -315,7 +317,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__take_cover_17",
 			"loc_enemy_traitor_gunner_a__take_cover_18",
 			"loc_enemy_traitor_gunner_a__take_cover_19",
-			"loc_enemy_traitor_gunner_a__take_cover_20"
+			"loc_enemy_traitor_gunner_a__take_cover_20",
 		},
 		sound_events_duration = {
 			1.758583,
@@ -337,7 +339,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			1.486042,
 			1.057,
 			1.900917,
-			1.64975
+			1.64975,
 		},
 		sound_event_weights = {
 			0.05,
@@ -359,9 +361,9 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_gunner_take_position = {
 		randomize_indexes_n = 0,
@@ -386,7 +388,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			"loc_enemy_traitor_gunner_a__take_position_17",
 			"loc_enemy_traitor_gunner_a__take_position_18",
 			"loc_enemy_traitor_gunner_a__take_position_19",
-			"loc_enemy_traitor_gunner_a__take_position_20"
+			"loc_enemy_traitor_gunner_a__take_position_20",
 		},
 		sound_events_duration = {
 			1.925896,
@@ -408,7 +410,7 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			2.619229,
 			1.209667,
 			1.415813,
-			1.023583
+			1.023583,
 		},
 		sound_event_weights = {
 			0.05,
@@ -430,10 +432,10 @@ local enemy_vo_enemy_traitor_gunner_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_traitor_gunner_a", enemy_vo_enemy_traitor_gunner_a)

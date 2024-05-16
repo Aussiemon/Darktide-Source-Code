@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/managers/horde/horde_templates.lua
+
 local horde_templates = {}
 
 local function _create_horde_template_entry(path)
 	local horde_template = require(path)
 	local name = horde_template.name
+
 	horde_templates[name] = horde_template
 end
 

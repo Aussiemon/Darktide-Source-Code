@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/join_permission/xbox_join_permission.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local XboxJoinPermission = {}
 local empty_array = {}
-local deny_reasons = nil
+local deny_reasons
 
 if XblPermissionDenyReason then
 	deny_reasons = {
@@ -13,24 +15,24 @@ if XblPermissionDenyReason then
 		[XblPermissionDenyReason.Unknown] = "XBOX_UNKNOWN",
 		[XblPermissionDenyReason.CrossNetworkUserMustBeFriend] = "XBOX_UNKNOWN",
 		[XblPermissionDenyReason.MissingPrivilege] = "XBOX_UNKNOWN",
-		[XblPermissionDenyReason.NotAllowed] = "XBOX_UNKNOWN"
+		[XblPermissionDenyReason.NotAllowed] = "XBOX_UNKNOWN",
 	}
 end
 
-local PERMISSION_ARRAY = nil
+local PERMISSION_ARRAY
 
 if XblPermission then
 	PERMISSION_ARRAY = {
 		default = {
-			XblPermission.PlayMultiplayer
+			XblPermission.PlayMultiplayer,
 		},
 		INVITE = {
 			XblPermission.PlayMultiplayer,
-			XblPermission.CommunicateUsingText
+			XblPermission.CommunicateUsingText,
 		},
 		JOIN_REQUEST = {
-			XblPermission.PlayMultiplayer
-		}
+			XblPermission.PlayMultiplayer,
+		},
 	}
 end
 
@@ -39,14 +41,14 @@ XboxJoinPermission.test_play_mutliplayer_permission = function (account_id, plat
 		local context_suffix = context and "_" .. context or ""
 		local permission_array = PERMISSION_ARRAY[context] or PERMISSION_ARRAY.default
 		local promise_check = XboxLiveUtilities.batch_check_permission(permission_array, {
-			platform_user_id
+			platform_user_id,
 		}, empty_array):catch(function (error)
 			Log.error("XboxJoinPermission", "XboxLiveUtilities.batch_check_permission failed with hresult %s", tostring(error[1]))
 
 			return Promise.resolved({
 				{
-					is_allowed = true
-				}
+					is_allowed = true,
+				},
 			})
 		end)
 
@@ -86,7 +88,7 @@ XboxJoinPermission.check_join_request_communication_allowed = function (joiner_a
 				promise:resolve(is_allowed)
 			else
 				promise:reject({
-					"Failed verifying user restriction"
+					"Failed verifying user restriction",
 				})
 			end
 		end)

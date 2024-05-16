@@ -1,18 +1,20 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/side_mission/grimoire_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_side_mission_pocketable_01",
-	name = "grimoire",
-	look_at_tag = "grimoire",
-	smart_tag_target_type = "pickup",
-	pickup_sound = "wwise/events/player/play_pick_up_tome",
-	interaction_type = "pocketable",
+	game_object_type = "pickup",
 	group = "side_mission_collect",
+	interaction_type = "pocketable",
+	inventory_item = "content/items/pocketable/grimoire_pocketable",
 	inventory_slot_name = "slot_pocketable",
+	is_side_mission_pickup = true,
+	look_at_tag = "grimoire",
+	name = "grimoire",
+	pickup_sound = "wwise/events/player/play_pick_up_tome",
+	smart_tag_target_type = "pickup",
+	spawn_weighting = 1,
 	unit_name = "content/pickups/pocketables/side_mission/grimoire/grimoire_pickup_01",
 	unit_template_name = "pickup",
-	game_object_type = "pickup",
-	is_side_mission_pickup = true,
-	spawn_weighting = 1,
-	inventory_item = "content/items/pocketable/grimoire_pocketable",
 	on_pickup_func = function (pickup_unit, interactor_unit, pickup_data)
 		local mission_objective_target_extension = ScriptUnit.extension(pickup_unit, "mission_objective_target_system")
 		local objective_name = mission_objective_target_extension:objective_name()
@@ -40,7 +42,7 @@ local pickup_data = {
 		end
 
 		Managers.state.unit_spawner:mark_for_deletion(unit)
-	end
+	end,
 }
 
 return pickup_data

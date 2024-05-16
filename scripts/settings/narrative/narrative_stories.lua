@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/settings/narrative/narrative_stories.lua
+
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 
 local function level_at_least(x)
 	return function (player_profile)
-		return x <= player_profile.current_level
+		return player_profile.current_level >= x
 	end
 end
 
@@ -87,7 +89,7 @@ end
 
 local function can_start_path_of_trust(required_level)
 	return function (player_profile)
-		return required_level <= player_profile.current_level and Managers.narrative:is_event_complete("onboarding_step_chapel_video_viewed")
+		return player_profile.current_level >= required_level and Managers.narrative:is_event_complete("onboarding_step_chapel_video_viewed")
 	end
 end
 
@@ -102,299 +104,299 @@ local narrative = {
 		main_story = {},
 		onboarding = {
 			{
-				name = "play_prologue",
 				backend_id = 1,
+				name = "play_prologue",
 				data = {
-					mission_name = "prologue"
+					mission_name = "prologue",
 				},
-				on_complete = achievement_unlocked("prologue")
+				on_complete = achievement_unlocked("prologue"),
 			},
 			{
-				name = "speak_to_morrow",
 				backend_id = 2,
+				name = "speak_to_morrow",
 				data = {
-					mission_name = "om_hub_01"
-				}
+					mission_name = "om_hub_01",
+				},
 			},
 			{
-				name = "go_to_training",
 				backend_id = 3,
+				name = "go_to_training",
 				data = {
-					mission_name = "om_hub_01"
-				}
+					mission_name = "om_hub_01",
+				},
 			},
 			{
-				name = "play_training",
 				backend_id = 4,
+				name = "play_training",
 				data = {
-					mission_name = "om_basic_combat_01"
+					mission_name = "om_basic_combat_01",
 				},
-				on_complete = achievement_unlocked("basic_training")
+				on_complete = achievement_unlocked("basic_training"),
 			},
 			{
-				name = "training_reward",
 				backend_id = 5,
+				name = "training_reward",
 				data = {
-					mission_name = "om_hub_02"
-				}
-			},
-			{
-				name = "inventory_popup",
-				backend_id = 6,
-				data = {
-					mission_name = "om_hub_02"
-				}
-			},
-			{
-				name = "visit_chapel",
-				backend_id = 7,
-				data = {
-					mission_name = "om_hub_02"
+					mission_name = "om_hub_02",
 				},
-				on_complete = set_account_has_completed_onboarding()
-			}
+			},
+			{
+				backend_id = 6,
+				name = "inventory_popup",
+				data = {
+					mission_name = "om_hub_02",
+				},
+			},
+			{
+				backend_id = 7,
+				name = "visit_chapel",
+				data = {
+					mission_name = "om_hub_02",
+				},
+				on_complete = set_account_has_completed_onboarding(),
+			},
 		},
 		path_of_trust = {
 			{
-				name = "pot_story_traitor_first",
 				backend_id = 1,
+				name = "pot_story_traitor_first",
 				data = {
 					localization_key = "loc_progression_step_01",
 					vo_story_stage = "pot_1",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_first
+					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_first,
 				},
 				requirement = can_start_path_of_trust(PlayerProgressionUnlocks.pot_story_traitor_first),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_1")
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_1"),
 			},
 			{
-				name = "pot_crafting",
 				backend_id = 2,
+				name = "pot_crafting",
 				data = {
 					localization_key = "loc_progression_step_02",
 					vo_story_stage = "pot_2",
-					level_to_reach = PlayerProgressionUnlocks.pot_crafting
+					level_to_reach = PlayerProgressionUnlocks.pot_crafting,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_crafting),
-				on_complete = on_path_of_trust_chapter_completion("unlock_crafting")
+				on_complete = on_path_of_trust_chapter_completion("unlock_crafting"),
 			},
 			{
-				name = "pot_gadgets",
 				backend_id = 3,
+				name = "pot_gadgets",
 				data = {
 					localization_key = "loc_progression_step_03",
 					vo_story_stage = "pot_3",
-					level_to_reach = PlayerProgressionUnlocks.pot_gadgets
+					level_to_reach = PlayerProgressionUnlocks.pot_gadgets,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_gadgets),
-				on_complete = on_path_of_trust_chapter_completion("unlock_gadgets")
+				on_complete = on_path_of_trust_chapter_completion("unlock_gadgets"),
 			},
 			{
-				name = "pot_contracts",
 				backend_id = 4,
+				name = "pot_contracts",
 				data = {
 					localization_key = "loc_progression_step_04",
 					vo_story_stage = "pot_4",
-					level_to_reach = PlayerProgressionUnlocks.pot_contracts
+					level_to_reach = PlayerProgressionUnlocks.pot_contracts,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_contracts),
-				on_complete = on_path_of_trust_chapter_completion("unlock_contracts")
+				on_complete = on_path_of_trust_chapter_completion("unlock_contracts"),
 			},
 			{
-				name = "pot_story_traitor_second",
 				backend_id = 5,
+				name = "pot_story_traitor_second",
 				data = {
 					localization_key = "loc_progression_step_05",
 					vo_story_stage = "pot_5",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_second
+					level_to_reach = PlayerProgressionUnlocks.pot_story_traitor_second,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_traitor_second),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_2")
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_2"),
 			},
 			{
-				name = "pot_story_masozi",
 				backend_id = 6,
+				name = "pot_story_masozi",
 				data = {
 					localization_key = "loc_progression_step_06",
 					vo_story_stage = "pot_6",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_masozi
+					level_to_reach = PlayerProgressionUnlocks.pot_story_masozi,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_masozi),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_3")
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_3"),
 			},
 			{
-				name = "pot_story_hadron",
 				backend_id = 7,
+				name = "pot_story_hadron",
 				data = {
 					localization_key = "loc_progression_step_07",
 					vo_story_stage = "pot_7",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_hadron
+					level_to_reach = PlayerProgressionUnlocks.pot_story_hadron,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_hadron),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_4")
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_4"),
 			},
 			{
-				name = "pot_story_do_or_die",
 				backend_id = 8,
+				name = "pot_story_do_or_die",
 				data = {
 					localization_key = "loc_progression_step_08",
 					vo_story_stage = "pot_8",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_do_or_die
+					level_to_reach = PlayerProgressionUnlocks.pot_story_do_or_die,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_do_or_die),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_5")
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_5"),
 			},
 			{
-				name = "pot_story_final",
 				backend_id = 9,
+				name = "pot_story_final",
 				data = {
 					localization_key = "loc_progression_step_09",
 					vo_story_stage = "pot_9",
-					level_to_reach = PlayerProgressionUnlocks.pot_story_final
+					level_to_reach = PlayerProgressionUnlocks.pot_story_final,
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_final),
-				on_complete = on_path_of_trust_chapter_completion("path_of_trust_6")
-			}
+				on_complete = on_path_of_trust_chapter_completion("path_of_trust_6"),
+			},
 		},
 		s1_twins = {
 			{
-				name = "s1_twins_prologue",
 				backend_id = 1,
+				name = "s1_twins_prologue",
 				requirement = event_done("onboarding_step_mission_board_introduction"),
 				narrative_mission_requirement = {
 					1,
 					1,
-					1
-				}
+					1,
+				},
 			},
 			{
-				name = "s1_twins_mission",
 				backend_id = 2,
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_prologue")
+				name = "s1_twins_mission",
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_prologue"),
 			},
 			{
-				name = "s1_twins_epilogue_1",
 				backend_id = 3,
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_mission")
+				name = "s1_twins_epilogue_1",
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_mission"),
 			},
 			{
-				name = "s1_twins_epilogue_2",
 				backend_id = 4,
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_1")
+				name = "s1_twins_epilogue_2",
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_1"),
 			},
 			{
-				name = "s1_twins_epilogue_3",
 				backend_id = 5,
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_2")
-			}
+				name = "s1_twins_epilogue_3",
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_2"),
+			},
 		},
 		level_unlock_popups = {
 			{
-				name = "level_unlock_credits_store_popup",
 				backend_id = 1,
-				requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first")
+				name = "level_unlock_credits_store_popup",
+				requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first"),
 			},
 			{
-				name = "level_unlock_mission_board_popup_difficulty_increased_1",
 				backend_id = 2,
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[3])
+				name = "level_unlock_mission_board_popup_difficulty_increased_1",
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[3]),
 			},
 			{
-				name = "level_unlock_crafting_station_popup",
 				backend_id = 3,
-				requirement = beyond_story_chapter("path_of_trust", "pot_crafting")
+				name = "level_unlock_crafting_station_popup",
+				requirement = beyond_story_chapter("path_of_trust", "pot_crafting"),
 			},
 			{
-				name = "level_unlock_talent_tier_1",
 				backend_id = 4,
-				requirement = level_at_least(PlayerProgressionUnlocks.talent_1)
+				name = "level_unlock_talent_tier_1",
+				requirement = level_at_least(PlayerProgressionUnlocks.talent_1),
 			},
 			{
-				name = "level_unlock_gadget_slot_1",
 				backend_id = 5,
-				requirement = beyond_story_chapter("path_of_trust", "pot_gadgets")
+				name = "level_unlock_gadget_slot_1",
+				requirement = beyond_story_chapter("path_of_trust", "pot_gadgets"),
 			},
 			{
-				name = "level_unlock_mission_board_popup_difficulty_increased_2",
 				backend_id = 6,
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[4])
+				name = "level_unlock_mission_board_popup_difficulty_increased_2",
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[4]),
 			},
 			{
-				name = "level_unlock_talent_tier_2",
 				backend_id = 7,
-				requirement = level_at_least(PlayerProgressionUnlocks.talent_2)
+				name = "level_unlock_talent_tier_2",
+				requirement = level_at_least(PlayerProgressionUnlocks.talent_2),
 			},
 			{
-				name = "level_unlock_contract_store_popup",
 				backend_id = 8,
-				requirement = beyond_story_chapter("path_of_trust", "pot_contracts")
+				name = "level_unlock_contract_store_popup",
+				requirement = beyond_story_chapter("path_of_trust", "pot_contracts"),
 			},
 			{
-				name = "level_unlock_mission_board_popup_difficulty_increased_3",
 				backend_id = 9,
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[5])
+				name = "level_unlock_mission_board_popup_difficulty_increased_3",
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[5]),
 			},
 			{
-				name = "level_unlock_gadget_slot_2",
 				backend_id = 10,
-				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_2)
+				name = "level_unlock_gadget_slot_2",
+				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_2),
 			},
 			{
-				name = "level_unlock_talent_tier_3",
 				backend_id = 11,
-				requirement = level_at_least(PlayerProgressionUnlocks.talent_3)
+				name = "level_unlock_talent_tier_3",
+				requirement = level_at_least(PlayerProgressionUnlocks.talent_3),
 			},
 			{
-				name = "level_unlock_talent_tier_4",
 				backend_id = 12,
-				requirement = level_at_least(PlayerProgressionUnlocks.talent_4)
+				name = "level_unlock_talent_tier_4",
+				requirement = level_at_least(PlayerProgressionUnlocks.talent_4),
 			},
 			{
-				name = "level_unlock_gadget_slot_3",
 				backend_id = 13,
-				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_3)
+				name = "level_unlock_gadget_slot_3",
+				requirement = level_at_least(PlayerProgressionUnlocks.gadget_slot_3),
 			},
 			{
-				name = "level_unlock_talent_tier_5",
 				backend_id = 14,
-				requirement = level_at_least(PlayerProgressionUnlocks.talent_5)
+				name = "level_unlock_talent_tier_5",
+				requirement = level_at_least(PlayerProgressionUnlocks.talent_5),
 			},
 			{
-				name = "level_unlock_talent_tier_6",
 				backend_id = 15,
-				requirement = level_at_least(PlayerProgressionUnlocks.talent_6)
-			}
-		}
+				name = "level_unlock_talent_tier_6",
+				requirement = level_at_least(PlayerProgressionUnlocks.talent_6),
+			},
+		},
 	},
 	events = {
 		mission_board = {},
 		crafting_table = {},
 		onboarding_step_chapel_video_viewed = {},
 		onboarding_step_chapel_cutscene_played = {
-			requirement = event_done("onboarding_step_chapel_video_viewed")
+			requirement = event_done("onboarding_step_chapel_video_viewed"),
 		},
 		onboarding_step_mission_board_introduction = {
-			requirement = event_done("onboarding_step_chapel_cutscene_played")
+			requirement = event_done("onboarding_step_chapel_cutscene_played"),
 		},
 		level_unlock_credits_store_visited = {
-			requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first")
+			requirement = beyond_story_chapter("path_of_trust", "pot_story_traitor_first"),
 		},
 		level_unlock_crafting_station_visited = {
-			requirement = beyond_story_chapter("path_of_trust", "pot_crafting")
+			requirement = beyond_story_chapter("path_of_trust", "pot_crafting"),
 		},
 		level_unlock_contract_store_visited = {
-			requirement = beyond_story_chapter("path_of_trust", "pot_contracts")
+			requirement = beyond_story_chapter("path_of_trust", "pot_contracts"),
 		},
 		level_unlock_premium_store_visited = {
-			requirement = level_at_least(PlayerProgressionUnlocks.premium_store)
+			requirement = level_at_least(PlayerProgressionUnlocks.premium_store),
 		},
 		level_unlock_barber_visited = {
-			requirement = level_at_least(PlayerProgressionUnlocks.barber)
+			requirement = level_at_least(PlayerProgressionUnlocks.barber),
 		},
 		level_unlock_cosmetic_store_visited = {
-			requirement = level_at_least(PlayerProgressionUnlocks.cosmetics_vendor)
+			requirement = level_at_least(PlayerProgressionUnlocks.cosmetics_vendor),
 		},
 		level_unlock_cosmetic_store_popup = {
-			requirement = level_at_least(PlayerProgressionUnlocks.cosmetics_vendor)
+			requirement = level_at_least(PlayerProgressionUnlocks.cosmetics_vendor),
 		},
 		hli_mission_board_viewed = {},
 		hli_barbershop_viewed = {},
@@ -402,8 +404,8 @@ local narrative = {
 		hli_crafting_station_underground_viewed = {},
 		hli_gun_shop_viewed = {},
 		hli_penances_viewed = {},
-		s1_intro_viewed = {}
-	}
+		s1_intro_viewed = {},
+	},
 }
 
 for _, chapters in pairs(narrative.stories) do

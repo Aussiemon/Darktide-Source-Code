@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/dropdown_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -10,20 +12,22 @@ local list_item_focused_visibility_function = ListHeaderPassTemplates.list_item_
 local DropdownPassTemplates = {}
 local DROPDOWN_BUTTON_SIZE = {
 	38,
-	20
+	20,
 }
 local DROPDOWN_BUTTON_MARGIN = 30
 local DROPDOWN_BUTTON_CLEARANCE = DROPDOWN_BUTTON_SIZE[1] + 2 * DROPDOWN_BUTTON_MARGIN
 
 DropdownPassTemplates.settings_dropdown = function (width, height, settings_area_width, num_options, use_is_focused)
 	local value_font_style = table.clone(UIFontSettings.list_button)
+
 	value_font_style.size = {
 		settings_area_width - (DROPDOWN_BUTTON_CLEARANCE + DROPDOWN_BUTTON_MARGIN),
-		height
+		height,
 	}
 	value_font_style.offset[1] = -DROPDOWN_BUTTON_CLEARANCE
 	value_font_style.offset[3] = 8
 	value_font_style.horizontal_alignment = "right"
+
 	local scrollbar_area_width = DROPDOWN_BUTTON_MARGIN
 	local scrollbar_width = 10
 	local scrollbar_horizontal_offset = 0
@@ -36,6 +40,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 		if pass.style_id and pass.style_id == "hotspot" then
 			local style = pass.style
+
 			style.on_pressed_fold_out_sound = UISoundEvents.default_dropdown_expand
 			style.on_pressed_fold_in_sound = UISoundEvents.default_dropdown_minimize
 
@@ -47,6 +52,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		local anim_progress = content.anim_exclusive_focus_progress
 		local style_height = style.size[2]
 		local height_addition = -(style_height * (1 - math.easeCubic(anim_progress)))
+
 		style.size_addition[2] = height_addition
 
 		if content.grow_downwards then
@@ -56,6 +62,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		end
 
 		local alpha_progress = math.easeOutCubic(anim_progress)
+
 		style.color[1] = 255 * alpha_progress
 	end
 
@@ -72,21 +79,22 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					height
+					height,
 				},
 				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
-					1
-				}
+					1,
+				},
 			},
 			change_function = function (content, style)
 				local default_alpha = 255
 				local disabled_alpha = default_alpha * 0.8
 				local current_alpha = content.disabled and disabled_alpha or default_alpha
+
 				style.color[1] = current_alpha
-			end
+			end,
 		},
 		{
 			pass_type = "rect",
@@ -94,42 +102,42 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					height
+					height,
 				},
 				offset = {
 					0,
 					0,
-					0
+					0,
 				},
-				color = Color.terminal_corner(25.5, true)
+				color = Color.terminal_corner(25.5, true),
 			},
 			visibility_function = function (content, style)
 				return not content.disabled
-			end
+			end,
 		},
 		{
-			value = "content/ui/materials/buttons/dropdown_fill",
-			style_id = "fill",
 			pass_type = "texture",
+			style_id = "fill",
+			value = "content/ui/materials/buttons/dropdown_fill",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				size = DROPDOWN_BUTTON_SIZE,
 				color = Color.black(255, true),
 				offset = {
 					-DROPDOWN_BUTTON_MARGIN,
 					0,
-					3
-				}
-			}
+					3,
+				},
+			},
 		},
 		{
 			pass_type = "texture",
 			style_id = "line",
 			value = "content/ui/materials/buttons/dropdown_line",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				size = DROPDOWN_BUTTON_SIZE,
 				default_color = Color.terminal_icon(255, true),
 				disabled_color = Color.terminal_text_body_dark(255, true),
@@ -137,81 +145,86 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				offset = {
 					-DROPDOWN_BUTTON_MARGIN,
 					0,
-					4
-				}
+					4,
+				},
 			},
-			change_function = highlight_color_change_function
+			change_function = highlight_color_change_function,
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/hover",
 			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
 				hdr = true,
+				horizontal_alignment = "right",
+				vertical_alignment = "top",
 				size = {
 					settings_area_width,
-					height
+					height,
 				},
 				size_addition = {
 					0,
-					0
+					0,
 				},
 				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
-					11
-				}
+					11,
+				},
 			},
 			change_function = function (content, style)
 				local progress = content.highlight_progress or 0
 				local alpha_progress = math.clamp(math.easeOutCubic(progress - content.anim_exclusive_focus_progress), 0, 1)
+
 				style.color[1] = 255 * alpha_progress
+
 				local size_addition = highlight_size_addition * math.easeInCubic(1 - progress)
 				local style_size_addition = style.size_addition
+
 				style_size_addition[1] = size_addition * 2
 				style_size_addition[2] = size_addition * 2
+
 				local offset = style.offset
+
 				offset[1] = size_addition
 				offset[2] = -size_addition
 				style.hdr = alpha_progress == 1
 			end,
-			visibility_function = list_item_focused_visibility_function
+			visibility_function = list_item_focused_visibility_function,
 		},
 		{
-			style_id = "dropdown_background",
 			pass_type = "rect",
+			style_id = "dropdown_background",
 			style = {
-				vertical_alignment = "top",
 				horizontal_alignment = "right",
+				vertical_alignment = "top",
 				size = {
 					settings_area_width,
-					height * num_options
+					height * num_options,
 				},
 				size_addition = {
 					0,
-					-height * num_options
+					-height * num_options,
 				},
 				color = Color.black(255, true),
 				offset = {
 					0,
 					height,
-					10
-				}
+					10,
+				},
 			},
 			visibility_function = content_visibility_function,
-			change_function = dropdown_content_foldout_function
+			change_function = dropdown_content_foldout_function,
 		},
 		{
-			value_id = "value_text",
 			pass_type = "text",
-			value = "n/a",
 			style_id = "text",
+			value = "n/a",
+			value_id = "value_text",
 			style = value_font_style,
-			change_function = highlight_color_change_function
-		}
+			change_function = highlight_color_change_function,
+		},
 	}
 
 	local function scrollbar_visibility_function(content)
@@ -224,70 +237,70 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 	local scrollbar_passes = {
 		{
-			style_id = "scrollbar_hotspot",
-			pass_type = "hotspot",
 			content_id = "scrollbar_hotspot",
+			pass_type = "hotspot",
+			style_id = "scrollbar_hotspot",
 			style = {
-				vertical_alignment = "top",
 				horizontal_alignment = "right",
+				vertical_alignment = "top",
 				size = {
 					scrollbar_width,
-					scrollbar_height
+					scrollbar_height,
 				},
 				offset = {
 					scrollbar_horizontal_offset,
 					0,
-					0
-				}
-			},
-			visibility_function = scrollbar_visibility_function
-		},
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/scrollbars/scrollbar_frame_default",
-			style_id = "scrollbar_track",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "right",
-				size = {
-					scrollbar_width,
-					scrollbar_height
-				},
-				size_addition = {
 					0,
-					-height * num_options
 				},
-				offset = {
-					scrollbar_horizontal_offset,
-					0,
-					12
-				},
-				color = Color.terminal_frame(255, true)
 			},
 			visibility_function = scrollbar_visibility_function,
-			change_function = dropdown_content_foldout_function
 		},
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/scrollbars/scrollbar_thumb_default",
-			style_id = "thumb",
+			style_id = "scrollbar_track",
+			value = "content/ui/materials/scrollbars/scrollbar_frame_default",
 			style = {
-				vertical_alignment = "top",
 				horizontal_alignment = "right",
+				vertical_alignment = "top",
 				size = {
 					scrollbar_width,
-					scrollbar_height
+					scrollbar_height,
 				},
 				size_addition = {
 					0,
-					-height * num_options
+					-height * num_options,
 				},
 				offset = {
 					scrollbar_horizontal_offset,
 					0,
-					11
+					12,
 				},
-				color = Color.terminal_text_body(255, true)
+				color = Color.terminal_frame(255, true),
+			},
+			visibility_function = scrollbar_visibility_function,
+			change_function = dropdown_content_foldout_function,
+		},
+		{
+			pass_type = "texture",
+			style_id = "thumb",
+			value = "content/ui/materials/scrollbars/scrollbar_thumb_default",
+			style = {
+				horizontal_alignment = "right",
+				vertical_alignment = "top",
+				size = {
+					scrollbar_width,
+					scrollbar_height,
+				},
+				size_addition = {
+					0,
+					-height * num_options,
+				},
+				offset = {
+					scrollbar_horizontal_offset,
+					0,
+					11,
+				},
+				color = Color.terminal_text_body(255, true),
 			},
 			visibility_function = scrollbar_visibility_function,
 			change_function = function (content, style)
@@ -296,16 +309,21 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local hotspot_style = parent_style.scrollbar_hotspot
 				local axis_offset = hotspot_style.offset[axis]
 				local axis_length = hotspot_style.size[axis]
+
 				style.size[axis] = axis_length
 				style.offset[axis] = axis_offset
+
 				local track_style = style.parent.scrollbar_track
 				local track_visible_height = track_style.size[2] + track_style.size_addition[2]
 				local thumb_total_height = axis_offset - height + axis_length
 				local thumb_height_addition = math.clamp(track_visible_height - thumb_total_height, -axis_length, 0)
+
 				style.size_addition[2] = thumb_height_addition
+
 				local anim_progress = content.anim_exclusive_focus_progress
+
 				style.color[1] = 255 * anim_progress
-			end
+			end,
 		},
 		{
 			pass_type = "logic",
@@ -315,6 +333,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local scroll_length = content.scroll_length or 0
 				local area_length = content.area_length or 0
 				local thumb_disabled = scroll_length <= 0
+
 				content.thumb_disabled = thumb_disabled
 
 				if thumb_disabled then
@@ -326,8 +345,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local thumb_length = (area_length - size[axis]) * thumb_size_fraction
 				local style_parent = style.parent
 				local hotspot_style = style_parent.scrollbar_hotspot
+
 				hotspot_style.size[axis] = thumb_length
-			end
+			end,
 		},
 		{
 			pass_type = "logic",
@@ -387,10 +407,13 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local start_position = 0
 				local end_position = scrollbar_length - thumb_length
 				local current_position = input_coordinate - input_offset
+
 				current_position = math.clamp(current_position, start_position, end_position)
+
 				local percentage = current_position / end_position
+
 				content.scroll_percentage = percentage
-			end
+			end,
 		},
 		{
 			pass_type = "logic",
@@ -416,12 +439,13 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local end_position = scrollbar_length - thumb_length
 				local scroll_percentage = content.scroll_percentage or 0
 				local current_position = end_position * scroll_percentage
+
 				hotspot_offset[2] = track_axis_offset + current_position
-			end
+			end,
 		},
 		{
-			style_id = "dropdown_background",
 			pass_type = "logic",
+			style_id = "dropdown_background",
 			visibility_function = scrollbar_visibility_function,
 			value = function (pass, renderer, style, content, position, size)
 				if content.drag_active then
@@ -448,7 +472,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 				if axis_input ~= 0 and is_hover then
 					content.axis_input = axis_input
+
 					local previous_scroll_add = content.scroll_add or 0
+
 					content.scroll_add = previous_scroll_add + axis_input * scroll_amount
 				end
 
@@ -456,7 +482,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 				if scroll_add then
 					local speed = content.scroll_speed or 5
-					local step = scroll_add * dt * speed
+					local step = scroll_add * (dt * speed)
 
 					if math.abs(scroll_add) > scroll_amount / 500 then
 						content.scroll_add = scroll_add - step
@@ -472,8 +498,8 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 					content.scroll_percentage = content.scroll_value or content.scroll_percentage or 0
 				end
-			end
-		}
+			end,
+		},
 	}
 	local option_fraction = 1 / num_options
 	local options_passes = {
@@ -481,8 +507,8 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			pass_type = "logic",
 			value = function (pass, renderer, style, content, position, size)
 				content.using_cursor_navigation = Managers.ui:using_cursor_navigation()
-			end
-		}
+			end,
+		},
 	}
 	local default_hotspot_style = ListHeaderPassTemplates.default_hotspot_style
 
@@ -490,37 +516,42 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		local current_fraction = (i - 1) / num_options
 		local hotspot_content = {
 			anim_hover_progress = 0,
-			anim_select_progress = 0
+			anim_select_progress = 0,
 		}
 		local hotspot_style = table.clone(default_hotspot_style)
+
 		hotspot_style.vertical_alignment = "top"
 		hotspot_style.horizontal_alignment = "right"
 		hotspot_style.size = {
 			settings_area_width - scrollbar_area_width,
-			height
+			height,
 		}
 		hotspot_style.offset = {
 			-scrollbar_area_width,
 			height * i,
-			0
+			0,
 		}
+
 		local option_font_style = table.clone(value_font_style)
+
 		option_font_style.default_color = Color.terminal_text_body(255, true)
 		option_font_style.offset = {
 			-scrollbar_area_width,
 			height * i,
-			12
+			12,
 		}
 		option_font_style.size = {
 			settings_area_width,
-			height
+			height,
 		}
 		option_font_style.size_addition = {
 			-scrollbar_area_width - DROPDOWN_BUTTON_MARGIN,
-			0
+			0,
 		}
+
 		local hotspot_id = "option_hotspot_" .. i
 		local text_id = "option_text_" .. i
+
 		options_passes[#options_passes + 1] = {
 			pass_type = "hotspot",
 			content_id = hotspot_id,
@@ -529,30 +560,30 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			style = hotspot_style,
 			visibility_function = function (content)
 				return content.parent.anim_exclusive_focus_progress > 0
-			end
+			end,
 		}
 		options_passes[#options_passes + 1] = {
 			pass_type = "texture",
 			value = "content/ui/materials/frames/hover",
 			style_id = "outline_" .. i,
 			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "left",
 				hdr = true,
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
 				size = {
 					settings_area_width,
-					height
+					height,
 				},
 				size_addition = {
 					0,
-					0
+					0,
 				},
 				offset = {
 					header_width,
 					height * i,
-					13
+					13,
 				},
-				color = Color.terminal_corner(255, true)
+				color = Color.terminal_corner(255, true),
 			},
 			change_function = function (content, style)
 				local hotspot = content[hotspot_id]
@@ -561,12 +592,16 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local gamepad_navigation_progress = not using_cursor_navigation and hotspot.anim_select_progress or 0
 				local progress = math.max(cursor_navigation_progress, gamepad_navigation_progress)
 				local focus_alpha = style.parent[text_id].text_color[1]
+
 				style.color[1] = math.min(255 * math.easeOutCubic(progress), focus_alpha)
+
 				local size_addition = highlight_size_addition * math.easeInCubic(1 - progress)
 				local style_size_addition = style.size_addition
+
 				style_size_addition[1] = size_addition * 2
 				style_size_addition[2] = size_addition * 2
-				local offset_y = nil
+
+				local offset_y
 
 				if content.grow_downwards then
 					offset_y = i * height
@@ -575,11 +610,12 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				end
 
 				local offset = style.offset
+
 				offset[1] = header_width - size_addition
 				offset[2] = offset_y - size_addition
 				style.hdr = focus_alpha == 255
 			end,
-			visibility_function = content_visibility_function
+			visibility_function = content_visibility_function,
 		}
 		options_passes[#options_passes + 1] = {
 			pass_type = "text",
@@ -594,13 +630,15 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local hotspot = content[hotspot_id]
 				local focus_progress = math.easeCubic(content.anim_exclusive_focus_progress)
 				local alpha_progress = math.clamp((focus_progress - current_fraction) / option_fraction, 0, 1)
+
 				text_color[1] = 255 * math.easeCubic(alpha_progress)
+
 				local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
 				local exclude_alpha = true
 
 				ColorUtilities.color_lerp(default_color, hover_color, highlight_progress, text_color, exclude_alpha)
 			end,
-			visibility_function = content_visibility_function
+			visibility_function = content_visibility_function,
 		}
 	end
 

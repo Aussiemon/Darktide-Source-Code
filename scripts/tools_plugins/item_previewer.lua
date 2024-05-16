@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/tools_plugins/item_previewer.lua
+
 require("core/scripts/log")
 
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local unit_alive = Unit.alive
+
 ItemPreviewer = coreclass(ItemPreviewer)
 
 ItemPreviewer.init = function (self, world)
@@ -20,7 +23,7 @@ end
 
 ItemPreviewer.update = function (self, dt, t)
 	if self.preview_type == "2D" then
-		local backbuffer_x, backbuffer_y = nil
+		local backbuffer_x, backbuffer_y
 
 		if EditorApi.get_viewport_window_resolution then
 			backbuffer_x, backbuffer_y = EditorApi:get_viewport_window_resolution()
@@ -76,53 +79,55 @@ ItemPreviewer.preview = function (self, resource, return_data)
 
 		if item_data then
 			item_data = table.clone(item_data)
+
 			local root_unit_resource = self:_select_root_unit_resource(item_data)
 			local root_unit = World.spawn_unit_ex(self.previewer_world, root_unit_resource)
+
 			EditorApi.root_unit = root_unit
 
 			if item_data.item_type == "END_OF_ROUND" or item_data.item_type == "EMOTE" then
 				if table.array_contains(item_data.breeds, "human") then
 					item_data.attachments = {
 						{
-							item = "content/items/characters/player/human/attachment_base/female_torso"
+							item = "content/items/characters/player/human/attachment_base/female_torso",
 						},
 						{
-							item = "content/items/characters/player/human/attachment_base/female_legs"
+							item = "content/items/characters/player/human/attachment_base/female_legs",
 						},
 						{
-							item = "content/items/characters/player/human/attachment_base/female_arms"
+							item = "content/items/characters/player/human/attachment_base/female_arms",
 						},
 						{
-							item = "content/items/characters/player/human/faces/female_asian_face_01"
+							item = "content/items/characters/player/human/faces/female_asian_face_01",
 						},
 						{
-							item = item_data.prop_item
+							item = item_data.prop_item,
 						},
 						{
-							item = item_data.prop_item_2
-						}
+							item = item_data.prop_item_2,
+						},
 					}
 					item_data.base_unit = "content/characters/player/human/third_person/base_gear_rig"
 				else
 					item_data.attachments = {
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_torso"
+							item = "content/items/characters/player/ogryn/attachment_base/male_torso",
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_legs"
+							item = "content/items/characters/player/ogryn/attachment_base/male_legs",
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_arms"
+							item = "content/items/characters/player/ogryn/attachment_base/male_arms",
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_face_caucasian_03"
+							item = "content/items/characters/player/ogryn/attachment_base/male_face_caucasian_03",
 						},
 						{
-							item = item_data.prop_item
+							item = item_data.prop_item,
 						},
 						{
-							item = item_data.prop_item_2
-						}
+							item = item_data.prop_item_2,
+						},
 					}
 					item_data.base_unit = "content/characters/player/ogryn/third_person/base_gear_rig"
 				end
@@ -150,11 +155,11 @@ ItemPreviewer.preview = function (self, resource, return_data)
 					self.preview_2D_texture_size_x, self.preview_2D_texture_size_y = Gui.texture_size(item_data.texture_resource)
 
 					if self.preview_2D_texture_size_x > 0 and self.preview_2D_texture_size_y > 0 then
-						if self.preview_2D_texture_size_y < self.preview_2D_texture_size_x then
-							self.preview_2D_texture_size_y = 256 * self.preview_2D_texture_size_y / self.preview_2D_texture_size_x
+						if self.preview_2D_texture_size_x > self.preview_2D_texture_size_y then
+							self.preview_2D_texture_size_y = 256 * (self.preview_2D_texture_size_y / self.preview_2D_texture_size_x)
 							self.preview_2D_texture_size_x = 256
 						else
-							self.preview_2D_texture_size_x = 256 * self.preview_2D_texture_size_x / self.preview_2D_texture_size_y
+							self.preview_2D_texture_size_x = 256 * (self.preview_2D_texture_size_x / self.preview_2D_texture_size_y)
 							self.preview_2D_texture_size_y = 256
 						end
 
@@ -184,9 +189,9 @@ ItemPreviewer.preview = function (self, resource, return_data)
 end
 
 ItemPreviewer._spawn_item = function (self, item_data, root_unit)
-	local attach_settings = {
-		is_minion = false
-	}
+	local attach_settings = {}
+
+	attach_settings.is_minion = false
 
 	if item_data.item_list_faction == "Minion" then
 		attach_settings.is_minion = true
@@ -202,12 +207,13 @@ ItemPreviewer._spawn_item = function (self, item_data, root_unit)
 
 	if VisualLoadoutCustomization then
 		local attached_units = {}
+
 		EditorApi.preview_resource, attached_units = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, root_unit, nil, nil, nil)
 		self.attached_units_table = self.attached_units_table or {}
 
 		if EditorApi.preview_resource then
 			table.append(self.attached_units_table, {
-				EditorApi.preview_resource
+				EditorApi.preview_resource,
 			})
 		end
 
@@ -222,7 +228,8 @@ ItemPreviewer._spawn_item = function (self, item_data, root_unit)
 end
 
 ItemPreviewer._build_bounding_box = function (self, item_data)
-	local tm, half_extents = nil
+	local tm, half_extents
+
 	tm, half_extents = self:_select_hardcoded_bounding_box(item_data)
 
 	if not tm then
@@ -248,7 +255,7 @@ ItemPreviewer._build_bounding_box = function (self, item_data)
 
 	self.preview_bounding_box = {
 		Matrix4x4Box(tm),
-		Vector3Box(half_extents)
+		Vector3Box(half_extents),
 	}
 end
 
@@ -352,7 +359,7 @@ end
 
 ItemPreviewer.get_supported_types = function (self)
 	return {
-		"item"
+		"item",
 	}
 end
 

@@ -1,39 +1,44 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_bullets.lua
+
 local Component = require("scripts/utilities/component")
-local _components = nil
+local _components
 local RevolverBullets = class("RevolverBullets")
 
 RevolverBullets.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._owner_unit = owner_unit
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 	self._bullets = {
 		{
-			casing_attachment_name = "casing_01",
 			bullet_attachment_name = "bullet_01",
-			visible = true
+			casing_attachment_name = "casing_01",
+			visible = true,
 		},
 		{
-			casing_attachment_name = "casing_02",
 			bullet_attachment_name = "bullet_02",
-			visible = true
+			casing_attachment_name = "casing_02",
+			visible = true,
 		},
 		{
-			casing_attachment_name = "casing_03",
 			bullet_attachment_name = "bullet_03",
-			visible = true
+			casing_attachment_name = "casing_03",
+			visible = true,
 		},
 		{
-			casing_attachment_name = "casing_04",
 			bullet_attachment_name = "bullet_04",
-			visible = true
+			casing_attachment_name = "casing_04",
+			visible = true,
 		},
 		{
-			casing_attachment_name = "casing_05",
 			bullet_attachment_name = "bullet_05",
-			visible = true
-		}
+			casing_attachment_name = "casing_05",
+			visible = true,
+		},
 	}
 	self._components_1p = {}
 	self._components_3p = {}
@@ -123,8 +128,9 @@ function _components(destination, destination_lookup, attachments, attachments_n
 			local data = {
 				unit = attachment_unit,
 				lookup_name = lookup_name,
-				component = component
+				component = component,
 			}
+
 			destination[#destination + 1] = data
 			destination_lookup[lookup_name] = data
 		end

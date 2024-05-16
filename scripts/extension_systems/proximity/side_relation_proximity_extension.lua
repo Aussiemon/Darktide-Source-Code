@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/proximity/side_relation_proximity_extension.lua
+
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_heal")
 
 local JobInterface = require("scripts/managers/unit_job/job_interface")
@@ -10,18 +12,22 @@ SideRelationProximityExtension.init = function (self, extension_init_context, un
 	self._unit = unit
 	self._broadphase = extension_init_data.broadphase
 	self._side_extension = ScriptUnit.extension(unit, "side_system")
+
 	local side_name = self._side_extension.side:name()
 	local relation_data = {}
+
 	self._relation_data = relation_data
 	self._logic_context = {
 		unit = unit,
-		side_name = side_name
+		side_name = side_name,
 	}
 	self._job_logic = nil
+
 	local relation_init_data = extension_init_data.relation_init_data
 
 	for relation_name, init_data in pairs(relation_init_data) do
 		local data = self:_initialize_relation(relation_name, init_data)
+
 		relation_data[relation_name] = data
 	end
 end
@@ -30,15 +36,15 @@ SideRelationProximityExtension._initialize_relation = function (self, relation_n
 	local proximity_radius = relation_init_data.proximity_radius
 	local logic = {}
 	local data = {
-		num_logic = 0,
 		num_in_proximity = 0,
+		num_logic = 0,
 		units_in_proximity = {},
 		temp = {},
 		stickiness_table = {},
 		proximity_radius = relation_init_data.proximity_radius,
 		stickiness_limit = relation_init_data.stickiness_limit,
 		stickiness_time = relation_init_data.stickiness_time,
-		logic = logic
+		logic = logic,
 	}
 	local logic_context = self._logic_context
 	local logic_configuration = relation_init_data.logic
@@ -51,6 +57,7 @@ SideRelationProximityExtension._initialize_relation = function (self, relation_n
 		local owner_unit_or_nil = config.owner_unit_or_nil
 		local class_object = CLASSES[class_name]
 		local class_instance = class_object:new(logic_context, init_data, owner_unit_or_nil)
+
 		logic[i] = class_instance
 
 		if config.use_as_job then
@@ -104,8 +111,10 @@ SideRelationProximityExtension._update_unit_alive_check = function (self, unit, 
 
 		for j = 1, num_dead_units do
 			local dead_unit = dead_units[j]
+
 			units_in_proximity[dead_unit] = nil
 			stickiness_table[dead_unit] = nil
+
 			local data_logic = data.logic
 			local num_logic = data.num_logic
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_character_profile_package_loader.lua
+
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local UICharacterProfilePackageLoader = class("UICharacterProfilePackageLoader")
 
@@ -27,6 +29,7 @@ UICharacterProfilePackageLoader.load_profile = function (self, profile)
 
 	for slot_id, item in pairs(loadout) do
 		local item_name = item.name
+
 		loading_items[slot_id] = item_name
 
 		self:load_slot_item(slot_id, item)
@@ -108,11 +111,13 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 	if num_packages_to_load > 0 then
 		local reference_name = self._reference_name
 		local package_manager = Managers.package
+
 		self._slots_item_loaded[slot_id] = nil
 		self._slots_loading_data[slot_id] = {
 			packages = table.clone(packages_to_load),
-			item_name = item_name
+			item_name = item_name,
 		}
+
 		local package_ids = {}
 		local use_resident_loading = true
 
@@ -124,6 +129,7 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 			local package_name = packages_to_load[i]
 			local on_loaded_callback = callback(self, "cb_on_slot_item_package_loaded", slot_id, item_name, package_name, complete_callback)
 			local prioritize = true
+
 			package_ids[i] = package_manager:load(package_name, reference_name, on_loaded_callback, prioritize, use_resident_loading)
 		end
 

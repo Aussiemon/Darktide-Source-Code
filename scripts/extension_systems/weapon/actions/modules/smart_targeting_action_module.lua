@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/smart_targeting_action_module.lua
+
 local SmartTargeting = require("scripts/utilities/smart_targeting")
 local EMPTY_TABLE = {}
 local SmartTargetingActionModule = class("SmartTargetingActionModule")
@@ -7,7 +9,9 @@ SmartTargetingActionModule.init = function (self, physics_world, player_unit, co
 	self._player_unit = player_unit
 	self._component = component
 	self._action_settings = action_settings
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -16,6 +20,7 @@ end
 
 SmartTargetingActionModule.start = function (self, action_settings, t)
 	local component = self._component
+
 	component.target_unit_1 = nil
 	component.target_unit_2 = nil
 	component.target_unit_3 = nil
@@ -37,7 +42,7 @@ SmartTargetingActionModule.fixed_update = function (self, dt, t)
 		local new_target_unit = targeting_data.unit
 
 		if new_target_unit ~= current_target_unit then
-			local is_in_range = nil
+			local is_in_range
 
 			if HEALTH_ALIVE[new_target_unit] then
 				local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component)
@@ -45,6 +50,7 @@ SmartTargetingActionModule.fixed_update = function (self, dt, t)
 				local max_range = precision_target_settings.max_range
 				local target_pos = POSITION_LOOKUP[new_target_unit]
 				local player_pos = POSITION_LOOKUP[self._player_unit]
+
 				is_in_range = Vector3.distance_squared(target_pos, player_pos) < max_range * max_range
 			end
 
@@ -62,6 +68,7 @@ end
 SmartTargetingActionModule.finish = function (self, reason, data, t)
 	if reason == "hold_input_released" or reason == "stunned" then
 		local component = self._component
+
 		component.target_unit_1 = nil
 		component.target_unit_2 = nil
 		component.target_unit_3 = nil

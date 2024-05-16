@@ -1,16 +1,20 @@
+﻿-- chunkname: @scripts/managers/error/error_manager.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local Promise = require("scripts/foundation/utilities/promise")
 local StateError = require("scripts/game_states/game/state_error")
 local ErrorManager = class("ErrorManager")
 local ERROR_QUEUE_MAX_SIZE = 3
 local ERROR_LEVEL = {
-	warning = 2,
+	error = 4,
 	fatal = 5,
 	log = 1,
+	warning = 2,
 	warning_popup = 3,
-	error = 4
 }
+
 ErrorManager.ERROR_LEVEL = ERROR_LEVEL
+
 local _, MAX_ERROR_LEVEL = table.max(ERROR_LEVEL)
 
 ErrorManager.init = function (self)
@@ -18,7 +22,7 @@ ErrorManager.init = function (self)
 end
 
 local function _log_error(error_object)
-	local original_traceback = nil
+	local original_traceback
 
 	if error_object.__traceback then
 		original_traceback = "\noriginal traceback: \n" .. error_object.__traceback .. "\n"
@@ -32,24 +36,28 @@ local function _log_error(error_object)
 end
 
 local function _notify_error(error_object)
-	local notification_text = nil
+	local notification_text
 	local loc_title = error_object:loc_title()
 
 	if loc_title then
 		local title = Localize(loc_title)
 		local loc_description, loc_description_params, string_format = error_object:loc_description()
+
 		string_format = string_format or "%s: %s"
+
 		local description = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
+
 		notification_text = string.format(string_format, title, description)
 	else
 		local loc_description, loc_description_params, _ = error_object:loc_description()
+
 		notification_text = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
 	end
 
 	local sound_event = error_object.sound_event and error_object:sound_event()
 
 	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = notification_text
+		text = notification_text,
 	}, nil, sound_event)
 end
 
@@ -57,16 +65,17 @@ local function _notify_popup(error_object)
 	local loc_title = error_object:loc_title()
 	local loc_description, loc_description_params = error_object:loc_description()
 	local options = error_object:options() or {}
+
 	options[#options + 1] = {
 		close_on_pressed = true,
-		text = "loc_popup_button_close"
+		text = "loc_popup_button_close",
 	}
 
 	Managers.event:trigger("event_show_ui_popup", {
 		title_text = loc_title,
 		description_text = loc_description,
 		description_text_params = loc_description_params,
-		options = options
+		options = options,
 	})
 end
 
@@ -75,7 +84,7 @@ local function _enqueue_error(error_object, queue)
 		local level = error_object:level()
 
 		for i = 1, #queue do
-			if queue[i]:level() < level then
+			if level > queue[i]:level() then
 				queue[i] = error_object
 
 				break
@@ -106,16 +115,16 @@ local function _dequeue_error(queue, queue_empty_promise)
 				text = "loc_popup_button_quit_game",
 				callback = function ()
 					Application.quit()
-				end
+				end,
 			}
 		end
 	else
 		options[#options + 1] = {
-			text = "loc_popup_button_close",
 			close_on_pressed = true,
+			text = "loc_popup_button_close",
 			callback = function ()
 				_dequeue_error(queue, queue_empty_promise)
-			end
+			end,
 		}
 	end
 
@@ -124,7 +133,7 @@ local function _dequeue_error(queue, queue_empty_promise)
 		description_text = loc_description,
 		description_text_params = loc_description_params,
 		options = options,
-		priority_order = math.huge
+		priority_order = math.huge,
 	})
 end
 

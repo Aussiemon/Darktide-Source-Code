@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mission/mission_manager.lua
+
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
@@ -6,8 +8,11 @@ local mission_zone_ids = MissionSettings.mission_zone_ids
 local mission_game_mode_names = MissionSettings.mission_game_mode_names
 local main_objective_names = MissionSettings.main_objective_names
 local MissionManager = class("MissionManager")
+
 MissionManager.SIDE_MISSION_TYPES = table.enum("none", "luggable", "collect")
+
 local SIDE_MISSION_TYPES = MissionManager.SIDE_MISSION_TYPES
+
 MissionManager._num_missions_started = MissionManager._num_missions_started or 0
 
 MissionManager.init = function (self, mission_name, level, level_name, side_mission_name)
@@ -16,7 +21,7 @@ MissionManager.init = function (self, mission_name, level, level_name, side_miss
 	rawset(_G, "SPAWNED_LEVEL_NAME", level_name)
 
 	local mission = MissionTemplates[mission_name]
-	local side_mission = nil
+	local side_mission
 
 	if side_mission_name ~= "default" then
 		side_mission = MissionObjectiveTemplates.side_mission.objectives[side_mission_name]

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/local_states/local_determine_level_state.lua
+
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 
 local function _warning(...)
@@ -33,6 +35,7 @@ end
 LocalDetermineLevelState.load_mission = function (self)
 	local shared_state = self._shared_state
 	local mission_name = shared_state.mission_name
+
 	self._mission_name = mission_name
 end
 

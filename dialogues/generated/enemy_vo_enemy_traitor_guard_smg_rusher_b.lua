@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_guard_smg_rusher_b.lua
+
 local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 	ranged_idle_player_low_on_health = {
 		randomize_indexes_n = 0,
@@ -6,21 +8,21 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_01",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_02",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_03",
-			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_04"
+			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_04",
 		},
 		sound_events_duration = {
 			2.142604,
 			1.850896,
 			2.505375,
-			0.722042
+			0.722042,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ranged_idle_player_out_of_ammo = {
 		randomize_indexes_n = 0,
@@ -35,7 +37,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_07",
 			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_08",
 			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_09",
-			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_10"
+			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_10",
 		},
 		sound_events_duration = {
 			0.960458,
@@ -47,7 +49,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			1.018292,
 			1.234313,
 			1.656667,
-			1.540833
+			1.540833,
 		},
 		sound_event_weights = {
 			0.1,
@@ -59,9 +61,9 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_smg_rusher_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -76,7 +78,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__alerted_idle_07",
 			"loc_enemy_traitor_guard_smg_rusher_b__alerted_idle_08",
 			"loc_enemy_traitor_guard_smg_rusher_b__alerted_idle_09",
-			"loc_enemy_traitor_guard_smg_rusher_b__alerted_idle_10"
+			"loc_enemy_traitor_guard_smg_rusher_b__alerted_idle_10",
 		},
 		sound_events_duration = {
 			1.334,
@@ -88,7 +90,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			2.509542,
 			2.601271,
 			1.944938,
-			1.856604
+			1.856604,
 		},
 		sound_event_weights = {
 			0.1,
@@ -100,9 +102,9 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_smg_rusher_ranged_idle = {
 		randomize_indexes_n = 0,
@@ -111,21 +113,21 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_01",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_02",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_03",
-			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_04"
+			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_04",
 		},
 		sound_events_duration = {
 			1.25525,
 			1.095583,
 			1.787292,
-			1.833271
+			1.833271,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_smg_rusher_ranged_idle_player_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -134,21 +136,21 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_out_of_ammo_01",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_out_of_ammo_02",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_out_of_ammo_03",
-			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_out_of_ammo_04"
+			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_out_of_ammo_04",
 		},
 		sound_events_duration = {
 			2.107125,
 			1.934708,
 			1.187938,
-			2.071104
+			2.071104,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_smg_rusher_ranged_idle_player_low_on_health = {
 		randomize_indexes_n = 0,
@@ -157,21 +159,21 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_01",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_02",
 			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_03",
-			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_04"
+			"loc_enemy_traitor_guard_smg_rusher_b__ranged_idle_player_low_on_health_04",
 		},
 		sound_events_duration = {
 			2.142604,
 			1.850896,
 			2.505375,
-			0.722042
+			0.722042,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_smg_rusher_take_cover = {
 		randomize_indexes_n = 0,
@@ -186,7 +188,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_07",
 			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_08",
 			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_09",
-			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_10"
+			"loc_enemy_traitor_guard_smg_rusher_b__take_cover_10",
 		},
 		sound_events_duration = {
 			0.960458,
@@ -198,7 +200,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			1.018292,
 			1.234313,
 			1.656667,
-			1.540833
+			1.540833,
 		},
 		sound_event_weights = {
 			0.1,
@@ -210,9 +212,9 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_smg_rusher_take_position = {
 		randomize_indexes_n = 0,
@@ -227,7 +229,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			"loc_enemy_traitor_guard_smg_rusher_b__take_position_07",
 			"loc_enemy_traitor_guard_smg_rusher_b__take_position_08",
 			"loc_enemy_traitor_guard_smg_rusher_b__take_position_09",
-			"loc_enemy_traitor_guard_smg_rusher_b__take_position_10"
+			"loc_enemy_traitor_guard_smg_rusher_b__take_position_10",
 		},
 		sound_events_duration = {
 			1.154396,
@@ -239,7 +241,7 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			1.467,
 			0.916854,
 			1.186604,
-			1.428292
+			1.428292,
 		},
 		sound_event_weights = {
 			0.1,
@@ -251,10 +253,10 @@ local enemy_vo_enemy_traitor_guard_smg_rusher_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_traitor_guard_smg_rusher_b", enemy_vo_enemy_traitor_guard_smg_rusher_b)

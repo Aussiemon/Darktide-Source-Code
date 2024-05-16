@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/multiplayer/connection_manager.lua
+
 local ConnectionManagerTestify = GameParameters.testify and require("scripts/managers/multiplayer/connection_manager_testify")
 local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 local ConnectionManager = class("ConnectionManager")
@@ -6,17 +8,15 @@ local function _info(...)
 	Log.info("ConnectionManager", ...)
 end
 
-local IS_ERROR = true
-local IS_NOT_ERROR = false
-local IS_HOST = true
-local IS_NOT_HOST = false
+local IS_ERROR, IS_NOT_ERROR = true, false
+local IS_HOST, IS_NOT_HOST = true, false
 local EVENT_NAMES = {
 	"client_connected",
 	"client_disconnected",
 	"connected_to_host",
-	"disconnected_from_host"
+	"disconnected_from_host",
 }
-local default_game_udp_key, default_game_udp_cert = nil
+local default_game_udp_key, default_game_udp_cert
 
 local function _source_reason(game_reason, engine_reason)
 	if game_reason then
@@ -79,7 +79,9 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	self._connection_host_event_object = nil
 	self._connection_client = nil
 	self._connection_client_event_object = nil
+
 	local trunk_revision = APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION
+
 	trunk_revision = tostring(trunk_revision)
 
 	if trunk_revision == "Unknown" then
@@ -89,6 +91,7 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	local project_hash = options.project_hash
 	local argument_hash = options.argument_hash
 	local stripping_hash = ""
+
 	self.network_hash = Network.config_hash(self.config_file_name)
 	self.combined_hash = Application.make_hash(self.network_hash, trunk_revision, project_hash, argument_hash, stripping_hash)
 
@@ -102,6 +105,7 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	self._peer_to_channel = {}
 	self._channel_to_peer = {}
 	self._members = {}
+
 	local event_listeners = {}
 
 	for i = 1, #EVENT_NAMES do
@@ -119,6 +123,7 @@ end
 
 ConnectionManager.initialize_wan_client = function (self, peer_id)
 	peer_id = peer_id or WAN_RANDOM_PEER_ID
+
 	local client = Network.init_wan_client(self.config_file_name, peer_id, self.oodle_net_file_name)
 
 	if client then
@@ -388,7 +393,7 @@ ConnectionManager.set_connection_client = function (self, connection_client, eve
 end
 
 ConnectionManager.disconnect = function (self, peer_id)
-	local engine_lobby = nil
+	local engine_lobby
 
 	if self._connection_host then
 		engine_lobby = self._connection_host:engine_lobby()
@@ -455,10 +460,12 @@ ConnectionManager._shutdown_connection_client = function (self, is_error, game_r
 		game_session_manager:leave()
 	end
 
-	local host_peer_id = self._connection_client:host()
-	local host_channel_id = self:peer_to_channel(host_peer_id)
+	do
+		local host_peer_id = self._connection_client:host()
+		local host_channel_id = self:peer_to_channel(host_peer_id)
 
-	self:_peer_disconnected(host_channel_id, host_peer_id, IS_HOST, is_error, game_reason, engine_reason)
+		self:_peer_disconnected(host_channel_id, host_peer_id, IS_HOST, is_error, game_reason, engine_reason)
+	end
 
 	for peer_id, _ in pairs(self._members) do
 		local channel_id = self:peer_to_channel(peer_id)
@@ -484,8 +491,7 @@ ConnectionManager.shutdown_connections = function (self, reason)
 		ConnectionManagerTestify.unregister_testify_connection_events(self)
 	end
 
-	local game_reason = reason
-	local engine_reason = nil
+	local game_reason, engine_reason = reason
 
 	if self._connection_host then
 		self:_shutdown_connection_host(IS_NOT_ERROR, game_reason, engine_reason)
@@ -615,6 +621,7 @@ ConnectionManager._peer_connected = function (self, channel_id, peer_id)
 
 	local connection_client = self._connection_client
 	local is_host = peer_id == connection_client:host()
+
 	self._members[peer_id] = true
 
 	if is_host then
@@ -760,11 +767,13 @@ end
 
 ConnectionManager.register_event_listener = function (self, object, event_name, func)
 	local listeners = self._event_listeners[event_name]
+
 	listeners[object] = func
 end
 
 ConnectionManager.unregister_event_listener = function (self, object, event_name)
 	local listeners = self._event_listeners[event_name]
+
 	listeners[object] = nil
 end
 

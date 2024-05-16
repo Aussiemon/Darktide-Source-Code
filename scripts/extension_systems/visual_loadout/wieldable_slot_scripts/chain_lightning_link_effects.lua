@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_link_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ChainLightningTarget = require("scripts/utilities/action/chain_lightning_target")
@@ -20,12 +22,12 @@ local JUMP_VALIDATION = ChainLightning.jump_validation_functions
 local ACTION_MODULE_TARGETING_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
-	"target_unit_3"
+	"target_unit_3",
 }
 local ROOT_CHAIN_SETTINGS = {
 	max_targets = {
-		num_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS
-	}
+		num_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS,
+	},
 }
 local LOOPING_LINK_VFX_ALIAS = "chain_lightning_link"
 local PARTICLE_VARIABLE_NAME = "length"
@@ -34,7 +36,7 @@ local DEFAULT_HAND = "both"
 local VISUAL_JUMP_TIME = 0.05
 local NO_TARGET_JUMP_TIME = 0.2
 local vfx_external_properties = {}
-local _on_add_func, _root_on_add_func, _on_remove_func, _link_effect_name = nil
+local _on_add_func, _root_on_add_func, _on_remove_func, _link_effect_name
 local MAX_NUM_FX_DATA_TABLES = 128
 local MAX_NUM_EFFECTS_PER_TABLE = 4
 local FxData = class("FxDataChainLightning")
@@ -42,6 +44,7 @@ local FxData = class("FxDataChainLightning")
 FxData.init = function (self, index)
 	self.index = index
 	self.active = false
+
 	local effects = Script.new_array(MAX_NUM_EFFECTS_PER_TABLE)
 
 	for jj = 1, MAX_NUM_EFFECTS_PER_TABLE do
@@ -55,7 +58,9 @@ end
 FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_node, target_unit, target_node)
 	local num_effects = self._num_effects + 1
 	local entry = self._effects[num_effects]
+
 	self._num_effects = num_effects
+
 	local source_pos = Unit_world_position(source_unit, source_node)
 	local target_pos = Unit_world_position(target_unit, target_node)
 	local line = target_pos - source_pos
@@ -78,7 +83,9 @@ end
 FxData.spawn_vfx_world_position = function (self, world, link_effect_name, source_unit, source_node, target_pos)
 	local num_effects = self._num_effects + 1
 	local entry = self._effects[num_effects]
+
 	self._num_effects = num_effects
+
 	local source_pos = Unit_world_position(source_unit, source_node)
 	local line = target_pos - source_pos
 	local direction, length = Vector3_direction_length(line)
@@ -146,6 +153,7 @@ end
 
 FxData.clear = function (self)
 	self.active = false
+
 	local effects = self._effects
 
 	for jj = 1, MAX_NUM_EFFECTS_PER_TABLE do
@@ -185,6 +193,7 @@ end
 
 ChainLightningLinkEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._world = context.world
 	self._physics_world = context.physics_world
 	self._is_husk = context.is_husk
@@ -195,7 +204,9 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 	self._buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
 	self._fx_extension = context.fx_extension
 	self._visual_loadout_extension = context.visual_loadout_extension
+
 	local unit_data_extension = context.unit_data_extension
+
 	self._targeting_module_component = unit_data_extension:read_component("action_module_targeting")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._critical_strike_component = unit_data_extension:read_component("critical_strike")
@@ -208,6 +219,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 	self._next_no_target_jump_time = 0
 	self._no_target_position = Vector3Box(0, 0, 0)
 	self._charge_level = false
+
 	local weapon_chain_settings = weapon_template.chain_settings
 	local right_fx_source_name = fx_sources[weapon_chain_settings.right_fx_source_name]
 	local left_fx_source_name = fx_sources[weapon_chain_settings.left_fx_source_name]
@@ -233,7 +245,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 		visual_loadout_extension = self._visual_loadout_extension,
 		weapon_action_component = self._weapon_action_component,
 		weapon_template = self._weapon_template,
-		weapon_actions = self._weapon_actions
+		weapon_actions = self._weapon_actions,
 	}
 
 	self:_create_chain_root_node()
@@ -309,6 +321,7 @@ ChainLightningLinkEffects._find_root_targets = function (self, t)
 		local is_critical_strike = self._critical_strike_component.is_active
 		local fx_settings = action_settings and action_settings.fx
 		local fx_hand = fx_settings and (is_critical_strike and fx_settings.fx_hand_critical_strike or fx_settings.fx_hand) or DEFAULT_HAND
+
 		func_context.fx_hand = fx_hand
 
 		for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
@@ -418,10 +431,12 @@ ChainLightningLinkEffects._find_no_target_pos = function (self, t)
 	if not hit then
 		local right = Quaternion.right(rotation)
 		local downwards_rotation = Quaternion.multiply(Quaternion.axis_angle(right, -math.pi * 0.1), rotation)
+
 		hit, hit_position = self:_no_target_raycast(position, downwards_rotation, 10)
 	end
 
 	local jump_time = NO_TARGET_JUMP_TIME
+
 	self._next_no_target_jump_time = t + jump_time
 
 	self._no_target_position:store(hit_position)
@@ -478,6 +493,7 @@ ChainLightningLinkEffects._find_new_targets = function (self, t)
 	local chain_settings = action_settings and action_settings.chain_settings
 	local time_in_action = t - weapon_action_component.start_t
 	local max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
+
 	jump_time = VISUAL_JUMP_TIME
 
 	for child_node, _ in pairs(chain_root_node:children()) do
@@ -598,6 +614,7 @@ function _on_remove_func(node, context)
 	end
 
 	local unit = node:value("unit")
+
 	context.hit_units[unit] = nil
 end
 
@@ -616,7 +633,7 @@ function _link_effect_name(context, power_override)
 				for ii = #charge_level_to_power, 1, -1 do
 					local entry = charge_level_to_power[ii]
 
-					if entry.charge_level < charge_level then
+					if charge_level > entry.charge_level then
 						power = entry.power
 
 						break
@@ -631,6 +648,7 @@ function _link_effect_name(context, power_override)
 	end
 
 	vfx_external_properties.power = power or "high"
+
 	local visual_loadout_extension = context.visual_loadout_extension
 	local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_LINK_VFX_ALIAS, vfx_external_properties)
 

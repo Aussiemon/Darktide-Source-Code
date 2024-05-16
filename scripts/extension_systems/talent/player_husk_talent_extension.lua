@@ -1,26 +1,36 @@
+﻿-- chunkname: @scripts/extension_systems/talent/player_husk_talent_extension.lua
+
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local RPCS = {
-	"rpc_update_talents"
+	"rpc_update_talents",
 }
 local PlayerHuskTalentExtension = class("PlayerHuskTalentExtension")
 
 PlayerHuskTalentExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
+
 	local player = extension_init_data.player
+
 	self._player = player
 	self._local_player = Managers.player:local_player(1)
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
+
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
+
 	self._first_person_unit = first_person_unit
 	self._is_local_unit = extension_init_data.is_local_unit
+
 	local peer_id = player:peer_id()
+
 	self._channel_id = Managers.state.game_session:peer_to_channel(peer_id)
 	self._game_object_id = Managers.state.unit_spawner:game_object_id(self._unit)
+
 	local archetype = extension_init_data.archetype
 	local talents = extension_init_data.talents
+
 	self._package_synchronizer_client = extension_init_data.package_synchronizer_client
 	self._archetype = archetype
 	self._talents = talents
@@ -41,6 +51,7 @@ PlayerHuskTalentExtension._init_components = function (self)
 		local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:write_component("warp_charge")
 		local talent_resource_component = unit_data_extension:write_component("talent_resource")
+
 		warp_charge_component.state = "idle"
 		warp_charge_component.last_charge_at_t = 0
 		warp_charge_component.remove_at_t = 0
@@ -96,16 +107,16 @@ local class_loadout = {
 	passives = {},
 	coherency = {},
 	special_rules = {},
-	buff_template_tiers = {}
+	buff_template_tiers = {},
 }
 
 PlayerHuskTalentExtension._update_talents = function (self, talents)
 	self._talents = talents
-	local special_rules, buff_template_tiers = nil
+
+	local special_rules, buff_template_tiers
 
 	if Managers.state.game_mode:talents_disabled() then
-		buff_template_tiers = {}
-		special_rules = {}
+		special_rules, buff_template_tiers = {}, {}
 	else
 		local game_mode_settings = Managers.state.game_mode:settings()
 		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
@@ -146,6 +157,7 @@ PlayerHuskTalentExtension.rpc_update_talents = function (self, channel_id, unit_
 	for ii = 1, #talent_id_array do
 		local talent_name_id = talent_id_array[ii]
 		local talent_name = NetworkLookup.archetype_talent_names[talent_name_id]
+
 		temp_talent_name_set[talent_name] = talent_tier_array[ii]
 	end
 

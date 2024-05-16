@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/foundation/managers/managers.lua
+
 Managers = Managers or {
-	state = {}
+	state = {},
 }
 ManagersCreationOrder = ManagersCreationOrder or {
 	global = {},
-	state = {}
+	state = {},
 }
 
 local function destroy_global_managers()
@@ -58,7 +60,7 @@ local mt_global = {
 		end
 
 		return s
-	end
+	end,
 }
 local mt_state = {
 	__newindex = function (managers, alias, manager)
@@ -75,7 +77,7 @@ local mt_state = {
 		end
 
 		return s
-	end
+	end,
 }
 
 setmetatable(Managers, mt_global)

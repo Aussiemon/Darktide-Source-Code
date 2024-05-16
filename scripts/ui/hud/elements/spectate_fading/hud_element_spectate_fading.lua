@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/spectate_fading/hud_element_spectate_fading.lua
+
 local Definitions = require("scripts/ui/hud/elements/spectate_fading/hud_element_spectate_fading_definitions")
 local HudElementSpectateFadingSettings = require("scripts/ui/hud/elements/spectate_fading/hud_element_spectate_fading_settings")
 local ViewTransitionUI = require("scripts/ui/view_transition_ui")
@@ -7,7 +9,9 @@ HudElementSpectateFading.init = function (self, parent, draw_layer, start_scale)
 	HudElementSpectateFading.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	self._player = parent:player()
+
 	local fade_render_settings = HudElementSpectateFadingSettings.render_settings
+
 	self._fade_ui = ViewTransitionUI:new(fade_render_settings)
 
 	self:_register_event("event_spectate_fade_in")
@@ -19,7 +23,7 @@ end
 HudElementSpectateFading.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementSpectateFading.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
-	local fade_progress = nil
+	local fade_progress
 
 	if self._fade_duration then
 		if self._fading_in then
@@ -75,7 +79,7 @@ HudElementSpectateFading.event_spectate_fade_out_at = function (self, player, du
 		player = player,
 		duration = duration,
 		easing_function = easing_function,
-		fade_out_at = fade_out_at
+		fade_out_at = fade_out_at,
 	}
 end
 

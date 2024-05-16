@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/sway_weapon_module.lua
+
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local SwayWeaponModule = class("SwayWeaponModule")
@@ -16,7 +18,9 @@ SwayWeaponModule.init = function (self, unit, unit_data_extension, weapon_extens
 	self._shooting_status_component = unit_data_extension:read_component("shooting_status")
 	self._weapon_tweak_templates_component = unit_data_extension:write_component("weapon_tweak_templates")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
+
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._action_module_charge_component = unit_data_ext:read_component("action_module_charge")
 	self._sway_component.pitch = 0
 	self._sway_component.yaw = 0
@@ -62,24 +66,27 @@ SwayWeaponModule.fixed_update = function (self, dt, t)
 	local yaw_ratio = 1 - yaw / max_yaw
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local sway_modifier = stat_buffs.sway_modifier or 1
-	local pitch_decay_curve = 1 + 2 * pitch_ratio * pitch_ratio
-	local yaw_decay_curve = 1 + 2 * yaw_ratio * yaw_ratio
+	local pitch_decay_curve = 1 + 2 * (pitch_ratio * pitch_ratio)
+	local yaw_decay_curve = 1 + 2 * (yaw_ratio * yaw_ratio)
+
 	min_pitch = min_pitch * sway_modifier
 	min_yaw = min_yaw * sway_modifier
-	pitch_decay_curve = pitch_decay_curve * 1 / sway_modifier
-	yaw_decay_curve = yaw_decay_curve * 1 / sway_modifier
+	pitch_decay_curve = pitch_decay_curve * (1 / sway_modifier)
+	yaw_decay_curve = yaw_decay_curve * (1 / sway_modifier)
 
 	if min_pitch < pitch then
 		local decay = decay_settings.pitch
+
 		pitch = math.max(min_pitch, pitch - pitch * dt * decay * pitch_decay_curve)
-	elseif EPSILON < min_pitch - pitch then
+	elseif min_pitch - pitch > EPSILON then
 		pitch = math.min(max_pitch, pitch + pitch * dt * min_pitch * pitch_decay_curve)
 	end
 
 	if min_yaw < yaw then
 		local decay = decay_settings.yaw
+
 		yaw = math.max(min_yaw, yaw - yaw * dt * decay * yaw_decay_curve)
-	elseif EPSILON < min_yaw - yaw then
+	elseif min_yaw - yaw > EPSILON then
 		yaw = math.min(max_yaw, yaw + yaw * dt * min_yaw * yaw_decay_curve)
 	end
 
@@ -102,7 +109,7 @@ SwayWeaponModule._player_event_decay = function (self, decay, t)
 	local crouch_transition_grace_time = decay.crouch_transition_grace_time or 0
 	local crouch_transition_grace = t <= self._movement_state_component.is_crouching_transition_start_t + crouch_transition_grace_time
 	local is_in_player_event = enter_alternate_fire_grace or crouch_transition_grace
-	local decay_settings = nil
+	local decay_settings
 
 	if is_in_player_event then
 		decay_settings = decay.player_event or decay.idle
@@ -128,7 +135,9 @@ SwayWeaponModule._calculate_sway_offsets = function (self, dt, t)
 	local suppression_component = self._suppression_component
 	local pitch = sway_component.pitch
 	local yaw = sway_component.yaw
+
 	pitch, yaw = Suppression.apply_suppression_offsets_to_sway(suppression_component, pitch, yaw)
+
 	local offset_x, offset_y = sway_pattern(dt, t, sway_settings, yaw, pitch)
 
 	if self._action_module_charge_component then
@@ -139,6 +148,7 @@ SwayWeaponModule._calculate_sway_offsets = function (self, dt, t)
 			local charge_max_yaw = sway_template.charge_scale.max_yaw
 			local pitch_charge_offset = math.lerp(1, charge_max_pitch, math.sqrt(charge_level))
 			local yaw_charge_offset = math.lerp(1, charge_max_yaw, math.sqrt(charge_level))
+
 			offset_x = offset_x * pitch_charge_offset
 			offset_y = offset_y * yaw_charge_offset
 		end

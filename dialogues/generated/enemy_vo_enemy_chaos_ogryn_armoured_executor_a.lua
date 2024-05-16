@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_chaos_ogryn_armoured_executor_a.lua
+
 local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 	chaos_ogryn_executor_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			"loc_enemy_chaos_ogryn_armoured_executor_a__alerted_idle_07",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__alerted_idle_08",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__alerted_idle_09",
-			"loc_enemy_chaos_ogryn_armoured_executor_a__alerted_idle_10"
+			"loc_enemy_chaos_ogryn_armoured_executor_a__alerted_idle_10",
 		},
 		sound_events_duration = {
 			2.321,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			9.482063,
 			10.5541,
 			7.236854,
-			3.13875
+			3.13875,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_ogryn_executor_assault = {
 		randomize_indexes_n = 0,
@@ -50,7 +52,7 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_06",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_07",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_09",
-			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_10"
+			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_10",
 		},
 		sound_events_duration = {
 			2.267313,
@@ -59,7 +61,7 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			3.274396,
 			4.137563,
 			4.465271,
-			2.775063
+			2.775063,
 		},
 		sound_event_weights = {
 			0.1428571,
@@ -68,9 +70,9 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			0.1428571,
 			0.1428571,
 			0.1428571,
-			0.1428571
+			0.1428571,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_ogryn_executor_no_damage = {
 		randomize_indexes_n = 0,
@@ -85,7 +87,7 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			"loc_enemy_chaos_ogryn_armoured_executor_a__no_damage_07",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__no_damage_08",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__no_damage_09",
-			"loc_enemy_chaos_ogryn_armoured_executor_a__no_damage_10"
+			"loc_enemy_chaos_ogryn_armoured_executor_a__no_damage_10",
 		},
 		sound_events_duration = {
 			2.805125,
@@ -97,7 +99,7 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			2.786688,
 			2.707792,
 			2.514333,
-			1.879521
+			1.879521,
 		},
 		sound_event_weights = {
 			0.1,
@@ -109,10 +111,10 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_chaos_ogryn_armoured_executor_a", enemy_vo_enemy_chaos_ogryn_armoured_executor_a)

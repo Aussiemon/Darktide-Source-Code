@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/wwise_room_volume.lua
+
 local WwiseRoomVolume = component("WwiseRoomVolume")
 
 WwiseRoomVolume.init = function (self, unit)
@@ -68,36 +70,36 @@ end
 
 WwiseRoomVolume.component_data = {
 	priority = {
-		ui_type = "number",
+		decimals = 0,
+		max = 1024,
 		min = 1,
 		step = 1,
-		decimals = 0,
-		value = 1,
 		ui_name = "Priority",
-		max = 1024
+		ui_type = "number",
+		value = 1,
 	},
 	wall_occlusion = {
-		ui_type = "number",
+		decimals = 2,
+		max = 1,
 		min = 0,
 		step = 1,
-		decimals = 2,
-		value = 1,
 		ui_name = "Wall Occlusion",
-		max = 1
+		ui_type = "number",
+		value = 1,
 	},
 	aux_send_to_self = {
-		ui_type = "number",
+		decimals = 2,
+		max = 1,
 		min = 0,
 		step = 1,
-		decimals = 2,
-		value = 0.25,
 		ui_name = "Aux send to self",
-		max = 1
+		ui_type = "number",
+		value = 0.25,
 	},
 	reverb_aux_bus = {
+		ui_name = "Reverb aux bus",
 		ui_type = "combo_box",
 		value = "indoor_medium_3d",
-		ui_name = "Reverb aux bus",
 		options = {
 			"indoor_large_3d",
 			"indoor_medium_3d",
@@ -110,21 +112,21 @@ WwiseRoomVolume.component_data = {
 			"indoor_large_echo_3d",
 			"indoor_medium_hallway_3d",
 			"indoor_huge_cylinder_3d",
-			"indoor_small_hallway_3d"
-		}
+			"indoor_small_hallway_3d",
+		},
 	},
 	ambient_event = {
-		ui_type = "resource",
+		filter = "wwise_event",
 		preview = true,
 		thumbnails = false,
-		value = "",
 		ui_name = "Ambient event",
-		filter = "wwise_event"
+		ui_type = "resource",
+		value = "",
 	},
 	environment_state = {
+		ui_name = "Environment state",
 		ui_type = "combo_box",
 		value = "indoor_medium",
-		ui_name = "Environment state",
 		options = {
 			"indoor_huge",
 			"indoor_large",
@@ -133,9 +135,9 @@ WwiseRoomVolume.component_data = {
 			"indoor_tiny",
 			"urban_large",
 			"urban_medium",
-			"urban_small"
-		}
-	}
+			"urban_small",
+		},
+	},
 }
 
 return WwiseRoomVolume

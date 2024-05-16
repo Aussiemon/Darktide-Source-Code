@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/stagger_calculation.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local PowerLevel = require("scripts/utilities/attack/power_level")
@@ -7,7 +9,7 @@ local attack_types = AttackSettings.attack_types
 local rending_stagger_strength_modifier = StaggerSettings.rending_stagger_strength_modifier
 local stagger_strength_output = PowerLevelSettings.stagger_strength_output
 local StaggerCalculation = {}
-local _calculate_stagger_strength, _stagger_reduction, _get_stagger_type, _calculate_extents, _calculate_stagger_duration_scale, _calculate_stagger_length_scale, _calculate_stagger_buffs, _calculate_stagger_reduction_buffs = nil
+local _calculate_stagger_strength, _stagger_reduction, _get_stagger_type, _calculate_extents, _calculate_stagger_duration_scale, _calculate_stagger_length_scale, _calculate_stagger_buffs, _calculate_stagger_reduction_buffs
 
 StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning, optional_mutator_stagger_overrides)
 	local is_finesse_hit = hit_weakspot
@@ -15,6 +17,7 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 	if target_settings.power_level_multiplier then
 		local power_level_lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "targets", 1, "power_level_multiplier")
 		local power_level_multiplier = DamageProfile.lerp_damage_profile_entry(target_settings.power_level_multiplier, power_level_lerp_value)
+
 		power_level = power_level * power_level_multiplier
 	end
 
@@ -27,6 +30,7 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 	end
 
 	stagger_strength = stagger_strength * armor_damage_modifier
+
 	local current_hit_stagger_strength = stagger_strength
 	local sum_stagger_strength = stagger_strength + stagger_strength_pool - 0.5 * stagger_reduction
 	local stagger_resistance = breed.stagger_resistance or StaggerSettings.default_stagger_resistance
@@ -56,13 +60,14 @@ end
 
 function _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
 	local stagger_table = stagger_strength_output[armor_type]
-	local min = stagger_table.min
-	local max = stagger_table.max
+	local min, max = stagger_table.min, stagger_table.max
 	local stagger_strength_range = max - min
 	local charged_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
 	local stagger_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charged_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, attacker_stat_buffs, attack_type)
 	local stagger_buff_modifier = _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, hit_weakspot)
+
 	stagger_power_level = stagger_power_level * stagger_buff_modifier
+
 	local percentage = PowerLevel.power_level_percentage(stagger_power_level)
 	local stagger_strength = min + stagger_strength_range * percentage
 
@@ -74,6 +79,7 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 
 	if optional_stagger_strength_multiplier then
 		local additional_stagger_strength = stagger_strength * optional_stagger_strength_multiplier
+
 		stagger_strength = stagger_strength + additional_stagger_strength
 	end
 
@@ -104,6 +110,7 @@ function _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduc
 	end
 
 	local stagger_reduction_buff_modifier = _calculate_stagger_reduction_buffs(attacker_stat_buffs, hit_weakspot, is_burning)
+
 	stagger_reduction = stagger_reduction * stagger_reduction_buff_modifier
 
 	return stagger_reduction
@@ -114,7 +121,7 @@ local stagger_categories = StaggerSettings.stagger_categories
 function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resistance, hit_shield, optional_mutator_stagger_overrides, hit_weakspot)
 	local stagger_category = hit_shield and damage_profile.shield_stagger_category or damage_profile.stagger_category
 	local stagger_list = stagger_categories[stagger_category]
-	local chosen_stagger_type = nil
+	local chosen_stagger_type
 	local chosen_stagger_threshold = 0
 	local default_stagger_thresholds = StaggerSettings.default_stagger_thresholds
 	local threshold_overrides = optional_mutator_stagger_overrides and optional_mutator_stagger_overrides.stagger_thresholds and optional_mutator_stagger_overrides.stagger_thresholds[breed.name]
@@ -127,7 +134,8 @@ function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resi
 
 		if stagger_threshold >= 0 then
 			local stagger_resistance_modifier = hit_weakspot and damage_profile.weakspot_stagger_resistance_modifier or damage_profile.stagger_resistance_modifier or 1
-			stagger_threshold = stagger_threshold * stagger_resistance * stagger_resistance_modifier
+
+			stagger_threshold = stagger_threshold * (stagger_resistance * stagger_resistance_modifier)
 
 			if chosen_stagger_threshold < stagger_threshold and stagger_threshold < stagger_strength then
 				chosen_stagger_type = stagger_type

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_weapon_spawner.lua
+
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MasterItems = require("scripts/backend/master_items")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
@@ -54,10 +56,12 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 	end
 
 	self._weapon_loader_index = (self._weapon_loader_index or 0) + 1
+
 	local reference_name = self._reference_name .. "_weapon_item_loader_" .. tostring(self._weapon_loader_index)
 	local single_item_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions)
 	local slot_id = "slot_primary"
 	local on_loaded_callback = callback(self, "cb_on_item_package_loaded", slot_id, item, on_spawn_cb)
+
 	self._loading_weapon_data = {
 		link_unit_name = "content/weapons/default_display",
 		loader = single_item_loader,
@@ -66,7 +70,7 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 		rotation = rotation and QuaternionBox(rotation),
 		scale = scale and Vector3.to_array(scale),
 		item = item,
-		force_highest_mip = force_highest_mip
+		force_highest_mip = force_highest_mip,
 	}
 
 	single_item_loader:load_slot_item(slot_id, item, on_loaded_callback)
@@ -163,8 +167,7 @@ UIWeaponSpawner._despawn_weapon = function (self)
 	local weapon_spawn_data = self._weapon_spawn_data
 
 	if weapon_spawn_data then
-		local item_unit_3p = weapon_spawn_data.item_unit_3p
-		local attachment_units_3p = weapon_spawn_data.attachment_units_3p
+		local item_unit_3p, attachment_units_3p = weapon_spawn_data.item_unit_3p, weapon_spawn_data.attachment_units_3p
 		local link_unit = weapon_spawn_data.link_unit
 
 		for i = #attachment_units_3p, 1, -1 do
@@ -201,6 +204,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 	scale = scale or Vector3.zero()
+
 	local world = self._world
 	local link_unit = World.spawn_unit_ex(world, link_unit_name, nil, position, rotation)
 
@@ -208,26 +212,28 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 
 	local extension_manager = self._extension_manager
 	local attach_settings = {
-		from_script_component = false,
 		force_highest_lod_step = true,
+		from_script_component = false,
 		world = world,
 		unit_spawner = self._unit_spawner,
 		item_definitions = self._item_definitions,
 		extension_manager = extension_manager,
-		spawn_with_extensions = extension_manager ~= nil
+		spawn_with_extensions = extension_manager ~= nil,
 	}
 	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit, nil, nil, nil)
 	local spawn_data = {
-		visible = false,
 		streaming_complete = false,
+		visible = false,
 		loader = loader,
 		rotation = rotation and QuaternionBox(rotation),
 		item = item,
 		link_unit = link_unit,
 		item_unit_3p = item_unit_3p,
-		attachment_units_3p = attachment_units_3p
+		attachment_units_3p = attachment_units_3p,
 	}
+
 	self._weapon_spawn_data = spawn_data
+
 	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", item_unit_3p)
 
 	Unit.force_stream_meshes(item_unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
@@ -316,7 +322,8 @@ UIWeaponSpawner._mouse_rotation_input = function (self, input_service, dt)
 		if InputDevice.gamepad_active then
 			local scroll_axis = input_service:get("scroll_axis")
 			local rotation = scroll_axis and scroll_axis[1] or 0
-			rotation = math.abs(scroll_axis[2]) < math.abs(rotation) and rotation or 0
+
+			rotation = math.abs(rotation) > math.abs(scroll_axis[2]) and rotation or 0
 
 			if math.abs(rotation) > 0.1 then
 				local angle = self._rotation_angle + -rotation * dt * 4
@@ -369,7 +376,9 @@ UIWeaponSpawner._is_pressed = function (self, input_service)
 
 		if physics_world and camera then
 			local screen_height = RESOLUTION_LOOKUP.height
+
 			cursor[2] = screen_height - cursor[2]
+
 			local from = Camera.screen_to_world(camera, Vector3(cursor[1], cursor[2], 0), 0)
 			local direction = Camera.screen_to_world(camera, cursor, 1) - from
 			local to = Vector3.normalize(direction)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/vo_sources_cache.lua
+
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local VOSourcesCache = class("VOSourcesCache")
 

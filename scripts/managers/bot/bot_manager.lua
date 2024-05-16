@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/bot/bot_manager.lua
+
 local BotSynchronizerHost = require("scripts/bot/bot_synchronizer_host")
 local BotSynchronizerClient = require("scripts/bot/bot_synchronizer_client")
 local BotManagerTestify = GameParameters.testify and require("scripts/managers/bot/bot_manager_testify")
@@ -32,6 +34,7 @@ BotManager.create_synchronizer_host = function (self)
 	self:_cleanup()
 
 	local network_delegate = Managers.connection:network_event_delegate()
+
 	self._bot_synchronizer_host = BotSynchronizerHost:new(network_delegate)
 
 	return self._bot_synchronizer_host
@@ -46,6 +49,7 @@ BotManager.create_synchronizer_client = function (self, host_channel_id)
 
 	local peer_id = Network.peer_id()
 	local network_delegate = Managers.connection:network_event_delegate()
+
 	self._bot_synchronizer_client = BotSynchronizerClient:new(peer_id, network_delegate, host_channel_id)
 
 	return self._bot_synchronizer_client

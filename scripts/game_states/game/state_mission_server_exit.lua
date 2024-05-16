@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_mission_server_exit.lua
+
 local NameGenerator = require("scripts/multiplayer/utilities/name_generator")
 
 local function _warning(...)
@@ -29,7 +31,7 @@ StateMissionServerExit.update = function (self, dt)
 	if self._timeout then
 		self._timeout = self._timeout + dt
 
-		if TIMEOUT < self._timeout then
+		if self._timeout > TIMEOUT then
 			self._timeout = nil
 
 			Managers.multiplayer_session:leave("mission_server_exit_timeout")

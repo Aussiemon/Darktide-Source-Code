@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_move_to_target_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -9,9 +11,12 @@ local BtMoveToTargetAction = class("BtMoveToTargetAction", "BtNode")
 BtMoveToTargetAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.navigation_extension = navigation_extension
+
 	local walk_speed = breed.walk_speed
 
 	navigation_extension:set_enabled(true, walk_speed)
@@ -34,7 +39,7 @@ BtMoveToTargetAction.run = function (self, unit, breed, blackboard, scratchpad, 
 	local navigation_extension = scratchpad.navigation_extension
 	local destination = navigation_extension:destination()
 
-	if MOVE_CHECK_DISTANCE_SQ < Vector3.distance_squared(destination, target_position) then
+	if Vector3.distance_squared(destination, target_position) > MOVE_CHECK_DISTANCE_SQ then
 		self:_update_move_to_target_position(scratchpad, navigation_extension, target_position)
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/constant_elements.lua
+
 local ChatElementSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
 local elements = {
 	{
@@ -11,8 +13,8 @@ local elements = {
 			"in_view",
 			"in_loading",
 			"skippable_cinematic",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
 		class_name = "ConstantElementSubtitles",
@@ -25,13 +27,13 @@ local elements = {
 			"in_view",
 			"in_loading",
 			"skippable_cinematic",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
-		package = "packages/ui/constant_elements/popup_handler/popup_handler",
 		class_name = "ConstantElementPopupHandler",
 		filename = "scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler",
+		package = "packages/ui/constant_elements/popup_handler/popup_handler",
 		visibility_groups = {
 			"cutscene",
 			"mission_lobby",
@@ -39,21 +41,21 @@ local elements = {
 			"in_view",
 			"in_loading",
 			"skippable_cinematic",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
-		package = "packages/ui/constant_elements/notification_feed/notification_feed",
-		use_hud_scale = true,
 		class_name = "ConstantElementNotificationFeed",
 		filename = "scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed",
+		package = "packages/ui/constant_elements/notification_feed/notification_feed",
+		use_hud_scale = true,
 		visibility_groups = {
 			"cutscene",
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
 		class_name = "ConstantElementWatermark",
@@ -64,8 +66,8 @@ local elements = {
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
 		class_name = "ConstantElementBetaLabel",
@@ -76,62 +78,62 @@ local elements = {
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
-		package = "packages/ui/constant_elements/mission_lobby_status/mission_lobby_status",
 		class_name = "ConstantMissionLobbyStatus",
 		filename = "scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status",
+		package = "packages/ui/constant_elements/mission_lobby_status/mission_lobby_status",
 		visibility_groups = {
-			"mission_lobby"
-		}
+			"mission_lobby",
+		},
 	},
 	{
-		package = "packages/ui/constant_elements/cursors/cursors",
 		class_name = "ConstantElementSoftwareCursor",
 		filename = "scripts/ui/constant_elements/elements/software_cursor/constant_element_software_cursor",
+		package = "packages/ui/constant_elements/cursors/cursors",
 		visibility_groups = {
 			"tactical_overlay",
 			"cutscene",
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
-		package = "packages/ui/constant_elements/chat/chat",
-		visibility_group_parameters_fallback = "default",
 		class_name = "ConstantElementChat",
 		filename = "scripts/ui/constant_elements/elements/chat/constant_element_chat",
+		package = "packages/ui/constant_elements/chat/chat",
+		visibility_group_parameters_fallback = "default",
 		visibility_groups = {
 			"mission_lobby",
 			"end_of_round",
 			"in_loading",
 			"cutscene",
-			"default"
+			"default",
 		},
 		visibility_group_parameters = {
 			default = {
 				horizontal_alignment = ChatElementSettings.horizontal_alignment,
 				vertical_alignment = ChatElementSettings.vertical_alignment,
 				chat_window_offset = ChatElementSettings.chat_window_offset,
-				chat_window_size = ChatElementSettings.chat_window_size
+				chat_window_size = ChatElementSettings.chat_window_size,
 			},
 			mission_lobby = {
 				horizontal_alignment = "right",
 				chat_window_offset = {
-					-ChatElementSettings.chat_window_offset[1]
-				}
+					-ChatElementSettings.chat_window_offset[1],
+				},
 			},
 			end_of_round = {
 				horizontal_alignment = "right",
 				chat_window_offset = {
-					-ChatElementSettings.chat_window_offset[1]
-				}
-			}
-		}
+					-ChatElementSettings.chat_window_offset[1],
+				},
+			},
+		},
 	},
 	{
 		class_name = "ConstantElementLoading",
@@ -141,8 +143,8 @@ local elements = {
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
-			"default"
-		}
+			"default",
+		},
 	},
 	{
 		class_name = "ConstantElementOnboardingHandler",
@@ -152,9 +154,9 @@ local elements = {
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
-			"default"
-		}
-	}
+			"default",
+		},
+	},
 }
 
 return elements

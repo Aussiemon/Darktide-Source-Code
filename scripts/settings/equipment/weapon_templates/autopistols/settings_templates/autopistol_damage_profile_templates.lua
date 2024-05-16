@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -20,12 +22,13 @@ local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
+
 damage_templates.default_autopistol_assault = {
 	stagger_category = "killshot",
 	cleave_distribution = single_cleave,
 	ranges = {
 		max = 25,
-		min = 10
+		min = 10,
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -37,7 +40,7 @@ damage_templates.default_autopistol_assault = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
@@ -47,8 +50,8 @@ damage_templates.default_autopistol_assault = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
-			}
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+			},
 		},
 		far = {
 			attack = {
@@ -59,7 +62,7 @@ damage_templates.default_autopistol_assault = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_6
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
@@ -69,27 +72,27 @@ damage_templates.default_autopistol_assault = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_01,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_4,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
-			}
-		}
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+			},
+		},
 	},
 	critical_strike = {
 		gibbing_power = GibbingPower.light,
-		gibbing_type = GibbingTypes.ballistic
+		gibbing_type = GibbingTypes.ballistic,
 	},
 	power_distribution = {
 		attack = {
 			40,
-			80
+			80,
 		},
 		impact = {
 			2,
-			4
-		}
+			4,
+		},
 	},
 	accumulative_stagger_strength_multiplier = {
 		0.5,
-		2
+		2,
 	},
 	herding_template = HerdingTemplates.shot,
 	wounds_template = WoundsTemplates.autopistol,
@@ -98,43 +101,43 @@ damage_templates.default_autopistol_assault = {
 	gibbing_type = GibbingTypes.ballistic,
 	suppression_attack_delay = {
 		0.05,
-		0.4
+		0.4,
 	},
 	suppression_value = {
 		0.05,
-		1
+		1,
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			2,
-			6
+			6,
 		},
 		distance = {
 			3,
-			6
-		}
+			6,
+		},
 	},
 	ragdoll_push_force = {
 		200,
-		250
+		250,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default
+			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 		boost_curve_multiplier_finesse = {
 			0.3,
-			0.9
-		}
-	}
+			0.9,
+		},
+	},
 }
 damage_templates.default_autopistol_snp = {
 	stagger_category = "killshot",
 	cleave_distribution = single_cleave,
 	ranges = {
 		max = 25,
-		min = 10
+		min = 10,
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -146,7 +149,7 @@ damage_templates.default_autopistol_snp = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
@@ -156,8 +159,8 @@ damage_templates.default_autopistol_snp = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
-			}
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+			},
 		},
 		far = {
 			attack = {
@@ -168,7 +171,7 @@ damage_templates.default_autopistol_snp = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_6
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
@@ -178,27 +181,27 @@ damage_templates.default_autopistol_snp = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_01,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_4,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4
-			}
-		}
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+			},
+		},
 	},
 	critical_strike = {
 		gibbing_power = GibbingPower.light,
-		gibbing_type = GibbingTypes.ballistic
+		gibbing_type = GibbingTypes.ballistic,
 	},
 	power_distribution = {
 		attack = {
 			40,
-			80
+			80,
 		},
 		impact = {
 			4,
-			8
-		}
+			8,
+		},
 	},
 	accumulative_stagger_strength_multiplier = {
 		2,
-		4
+		4,
 	},
 	herding_template = HerdingTemplates.shot,
 	wounds_template = WoundsTemplates.autopistol,
@@ -207,39 +210,39 @@ damage_templates.default_autopistol_snp = {
 	gibbing_type = GibbingTypes.ballistic,
 	suppression_attack_delay = {
 		0.05,
-		0.4
+		0.4,
 	},
 	suppression_value = {
 		0.05,
-		1
+		1,
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
 			2,
-			6
+			6,
 		},
 		distance = {
 			3,
-			6
-		}
+			6,
+		},
 	},
 	ragdoll_push_force = {
 		200,
-		250
+		250,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default
+			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 		boost_curve_multiplier_finesse = {
 			0.3,
-			0.9
-		}
-	}
+			0.9,
+		},
+	},
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides
+	overrides = overrides,
 }

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/options/settings_utils.lua
+
 local function print_func(format, ...)
 	print(string.format("[RenderSettings] " .. format, ...))
 end
@@ -151,6 +153,7 @@ local function remove_repeated_entries(changes_list, start_index)
 
 			for i = 1, #occurences do
 				local index = occurences[i]
+
 				changes_list[index] = nil
 			end
 
@@ -176,12 +179,12 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 			id = changed_setting.id,
 			value = new_value,
 			save_location = changed_setting.save_location,
-			require_apply = changed_setting.require_apply
+			require_apply = changed_setting.require_apply,
 		}
 	end
 
 	local settings_list = affected_settings or {}
-	local changed_setting_valid = not changed_setting.validation_function or changed_setting.validation_function and changed_setting:validation_function()
+	local changed_setting_valid = not changed_setting.validation_function or changed_setting.validation_function and changed_setting.validation_function(changed_setting)
 
 	if changed_setting_valid and (not changed_setting.disabled or changed_setting.disabled and changed_setting.disabled_origin == origin_id) then
 		if changed_setting.disable_rules then
@@ -193,14 +196,14 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 				local disabled_rule = changed_setting.disable_rules[i]
 				local disabled_setting = settings_by_id[disabled_rule.id]
 
-				if disabled_setting and (not disabled_setting.validation_function or disabled_setting.validation_function and disabled_setting:validation_function()) then
+				if disabled_setting and (not disabled_setting.validation_function or disabled_setting.validation_function and disabled_setting.validation_function(disabled_setting)) then
 					if disabled_rule.validation_function(new_value) then
 						if not disabled_by_id[disabled_rule.id] then
 							affected_ids[disabled_rule.id] = true
 							disabled_by_id[disabled_rule.id] = {
 								disabled_origin_id = changed_setting.id,
 								affected_setting = disabled_setting,
-								disabled_rule = disabled_rule
+								disabled_rule = disabled_rule,
 							}
 						end
 					elseif not disabled_rule.validation_function(new_value) and (not disabled_setting.disabled_by or disabled_setting.disabled_by and disabled_setting.disabled_by[changed_setting.id]) and not enabled_by_id[disabled_rule.id] then
@@ -208,7 +211,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 						enabled_by_id[disabled_rule.id] = {
 							disabled_origin_id = changed_setting.id,
 							affected_setting = disabled_setting,
-							disabled_rule = disabled_rule
+							disabled_rule = disabled_rule,
 						}
 					end
 				end
@@ -222,10 +225,11 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 					local disabled_setting = disabled_data.affected_setting
 					local disabled_origin_id = disabled_data.disabled_origin_id
 					local disabled_rule = disabled_data.disabled_rule
+
 					disabled_setting.disabled_by = disabled_setting.disabled_by or {}
 
 					if table.is_empty(disabled_setting.disabled_by) then
-						disabled_setting.value_on_enabled = disabled_setting:get_function()
+						disabled_setting.value_on_enabled = disabled_setting.get_function(disabled_setting)
 						disabled_setting.disabled_origin = disabled_origin_id
 					end
 
@@ -235,7 +239,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 						id = disabled_rule.id,
 						value = disabled_rule.disable_value,
 						save_location = disabled_setting.save_location,
-						require_apply = disabled_setting.require_apply
+						require_apply = disabled_setting.require_apply,
 					}
 				elseif enabled_data then
 					local enabled_setting = enabled_data.affected_setting
@@ -253,7 +257,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 							id = disabled_rule.id,
 							value = enabled_setting.value_on_enabled,
 							save_location = enabled_setting.save_location,
-							require_apply = enabled_setting.require_apply
+							require_apply = enabled_setting.require_apply,
 						}
 					end
 				end
@@ -275,7 +279,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 												id = inner_id,
 												value = inner_value,
 												save_location = settings_by_id[inner_id].save_location,
-												require_apply = settings_by_id[inner_id].require_apply
+												require_apply = settings_by_id[inner_id].require_apply,
 											}
 										elseif settings_by_id[inner_id].disabled then
 											settings_by_id[inner_id].value_on_enabled = inner_value
@@ -284,7 +288,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 										changes_list[#changes_list + 1] = {
 											id = inner_id,
 											value = inner_value,
-											save_location = id
+											save_location = id,
 										}
 									end
 								end
@@ -294,7 +298,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 										id = id,
 										value = value,
 										save_location = settings_by_id[id].save_location,
-										require_apply = settings_by_id[id].require_apply
+										require_apply = settings_by_id[id].require_apply,
 									}
 								elseif settings_by_id[id].disabled then
 									settings_by_id[id].value_on_enabled = value
@@ -302,7 +306,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 							elseif not settings_by_id[id] then
 								changes_list[#changes_list + 1] = {
 									id = id,
-									value = value
+									value = value,
 								}
 							end
 						end
@@ -316,7 +320,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 										id = id,
 										value = value,
 										save_location = settings_by_id[id].save_location,
-										require_apply = settings_by_id[id].require_apply
+										require_apply = settings_by_id[id].require_apply,
 									}
 								elseif settings_by_id[id] and settings_by_id[id].disabled then
 									settings_by_id[id].value_on_enabled = value
@@ -338,7 +342,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 							id = id,
 							value = value,
 							save_location = settings_by_id[id].save_location,
-							require_apply = settings_by_id[id].require_apply
+							require_apply = settings_by_id[id].require_apply,
 						}
 					elseif settings_by_id[id].disabled then
 						settings_by_id[id].value_on_enabled = value
@@ -349,6 +353,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 
 		for i = 1, #changes_list do
 			local change = changes_list[i]
+
 			settings_list[#settings_list + 1] = change
 
 			if settings_by_id[change.id] then
@@ -378,6 +383,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 
 			if settings_by_id[id] and settings_by_id[id].on_changed then
 				local saved, needs_apply = settings_by_id[id].on_changed(new_value, settings_by_id[id])
+
 				dirty = dirty or saved
 
 				if not require_apply then
@@ -387,7 +393,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 				settings_by_id[id].on_value_changed_function(new_value, settings_by_id[id])
 
 				local save_location = setting_changed.save_location
-				local current_value = setting_changed:get_function()
+				local current_value = setting_changed.get_function(setting_changed)
 
 				if not is_same(current_value, new_value) then
 					set_user_setting(save_location, id, new_value)
@@ -463,7 +469,7 @@ local function generate_settings(settings)
 		end,
 		get_local_settings = function (settings_name)
 			return get_local_settings(settings_name)
-		end
+		end,
 	}
 end
 

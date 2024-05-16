@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_buff_templates.lua
+
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -38,17 +40,17 @@ local templates = {}
 table.make_unique(templates)
 
 templates.flamer_assault = {
-	interval = 0.5,
-	duration = 4,
 	buff_id = "flamer_assault",
+	class_name = "interval_buff",
+	duration = 4,
+	interval = 0.5,
 	interval_stack_removal = true,
+	max_stacks = 31,
+	max_stacks_cap = 31,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks_cap = 31,
-	max_stacks = 31,
-	class_name = "interval_buff",
 	keywords = {
-		buff_keywords.burning
+		buff_keywords.burning,
 	},
 	interval_func = function (template_data, template_context, template)
 		local unit = template_context.unit
@@ -64,22 +66,24 @@ templates.flamer_assault = {
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.fire
+	minion_effects = minion_burning_buff_effects.fire,
 }
+
 local warpfire_broadphase_results = {}
+
 templates.warp_fire = {
-	interval = 0.75,
-	duration = 8,
 	buff_id = "warp_fire",
+	class_name = "interval_buff",
+	duration = 8,
+	interval = 0.75,
 	interval_stack_removal = true,
+	max_stacks = 31,
+	max_stacks_cap = 31,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks_cap = 31,
-	max_stacks = 31,
-	class_name = "interval_buff",
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.warpfire_burning
+		buff_keywords.warpfire_burning,
 	},
 	interval_func = function (template_data, template_context, template)
 		local unit = template_context.unit
@@ -122,7 +126,7 @@ templates.warp_fire = {
 					local victim_unit = template_context.unit
 					local position = POSITION_LOOKUP[victim_unit]
 					local distance = 5
-					local num_results = broadphase:query(position, distance, warpfire_broadphase_results, enemy_side_names)
+					local num_results = broadphase.query(broadphase, position, distance, warpfire_broadphase_results, enemy_side_names)
 
 					if num_results > 0 then
 						local i = 1
@@ -172,30 +176,26 @@ templates.warp_fire = {
 								end
 							end
 
-							if i == num_results then
-								i = 1
-							else
-								i = i + 1
-							end
+							i = i == num_results and 1 or i + 1
 						end
 					end
 				end
 			end
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.warpfire
+	minion_effects = minion_burning_buff_effects.warpfire,
 }
 templates.bleed = {
-	interval = 0.5,
-	predicted = false,
-	interval_stack_removal = true,
-	max_stacks_cap = 16,
-	refresh_duration_on_stack = true,
-	max_stacks = 16,
-	duration = 1.5,
 	class_name = "interval_buff",
+	duration = 1.5,
+	interval = 0.5,
+	interval_stack_removal = true,
+	max_stacks = 16,
+	max_stacks_cap = 16,
+	predicted = false,
+	refresh_duration_on_stack = true,
 	keywords = {
-		buff_keywords.bleeding
+		buff_keywords.bleeding,
 	},
 	interval_func = function (template_data, template_context, template)
 		local unit = template_context.unit
@@ -217,111 +217,111 @@ templates.bleed = {
 				node_name = "j_spine",
 				vfx = {
 					material_emission = true,
-					particle_effect = "content/fx/particles/enemies/buff_bleeding",
 					orphaned_policy = "destroy",
-					stop_type = "stop"
-				}
-			}
-		}
-	}
+					particle_effect = "content/fx/particles/enemies/buff_bleeding",
+					stop_type = "stop",
+				},
+			},
+		},
+	},
 }
 templates.increase_damage_taken = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 8,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks = 8,
-	duration = 5,
-	class_name = "buff",
 	stat_buffs = {
-		[buff_stat_buffs.damage_taken_modifier] = 0.1
-	}
+		[buff_stat_buffs.damage_taken_modifier] = 0.1,
+	},
 }
 templates.increase_impact_received_while_staggered = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 8,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks = 8,
-	duration = 5,
-	class_name = "buff",
 	stat_buffs = {
-		[buff_stat_buffs.impact_modifier] = 0.1
-	}
+		[buff_stat_buffs.impact_modifier] = 0.1,
+	},
 }
 templates.increase_damage_received_while_staggered = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 8,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks = 8,
-	duration = 5,
-	class_name = "buff",
 	conditional_stat_buffs = {
-		[buff_stat_buffs.damage_vs_staggered] = 0.1
+		[buff_stat_buffs.damage_vs_staggered] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		return MinionState.is_staggered(unit)
-	end
+	end,
 }
 templates.increase_damage_received_while_electrocuted = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 8,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks = 8,
-	duration = 5,
-	class_name = "buff",
 	conditional_stat_buffs = {
-		[buff_stat_buffs.damage_vs_electrocuted] = 0.05
+		[buff_stat_buffs.damage_vs_electrocuted] = 0.05,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		return MinionState.is_electrocuted(unit)
-	end
+	end,
 }
 templates.rending_debuff = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 16,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks = 16,
-	duration = 5,
-	class_name = "buff",
 	stat_buffs = {
-		[buff_stat_buffs.rending_multiplier] = 0.025
-	}
+		[buff_stat_buffs.rending_multiplier] = 0.025,
+	},
 }
 templates.rending_debuff_medium = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 2,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks = 2,
-	duration = 5,
-	class_name = "buff",
 	stat_buffs = {
-		[buff_stat_buffs.rending_multiplier] = 0.1
-	}
+		[buff_stat_buffs.rending_multiplier] = 0.1,
+	},
 }
 templates.rending_burn_debuff = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 20,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks = 20,
-	duration = 5,
-	class_name = "buff",
 	stat_buffs = {
-		[buff_stat_buffs.rending_multiplier] = 0.01
-	}
+		[buff_stat_buffs.rending_multiplier] = 0.01,
+	},
 }
 templates.shock_grenade_interval = {
-	start_interval_on_apply = true,
 	buff_id = "shock_grenade_shock",
+	class_name = "interval_buff",
+	duration = 8,
 	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	max_stacks_cap = 1,
-	duration = 8,
+	start_interval_on_apply = true,
 	start_with_frame_offset = true,
-	class_name = "interval_buff",
 	keywords = {
 		buff_keywords.electrocuted,
-		buff_keywords.shock_grenade_shock
+		buff_keywords.shock_grenade_shock,
 	},
 	interval = {
 		0.3,
-		0.8
+		0.8,
 	},
 	interval_func = function (template_data, template_context, template, dt, t)
 		local is_server = template_context.is_server
@@ -338,6 +338,7 @@ templates.shock_grenade_interval = {
 			local power_level = DEFAULT_POWER_LEVEL
 			local random_radians = math.random_range(0, PI_2)
 			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
 			attack_direction = Vector3.normalize(attack_direction)
 
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
@@ -349,30 +350,31 @@ templates.shock_grenade_interval = {
 				node_name = "j_spine",
 				vfx = {
 					material_emission = false,
-					particle_effect = "content/fx/particles/enemies/buff_stummed",
 					orphaned_policy = "destroy",
-					stop_type = "stop"
-				}
-			}
-		}
-	}
+					particle_effect = "content/fx/particles/enemies/buff_stummed",
+					stop_type = "stop",
+				},
+			},
+		},
+	},
 }
 templates.ogryn_slabshield_shield_plant = {
+	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
-	class_name = "buff",
 	conditional_stat_buffs = {
-		[buff_stat_buffs.block_cost_multiplier] = 0.15
+		[buff_stat_buffs.block_cost_multiplier] = 0.15,
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
 		local slot_name = template_context.item_slot_name
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 		template_data.inventory_slot_component = unit_data_extension:read_component(slot_name)
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.inventory_slot_component.special_active
-	end
+	end,
 }
 
 local function _chain_lightning_start_func(template_data, template_context)
@@ -384,6 +386,7 @@ local function _chain_lightning_start_func(template_data, template_context)
 
 	local unit = template_context.unit
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
 	template_data.buff_extension = buff_extension
 
 	if template_context.template.use_hit_mass_based_timing then
@@ -392,12 +395,14 @@ local function _chain_lightning_start_func(template_data, template_context)
 		local template = template_context.template
 		local hit_mass_cost = template.hit_mass_cost or 0.2
 		local attack_start_time = math.clamp((target_hit_mass - 1) * hit_mass_cost, 0, 2)
+
 		template_data.attack_start_time = attack_start_time
 	end
 
 	local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
 	local breed = unit_data and unit_data:breed()
 	local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
 	template_data.is_poxwalker_bomber = is_poxwalker_bomber
 end
 
@@ -419,7 +424,7 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 	if HEALTH_ALIVE[unit] and can_attack then
 		local damage_template = template.interval_attack_damage_profile
 		local owner_unit = template_context.owner_unit
-		local attack_direction = nil
+		local attack_direction
 		local target_position = POSITION_LOOKUP[unit]
 		local owner_position = owner_unit and POSITION_LOOKUP[owner_unit]
 
@@ -427,7 +432,7 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 			attack_direction = Vector3.normalize(target_position - owner_position)
 		end
 
-		local charge_level = nil
+		local charge_level
 		local max_charge_at_time = template.max_charge_at_time
 
 		if max_charge_at_time then
@@ -456,73 +461,73 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 end
 
 templates.chain_lightning_interval = {
-	predicted = false,
-	start_with_frame_offset = true,
+	class_name = "interval_buff",
 	max_stacks = 1,
 	max_stacks_cap = 1,
+	predicted = false,
 	shock_effect_buff_template = "shock_effect",
 	start_interval_on_apply = true,
-	class_name = "interval_buff",
+	start_with_frame_offset = true,
 	keywords = {
-		buff_keywords.electrocuted
+		buff_keywords.electrocuted,
 	},
 	interval = {
 		0.1,
-		0.3
+		0.3,
 	},
 	interval_attack_damage_profile = DamageProfileTemplates.default_chain_lighting_interval,
 	start_func = _chain_lightning_start_func,
 	interval_func = _chain_lightning_interval_func,
 	minion_effects = {
-		ailment_effect = ailment_effects.electrocution
-	}
+		ailment_effect = ailment_effects.electrocution,
+	},
 }
 templates.psyker_protectorate_spread_chain_lightning_interval = {
-	trigger_poxwalker_bomber = true,
-	use_hit_mass_based_timing = true,
-	max_stacks = 1,
-	max_stacks_cap = 1,
-	predicted = false,
-	start_with_frame_offset = true,
-	shock_effect_buff_template = "shock_effect",
 	class_name = "interval_buff",
 	hit_mass_cost = 0.1,
 	max_charge_at_time = 5,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	shock_effect_buff_template = "shock_effect",
 	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	trigger_poxwalker_bomber = true,
+	use_hit_mass_based_timing = true,
 	keywords = {
-		buff_keywords.electrocuted
+		buff_keywords.electrocuted,
 	},
 	interval = {
 		0.1,
-		0.3
+		0.3,
 	},
 	interval_attack_damage_profile = DamageProfileTemplates.psyker_protectorate_spread_chain_lightning_interval,
 	start_func = _chain_lightning_start_func,
 	interval_func = _chain_lightning_interval_func,
 	minion_effects = {
-		ailment_effect = ailment_effects.electrocution
-	}
+		ailment_effect = ailment_effects.electrocution,
+	},
 }
 templates.psyker_protectorate_spread_chain_lightning_interval_improved = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval)
 templates.psyker_protectorate_spread_chain_lightning_interval_improved.stat_buffs = {
-	[buff_stat_buffs.damage_taken_multiplier] = 1.1
+	[buff_stat_buffs.damage_taken_multiplier] = 1.1,
 }
 templates.psyker_protectorate_spread_charged_chain_lightning_interval = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval)
 templates.psyker_protectorate_spread_charged_chain_lightning_interval.hit_mass_cost = 0.05
 templates.psyker_protectorate_spread_charged_chain_lightning_interval.max_charge_at_time = 2
 templates.psyker_protectorate_spread_charged_chain_lightning_interval_improved = table.clone(templates.psyker_protectorate_spread_charged_chain_lightning_interval)
 templates.psyker_protectorate_spread_charged_chain_lightning_interval_improved.stat_buffs = {
-	[buff_stat_buffs.damage_taken_multiplier] = 1.1
+	[buff_stat_buffs.damage_taken_multiplier] = 1.1,
 }
 templates.shock_effect = {
-	refresh_duration_on_stack = true,
+	class_name = "buff",
+	duration = 2,
 	max_stacks = 1,
 	max_stacks_cap = 1,
 	predicted = false,
-	duration = 2,
-	class_name = "buff",
+	refresh_duration_on_stack = true,
 	keywords = {
-		buff_keywords.electrocuted
+		buff_keywords.electrocuted,
 	},
 	minion_effects = {
 		node_effects = {
@@ -530,26 +535,26 @@ templates.shock_effect = {
 				node_name = "j_spine",
 				vfx = {
 					material_emission = true,
-					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
 					orphaned_policy = "destroy",
-					stop_type = "stop"
+					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+					stop_type = "stop",
 				},
 				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
 					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
-					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit"
-				}
-			}
-		}
-	}
+				},
+			},
+		},
+	},
 }
 templates.taunted = {
 	buff_id = "taunted",
-	unique_buff_id = "taunted",
+	class_name = "buff",
 	duration = 15,
 	predicted = false,
-	class_name = "buff",
+	unique_buff_id = "taunted",
 	keywords = {
-		buff_keywords.taunted
+		buff_keywords.taunted,
 	},
 	minion_effects = {
 		node_effects = {
@@ -558,18 +563,18 @@ templates.taunted = {
 				vfx = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/buff_taunted_1p",
-					stop_type = "destroy"
-				}
-			}
+					stop_type = "destroy",
+				},
+			},
 		},
 		material_vector = {
 			name = "stimmed_color",
 			value = {
 				0.075,
 				0.005,
-				0
-			}
-		}
+				0,
+			},
+		},
 	},
 	start_func = function (template_data, template_context)
 		local is_server = template_context.is_server
@@ -580,18 +585,23 @@ templates.taunted = {
 
 		local taunter_unit = template_context.owner_unit
 		local taunter_buff_extension = ScriptUnit.extension(taunter_unit, "buff_system")
+
 		template_data.taunter_buff_extension = taunter_buff_extension
+
 		local taunter_unit_data_extension = ScriptUnit.extension(taunter_unit, "unit_data_system")
 		local taunter_breed = taunter_unit_data_extension:breed()
 
 		if Breed.is_player(taunter_breed) then
 			local taunter_character_state_component = taunter_unit_data_extension:read_component("character_state")
+
 			template_data.taunter_character_state_component = taunter_character_state_component
 		end
 
 		local breed = template_context.breed
 		local is_disabler = breed.tags.disabler
+
 		template_data.is_disabler = is_disabler
+
 		local unit = template_context.unit
 		local blackboard = BLACKBOARDS[unit]
 		local perception_component = blackboard.perception
@@ -629,36 +639,36 @@ templates.taunted = {
 		end
 
 		return false
-	end
+	end,
 }
 templates.taunted_short = table.clone(templates.taunted)
 templates.taunted_short.duration = 8
 templates.in_smoke_fog = {
-	max_stacks = 1,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_dodge_buff_hud",
-	predicted = false,
-	hud_priority = 1,
 	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_dodge_buff_hud",
+	hud_priority = 1,
 	is_negative = false,
+	max_stacks = 1,
+	predicted = false,
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.hud_nameplates_disabled
+		buff_keywords.hud_nameplates_disabled,
 	},
-	player_effects = {}
+	player_effects = {},
 }
 templates.left_smoke_fog = {
-	predicted = false,
-	hud_priority = 1,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_dodge_buff_hud",
-	max_stacks = 1,
-	duration = 0.5,
 	class_name = "buff",
+	duration = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_dodge_buff_hud",
+	hud_priority = 1,
 	is_negative = false,
+	max_stacks = 1,
+	predicted = false,
 	target = buff_targets.player_only,
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.hud_nameplates_disabled
-	}
+		buff_keywords.hud_nameplates_disabled,
+	},
 }
 
 return templates

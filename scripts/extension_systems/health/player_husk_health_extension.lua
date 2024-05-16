@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/health/player_husk_health_extension.lua
+
 local Health = require("scripts/utilities/health")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -18,7 +20,9 @@ PlayerHuskHealthExtension.init = function (self, extension_init_context, unit, e
 	self._unit = unit
 	self._is_local_unit = extension_init_data.is_local_unit
 	self._max_wounds = extension_init_data.wounds
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._character_state_read_component = unit_data_extension:read_component("character_state")
 end
 
@@ -28,8 +32,10 @@ end
 
 PlayerHuskHealthExtension.fixed_update = function (self, unit, dt, t)
 	self._is_knocked_down = PlayerUnitStatus.is_knocked_down(self._character_state_read_component)
+
 	local game_session = self._game_session
 	local game_object_id = self._game_object_id
+
 	self._health = GameSession.game_object_field(game_session, game_object_id, "health")
 	self._damage = GameSession.game_object_field(game_session, game_object_id, "damage")
 	self._permanent_damage = GameSession.game_object_field(game_session, game_object_id, "permanent_damage")

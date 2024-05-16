@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_grid/view_element_grid.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -11,8 +13,11 @@ local ViewElementGrid = class("ViewElementGrid", "ViewElementBase")
 
 ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional_menu_settings, optional_definitions)
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
+
 	local owner = parent and parent.view_name or Managers.ui:active_top_view()
+
 	self._element_view_id = string.format("%s_%s", owner, optional_menu_settings.reference_name or "1")
 
 	if optional_menu_settings then
@@ -24,7 +29,7 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 	self._loaded_item_icons_info = {}
 	self._pivot_offset = {
 		0,
-		0
+		0,
 	}
 	self._loaded_icon_id_cache = {}
 	self._cache_loaded_icons = self._menu_settings.cache_loaded_icons or false
@@ -32,6 +37,7 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 	self._widget_visual_margin = self._menu_settings.widget_visual_margin or 0
 	self._widget_icon_load_margin = self._menu_settings.widget_icon_load_margin or 0
 	self._resource_renderer_background = self._menu_settings.resource_renderer_background or false
+
 	local definitions = _create_definitions_function(self._menu_settings)
 
 	if optional_definitions then
@@ -49,18 +55,22 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 		if self._menu_settings.use_parent_ui_renderer then
 			local ui_renderer = self._parent:ui_renderer()
 			local world = ui_renderer.world
+
 			self._ui_grid_renderer = ui_renderer
 			self._ui_grid_renderer_is_external = true
+
 			local gui = self._ui_grid_renderer.gui
 			local gui_retained = self._ui_grid_renderer.gui_retained
 			local resource_renderer_name = self._unique_id
 			local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
+
 			self._ui_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
 		else
-			local optional_world = nil
+			local optional_world
 
 			if self._menu_settings.use_parent_world then
 				local ui_renderer = self._parent:ui_renderer()
+
 				optional_world = ui_renderer.world
 			end
 
@@ -85,6 +95,7 @@ ViewElementGrid.set_expire_time = function (self, time)
 	if timer_loc_string then
 		local timer_params = _timer_params
 		local timer_color = Color.terminal_text_body_sub_header(255, true)
+
 		timer_params.timer_text = timer_text
 		timer_params.timer_color_r = timer_color[2]
 		timer_params.timer_color_g = timer_color[3]
@@ -99,19 +110,23 @@ end
 ViewElementGrid.setup_sort_button = function (self, options, sort_callback, start_index)
 	self._sort_options = options
 	self._sort_callback = sort_callback
+
 	local widget = self._widgets_by_name.sort_button
+
 	widget.content.visible = true
 	widget.content.hotspot.pressed_callback = callback(self, "_cb_on_sort_button_pressed")
 	self._sort_button_input = "hotkey_item_sort"
 
 	if not start_index then
 		start_index = 1
+
 		local player = Managers.player:local_player(1)
 		local save_manager = Managers.save
 
 		if player and save_manager then
 			local account_data = save_manager:account_data()
 			local element_view_id = self._element_view_id
+
 			start_index = account_data.selected_sort_options[element_view_id] or 1
 		end
 	end
@@ -133,8 +148,9 @@ ViewElementGrid._cb_on_sort_button_pressed = function (self, start_index)
 		sort_color_r = sort_color[2],
 		sort_color_g = sort_color[3],
 		sort_color_b = sort_color[4],
-		name = sort_display_name
+		name = sort_display_name,
 	})
+
 	self._sort_button_text = text
 
 	self:_apply_sort_button_text()
@@ -145,6 +161,7 @@ ViewElementGrid._cb_on_sort_button_pressed = function (self, start_index)
 	if player and save_manager then
 		local account_data = save_manager:account_data()
 		local element_view_id = self._element_view_id
+
 		account_data.selected_sort_options[element_view_id] = next_index
 
 		save_manager:queue_save()
@@ -164,10 +181,12 @@ ViewElementGrid._apply_sort_button_text = function (self)
 			local service_type = "View"
 			local color_tint_text = true
 			local input_key = InputUtils.input_text_for_current_input_device(service_type, input_action, color_tint_text)
+
 			text = input_key .. " " .. text
 		end
 
 		local widget = self._widgets_by_name.sort_button
+
 		widget.content.text = text
 		self._update_sort_button_length = true
 	end
@@ -176,6 +195,7 @@ end
 ViewElementGrid.set_sort_button_offset = function (self, x, y)
 	local widget = self._widgets_by_name.sort_button
 	local scenegraph_id = widget.scenegraph_id
+
 	self._pivot_offset[1] = x or self._pivot_offset[1]
 	self._pivot_offset[2] = y or self._pivot_offset[2]
 
@@ -185,6 +205,7 @@ end
 ViewElementGrid.set_timer_text_offset = function (self, x, y)
 	local widget = self._widgets_by_name.timer_text
 	local scenegraph_id = widget.scenegraph_id
+
 	self._pivot_offset[1] = x or self._pivot_offset[1]
 	self._pivot_offset[2] = y or self._pivot_offset[2]
 
@@ -230,27 +251,34 @@ ViewElementGrid._setup_grid_gui = function (self, optional_world)
 		local world_name = self._unique_id .. "_ui_grid_world"
 		local parent = self._parent
 		local view_name = parent.view_name
+
 		self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 		local viewport_name = self._unique_id .. "_ui_grid_world_viewport"
 		local viewport_type = "overlay"
 		local viewport_layer = 1
+
 		self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 		self._viewport_name = viewport_name
 	end
 
 	local world = optional_world or self._world
 	local renderer_name = self._unique_id .. "_grid_renderer"
+
 	self._ui_grid_renderer = ui_manager:create_renderer(renderer_name, world)
+
 	local gui = self._ui_grid_renderer.gui
 	local gui_retained = self._ui_grid_renderer.gui_retained
 	local resource_renderer_name = self._unique_id
 	local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
+
 	self._ui_resource_renderer = ui_manager:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
 end
 
 ViewElementGrid._destroy_grid_gui = function (self)
 	if self._ui_resource_renderer then
 		local renderer_name = self._unique_id
+
 		self._ui_resource_renderer = nil
 
 		Managers.ui:destroy_renderer(renderer_name)
@@ -337,6 +365,7 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 
 	if self._update_sort_button_length then
 		self._update_sort_button_length = false
+
 		local widget = self._widgets_by_name.sort_button
 		local style = widget.style
 		local text_style = style.text
@@ -350,7 +379,9 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	end
 
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_grid_renderer = self._ui_grid_renderer
 	local no_resource_rendering = self._no_resource_rendering
@@ -361,9 +392,12 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 
 	local old_color_intensity_multiplier = render_settings.color_intensity_multiplier
 	local color_intensity_multiplier = self._color_intensity_multiplier or 1
+
 	render_settings.color_intensity_multiplier = (old_color_intensity_multiplier or 1) * color_intensity_multiplier
+
 	local old_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._alpha_multiplier or 1
+
 	render_settings.alpha_multiplier = (old_alpha_multiplier or 1) * alpha_multiplier
 
 	if not self._ui_grid_renderer_is_external then
@@ -454,7 +488,9 @@ ViewElementGrid._draw_grid = function (self, dt, t, ui_renderer, input_service, 
 	local widgets_by_name = self._widgets_by_name
 	local interaction_widget = widgets_by_name.grid_interaction
 	local is_grid_hovered = not self._using_cursor_navigation or interaction_widget.content.hotspot.is_hover or false
+
 	is_grid_hovered = is_grid_hovered and not self._input_disabled
+
 	local ui_resource_renderer = self._ui_resource_renderer
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_grid_renderer = self._ui_grid_renderer
@@ -518,6 +554,7 @@ ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
 			local previous_visibility_state = content.visible
 			local visible = grid:is_widget_visible(widget, content.extra_margin or widget_visual_margin)
 			local render_icon = grid:is_widget_visible(widget, widget_icon_load_margin)
+
 			content.visible_last_frame = content.visible
 			content.visible = visible
 			content.render_icon = render_icon or visible
@@ -602,7 +639,7 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 		ui_renderer = self._parent:ui_renderer()
 	end
 
-	local widget = nil
+	local widget
 	local template = self._content_blueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template_function = template.pass_template_function
@@ -613,8 +650,10 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 
 	if widget_definition then
 		local name = "widget_" .. suffix
+
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
+
 		local init = template.init
 
 		if init then
@@ -626,13 +665,14 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 		return widget, widget
 	else
 		return nil, {
-			size = size
+			size = size,
 		}
 	end
 end
 
 ViewElementGrid.update_grid_height = function (self, grid_height, mask_height)
 	local menu_settings = self._menu_settings
+
 	menu_settings.grid_size[2] = grid_height or menu_settings.grid_size[2]
 	menu_settings.mask_size[2] = mask_height or menu_settings.mask_size[2]
 
@@ -658,24 +698,18 @@ ViewElementGrid._update_window_size = function (self)
 	local scrollbar_vertical_offset = menu_settings.scrollbar_vertical_offset or 0
 	local scrollbar_horizontal_offset = menu_settings.scrollbar_horizontal_offset or 0
 	local top_padding = menu_settings.top_padding or 0
-
-	if not using_title or not {
-		[2] = grid_size[2] - title_height - grid_height_divider_deduction
-	} then
-		local active_grid_size = {
-			grid_size[1],
-			grid_size[2] - grid_height_divider_deduction
-		}
-	end
-
-	if not using_title or not {
-		[2] = mask_size[2] - title_height - grid_height_divider_deduction
-	} then
-		local active_mask_size = {
-			mask_size[1],
-			mask_size[2] - grid_height_divider_deduction
-		}
-	end
+	local active_grid_size = using_title and {
+		[2] = grid_size[2] - title_height - grid_height_divider_deduction,
+	} or {
+		grid_size[1],
+		grid_size[2] - grid_height_divider_deduction,
+	}
+	local active_mask_size = using_title and {
+		[2] = mask_size[2] - title_height - grid_height_divider_deduction,
+	} or {
+		mask_size[1],
+		mask_size[2] - grid_height_divider_deduction,
+	}
 
 	self:_set_scenegraph_size("grid_title_background", nil, using_title and title_height or 0)
 	self:_set_scenegraph_size("grid_background", nil, active_grid_size[2])
@@ -701,6 +735,7 @@ ViewElementGrid._assign_display_name = function (self, display_name)
 	local use_title = display_name ~= nil
 	local widgets_by_name = self._widgets_by_name
 	local title_text = ""
+
 	self._display_name_key = display_name
 
 	if use_title then
@@ -753,17 +788,19 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	self._left_click_callback = left_click_callback
 	self._right_click_callback = right_click_callback
 	self._left_double_click_callback = optional_left_double_click_callback
+
 	local widgets = {}
 	local alignment_widgets = {}
 	local left_click_callback_name = "cb_on_grid_entry_left_pressed"
 	local right_click_callback_name = "cb_on_grid_entry_right_pressed"
 	local double_click_callback_name = optional_left_double_click_callback and "cb_on_grid_entry_double_click_pressed"
-	local previous_group_header_name = nil
+	local previous_group_header_name
 	local group_header_index = 0
 
 	for index, entry in ipairs(layout) do
 		local widget_suffix = "entry_" .. tostring(index)
 		local widget, alignment_widget = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name, right_click_callback_name, double_click_callback_name)
+
 		widgets[#widgets + 1] = widget
 		alignment_widgets[#alignment_widgets + 1] = alignment_widget
 
@@ -780,6 +817,7 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 
 	self._grid_widgets = widgets
 	self._grid_alignment_widgets = alignment_widgets
+
 	local menu_settings = self._menu_settings
 	local grid_scenegraph_id = "grid_background"
 	local grid_pivot_scenegraph_id = "grid_content_pivot"
@@ -791,10 +829,13 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	local top_padding = menu_settings.top_padding or 0
 	local scroll_start_margin = menu_settings.scroll_start_margin or 0
 	local grid = UIWidgetGrid:new(self._grid_widgets, self._grid_alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, use_is_focused_for_navigation, use_select_on_focused, bottom_chin, top_padding, scroll_start_margin)
+
 	self._grid = grid
+
 	local widgets_by_name = self._widgets_by_name
 	local grid_scrollbar_widget_id = "grid_scrollbar"
 	local scrollbar_widget = widgets_by_name[grid_scrollbar_widget_id]
+
 	scrollbar_widget.content.enable_gamepad_scrolling = menu_settings.enable_gamepad_scrolling
 
 	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
@@ -1163,6 +1204,7 @@ ViewElementGrid.destroy = function (self, ui_renderer)
 	end
 
 	self._loaded_icon_id_cache = nil
+
 	local ui_grid_renderer = self._ui_grid_renderer
 
 	if ui_grid_renderer then
@@ -1281,6 +1323,7 @@ ViewElementGrid.hovered = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local interaction_widget = widgets_by_name.grid_interaction
 	local is_grid_hovered = self._using_cursor_navigation and (interaction_widget.content.hotspot.is_hover or false)
+
 	is_grid_hovered = is_grid_hovered and not self._input_disabled
 
 	return is_grid_hovered
@@ -1291,6 +1334,7 @@ ViewElementGrid.pressed = function (self)
 	local interaction_widget = widgets_by_name.grid_interaction
 	local on_pressed = interaction_widget.content.hotspot.on_pressed or false
 	local on_right_pressed = interaction_widget.content.hotspot.on_right_pressed or false
+
 	on_pressed = on_pressed and not self._input_disabled
 	on_right_pressed = on_right_pressed and not self._input_disabled
 
@@ -1300,12 +1344,14 @@ end
 ViewElementGrid.select = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local interaction_widget = widgets_by_name.grid_interaction
+
 	interaction_widget.content.hotspot.is_selected = true
 end
 
 ViewElementGrid.unselect = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local interaction_widget = widgets_by_name.grid_interaction
+
 	interaction_widget.content.hotspot.is_selected = false
 end
 

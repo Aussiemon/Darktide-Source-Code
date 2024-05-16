@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/spline_group/spline_group_system.lua
+
 require("scripts/extension_systems/spline_group/spline_group_extension")
 
 local SplineGroupSystem = class("SplineGroupSystem", "ExtensionSystemBase")
@@ -17,6 +19,7 @@ SplineGroupSystem.spline_names = function (self)
 
 	for unit, extension in pairs(unit_to_extension_map) do
 		local objective_name = extension:objective_name()
+
 		splines[objective_name] = extension:splines()
 	end
 

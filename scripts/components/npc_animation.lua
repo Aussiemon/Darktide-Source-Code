@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/npc_animation.lua
+
 local NpcAnimation = component("NpcAnimation")
 
 NpcAnimation.init = function (self, unit)
@@ -22,6 +24,7 @@ NpcAnimation.init = function (self, unit)
 
 			if has_bone_lod_manager and use_bone_lod and not is_in_ui_world then
 				local bone_lod_radius = self:get_data(unit, "bone_lod_radius")
+
 				self._bone_lod_id = Managers.state.bone_lod:register_unit(unit, bone_lod_radius, true)
 			end
 		end
@@ -71,29 +74,29 @@ end
 
 NpcAnimation.component_data = {
 	editor_only = {
+		category = "Settings",
+		ui_name = "Editor Only",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Editor Only",
-		category = "Settings"
 	},
 	state_machine_override = {
-		ui_type = "resource",
 		category = "Animation",
-		value = "",
+		filter = "state_machine",
 		ui_name = "State Machine Override",
-		filter = "state_machine"
+		ui_type = "resource",
+		value = "",
 	},
 	state_machine_init_event = {
+		category = "Animation",
+		ui_name = "State Machine Init Event",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "State Machine Init Event",
-		category = "Animation"
 	},
 	anim_bone_mode = {
-		value = "default",
-		ui_type = "combo_box",
 		category = "Animation",
 		ui_name = "Bone Mode",
+		ui_type = "combo_box",
+		value = "default",
 		options_keys = {
 			"Default",
 			"Position and Rotation",
@@ -103,7 +106,7 @@ NpcAnimation.component_data = {
 			"Rotation",
 			"Scale",
 			"Position and Scale",
-			"Rotation and Scale"
+			"Rotation and Scale",
 		},
 		options_values = {
 			"default",
@@ -114,23 +117,23 @@ NpcAnimation.component_data = {
 			"rotation",
 			"scale",
 			"position_and_scale",
-			"rotation_and_scale"
-		}
+			"rotation_and_scale",
+		},
 	},
 	use_bone_lod = {
+		category = "Bone LOD",
+		ui_name = "Use Bone LOD (not visible in editor)",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Use Bone LOD (not visible in editor)",
-		category = "Bone LOD"
 	},
 	bone_lod_radius = {
-		ui_type = "number",
-		decimals = 2,
 		category = "Bone LOD",
-		value = 0.88,
+		decimals = 2,
+		step = 0.01,
 		ui_name = "Bone LOD Radius",
-		step = 0.01
-	}
+		ui_type = "number",
+		value = 0.88,
+	},
 }
 
 return NpcAnimation

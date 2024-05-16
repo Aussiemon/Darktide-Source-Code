@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/spline_follower.lua
+
 local SplineFollower = component("SplineFollower")
 
 SplineFollower.init = function (self, unit)
@@ -22,8 +24,8 @@ end
 
 SplineFollower.component_data = {
 	extensions = {
-		"SplineFollowerExtension"
-	}
+		"SplineFollowerExtension",
+	},
 }
 
 return SplineFollower

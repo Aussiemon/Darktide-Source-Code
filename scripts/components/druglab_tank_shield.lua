@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/druglab_tank_shield.lua
+
 local DruglabTankShield = component("DruglabTankShield")
 
 DruglabTankShield.init = function (self, unit)
@@ -80,42 +82,42 @@ end
 
 DruglabTankShield.component_data = {
 	material_slot_name = {
+		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "lambert1",
-		ui_name = "Material Slot Name"
 	},
 	shield_strength_variable_name = {
+		category = "Material Variable Names",
+		ui_name = "Shield Strength",
 		ui_type = "text_box",
 		value = "shield_power",
-		ui_name = "Shield Strength",
-		category = "Material Variable Names"
 	},
 	shield_min_strength_variable_name = {
+		category = "Material Variable Names",
+		ui_name = "Min Shield Strength",
 		ui_type = "text_box",
 		value = "min_shield_power",
-		ui_name = "Min Shield Strength",
-		category = "Material Variable Names"
 	},
 	overload_variable_name = {
+		category = "Material Variable Names",
+		ui_name = "Overload",
 		ui_type = "text_box",
 		value = "overload",
-		ui_name = "Overload",
-		category = "Material Variable Names"
 	},
 	overload_duration = {
-		ui_type = "number",
-		min = 0.5,
 		decimals = 3,
-		value = 2,
+		max = 10,
+		min = 0.5,
 		ui_name = "Overload Duration",
-		max = 10
+		ui_type = "number",
+		value = 2,
 	},
 	inputs = {
 		druglab_tank_shield_start_overload = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return DruglabTankShield

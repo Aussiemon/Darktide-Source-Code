@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/wounds_templates.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
@@ -7,56 +9,57 @@ local attack_results = AttackSettings.attack_results
 local wounds_templates = {}
 local laser_red = {
 	1,
-	0.09
+	0.09,
 }
 local standard_ranged = {
 	0.06,
-	1
+	1,
 }
 local standard_melee = {
 	0.06,
-	0
+	0,
 }
 local force_teal = {
 	0.53,
-	0.7
+	0.7,
 }
 local plasma_blue = {
 	0.6,
-	1
+	1,
 }
 local energy_blue = {
 	0.6,
-	0.5
+	0.5,
 }
 local electric_blue = {
 	0.55,
-	0.5
+	0.5,
 }
 local smoldering_red = {
 	0.02,
-	0.8
+	0.8,
 }
 local flash_quick = {
 	0.35,
-	0.35
+	0.35,
 }
 local flash_slow = {
 	0.5,
-	0.6
+	0.6,
 }
 local linger_light = {
 	2.5,
-	2.75
+	2.75,
 }
 local linger_medium = {
 	3.5,
-	4
+	4,
 }
 local linger_heavy = {
 	5,
-	6
+	6,
 }
+
 wounds_templates.laser = {
 	[attack_results.damaged] = {
 		default = {
@@ -65,12 +68,12 @@ wounds_templates.laser = {
 				shape_scaling = false,
 				radius = {
 					0,
-					5
+					5,
 				},
 				color_brightness = laser_red,
-				duration = linger_light
-			}
-		}
+				duration = linger_light,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -79,13 +82,13 @@ wounds_templates.laser = {
 				shape_scaling = false,
 				radius = {
 					5,
-					5.25
+					5.25,
 				},
 				color_brightness = laser_red,
-				duration = linger_medium
-			}
-		}
-	}
+				duration = linger_medium,
+			},
+		},
+	},
 }
 wounds_templates.ballistic = {
 	[attack_results.damaged] = {
@@ -95,12 +98,12 @@ wounds_templates.ballistic = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_quick
-			}
-		}
+				duration = flash_quick,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -109,13 +112,13 @@ wounds_templates.ballistic = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_quick
-			}
-		}
-	}
+				duration = flash_quick,
+			},
+		},
+	},
 }
 wounds_templates.stubber = {
 	[attack_results.damaged] = {
@@ -125,12 +128,12 @@ wounds_templates.stubber = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_slow
-			}
-		}
+				duration = flash_slow,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -139,13 +142,13 @@ wounds_templates.stubber = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					5
+					5,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_slow
-			}
-		}
-	}
+				duration = flash_slow,
+			},
+		},
+	},
 }
 wounds_templates.plasma = {
 	[attack_results.damaged] = {
@@ -155,12 +158,12 @@ wounds_templates.plasma = {
 				shape_scaling = false,
 				radius = {
 					3,
-					5
+					5,
 				},
 				color_brightness = plasma_blue,
-				duration = linger_heavy
-			}
-		}
+				duration = linger_heavy,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -169,13 +172,13 @@ wounds_templates.plasma = {
 				shape_scaling = false,
 				radius = {
 					3,
-					5
+					5,
 				},
 				color_brightness = plasma_blue,
-				duration = linger_heavy
-			}
-		}
-	}
+				duration = linger_heavy,
+			},
+		},
+	},
 }
 wounds_templates.pickaxe = {
 	[attack_results.damaged] = {
@@ -185,21 +188,21 @@ wounds_templates.pickaxe = {
 				shape_scaling = true,
 				radius = {
 					1.5,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.sphere] = {
 				shape_scaling = true,
 				radius = {
 					2,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
+				duration = flash_quick,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -208,22 +211,22 @@ wounds_templates.pickaxe = {
 				shape_scaling = true,
 				radius = {
 					2,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.sphere] = {
 				shape_scaling = true,
 				radius = {
 					5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = linger_heavy
-			}
-		}
-	}
+				duration = linger_heavy,
+			},
+		},
+	},
 }
 wounds_templates.force_projectile = {
 	[attack_results.damaged] = {
@@ -233,12 +236,12 @@ wounds_templates.force_projectile = {
 				shape_scaling = false,
 				radius = {
 					3,
-					5
+					5,
 				},
 				color_brightness = force_teal,
-				duration = linger_light
-			}
-		}
+				duration = linger_light,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -247,13 +250,13 @@ wounds_templates.force_projectile = {
 				shape_scaling = false,
 				radius = {
 					3,
-					5
+					5,
 				},
 				color_brightness = force_teal,
-				duration = linger_light
-			}
-		}
-	}
+				duration = linger_light,
+			},
+		},
+	},
 }
 wounds_templates.chain_light = {
 	[attack_results.damaged] = {
@@ -263,48 +266,48 @@ wounds_templates.chain_light = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
+				duration = flash_quick,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -313,49 +316,49 @@ wounds_templates.chain_light = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
-	}
+				duration = flash_quick,
+			},
+		},
+	},
 }
 wounds_templates.chain_heavy = {
 	[attack_results.damaged] = {
@@ -365,48 +368,48 @@ wounds_templates.chain_heavy = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					3.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
+				duration = flash_quick,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -415,49 +418,49 @@ wounds_templates.chain_heavy = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					4.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					4.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					4.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					4.5,
-					5
+					5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
-	}
+				duration = flash_quick,
+			},
+		},
+	},
 }
 wounds_templates.blunt = {
 	[attack_results.damaged] = {
@@ -467,48 +470,48 @@ wounds_templates.blunt = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
+				duration = flash_quick,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -517,49 +520,49 @@ wounds_templates.blunt = {
 				shape_scaling = false,
 				radius = {
 					2.25,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
-	}
+				duration = flash_quick,
+			},
+		},
+	},
 }
 wounds_templates.shock_blunt = {
 	[attack_results.damaged] = {
@@ -569,48 +572,48 @@ wounds_templates.shock_blunt = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
-			}
-		}
+				duration = flash_slow,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -619,49 +622,49 @@ wounds_templates.shock_blunt = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2
+					2,
 				},
 				color_brightness = electric_blue,
-				duration = flash_slow
-			}
-		}
-	}
+				duration = flash_slow,
+			},
+		},
+	},
 }
 wounds_templates.slash = {
 	[attack_results.damaged] = {
@@ -671,84 +674,84 @@ wounds_templates.slash = {
 				shape_scaling = false,
 				radius = {
 					1.5,
-					1.95
+					1.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.95
+					2.95,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
+				duration = flash_quick,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -757,85 +760,85 @@ wounds_templates.slash = {
 				shape_scaling = false,
 				radius = {
 					1,
-					1.5
+					1.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					2.5,
-					2.75
+					2.75,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
-	}
+				duration = flash_quick,
+			},
+		},
+	},
 }
 wounds_templates.slash_large = {
 	[attack_results.damaged] = {
@@ -845,48 +848,48 @@ wounds_templates.slash_large = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
+				duration = flash_quick,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -895,49 +898,49 @@ wounds_templates.slash_large = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2.5
+					2.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.left_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.right_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.horizontal_slash] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
+				duration = flash_quick,
 			},
 			[shapes.vertical_slash] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = standard_melee,
-				duration = flash_quick
-			}
-		}
-	}
+				duration = flash_quick,
+			},
+		},
+	},
 }
 wounds_templates.energy_blunt = {
 	[attack_results.damaged] = {
@@ -947,48 +950,48 @@ wounds_templates.energy_blunt = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
-			}
-		}
+				duration = linger_light,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -997,49 +1000,49 @@ wounds_templates.energy_blunt = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
+				duration = linger_light,
 			},
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = true,
 				radius = {
 					4,
-					5
+					5,
 				},
 				color_brightness = energy_blue,
-				duration = linger_light
-			}
-		}
-	}
+				duration = linger_light,
+			},
+		},
+	},
 }
 wounds_templates.energy_slash = {
 	[attack_results.damaged] = {
@@ -1049,48 +1052,48 @@ wounds_templates.energy_slash = {
 				shape_scaling = false,
 				radius = {
 					1,
-					1.5
+					1.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.left_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2.5
+					2.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.right_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2.5
+					2.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.horizontal_slash] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2.5
+					2.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.vertical_slash] = {
 				shape_scaling = false,
 				radius = {
 					2,
-					2.5
+					2.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
-			}
-		}
+				duration = flash_slow,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -1099,49 +1102,49 @@ wounds_templates.energy_slash = {
 				shape_scaling = false,
 				radius = {
 					1,
-					1.5
+					1.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.left_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.right_45_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.horizontal_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
+				duration = flash_slow,
 			},
 			[shapes.vertical_slash] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = energy_blue,
-				duration = flash_slow
-			}
-		}
-	}
+				duration = flash_slow,
+			},
+		},
+	},
 }
 wounds_templates.slash_force = {
 	[attack_results.damaged] = {
@@ -1151,48 +1154,48 @@ wounds_templates.slash_force = {
 				shape_scaling = false,
 				radius = {
 					5,
-					5.5
+					5.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.left_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.right_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.horizontal_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.vertical_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					3,
-					3.5
+					3.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
-			}
-		}
+				duration = linger_heavy,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -1201,49 +1204,49 @@ wounds_templates.slash_force = {
 				shape_scaling = false,
 				radius = {
 					5,
-					5.5
+					5.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.left_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.right_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.horizontal_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
+				duration = linger_heavy,
 			},
 			[shapes.vertical_slash_clean] = {
 				shape_scaling = false,
 				radius = {
 					4,
-					4.5
+					4.5,
 				},
 				color_brightness = force_teal,
-				duration = linger_heavy
-			}
-		}
-	}
+				duration = linger_heavy,
+			},
+		},
+	},
 }
 wounds_templates.shotgun_large = {
 	[attack_results.damaged] = {
@@ -1253,12 +1256,12 @@ wounds_templates.shotgun_large = {
 				shape_scaling = true,
 				radius = {
 					3,
-					3.25
+					3.25,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_slow
-			}
-		}
+				duration = flash_slow,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -1267,13 +1270,13 @@ wounds_templates.shotgun_large = {
 				shape_scaling = true,
 				radius = {
 					4.5,
-					4.75
+					4.75,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_slow
-			}
-		}
-	}
+				duration = flash_slow,
+			},
+		},
+	},
 }
 wounds_templates.shotgun_small = {
 	[attack_results.damaged] = {
@@ -1283,12 +1286,12 @@ wounds_templates.shotgun_small = {
 				shape_scaling = true,
 				radius = {
 					2.5,
-					3
+					3,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_slow
-			}
-		}
+				duration = flash_slow,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -1297,13 +1300,13 @@ wounds_templates.shotgun_small = {
 				shape_scaling = true,
 				radius = {
 					3.75,
-					4
+					4,
 				},
 				color_brightness = standard_ranged,
-				duration = flash_slow
-			}
-		}
-	}
+				duration = flash_slow,
+			},
+		},
+	},
 }
 wounds_templates.boltshell = {
 	[attack_results.damaged] = {
@@ -1313,12 +1316,12 @@ wounds_templates.boltshell = {
 				shape_scaling = true,
 				radius = {
 					4,
-					4
+					4,
 				},
 				color_brightness = smoldering_red,
-				duration = flash_slow
-			}
-		}
+				duration = flash_slow,
+			},
+		},
 	},
 	[attack_results.died] = {
 		default = {
@@ -1327,13 +1330,13 @@ wounds_templates.boltshell = {
 				shape_scaling = true,
 				radius = {
 					5,
-					5
+					5,
 				},
 				color_brightness = smoldering_red,
-				duration = flash_slow
-			}
-		}
-	}
+				duration = flash_slow,
+			},
+		},
+	},
 }
 wounds_templates.lasgun = table.clone(wounds_templates.laser)
 wounds_templates.laspistol = table.clone(wounds_templates.laser)

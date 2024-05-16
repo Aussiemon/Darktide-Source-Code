@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel_definitions")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -9,29 +11,30 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementMenuPanel = class("ViewElementMenuPanel", "ViewElementBase")
 local button_template = {
 	size = ViewElementMenuPanelSettings.button_max_size,
-	pass_template = ButtonPassTemplates.menu_panel_button
+	pass_template = ButtonPassTemplates.menu_panel_button,
+	init = function (parent, widget, element, callback_name)
+		local content = widget.content
+		local hotspot = content.hotspot
+		local text = element.text
+
+		content.text = text
+
+		local style = widget.style
+		local text_style = style.text
+		local button_size = content.size
+		local ui_renderer = parent:ui_renderer()
+		local text_width = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, button_size)
+		local desired_button_width = text_width + ViewElementMenuPanelSettings.button_text_margin * 2
+
+		if desired_button_width <= button_size[1] then
+			button_size[1] = desired_button_width
+		end
+
+		hotspot.pressed_callback = callback(parent, callback_name, widget, element)
+		hotspot.disabled = not element.callback
+		widget.update = element.update
+	end,
 }
-
-button_template.init = function (parent, widget, element, callback_name)
-	local content = widget.content
-	local hotspot = content.hotspot
-	local text = element.text
-	content.text = text
-	local style = widget.style
-	local text_style = style.text
-	local button_size = content.size
-	local ui_renderer = parent:ui_renderer()
-	local text_width = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, button_size)
-	local desired_button_width = text_width + ViewElementMenuPanelSettings.button_text_margin * 2
-
-	if desired_button_width <= button_size[1] then
-		button_size[1] = desired_button_width
-	end
-
-	hotspot.pressed_callback = callback(parent, callback_name, widget, element)
-	hotspot.disabled = not element.callback
-	widget.update = element.update
-end
 
 ViewElementMenuPanel.init = function (self, parent, draw_layer, start_scale, definitions)
 	ViewElementMenuPanel.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -53,21 +56,20 @@ end
 
 ViewElementMenuPanel.set_selected_panel_index = function (self, index)
 	local widgets = self._content_widgets
-	local focus_widget = nil
+	local focus_widget
 
 	for j = 1, #widgets do
 		local widget = widgets[j]
 		local content = widget.content
 		local is_selected = index == j
-		content.hotspot.is_selected = is_selected
 
-		if is_selected then
-			focus_widget = widget or focus_widget
-		end
+		content.hotspot.is_selected = is_selected
+		focus_widget = is_selected and widget or focus_widget
 	end
 
 	if self._selected_index == nil and focus_widget then
 		local hotspot = focus_widget.content.hotspot
+
 		hotspot.anim_select_progress = 1
 		hotspot._is_selected = true
 	end
@@ -133,10 +135,12 @@ ViewElementMenuPanel.add_entry = function (self, text, onclick_callback, update_
 	self._content[#self._content + 1] = {
 		text = Utf8.upper(text),
 		callback = onclick_callback,
-		update = update_function
+		update = update_function,
 	}
+
 	local scenegraph_id = "grid_content_pivot"
 	local callback_name = "_on_entry_pressed_cb"
+
 	self._content_widgets, self._alignment_list = self:_setup_content_widgets(self._content, scenegraph_id, callback_name)
 	self._content_grid = self:_setup_grid(self._content_widgets, self._alignment_list)
 end
@@ -152,7 +156,7 @@ ViewElementMenuPanel._setup_content_widgets = function (self, content, scenegrap
 
 	for i = 1, amount do
 		local entry = content[i]
-		local widget = nil
+		local widget
 		local template = button_template
 		local size = template.size
 		local pass_template = template.pass_template
@@ -160,7 +164,9 @@ ViewElementMenuPanel._setup_content_widgets = function (self, content, scenegrap
 
 		if widget_definition then
 			local name = scenegraph_id .. "_widget_" .. i
+
 			widget = self:_create_widget(name, widget_definition)
+
 			local init = template.init
 
 			if init then
@@ -171,7 +177,7 @@ ViewElementMenuPanel._setup_content_widgets = function (self, content, scenegrap
 		end
 
 		alignment_list[#alignment_list + 1] = widget or {
-			size = size
+			size = size,
 		}
 	end
 
@@ -244,6 +250,7 @@ ViewElementMenuPanel.update = function (self, dt, t, input_service)
 
 		if grid_length ~= self._grid_length then
 			self._grid_length = grid_length
+
 			local x = -grid_length * 0.5
 
 			self:_set_scenegraph_position("grid_content_pivot", x)
@@ -293,7 +300,7 @@ ViewElementMenuPanel._select_next_tab = function (self, direction)
 	local step = direction == "backward" and -1 or 1
 	local index = current_index
 	local content_widgets = self._content_widgets
-	local is_disabled, selected_widget = nil
+	local is_disabled, selected_widget
 
 	repeat
 		index = math.index_wrapper(index + step, num_items)
@@ -327,9 +334,12 @@ ViewElementMenuPanel._update_input_texts = function (self)
 	local right_alias_key = Managers.ui:get_input_alias_key("navigate_primary_right_pressed", service)
 	local widgets_by_name = self._widgets_by_name
 	local left_widget = widgets_by_name.input_text_left
+
 	left_widget.content.text = InputUtils.input_text_for_current_input_device(service, left_alias_key)
 	left_widget.style.text.visible = is_visible
+
 	local right_widget = widgets_by_name.input_text_right
+
 	right_widget.content.text = InputUtils.input_text_for_current_input_device(service, right_alias_key)
 	right_widget.style.text.visible = is_visible
 end
@@ -338,8 +348,11 @@ ViewElementMenuPanel._update_input_text_positions = function (self, grid_length)
 	local widgets_by_name = self._widgets_by_name
 	local left_widget = widgets_by_name.input_text_left
 	local left_input_text_style = left_widget.style.text
+
 	left_widget.offset[1] = -left_input_text_style.size[1]
+
 	local right_widget = widgets_by_name.input_text_right
+
 	right_widget.offset[1] = grid_length
 end
 

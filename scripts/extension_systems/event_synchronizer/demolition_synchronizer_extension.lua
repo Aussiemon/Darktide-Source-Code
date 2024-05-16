@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/demolition_synchronizer_extension.lua
+
 local Component = require("scripts/utilities/component")
 local DemolitionSynchronizerExtension = class("DemolitionSynchronizerExtension", "EventSynchronizerBaseExtension")
 
@@ -56,9 +58,12 @@ end
 
 DemolitionSynchronizerExtension.register_connected_units = function (self, stage_units, registered_units, stage)
 	stage_units = registered_units[self._stage_order[stage]]
+
 	local target_units = self:_seperate_objective_units(stage_units)
+
 	self._target_units = target_units
 	self._active_stage_unit_num = #target_units
+
 	local segment_stages = self._segment_by_start_stage[self._stage_order[stage]]
 
 	if segment_stages then
@@ -104,7 +109,9 @@ DemolitionSynchronizerExtension.setup_stages = function (self, registered_units)
 			end
 
 			local length = stage - p + 1
+
 			stage = stage - length
+
 			local segment = {}
 
 			for i = 1, length do
@@ -114,13 +121,13 @@ DemolitionSynchronizerExtension.setup_stages = function (self, registered_units)
 			segments[#segments + 1] = segment
 		else
 			segments[#segments + 1] = {
-				stage
+				stage,
 			}
 			stage = stage - 1
 		end
 	end
 
-	local last_segment = nil
+	local last_segment
 
 	if self._lock_last_segment then
 		last_segment = segments[1]

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_hud.lua
+
 require("scripts/ui/hud/elements/hud_element_base")
 
 local Hud = require("scripts/utilities/ui/hud")
@@ -19,6 +21,7 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	self._visibility_groups = visibility_groups
 	self._world_name = "level_world"
 	self._player_viewport_name = "player1"
+
 	local world = Managers.world:world(self._world_name)
 
 	if params.enable_world_bloom then
@@ -26,9 +29,10 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	end
 
 	local uniq_id = tostring(self)
+
 	self._unique_id = self.__class_name .. "_" .. uniq_id:gsub("[%p%c%s]", "") .. "_"
 	self._render_settings = {
-		force_retained_mode = false
+		force_retained_mode = false,
 	}
 	self._ui_renderer_name = self._unique_id .. (params.renderer_name or self.__class_name .. "_ui_renderer")
 	self._ui_renderer = Managers.ui:create_renderer(self._ui_renderer_name, world)
@@ -36,9 +40,11 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	self._elements_array = {}
 	self._elements_hud_scale_lookup = {}
 	self._elements_hud_retained_mode_lookup = {}
+
 	local peer_id = params.peer_id
 	local local_player_id = params.local_player_id or 1
 	local player = Managers.player:player(peer_id, local_player_id)
+
 	self._player = player
 	self._world_viewport_name = params.world_viewport_name or player.viewport_name
 	self._element_definitions = table.clone(elements)
@@ -65,6 +71,7 @@ end
 UIHud.get_all_player_extensions = function (self, player, output)
 	if player:unit_is_alive() then
 		local player_unit = player.player_unit
+
 		output.health = ScriptUnit.has_extension(player_unit, "health_system")
 		output.toughness = ScriptUnit.has_extension(player_unit, "toughness_system")
 		output.interactor = ScriptUnit.has_extension(player_unit, "interactor_system")
@@ -106,6 +113,7 @@ UIHud.player_camera = function (self)
 	if not self._camera then
 		local camera_manager = Managers.state.camera
 		local camera = camera_manager:camera(self._world_viewport_name)
+
 		self._camera = camera
 	end
 
@@ -127,6 +135,7 @@ UIHud._verify_elements = function (self, element_definitions)
 
 	for _, settings in ipairs(self._visibility_groups) do
 		local name = settings.name
+
 		visibility_groups_lookup[name] = settings
 	end
 
@@ -143,6 +152,7 @@ UIHud._verify_elements = function (self, element_definitions)
 			end
 
 			local visible_elements = visibility_group.visible_elements
+
 			visible_elements[class_name] = true
 		end
 	end
@@ -202,8 +212,11 @@ UIHud._add_element = function (self, definition, elements, elements_array)
 		local draw_layer = 0
 		local hud_scale = use_hud_scale and Hud.hud_scale() or RESOLUTION_LOOKUP.scale
 		local element = class:new(self, draw_layer, hud_scale, optional_context)
+
 		elements[class_name] = element
+
 		local id = #elements_array + 1
+
 		elements_array[id] = element
 	end
 end
@@ -257,6 +270,7 @@ end
 UIHud._apply_hud_scale = function (self)
 	local new_scale = Hud.hud_scale()
 	local render_settings = self._render_settings
+
 	render_settings.scale = new_scale
 	render_settings.inverse_scale = 1 / new_scale
 	render_settings.using_hud_scale = true
@@ -265,6 +279,7 @@ end
 UIHud._abort_hud_scale = function (self)
 	local render_settings = self._render_settings
 	local scale = RESOLUTION_LOOKUP.scale
+
 	render_settings.scale = scale
 	render_settings.inverse_scale = 1 / scale
 	render_settings.using_hud_scale = nil
@@ -294,11 +309,13 @@ UIHud.update = function (self, dt, t, input_service)
 	local hud_scale_applied = false
 	local render_settings = self._render_settings
 	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key] or self._hud_scale_modified
+
 	self._hud_scale_modified = nil
 	self._refresh_retained = resolution_modified or self._refresh_retained
 
 	if resolution_modified then
 		local scale = RESOLUTION_LOOKUP.scale
+
 		render_settings.scale = scale
 		render_settings.inverse_scale = 1 / scale
 		render_settings.using_hud_scale = nil
@@ -375,6 +392,7 @@ UIHud.draw = function (self, dt, t, input_service)
 
 			if ui_renderer then
 				local use_retained_mode = elements_hud_retained_mode_lookup[element_name]
+
 				render_settings.force_retained_mode = use_retained_mode
 
 				element:draw(dt, t, ui_renderer, render_settings, input_service)

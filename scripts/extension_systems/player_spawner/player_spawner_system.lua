@@ -1,11 +1,15 @@
+﻿-- chunkname: @scripts/extension_systems/player_spawner/player_spawner_system.lua
+
 require("scripts/extension_systems/player_spawner/player_spawner_extension")
 
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerSpawnerSystem = class("PlayerSpawnerSystem", "ExtensionSystemBase")
+
 PlayerSpawnerSystem.DEFAULT_SPAWN_IDENTIFIER = "default"
 PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE = "heroes"
+
 local MAX_DISTANCE_SQUARED_TO_SPAWN_POINT = 400
 
 PlayerSpawnerSystem.init = function (self, extension_init_context, system_init_data, ...)
@@ -41,13 +45,12 @@ local function _sort_spawn_priority_func(a, b)
 end
 
 PlayerSpawnerSystem.add_spawn_point = function (self, unit, side, spawn_identifier, spawn_priority)
-	local position = POSITION_LOOKUP[unit]
-	local rotation = Unit.local_rotation(unit, 1)
+	local position, rotation = POSITION_LOOKUP[unit], Unit.local_rotation(unit, 1)
 	local spawn_point_data = {
 		position = Vector3Box(position),
 		rotation = QuaternionBox(rotation),
 		spawn_priority = spawn_priority,
-		side = side
+		side = side,
 	}
 	local spawn_points = self._spawn_points_by_identifier[spawn_identifier]
 
@@ -58,13 +61,13 @@ PlayerSpawnerSystem.add_spawn_point = function (self, unit, side, spawn_identifi
 	else
 		self._next_spawn_point_index_by_identifier[spawn_identifier] = 1
 		self._spawn_points_by_identifier[spawn_identifier] = {
-			spawn_point_data
+			spawn_point_data,
 		}
 	end
 end
 
 PlayerSpawnerSystem.next_free_spawn_point = function (self, optional_spawn_identifier)
-	local found, position, rotation, parent, side = nil
+	local found, position, rotation, parent, side
 
 	if optional_spawn_identifier then
 		found, position, rotation, side = self:_find_spawner_spawn_point(optional_spawn_identifier)
@@ -78,6 +81,7 @@ PlayerSpawnerSystem.next_free_spawn_point = function (self, optional_spawn_ident
 
 	if not found then
 		local identifier = PlayerSpawnerSystem.DEFAULT_SPAWN_IDENTIFIER
+
 		found, position, rotation, side = self:_find_spawner_spawn_point(identifier)
 	end
 
@@ -117,7 +121,7 @@ PlayerSpawnerSystem._use_progression_spawn_in_safe_zone = function (self)
 					local player_position = Unit.world_position(player_unit, 1)
 					local distance_sq = Vector3.distance_squared(player_position, spawn_point_position)
 
-					if MAX_DISTANCE_SQUARED_TO_SPAWN_POINT < distance_sq then
+					if distance_sq > MAX_DISTANCE_SQUARED_TO_SPAWN_POINT then
 						return true
 					end
 				end
@@ -138,7 +142,9 @@ PlayerSpawnerSystem._find_spawner_spawn_point = function (self, spawn_identifier
 	local next_spawn_point_index_by_identifier = self._next_spawn_point_index_by_identifier
 	local spawn_point_index = next_spawn_point_index_by_identifier[spawn_identifier]
 	local num_spawn_points = #spawn_points
+
 	next_spawn_point_index_by_identifier[spawn_identifier] = spawn_point_index % num_spawn_points + 1
+
 	local spawn_point = spawn_points[spawn_point_index]
 
 	return true, spawn_point.position:unbox(), spawn_point.rotation:unbox(), spawn_point.side
@@ -169,6 +175,7 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 
 	if #progression_players > 2 then
 		local temp = progression_players[1]
+
 		progression_players[1] = progression_players[2]
 		progression_players[2] = temp
 	end
@@ -232,7 +239,7 @@ PlayerSpawnerSystem._add_progression_player = function (self, player, bot)
 				local index = #progression_players + 1
 
 				for i = 1, #progression_players do
-					if progression_players[i].distance < travel_distance then
+					if travel_distance > progression_players[i].distance then
 						index = i
 
 						break
@@ -243,7 +250,7 @@ PlayerSpawnerSystem._add_progression_player = function (self, player, bot)
 					unit = player_unit,
 					distance = travel_distance,
 					disabled = PlayerUnitStatus.requires_help(character_state_component),
-					bot = bot
+					bot = bot,
 				})
 			end
 		end
@@ -265,8 +272,7 @@ PlayerSpawnerSystem._player_spawn_point = function (self, unit)
 		local player_yaw = Quaternion.yaw(first_person_component.rotation)
 		local flat_player_rotation = Quaternion.from_yaw_pitch_roll(player_yaw, 0, 0)
 		local query_direction = -Quaternion.forward(flat_player_rotation)
-		local nav_world = navigation_extension:nav_world()
-		local traverse_logic = navigation_extension:traverse_logic()
+		local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 		local spawn_position = NavQueries.empty_space_near_nav_position(nav_position, query_direction, nav_world, traverse_logic, self._physics_world)
 
 		return true, spawn_position, spawn_rotation, parent, PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE

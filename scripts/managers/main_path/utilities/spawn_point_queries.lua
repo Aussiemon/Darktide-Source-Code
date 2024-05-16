@@ -1,10 +1,10 @@
+﻿-- chunkname: @scripts/managers/main_path/utilities/spawn_point_queries.lua
+
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local SpawnPointQueries = {}
-local ABOVE = 1
-local BELOW = 1
-local HORIZONTAL = 3
+local ABOVE, BELOW, HORIZONTAL = 1, 1, 3
 
 SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_distance, group_cutoff_values)
 	local main_path_length = EngineOptimized.main_path_total_length()
@@ -20,8 +20,11 @@ SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_dista
 
 		if position_on_navmesh then
 			local group_index = #flood_fill_positions + 1
+
 			flood_fill_positions[group_index] = position_on_navmesh
+
 			local _, _, _, node_index, _ = MainPathQueries.closest_position(position_on_navmesh)
+
 			group_index_to_mainpath_index[group_index] = node_index
 		end
 
@@ -52,8 +55,10 @@ SpawnPointQueries.generate_nav_spawn_points = function (nav_world, nav_triangle_
 			local num_sub_group_spawn_points = math.min(num_triangles, num_spawn_points_per_subgroup)
 
 			for k = 1, num_sub_group_spawn_points do
-				local start_triangle_index = nil
+				local start_triangle_index
+
 				seed, start_triangle_index = math_next_random(seed, 1, num_triangles)
+
 				local found, position = GwNavSpawnPoints_get_spawn_point_position(nav_spawn_points, nav_world, i, j, start_triangle_index, min_free_radius, min_distance_to_others, nav_tag_cost_table)
 
 				if found then
@@ -101,8 +106,10 @@ SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data
 			local num_sub_group_spawn_points = math.min(num_triangles, num_spawn_points_per_subgroup)
 
 			for k = 1, num_sub_group_spawn_points do
-				local start_triangle_index = nil
+				local start_triangle_index
+
 				seed, start_triangle_index = math_next_random(seed, 1, num_triangles)
+
 				local found, position = GwNavSpawnPoints_get_spawn_point_position(nav_spawn_points, nav_world, index, j, start_triangle_index, min_free_radius, min_distance_to_others, nav_tag_cost_table)
 
 				if found then
@@ -177,9 +184,14 @@ local function _remove_invalid_occluded_positions(valid_enemy_player_units_posit
 
 						num_occluded_positions = num_occluded_positions - 1
 					end
-				elseif optional_disallowed_positions then
+
+					break
+				end
+
+				if optional_disallowed_positions then
 					for h = 1, #optional_disallowed_positions do
 						local disallowed_position = optional_disallowed_positions[h]:unbox()
+
 						distance = Vector3.distance(disallowed_position, occluded_position)
 
 						if distance <= DISALLOWED_DISTANCE then
@@ -204,7 +216,7 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 		return
 	end
 
-	local occluded_positions = nil
+	local occluded_positions
 
 	if optional_initial_offset then
 		local half_range = math.floor(optional_initial_offset / 2)
@@ -229,13 +241,14 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 	end
 
 	if #occluded_positions == 0 then
-		local start_index, end_index = nil
+		local start_index, end_index
 
 		if optional_only_search_forward then
 			start_index = math.min(group_index + 1, num_groups)
 			end_index = math.min(group_index + offset_range, num_groups)
 		else
 			local half_range = math.floor(offset_range / 2)
+
 			start_index = math.max(group_index - half_range, 1)
 			end_index = math.min(group_index + half_range, num_groups)
 		end
@@ -254,7 +267,7 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 					_remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, optional_min_distance, optional_max_distance)
 				end
 
-				if MIN_WANTED_OCCLUDED_POSITIONS <= #occluded_positions then
+				if #occluded_positions >= MIN_WANTED_OCCLUDED_POSITIONS then
 					break
 				end
 			elseif i == 1 or i == num_groups then

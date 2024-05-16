@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/aim/utilities/hub_aim_constraints.lua
+
 local HubAimConstraintSettings = require("scripts/settings/aim/hub_aim_constraint_settings")
 local IDLE_SPEEDS = HubAimConstraintSettings.speed.idle
 local PASSIVE_SPEEDS = HubAimConstraintSettings.speed.passive
@@ -15,10 +17,12 @@ HubAimConstraints.init = function (self, unit, init_context)
 	self._unit = unit
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local head_constraint_target_name = init_context.aim_constraint_target_name
 	local torso_constraint_target_name = init_context.aim_constraint_target_torso_name
 	local head_aim_weight_name = init_context.head_aim_weight_name
 	local torso_aim_weight_name = init_context.torso_aim_weight_name
+
 	self._head_constraint_target_name = head_constraint_target_name
 	self._torso_constraint_target_name = torso_constraint_target_name
 	self._head_constraint_target_index = Unit.animation_find_constraint_target(unit, head_constraint_target_name)
@@ -37,7 +41,7 @@ end
 HubAimConstraints.is_moving = function (self)
 	local move_speed_squared = self._locomotion_extension:move_speed_squared()
 
-	return HubAimConstraintSettings.moving_threshold_sq <= move_speed_squared
+	return move_speed_squared >= HubAimConstraintSettings.moving_threshold_sq
 end
 
 HubAimConstraints.update = function (self, head_direction, torso_direction, is_moving, aim_state, dt, t)
@@ -49,8 +53,10 @@ HubAimConstraints.update = function (self, head_direction, torso_direction, is_m
 	local result_head_speed, result_torso_speed = self:_update_speeds(dt, head_goal_speed, torso_goal_speed, is_passive)
 	local head_target_aim_weight = self:_get_aim_weight(aim_state, "head")
 	local torso_target_aim_weight = self:_get_aim_weight(aim_state, "torso")
+
 	self._head_aim_weight = self:_update_aim_weight(unit, self._head_aim_weight, head_target_aim_weight, dt, "head", self._head_aim_weight_index)
 	self._torso_aim_weight = self:_update_aim_weight(unit, self._torso_aim_weight, torso_target_aim_weight, dt, "torso", self._torso_aim_weight_index)
+
 	local unit_forward = Vector3.normalize(Matrix4x4.forward(unit_pose))
 	local unit_right = Vector3.normalize(Matrix4x4.right(unit_pose))
 
@@ -79,7 +85,7 @@ HubAimConstraints._update_aim_weight = function (self, unit, current_weight, tar
 end
 
 HubAimConstraints._goal_speeds = function (self, is_moving, is_passive)
-	local head_goal_speed, torso_goal_speed = nil
+	local head_goal_speed, torso_goal_speed
 
 	if is_moving then
 		if is_passive then
@@ -116,11 +122,12 @@ end
 
 HubAimConstraints._update_speeds = function (self, dt, head_goal_speed, torso_goal_speed, is_passive)
 	local t = dt * RATE_OF_CHANGE
-	local result_head_speed, result_torso_speed = nil
+	local result_head_speed, result_torso_speed
 
 	if is_passive then
 		local interpolated_passive_head_speed = (1 - t) * self._passive_head_speed + t * head_goal_speed
 		local interpolated_passive_torso_speed = (1 - t) * self._passive_torso_speed + t * torso_goal_speed
+
 		self._passive_head_speed = math.min(interpolated_passive_head_speed, head_goal_speed)
 		self._passive_torso_speed = math.min(interpolated_passive_torso_speed, torso_goal_speed)
 		self._head_speed = 0
@@ -130,8 +137,10 @@ HubAimConstraints._update_speeds = function (self, dt, head_goal_speed, torso_go
 	else
 		self._passive_head_speed = 0
 		self._passive_torso_speed = 0
+
 		local interpolated_head_speed = (1 - t) * self._head_speed + t * head_goal_speed
 		local interpolated_torso_speed = (1 - t) * self._torso_speed + t * torso_goal_speed
+
 		self._head_speed = math.min(interpolated_head_speed, head_goal_speed)
 		self._torso_speed = math.min(interpolated_torso_speed, torso_goal_speed)
 		result_head_speed = self._head_speed
@@ -154,7 +163,7 @@ HubAimConstraints._lerp_target = function (self, unit, unit_forward, unit_right,
 		local target_relative_angle = Vector3.length_squared(source_to_target) > 0 and Vector3.angle(unit_forward, source_to_target) or 0
 		local big_angle = current_relative_angle + target_relative_angle
 
-		if PI <= big_angle then
+		if big_angle >= PI then
 			target_rot = Quaternion.lerp(Quaternion.look(unit_forward), target_rot, 0.4)
 		end
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -26,7 +28,7 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 	self._is_handling_navigation_input = false
 	self._pivot_offset = {
 		0,
-		0
+		0,
 	}
 	self._costumization_open = false
 	self._tooltip_visibility = true
@@ -56,6 +58,7 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 		if not profile_presets then
 			local default_character_data = SaveData.default_character_data
 			local default_profile_presets = default_character_data.profile_presets
+
 			profile_presets = table.clone(default_profile_presets)
 			character_data.profile_presets = profile_presets
 			trigger_save = true
@@ -80,6 +83,7 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 
 	local widgets_by_name = self._widgets_by_name
 	local add_button_widget = widgets_by_name.profile_preset_add_button
+
 	add_button_widget.content.hotspot.pressed_callback = callback(self, "cb_add_new_profile_preset")
 end
 
@@ -95,29 +99,30 @@ ViewElementProfilePresets._setup_tooltip_grid = function (self)
 	local grid_size = grid_scenegraph.size
 	local mask_padding_size = 40
 	local grid_settings = {
-		scrollbar_width = 7,
-		widget_icon_load_margin = 0,
-		use_select_on_focused = false,
 		edge_padding = 0,
-		hide_dividers = true,
-		use_is_focused_for_navigation = false,
-		use_terminal_background = false,
-		title_height = 0,
 		hide_background = true,
+		hide_dividers = true,
+		scrollbar_width = 7,
+		title_height = 0,
+		use_is_focused_for_navigation = false,
+		use_select_on_focused = false,
+		use_terminal_background = false,
+		widget_icon_load_margin = 0,
 		grid_spacing = {
 			0,
-			0
+			0,
 		},
 		grid_size = grid_size,
 		mask_size = {
 			grid_size[1] + mask_padding_size,
-			grid_size[2] + mask_padding_size
-		}
+			grid_size[2] + mask_padding_size,
+		},
 	}
 	local reference_name = "profile_preset_tooltip_grid"
 	local layer = self._draw_layer + 10
 	local scale = self._render_scale or RESOLUTION_LOOKUP.scale
 	local grid = ViewElementGrid:new(self, layer, scale, grid_settings)
+
 	self._profile_preset_tooltip_grid = grid
 end
 
@@ -127,54 +132,54 @@ ViewElementProfilePresets._setup_intro_grid = function (self)
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				25
-			}
+				25,
+			},
 		},
 		{
 			widget_type = "header",
-			text = Localize("loc_inventory_menu_profile_preset_intro_text_1")
+			text = Localize("loc_inventory_menu_profile_preset_intro_text_1"),
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				20
-			}
+				20,
+			},
 		},
 		{
 			widget_type = "header",
-			text = Localize("loc_inventory_menu_profile_preset_intro_text_2")
+			text = Localize("loc_inventory_menu_profile_preset_intro_text_2"),
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				25
-			}
+				25,
+			},
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				86,
-				40
-			}
+				40,
+			},
 		},
 		{
 			texture = "content/ui/materials/icons/generic/aquila",
 			widget_type = "texture",
 			size = {
 				52,
-				20
+				20,
 			},
-			color = Color.terminal_icon(255, true)
+			color = Color.terminal_icon(255, true),
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				86,
-				40
-			}
-		}
+				40,
+			},
+		},
 	}
 
 	self:_present_tooltip_grid_layout(layout)
@@ -184,26 +189,27 @@ end
 
 ViewElementProfilePresets._setup_custom_icons_grid = function (self)
 	self._custom_icons_initialized = true
+
 	local definitions = self._definitions
 	local layout = {
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				10
-			}
+				10,
+			},
 		},
 		{
 			widget_type = "header",
-			text = Localize("loc_inventory_menu_profile_preset_customize_text")
+			text = Localize("loc_inventory_menu_profile_preset_customize_text"),
 		},
 		{
 			widget_type = "dynamic_spacing",
 			size = {
 				225,
-				10
-			}
-		}
+				10,
+			},
+		},
 	}
 	local optional_preset_icon_reference_keys = ViewElementProfilePresetsSettings.optional_preset_icon_reference_keys
 	local optional_preset_icons_lookup = ViewElementProfilePresetsSettings.optional_preset_icons_lookup
@@ -211,10 +217,11 @@ ViewElementProfilePresets._setup_custom_icons_grid = function (self)
 	for i = 1, #optional_preset_icon_reference_keys do
 		local icon_key = optional_preset_icon_reference_keys[i]
 		local icon_texture = optional_preset_icons_lookup[icon_key]
+
 		layout[#layout + 1] = {
 			widget_type = "icon",
 			icon = icon_texture,
-			icon_key = icon_key
+			icon_key = icon_key,
 		}
 	end
 
@@ -222,20 +229,20 @@ ViewElementProfilePresets._setup_custom_icons_grid = function (self)
 		widget_type = "dynamic_spacing",
 		size = {
 			225,
-			10
-		}
+			10,
+		},
 	}
 	layout[#layout + 1] = {
 		delete_button = true,
 		widget_type = "dynamic_button",
-		text = Localize("loc_inventory_menu_profile_preset_delete")
+		text = Localize("loc_inventory_menu_profile_preset_delete"),
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			225,
-			10
-		}
+			10,
+		},
 	}
 
 	self:_present_tooltip_grid_layout(layout)
@@ -282,13 +289,19 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 		local custom_icon_key = profile_preset and profile_preset.custom_icon_key
 		local widget_name = "profile_button_" .. i
 		local widget = self:_create_widget(widget_name, profile_preset_button)
+
 		profile_buttons_widgets[i] = widget
+
 		local offset = widget.offset
+
 		offset[1] = -total_width
+
 		local content = widget.content
 		local hotspot = content.hotspot
+
 		hotspot.pressed_callback = callback(self, "on_profile_preset_index_change", i)
 		hotspot.right_pressed_callback = callback(self, "on_profile_preset_index_customize", i)
+
 		local is_selected = profile_preset_id == active_profile_preset_id
 
 		if is_selected then
@@ -296,9 +309,11 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 		end
 
 		hotspot.is_selected = is_selected
+
 		local default_icon_index = math.index_wrapper(i, #optional_preset_icon_reference_keys)
 		local default_icon_key = optional_preset_icon_reference_keys[default_icon_index]
 		local default_icon = optional_preset_icons_lookup[custom_icon_key or default_icon_key]
+
 		content.icon = default_icon
 		content.profile_preset_id = profile_preset_id
 		total_width = total_width + button_width
@@ -309,6 +324,7 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 	end
 
 	self._profile_buttons_widgets = profile_buttons_widgets
+
 	local panel_width = total_width + button_width + 45
 
 	self:_set_scenegraph_size("profile_preset_button_panel", panel_width)
@@ -326,6 +342,7 @@ ViewElementProfilePresets._sync_profile_buttons_items_status = function (self)
 			local widget = profile_buttons_widgets[i]
 			local content = widget.content
 			local profile_preset_id = content.profile_preset_id
+
 			content.missing_content = self._presets_id_warning[profile_preset_id]
 			content.modified_content = self._presets_id_modified[profile_preset_id]
 		end
@@ -366,7 +383,7 @@ ViewElementProfilePresets.can_add_profile_preset = function (self)
 	local profile_presets = ProfileUtils.get_profile_presets()
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
-	if profile_presets and ViewElementProfilePresetsSettings.max_profile_presets <= #profile_presets or self._current_profile_loadout_warning then
+	if profile_presets and #profile_presets >= ViewElementProfilePresetsSettings.max_profile_presets or self._current_profile_loadout_warning then
 		return false
 	end
 
@@ -390,7 +407,7 @@ ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
 	local profile_presets = ProfileUtils.get_profile_presets()
 	local num_profile_presets = profile_presets and #profile_presets
 
-	if not profile_presets or ViewElementProfilePresetsSettings.max_profile_presets <= num_profile_presets then
+	if not profile_presets or num_profile_presets >= ViewElementProfilePresetsSettings.max_profile_presets then
 		return
 	end
 
@@ -403,6 +420,7 @@ ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
 	self:_setup_preset_buttons()
 
 	self._active_profile_preset_id = nil
+
 	local _, profile_preset_widget_index = self:_get_widget_by_preset_id(profile_preset_id)
 
 	self:on_profile_preset_index_change(profile_preset_widget_index)
@@ -420,11 +438,14 @@ ViewElementProfilePresets._remove_profile_preset = function (self, widget, eleme
 	local profile_preset_id = self:_get_profile_preset_id_by_widget_index(active_customize_preset_index)
 	local widget_content = widget.content
 	local widget_hotspot = widget_content.hotspot
+
 	widget_hotspot.anim_hover_progress = 0
 	widget_hotspot.anim_input_progress = 0
 	widget_hotspot.anim_focus_progress = 0
 	widget_hotspot.anim_select_progress = 0
+
 	local previously_active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+
 	self._active_profile_preset_id = nil
 
 	ProfileUtils.remove_profile_preset(profile_preset_id)
@@ -462,6 +483,7 @@ ViewElementProfilePresets.cb_on_profile_preset_icon_grid_layout_changed = functi
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local new_grid_height = math.clamp(grid_length + 10, 0, 700)
+
 	grid_size[2] = new_grid_height
 	mask_size[2] = new_grid_height
 
@@ -498,6 +520,7 @@ ViewElementProfilePresets.cb_on_profile_preset_icon_grid_left_pressed = function
 		local grid_widget = grid_widgets[i]
 		local equipped = grid_widget == widget
 		local content = grid_widget.content
+
 		content.equipped = equipped
 	end
 
@@ -513,6 +536,7 @@ ViewElementProfilePresets.cb_on_profile_preset_icon_grid_left_pressed = function
 
 			if button_widget then
 				local content = button_widget.content
+
 				content.icon = default_icon
 				profile_preset.custom_icon_key = icon_key
 
@@ -576,6 +600,7 @@ ViewElementProfilePresets.on_profile_preset_index_customize = function (self, in
 			local widget = profile_buttons_widgets[i]
 			local content = widget.content
 			local hotspot = content.hotspot
+
 			hotspot.is_focused = i == index
 		end
 	end
@@ -585,6 +610,7 @@ ViewElementProfilePresets.on_profile_preset_index_customize = function (self, in
 	end
 
 	self._active_customize_preset_index = index
+
 	local tooltip_visible = index ~= nil
 
 	self:_set_tooltip_visibility(tooltip_visible)
@@ -593,12 +619,13 @@ ViewElementProfilePresets.on_profile_preset_index_customize = function (self, in
 	local equipped_icon_texture = profile_preset_button_widget and profile_preset_button_widget.content.icon
 	local grid = self._profile_preset_tooltip_grid
 	local grid_widgets = grid:widgets()
-	local equipped_widget = nil
+	local equipped_widget
 
 	for i = 1, #grid_widgets do
 		local grid_widget = grid_widgets[i]
 		local content = grid_widget.content
 		local equipped = content.icon == equipped_icon_texture
+
 		content.equipped = equipped
 
 		if equipped then
@@ -629,11 +656,16 @@ end
 
 ViewElementProfilePresets._set_tooltip_visibility = function (self, visible, pulse_tooltip)
 	self._tooltip_visibility = visible
+
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.profile_preset_tooltip.content.visible = visible
 	widgets_by_name.profile_preset_tooltip.content.pulse = visible and pulse_tooltip
+
 	local add_button_widget = widgets_by_name.profile_preset_add_button
+
 	add_button_widget.content.pulse = pulse_tooltip
+
 	local grid = self._profile_preset_tooltip_grid
 
 	grid:set_visibility(visible)
@@ -680,7 +712,7 @@ ViewElementProfilePresets._get_profile_preset_id_by_widget_index = function (sel
 end
 
 ViewElementProfilePresets.on_profile_preset_index_change = function (self, index, ignore_activation, on_preset_deleted, ignore_sound)
-	local profile_preset_id = nil
+	local profile_preset_id
 	local profile_buttons_widgets = self._profile_buttons_widgets
 
 	if profile_buttons_widgets then
@@ -689,6 +721,7 @@ ViewElementProfilePresets.on_profile_preset_index_change = function (self, index
 			local content = widget.content
 			local hotspot = content.hotspot
 			local is_selected = i == index
+
 			hotspot.is_selected = is_selected
 
 			if is_selected then
@@ -792,7 +825,7 @@ end
 local _device_list = {
 	Pad1,
 	Keyboard,
-	Mouse
+	Mouse,
 }
 
 ViewElementProfilePresets.update = function (self, dt, t, input_service)
@@ -862,7 +895,7 @@ ViewElementProfilePresets.update = function (self, dt, t, input_service)
 		grid:update(dt, t, input_service)
 
 		if self._active_customize_preset_index then
-			local equipped_grid_index = nil
+			local equipped_grid_index
 			local grid_widgets = grid:widgets()
 
 			for i = 1, #grid_widgets do
@@ -876,24 +909,26 @@ ViewElementProfilePresets.update = function (self, dt, t, input_service)
 				end
 			end
 
-			local gamepad_active = InputDevice.gamepad_active
+			do
+				local gamepad_active = InputDevice.gamepad_active
 
-			if not grid:selected_grid_index() then
-				if gamepad_active and equipped_grid_index then
-					grid:select_grid_index(equipped_grid_index)
+				if not grid:selected_grid_index() then
+					if gamepad_active and equipped_grid_index then
+						grid:select_grid_index(equipped_grid_index)
+					end
+				elseif not gamepad_active then
+					grid:select_grid_widget(nil)
 				end
-			elseif not gamepad_active then
-				grid:select_grid_widget(nil)
-			end
 
-			local selected_grid_index = grid:selected_grid_index()
+				local selected_grid_index = grid:selected_grid_index()
 
-			if selected_grid_index and equipped_grid_index and selected_grid_index ~= equipped_grid_index then
-				local grid_widget = grid_widgets[selected_grid_index]
-				local grid_widget_element = grid_widget and grid_widget.content.element
+				if selected_grid_index and equipped_grid_index and selected_grid_index ~= equipped_grid_index then
+					local grid_widget = grid_widgets[selected_grid_index]
+					local grid_widget_element = grid_widget and grid_widget.content.element
 
-				if grid_widget_element and not grid_widget_element.delete_button then
-					self:cb_on_profile_preset_icon_grid_left_pressed(grid_widget, grid_widget_element)
+					if grid_widget_element and not grid_widget_element.delete_button then
+						self:cb_on_profile_preset_icon_grid_left_pressed(grid_widget, grid_widget_element)
+					end
 				end
 			end
 
@@ -905,6 +940,7 @@ ViewElementProfilePresets.update = function (self, dt, t, input_service)
 
 	if add_button_widget then
 		add_button_widget.content.hotspot.disabled = not self:can_add_profile_preset()
+
 		local index = self._active_profile_preset_id
 		local widget = self._profile_buttons_widgets[index]
 
@@ -970,6 +1006,7 @@ ViewElementProfilePresets._update_input_action_texts = function (self)
 	local input_action_left = self._input_action_left
 	local input_action_right = self._input_action_right
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.input_text_left.content.text = not using_cursor_navigation and input_action_left and self:_get_input_text(input_action_left) or ""
 	widgets_by_name.input_text_right.content.text = not using_cursor_navigation and input_action_right and self:_get_input_text(input_action_right) or ""
 end

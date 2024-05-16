@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/foundation/utilities/reportify.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+
 Reportify = Reportify or {}
 REPORTIFY_NETWORK_READY = false
 
@@ -24,7 +27,7 @@ Reportify.get_data = function (self)
 		fields = {
 			customfield_10031 = self.content_revision,
 			customfield_10032 = self.engine_revision,
-			summary = mission_info
+			summary = mission_info,
 		},
 		custom = {
 			level = self:_get_level(),
@@ -34,8 +37,8 @@ Reportify.get_data = function (self)
 			archetype = player_info.archetype_name,
 			wielded_slot = player_info.wielded_slot,
 			primary_slot = player_info.primary_name,
-			secondary_slot = player_info.secondary_name
-		}
+			secondary_slot = player_info.secondary_name,
+		},
 	}
 
 	Application.console_send(console_command)
@@ -51,7 +54,7 @@ Reportify._get_mission_info = function (self)
 	local mission_manager = Managers.state.mission
 	local mission = mission_manager and mission_manager:mission()
 	local mission_name = mission and mission.name or "n/a"
-	local chunk_short_name = nil
+	local chunk_short_name
 
 	if Managers.state and Managers.state.chunk_lod then
 		local chunk_name = Managers.state.chunk_lod:current_chunk_name()
@@ -92,10 +95,10 @@ end
 
 Reportify._get_player_info = function (self)
 	local ret = {
-		wielded_slot = "N/A",
-		primary_name = "N/A",
 		archetype_name = "N/A",
-		secondary_name = "N/A"
+		primary_name = "N/A",
+		secondary_name = "N/A",
+		wielded_slot = "N/A",
 	}
 
 	if not Managers.player then

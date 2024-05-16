@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/baked_physics.lua
+
 local BakedPhysics = component("BakedPhysics")
 
 BakedPhysics.editor_init = function (self, unit)
@@ -44,7 +46,7 @@ end
 BakedPhysics.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true
+	starts_enabled_default = true,
 }
 
 return BakedPhysics

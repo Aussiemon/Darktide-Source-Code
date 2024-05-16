@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_event_vo_demolition.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "event_demolition_first_corruptor_destroyed_a"
 DialogueLookup[DialogueLookup_n + 2] = "event_demolition_first_corruptor_destroyed_b"
 DialogueLookup[DialogueLookup_n + 3] = "event_demolition_last_corruptor"

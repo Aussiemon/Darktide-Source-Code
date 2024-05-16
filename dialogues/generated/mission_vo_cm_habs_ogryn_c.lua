@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_ogryn_c.lua
+
 local mission_vo_cm_habs_ogryn_c = {
 	hab_block_void_response_b = {
 		randomize_indexes_n = 0,
@@ -5,75 +7,75 @@ local mission_vo_cm_habs_ogryn_c = {
 		sound_events = {
 			"loc_ogryn_c__region_habculum_01",
 			"loc_ogryn_c__region_habculum_02",
-			"loc_ogryn_c__region_habculum_03"
+			"loc_ogryn_c__region_habculum_03",
 		},
 		sound_events_duration = {
 			1.880125,
 			4.54024,
-			3.445604
+			3.445604,
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333
+			0.3333333,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_atrium = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__level_hab_block_atrium_01",
-			[2.0] = "loc_ogryn_c__level_hab_block_atrium_02"
+			[1] = "loc_ogryn_c__level_hab_block_atrium_01",
+			[2] = "loc_ogryn_c__level_hab_block_atrium_02",
 		},
 		sound_events_duration = {
-			[1.0] = 2.885594,
-			[2.0] = 3.382771
+			[1] = 2.885594,
+			[2] = 3.382771,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_b_response_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__level_hab_block_b_response_b_01",
-			[2.0] = "loc_ogryn_c__level_hab_block_b_response_b_02"
+			[1] = "loc_ogryn_c__level_hab_block_b_response_b_01",
+			[2] = "loc_ogryn_c__level_hab_block_b_response_b_02",
 		},
 		sound_events_duration = {
-			[1.0] = 2.295552,
-			[2.0] = 2.736615
+			[1] = 2.295552,
+			[2] = 2.736615,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_market_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__level_hab_block_market_response_01",
-			[2.0] = "loc_ogryn_c__level_hab_block_market_response_02"
+			[1] = "loc_ogryn_c__level_hab_block_market_response_01",
+			[2] = "loc_ogryn_c__level_hab_block_market_response_02",
 		},
 		sound_events_duration = {
-			[1.0] = 3.247979,
-			[2.0] = 4.109583
+			[1] = 3.247979,
+			[2] = 4.109583,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_start_banter_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__level_hab_block_void_01",
-			[2.0] = "loc_ogryn_c__level_hab_block_void_02"
+			[1] = "loc_ogryn_c__level_hab_block_void_01",
+			[2] = "loc_ogryn_c__level_hab_block_void_02",
 		},
 		sound_events_duration = {
-			[1.0] = 2.797083,
-			[2.0] = 3.725375
+			[1] = 2.797083,
+			[2] = 3.725375,
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_start_banter_c = {
 		randomize_indexes_n = 0,
@@ -84,7 +86,7 @@ local mission_vo_cm_habs_ogryn_c = {
 			"loc_ogryn_c__region_habculum_03",
 			"loc_ogryn_c__zone_transit_01",
 			"loc_ogryn_c__zone_transit_02",
-			"loc_ogryn_c__zone_transit_03"
+			"loc_ogryn_c__zone_transit_03",
 		},
 		sound_events_duration = {
 			1.880125,
@@ -92,7 +94,7 @@ local mission_vo_cm_habs_ogryn_c = {
 			3.445604,
 			4.882969,
 			3.751333,
-			3.65425
+			3.65425,
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -100,22 +102,22 @@ local mission_vo_cm_habs_ogryn_c = {
 			0.1666667,
 			0.1666667,
 			0.1666667,
-			0.1666667
+			0.1666667,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_temple = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__level_hab_block_temple_01",
-			[2.0] = "loc_ogryn_c__level_hab_block_temple_02"
+			[1] = "loc_ogryn_c__level_hab_block_temple_01",
+			[2] = "loc_ogryn_c__level_hab_block_temple_02",
 		},
 		sound_events_duration = {
-			[1.0] = 3.076031,
-			[2.0] = 3.820698
+			[1] = 3.076031,
+			[2] = 3.820698,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_temple_response = {
 		randomize_indexes_n = 0,
@@ -135,7 +137,7 @@ local mission_vo_cm_habs_ogryn_c = {
 			"loc_ogryn_c__nurgle_circumstance_prop_growth_a_07",
 			"loc_ogryn_c__nurgle_circumstance_prop_growth_a_08",
 			"loc_ogryn_c__nurgle_circumstance_prop_growth_a_09",
-			"loc_ogryn_c__nurgle_circumstance_prop_growth_a_10"
+			"loc_ogryn_c__nurgle_circumstance_prop_growth_a_10",
 		},
 		sound_events_duration = {
 			4.444156,
@@ -152,7 +154,7 @@ local mission_vo_cm_habs_ogryn_c = {
 			5.635531,
 			2.9355,
 			5.400063,
-			6.012281
+			6.012281,
 		},
 		sound_event_weights = {
 			0.06666667,
@@ -169,23 +171,23 @@ local mission_vo_cm_habs_ogryn_c = {
 			0.06666667,
 			0.06666667,
 			0.06666667,
-			0.06666667
+			0.06666667,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	level_hab_block_vista = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__level_hab_block_vista_01",
-			[2.0] = "loc_ogryn_c__level_hab_block_vista_02"
+			[1] = "loc_ogryn_c__level_hab_block_vista_01",
+			[2] = "loc_ogryn_c__level_hab_block_vista_02",
 		},
 		sound_events_duration = {
-			[1.0] = 3.169354,
-			[2.0] = 3.894646
+			[1] = 3.169354,
+			[2] = 3.894646,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_vo_cm_habs_ogryn_c", mission_vo_cm_habs_ogryn_c)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_step_shoot_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -18,11 +20,15 @@ BtStepShootAction.enter = function (self, unit, breed, blackboard, scratchpad, a
 	MinionAttack.init_scratchpad_shooting_variables(unit, scratchpad, action_data, blackboard, breed)
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
+
 	scratchpad.broadphase = broadphase_system.broadphase
+
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
 	local side_name = side:name()
+
 	scratchpad.side_name = side_name
+
 	local can_step = self:_start_stepping(unit, t, scratchpad, action_data, blackboard)
 	local vo_event = action_data.vo_event
 
@@ -50,7 +56,7 @@ BtStepShootAction.run = function (self, unit, breed, blackboard, scratchpad, act
 
 	MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
 
-	if scratchpad.step_move_timing and scratchpad.step_move_timing <= t then
+	if scratchpad.step_move_timing and t >= scratchpad.step_move_timing then
 		if not navigation_extension:is_following_path() then
 			return "failed"
 		end
@@ -58,7 +64,7 @@ BtStepShootAction.run = function (self, unit, breed, blackboard, scratchpad, act
 		scratchpad.step_move_timing = nil
 	end
 
-	if scratchpad.step_anim_finished_timing <= t then
+	if t >= scratchpad.step_anim_finished_timing then
 		return "done"
 	elseif not scratchpad.all_shots_fired then
 		self:_aim_at_target(unit, scratchpad)
@@ -84,9 +90,8 @@ local function _get_step_position(direction_identifier, unit, scratchpad, action
 		return nil, nil
 	end
 
-	local broadphase = scratchpad.broadphase
-	local side_name = scratchpad.side_name
-	local num_results = broadphase:query(wanted_position_on_navmesh, BROADPHASE_SEARCH_RADIUS, broadphase_results, side_name)
+	local broadphase, side_name = scratchpad.broadphase, scratchpad.side_name
+	local num_results = broadphase.query(broadphase, wanted_position_on_navmesh, BROADPHASE_SEARCH_RADIUS, broadphase_results, side_name)
 
 	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]
@@ -109,14 +114,12 @@ end
 
 BtStepShootAction._start_stepping = function (self, unit, t, scratchpad, action_data, blackboard)
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local target_unit = scratchpad.perception_component.target_unit
-	local self_position = POSITION_LOOKUP[unit]
-	local target_position = POSITION_LOOKUP[target_unit]
+	local self_position, target_position = POSITION_LOOKUP[unit], POSITION_LOOKUP[target_unit]
 	local to_target_direction = Vector3.normalize(target_position - self_position)
 	local try_step_right = math.random() > 0.5
-	local wanted_step_position, step_anim_event = nil
+	local wanted_step_position, step_anim_event
 	local test_forward_step_first = action_data.test_forward_step_first
 
 	if test_forward_step_first then
@@ -130,14 +133,17 @@ BtStepShootAction._start_stepping = function (self, unit, t, scratchpad, action_
 	if not wanted_step_position then
 		if test_forward_step_first then
 			local direction_identifier = try_step_right and "right" or "left"
+
 			wanted_step_position, step_anim_event = _get_step_position(direction_identifier, unit, scratchpad, action_data, self_position, to_target_direction, nav_world, traverse_logic)
 
 			if not wanted_step_position then
 				local reverse_direction_identifer = direction_identifier == "right" and "left" or "right"
+
 				wanted_step_position, step_anim_event = _get_step_position(reverse_direction_identifer, unit, scratchpad, action_data, self_position, to_target_direction, nav_world, traverse_logic)
 			end
 		else
 			local reverse_direction_identifer = try_step_right and "left" or "right"
+
 			wanted_step_position, step_anim_event = _get_step_position(reverse_direction_identifer, unit, scratchpad, action_data, self_position, to_target_direction, nav_world, traverse_logic)
 
 			if not wanted_step_position then
@@ -157,10 +163,15 @@ BtStepShootAction._start_stepping = function (self, unit, t, scratchpad, action_
 
 	scratchpad.current_aim_anim_event = step_anim_event
 	scratchpad.behavior_component.move_state = "attacking"
+
 	local step_anim_finished_timing = action_data.step_anim_durations[step_anim_event]
+
 	scratchpad.step_anim_finished_timing = t + step_anim_finished_timing
+
 	local step_move_timing = action_data.step_move_timing[step_anim_event]
+
 	scratchpad.step_move_timing = t + step_move_timing
+
 	local shoot_timing = action_data.shoot_timing[step_anim_event]
 
 	MinionAttack.start_shooting(unit, scratchpad, t, action_data, shoot_timing)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/door_control_panel.lua
+
 local DoorControlPanel = component("DoorControlPanel")
 
 DoorControlPanel.init = function (self, unit)
@@ -49,29 +51,29 @@ end
 
 DoorControlPanel.component_data = {
 	start_active = {
+		ui_name = "Start Active",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Start Active"
 	},
 	interaction_interlude = {
-		ui_type = "number",
 		min = 0,
 		ui_name = "Interaction Interlude (sec.)",
-		value = 0.75
+		ui_type = "number",
+		value = 0.75,
 	},
 	inputs = {
 		activate = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		deactivate = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"DoorControlPanelExtension"
-	}
+		"DoorControlPanelExtension",
+	},
 }
 
 return DoorControlPanel

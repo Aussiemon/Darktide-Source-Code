@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/foundation/managers/time/time_manager.lua
+
 local Timer = require("scripts/foundation/managers/time/timer")
 local TimeManager = class("TimeManager")
 
 TimeManager.init = function (self, dt)
 	self._timers = {
-		main = Timer:new("main", nil, 0, dt)
+		main = Timer:new("main", nil, 0, dt),
 	}
 	self._dt_stack = {}
 	self._dt_stack_max_size = 10
@@ -41,6 +43,7 @@ end
 
 TimeManager.update = function (self, dt)
 	self._dt = dt
+
 	local main_timer = self._timers.main
 
 	if main_timer:active() then
@@ -52,13 +55,16 @@ end
 
 TimeManager._update_mean_dt = function (self, dt)
 	self._dt_stack_index = self._dt_stack_index % self._dt_stack_max_size + 1
+
 	local dt_stack = self._dt_stack
+
 	dt_stack[self._dt_stack_index] = dt
-	local dt_sum = 0
-	local dt_stack_size = #dt_stack
+
+	local dt_sum, dt_stack_size = 0, #dt_stack
 
 	for i = 1, dt_stack_size do
 		local dt_stack_entry = dt_stack[i]
+
 		dt_sum = dt_sum + dt_stack_entry
 	end
 

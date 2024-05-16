@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/player_unit_data_extension.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerHuskDataComponentConfig = require("scripts/extension_systems/unit_data/player_husk_data_component_config")
@@ -19,34 +21,34 @@ local math_max = math.max
 local vector3_unbox = Vector3Box.unbox
 local quaternion_unbox = QuaternionBox.unbox
 local NUMBER_NETWORK_TYPE_TOLERANCES = {
-	weapon_sway_offset = 0.01,
-	weapon_sway = 0.01,
-	weapon_view_lock = 0.01,
-	weapon_spread = 0.01,
-	warp_charge_ramping_modifier = 0.01,
+	action_time_scale = 0.01,
+	character_height = 0.01,
 	default = 0.001,
 	projectile_speed = 0.1,
-	stamina_fraction = 0.01,
 	recoil_angle = 0.01,
-	character_height = 0.01,
-	action_time_scale = 0.01
+	stamina_fraction = 0.01,
+	warp_charge_ramping_modifier = 0.01,
+	weapon_spread = 0.01,
+	weapon_sway = 0.01,
+	weapon_sway_offset = 0.01,
+	weapon_view_lock = 0.01,
 }
 local VECTOR3_NETWORK_TYPE_TOLERANCES = {
+	Vector3 = 0.001,
+	high_precision_direction = 1e-05,
 	high_precision_velocity = 1e-05,
 	locomotion_position = 0.001,
-	Vector3 = 0.001,
-	high_precision_direction = 1e-05
 }
 local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
+	fixed_frame_offset = true,
+	fixed_frame_offset_end_t_4bit = true,
 	fixed_frame_offset_end_t_6bit = true,
-	fixed_frame_offset_start_t_7bit = true,
-	fixed_frame_offset_start_t_9bit = true,
-	fixed_frame_offset_start_t_6bit = true,
+	fixed_frame_offset_end_t_7bit = true,
 	fixed_frame_offset_small = true,
 	fixed_frame_offset_start_t_5bit = true,
-	fixed_frame_offset = true,
-	fixed_frame_offset_end_t_7bit = true,
-	fixed_frame_offset_end_t_4bit = true
+	fixed_frame_offset_start_t_6bit = true,
+	fixed_frame_offset_start_t_7bit = true,
+	fixed_frame_offset_start_t_9bit = true,
 }
 local script_id_string_32 = Script.id_string_32
 local NETWORK_NAME_ID_TO_FIELD_ID = {}
@@ -74,10 +76,13 @@ for i = 1, NUM_FIELDS do
 	end
 
 	FIELDS_LOOKUP[network_name] = i
+
 	local network_name_id = script_id_string_32(network_name)
+
 	NETWORK_NAME_ID_TO_FIELD_ID[network_name_id] = i
 	NETWORK_ID_TO_NAME[network_name_id] = network_name
 	NETWORK_ID_TO_NAME[network_name] = network_name_id
+
 	local husk_config = FORMATTED_HUSK_CONFIG[component_name]
 
 	if husk_config and husk_config[field_name] then
@@ -106,7 +111,7 @@ local POST_UPDATE_FIELDS = {
 	end,
 	fixed_frame_time = function (value, fixed_time_step)
 		return math_round(value / fixed_time_step)
-	end
+	end,
 }
 local FRAME_INDEX_FIELD = "frame_index"
 local REMAINDER_TIME_FIELD = "remainder_time"
@@ -144,10 +149,13 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._player_peer = self._player:peer_id()
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 	self.is_resimulating = false
+
 	local component_config = FORMATTED_CONFIG
 	local is_server = extension_init_context.is_server
 	local state_cache_size = is_server and SERVER_STATE_CACHE_SIZE or CLIENT_STATE_CACHE_SIZE
+
 	self._state_cache_size = state_cache_size
+
 	local components = {}
 	local rollback_components = {}
 
@@ -163,6 +171,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 		end
 
 		components[config_name] = cache
+
 		local rollback_component = {}
 
 		_populate_component(fields, rollback_component)
@@ -171,9 +180,11 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	end
 
 	self._rollback_components = rollback_components
+
 	local fixed_frame = extension_init_context.fixed_frame
 	local next_frame = fixed_frame + 1
 	local i = (next_frame - 1) % state_cache_size + 1
+
 	self._component_index = i
 	self._last_component_index = i
 	self._last_fixed_frame = fixed_frame
@@ -192,11 +203,14 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	end
 
 	self._is_server = is_server
+
 	local is_local_unit = extension_init_data.is_local_unit
 
 	if not is_local_unit then
 		self._sent_fixed_frame = next_frame
+
 		local owner = extension_init_data.player
+
 		self._owner_peer = owner:peer_id()
 		self._owner_channel = owner:channel_id()
 	end
@@ -206,9 +220,11 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._component_config = component_config
 	self._components.movement_settings[i].player_speed_scale = 1
 	self._component_blackboard = {
-		index = i
+		index = i,
 	}
+
 	local breed = extension_init_data.breed
+
 	self._breed = breed
 	self._server_sync_data = {}
 	self._server_sync_husk_data = {}
@@ -216,7 +232,9 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._update_fields_post_update = Script.new_array(2048)
 	self._update_fields_post_update[0] = 0
 	self._modified_update_fields = Script.new_map(512)
+
 	local archetype = extension_init_data.archetype
+
 	self._archetype = archetype
 	self._hit_zone_lookup, self._hit_zone_actors_lookup = HitZone.initialize_lookup(unit, breed.hit_zones)
 	self._write_components = {}
@@ -250,6 +268,7 @@ end
 PlayerUnitDataExtension.game_object_initialized = function (self, session, object_id)
 	self._game_session = session
 	self._game_object_id = object_id
+
 	local last_fixed_frame = self._last_fixed_frame
 	local go_data_table = {}
 	local husk_go_data_table = {}
@@ -257,29 +276,26 @@ PlayerUnitDataExtension.game_object_initialized = function (self, session, objec
 
 	for i = 1, NUM_FIELDS do
 		local field = FIELD_NETWORK_LOOKUP[i]
-		local component_name = field[1]
-		local field_name = field[2]
-		local type = field[3]
-		local network_name = field[4]
-		local network_type = field[5]
-		local lookup = field[6]
-		local use_network_lookup = field[8]
+		local component_name, field_name, type, network_name, network_type, lookup, use_network_lookup = field[1], field[2], field[3], field[4], field[5], field[6], field[8]
 		local value = self._components[component_name][self._component_index][field_name]
-		local actual_value = nil
+		local actual_value
 
 		if type == "Vector3" or type == "Quaternion" then
 			actual_value = value:unbox()
 		elseif type == "string" then
 			local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
 			local lookup_index = string_lookup[value]
+
 			actual_value = lookup_index
 		elseif network_type == "fixed_frame_time" then
 			local frame = math.round(value / self._fixed_time_step)
+
 			actual_value = frame
 		elseif FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
 			local type_info = NetworkConstants[network_type]
 			local min_value = type_info.min
 			local frame = math.max(math.round(value / self._fixed_time_step) - last_fixed_frame, min_value)
+
 			actual_value = frame
 		else
 			actual_value = value
@@ -302,6 +318,7 @@ PlayerUnitDataExtension.game_object_initialized = function (self, session, objec
 		go_data_table[FRAME_INDEX_FIELD] = last_fixed_frame
 		go_data_table.game_object_type = NetworkLookup.game_object_types.server_unit_data_state
 		go_data_table.unit_game_object_id = object_id
+
 		local action_input_network_data = self._action_input_extension:network_data()
 
 		for game_object_field_name, lookup_id_array in pairs(action_input_network_data) do
@@ -336,7 +353,7 @@ PlayerUnitDataExtension.extensions_ready = function (self, world, unit)
 		for field_name, data in pairs(component_config) do
 			local value = component[field_name]
 			local field_type = data.type
-			local go_return_init_value = nil
+			local go_return_init_value
 
 			if field_type == "Vector3" then
 				go_return_init_value = USERDATA_REPLACEMENT
@@ -350,6 +367,7 @@ PlayerUnitDataExtension.extensions_ready = function (self, world, unit)
 				local lookup_index = data.lookup_index
 				local field = FIELD_NETWORK_LOOKUP[lookup_index]
 				local network_name = field[4]
+
 				game_object_return_table_or_nil[n_fields + 1] = NETWORK_ID_TO_NAME[network_name]
 				game_object_return_table_or_nil[n_fields + 2] = go_return_init_value
 				n_fields = n_fields + 2
@@ -424,7 +442,7 @@ local READ_ONLY_META = {
 	end,
 	__newindex = function (t, field_name, value)
 		ferror("Trying to write to %q in read only component %q", field_name, rawget(t, "__name"))
-	end
+	end,
 }
 
 PlayerUnitDataExtension._create_read_component = function (self, component_name)
@@ -433,7 +451,7 @@ PlayerUnitDataExtension._create_read_component = function (self, component_name)
 		__data = self._components[component_name],
 		__blackboard = self._component_blackboard,
 		__config = config,
-		__name = component_name
+		__name = component_name,
 	}
 
 	setmetatable(component, READ_ONLY_META)
@@ -454,11 +472,11 @@ local WRITE_META = {
 	__newindex = function (t, field_name, value)
 		local field = rawget(t, "__config")[field_name]
 		local data_type = field.type
-		local networked_value = nil
+		local networked_value
 		local data = rawget(t, "__data")
 
 		if data_type == "Vector3" or data_type == "Quaternion" then
-			local actual_value = nil
+			local actual_value
 			local field_network_type = field.field_network_type
 
 			if data_type == "Vector3" then
@@ -499,6 +517,7 @@ local WRITE_META = {
 
 				if prev_val ~= nil then
 					doing_conversion = true
+
 					local additional_data = rawget(t, "__additional_data")[field_name]
 					local conversion_array = additional_data.conversion_array
 
@@ -572,7 +591,7 @@ local WRITE_META = {
 				end
 			end
 		end
-	end
+	end,
 }
 
 PlayerUnitDataExtension.write_component = function (self, component_name)
@@ -587,7 +606,7 @@ PlayerUnitDataExtension._create_write_component = function (self, component_name
 		__config = config,
 		__name = component_name,
 		__data_ext = self,
-		__is_server = self._is_server
+		__is_server = self._is_server,
 	}
 
 	setmetatable(component, WRITE_META)
@@ -607,12 +626,13 @@ PlayerUnitDataExtension._setup_component_dependency = function (self, component_
 		rawset(write_component, "__additional_data", additional_data)
 	end
 
-	local field_additional_data = nil
+	local field_additional_data
 	local field_network_type = field_info.field_network_type
 
 	if field_network_type == "locomotion_parent" then
 		local children = additional_data_config.children
 		local num_children = #children
+
 		field_additional_data = Script.new_table(num_children * 2, 2)
 		field_additional_data.size = num_children * 2
 		field_additional_data.conversion_array = Script.new_array(num_children)
@@ -623,6 +643,7 @@ PlayerUnitDataExtension._setup_component_dependency = function (self, component_
 			local child_field_name = child.field_name
 			local child_write_component = self:write_component(child_component_name)
 			local strided_i = (i - 1) * 2
+
 			field_additional_data[strided_i + 1] = child_write_component
 			field_additional_data[strided_i + 2] = child_field_name
 		end
@@ -631,9 +652,10 @@ PlayerUnitDataExtension._setup_component_dependency = function (self, component_
 		local parent_component_name = parent.component_name
 		local parent_component = self:read_component(parent_component_name)
 		local parent_field_name = parent.field_name
+
 		field_additional_data = {
 			parent_read_component = parent_component,
-			parent_field_name = parent_field_name
+			parent_field_name = parent_field_name,
 		}
 	else
 		ferror("Don't know how to handle additional_data for this field_network_type:%q", field_network_type)
@@ -715,6 +737,7 @@ PlayerUnitDataExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	local old_index = self._component_index
 	local next_frame = fixed_frame + 1
 	local new_index = (next_frame - 1) % self._state_cache_size + 1
+
 	self._component_blackboard.index = new_index
 	self._component_index = new_index
 	self._last_fixed_frame = fixed_frame
@@ -784,6 +807,7 @@ PlayerUnitDataExtension.post_update = function (self, unit, dt, t)
 		table.clear(self._modified_update_fields)
 
 		update_fields_post_update[0] = 0
+
 		local components = self._components
 		local network_constants = NetworkConstants
 		local index = self._last_component_index
@@ -812,10 +836,13 @@ PlayerUnitDataExtension.post_update = function (self, unit, dt, t)
 
 		if sync_server_state then
 			server_sync_data[FRAME_INDEX_FIELD] = last_fixed_frame
+
 			local remainder_time = math_min(t - self._last_fixed_t, self._network_max_time_offset)
+
 			server_sync_data[REMAINDER_TIME_FIELD] = remainder_time
 			server_sync_data[FRAME_TIME_FIELD] = math_min(dt, self._network_max_time_offset)
 			server_sync_data[HAD_RECEIVED_INPUT_FIELD] = self._input_extension:had_received_input(last_fixed_frame)
+
 			local action_input_extension = self._action_input_extension
 			local action_input_network_data = action_input_extension:network_data()
 
@@ -860,7 +887,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 
 	if frame_index <= self._last_received_frame then
 		return
-	elseif self._last_fixed_frame < frame_index then
+	elseif frame_index > self._last_fixed_frame then
 		input_handler:frame_parsed(frame_index, remainder_time, frame_time)
 
 		if not self._in_panic then
@@ -923,17 +950,11 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 		local field_id = NETWORK_NAME_ID_TO_FIELD_ID[game_object_return_table[i]]
 		local field = FIELD_NETWORK_LOOKUP[field_id]
 		local authoritative_value = game_object_return_table[i + 1]
-		local component_name = field[1]
-		local field_name = field[2]
-		local type = field[3]
-		local network_type = field[5]
-		local lookup = field[6]
-		local skip_predict_verification = field[7]
-		local use_network_lookup = field[8]
+		local component_name, field_name, type, network_type, lookup, skip_predict_verification, use_network_lookup = field[1], field[2], field[3], field[5], field[6], field[7], field[8]
 		local component = components[component_name][wrapped_frame_index]
 		local rollback_component = rollback_components[component_name]
 		local simulated_value = component[field_name]
-		local real_simulated_value, correct = nil
+		local real_simulated_value, correct
 		local default_number_tolerance = NUMBER_NETWORK_TYPE_TOLERANCES.default
 
 		if simulated_value == nil then
@@ -941,6 +962,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 
 			if type == "string" then
 				local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
+
 				component[field_name] = string_lookup[authoritative_value]
 			elseif type == "number" and FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
 				component[field_name] = (authoritative_value + frame_index) * self._fixed_time_step
@@ -956,13 +978,16 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 			simulated_value:store(authoritative_value)
 		elseif type == "Quaternion" then
 			real_simulated_value = simulated_value:unbox()
-			correct = _quaternion_is_valid(real_simulated_value) and QUATERNION_TOLERANCE < math.abs(_quaternion_dot(real_simulated_value, authoritative_value))
+			correct = _quaternion_is_valid(real_simulated_value) and math.abs(_quaternion_dot(real_simulated_value, authoritative_value)) > QUATERNION_TOLERANCE
 
 			simulated_value:store(authoritative_value)
 		elseif type == "string" then
 			local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
+
 			real_simulated_value = simulated_value
+
 			local local_correct = string_lookup[real_simulated_value] == authoritative_value
+
 			correct = skip_predict_verification and true or local_correct
 
 			if not local_correct then
@@ -971,8 +996,10 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 		elseif type == "number" then
 			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
 				real_simulated_value = math.round(simulated_value / self._fixed_time_step) - frame_index
+
 				local type_info = NetworkConstants[network_type]
 				local min_value = type_info.min
+
 				correct = real_simulated_value == authoritative_value or real_simulated_value <= min_value and authoritative_value <= min_value
 
 				if correct then

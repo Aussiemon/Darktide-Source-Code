@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/onboarding_handler/onboarding_templates.lua
+
 local UI_POPUP_INFO_DURATION = 10
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemUtils = require("scripts/utilities/items")
@@ -71,7 +73,7 @@ local function _create_objective(objective_name, localization_key, marker_units,
 		header = localization_key,
 		is_side_mission = is_side_mission,
 		icon = icon,
-		marker_type = marker_type or "hub_objective"
+		marker_type = marker_type or "hub_objective",
 	}
 	local objective = MissionObjectiveGoal:new()
 
@@ -128,7 +130,7 @@ local templates = {
 	{
 		name = "Training Ground Objective - Morrow",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "speak_to_morrow")
@@ -146,9 +148,10 @@ local templates = {
 			local objective_name = self.name
 			local localization_key = "loc_objective_om_hub_01_goto_command_central_header"
 			local marker_units = {
-				interaction_unit
+				interaction_unit,
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -168,13 +171,13 @@ local templates = {
 			objective:destroy()
 		end,
 		sync_on_events = {
-			"event_onboarding_step_speak_to_morrow"
-		}
+			"event_onboarding_step_speak_to_morrow",
+		},
 	},
 	{
 		name = "Training Ground Objective - visit training ground",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "go_to_training")
@@ -192,9 +195,10 @@ local templates = {
 			local objective_name = self.name
 			local localization_key = "loc_onboarding_hub_training_grounds"
 			local marker_units = {
-				interaction_unit
+				interaction_unit,
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -214,13 +218,13 @@ local templates = {
 			objective:destroy()
 		end,
 		sync_on_events = {
-			"event_onboarding_step_go_to_training"
-		}
+			"event_onboarding_step_go_to_training",
+		},
 	},
 	{
 		name = "Training Ground Popup - Reward Popup",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "training_reward")
@@ -231,7 +235,7 @@ local templates = {
 			local loadout = profile.loadout
 			local new_items = {
 				primary_item = loadout.slot_primary,
-				secondary_item = loadout.slot_secondary
+				secondary_item = loadout.slot_secondary,
 			}
 
 			for _, item in pairs(new_items) do
@@ -243,12 +247,12 @@ local templates = {
 		on_deactivation = function (self)
 			return
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Training Ground Popup - Inventory",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "inventory_popup")
@@ -258,7 +262,7 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_inventory"
 			local no_cache = true
 			local param = {
-				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}",
 			}
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
@@ -287,12 +291,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Training Ground Objective - Visit Chapel",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "visit_chapel")
@@ -310,9 +314,10 @@ local templates = {
 			local objective_name = self.name
 			local localization_key = "loc_objective_om_hub_01_goto_cathedral_header"
 			local marker_units = {
-				interaction_unit
+				interaction_unit,
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -332,13 +337,13 @@ local templates = {
 			objective:destroy()
 		end,
 		sync_on_events = {
-			"event_onboarding_step_visit_chapel"
-		}
+			"event_onboarding_step_visit_chapel",
+		},
 	},
 	{
 		name = "Training Ground Objective - Chapel Video",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.state.mission and Managers.narrative:can_complete_event("onboarding_step_chapel_video_viewed")
@@ -379,7 +384,7 @@ local templates = {
 			local context = {
 				allow_skip_input = true,
 				template = template_name,
-				close_callback = close_callback
+				close_callback = close_callback,
 			}
 
 			ui_manager:open_view(view_name, nil, true, true, nil, context)
@@ -394,12 +399,12 @@ local templates = {
 				ui_manager:close_view(view_name, force_close)
 			end
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Mission Terminal Objective - Access MT",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
@@ -416,6 +421,7 @@ local templates = {
 			local interaction_type = "mission_board"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -440,12 +446,12 @@ local templates = {
 
 			objective:destroy()
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Mission Terminal Popup - Access MT",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
@@ -463,12 +469,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 2 Unlocks Objective - Contracts Shop",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_contract_store_visited")
@@ -485,6 +491,7 @@ local templates = {
 			local interaction_type = "contracts"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -506,12 +513,12 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("contracts_background_view")
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 2 Unlocks Popup - Contracts Shop",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and _is_on_story_chapter("level_unlock_popups", "level_unlock_contract_store_popup")
@@ -535,12 +542,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 3 Unlocks Objective - Weapons Shop",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_credits_store_visited")
@@ -557,6 +564,7 @@ local templates = {
 			local interaction_type = "vendor"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -578,12 +586,12 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("credits_view")
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 3 Unlocks Popup - Weapons Shop",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and _is_on_story_chapter("level_unlock_popups", "level_unlock_credits_store_popup")
@@ -607,12 +615,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 3 Unlocks Objective - Cosmetics Shop",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited")
@@ -629,6 +637,7 @@ local templates = {
 			local interaction_type = "cosmetics_vendor"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -650,12 +659,12 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("cosmetics_vendor_background_view")
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 3 Unlocks Popup - Cosmetics Shop",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_popup")
@@ -679,12 +688,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 4 Unlocks Objective - Forge / Crafting",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_crafting_station_visited")
@@ -701,6 +710,7 @@ local templates = {
 			local interaction_type = "crafting"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -722,12 +732,12 @@ local templates = {
 		close_condition = function (self)
 			return Managers.ui:view_active("crafting_view")
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 4 Unlocks Popup - Forge / Crafting",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and _is_on_story_chapter("level_unlock_popups", "level_unlock_crafting_station_popup")
@@ -751,12 +761,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 5 Unlocks Popup - Mission Board Tier Up",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_3"))
@@ -780,12 +790,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 7 Introduce Objective - Penances / Track",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			if not _is_in_hub() then
@@ -810,6 +820,7 @@ local templates = {
 			local interaction_type = "penances"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -828,12 +839,12 @@ local templates = {
 
 			objective:destroy()
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Level 8 / 15 / 23 Unlocks Popup - New Device Slot",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_3"))
@@ -843,7 +854,7 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_device_slot_01"
 			local no_cache = true
 			local param = {
-				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}",
 			}
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
@@ -866,12 +877,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "Narrative main objective",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and not Managers.narrative:is_story_complete("path_of_trust")
@@ -897,9 +908,10 @@ local templates = {
 				local localization_key = chapter_data.localization_key
 				local level = chapter_data.level_to_reach
 				local text = Localize(localization_key, true, {
-					level = level or 0
+					level = level or 0,
 				})
 				local objective = _create_objective(objective_name, localization_key)
+
 				self.objective = objective
 
 				Managers.event:trigger("event_add_mission_objective", objective)
@@ -920,14 +932,14 @@ local templates = {
 			objective:destroy()
 		end,
 		sync_on_events = {
-			"event_on_path_of_trust_updated"
-		}
+			"event_on_path_of_trust_updated",
+		},
 	},
 	{
 		name = "Unspent Talent points available",
 		once_per_state = true,
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			if _is_in_hub() then
@@ -957,7 +969,7 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_talent_points_reminder"
 			local no_cache = true
 			local param = {
-				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}",
 			}
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
@@ -980,12 +992,12 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		sync_on_events = {}
+		sync_on_events = {},
 	},
 	{
 		name = "season_1_twins_prologue",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_prologue")
@@ -998,12 +1010,12 @@ local templates = {
 			if level then
 				Level.trigger_event(level, "s1_event_twins_prologue")
 			end
-		end
+		end,
 	},
 	{
 		name = "season_1_twins_epilogue_1",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_epilogue_1")
@@ -1014,12 +1026,12 @@ local templates = {
 			if level then
 				Level.trigger_event(level, "s1_event_twins_epilogue_1")
 			end
-		end
+		end,
 	},
 	{
 		name = "season_1_twins_epilogue_3",
 		valid_states = {
-			"GameplayStateRun"
+			"GameplayStateRun",
 		},
 		validation_func = function (self)
 			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_epilogue_3")
@@ -1032,8 +1044,8 @@ local templates = {
 			if level then
 				Level.trigger_event(level, "s1_event_twins_epilogue_3")
 			end
-		end
-	}
+		end,
+	},
 }
 
 return templates

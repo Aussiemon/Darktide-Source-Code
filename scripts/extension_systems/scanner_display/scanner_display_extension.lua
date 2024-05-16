@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/scanner_display/scanner_display_extension.lua
+
 local ScannerDisplayExtension = class("ScannerDisplayExtension")
 local EMPTY_TABLE = {}
 
@@ -41,6 +43,7 @@ ScannerDisplayExtension._open_view = function (self, ui_manager, device_owner_un
 
 	if interface_unit then
 		local minigame_extension = ScriptUnit.extension(interface_unit, "minigame_system")
+
 		view_context.device_owner_unit = device_owner_unit
 		view_context.minigame_type = minigame_extension:minigame_type()
 		view_context.minigame_extension = minigame_extension

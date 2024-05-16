@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/buff_utils.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -35,6 +37,7 @@ BuffUtils.add_debuff_on_hit_start = function (template_data, template_context)
 	local target_buff_data = template.target_buff_data
 	local template_override_data = template_context.template_override_data
 	local override_target_buff_data = template_override_data.target_buff_data
+
 	template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
 	template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 	template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
@@ -90,11 +93,13 @@ BuffUtils.consecutive_hits_proc_func = function (params, template_data, template
 		local template = template_context.template
 		local max_stacks = template.child_max_stacks or 5
 		local number_of_hits = template_data.number_of_hits + 1
+
 		template_data.number_of_hits = number_of_hits
 
 		if template_data.number_of_hits > 1 then
 			local override = template_context.template_override_data
 			local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
+
 			template_data.target_number_of_stacks = math.clamp(math.floor((number_of_hits - 1) / number_of_hits_per_stack), 0, max_stacks)
 			template_data.last_hit_time = t
 		end
@@ -109,10 +114,13 @@ BuffUtils.consecutive_hits_same_target_proc_func = function (params, template_da
 	else
 		local max_stacks = 5
 		local number_of_hits = template_data.number_of_hits + 1
+
 		template_data.number_of_hits = number_of_hits
+
 		local template = template_context.template
 		local override = template_context.template_override_data
 		local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
+
 		template_data.target_number_of_stacks = math.clamp(math.floor(number_of_hits / number_of_hits_per_stack), 0, max_stacks)
 		template_data.last_hit_time = t
 	end

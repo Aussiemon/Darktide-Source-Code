@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/decoder_device/decoder_device_system.lua
+
 require("scripts/extension_systems/decoder_device/decoder_device_extension")
 
 local DecoderDeviceSystem = class("DecoderDeviceSystem", "ExtensionSystemBase")
@@ -7,7 +9,7 @@ local RPCS = {
 	"rpc_decoder_device_enable_unit",
 	"rpc_decoder_device_decode_interrupt",
 	"rpc_decoder_device_start_decode",
-	"rpc_decoder_device_finished"
+	"rpc_decoder_device_finished",
 }
 
 DecoderDeviceSystem.init = function (self, context, system_init_data, ...)

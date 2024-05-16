@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay.lua
+
 local Blueprints = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_blueprints")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Definitions = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_definitions")
@@ -59,7 +61,9 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 	HudElementTacticalOverlay.super.update(self, dt, t, ui_renderer, render_settings, is_input_blocked and input_service:null_service() or input_service)
 
 	local service_type = "Ingame"
+
 	input_service = is_input_blocked and input_service:null_service() or Managers.input:get_input_service(service_type)
+
 	local active = false
 
 	if not input_service:is_null_service() and input_service:get("tactical_overlay_hold") then
@@ -110,11 +114,14 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 	local total_size = 0
 	local margin = 20
 	local scenegraph = self._ui_scenegraph
+
 	total_size = total_size + scenegraph.mission_info_panel.size[2]
+
 	local circumstance_info_widget = self._widgets_by_name.circumstance_info
 
 	if circumstance_info_widget.visible == true then
 		local title_margin = 20
+
 		total_size = total_size + margin + title_margin
 
 		self:set_scenegraph_position("circumstance_info_panel", nil, total_size)
@@ -124,20 +131,24 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		local circumstance_name_font_options = UIFonts.get_font_options_by_style(circumstance_name_style)
 		local _, circumstance_name_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_name, circumstance_name_style.font_type, circumstance_name_style.font_size, {
 			circumstance_name_style.size[1],
-			1000
+			1000,
 		}, circumstance_name_font_options)
 		local description_margin = 5
 		local min_height = circumstance_info_widget.style.icon.size[2]
 		local title_height = math.max(min_height, circumstance_name_height)
+
 		circumstance_name_style.size[2] = title_height
+
 		local circumstance_description_style = circumstance_info_widget.style.circumstance_description
 		local circumstance_description_font_options = UIFonts.get_font_options_by_style(circumstance_description_style)
 		local _, circumstance_description_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_description, circumstance_description_style.font_type, circumstance_description_style.font_size, {
 			circumstance_description_style.size[1],
-			1000
+			1000,
 		}, circumstance_description_font_options)
+
 		circumstance_description_style.offset[2] = title_height + circumstance_name_style.offset[2] + description_margin
 		circumstance_description_style.size[2] = circumstance_description_height
+
 		local circumstance_height = circumstance_description_style.offset[2] + circumstance_description_style.size[2] + circumstance_info_widget.style.icon.offset[2]
 
 		self:_set_scenegraph_size("circumstance_info_panel", nil, circumstance_height)
@@ -172,6 +183,7 @@ HudElementTacticalOverlay._fetch_task_list = function (self)
 	end
 
 	local should_request = Managers.narrative:is_chapter_complete("path_of_trust", "pot_contracts")
+
 	self._contracts_promise = self._backend_interfaces.contracts:get_current_contract(character_id, nil, should_request)
 
 	self._contracts_promise:next(function (data)
@@ -192,6 +204,7 @@ HudElementTacticalOverlay._update_right_grid_size = function (self)
 	local grid = self._right_panel_grid
 	local height = should_be_visible and grid:length() or 0
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.right_grid_background.style.rect.size[2] = height
 	widgets_by_name.right_grid_stick.style.rect.size[2] = height
 	widgets_by_name.right_input_hint.style.hint.offset[2] = height + 2
@@ -233,6 +246,7 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 	if table.size(entries) > 0 then
 		widgets_by_name.right_header_stick.content.visible = true
 		widgets_by_name.right_header_background.content.visible = true
+
 		local definitions = {}
 		local tab_bar_widgets = {}
 		local ordered_keys = ElementSettings.right_panel_order
@@ -244,10 +258,12 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 				local blueprint_type = page_settings.icon.blueprint_type
 				local blueprint = Blueprints[blueprint_type]
 				local definition = definitions[blueprint_type] or UIWidget.create_definition(blueprint.pass_template, "right_panel_header", nil, blueprint.size)
+
 				definitions[blueprint_type] = definition
+
 				local config = {
 					value = page_settings.icon.value,
-					selected = current_key == page_key
+					selected = current_key == page_key,
 				}
 				local index = #tab_bar_widgets + 1
 				local name = string.format("tab_%d", index)
@@ -267,6 +283,7 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 
 		for i = 1, #tab_bar_widgets do
 			local widget = tab_bar_widgets[i]
+
 			widget.offset[1] = ElementSettings.right_grid_width - total_width + current_width
 			current_width = current_width + widget.content.size[1] + ElementSettings.internal_buffer
 		end
@@ -280,6 +297,7 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 	local title_widget = widgets_by_name.right_header_title
 	local selected_page = ElementSettings.right_panel_grids[current_key]
 	local selected_title = selected_page and Localize(selected_page.loc_key) or ""
+
 	title_widget.content.text = Utf8.upper(selected_title)
 end
 
@@ -291,6 +309,7 @@ HudElementTacticalOverlay._swap_right_grid = function (self, page_key, ui_render
 	end
 
 	local widgets = self._right_panel_entries[page_key] or {}
+
 	self._right_panel_grid = UIWidgetGrid:new(widgets, nil, self._ui_scenegraph, "right_panel_content", "down", ElementSettings.right_grid_spacing)
 
 	self:_update_right_grid_size()
@@ -309,6 +328,7 @@ HudElementTacticalOverlay._delete_right_panel_widgets = function (self, page_key
 	end
 
 	self._right_panel_entries[page_key] = nil
+
 	local current_key = self._right_panel_key
 
 	if not is_update and current_key == page_key then
@@ -329,7 +349,9 @@ HudElementTacticalOverlay._create_right_panel_widgets = function (self, page_key
 		local blueprint_type = config.blueprint
 		local blueprint = Blueprints[blueprint_type]
 		local definition = definitions[blueprint_type] or UIWidget.create_definition(blueprint.pass_template, "right_panel_content", nil, blueprint.size)
+
 		definitions[blueprint_type] = definition
+
 		local name = string.format("%s_%d", page_key, i)
 		local widget = self:_create_widget(name, definition)
 		local init_function = blueprint.init
@@ -343,6 +365,7 @@ HudElementTacticalOverlay._create_right_panel_widgets = function (self, page_key
 	end
 
 	self._right_panel_entries[page_key] = widgets
+
 	local current_key = self._right_panel_key
 	local is_empty = current_key == nil
 	local is_current = page_key == current_key
@@ -367,7 +390,7 @@ HudElementTacticalOverlay._setup_contracts = function (self, contracts_data, ui_
 		configs[#configs + 1] = {
 			blueprint = "contract",
 			task = tasks[i],
-			reward = table.nested_get(tasks[i], "reward", "amount")
+			reward = table.nested_get(tasks[i], "reward", "amount"),
 		}
 	end
 
@@ -420,7 +443,7 @@ HudElementTacticalOverlay._setup_achievements = function (self, ui_renderer)
 		if Managers.achievements:achievement_definition(id) then
 			configs[#configs + 1] = {
 				blueprint = "achievement",
-				id = id
+				id = id,
 			}
 			current_achievements[i] = id
 		end
@@ -497,16 +520,20 @@ end
 HudElementTacticalOverlay._set_difficulty_icons = function (self, difficulty_value)
 	local danger_info_widget = self._widgets_by_name.danger_info
 	local visible = difficulty_value ~= 0 and self._context.show_left_side_details
+
 	danger_info_widget.visible = visible
+
 	local danger_info_style = danger_info_widget.style
 	local difficulty_icon_style = danger_info_style.difficulty_icon
+
 	difficulty_icon_style.amount = difficulty_value
 end
 
 HudElementTacticalOverlay._setup_left_panel_widgets = function (self)
 	local definitions = {
-		widget_definitions = self._definitions.left_panel_widgets_definitions
+		widget_definitions = self._definitions.left_panel_widgets_definitions,
 	}
+
 	self._left_panel_widgets = {}
 
 	self:_create_widgets(definitions, self._left_panel_widgets, self._widgets_by_name)
@@ -525,12 +552,15 @@ HudElementTacticalOverlay._sync_mission_info = function (self)
 	local type = mission.mission_type
 	local mission_type = MissionTypes[type]
 	local mission_type_icon = mission_type and mission_type.icon or default_mission_type_icon
+
 	mission_info_content.icon = mission_type_icon
 	mission_info_content.mission_name = Utf8.upper(Localize(mission_name))
+
 	local show_mission_type = mission_type and self._context.show_left_side_details
 
 	if show_mission_type then
 		local mission_type_name = mission_type.name
+
 		mission_info_content.mission_type = Localize(mission_type_name)
 		mission_info_style.mission_name.offset[2] = 15
 	else
@@ -559,6 +589,7 @@ HudElementTacticalOverlay._sync_circumstance_info = function (self)
 			local circumstance_icon = circumstance_ui_settings.icon
 			local circumstance_display_name = circumstance_ui_settings.display_name
 			local circumstance_description = circumstance_ui_settings.description
+
 			circumstance_info_content.icon = circumstance_icon
 			circumstance_info_content.circumstance_name = Localize(circumstance_display_name)
 			circumstance_info_content.circumstance_description = Localize(circumstance_description)
@@ -587,8 +618,9 @@ end
 
 HudElementTacticalOverlay._setup_right_panel_widgets = function (self)
 	local definitions = {
-		widget_definitions = self._definitions.right_panel_widgets_definitions
+		widget_definitions = self._definitions.right_panel_widgets_definitions,
 	}
+
 	self._right_panel_widgets = {}
 
 	self:_create_widgets(definitions, self._right_panel_widgets, self._widgets_by_name)
@@ -597,11 +629,13 @@ end
 HudElementTacticalOverlay._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	if self._alpha_multiplier ~= 0 then
 		local alpha_multiplier = render_settings.alpha_multiplier
+
 		render_settings.alpha_multiplier = self._alpha_multiplier
 
 		HudElementTacticalOverlay.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
 		render_settings.alpha_multiplier = alpha_multiplier
+
 		local left_panel_widgets = self._left_panel_widgets
 		local num_left_panel_widget = #left_panel_widgets
 
@@ -656,10 +690,13 @@ HudElementTacticalOverlay._update_materials_collected = function (self)
 	local show_details = self._context.show_left_side_details
 	local plasteel_info_widget = self._widgets_by_name.plasteel_info
 	local plasteel_info_content = plasteel_info_widget.content
+
 	plasteel_info_widget.visible = show_details
 	plasteel_info_content.plasteel_amount_id = self:_total_materials_collected("plasteel")
+
 	local diamantine_info_widget = self._widgets_by_name.diamantine_info
 	local diamantine_info_content = diamantine_info_widget.content
+
 	diamantine_info_widget.visible = show_details
 	diamantine_info_content.diamantine_amount_id = self:_total_materials_collected("diamantine")
 end

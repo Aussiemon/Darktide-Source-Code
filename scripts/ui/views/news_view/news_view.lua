@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/news_view/news_view.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local Definitions = require("scripts/ui/views/news_view/news_view_definitions")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
@@ -14,6 +16,7 @@ NewsView.init = function (self, settings, context)
 	self._slide_position = {}
 	self._initialized = false
 	self._url_textures = {}
+
 	local slide_data = context and context.slide_data
 	local content_package = context and context.content_package
 
@@ -40,32 +43,32 @@ end
 local function to_news_view(news_item)
 	local content = news_item.content or {}
 	local backend_contents = news_item.contents
-	local image_url = nil
+	local image_url
 
 	if backend_contents then
 		for _, content_item in ipairs(backend_contents) do
 			if content_item.type == "title" then
 				table.insert(content, {
 					widget_type = "header",
-					text = content_item.data or ""
+					text = content_item.data or "",
 				})
 			elseif content_item.type == "subtitle" then
 				table.insert(content, {
 					widget_type = "sub_header",
-					text = content_item.data or ""
+					text = content_item.data or "",
 				})
 			elseif content_item.type == "body" then
 				table.insert(content, {
 					widget_type = "body",
-					text = content_item.data or ""
+					text = content_item.data or "",
 				})
 			elseif content_item.type == "br" then
 				table.insert(content, {
 					widget_type = "dynamic_spacing",
 					size = {
 						500,
-						20
-					}
+						20,
+					},
 				})
 			elseif content_item.type == "image" then
 				image_url = content_item.data
@@ -80,7 +83,7 @@ local function to_news_view(news_item)
 		backend_news = news_item,
 		local_image = news_item.local_image,
 		local_image_material = news_item.local_image_material,
-		local_slide = news_item.local_slide
+		local_slide = news_item.local_slide,
 	}
 end
 
@@ -103,7 +106,7 @@ NewsView._load_slides = function (self)
 	Managers.data_service.news:get_news():next(function (raw_news)
 		local slide_data = {
 			starting_slide_index = 1,
-			slides = raw_news
+			slides = raw_news,
 		}
 
 		self:_initialize_slides(slide_data)
@@ -120,6 +123,7 @@ NewsView.on_enter = function (self)
 	NewsView.super.on_enter(self)
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.previous_button.content.visible = false
 	widgets_by_name.next_button.content.visible = false
 
@@ -193,8 +197,9 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 	local widgets_by_name = self._widgets_by_name
 	local num_slides = #self._slides
 
-	if slide_index > num_slides or slide_index < 1 then
+	if num_slides < slide_index or slide_index < 1 then
 		local prev_button_content = widgets_by_name.previous_button.content
+
 		prev_button_content.visible = true
 		prev_button_content.original_text = Localize("loc_news_view_close")
 
@@ -208,14 +213,14 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 	end
 
 	local slide_content = slide.content
-	local layout = {
-		[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				500,
-				10
-			}
-		}
+	local layout = {}
+
+	layout[#layout + 1] = {
+		widget_type = "dynamic_spacing",
+		size = {
+			500,
+			10,
+		},
 	}
 
 	for index, entry in ipairs(slide_content) do
@@ -226,12 +231,13 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			10
-		}
+			10,
+		},
 	}
 
 	if slide.local_image_material then
 		local image_element = widgets_by_name.window_image
+
 		image_element.content.texture = slide.local_image_material
 		image_element.style.texture.force_view = true
 	end
@@ -242,9 +248,11 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 		self:load_texture(slide.image_url, image_element)
 	elseif slide.local_image then
 		local image_element = widgets_by_name.window_image
+
 		image_element.style.texture.material_values.texture = slide.local_image
 	else
 		local image_element = widgets_by_name.window_image
+
 		image_element.style.texture.material_values.texture = nil
 	end
 
@@ -257,7 +265,7 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 	self._slide_position.current = slide_index
 
 	if slide_index == 1 then
-		local target_position_width, target_position_height = nil
+		local target_position_width, target_position_height
 
 		if num_slides == 1 then
 			target_position_width, target_position_height = self:_scenegraph_position("center_button")
@@ -317,7 +325,9 @@ end
 NewsView.load_texture = function (self, image_url, image_element)
 	if image_url then
 		local style = image_element.style
+
 		style.texture.material_values.texture = nil
+
 		local url_textures = self._url_textures
 		local cached_texture = url_textures[image_url]
 
@@ -451,7 +461,7 @@ end
 NewsView._get_animation_widgets = function (self)
 	local window_image_widget = self._widgets_by_name.window_image
 	local widgets = {
-		[window_image_widget.name] = window_image_widget
+		[window_image_widget.name] = window_image_widget,
 	}
 
 	return widgets
@@ -486,6 +496,7 @@ NewsView._set_slide_indicator_focus = function (self, index)
 
 	for i = 1, #slide_page_circles do
 		local widget = slide_page_circles[i]
+
 		widget.content.active = i == index
 	end
 end
@@ -558,24 +569,25 @@ NewsView._setup_grid = function (self)
 		local grid_size = grid_scenegraph.size
 		local mask_padding_size = 0
 		local grid_settings = {
-			scrollbar_width = 7,
-			hide_dividers = true,
-			widget_icon_load_margin = 0,
 			enable_gamepad_scrolling = true,
-			title_height = 0,
-			scrollbar_horizontal_offset = 18,
 			hide_background = true,
+			hide_dividers = true,
+			scrollbar_horizontal_offset = 18,
+			scrollbar_width = 7,
+			title_height = 0,
+			widget_icon_load_margin = 0,
 			grid_spacing = {
 				0,
-				0
+				0,
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size
-			}
+				grid_size[2] + mask_padding_size,
+			},
 		}
 		local layer = (self._draw_layer or 0) + 10
+
 		self._grid = self:_add_element(ViewElementGrid, "slide_content_grid", layer, grid_settings, grid_scenegraph_id)
 
 		self:_update_element_position("slide_content_grid", self._grid)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/projectile_integration.lua
+
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local ProjectileIntegration = {}
 
@@ -8,23 +10,30 @@ ProjectileIntegration.integrate_position = function (physics_world, integration_
 	local gravity = -integration_data.gravity
 	local air_drag = integration_data.air_drag
 	local collision_filter = integration_data.collision_filter
+
 	time_step_multiplier = time_step_multiplier or 1
+
 	local new_position = position
 	local new_velocity = velocity
 	local new_acceleration = acceleration
 
 	for i = 1, time_step_multiplier do
 		local old_acceleration = new_acceleration
+
 		new_position = new_position + dt * new_velocity
 		new_position = new_position + dt * dt * 0.5 * new_acceleration
+
 		local air_drag_acceleration = -air_drag * Vector3.length(new_velocity) * new_velocity
+
 		new_acceleration = air_drag_acceleration
 		new_acceleration.z = new_acceleration.z + gravity
 		new_velocity = new_velocity + dt * 0.5 * (old_acceleration + new_acceleration)
 	end
 
 	dt = dt * time_step_multiplier
+
 	local position_after_impact, velocity_after_impact = ProjectileLocomotion.impact_detection_and_resolution(integration_data, new_position, new_velocity, physics_world, collision_filter, dt, dont_draw, false)
+
 	integration_data.previous_position = position
 	integration_data.position = position_after_impact
 	integration_data.velocity = velocity_after_impact
@@ -47,12 +56,16 @@ ProjectileIntegration.integrate_rotation = function (physics_world, integration_
 		local up_rotator = Quaternion.axis_angle(direction, angle)
 		local new_up = Quaternion.rotate(up_rotator, previous_up)
 		local rotation = Quaternion.look(direction, new_up)
+
 		integration_data.rotation = rotation
 	else
 		local new_rotation = Quaternion.from_elements(angular_velocity.x, angular_velocity.y, angular_velocity.z, 0)
+
 		new_rotation = Quaternion.multiply_scalar(new_rotation, 0.5)
+
 		local rotation = integration_data.rotation
 		local spin = Quaternion.multiply(rotation, new_rotation)
+
 		spin = Quaternion.multiply_scalar(spin, dt)
 		rotation = Quaternion.add_elements(rotation, spin)
 		rotation = Quaternion.normalize(rotation)

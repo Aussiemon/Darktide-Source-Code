@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/guidance_vo_psyker_female_a.lua
+
 local guidance_vo_psyker_female_a = {
 	guidance_correct_doorway = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_07",
 			"loc_psyker_female_a__guidance_correct_path_08",
 			"loc_psyker_female_a__guidance_correct_path_09",
-			"loc_psyker_female_a__guidance_correct_path_10"
+			"loc_psyker_female_a__guidance_correct_path_10",
 		},
 		sound_events_duration = {
 			0.809958,
@@ -24,7 +26,7 @@ local guidance_vo_psyker_female_a = {
 			0.640271,
 			0.979646,
 			1.018063,
-			1.147021
+			1.147021,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path = {
 		randomize_indexes_n = 0,
@@ -53,7 +55,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_07",
 			"loc_psyker_female_a__guidance_correct_path_08",
 			"loc_psyker_female_a__guidance_correct_path_09",
-			"loc_psyker_female_a__guidance_correct_path_10"
+			"loc_psyker_female_a__guidance_correct_path_10",
 		},
 		sound_events_duration = {
 			0.809958,
@@ -65,9 +67,9 @@ local guidance_vo_psyker_female_a = {
 			0.640271,
 			0.979646,
 			1.018063,
-			1.147021
+			1.147021,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_1 = {
 		randomize_indexes_n = 0,
@@ -82,7 +84,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_07",
 			"loc_psyker_female_a__guidance_correct_path_08",
 			"loc_psyker_female_a__guidance_correct_path_09",
-			"loc_psyker_female_a__guidance_correct_path_10"
+			"loc_psyker_female_a__guidance_correct_path_10",
 		},
 		sound_events_duration = {
 			0.809958,
@@ -94,7 +96,7 @@ local guidance_vo_psyker_female_a = {
 			0.640271,
 			0.979646,
 			1.018063,
-			1.147021
+			1.147021,
 		},
 		sound_event_weights = {
 			0.1,
@@ -106,9 +108,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_2 = {
 		randomize_indexes_n = 0,
@@ -123,7 +125,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_07",
 			"loc_psyker_female_a__guidance_correct_path_08",
 			"loc_psyker_female_a__guidance_correct_path_09",
-			"loc_psyker_female_a__guidance_correct_path_10"
+			"loc_psyker_female_a__guidance_correct_path_10",
 		},
 		sound_events_duration = {
 			0.809958,
@@ -135,7 +137,7 @@ local guidance_vo_psyker_female_a = {
 			0.640271,
 			0.979646,
 			1.018063,
-			1.147021
+			1.147021,
 		},
 		sound_event_weights = {
 			0.1,
@@ -147,9 +149,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_3 = {
 		randomize_indexes_n = 0,
@@ -164,7 +166,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_07",
 			"loc_psyker_female_a__guidance_correct_path_08",
 			"loc_psyker_female_a__guidance_correct_path_09",
-			"loc_psyker_female_a__guidance_correct_path_10"
+			"loc_psyker_female_a__guidance_correct_path_10",
 		},
 		sound_events_duration = {
 			0.809958,
@@ -176,7 +178,7 @@ local guidance_vo_psyker_female_a = {
 			0.640271,
 			0.979646,
 			1.018063,
-			1.147021
+			1.147021,
 		},
 		sound_event_weights = {
 			0.1,
@@ -188,9 +190,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_drop = {
 		randomize_indexes_n = 0,
@@ -205,7 +207,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_drop_07",
 			"loc_psyker_female_a__guidance_correct_path_drop_08",
 			"loc_psyker_female_a__guidance_correct_path_drop_09",
-			"loc_psyker_female_a__guidance_correct_path_drop_10"
+			"loc_psyker_female_a__guidance_correct_path_drop_10",
 		},
 		sound_events_duration = {
 			2.0785,
@@ -217,9 +219,9 @@ local guidance_vo_psyker_female_a = {
 			1.662583,
 			2.097271,
 			2.149042,
-			2.067208
+			2.067208,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_drop_1 = {
 		randomize_indexes_n = 0,
@@ -234,7 +236,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_drop_07",
 			"loc_psyker_female_a__guidance_correct_path_drop_08",
 			"loc_psyker_female_a__guidance_correct_path_drop_09",
-			"loc_psyker_female_a__guidance_correct_path_drop_10"
+			"loc_psyker_female_a__guidance_correct_path_drop_10",
 		},
 		sound_events_duration = {
 			2.0785,
@@ -246,7 +248,7 @@ local guidance_vo_psyker_female_a = {
 			1.662583,
 			2.097271,
 			2.149042,
-			2.067208
+			2.067208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -258,9 +260,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_drop_2 = {
 		randomize_indexes_n = 0,
@@ -275,7 +277,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_drop_07",
 			"loc_psyker_female_a__guidance_correct_path_drop_08",
 			"loc_psyker_female_a__guidance_correct_path_drop_09",
-			"loc_psyker_female_a__guidance_correct_path_drop_10"
+			"loc_psyker_female_a__guidance_correct_path_drop_10",
 		},
 		sound_events_duration = {
 			2.0785,
@@ -287,7 +289,7 @@ local guidance_vo_psyker_female_a = {
 			1.662583,
 			2.097271,
 			2.149042,
-			2.067208
+			2.067208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -299,9 +301,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_drop_3 = {
 		randomize_indexes_n = 0,
@@ -316,7 +318,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_drop_07",
 			"loc_psyker_female_a__guidance_correct_path_drop_08",
 			"loc_psyker_female_a__guidance_correct_path_drop_09",
-			"loc_psyker_female_a__guidance_correct_path_drop_10"
+			"loc_psyker_female_a__guidance_correct_path_drop_10",
 		},
 		sound_events_duration = {
 			2.0785,
@@ -328,7 +330,7 @@ local guidance_vo_psyker_female_a = {
 			1.662583,
 			2.097271,
 			2.149042,
-			2.067208
+			2.067208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -340,9 +342,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_drop_4 = {
 		randomize_indexes_n = 0,
@@ -357,7 +359,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_drop_07",
 			"loc_psyker_female_a__guidance_correct_path_drop_08",
 			"loc_psyker_female_a__guidance_correct_path_drop_09",
-			"loc_psyker_female_a__guidance_correct_path_drop_10"
+			"loc_psyker_female_a__guidance_correct_path_drop_10",
 		},
 		sound_events_duration = {
 			2.0785,
@@ -369,7 +371,7 @@ local guidance_vo_psyker_female_a = {
 			1.662583,
 			2.097271,
 			2.149042,
-			2.067208
+			2.067208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -381,9 +383,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_drop_5 = {
 		randomize_indexes_n = 0,
@@ -398,7 +400,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_drop_07",
 			"loc_psyker_female_a__guidance_correct_path_drop_08",
 			"loc_psyker_female_a__guidance_correct_path_drop_09",
-			"loc_psyker_female_a__guidance_correct_path_drop_10"
+			"loc_psyker_female_a__guidance_correct_path_drop_10",
 		},
 		sound_events_duration = {
 			2.0785,
@@ -410,7 +412,7 @@ local guidance_vo_psyker_female_a = {
 			1.662583,
 			2.097271,
 			2.149042,
-			2.067208
+			2.067208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -422,9 +424,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_drop_6 = {
 		randomize_indexes_n = 0,
@@ -439,7 +441,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_drop_07",
 			"loc_psyker_female_a__guidance_correct_path_drop_08",
 			"loc_psyker_female_a__guidance_correct_path_drop_09",
-			"loc_psyker_female_a__guidance_correct_path_drop_10"
+			"loc_psyker_female_a__guidance_correct_path_drop_10",
 		},
 		sound_events_duration = {
 			2.0785,
@@ -451,7 +453,7 @@ local guidance_vo_psyker_female_a = {
 			1.662583,
 			2.097271,
 			2.149042,
-			2.067208
+			2.067208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -463,9 +465,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_correct_path_up = {
 		randomize_indexes_n = 0,
@@ -480,7 +482,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_correct_path_up_07",
 			"loc_psyker_female_a__guidance_correct_path_up_08",
 			"loc_psyker_female_a__guidance_correct_path_up_09",
-			"loc_psyker_female_a__guidance_correct_path_up_10"
+			"loc_psyker_female_a__guidance_correct_path_up_10",
 		},
 		sound_events_duration = {
 			0.580896,
@@ -492,9 +494,9 @@ local guidance_vo_psyker_female_a = {
 			1.008938,
 			1.068021,
 			2.490813,
-			0.914458
+			0.914458,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_ladder_down = {
 		randomize_indexes_n = 0,
@@ -509,7 +511,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__ladder_sighted_07",
 			"loc_psyker_female_a__ladder_sighted_08",
 			"loc_psyker_female_a__ladder_sighted_09",
-			"loc_psyker_female_a__ladder_sighted_10"
+			"loc_psyker_female_a__ladder_sighted_10",
 		},
 		sound_events_duration = {
 			0.779083,
@@ -521,7 +523,7 @@ local guidance_vo_psyker_female_a = {
 			1.556146,
 			1.114021,
 			1.645896,
-			2.051208
+			2.051208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -533,9 +535,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_ladder_sighted = {
 		randomize_indexes_n = 0,
@@ -550,7 +552,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__ladder_sighted_07",
 			"loc_psyker_female_a__ladder_sighted_08",
 			"loc_psyker_female_a__ladder_sighted_09",
-			"loc_psyker_female_a__ladder_sighted_10"
+			"loc_psyker_female_a__ladder_sighted_10",
 		},
 		sound_events_duration = {
 			0.779083,
@@ -562,7 +564,7 @@ local guidance_vo_psyker_female_a = {
 			1.556146,
 			1.114021,
 			1.645896,
-			2.051208
+			2.051208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -574,9 +576,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_ladder_up = {
 		randomize_indexes_n = 0,
@@ -591,7 +593,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__ladder_sighted_07",
 			"loc_psyker_female_a__ladder_sighted_08",
 			"loc_psyker_female_a__ladder_sighted_09",
-			"loc_psyker_female_a__ladder_sighted_10"
+			"loc_psyker_female_a__ladder_sighted_10",
 		},
 		sound_events_duration = {
 			0.779083,
@@ -603,7 +605,7 @@ local guidance_vo_psyker_female_a = {
 			1.556146,
 			1.114021,
 			1.645896,
-			2.051208
+			2.051208,
 		},
 		sound_event_weights = {
 			0.1,
@@ -615,9 +617,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_stairs_down = {
 		randomize_indexes_n = 0,
@@ -632,7 +634,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__stairs_sighted_07",
 			"loc_psyker_female_a__stairs_sighted_08",
 			"loc_psyker_female_a__stairs_sighted_09",
-			"loc_psyker_female_a__stairs_sighted_10"
+			"loc_psyker_female_a__stairs_sighted_10",
 		},
 		sound_events_duration = {
 			0.821708,
@@ -644,7 +646,7 @@ local guidance_vo_psyker_female_a = {
 			1.021938,
 			1.708917,
 			1.037708,
-			1.412313
+			1.412313,
 		},
 		sound_event_weights = {
 			0.1,
@@ -656,9 +658,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_stairs_sighted = {
 		randomize_indexes_n = 0,
@@ -673,7 +675,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__stairs_sighted_07",
 			"loc_psyker_female_a__stairs_sighted_08",
 			"loc_psyker_female_a__stairs_sighted_09",
-			"loc_psyker_female_a__stairs_sighted_10"
+			"loc_psyker_female_a__stairs_sighted_10",
 		},
 		sound_events_duration = {
 			0.821708,
@@ -685,7 +687,7 @@ local guidance_vo_psyker_female_a = {
 			1.021938,
 			1.708917,
 			1.037708,
-			1.412313
+			1.412313,
 		},
 		sound_event_weights = {
 			0.1,
@@ -697,9 +699,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_stairs_sighted_1 = {
 		randomize_indexes_n = 0,
@@ -714,7 +716,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__stairs_sighted_07",
 			"loc_psyker_female_a__stairs_sighted_08",
 			"loc_psyker_female_a__stairs_sighted_09",
-			"loc_psyker_female_a__stairs_sighted_10"
+			"loc_psyker_female_a__stairs_sighted_10",
 		},
 		sound_events_duration = {
 			0.821708,
@@ -726,7 +728,7 @@ local guidance_vo_psyker_female_a = {
 			1.021938,
 			1.708917,
 			1.037708,
-			1.412313
+			1.412313,
 		},
 		sound_event_weights = {
 			0.1,
@@ -738,9 +740,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_stairs_sighted_2 = {
 		randomize_indexes_n = 0,
@@ -755,7 +757,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__stairs_sighted_07",
 			"loc_psyker_female_a__stairs_sighted_08",
 			"loc_psyker_female_a__stairs_sighted_09",
-			"loc_psyker_female_a__stairs_sighted_10"
+			"loc_psyker_female_a__stairs_sighted_10",
 		},
 		sound_events_duration = {
 			0.821708,
@@ -767,7 +769,7 @@ local guidance_vo_psyker_female_a = {
 			1.021938,
 			1.708917,
 			1.037708,
-			1.412313
+			1.412313,
 		},
 		sound_event_weights = {
 			0.1,
@@ -779,9 +781,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_stairs_sighted_3 = {
 		randomize_indexes_n = 0,
@@ -796,7 +798,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__stairs_sighted_07",
 			"loc_psyker_female_a__stairs_sighted_08",
 			"loc_psyker_female_a__stairs_sighted_09",
-			"loc_psyker_female_a__stairs_sighted_10"
+			"loc_psyker_female_a__stairs_sighted_10",
 		},
 		sound_events_duration = {
 			0.821708,
@@ -808,7 +810,7 @@ local guidance_vo_psyker_female_a = {
 			1.021938,
 			1.708917,
 			1.037708,
-			1.412313
+			1.412313,
 		},
 		sound_event_weights = {
 			0.1,
@@ -820,9 +822,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_stairs_sighted_4 = {
 		randomize_indexes_n = 0,
@@ -837,7 +839,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__stairs_sighted_07",
 			"loc_psyker_female_a__stairs_sighted_08",
 			"loc_psyker_female_a__stairs_sighted_09",
-			"loc_psyker_female_a__stairs_sighted_10"
+			"loc_psyker_female_a__stairs_sighted_10",
 		},
 		sound_events_duration = {
 			0.821708,
@@ -849,7 +851,7 @@ local guidance_vo_psyker_female_a = {
 			1.021938,
 			1.708917,
 			1.037708,
-			1.412313
+			1.412313,
 		},
 		sound_event_weights = {
 			0.1,
@@ -861,9 +863,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_stairs_up = {
 		randomize_indexes_n = 0,
@@ -878,7 +880,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__stairs_sighted_07",
 			"loc_psyker_female_a__stairs_sighted_08",
 			"loc_psyker_female_a__stairs_sighted_09",
-			"loc_psyker_female_a__stairs_sighted_10"
+			"loc_psyker_female_a__stairs_sighted_10",
 		},
 		sound_events_duration = {
 			0.821708,
@@ -890,7 +892,7 @@ local guidance_vo_psyker_female_a = {
 			1.021938,
 			1.708917,
 			1.037708,
-			1.412313
+			1.412313,
 		},
 		sound_event_weights = {
 			0.1,
@@ -902,9 +904,9 @@ local guidance_vo_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_starting_area = {
 		randomize_indexes_n = 0,
@@ -919,7 +921,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_starting_area_07",
 			"loc_psyker_female_a__guidance_starting_area_08",
 			"loc_psyker_female_a__guidance_starting_area_09",
-			"loc_psyker_female_a__guidance_starting_area_10"
+			"loc_psyker_female_a__guidance_starting_area_10",
 		},
 		sound_events_duration = {
 			2.839167,
@@ -931,9 +933,9 @@ local guidance_vo_psyker_female_a = {
 			4.030083,
 			3.321792,
 			3.639792,
-			3.531688
+			3.531688,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	guidance_switch = {
 		randomize_indexes_n = 0,
@@ -947,7 +949,7 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__guidance_switch_06",
 			"loc_psyker_female_a__guidance_switch_07",
 			"loc_psyker_female_a__guidance_switch_08",
-			"loc_psyker_female_a__guidance_switch_10"
+			"loc_psyker_female_a__guidance_switch_10",
 		},
 		sound_events_duration = {
 			1.300063,
@@ -958,7 +960,7 @@ local guidance_vo_psyker_female_a = {
 			0.960729,
 			1.116208,
 			1.71375,
-			1.505854
+			1.505854,
 		},
 		sound_event_weights = {
 			0.1111111,
@@ -969,9 +971,9 @@ local guidance_vo_psyker_female_a = {
 			0.1111111,
 			0.1111111,
 			0.1111111,
-			0.1111111
+			0.1111111,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	info_asset_nurgle_growth = {
 		randomize_indexes_n = 0,
@@ -981,24 +983,24 @@ local guidance_vo_psyker_female_a = {
 			"loc_psyker_female_a__asset_nurgle_growth_02",
 			"loc_psyker_female_a__asset_nurgle_growth_03",
 			"loc_psyker_female_a__asset_nurgle_growth_04",
-			"loc_psyker_female_a__asset_nurgle_growth_05"
+			"loc_psyker_female_a__asset_nurgle_growth_05",
 		},
 		sound_events_duration = {
 			3.058729,
 			3.610188,
 			4.49275,
 			6.079604,
-			3.622146
+			3.622146,
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2
+			0.2,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("guidance_vo_psyker_female_a", guidance_vo_psyker_female_a)

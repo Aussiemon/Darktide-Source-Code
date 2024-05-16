@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/difficulty/difficulty_manager.lua
+
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerDifficultySettings = require("scripts/settings/difficulty/player_difficulty_settings")
 local DifficultyManager = class("DifficultyManager")

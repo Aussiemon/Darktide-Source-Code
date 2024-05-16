@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/count_player_hits.lua
+
 local CountPlayerHits = component("CountPlayerHits")
 
 CountPlayerHits.init = function (self, unit, is_server)
@@ -16,6 +18,7 @@ CountPlayerHits.init = function (self, unit, is_server)
 
 	if not not rawget(_G, "LevelEditor") then
 		local level = Managers.state.mission:mission_level()
+
 		self._level = level
 	end
 end
@@ -92,45 +95,45 @@ end
 
 CountPlayerHits.component_data = {
 	enabled = {
+		ui_name = "Enabled",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Enabled"
 	},
 	hit_count = {
+		ui_name = "Hit Count",
 		ui_type = "number",
 		value = 1,
-		ui_name = "Hit Count"
 	},
 	level_flow_on_hit_count = {
+		ui_name = "Level Flow Event On Reached Hit Count",
 		ui_type = "text_box",
 		value = "none",
-		ui_name = "Level Flow Event On Reached Hit Count"
 	},
 	unit_flow_on_hit_count = {
+		ui_name = "Unit Flow Event On Reached Hit Count",
 		ui_type = "text_box",
 		value = "none",
-		ui_name = "Unit Flow Event On Reached Hit Count"
 	},
 	unit_flow_on_unique_hit_count = {
+		ui_name = "Unique Unit Flow Event On Reached Hit Count",
 		ui_type = "text_box",
 		value = "none",
-		ui_name = "Unique Unit Flow Event On Reached Hit Count"
 	},
 	unique_counting = {
+		ui_name = "Unique Counting",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Unique Counting"
 	},
 	set_hit_count_to_num_players = {
+		ui_name = "Set Hit Count To Num Players",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Set Hit Count To Num Players"
 	},
 	min_unique_hit_count = {
+		ui_name = "Min Unique Hit Count",
 		ui_type = "number",
 		value = 0,
-		ui_name = "Min Unique Hit Count"
-	}
+	},
 }
 
 return CountPlayerHits

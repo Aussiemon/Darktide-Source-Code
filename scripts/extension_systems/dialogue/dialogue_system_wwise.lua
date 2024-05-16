@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_system_wwise.lua
+
 local DialogueSystemWwise = class("DialogueSystemWwise")
 
 DialogueSystemWwise.init = function (self, world)
@@ -5,7 +7,7 @@ DialogueSystemWwise.init = function (self, world)
 end
 
 DialogueSystemWwise.make_unit_auto_source = function (self, unit, node_id)
-	local source = nil
+	local source
 
 	if node_id then
 		source = WwiseWorld.make_auto_source(self._wwise_world, unit, node_id)

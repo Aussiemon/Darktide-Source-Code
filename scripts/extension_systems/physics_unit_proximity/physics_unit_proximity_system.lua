@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/physics_unit_proximity/physics_unit_proximity_system.lua
+
 local PhysicsUnitProximitySystem = class("PhysicsUnitProximitySystem", "ExtensionSystemBase")
 local MAX_AGE_MS = 1000
 local FREQUENCY_MS = 32
@@ -86,13 +88,11 @@ PhysicsUnitProximitySystem.post_update = function (self, context, dt, t, ...)
 	end
 
 	local unit_spawner_manager = Managers.state.unit_spawner
-	local physics_world = self._physics_world
-	local game_session = self._game_session
+	local physics_world, game_session = self._physics_world, self._game_session
 	local default_priority = DEFAULT_PROXIMITY_NETWORK_PRIORITY
 	local GameSession_set_game_object_priority = GameSession.set_game_object_priority
 	local local_peer_id = self._peer_id
-	local observers = self._observers
-	local player_peers = self._player_peers
+	local observers, player_peers = self._observers, self._player_peers
 
 	for observer_unit, index in pairs(observers) do
 		local peer_id = player_peers[observer_unit]

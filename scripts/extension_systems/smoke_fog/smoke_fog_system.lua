@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/smoke_fog/smoke_fog_system.lua
+
 local SmokeFogSystem = class("SmokeFogSystem", "ExtensionSystemBase")
 local DELETE_AFTER_DURATION_TIMER = 8
 local SMOKE_EFFECT_DURATION = 4
@@ -6,6 +8,7 @@ SmokeFogSystem.init = function (self, context, system_init_data, ...)
 	SmokeFogSystem.super.init(self, context, system_init_data, ...)
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
 	self._unit_has_buff_list = {}
 	self._unit_los_blocking_list = {}
@@ -117,10 +120,12 @@ local temp_check_units = {}
 
 SmokeFogSystem._check_unit_collisions = function (self, t)
 	local unit_to_extension_map = self._unit_to_extension_map
+
 	frame_count = frame_count + 1
 
-	if frame_max <= frame_count then
+	if frame_count >= frame_max then
 		frame_count = 0
+
 		local num_unit_to_update = #self._unit_has_buff_list
 
 		if num_unit_to_update == 0 then
@@ -142,7 +147,7 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 
 		table.clear_array(extension.broadphase_results, #extension.broadphase_results)
 
-		extension.num_results = broadphase:query(broadphase_center, broadphase_radius, extension.broadphase_results, side_names)
+		extension.num_results = broadphase.query(broadphase, broadphase_center, broadphase_radius, extension.broadphase_results, side_names)
 	end
 
 	for smoke_fog_unit, extension in pairs(unit_to_extension_map) do
@@ -156,17 +161,19 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 
 				if not HEALTH_ALIVE[unit] then
 					units_inside[unit] = nil
-				else
-					local unit_pos = POSITION_LOOKUP[unit]
-					local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-					local breed = unit_data_extension:breed()
-					local unit_radius = (breed.player_locomotion_constrain_radius or 0.5) * 2
 
-					if not extension:is_unit_inside(unit_pos, unit_radius) then
-						extension:on_unit_exit(unit, t)
+					break
+				end
 
-						units_inside[unit] = nil
-					end
+				local unit_pos = POSITION_LOOKUP[unit]
+				local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+				local breed = unit_data_extension:breed()
+				local unit_radius = (breed.player_locomotion_constrain_radius or 0.5) * 2
+
+				if not extension:is_unit_inside(unit_pos, unit_radius) then
+					extension:on_unit_exit(unit, t)
+
+					units_inside[unit] = nil
 				end
 			until true
 		end
@@ -223,31 +230,35 @@ SmokeFogSystem.check_fog_los = function (self, source_position, target_position,
 
 			local smoke_fog_position = POSITION_LOOKUP[smoke_fog_unit]
 			local fog_radius_squared = fog_extension.inner_radius_squared
-			local closest_point_to_fog = nil
-			local towards_smoke_fog = smoke_fog_position - source_position
-			local distance_to_smoke_fog_squared = Vector3_length_squared(towards_smoke_fog)
+			local closest_point_to_fog
 
-			if distance_to_smoke_fog_squared < fog_radius_squared then
-				if count_standing_in_smoke then
-					return true
+			do
+				local towards_smoke_fog = smoke_fog_position - source_position
+				local distance_to_smoke_fog_squared = Vector3_length_squared(towards_smoke_fog)
+
+				if distance_to_smoke_fog_squared < fog_radius_squared then
+					if count_standing_in_smoke then
+						return true
+					end
+
+					break
 				end
 
-				break
-			end
+				local dot1 = Vector3_dot(towards_smoke_fog, towards_target)
 
-			local dot1 = Vector3_dot(towards_smoke_fog, towards_target)
+				if dot1 <= 0 then
+					break
+				end
 
-			if dot1 <= 0 then
-				break
-			end
+				local dot2 = Vector3_dot(towards_target, towards_target)
 
-			local dot2 = Vector3_dot(towards_target, towards_target)
+				if dot2 <= dot1 then
+					closest_point_to_fog = target_position
+				else
+					local t = dot1 / dot2
 
-			if dot2 <= dot1 then
-				closest_point_to_fog = target_position
-			else
-				local t = dot1 / dot2
-				closest_point_to_fog = source_position + t * towards_target
+					closest_point_to_fog = source_position + t * towards_target
+				end
 			end
 
 			local distance_line_to_fog_squared = Vector3_distance_squared(closest_point_to_fog, smoke_fog_position)

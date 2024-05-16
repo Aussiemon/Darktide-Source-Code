@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/renegade_flamer_approach.lua
+
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local APPROACH_SOUND_EVENT = "wwise/events/minions/play_cultist_flamer_proximity_warning"
@@ -6,9 +8,9 @@ local TRIGGER_DISTANCE = 25
 local RESTART_TRIGGER_DISTANCE = 28
 local TIME_BETWEEN_TRIGGERS = 15
 local resources = {
-	approach_sound_event = APPROACH_SOUND_EVENT
+	approach_sound_event = APPROACH_SOUND_EVENT,
 }
-local _trigger_sound = nil
+local _trigger_sound
 local effect_template = {
 	name = "renegade_flamer_approach",
 	resources = resources,
@@ -17,8 +19,7 @@ local effect_template = {
 	end,
 	update = function (template_data, template_context, dt, t)
 		local unit = template_data.unit
-		local game_session = template_context.game_session
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+		local game_session, game_object_id = template_context.game_session, Managers.state.unit_spawner:game_object_id(unit)
 		local target_unit = MinionPerception.target_unit(game_session, game_object_id)
 
 		if not ALIVE[target_unit] then
@@ -30,18 +31,18 @@ local effect_template = {
 		local distance_to_target_unit = Vector3.distance(unit_position, target_position)
 
 		if not template_data.triggered then
-			local can_trigger = template_data.next_trigger_t < t and distance_to_target_unit <= TRIGGER_DISTANCE
+			local can_trigger = t > template_data.next_trigger_t and distance_to_target_unit <= TRIGGER_DISTANCE
 
 			if can_trigger then
 				_trigger_sound(unit, target_unit, template_data, template_context, t)
 			end
-		elseif RESTART_TRIGGER_DISTANCE <= distance_to_target_unit then
+		elseif distance_to_target_unit >= RESTART_TRIGGER_DISTANCE then
 			template_data.triggered = false
 		end
 	end,
 	stop = function (template_data, template_context)
 		return
-	end
+	end,
 }
 
 function _trigger_sound(unit, target_unit, template_data, template_context, t)

@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/overheat_display.lua
+
 local OverheatDisplay = component("OverheatDisplay")
 
 OverheatDisplay.editor_init = function (self, unit)
 	local overheat = self:get_data(unit, "overheat")
 	local overheat_display_steps = self:get_data(unit, "overheat_display_steps")
 	local warning_threshold = self:get_data(unit, "warning_threshold")
+
 	self._overheat = overheat
 	self._overheat_display_steps = overheat_display_steps
 	self._warning_threshold = warning_threshold
@@ -19,6 +22,7 @@ OverheatDisplay.init = function (self, unit)
 	local overheat = self:get_data(unit, "overheat")
 	local overheat_display_steps = self:get_data(unit, "overheat_display_steps")
 	local warning_threshold = self:get_data(unit, "warning_threshold")
+
 	self._overheat = overheat
 	self._overheat_display_steps = overheat_display_steps
 	self._warning_threshold = warning_threshold
@@ -56,29 +60,29 @@ end
 
 OverheatDisplay.component_data = {
 	overheat_display_steps = {
-		ui_type = "slider",
-		step = 1,
 		decimals = 0,
-		value = 10,
+		max = 10,
+		step = 1,
 		ui_name = "Overheat Steps",
-		max = 10
+		ui_type = "slider",
+		value = 10,
 	},
 	overheat = {
-		ui_type = "slider",
-		step = 1,
 		decimals = 2,
-		value = 0,
+		max = 1,
+		step = 1,
 		ui_name = "Overheat",
-		max = 1
+		ui_type = "slider",
+		value = 0,
 	},
 	warning_threshold = {
-		ui_type = "slider",
-		step = 1,
 		decimals = 2,
-		value = 0.9,
+		max = 1,
+		step = 1,
 		ui_name = "Warning Threshold",
-		max = 1
-	}
+		ui_type = "slider",
+		value = 0.9,
+	},
 }
 
 return OverheatDisplay

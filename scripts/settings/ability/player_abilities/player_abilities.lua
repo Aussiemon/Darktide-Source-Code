@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/player_abilities/player_abilities.lua
+
 local player_abilities_name = "PlayerAbilities"
 local player_abilities = {}
 
@@ -6,7 +8,9 @@ local function _include_ability_definition(file_name)
 
 	for ability_name, entry_data in pairs(definition) do
 		entry_data.name = ability_name
+
 		local entry = entry_data
+
 		player_abilities[ability_name] = entry
 	end
 end

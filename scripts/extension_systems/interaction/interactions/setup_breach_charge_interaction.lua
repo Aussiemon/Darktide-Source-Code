@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/setup_breach_charge_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")

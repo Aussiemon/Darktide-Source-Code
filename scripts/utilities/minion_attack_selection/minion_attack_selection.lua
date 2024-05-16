@@ -1,13 +1,12 @@
+﻿-- chunkname: @scripts/utilities/minion_attack_selection/minion_attack_selection.lua
+
 local MinionAttackSelectionTemplates = require("scripts/settings/minion_attack_selection/minion_attack_selection_templates")
 local MinionAttackSelection = {}
-local TEMP_CATEGORY_ATTACK_ENTRIES = {}
-local TEMP_CATEGORIES = {}
+local TEMP_CATEGORY_ATTACK_ENTRIES, TEMP_CATEGORIES = {}, {}
 
 MinionAttackSelection.generate = function (attack_selection_template_name, initial_random_seed)
 	local attack_selection_template = MinionAttackSelectionTemplates[attack_selection_template_name]
-	local selected_attack_names = {}
-	local used_weapon_slot_names = {}
-	local random_seed = initial_random_seed
+	local selected_attack_names, used_weapon_slot_names, random_seed = {}, {}, initial_random_seed
 
 	table.merge_recursive(TEMP_CATEGORY_ATTACK_ENTRIES, attack_selection_template.categories)
 
@@ -29,15 +28,15 @@ MinionAttackSelection.generate = function (attack_selection_template_name, initi
 	if multi_selection then
 		table.merge_array(TEMP_CATEGORIES, multi_selection.categories)
 
-		local amount = multi_selection.amount
-		local num_categories = #TEMP_CATEGORIES
-		local category_index = nil
+		local amount, num_categories, category_index = multi_selection.amount, #TEMP_CATEGORIES
 
 		for i = 1, amount do
 			random_seed, category_index = math.next_random(random_seed, num_categories)
+
 			local category = TEMP_CATEGORIES[category_index]
 			local entries = TEMP_CATEGORY_ATTACK_ENTRIES[category]
 			local num_entries = #entries
+
 			random_seed, num_entries = MinionAttackSelection._select_and_remove_random_attack(random_seed, entries, num_entries, selected_attack_names, used_weapon_slot_names)
 
 			if num_entries == 0 then
@@ -70,6 +69,7 @@ MinionAttackSelection._select_and_remove_random_attack = function (random_seed, 
 	local num_attack_names = #attack_names
 	local new_random_seed, attack_index = math.next_random(attack_random_seed, num_attack_names)
 	local attack_name = attack_names[attack_index]
+
 	selected_attack_names[attack_name] = true
 
 	table.swap_delete(attack_names, attack_index)

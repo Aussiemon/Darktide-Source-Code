@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shock_maul_hit_effects.lua
+
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local ShockMaulHitEffects = class("ShockMaulHitEffects")
 local external_properties = {}
@@ -7,20 +9,27 @@ local BURST_SOUND_ALIAS = "sfx_special_activate"
 
 ShockMaulHitEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_husk = context.is_husk
+
 	self._is_husk = is_husk
 	self._wwise_world = context.wwise_world
 	self._world = context.world
 	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
+
 	local owner_unit = context.owner_unit
+
 	self._owner_unit = owner_unit
 	self._visual_loadout_extension = context.visual_loadout_extension
 	self._first_person_extension = ScriptUnit.has_extension(owner_unit, "first_person_system")
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+
 	local source_alias = "_special_active"
 	local source_name = fx_sources and fx_sources[source_alias]
+
 	self._source_name = source_name
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 end
 
@@ -101,8 +110,8 @@ end
 
 local _powermaul_damage_profiles = {
 	powermaul_heavy_tank = true,
+	powermaul_light_smiter = true,
 	powermaul_weapon_special = true,
-	powermaul_light_smiter = true
 }
 
 ShockMaulHitEffects.event_on_player_hit = function (self, attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike, damage_profile)
@@ -128,7 +137,7 @@ ShockMaulHitEffects._start_particle_effect = function (self, particle_alias)
 	local use_1p = self:_use_1p()
 	local unit_1p, node_1p, unit_3p, node_3p = self._fx_extension:vfx_spawner_unit_and_node(self._source_name)
 	local vfx_link_unit = use_1p and unit_1p or unit_3p
-	local vfx_link_node = use_1p and node_1p or node_3p
+	local vfx_link_unit, vfx_link_node = vfx_link_unit, use_1p and node_1p or node_3p
 	local particle_resolved, particle_name = self._visual_loadout_extension:resolve_gear_particle(particle_alias, external_properties)
 
 	if particle_resolved then
@@ -165,11 +174,10 @@ ShockMaulHitEffects._play_sound = function (self, sound_alias)
 	if sound_resolved then
 		local wwise_world = self._wwise_world
 
-		if use_husk_event and has_husk_events then
-			sound_event_name = sound_event_name .. "_husk" or sound_event_name
-		end
+		sound_event_name = use_husk_event and has_husk_events and sound_event_name .. "_husk" or sound_event_name
 
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, sound_event_name, sfx_source_id)
+
 		self._sound_id = new_playing_id
 	end
 end

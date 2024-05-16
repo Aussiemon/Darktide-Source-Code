@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base_definitions")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
@@ -19,7 +21,7 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 
 	if type(self._wallet_type) == "string" then
 		self._wallet_type = {
-			self._wallet_type
+			self._wallet_type,
 		}
 	end
 
@@ -30,15 +32,17 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 	end
 
 	self._option_button_settings = definitions.option_button_settings or {
-		spacing = 10,
 		grow_vertically = true,
-		button_template = ButtonPassTemplates.list_button_with_background
+		spacing = 10,
+		button_template = ButtonPassTemplates.list_button_with_background,
 	}
 	self._button_input_actions = {
 		"navigate_down_continuous",
-		"navigate_up_continuous"
+		"navigate_up_continuous",
 	}
+
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._current_vo_event = nil
 	self._current_vo_id = nil
@@ -63,7 +67,7 @@ VendorInteractionViewBase.on_enter = function (self)
 	end
 
 	self:_setup_tab_bar({
-		tabs_params = {}
+		tabs_params = {},
 	})
 
 	local button_options_definitions = self._base_definitions.button_options_definitions
@@ -72,6 +76,7 @@ VendorInteractionViewBase.on_enter = function (self)
 
 	self._presenting_options = true
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
+
 	local intro_texts = self._base_definitions.intro_texts
 
 	self:_set_intro_texts(intro_texts)
@@ -89,7 +94,7 @@ end
 
 VendorInteractionViewBase._switch_tab = function (self, index)
 	local additional_context = {
-		wallet_type = self._wallet_type
+		wallet_type = self._wallet_type,
 	}
 
 	VendorInteractionViewBase.super._switch_tab(self, index, additional_context)
@@ -146,12 +151,13 @@ end
 VendorInteractionViewBase._on_navigation_input_changed = function (self)
 	local is_mouse = self._using_cursor_navigation
 	local button_widgets = self._button_widgets
-	local focused_index = nil
+	local focused_index
 	local num_buttons = button_widgets and #button_widgets or 0
 
 	if is_mouse then
 		for i = 1, num_buttons do
 			local button = button_widgets[i]
+
 			button.content.hotspot.is_selected = false
 		end
 	elseif num_buttons > 0 then
@@ -168,9 +174,10 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 	end
 
 	input_service = self._presenting_options and input_service or input_service:null_service()
+
 	local is_mouse = self._using_cursor_navigation
 	local button_widgets = self._button_widgets
-	local focused_index = nil
+	local focused_index
 	local num_buttons = button_widgets and #button_widgets or 0
 
 	if not is_mouse then
@@ -187,7 +194,7 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 		local button_input_actions = self._button_input_actions
 
 		if num_buttons > 0 then
-			local next_index = nil
+			local next_index
 
 			if input_service:get(button_input_actions[1]) and focused_index < num_buttons then
 				next_index = focused_index + 1
@@ -225,7 +232,7 @@ VendorInteractionViewBase._handle_back_pressed = function (self)
 		else
 			self:_close_active_view()
 			self:_setup_tab_bar({
-				tabs_params = {}
+				tabs_params = {},
 			})
 
 			self._next_view = nil
@@ -242,7 +249,7 @@ VendorInteractionViewBase._handle_back_pressed = function (self)
 					widgets_by_name.title_text,
 					widgets_by_name.description_text,
 					widgets_by_name.button_divider,
-					widgets_by_name.title_text
+					widgets_by_name.title_text,
 				}
 				local button_widgets = self._button_widgets
 
@@ -278,10 +285,13 @@ VendorInteractionViewBase._setup_option_buttons = function (self, options)
 		local widget = self:_create_widget("option_button_" .. i, button_definition)
 		local content = widget.content
 		local hotspot = content.hotspot
+
 		hotspot.pressed_callback = callback(self, "on_option_button_pressed", i, option)
 		hotspot.disabled = option.disabled
+
 		local display_name = option.display_name
 		local unlocalized_name = option.unlocalized_name
+
 		content.text = unlocalized_name and not display_name and unlocalized_name or Localize(display_name)
 		content.icon = option.icon
 
@@ -326,7 +336,7 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 			widgets_by_name.title_text,
 			widgets_by_name.description_text,
 			widgets_by_name.button_divider,
-			widgets_by_name.title_text
+			widgets_by_name.title_text,
 		}
 		local button_widgets = self._button_widgets
 
@@ -337,6 +347,7 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 		end
 
 		local anim_name = option.blur_background and "on_option_enter_blurred" or "on_option_enter"
+
 		self._on_option_enter_anim_id = self:_start_animation(anim_name, widget_list, self)
 		self._presenting_options = false
 	end
@@ -356,9 +367,11 @@ VendorInteractionViewBase.draw = function (self, dt, t, input_service, layer)
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local ui_scenegraph = self._ui_scenegraph
 	local situational_input_service = self._presenting_options and input_service or input_service:null_service()
 
@@ -370,6 +383,7 @@ end
 
 VendorInteractionViewBase._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local render_settings_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self._alpha_multiplier or 0
 
 	VendorInteractionViewBase.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
@@ -445,6 +459,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 	local total_width = 0
 	local widgets = {}
 	local wallet_definition = Definitions.wallet_definitions
+
 	self._wallets_data = wallets_data
 
 	for i = 1, #self._wallet_type do
@@ -453,19 +468,24 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 		local font_gradient_material = wallet_settings.font_gradient_material
 		local icon_texture_small = wallet_settings.icon_texture_small
 		local widget = self:_create_widget("wallet_" .. i, wallet_definition)
+
 		widget.style.text.material = font_gradient_material
 		widget.content.texture = icon_texture_small
+
 		local amount = 0
 
 		if wallets_data then
 			local wallet = wallets_data:by_type(wallet_type)
 			local balance = wallet and wallet.balance
+
 			amount = balance and balance.amount or 0
 		end
 
 		local text = TextUtilities.format_currency(amount)
+
 		self._current_balance[wallet_type] = amount
 		widget.content.text = text
+
 		local style = widget.style
 		local text_style = style.text
 		local text_width, _ = self:_text_size(text, text_style.font_type, text_style.font_size)
@@ -497,9 +517,10 @@ VendorInteractionViewBase._set_wallet_background_width = function (self, total_w
 
 	if corner_right and not corner_right.content.original_size then
 		local corner_width, corner_height = self:_scenegraph_size("corner_top_right")
+
 		corner_right.content.original_size = {
 			corner_width,
-			corner_height
+			corner_height,
 		}
 	end
 
@@ -546,6 +567,7 @@ VendorInteractionViewBase._update_vo = function (self, dt, t)
 					self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
 
 					character_cooldowns[voice_profile] = DialogueSettings.store_npc_cooldown_time
+
 					local reply = queued_vo_event_request.reply
 
 					if reply then
@@ -615,7 +637,7 @@ VendorInteractionViewBase.play_vo_events = function (self, events, voice_profile
 			voice_profile = voice_profile,
 			optional_route_key = optional_route_key,
 			delay = optional_delay,
-			is_opinion_vo = is_opinion_vo
+			is_opinion_vo = is_opinion_vo,
 		}
 		local queued_vo_event_request = self._queued_vo_event_request
 
@@ -630,6 +652,7 @@ VendorInteractionViewBase.play_vo_events = function (self, events, voice_profile
 		local wwise_route_key = optional_route_key or 40
 		local callback = self._vo_callback
 		local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, nil, is_opinion_vo)
+
 		self._vo_unit = vo_unit
 	end
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/loading/profile_synchronization_manager.lua
+
 local ProfileSynchronizationManagerTestify = GameParameters.testify and require("scripts/managers/loading/profile_synchronization_manager_testify")
 local ProfileSynchronizationManager = class("ProfileSynchronizationManager")
 

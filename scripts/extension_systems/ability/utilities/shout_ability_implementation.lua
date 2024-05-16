@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/utilities/shout_ability_implementation.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local MinionState = require("scripts/utilities/minion_state")
@@ -14,7 +16,7 @@ local MINION_BREED_TYPE = breed_types.minion
 local PLAYER_BREED_TYPE = breed_types.player
 local special_rules = SpecialRulesSetting.special_rules
 local ShoutAbilityImplementation = {}
-local _suppress_units = nil
+local _suppress_units
 local broadphase_results = {}
 
 ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, locomotion_component, shout_direction)
@@ -71,7 +73,7 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 			local broadphase = broadphase_system.broadphase
 			local radius_modifier = stat_buffs.shout_radius_modifier or 1
 			local radius = shout_settings.radius * radius_modifier
-			local num_hits = broadphase:query(player_position, radius, broadphase_results, allied_side_names, PLAYER_BREED_TYPE)
+			local num_hits = broadphase.query(broadphase, player_position, radius, broadphase_results, allied_side_names, PLAYER_BREED_TYPE)
 
 			for i = 1, num_hits do
 				local unit = broadphase_results[i]
@@ -84,6 +86,7 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 
 					if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
 						local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
+
 						assisted_state_input_component.force_assist = true
 
 						if ALIVE[unit] then
@@ -102,7 +105,7 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 		local broadphase = broadphase_system.broadphase
 		local radius_modifier = stat_buffs.shout_radius_modifier or 1
 		local radius = shout_settings.radius * radius_modifier
-		local num_hits = broadphase:query(player_position, radius, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
+		local num_hits = broadphase.query(broadphase, player_position, radius, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 		local damage_profile = shout_settings.damage_profile
 		local damage_type = shout_settings.damage_type
 		local power_level = shout_settings.power_level or DEFAULT_POWER_LEVEL
@@ -165,7 +168,7 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 
 					if has_special_rule then
 						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
-						local special_rule_buff_name = nil
+						local special_rule_buff_name
 						local monster_buff_name = shout_settings.special_rule_buff_enemy_monster
 
 						if monster_buff_name then
@@ -226,7 +229,7 @@ function _suppress_units(shout_settings, t, player_unit, player_position, player
 	local cone_range = shout_settings.cone_range
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(player_position, cone_range, broadphase_results, enemy_side_names)
+	local num_hits = broadphase.query(broadphase, player_position, cone_range, broadphase_results, enemy_side_names)
 	local rotation = player_rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
@@ -253,7 +256,7 @@ function _suppress_units(shout_settings, t, player_unit, player_position, player
 
 			if has_special_rule_to_add_buffs then
 				local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
-				local buff_name = nil
+				local buff_name
 				local monster_buff_name = shout_settings.special_rule_buff_enemy_monster
 
 				if monster_buff_name then

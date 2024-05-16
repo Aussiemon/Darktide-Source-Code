@@ -1,52 +1,56 @@
+﻿-- chunkname: @scripts/tests/test_cases/audio_test_cases.lua
+
 local TestifySnippets = require("scripts/tests/testify_snippets")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
-AudioTestCases = {
-	play_all_vo_lines = function ()
-		Testify:run_case(function (dt, t)
-			if TestifySnippets.is_debug_stripped() or BUILD == "release" then
-				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
-				TestifySnippets.load_mission("spawn_all_enemies")
-			end
 
-			Testify:make_request("wait_for_state_gameplay_reached")
+AudioTestCases = {}
 
-			local player_unit = Testify:make_request("player_unit")
-			local dialogue_extension = Testify:make_request("dialogue_extension", player_unit)
-			local voices = Testify:make_request("all_wwise_voices")
+AudioTestCases.play_all_vo_lines = function ()
+	Testify:run_case(function (dt, t)
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
+			TestifySnippets.load_mission("spawn_all_enemies")
+		end
 
-			for _, voice in pairs(voices) do
-				local vo_settings = {
-					dialogue_extension = dialogue_extension,
-					voice = voice
-				}
+		Testify:make_request("wait_for_state_gameplay_reached")
 
-				Testify:make_request("set_vo_profile", vo_settings)
-			end
+		local player_unit = Testify:make_request("player_unit")
+		local dialogue_extension = Testify:make_request("dialogue_extension", player_unit)
+		local voices = Testify:make_request("all_wwise_voices")
 
-			local wwise_route = dialogue_extension._dialogue_system._wwise_route_default
-			local event_type = "vorbis_external"
-			local sound_events = Testify:make_request("all_dialogue_sound_events", dialogue_extension)
+		for _, voice in pairs(voices) do
+			local vo_settings = {
+				dialogue_extension = dialogue_extension,
+				voice = voice,
+			}
 
-			for _, sound_event in pairs(sound_events) do
-				local vo_settings = {
-					dialogue_extension = dialogue_extension,
-					event = {
-						type = event_type,
-						wwise_route = wwise_route,
-						sound_event = sound_event
-					}
-				}
+			Testify:make_request("set_vo_profile", vo_settings)
+		end
 
-				Testify:make_request("play_dialogue_event", vo_settings)
-			end
-		end)
-	end
-}
+		local wwise_route = dialogue_extension._dialogue_system._wwise_route_default
+		local event_type = "vorbis_external"
+		local sound_events = Testify:make_request("all_dialogue_sound_events", dialogue_extension)
+
+		for _, sound_event in pairs(sound_events) do
+			local vo_settings = {
+				dialogue_extension = dialogue_extension,
+				event = {
+					type = event_type,
+					wwise_route = wwise_route,
+					sound_event = sound_event,
+				},
+			}
+
+			Testify:make_request("play_dialogue_event", vo_settings)
+		end
+	end)
+end
+
 local default_vo_look_at_distance = 15
 local common_missions_look_at_tag = {
 	asset_acid_clouds = "asset_acid_clouds",
+	asset_cartel_insignia = "asset_cartel_insignia",
 	asset_water_course = "asset_water_course",
-	asset_cartel_insignia = "asset_cartel_insignia"
 }
 
 AudioTestCases.vo_rules_dm_forge = function ()
@@ -79,7 +83,7 @@ AudioTestCases.vo_rules_dm_forge = function ()
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_forge_purge_infestation", "sergeant_a"),
 			TestifySnippets.trigger_vo_query_player_generic_vo("mission_forge_alive"),
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_forge_smelter_working", "sergeant_a"),
-			TestifySnippets.trigger_vo_query_player_generic_vo("mission_forge_hellhole")
+			TestifySnippets.trigger_vo_query_player_generic_vo("mission_forge_hellhole"),
 		}
 		local failed_rules = result
 
@@ -126,7 +130,7 @@ AudioTestCases.vo_rules_dm_propaganda = function ()
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_propaganda_corruptor_event_next_bridge", "sergeant_a"),
 			TestifySnippets.trigger_vo_query_player_look_at("mission_propaganda_infested_elevator", default_vo_look_at_distance),
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_propaganda_corruptor_event_stop_signal_start", "sergeant_a"),
-			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_propaganda_corruptor_event_stop_signal_end", "sergeant_a")
+			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_propaganda_corruptor_event_stop_signal_end", "sergeant_a"),
 		}
 		local failed_rules = result
 
@@ -168,7 +172,7 @@ AudioTestCases.vo_rules_dm_stockpile = function ()
 			TestifySnippets.trigger_vo_query_player_look_at("mission_stockpile_ruined_hab", default_vo_look_at_distance),
 			TestifySnippets.trigger_vo_query_faction_look_at("npc", "mission_stockpile_through_to_silo", default_vo_look_at_distance),
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_stockpile_end_event_start", "sergeant_a"),
-			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_stockpile_clean_water", "sergeant_a")
+			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_stockpile_clean_water", "sergeant_a"),
 		}
 		local failed_rules = result
 
@@ -197,7 +201,7 @@ AudioTestCases.vo_rules_event_kill = function ()
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("event_kill_kill_the_target", "explicator_a"),
 			TestifySnippets.trigger_vo_query_player_generic_vo("event_kill_target_damaged"),
 			TestifySnippets.trigger_vo_query_player_generic_vo("event_kill_target_destroyed_a"),
-			TestifySnippets.trigger_vo_query_player_generic_vo("event_kill_target_heavy_damage_a")
+			TestifySnippets.trigger_vo_query_player_generic_vo("event_kill_target_heavy_damage_a"),
 		}
 		local failed_rules = result
 
@@ -237,7 +241,7 @@ AudioTestCases.vo_rules_fm_cargo = function ()
 			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_cargo_end_event_conversation_two_a"),
 			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_cargo_end_event_conversation_three_a"),
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_cargo_consignment_yard", "sergeant_a"),
-			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_cargo_reinforcements", "sergeant_a")
+			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_cargo_reinforcements", "sergeant_a"),
 		}
 		local failed_rules = result
 
@@ -281,7 +285,7 @@ AudioTestCases.vo_rules_hm_cartel = function ()
 			TestifySnippets.trigger_vo_query_faction_look_at("npc", "mission_cartel_keep_moving", default_vo_look_at_distance),
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_cartel_use_passcode", "sergeant_a"),
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_cartel_disable_security", "sergeant_a"),
-			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_cartel_upload", "sergeant_a")
+			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_cartel_upload", "sergeant_a"),
 		}
 		local failed_rules = result
 
@@ -330,7 +334,7 @@ AudioTestCases.vo_rules_hm_strain = function ()
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_strain_end_event_start", "sergeant_a"),
 			TestifySnippets.trigger_vo_query_player_look_at("asset_foul_smoke", default_vo_look_at_distance),
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_strain_job_done", "sergeant_a"),
-			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_strain_demolish_door", "sergeant_a")
+			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_strain_demolish_door", "sergeant_a"),
 		}
 		local failed_rules = result
 
@@ -376,7 +380,7 @@ AudioTestCases.vo_rules_km_enforcer = function ()
 			TestifySnippets.trigger_vo_query_faction_look_at("npc", "access_elevator", default_vo_look_at_distance),
 			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_enforcer_end_event_conversation_one_a", 3),
 			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_enforcer_end_event_conversation_two_a", 3),
-			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_enforcer_end_event_conversation_three_a", 3)
+			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_enforcer_end_event_conversation_three_a", 3),
 		}
 		local failed_rules = result
 
@@ -422,7 +426,7 @@ AudioTestCases.vo_rules_km_station = function ()
 			TestifySnippets.trigger_vo_query_faction_look_at("npc", "mission_station_cross_station", default_vo_look_at_distance),
 			TestifySnippets.trigger_mission_giver_conversation_starter("mission_station_end_event_conversation_one_a", "explicator_a"),
 			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_station_end_event_conversation_two_a"),
-			TestifySnippets.trigger_mission_giver_conversation_starter("mission_station_end_event_conversation_three_a", "sergeant_a")
+			TestifySnippets.trigger_mission_giver_conversation_starter("mission_station_end_event_conversation_three_a", "sergeant_a"),
 		}
 		local failed_rules = result
 
@@ -466,7 +470,7 @@ AudioTestCases.vo_rules_lm_rails = function ()
 			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_rails_end_event_conversation_two_a", 3),
 			TestifySnippets.trigger_vo_query_player_environmental_story_vo("mission_rails_end_event_conversation_three_a", 3),
 			TestifySnippets.trigger_vo_query_player_generic_vo("mission_rails_disable_skyfire_a", 2),
-			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_rails_event_grab_supplies", "sergeant_a")
+			TestifySnippets.trigger_vo_query_mission_giver_mission_info("mission_rails_event_grab_supplies", "sergeant_a"),
 		}
 		local failed_rules = result
 
@@ -531,7 +535,7 @@ AudioTestCases.vo_rules_smart_tag_com_wheel = function ()
 			TestifySnippets.trigger_vo_on_demand(concept_enemy_tag, "chaos_hound", 1),
 			TestifySnippets.trigger_vo_on_demand(concept_enemy_tag, "chaos_mutant_charger", 1),
 			TestifySnippets.trigger_vo_on_demand(concept_enemy_tag, "cultist_holy_stubber_gunner", 1),
-			TestifySnippets.trigger_vo_on_demand(concept_enemy_tag, "cultist_shocktrooper", 1)
+			TestifySnippets.trigger_vo_on_demand(concept_enemy_tag, "cultist_shocktrooper", 1),
 		}
 		local failed_rules = result
 

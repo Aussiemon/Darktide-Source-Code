@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_contract_vendor_a.lua
+
 local mission_giver_vo_contract_vendor_a = {
 	info_all_players_required = {
 		randomize_indexes_n = 0,
@@ -6,15 +8,15 @@ local mission_giver_vo_contract_vendor_a = {
 			"loc_contract_vendor_a__info_all_players_required_a_01",
 			"loc_contract_vendor_a__info_all_players_required_a_02",
 			"loc_contract_vendor_a__info_all_players_required_a_03",
-			"loc_contract_vendor_a__info_all_players_required_a_04"
+			"loc_contract_vendor_a__info_all_players_required_a_04",
 		},
 		sound_events_duration = {
 			2.683646,
 			3.580104,
 			2.54276,
-			3.834083
+			3.834083,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	info_event_almost_done_mg = {
 		randomize_indexes_n = 0,
@@ -23,15 +25,15 @@ local mission_giver_vo_contract_vendor_a = {
 			"loc_contract_vendor_a__info_event_almost_done_a_01",
 			"loc_contract_vendor_a__info_event_almost_done_a_02",
 			"loc_contract_vendor_a__info_event_almost_done_a_03",
-			"loc_contract_vendor_a__info_event_almost_done_a_04"
+			"loc_contract_vendor_a__info_event_almost_done_a_04",
 		},
 		sound_events_duration = {
 			2.573063,
 			2.288115,
 			3.494302,
-			2.685521
+			2.685521,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	info_event_one_down = {
 		randomize_indexes_n = 0,
@@ -40,26 +42,26 @@ local mission_giver_vo_contract_vendor_a = {
 			"loc_contract_vendor_a__info_event_one_down_a_01",
 			"loc_contract_vendor_a__info_event_one_down_a_02",
 			"loc_contract_vendor_a__info_event_one_down_a_03",
-			"loc_contract_vendor_a__info_event_one_down_a_04"
+			"loc_contract_vendor_a__info_event_one_down_a_04",
 		},
 		sound_events_duration = {
 			2.612771,
 			1.771823,
 			1.58749,
-			2.218656
+			2.218656,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_cartel_brief_one = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__mission_cartel_brief_one_01"
+			[1] = "loc_contract_vendor_a__mission_cartel_brief_one_01",
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1] = 3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_cartel_brief_three = {
 		randomize_indexes_n = 0,
@@ -67,27 +69,27 @@ local mission_giver_vo_contract_vendor_a = {
 		sound_events = {
 			"loc_contract_vendor_a__mission_cartel_brief_three_01",
 			"loc_contract_vendor_a__mission_cartel_brief_three_02",
-			"loc_contract_vendor_a__mission_cartel_brief_three_03"
+			"loc_contract_vendor_a__mission_cartel_brief_three_03",
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_cartel_brief_two = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__mission_cartel_brief_two_01",
-			[2.0] = "loc_contract_vendor_a__mission_cartel_brief_two_02"
+			[1] = "loc_contract_vendor_a__mission_cartel_brief_two_01",
+			[2] = "loc_contract_vendor_a__mission_cartel_brief_two_02",
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1] = 3.45678,
+			[2] = 3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_enforcer_briefing_a = {
 		randomize_indexes_n = 0,
@@ -95,14 +97,14 @@ local mission_giver_vo_contract_vendor_a = {
 		sound_events = {
 			"loc_contract_vendor_a__mission_enforcer_briefing_a_01",
 			"loc_contract_vendor_a__mission_enforcer_briefing_a_02",
-			"loc_contract_vendor_a__mission_enforcer_briefing_a_03"
+			"loc_contract_vendor_a__mission_enforcer_briefing_a_03",
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_enforcer_briefing_b = {
 		randomize_indexes_n = 0,
@@ -110,14 +112,14 @@ local mission_giver_vo_contract_vendor_a = {
 		sound_events = {
 			"loc_contract_vendor_a__mission_enforcer_briefing_b_01",
 			"loc_contract_vendor_a__mission_enforcer_briefing_b_02",
-			"loc_contract_vendor_a__mission_enforcer_briefing_b_03"
+			"loc_contract_vendor_a__mission_enforcer_briefing_b_03",
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_stockpile_briefing_a = {
 		randomize_indexes_n = 0,
@@ -128,7 +130,7 @@ local mission_giver_vo_contract_vendor_a = {
 			"loc_contract_vendor_a__mission_stockpile_briefing_b_01",
 			"loc_contract_vendor_a__mission_stockpile_briefing_b_02",
 			"loc_contract_vendor_a__mission_stockpile_briefing_c_01",
-			"loc_contract_vendor_a__mission_stockpile_briefing_c_02"
+			"loc_contract_vendor_a__mission_stockpile_briefing_c_02",
 		},
 		sound_events_duration = {
 			3.45678,
@@ -136,10 +138,10 @@ local mission_giver_vo_contract_vendor_a = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_giver_vo_contract_vendor_a", mission_giver_vo_contract_vendor_a)

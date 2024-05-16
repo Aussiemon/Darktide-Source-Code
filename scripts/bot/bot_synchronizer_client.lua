@@ -1,10 +1,13 @@
+﻿-- chunkname: @scripts/bot/bot_synchronizer_client.lua
+
 local RemotePlayer = require("scripts/managers/player/remote_player")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local BotSynchronizerClient = class("BotSynchronizerClient")
 local RPCS = {
 	"rpc_add_bot_player",
-	"rpc_remove_bot_player"
+	"rpc_remove_bot_player",
 }
+
 BotSynchronizerClient.DEBUG_TAG = "Bot Sync Client"
 
 local function _debug_print(str, ...)

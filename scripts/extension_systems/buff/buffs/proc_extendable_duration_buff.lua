@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/proc_extendable_duration_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -38,6 +40,7 @@ ProcExtendableDurationBuff.update_proc_events = function (self, t, proc_events, 
 						local max_proc_stacks = template.max_proc_stacks
 						local proc_count = buff_component[proc_count_key] + 1
 						local new_proc_count = math.clamp(proc_count, 0, max_proc_stacks)
+
 						buff_component[proc_count_key] = new_proc_count
 					end
 

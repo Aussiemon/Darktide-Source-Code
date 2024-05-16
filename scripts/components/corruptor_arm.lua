@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/corruptor_arm.lua
+
 local Bezier = require("scripts/utilities/spline/bezier")
 local CorruptorArm = component("CorruptorArm")
 
@@ -43,7 +45,9 @@ CorruptorArm.editor_init = function (self, unit)
 
 	if self._in_level_editor then
 		self._unit = unit
+
 		local line_render = World.create_line_object(self._world, true)
+
 		self._line_render = line_render
 		self._drawer = DebugDrawer(line_render, "retained")
 
@@ -51,6 +55,7 @@ CorruptorArm.editor_init = function (self, unit)
 
 		self._debug_text_ids = {}
 		self._guis = {}
+
 		local text_color = Color.red()
 		local text_position = Unit.local_position(unit, 1)
 		local translation_matrix = Matrix4x4.from_translation(text_position)
@@ -134,6 +139,7 @@ end
 
 CorruptorArm._spline_position = function (self, unit, multi_mesh, mesh_increment_add, attach_mesh, mesh_rotation, current_end_position)
 	mesh_rotation = mesh_rotation or 0
+
 	local mesh_amount = self._mesh_amount
 	local total_joint_amount = self._joint_amount
 	local joint_base_name = self._joint_base_name
@@ -146,7 +152,7 @@ CorruptorArm._spline_position = function (self, unit, multi_mesh, mesh_increment
 	local mesh_increment = 1 / mesh_amount
 
 	for joint_amount = 0, total_joint_amount do
-		local t = nil
+		local t
 
 		if multi_mesh then
 			t = (joint_increment * joint_amount * mesh_increment + mesh_increment_add) * current_end_position + 0.01
@@ -185,10 +191,11 @@ CorruptorArm._create_meshes = function (self, unit)
 	end
 
 	for i = 1, mesh_amount do
-		local attach_mesh = nil
+		local attach_mesh
 		local socket_node = Unit.node(unit, self._main_unit_root_name)
 		local socket_pos = Unit.world_position(unit, socket_node)
 		local socket_rot = Unit.world_rotation(unit, socket_node)
+
 		attach_mesh = World.spawn_unit_ex(world, tiling_mesh_name, nil, socket_pos, socket_rot)
 		attached_meshes[#attached_meshes + 1] = attach_mesh
 
@@ -270,13 +277,13 @@ CorruptorArm._editor_debug_draw = function (self, unit)
 			arm_start_position,
 			first_control_position,
 			second_control_position,
-			arm_end_position
+			arm_end_position,
 		}
 		local text = {
 			"Start Node",
 			"First Control",
 			"Second Control",
-			"End Node"
+			"End Node",
 		}
 
 		for i = 1, 4 do
@@ -317,100 +324,100 @@ end
 
 CorruptorArm.component_data = {
 	activation_delay = {
+		category = "Setup",
+		ui_name = "Activation Delay (sec.)",
 		ui_type = "number",
 		value = 0,
-		ui_name = "Activation Delay (sec.)",
-		category = "Setup"
 	},
 	main_unit_root_name = {
+		category = "Curve",
+		ui_name = "Main Unit Root Name",
 		ui_type = "text_box",
 		value = "rp_corruptor_arm_mid",
-		ui_name = "Main Unit Root Name",
-		category = "Curve"
 	},
 	attach_unit_root_name = {
+		category = "Curve",
+		ui_name = "Attach Unit Base Name",
 		ui_type = "text_box",
 		value = "rp_corruptor_arm_mid_attach",
-		ui_name = "Attach Unit Base Name",
-		category = "Curve"
 	},
 	joint_base_name = {
+		category = "Curve",
+		ui_name = "Joint Base Name",
 		ui_type = "text_box",
 		value = "j_arm_0",
-		ui_name = "Joint Base Name",
-		category = "Curve"
 	},
 	mesh_amount = {
-		ui_type = "slider",
+		category = "Curve",
+		decimals = 0,
+		max = 9,
 		min = 1,
 		step = 1,
-		category = "Curve",
-		value = 1,
-		decimals = 0,
 		ui_name = "Mesh Amount",
-		max = 9
+		ui_type = "slider",
+		value = 1,
 	},
 	tiling_mesh_name = {
-		ui_type = "resource",
-		preview = true,
 		category = "Curve",
-		value = "content/environment/gameplay/corruptor/corruptor_arm_mid_attach",
+		filter = "unit",
+		preview = true,
 		ui_name = "Tiling Mesh",
-		filter = "unit"
+		ui_type = "resource",
+		value = "content/environment/gameplay/corruptor/corruptor_arm_mid_attach",
 	},
 	joint_amount = {
-		ui_type = "slider",
+		category = "Curve",
+		decimals = 0,
+		max = 9,
 		min = 1,
 		step = 1,
-		category = "Curve",
-		value = 6,
-		decimals = 0,
 		ui_name = "Joint Amount (per mesh)",
-		max = 9
+		ui_type = "slider",
+		value = 6,
 	},
 	first_control = {
+		category = "Curve",
+		ui_name = "First Ctrl",
 		ui_type = "text_box",
 		value = "curve_start",
-		ui_name = "First Ctrl",
-		category = "Curve"
 	},
 	second_control = {
+		category = "Curve",
+		ui_name = "Second Ctrl",
 		ui_type = "text_box",
 		value = "curve_end",
-		ui_name = "Second Ctrl",
-		category = "Curve"
 	},
 	arm_start = {
+		category = "Curve",
+		ui_name = "Arm Start",
 		ui_type = "text_box",
 		value = "arm_start",
-		ui_name = "Arm Start",
-		category = "Curve"
 	},
 	arm_end = {
+		category = "Curve",
+		ui_name = "Arm End",
 		ui_type = "text_box",
 		value = "arm_end",
-		ui_name = "Arm End",
-		category = "Curve"
 	},
 	auto_current_end = {
+		category = "Curve",
+		ui_name = "Auto Animator",
 		ui_type = "text_box",
 		value = "auto_current_end",
-		ui_name = "Auto Animator",
-		category = "Curve"
 	},
 	current_spline_distance = {
-		ui_type = "slider",
+		category = "Curve",
+		decimals = 3,
+		max = 1,
 		min = 0,
 		step = 0.001,
-		category = "Curve",
-		value = 0,
-		decimals = 3,
 		ui_name = "Current Spline Distance",
-		max = 1
+		ui_type = "slider",
+		value = 0,
 	},
 	extensions = {
-		"CorruptorArmExtension"
-	}
+		"CorruptorArmExtension",
+	},
 }
 
 return CorruptorArm

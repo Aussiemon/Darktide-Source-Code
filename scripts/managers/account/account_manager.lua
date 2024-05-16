@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/account/account_manager.lua
+
 local interface = {
 	"delete",
 	"destroy",
@@ -29,7 +31,7 @@ local interface = {
 	"user_has_restriction",
 	"user_restriction_verified",
 	"verify_connection",
-	"communication_restriction_iteration"
+	"communication_restriction_iteration",
 }
 local NullAccountManager = class("NullAccountManager")
 
@@ -153,30 +155,30 @@ NullAccountManager.communication_restriction_iteration = function (self)
 	return nil
 end
 
-local AccountManager = {
-	new = function (self)
-		local instance = nil
+local AccountManager = {}
 
-		if IS_XBS then
-			instance = require("scripts/managers/account/account_manager_xbox_live"):new()
+AccountManager.new = function (self)
+	local instance
 
-			Log.info("AccountManager", "Using Xbox Live account manager")
-		elseif IS_GDK then
-			instance = require("scripts/managers/account/account_manager_win_gdk"):new()
+	if IS_XBS then
+		instance = require("scripts/managers/account/account_manager_xbox_live"):new()
 
-			Log.info("AccountManager", "Using Win GDK account manager")
-		else
-			instance = NullAccountManager:new()
+		Log.info("AccountManager", "Using Xbox Live account manager")
+	elseif IS_GDK then
+		instance = require("scripts/managers/account/account_manager_win_gdk"):new()
 
-			Log.info("AccountManager", "Using base account manager")
-		end
+		Log.info("AccountManager", "Using Win GDK account manager")
+	else
+		instance = NullAccountManager:new()
 
-		if rawget(_G, "implements") then
-			implements(instance, interface)
-		end
-
-		return instance
+		Log.info("AccountManager", "Using base account manager")
 	end
-}
+
+	if rawget(_G, "implements") then
+		implements(instance, interface)
+	end
+
+	return instance
+end
 
 return AccountManager

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/breed_loader.lua
+
 local BreedResourceDependencies = require("scripts/utilities/breed_resource_dependencies")
 local Breeds = require("scripts/settings/breed/breeds")
 local Loader = require("scripts/loading/loader")
@@ -54,12 +56,14 @@ BreedLoader.start_loading = function (self, mission_name, level_editor_level, ci
 	end
 
 	self._load_state = LOAD_STATES.packages_load
+
 	local callback = callback(self, "_load_done_callback")
 	local package_manager = Managers.package
 
 	for package_name, loaded in pairs(packages_to_load) do
 		if not loaded then
 			local id = package_manager:load(package_name, "BreedLoader", callback)
+
 			self._package_ids[id] = package_name
 		end
 	end
@@ -68,7 +72,9 @@ end
 BreedLoader._load_done_callback = function (self, id)
 	local package_name = self._package_ids[id]
 	local packages_to_load = self._packages_to_load
+
 	packages_to_load[package_name] = true
+
 	local all_packages_finished_loading = true
 
 	for _, loaded in pairs(packages_to_load) do

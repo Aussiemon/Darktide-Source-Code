@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/team_player_panel_hub/hud_element_team_player_panel_hub.lua
+
 local definition_path = "scripts/ui/hud/elements/team_player_panel_hub/hud_element_team_player_panel_hub_definitions"
 local HudElementTeamPlayerPanelHubSettings = require("scripts/ui/hud/elements/team_player_panel_hub/hud_element_team_player_panel_hub_settings")
 local HudElementTeamPlayerPanelHub = class("HudElementTeamPlayerPanelHub", "HudElementPlayerPanelBase")

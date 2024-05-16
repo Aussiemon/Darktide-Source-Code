@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/health_station/health_station_system.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local HealthStationExtension = require("scripts/extension_systems/health_station/health_station_extension")
 local HealthStationSystem = class("HealthStationSystem", "ExtensionSystemBase")
@@ -6,14 +8,14 @@ local CLIENT_RPCS = {
 	"rpc_health_station_hot_join",
 	"rpc_health_station_on_socket_spawned",
 	"rpc_health_station_on_battery_spawned",
-	"rpc_health_station_sync_charges"
+	"rpc_health_station_sync_charges",
 }
 local DISTRIBUTION_CHARGES_PER_STATION = {
 	2.5,
 	2.5,
 	2.25,
 	2,
-	1.75
+	1.75,
 }
 
 HealthStationSystem.init = function (self, context, system_init_data, ...)
@@ -91,7 +93,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 			if extension:use_distribution_pool() and has_battery_on_start then
 				stations[#stations + 1] = {
 					charges = 0,
-					extension = extension
+					extension = extension,
 				}
 			else
 				local charges = extension:charge_amount()
@@ -112,6 +114,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 		if station_count > 0 then
 			local max_charges_per_station = HealthStationExtension.MAX_CHARGES
 			local max_total_charges = max_charges_per_station * station_count
+
 			charges_to_distribute = math.min(charges_to_distribute, max_total_charges)
 
 			if station_count <= charges_to_distribute then
@@ -145,8 +148,7 @@ end
 
 HealthStationSystem.get_closest_health_station = function (self, position)
 	local unit_to_extension_map = self._unit_to_extension_map
-	local closest_unit = nil
-	local closest_distance = math.huge
+	local closest_unit, closest_distance = nil, math.huge
 
 	for unit, _ in pairs(unit_to_extension_map) do
 		local station_position = Unit.world_position(unit, 1)
@@ -173,13 +175,13 @@ HealthStationSystem.rpc_health_station_hot_join = function (self, channel_id, le
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local health_station_unit = unit_spawner_manager:unit(level_unit_id, true)
 	local health_station_extension = self._unit_to_extension_map[health_station_unit]
-	local socket_unit = nil
+	local socket_unit
 
 	if socket_object_id ~= NetworkConstants.invalid_game_object_id then
 		socket_unit = unit_spawner_manager:unit(socket_object_id, false)
 	end
 
-	local battery_unit = nil
+	local battery_unit
 
 	if unit_spawner_manager:valid_unit_id(battery_id, battery_is_level_unit) then
 		battery_unit = unit_spawner_manager:unit(battery_id, battery_is_level_unit)

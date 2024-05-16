@@ -1,13 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/view_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 HubLocationIntroductionSettings = require("scripts/settings/cinematic_video/hub_location_introduction_settings")
+
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ViewInteraction = class("ViewInteraction", "BaseInteraction")
 local ui_view_level_requirement = {
 	credits_vendor_background_view = PlayerProgressionUnlocks.credits_vendor,
 	crafting_view = PlayerProgressionUnlocks.crafting,
 	contracts_background_view = PlayerProgressionUnlocks.contracts,
-	cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor
+	cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor,
 }
 
 ViewInteraction.init = function (self, template)
@@ -15,16 +18,16 @@ ViewInteraction.init = function (self, template)
 	self._view_story_chapter_requirement = {
 		credits_vendor_background_view = {
 			chapter = "pot_story_traitor_first",
-			story = "path_of_trust"
+			story = "path_of_trust",
 		},
 		crafting_view = {
 			chapter = "pot_crafting",
-			story = "path_of_trust"
+			story = "path_of_trust",
 		},
 		contracts_background_view = {
 			chapter = "pot_contracts",
-			story = "path_of_trust"
-		}
+			story = "path_of_trust",
+		},
 	}
 end
 
@@ -51,14 +54,14 @@ ViewInteraction.start = function (self, world, interactor_unit, unit_data_compon
 			if hli_settings and hli_unseen then
 				local context = {
 					allow_skip_input = true,
-					template = hli_settings.video_template
+					template = hli_settings.video_template,
 				}
 
 				ui_manager:open_view("video_view", nil, nil, nil, nil, context)
 				Managers.narrative:complete_event(narrative_event)
 			else
 				local context = {
-					hub_interaction = true
+					hub_interaction = true,
 				}
 
 				ui_manager:open_view(ui_interaction, nil, nil, nil, nil, context)
@@ -75,7 +78,7 @@ ViewInteraction._check_view_requirements = function (self, interactor_unit, ui_i
 	local player_profile = player:profile()
 	local level_requirement = ui_view_level_requirement[ui_interaction]
 
-	if level_requirement and player_profile.current_level < level_requirement then
+	if level_requirement and level_requirement > player_profile.current_level then
 		table.clear(view_requirement_failure_context)
 
 		view_requirement_failure_context.level = level_requirement
@@ -90,8 +93,7 @@ ViewInteraction._check_view_requirements = function (self, interactor_unit, ui_i
 	end
 
 	if story_data then
-		local story_name = story_data.story
-		local chapter_name = story_data.chapter
+		local story_name, chapter_name = story_data.story, story_data.chapter
 		local story_requirement_met = Managers.narrative:is_chapter_complete(story_name, chapter_name, player)
 
 		if not story_requirement_met then

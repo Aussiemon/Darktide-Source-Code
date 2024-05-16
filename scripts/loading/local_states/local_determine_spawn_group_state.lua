@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/loading/local_states/local_determine_spawn_group_state.lua
+
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local RPCS = {
-	"rpc_request_spawn_group_reply"
+	"rpc_request_spawn_group_reply",
 }
 local LocalDetermineSpawnGroupState = class("LocalDetermineSpawnGroupState")
 

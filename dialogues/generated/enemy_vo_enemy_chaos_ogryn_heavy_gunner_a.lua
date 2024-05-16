@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_chaos_ogryn_heavy_gunner_a.lua
+
 local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 	chaos_ogryn_heavy_gunner_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 			"loc_enemy_chaos_ogryn_heavy_gunner_a__alerted_idle_07",
 			"loc_enemy_chaos_ogryn_heavy_gunner_a__alerted_idle_08",
 			"loc_enemy_chaos_ogryn_heavy_gunner_a__alerted_idle_09",
-			"loc_enemy_chaos_ogryn_heavy_gunner_a__alerted_idle_10"
+			"loc_enemy_chaos_ogryn_heavy_gunner_a__alerted_idle_10",
 		},
 		sound_events_duration = {
 			1.632479,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 			1.551625,
 			2.282313,
 			2.065083,
-			4.934604
+			4.934604,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_ogryn_heavy_gunner_shooting = {
 		randomize_indexes_n = 0,
@@ -53,7 +55,7 @@ local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 			"loc_enemy_chaos_ogryn_heavy_gunner_a__shooting_07",
 			"loc_enemy_chaos_ogryn_heavy_gunner_a__shooting_08",
 			"loc_enemy_chaos_ogryn_heavy_gunner_a__shooting_09",
-			"loc_enemy_chaos_ogryn_heavy_gunner_a__shooting_10"
+			"loc_enemy_chaos_ogryn_heavy_gunner_a__shooting_10",
 		},
 		sound_events_duration = {
 			2.769208,
@@ -65,7 +67,7 @@ local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 			1.285896,
 			1.719375,
 			1.799833,
-			2.594604
+			2.594604,
 		},
 		sound_event_weights = {
 			0.1,
@@ -77,10 +79,10 @@ local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_chaos_ogryn_heavy_gunner_a", enemy_vo_enemy_chaos_ogryn_heavy_gunner_a)

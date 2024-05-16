@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_flamer_approach_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -7,13 +9,17 @@ local DEFAULT_MIN_MOVE_DURATION = 0.5
 
 BtFlamerApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local perception_component = blackboard.perception
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	scratchpad.navigation_extension = navigation_extension
+
 	local run_speed = action_data.speed
 
 	navigation_extension:set_enabled(true, run_speed)
@@ -21,6 +27,7 @@ BtFlamerApproachAction.enter = function (self, unit, breed, blackboard, scratchp
 
 	if action_data.effect_template then
 		local fx_system = Managers.state.extension:system("fx_system")
+
 		scratchpad.fx_system = fx_system
 		scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
 	end
@@ -46,11 +53,11 @@ BtFlamerApproachAction.run = function (self, unit, breed, blackboard, scratchpad
 	local distance_to_target = perception_component.target_distance
 	local force_move = distance_to_target <= action_data.min_range
 
-	if distance_to_target < action_data.wanted_distance and action_data.min_range < distance_to_target then
+	if distance_to_target < action_data.wanted_distance and distance_to_target > action_data.min_range then
 		local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
 		local has_clear_shot = scratchpad.perception_extension:has_line_of_sight_by_id(target_unit, clear_shot_line_of_sight_id)
 
-		if perception_component.has_line_of_sight and has_clear_shot and scratchpad.min_move_duration < t then
+		if perception_component.has_line_of_sight and has_clear_shot and t > scratchpad.min_move_duration then
 			return "done"
 		end
 
@@ -78,7 +85,7 @@ BtFlamerApproachAction.run = function (self, unit, breed, blackboard, scratchpad
 		self:_start_move_anim(unit, t, behavior_component, scratchpad, action_data)
 	end
 
-	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -99,6 +106,7 @@ BtFlamerApproachAction._start_move_anim = function (self, unit, t, behavior_comp
 			MinionMovement.set_anim_driven(scratchpad, true)
 
 			local start_rotation_timing = action_data.start_move_rotation_timings[start_move_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = start_move_event
 		else

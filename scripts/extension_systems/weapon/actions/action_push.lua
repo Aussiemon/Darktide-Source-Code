@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_push.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -13,6 +15,7 @@ ActionPush.init = function (self, action_context, ...)
 	ActionPush.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._block_component = unit_data_extension:write_component("block")
 	self._action_push_component = unit_data_extension:write_component("action_push")
 end
@@ -26,13 +29,13 @@ end
 ActionPush.fixed_update = function (self, dt, t, time_in_action)
 	local action_settings = self._action_settings
 
-	if self._block_component.is_blocking and action_settings.block_duration <= time_in_action then
+	if self._block_component.is_blocking and time_in_action >= action_settings.block_duration then
 		self._block_component.is_blocking = false
 	end
 
 	local damage_time = action_settings.damage_time or 0
 
-	if time_in_action >= damage_time and not self._action_push_component.has_pushed then
+	if damage_time <= time_in_action and not self._action_push_component.has_pushed then
 		self:_push(t)
 
 		self._action_push_component.has_pushed = true
@@ -81,6 +84,7 @@ ActionPush._push = function (self, t)
 
 		local push_offset = action_settings.push_offset or 0
 		local push_position = player_position + player_direction * push_offset
+
 		number_of_units_hit = PushAttack.push(self._physics_world, push_position, player_direction, rewind_ms, power_level, action_settings, player_unit, is_predicted, weapon_item, weak_push)
 
 		self:_play_push_rumble(number_of_units_hit)

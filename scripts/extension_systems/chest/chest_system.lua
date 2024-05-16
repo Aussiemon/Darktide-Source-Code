@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/chest/chest_system.lua
+
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 
 require("scripts/extension_systems/chest/chest_extension")
@@ -5,7 +7,7 @@ require("scripts/extension_systems/chest/chest_extension")
 local ChestSystem = class("ChestSystem", "ExtensionSystemBase")
 local RPCS = {
 	"rpc_chest_set_state",
-	"rpc_chest_hot_join"
+	"rpc_chest_hot_join",
 }
 
 ChestSystem.init = function (self, context, ...)

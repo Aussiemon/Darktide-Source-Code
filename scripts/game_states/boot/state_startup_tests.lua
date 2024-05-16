@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/boot/state_startup_tests.lua
+
 require("scripts/game_states/boot/state_boot_sub_state_base")
 
 local StateStartupTests = class("StateStartupTests", "StateBootSubStateBase")

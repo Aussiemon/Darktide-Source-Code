@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/tracks.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Tracks = class("Tracks")
 
@@ -42,7 +44,7 @@ Tracks.claim_track_tier = function (self, trackId, tier)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(trackId):path("/tiers/"):path(tier)
 		local options = {
-			method = "POST"
+			method = "POST",
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)
@@ -54,7 +56,7 @@ Tracks.claim_trait_tier_reward = function (self, trackId, tier, rewardId)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(trackId):path("/tiers/"):path(tier):path("/rewards/"):path(rewardId)
 		local options = {
-			method = "POST"
+			method = "POST",
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)

@@ -1,6 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/chest/chest_extension.lua
+
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local ChestExtension = class("ChestExtension")
+
 ChestExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
 local CHEST_LOCK_DELAY = 0.5
 local STATES = table.enum("closed", "locked", "opened")
 
@@ -68,6 +72,7 @@ ChestExtension.set_current_state = function (self, state)
 
 	if self._is_server then
 		self._state_changed = true
+
 		local unit = self._unit
 		local unit_level_index = Managers.state.unit_spawner:level_index(unit)
 		local state_id = NetworkLookup.chest_states[state]

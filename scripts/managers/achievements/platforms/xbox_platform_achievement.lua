@@ -1,11 +1,13 @@
+﻿-- chunkname: @scripts/managers/achievements/platforms/xbox_platform_achievement.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local XboxPlatformAchievement = class("XboxPlatformAchievement")
-local ProgressStates = {
-	UNLOCKED = 1,
-	NOT_STARTED = 2,
-	IN_PROGRESS = 3
-}
+local ProgressStates = {}
+
+ProgressStates.UNLOCKED = 1
+ProgressStates.NOT_STARTED = 2
+ProgressStates.IN_PROGRESS = 3
 
 XboxPlatformAchievement._get_platform_id = function (self, achievement_definition)
 	local xbox_data = achievement_definition.xbox

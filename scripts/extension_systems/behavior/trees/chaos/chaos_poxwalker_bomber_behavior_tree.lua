@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/chaos/chaos_poxwalker_bomber_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.chaos_poxwalker_bomber
 local behavior_tree = {
@@ -7,78 +9,78 @@ local behavior_tree = {
 		{
 			"BtChaosPoxwalkerExplodeAction",
 			name = "explode",
-			action_data = action_data.explode
+			action_data = action_data.explode,
 		},
 		{
 			"BtDieAction",
 			enter_hook = "poxwalker_bomber_death_enter",
 			name = "death",
-			action_data = action_data.death
+			action_data = action_data.death,
 		},
 		condition = "poxwalker_bomber_is_dead",
-		name = "death_sequence"
+		name = "death_sequence",
 	},
 	{
 		"BtExitSpawnerAction",
-		name = "exit_spawner",
 		condition = "is_exiting_spawner",
-		action_data = action_data.exit_spawner
+		name = "exit_spawner",
+		action_data = action_data.exit_spawner,
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
-			name = "teleport",
 			condition = "at_teleport_smart_object",
-			action_data = action_data.teleport
+			name = "teleport",
+			action_data = action_data.teleport,
 		},
 		{
 			"BtClimbAction",
+			condition = "at_climb_smart_object",
 			enter_hook = "poxwalker_bomber_jump_explode_check",
 			name = "climb",
-			condition = "at_climb_smart_object",
-			action_data = action_data.climb
+			action_data = action_data.climb,
 		},
 		{
 			"BtJumpAcrossAction",
-			name = "jump_across",
 			condition = "at_jump_smart_object",
-			action_data = action_data.jump_across
+			name = "jump_across",
+			action_data = action_data.jump_across,
 		},
 		{
 			"BtSmashObstacleAction",
-			name = "smash_obstacle",
 			condition = "at_smashable_obstacle_smart_object",
-			action_data = action_data.smash_obstacle
+			name = "smash_obstacle",
+			action_data = action_data.smash_obstacle,
 		},
 		{
 			"BtOpenDoorAction",
-			name = "open_door",
 			condition = "at_door_smart_object",
-			action_data = action_data.open_door
+			name = "open_door",
+			action_data = action_data.open_door,
 		},
 		condition = "at_smart_object",
-		name = "smart_object"
+		name = "smart_object",
 	},
 	{
 		"BtStaggerAction",
+		condition = "is_staggered",
 		leave_hook = "poxwalker_bomber_lunge_stagger_check",
 		name = "stagger",
-		condition = "is_staggered",
-		action_data = action_data.stagger
+		action_data = action_data.stagger,
 	},
 	{
 		"BtPoxwalkerBomberApproachAction",
-		name = "approach",
 		condition = "is_aggroed",
-		action_data = action_data.approach
+		name = "approach",
+		action_data = action_data.approach,
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle
+		action_data = action_data.idle,
 	},
-	name = "chaos_poxwalker_bomber"
+	name = "chaos_poxwalker_bomber",
 }
 
 return behavior_tree

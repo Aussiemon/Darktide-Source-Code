@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/attack_intensity/player_unit_attack_intensity_extension.lua
+
 local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PlayerUnitAttackIntensityExtension = class("PlayerUnitAttackIntensityExtension")
@@ -17,13 +19,16 @@ PlayerUnitAttackIntensityExtension.init = function (self, extension_init_context
 	self:_setup_intensities()
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
 	self._locked_in_melee = false
 	self._locked_in_melee_timer = 0
 	self._next_locked_in_melee_update = 0
 	self._attack_allowed_timer = 0
 	self._num_attacks_in_melee = 0
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
 	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._character_state_component = unit_data_extension:read_component("character_state")
@@ -39,10 +44,11 @@ PlayerUnitAttackIntensityExtension._setup_intensities = function (self)
 
 	for intensity_type, settings in pairs(attack_intensities) do
 		local difficulty_settings = Managers.state.difficulty:get_table_entry_by_challenge(settings)
+
 		intensity_data[intensity_type] = {
-			intensity = 0,
-			decay_grace_timer = 0,
 			attack_allowed = true,
+			decay_grace_timer = 0,
+			intensity = 0,
 			threshold = difficulty_settings.threshold,
 			decay_grace = difficulty_settings.decay_grace,
 			decay = difficulty_settings.decay,
@@ -50,16 +56,16 @@ PlayerUnitAttackIntensityExtension._setup_intensities = function (self)
 			attack_allowed_decay_multiplier = difficulty_settings.attack_allowed_decay_multiplier,
 			ignored_movement_states = difficulty_settings.ignored_movement_states,
 			locked_in_melee_check = difficulty_settings.locked_in_melee_check,
-			attack_intensity_clamp = difficulty_settings.attack_intensity_clamp
+			attack_intensity_clamp = difficulty_settings.attack_intensity_clamp,
 		}
 	end
 end
 
 local DISALLOWED_CHARACTER_STATES = {
+	consumed = true,
 	grabbed = true,
 	mutant_charged = true,
 	pounced = true,
-	consumed = true
 }
 
 PlayerUnitAttackIntensityExtension.update = function (self, unit, dt, t, context)
@@ -78,51 +84,60 @@ PlayerUnitAttackIntensityExtension.update = function (self, unit, dt, t, context
 			if ignored_movement_states and ignored_movement_states[movement_state] then
 				data.intensity = 0
 				data.attack_allowed = true
-			else
-				local locked_in_melee = self._locked_in_melee
 
-				if data.locked_in_melee_check and locked_in_melee then
-					data.attack_allowed = false
-					data.intensity = data.reset
-				else
-					local state_name = character_state_component.state_name
+				break
+			end
 
-					if DISALLOWED_CHARACTER_STATES[state_name] then
-						data.attack_allowed = false
-						data.intensity = data.reset
-					else
-						local intensity = data.intensity
-						local override_grace_mod = 1
-						local decay_grace_timer = data.decay_grace_timer
+			local locked_in_melee = self._locked_in_melee
 
-						if intensity < LOW_INTENSITY_THRESHOLD then
-							override_grace_mod = LOW_INTENSITY_GRACE_MOD
-						elseif movement_state == "sprint" then
-							data.decay_grace_timer = 0
-							override_grace_mod = SPRINT_DECAY_MULTIPLIER
-						elseif num_occupied_slots == 0 then
-							override_grace_mod = ZERO_DOGPILE_DECAY_MULTIPLIER
-						end
+			if data.locked_in_melee_check and locked_in_melee then
+				data.attack_allowed = false
+				data.intensity = data.reset
 
-						if decay_grace_timer > 0 then
-							data.decay_grace_timer = math.max(decay_grace_timer - dt, 0)
-						elseif intensity > 0 then
-							local attack_allowed = data.attack_allowed
-							local decay = data.decay
-							decay = decay * override_grace_mod
+				break
+			end
 
-							if attack_allowed then
-								decay = decay * data.attack_allowed_decay_multiplier or decay
-							end
+			local state_name = character_state_component.state_name
 
-							local new_intensity = math.max(intensity - dt * decay, 0)
-							data.intensity = new_intensity
+			if DISALLOWED_CHARACTER_STATES[state_name] then
+				data.attack_allowed = false
+				data.intensity = data.reset
 
-							if new_intensity <= data.reset then
-								data.attack_allowed = true
-							end
-						end
-					end
+				break
+			end
+
+			local intensity = data.intensity
+			local override_grace_mod = 1
+			local decay_grace_timer = data.decay_grace_timer
+
+			if intensity < LOW_INTENSITY_THRESHOLD then
+				override_grace_mod = LOW_INTENSITY_GRACE_MOD
+			elseif movement_state == "sprint" then
+				data.decay_grace_timer = 0
+				override_grace_mod = SPRINT_DECAY_MULTIPLIER
+			elseif num_occupied_slots == 0 then
+				override_grace_mod = ZERO_DOGPILE_DECAY_MULTIPLIER
+			end
+
+			if decay_grace_timer > 0 then
+				data.decay_grace_timer = math.max(decay_grace_timer - dt, 0)
+
+				break
+			end
+
+			if intensity > 0 then
+				local attack_allowed = data.attack_allowed
+				local decay = data.decay
+
+				decay = decay * override_grace_mod
+				decay = attack_allowed and decay * data.attack_allowed_decay_multiplier or decay
+
+				local new_intensity = math.max(intensity - dt * decay, 0)
+
+				data.intensity = new_intensity
+
+				if new_intensity <= data.reset then
+					data.attack_allowed = true
 				end
 			end
 		until true
@@ -133,7 +148,7 @@ PlayerUnitAttackIntensityExtension._update_locked_in_melee = function (self, dt,
 	local locked_in_melee_timer = math.max(0, self._locked_in_melee_timer - t)
 	local timer_is_below_threshold = locked_in_melee_timer < LockedInMeleeSettings.delay
 
-	if timer_is_below_threshold and self._next_locked_in_melee_update < t then
+	if timer_is_below_threshold and t > self._next_locked_in_melee_update then
 		self:_check_locked_in_melee(t)
 
 		self._next_locked_in_melee_update = t + LockedInMeleeSettings.update_frequency
@@ -161,7 +176,7 @@ PlayerUnitAttackIntensityExtension._check_locked_in_melee = function (self, t)
 		local side = side_system.side_by_unit[self_unit]
 		local enemy_side_names = side:relation_side_names("enemy")
 		local position = POSITION_LOOKUP[self_unit]
-		local num_results = broadphase:query(position, radius, broadphase_results, enemy_side_names)
+		local num_results = broadphase.query(broadphase, position, radius, broadphase_results, enemy_side_names)
 		local total_challenge_rating = 0
 		local delay = LockedInMeleeSettings.delay
 		local needed_challenge_rating = Managers.state.difficulty:get_table_entry_by_challenge(LockedInMeleeSettings.needed_challenge_rating)
@@ -182,6 +197,7 @@ PlayerUnitAttackIntensityExtension._check_locked_in_melee = function (self, t)
 
 					if combat_range == "melee" then
 						local challenge_rating = breed.challenge_rating
+
 						total_challenge_rating = total_challenge_rating + challenge_rating
 					end
 
@@ -199,12 +215,15 @@ end
 PlayerUnitAttackIntensityExtension.add_intensity = function (self, intensity_type, intensity)
 	local data = self._intensity_data[intensity_type]
 	local decay_grace = data.decay_grace
+
 	data.decay_grace_timer = decay_grace
+
 	local current_intensity = data.intensity
 	local new_intensity = math.clamp(current_intensity + intensity, 0, data.attack_intensity_clamp or DEFAULT_ATTACK_INTENSITY_CLAMP)
+
 	data.intensity = new_intensity
 
-	if data.threshold < new_intensity then
+	if new_intensity > data.threshold then
 		data.attack_allowed = false
 	elseif not data.attack_allowed and new_intensity <= data.reset then
 		data.attack_allowed = true
@@ -214,7 +233,7 @@ end
 PlayerUnitAttackIntensityExtension.attack_allowed = function (self, intensity_type)
 	local intensity_data = self._intensity_data[intensity_type]
 	local t = Managers.time:time("gameplay")
-	local has_attack_allowed_timer = self._attack_allowed_timer < t
+	local has_attack_allowed_timer = t > self._attack_allowed_timer
 	local attack_allowed = intensity_data.attack_allowed
 
 	if attack_allowed and has_attack_allowed_timer then
@@ -246,6 +265,7 @@ PlayerUnitAttackIntensityExtension.total_intensity = function (self)
 
 	for _, data in pairs(intensity_data) do
 		local intensity = data.intensity
+
 		total_intensity = total_intensity + intensity
 	end
 
@@ -258,6 +278,7 @@ end
 
 PlayerUnitAttackIntensityExtension.add_to_locked_in_melee_timer = function (self, time_to_add)
 	local t = Managers.time:time("gameplay")
+
 	self._locked_in_melee_timer = t + time_to_add
 end
 
@@ -276,6 +297,7 @@ PlayerUnitAttackIntensityExtension.set_attacked = function (self)
 	local t = Managers.time:time("gameplay")
 	local attacked_allowed_time_range = AttackIntensitySettings.attacked_allowed_time_range
 	local diff_attacked_allowed_time_range = Managers.state.difficulty:get_table_entry_by_challenge(attacked_allowed_time_range)
+
 	self._attack_allowed_timer = t + math.random_range(diff_attacked_allowed_time_range[1], diff_attacked_allowed_time_range[2])
 end
 

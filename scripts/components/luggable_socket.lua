@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/luggable_socket.lua
+
 local LuggableSocket = component("LuggableSocket")
 
 LuggableSocket.init = function (self, unit)
@@ -10,9 +12,7 @@ LuggableSocket.init = function (self, unit)
 		local is_side_mission_socket = self:get_data(unit, "is_side_mission_socket")
 		local lock_offset_node = self:get_data(unit, "lock_offset_node")
 
-		if lock_offset_node == "" then
-			lock_offset_node = nil
-		end
+		lock_offset_node = (lock_offset_node ~= "" or nil) and lock_offset_node
 
 		luggable_socket_extension:setup_from_component(consume_luggable, is_side_mission_socket, lock_offset_node)
 	end
@@ -55,24 +55,24 @@ end
 
 LuggableSocket.component_data = {
 	consume_luggable = {
+		ui_name = "Consume Luggable",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Consume Luggable"
 	},
 	is_side_mission_socket = {
+		category = "Side Mission",
+		ui_name = "Is Side Mission Socket",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Is Side Mission Socket",
-		category = "Side Mission"
 	},
 	lock_offset_node = {
+		ui_name = "Lock Offset Node",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Lock Offset Node"
 	},
 	extensions = {
-		"LuggableSocketExtension"
-	}
+		"LuggableSocketExtension",
+	},
 }
 
 return LuggableSocket

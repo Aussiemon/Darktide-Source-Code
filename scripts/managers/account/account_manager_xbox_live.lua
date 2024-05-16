@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/account/account_manager_xbox_live.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
@@ -8,14 +10,14 @@ local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
 local Promise = require("scripts/foundation/utilities/promise")
 local AccountManagerXboxLive = class("AccountManagerXboxLive")
 local SIGNIN_STATES = {
-	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
-	loading_save = "loc_signin_load_save",
-	idle = "",
-	signin_profile = "loc_signin_acquiring_user_profile",
-	fetching_privileges = "loc_signin_fetch_privileges",
-	querying_storage = "loc_signin_query_storage",
 	acquiring_storage = "loc_signin_acquire_storage",
-	deleting_save = "loc_signin_delete_save"
+	deleting_save = "loc_signin_delete_save",
+	fetching_privileges = "loc_signin_fetch_privileges",
+	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
+	idle = "",
+	loading_save = "loc_signin_load_save",
+	querying_storage = "loc_signin_query_storage",
+	signin_profile = "loc_signin_acquiring_user_profile",
 }
 
 AccountManagerXboxLive.init = function (self)
@@ -163,7 +165,7 @@ AccountManagerXboxLive.signin_profile = function (self, signin_callback, optiona
 
 		self._signin_state = SIGNIN_STATES.fetching_privileges
 	else
-		local async_task, error_code = nil
+		local async_task, error_code
 		local users = XUser.users()
 
 		if #users > 1 then
@@ -330,6 +332,7 @@ end
 
 AccountManagerXboxLive._cb_user_signed_in = function (self, optional_input_device, async_block)
 	self._do_re_signin = nil
+
 	local user_id = XUser.get_user_result(async_block)
 
 	self:_set_user_data(user_id)
@@ -363,6 +366,7 @@ end
 AccountManagerXboxLive._set_user_data = function (self, user_id)
 	local user_info = XUser.user_info(user_id)
 	local gamertag = XUser.get_gamertag(user_id)
+
 	self._is_guest = user_info.guest
 	self._xuid = user_info.xuid
 	self._user_id = user_id
@@ -381,6 +385,7 @@ AccountManagerXboxLive._set_active_device = function (self, optional_input_devic
 
 	local device_type = optional_input_device.type()
 	local device_id = optional_input_device.device_id()
+
 	InputDevice.default_device_id[device_type] = device_id
 	self._active_controller = optional_input_device
 end
@@ -519,24 +524,24 @@ AccountManagerXboxLive._show_gamertag_popup = function (self)
 		self:_setup_friends_list()
 	else
 		local context = {
-			title_text = "loc_popup_info",
 			description_text = "loc_popup_desc_signed_in_gamertag",
+			title_text = "loc_popup_info",
 			description_text_params = {
-				gamertag = self._gamertag
+				gamertag = self._gamertag,
 			},
 			options = {
 				{
-					text = "loc_popup_button_confirm",
 					close_on_pressed = true,
-					callback = callback(self, "_setup_friends_list")
+					text = "loc_popup_button_confirm",
+					callback = callback(self, "_setup_friends_list"),
 				},
 				{
-					text = "loc_exit_to_title_display_name",
 					close_on_pressed = true,
 					hotkey = "back",
-					callback = callback(self, "return_to_title_screen")
-				}
-			}
+					text = "loc_exit_to_title_display_name",
+					callback = callback(self, "return_to_title_screen"),
+				},
+			},
 		}
 
 		Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -568,7 +573,7 @@ AccountManagerXboxLive._apply_render_settings = function (self, settings)
 			end
 		end
 
-		local valid = not setting.validation_function or setting:validation_function()
+		local valid = not setting.validation_function or setting.validation_function(setting)
 
 		if valid then
 			local apply_on_startup = setting.apply_on_startup
@@ -632,6 +637,7 @@ end
 
 AccountManagerXboxLive._handle_user_changes = function (self, dt, t)
 	local local_user_changed, user_state_changed, user_privileges_changed, user_device_association_changed = XUser.user_info_changed()
+
 	self._local_user_changed = local_user_changed or self._local_user_changed
 	self._user_state_changed = user_state_changed or self._user_state_changed
 	self._user_privileges_changed = user_privileges_changed or self._user_privileges_changed
@@ -683,7 +689,9 @@ AccountManagerXboxLive._update_active_profile = function (self)
 	if user then
 		self._is_guest = user.guest
 		self._user_id = user.id
+
 		local state = XUser.get_state(user.id)
+
 		profile_active = state ~= XUserState.SignedOut
 	end
 
@@ -765,34 +773,35 @@ end
 AccountManagerXboxLive._show_disconnect_error = function (self)
 	if self._active_controller then
 		local device_type = self._active_controller.type()
+
 		InputDevice.default_device_id[device_type] = nil
 	end
 
 	local context = {
-		title_text = "loc_popup_header_controller_disconnect_error",
 		description_text = "loc_popup_desc_signed_out_error",
+		title_text = "loc_popup_header_controller_disconnect_error",
 		priority_order = math.huge,
 		description_text_params = {
-			gamertag = self._gamertag
+			gamertag = self._gamertag,
 		},
 		options = {
 			{
+				close_on_pressed = true,
 				text = "loc_retry",
-				close_on_pressed = true,
-				callback = callback(self, "_cb_verify_profile")
+				callback = callback(self, "_cb_verify_profile"),
 			},
 			{
+				close_on_pressed = true,
 				text = "loc_select_profile",
-				close_on_pressed = true,
-				callback = callback(self, "_cb_open_profile_picker")
+				callback = callback(self, "_cb_open_profile_picker"),
 			},
 			{
-				text = "loc_exit_to_title_display_name",
 				close_on_pressed = true,
 				hotkey = "back",
-				callback = callback(self, "return_to_title_screen")
-			}
-		}
+				text = "loc_exit_to_title_display_name",
+				callback = callback(self, "return_to_title_screen"),
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -803,34 +812,35 @@ end
 AccountManagerXboxLive._show_signed_out_error = function (self)
 	if self._active_controller then
 		local device_type = self._active_controller.type()
+
 		InputDevice.default_device_id[device_type] = nil
 	end
 
 	local context = {
-		title_text = "loc_popup_header_signed_out_error",
 		description_text = "loc_popup_desc_signed_out_error",
+		title_text = "loc_popup_header_signed_out_error",
 		priority_order = math.huge,
 		description_text_params = {
-			gamertag = self._gamertag
+			gamertag = self._gamertag,
 		},
 		options = {
 			{
+				close_on_pressed = true,
 				text = "loc_retry",
-				close_on_pressed = true,
-				callback = callback(self, "_cb_verify_profile")
+				callback = callback(self, "_cb_verify_profile"),
 			},
 			{
+				close_on_pressed = true,
 				text = "loc_select_profile",
-				close_on_pressed = true,
-				callback = callback(self, "_cb_open_profile_picker")
+				callback = callback(self, "_cb_open_profile_picker"),
 			},
 			{
-				text = "loc_exit_to_title_display_name",
 				close_on_pressed = true,
 				hotkey = "back",
-				callback = callback(self, "return_to_title_screen")
-			}
-		}
+				text = "loc_exit_to_title_display_name",
+				callback = callback(self, "return_to_title_screen"),
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -845,11 +855,11 @@ AccountManagerXboxLive._show_fatal_error = function (self, title_text, descripti
 		description_text = description_text,
 		options = {
 			{
-				text = "loc_popup_button_close",
 				close_on_pressed = true,
-				callback = callback(self, "return_to_title_screen")
-			}
-		}
+				text = "loc_popup_button_close",
+				callback = callback(self, "return_to_title_screen"),
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

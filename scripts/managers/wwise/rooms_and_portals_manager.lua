@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise/rooms_and_portals_manager.lua
+
 local Component = require("scripts/utilities/component")
 local RoomsAndPortalsManager = class("RoomsAndPortalsManager")
 
@@ -24,7 +26,9 @@ RoomsAndPortalsManager.update = function (self, dt, t)
 			local reverb_aux_bus = room:get_data(unit, "reverb_aux_bus")
 			local environment_state = room:get_data(unit, "environment_state")
 			local room_id = WwiseWorld.add_room_unit(self._wwise_world, unit, priority, wall_occlusion, aux_send_to_self, reverb_aux_bus, environment_state)
+
 			self._rooms[room] = room_id
+
 			local ambient_event = room:get_data(unit, "ambient_event")
 
 			if ambient_event ~= "" then
@@ -98,7 +102,7 @@ RoomsAndPortalsManager.toggle_portal = function (self, portal, enabled)
 	else
 		self._portal_toggle_queue[#self._portal_toggle_queue + 1] = {
 			wwise_portal_component = portal,
-			enabled = enabled
+			enabled = enabled,
 		}
 	end
 end
@@ -122,7 +126,7 @@ RoomsAndPortalsManager._cleanup = function (self)
 end
 
 RoomsAndPortalsManager._check_portal_id = function (self, portal_id)
-	local INT32_MAX = 4294967295.0
+	local INT32_MAX = 4294967295
 
 	if portal_id == nil or portal_id == -1 or portal_id == INT32_MAX then
 		return false

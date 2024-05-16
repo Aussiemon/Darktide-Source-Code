@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_mechanism_verification_state.lua
+
 local RPCS = {
-	"rpc_check_mechanism_reply"
+	"rpc_check_mechanism_reply",
 }
 local LocalMechanismVerificationState = class("LocalMechanismVerificationState")
 
@@ -35,13 +37,14 @@ end
 
 LocalMechanismVerificationState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalMechanismVerificationState", "Timeout waiting for rpc_check_mechanism_reply")
 
 		return "timeout", {
-			game_reason = "timeout"
+			game_reason = "timeout",
 		}
 	end
 
@@ -51,7 +54,7 @@ LocalMechanismVerificationState.update = function (self, dt)
 		Log.info("LocalMechanismVerificationState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason
+			engine_reason = reason,
 		}
 	end
 
@@ -62,7 +65,7 @@ LocalMechanismVerificationState.update = function (self, dt)
 			Log.info("LocalMechanismVerificationState", "Mechanism mismatched, reason: %s", self._mismatch_reason)
 
 			return "mechanism mismatched", {
-				game_reason = "mechanism_mismatched"
+				game_reason = "mechanism_mismatched",
 			}
 		end
 	end

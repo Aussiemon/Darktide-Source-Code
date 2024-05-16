@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/crosshair/templates/crosshair_template_spray_n_pray.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local template = {}
@@ -5,11 +7,11 @@ local length = 12
 local thickness = 30
 local size = {
 	length,
-	thickness
+	thickness,
 }
 local center_size = {
 	4,
-	4
+	4,
 }
 local spread_distance = 10
 local default_offset_x = 0
@@ -17,8 +19,9 @@ local default_offset_y = 0
 local hit_default_distance = 10
 local hit_size = {
 	12,
-	2
+	2,
 }
+
 template.name = "spray_n_pray"
 template.size = size
 template.hit_size = hit_size
@@ -51,191 +54,191 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	local offset_up = {
 		0,
 		-(size[1] * 2 + center_half_width),
-		1
+		1,
 	}
 	local offset_down = {
 		0,
 		size[1] + center_half_width,
-		1
+		1,
 	}
 	local offset_left = {
 		-(size[1] * 2 + center_half_width),
 		0,
-		1
+		1,
 	}
 	local offset_right = {
 		size[1] + center_half_width,
 		0,
-		1
+		1,
 	}
 
 	return UIWidget.create_definition({
 		{
-			value = "content/ui/materials/hud/crosshairs/default_center",
-			style_id = "center",
 			pass_type = "texture",
+			style_id = "center",
+			value = "content/ui/materials/hud/crosshairs/default_center",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					0
+					0,
 				},
 				size = center_size,
-				color = UIHudSettings.color_tint_main_1
-			}
+				color = UIHudSettings.color_tint_main_1,
+			},
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			pass_type = "rotated_texture",
 			style_id = "hit_top_left",
-			pass_type = "rotated_texture",
+			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				offset = {
 					-center_half_width - hit_default_distance,
 					-center_half_width - hit_default_distance,
-					0
+					0,
 				},
 				size = {
 					hit_size[1],
-					hit_size[2]
+					hit_size[2],
 				},
 				pivot = {
 					hit_size[1],
-					hit_size[2] * 0.5
+					hit_size[2] * 0.5,
 				},
 				angle = -math.pi / 4,
 				color = {
 					255,
 					255,
 					255,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			pass_type = "rotated_texture",
 			style_id = "hit_bottom_left",
-			pass_type = "rotated_texture",
+			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				offset = {
 					-center_half_width - hit_default_distance,
 					center_half_width + hit_default_distance,
-					0
+					0,
 				},
 				size = {
 					hit_size[1],
-					hit_size[2]
+					hit_size[2],
 				},
 				pivot = {
 					hit_size[1],
-					hit_size[2] * 0.5
+					hit_size[2] * 0.5,
 				},
 				angle = math.pi / 4,
 				color = {
 					255,
 					255,
 					255,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
+			pass_type = "rotated_texture",
 			style_id = "hit_top_right",
-			pass_type = "rotated_texture",
+			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "left",
+				vertical_alignment = "center",
 				offset = {
 					center_half_width + hit_default_distance,
 					-center_half_width - hit_default_distance,
-					0
+					0,
 				},
 				size = {
 					hit_size[1],
-					hit_size[2]
+					hit_size[2],
 				},
 				pivot = {
 					0,
-					hit_size[2] * 0.5
+					hit_size[2] * 0.5,
 				},
 				angle = math.pi / 4,
 				color = {
 					255,
 					255,
 					255,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
-			style_id = "hit_bottom_right",
 			pass_type = "rotated_texture",
+			style_id = "hit_bottom_right",
+			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "left",
+				vertical_alignment = "center",
 				offset = {
 					center_half_width + hit_default_distance,
 					center_half_width + hit_default_distance,
-					0
+					0,
 				},
 				size = {
 					hit_size[1],
-					hit_size[2]
+					hit_size[2],
 				},
 				pivot = {
 					0,
-					hit_size[2] * 0.5
+					hit_size[2] * 0.5,
 				},
 				angle = -math.pi / 4,
 				color = {
 					255,
 					255,
 					255,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/hud/crosshairs/angle_spread",
-			style_id = "left",
 			pass_type = "texture",
+			style_id = "left",
+			value = "content/ui/materials/hud/crosshairs/angle_spread",
 			style = {
 				vertical_alignment = "center",
 				offset = offset_left,
 				default_offset = offset_left,
 				size = size,
-				color = UIHudSettings.color_tint_main_1
-			}
+				color = UIHudSettings.color_tint_main_1,
+			},
 		},
 		{
-			value = "content/ui/materials/hud/crosshairs/angle_spread",
-			style_id = "right",
 			pass_type = "texture_uv",
+			style_id = "right",
+			value = "content/ui/materials/hud/crosshairs/angle_spread",
 			style = {
 				vertical_alignment = "center",
 				uvs = {
 					{
 						1,
-						0
+						0,
 					},
 					{
 						0,
-						1
-					}
+						1,
+					},
 				},
 				offset = offset_right,
 				default_offset = offset_right,
 				size = size,
-				color = UIHudSettings.color_tint_main_1
-			}
-		}
+				color = UIHudSettings.color_tint_main_1,
+			},
+		},
 	}, scenegraph_id)
 end
 
@@ -254,8 +257,11 @@ template.update_function = function (parent, ui_renderer, widget, crosshair_temp
 		local spread_offset_y = spread_distance * pitch
 		local spread_offset_x = spread_distance * yaw
 		local left_style = style.left
+
 		left_style.offset[1] = left_style.default_offset[1] - spread_offset_x
+
 		local right_style = style.right
+
 		right_style.offset[1] = right_style.default_offset[1] + spread_offset_x
 	end
 
@@ -263,15 +269,22 @@ template.update_function = function (parent, ui_renderer, widget, crosshair_temp
 
 	if hit_alpha > 0 then
 		local top_left_style = style.hit_top_left
+
 		top_left_style.color = apply_color_values(top_left_style.color, hit_color or top_left_style.color, false, hit_alpha)
 		top_left_style.visible = true
+
 		local bottom_left_style = style.hit_bottom_left
+
 		bottom_left_style.color = apply_color_values(bottom_left_style.color, hit_color or bottom_left_style.color, false, hit_alpha)
 		bottom_left_style.visible = true
+
 		local top_right_style = style.hit_top_right
+
 		top_right_style.color = apply_color_values(top_right_style.color, hit_color or top_right_style.color, false, hit_alpha)
 		top_right_style.visible = true
+
 		local bottom_right_style = style.hit_bottom_right
+
 		bottom_right_style.color = apply_color_values(bottom_right_style.color, hit_color or bottom_right_style.color, false, hit_alpha)
 		bottom_right_style.visible = true
 	else

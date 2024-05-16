@@ -1,15 +1,17 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/projectile_locomotion.lua
+
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local MIN_TRAVEL_DISTANCE_TO_INTEGRATE = ProjectileLocomotionSettings.MIN_TRAVEL_DISTANCE_TO_INTEGRATE
-local ProjectileLocomotion = {
-	set_kinematic = function (unit, actor_id, kinematic)
-		if actor_id then
-			local dynamic_actor = Unit.actor(unit, actor_id)
+local ProjectileLocomotion = {}
 
-			Actor.set_kinematic(dynamic_actor, kinematic)
-		end
+ProjectileLocomotion.set_kinematic = function (unit, actor_id, kinematic)
+	if actor_id then
+		local dynamic_actor = Unit.actor(unit, actor_id)
+
+		Actor.set_kinematic(dynamic_actor, kinematic)
 	end
-}
+end
 
 local function _has_actor(unit, actor_name)
 	local actor_id = Unit.find_actor(unit, actor_name)
@@ -83,13 +85,13 @@ local LAST_NUM_HITS = 0
 
 ProjectileLocomotion.projectile_cast = function (physics_world, travel_position, new_position, travel_direction, travel_distance, collision_filter, radius, optional_skip_static, optional_statics_radius, optional_static_raycast)
 	local max_hits = 32
-	local hits = nil
+	local hits
 
 	if optional_skip_static then
 		hits = PhysicsWorld.linear_sphere_sweep(physics_world, travel_position, new_position, radius, max_hits, "types", "dynamics", "collision_filter", collision_filter) or NO_HITS
 	elseif optional_statics_radius or optional_static_raycast then
 		local all_dynamics_hits = PhysicsWorld.linear_sphere_sweep(physics_world, travel_position, new_position, radius, max_hits, "types", "dynamics", "collision_filter", collision_filter) or NO_HITS
-		local all_statics_hits = nil
+		local all_statics_hits
 
 		if optional_statics_radius then
 			all_statics_hits = PhysicsWorld.linear_sphere_sweep(physics_world, travel_position, new_position, optional_statics_radius, max_hits, "types", "statics", "collision_filter", collision_filter) or NO_HITS
@@ -97,17 +99,15 @@ ProjectileLocomotion.projectile_cast = function (physics_world, travel_position,
 			all_statics_hits = PhysicsWorld.immediate_raycast(physics_world, travel_position, travel_direction, travel_distance, "all", "types", "statics", "collision_filter", collision_filter) or NO_HITS
 		end
 
-		local dynamics_i = 1
-		local statics_i = 1
+		local dynamics_i, statics_i = 1, 1
 		local merged_hits = HITS
 		local merged_hits_i = 1
-		local dynamic_hit = all_dynamics_hits[dynamics_i]
-		local static_hit = all_statics_hits[statics_i]
+		local dynamic_hit, static_hit = all_dynamics_hits[dynamics_i], all_statics_hits[statics_i]
 
 		while dynamic_hit or static_hit do
 			local dynamics_distance = dynamic_hit and dynamic_hit.distance or math.huge
 			local statics_distance = static_hit and (static_hit.distance or static_hit[2]) or math.huge
-			local hit = nil
+			local hit
 
 			if dynamics_distance < statics_distance then
 				hit = dynamic_hit
@@ -137,8 +137,8 @@ ProjectileLocomotion.projectile_cast = function (physics_world, travel_position,
 end
 
 local DO_NOTHING_IMPACT_RESULTS = {
+	continue_straight = true,
 	stick = true,
-	continue_straight = true
 }
 local hit_units_this_frame = {}
 
@@ -149,11 +149,12 @@ ProjectileLocomotion.impact_detection_and_resolution = function (integration_dat
 	table.clear(hit_units_this_frame)
 
 	local target_unit_or_nil = integration_data.target_unit
-	local bounce_unit = nil
+	local bounce_unit
 	local times_ran = 0
 
 	repeat
 		times_ran = times_ran + 1
+
 		local bounced = false
 		local travel_position = integration_data.last_hit_detection_position
 		local travel_vector = new_position - travel_position
@@ -185,8 +186,10 @@ ProjectileLocomotion.impact_detection_and_resolution = function (integration_dat
 
 					if ProjectileLocomotion.check_collision(hit_unit, hit_position, integration_data, bounce_unit) then
 						local hit_normal = hit.normal or hit[3]
+
 						hit_units_this_frame[hit_unit] = true
-						local impact_result = nil
+
+						local impact_result
 
 						if damage_extension then
 							local is_target_unit = true
@@ -207,10 +210,12 @@ ProjectileLocomotion.impact_detection_and_resolution = function (integration_dat
 						elseif impact_result and DO_NOTHING_IMPACT_RESULTS[impact_result] then
 							if impact_result == "continue_straight" and true_flight_template and true_flight_template.true_flight_shard_impact_behaviour then
 								local new_direction = travel_direction + Vector3(0, 0, 1)
+
 								new_velocity = current_speed * 0.5 * new_direction
 							end
 						else
 							bounce_unit = hit_unit
+
 							local bounce_pos = Geometry.closest_point_on_line(hit_position + hit_normal * radius, travel_position, new_position)
 							local travel_to_bounce = bounce_pos - travel_position
 							local distance_to_bounce = Vector3.length(travel_to_bounce)
@@ -226,6 +231,7 @@ ProjectileLocomotion.impact_detection_and_resolution = function (integration_dat
 							end
 
 							integration_data.have_bounced = true
+
 							local coefficient_of_restitution = integration_data.coefficient_of_restitution
 
 							if HEALTH_ALIVE[hit_unit] and not used_generous_bouncing then

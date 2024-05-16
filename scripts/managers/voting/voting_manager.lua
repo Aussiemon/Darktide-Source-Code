@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_manager.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local VotingByImmateriumPartyImpl = require("scripts/managers/voting/voting_by_immaterium_party_impl")
 local VotingByNetworkImpl = require("scripts/managers/voting/voting_by_network_impl")
@@ -70,7 +72,7 @@ VotingManager.start_voting = function (self, template_name, params)
 
 	if not success then
 		return Promise.rejected({
-			fail_reason
+			fail_reason,
 		})
 	end
 

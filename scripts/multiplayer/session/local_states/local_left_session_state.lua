@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/local_states/local_left_session_state.lua
+
 local LocalLeftSessionState = class("LocalLeftSessionState")
 
 LocalLeftSessionState.init = function (self, state_machine, shared_state)
@@ -6,11 +8,12 @@ end
 
 LocalLeftSessionState.enter = function (self, reason)
 	local shared_state = self._shared_state
+
 	reason.peer_id = shared_state.peer_id
 	reason.channel_id = shared_state.channel_id
 	shared_state.event_list[#shared_state.event_list + 1] = {
 		name = "session_left",
-		parameters = reason
+		parameters = reason,
 	}
 
 	if shared_state.has_joined_session then

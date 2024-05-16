@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/networked_unique_randomize.lua
+
 local Component = require("scripts/utilities/component")
 local NetworkedUniqueRandomize = component("NetworkedUniqueRandomize")
 
@@ -90,41 +92,41 @@ end
 
 NetworkedUniqueRandomize.component_data = {
 	min_rand = {
-		ui_type = "number",
+		max = 18,
 		min = 1,
 		step = 1,
-		value = 1,
 		ui_name = "Min Randomize",
-		max = 18
+		ui_type = "number",
+		value = 1,
 	},
 	max_rand = {
-		ui_type = "number",
+		max = 18,
 		min = 1,
 		step = 1,
-		value = 18,
 		ui_name = "Max Randomize",
-		max = 18
+		ui_type = "number",
+		value = 18,
 	},
 	queue_loop = {
+		ui_name = "Queue Loop",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Queue Loop"
 	},
 	inputs = {
 		get_next = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		reset = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		new_table = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
-	extensions = {}
+	extensions = {},
 }
 
 return NetworkedUniqueRandomize

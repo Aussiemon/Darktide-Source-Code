@@ -1,29 +1,31 @@
+﻿-- chunkname: @scripts/ui/views/video_view/video_view_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	video_canvas = {
-		vertical_alignment = "center",
+		horizontal_alignment = "center",
 		parent = "screen",
 		scale = "aspect_ratio",
-		horizontal_alignment = "center",
+		vertical_alignment = "center",
 		size = {
 			1920,
-			1080
+			1080,
 		},
 		position = {
 			0,
 			0,
-			1
-		}
-	}
+			1,
+		},
+	},
 }
 local widget_definitions = {
 	video = UIWidget.create_definition({
 		{
 			pass_type = "video",
-			value_id = "video_path"
-		}
+			value_id = "video_path",
+		},
 	}, "video_canvas"),
 	background = UIWidget.create_definition({
 		{
@@ -33,25 +35,25 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0
-				}
-			}
-		}
-	}, "screen")
+					0,
+				},
+			},
+		},
+	}, "screen"),
 }
 local legend_inputs = {
 	{
-		input_action = "skip_cinematic_hold",
-		display_name = "loc_cutscene_skip_no_input",
 		alignment = "left_alignment",
-		use_mouse_hold = true,
+		display_name = "loc_cutscene_skip_no_input",
+		input_action = "skip_cinematic_hold",
+		key = "hold_skip",
 		on_pressed_callback = "on_skip_pressed",
-		key = "hold_skip"
-	}
+		use_mouse_hold = true,
+	},
 }
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	legend_inputs = legend_inputs
+	legend_inputs = legend_inputs,
 }

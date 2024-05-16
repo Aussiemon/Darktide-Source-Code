@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_zone/mission_objective_zone_capture_extension.lua
+
 local MissionObjectiveZoneCaptureExtension = class("MissionObjectiveZoneCaptureExtension", "MissionObjectiveZoneBaseExtension")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SERVER_STATES = table.enum("progress_inactive", "progress_active", "progress_finished")
@@ -12,7 +14,9 @@ MissionObjectiveZoneCaptureExtension.init = function (self, extension_init_conte
 	self._networked_timer_extension = ScriptUnit.extension(unit, "networked_timer_system")
 	self._current_server_state = SERVER_STATES.progress_inactive
 	self._network_timer_state = NETWORK_TIMER_STATES.pause
+
 	local side_system = Managers.state.extension:system("side_system")
+
 	self._player_side = side_system:get_default_player_side_name()
 	self._side_system = side_system
 end
@@ -37,7 +41,7 @@ end
 
 MissionObjectiveZoneCaptureExtension._update_server = function (self)
 	local fulfill_in_zone_check, _ = self:_players_fulfill_in_zone_check()
-	local new_state = nil
+	local new_state
 
 	if self._current_server_state == SERVER_STATES.progress_inactive then
 		if fulfill_in_zone_check then
@@ -83,8 +87,7 @@ MissionObjectiveZoneCaptureExtension._players_fulfill_in_zone_check = function (
 	local side_system = self._side_system
 	local side = side_system:get_side_from_name(side_name)
 	local valid_player_units = side.valid_player_units
-	local players_in_zone = 0
-	local total_players = #valid_player_units
+	local players_in_zone, total_players = 0, #valid_player_units
 
 	for i = 1, total_players do
 		local player_unit = valid_player_units[i]

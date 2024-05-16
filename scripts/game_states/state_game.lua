@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/state_game.lua
+
 require("core/volumetrics/lua/volumetrics_flow_callbacks")
 require("core/wwise/lua/wwise_flow_callbacks")
 require("scripts/global_tables")
@@ -72,10 +74,14 @@ local StateGame = class("StateGame")
 
 StateGame.on_enter = function (self, parent, params)
 	local event_delegate = NetworkEventDelegate:new()
+
 	self._event_delegate = event_delegate
+
 	local approve_channel_delegate = ApproveChannelDelegate:new()
+
 	self._approve_channel_delegate = approve_channel_delegate
 	self._vo_sources_cache = VOSourcesCache:new()
+
 	local creation_context = {
 		network_receive_function = function (dt)
 			Network.update_receive(dt, self._event_delegate.event_table)
@@ -85,7 +91,7 @@ StateGame.on_enter = function (self, parent, params)
 		network_transmit_function = function (dt)
 			Network.update_transmit()
 		end,
-		vo_sources_cache = self._vo_sources_cache
+		vo_sources_cache = self._vo_sources_cache,
 	}
 
 	self:_init_managers(params.package_manager, params.localization_manager, event_delegate, approve_channel_delegate)
@@ -99,9 +105,11 @@ StateGame.on_enter = function (self, parent, params)
 	end
 
 	local start_params = {}
-	local start_state = nil
+	local start_state
+
 	start_state = StateSplash
 	start_params.is_booting = true
+
 	local state_change_callbacks = {}
 
 	if not DEDICATED_SERVER then
@@ -122,21 +130,21 @@ StateGame.on_enter = function (self, parent, params)
 end
 
 local function _connection_options(is_dedicated_hub_server, is_dedicated_mission_server)
-	local options = nil
+	local options
 
 	if GameParameters.network_wan or GameParameters.prod_like_backend then
 		if DEDICATED_SERVER then
 			options = {
-				project_hash = "bishop",
 				network_platform = "wan_server",
+				project_hash = "bishop",
 				wan_port = GameParameters.wan_server_port,
-				argument_hash = DevParameters.network_hash
+				argument_hash = DevParameters.network_hash,
 			}
 		else
 			options = {
-				project_hash = "bishop",
 				network_platform = "wan_client",
-				argument_hash = DevParameters.network_hash
+				project_hash = "bishop",
+				argument_hash = DevParameters.network_hash,
 			}
 		end
 	end
@@ -182,12 +190,13 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	local version_id = PLATFORM .. "#" .. (APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or "")
 	local language = Managers.localization:language()
+
 	Managers.backend = BackendManager:new(function ()
 		return {
 			["request-id"] = math.uuid(),
 			["platform-name"] = version_id,
 			["accept-language"] = language,
-			["is-modded"] = GameParameters.is_modded_crashify_property or nil
+			["is-modded"] = GameParameters.is_modded_crashify_property or nil,
 		}
 	end)
 	Managers.steam = SteamManager:new()
@@ -200,7 +209,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	local is_dedicated_hub_server = false
 	local is_dedicated_mission_server = false
-	local mechanism_name = nil
+	local mechanism_name
 
 	if is_dedicated_mission_server then
 		mechanism_name = "idle"
@@ -209,7 +218,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	end
 
 	Managers.mechanism = MechanismManager:new(event_delegate, mechanism_name, {
-		mission_name = GameParameters.mission
+		mission_name = GameParameters.mission,
 	})
 	Managers.connection = ConnectionManager:new(_connection_options(is_dedicated_hub_server, is_dedicated_mission_server), event_delegate, approve_channel_delegate)
 	Managers.multiplayer_session = MultiplayerSessionManager:new()
@@ -232,8 +241,10 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	end
 
 	Managers.stats = StatsManager:new(not DEDICATED_SERVER, event_delegate)
+
 	local use_batched_saving = is_dedicated_mission_server and GameParameters.save_achievements_in_batch
 	local broadcast_unlocks = is_dedicated_mission_server
+
 	Managers.achievements = AchievementsManager:new(not DEDICATED_SERVER, event_delegate, use_batched_saving, broadcast_unlocks)
 	Managers.voting = VotingManager:new(event_delegate)
 	Managers.progression = ProgressionManager:new()

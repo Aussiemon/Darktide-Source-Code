@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/renegade_captain_powermaul_ground_slam.lua
+
 local Component = require("scripts/utilities/component")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local SLOT_ITEM_NAME = "slot_powermaul"
 local FX_SOURCE_NAME = "fx_sweep"
 local VFX = "content/fx/particles/enemies/renegade_captain/renegade_captain_sweep_trail"
 local resources = {
-	vfx = VFX
+	vfx = VFX,
 }
 
 local function _start_vfx(unit, position, node, template_data, template_context)
@@ -31,9 +33,12 @@ local effect_template = {
 
 		template_context.attachment_unit = attachment_unit
 		template_context.node_index = node_index
+
 		local unit_components = Component.get_components_by_name(attachment_unit, "WeaponMaterialVariables")
+
 		template_data.unit_components = unit_components
 		template_data.attachment_unit = attachment_unit
+
 		local world = template_context.world
 		local t = World.time(world)
 
@@ -56,7 +61,7 @@ local effect_template = {
 		for _, component in pairs(unit_components) do
 			component:set_stop_time(t, template_data.attachment_unit)
 		end
-	end
+	end,
 }
 
 return effect_template

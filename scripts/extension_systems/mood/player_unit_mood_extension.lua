@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mood/player_unit_mood_extension.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -8,19 +10,25 @@ local mood_types = MoodSettings.mood_types
 local mood_status = MoodSettings.status
 local num_moods = MoodSettings.num_moods
 local CLIENT_RPCS = {
-	"rpc_trigger_timed_mood"
+	"rpc_trigger_timed_mood",
 }
 local PlayerUnitMoodExtension = class("PlayerUnitMoodExtension")
 
 PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, nil_or_game_object_id)
 	self._world = extension_init_context.world
 	self._unit = unit
+
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
+
 	local player = extension_init_data.player
+
 	self._player = player
 	self._is_local_human = not player.remote and self._player:is_human_controlled()
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._unit_data_extension = unit_data_extension
 	self._character_state_read_component = unit_data_extension:read_component("character_state")
@@ -34,13 +42,14 @@ PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, ext
 	self._toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 	self._suppression_extension = ScriptUnit.extension(unit, "suppression_system")
 	self._force_field_system = Managers.state.extension:system("force_field_system")
+
 	local moods_data = Script.new_map(num_moods)
 
 	for mood_type, _ in pairs(mood_types) do
 		moods_data[mood_type] = {
 			entered_t = math.huge,
 			removed_t = math.huge,
-			status = mood_status.inactive
+			status = mood_status.inactive,
 		}
 	end
 
@@ -48,6 +57,7 @@ PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, ext
 
 	if not is_server then
 		local network_event_delegate = extension_init_context.network_event_delegate
+
 		self._network_event_delegate = network_event_delegate
 		self._game_object_id = nil_or_game_object_id
 
@@ -96,7 +106,7 @@ end
 PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_knocked_down = PlayerUnitStatus.is_knocked_down(self._character_state_read_component)
 	local is_in_critical_health, critical_health_status = PlayerUnitStatus.is_in_critical_health(self._health_extension, self._toughness_extension)
-	local critical_health = is_in_critical_health and CRITICAL_HEALTH_LIMIT <= critical_health_status
+	local critical_health = is_in_critical_health and critical_health_status >= CRITICAL_HEALTH_LIMIT
 	local no_toughness_left = PlayerUnitStatus.no_toughness_left(self._toughness_extension)
 	local entered_toughness_cooldown = self._entered_toughness_cooldown and t < self._entered_toughness_cooldown
 	local is_suppressed = self._suppression_extension:has_high_suppression()
@@ -141,7 +151,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		veteran_combat_ability_stance_active = false
 	end
 
-	local psyker_combat_ability_shout_active, ogryn_combat_ability_shout_active = nil
+	local psyker_combat_ability_shout_active, ogryn_combat_ability_shout_active
 	local combat_ability_active = self._combat_ability_read_component.active
 
 	if combat_ability_active then

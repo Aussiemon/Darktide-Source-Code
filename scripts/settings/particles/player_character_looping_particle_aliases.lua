@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/particles/player_character_looping_particle_aliases.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local armor_types = ArmorSettings.types
@@ -12,8 +14,8 @@ local PlayerCharacterLoopingParticleAliases = {
 		exclude_from_unit_data_components = true,
 		particle_alias = "melee_sticky_loop",
 		external_properties = {
-			armor_type = armor_types_array
-		}
+			armor_type = armor_types_array,
+		},
 	},
 	ranged_charging = {
 		particle_alias = "ranged_charging",
@@ -27,32 +29,32 @@ local PlayerCharacterLoopingParticleAliases = {
 					local charge_level = action_module_charge_component.charge_level
 
 					return charge_level, charge_level, charge_level
-				end
-			}
-		}
+				end,
+			},
+		},
 	},
 	weapon_overload_loop = {
 		exclude_from_unit_data_components = true,
 		particle_alias = "weapon_overload_loop",
-		external_properties = {}
+		external_properties = {},
 	},
 	chain_lightning_link = {
 		exclude_from_unit_data_components = true,
 		particle_alias = "chain_lightning_link",
-		external_properties = {}
+		external_properties = {},
 	},
 	chain_lightning_impact = {
 		exclude_from_unit_data_components = true,
 		particle_alias = "chain_lightning_impact",
-		external_properties = {}
+		external_properties = {},
 	},
 	plasma_venting = {
 		particle_alias = "plasma_venting",
-		external_properties = {}
+		external_properties = {},
 	},
 	psyker_smite_buildup = {
 		particle_alias = "psyker_smite_buildup",
-		external_properties = {}
+		external_properties = {},
 	},
 	psyker_biomancer_soul = {
 		particle_alias = "psyker_biomancer_soul",
@@ -74,14 +76,14 @@ local PlayerCharacterLoopingParticleAliases = {
 					end
 
 					return 0
-				end
-			}
-		}
+				end,
+			},
+		},
 	},
 	weapon_special_loop = {
 		exclude_from_unit_data_components = true,
 		particle_alias = "weapon_special_loop",
-		external_properties = {}
+		external_properties = {},
 	},
 	critical_health_loop = {
 		particle_alias = "critical_health",
@@ -89,8 +91,8 @@ local PlayerCharacterLoopingParticleAliases = {
 		external_properties = {},
 		variables = {
 			{
-				variable_name = "material_variable_d4e3dd67",
 				cloud_name = "cloud_2",
+				variable_name = "material_variable_d4e3dd67",
 				variable_type = "material_scalar",
 				func = function (context)
 					local health_extension = context.health_extension
@@ -99,15 +101,15 @@ local PlayerCharacterLoopingParticleAliases = {
 					local scalar = math.ease_exp(critical_health_status)
 
 					return scalar
-				end
-			}
-		}
+				end,
+			},
+		},
 	},
 	equipped_item_passive_loop = {
 		exclude_from_unit_data_components = true,
 		particle_alias = "equipped_item_passive",
-		external_properties = {}
-	}
+		external_properties = {},
+	},
 }
 
 return PlayerCharacterLoopingParticleAliases

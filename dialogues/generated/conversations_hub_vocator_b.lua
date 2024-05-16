@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_vocator_b.lua
+
 local conversations_hub_vocator_b = {
 	hub_propaganda_announcement = {
 		randomize_indexes_n = 0,
@@ -32,7 +34,7 @@ local conversations_hub_vocator_b = {
 			"loc_vocator_b__hub_propaganda_announcement_27",
 			"loc_vocator_b__hub_propaganda_announcement_28",
 			"loc_vocator_b__hub_propaganda_announcement_29",
-			"loc_vocator_b__hub_propaganda_announcement_30"
+			"loc_vocator_b__hub_propaganda_announcement_30",
 		},
 		sound_events_duration = {
 			6.985813,
@@ -64,7 +66,7 @@ local conversations_hub_vocator_b = {
 			6.676313,
 			6.057334,
 			5.562146,
-			7.852396
+			7.852396,
 		},
 		sound_event_weights = {
 			0.03333334,
@@ -96,10 +98,10 @@ local conversations_hub_vocator_b = {
 			0.03333334,
 			0.03333334,
 			0.03333334,
-			0.03333334
+			0.03333334,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_vocator_b", conversations_hub_vocator_b)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_discard.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Pickups = require("scripts/settings/pickup/pickups")
@@ -8,6 +10,7 @@ ActionDiscard.init = function (self, action_context, ...)
 	ActionDiscard.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_component = unit_data_extension:read_component("action_place")
 	self._weapon_system = Managers.state.extension:system("weapon_system")
 end
@@ -43,7 +46,7 @@ ActionDiscard._discard = function (self, action_settings)
 
 	if pickup_name then
 		local pickup_system = Managers.state.extension:system("pickup_system")
-		local placed_unit = nil
+		local placed_unit
 
 		if player_or_nil then
 			placed_unit = pickup_system:player_spawn_pickup(pickup_name, position, rotation, player_or_nil, player_or_nil:session_id())
@@ -62,7 +65,7 @@ ActionDiscard._discard = function (self, action_settings)
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[self._player_unit]
 		local side_id = side.side_id
-		local unit_name, material = nil
+		local unit_name, material
 
 		Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, side_id, deployable_settings)
 	end

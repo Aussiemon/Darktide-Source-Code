@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_meat_grinder_vo.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "hub_rumour_cult_01_a"
 DialogueLookup[DialogueLookup_n + 2] = "hub_rumour_escalation_01_a"
 DialogueLookup[DialogueLookup_n + 3] = "hub_rumour_hub_crew_01_a"

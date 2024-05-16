@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/utilities/main_path_queries.lua
+
 local MainPathQueries = {}
 
 MainPathQueries.segment_has_marker_type = function (path_markers, main_path_segment_index, marker_type)
-	local has_marker_type = nil
+	local has_marker_type
 
 	for i = 1, #path_markers do
 		local path_marker = path_markers[i]
@@ -19,19 +21,15 @@ MainPathQueries.segment_has_marker_type = function (path_markers, main_path_segm
 end
 
 MainPathQueries.closest_position = function (position, optional_search_main_path_segment_index, optional_breaks_order)
-	local start_node_index, end_node_index = nil
+	local start_node_index, end_node_index
 
 	if optional_search_main_path_segment_index then
-		if optional_search_main_path_segment_index == 1 then
-			start_node_index = 1
-		else
-			start_node_index = optional_breaks_order[optional_search_main_path_segment_index - 1] + 1
-		end
-
+		start_node_index = optional_search_main_path_segment_index == 1 and 1 or optional_breaks_order[optional_search_main_path_segment_index - 1] + 1
 		end_node_index = optional_breaks_order[optional_search_main_path_segment_index]
 	end
 
 	local closest_position, travel_distance, travel_percentage, main_path_node_index, main_path_segment_index = EngineOptimized.closest_pos_at_main_path(position, start_node_index, end_node_index)
+
 	main_path_node_index = main_path_node_index + 1
 
 	return closest_position, travel_distance, travel_percentage, main_path_node_index, main_path_segment_index
@@ -39,6 +37,7 @@ end
 
 MainPathQueries.closest_position_between_nodes = function (position, start_node_index, end_node_index)
 	local closest_position, travel_distance, travel_percentage, main_path_node_index, main_path_segment_index = EngineOptimized.closest_pos_at_main_path(position, start_node_index, end_node_index)
+
 	main_path_node_index = main_path_node_index + 1
 
 	return closest_position, travel_distance, travel_percentage, main_path_node_index, main_path_segment_index
@@ -57,11 +56,7 @@ MainPathQueries.is_main_path_registered = function ()
 end
 
 MainPathQueries.generate_unified_main_path = function (main_path_segments)
-	local unified_path = {}
-	local unified_travel_distances = {}
-	local breaks = {}
-	local breaks_order = {}
-	local segment_lookup = {}
+	local unified_path, unified_travel_distances, breaks, breaks_order, segment_lookup = {}, {}, {}, {}, {}
 	local k = 1
 	local num_main_path_segments = #main_path_segments
 
@@ -76,6 +71,7 @@ MainPathQueries.generate_unified_main_path = function (main_path_segments)
 		end
 
 		breaks_order[i] = break_index
+
 		local travel_distances = main_path_segment.travel_distances
 
 		for j = 1, num_nodes do

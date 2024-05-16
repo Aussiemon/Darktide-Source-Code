@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/player_unit_status.lua
+
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local critical_health = PlayerCharacterConstants.critical_health
@@ -5,83 +7,83 @@ local HEALTH_PERCENT_LIMIT = critical_health.health_percent_limit
 local TOUGHNESS_PERCENT_LIMIT = critical_health.toughness_percent_limit
 local PlayerUnitStatus = {}
 local DISABLED_STATES = {
-	ledge_hanging = true,
-	warp_grabbed = true,
-	dead = true,
-	hogtied = true,
-	grabbed = true,
 	catapulted = true,
-	knocked_down = true,
 	consumed = true,
-	netted = true,
+	dead = true,
+	grabbed = true,
+	hogtied = true,
+	knocked_down = true,
+	ledge_hanging = true,
 	mutant_charged = true,
-	pounced = true
+	netted = true,
+	pounced = true,
+	warp_grabbed = true,
 }
 local REQUIRES_HELP = {
-	ledge_hanging = true,
-	warp_grabbed = true,
-	hogtied = true,
-	grabbed = true,
-	knocked_down = true,
 	consumed = true,
-	netted = true,
+	grabbed = true,
+	hogtied = true,
+	knocked_down = true,
+	ledge_hanging = true,
 	mutant_charged = true,
-	pounced = true
+	netted = true,
+	pounced = true,
+	warp_grabbed = true,
 }
 local REQUIRES_ALLIED_INTERACTION_HELP = {
-	netted = true,
+	hogtied = true,
 	knocked_down = true,
 	ledge_hanging = true,
-	hogtied = true
+	netted = true,
 }
 local OBJECTIVE_INTERACTION_STATES = {
 	interacting = true,
 	sprinting = true,
-	walking = true
+	walking = true,
 }
 local VALID_END_ZONE_STATES = {
-	stunned = true,
-	ladder_top_leaving = true,
-	ladder_top_entering = true,
-	hogtied = false,
-	sliding = true,
 	catapulted = true,
-	sprinting = true,
 	consumed = true,
-	jumping = true,
-	lunging = true,
-	ladder_climbing = true,
-	mutant_charged = true,
-	interacting = true,
+	dead = true,
 	dodging = true,
-	pounced = true,
-	minigame = true,
-	warp_grabbed = true,
-	walking = true,
-	ledge_vaulting = true,
+	exploding = false,
 	falling = true,
 	grabbed = true,
+	hogtied = false,
 	hub_emote = false,
-	dead = true,
-	ledge_hanging = false,
-	netted = false,
-	ledge_hanging_pull_up = true,
+	hub_jog = false,
+	interacting = true,
+	jumping = true,
 	knocked_down = false,
-	exploding = false,
+	ladder_climbing = true,
+	ladder_top_entering = true,
+	ladder_top_leaving = true,
+	ledge_hanging = false,
 	ledge_hanging_falling = false,
-	hub_jog = false
+	ledge_hanging_pull_up = true,
+	ledge_vaulting = true,
+	lunging = true,
+	minigame = true,
+	mutant_charged = true,
+	netted = false,
+	pounced = true,
+	sliding = true,
+	sprinting = true,
+	stunned = true,
+	walking = true,
+	warp_grabbed = true,
 }
 local MISSION_FAILURE_DEAD_STATES = {
+	dead = true,
 	hogtied = true,
-	dead = true
 }
 local MISSION_FAILURE_DISABLED_STATES = {
-	netted = true,
-	warp_grabbed = true,
-	ledge_hanging = true,
+	dead = true,
 	hogtied = true,
 	knocked_down = true,
-	dead = true
+	ledge_hanging = true,
+	netted = true,
+	warp_grabbed = true,
 }
 local KNOCKED_DOWN_STATE_NAME = "knocked_down"
 local CATAPULTED_STATE_NAME = "catapulted"
@@ -247,11 +249,12 @@ PlayerUnitStatus.is_in_critical_health = function (health_extension, toughness_e
 	return is_in_critical_health, critical_health_status
 end
 
-local AbilityTemplate, Action = nil
+local AbilityTemplate, Action
 
 PlayerUnitStatus.is_aiming_lunge = function (combat_ability_action_read_component)
 	AbilityTemplate = AbilityTemplate or require("scripts/utilities/ability/ability_template")
 	Action = Action or require("scripts/utilities/weapon/action")
+
 	local ability_template = AbilityTemplate.current_ability_template(combat_ability_action_read_component)
 	local _, current_action_settings = Action.current_action(combat_ability_action_read_component, ability_template)
 	local current_action_kind = current_action_settings and current_action_settings.kind

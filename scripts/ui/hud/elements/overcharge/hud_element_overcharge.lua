@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/overcharge/hud_element_overcharge.lua
+
 local Definitions = require("scripts/ui/hud/elements/overcharge/hud_element_overcharge_definitions")
 local HudElementOverchargeSettings = require("scripts/ui/hud/elements/overcharge/hud_element_overcharge_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -15,6 +17,7 @@ HudElementOvercharge.init = function (self, parent, draw_layer, start_scale)
 	self._overheat_level = 0
 	self._overheat_alpha_multiplier = 0
 	self._death_warning_alpha_multiplier = 0
+
 	local weapon_slots = {}
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 
@@ -39,7 +42,9 @@ end
 
 HudElementOvercharge._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local snap_pixel_positions = render_settings.snap_pixel_positions
+
 	render_settings.snap_pixel_positions = true
+
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
@@ -64,6 +69,7 @@ HudElementOvercharge._update_overcharge = function (self, dt)
 
 		if player_unit_data then
 			local warp_charge_component = player_unit_data:read_component("warp_charge")
+
 			warp_charge_level = warp_charge_component.current_percentage
 		end
 	end
@@ -97,20 +103,23 @@ HudElementOvercharge._update_overcharge = function (self, dt)
 
 	local old_warning_text = widget.content.warning_text
 	local new_warning_text = "" .. string.format("%.0f%%", warp_charge_level * 100)
+
 	widget.content.warning_text = new_warning_text
 
 	if old_warning_text ~= new_warning_text then
 		widget.dirty = true
 	end
 
-	local visible = EPSILON < warp_charge_level
+	local visible = warp_charge_level > EPSILON
+
 	self._warp_charge_alpha_multiplier = self:_update_visibility(dt, visible, self._warp_charge_alpha_multiplier)
+
 	local alpha_multiplier = math.clamp(self._warp_charge_alpha_multiplier * 0.5 + warp_charge_level * 0.5, 0, 1)
 
-	if EPSILON < math.abs((widget.alpha_multiplier or 0) - alpha_multiplier) then
+	if math.abs((widget.alpha_multiplier or 0) - alpha_multiplier) > EPSILON then
 		widget.alpha_multiplier = alpha_multiplier
 		widget.dirty = true
-		widget.visible = EPSILON < alpha_multiplier
+		widget.visible = alpha_multiplier > EPSILON
 	end
 
 	self._warp_charge_level = warp_charge_level
@@ -138,6 +147,7 @@ HudElementOvercharge._update_overheat = function (self, dt)
 					if slot_configuration.slot_type == "weapon" then
 						local slot_component = player_unit_data:read_component(wielded_slot)
 						local overheat_current_percentage = slot_component.overheat_current_percentage
+
 						overheat_level = overheat_current_percentage
 					end
 				end
@@ -148,6 +158,7 @@ HudElementOvercharge._update_overheat = function (self, dt)
 					local weapon_slot = weapon_slots[i]
 					local slot_component = player_unit_data:read_component(weapon_slot)
 					local overheat_current_percentage = slot_component.overheat_current_percentage
+
 					overheat_level = math.max(overheat_current_percentage, overheat_level)
 				end
 			end
@@ -177,6 +188,7 @@ HudElementOvercharge._update_overheat = function (self, dt)
 
 	local old_warning_text = widget.content.warning_text
 	local new_warning_text = "" .. string.format("%.0f%%", overheat_level * 100)
+
 	widget.content.warning_text = new_warning_text
 
 	if old_warning_text ~= new_warning_text then
@@ -184,13 +196,15 @@ HudElementOvercharge._update_overheat = function (self, dt)
 	end
 
 	local visible = overheat_level > 0
+
 	self._overheat_alpha_multiplier = self:_update_visibility(dt, visible, self._overheat_alpha_multiplier)
+
 	local alpha_multiplier = math.clamp(self._overheat_alpha_multiplier * 0.5 + overheat_level, 0, 1)
 
-	if EPSILON < math.abs((widget.alpha_multiplier or 0) - alpha_multiplier) then
+	if math.abs((widget.alpha_multiplier or 0) - alpha_multiplier) > EPSILON then
 		widget.alpha_multiplier = alpha_multiplier
 		widget.dirty = true
-		widget.visible = EPSILON < alpha_multiplier
+		widget.visible = alpha_multiplier > EPSILON
 	end
 
 	self._overheat_level = overheat_level
@@ -198,8 +212,9 @@ end
 
 HudElementOvercharge._update_visibility = function (self, dt, visible, previous_alpha_multiplier)
 	previous_alpha_multiplier = previous_alpha_multiplier or 0
+
 	local alpha_speed = 5
-	local alpha_multiplier = nil
+	local alpha_multiplier
 
 	if visible then
 		alpha_multiplier = math.min(previous_alpha_multiplier + dt * alpha_speed, 1)
@@ -250,14 +265,14 @@ HudElementOvercharge._animate_widget_warnings = function (self, widget, value_fr
 
 	if font_size_threshold then
 		local font_size = 0
-		local new_threshold_index, animation_size_fraction = nil
+		local new_threshold_index, animation_size_fraction
 		local wanted_font_size = font_size
-		local wanted_color = nil
+		local wanted_color
 
 		for i = #font_size_threshold, 1, -1 do
 			local font_size_data = font_size_threshold[i]
 
-			if font_size_data.threshold <= value_fraction then
+			if value_fraction >= font_size_data.threshold then
 				font_size = font_size_data.font_size
 				wanted_color = font_size_data.color
 				animation_size_fraction = font_size_data.animation_size_fraction
@@ -294,6 +309,7 @@ HudElementOvercharge._animate_widget_warnings = function (self, widget, value_fr
 			local extra_font_anim_size = warning_text_style.extra_font_anim_size
 			local animate_in = false
 			local anim_progress = self:_get_animation_progress(dt, warning_text_style.font_anim_progress, animate_in, anim_speed)
+
 			warning_text_style.font_size = font_size + math.easeInCubic(anim_progress) * extra_font_anim_size
 			warning_text_style.font_anim_progress = anim_progress
 
@@ -310,6 +326,7 @@ end
 
 HudElementOvercharge._get_animation_progress = function (self, dt, progress, animate_in, anim_speed)
 	anim_speed = anim_speed or 5
+
 	local anim_progress = progress or 0
 
 	if animate_in then

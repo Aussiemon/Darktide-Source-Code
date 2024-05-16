@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/utilities/aim_assist.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local SmartTargeting = require("scripts/utilities/smart_targeting")
 local AimAssist = {}
 local MULTIPLIER_EPSILON = 0.0001
-local _aim_assist_multiplier = nil
+local _aim_assist_multiplier
 
 AimAssist.increase_ramp_multiplier = function (t, aim_assist_ramp_component, ramp_settings)
 	if not ramp_settings then
@@ -14,6 +16,7 @@ AimAssist.increase_ramp_multiplier = function (t, aim_assist_ramp_component, ram
 	local delay = ramp_settings.ramp_decay_delay or 0
 	local current_multiplier = aim_assist_ramp_component.multiplier
 	local new_multiplier = math.min(current_multiplier + multiplier, max_multiplier)
+
 	aim_assist_ramp_component.multiplier = new_multiplier
 	aim_assist_ramp_component.decay_end_time = t + delay
 end
@@ -37,7 +40,9 @@ AimAssist.apply_aim_assist = function (main_t, main_dt, input, targeting_data, a
 	local last_pressed_device = InputDevice.last_pressed_device
 	local gamepad_active = last_pressed_device and last_pressed_device:type() == "xbox_controller"
 	local enable_aim_assist = gamepad_active
-	enable_aim_assist = enable_aim_assist and targeting_data and not not targeting_data.unit
+
+	enable_aim_assist = enable_aim_assist and not not targeting_data and not not targeting_data.unit
+
 	local aim_assist_type = Managers.save:account_data().input_settings.controller_aim_assist
 
 	if aim_assist_type ~= "old" then
@@ -75,12 +80,13 @@ function _aim_assist_multiplier(input, aim_assist_ramp_component, aim_assist_set
 	local base_multiplier = aim_assist_settings.base_multiplier
 	local no_aim_input_multiplier = aim_assist_settings.no_aim_input_multiplier
 	local ramp_multiplier = aim_assist_ramp_component.multiplier
-	local multiplier = nil
+	local multiplier
 	local input_alias = "look_raw_controller"
 	local look_raw = input:get(input_alias)
 
 	if Vector3.length_squared(look_raw) < MULTIPLIER_EPSILON then
 		multiplier = math.min(no_aim_input_multiplier + ramp_multiplier, 1)
+
 		local move = input:get("move")
 
 		if Vector3.length_squared(move) < MULTIPLIER_EPSILON then
@@ -162,7 +168,7 @@ local function _handle_start_stop_movement_assist(internal, aim_assist_context, 
 			internal.assist_sticky_timer = t + sticky_timer
 		end
 
-		if internal.assist_sticky_timer <= t then
+		if t >= internal.assist_sticky_timer then
 			_stop_movement_aim_assist(internal)
 
 			return false
@@ -178,17 +184,17 @@ local TAU = math.pi * 2
 local YAW_PER_SECOND_MIN = TAU / 128
 local YAW_PER_SECOND_MAX = TAU / 24
 local _internal = {
-	lock_start_t = 0,
-	previous_distance = 0,
-	has_lock = false,
-	finding_lock = false,
-	locking = false,
 	assisting = false,
+	finding_lock = false,
 	finding_lock_start_t = 0,
+	has_lock = false,
 	lock_modifies_pitch = false,
 	lock_modifies_yaw = false,
+	lock_start_t = 0,
+	locking = false,
+	previous_distance = 0,
 	target_position = Vector3Box(Vector3.zero()),
-	lock_position = Vector3Box(Vector3.zero())
+	lock_position = Vector3Box(Vector3.zero()),
 }
 
 AimAssist.apply_movement_aim_assist = function (aim_assist_context, orientation, input, look_delta, dt, t)
@@ -211,7 +217,7 @@ AimAssist.apply_movement_aim_assist = function (aim_assist_context, orientation,
 	local yaw_per_second = math.lerp(YAW_PER_SECOND_MIN, YAW_PER_SECOND_MAX, math.abs(move_input.x))
 	local yaw_correction = yaw_delta_dir * yaw_per_second * dt
 
-	if math.abs(yaw_delta) < math.abs(yaw_correction) then
+	if math.abs(yaw_correction) > math.abs(yaw_delta) then
 		yaw_correction = yaw_delta
 	end
 
@@ -291,6 +297,7 @@ AimAssist.apply_lock_on = function (aim_assist_context, main_t, targeting_data, 
 			local delta_yaw = Quaternion.yaw(delta_rotation)
 			local target_yaw = yaw - delta_yaw
 			local lerped_yaw = math.lerp(yaw, target_yaw, t)
+
 			yaw = lerped_yaw
 
 			if math.abs(target_yaw - lerped_yaw) < 0.001 then
@@ -302,6 +309,7 @@ AimAssist.apply_lock_on = function (aim_assist_context, main_t, targeting_data, 
 			local delta_pitch = Quaternion.pitch(delta_rotation)
 			local target_pitch = pitch - delta_pitch
 			local lerped_pitch = math.lerp(pitch, target_pitch, t)
+
 			pitch = lerped_pitch
 
 			if math.abs(target_pitch - lerped_pitch) < 0.001 then

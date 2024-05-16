@@ -1,16 +1,19 @@
+﻿-- chunkname: @scripts/loading/remote_states/remote_load_state.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local RPCS = {
-	"rpc_finished_loading_level"
+	"rpc_finished_loading_level",
 }
 local RemoteLoadState = class("RemoteLoadState")
 local HOST_TYPES_PRELOAD_CINEMATIC = {
 	[MatchmakingConstants.HOST_TYPES.mission_server] = true,
-	[MatchmakingConstants.HOST_TYPES.singleplay_backend_session] = true
+	[MatchmakingConstants.HOST_TYPES.singleplay_backend_session] = true,
 }
 
 RemoteLoadState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
 	self._ready_to_spawn = false
+
 	local host_type = Managers.connection:host_type()
 
 	if HOST_TYPES_PRELOAD_CINEMATIC[host_type] then

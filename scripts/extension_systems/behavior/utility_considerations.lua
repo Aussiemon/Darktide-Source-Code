@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations.lua
+
 local utility_considerations = {}
 
 local function _create_utility_considerations_template_entry(path)

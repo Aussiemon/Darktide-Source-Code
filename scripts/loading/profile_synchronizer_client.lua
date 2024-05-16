@@ -1,12 +1,15 @@
+﻿-- chunkname: @scripts/loading/profile_synchronizer_client.lua
+
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local RPCS = {
 	"rpc_start_profile_sync",
 	"rpc_sync_player_profile_data",
 	"rpc_profile_sync_complete",
 	"rpc_profile_synced_by_all",
-	"rpc_profile_sync_peer_disconnected"
+	"rpc_profile_sync_peer_disconnected",
 }
 local ProfileSynchronizerClient = class("ProfileSynchronizerClient")
+
 ProfileSynchronizerClient.DEBUG_TAG = "Profile Sync Client"
 
 local function _debug_print(str, ...)
@@ -32,6 +35,7 @@ ProfileSynchronizerClient.peer_profile_chunks_array = function (self, peer_id, l
 	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local chunks = profile_chunks[local_player_id]
+
 		profile_chunks_array[i] = chunks
 	end
 
@@ -59,6 +63,7 @@ end
 ProfileSynchronizerClient.rpc_start_profile_sync = function (self, channel_id, peer_id, local_player_id)
 	local peer_profile_chunks = self._peer_profile_chunks
 	local peer_profiles_json = self._peer_profiles_json
+
 	peer_profile_chunks[peer_id] = peer_profile_chunks[peer_id] or {}
 	peer_profile_chunks[peer_id][local_player_id] = {}
 	peer_profiles_json[peer_id] = peer_profiles_json[peer_id] or {}
@@ -74,9 +79,12 @@ ProfileSynchronizerClient.rpc_sync_player_profile_data = function (self, channel
 	end
 
 	local chunks = profile_chunks[local_player_id]
+
 	chunks[#chunks + 1] = profile_chunk
+
 	local peer_profiles_json = self._peer_profiles_json[peer_id]
 	local profile_json = peer_profiles_json[local_player_id]
+
 	peer_profiles_json[local_player_id] = profile_json .. profile_chunk
 end
 

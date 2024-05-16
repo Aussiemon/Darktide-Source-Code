@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/syringe_buff_templates.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local Health = require("scripts/utilities/health")
@@ -17,6 +19,7 @@ local function _calulcate_coruption_buff_healing(template_data, heal_settings, h
 	if number_of_health_segments then
 		local max_wounds = health_extension.max_wounds and health_extension:max_wounds() or 1
 		local health_per_segment = max_health / max_wounds
+
 		total_healing = health_per_segment * number_of_health_segments
 	end
 
@@ -35,22 +38,24 @@ local function _calulcate_coruption_buff_healing(template_data, heal_settings, h
 
 	total_healing = math.max(min_healing, total_healing)
 	template_data.healing_remaining = total_healing
+
 	local heal_duration = heal_settings.heal_duration
 	local healing_per_second = heal_duration ~= 0 and total_healing / heal_duration
+
 	template_data.healing_per_second = healing_per_second
 end
 
 templates.syringe_heal_corruption_buff = {
+	class_name = "buff",
+	duration = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_corruption_buff_hud",
 	predicted = false,
-	duration = 3,
-	class_name = "buff",
 	heal_settings = {
-		number_of_health_segments = 1,
 		heal_duration = 0,
 		min_percentage_of_heal = 0.25,
+		number_of_health_segments = 1,
 		heal_type_permanent = DamageSettings.heal_types.blessing_syringe,
-		heal_type_normal = DamageSettings.heal_types.syringe
+		heal_type_normal = DamageSettings.heal_types.syringe,
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -60,6 +65,7 @@ templates.syringe_heal_corruption_buff = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 		local health_extension = ScriptUnit.extension(unit, "health_system")
+
 		template_data.health_extension = health_extension
 
 		Health.play_fx(unit)
@@ -109,10 +115,12 @@ templates.syringe_heal_corruption_buff = {
 
 		if heal_settings.heal_type_normal and not used_to_heal_knocked_down_player then
 			local normal_health_added = heal_amount
+
 			health_added_normal = health_extension:add_heal(normal_health_added, heal_settings.heal_type_normal)
 		end
 
 		local health_added = math.max(health_added_permanent, health_added_normal)
+
 		healing_remaining = healing_remaining - health_added
 		template_data.healing_remaining = healing_remaining
 	end,
@@ -129,8 +137,8 @@ templates.syringe_heal_corruption_buff = {
 
 			if player then
 				local data = {
+					corruption_healed_amount = 0,
 					healed_amount = 0,
-					corruption_healed_amount = 0
 				}
 
 				Managers.telemetry_events:player_stimm_heal(player, data)
@@ -149,27 +157,29 @@ templates.syringe_heal_corruption_buff = {
 		if player then
 			local data = {
 				healed_amount = heal,
-				corruption_healed_amount = corruption_heal
+				corruption_healed_amount = corruption_heal,
 			}
 
 			Managers.telemetry_events:player_stimm_heal(player, data)
 		end
-	end
+	end,
 }
 templates.syringe_ability_boost_buff = {
-	unique_buff_id = "syringe_stimm",
-	predicted = false,
-	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_ability_buff_hud",
-	unique_buff_priority = 1,
-	duration = 15,
 	class_name = "buff",
+	duration = 15,
+	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_ability_buff_hud",
+	predicted = false,
+	unique_buff_id = "syringe_stimm",
+	unique_buff_priority = 1,
 	keywords = {
-		keywords.syringe_ability
+		keywords.syringe_ability,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local ability_extension = ScriptUnit.extension(unit, "ability_system")
+
 		template_data.ability_extension = ability_extension
+
 		local fx_extension = ScriptUnit.extension(unit, "fx_system")
 		local particle_name = "content/fx/particles/pocketables/syringe_ability_3p"
 
@@ -186,38 +196,38 @@ templates.syringe_ability_boost_buff = {
 
 			ability_extension:reduce_ability_cooldown_time(ability_type, reduce_time)
 		end
-	end
+	end,
 }
 templates.syringe_power_boost_buff = {
-	unique_buff_id = "syringe_stimm",
-	duration = 15,
-	predicted = false,
-	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_power_buff_hud",
-	unique_buff_priority = 1,
 	class_name = "buff",
+	duration = 15,
+	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_power_buff_hud",
+	predicted = false,
+	unique_buff_id = "syringe_stimm",
+	unique_buff_priority = 1,
 	stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.25,
 		[stat_buffs.rending_multiplier] = 0.25,
 		[stat_buffs.fov_multiplier] = 0.985,
-		[stat_buffs.warp_charge_amount] = 0.66
+		[stat_buffs.warp_charge_amount] = 0.66,
 	},
 	keywords = {
-		keywords.syringe_power
+		keywords.syringe_power,
 	},
 	start_func = function (template_data, template_context)
 		local fx_extension = ScriptUnit.extension(template_context.unit, "fx_system")
 		local particle_name = "content/fx/particles/pocketables/syringe_power_3p"
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
-	end
+	end,
 }
 templates.syringe_speed_boost_buff = {
-	unique_buff_id = "syringe_stimm",
-	duration = 15,
-	predicted = false,
-	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_speed_buff_hud",
-	unique_buff_priority = 1,
 	class_name = "buff",
+	duration = 15,
+	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_speed_buff_hud",
+	predicted = false,
+	unique_buff_id = "syringe_stimm",
+	unique_buff_priority = 1,
 	stat_buffs = {
 		[stat_buffs.fov_multiplier] = 1.035,
 		[stat_buffs.reload_speed] = 0.15,
@@ -228,10 +238,10 @@ templates.syringe_speed_boost_buff = {
 		[stat_buffs.chain_lightning_jump_time_multiplier] = 0.75,
 		[stat_buffs.psyker_throwing_knife_speed_modifier] = 0.25,
 		[stat_buffs.smite_attack_speed] = 0.25,
-		[stat_buffs.vent_warp_charge_multiplier] = 1.25
+		[stat_buffs.vent_warp_charge_multiplier] = 1.25,
 	},
 	keywords = {
-		keywords.syringe_speed
+		keywords.syringe_speed,
 	},
 	start_func = function (template_data, template_context)
 		Stamina.add_stamina_percent(template_context.unit, 1)
@@ -240,7 +250,7 @@ templates.syringe_speed_boost_buff = {
 		local particle_name = "content/fx/particles/pocketables/syringe_speed_3p"
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
-	end
+	end,
 }
 
 return templates

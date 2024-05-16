@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/presence/presence_manager.lua
+
 local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
 local PresenceEntryImmaterium = require("scripts/managers/presence/presence_entry_immaterium")
 local PresenceManagerInterface = require("scripts/managers/presence/presence_manager_interface")
@@ -126,8 +128,8 @@ PresenceManager.set_party = function (self, party_id, num_party_members)
 	self._myself:set_party_id(party_id)
 	self._myself:set_num_party_members(num_party_members)
 	self:_update_my_presence({
+		num_party_members = true,
 		party_id = true,
-		num_party_members = true
 	})
 
 	if self._advertise_playing then
@@ -138,28 +140,28 @@ end
 PresenceManager.set_character_profile = function (self, character_profile)
 	self._myself:set_character_profile(character_profile)
 	self:_update_my_presence({
-		character_profile = true
+		character_profile = true,
 	})
 end
 
 PresenceManager.set_cross_play_disabled = function (self, disabled)
 	self._myself:set_cross_play_disabled(disabled)
 	self:_update_my_presence({
-		cross_play_disabled = true
+		cross_play_disabled = true,
 	})
 end
 
 PresenceManager._set_cross_play_disabled_in_party = function (self, disabled)
 	self._myself:set_cross_play_disabled_in_party(disabled)
 	self:_update_my_presence({
-		cross_play_disabled_in_party = true
+		cross_play_disabled_in_party = true,
 	})
 end
 
 PresenceManager._set_is_cross_playing = function (self, value)
 	self._myself:set_is_cross_playing(value)
 	self:_update_my_presence({
-		is_cross_playing = true
+		is_cross_playing = true,
 	})
 end
 
@@ -220,7 +222,7 @@ PresenceManager._init_batched_get_presence = function (self, stream_id)
 	batched_presence_streams[stream_id] = {
 		restarting = false,
 		stream = Managers.grpc:get_batched_presence_stream(),
-		entry_to_request_id = {}
+		entry_to_request_id = {},
 	}
 
 	return stream_id
@@ -358,7 +360,9 @@ PresenceManager.update = function (self, dt, t)
 
 	if self._character_name_update_interval <= 0 then
 		local profile = Managers.player:local_player_backend_profile()
+
 		self._character_name_update_interval = 1
+
 		local prev_character_profile = self._myself:character_profile()
 
 		if profile and (not prev_character_profile or prev_character_profile ~= profile) then
@@ -418,6 +422,7 @@ PresenceManager.update = function (self, dt, t)
 			end
 		else
 			local error = self._my_presence_stream:error()
+
 			self._my_presence_stream = nil
 
 			if error then
@@ -443,6 +448,7 @@ PresenceManager.update = function (self, dt, t)
 
 		if self._last_request_xbox_gamertag > 0.2 then
 			local buffer = {}
+
 			self._load_buffer_in_flight = {}
 
 			for id, _ in pairs(self._load_buffer_request_xbox_gamertag) do
@@ -473,13 +479,13 @@ PresenceManager.update = function (self, dt, t)
 		end
 	end
 
-	if self._next_activity_check <= t then
+	if t >= self._next_activity_check then
 		self:_check_activity()
 
 		self._next_activity_check = t + ACTIVITY_CHECK_INTERVAL
 	end
 
-	if self._next_cross_play_check <= t then
+	if t >= self._next_cross_play_check then
 		self:_check_cross_play()
 
 		self._next_cross_play_check = t + CROSS_PLAY_CHECK_INTERVAL

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/vector_field_effect.lua
+
 local VectorFieldEffect = component("VectorFieldEffect")
 
 VectorFieldEffect.init = function (self, unit)
@@ -11,9 +13,11 @@ VectorFieldEffect.init = function (self, unit)
 	end
 
 	self._settings = {
-		duration = self._duration
+		duration = self._duration,
 	}
+
 	local world = Application.main_world()
+
 	self._vector_field = World.vector_field(world, "wind")
 	self._effect_path = "vector_fields/" .. self._effect
 
@@ -72,11 +76,11 @@ VectorFieldEffect.create_paramaters = function (self, unit, effect, speed)
 	if effect == "box_direction" then
 		return {
 			speed = Vector3.multiply(direction, speed),
-			world_extents = world_extents
+			world_extents = world_extents,
 		}
 	elseif effect == "global_direction" then
 		return {
-			speed = Vector3.multiply(direction, speed)
+			speed = Vector3.multiply(direction, speed),
 		}
 	elseif effect == "global_sine" then
 		local amplitude = self:get_data(unit, "amplitude")
@@ -90,7 +94,7 @@ VectorFieldEffect.create_paramaters = function (self, unit, effect, speed)
 			amplitude = rotated_amplitude,
 			wave_vector = wave_vector,
 			frequency = frequency,
-			phase = phase
+			phase = phase,
 		}
 	elseif effect == "push_pull" then
 		local scale = Unit.local_scale(unit, self._index_offset)
@@ -98,7 +102,7 @@ VectorFieldEffect.create_paramaters = function (self, unit, effect, speed)
 		return {
 			center = center,
 			radius = scale.x * 0.5,
-			speed = speed
+			speed = speed,
 		}
 	elseif effect == "whirl" then
 		local whirl_speed = self:get_data(unit, "whirl_speed")
@@ -110,7 +114,7 @@ VectorFieldEffect.create_paramaters = function (self, unit, effect, speed)
 			pull_speed = pull_speed,
 			center = center,
 			radius = scale.x * 0.5,
-			up = Quaternion.up(rotation)
+			up = Quaternion.up(rotation),
 		}
 	else
 		Log.info("VectorFieldEffect", "Can not find effect: %s", effect)
@@ -124,69 +128,70 @@ local effects = {
 	"global_direction",
 	"global_sine",
 	"push_pull",
-	"whirl"
+	"whirl",
 }
+
 VectorFieldEffect.component_data = {
 	effect = {
+		ui_name = "Effect",
 		ui_type = "combo_box",
 		value = "global_direction",
-		ui_name = "Effect",
 		options = {
 			"box_direction",
 			"global_direction",
 			"global_sine",
 			"push_pull",
-			"whirl"
-		}
+			"whirl",
+		},
 	},
 	duration = {
-		ui_type = "number",
-		min = 0,
 		decimals = 2,
-		value = 0,
+		min = 0,
+		step = 0.01,
 		ui_name = "Duration",
-		step = 0.01
+		ui_type = "number",
+		value = 0,
 	},
 	speed = {
-		ui_type = "slider",
 		decimals = 2,
-		value = 5,
+		step = 0.01,
 		ui_name = "Speed",
-		step = 0.01
+		ui_type = "slider",
+		value = 5,
 	},
 	whirl_speed = {
-		ui_type = "slider",
 		decimals = 2,
-		value = 30,
+		step = 0.01,
 		ui_name = "Whirl Speed",
-		step = 0.01
+		ui_type = "slider",
+		value = 30,
 	},
 	pull_speed = {
-		ui_type = "slider",
 		decimals = 2,
-		value = 10,
+		step = 0.01,
 		ui_name = "Pull Speed",
-		step = 0.01
+		ui_type = "slider",
+		value = 10,
 	},
 	amplitude = {
-		ui_type = "vector",
 		ui_name = "Amplitude",
-		value = Vector3Box(0, 0, 1)
+		ui_type = "vector",
+		value = Vector3Box(0, 0, 1),
 	},
 	frequency = {
-		ui_type = "slider",
 		decimals = 2,
-		value = 5,
+		step = 0.01,
 		ui_name = "Frequency",
-		step = 0.01
+		ui_type = "slider",
+		value = 5,
 	},
 	phase = {
-		ui_type = "slider",
 		decimals = 2,
-		value = 0,
+		step = 0.01,
 		ui_name = "Phase",
-		step = 0.01
-	}
+		ui_type = "slider",
+		value = 0,
+	},
 }
 
 return VectorFieldEffect

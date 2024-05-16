@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/boot/state_load_boot_assets.lua
+
 require("scripts/game_states/boot/state_boot_sub_state_base")
 
 local StateLoadBootAssets = class("StateLoadBootAssets", "StateBootSubStateBase")
@@ -7,13 +9,16 @@ StateLoadBootAssets.on_enter = function (self, ...)
 
 	local state_params = self:_state_params()
 	local pm = state_params.package_manager
+
 	self._package_manager = pm
 	self._localization_manager = state_params.localization_manager
+
 	local boot_packages = {
 		"packages/boot_assets",
 		"packages/strings",
-		"packages/game_scripts"
+		"packages/game_scripts",
 	}
+
 	self._package_ids = {}
 
 	for i = 1, #boot_packages do

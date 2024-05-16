@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/nav_block.lua
+
 local NavBlock = component("NavBlock")
 
 NavBlock.init = function (self, unit, is_server)
 	self._is_server = is_server
+
 	local nav_block_extension = ScriptUnit.fetch_component_extension(unit, "nav_block_system")
 
 	if nav_block_extension then
@@ -65,28 +68,28 @@ end
 
 NavBlock.component_data = {
 	start_blocked = {
+		ui_name = "Start blocked",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Start blocked"
 	},
 	volume_name = {
+		ui_name = "Volume Name",
 		ui_type = "text_box",
 		value = "g_volume_block",
-		ui_name = "Volume Name"
 	},
 	inputs = {
 		block_nav = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		unblock_nav = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"NavBlockExtension"
-	}
+		"NavBlockExtension",
+	},
 }
 
 return NavBlock

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_extensions.lua
+
 local ExtensionManager = require("scripts/foundation/managers/extension/extension_manager")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepManagers = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_managers")
@@ -11,7 +13,9 @@ end
 
 GameplayInitStepExtensions.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local world = shared_state.world
 	local physics_world = shared_state.physics_world
 	local is_server = shared_state.is_server
@@ -45,7 +49,7 @@ GameplayInitStepExtensions.update = function (self, main_dt, main_t)
 	end
 
 	local next_step_params = {
-		shared_state = self._shared_state
+		shared_state = self._shared_state,
 	}
 
 	return GameplayInitStepManagers, next_step_params
@@ -63,72 +67,76 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 
 	for i = 1, num_sides do
 		local side_data = side_compositions[i]
+
 		side_names[i] = side_data.name
 	end
 
 	local mission = MissionTemplates[mission_name]
 	local system_init_data = {
 		broadphase_system = {
-			side_names = side_names
+			side_names = side_names,
 		},
 		cinematic_scene_system = {
-			mission = mission
+			mission = mission,
 		},
 		cutscene_character_system = {
-			level_seed = level_seed
+			level_seed = level_seed,
 		},
 		darkness_system = {
-			mission = mission
+			mission = mission,
 		},
 		dialogue_context_system = {
-			mission = mission
+			mission = mission,
 		},
 		dialogue_system = {
 			is_rule_db_enabled = true,
 			mission = mission,
-			vo_sources_cache = vo_sources_cache
+			vo_sources_cache = vo_sources_cache,
 		},
 		hazard_prop_system = {
 			mission = mission,
-			level_seed = level_seed
+			level_seed = level_seed,
 		},
 		health_station_system = {
-			mission = mission
+			mission = mission,
 		},
 		light_controller_system = {
-			themes = self._shared_state.themes
+			themes = self._shared_state.themes,
 		},
 		mission_objective_system = {
-			mission = mission
+			mission = mission,
 		},
 		mission_objective_zone_system = {
-			level_seed = level_seed
+			level_seed = level_seed,
 		},
 		pickup_system = {
 			mission = mission,
-			level_seed = level_seed
+			level_seed = level_seed,
 		},
 		side_system = {
 			side_compositions = side_compositions,
-			default_player_side_name = default_player_side_name
+			default_player_side_name = default_player_side_name,
 		},
 		spline_follower_system = {
-			level_seed = level_seed
+			level_seed = level_seed,
 		},
 		minigame_system = {
 			mission = mission,
-			level_seed = level_seed
-		}
+			level_seed = level_seed,
+		},
 	}
+
 	Managers.state.level_props_broadphase = LevelPropsBroadphaseManager:new()
+
 	local unit_categories = {
 		"flow_spawned",
 		"level_spawned",
-		"cinematic"
+		"cinematic",
 	}
 	local UnitTemplates = require("scripts/extension_systems/unit_templates")
 	local ExtensionSystemConfiguration = require("scripts/extension_systems/extension_system_configuration")
 	local use_time_slice = true
+
 	Managers.state.extension = ExtensionManager:new(world, physics_world, wwise_world, nav_world, has_navmesh, level_name, circumstance_name, is_server, UnitTemplates, ExtensionSystemConfiguration, system_init_data, unit_categories, network_event_delegate, fixed_time_step, game_session, soft_cap_out_of_bounds_units, use_time_slice)
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/ammo_display.lua
+
 local AmmoDisplay = component("AmmoDisplay")
 
 AmmoDisplay.editor_init = function (self, unit)
@@ -76,35 +78,35 @@ end
 
 AmmoDisplay.component_data = {
 	ammo_display_steps = {
-		ui_type = "slider",
 		decimals = 0,
-		value = 6,
+		step = 1,
 		ui_name = "Ammo Steps",
-		step = 1
+		ui_type = "slider",
+		value = 6,
 	},
 	max_ammo = {
-		ui_type = "slider",
 		decimals = 0,
-		value = 30,
+		step = 1,
 		ui_name = "Max Ammo",
-		step = 1
+		ui_type = "slider",
+		value = 30,
 	},
 	ammo = {
-		ui_type = "slider",
-		step = 1,
 		decimals = 0,
-		value = 30,
+		max = 30,
+		step = 1,
 		ui_name = "Ammo",
-		max = 30
+		ui_type = "slider",
+		value = 30,
 	},
 	critical_threshold = {
-		ui_type = "slider",
-		step = 1,
 		decimals = 0,
-		value = 3,
+		max = 30,
+		step = 1,
 		ui_name = "Critical Threshold",
-		max = 30
-	}
+		ui_type = "slider",
+		value = 3,
+	},
 }
 
 return AmmoDisplay

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/talent/talent_settings.lua
+
 local TalentSettingsOgryn = require("scripts/settings/talent/talent_settings_ogryn")
 local TalentSettingsPsyker = require("scripts/settings/talent/talent_settings_psyker")
 local TalentSettingsVeteran = require("scripts/settings/talent/talent_settings_veteran")

@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/utilities/dampened_string.lua
+
 local DampenedString = {}
-local _damper_implicit, _halflife_to_damping, _fast_negexp = nil
+local _damper_implicit, _halflife_to_damping, _fast_negexp
 
 DampenedString.step = function (position, target_position, halflife, dt)
 	local damping = _halflife_to_damping(halflife, dt)
@@ -7,6 +9,7 @@ DampenedString.step = function (position, target_position, halflife, dt)
 	for i = 1, 3 do
 		local p = position[i]
 		local p_goal = target_position[i]
+
 		position[i] = _damper_implicit(p, p_goal, damping)
 	end
 end

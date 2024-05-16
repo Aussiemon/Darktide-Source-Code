@@ -1,7 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/minigame/minigame_extension.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local MinigameClasses = require("scripts/settings/minigame/minigame_classes")
 local MinigameExtension = class("MinigameExtension")
+
 MinigameExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
 local STATES = MinigameSettings.states
 
 MinigameExtension.init = function (self, extension_init_context, unit, ...)
@@ -35,7 +39,9 @@ MinigameExtension.setup_from_component = function (self, minigame_type)
 	end
 
 	self._minigame_type = minigame_type
+
 	local minigame_class = MinigameClasses[minigame_type]
+
 	self._minigame = minigame_class:new(self._unit, self._is_server, self._seed)
 end
 

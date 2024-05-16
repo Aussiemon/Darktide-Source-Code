@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/blank_view/blank_view.lua
+
 local definition_path = "scripts/ui/views/blank_view/blank_view_definitions"
 local BaseView = require("scripts/ui/views/base_view")
 local BlankView = class("BlankView", "BaseView")

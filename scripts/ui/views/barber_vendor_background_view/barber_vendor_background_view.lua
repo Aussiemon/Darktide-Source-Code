@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view.lua
+
 local Definitions = require("scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view_definitions")
 local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 local ViewSettings = require("scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view_settings")
@@ -53,16 +55,17 @@ BarberVendorBackgroundView._fetch_operations = function (self)
 	promise:next(function (data)
 		if not self._destroyed then
 			local shopkeep = "barber"
+
 			self._operations = data[shopkeep]
 		end
 	end)
 end
 
 BarberVendorBackgroundView.get_mindwipe_cost = function (self)
-	local cost = {
-		type = "credits",
-		amount = self._cost
-	}
+	local cost = {}
+
+	cost.type = "credits"
+	cost.amount = self._cost
 
 	return cost
 end
@@ -76,6 +79,7 @@ BarberVendorBackgroundView.can_afford_mindwipe = function (self)
 		local currency = mindwipe_operation.type
 		local cost = mindwipe_operation.amount
 		local can_afford = self:can_afford(cost, currency)
+
 		self._cost = cost
 		self._balance = self:get_balance(currency)
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/penance_track_service.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local PenanceTrackService = class("PenanceTrackService")
 
@@ -7,7 +9,7 @@ PenanceTrackService.init = function (self, backend_interface)
 end
 
 PenanceTrackService.get_track = function (self, trackId)
-	local promise = nil
+	local promise
 
 	if self._cached_track_data then
 		promise = Promise.resolved(self._cached_track_data):next(function (data)

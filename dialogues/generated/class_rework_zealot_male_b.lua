@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_zealot_male_b.lua
+
 local class_rework_zealot_male_b = {
 	ability_banisher = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local class_rework_zealot_male_b = {
 			"loc_zealot_male_b__ability_banisher_07",
 			"loc_zealot_male_b__ability_banisher_08",
 			"loc_zealot_male_b__ability_banisher_09",
-			"loc_zealot_male_b__ability_banisher_10"
+			"loc_zealot_male_b__ability_banisher_10",
 		},
 		sound_events_duration = {
 			2.295417,
@@ -24,9 +26,9 @@ local class_rework_zealot_male_b = {
 			3.764521,
 			3.690583,
 			3.517417,
-			3.641417
+			3.641417,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_banisher_impact = {
 		randomize_indexes_n = 0,
@@ -41,7 +43,7 @@ local class_rework_zealot_male_b = {
 			"loc_zealot_male_b__ability_banisher_impact_07",
 			"loc_zealot_male_b__ability_banisher_impact_08",
 			"loc_zealot_male_b__ability_banisher_impact_09",
-			"loc_zealot_male_b__ability_banisher_impact_10"
+			"loc_zealot_male_b__ability_banisher_impact_10",
 		},
 		sound_events_duration = {
 			2.058458,
@@ -53,9 +55,9 @@ local class_rework_zealot_male_b = {
 			1.36025,
 			1.413771,
 			0.813104,
-			0.850813
+			0.850813,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_litany_temp = {
 		randomize_indexes_n = 0,
@@ -68,7 +70,7 @@ local class_rework_zealot_male_b = {
 			"loc_zealot_male_b__ability_litany_temp_05",
 			"loc_zealot_male_b__ability_litany_temp_06",
 			"loc_zealot_male_b__ability_litany_temp_07",
-			"loc_zealot_male_b__ability_litany_temp_08"
+			"loc_zealot_male_b__ability_litany_temp_08",
 		},
 		sound_events_duration = {
 			2.670458,
@@ -78,9 +80,9 @@ local class_rework_zealot_male_b = {
 			1.269917,
 			2.588125,
 			0.938,
-			1.328458
+			1.328458,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_pious_stabber = {
 		randomize_indexes_n = 0,
@@ -100,7 +102,7 @@ local class_rework_zealot_male_b = {
 			"loc_zealot_male_b__ability_pious_stabber_12",
 			"loc_zealot_male_b__ability_pious_stabber_13",
 			"loc_zealot_male_b__ability_pious_stabber_14",
-			"loc_zealot_male_b__ability_pious_stabber_15"
+			"loc_zealot_male_b__ability_pious_stabber_15",
 		},
 		sound_events_duration = {
 			2.4205,
@@ -117,10 +119,10 @@ local class_rework_zealot_male_b = {
 			2.738063,
 			2.487792,
 			2.195396,
-			3.590438
+			3.590438,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("class_rework_zealot_male_b", class_rework_zealot_male_b)

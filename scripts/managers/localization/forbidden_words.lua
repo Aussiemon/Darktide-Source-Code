@@ -1,18 +1,20 @@
+﻿-- chunkname: @scripts/managers/localization/forbidden_words.lua
+
 local forbidden_words = {
 	phrases = {
 		[5] = {
-			"k k k"
+			"k k k",
 		},
 		[7] = {
 			"suck my",
 			"tea bag",
-			"xbl pet"
+			"xbl pet",
 		},
 		[8] = {
 			"god damn",
 			"jack off",
 			"klu klux",
-			"red tube"
+			"red tube",
 		},
 		[9] = {
 			"bin laden",
@@ -21,39 +23,39 @@ local forbidden_words = {
 			"deez nuts",
 			"koon hunt",
 			"koon kill",
-			"sofa king"
+			"sofa king",
 		},
 		[10] = {
 			"cotton pic",
 			"cotton pik",
-			"dio bestia"
+			"dio bestia",
 		},
 		[11] = {
 			"ching chong",
 			"durka durka",
-			"white power"
+			"white power",
 		},
 		[12] = {
 			"jungle bunny",
 			"ku klux klan",
 			"moon cricket",
-			"porch monkey"
+			"porch monkey",
 		},
 		[13] = {
 			"klu klux klan",
 			"porca madonna",
-			"succhia cazzi"
+			"succhia cazzi",
 		},
 		[14] = {
 			"chingada madre",
-			"testa di cazzo"
+			"testa di cazzo",
 		},
 		[15] = {
-			"madonna puttana"
+			"madonna puttana",
 		},
 		[17] = {
-			"figlio di puttana"
-		}
+			"figlio di puttana",
+		},
 	},
 	words = {
 		[2] = {
@@ -62,7 +64,7 @@ local forbidden_words = {
 			"強姦",
 			"援交",
 			"精薄",
-			"輪姦"
+			"輪姦",
 		},
 		[3] = {
 			"8=d",
@@ -93,7 +95,7 @@ local forbidden_words = {
 			"マンコ",
 			"レイプ",
 			"支那人",
-			"精薄者"
+			"精薄者",
 		},
 		[4] = {
 			"1488",
@@ -210,7 +212,7 @@ local forbidden_words = {
 			"クロンボ",
 			"シナジン",
 			"タチンボ",
-			"トルコ嬢"
+			"トルコ嬢",
 		},
 		[5] = {
 			"ahole",
@@ -346,7 +348,7 @@ local forbidden_words = {
 			"カワラモノ",
 			"チョンコウ",
 			"チョンコロ",
-			"トルコ風呂"
+			"トルコ風呂",
 		},
 		[6] = {
 			"anuses",
@@ -480,7 +482,7 @@ local forbidden_words = {
 			"とるこじょう",
 			"はんとうじん",
 			"カワラコジキ",
-			"コロシテヤル"
+			"コロシテヤル",
 		},
 		[7] = {
 			"a55hole",
@@ -544,7 +546,7 @@ local forbidden_words = {
 			"w3tback",
 			"wetb4ck",
 			"wetback",
-			"xl3lpet"
+			"xl3lpet",
 		},
 		[8] = {
 			"abortion",
@@ -604,7 +606,7 @@ local forbidden_words = {
 			"torukojo",
 			"tyankoro",
 			"tyonkoro",
-			"tyurenbo"
+			"tyurenbo",
 		},
 		[9] = {
 			"akimekura",
@@ -651,7 +653,7 @@ local forbidden_words = {
 			"tyourippo",
 			"usigorosi",
 			"vaccagare",
-			"vatefaire"
+			"vatefaire",
 		},
 		[10] = {
 			"arseholing",
@@ -687,7 +689,7 @@ local forbidden_words = {
 			"whitepower",
 			"xblrewards",
 			"yabunirami",
-			"zipperhead"
+			"zipperhead",
 		},
 		[11] = {
 			"beefwhistle",
@@ -708,7 +710,7 @@ local forbidden_words = {
 			"moth3rfvker",
 			"semusiotoko",
 			"ushigoroshi",
-			"vvhitepower"
+			"vvhitepower",
 		},
 		[12] = {
 			"fukashokumin",
@@ -717,24 +719,24 @@ local forbidden_words = {
 			"hukasyokumin",
 			"masturbacion",
 			"motherfucker",
-			"semushiotoko"
+			"semushiotoko",
 		},
 		[13] = {
 			"goldenshowers",
 			"koroshiteyaru",
 			"masturbazione",
 			"tokushugakkyu",
-			"tokusyugakkyu"
+			"tokusyugakkyu",
 		},
 		[15] = {
 			"seishinhakujaku",
 			"seisinhakuzyaku",
-			"syokubutuningen"
+			"syokubutuningen",
 		},
 		[16] = {
-			"shokubutsuningen"
-		}
-	}
+			"shokubutsuningen",
+		},
+	},
 }
 
 return forbidden_words

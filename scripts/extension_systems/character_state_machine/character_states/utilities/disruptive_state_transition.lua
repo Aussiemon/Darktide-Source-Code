@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition.lua
+
 local Overheat = require("scripts/utilities/overheat")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local DisruptiveStateTransition = {}
@@ -9,6 +11,7 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 	if overheat_explode then
 		local configuration = Overheat.configuration(visual_loadout_extension, slot_name)
 		local explode_action = configuration.explode_action
+
 		next_state_params.slot_name = slot_name
 		next_state_params.reason = "overheat"
 		next_state_params.explode_action = explode_action
@@ -22,11 +25,12 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 	if warp_charge_explode then
 		local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(unit)
 		local explode_action = weapon_warp_charge_template and weapon_warp_charge_template.explode_action_override
-		local slot_to_wield = nil
+		local slot_to_wield
 
 		if not explode_action then
 			local player = Managers.state.player_unit_spawn:owner(unit)
 			local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
+
 			explode_action = base_warp_charge_template.explode_action
 			slot_to_wield = "slot_unarmed"
 		end
@@ -73,6 +77,7 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 
 	if catapulted_state_input.new_input then
 		local velocity = catapulted_state_input.velocity
+
 		next_state_params.velocity = velocity
 
 		return "catapulted"
@@ -84,8 +89,9 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 	if disorientation_type ~= "none" then
 		local current_frame = unit_data_extension:last_fixed_frame()
 
-		if stun_state_input.stun_frame <= current_frame then
+		if current_frame >= stun_state_input.stun_frame then
 			next_state_params.disorientation_type = disorientation_type
+
 			local push_direction = stun_state_input.push_direction
 
 			if Vector3.length_squared(push_direction) ~= 0 then

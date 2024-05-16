@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/hit_scan.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -32,7 +34,7 @@ local DEFAULT_COLLISION_FILTER = "filter_player_character_shooting_raycast"
 local MAX_HITS = 256
 local HIT_UNITS = {}
 local SUPPRESSED_UNITS = {}
-local _block_position, _fetch_damage_type = nil
+local _block_position, _fetch_damage_type
 
 HitScan.raycast = function (physics_world, position, direction, max_distance, optional_test_against, optional_collision_filter, optional_rewind_ms, optional_is_local_unit, optional_player, optional_is_server)
 	local hits = PhysicsWorld.raycast(physics_world, position, direction, max_distance, "all", "types", optional_test_against or DEFAULT_TEST_AGAINST, "max_hits", MAX_HITS, "collision_filter", optional_collision_filter or DEFAULT_COLLISION_FILTER, "rewind_ms", optional_rewind_ms or 0)
@@ -56,6 +58,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	table.clear(SUPPRESSED_UNITS)
 
 	HIT_UNITS[attacker_unit] = true
+
 	local hit_scan_template = fire_configuration.hit_scan_template
 	local damage_config = hit_scan_template.damage
 	local impact_config = damage_config.impact
@@ -70,7 +73,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	local penetrated = false
 	local try_penetration = not impact_config.destroy_on_impact and penetration_config
 	local stop = false
-	local end_position = nil
+	local end_position
 	local exploded = false
 	local hit_minion = false
 	local hit_weakspot = false
@@ -93,8 +96,10 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 			local hit_actor = hit.actor or hit[INDEX_ACTOR]
 			local hit_unit = Actor.unit(hit_actor)
 			local explosion_arming_distance = damage_config.explosion_arming_distance or 0
+
 			explosion_arming_distance = explosion_arming_distance * explosion_arming_distance_multiplier
-			local can_explode = hit_distance >= explosion_arming_distance
+
+			local can_explode = explosion_arming_distance <= hit_distance
 			local damage_type = can_explode and damage_type_explode or damage_type_non_explode
 
 			if HIT_UNITS[hit_unit] then
@@ -134,6 +139,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 
 						if is_dodging or is_sprint_dodging then
 							HIT_UNITS[hit_unit] = true
+
 							local hit_unit_fx_extension = ScriptUnit.has_extension(hit_unit, "fx_system")
 
 							if is_server and hit_unit_fx_extension then
@@ -198,11 +204,13 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
 				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
 				stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
+
 				local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
-				local damage_dealt, attack_result, damage_efficiency = nil
+				local damage_dealt, attack_result, damage_efficiency
 
 				if should_deal_damage then
 					local previous_hit_weakspot = hit_weakspot
+
 					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, damage_config, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
 
 					if attack_result == attack_results.blocked then
@@ -211,8 +219,10 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 
 					hit_weakspot = previous_hit_weakspot or hit_weakspot
 					killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
+
 					local breed_is_minion = Breed.is_minion(target_breed_or_nil)
 					local breed_is_living_prop = Breed.is_living_prop(target_breed_or_nil)
+
 					hit_minion = hit_minion or breed_is_minion or breed_is_living_prop
 					number_of_units_hit = number_of_units_hit + 1
 				end
@@ -239,7 +249,9 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				if exit_position then
 					try_penetration = false
 					penetrated = true
+
 					local object_thickness = Vector3.distance(hit_position, exit_position)
+
 					exit_distance = hit_distance + object_thickness
 
 					if penetration_config.exit_explosion_template and is_server then
@@ -340,6 +352,7 @@ function _fetch_damage_type(fire_configuration, is_critical_strike, charge_level
 
 	if is_charge_dependant then
 		local damage_type_table = damage_type_non_explode
+
 		damage_type_non_explode = nil
 
 		for i = 1, #damage_type_table do

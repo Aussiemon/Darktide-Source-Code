@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sweep_trail.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
 local SweepTrail = class("SweepTrail")
@@ -6,15 +8,18 @@ local WINDUP_STOP_SOUND_ALIAS = "windup_stop"
 local SOURCE_NAME = "_sweep"
 local VISIBILITY_GROUP_NAME = "trail"
 local EXTERNAL_PROPERTIES = {}
-local _slot_components, _update_status = nil
+local _slot_components, _update_status
 
 SweepTrail.init = function (self, context, slot, weapon_template, fx_sources, item)
 	local owner_unit = context.owner_unit
+
 	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
 	self._fx_source_name = fx_sources[SOURCE_NAME]
 	self._playing_id = nil
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._critical_strike_component = unit_data_extension:read_component("critical_strike")
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -91,6 +96,7 @@ SweepTrail._update_trail_status = function (self, t, action_settings)
 		local time_in_action = t - start_t + action_time_offset
 		local after_start = damage_window_start <= time_in_action
 		local before_end = time_in_action <= damage_window_end
+
 		in_damage_window = after_start and before_end
 	end
 
@@ -123,7 +129,7 @@ function _slot_components(attachments)
 
 			component_list[#component_list + 1] = {
 				unit = attachment_unit,
-				component = component
+				component = component,
 			}
 		end
 	end

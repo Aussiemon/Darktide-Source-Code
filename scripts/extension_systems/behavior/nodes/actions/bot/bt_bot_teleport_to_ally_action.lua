@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bot/bt_bot_teleport_to_ally_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtConditions = require("scripts/extension_systems/behavior/utilities/bt_conditions")
@@ -26,7 +28,7 @@ local function _debug_draw_cant_reach_ally(unit, follow_component)
 	local options = {
 		time = duration,
 		color = Color.red(),
-		rotation = Quaternion.identity()
+		rotation = Quaternion.identity(),
 	}
 
 	Debug:world_text(debug_text_1, between_position + Vector3(0, 0, 3), options)
@@ -38,12 +40,15 @@ end
 BtBotTeleportToAllyAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local group_extension = ScriptUnit.extension(unit, "group_system")
 	local follow_component = Blackboard.write_component(blackboard, "follow")
+
 	scratchpad.follow_component = follow_component
 	scratchpad.bot_group_data = group_extension:bot_group_data()
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	scratchpad.behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local player = player_unit_spawn_manager:owner(unit)
+
 	scratchpad.player = player
 end
 
@@ -52,10 +57,11 @@ BtBotTeleportToAllyAction.run = function (self, unit, breed, blackboard, scratch
 	local follow_unit = bot_group_data.follow_unit
 	local follow_component = scratchpad.follow_component
 	local navigation_extension = scratchpad.navigation_extension
-	local teleport_position = nil
+	local teleport_position
 
 	if follow_component.level_forced_teleport then
 		follow_component.level_forced_teleport = false
+
 		local level_force_teleport_position = follow_component.level_forced_teleport_position:unbox()
 
 		if Vector3.length_squared(level_force_teleport_position) ~= 0 then
@@ -72,8 +78,8 @@ BtBotTeleportToAllyAction.run = function (self, unit, breed, blackboard, scratch
 		local check_direction = -Quaternion.forward(follow_unit_rotation)
 		local follow_unit_navigation_extension = ScriptUnit.extension(follow_unit, "navigation_system")
 		local from_position = follow_unit_navigation_extension:latest_position_on_nav_mesh()
-		local nav_world = navigation_extension:nav_world()
-		local traverse_logic = navigation_extension:traverse_logic()
+		local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
+
 		teleport_position = NavQueries.position_near_nav_position(from_position, check_direction, nav_world, traverse_logic)
 	end
 

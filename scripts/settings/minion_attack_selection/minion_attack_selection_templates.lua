@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minion_attack_selection/minion_attack_selection_templates.lua
+
 local minion_attack_selection_templates = {}
 
 local function _extract_templates(path)

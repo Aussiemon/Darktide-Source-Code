@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/horde_pacing/horde_compositions.lua
+
 local horde_compositions = {}
 
 local function _create_horde_composition_entry(path)

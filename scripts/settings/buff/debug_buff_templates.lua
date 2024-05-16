@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/debug_buff_templates.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -16,27 +18,27 @@ local templates = {}
 table.make_unique(templates)
 
 templates.debug_movement_speed_on_kill = {
-	class_name = "proc_buff",
 	active_duration = 5,
+	class_name = "proc_buff",
 	proc_events = {
-		[buff_proc_events.on_hit] = 0.1
+		[buff_proc_events.on_hit] = 0.1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 1
+		[buff_stat_buffs.movement_speed] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local result = params.attack_result
 
 		return result == attack_results.died
-	end
+	end,
 }
 templates.weapon_trait_lasgun_tier_1 = {
 	class_name = "buff",
 	keywords = {},
 	stat_buffs = {
 		[buff_stat_buffs.spread_modifier] = -0.15,
-		[buff_stat_buffs.sway_modifier] = 0.7
-	}
+		[buff_stat_buffs.sway_modifier] = 0.7,
+	},
 }
 templates.weapon_trait_lasgun_tier_2 = {
 	class_name = "buff",
@@ -44,8 +46,8 @@ templates.weapon_trait_lasgun_tier_2 = {
 	stat_buffs = {
 		[buff_stat_buffs.spread_modifier] = -0.15,
 		[buff_stat_buffs.sway_modifier] = 0.7,
-		[buff_stat_buffs.recoil_modifier] = -0.33
-	}
+		[buff_stat_buffs.recoil_modifier] = -0.33,
+	},
 }
 templates.weapon_trait_lasgun_tier_3 = {
 	class_name = "buff",
@@ -54,8 +56,8 @@ templates.weapon_trait_lasgun_tier_3 = {
 		[buff_stat_buffs.spread_modifier] = -0.15,
 		[buff_stat_buffs.sway_modifier] = 0.7,
 		[buff_stat_buffs.recoil_modifier] = -0.33,
-		[buff_stat_buffs.ranged_weakspot_damage] = 0.5
-	}
+		[buff_stat_buffs.ranged_weakspot_damage] = 0.5,
+	},
 }
 templates.weapon_trait_lasgun_tier_4 = {
 	class_name = "buff",
@@ -64,43 +66,43 @@ templates.weapon_trait_lasgun_tier_4 = {
 		[buff_stat_buffs.spread_modifier] = -0.15,
 		[buff_stat_buffs.sway_modifier] = 0.7,
 		[buff_stat_buffs.recoil_modifier] = -0.33,
-		[buff_stat_buffs.ranged_weakspot_damage] = 0.5
-	}
+		[buff_stat_buffs.ranged_weakspot_damage] = 0.5,
+	},
 }
 templates.weapon_trait_lasgun_ranged_weakspot_damage = {
 	class_name = "buff",
 	keywords = {},
 	stat_buffs = {
-		[buff_stat_buffs.ranged_weakspot_damage] = 0.5
-	}
+		[buff_stat_buffs.ranged_weakspot_damage] = 0.5,
+	},
 }
 templates.weapon_trait_lasgun_spread_and_sway_reduction = {
 	class_name = "buff",
 	keywords = {},
 	stat_buffs = {
 		[buff_stat_buffs.spread_modifier] = -0.15,
-		[buff_stat_buffs.sway_modifier] = 0.7
-	}
+		[buff_stat_buffs.sway_modifier] = 0.7,
+	},
 }
 templates.weapon_trait_lasgun_recoil_reduction = {
 	class_name = "buff",
 	keywords = {},
 	stat_buffs = {
-		[buff_stat_buffs.recoil_modifier] = -0.33
-	}
+		[buff_stat_buffs.recoil_modifier] = -0.33,
+	},
 }
 templates.weapon_trait_lasgun_alternate_fire_movement_speed = {
 	class_name = "buff",
 	keywords = {},
 	stat_buffs = {
-		[buff_stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.1
-	}
+		[buff_stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.1,
+	},
 }
 templates.weapon_gestalt_trait_reload_on_kill = {
-	class_name = "proc_buff",
 	active_duration = 0,
+	class_name = "proc_buff",
 	proc_events = {
-		[buff_proc_events.on_hit] = 1
+		[buff_proc_events.on_hit] = 1,
 	},
 	proc_func = function (params)
 		local attacking_unit = params.attacking_unit
@@ -137,23 +139,23 @@ templates.weapon_gestalt_trait_reload_on_kill = {
 		end
 
 		return true
-	end
+	end,
 }
 templates.weapon_gestalt_trait_ranged_weakspot_damage_increase_on_stagger = {
 	class_name = "buff",
 	keywords = {},
 	stat_buffs = {
-		[buff_stat_buffs.ranged_weakspot_damage_vs_staggered] = 0.5
-	}
+		[buff_stat_buffs.ranged_weakspot_damage_vs_staggered] = 0.5,
+	},
 }
 templates.debug_burninating_burning = {
-	interval = 0.75,
-	refresh_duration_on_stack = true,
-	max_stacks = 5,
-	duration = 5,
 	class_name = "interval_buff",
+	duration = 5,
+	interval = 0.75,
+	max_stacks = 5,
+	refresh_duration_on_stack = true,
 	keywords = {
-		buff_keywords.burning
+		buff_keywords.burning,
 	},
 	target = buff_targets.minion_only,
 	on_reached_max_stack_func = function (template_data, template_context)
@@ -173,13 +175,13 @@ templates.debug_burninating_burning = {
 			Attack.execute(unit, damage_template, "power_level", power_level)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.fire
+	minion_effects = minion_burning_buff_effects.fire,
 }
 templates.debug_ignite_on_hit = {
-	unique_buff_id = "debug_ignite_on_hit",
 	class_name = "proc_buff",
+	unique_buff_id = "debug_ignite_on_hit",
 	proc_events = {
-		[buff_proc_events.on_hit] = 1
+		[buff_proc_events.on_hit] = 1,
 	},
 	proc_func = function (params, template_data, template_context)
 		local attacked_unit = params.attacked_unit
@@ -194,23 +196,23 @@ templates.debug_ignite_on_hit = {
 				attacked_unit_buff_extension:add_internally_controlled_buff(buff_to_add, t)
 			end
 		end
-	end
+	end,
 }
 templates.debug_power_buff = {
-	predicted = false,
 	class_name = "buff",
+	predicted = false,
 	keywords = {},
 	stat_buffs = {
-		[buff_stat_buffs.power_level_modifier] = 0.1
-	}
+		[buff_stat_buffs.power_level_modifier] = 0.1,
+	},
 }
 templates.debug_damage_vs_ogryns = {
-	predicted = false,
 	class_name = "buff",
+	predicted = false,
 	keywords = {},
 	stat_buffs = {
-		[buff_stat_buffs.damage_vs_ogryn] = 0.1
-	}
+		[buff_stat_buffs.damage_vs_ogryn] = 0.1,
+	},
 }
 
 return templates

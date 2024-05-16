@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/managers/emote/emote_manager.lua
+
 local EmoteManager = class("EmoteManager")
 local RPCs = {
 	"rpc_trigger_emote",
-	"rpc_stop_emote"
+	"rpc_stop_emote",
 }
 
 EmoteManager.init = function (self, is_host, network_event_delegate)
@@ -70,13 +72,10 @@ EmoteManager._stop_emote = function (self, index)
 		self:_trigger_face_event(unit, "pose_neutral")
 	end
 
-	local size = self._tracking_size
-	local id = self._tracking_id
-	local time = self._tracking_time
-	time[index] = time[size]
-	id[index] = id[size]
-	time[size] = nil
-	id[size] = nil
+	local size, id, time = self._tracking_size, self._tracking_id, self._tracking_time
+
+	id[index], time[index] = id[size], time[size]
+	id[size], time[size] = nil
 	self._tracking_size = size - 1
 end
 
@@ -104,6 +103,7 @@ EmoteManager._start_emote = function (self, unit, slot_id, rpc)
 	end
 
 	local duration = emote_item.animation_duration or 0
+
 	self._tracking_size = self._tracking_size + 1
 	self._tracking_id[self._tracking_size] = unit_id
 	self._tracking_time[self._tracking_size] = duration
@@ -146,11 +146,11 @@ EmoteManager.rpc_trigger_emote = function (self, _, unit_id, slot_id_lookup)
 end
 
 local emote_key_to_slot_id = {
-	emote_4 = "slot_animation_emote_4",
-	emote_5 = "slot_animation_emote_5",
 	emote_1 = "slot_animation_emote_1",
 	emote_2 = "slot_animation_emote_2",
-	emote_3 = "slot_animation_emote_3"
+	emote_3 = "slot_animation_emote_3",
+	emote_4 = "slot_animation_emote_4",
+	emote_5 = "slot_animation_emote_5",
 }
 
 EmoteManager.check_emote_input = function (self, input_extension)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_view/crafting_view.lua
+
 local CraftingViewDefinitions = require("scripts/ui/views/crafting_view/crafting_view_definitions")
 local ItemUtils = require("scripts/utilities/items")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -11,6 +13,7 @@ CraftingView.init = function (self, settings, context)
 	CraftingView.super.init(self, CraftingViewDefinitions, settings, context)
 
 	local ui_renderer = self._ui_renderer
+
 	ui_renderer.render_pass_flag = "render_pass"
 	ui_renderer.base_render_pass = "to_screen"
 end
@@ -27,7 +30,7 @@ CraftingView.show_wallets = function (self, show)
 		self._wallet_type = {
 			"diamantine",
 			"plasteel",
-			"credits"
+			"credits",
 		}
 		wallet_widget.content.visible = true
 		no_wallet_widget.content.visible = false
@@ -40,7 +43,7 @@ CraftingView.go_to_crafting_view = function (self, view_name, item)
 	local tab_data = CraftingViewDefinitions.crafting_tab_params[view_name]
 	local context = {
 		item = item,
-		ui_renderer = self._ui_renderer
+		ui_renderer = self._ui_renderer,
 	}
 
 	self:_setup_tab_bar(tab_data, context)
@@ -70,7 +73,7 @@ CraftingView.on_enter = function (self)
 
 	achievements_manager:unlock_achievement(player, achievement_name)
 	self:play_vo_events({
-		"hub_idle_crafting"
+		"hub_idle_crafting",
 	}, "tech_priest_a", nil, 0.8)
 
 	self._next_tab_index = nil
@@ -82,6 +85,7 @@ end
 
 CraftingView.update = function (self, dt, t, input_service)
 	local overlay_style_color = self._widgets_by_name.overlay.style.overlay.color
+
 	overlay_style_color[1] = math.lerp(self._wanted_overlay_alpha or 0, overlay_style_color[1], 1e-05^dt)
 
 	return CraftingView.super.update(self, dt, t, input_service)
@@ -149,7 +153,7 @@ CraftingView._switch_tab_view = function (self, index)
 
 		if view then
 			local context = {
-				parent = self
+				parent = self,
 			}
 			local additional_context = tab_params.context
 			local context_function = tab_params.context_function
@@ -167,7 +171,7 @@ CraftingView._switch_tab_view = function (self, index)
 			local input_legend_params = self._definitions.input_legend_params
 
 			if input_legend_params then
-				local merged_input_legend_params = nil
+				local merged_input_legend_params
 
 				if view_input_legend_buttons then
 					merged_input_legend_params = table.clone(input_legend_params)
@@ -181,6 +185,7 @@ CraftingView._switch_tab_view = function (self, index)
 	end
 
 	local alpha = tab_params.background_alpha or 0
+
 	self._wanted_overlay_alpha = alpha
 	self._active_view_on_enter_callback = self._active_view and view_function and callback(function ()
 		if self._active_view == view then
@@ -195,11 +200,13 @@ CraftingView._switch_tab_view = function (self, index)
 
 		return false
 	end)
+
 	local story_name = tab_params.level_story_event
 
 	if story_name then
 		if story_name or self._previous_story_name or self._previous_story_name ~= story_name then
 			local play_backwards = not story_name and true or false
+
 			story_name = story_name or self._previous_story_name
 
 			self._world_spawner:play_story(story_name, nil, play_backwards)
@@ -274,7 +281,7 @@ CraftingView.craft = function (self, recipe, ingredients, callback, done_callbac
 		end
 
 		self:play_vo_events({
-			"crafting_complete"
+			"crafting_complete",
 		}, "tech_priest_a", nil, 1.4)
 
 		local input_item = ingredients.item
@@ -300,10 +307,10 @@ CraftingView.craft = function (self, recipe, ingredients, callback, done_callbac
 
 		Log.error("CraftingView", "Craft operation %q failed! Error:\n%s", recipe_name, message)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_crafting_failure")
+			text = Localize("loc_crafting_failure"),
 		}, callback, nil, done_callback)
 		error({
-			message = message
+			message = message,
 		})
 	end)
 end

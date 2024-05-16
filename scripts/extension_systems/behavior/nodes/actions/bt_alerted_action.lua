@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_alerted_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -6,11 +8,11 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtAlertedAction = class("BtAlertedAction", "BtNode")
 local ALERTED_MODES = {
-	directional_alerted = 3,
 	alerted = 5,
+	directional_alerted = 3,
 	hesitate = 4,
 	instant_aggro = 1,
-	moving_alerted = 2
+	moving_alerted = 2,
 }
 local LINE_OF_SIGHT_CHECK_SHORT_DISTANCE = 15
 local LINE_OF_SIGHT_CHECK_DELAY_SHORT = 0.15
@@ -19,17 +21,24 @@ local LINE_OF_SIGHT_CHECK_DELAY = 0.75
 BtAlertedAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = animation_extension
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	local perception_component = blackboard.perception
+
 	scratchpad.perception_component = perception_component
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.perception_system = Managers.state.extension:system("perception_system")
+
 	local alerted_mode = self:_select_alerted_mode(action_data)
+
 	scratchpad.alerted_mode = alerted_mode
+
 	local delay = perception_component.target_distance < LINE_OF_SIGHT_CHECK_SHORT_DISTANCE and LINE_OF_SIGHT_CHECK_DELAY_SHORT or LINE_OF_SIGHT_CHECK_DELAY
+
 	scratchpad.check_line_of_sight_timing = t + delay
 
 	if alerted_mode == ALERTED_MODES.alerted then
@@ -71,13 +80,13 @@ end
 
 BtAlertedAction._select_alerted_mode = function (self, action_data)
 	local hesitate_chance = action_data.hesitate_chance
-	local should_hesitate = hesitate_chance and math.random() < hesitate_chance
+	local should_hesitate = hesitate_chance and hesitate_chance > math.random()
 
 	if should_hesitate then
 		return ALERTED_MODES.hesitate
 	else
 		local instant_aggro_chance = action_data.instant_aggro_chance
-		local should_aggro_instantly = instant_aggro_chance and math.random() < instant_aggro_chance
+		local should_aggro_instantly = instant_aggro_chance and instant_aggro_chance > math.random()
 
 		if should_aggro_instantly then
 			return ALERTED_MODES.instant_aggro
@@ -101,8 +110,7 @@ BtAlertedAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 
 		perception_extension:aggro()
 
-		local alert_spread_radius = action_data.alert_spread_radius
-		local target_unit = perception_component.target_unit
+		local alert_spread_radius, target_unit = action_data.alert_spread_radius, perception_component.target_unit
 
 		if alert_spread_radius and ALIVE[target_unit] then
 			local optional_require_los = true
@@ -129,6 +137,7 @@ BtAlertedAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 		scratchpad.navigation_extension:set_enabled(false)
 	elseif alerted_mode == ALERTED_MODES.directional_alerted and not scratchpad.triggered_directional_alerted_loop then
 		scratchpad.triggered_directional_alerted_loop = true
+
 		local alerted_anim_events = action_data.alerted_anim_events
 		local alerted_event = alerted_anim_events and Animation.random_event(alerted_anim_events) or DEFAULT_ALERTED_LOOP_EVENT
 
@@ -137,10 +146,8 @@ BtAlertedAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 end
 
 BtAlertedAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	local behavior_component = scratchpad.behavior_component
-	local navigation_extension = scratchpad.navigation_extension
-	local move_state = behavior_component.move_state
-	local is_following_path = navigation_extension:is_following_path()
+	local behavior_component, navigation_extension = scratchpad.behavior_component, scratchpad.navigation_extension
+	local move_state, is_following_path = behavior_component.move_state, navigation_extension:is_following_path()
 
 	if move_state == "moving" and not is_following_path then
 		return "failed"
@@ -151,7 +158,7 @@ BtAlertedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 	if not scratchpad.confirmed_line_of_sight then
 		local has_line_of_sight = perception_component.has_line_of_sight
 
-		if scratchpad.check_line_of_sight_timing < t then
+		if t > scratchpad.check_line_of_sight_timing then
 			scratchpad.confirmed_line_of_sight = has_line_of_sight
 		elseif has_line_of_sight then
 			scratchpad.perception_system:register_prioritized_unit_update(unit)
@@ -242,8 +249,9 @@ end
 
 BtAlertedAction._start_alerted_direction_anim = function (self, unit, scratchpad, action_data, t)
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local alerted_mode = scratchpad.alerted_mode
-	local direction_name, anim_events = nil
+	local direction_name, anim_events
 
 	if alerted_mode == ALERTED_MODES.moving_alerted then
 		direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
@@ -255,6 +263,7 @@ BtAlertedAction._start_alerted_direction_anim = function (self, unit, scratchpad
 		local position = POSITION_LOOKUP[unit]
 		local target_position = POSITION_LOOKUP[scratchpad.perception_component.target_unit]
 		local direction = Vector3.flat(Vector3.normalize(target_position - position))
+
 		direction_name = MinionMovement.get_relative_direction_name(right, forward, direction)
 		anim_events = action_data.directional_alerted_anim_events
 	end
@@ -267,6 +276,7 @@ BtAlertedAction._start_alerted_direction_anim = function (self, unit, scratchpad
 
 		local start_move_rotation_timings = action_data.start_move_rotation_timings
 		local start_rotation_timing = start_move_rotation_timings[alerted_anim]
+
 		scratchpad.start_rotation_timing = t + start_rotation_timing
 		scratchpad.move_start_anim_event_name = alerted_anim
 	else

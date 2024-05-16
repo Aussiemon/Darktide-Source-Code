@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/components/toxic_gas_corals.lua
+
 local Component = require("scripts/utilities/component")
 local ToxicGasFog = component("ToxicGasFog")
 local ToxicGasCorals = component("ToxicGasCorals")
 
 ToxicGasCorals.init = function (self, unit, is_server, nav_world)
 	self._unit = unit
+
 	local run_update = false
+
 	self._is_server = is_server
 
 	if rawget(_G, "LevelEditor") then
@@ -77,6 +81,7 @@ end
 local function _add_data_script_data(object, component_guid, section_id, id)
 	local script_data_to_update = {}
 	local script_data = {}
+
 	script_data.components = script_data.components or {}
 	script_data.components[component_guid] = script_data.components[component_guid] or {}
 	script_data.components[component_guid].component_data = script_data.components[component_guid].component_data or {}
@@ -91,12 +96,12 @@ local function _add_data_script_data(object, component_guid, section_id, id)
 
 	script_data_to_update[#script_data_to_update + 1] = {
 		id = object.id,
-		script_data = script_data
+		script_data = script_data,
 	}
 
 	Application.console_send({
 		type = "update_script_data",
-		data = script_data_to_update
+		data = script_data_to_update,
 	})
 end
 
@@ -156,10 +161,11 @@ ToxicGasCorals.editor_update = function (self, unit)
 				for i = 1, #fog_clouds do
 					local fog_unit = fog_clouds[i].unit
 					local distance = Vector3.distance(Unit.world_position(unit, 1), Unit.world_position(fog_unit, 1))
+
 					CLOSEST_CLOUD[#CLOSEST_CLOUD + 1] = {
 						distance = distance,
 						fog_unit = fog_unit,
-						component = fog_clouds[i].component
+						component = fog_clouds[i].component,
 					}
 				end
 
@@ -208,26 +214,26 @@ end
 
 ToxicGasCorals.component_data = {
 	id = {
-		ui_type = "number",
+		max = 100,
 		min = 1,
 		step = 1,
-		value = 0,
 		ui_name = "ID",
-		max = 100
+		ui_type = "number",
+		value = 0,
 	},
 	section_id = {
-		ui_type = "number",
+		max = 50,
 		min = 1,
 		step = 1,
-		value = 0,
 		ui_name = "Section ID",
-		max = 50
+		ui_type = "number",
+		value = 0,
 	},
 	dont_automatically_set_ids = {
+		ui_name = "Dont Automatically Set IDs",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Dont Automatically Set IDs"
-	}
+	},
 }
 
 return ToxicGasCorals

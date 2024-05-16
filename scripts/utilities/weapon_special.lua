@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/weapon_special.lua
+
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local stat_buff_types = BuffSettings.stat_buffs
@@ -11,7 +13,7 @@ WeaponSpecial.update_active = function (t, tweak_data, inventory_slot_component,
 		local special_active_start_t = inventory_slot_component.special_active_start_t
 		local end_t = special_active_start_t + active_duration
 
-		if t >= end_t then
+		if end_t <= t then
 			inventory_slot_component.special_active = false
 			inventory_slot_component.num_special_activations = 0
 		end
@@ -34,6 +36,7 @@ WeaponSpecial.disable = function (unit)
 
 	if is_wielded_slot_weapon then
 		local inventory_slot_component = unit_data_extension:write_component(wielded_slot)
+
 		inventory_slot_component.special_active = false
 		inventory_slot_component.num_special_activations = 0
 	end

@@ -1,12 +1,14 @@
+﻿-- chunkname: @scripts/managers/input/input_debug.lua
+
 local InputDebug = class("InputDebug")
-InputDebug.DISPLAY_AS = {
-	["left shift"] = "LSHIFT",
-	["right shift"] = "RSHIFT",
-	["left ctrl"] = "LCTRL",
-	["right ctrl"] = "RCTRL",
-	["left alt"] = "LALT",
-	["right alt"] = "RALT"
-}
+
+InputDebug.DISPLAY_AS = {}
+InputDebug.DISPLAY_AS["left shift"] = "LSHIFT"
+InputDebug.DISPLAY_AS["right shift"] = "RSHIFT"
+InputDebug.DISPLAY_AS["left ctrl"] = "LCTRL"
+InputDebug.DISPLAY_AS["right ctrl"] = "RCTRL"
+InputDebug.DISPLAY_AS["left alt"] = "LALT"
+InputDebug.DISPLAY_AS["right alt"] = "RALT"
 
 local function _value_or_table_to_string_array(item, uppercase, out)
 	if type(item) == "table" then
@@ -14,6 +16,7 @@ local function _value_or_table_to_string_array(item, uppercase, out)
 
 		for i = 1, num_items do
 			local v = item[i]
+
 			v = InputDebug.DISPLAY_AS[v] or v
 
 			if uppercase then

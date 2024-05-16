@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/host_states/host_wait_for_mission_briefing_done_state.lua
+
 local HostWaitForMissionBriefingDoneState = class("HostWaitForMissionBriefingDoneState")
 
 HostWaitForMissionBriefingDoneState.init = function (self, state_machine, shared_state)

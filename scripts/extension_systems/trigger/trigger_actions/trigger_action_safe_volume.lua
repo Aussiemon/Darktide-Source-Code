@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_actions/trigger_action_safe_volume.lua
+
 require("scripts/extension_systems/trigger/trigger_actions/trigger_action_base")
 
 local TriggerActionSafeVolume = class("TriggerActionSafeVolume", "TriggerActionBase")

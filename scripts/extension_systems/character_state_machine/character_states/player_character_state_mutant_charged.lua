@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_mutant_charged.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local FirstPersonView = require("scripts/utilities/first_person_view")
@@ -11,7 +13,7 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "mutant_charge"
+	stinger_type = "mutant_charge",
 }
 local VCE = "scream_long_vce"
 local PlayerCharacterStateMutantCharged = class("PlayerCharacterStateMutantCharged", "PlayerCharacterStateBase")
@@ -21,6 +23,7 @@ PlayerCharacterStateMutantCharged.init = function (self, character_state_init_co
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.target_drag_position = Vector3.zero()
@@ -44,21 +47,24 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 		self._animation_extension:anim_event("to_charger")
 
 		local locomotion_steering_component = self._locomotion_steering_component
+
 		locomotion_steering_component.move_method = "script_driven"
 		locomotion_steering_component.velocity_wanted = Vector3.zero()
 		locomotion_steering_component.calculate_fall_velocity = false
 		locomotion_steering_component.disable_minion_collision = true
 		self._movement_state_component.method = "idle"
+
 		local disabling_unit = self._disabled_state_input.disabling_unit
 		local disabled_character_state_component = self._disabled_character_state_component
+
 		disabled_character_state_component.is_disabled = true
 		disabled_character_state_component.disabling_unit = disabling_unit
 		disabled_character_state_component.disabling_type = "mutant_charged"
+
 		local is_server = self._is_server
 
 		if is_server then
-			local teleport_position = Unit.world_position(disabling_unit, 1)
-			local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, 1))
+			local teleport_position, teleport_rotation = Unit.world_position(disabling_unit, 1), Quaternion.inverse(Unit.local_rotation(disabling_unit, 1))
 
 			PlayerMovement.teleport_fixed_update(unit, teleport_position, nil)
 		end
@@ -99,12 +105,14 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
 	local is_server = self._is_server
-	local teleport_position = nil
+	local teleport_position
 
 	if ALIVE[disabling_unit] then
 		local breed_name = self._breed.name
 		local is_human = breed_name == "human"
+
 		teleport_position = disabled_character_state_component.target_drag_position
+
 		local unit_rotation = Unit.local_rotation(disabling_unit, 1)
 		local disabling_unit_forward = Quaternion.forward(unit_rotation)
 		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
@@ -129,12 +137,14 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 	disabled_character_state_component.target_drag_position = Vector3.zero()
 	disabled_character_state_component.disabling_type = "none"
 	self._locomotion_steering_component.disable_minion_collision = false
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 	locomotion_extension:set_parent_unit(nil)
 	locomotion_extension:visual_unlink()
 
 	local locomotion_steering_component = self._locomotion_steering_component
+
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
 
 	if is_server then

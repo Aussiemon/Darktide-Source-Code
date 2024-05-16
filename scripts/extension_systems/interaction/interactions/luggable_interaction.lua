@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/luggable_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local Luggable = require("scripts/utilities/luggable")
@@ -5,10 +7,10 @@ local Pickups = require("scripts/settings/pickup/pickups")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local valid_interaction_states = ProjectileLocomotionSettings.valid_interaction_states
 local NON_SUPPORTED_CHARACTER_STATES = {
+	ladder_climbing = true,
+	ladder_top_entering = true,
 	ladder_top_leaving = true,
 	ledge_vaulting = true,
-	ladder_climbing = true,
-	ladder_top_entering = true
 }
 local LuggableInteraction = class("LuggableInteraction", "BaseInteraction")
 

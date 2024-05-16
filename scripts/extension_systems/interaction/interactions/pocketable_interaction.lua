@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/pocketable_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
 local Pickups = require("scripts/settings/pickup/pickups")

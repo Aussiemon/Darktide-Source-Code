@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/multiplayer/network_event_delegate.lua
+
 local NetworkEventDelegate = class("NetworkEventDelegate")
 
 NetworkEventDelegate.init = function (self)
@@ -5,29 +7,31 @@ NetworkEventDelegate.init = function (self)
 	self._registered_channel_objects = {}
 	self._registered_unit_objects = {}
 	self._state_events = {}
-	local event_meta_table = {
-		__index = function (t, key)
-			if BUILD == "release" then
-				Crashify.print_exception("NetworkEventDelegate", string.format("Network event not registered %q", key))
 
-				return function ()
-					return
-				end
-			end
+	local event_meta_table = {}
 
-			local message_info = Network.message_info(key)
+	event_meta_table.__index = function (t, key)
+		if BUILD == "release" then
+			Crashify.print_exception("NetworkEventDelegate", string.format("Network event not registered %q", key))
 
-			if message_info and not message_info.session_bound then
-				Log.info("NetworkEventDelegate", "Network event not registered %q", key)
-
-				return function ()
-					return
-				end
-			else
-				ferror("Network event not registered %q", key)
+			return function ()
+				return
 			end
 		end
-	}
+
+		local message_info = Network.message_info(key)
+
+		if message_info and not message_info.session_bound then
+			Log.info("NetworkEventDelegate", "Network event not registered %q", key)
+
+			return function ()
+				return
+			end
+		else
+			ferror("Network event not registered %q", key)
+		end
+	end
+
 	self.event_table = setmetatable({}, event_meta_table)
 end
 
@@ -66,6 +70,7 @@ end
 NetworkEventDelegate.unregister_events = function (self, ...)
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
+
 		self._registered_objects[callback_name] = nil
 		self.event_table[callback_name] = nil
 		self._state_events[callback_name] = nil
@@ -110,8 +115,11 @@ NetworkEventDelegate._register_events = function (self, is_session_event, object
 	for i = 1, select("#", ...) do
 		local callback_name = select(i, ...)
 		local object_table = self._registered_unit_objects[callback_name]
+
 		object_table = self._registered_channel_objects[callback_name]
+
 		local registered_object = self._registered_objects[callback_name]
+
 		self._registered_objects[callback_name] = object
 
 		local function callback(event_table, ...)
@@ -131,8 +139,9 @@ NetworkEventDelegate._register_channel_events = function (self, is_session_event
 		local callback_name = select(i, ...)
 		local registered_object = self._registered_objects[callback_name]
 		local object_table = self._registered_unit_objects[callback_name]
+
 		object_table = self._registered_channel_objects[callback_name] or {
-			__size = 0
+			__size = 0,
 		}
 		self._registered_channel_objects[callback_name] = object_table
 		object_table[channel_id] = object
@@ -169,8 +178,9 @@ NetworkEventDelegate._register_session_unit_events = function (self, object, uni
 		local callback_name = select(i, ...)
 		local registered_object = self._registered_objects[callback_name]
 		local object_table = self._registered_channel_objects[callback_name]
+
 		object_table = self._registered_unit_objects[callback_name] or {
-			__size = 0
+			__size = 0,
 		}
 		self._registered_unit_objects[callback_name] = object_table
 		object_table[unit_id] = object
@@ -204,6 +214,7 @@ NetworkEventDelegate._cleanup_all = function (self)
 	if not table.is_empty(self._registered_unit_objects) then
 		for callback_name, object_table in pairs(self._registered_unit_objects) do
 			local unit_id, object = next(object_table)
+
 			error_str = error_str .. string.format("\tUnit event callback %s for unit id %i not unregistered. Held by %q\n", callback_name, unit_id, object.__class_name)
 		end
 
@@ -213,6 +224,7 @@ NetworkEventDelegate._cleanup_all = function (self)
 	if not table.is_empty(self._registered_channel_objects) then
 		for callback_name, object_table in pairs(self._registered_channel_objects) do
 			local channel_id, object = next(object_table)
+
 			error_str = error_str .. string.format("\tChannel event callback %s for channel %i not unregistered. Held by %q\n", callback_name, channel_id, object.__class_name)
 		end
 
@@ -237,7 +249,8 @@ NetworkEventDelegate._cleanup_session = function (self)
 			local object_table = self._registered_unit_objects[callback_name]
 
 			if object_table then
-				local unit_id = nil
+				local unit_id
+
 				unit_id, object = next(object_table)
 				error_str = error_str .. string.format("\tUnit event callback %s for unit id %i not unregistered. Held by %q\n", callback_name, unit_id, object.__class_name)
 			end
@@ -245,7 +258,8 @@ NetworkEventDelegate._cleanup_session = function (self)
 			object_table = self._registered_channel_objects[callback_name]
 
 			if object_table then
-				local channel_id = nil
+				local channel_id
+
 				channel_id, object = next(object_table)
 				error_str = error_str .. string.format("\tChannel event callback %s for channel %i not unregistered. Held by %q\n", callback_name, channel_id, object.__class_name)
 			end

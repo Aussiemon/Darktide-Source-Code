@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_consumed.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
@@ -12,7 +14,7 @@ local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "mutant_charge"
+	stinger_type = "mutant_charge",
 }
 local VCE = "scream_long_vce"
 local PlayerCharacterStateConsumed = class("PlayerCharacterStateConsumed", "PlayerCharacterStateBase")
@@ -22,6 +24,7 @@ PlayerCharacterStateConsumed.init = function (self, character_state_init_context
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	self._disabled_character_state_component = disabled_character_state_component
@@ -36,7 +39,7 @@ local CONSUMED_UNIT_LINK_NODE = "root_point"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
 local SET_CONSUMED_TIMING = {
 	human = 3.566666666666667,
-	ogryn = 3.8
+	ogryn = 3.8,
 }
 local FOLLOW_CONSUMED_TARGET_CAMERA_TIMING = 0.5
 
@@ -51,25 +54,32 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 		self._animation_extension:anim_event("to_beast_of_nurgle")
 
 		local locomotion_steering_component = self._locomotion_steering_component
+
 		locomotion_steering_component.move_method = "script_driven"
 		locomotion_steering_component.velocity_wanted = Vector3.zero()
 		locomotion_steering_component.calculate_fall_velocity = false
 		locomotion_steering_component.disable_velocity_rotation = true
 		locomotion_steering_component.disable_minion_collision = true
 		self._movement_state_component.method = "idle"
+
 		local disabling_unit = self._disabled_state_input.disabling_unit
 		local disabling_unit_data_extension = ScriptUnit.extension(disabling_unit, "unit_data_system")
+
 		self._disabling_breed = disabling_unit_data_extension:breed()
+
 		local disabled_character_state_component = self._disabled_character_state_component
+
 		disabled_character_state_component.is_disabled = true
 		disabled_character_state_component.disabling_unit = disabling_unit
 		disabled_character_state_component.disabling_type = "consumed"
+
 		local is_server = self._is_server
 
 		if is_server then
 			local link_node = Unit.node(disabling_unit, ENTER_TELEPORT_NODE)
 			local teleport_position = Unit.world_position(disabling_unit, link_node)
 			local unit_forward = Quaternion.forward(Unit.world_rotation(disabling_unit, link_node))
+
 			teleport_position = teleport_position + unit_forward * 4.5
 
 			PlayerMovement.teleport_fixed_update(unit, teleport_position)
@@ -107,10 +117,8 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 	self._consumed_timing = t + SET_CONSUMED_TIMING[self._breed.name]
 end
 
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5
-local THROW_TELEPORT_FWD_OFFSET_HUMAN = 3.2
-local THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2
+local THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5, 1.5
+local THROW_TELEPORT_FWD_OFFSET_HUMAN, THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2, 3.2
 
 PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
@@ -152,12 +160,14 @@ PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.disabling_type = "none"
 	self._locomotion_steering_component.disable_minion_collision = false
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 	locomotion_extension:set_parent_unit(nil)
 	locomotion_extension:visual_unlink()
 
 	local locomotion_steering_component = self._locomotion_steering_component
+
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
 
 	if self._is_server then
@@ -218,9 +228,10 @@ PlayerCharacterStateConsumed._add_buffs = function (self, t)
 
 	if not self._buff_indexes then
 		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(constants.beast_of_nurgle_consumed_buff, t)
+
 		self._buff_indexes = {
 			local_index = local_index,
-			component_index = component_index
+			component_index = component_index,
 		}
 	end
 end
@@ -242,7 +253,7 @@ end
 PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local disabling_unit = self._disabled_state_input.disabling_unit
 
-	if self._consumed_timing and self._consumed_timing <= t and ALIVE[disabling_unit] then
+	if self._consumed_timing and t >= self._consumed_timing and ALIVE[disabling_unit] then
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 		locomotion_extension:visual_unlink()
@@ -253,8 +264,7 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 		self._animation_extension:anim_event("player_" .. breed_name .. "_consumed")
 
 		if self._is_server then
-			local teleport_position = Unit.world_position(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE))
-			local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE)))
+			local teleport_position, teleport_rotation = Unit.world_position(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE)), Quaternion.inverse(Unit.local_rotation(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE)))
 
 			PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
 
@@ -262,6 +272,7 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 			local disabling_breed = self._disabling_breed
 			local target_effect_template = disabling_breed.target_effect_template
 			local effect_id = fx_system:start_template_effect(target_effect_template, unit)
+
 			self._consumed_effect_id = effect_id
 		end
 

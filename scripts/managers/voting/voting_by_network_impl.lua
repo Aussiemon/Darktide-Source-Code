@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_by_network_impl.lua
+
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local VotingTemplates = require("scripts/settings/voting/voting_templates")
 local VotingHost = require("scripts/managers/voting/voting_host")
@@ -8,7 +10,7 @@ local HOST_RPCS = {
 	"rpc_voting_client_ready",
 	"rpc_request_voting_no_params",
 	"rpc_request_voting_kick_player",
-	"rpc_request_vote"
+	"rpc_request_vote",
 }
 local CLIENT_RPCS = {
 	"rpc_start_voting_no_params",
@@ -22,7 +24,7 @@ local CLIENT_RPCS = {
 	"rpc_register_vote",
 	"rpc_vote_denied",
 	"rpc_voting_member_joined",
-	"rpc_voting_member_left"
+	"rpc_voting_member_left",
 }
 local VotingByNetworkImpl = class("VotingByNetworkImpl")
 
@@ -33,6 +35,7 @@ VotingByNetworkImpl.init = function (self, network_event_delegate)
 	self._voting_results = {}
 	self._voting_index = 0
 	self._last_vote_started = {}
+
 	local connection_manager = Managers.connection
 
 	connection_manager:register_event_listener(self, "client_connected", "_event_network_client_connected")
@@ -43,6 +46,7 @@ end
 
 VotingByNetworkImpl._generate_voting_id = function (self)
 	local index = self._voting_index + 1
+
 	self._voting_index = index
 
 	return string.format("%s:%s", Network.peer_id(), index)
@@ -114,11 +118,13 @@ VotingByNetworkImpl.start_voting = function (self, template_name, params)
 
 	if network_interface:is_host() then
 		local voting = VotingHost:new(voting_id, initiator_peer, template, params)
+
 		self._votings[voting_id] = voting
 
 		self:_on_started(voting_id, template, params, initiator_peer)
 	elseif network_interface:is_client() then
 		local voting = VotingClient:new(voting_id, initiator_peer, template, params)
+
 		self._votings[voting_id] = voting
 	end
 
@@ -193,9 +199,11 @@ VotingByNetworkImpl.update = function (self, dt, t)
 
 		if state == "completed" then
 			local result = voting:result()
+
 			self._voting_results[voting_id] = {
-				result = result
+				result = result,
 			}
+
 			local template = voting:template()
 
 			if DEDICATED_SERVER then
@@ -215,9 +223,11 @@ VotingByNetworkImpl.update = function (self, dt, t)
 			delete_votings[#delete_votings + 1] = voting_id
 		elseif state == "aborted" then
 			local abort_reason = voting:abort_reason()
+
 			self._voting_results[voting_id] = {
-				abort_reason = abort_reason
+				abort_reason = abort_reason,
 			}
+
 			local template = voting:template()
 
 			template.on_aborted(voting_id, template, table.clone(voting:params()), abort_reason)
@@ -348,7 +358,7 @@ VotingByNetworkImpl.complete_vote = function (self, voting_id)
 end
 
 VotingByNetworkImpl.rpc_voting_client_ready = function (self, channel_id)
-	local network_interface = nil
+	local network_interface
 
 	if Managers.connection:channel_to_peer(channel_id) then
 		network_interface = Managers.connection
@@ -389,6 +399,7 @@ VotingByNetworkImpl._rpc_request_voting = function (self, channel_id, voting_id,
 	end
 
 	local voting = VotingHost:new(voting_id, initiator_peer, template, params)
+
 	self._votings[voting_id] = voting
 
 	self:_on_started(voting_id, template, params, initiator_peer)
@@ -432,6 +443,7 @@ VotingByNetworkImpl.rpc_voting_accepted = function (self, channel_id, voting_id,
 		for i = 1, #initial_votes_list do
 			local option_id = initial_votes_list[i]
 			local option = voting_options_lookup[option_id]
+
 			initial_votes_list[i] = option == "nil" and StrictNil or option
 		end
 
@@ -453,10 +465,12 @@ VotingByNetworkImpl._rpc_start_voting = function (self, voting_id, template_id, 
 	for i = 1, #initial_votes_list do
 		local option_id = initial_votes_list[i]
 		local option = voting_options_lookup[option_id]
+
 		initial_votes_list[i] = option == "nil" and StrictNil or option
 	end
 
 	local voting = VotingClient:new(voting_id, initiator_peer, template, params, member_list, initial_votes_list, time_left)
+
 	self._votings[voting_id] = voting
 
 	self:_on_started(voting_id, template, params, initiator_peer)
@@ -549,6 +563,7 @@ VotingByNetworkImpl._event_network_client_disconnected = function (self, network
 	self._event_delegate:unregister_channel_events(channel_id, unpack(HOST_RPCS))
 
 	self._registered_channel_rpcs[channel_id] = nil
+
 	local votings = self._votings
 
 	for _, voting in pairs(votings) do
@@ -576,6 +591,7 @@ VotingByNetworkImpl._event_network_disconnected_from_host = function (self, netw
 	self._event_delegate:unregister_channel_events(channel_id, unpack(CLIENT_RPCS))
 
 	self._registered_channel_rpcs[channel_id] = nil
+
 	local votings = self._votings
 
 	for voting_id, voting in pairs(votings) do

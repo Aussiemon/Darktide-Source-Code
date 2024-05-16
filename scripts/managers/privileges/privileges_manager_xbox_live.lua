@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/privileges/privileges_manager_xbox_live.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local PrivilegesManagerXboxLive = class("PrivilegesManagerXboxLive")
 
@@ -19,7 +21,7 @@ local function _get_xbox_privilege(privilege_name)
 
 	p:resolve({
 		has_privilege = has_privilege or false,
-		deny_reason = deny_reason
+		deny_reason = deny_reason,
 	})
 
 	return p

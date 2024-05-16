@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_background_view/inventory_background_view.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local Definitions = require("scripts/ui/views/inventory_background_view/inventory_background_view_definitions")
 local InventoryBackgroundViewSettings = require("scripts/ui/views/inventory_background_view/inventory_background_view_settings")
@@ -25,11 +27,15 @@ local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
 InventoryBackgroundView.init = function (self, settings, context)
 	self._context = context
 	self.show_locked_cosmetics = true
+
 	local player = context and context.player or self:_player()
+
 	self._preview_player = player
 	self._is_own_player = self._preview_player == self:_player()
 	self._is_readonly = context and context.is_readonly
+
 	local profile = self._preview_player:profile()
+
 	self._player_level = profile.current_level
 	self._inventory_items = {}
 	self._new_items_gear_ids = {}
@@ -77,6 +83,7 @@ InventoryBackgroundView.on_enter = function (self)
 	self:_setup_background_frames_by_archetype(archetype_name)
 
 	local talent_layout_file_path = profile_archetype and profile_archetype.talent_layout_file_path
+
 	self._active_talent_loadout = talent_layout_file_path and require(talent_layout_file_path)
 	self._talent_icons_package_id = Managers.data_service.talents:load_icons_for_profile(profile, "InventoryBackgroundView")
 	self._widgets_by_name.character_insigna.content.visible = false
@@ -86,6 +93,7 @@ InventoryBackgroundView._setup_background_frames_by_archetype = function (self, 
 	local inventory_frames_by_archetype = UISettings.inventory_frames_by_archetype
 	local frame_textures = inventory_frames_by_archetype[archetype_name]
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.corner_top_left.content.texture = frame_textures.left_upper
 	widgets_by_name.corner_bottom_left.content.texture = frame_textures.left_lower
 	widgets_by_name.corner_top_right.content.texture = frame_textures.right_upper
@@ -98,6 +106,7 @@ InventoryBackgroundView._set_player_profile_information = function (self, player
 	local current_level = profile.current_level
 	local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.character_name.content.text = character_name
 	widgets_by_name.character_archetype_title.content.text = character_archetype_title
 	widgets_by_name.character_level.content.text = tostring(current_level)
@@ -132,12 +141,14 @@ InventoryBackgroundView._set_player_profile_title = function (self, profile)
 
 	if player_title then
 		local widgets_by_name = self._widgets_by_name
+
 		widgets_by_name.character_title.content.text = player_title
 	end
 end
 
 InventoryBackgroundView._request_player_icon = function (self)
 	local material_values = self._widgets_by_name.character_portrait.style.texture_portrait.material_values
+
 	material_values.use_placeholder_texture = 1
 
 	self:_load_portrait_icon()
@@ -148,8 +159,9 @@ InventoryBackgroundView._load_portrait_icon = function (self)
 	local load_cb = callback(self, "_cb_set_player_icon")
 	local unload_cb = callback(self, "_cb_unset_player_icon")
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
+
 	self._portrait_loaded_info = {
-		icon_load_id = icon_load_id
+		icon_load_id = icon_load_id,
 	}
 end
 
@@ -169,8 +181,11 @@ end
 
 InventoryBackgroundView._cb_set_player_icon = function (self, grid_index, rows, columns, render_target)
 	local widget = self._widgets_by_name.character_portrait
+
 	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
+
 	local material_values = widget.style.texture_portrait.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -181,6 +196,7 @@ end
 InventoryBackgroundView._cb_unset_player_icon = function (self, widget)
 	local widget = self._widgets_by_name.character_portrait
 	local material_values = widget.style.texture_portrait.material_values
+
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil
@@ -197,8 +213,9 @@ end
 InventoryBackgroundView._load_portrait_frame = function (self, item)
 	local cb = callback(self, "_cb_set_player_frame")
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+
 	self._frame_loaded_info = {
-		icon_load_id = icon_load_id
+		icon_load_id = icon_load_id,
 	}
 end
 
@@ -213,6 +230,7 @@ InventoryBackgroundView._unload_portrait_frame = function (self, ui_renderer)
 
 	if not self.destroyed then
 		local material_values = widget.style.texture_portrait.material_values
+
 		material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
 	end
 
@@ -230,7 +248,7 @@ end
 
 InventoryBackgroundView._cb_set_player_frame = function (self, item)
 	local profile = self._presentation_profile
-	local icon = nil
+	local icon
 
 	if item.icon then
 		icon = item.icon
@@ -240,6 +258,7 @@ InventoryBackgroundView._cb_set_player_frame = function (self, item)
 
 	local widget = self._widgets_by_name.character_portrait
 	local material_values = widget.style.texture_portrait.material_values
+
 	material_values.portrait_frame_texture = icon
 end
 
@@ -251,8 +270,9 @@ end
 InventoryBackgroundView._load_insignia = function (self, item)
 	local cb = callback(self, "_cb_set_player_insignia")
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+
 	self._insignia_loaded_info = {
-		icon_load_id = icon_load_id
+		icon_load_id = icon_load_id,
 	}
 end
 
@@ -267,7 +287,9 @@ InventoryBackgroundView._unload_insignia = function (self, ui_renderer)
 
 	if not self.destroyed then
 		widget.content.icon = "content/ui/materials/base/ui_default_base"
+
 		local material_values = widget.style.texture_insignia.material_values
+
 		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
 	end
 
@@ -313,11 +335,13 @@ InventoryBackgroundView._fetch_character_progression = function (self, player)
 	end
 
 	self._fetching_character_progression = true
-	local profiles_promise = nil
+
+	local profiles_promise
 	local character_id = player:character_id()
 
 	if Managers.backend:authenticated() then
 		local backend_interface = Managers.backend.interfaces
+
 		profiles_promise = backend_interface.progression:get_progression("character", character_id):next(function (results)
 			local progression_data = results
 			local current_level_experience = progression_data and progression_data.currentXpInLevel or 0
@@ -330,6 +354,7 @@ InventoryBackgroundView._fetch_character_progression = function (self, player)
 		end)
 	else
 		profiles_promise = Promise.new()
+
 		local level_experience_progress = 0
 
 		profiles_promise:resolve(level_experience_progress)
@@ -367,6 +392,7 @@ InventoryBackgroundView._set_experience_bar = function (self, experience_fractio
 
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.character_experience
+
 	widget.content.progress = experience_fraction
 	self._current_experience_fraction = experience_fraction
 end
@@ -380,7 +406,9 @@ InventoryBackgroundView._update_experience_bar_fill_animation = function (self, 
 
 	local anim_duration = self._experience_fraction_duration_delay
 	local target_fraction = self._target_experience_fraction
+
 	current_time = current_time + dt
+
 	local time_progress = math.clamp(current_time / anim_duration, 0, 1)
 	local anim_progress = math.ease_out_exp(time_progress)
 	local anim_fraction = target_fraction * anim_progress
@@ -436,7 +464,7 @@ end
 InventoryBackgroundView.event_discard_item = function (self, item)
 	local gear_id = item.gear_id
 	local local_changes_promise = self:_equip_local_changes()
-	local delete_promise = nil
+	local delete_promise
 
 	if local_changes_promise then
 		delete_promise = local_changes_promise:next(function ()
@@ -448,6 +476,7 @@ InventoryBackgroundView.event_discard_item = function (self, item)
 
 	delete_promise:next(function (result)
 		self._inventory_items[gear_id] = nil
+
 		local rewards = result and result.rewards
 
 		if rewards then
@@ -456,7 +485,7 @@ InventoryBackgroundView.event_discard_item = function (self, item)
 			Managers.event:trigger("event_force_wallet_update")
 			Managers.event:trigger("event_add_notification_message", "currency", {
 				currency = "credits",
-				amount = credits_amount
+				amount = credits_amount,
 			})
 		end
 
@@ -497,10 +526,11 @@ InventoryBackgroundView._equip_slot_item = function (self, slot_name, item, forc
 	local previous_item = current_loadout[slot_name]
 	local item_gear_id = type(item) == "table" and item.gear_id or type(item) == "string" and item
 	local previous_item_gear_id = type(previous_item) == "table" and previous_item.gear_id or type(previous_item) == "string" and previous_item
-	local valid_item_change = item_gear_id and previous_item_gear_id and item_gear_id ~= previous_item_gear_id or type(item) == "table" and item.always_owned and type(previous_item) == "table" and item.name ~= previous_item.name or (item_gear_id or type(item) == "table" and item.always_owned) and not previous_item_gear_id or type(previous_item) == "table" and not item or force_update
+	local valid_item_change = item_gear_id and previous_item_gear_id and item_gear_id ~= previous_item_gear_id or type(item) == "table" and item.always_owned and type(previous_item) == "table" and item.name ~= previous_item.name or (item_gear_id or type(item) == "table" and item.always_owned) and not previous_item_gear_id or type(previous_item) == "table" and not not not item or force_update
 
 	if valid_item_change then
 		presentation_loadout[slot_name] = item
+
 		local player_profile = self._presentation_profile
 
 		if player_profile then
@@ -609,6 +639,7 @@ end
 
 InventoryBackgroundView.cb_on_weapon_swap_pressed = function (self)
 	local slot_name = self._preview_wield_slot_id
+
 	slot_name = slot_name == "slot_primary" and "slot_secondary" or "slot_primary"
 
 	self:_play_sound(UISoundEvents.weapons_swap)
@@ -617,7 +648,7 @@ InventoryBackgroundView.cb_on_weapon_swap_pressed = function (self)
 end
 
 InventoryBackgroundView.has_new_items_by_type = function (self, item_type)
-	return self._new_items_gear_ids_by_type[item_type] and not not not table.is_empty(self._new_items_gear_ids_by_type[item_type])
+	return not not self._new_items_gear_ids_by_type[item_type] and not not not table.is_empty(self._new_items_gear_ids_by_type[item_type])
 end
 
 InventoryBackgroundView._update_has_empty_talent_nodes = function (self, optional_selected_nodes)
@@ -644,16 +675,19 @@ end
 InventoryBackgroundView._setup_top_panel = function (self)
 	local reference_name = "top_panel"
 	local layer = 90
+
 	self._top_panel = self:_add_element(ViewElementMenuPanel, reference_name, layer)
+
 	local player = self._preview_player
 	local profile = player:profile()
 	local profile_archetype = profile.archetype
 	local archetype_name = profile_archetype.name
 	local is_ogryn = archetype_name == "ogryn"
+
 	self._views_settings = {
 		{
-			view_name = "inventory_view",
 			display_name = "loc_inventory_view_display_name",
+			view_name = "inventory_view",
 			update = function (content, style, dt)
 				content.hotspot.disabled = not self:is_inventory_synced()
 
@@ -677,9 +711,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			view_context = {
 				tabs = {
 					{
-						ui_animation = "loadout_on_enter",
-						is_grid_layout = false,
 						allow_item_hover_information = true,
+						is_grid_layout = false,
+						ui_animation = "loadout_on_enter",
 						draw_wallet = self._is_own_player and not self._is_readonly,
 						camera_settings = {
 							{
@@ -687,219 +721,219 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								"x",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_position_axis_offset",
 								"y",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_position_axis_offset",
 								"z",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_rotation_axis_offset",
 								"x",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_rotation_axis_offset",
 								"y",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_rotation_axis_offset",
 								"z",
 								0,
 								0.5,
-								math.easeCubic
-							}
+								math.easeCubic,
+							},
 						},
 						layout = {
 							{
-								slot_title = "loc_inventory_title_slot_primary",
-								scenegraph_id = "slot_primary",
-								loadout_slot = true,
-								widget_type = "item_slot",
 								default_icon = "content/ui/materials/icons/items/weapons/melee/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_primary",
+								slot_title = "loc_inventory_title_slot_primary",
+								widget_type = "item_slot",
 								slot = ItemSlotSettings.slot_primary,
 								navigation_grid_indices = {
 									1,
-									1
+									1,
 								},
 								item_type = UISettings.ITEM_TYPES.WEAPON_MELEE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								slot_title = "loc_inventory_title_slot_secondary",
-								scenegraph_id = "slot_secondary",
-								loadout_slot = true,
-								widget_type = "item_slot",
 								default_icon = "content/ui/materials/icons/items/weapons/ranged/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_secondary",
+								slot_title = "loc_inventory_title_slot_secondary",
+								widget_type = "item_slot",
 								slot = ItemSlotSettings.slot_secondary,
 								navigation_grid_indices = {
 									2,
-									1
+									1,
 								},
 								item_type = UISettings.ITEM_TYPES.WEAPON_RANGED,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								scenegraph_id = "slot_attachments_header",
 								display_name = "loc_inventory_loadout_group_attachments",
+								scenegraph_id = "slot_attachments_header",
 								widget_type = "item_sub_header",
 								item_type = UISettings.ITEM_TYPES.GADGET,
 								size = {
 									840,
-									50
+									50,
 								},
 								new_indicator_width_offset = {
 									183,
 									-20,
-									4
+									4,
 								},
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								scenegraph_id = "slot_attachment_1",
+								default_icon = "content/ui/materials/icons/items/attachments/defensive/empty",
 								loadout_slot = true,
+								scenegraph_id = "slot_attachment_1",
 								slot_title = "loc_inventory_title_slot_attachment_1",
 								widget_type = "gadget_item_slot",
-								default_icon = "content/ui/materials/icons/items/attachments/defensive/empty",
 								slot = ItemSlotSettings.slot_attachment_1,
 								required_level = PlayerProgressionUnlocks.gadget_slot_1,
 								navigation_grid_indices = {
 									3,
-									1
+									1,
 								},
 								item_type = UISettings.ITEM_TYPES.GADGET,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								scenegraph_id = "slot_attachment_2",
+								default_icon = "content/ui/materials/icons/items/attachments/tactical/empty",
 								loadout_slot = true,
+								scenegraph_id = "slot_attachment_2",
 								slot_title = "loc_inventory_title_slot_attachment_2",
 								widget_type = "gadget_item_slot",
-								default_icon = "content/ui/materials/icons/items/attachments/tactical/empty",
 								slot = ItemSlotSettings.slot_attachment_2,
 								required_level = PlayerProgressionUnlocks.gadget_slot_2,
 								navigation_grid_indices = {
 									3,
-									2
+									2,
 								},
 								item_type = UISettings.ITEM_TYPES.GADGET,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								scenegraph_id = "slot_attachment_3",
+								default_icon = "content/ui/materials/icons/items/attachments/utility/empty",
 								loadout_slot = true,
+								scenegraph_id = "slot_attachment_3",
 								slot_title = "loc_inventory_title_slot_attachment_3",
 								widget_type = "gadget_item_slot",
-								default_icon = "content/ui/materials/icons/items/attachments/utility/empty",
 								slot = ItemSlotSettings.slot_attachment_3,
 								required_level = PlayerProgressionUnlocks.gadget_slot_3,
 								navigation_grid_indices = {
 									3,
-									3
+									3,
 								},
 								item_type = UISettings.ITEM_TYPES.GADGET,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								scenegraph_id = "slot_primary_header",
 								display_name = "loc_inventory_loadout_group_primary_weapon",
+								scenegraph_id = "slot_primary_header",
 								widget_type = "item_sub_header",
 								item_type = UISettings.ITEM_TYPES.WEAPON_MELEE,
 								size = {
 									840,
-									50
+									50,
 								},
 								new_indicator_width_offset = {
 									243,
 									-22,
-									4
+									4,
 								},
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								scenegraph_id = "slot_secondary_header",
 								display_name = "loc_inventory_loadout_group_secondary_weapon",
+								scenegraph_id = "slot_secondary_header",
 								widget_type = "item_sub_header",
 								item_type = UISettings.ITEM_TYPES.WEAPON_RANGED,
 								size = {
 									840,
-									50
+									50,
 								},
 								new_indicator_width_offset = {
 									211,
 									-20,
-									4
+									4,
 								},
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								texture = "content/ui/materials/frames/loadout_main",
 								scenegraph_id = "loadout_frame",
+								texture = "content/ui/materials/frames/loadout_main",
 								widget_type = "texture",
 								size = {
 									840,
-									840
-								}
+									840,
+								},
 							},
 							{
-								texture = "content/ui/materials/backgrounds/terminal_basic",
 								scenegraph_id = "loadout_background_1",
+								texture = "content/ui/materials/backgrounds/terminal_basic",
 								widget_type = "texture",
 								size = {
 									640,
-									380
+									380,
 								},
-								color = Color.terminal_grid_background(nil, true)
+								color = Color.terminal_grid_background(nil, true),
 							},
 							{
-								texture = "content/ui/materials/backgrounds/terminal_basic",
 								scenegraph_id = "loadout_background_2",
+								texture = "content/ui/materials/backgrounds/terminal_basic",
 								widget_type = "texture",
 								size = {
 									700,
-									320
+									320,
 								},
-								color = Color.terminal_grid_background(nil, true)
-							}
-						}
-					}
-				}
-			}
+								color = Color.terminal_grid_background(nil, true),
+							},
+						},
+					},
+				},
+			},
 		},
 		{
-			view_name = "inventory_view",
 			display_name = "loc_cosmetics_view_display_name",
+			view_name = "inventory_view",
 			update = function (content, style, dt)
 				content.hotspot.disabled = not self:is_inventory_synced()
 
@@ -925,346 +959,346 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			view_context = {
 				tabs = {
 					{
-						ui_animation = "cosmetics_on_enter",
+						allow_item_hover_information = true,
 						display_name = "tab1",
 						draw_wallet = false,
-						allow_item_hover_information = true,
 						icon = "content/ui/materials/icons/item_types/outfits",
 						is_grid_layout = false,
+						ui_animation = "cosmetics_on_enter",
 						camera_settings = {
 							{
 								"event_inventory_set_camera_position_axis_offset",
 								"x",
 								is_ogryn and 1.2 or 0.85,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_position_axis_offset",
 								"y",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_position_axis_offset",
 								"z",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_rotation_axis_offset",
 								"x",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_rotation_axis_offset",
 								"y",
 								0,
 								0.5,
-								math.easeCubic
+								math.easeCubic,
 							},
 							{
 								"event_inventory_set_camera_rotation_axis_offset",
 								"z",
 								0,
 								0.5,
-								math.easeCubic
-							}
+								math.easeCubic,
+							},
 						},
 						item_hover_information_offset = {
-							0
+							0,
 						},
 						layout = {
 							{
-								slot_title = "loc_inventory_title_slot_character_title",
-								scenegraph_id = "slot_character_title",
-								loadout_slot = true,
-								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
-								widget_type = "character_title_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/head/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_character_title",
+								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
+								slot_title = "loc_inventory_title_slot_character_title",
+								widget_type = "character_title_item_slot",
 								slot = ItemSlotSettings.slot_character_title,
 								navigation_grid_indices = {
 									4,
-									1
+									1,
 								},
 								item_type = UISettings.ITEM_TYPES.CHARACTER_TITLE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								slot_title = "loc_inventory_title_slot_gear_head",
-								scenegraph_id = "slot_gear_head",
-								loadout_slot = true,
-								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
-								widget_type = "gear_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/head/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_gear_head",
+								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
+								slot_title = "loc_inventory_title_slot_gear_head",
+								widget_type = "gear_item_slot",
 								slot = ItemSlotSettings.slot_gear_head,
 								navigation_grid_indices = {
 									1,
-									1
+									1,
 								},
 								item_type = UISettings.ITEM_TYPES.GEAR_HEAD,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								slot_title = "loc_inventory_title_slot_gear_upperbody",
-								scenegraph_id = "slot_gear_upperbody",
-								loadout_slot = true,
-								slot_icon = "content/ui/materials/icons/item_types/beveled/upper_bodies",
-								widget_type = "gear_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/arms/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_gear_upperbody",
+								slot_icon = "content/ui/materials/icons/item_types/beveled/upper_bodies",
+								slot_title = "loc_inventory_title_slot_gear_upperbody",
+								widget_type = "gear_item_slot",
 								slot = ItemSlotSettings.slot_gear_upperbody,
 								navigation_grid_indices = {
 									2,
-									1
+									1,
 								},
 								item_type = UISettings.ITEM_TYPES.GEAR_UPPERBODY,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								slot_title = "loc_inventory_title_slot_gear_lowerbody",
-								scenegraph_id = "slot_gear_lowerbody",
-								loadout_slot = true,
-								slot_icon = "content/ui/materials/icons/item_types/beveled/lower_bodies",
-								widget_type = "gear_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_gear_lowerbody",
+								slot_icon = "content/ui/materials/icons/item_types/beveled/lower_bodies",
+								slot_title = "loc_inventory_title_slot_gear_lowerbody",
+								widget_type = "gear_item_slot",
 								slot = ItemSlotSettings.slot_gear_lowerbody,
 								navigation_grid_indices = {
 									3,
-									1
+									1,
 								},
 								item_type = UISettings.ITEM_TYPES.GEAR_LOWERBODY,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
-								scenegraph_id = "slot_gear_extra_cosmetic",
-								loadout_slot = true,
-								slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
-								widget_type = "gear_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_gear_extra_cosmetic",
+								slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
+								slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
+								widget_type = "gear_item_slot",
 								slot = ItemSlotSettings.slot_gear_extra_cosmetic,
 								navigation_grid_indices = {
 									1,
-									2
+									2,
 								},
 								initial_rotation = math.pi,
 								item_type = UISettings.ITEM_TYPES.GEAR_EXTRA_COSMETIC,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								slot_title = "loc_inventory_title_slot_portrait_frame",
-								scenegraph_id = "slot_portrait_frame",
-								loadout_slot = true,
-								widget_type = "ui_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_portrait_frame",
+								slot_title = "loc_inventory_title_slot_portrait_frame",
+								widget_type = "ui_item_slot",
 								slot = ItemSlotSettings.slot_portrait_frame,
 								navigation_grid_indices = {
 									2,
-									2
+									2,
 								},
 								item_type = UISettings.ITEM_TYPES.PORTRAIT_FRAME,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							{
-								slot_title = "loc_inventory_title_slot_insignia",
-								scenegraph_id = "slot_insignia",
-								loadout_slot = true,
-								widget_type = "ui_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								loadout_slot = true,
+								scenegraph_id = "slot_insignia",
+								slot_title = "loc_inventory_title_slot_insignia",
+								widget_type = "ui_item_slot",
 								slot = ItemSlotSettings.slot_insignia,
 								navigation_grid_indices = {
 									3,
-									2
+									2,
 								},
 								item_type = UISettings.ITEM_TYPES.CHARACTER_INSIGNIA,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							},
 							not self._is_readonly and {
-								scenegraph_id = "button_expressions",
-								slot_title = "loc_inventory_title_slot_animation_end_of_round",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								display_name = "loc_inventory_title_slot_animation_end_of_round",
 								loadout_slot = true,
+								scenegraph_id = "button_expressions",
+								slot_title = "loc_inventory_title_slot_animation_end_of_round",
 								widget_type = "pose_item_slot",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								size = {
 									64,
-									64
+									64,
 								},
 								slot = ItemSlotSettings.slot_animation_end_of_round,
 								navigation_grid_indices = {
 									6,
-									3
+									3,
 								},
 								item_type = UISettings.ITEM_TYPES.END_OF_ROUND,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							} or nil,
 							not self._is_readonly and {
-								scenegraph_id = "button_emote_1",
-								slot_title = "loc_inventory_title_slot_animation_emote_1",
+								animation_event_name_suffix = "_instant",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								disable_rotation_input = false,
 								display_name = "loc_inventory_title_slot_animation_emote_1",
 								loadout_slot = true,
-								disable_rotation_input = false,
+								scenegraph_id = "button_emote_1",
+								slot_title = "loc_inventory_title_slot_animation_emote_1",
 								widget_type = "emote_item_slot",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								animation_event_name_suffix = "_instant",
 								size = {
 									64,
-									64
+									64,
 								},
 								slot = ItemSlotSettings.slot_animation_emote_1,
 								navigation_grid_indices = {
 									1,
-									3
+									3,
 								},
 								animation_event_variable_data = {
 									index = "in_menu",
-									value = 1
+									value = 1,
 								},
 								item_type = UISettings.ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							} or nil,
 							not self._is_readonly and {
-								scenegraph_id = "button_emote_2",
-								slot_title = "loc_inventory_title_slot_animation_emote_2",
+								animation_event_name_suffix = "_instant",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								disable_rotation_input = false,
 								display_name = "loc_inventory_title_slot_animation_emote_2",
 								loadout_slot = true,
-								disable_rotation_input = false,
+								scenegraph_id = "button_emote_2",
+								slot_title = "loc_inventory_title_slot_animation_emote_2",
 								widget_type = "emote_item_slot",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								animation_event_name_suffix = "_instant",
 								size = {
 									64,
-									64
+									64,
 								},
 								slot = ItemSlotSettings.slot_animation_emote_2,
 								navigation_grid_indices = {
 									2,
-									3
+									3,
 								},
 								animation_event_variable_data = {
 									index = "in_menu",
-									value = 1
+									value = 1,
 								},
 								item_type = UISettings.ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							} or nil,
 							not self._is_readonly and {
-								scenegraph_id = "button_emote_3",
-								slot_title = "loc_inventory_title_slot_animation_emote_3",
+								animation_event_name_suffix = "_instant",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								disable_rotation_input = false,
 								display_name = "loc_inventory_title_slot_animation_emote_3",
 								loadout_slot = true,
-								disable_rotation_input = false,
+								scenegraph_id = "button_emote_3",
+								slot_title = "loc_inventory_title_slot_animation_emote_3",
 								widget_type = "emote_item_slot",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								animation_event_name_suffix = "_instant",
 								size = {
 									64,
-									64
+									64,
 								},
 								slot = ItemSlotSettings.slot_animation_emote_3,
 								navigation_grid_indices = {
 									3,
-									3
+									3,
 								},
 								animation_event_variable_data = {
 									index = "in_menu",
-									value = 1
+									value = 1,
 								},
 								item_type = UISettings.ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							} or nil,
 							not self._is_readonly and {
-								scenegraph_id = "button_emote_4",
-								slot_title = "loc_inventory_title_slot_animation_emote_4",
+								animation_event_name_suffix = "_instant",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								disable_rotation_input = false,
 								display_name = "loc_inventory_title_slot_animation_emote_4",
 								loadout_slot = true,
-								disable_rotation_input = false,
+								scenegraph_id = "button_emote_4",
+								slot_title = "loc_inventory_title_slot_animation_emote_4",
 								widget_type = "emote_item_slot",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								animation_event_name_suffix = "_instant",
 								size = {
 									64,
-									64
+									64,
 								},
 								slot = ItemSlotSettings.slot_animation_emote_4,
 								navigation_grid_indices = {
 									4,
-									3
+									3,
 								},
 								animation_event_variable_data = {
 									index = "in_menu",
-									value = 1
+									value = 1,
 								},
 								item_type = UISettings.ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
+								end,
 							} or nil,
 							not self._is_readonly and {
-								scenegraph_id = "button_emote_5",
-								slot_title = "loc_inventory_title_slot_animation_emote_5",
+								animation_event_name_suffix = "_instant",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+								disable_rotation_input = false,
 								display_name = "loc_inventory_title_slot_animation_emote_5",
 								loadout_slot = true,
-								disable_rotation_input = false,
+								scenegraph_id = "button_emote_5",
+								slot_title = "loc_inventory_title_slot_animation_emote_5",
 								widget_type = "emote_item_slot",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								animation_event_name_suffix = "_instant",
 								size = {
 									64,
-									64
+									64,
 								},
 								slot = ItemSlotSettings.slot_animation_emote_5,
 								navigation_grid_indices = {
 									5,
-									3
+									3,
 								},
 								animation_event_variable_data = {
 									index = "in_menu",
-									value = 1
+									value = 1,
 								},
 								item_type = UISettings.ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
-								end
-							} or nil
-						}
-					}
-				}
-			}
-		}
+								end,
+							} or nil,
+						},
+					},
+				},
+			},
+		},
 	}
 
 	self:_update_has_empty_talent_nodes()
 
 	self._views_settings[#self._views_settings + 1] = {
-		view_name = "talent_builder_view",
 		display_name = "loc_talent_view_display_name",
+		view_name = "talent_builder_view",
 		update = function (content, style, dt)
 			content.hotspot.disabled = not self:is_inventory_synced()
 
@@ -1276,7 +1310,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		end,
 		context = {
 			can_exit = true,
-			player_mode = true
+			player_mode = true,
 		},
 		view_context = {
 			can_exit = true,
@@ -1287,52 +1321,53 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					"x",
 					is_ogryn and 5.2 or 3.5,
 					0.5,
-					math.easeCubic
+					math.easeCubic,
 				},
 				{
 					"event_inventory_set_camera_position_axis_offset",
 					"y",
 					0,
 					0.5,
-					math.easeCubic
+					math.easeCubic,
 				},
 				{
 					"event_inventory_set_camera_position_axis_offset",
 					"z",
 					0,
 					0.5,
-					math.easeCubic
+					math.easeCubic,
 				},
 				{
 					"event_inventory_set_camera_rotation_axis_offset",
 					"x",
 					0,
 					0.5,
-					math.easeCubic
+					math.easeCubic,
 				},
 				{
 					"event_inventory_set_camera_rotation_axis_offset",
 					"y",
 					0,
 					0.5,
-					math.easeCubic
+					math.easeCubic,
 				},
 				{
 					"event_inventory_set_camera_rotation_axis_offset",
 					"z",
 					0,
 					0.5,
-					math.easeCubic
-				}
-			}
-		}
+					math.easeCubic,
+				},
+			},
+		},
 	}
+
 	local views_settings = self._views_settings
 
 	for i = 1, #views_settings do
 		local settings = views_settings[i]
 		local view_name = settings.view_name
-		local display_name = nil
+		local display_name
 		local display_name_loc_key = settings.display_name
 
 		if not display_name_loc_key and settings.unlocalized_display_name then
@@ -1340,6 +1375,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		else
 			if not display_name_loc_key then
 				local view_settings = Views[view_name]
+
 				display_name_loc_key = view_settings.display_name
 			end
 
@@ -1376,9 +1412,7 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 	local settings = views_settings[index]
 	local view_name = settings.view_name
 
-	if settings.resolve_function then
-		view_name = settings.resolve_function() or view_name
-	end
+	view_name = settings.resolve_function and settings.resolve_function() or view_name
 
 	local view_context = settings.view_context
 
@@ -1432,8 +1466,9 @@ InventoryBackgroundView._switch_active_view = function (self, view_name, additio
 				current_profile_equipped_items = self._current_profile_equipped_items,
 				current_profile_equipped_talents = self._current_profile_equipped_talents,
 				changeable_context = additional_context_data,
-				is_readonly = self._is_readonly
+				is_readonly = self._is_readonly,
 			}
+
 			self._active_view = view_name
 			self._active_view_context = context
 
@@ -1474,7 +1509,7 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 	end
 
 	local new_loadout = {}
-	local new_talents, new_talents_version = nil
+	local new_talents, new_talents_version
 	local player = self._preview_player
 	local profile = player:profile()
 	local active_layout = self._active_talent_loadout
@@ -1483,12 +1518,15 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 	if active_profile_preset then
 		local loadout = active_profile_preset.loadout
 		local talents = active_profile_preset.talents
+
 		new_loadout = loadout and table.create_copy(nil, loadout) or {}
 		new_talents = talents and table.create_copy(nil, talents) or {}
 		new_talents_version = active_profile_preset.talents_version
 	else
 		local loadout = profile.loadout
+
 		new_talents_version = active_layout_version
+
 		local current_profile_equipped_talents = self._current_profile_equipped_talents
 
 		if current_profile_equipped_talents then
@@ -1498,12 +1536,14 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 
 			if selected_nodes then
 				local nodes = active_layout.nodes
+
 				new_talents = {}
 
 				for node_index_s, points_spent_on_node in pairs(selected_nodes) do
 					local node_index = tonumber(node_index_s)
 					local node = nodes[node_index]
 					local node_name = node.widget_name
+
 					new_talents[node_name] = points_spent_on_node
 				end
 			else
@@ -1531,6 +1571,7 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 	end
 
 	local new_profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+
 	new_profile_preset.loadout = new_loadout
 	new_profile_preset.talents = new_talents
 	new_profile_preset.talents_version = new_talents_version
@@ -1579,7 +1620,7 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 
 	if not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots) or not table.is_empty(self._modified_slots) then
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_inventory_error_loadout_items")
+			text = Localize("loc_inventory_error_loadout_items"),
 		})
 	end
 end
@@ -1638,6 +1679,7 @@ end
 
 InventoryBackgroundView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 90)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -1658,6 +1700,7 @@ InventoryBackgroundView._load_profile = function (self, profile)
 
 	self._item_definitions = MasterItems.get_cached()
 	self._profile_loader_index = (self._profile_loader_index or 0) + 1
+
 	local reference_name = self.__class_name .. "_profile_loader_" .. tostring(self._profile_loader_index)
 	local character_profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions)
 
@@ -1665,10 +1708,12 @@ InventoryBackgroundView._load_profile = function (self, profile)
 
 	self._loading_profile = profile
 	self._loading_profile_loader = character_profile_loader
+
 	local profile_archetype = profile.archetype
 	local archetype_name = profile_archetype.name
 	local is_ogryn = archetype_name == "ogryn"
 	local camera_position_default_offset = self._camera_position_default_offset
+
 	camera_position_default_offset[1] = is_ogryn and 0 or 0
 	camera_position_default_offset[2] = is_ogryn and -1.5 or 0
 	camera_position_default_offset[3] = is_ogryn and 0.5 or 0
@@ -1687,6 +1732,7 @@ InventoryBackgroundView._setup_background_world = function (self)
 		end
 
 		self._default_camera_unit = camera_unit
+
 		local viewport_name = InventoryBackgroundViewSettings.viewport_name
 		local viewport_type = InventoryBackgroundViewSettings.viewport_type
 		local viewport_layer = InventoryBackgroundViewSettings.viewport_layer
@@ -1719,7 +1765,9 @@ InventoryBackgroundView._setup_background_world = function (self)
 	local world_name = InventoryBackgroundViewSettings.world_name
 	local world_layer = InventoryBackgroundViewSettings.world_layer
 	local world_timer_name = InventoryBackgroundViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = InventoryBackgroundViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)
@@ -2117,8 +2165,11 @@ end
 
 InventoryBackgroundView._setup_inventory = function (self)
 	local profile = self._preview_player:profile()
+
 	self._presentation_profile = table.clone_instance(profile)
+
 	local player_loadout = self._presentation_profile.loadout
+
 	self._preview_profile_equipped_items = player_loadout
 	self._starting_profile_equipped_items = self._context and self._context.starting_profile_equipped_items or table.clone_instance(player_loadout)
 	self._current_profile_equipped_items = self._context and self._context.current_profile_equipped_items or table.clone_instance(player_loadout)
@@ -2137,6 +2188,7 @@ InventoryBackgroundView._setup_inventory = function (self)
 
 		local items = self._inventory_items
 		local new_items, new_items_by_type = self:_get_valid_new_items(items)
+
 		self._new_items_gear_ids = new_items
 		self._new_items_gear_ids_by_type = new_items_by_type
 	end
@@ -2154,7 +2206,9 @@ InventoryBackgroundView._spawn_profile = function (self, profile)
 	local world = self._world_spawner:world()
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
+
 	self._profile_spawner = UIProfileSpawner:new("InventoryBackgroundView", world, camera, unit_spawner)
+
 	local ignored_slots = InventoryBackgroundViewSettings.ignored_slots
 
 	for i = 1, #ignored_slots do
@@ -2166,7 +2220,9 @@ InventoryBackgroundView._spawn_profile = function (self, profile)
 	local camera_position = ScriptCamera.position(camera)
 	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
+
 	camera_position.z = 0
+
 	local selected_archetype = profile.archetype
 	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
@@ -2260,1680 +2316,225 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 		self._inventory_synced = true
 	end):catch(function ()
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error")
+			text = Localize("loc_popup_description_backend_error"),
 		})
 		self:cb_on_close_pressed()
 	end)
 end
 
 InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-7, warpins: 1 ---
 	local invalid_slots = {}
 	local modified_slots = {}
 	local duplicated_slots = {}
 	local only_show_slot_as_invalid = {}
 
 	if not self._is_own_player or self._is_readonly then
-
-		-- Decompilation error in this vicinity:
-		--- BLOCK #2 11-14, warpins: 2 ---
 		return invalid_slots, modified_slots, duplicated_slots
-		--- END OF BLOCK #2 ---
-
-
-
 	end
 
-	--- END OF BLOCK #0 ---
+	for slot_name, item_data in pairs(loadout) do
+		if not ItemSlotSettings[slot_name].equipped_in_inventory then
+			-- Nothing
+		else
+			local gear_id = type(item_data) == "table" and item_data.gear_id
+			local item = gear_id and self:_get_inventory_item_by_id(gear_id) or self:_get_inventory_item_by_id(item_data)
+			local fallback_item = MasterItems.find_fallback_item(slot_name)
 
-	FLOW; TARGET BLOCK #3
+			if not item and (type(item_data) ~= "table" or not item_data.always_owned) then
+				invalid_slots[slot_name] = true
+			elseif not item and not fallback_item then
+				invalid_slots[slot_name] = true
+			elseif item and not item.always_owned and fallback_item and item.name == fallback_item.name then
+				invalid_slots[slot_name] = true
+			else
+				local allowed_duplicates = {
+					slot_animation_emote_1 = true,
+					slot_animation_emote_2 = true,
+					slot_animation_emote_3 = true,
+					slot_animation_emote_4 = true,
+					slot_animation_emote_5 = true,
+				}
 
+				for checked_slot_name, checked_load_data in pairs(loadout) do
+					local checked_gear_id = type(checked_load_data) == "table" and checked_load_data.gear_id or type(checked_load_data) == "string" and checked_load_data
+					local item_gear_id = type(item_data) == "table" and item_data.gear_id or type(item_data) == "string" and item_data
 
+					if checked_gear_id == item_gear_id and checked_slot_name ~= slot_name and not invalid_slots[slot_name] and (not allowed_duplicates[checked_slot_name] or not allowed_duplicates[slot_name]) then
+						duplicated_slots[checked_slot_name] = true
 
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 8-10, warpins: 1 ---
-	--- END OF BLOCK #1 ---
+						goto label_1_0
+					end
+				end
 
-	slot7 = if self._is_readonly then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
+				local player = self._preview_player
+				local profile = player:profile()
+				local item = type(item_data) == "table" and self:_get_inventory_item_by_id(gear_id) or self:_get_inventory_item_by_id(item_data)
+
+				if item then
+					local compatible_profile = ItemUtils.is_item_compatible_with_profile(item, profile)
+
+					if not compatible_profile then
+						only_show_slot_as_invalid[slot_name] = true
+						invalid_slots[slot_name] = true
+					end
+				end
+			end
+		end
+
+		::label_1_0::
 	end
 
+	for removed_slot_id, _ in pairs(invalid_slots) do
+		if not only_show_slot_as_invalid[removed_slot_id] then
+			local starting_item = self._starting_profile_equipped_items and self._starting_profile_equipped_items[removed_slot_id]
+			local valid_stored_item = self._valid_profile_equipped_items and self._valid_profile_equipped_items[removed_slot_id]
 
+			starting_item = starting_item and self:_get_inventory_item_by_id(starting_item.gear_id)
+			valid_stored_item = valid_stored_item and self:_get_inventory_item_by_id(valid_stored_item.gear_id)
 
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 11-14, warpins: 2 ---
+			local fallback_item = MasterItems.find_fallback_item(removed_slot_id)
+			local starting_item_valid = starting_item and (starting_item.always_owned or fallback_item and fallback_item.name ~= starting_item.name)
+			local valid_stored_item_valid = valid_stored_item and (valid_stored_item.always_owned or fallback_item and fallback_item.name ~= valid_stored_item.name)
+
+			if not read_only then
+				if starting_item_valid then
+					self:_equip_slot_item(removed_slot_id, starting_item, true)
+				elseif valid_stored_item_valid then
+					self:_equip_slot_item(removed_slot_id, valid_stored_item, true)
+				end
+			end
+
+			if starting_item_valid or valid_stored_item_valid then
+				invalid_slots[removed_slot_id] = nil
+				modified_slots[removed_slot_id] = true
+			elseif fallback_item then
+				if not read_only then
+					self:_equip_slot_item(removed_slot_id, fallback_item, true)
+				end
+
+				if fallback_item.always_owned then
+					invalid_slots[removed_slot_id] = nil
+					modified_slots[removed_slot_id] = true
+				end
+			else
+				if string.find(removed_slot_id, "slot_attachment") then
+					invalid_slots[removed_slot_id] = nil
+					modified_slots[removed_slot_id] = true
+				end
+
+				if not read_only then
+					self:_equip_slot_item(removed_slot_id, nil, true)
+				end
+			end
+		end
+	end
+
+	if not read_only then
+		self._invalid_slots = invalid_slots
+		self._modified_slots = modified_slots
+		self._duplicated_slots = duplicated_slots
+	end
+
 	return invalid_slots, modified_slots, duplicated_slots
-
-	--- END OF BLOCK #2 ---
-
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 15-18, warpins: 2 ---
-	--- END OF BLOCK #3 ---
-
-	for slot_name, item_data in pairs(loadout)
-
-	LOOP BLOCK #4
-	GO OUT TO BLOCK #52
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 19-23, warpins: 1 ---
-	--- END OF BLOCK #4 ---
-
-	slot12 = if not ItemSlotSettings[slot_name].equipped_in_inventory then
-	JUMP TO BLOCK #5
-	else
-	JUMP TO BLOCK #6
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 24-24, warpins: 1 ---
-	--- END OF BLOCK #5 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #51
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 25-29, warpins: 1 ---
-	--- END OF BLOCK #6 ---
-
-	if type(item_data)
-
-	 == "table" then
-	JUMP TO BLOCK #7
-	else
-	JUMP TO BLOCK #8
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #7 30-31, warpins: 1 ---
-	slot12 = item_data.gear_id
-	--- END OF BLOCK #7 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #10
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #8 32-33, warpins: 1 ---
-	slot12 = false
-	--- END OF BLOCK #8 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #10
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #9 34-34, warpins: 0 ---
-	local gear_id = true
-
-	--- END OF BLOCK #9 ---
-
-	FLOW; TARGET BLOCK #10
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #10 35-36, warpins: 3 ---
-	--- END OF BLOCK #10 ---
-
-	slot12 = if gear_id then
-	JUMP TO BLOCK #11
-	else
-	JUMP TO BLOCK #12
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #11 37-42, warpins: 1 ---
-	--- END OF BLOCK #11 ---
-
-	slot13 = if not self:_get_inventory_item_by_id(gear_id)
-
-	 then
-	JUMP TO BLOCK #12
-	else
-	JUMP TO BLOCK #13
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #12 43-46, warpins: 2 ---
-	local item = self:_get_inventory_item_by_id(item_data)
-	--- END OF BLOCK #12 ---
-
-	FLOW; TARGET BLOCK #13
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #13 47-52, warpins: 2 ---
-	local fallback_item = MasterItems.find_fallback_item(slot_name)
-
-	--- END OF BLOCK #13 ---
-
-	slot13 = if not item then
-	JUMP TO BLOCK #14
-	else
-	JUMP TO BLOCK #17
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #14 53-57, warpins: 1 ---
-	--- END OF BLOCK #14 ---
-
-	if type(item_data)
-
-	 == "table" then
-	JUMP TO BLOCK #15
-	else
-	JUMP TO BLOCK #16
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #15 58-60, warpins: 1 ---
-	--- END OF BLOCK #15 ---
-
-	slot15 = if not item_data.always_owned then
-	JUMP TO BLOCK #16
-	else
-	JUMP TO BLOCK #17
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #16 61-63, warpins: 2 ---
-	invalid_slots[slot_name] = true
-	--- END OF BLOCK #16 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #51
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #17 64-65, warpins: 2 ---
-	--- END OF BLOCK #17 ---
-
-	slot13 = if not item then
-	JUMP TO BLOCK #18
-	else
-	JUMP TO BLOCK #20
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #18 66-67, warpins: 1 ---
-	--- END OF BLOCK #18 ---
-
-	slot14 = if not fallback_item then
-	JUMP TO BLOCK #19
-	else
-	JUMP TO BLOCK #20
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #19 68-70, warpins: 1 ---
-	invalid_slots[slot_name] = true
-	--- END OF BLOCK #19 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #51
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #20 71-72, warpins: 2 ---
-	--- END OF BLOCK #20 ---
-
-	slot13 = if item then
-	JUMP TO BLOCK #21
-	else
-	JUMP TO BLOCK #25
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #21 73-75, warpins: 1 ---
-	--- END OF BLOCK #21 ---
-
-	slot15 = if not item.always_owned then
-	JUMP TO BLOCK #22
-	else
-	JUMP TO BLOCK #25
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #22 76-77, warpins: 1 ---
-	--- END OF BLOCK #22 ---
-
-	slot14 = if fallback_item then
-	JUMP TO BLOCK #23
-	else
-	JUMP TO BLOCK #25
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #23 78-81, warpins: 1 ---
-	--- END OF BLOCK #23 ---
-
-	if item.name == fallback_item.name then
-	JUMP TO BLOCK #24
-	else
-	JUMP TO BLOCK #25
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #24 82-84, warpins: 1 ---
-	invalid_slots[slot_name] = true
-	--- END OF BLOCK #24 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #51
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #25 85-89, warpins: 4 ---
-	local allowed_duplicates = {
-		slot_animation_emote_3 = true,
-		slot_animation_emote_5 = true,
-		slot_animation_emote_4 = true,
-		slot_animation_emote_1 = true,
-		slot_animation_emote_2 = true
-	}
-
-	--- END OF BLOCK #25 ---
-
-	FLOW; TARGET BLOCK #26
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #26 90-94, warpins: 1 ---
-	--- END OF BLOCK #26 ---
-
-	if type(checked_load_data)
-	 == "table" then
-	JUMP TO BLOCK #27
-	else
-	JUMP TO BLOCK #28
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #27 95-97, warpins: 1 ---
-	--- END OF BLOCK #27 ---
-
-	slot21 = if not checked_load_data.gear_id then
-	JUMP TO BLOCK #28
-	else
-	JUMP TO BLOCK #32
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #28 98-102, warpins: 2 ---
-	--- END OF BLOCK #28 ---
-
-	if type(checked_load_data)
-
-	 == "string" then
-	JUMP TO BLOCK #29
-	else
-	JUMP TO BLOCK #30
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #29 103-104, warpins: 1 ---
-	slot21 = checked_load_data
-	--- END OF BLOCK #29 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #32
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #30 105-106, warpins: 1 ---
-	slot21 = false
-	--- END OF BLOCK #30 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #32
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #31 107-107, warpins: 0 ---
-	local checked_gear_id = true
-
-	--- END OF BLOCK #31 ---
-
-	FLOW; TARGET BLOCK #32
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #32 108-112, warpins: 4 ---
-	--- END OF BLOCK #32 ---
-
-	if type(item_data)
-	 == "table" then
-	JUMP TO BLOCK #33
-	else
-	JUMP TO BLOCK #34
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #33 113-115, warpins: 1 ---
-	--- END OF BLOCK #33 ---
-
-	slot22 = if not item_data.gear_id then
-	JUMP TO BLOCK #34
-	else
-	JUMP TO BLOCK #38
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #34 116-120, warpins: 2 ---
-	--- END OF BLOCK #34 ---
-
-	if type(item_data)
-
-	 == "string" then
-	JUMP TO BLOCK #35
-	else
-	JUMP TO BLOCK #36
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #35 121-122, warpins: 1 ---
-	slot22 = item_data
-	--- END OF BLOCK #35 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #38
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #36 123-124, warpins: 1 ---
-	slot22 = false
-	--- END OF BLOCK #36 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #38
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #37 125-125, warpins: 0 ---
-	local item_gear_id = true
-	--- END OF BLOCK #37 ---
-
-	FLOW; TARGET BLOCK #38
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #38 126-127, warpins: 4 ---
-	--- END OF BLOCK #38 ---
-
-	if checked_gear_id == item_gear_id then
-	JUMP TO BLOCK #39
-	else
-	JUMP TO BLOCK #44
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #39 128-129, warpins: 1 ---
-	--- END OF BLOCK #39 ---
-
-	if checked_slot_name ~= slot_name then
-	JUMP TO BLOCK #40
-	else
-	JUMP TO BLOCK #44
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #40 130-132, warpins: 1 ---
-	--- END OF BLOCK #40 ---
-
-	slot23 = if not invalid_slots[slot_name] then
-	JUMP TO BLOCK #41
-	else
-	JUMP TO BLOCK #44
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #41 133-135, warpins: 1 ---
-	--- END OF BLOCK #41 ---
-
-	slot23 = if allowed_duplicates[checked_slot_name] then
-	JUMP TO BLOCK #42
-	else
-	JUMP TO BLOCK #43
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #42 136-138, warpins: 1 ---
-	--- END OF BLOCK #42 ---
-
-	slot23 = if not allowed_duplicates[slot_name] then
-	JUMP TO BLOCK #43
-	else
-	JUMP TO BLOCK #44
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #43 139-141, warpins: 2 ---
-	duplicated_slots[checked_slot_name] = true
-	--- END OF BLOCK #43 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #51
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #44 142-143, warpins: 5 ---
-	--- END OF BLOCK #44 ---
-
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #45 144-152, warpins: 1 ---
-	local player = self._preview_player
-	local profile = player:profile()
-
-	--- END OF BLOCK #45 ---
-
-	if type(item_data)
-	 == "table" then
-	JUMP TO BLOCK #46
-	else
-	JUMP TO BLOCK #47
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #46 153-158, warpins: 1 ---
-	--- END OF BLOCK #46 ---
-
-	slot18 = if not self:_get_inventory_item_by_id(gear_id)
-
-	 then
-	JUMP TO BLOCK #47
-	else
-	JUMP TO BLOCK #48
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #47 159-162, warpins: 2 ---
-	local item = self:_get_inventory_item_by_id(item_data)
-	--- END OF BLOCK #47 ---
-
-	FLOW; TARGET BLOCK #48
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #48 163-164, warpins: 2 ---
-	--- END OF BLOCK #48 ---
-
-	slot18 = if item then
-	JUMP TO BLOCK #49
-	else
-	JUMP TO BLOCK #51
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #49 165-171, warpins: 1 ---
-	local compatible_profile = ItemUtils.is_item_compatible_with_profile(item, profile)
-	--- END OF BLOCK #49 ---
-
-	slot19 = if not compatible_profile then
-	JUMP TO BLOCK #50
-	else
-	JUMP TO BLOCK #51
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #50 172-176, warpins: 1 ---
-	only_show_slot_as_invalid[slot_name] = true
-	invalid_slots[slot_name] = true
-	--- END OF BLOCK #50 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #51
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #51 177-178, warpins: 9 ---
-	--- END OF BLOCK #51 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #52 179-182, warpins: 1 ---
-	--- END OF BLOCK #52 ---
-
-	FLOW; TARGET BLOCK #53
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #53 183-185, warpins: 1 ---
-	--- END OF BLOCK #53 ---
-
-	slot12 = if not only_show_slot_as_invalid[removed_slot_id] then
-	JUMP TO BLOCK #54
-	else
-	JUMP TO BLOCK #91
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #54 186-188, warpins: 1 ---
-	--- END OF BLOCK #54 ---
-
-	slot12 = if self._starting_profile_equipped_items then
-	JUMP TO BLOCK #55
-	else
-	JUMP TO BLOCK #56
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #55 189-190, warpins: 1 ---
-	local starting_item = self._starting_profile_equipped_items[removed_slot_id]
-	--- END OF BLOCK #55 ---
-
-	FLOW; TARGET BLOCK #56
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #56 191-193, warpins: 2 ---
-	--- END OF BLOCK #56 ---
-
-	slot13 = if self._valid_profile_equipped_items then
-	JUMP TO BLOCK #57
-	else
-	JUMP TO BLOCK #58
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #57 194-195, warpins: 1 ---
-	local valid_stored_item = self._valid_profile_equipped_items[removed_slot_id]
-	--- END OF BLOCK #57 ---
-
-	FLOW; TARGET BLOCK #58
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #58 196-197, warpins: 2 ---
-	--- END OF BLOCK #58 ---
-
-	slot12 = if starting_item then
-	JUMP TO BLOCK #59
-	else
-	JUMP TO BLOCK #60
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #59 198-202, warpins: 1 ---
-	starting_item = self:_get_inventory_item_by_id(starting_item.gear_id)
-	--- END OF BLOCK #59 ---
-
-	FLOW; TARGET BLOCK #60
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #60 203-204, warpins: 2 ---
-	--- END OF BLOCK #60 ---
-
-	slot13 = if valid_stored_item then
-	JUMP TO BLOCK #61
-	else
-	JUMP TO BLOCK #62
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #61 205-209, warpins: 1 ---
-	valid_stored_item = self:_get_inventory_item_by_id(valid_stored_item.gear_id)
-	--- END OF BLOCK #61 ---
-
-	FLOW; TARGET BLOCK #62
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #62 210-215, warpins: 2 ---
-	local fallback_item = MasterItems.find_fallback_item(removed_slot_id)
-	--- END OF BLOCK #62 ---
-
-	slot15 = if starting_item then
-	JUMP TO BLOCK #63
-	else
-	JUMP TO BLOCK #68
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #63 216-218, warpins: 1 ---
-	--- END OF BLOCK #63 ---
-
-	slot15 = if not starting_item.always_owned then
-	JUMP TO BLOCK #64
-	else
-	JUMP TO BLOCK #68
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #64 219-220, warpins: 1 ---
-	--- END OF BLOCK #64 ---
-
-	slot15 = if fallback_item then
-	JUMP TO BLOCK #65
-	else
-	JUMP TO BLOCK #68
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #65 221-224, warpins: 1 ---
-	--- END OF BLOCK #65 ---
-
-	if fallback_item.name == starting_item.name then
-	JUMP TO BLOCK #66
-	else
-	JUMP TO BLOCK #67
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #66 225-226, warpins: 1 ---
-	slot15 = false
-	--- END OF BLOCK #66 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #68
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #67 227-227, warpins: 1 ---
-	local starting_item_valid = true
-	--- END OF BLOCK #67 ---
-
-	FLOW; TARGET BLOCK #68
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #68 228-229, warpins: 5 ---
-	--- END OF BLOCK #68 ---
-
-	slot16 = if valid_stored_item then
-	JUMP TO BLOCK #69
-	else
-	JUMP TO BLOCK #74
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #69 230-232, warpins: 1 ---
-	--- END OF BLOCK #69 ---
-
-	slot16 = if not valid_stored_item.always_owned then
-	JUMP TO BLOCK #70
-	else
-	JUMP TO BLOCK #74
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #70 233-234, warpins: 1 ---
-	--- END OF BLOCK #70 ---
-
-	slot16 = if fallback_item then
-	JUMP TO BLOCK #71
-	else
-	JUMP TO BLOCK #74
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #71 235-238, warpins: 1 ---
-	--- END OF BLOCK #71 ---
-
-	if fallback_item.name == valid_stored_item.name then
-	JUMP TO BLOCK #72
-	else
-	JUMP TO BLOCK #73
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #72 239-240, warpins: 1 ---
-	slot16 = false
-	--- END OF BLOCK #72 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #74
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #73 241-241, warpins: 1 ---
-	local valid_stored_item_valid = true
-
-	--- END OF BLOCK #73 ---
-
-	FLOW; TARGET BLOCK #74
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #74 242-243, warpins: 5 ---
-	--- END OF BLOCK #74 ---
-
-	slot2 = if not read_only then
-	JUMP TO BLOCK #75
-	else
-	JUMP TO BLOCK #79
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #75 244-245, warpins: 1 ---
-	--- END OF BLOCK #75 ---
-
-	slot15 = if starting_item_valid then
-	JUMP TO BLOCK #76
-	else
-	JUMP TO BLOCK #77
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #76 246-252, warpins: 1 ---
-	self:_equip_slot_item(removed_slot_id, starting_item, true)
-	--- END OF BLOCK #76 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #79
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #77 253-254, warpins: 1 ---
-	--- END OF BLOCK #77 ---
-
-	slot16 = if valid_stored_item_valid then
-	JUMP TO BLOCK #78
-	else
-	JUMP TO BLOCK #79
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #78 255-260, warpins: 1 ---
-	self:_equip_slot_item(removed_slot_id, valid_stored_item, true)
-
-	--- END OF BLOCK #78 ---
-
-	FLOW; TARGET BLOCK #79
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #79 261-262, warpins: 4 ---
-	--- END OF BLOCK #79 ---
-
-	slot15 = if not starting_item_valid then
-	JUMP TO BLOCK #80
-	else
-	JUMP TO BLOCK #81
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #80 263-264, warpins: 1 ---
-	--- END OF BLOCK #80 ---
-
-	slot16 = if valid_stored_item_valid then
-	JUMP TO BLOCK #81
-	else
-	JUMP TO BLOCK #82
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #81 265-269, warpins: 2 ---
-	invalid_slots[removed_slot_id] = nil
-	modified_slots[removed_slot_id] = true
-
-	--- END OF BLOCK #81 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #91
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #82 270-271, warpins: 1 ---
-	--- END OF BLOCK #82 ---
-
-	slot14 = if fallback_item then
-	JUMP TO BLOCK #83
-	else
-	JUMP TO BLOCK #87
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #83 272-273, warpins: 1 ---
-	--- END OF BLOCK #83 ---
-
-	slot2 = if not read_only then
-	JUMP TO BLOCK #84
-	else
-	JUMP TO BLOCK #85
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #84 274-279, warpins: 1 ---
-	self:_equip_slot_item(removed_slot_id, fallback_item, true)
-
-	--- END OF BLOCK #84 ---
-
-	FLOW; TARGET BLOCK #85
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #85 280-282, warpins: 2 ---
-	--- END OF BLOCK #85 ---
-
-	slot17 = if fallback_item.always_owned then
-	JUMP TO BLOCK #86
-	else
-	JUMP TO BLOCK #91
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #86 283-287, warpins: 1 ---
-	invalid_slots[removed_slot_id] = nil
-	modified_slots[removed_slot_id] = true
-
-	--- END OF BLOCK #86 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #91
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #87 288-294, warpins: 1 ---
-	--- END OF BLOCK #87 ---
-
-	slot17 = if string.find(removed_slot_id, "slot_attachment")
-
-	 then
-	JUMP TO BLOCK #88
-	else
-	JUMP TO BLOCK #89
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #88 295-298, warpins: 1 ---
-	invalid_slots[removed_slot_id] = nil
-	modified_slots[removed_slot_id] = true
-
-	--- END OF BLOCK #88 ---
-
-	FLOW; TARGET BLOCK #89
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #89 299-300, warpins: 2 ---
-	--- END OF BLOCK #89 ---
-
-	slot2 = if not read_only then
-	JUMP TO BLOCK #90
-	else
-	JUMP TO BLOCK #91
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #90 301-306, warpins: 1 ---
-	self:_equip_slot_item(removed_slot_id, nil, true)
-
-	--- END OF BLOCK #90 ---
-
-	FLOW; TARGET BLOCK #91
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #91 307-308, warpins: 7 ---
-	--- END OF BLOCK #91 ---
-
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #92 309-310, warpins: 1 ---
-	--- END OF BLOCK #92 ---
-
-	slot2 = if not read_only then
-	JUMP TO BLOCK #93
-	else
-	JUMP TO BLOCK #94
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #93 311-313, warpins: 1 ---
-	self._invalid_slots = invalid_slots
-	self._modified_slots = modified_slots
-	self._duplicated_slots = duplicated_slots
-
-	--- END OF BLOCK #93 ---
-
-	FLOW; TARGET BLOCK #94
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #94 314-317, warpins: 2 ---
-	return invalid_slots, modified_slots, duplicated_slots
-	--- END OF BLOCK #94 ---
-
-
-
 end
 
 InventoryBackgroundView._get_valid_new_items = function (self, inventory_items)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-16, warpins: 1 ---
 	local save_manager = Managers.save
 	local character_id = self._preview_player:character_id()
 	local profile = self._preview_player:profile()
 	local archetype = self._preview_player:archetype_name()
-	--- END OF BLOCK #0 ---
+	local character_data = character_id and save_manager and save_manager:character_data(character_id)
 
-	slot6 = if character_id then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #3
+	if not character_data then
+		return {}
 	end
 
+	local account_new_items_data = save_manager and save_manager:account_data()
 
+	account_new_items_data = account_new_items_data and account_new_items_data.new_account_items_by_archetype[archetype] or {}
 
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 17-18, warpins: 1 ---
-	--- END OF BLOCK #1 ---
-
-	slot6 = if save_manager then
-	JUMP TO BLOCK #2
-	else
-	JUMP TO BLOCK #3
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 19-22, warpins: 1 ---
-	local character_data = save_manager:character_data(character_id)
-
-	--- END OF BLOCK #2 ---
-
-	FLOW; TARGET BLOCK #3
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 23-24, warpins: 3 ---
-	--- END OF BLOCK #3 ---
-
-	slot6 = if not character_data then
-	JUMP TO BLOCK #4
-	else
-	JUMP TO BLOCK #5
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 25-26, warpins: 1 ---
-	return {}
-
-	--- END OF BLOCK #4 ---
-
-	FLOW; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 27-28, warpins: 2 ---
-	--- END OF BLOCK #5 ---
-
-	slot7 = if save_manager then
-	JUMP TO BLOCK #6
-	else
-	JUMP TO BLOCK #7
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 29-31, warpins: 1 ---
-	local account_new_items_data = save_manager:account_data()
-	--- END OF BLOCK #6 ---
-
-	FLOW; TARGET BLOCK #7
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #7 32-33, warpins: 2 ---
-	--- END OF BLOCK #7 ---
-
-	slot7 = if account_new_items_data then
-	JUMP TO BLOCK #8
-	else
-	JUMP TO BLOCK #9
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #8 34-37, warpins: 1 ---
-	--- END OF BLOCK #8 ---
-
-	slot7 = if not account_new_items_data.new_account_items_by_archetype[archetype] then
-	JUMP TO BLOCK #9
-	else
-	JUMP TO BLOCK #10
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #9 38-38, warpins: 2 ---
-	account_new_items_data = {}
-	--- END OF BLOCK #9 ---
-
-	FLOW; TARGET BLOCK #10
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #10 39-52, warpins: 2 ---
 	local new_gear_items = {}
 	local new_gear_items_by_type = {}
-	local new_item_lists = {}
-	new_item_lists[1] = {
-		is_character_data = true,
-		data = character_data.new_items
+	local new_item_lists = {
+		{
+			is_character_data = true,
+			data = character_data.new_items,
+		},
+		{
+			data = account_new_items_data,
+		},
 	}
-	new_item_lists[2] = {
-		data = account_new_items_data
-	}
-	--- END OF BLOCK #10 ---
 
-	for i=1, #new_item_lists, 1
-	LOOP BLOCK #11
-	GO OUT TO BLOCK #23
+	for i = 1, #new_item_lists do
+		local new_items_list = new_item_lists[i]
+		local new_items = new_items_list.data
 
+		for gear_id, _ in pairs(new_items) do
+			local item = inventory_items[gear_id]
 
-	-- Decompilation error in this vicinity:
-	--- BLOCK #11 53-58, warpins: 2 ---
-	local new_items_list = new_item_lists[i]
-	local new_items = new_items_list.data
+			if not item then
+				ItemUtils.unmark_item_id_as_new(gear_id)
+			else
+				local compatible_profile = ItemUtils.is_item_compatible_with_profile(item, profile)
 
-	--- END OF BLOCK #11 ---
+				if compatible_profile then
+					new_gear_items[gear_id] = true
 
-	for gear_id, _ in pairs(new_items)
+					local item_type = item.item_type
 
-
-	LOOP BLOCK #12
-	GO OUT TO BLOCK #22
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #12 59-61, warpins: 1 ---
-	local item = inventory_items[gear_id]
-
-	--- END OF BLOCK #12 ---
-
-	slot22 = if not item then
-	JUMP TO BLOCK #13
-	else
-	JUMP TO BLOCK #14
+					if item_type then
+						new_gear_items_by_type[item_type] = new_gear_items_by_type[item_type] or {}
+						new_gear_items_by_type[item_type][gear_id] = true
+					end
+				elseif new_items_list.is_character_data then
+					ItemUtils.unmark_item_id_as_new(gear_id)
+				end
+			end
+		end
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #13 62-66, warpins: 1 ---
-	ItemUtils.unmark_item_id_as_new(gear_id)
-
-	--- END OF BLOCK #13 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #21
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #14 67-73, warpins: 1 ---
-	local compatible_profile = ItemUtils.is_item_compatible_with_profile(item, profile)
-	--- END OF BLOCK #14 ---
-
-	slot23 = if compatible_profile then
-	JUMP TO BLOCK #15
-	else
-	JUMP TO BLOCK #19
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #15 74-78, warpins: 1 ---
-	new_gear_items[gear_id] = true
-	local item_type = item.item_type
-	--- END OF BLOCK #15 ---
-
-	slot24 = if item_type then
-	JUMP TO BLOCK #16
-	else
-	JUMP TO BLOCK #21
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #16 79-81, warpins: 1 ---
-	--- END OF BLOCK #16 ---
-
-	slot25 = if not new_gear_items_by_type[item_type] then
-	JUMP TO BLOCK #17
-	else
-	JUMP TO BLOCK #18
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #17 82-82, warpins: 1 ---
-	slot25 = {}
-	--- END OF BLOCK #17 ---
-
-	FLOW; TARGET BLOCK #18
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #18 83-87, warpins: 2 ---
-	new_gear_items_by_type[item_type] = slot25
-	new_gear_items_by_type[item_type][gear_id] = true
-
-	--- END OF BLOCK #18 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #21
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #19 88-90, warpins: 1 ---
-	--- END OF BLOCK #19 ---
-
-	slot24 = if new_items_list.is_character_data then
-	JUMP TO BLOCK #20
-	else
-	JUMP TO BLOCK #21
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #20 91-94, warpins: 1 ---
-	ItemUtils.unmark_item_id_as_new(gear_id)
-
-	--- END OF BLOCK #20 ---
-
-	FLOW; TARGET BLOCK #21
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #21 95-96, warpins: 6 ---
-	--- END OF BLOCK #21 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #11
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #22 97-97, warpins: 1 ---
-	--- END OF BLOCK #22 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #10
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #23 98-100, warpins: 1 ---
 	return new_gear_items, new_gear_items_by_type
-	--- END OF BLOCK #23 ---
-
-
-
 end
 
 InventoryBackgroundView.is_inventory_synced = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
-	--- END OF BLOCK #0 ---
-
-	if self._inventory_synced == nil then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 4-6, warpins: 1 ---
-	slot1 = not self._check_for_loadout_update_timeout
-	--- END OF BLOCK #1 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 7-8, warpins: 1 ---
-	slot1 = false
-	--- END OF BLOCK #2 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 9-9, warpins: 0 ---
-	slot1 = true
-
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 10-10, warpins: 3 ---
-	return slot1
-	--- END OF BLOCK #4 ---
-
-
-
+	return self._inventory_synced == nil and not self._check_for_loadout_update_timeout
 end
 
 InventoryBackgroundView._get_inventory_item_by_id = function (self, gear_id)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-2, warpins: 1 ---
-	--- END OF BLOCK #0 ---
-
-	slot1 = if not gear_id then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+	if not gear_id then
+		return
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 3-3, warpins: 1 ---
-	return
-
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 4-8, warpins: 2 ---
 	local inventory_items = self._inventory_items
 
-	--- END OF BLOCK #2 ---
-
-	for _, item in pairs(inventory_items)
-
-
-	LOOP BLOCK #3
-	GO OUT TO BLOCK #6
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 9-11, warpins: 1 ---
-	--- END OF BLOCK #3 ---
-
-	if item.gear_id == gear_id then
-	JUMP TO BLOCK #4
-	else
-	JUMP TO BLOCK #5
+	for _, item in pairs(inventory_items) do
+		if item.gear_id == gear_id then
+			return item
+		end
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 12-12, warpins: 1 ---
-	return item
-	--- END OF BLOCK #4 ---
-
-	FLOW; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 13-14, warpins: 3 ---
-	--- END OF BLOCK #5 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 15-15, warpins: 1 ---
-	return
-	--- END OF BLOCK #6 ---
-
-
-
 end
 
 InventoryBackgroundView._update_loadout_validation = function (self)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
-	--- END OF BLOCK #0 ---
-
-	slot1 = if self._profile_presets_element then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+	if self._profile_presets_element then
+		self._profile_presets_element:sync_profiles_states()
+		self:_update_presets_missing_warning_marker()
+	elseif self._current_profile_equipped_items then
+		self:_validate_loadout(self._current_profile_equipped_items)
 	end
 
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 4-11, warpins: 1 ---
-	self._profile_presets_element:sync_profiles_states()
-	self:_update_presets_missing_warning_marker()
-	--- END OF BLOCK #1 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 12-14, warpins: 1 ---
-	--- END OF BLOCK #2 ---
-
-	slot1 = if self._current_profile_equipped_items then
-	JUMP TO BLOCK #3
-	else
-	JUMP TO BLOCK #4
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 15-18, warpins: 1 ---
-	self:_validate_loadout(self._current_profile_equipped_items)
-	--- END OF BLOCK #3 ---
-
-	FLOW; TARGET BLOCK #4
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 19-22, warpins: 3 ---
 	self:_update_valid_items_list()
-
-	return
-	--- END OF BLOCK #4 ---
-
-
-
 end
 
 InventoryBackgroundView._update_valid_items_list = function (self)
+	self._valid_profile_equipped_items = self._valid_profile_equipped_items or {}
 
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-3, warpins: 1 ---
-	--- END OF BLOCK #0 ---
+	for slot_name, item in pairs(self._current_profile_equipped_items) do
+		local valid_item = self:_get_inventory_item_by_id(item.gear_id) or item.always_owned
 
-	slot1 = if not self._valid_profile_equipped_items then
-	JUMP TO BLOCK #1
-	else
-	JUMP TO BLOCK #2
+		if valid_item and not self._invalid_slots[slot_name] and not self._modified_slots[slot_name] and not self._duplicated_slots[slot_name] then
+			self._valid_profile_equipped_items[slot_name] = item
+		end
 	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #1 4-4, warpins: 1 ---
-	slot1 = {}
-	--- END OF BLOCK #1 ---
-
-	FLOW; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #2 5-9, warpins: 2 ---
-	self._valid_profile_equipped_items = slot1
-
-	--- END OF BLOCK #2 ---
-
-	for slot_name, item in pairs(self._current_profile_equipped_items)
-
-	LOOP BLOCK #3
-	GO OUT TO BLOCK #11
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #3 10-15, warpins: 1 ---
-	--- END OF BLOCK #3 ---
-
-	slot6 = if not self:_get_inventory_item_by_id(item.gear_id)
-
-	 then
-	JUMP TO BLOCK #4
-	else
-	JUMP TO BLOCK #5
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #4 16-16, warpins: 1 ---
-	local valid_item = item.always_owned
-	--- END OF BLOCK #4 ---
-
-	FLOW; TARGET BLOCK #5
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #5 17-18, warpins: 2 ---
-	--- END OF BLOCK #5 ---
-
-	slot6 = if valid_item then
-	JUMP TO BLOCK #6
-	else
-	JUMP TO BLOCK #10
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #6 19-22, warpins: 1 ---
-	--- END OF BLOCK #6 ---
-
-	slot7 = if not self._invalid_slots[slot_name] then
-	JUMP TO BLOCK #7
-	else
-	JUMP TO BLOCK #10
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #7 23-26, warpins: 1 ---
-	--- END OF BLOCK #7 ---
-
-	slot7 = if not self._modified_slots[slot_name] then
-	JUMP TO BLOCK #8
-	else
-	JUMP TO BLOCK #10
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #8 27-30, warpins: 1 ---
-	--- END OF BLOCK #8 ---
-
-	slot7 = if not self._duplicated_slots[slot_name] then
-	JUMP TO BLOCK #9
-	else
-	JUMP TO BLOCK #10
-	end
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #9 31-32, warpins: 1 ---
-	self._valid_profile_equipped_items[slot_name] = item
-
-	--- END OF BLOCK #9 ---
-
-	FLOW; TARGET BLOCK #10
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #10 33-34, warpins: 6 ---
-	--- END OF BLOCK #10 ---
-
-	UNCONDITIONAL JUMP; TARGET BLOCK #2
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #11 35-35, warpins: 1 ---
-	return
-	--- END OF BLOCK #11 ---
-
-
-
 end
 
 return InventoryBackgroundView

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_event_vo_fortification.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "event_fortification_beacon_deployed"
 DialogueLookup[DialogueLookup_n + 2] = "event_fortification_disable_the_skyfire"
 DialogueLookup[DialogueLookup_n + 3] = "event_fortification_fortification_survive"

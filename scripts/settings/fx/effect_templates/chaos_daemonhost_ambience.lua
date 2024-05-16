@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_daemonhost_ambience.lua
+
 local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local AMBIENCE_SETTINGS = ChaosDaemonhostSettings.ambience
 local DEATH_SETTINGS = ChaosDaemonhostSettings.death
@@ -12,131 +14,139 @@ local SFX_IDLE_STOP = "wwise/events/minions/stop_enemy_daemonhost_ambience_idle"
 local resources = {
 	sfx_idle_start = SFX_IDLE_START,
 	sfx_idle_stop = SFX_IDLE_STOP,
-	ambience_settings = AMBIENCE_SETTINGS
+	ambience_settings = AMBIENCE_SETTINGS,
 }
-local _update_ambience, _update_dying, _update_passive, _update_frost_screen_space, _switch_stage, _screen_distortion_intensity, _screen_frost_intensity, _sfx_distortion_intensity, _distance_to_local_player_or_nil = nil
+local _update_ambience, _update_dying, _update_passive, _update_frost_screen_space, _switch_stage, _screen_distortion_intensity, _screen_frost_intensity, _sfx_distortion_intensity, _distance_to_local_player_or_nil
 local effect_template = {
 	name = "chaos_daemonhost_ambience",
-	resources = resources
+	resources = resources,
+	start = function (template_data, template_context)
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local world = template_context.world
+		local wwise_world = template_context.wwise_world
+		local unit = template_data.unit
+		local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+		local source_id = dialogue_extension:get_wwise_source_id()
+
+		WwiseWorld.trigger_resource_event(wwise_world, SFX_IDLE_START, source_id)
+
+		template_data.source_id = source_id
+
+		local game_session = Managers.state.game_session:game_session()
+		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
+		template_data.game_session, template_data.game_object_id = game_session, game_object_id
+
+		local light_name = AMBIENCE_SETTINGS.light_name
+		local light = Unit.light(unit, light_name)
+
+		Light.set_enabled(light, true)
+
+		template_data.light = light
+
+		local screen_effect_distortion_settings = AMBIENCE_SETTINGS.screen_effect_distortion
+		local screen_distortion_particle_effect = screen_effect_distortion_settings.particle_effect
+		local screen_effect_distortion_id = World.create_particles(world, screen_distortion_particle_effect, Vector3(0, 0, 1))
+
+		template_data.screen_effect_distortion_id = screen_effect_distortion_id
+
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local body_slot_unit = visual_loadout_extension:slot_unit("slot_body")
+
+		template_data.body_slot_unit = body_slot_unit
+
+		local fog_settings = AMBIENCE_SETTINGS.fog_effect
+		local fog_particle_effect = fog_settings.particle_effect
+		local position = Unit.world_position(unit, 1)
+		local fog_position = position + Vector3.up()
+		local fog_effect_id = World.create_particles(world, fog_particle_effect, fog_position)
+
+		template_data.fog_effect_id = fog_effect_id
+		template_data.intensity_sin_value = 0
+
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
+		template_data.breed = unit_data_extension:breed()
+
+		local stage = GameSession.game_object_field(game_session, game_object_id, "stage")
+
+		_switch_stage(template_data, template_context, stage)
+
+		local screen_effect_frost_settings = AMBIENCE_SETTINGS.screen_effect_frost
+
+		if screen_effect_frost_settings then
+			local screen_effect_frost_particle_effect = screen_effect_frost_settings.particle_effect
+			local screen_effect_frost_id = World.create_particles(world, screen_effect_frost_particle_effect, Vector3(0, 0, 1))
+
+			template_data.screen_effect_frost_id = screen_effect_frost_id
+			template_data.screen_frost_intensity = 0
+
+			local cloud_name, variable_name = "frost", "distance_scalar"
+
+			World.set_particles_material_scalar(template_context.world, screen_effect_frost_id, cloud_name, variable_name, 0)
+		end
+
+		template_data.next_vo_trigger_t = 0
+	end,
+	update = function (template_data, template_context, dt, t)
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local game_session, game_object_id = template_data.game_session, template_data.game_object_id
+		local wanted_stage = GameSession.game_object_field(game_session, game_object_id, "stage")
+		local previous_stage = template_data.stage
+
+		if previous_stage ~= wanted_stage then
+			_switch_stage(template_data, template_context, wanted_stage)
+		end
+
+		local stage = template_data.stage
+		local is_dying = stage == STAGES.death_normal or stage == STAGES.death_leave
+
+		if stage == STAGES.passive then
+			_update_passive(template_data, template_context, dt)
+		elseif is_dying then
+			_update_dying(template_data, template_context, stage, dt, t)
+		else
+			_update_ambience(template_data, template_context, stage, dt)
+		end
+
+		_update_frost_screen_space(template_data, template_context, stage, dt)
+	end,
+	stop = function (template_data, template_context)
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local wwise_world = template_context.wwise_world
+
+		WwiseWorld.set_global_parameter(wwise_world, WWISE_DAEMONHOST_RANGE, WWISE_DEFAULT_DAEMONHOST_RANGE)
+
+		local source_id = template_data.source_id
+
+		WwiseWorld.set_source_parameter(wwise_world, source_id, WWISE_DAEMONHOST_STAGE, STAGES.passive)
+		WwiseWorld.trigger_resource_event(wwise_world, SFX_IDLE_STOP, source_id)
+
+		local world = template_context.world
+		local screen_effect_distortion_id = template_data.screen_effect_distortion_id
+
+		World.destroy_particles(world, screen_effect_distortion_id)
+
+		local fog_effect_id = template_data.fog_effect_id
+
+		World.stop_spawning_particles(world, fog_effect_id)
+
+		local frost_effect_id = template_data.screen_effect_frost_id
+
+		if frost_effect_id then
+			World.destroy_particles(world, frost_effect_id)
+		end
+	end,
 }
-
-effect_template.start = function (template_data, template_context)
-	if DEDICATED_SERVER then
-		return
-	end
-
-	local world = template_context.world
-	local wwise_world = template_context.wwise_world
-	local unit = template_data.unit
-	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
-	local source_id = dialogue_extension:get_wwise_source_id()
-
-	WwiseWorld.trigger_resource_event(wwise_world, SFX_IDLE_START, source_id)
-
-	template_data.source_id = source_id
-	local game_session = Managers.state.game_session:game_session()
-	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
-	template_data.game_object_id = game_object_id
-	template_data.game_session = game_session
-	local light_name = AMBIENCE_SETTINGS.light_name
-	local light = Unit.light(unit, light_name)
-
-	Light.set_enabled(light, true)
-
-	template_data.light = light
-	local screen_effect_distortion_settings = AMBIENCE_SETTINGS.screen_effect_distortion
-	local screen_distortion_particle_effect = screen_effect_distortion_settings.particle_effect
-	local screen_effect_distortion_id = World.create_particles(world, screen_distortion_particle_effect, Vector3(0, 0, 1))
-	template_data.screen_effect_distortion_id = screen_effect_distortion_id
-	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-	local body_slot_unit = visual_loadout_extension:slot_unit("slot_body")
-	template_data.body_slot_unit = body_slot_unit
-	local fog_settings = AMBIENCE_SETTINGS.fog_effect
-	local fog_particle_effect = fog_settings.particle_effect
-	local position = Unit.world_position(unit, 1)
-	local fog_position = position + Vector3.up()
-	local fog_effect_id = World.create_particles(world, fog_particle_effect, fog_position)
-	template_data.fog_effect_id = fog_effect_id
-	template_data.intensity_sin_value = 0
-	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-	template_data.breed = unit_data_extension:breed()
-	local stage = GameSession.game_object_field(game_session, game_object_id, "stage")
-
-	_switch_stage(template_data, template_context, stage)
-
-	local screen_effect_frost_settings = AMBIENCE_SETTINGS.screen_effect_frost
-
-	if screen_effect_frost_settings then
-		local screen_effect_frost_particle_effect = screen_effect_frost_settings.particle_effect
-		local screen_effect_frost_id = World.create_particles(world, screen_effect_frost_particle_effect, Vector3(0, 0, 1))
-		template_data.screen_effect_frost_id = screen_effect_frost_id
-		template_data.screen_frost_intensity = 0
-		local cloud_name = "frost"
-		local variable_name = "distance_scalar"
-
-		World.set_particles_material_scalar(template_context.world, screen_effect_frost_id, cloud_name, variable_name, 0)
-	end
-
-	template_data.next_vo_trigger_t = 0
-end
-
-effect_template.update = function (template_data, template_context, dt, t)
-	if DEDICATED_SERVER then
-		return
-	end
-
-	local game_session = template_data.game_session
-	local game_object_id = template_data.game_object_id
-	local wanted_stage = GameSession.game_object_field(game_session, game_object_id, "stage")
-	local previous_stage = template_data.stage
-
-	if previous_stage ~= wanted_stage then
-		_switch_stage(template_data, template_context, wanted_stage)
-	end
-
-	local stage = template_data.stage
-	local is_dying = stage == STAGES.death_normal or stage == STAGES.death_leave
-
-	if stage == STAGES.passive then
-		_update_passive(template_data, template_context, dt)
-	elseif is_dying then
-		_update_dying(template_data, template_context, stage, dt, t)
-	else
-		_update_ambience(template_data, template_context, stage, dt)
-	end
-
-	_update_frost_screen_space(template_data, template_context, stage, dt)
-end
-
-effect_template.stop = function (template_data, template_context)
-	if DEDICATED_SERVER then
-		return
-	end
-
-	local wwise_world = template_context.wwise_world
-
-	WwiseWorld.set_global_parameter(wwise_world, WWISE_DAEMONHOST_RANGE, WWISE_DEFAULT_DAEMONHOST_RANGE)
-
-	local source_id = template_data.source_id
-
-	WwiseWorld.set_source_parameter(wwise_world, source_id, WWISE_DAEMONHOST_STAGE, STAGES.passive)
-	WwiseWorld.trigger_resource_event(wwise_world, SFX_IDLE_STOP, source_id)
-
-	local world = template_context.world
-	local screen_effect_distortion_id = template_data.screen_effect_distortion_id
-
-	World.destroy_particles(world, screen_effect_distortion_id)
-
-	local fog_effect_id = template_data.fog_effect_id
-
-	World.stop_spawning_particles(world, fog_effect_id)
-
-	local frost_effect_id = template_data.screen_effect_frost_id
-
-	if frost_effect_id then
-		World.destroy_particles(world, frost_effect_id)
-	end
-end
 
 function _switch_stage(template_data, template_context, new_stage)
 	local ambience_settings = AMBIENCE_SETTINGS[new_stage]
@@ -184,14 +194,16 @@ function _update_dying(template_data, template_context, stage, dt, t)
 				template_data.previous_alpha_clip_lerp = 1
 			end
 
-			if template_data.alpha_clip_start_t < t then
+			if t > template_data.alpha_clip_start_t then
 				if not template_data.alpha_lerp_start_t then
 					template_data.alpha_lerp_start_t = t
 				end
 
 				local lerp_t = math.min(dt * alpha_clip_settings.speed, 1)
 				local final_value = math.lerp(template_data.previous_alpha_clip_lerp, 0, lerp_t)
+
 				template_data.previous_alpha_clip_lerp = final_value
+
 				local body_slot_unit = template_data.body_slot_unit
 				local material_scalar_key = alpha_clip_settings.material_scalar_key
 				local material_variable_key = alpha_clip_settings.material_variable_key
@@ -213,7 +225,9 @@ function _update_dying(template_data, template_context, stage, dt, t)
 		end
 
 		local dying_effect_t = template_data.dying_effect_t + dt
+
 		template_data.dying_effect_t = dying_effect_t
+
 		local dying_emissive_t = template_data.dying_emissive_t
 
 		if dying_emissive_t <= t then
@@ -249,11 +263,12 @@ function _update_dying(template_data, template_context, stage, dt, t)
 			local lerp_value = math.lerp(1, 0, dying_effect_t / DURATION)
 			local screen_distortion_lerp = math.clamp(lerp_value, 0, 1)
 			local screen_distortion_intensity = _screen_distortion_intensity(distance)
+
 			screen_distortion_intensity = screen_distortion_intensity * screen_distortion_lerp
+
 			local world = template_context.world
 			local screen_effect_distortion_id = template_data.screen_effect_distortion_id
-			local cloud_name = "static"
-			local variable_name = "distance_scalar"
+			local cloud_name, variable_name = "static", "distance_scalar"
 
 			World.set_particles_material_scalar(world, screen_effect_distortion_id, cloud_name, variable_name, screen_distortion_intensity)
 		end
@@ -293,9 +308,10 @@ function _update_frost_screen_space(template_data, template_context, stage, dt)
 			local lerp_speed = stage == STAGES.waking_up and frost_settings.waking_up_lerp_speed or frost_settings.lerp_speed
 			local max_lerp = stage == STAGES.waking_up and 1 or 0.7
 			local lerp_t = math.min(dt * lerp_speed, 1)
+
 			template_data.screen_frost_intensity = math.min(math.lerp(template_data.screen_frost_intensity, screen_frost_intensity, lerp_t), max_lerp)
-			local cloud_name = "frost"
-			local variable_name = "distance_scalar"
+
+			local cloud_name, variable_name = "frost", "distance_scalar"
 
 			World.set_particles_material_scalar(template_context.world, screen_effect_frost_id, cloud_name, variable_name, template_data.screen_frost_intensity)
 		end
@@ -304,9 +320,10 @@ function _update_frost_screen_space(template_data, template_context, stage, dt)
 
 		if frost_effect_id then
 			local frost_settings = AMBIENCE_SETTINGS.screen_effect_frost
+
 			template_data.screen_frost_intensity = math.lerp(template_data.screen_frost_intensity, 0, dt * frost_settings.waking_up_lerp_speed)
-			local cloud_name = "frost"
-			local variable_name = "distance_scalar"
+
+			local cloud_name, variable_name = "frost", "distance_scalar"
 
 			World.set_particles_material_scalar(template_context.world, frost_effect_id, cloud_name, variable_name, template_data.screen_frost_intensity)
 
@@ -319,8 +336,7 @@ function _update_frost_screen_space(template_data, template_context, stage, dt)
 
 		local screen_effect_distortion_id = template_data.screen_effect_distortion_id
 		local screen_distortion_intensity = _screen_distortion_intensity(distance)
-		local cloud_name = "static"
-		local variable_name = "distance_scalar"
+		local cloud_name, variable_name = "static", "distance_scalar"
 
 		World.set_particles_material_scalar(template_context.world, screen_effect_distortion_id, cloud_name, variable_name, screen_distortion_intensity)
 	end
@@ -351,7 +367,7 @@ end
 
 function _screen_frost_intensity(distance, stage)
 	local frost_settings = AMBIENCE_SETTINGS.screen_effect_frost
-	local distance_min, distance_max = nil
+	local distance_min, distance_max
 
 	if stage == STAGES.passive then
 		distance_min = frost_settings.passive_distance_min
@@ -377,6 +393,7 @@ end
 function _distance_to_local_player_or_nil(daemonhost_unit)
 	local local_player = Managers.player:local_player(1)
 	local local_player_unit = local_player and local_player.player_unit
+
 	local_player_unit = local_player_unit or local_player and local_player.camera_handler:camera_follow_unit()
 
 	if not local_player_unit or not ALIVE[local_player_unit] then

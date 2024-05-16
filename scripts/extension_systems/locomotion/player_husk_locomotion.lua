@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/player_husk_locomotion.lua
+
 local Ladder = require("scripts/extension_systems/character_state_machine/character_states/utilities/ladder")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -5,7 +7,7 @@ local ThirdPersonHubMovementDirectionAnimationControl = require("scripts/extensi
 local PlayerHuskLocomotionExtension = class("PlayerHuskLocomotionExtension")
 local RPCS = {
 	"rpc_set_player_link",
-	"rpc_player_unlink"
+	"rpc_player_unlink",
 }
 
 PlayerHuskLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id, owner_id)
@@ -15,20 +17,27 @@ PlayerHuskLocomotionExtension.init = function (self, extension_init_context, uni
 	self._game_session = game_session
 	self._player = extension_init_data.player
 	self._breed = extension_init_data.breed
+
 	local position = GameSession.game_object_field(game_session, game_object_id, "position")
 	local rotation = self:_get_rotation(game_session, game_object_id)
+
 	self._old_lerp_position = Vector3Box(position)
 	self._old_lerp_rotation = QuaternionBox(rotation)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._move_speed_variable = "anim_move_speed"
 	self._climb_time_anim_var = "climb_time"
 	self._active_stop_anim_var = "active_stop"
+
 	local data_ext = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._locomotion_steering_component = data_ext:read_component("locomotion_steering")
 	self._old_parent_unit = nil
+
 	local move_speed = GameSession.game_object_field(game_session, game_object_id, "move_speed")
+
 	self._move_speed = move_speed
 	self._move_speed_squared = move_speed * move_speed
+
 	local network_event_delegate = extension_init_context.network_event_delegate
 
 	network_event_delegate:register_session_unit_events(self, self._game_object_id, unpack(RPCS))
@@ -42,13 +51,14 @@ end
 
 PlayerHuskLocomotionExtension.extensions_ready = function (self, world, unit)
 	local init_context = {
-		is_local_unit = false,
 		is_husk = true,
+		is_local_unit = false,
 		is_server = false,
 		player_character_constants = PlayerCharacterConstants,
 		game_session = self._game_session,
-		game_object_id = self._game_object_id
+		game_object_id = self._game_object_id,
 	}
+
 	self._movement_direction_animation_control = ThirdPersonHubMovementDirectionAnimationControl:new(unit, init_context)
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
@@ -71,7 +81,7 @@ end
 PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 	local session = self._game_session
 	local id = self._game_object_id
-	local parent_unit = nil
+	local parent_unit
 	local parent_unit_id = GameSession.game_object_field(session, id, "parent_unit_id")
 
 	if parent_unit_id ~= NetworkConstants.invalid_level_unit_id then
@@ -94,8 +104,7 @@ PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 		if parent_unit then
 			old_rotation, old_position = PlayerMovement.calculate_relative_rotation_position(parent_unit, rotation, position)
 		else
-			old_position = position
-			old_rotation = rotation
+			old_rotation, old_position = rotation, position
 		end
 
 		self._old_parent_unit = parent_unit
@@ -111,18 +120,18 @@ PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 	self._old_lerp_position:store(lerp_position)
 	self._old_lerp_rotation:store(lerp_rotation)
 
-	local final_rotation, final_position = nil
+	local final_rotation, final_position
 
 	if parent_unit then
 		final_rotation, final_position = PlayerMovement.calculate_absolute_rotation_position(parent_unit, lerp_rotation, lerp_position)
+
 		local moveable_platform_extension = ScriptUnit.has_extension(parent_unit, "moveable_platform_system")
 
 		if moveable_platform_extension then
 			final_position = final_position + moveable_platform_extension:movement_this_render_frame()
 		end
 	else
-		final_position = lerp_position
-		final_rotation = lerp_rotation
+		final_rotation, final_position = lerp_rotation, lerp_position
 	end
 
 	Unit.set_local_position(unit, 1, final_position)
@@ -141,8 +150,10 @@ PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 
 	local animation_extension = self._animation_extension
 	local move_speed = GameSession.game_object_field(session, id, "move_speed")
+
 	self._move_speed = move_speed
 	self._move_speed_squared = move_speed * move_speed
+
 	local move_speed_var_id = animation_extension:anim_variable_id(self._move_speed_variable)
 	local old_speed = Unit.animation_get_variable(unit, move_speed_var_id)
 	local anim_move_speed = math.lerp(old_speed, move_speed, dt * 10)

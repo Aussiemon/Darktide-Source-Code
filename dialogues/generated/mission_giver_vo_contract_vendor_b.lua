@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_contract_vendor_b.lua
+
 local mission_giver_vo_contract_vendor_b = {
 	info_extraction = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local mission_giver_vo_contract_vendor_b = {
 			"loc_contract_vendor_b__info_extraction_a_07",
 			"loc_contract_vendor_b__info_extraction_a_08",
 			"loc_contract_vendor_b__info_extraction_a_09",
-			"loc_contract_vendor_b__info_extraction_a_10"
+			"loc_contract_vendor_b__info_extraction_a_10",
 		},
 		sound_events_duration = {
 			3.45678,
@@ -24,9 +26,9 @@ local mission_giver_vo_contract_vendor_b = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_strain_briefing_a = {
 		randomize_indexes_n = 0,
@@ -35,15 +37,15 @@ local mission_giver_vo_contract_vendor_b = {
 			"loc_contract_vendor_b__mission_strain_briefing_a_01",
 			"loc_contract_vendor_b__mission_strain_briefing_a_02",
 			"loc_contract_vendor_b__mission_strain_briefing_a_03",
-			"loc_contract_vendor_b__mission_strain_briefing_a_04"
+			"loc_contract_vendor_b__mission_strain_briefing_a_04",
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_strain_briefing_b = {
 		randomize_indexes_n = 0,
@@ -52,15 +54,15 @@ local mission_giver_vo_contract_vendor_b = {
 			"loc_contract_vendor_b__mission_strain_briefing_b_01",
 			"loc_contract_vendor_b__mission_strain_briefing_b_02",
 			"loc_contract_vendor_b__mission_strain_briefing_b_03",
-			"loc_contract_vendor_b__mission_strain_briefing_b_04"
+			"loc_contract_vendor_b__mission_strain_briefing_b_04",
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_strain_briefing_c = {
 		randomize_indexes_n = 0,
@@ -69,16 +71,16 @@ local mission_giver_vo_contract_vendor_b = {
 			"loc_contract_vendor_b__mission_strain_briefing_c_01",
 			"loc_contract_vendor_b__mission_strain_briefing_c_02",
 			"loc_contract_vendor_b__mission_strain_briefing_c_03",
-			"loc_contract_vendor_b__mission_strain_briefing_c_04"
+			"loc_contract_vendor_b__mission_strain_briefing_c_04",
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-			3.45678
+			3.45678,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_giver_vo_contract_vendor_b", mission_giver_vo_contract_vendor_b)

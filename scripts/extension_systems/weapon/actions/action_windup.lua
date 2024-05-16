@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_windup.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -9,6 +11,7 @@ ActionWindup.start = function (self, action_settings, t, time_scale, params)
 	ActionWindup.super.start(self, action_settings, t, time_scale, params)
 
 	self._proc_trigger_time = self:_latest_chain_time(action_settings)
+
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 
@@ -20,10 +23,12 @@ ActionWindup.start = function (self, action_settings, t, time_scale, params)
 end
 
 ActionWindup.fixed_update = function (self, dt, t, time_in_action)
-	if self._proc_trigger_time and self._proc_trigger_time <= time_in_action then
+	if self._proc_trigger_time and time_in_action >= self._proc_trigger_time then
 		local action_settings = self._action_settings
 		local proc_interval = action_settings.proc_time_interval or PROC_INTERVAL_DEFAULT
+
 		self._proc_trigger_time = self._proc_trigger_time + proc_interval
+
 		local buff_extension = self._buff_extension
 		local param_table = buff_extension:request_proc_event_param_table()
 

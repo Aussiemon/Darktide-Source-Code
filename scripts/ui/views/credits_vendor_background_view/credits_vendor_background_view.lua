@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_vendor_background_view/credits_vendor_background_view.lua
+
 local Definitions = require("scripts/ui/views/credits_vendor_background_view/credits_vendor_background_view_definitions")
 local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 local ViewSettings = require("scripts/ui/views/credits_vendor_view/credits_vendor_view_settings")
@@ -44,6 +46,7 @@ end
 
 CreditsVendorBackgroundView._set_wallet_background_width = function (self, width)
 	width = 130 + width
+
 	local scenegraph_id = "corner_top_right"
 	local definitions = self._definitions
 	local scenegraph_definition = definitions.scenegraph_definition

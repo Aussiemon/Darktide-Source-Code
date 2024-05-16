@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_vent_overheat.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Attack = require("scripts/utilities/attack/attack")
@@ -7,7 +9,7 @@ local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/pl
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local hit_zone_names = HitZone.hit_zone_names
 local IMPACT_FX_DATA = {
-	will_be_predicted = true
+	will_be_predicted = true,
 }
 local ActionVentOverheat = class("ActionVentOverheat", "ActionWeaponBase")
 
@@ -15,6 +17,7 @@ ActionVentOverheat.init = function (self, action_context, action_params, action_
 	ActionVentOverheat.super.init(self, action_context, action_params, action_settings)
 
 	local weapon = action_params.weapon
+
 	self._vent_fx_source_name = weapon.fx_sources._vent
 end
 
@@ -38,6 +41,7 @@ ActionVentOverheat.start = function (self, action_settings, t, time_scale, actio
 			self._fx_extension:trigger_looping_wwise_event(sfx_alias, fx_source_name)
 
 			local component_name = PlayerUnitData.looping_sound_component_name(sfx_alias)
+
 			self._looping_sound_component = unit_data_extension:read_component(component_name)
 		end
 
@@ -101,11 +105,13 @@ ActionVentOverheat._deal_damage = function (self)
 	local final_power_level = (max_power - min_power) * scaled_current_heat + min_power
 	local stat_buffs = buff_extension and buff_extension:stat_buffs()
 	local venting_damage_reduction = stat_buffs.vent_overheat_damage_multiplier or 1
+
 	final_power_level = final_power_level * venting_damage_reduction
+
 	local player_unit = self._player_unit
 	local hit_zone_name = hit_zone_names.center_mass
 	local hit_position = HitZone.hit_zone_center_of_mass(player_unit, hit_zone_name)
-	local hit_normal, hit_actor = nil
+	local hit_normal, hit_actor
 	local first_person_component = self._first_person_component
 	local direction = Vector3.forward(first_person_component.rotation)
 	local attack_was_stopped = false

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_health.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local PropHealth = component("PropHealth")
@@ -78,87 +80,87 @@ end
 
 PropHealth.component_data = {
 	max_health = {
-		value = 100,
+		category = "Base Data",
+		decimals = 0,
+		max = 4000,
 		min = 0,
 		step = 1,
-		category = "Base Data",
-		ui_type = "number",
-		decimals = 0,
 		ui_name = "Base Health",
-		max = 4000
+		ui_type = "number",
+		value = 100,
 	},
 	difficulty_scaling = {
+		category = "Base Data",
+		ui_name = "Difficulty Scaling",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Difficulty Scaling",
-		category = "Base Data"
 	},
 	create_game_object = {
+		category = "Base Data",
+		ui_name = "Sync Health to Clients",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Sync Health to Clients",
-		category = "Base Data"
 	},
 	invulnerable = {
+		category = "Base Data",
+		ui_name = "Invulnerable",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Invulnerable",
-		category = "Base Data"
 	},
 	unkillable = {
+		category = "Base Data",
+		ui_name = "Unkillable",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Unkillable",
-		category = "Base Data"
 	},
 	regenerate_health = {
+		category = "DO NOT USE - IS HACK",
+		ui_name = "Regenerate Health",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Regenerate Health",
-		category = "DO NOT USE - IS HACK"
 	},
 	hit_mass = {
+		category = "Base Data",
+		ui_name = "Hit Mass",
 		ui_type = "number",
 		value = 0,
-		ui_name = "Hit Mass",
-		category = "Base Data"
 	},
 	breed_white_list = {
-		ui_type = "text_box_array",
+		category = "Ignores",
 		is_optional = true,
 		ui_name = "Breed Whitelist",
-		category = "Ignores"
+		ui_type = "text_box_array",
 	},
 	ignored_colliders = {
-		ui_type = "text_box_array",
+		category = "Ignores",
 		is_optional = true,
 		ui_name = "Ignored Colliders",
-		category = "Ignores"
+		ui_type = "text_box_array",
 	},
 	speed_on_hit = {
-		ui_type = "number",
-		min = 0,
 		category = "Debris",
+		min = 0,
+		ui_name = "Impulse Speed on Hit",
+		ui_type = "number",
 		value = 5,
-		ui_name = "Impulse Speed on Hit"
 	},
 	inputs = {
 		prop_health_set_invulnerable = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		prop_health_set_vulnerable = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		prop_health_kill = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"PropHealthExtension"
-	}
+		"PropHealthExtension",
+	},
 }
 
 return PropHealth

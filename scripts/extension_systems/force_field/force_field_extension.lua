@@ -1,23 +1,25 @@
+﻿-- chunkname: @scripts/extension_systems/force_field/force_field_extension.lua
+
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local ForceFieldExtension = class("ForceFieldExtension")
 local special_rules = SpecialRulesSetting.special_rules
 local talent_settings = TalentSettings.psyker_3.combat_ability
 local SOUND_EVENTS_WALL = {
+	start = "wwise/events/player/play_ability_psyker_protectorate_shield",
 	stop = "wwise/events/player/stop_ability_psyker_protectorate_shield",
-	start = "wwise/events/player/play_ability_psyker_protectorate_shield"
 }
 local SOUND_EVENTS_SPHERE = {
+	start = "wwise/events/player/play_ability_psyker_shield_dome",
 	stop = "wwise/events/player/stop_ability_psyker_shield_dome",
-	start = "wwise/events/player/play_ability_psyker_shield_dome"
 }
 local PARTICLES_WALL = {
+	start = "content/fx/particles/abilities/protectorate_forward_shield_init",
 	stop = "content/fx/particles/abilities/protectorate_forward_shield_fade",
-	start = "content/fx/particles/abilities/protectorate_forward_shield_init"
 }
 local PARTICLES_SPHERE = {
+	start = "content/fx/particles/abilities/protectorate_sphere_shield_init",
 	stop = "content/fx/particles/abilities/protectorate_sphere_shield_fade",
-	start = "content/fx/particles/abilities/protectorate_sphere_shield_init"
 }
 local DEFAULT_UNIT_RADIUS = 1
 local SPHERE_UNIT_RADIUS = 6
@@ -25,13 +27,18 @@ local DEFAULT_HEIGHT = 3.5
 
 ForceFieldExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, unit_spawn_parameter_or_game_object_id)
 	self._unit = unit
+
 	local world = extension_init_context.world
 	local wwise_world = extension_init_context.wwise_world
+
 	self._world = world
 	self._wwise_world = wwise_world
+
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self.owner_unit = extension_init_data.owner_unit
+
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local owner_player = player_unit_spawn_manager:owner(self.owner_unit)
 
@@ -41,13 +48,16 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 
 	self._game_session = game_object_data_or_game_session
 	self._game_object_id = unit_spawn_parameter_or_game_object_id
+
 	local rotation = Unit.local_rotation(unit, 1)
 	local position = Unit.local_position(unit, 1)
+
 	self._rotation = QuaternionBox(rotation)
 	self._position = Vector3Box(position)
 
 	if is_server then
 		local side_system = Managers.state.extension:system("side_system")
+
 		self.side = side_system.side_by_unit[self.owner_unit]
 		self.enemy_side_names = self.side:relation_side_names("enemy")
 	end
@@ -63,6 +73,7 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 	local p5 = Vector3Box(position - left * 0.3 + forward * 0.45)
 	local p6 = Vector3Box(position - left * 0.6 + forward * 0.3)
 	local p7 = Vector3Box(position - left * 0.9)
+
 	self._points = {
 		p1,
 		p2,
@@ -70,21 +81,31 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 		p4,
 		p5,
 		p6,
-		p7
+		p7,
 	}
+
 	local owner_unit = self.owner_unit
+
 	self.buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
 	self.talent_extension = ScriptUnit.extension(owner_unit, "talent_system")
+
 	local sphere_shield = self.talent_extension:has_special_rule(special_rules.psyker_sphere_shield)
+
 	self._sphere_shield = sphere_shield
+
 	local duration = talent_settings.duration
 	local sphere_duration = talent_settings.sphere_duration
+
 	self._duration = self._sphere_shield and sphere_duration or duration
 	self._max_duration = self._duration
+
 	local start_sound_event = sphere_shield and SOUND_EVENTS_SPHERE.start or SOUND_EVENTS_WALL.start
 	local source_id = WwiseWorld.make_manual_source(wwise_world, position + Vector3.up() * 1.5, rotation)
+
 	self._playing_id, self._source_id = WwiseWorld.trigger_resource_event(wwise_world, start_sound_event, source_id)
+
 	local start_particle_effect = sphere_shield and PARTICLES_SPHERE.start or PARTICLES_WALL.start
+
 	self._effect_id = World.create_particles(world, start_particle_effect, position, rotation)
 	self._players_inside = {}
 	self.is_expired = false
@@ -154,11 +175,13 @@ ForceFieldExtension.fixed_update = function (self, unit, dt, t)
 
 	if self._is_server then
 		local duration = math.max(self._duration - dt, 0)
+
 		self._duration = duration
 
 		GameSession.set_game_object_field(game_session, game_object_id, "remaining_duration", duration)
 	else
 		self._duration = GameSession.game_object_field(game_session, game_object_id, "remaining_duration")
+
 		local is_expired = GameSession.game_object_field(game_session, game_object_id, "expired")
 
 		if not self.is_expired and is_expired then
@@ -203,9 +226,11 @@ ForceFieldExtension.is_unit_colliding = function (self, unit_pos, unit_radius, h
 		end
 
 		unit_radius = unit_radius or DEFAULT_UNIT_RADIUS
-		local distance_sq, last_distance_sq = nil
+
+		local distance_sq, last_distance_sq
 		local radius_sq = unit_radius * unit_radius
 		local points = self._points
+
 		distance_sq = Vector3.distance_squared(unit_pos, points[4]:unbox())
 
 		if distance_sq < radius_sq then
@@ -294,7 +319,7 @@ ForceFieldExtension.is_sphere_shield = function (self)
 end
 
 ForceFieldExtension.reflected_direction = function (self, unit, direction)
-	local normal = nil
+	local normal
 
 	if not self._sphere_shield then
 		local rotation = self._rotation:unbox()
@@ -310,6 +335,7 @@ ForceFieldExtension.reflected_direction = function (self, unit, direction)
 	else
 		local shield_pos = self._position:unbox()
 		local unit_pos = POSITION_LOOKUP[unit]
+
 		normal = Vector3.normalize(shield_pos - unit_pos)
 	end
 
@@ -334,9 +360,10 @@ ForceFieldExtension.on_player_enter = function (self, unit, t)
 
 	if in_sheild_buff_template_name then
 		local _, local_index, component_index = unit_buff_extension:add_externally_controlled_buff(in_sheild_buff_template_name, t, "owner_unit", self._unit)
+
 		buff_affected_units[unit] = {
 			local_index = local_index,
-			component_index = component_index
+			component_index = component_index,
 		}
 	end
 
@@ -415,6 +442,7 @@ ForceFieldExtension._trigger_death_effects = function (self)
 	WwiseWorld.destroy_manual_source(wwise_world, source_id)
 
 	self._source_id = nil
+
 	local stop_particle_effect = sphere_shield and PARTICLES_SPHERE.stop or PARTICLES_WALL.stop
 
 	if effect_id and World.are_particles_playing(world, effect_id) then

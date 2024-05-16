@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_lm_scavenge.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "cmd_mission_scavenge_entering_ship_port"
 DialogueLookup[DialogueLookup_n + 2] = "cmd_mission_scavenge_hacking_event_end"
 DialogueLookup[DialogueLookup_n + 3] = "cmd_mission_scavenge_hacking_event_start"

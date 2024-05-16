@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_overload_target_finder.lua
+
 require("scripts/extension_systems/weapon/actions/action_target_finder")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
@@ -8,6 +10,7 @@ ActionOverloadTargetFinder.init = function (self, action_context, action_params,
 
 	local player_unit = self._player_unit
 	local overload_module_class_name = action_settings.overload_module_class_name
+
 	self._overload_module = ActionModules[overload_module_class_name]:new(player_unit, action_settings, self._inventory_slot_component)
 end
 

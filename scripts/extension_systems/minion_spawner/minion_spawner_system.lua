@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/minion_spawner/minion_spawner_system.lua
+
 require("scripts/extension_systems/minion_spawner/minion_spawner_extension")
 
 local MinionSpawnerSystem = class("MinionSpawnerSystem", "ExtensionSystemBase")
 local BROADPHASE_CELL_RADIUS = 50
 local BROADPHASE_MAX_NUM_ENTITIES = 256
 local BROADPHASE_CATEGORIES = {
-	"minion_spawner"
+	"minion_spawner",
 }
 local BROADPHASE_UNIT_RADIUS = 1
 
@@ -13,7 +15,9 @@ MinionSpawnerSystem.init = function (self, extension_system_creation_context, ..
 
 	local nav_world = extension_system_creation_context.nav_world
 	local extension_init_context = self._extension_init_context
+
 	extension_init_context.nav_world = nav_world
+
 	local nav_tag_cost_table = GwNavTagLayerCostTable.create()
 	local traverse_logic = GwNavTraverseLogic.create(nav_world)
 
@@ -51,6 +55,7 @@ MinionSpawnerSystem._add_spawner_groups = function (self, unit, new_spawnergroup
 	for i = 1, #spawner_groups do
 		local spawner_group = spawner_groups[i]
 		local extensions = spawner_group_extensions[spawner_group] or {}
+
 		extensions[#extensions + 1] = extension
 		spawner_group_extensions[spawner_group] = extensions
 	end
@@ -107,6 +112,7 @@ MinionSpawnerSystem.spawners_in_group_distance_sorted = function (self, group, p
 		for i = #spawners_table, 1, -1 do
 			local spawner = spawners[i]
 			local distance = Vector3.distance(position, spawner:position())
+
 			spawner.distance = distance
 		end
 
@@ -129,6 +135,7 @@ MinionSpawnerSystem.average_position_of_spawners = function (self, group)
 	for i = 1, num_spawners do
 		local extension = spawners[i]
 		local position = extension:position()
+
 		average_position = average_position + position
 	end
 
@@ -145,7 +152,7 @@ MinionSpawnerSystem.spawners_in_range = function (self, position, radius, option
 
 	local broadphase = self._broadphase
 	local extension_broadphase_lookup = self._extension_broadphase_lookup
-	local num_results = broadphase:query(position, radius, broadphase_results, BROADPHASE_CATEGORIES)
+	local num_results = broadphase.query(broadphase, position, radius, broadphase_results, BROADPHASE_CATEGORIES)
 	local num_extensions = 0
 
 	for i = 1, num_results do
@@ -177,6 +184,7 @@ MinionSpawnerSystem.add_spawner_to_ranged_search = function (self, extension)
 
 	local position = extension:position()
 	local broadphase_id = Broadphase.add(self._broadphase, nil, position, BROADPHASE_UNIT_RADIUS, BROADPHASE_CATEGORIES)
+
 	extension_broadphase_lookup[broadphase_id] = extension
 	extension_broadphase_lookup[extension] = broadphase_id
 end

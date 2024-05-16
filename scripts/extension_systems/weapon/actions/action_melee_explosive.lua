@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_melee_explosive.lua
+
 require("scripts/extension_systems/weapon/actions/action_sweep")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -75,6 +77,7 @@ ActionMeleeExplosive._explode = function (self, t)
 	if ammunition_usage then
 		local inventory_slot_component = self._inventory_slot_component
 		local new_ammunition = math.max(inventory_slot_component.current_ammunition_clip - ammunition_usage, 0)
+
 		inventory_slot_component.current_ammunition_clip = new_ammunition
 		inventory_slot_component.last_ammunition_usage = t
 	end
@@ -90,6 +93,7 @@ ActionMeleeExplosive._process_hit = function (self, t, unit, hit_actor, hit_unit
 
 	if abort_attack and (not ammunition_usage or ammunition_usage and has_ammo) then
 		local explosion_delay = action_settings.explosion_delay
+
 		self._exploding_time = t + explosion_delay
 	end
 

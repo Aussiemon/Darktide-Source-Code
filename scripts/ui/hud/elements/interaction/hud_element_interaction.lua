@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/interaction/hud_element_interaction.lua
+
 local Definitions = require("scripts/ui/hud/elements/interaction/hud_element_interaction_definitions")
 local HudElementInteractionSettings = require("scripts/ui/hud/elements/interaction/hud_element_interaction_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -66,6 +68,7 @@ HudElementInteraction._update_interactee_data = function (self, interactee_unit,
 	if render_marker and camera_position then
 		local interactee_position = Unit.world_position(interactee_unit, 1)
 		local distance_sq = Vector3.distance_squared(interactee_position, camera_position)
+
 		render_marker = distance_sq <= HudElementInteractionSettings.max_spawn_distance_sq
 	end
 
@@ -73,8 +76,9 @@ HudElementInteraction._update_interactee_data = function (self, interactee_unit,
 		if not interaction_units[interactee_unit] then
 			interaction_units[interactee_unit] = {
 				requested = true,
-				extension = extension
+				extension = extension,
 			}
+
 			local marker_callback = callback(self, "_on_interaction_marker_spawned", interactee_unit)
 			local marker_type = "interaction"
 
@@ -185,17 +189,18 @@ HudElementInteraction._update_can_interact_target = function (self)
 			local marker_id = interaction_data and interaction_data.marker_id
 			local ui_interaction_type = interactee_extension.ui_interaction_type and interactee_extension:ui_interaction_type()
 			local use_minimal_presentation = ui_interaction_type and ui_interaction_type == "player_interaction"
+
 			self._active_presentation_data = {
 				intro_anim_duration = 0.2,
-				intro_anim_time = 0,
 				intro_anim_progress = 0,
+				intro_anim_time = 0,
 				interactee_extension = interactee_extension,
 				interactor_extension = interactor_extension,
 				interactee_unit = interactee_unit,
 				player_unit = player_unit,
 				marker_id = marker_id,
 				use_minimal_presentation = use_minimal_presentation,
-				background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size
+				background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size,
 			}
 
 			self:_setup_interaction_information(interactee_unit, interactee_extension, interactor_extension, use_minimal_presentation)
@@ -214,10 +219,13 @@ HudElementInteraction._update_can_interact_target = function (self)
 
 	if active_presentation_data then
 		local marker = active_presentation_data.marker
+
 		self._use_minimal_presentation = active_presentation_data.use_minimal_presentation
+
 		local show_interaction_ui = interactor_extension:show_interaction_ui()
 		local show_counter_ui = interactor_extension:show_counter_ui()
 		local show_block_ui = interactor_extension:hud_block_text()
+
 		self._widgets_by_name.background.content.use_minimal_presentation = self._use_minimal_presentation
 		self._widgets_by_name.frame.content.use_minimal_presentation = self._use_minimal_presentation
 
@@ -246,7 +254,7 @@ local function _get_input_text(alias_name, input_text_key, hold_required)
 	local input_display_text = Localize(input_text_key)
 	local input_action_localization_params = {
 		input = input_text,
-		action = input_display_text
+		action = input_display_text,
 	}
 	local input_type_string = hold_required and "loc_interaction_input_type_hold" or "loc_interaction_input_type"
 
@@ -285,6 +293,7 @@ HudElementInteraction._update_tag_input_information = function (self, interactee
 	end
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.tag_text.content.text = input_text_tag
 end
 
@@ -295,6 +304,7 @@ HudElementInteraction._update_interaction_input_text = function (self, interacte
 	local interaction_input_alias_key = _get_alias_key(interaction_input)
 	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.interact_text.content.text = input_text_interact
 end
 
@@ -361,9 +371,12 @@ HudElementInteraction._update_target_interaction_hold_progress = function (self,
 	local widgets_by_name = self._widgets_by_name
 	local background_widget = widgets_by_name.background
 	local progress_width = hold_progress * background_size[1]
+
 	background_widget.style.input_progress_background.size[1] = progress_width
 	background_widget.style.input_progress_background_large.size[1] = progress_width + (hold_progress > 0 and 1 or 0)
+
 	local progress_frame_style = background_widget.style.input_progress_frame
+
 	progress_frame_style.size[1] = progress_width
 	progress_frame_style.offset[1] = progress_frame_style.default_offset[1] - background_size[1] + progress_width
 	progress_frame_style.color[1] = 255 * math.clamp(math.ease_out_exp(hold_progress * 2), 0, 1)
@@ -388,22 +401,26 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 	local max_text_width = background_size[1] - edge_spacing[1] * 2
 	local tag_max_size = {
 		interaction_style.size[1],
-		1080
+		1080,
 	}
 	local description_max_size = {
 		max_text_width,
-		1080
+		1080,
 	}
 	local tag_text_width, tag_text_height = UIRenderer.text_size(ui_renderer, tag_text, tag_style.font_type, tag_style.font_size, tag_max_size, UIFonts.get_font_options_by_style(tag_style))
+
 	tag_text_width = tag_text_width > 0 and tag_text_width + edge_spacing[1] or 0
+
 	local interaction_max_size = {
 		max_text_width - tag_text_width,
-		1080
+		1080,
 	}
 	local interaction_width, interaction_height = UIRenderer.text_size(ui_renderer, interaction_text, interaction_style.font_type, interaction_style.font_size, interaction_max_size, UIFonts.get_font_options_by_style(interaction_style))
 	local description_width, description_height = UIRenderer.text_size(ui_renderer, description_text, description_style.font_type, description_style.font_size, description_max_size, UIFonts.get_font_options_by_style(description_style))
+
 	interaction_height = interaction_height + (interaction_height > 0 and edge_spacing[2] * 2 or 0)
 	description_height = description_height + (description_height > 0 and edge_spacing[2] * 4 or 0)
+
 	local background_height = interaction_height + description_height
 
 	self:_set_scenegraph_size("description_box", nil, description_height)
@@ -411,11 +428,11 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 
 	self._active_presentation_data.background_size = {
 		background_size[1],
-		background_height
+		background_height,
 	}
 	interaction_style.size = {
 		interaction_max_size[1],
-		interaction_height
+		interaction_height,
 	}
 	widgets_by_name.background.style.input_background.size[2] = interaction_height
 	widgets_by_name.background.style.input_background_slim.size[2] = interaction_height
@@ -428,6 +445,7 @@ HudElementInteraction._update_target_interaction_animation = function (self, dt,
 	if intro_anim_progress ~= 1 then
 		local intro_anim_time = active_presentation_data.intro_anim_time
 		local intro_anim_duration = active_presentation_data.intro_anim_duration
+
 		intro_anim_time = intro_anim_time + dt
 		intro_anim_progress = math.min(intro_anim_time / intro_anim_duration, 1)
 		active_presentation_data.intro_anim_time = intro_anim_time
@@ -443,6 +461,7 @@ HudElementInteraction._update_target_interaction_animation = function (self, dt,
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
+
 		widget.alpha_multiplier = alpha_progress
 	end
 end
@@ -500,16 +519,18 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 	local interaction_input = interactee_extension:interaction_input() or "interact_pressed"
 	local interaction_input_alias_key = _get_alias_key(interaction_input)
 	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
-	local description_text, hud_description = nil
+	local description_text, hud_description
 
 	if not use_minimal_presentation then
 		hud_description = interactor_extension:hud_description()
+
 		local interactee_player = Managers.player:player_by_unit(interactee_unit)
 
 		if interactee_player then
 			local player_slot = interactee_player:slot()
 			local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 			local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
+
 			description_text = color_string .. "{#size(30)} {#reset()}" .. interactee_player:name()
 		else
 			description_text = Localize(hud_description)
@@ -520,6 +541,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 	end
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.interact_text.content.text = input_text_interact
 
 	if input_block_text then
@@ -532,6 +554,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 
 	widgets_by_name.description_text.content.text = description_text
 	widgets_by_name.type_description_text.content.text = ""
+
 	local is_event_interaction = interactee_extension.display_start_event and interactee_extension:display_start_event()
 
 	self:_set_event_popup_visibility(is_event_interaction)
@@ -541,7 +564,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 		input_action_text = input_action_text,
 		input_block_text = input_block_text,
 		hud_description = hud_description,
-		is_event = is_event_interaction
+		is_event = is_event_interaction,
 	}
 end
 

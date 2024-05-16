@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/portable_random.lua
+
 local PortableRandom = class("PortableRandom")
 
 PortableRandom.init = function (self, seed)
@@ -6,6 +8,7 @@ end
 
 PortableRandom.next_random = function (self)
 	local seed, random_value = math.next_random(self._seed)
+
 	self._seed = seed
 
 	return random_value
@@ -13,6 +16,7 @@ end
 
 PortableRandom.random_range = function (self, min, max)
 	local seed, random_value = math.next_random(self._seed, min, max)
+
 	self._seed = seed
 
 	return random_value

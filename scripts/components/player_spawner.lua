@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/player_spawner.lua
+
 local PlayerSpawner = component("PlayerSpawner")
 
 PlayerSpawner.init = function (self, unit)
@@ -34,44 +36,44 @@ end
 
 PlayerSpawner.component_data = {
 	player_side = {
-		value = "heroes",
-		ui_type = "combo_box",
 		ui_name = "Player Side",
+		ui_type = "combo_box",
+		value = "heroes",
 		options_keys = {
-			"Heroes"
+			"Heroes",
 		},
 		options_values = {
-			"heroes"
-		}
+			"heroes",
+		},
 	},
 	spawn_identifier = {
-		value = "default",
-		ui_type = "combo_box",
 		ui_name = "Spawn Identifier",
+		ui_type = "combo_box",
+		value = "default",
 		options_keys = {
 			"Default",
 			"Bots",
 			"Recent Mission",
-			"Shooting Range"
+			"Shooting Range",
 		},
 		options_values = {
 			"default",
 			"bots",
 			"recent_mission",
-			"tg_shooting_range"
-		}
+			"tg_shooting_range",
+		},
 	},
 	spawn_priority = {
-		ui_type = "number",
-		min = 1,
 		decimals = 0,
-		value = 1,
+		min = 1,
+		step = 1,
 		ui_name = "Spawn Priority",
-		step = 1
+		ui_type = "number",
+		value = 1,
 	},
 	extensions = {
-		"PlayerSpawnerExtension"
-	}
+		"PlayerSpawnerExtension",
+	},
 }
 
 return PlayerSpawner

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/revive_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/assist_base_interaction")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -20,8 +22,11 @@ ReviveInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		local target_unit = unit_data_component.target_unit
 		local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 		local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
+
 		assisted_state_input_component.success = true
+
 		local knocked_down_state_input = unit_data_extension:write_component("knocked_down_state_input")
+
 		knocked_down_state_input.knock_down = false
 
 		self:_handle_buffs(interactor_unit, target_unit, proc_events.on_revive)

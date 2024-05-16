@@ -1,10 +1,11 @@
+﻿-- chunkname: @scripts/utilities/player_talents/player_talents.lua
+
 local PlayerTalents = {}
 
 PlayerTalents.add_archetype_base_talents = function (archetype, talents)
 	local talent_definitions = archetype.talents
-	local has_combat_ability = false
-	local has_grenade_ability = false
-	local combat_ability_talent, grenade_ability_talent = nil
+	local has_combat_ability, has_grenade_ability = false, false
+	local combat_ability_talent, grenade_ability_talent
 
 	for talent_name, _ in pairs(talents) do
 		local talent = talent_definitions[talent_name]
@@ -44,6 +45,7 @@ PlayerTalents.add_archetype_base_talents = function (archetype, talents)
 
 		if apply_talent then
 			local prev_tier = talents[talent_name] or 0
+
 			talents[talent_name] = prev_tier + tier
 		end
 	end

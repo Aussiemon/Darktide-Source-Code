@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_event_queue.lua
+
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local DialogueEventQueue = class("DialogueEventQueue")
 
@@ -76,10 +78,12 @@ end
 
 DialogueEventQueue._append_event_implementation = function (self, unit, event_name, event_data, identifier)
 	local base_index = self._index_input_event_queue
+
 	self._input_event_queue[base_index + 0] = unit
 	self._input_event_queue[base_index + 1] = event_name
 	self._input_event_queue[base_index + 2] = identifier or ""
 	self._input_event_queue[base_index + 3] = table.size(event_data)
+
 	local base_index_event_data = base_index + 4
 
 	for key, value in pairs(event_data) do

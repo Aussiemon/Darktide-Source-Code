@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/barrel_overheat.lua
+
 local BarrelOverheat = component("BarrelOverheat")
 local BARREL_OVERHEAT_MATERIAL_VARIABLE = "overheat"
 
@@ -41,29 +43,29 @@ end
 
 BarrelOverheat.component_data = {
 	overheat_min = {
-		ui_type = "slider",
+		decimals = 2,
+		max = 3,
 		min = 0,
 		step = 0.01,
-		decimals = 2,
-		value = 0,
 		ui_name = "Blur min",
-		max = 3
+		ui_type = "slider",
+		value = 0,
 	},
 	overheat_max = {
-		ui_type = "slider",
+		decimals = 2,
+		max = 1,
 		min = 0,
 		step = 0.01,
-		decimals = 2,
-		value = 1,
 		ui_name = "Blur max",
-		max = 1
+		ui_type = "slider",
+		value = 1,
 	},
 	inputs = {
 		set_barrel_overheat = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return BarrelOverheat

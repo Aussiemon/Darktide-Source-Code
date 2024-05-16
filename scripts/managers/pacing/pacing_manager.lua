@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/pacing_manager.lua
+
 local HordePacing = require("scripts/managers/pacing/horde_pacing/horde_pacing")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MonsterPacing = require("scripts/managers/pacing/monster_pacing/monster_pacing")
@@ -15,10 +17,12 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed, p
 	self._ramp_up_enabled = true
 	self._switch_state_conditions = {
 		back = {},
-		next = {}
+		next = {},
 	}
 	self._world = world
+
 	local template = PacingTemplates.default
+
 	self._template = template
 	self._roamer_pacing = RoamerPacing:new(nav_world, level_name, level_seed, pacing_control)
 	self._horde_pacing = HordePacing:new(nav_world)
@@ -41,10 +45,15 @@ end
 PacingManager.on_gameplay_post_init = function (self, level_name)
 	local template = self._template
 	local combat_state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.combat_state_settings)
+
 	self._combat_state_settings = combat_state_settings
+
 	local state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.state_settings)
+
 	self._state_settings = state_settings
+
 	local starting_state = template.starting_state
+
 	self._next_state = starting_state
 	self._state_orders = template.state_orders
 
@@ -53,6 +62,7 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 	self._max_tension = Managers.state.difficulty:get_table_entry_by_challenge(template.max_tension)
 	self._ramp_up_frequency_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.ramp_up_frequency_modifiers)
 	self._ramp_up_frequency_modifiers = {}
+
 	local challenge_rating_thresholds = {}
 
 	for spawn_type, challenge_table in pairs(template.challenge_rating_thresholds) do
@@ -76,13 +86,16 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 	local cinematic_playing = Managers.state.cinematic:is_playing()
 	local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
 	self._disabled = not main_path_available or cinematic_playing or not cinematic_scene_system:intro_played()
 
 	Managers.event:register(self, "intro_cinematic_started", "_event_intro_cinematic_started")
 	Managers.event:register(self, "intro_cinematic_played", "_event_intro_cinematic_played")
 
 	self._first_aggro = true
+
 	local min_wound_tension_requirement = Managers.state.difficulty:get_table_entry_by_challenge(template.min_wound_tension_requirement)
+
 	self._min_wound_tension_requirement = min_wound_tension_requirement
 end
 
@@ -102,8 +115,7 @@ PacingManager.destroy = function (self)
 end
 
 PacingManager.update = function (self, dt, t)
-	local side_id = 2
-	local target_side_id = 1
+	local side_id, target_side_id = 2, 1
 
 	self:_update_player_combat_state(dt, target_side_id)
 
@@ -113,6 +125,7 @@ PacingManager.update = function (self, dt, t)
 
 	if not delay_duration or delay_duration and delay_duration < t then
 		local new_tension = math.clamp(tension - dt * decay_tension_rate, 0, self._max_tension)
+
 		self._tension = new_tension
 		self._is_decaying_tension = new_tension > 0
 	else
@@ -325,6 +338,7 @@ PacingManager.add_tension = function (self, tension, optional_player_unit, reaso
 
 	if decay_tension_delay then
 		local t = Managers.time:time("gameplay")
+
 		self._decay_tension_delay_duration = t + decay_tension_delay
 	end
 
@@ -339,6 +353,7 @@ PacingManager.add_tension = function (self, tension, optional_player_unit, reaso
 		local current_player_tension = self._player_tension[optional_player_unit] or 0
 		local tension_modifier = settings.tension_modifier
 		local max_value = settings.max_value
+
 		self._player_tension[optional_player_unit] = math.min(current_player_tension + tension * tension_modifier, max_value)
 	end
 end
@@ -359,6 +374,7 @@ PacingManager.add_damage_tension = function (self, tension_type, damage, attacke
 	local side = self._side_system:get_side(side_id)
 	local valid_player_units = side.valid_player_units
 	local num_valid_player_units = #valid_player_units
+
 	tension = tension / num_valid_player_units
 
 	self:add_tension(tension, attacked_unit, tension_type)
@@ -388,32 +404,32 @@ local MAX_OUT_TENSION_BY_CHALLENGE = {
 		true,
 		true,
 		true,
-		false
+		false,
 	},
 	{
 		true,
 		true,
 		true,
-		false
+		false,
 	},
 	{
 		true,
 		true,
 		true,
-		false
+		false,
 	},
 	{
 		true,
 		true,
 		false,
-		false
+		false,
 	},
 	{
 		true,
 		true,
 		false,
-		false
-	}
+		false,
+	},
 }
 
 PacingManager.player_died = function (self, player_unit)
@@ -473,9 +489,7 @@ end
 PacingManager._update_player_combat_state = function (self, dt, side_id)
 	local settings = self._combat_state_settings
 	local combat_states = settings.combat_states
-	local low_threshold = settings.low_threshold
-	local medium_threshold = settings.medium_threshold
-	local high_threshold = settings.high_threshold
+	local low_threshold, medium_threshold, high_threshold = settings.low_threshold, settings.medium_threshold, settings.high_threshold
 	local max_value = settings.max_value
 	local base_decay_rate = settings.base_decay_rate
 	local player_combat_states = self._player_combat_states
@@ -485,17 +499,17 @@ PacingManager._update_player_combat_state = function (self, dt, side_id)
 	local side = self._side_system:get_side(side_id)
 	local valid_player_units = side.valid_player_units
 	local num_valid_player_units = #valid_player_units
-	local num_low = 0
-	local num_high = 0
-	local num_medium = 0
+	local num_low, num_high, num_medium = 0, 0, 0
 
 	for i = 1, num_valid_player_units do
 		local player_unit = valid_player_units[i]
 		local tension = player_tension[player_unit] or 0
 		local new_tension = math.max(tension - dt * (base_decay_rate + decay_tension_rate), 0)
+
 		player_tension[player_unit] = new_tension
+
 		local value = math.clamp(total_challenge_rating + new_tension, 0, max_value)
-		local current_combat_state = nil
+		local current_combat_state
 
 		if low_threshold <= value and value < medium_threshold then
 			current_combat_state = combat_states.low
@@ -566,13 +580,14 @@ PacingManager._update_ramp_up_frequency = function (self, dt, t, target_side_id)
 
 	if ramp_up_percentage == 1 and not self._max_ramp_up_duration then
 		local max_duration = ramp_up_frequency_settings.max_duration
+
 		self._max_ramp_up_duration = max_duration
 	elseif self._max_ramp_up_duration then
 		self._max_ramp_up_duration = math.max(self._max_ramp_up_duration - (dt + traveled_this_frame), 0)
 
 		if self._max_ramp_up_duration <= 0 then
 			if ramp_up_frequency_settings.wait_for_ramp_clear then
-				if self._waiting_for_ramp_clear and self._wait_for_ramp_clear_reset_t and self._wait_for_ramp_clear_reset_t <= t then
+				if self._waiting_for_ramp_clear and self._wait_for_ramp_clear_reset_t and t >= self._wait_for_ramp_clear_reset_t then
 					self._clear_ramp = true
 					self._wait_for_ramp_clear_reset_t = nil
 				end
@@ -580,7 +595,9 @@ PacingManager._update_ramp_up_frequency = function (self, dt, t, target_side_id)
 				if not self._waiting_for_ramp_clear then
 					self._waiting_for_ramp_clear = true
 					self._waiting_for_ramp_clear_t = t
+
 					local wait_for_ramp_clear_reset_range = self._ramp_up_frequency_settings.wait_for_ramp_clear_reset
+
 					self._wait_for_ramp_clear_reset_t = t + math.random_range(wait_for_ramp_clear_reset_range[1], wait_for_ramp_clear_reset_range[2])
 				elseif self._clear_ramp then
 					self._current_ramp_up_duration = ramp_duration
@@ -601,6 +618,7 @@ PacingManager._update_ramp_up_frequency = function (self, dt, t, target_side_id)
 
 	for spawn_type, max_modifier in pairs(ramp_modifiers) do
 		local diff = math.abs(1 - max_modifier)
+
 		ramp_up_frequency_modifiers[spawn_type] = 1 + diff * ramp_up_percentage
 	end
 end
@@ -671,6 +689,7 @@ PacingManager.add_aggroed_minion = function (self, unit)
 
 		if self._first_aggro then
 			local t = Managers.time:time("gameplay")
+
 			self._state_entered_t = t
 			self._low_state_entered_t = t
 			self._first_aggro = nil
@@ -820,9 +839,7 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 		self._specials_pacing:set_max_of_same_override(max_of_same_override)
 	end
 
-	local monsters_per_travel_distance = modify_settings.monsters_per_travel_distance
-	local monster_breed_name = modify_settings.monster_breed_name
-	local monster_spawn_type = modify_settings.monster_spawn_type
+	local monsters_per_travel_distance, monster_breed_name, monster_spawn_type = modify_settings.monsters_per_travel_distance, modify_settings.monster_breed_name, modify_settings.monster_spawn_type
 
 	if monsters_per_travel_distance and monster_breed_name then
 		self._monster_pacing:fill_spawns_by_travel_distance(monster_breed_name, monster_spawn_type, monsters_per_travel_distance)

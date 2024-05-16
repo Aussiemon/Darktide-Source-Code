@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates.lua
+
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local template_types = WeaponTweakTemplateSettings.template_types
@@ -17,7 +19,7 @@ local template_type_paths = {
 	[template_types.stamina] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/stamina_trait_templates",
 	[template_types.sway] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/sway_trait_templates",
 	[template_types.warp_charge] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/warp_charge_trait_templates",
-	[template_types.weapon_handling] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_handling_trait_templates"
+	[template_types.weapon_handling] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_handling_trait_templates",
 }
 local templates = {}
 local entries_to_duplicate = {}
@@ -42,7 +44,7 @@ local function _inject_weapon_movement_states(template)
 
 		for weapon_movement_state, _ in pairs(weapon_movement_states) do
 			local copied_entry = {
-				weapon_movement_state
+				weapon_movement_state,
 			}
 
 			for i = 2, depth do
@@ -71,13 +73,32 @@ local function _test_template(template, name, template_type)
 
 		for path_index = 1, num_paths do
 			local path = entry[path_index]
-			slot16 = type(path) == "table"
+
+			if type(path) ~= "table" then
+				local var_1_0 = false
+			else
+				local is_table = true
+			end
 		end
 
 		local lerp_value = entry[lerp_value_id]
 		local is_number = type(lerp_value) == "number"
 		local is_table = type(lerp_value) == "table"
-		slot16 = is_table and have_max and have_min
+
+		if is_table then
+			local have_max = not not lerp_value.max
+			local have_min = not not lerp_value.min
+
+			if have_max then
+				-- Nothing
+			end
+
+			::label_1_0::
+
+			local have_lerp_values = have_min
+		end
+
+		::label_1_1::
 	end
 
 	local default_lerp_value = template.DEFAULT_LERP_VALUE

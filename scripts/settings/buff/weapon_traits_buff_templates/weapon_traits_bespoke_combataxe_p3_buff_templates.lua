@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combataxe_p3_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
@@ -28,20 +30,20 @@ templates.weapon_trait_bespoke_combataxe_p3_stacking_rending_on_weakspot_parent.
 templates.weapon_trait_bespoke_combataxe_p3_stacking_rending_on_weakspot_child = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_child)
 templates.weapon_trait_bespoke_combataxe_p3_staggered_targets_receive_increased_damage_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_damage_debuff)
 templates.weapon_trait_bespoke_combataxe_p3_increased_weakspot_damage_on_push = {
-	allow_proc_while_active = true,
-	predicted = false,
-	class_name = "proc_buff",
 	active_duration = 3,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	predicted = false,
 	proc_events = {
-		[proc_events.on_push_finish] = 1
+		[proc_events.on_push_finish] = 1,
 	},
 	proc_stat_buffs = {
-		[stat_buffs.weakspot_damage] = 0.01
+		[stat_buffs.weakspot_damage] = 0.01,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, function (params, template_data, template_context)
 		return params.num_hit_units and params.num_hit_units > 0
-	end)
+	end),
 }
 templates.weapon_trait_bespoke_combataxe_p3_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff)
 

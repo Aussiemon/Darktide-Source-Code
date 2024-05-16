@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_suppression_templates.lua
+
 local suppression_templates = {}
 local overrides = {}
 
@@ -6,138 +8,138 @@ table.make_unique(overrides)
 
 suppression_templates.default_laspistol_killshot = {
 	still = {
-		delay = 0.2,
 		decay_time = 0.6,
+		delay = 0.2,
 		immediate_sway = {
 			{
 				pitch = {
+					lerp_basic = 0.2,
 					lerp_perfect = 0.1,
-					lerp_basic = 0.2
 				},
 				yaw = {
+					lerp_basic = 0.2,
 					lerp_perfect = 0.1,
-					lerp_basic = 0.2
-				}
+				},
 			},
 			{
 				pitch = {
+					lerp_basic = 0.3,
 					lerp_perfect = 0.15,
-					lerp_basic = 0.3
 				},
 				yaw = {
+					lerp_basic = 0.3,
 					lerp_perfect = 0.15,
-					lerp_basic = 0.3
-				}
+				},
 			},
 			{
 				pitch = {
+					lerp_basic = 0.4,
 					lerp_perfect = 0.2,
-					lerp_basic = 0.4
 				},
 				yaw = {
+					lerp_basic = 0.4,
 					lerp_perfect = 0.2,
-					lerp_basic = 0.4
-				}
+				},
 			},
 			{
 				pitch = {
+					lerp_basic = 0.5,
 					lerp_perfect = 0.3,
-					lerp_basic = 0.5
 				},
 				yaw = {
+					lerp_basic = 0.5,
 					lerp_perfect = 0.3,
-					lerp_basic = 0.5
-				}
-			}
-		}
+				},
+			},
+		},
 	},
 	moving = {
 		inherits = {
 			"default_laspistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		inherits = {
 			"default_laspistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		inherits = {
 			"default_laspistol_killshot",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 suppression_templates.hip_laspistol_killshot = {
 	still = {
-		delay = 0.2,
 		decay_time = 0.6,
+		delay = 0.2,
 		immediate_spread = {
 			{
 				pitch = {
+					lerp_basic = 0.2,
 					lerp_perfect = 0.1,
-					lerp_basic = 0.2
 				},
 				yaw = {
+					lerp_basic = 0.2,
 					lerp_perfect = 0.1,
-					lerp_basic = 0.2
-				}
+				},
 			},
 			{
 				pitch = {
+					lerp_basic = 0.3,
 					lerp_perfect = 0.15,
-					lerp_basic = 0.3
 				},
 				yaw = {
+					lerp_basic = 0.3,
 					lerp_perfect = 0.15,
-					lerp_basic = 0.3
-				}
+				},
 			},
 			{
 				pitch = {
+					lerp_basic = 0.4,
 					lerp_perfect = 0.2,
-					lerp_basic = 0.4
 				},
 				yaw = {
+					lerp_basic = 0.4,
 					lerp_perfect = 0.2,
-					lerp_basic = 0.4
-				}
+				},
 			},
 			{
 				pitch = {
+					lerp_basic = 0.5,
 					lerp_perfect = 0.3,
-					lerp_basic = 0.5
 				},
 				yaw = {
+					lerp_basic = 0.5,
 					lerp_perfect = 0.3,
-					lerp_basic = 0.5
-				}
-			}
-		}
+				},
+			},
+		},
 	},
 	moving = {
 		inherits = {
 			"hip_laspistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		inherits = {
 			"hip_laspistol_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		inherits = {
 			"hip_laspistol_killshot",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 
 return {
 	base_templates = suppression_templates,
-	overrides = overrides
+	overrides = overrides,
 }

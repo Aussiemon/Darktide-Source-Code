@@ -1,24 +1,27 @@
+﻿-- chunkname: @scripts/settings/options/interface_settings.lua
+
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local SettingsUtilities = {}
 
 local function construct_interface_settings_boolean(template)
-	local entry = {
-		default_value = template.default_value,
-		display_name = template.display_name,
-		on_value_changed = template.on_value_changed,
-		indentation_level = template.indentation_level,
-		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules,
-		validation_function = template.validation_function,
-		apply_on_startup = template.apply_on_startup
-	}
+	local entry = {}
+
+	entry.default_value = template.default_value
+	entry.display_name = template.display_name
+	entry.on_value_changed = template.on_value_changed
+	entry.indentation_level = template.indentation_level
+	entry.tooltip_text = template.tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.validation_function = template.validation_function
+	entry.apply_on_startup = template.apply_on_startup
+
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
 
 	entry.get_function = function ()
-		local old_value = nil
+		local old_value
 
 		if template.use_local_save then
 			old_value = SettingsUtilities.get_local_settings(id)
@@ -34,7 +37,7 @@ local function construct_interface_settings_boolean(template)
 	end
 
 	entry.on_activated = function (new_value)
-		local current_value = nil
+		local current_value
 
 		if template.use_local_save then
 			current_value = SettingsUtilities.get_local_settings(id)
@@ -75,6 +78,7 @@ local function construct_interface_settings_percent_slider(template)
 
 	local function explode_value(percent_value)
 		local exploded_value = min_value + percent_value * conversion_value
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -97,7 +101,7 @@ local function construct_interface_settings_percent_slider(template)
 	end
 
 	local value_get_function = template.get_function or function ()
-		local exploded_value = nil
+		local exploded_value
 
 		if template.use_local_save then
 			exploded_value = SettingsUtilities.get_local_settings(id)
@@ -131,7 +135,7 @@ local function construct_interface_settings_percent_slider(template)
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		apply_on_startup = template.apply_on_startup
+		apply_on_startup = template.apply_on_startup,
 	}
 
 	return OptionsUtilities.create_percent_slider_template(params)
@@ -160,7 +164,7 @@ local function construct_interface_settings_value_slider(template)
 	end
 
 	local function value_get_function()
-		local value = nil
+		local value
 
 		if template.use_local_save then
 			value = SettingsUtilities.get_local_settings(id)
@@ -185,7 +189,7 @@ local function construct_interface_settings_value_slider(template)
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		apply_on_startup = template.apply_on_startup
+		apply_on_startup = template.apply_on_startup,
 	}
 
 	return OptionsUtilities.create_value_slider_template(params)
@@ -204,10 +208,11 @@ local function construct_interface_settings_dropdown(template)
 
 	for i = 1, #template.options do
 		local value = template.options[i]
+
 		options[#options + 1] = {
 			id = value.name,
 			value = value.name,
-			display_name = value.display_name
+			display_name = value.display_name,
 		}
 	end
 
@@ -234,7 +239,7 @@ local function construct_interface_settings_dropdown(template)
 		id = template.id,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		default_value = template.default_value
+		default_value = template.default_value,
 	}
 
 	return params
@@ -244,433 +249,433 @@ local template_functions = {
 	boolean = construct_interface_settings_boolean,
 	percent_slider = construct_interface_settings_percent_slider,
 	value_slider = construct_interface_settings_value_slider,
-	dropdown = construct_interface_settings_dropdown
+	dropdown = construct_interface_settings_dropdown,
 }
 local _notification_options = {
 	{
 		display_name = "loc_setting_notification_type_none",
-		name = "none"
+		name = "none",
 	},
 	{
 		display_name = "loc_setting_notification_type_combat_feed",
-		name = "combat_feed"
+		name = "combat_feed",
 	},
 	{
 		display_name = "loc_setting_notification_type_notification",
-		name = "notification"
-	}
+		name = "notification",
+	},
 }
 local settings_definitions = {
 	{
-		group_name = "gameplay_settings",
 		display_name = "loc_settings_menu_group_gameplay_settings",
-		widget_type = "group_header"
+		group_name = "gameplay_settings",
+		widget_type = "group_header",
 	},
 	{
-		save_location = "interface_settings",
 		default_value = false,
 		display_name = "loc_interface_setting_forced_dot_crosshair",
 		id = "forced_dot_crosshair_enabled",
+		save_location = "interface_settings",
 		tooltip_text = "loc_settings_forced_dot_crosshair_mouseover",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_forced_dot_crosshair", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
+		default_value = true,
 		display_name = "loc_interface_setting_input_hints_enabled",
 		id = "input_hints_enabled",
-		default_value = true,
+		save_location = "interface_settings",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_input_hints_enabled", value)
-		end
+		end,
 	},
 	{
-		group_name = "buff_interface_settings",
 		display_name = "loc_settings_menu_group_buff_interface_settings",
-		widget_type = "group_header"
+		group_name = "buff_interface_settings",
+		widget_type = "group_header",
 	},
 	{
-		save_location = "interface_settings",
 		default_value = true,
 		display_name = "loc_interface_setting_show_group_buff_icon_in_categories",
 		id = "group_buff_icon_in_categories",
+		save_location = "interface_settings",
 		tooltip_text = "loc_interface_setting_show_group_buff_icon_in_categories_mouseover",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
 		default_value = true,
 		display_name = "loc_interface_setting_show_show_aura_buff_icons",
 		id = "show_aura_buff_icons",
+		save_location = "interface_settings",
 		tooltip_text = "loc_interface_setting_show_show_aura_buff_icons_mouseover",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
-		end
+		end,
 	},
 	{
-		group_name = "combat_feed_settings",
 		display_name = "loc_settings_menu_group_combat_feed_settings",
-		widget_type = "group_header"
+		group_name = "combat_feed_settings",
+		widget_type = "group_header",
 	},
 	{
-		save_location = "interface_settings",
+		default_value = true,
 		display_name = "loc_setting_combat_feed_enabled",
 		id = "combat_feed_enabled",
-		default_value = true,
+		save_location = "interface_settings",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_combat_feed_enabled", value)
-		end
+		end,
 	},
 	{
-		step_size_value = 1,
-		min_value = 4,
-		display_name = "loc_setting_combat_feed_max_messages",
-		num_decimals = 0,
-		max_value = 12,
 		default_value = 8,
-		widget_type = "value_slider",
+		display_name = "loc_setting_combat_feed_max_messages",
 		id = "combat_feed_max_messages",
+		max_value = 12,
+		min_value = 4,
+		num_decimals = 0,
 		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_combat_feed_max_messages", value)
-		end
+		end,
 	},
 	{
-		step_size_value = 1,
-		min_value = 3,
-		display_name = "loc_setting_combat_feed_message_duration",
-		num_decimals = 0,
-		max_value = 10,
 		default_value = 5,
-		widget_type = "value_slider",
+		display_name = "loc_setting_combat_feed_message_duration",
 		id = "combat_feed_message_duration",
+		max_value = 10,
+		min_value = 3,
+		num_decimals = 0,
 		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_combat_feed_message_duration", value)
-		end
+		end,
 	},
 	{
-		group_name = "notification_settings",
 		display_name = "loc_setting_menu_group_notification_settings",
-		widget_type = "group_header"
+		group_name = "notification_settings",
+		widget_type = "group_header",
 	},
 	{
-		save_location = "interface_settings",
+		default_value = "notification",
 		display_name = "loc_setting_notification_assist_notification_type",
 		id = "assist_notification_type",
-		default_value = "notification",
+		save_location = "interface_settings",
 		widget_type = "dropdown",
 		options = _notification_options,
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_assist_notification_type", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
+		default_value = "notification",
 		display_name = "loc_setting_notification_crafting_pickup_notification_type",
 		id = "crafting_pickup_notification_type",
-		default_value = "notification",
+		save_location = "interface_settings",
 		widget_type = "dropdown",
 		options = _notification_options,
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_crafting_pickup_notification_type", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
+		default_value = "others",
 		display_name = "loc_interface_setting_penance_unlock_chat_message_type",
 		id = "penance_unlock_chat_message_type",
-		default_value = "others",
+		save_location = "interface_settings",
 		widget_type = "dropdown",
 		options = {
 			{
 				display_name = "loc_setting_notification_type_none",
-				name = "none"
+				name = "none",
 			},
 			{
 				display_name = "loc_setting_notification_type_mine",
-				name = "mine"
+				name = "mine",
 			},
 			{
 				display_name = "loc_setting_notification_type_others",
-				name = "others"
+				name = "others",
 			},
 			{
 				display_name = "loc_setting_notification_type_all",
-				name = "all"
-			}
+				name = "all",
+			},
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_penance_unlock_chat_message_type", value)
-		end
+		end,
 	},
 	{
-		group_name = "subtitle_settings",
 		display_name = "loc_settings_menu_group_subtitle_settings",
-		widget_type = "group_header"
+		group_name = "subtitle_settings",
+		widget_type = "group_header",
 	},
 	{
-		save_location = "interface_settings",
+		default_value = true,
 		display_name = "loc_interface_setting_subtitle_enabled",
 		id = "subtitle_enabled",
-		default_value = true,
+		save_location = "interface_settings",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_enabled", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
+		default_value = true,
 		display_name = "loc_interface_setting_subtitle_secondary_enabled",
 		id = "secondary_subtitle_enabled",
-		default_value = true,
+		save_location = "interface_settings",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_secondary_subtitles_enabled", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
+		default_value = true,
 		display_name = "loc_interface_setting_subtitle_speaker_enabled",
 		id = "subtitle_speaker_enabled",
-		default_value = true,
+		save_location = "interface_settings",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitle_speaker_enabled", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		min_value = 0,
+		default_value = 60,
 		display_name = "loc_interface_setting_subtitle_background_opacity",
 		id = "subtitle_background_opacity",
-		default_value = 60,
+		min_value = 0,
+		save_location = "interface_settings",
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_background_opacity", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		min_value = 10,
+		default_value = 100,
 		display_name = "loc_interface_setting_subtitle_text_opacity",
 		id = "subtitle_text_opacity",
-		default_value = 100,
+		min_value = 10,
+		save_location = "interface_settings",
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitle_text_opacity", value)
-		end
+		end,
 	},
 	{
-		step_size_value = 1,
-		min_value = 12,
-		display_name = "loc_interface_setting_subtitle_font_size",
-		num_decimals = 0,
-		max_value = 72,
 		default_value = 32,
-		widget_type = "value_slider",
+		display_name = "loc_interface_setting_subtitle_font_size",
 		id = "subtitle_font_size",
+		max_value = 72,
+		min_value = 12,
+		num_decimals = 0,
 		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_font_size", value)
-		end
+		end,
 	},
 	{
-		step_size_value = 1,
-		min_value = 12,
-		display_name = "loc_interface_setting_subtitle_secondary_font_size",
-		num_decimals = 0,
-		max_value = 72,
 		default_value = 28,
-		widget_type = "value_slider",
+		display_name = "loc_interface_setting_subtitle_secondary_font_size",
 		id = "secondary_subtitle_font_size",
+		max_value = 72,
+		min_value = 12,
+		num_decimals = 0,
 		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "value_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_secondary_subtitles_font_size", value)
-		end
+		end,
 	},
 	{
-		group_name = "other_settings",
 		display_name = "loc_settings_menu_group_accessibility_settings",
-		widget_type = "group_header"
+		group_name = "other_settings",
+		widget_type = "group_header",
 	},
 	{
-		step_size_value = 1,
-		min_value = 50,
-		display_name = "loc_interface_setting_hud_scale",
-		max_value = 100,
 		default_value = 100,
-		widget_type = "percent_slider",
+		display_name = "loc_interface_setting_hud_scale",
 		id = "hud_scale",
+		max_value = 100,
+		min_value = 50,
 		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_hud_scale", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		min_value = 0,
+		default_value = 100,
 		display_name = "loc_interface_setting_camera_sway_intensity",
 		id = "camera_movement_offset_sway_intensity",
-		default_value = 100,
-		widget_type = "percent_slider"
+		min_value = 0,
+		save_location = "interface_settings",
+		widget_type = "percent_slider",
 	},
 	{
-		save_location = "interface_settings",
-		min_value = 0,
+		default_value = 100,
 		display_name = "loc_settings_menu_peril_effect",
 		id = "warp_charge_effects_intensity",
-		default_value = 100,
+		min_value = 0,
+		save_location = "interface_settings",
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Wwise.set_parameter("psyker_overload_global", (value or 100) / 100)
 			Application.set_user_setting("interface_settings", "psyker_overload_intensity", value)
 			Application.save_user_settings()
-		end
+		end,
 	},
 	{
-		group_name = "nameplate_settings",
 		display_name = "loc_settings_menu_group_nameplate_settings",
-		widget_type = "group_header"
+		group_name = "nameplate_settings",
+		widget_type = "group_header",
 	},
 	{
-		save_location = "interface_settings",
-		tooltip_text = "loc_interface_setting_nameplates_in_mission_mouseover",
+		default_value = "name_and_title",
 		display_name = "loc_interface_setting_nameplates_in_mission",
 		id = "character_nameplates_in_mission_type",
-		default_value = "name_and_title",
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_nameplates_in_mission_mouseover",
 		widget_type = "dropdown",
 		options = {
 			{
 				display_name = "loc_setting_nameplates_in_mission_name_and_title",
-				name = "name_and_title"
+				name = "name_and_title",
 			},
 			{
 				display_name = "loc_setting_nameplates_in_mission_name",
-				name = "name"
+				name = "name",
 			},
 			{
 				display_name = "loc_setting_nameplates_in_mission_none",
-				name = "none"
-			}
+				name = "none",
+			},
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_titles_in_mission_setting_changed", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		tooltip_text = "loc_interface_setting_my_title_in_hub_mouseover",
+		default_value = false,
 		display_name = "loc_interface_setting_my_title_in_hub",
 		id = "my_title_in_hub",
-		default_value = false,
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_my_title_in_hub_mouseover",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_titles_my_title_in_hub_setting_changed", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		tooltip_text = "loc_interface_setting_title_color_type_mouseover",
+		default_value = "rarity_colors",
 		display_name = "loc_interface_setting_title_color_type",
 		id = "character_titles_color_type",
-		default_value = "rarity_colors",
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_title_color_type_mouseover",
 		widget_type = "dropdown",
 		options = {
 			{
 				display_name = "loc_setting_title_color_type_rarities",
-				name = "rarity_colors"
+				name = "rarity_colors",
 			},
 			{
 				display_name = "loc_setting_title_color_type_no_colors",
-				name = "no_colors"
-			}
+				name = "no_colors",
+			},
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_hub_title_color_type_changed", value)
 			Managers.event:trigger("event_titles_my_title_in_hub_setting_changed", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		tooltip_text = "loc_interface_setting_title_in_mission_color_type_mouseover",
+		default_value = "rarity_colors",
 		display_name = "loc_interface_setting_title_in_mission_color_type",
 		id = "character_titles_in_mission_color_type",
-		default_value = "rarity_colors",
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_title_in_mission_color_type_mouseover",
 		widget_type = "dropdown",
 		options = {
 			{
 				display_name = "loc_setting_title_color_type_rarities",
-				name = "rarity_colors"
+				name = "rarity_colors",
 			},
 			{
 				display_name = "loc_setting_title_color_type_no_colors",
-				name = "no_colors"
-			}
+				name = "no_colors",
+			},
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_in_mission_title_color_type_changed", "color_changed")
-		end
+		end,
 	},
 	{
-		group_name = "other_settings",
 		display_name = "loc_settings_menu_group_other_settings",
-		widget_type = "group_header"
+		group_name = "other_settings",
+		widget_type = "group_header",
 	},
 	{
-		save_location = "interface_settings",
+		default_value = true,
 		display_name = "loc_interface_setting_profanity_filter_enabled",
 		id = "profanity_filter_enabled",
-		default_value = true,
+		save_location = "interface_settings",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_profanity_filter_enabled", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
+		default_value = true,
 		display_name = "loc_interface_setting_intro_cinematic_enabled",
 		id = "intro_cinematic_enabled",
+		save_location = "interface_settings",
 		use_local_save = true,
-		default_value = true,
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
 		end,
 		validation_function = function ()
 			return not IS_XBS
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		tooltip_text = "loc_settings_portrait_rendering_mouseover",
+		default_value = true,
 		display_name = "loc_interface_setting_portrait_rendering_enabled",
 		id = "portrait_rendering_enabled",
-		default_value = true,
+		save_location = "interface_settings",
+		tooltip_text = "loc_settings_portrait_rendering_mouseover",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_portrait_render_change", value)
-		end
+		end,
 	},
 	{
-		save_location = "interface_settings",
-		tooltip_text = "loc_interface_settings_flash_taskbar_mouseover",
+		default_value = true,
 		display_name = "loc_interface_setting_flash_taskbar_enabled",
 		id = "flash_taskbar_enabled",
-		default_value = true,
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_settings_flash_taskbar_mouseover",
 		widget_type = "boolean",
 		validation_function = function ()
 			return IS_WINDOWS
-		end
-	}
+		end,
+	},
 }
 local settings = {}
 
@@ -690,9 +695,9 @@ end
 SettingsUtilities = SettingsUtilitiesFunction(settings)
 
 return {
-	icon = "content/ui/materials/icons/system/settings/category_interface",
 	display_name = "loc_settings_menu_category_interface",
+	icon = "content/ui/materials/icons/system/settings/category_interface",
 	settings_utilities = SettingsUtilities,
 	settings_by_id = SettingsUtilities.settings_by_id,
-	settings = settings
+	settings = settings,
 }

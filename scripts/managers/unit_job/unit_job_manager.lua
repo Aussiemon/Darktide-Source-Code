@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/unit_job/unit_job_manager.lua
+
 local JobInterface = require("scripts/managers/unit_job/job_interface")
 local unit_alive = Unit.alive
 local UnitJobManager = class("UnitJobManager")

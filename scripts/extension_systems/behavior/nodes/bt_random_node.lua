@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/bt_random_node.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtConditions = require("scripts/extension_systems/behavior/utilities/bt_conditions")
@@ -14,7 +16,9 @@ BtRandomNode.init_values = function (self, blackboard, action_data, node_data)
 	BtRandomNode.super.init_values(self, blackboard, action_data, node_data)
 
 	local node_identifier = self.identifier
+
 	node_data[node_identifier] = true
+
 	local children = self._children
 
 	for i = 1, #children do
@@ -34,6 +38,7 @@ BtRandomNode.ready = function (self, lua_node)
 	for i = 1, num_children do
 		local child = children[i]
 		local action_data = child.tree_node.action_data
+
 		probabilities[i] = action_data.random_weight
 	end
 
@@ -46,12 +51,13 @@ end
 
 BtRandomNode.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy, node_data)
 	local node_identifier = self.identifier
+
 	node_data[node_identifier] = true
 end
 
 BtRandomNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local CONDITIONS = BtConditions
-	local leaf_node = nil
+	local leaf_node
 	local node_identifier = self.identifier
 	local should_reroll = node_data[node_identifier]
 	local child_is_running = not should_reroll

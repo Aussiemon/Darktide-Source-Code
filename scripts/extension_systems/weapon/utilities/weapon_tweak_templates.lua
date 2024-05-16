@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/utilities/weapon_tweak_templates.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local RecoilTemplates = require("scripts/settings/equipment/recoil_templates")
 local SpreadTemplates = require("scripts/settings/equipment/spread_templates")
@@ -26,34 +28,35 @@ local WeaponTweakStatsUIDataStats = WeaponTweakStatsUIData.stats
 local WeaponTweakTemplates = {}
 local math_lerp = math.lerp
 local math_clamp = math.clamp
-local _preparse_templates, _preparse_damage_templates, _preparse_explosion_templates, _lookup_entry, _build_templates, _lerp_array, _verify_base_templates, _add_tweak_modifiers, _add_lerped_tweak_modifiers, _resolve_template = nil
+local _preparse_templates, _preparse_damage_templates, _preparse_explosion_templates, _lookup_entry, _build_templates, _lerp_array, _verify_base_templates, _add_tweak_modifiers, _add_lerped_tweak_modifiers, _resolve_template
 
 WeaponTweakTemplates.preparse_weapon_template = function (weapon_template)
-	local base_template_lookup = {
-		[template_types.recoil] = _preparse_templates(weapon_template, template_types.recoil),
-		[template_types.sway] = _preparse_templates(weapon_template, template_types.sway),
-		[template_types.suppression] = _preparse_templates(weapon_template, template_types.suppression),
-		[template_types.spread] = _preparse_templates(weapon_template, template_types.spread),
-		[template_types.weapon_handling] = _preparse_templates(weapon_template, template_types.weapon_handling),
-		[template_types.dodge] = _preparse_templates(weapon_template, template_types.dodge),
-		[template_types.sprint] = _preparse_templates(weapon_template, template_types.sprint),
-		[template_types.stamina] = _preparse_templates(weapon_template, template_types.stamina),
-		[template_types.toughness] = _preparse_templates(weapon_template, template_types.toughness),
-		[template_types.ammo] = _preparse_templates(weapon_template, template_types.ammo),
-		[template_types.burninating] = _preparse_templates(weapon_template, template_types.burninating),
-		[template_types.size_of_flame] = _preparse_templates(weapon_template, template_types.size_of_flame),
-		[template_types.movement_curve_modifier] = _preparse_templates(weapon_template, template_types.movement_curve_modifier),
-		[template_types.charge] = _preparse_templates(weapon_template, template_types.charge),
-		[template_types.warp_charge] = _preparse_templates(weapon_template, template_types.warp_charge),
-		[template_types.damage] = _preparse_damage_templates(weapon_template),
-		[template_types.explosion] = _preparse_explosion_templates(weapon_template)
-	}
+	local base_template_lookup = {}
+
+	base_template_lookup[template_types.recoil] = _preparse_templates(weapon_template, template_types.recoil)
+	base_template_lookup[template_types.sway] = _preparse_templates(weapon_template, template_types.sway)
+	base_template_lookup[template_types.suppression] = _preparse_templates(weapon_template, template_types.suppression)
+	base_template_lookup[template_types.spread] = _preparse_templates(weapon_template, template_types.spread)
+	base_template_lookup[template_types.weapon_handling] = _preparse_templates(weapon_template, template_types.weapon_handling)
+	base_template_lookup[template_types.dodge] = _preparse_templates(weapon_template, template_types.dodge)
+	base_template_lookup[template_types.sprint] = _preparse_templates(weapon_template, template_types.sprint)
+	base_template_lookup[template_types.stamina] = _preparse_templates(weapon_template, template_types.stamina)
+	base_template_lookup[template_types.toughness] = _preparse_templates(weapon_template, template_types.toughness)
+	base_template_lookup[template_types.ammo] = _preparse_templates(weapon_template, template_types.ammo)
+	base_template_lookup[template_types.burninating] = _preparse_templates(weapon_template, template_types.burninating)
+	base_template_lookup[template_types.size_of_flame] = _preparse_templates(weapon_template, template_types.size_of_flame)
+	base_template_lookup[template_types.movement_curve_modifier] = _preparse_templates(weapon_template, template_types.movement_curve_modifier)
+	base_template_lookup[template_types.charge] = _preparse_templates(weapon_template, template_types.charge)
+	base_template_lookup[template_types.warp_charge] = _preparse_templates(weapon_template, template_types.warp_charge)
+	base_template_lookup[template_types.damage] = _preparse_damage_templates(weapon_template)
+	base_template_lookup[template_types.explosion] = _preparse_explosion_templates(weapon_template)
 	weapon_template.__base_template_lookup = base_template_lookup
 end
 
 WeaponTweakTemplates.create = function (lerp_values, weapon_template, override_lerp_value_or_nil)
 	local templates = {}
 	local base_template_lookup = weapon_template.__base_template_lookup
+
 	templates[template_types.recoil] = _build_templates(RecoilTemplates, base_template_lookup[template_types.recoil], lerp_values[template_types.recoil], override_lerp_value_or_nil)
 	templates[template_types.sway] = _build_templates(SwayTemplates, base_template_lookup[template_types.sway], lerp_values[template_types.sway], override_lerp_value_or_nil)
 	templates[template_types.spread] = _build_templates(SpreadTemplates, base_template_lookup[template_types.spread], lerp_values[template_types.spread], override_lerp_value_or_nil)
@@ -115,6 +118,7 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 		local base_stat_data = base_stats[i]
 		local base_stat_name = base_stat_data.name
 		local base_stat_value = base_stat_data.value
+
 		base_stat_values[base_stat_name] = base_stat_value
 	end
 
@@ -124,6 +128,7 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 		for base_stat_name, base_stat_definition in pairs(base_stat_definitions) do
 			local base_stat_value = base_stat_values[base_stat_name] or DEFAULT_STAT_TRAIT_VALUE
 			local overclock_modifier = overclock_modifiers[base_stat_name] or 0
+
 			base_stat_value = base_stat_value + overclock_modifier
 
 			_add_lerped_tweak_modifiers(weapon_tweaks, base_stat_definition, base_stat_value)
@@ -137,7 +142,7 @@ WeaponTweakTemplates.extract_buffs = function (weapon_template)
 	local buffs = {
 		[buff_targets.on_equip] = {},
 		[buff_targets.on_wield] = {},
-		[buff_targets.on_unwield] = {}
+		[buff_targets.on_unwield] = {},
 	}
 	local weapon_buffs = weapon_template.buffs
 
@@ -209,6 +214,7 @@ function _preparse_templates(weapon_template, template_type)
 	if base_template then
 		local base_template_name = string.format("base_%s", base_template)
 		local lookup_entry = _lookup_entry(base_template_name, base_template)
+
 		lookup.base = lookup_entry
 		weapon_template[key] = base_template_name
 	end
@@ -218,6 +224,7 @@ function _preparse_templates(weapon_template, template_type)
 	if base_special_template then
 		local base_special_template_name = string.format("base_special_%s", base_special_template)
 		local lookup_entry = _lookup_entry(base_special_template_name, base_special_template)
+
 		lookup.base_special = lookup_entry
 		weapon_template[special_key] = base_special_template_name
 	end
@@ -228,6 +235,7 @@ function _preparse_templates(weapon_template, template_type)
 	if alternate_fire_template then
 		local alternate_fire_template_name = string.format("alternate_fire_%s", alternate_fire_template)
 		local lookup_entry = _lookup_entry(alternate_fire_template_name, alternate_fire_template)
+
 		lookup.alternate_fire = lookup_entry
 		alternate_fire_settings[key] = alternate_fire_template_name
 	end
@@ -237,6 +245,7 @@ function _preparse_templates(weapon_template, template_type)
 	if alternate_fire_special_template then
 		local alternate_fire_special_template_name = string.format("alternate_fire_special_%s", alternate_fire_special_template)
 		local lookup_entry = _lookup_entry(alternate_fire_special_template_name, alternate_fire_special_template)
+
 		lookup.alternate_fire_special = lookup_entry
 		alternate_fire_settings[special_key] = alternate_fire_special_template_name
 	end
@@ -249,6 +258,7 @@ function _preparse_templates(weapon_template, template_type)
 		if action_template then
 			local action_template_name = string.format("%s_%s", action_name, action_template)
 			local lookup_entry = _lookup_entry(action_template_name, action_template)
+
 			lookup[action_name] = lookup_entry
 			action_settings[key] = action_template_name
 		end
@@ -259,6 +269,7 @@ function _preparse_templates(weapon_template, template_type)
 			local action_special_template_name = string.format("%s_special_%s", action_name, action_special_template)
 			local lookup_entry = _lookup_entry(action_special_template_name, action_special_template)
 			local action_special_name = string.format("%s_special", action_name)
+
 			lookup[action_special_name] = lookup_entry
 			action_settings[special_key] = action_special_template_name
 		end
@@ -292,7 +303,7 @@ end
 function _lookup_entry(new_identifier, base_identifier)
 	return {
 		new_identifier = new_identifier,
-		base_identifier = base_identifier
+		base_identifier = base_identifier,
 	}
 end
 
@@ -309,6 +320,7 @@ function _add_tweak_stats(start_table, tweak, tweak_value)
 			path = existing_path
 		else
 			local new_path = {}
+
 			path[key] = new_path
 			path = new_path
 		end
@@ -329,8 +341,8 @@ function _lerp_array(array_min, array_max, t)
 	local array = Script.new_array(num_entries)
 
 	for i = 1, num_entries do
-		local min = array_min[i]
-		local max = array_max[i]
+		local min, max = array_min[i], array_max[i]
+
 		array[i] = math.lerp(min, max, t)
 	end
 
@@ -351,8 +363,7 @@ end
 function _resolve_template(out_template, base_template, lerp_values_or_nil, default_lerp_value_or_nil, override_lerp_value_or_nil)
 	for key, template in pairs(base_template) do
 		if type(template) == "table" then
-			local lerp_basic = template.lerp_basic
-			local lerp_perfect = template.lerp_perfect
+			local lerp_basic, lerp_perfect = template.lerp_basic, template.lerp_perfect
 			local lerpable_value = lerp_basic and lerp_perfect
 			local current_lerp_values = lerp_values_or_nil and lerp_values_or_nil[key]
 
@@ -363,10 +374,12 @@ function _resolve_template(out_template, base_template, lerp_values_or_nil, defa
 					out_template[key] = _lerp_array(lerp_basic, lerp_perfect, t)
 				else
 					local lerped_value = math.lerp(lerp_basic, lerp_perfect, t)
+
 					out_template[key] = lerped_value
 				end
 			else
 				local sub_template = {}
+
 				out_template[key] = sub_template
 
 				_resolve_template(sub_template, template, current_lerp_values, default_lerp_value_or_nil, override_lerp_value_or_nil)
@@ -415,6 +428,7 @@ local function _add_lerped_tweak_modifiers_helper(tweak_groups, lerp_t, out_twea
 			if type(tweak_value) == "table" then
 				local lerp_min = tweak_value.min
 				local lerp_max = tweak_value.max
+
 				tweak_value = math_lerp(lerp_min, lerp_max, lerp_t)
 			end
 
@@ -456,8 +470,7 @@ function _build_templates(source_templates, base_template_lookup, lerp_values, o
 	local iterator = pairs
 
 	for lookup_type, lookup_entry in iterator(base_template_lookup) do
-		local new_identifier = lookup_entry.new_identifier
-		local base_identifier = lookup_entry.base_identifier
+		local new_identifier, base_identifier = lookup_entry.new_identifier, lookup_entry.base_identifier
 		local base_template = source_templates[base_identifier]
 		local new_template = {}
 		local template_lerp_values = lerp_values and lerp_values[lookup_type]
@@ -486,7 +499,7 @@ local BASE_TEMPLATES = {
 	[template_types.weapon_handling] = WeaponHandlingTemplates,
 	[template_types.movement_curve_modifier] = WeaponMovementCurveModifierTemplates,
 	[template_types.charge] = WeaponChargeTemplates,
-	[template_types.warp_charge] = WeaponWarpChargeTemplates
+	[template_types.warp_charge] = WeaponWarpChargeTemplates,
 }
 
 WeaponTweakTemplates.get_base_stats = function (weapon_template, template_type, target)
@@ -526,6 +539,7 @@ WeaponTweakTemplates.get_base_stats_values = function (base_stats, stat_data)
 
 	for i = 1, path_len - 1 do
 		local path_name = stat_data[i]
+
 		resolved_table = resolved_table[path_name]
 
 		if not resolved_table then
@@ -533,24 +547,20 @@ WeaponTweakTemplates.get_base_stats_values = function (base_stats, stat_data)
 		end
 	end
 
-	local lerp_basic, lerp_perfect = nil
+	local lerp_basic, lerp_perfect
 
 	if type(resolved_table) == "table" then
-		lerp_perfect = resolved_table.lerp_perfect
-		lerp_basic = resolved_table.lerp_basic
+		lerp_basic, lerp_perfect = resolved_table.lerp_basic, resolved_table.lerp_perfect
 	else
-		lerp_perfect = resolved_table
-		lerp_basic = resolved_table
+		lerp_basic, lerp_perfect = resolved_table, resolved_table
 	end
 
-	local real_min_lerp, real_max_lerp = nil
+	local real_min_lerp, real_max_lerp
 
 	if type(real_value_range) == "table" then
-		real_max_lerp = real_value_range.max
-		real_min_lerp = real_value_range.min
+		real_min_lerp, real_max_lerp = real_value_range.min, real_value_range.max
 	else
-		real_max_lerp = real_value_range
-		real_min_lerp = real_value_range
+		real_min_lerp, real_max_lerp = real_value_range, real_value_range
 	end
 
 	local min = math.lerp(lerp_basic, lerp_perfect, real_min_lerp)
@@ -587,7 +597,7 @@ WeaponTweakTemplates.get_stat_ui_data = function (template_type, stat_data, path
 				local array_range = resolved_table._array_range
 				local path_index = tonumber(path_name)
 
-				if array_range[1] <= path_index and path_index <= array_range[2] then
+				if path_index >= array_range[1] and path_index <= array_range[2] then
 					resolved_table = array_range
 				else
 					return nil

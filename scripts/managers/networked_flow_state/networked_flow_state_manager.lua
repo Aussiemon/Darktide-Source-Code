@@ -1,21 +1,23 @@
+﻿-- chunkname: @scripts/managers/networked_flow_state/networked_flow_state_manager.lua
+
 local unit_alive = Unit.alive
 local NetworkedFlowStateManager = class("NetworkedFlowStateManager")
 local FLOW_STATE_TYPES = {
 	boolean = {
 		rpcs = {
-			change = "rpc_flow_state_bool_changed"
-		}
+			change = "rpc_flow_state_bool_changed",
+		},
 	},
 	number = {
 		network_constant = "number",
 		rpcs = {
-			change = "rpc_flow_state_number_changed"
-		}
-	}
+			change = "rpc_flow_state_number_changed",
+		},
+	},
 }
 local CLIENT_RPCS = {
 	"rpc_flow_state_story_played",
-	"rpc_flow_state_story_stopped"
+	"rpc_flow_state_story_stopped",
 }
 
 for _, config in pairs(FLOW_STATE_TYPES) do
@@ -51,14 +53,17 @@ end
 
 NetworkedFlowStateManager.flow_cb_create_story = function (self, node_id)
 	local level = Application.flow_callback_context_level()
+
 	self._story_lookup[level] = self._story_lookup[level] or {}
+
 	local lookup = self._story_lookup[level]
 	local level_index = #self._story_lookup + 1
 	local story_data = {
 		level_index = level_index,
 		level = level,
-		node_id = node_id
+		node_id = node_id,
 	}
+
 	lookup[node_id] = story_data
 	self._story_lookup[level_index] = story_data
 end
@@ -73,7 +78,7 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 	local story_data = lookup[node_id]
 	local level_index = story_data.level_index
 	local stories = self._playing_stories[level]
-	local story = nil
+	local story
 
 	if stories then
 		story = stories[node_id]
@@ -89,9 +94,11 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 		story.start_time = start_time
 	else
 		self._playing_stories[level] = self._playing_stories[level] or {}
+
 		local new_story = self._playing_stories[level]
+
 		new_story[node_id] = {
-			start_time = start_time
+			start_time = start_time,
 		}
 	end
 
@@ -129,6 +136,7 @@ NetworkedFlowStateManager.flow_cb_stop_networked_story = function (self, node_id
 
 		if story then
 			local stop_time = self._storyteller:time(story.id)
+
 			story.stop_time = stop_time
 
 			Managers.state.game_session:send_rpc_clients("rpc_flow_state_story_stopped", level_id, stop_time)
@@ -187,6 +195,7 @@ NetworkedFlowStateManager.flow_cb_has_played_networked_story = function (self, n
 	local level = Application.flow_callback_context_level()
 	local stories = self._playing_stories[level]
 	local story = stories[node_id]
+
 	story.id = story_id
 	story.length = self._storyteller:length(story_id)
 end
@@ -228,6 +237,7 @@ NetworkedFlowStateManager._sync_states = function (self, peer, channel)
 			if value ~= state_table.default_value then
 				local state_network_id = unit_states.lookup[state_name]
 				local type_data = FLOW_STATE_TYPES[type(value)]
+
 				value = self:_clamp_state(state_name, type_data, value)
 
 				RPC[type_data.rpcs.change](channel, unit_id, state_network_id, value, true, not is_level_index)
@@ -238,15 +248,12 @@ end
 
 NetworkedFlowStateManager.flow_cb_create_state = function (self, unit, state_name, default_value, client_data_changed_event, hot_join_sync_event, is_game_object)
 	local states = self._object_states
-
-	if not states[unit] then
-		local unit_states = {
-			lookup = {},
-			states = {}
-		}
-	end
-
+	local unit_states = states[unit] or {
+		lookup = {},
+		states = {},
+	}
 	local state_network_id = #unit_states.lookup + 1
+
 	unit_states.lookup[state_name] = state_network_id
 	unit_states.lookup[state_network_id] = state_name
 	unit_states.states[state_name] = {
@@ -255,7 +262,7 @@ NetworkedFlowStateManager.flow_cb_create_state = function (self, unit, state_nam
 		client_state_changed_event = client_data_changed_event,
 		client_state_set_event = hot_join_sync_event,
 		state_network_id = state_network_id,
-		is_game_object = is_game_object or false
+		is_game_object = is_game_object or false,
 	}
 	states[unit] = unit_states
 	self._num_states = self._num_states + 1
@@ -274,12 +281,15 @@ NetworkedFlowStateManager.flow_cb_change_state = function (self, unit, state_nam
 	local level = Application.flow_callback_context_level()
 	local unit_states = self._object_states[unit]
 	local current_state = unit_states and unit_states.states[state_name]
+
 	current_state.value = new_state
+
 	local unit_spawner = Managers.state.unit_spawner
 	local is_game_object = current_state.is_game_object or false
 	local unit_id = is_game_object and unit_spawner:game_object_id(unit) or unit_spawner:level_index(unit)
 	local type_data = FLOW_STATE_TYPES[type(new_state)]
 	local state_network_id = current_state.state_network_id
+
 	new_state = self:_clamp_state(state_name, type_data, new_state)
 
 	Managers.state.game_session:send_rpc_clients(type_data.rpcs.change, unit_id, state_network_id, new_state, false, is_game_object)
@@ -290,7 +300,7 @@ end
 NetworkedFlowStateManager._clamp_state = function (self, state_name, type_data, new_state)
 	local network_constant = type_data.network_constant and NetworkConstants[type_data.network_constant]
 
-	if network_constant and (new_state < network_constant.min or network_constant.max < new_state) then
+	if network_constant and (new_state < network_constant.min or new_state > network_constant.max) then
 		new_state = math.max(network_constant.min, math.min(network_constant.max, new_state))
 
 		Application.warning("[NetworkedFlowStateManager] Networked Flow State %q value %f out of bounds [%f..%f]", state_name, new_state, network_constant.min, network_constant.max)
@@ -305,7 +315,9 @@ NetworkedFlowStateManager.client_flow_state_changed = function (self, unit_id, s
 	local unit_states = states[unit]
 	local state_name = unit_states.lookup[state_network_id]
 	local state = unit_states.states[state_name]
+
 	state.value = new_state
+
 	local flow_event = only_set and state.client_state_set_event or state.client_state_changed_event
 
 	Unit.flow_event(unit, flow_event)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/base_camera.lua
+
 local BaseCamera = class("BaseCamera")
 
 BaseCamera.init = function (self, root_node)
@@ -29,6 +31,7 @@ BaseCamera.parse_parameters = function (self, camera_settings, parent_node)
 	end
 
 	local degrees_to_radians = math.pi / 180
+
 	self._fade_to_black = camera_settings.fade_to_black
 	self._vertical_fov = camera_settings.vertical_fov and camera_settings.vertical_fov * degrees_to_radians
 	self._should_apply_fov_multiplier = camera_settings.should_apply_fov_multiplier or parent_node:should_apply_fov_multiplier()
@@ -321,6 +324,7 @@ BaseCamera._update_fov_multiplier = function (self, dt, data)
 		local fov_multiplier = self._fov_multiplier
 		local lerp_time = data.fov_multiplier_lerp_time or self._default_fov_multiplier_lerp_time
 		local lerp_value = fov_multiplier_lerp_time / lerp_time
+
 		fov_multiplier = math.lerp(fov_multiplier, wanted_fov_multiplier, lerp_value)
 		self._fov_multiplier = fov_multiplier
 		fov_multiplier_lerp_time = math.min(fov_multiplier_lerp_time + dt, lerp_time)

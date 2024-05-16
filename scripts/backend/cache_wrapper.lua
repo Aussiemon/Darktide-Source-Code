@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/cache_wrapper.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local CacheWrapper = class("CacheWrapper")
 local Interface = {
@@ -5,7 +7,7 @@ local Interface = {
 	"get_cached",
 	"has_data",
 	"add_listener",
-	"remove_listener"
+	"remove_listener",
 }
 
 CacheWrapper.init = function (self, metadata_fn, refresh_fn, fallback_fn)
@@ -26,12 +28,12 @@ CacheWrapper.remove_listener = function (self, callback_fn)
 end
 
 CacheWrapper.refresh = function (self, version, url)
-	local promise = nil
+	local promise
 
 	if version ~= nil and url ~= nil then
 		promise = Promise.resolved({
 			version = version,
-			url = url
+			url = url,
 		})
 	else
 		promise = self._metadata_fn()

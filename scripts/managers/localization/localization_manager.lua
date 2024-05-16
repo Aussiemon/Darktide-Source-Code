@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/managers/localization/localization_manager.lua
+
 local LocalizationMacros = require("scripts/managers/localization/localization_macros")
 local LocalizationManager = class("LocalizationManager")
 local STRING_RESOURCE_NAMES = {
 	"content/localization/ui",
 	"content/localization/subtitles",
 	"content/localization/items",
-	"content/localization/path_of_trust/ui"
+	"content/localization/path_of_trust/ui",
 }
 local ASSERT_ON_MISSING_LOC_PREFIX = false
 local STRING_CACHE_EXPECTED_SIZE = 2048
@@ -12,46 +14,46 @@ local DEFAULT_LANGUAGE = "en"
 
 local function xbox_format_locale(language_id)
 	local supported_languages = {
-		["zh-hk"] = "zh-cn",
-		["fr-ch"] = "fr",
-		["ru-ru"] = "ru",
-		["de-ch"] = "de",
 		["de-at"] = "de",
-		["en-ca"] = "en",
-		["en-il"] = "en",
-		["en-sa"] = "en",
-		["fr-be"] = "fr",
-		["en-hk"] = "en",
-		["en-cz"] = "en",
-		["en-us"] = "en",
-		["es-co"] = "es",
-		["en-hu"] = "en",
-		["en-sg"] = "en",
-		["en-gb"] = "en",
-		["en-ae"] = "en",
-		["zh-tw"] = "zh-tw",
-		["en-in"] = "en",
+		["de-ch"] = "de",
 		["de-de"] = "de",
-		["en-gr"] = "en",
-		["zh-sg"] = "zh-cn",
-		["es-ar"] = "es",
-		["en-sk"] = "en",
-		["pl-pl"] = "pl",
-		["ko-kr"] = "ko",
-		["pt-br"] = "pt-br",
-		["it-it"] = "it",
-		["zh-mo"] = "zh-cn",
-		["es-es"] = "es",
+		["en-ae"] = "en",
 		["en-au"] = "en",
-		["es-mx"] = "es",
-		["en-nz"] = "en",
-		["zh-cn"] = "zh-cn",
-		["fr-fr"] = "fr",
-		["fr-ca"] = "fr",
-		["ja-jp"] = "ja",
-		["es-cl"] = "es",
+		["en-ca"] = "en",
+		["en-cz"] = "en",
+		["en-gb"] = "en",
+		["en-gr"] = "en",
+		["en-hk"] = "en",
+		["en-hu"] = "en",
 		["en-ie"] = "en",
-		["en-za"] = "en"
+		["en-il"] = "en",
+		["en-in"] = "en",
+		["en-nz"] = "en",
+		["en-sa"] = "en",
+		["en-sg"] = "en",
+		["en-sk"] = "en",
+		["en-us"] = "en",
+		["en-za"] = "en",
+		["es-ar"] = "es",
+		["es-cl"] = "es",
+		["es-co"] = "es",
+		["es-es"] = "es",
+		["es-mx"] = "es",
+		["fr-be"] = "fr",
+		["fr-ca"] = "fr",
+		["fr-ch"] = "fr",
+		["fr-fr"] = "fr",
+		["it-it"] = "it",
+		["ja-jp"] = "ja",
+		["ko-kr"] = "ko",
+		["pl-pl"] = "pl",
+		["pt-br"] = "pt-br",
+		["ru-ru"] = "ru",
+		["zh-cn"] = "zh-cn",
+		["zh-hk"] = "zh-cn",
+		["zh-mo"] = "zh-cn",
+		["zh-sg"] = "zh-cn",
+		["zh-tw"] = "zh-tw",
 	}
 
 	return supported_languages[string.lower(language_id)] or "en"
@@ -60,7 +62,7 @@ end
 local LOCALIZATION_MANAGER_STATUS = table.enum("empty", "loading", "ready")
 
 local function _select_language()
-	local language = nil
+	local language
 
 	if PLATFORM == "win32" then
 		language = Application.user_setting("language_id") or HAS_STEAM and Steam:language() or DEFAULT_LANGUAGE
@@ -68,9 +70,11 @@ local function _select_language()
 		language = PS5.locale() or DEFAULT_LANGUAGE
 	elseif PLATFORM == "xb1" then
 		local locale = XboxLive.locale() or "error"
+
 		language = xbox_format_locale(locale)
 	elseif PLATFORM == "xbs" then
 		local locale = XboxLive.locale() or "error"
+
 		language = xbox_format_locale(locale)
 	elseif PLATFORM == "linux" then
 		language = "en"
@@ -84,7 +88,9 @@ Localize = Localize or false
 LocalizationManager.init = function (self)
 	self._backend_localizations = {}
 	self._string_cache = Script.new_map(STRING_CACHE_EXPECTED_SIZE)
+
 	local language = _select_language()
+
 	self._original_language = language
 	self._enable_string_tags = false
 	self._language = language
@@ -122,6 +128,7 @@ LocalizationManager.setup_localizers = function (self, strings_package_id)
 
 	for i = 1, num_string_resources do
 		local resource_name = STRING_RESOURCE_NAMES[i]
+
 		localizers[i] = Localizer(resource_name)
 	end
 
@@ -133,6 +140,7 @@ LocalizationManager._teardown_localizers = function (self)
 	print("[LocalizationManager] Tearing down localizers")
 
 	self._localizers = nil
+
 	local package_manager = Managers.package
 
 	package_manager:release(self._package_id)
@@ -146,7 +154,7 @@ LocalizationManager._lookup = function (self, key)
 
 	for ii = 1, #localizers do
 		local localizer = localizers[ii]
-		local loc_str = nil
+		local loc_str
 
 		if self._lookup_with_tag ~= nil and self._enable_string_tags then
 			loc_str = self:_lookup_with_tag(localizer, key)
@@ -259,6 +267,7 @@ LocalizationManager._process_string = function (self, str, context)
 
 	str = string.gsub(str, "%$([%a%d_]*):*([%a%d,_]*)%$", callback(_apply_macro_callback, error_table))
 	str = string.gsub(str, "{([%a%d_]*):*([%a%d%.%%]*)}", callback(_apply_interpolation_callback, error_table, context))
+
 	local error_string = #error_table > 0 and table.concat(error_table, "; ") or nil
 
 	return str, error_string

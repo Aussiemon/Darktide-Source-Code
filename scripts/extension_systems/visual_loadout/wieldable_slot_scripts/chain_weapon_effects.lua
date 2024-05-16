@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects.lua
+
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local sfx_external_properties = {}
 local vfx_external_properties = {}
@@ -9,6 +11,7 @@ local INTENSITY_DECAY_SPEED = 1
 
 ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_husk = context.is_husk
+
 	self._is_husk = is_husk
 	self._slot = slot
 	self._is_server = context.is_server
@@ -19,22 +22,27 @@ ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._first_person_unit = context.first_person_unit
 	self._equipment_component = context.equipment_component
 	self._weapon_actions = weapon_template.actions
+
 	local owner_unit = context.owner_unit
 	local fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	local engine_fx_source_name = fx_sources._engine
 	local special_active_fx_source_name = fx_sources._special_active
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 
 	if not is_husk then
 		local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
+
 		self._melee_idling_looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
 	end
 
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._visual_loadout_extension = context.visual_loadout_extension
+
 	local chain_speed_template = weapon_template.chain_speed_template
+
 	self._chain_speed_template = chain_speed_template
 	self._fx_extension = fx_extension
 	self._engine_fx_source_name = engine_fx_source_name
@@ -109,14 +117,13 @@ ChainWeaponEffects._update_base_intensity = function (self, dt, t)
 	local current_action_name = weapon_action_component.current_action_name
 	local action_settings = self._weapon_actions[current_action_name]
 	local powered_weapon_intensity = action_settings and action_settings.powered_weapon_intensity
-	local intensity = nil
+	local intensity
 
 	if powered_weapon_intensity then
 		local start_t = weapon_action_component.start_t
 		local action_t = t - start_t
 		local start_mod = powered_weapon_intensity.start_intensity
-		local p1 = start_mod
-		local p2 = 1
+		local p1, p2 = start_mod, 1
 		local segment_progress = 0
 
 		for i = 1, #powered_weapon_intensity do
@@ -130,6 +137,7 @@ ChainWeaponEffects._update_base_intensity = function (self, dt, t)
 				break
 			else
 				local segment_intensity = segment.intensity
+
 				p1 = segment_intensity
 				p2 = segment_intensity
 			end
@@ -138,6 +146,7 @@ ChainWeaponEffects._update_base_intensity = function (self, dt, t)
 		intensity = math.lerp(p1, p2, segment_progress)
 	else
 		local current_intensity = self._base_intensity
+
 		intensity = math.max(current_intensity - INTENSITY_DECAY_SPEED * dt, 0)
 	end
 
@@ -145,8 +154,7 @@ ChainWeaponEffects._update_base_intensity = function (self, dt, t)
 end
 
 ChainWeaponEffects._update_intensity = function (self, dt, t)
-	local engine_source = self._fx_extension:sound_source(self._engine_fx_source_name)
-	local wwise_world = self._wwise_world
+	local engine_source, wwise_world = self._fx_extension:sound_source(self._engine_fx_source_name), self._wwise_world
 	local inventory_slot_component = self._inventory_slot_component
 	local first_person_unit = self._first_person_unit
 	local action_sweep_component = self._action_sweep_component
@@ -159,13 +167,14 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 
 	if base_intensity > 0 then
 		local variation = special_active and intensity_variation.activated or intensity_variation.idle
+
 		base_intensity = math.max(base_intensity, math.random() * variation)
 	end
 
-	local intensity = nil
+	local intensity
 
 	if is_sawing then
-		local max, variation = nil
+		local max, variation
 
 		if special_active then
 			max = max_intensity.activated_sawing
@@ -178,6 +187,7 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 		intensity = max - math.random() * variation
 	elseif special_active then
 		self._special_active_end_t = nil
+
 		local special_active_start_t = self._special_active_start_t
 
 		if not special_active_start_t then
@@ -188,10 +198,12 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 		local time_until_max_throttle = speed_settings.time_until_max_throttle
 		local time_since_start = t - special_active_start_t
 		local special_active_t = math.min(time_since_start, time_until_max_throttle) / time_until_max_throttle
+
 		intensity = math.lerp(base_intensity, 1, special_active_t)
 		intensity = intensity * max_intensity.activated
 	else
 		self._special_active_start_t = nil
+
 		local special_active_end_t = self._special_active_end_t
 
 		if not special_active_end_t then
@@ -202,10 +214,12 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 		local time_until_min_throttle = speed_settings.time_until_min_throttle
 		local time_since_end = t - special_active_end_t
 		local special_active_t = math.min(time_since_end, time_until_min_throttle) / time_until_min_throttle
+
 		intensity = math.lerp(self._intensity, base_intensity, special_active_t)
 	end
 
 	intensity = math.clamp01(intensity)
+
 	local intensity_epsilon = speed_settings.intensity_epsilon
 	local intensity_delta = math.abs(self._intensity - intensity)
 
@@ -221,8 +235,7 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 		end
 
 		local animation = speed_settings.animation
-		local anim_min = animation.min
-		local anim_max = animation.max
+		local anim_min, anim_max = animation.min, animation.max
 		local anim_speed = math.lerp(anim_min, anim_max, intensity)
 
 		self._equipment_component.send_component_event(self._slot, "set_speed", anim_speed)

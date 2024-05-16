@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/blackboard/blackboard_system.lua
+
 require("scripts/extension_systems/blackboard/blackboard_extension")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -8,16 +10,16 @@ local BLACKBOARD_COMPONENT_UPDATE_FUNCTION_INDEX = 2
 local BLACKBOARD_COMPONENT_UPDATE = {
 	weapon_switch = {
 		"behavior_system",
-		"update_combat_range"
+		"update_combat_range",
 	},
 	nearby_units_broadphase = {
 		"behavior_system",
-		"update_nearby_units_broadphase"
+		"update_nearby_units_broadphase",
 	},
 	phase = {
 		"behavior_system",
-		"update_minion_phase"
-	}
+		"update_minion_phase",
+	},
 }
 
 BlackboardSystem.init = function (self, ...)
@@ -111,8 +113,7 @@ BlackboardSystem._update_blackboards_prioritized = function (self, dt, t)
 
 		_update_blackboard(unit, blackboard, dt, t)
 
-		update_counter = update_counter + 1
-		index = index + 1
+		index, update_counter = index + 1, update_counter + 1
 	end
 
 	self._blackboard_prioritized_update_index = index
@@ -143,8 +144,7 @@ BlackboardSystem._update_blackboards = function (self, dt, t)
 
 		_update_blackboard(unit, blackboard, dt, t)
 
-		update_counter = update_counter + 1
-		index = index + 1
+		index, update_counter = index + 1, update_counter + 1
 	end
 
 	self._blackboard_update_index = index
@@ -167,6 +167,7 @@ BlackboardSystem.unregister_priority_update_unit = function (self, unit)
 	table.swap_delete(blackboard_prioritized_updates, index)
 
 	local blackboard_updates = self._blackboard_updates
+
 	blackboard_updates[#blackboard_updates + 1] = unit
 end
 

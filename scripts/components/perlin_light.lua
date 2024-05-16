@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/perlin_light.lua
+
 local PerlinLight = component("PerlinLight")
 
 PerlinLight.init = function (self, unit)
@@ -39,23 +41,23 @@ end
 
 PerlinLight.component_data = {
 	flicker_config = {
-		value = "default",
-		ui_type = "combo_box",
 		ui_name = "Flicker Config",
+		ui_type = "combo_box",
+		value = "default",
 		options_keys = {
 			"Default",
-			"Default 2"
+			"Default 2",
 		},
 		options_values = {
 			"default",
-			"default2"
-		}
+			"default2",
+		},
 	},
 	light_enabled = {
+		ui_name = "Light Enabled",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Light Enabled"
-	}
+	},
 }
 
 return PerlinLight

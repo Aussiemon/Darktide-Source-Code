@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/friends_dummy.lua
+
 local FriendsInterface = require("scripts/managers/data_service/services/friends/friends_interface")
 local FriendsDummy = class("FriendsDummy")
 

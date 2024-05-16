@@ -1,33 +1,41 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel_animations.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local animations = {
-	sequence_animations = {}
-}
+local animations = {}
+
+animations.sequence_animations = {}
+
 local _mission_info_panel_widgets = {
 	"panel",
 	"panel_scrollbar",
 	"list_interaction",
 	"list_mask",
-	"mission_header"
+	"mission_header",
 }
+
 animations.sequence_animations.resize_mission_window = {
 	{
-		name = "fade_in_panel",
 		end_time = 0.2,
+		name = "fade_in_panel",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.panel
+
 			params.original_alpha = panel_widget.alpha_multiplier or 0
+
 			local fade_in_widgets = params.fade_in_widgets
 
 			if not fade_in_widgets then
 				fade_in_widgets = {}
+
 				local widget_names = _mission_info_panel_widgets
 
 				for i = 1, #widget_names do
 					local name = widget_names[i]
 					local widget = widgets_by_name[name]
+
 					fade_in_widgets[#fade_in_widgets + 1] = widget
 				end
 
@@ -53,11 +61,11 @@ animations.sequence_animations.resize_mission_window = {
 			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = 1
 			end
-		end
+		end,
 	},
 	{
-		name = "change_background_color",
 		end_time = 0.3,
+		name = "change_background_color",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local color_copy = ColorUtilities.color_copy
@@ -69,7 +77,9 @@ animations.sequence_animations.resize_mission_window = {
 			end
 
 			local panel_widget = widgets_by_name.panel
+
 			panel_widget.content.can_flash = false
+
 			local panel_style = panel_widget.style
 			local background_style = panel_style.background
 
@@ -82,10 +92,12 @@ animations.sequence_animations.resize_mission_window = {
 			local frame_top_regular_style = panel_style.frame_top_regular
 			local frame_top_event_style = panel_style.frame_top_event
 			local frame_top_red_style = panel_style.frame_top_red
+
 			params.start_regular_divider_alpha = panel_style.frame_top_regular.color[1]
 			params.start_event_divider_alpha = panel_style.frame_top_event.color[1]
 			params.start_red_divider_alpha = panel_style.frame_top_red.color[1]
-			local target_background_color = nil
+
+			local target_background_color
 			local target_frame_color = params.target_frame_color
 			local flags = params.flags
 
@@ -169,18 +181,21 @@ animations.sequence_animations.resize_mission_window = {
 			local flag_happening = flags.happening_mission or false
 			local panel_widget = widgets_by_name.panel
 			local panel_content = panel_widget.content
+
 			panel_content.flash_mission = flag_flash and not flag_locked
 			panel_content.can_flash = true
+
 			local panel_style = panel_widget.style
+
 			panel_style.event_frame.visible = flag_happening or flag_flash and not flag_locked
 			panel_style.frame_top_red.visible = flag_flash or flag_locked
 			panel_style.frame_top_event.visible = flag_happening and not flag_flash and not flag_locked
 			panel_style.frame_top_regular.visible = not flag_flash and not flag_locked and not flag_happening
-		end
+		end,
 	},
 	{
-		name = "resize",
 		end_time = 0.4,
+		name = "resize",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			params.start_heights = params.start_heights or {}
@@ -208,6 +223,7 @@ animations.sequence_animations.resize_mission_window = {
 			for scenegraph_id, start_height in pairs(start_heights) do
 				local target_height = target_heights[scenegraph_id]
 				local height = math.lerp(start_height, target_height, anim_progress)
+
 				ui_scenegraph[scenegraph_id].size[2] = height
 			end
 
@@ -221,6 +237,7 @@ animations.sequence_animations.resize_mission_window = {
 
 			if mission_header_height < mission_header_target_height then
 				local normalized_height = mission_header_height / mission_header_target_height
+
 				image_style.uvs[2][2] = normalized_height
 				old_header_image_style.uvs[2][2] = normalized_height
 			else
@@ -231,11 +248,11 @@ animations.sequence_animations.resize_mission_window = {
 			ui_scenegraph.info_area.position[2] = mission_header_height
 
 			return true
-		end
+		end,
 	},
 	{
-		name = "fade_content",
 		end_time = 0.4,
+		name = "fade_content",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local widgets_to_fade = params._widgets_to_fade
@@ -257,7 +274,9 @@ animations.sequence_animations.resize_mission_window = {
 
 			for i = 1, #old_widgets do
 				last_index = last_index + 1
+
 				local widget = old_widgets[i]
+
 				widgets_to_fade[last_index] = widget
 				start_alphas[last_index] = widget.alpha_multiplier
 				target_alphas[last_index] = 0
@@ -267,7 +286,9 @@ animations.sequence_animations.resize_mission_window = {
 
 			for i = 1, #new_widgets do
 				last_index = last_index + 1
+
 				local widget = new_widgets[i]
+
 				widget.visible = true
 				widgets_to_fade[last_index] = widget
 				start_alphas[last_index] = 0
@@ -284,7 +305,9 @@ animations.sequence_animations.resize_mission_window = {
 			end
 
 			local button_widget = widgets_by_name.play_button
+
 			button_widget.visible = true
+
 			local button_orig_alpha = button_widget.alpha_multiplier or 0
 			local button_target_alpha = flags.locked and 0 or 1
 
@@ -296,7 +319,9 @@ animations.sequence_animations.resize_mission_window = {
 			end
 
 			local banner_widget = widgets_by_name.header_banner
+
 			banner_widget.visible = true
+
 			local banner_orig_alpha = banner_widget.alpha_multiplier or 0
 			local banner_target_alpha = flags.locked and 1 or 0
 
@@ -319,6 +344,7 @@ animations.sequence_animations.resize_mission_window = {
 
 			for i = 1, num_widgets_to_fade do
 				local widget = widgets_to_fade[i]
+
 				widget.alpha_multiplier = ease_exp(lerp(start_alphas[i], target_alphas[i], progress))
 			end
 		end,
@@ -330,36 +356,43 @@ animations.sequence_animations.resize_mission_window = {
 			for i = 1, num_widgets_to_fade do
 				local widget = widgets_to_fade[i]
 				local target_alpha = target_alphas[i]
+
 				widget.alpha_multiplier = target_alpha
 				widget.visible = target_alpha > 0
 			end
-		end
-	}
+		end,
+	},
 }
+
 local _status_report_panel_widgets = {
 	"panel",
 	"panel_scrollbar",
 	"list_interaction",
 	"list_mask",
-	"report_background"
+	"report_background",
 }
+
 animations.sequence_animations.resize_report_window = {
 	{
-		name = "fade_in_panel",
 		end_time = 0.2,
+		name = "fade_in_panel",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.report_background
+
 			params.original_alpha = panel_widget.alpha_multiplier or 0
+
 			local fade_in_widgets = params.fade_in_widgets
 
 			if not fade_in_widgets then
 				fade_in_widgets = {}
+
 				local widget_names = _status_report_panel_widgets
 
 				for i = 1, #widget_names do
 					local name = widget_names[i]
 					local widget = widgets_by_name[name]
+
 					fade_in_widgets[#fade_in_widgets + 1] = widget
 				end
 
@@ -385,16 +418,18 @@ animations.sequence_animations.resize_report_window = {
 			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = 1
 			end
-		end
+		end,
 	},
 	{
-		name = "change_background_color",
 		end_time = 0.3,
+		name = "change_background_color",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local color_copy = ColorUtilities.color_copy
 			local panel_widget = widgets_by_name.panel
+
 			panel_widget.content.can_flash = false
+
 			local panel_style = panel_widget.style
 			local background_style = panel_style.background
 
@@ -418,13 +453,15 @@ animations.sequence_animations.resize_report_window = {
 
 			color_copy(insignia_style.color, params.start_insignia_color)
 
-			local target_insignia_color, target_frame_color = nil
+			local target_insignia_color, target_frame_color
 
 			if params.is_event then
 				target_insignia_color = insignia_style.color_event
 				target_frame_color = frame_style.color_event
 				frame_style.visible = true
+
 				local frame_top_event_style = panel_style.frame_top_event
+
 				frame_top_event_style.visible = true
 				frame_top_event_style.color[1] = frame_top_event_style.anim_lower_alpha
 				panel_style.frame_top_regular.visible = false
@@ -462,17 +499,20 @@ animations.sequence_animations.resize_report_window = {
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget_content = widgets_by_name.panel.content
+
 			panel_widget_content.can_flash = true
 			panel_widget_content.anim_time = 0
-		end
+		end,
 	},
 	{
-		name = "resize",
 		end_time = 0.4,
+		name = "resize",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local target_height_params = params.target_heights
+
 			target_height_params.panel_header = 0
+
 			local scenegraph_ids = params._scnengraph_ids
 			local start_heights = params._start_heights
 			local target_heights = params._target_heights
@@ -517,6 +557,7 @@ animations.sequence_animations.resize_report_window = {
 				local target_height = target_heights[i]
 				local start_height = start_heights[i]
 				local height = math.lerp(start_height, target_height, anim_progress)
+
 				ui_scenegraph[scenegraph_id].size[2] = height
 			end
 
@@ -528,7 +569,9 @@ animations.sequence_animations.resize_report_window = {
 
 			if current_background_height < insignia_target_height then
 				insignia_style.size[2] = current_background_height
+
 				local normalized_height = current_background_height / insignia_target_height
+
 				insignia_style.uvs[2][2] = normalized_height
 			else
 				insignia_style.size[2] = insignia_target_height
@@ -536,13 +579,13 @@ animations.sequence_animations.resize_report_window = {
 			end
 
 			return true
-		end
-	}
+		end,
+	},
 }
 animations.sequence_animations.retract_window = {
 	{
-		name = "resize_window",
 		end_time = 0.4,
+		name = "resize_window",
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local scenegraph_ids = params.scnengraph_ids
@@ -585,6 +628,7 @@ animations.sequence_animations.retract_window = {
 				local start_height = start_heights[i]
 				local target_height = target_heights[i]
 				local height = math.lerp(start_height, target_height, anim_progress)
+
 				ui_scenegraph[scenegraph_id].size[2] = height
 			end
 
@@ -597,7 +641,9 @@ animations.sequence_animations.retract_window = {
 
 				if current_background_height < insignia_target_height then
 					insignia_style.size[2] = current_background_height
+
 					local normalized_height = current_background_height / insignia_target_height
+
 					insignia_style.uvs[2][2] = normalized_height
 				else
 					insignia_style.size[2] = insignia_target_height
@@ -612,6 +658,7 @@ animations.sequence_animations.retract_window = {
 
 				if mission_header_height < mission_header_target_height then
 					local normalized_height = mission_header_height / mission_header_target_height
+
 					image_style.uvs[2][2] = normalized_height
 				else
 					image_style.uvs[2][2] = 1
@@ -627,18 +674,20 @@ animations.sequence_animations.retract_window = {
 
 			for i = 1, #scnengraph_ids do
 				local scenegraph_id = scnengraph_ids[i]
+
 				ui_scenegraph[scenegraph_id].size[2] = scenegraph_definition[scenegraph_id].size[2]
 			end
 
 			ui_scenegraph.info_area.position[2] = ui_scenegraph.panel_header.size[2]
-		end
+		end,
 	},
 	{
-		name = "change_background_color",
 		end_time = 0.4,
+		name = "change_background_color",
 		start_time = 0.1,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.panel
+
 			panel_widget.content.can_flash = false
 
 			if not params.start_background_color then
@@ -670,16 +719,18 @@ animations.sequence_animations.retract_window = {
 			local insignia_target_color = insignia_style.color_default
 
 			ColorUtilities.color_lerp(insignia_start_color, insignia_target_color, eased_progress, insignia_style.color, true)
-		end
+		end,
 	},
 	{
-		name = "fade_out",
 		end_time = 0.4,
+		name = "fade_out",
 		start_time = 0.1,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.panel
 			local original_alpha = panel_widget.alpha_multiplier or 0
+
 			params.original_alpha = original_alpha
+
 			local widgets = {}
 
 			for name, widget in pairs(widgets_by_name) do
@@ -705,22 +756,27 @@ animations.sequence_animations.retract_window = {
 
 			for i = 1, #widgets do
 				local widget = widgets[i]
+
 				widget.alpha_multiplier = 0
 				widget.visible = false
 			end
 
 			local panel_widget = widgets_by_name.panel
 			local panel_style = panel_widget.style
+
 			panel_style.event_frame.visible = false
+
 			local frame_top_regular_style = panel_style.frame_top_regular
+
 			frame_top_regular_style.visible = true
 			frame_top_regular_style.color[1] = frame_top_regular_style.anim_lower_alpha
 			panel_style.frame_top_event.visible = false
 			panel_style.frame_top_red.visible = false
-		end
-	}
+		end,
+	},
 }
 animations.change_functions = {}
+
 local _ease_function = math.ease_pulse
 
 animations.change_functions.event_frame = function (content, style, animations, dt)
@@ -740,6 +796,7 @@ animations.change_functions.frame_lights = function (content, style, animations,
 
 	local speed = content.flash_mission and style.anim_flash_speed or style.anim_speed
 	local anim_time = (content.anim_time + dt * speed) % 1
+
 	content.anim_time = anim_time
 	style.color[1] = math.lerp(255, style.anim_lower_alpha, _ease_function(anim_time))
 end

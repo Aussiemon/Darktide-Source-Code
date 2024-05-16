@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/spraynpray_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -13,13 +15,14 @@ table.make_unique(overrides)
 local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local single_cleave = DamageProfileSettings.single_cleave
+
 damage_templates.default_spraynpray = {
-	suppression_value = 4,
 	stagger_category = "ranged",
+	suppression_value = 4,
 	cleave_distribution = single_cleave,
 	ranges = {
 		max = 20,
-		min = 10
+		min = 10,
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -31,7 +34,7 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75
+				[armor_types.void_shield] = 0.75,
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -41,8 +44,8 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25
-			}
+				[armor_types.void_shield] = 0.25,
+			},
 		},
 		far = {
 			attack = {
@@ -53,7 +56,7 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.55,
-				[armor_types.void_shield] = 0.55
+				[armor_types.void_shield] = 0.55,
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -63,37 +66,37 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25
-			}
-		}
+				[armor_types.void_shield] = 0.25,
+			},
+		},
 	},
 	power_distribution = {
 		attack = 0.3,
-		impact = 0.75
+		impact = 0.75,
 	},
 	gibbing_power = GibbingPower.medium,
 	on_kill_area_suppression = {
 		distance = 2,
-		suppression_value = 4
+		suppression_value = 4,
 	},
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.5,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
-				[armor_types.unarmored] = 0.75
-			}
-		}
-	}
+				[armor_types.unarmored] = 0.75,
+			},
+		},
+	},
 }
 damage_templates.autogun_snp = {
-	suppression_value = 4,
 	ragdoll_push_force = 250,
 	stagger_category = "ranged",
+	suppression_value = 4,
 	cleave_distribution = single_cleave,
 	ranges = {
 		max = 25,
-		min = 10
+		min = 10,
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -105,7 +108,7 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5
+				[armor_types.void_shield] = 0.5,
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -115,8 +118,8 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1
-			}
+				[armor_types.void_shield] = 1,
+			},
 		},
 		far = {
 			attack = {
@@ -127,7 +130,7 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5
+				[armor_types.void_shield] = 0.5,
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -137,37 +140,37 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1
-			}
-		}
+				[armor_types.void_shield] = 1,
+			},
+		},
 	},
 	power_distribution = {
 		attack = 0.3,
-		impact = 0.4
+		impact = 0.4,
 	},
 	gibbing_power = GibbingPower.medium,
 	on_kill_area_suppression = {
 		distance = 2,
-		suppression_value = 4
+		suppression_value = 4,
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default
-		}
-	}
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
 }
 damage_templates.rippergun_spraynpray = {
 	ignore_stagger_reduction = true,
-	suppression_value = 5,
 	ragdoll_only = true,
 	stagger_category = "ranged",
+	suppression_value = 5,
 	cleave_distribution = {
 		attack = 0.01,
-		impact = 0.1
+		impact = 0.1,
 	},
 	ranges = {
 		max = 25,
-		min = 10
+		min = 10,
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -179,7 +182,7 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 0.9,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1.5,
-				[armor_types.void_shield] = 1.5
+				[armor_types.void_shield] = 1.5,
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -189,8 +192,8 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2
-			}
+				[armor_types.void_shield] = 2,
+			},
 		},
 		far = {
 			attack = {
@@ -201,7 +204,7 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.6,
-				[armor_types.void_shield] = 0.6
+				[armor_types.void_shield] = 0.6,
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -211,13 +214,13 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1.5,
-				[armor_types.void_shield] = 1.5
-			}
-		}
+				[armor_types.void_shield] = 1.5,
+			},
+		},
 	},
 	power_distribution = {
 		attack = 1.5,
-		impact = 1.75
+		impact = 1.75,
 	},
 	gibbing_power = GibbingPower.medium,
 	targets = {
@@ -225,17 +228,17 @@ damage_templates.rippergun_spraynpray = {
 			boost_curve_multiplier_finesse = 1.2,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
-				[armor_types.unarmored] = 0.75
-			}
-		}
+				[armor_types.unarmored] = 0.75,
+			},
+		},
 	},
 	ragdoll_push_force = {
 		400,
-		600
-	}
+		600,
+	},
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides
+	overrides = overrides,
 }

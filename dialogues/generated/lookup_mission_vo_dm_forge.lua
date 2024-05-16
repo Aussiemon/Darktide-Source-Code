@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_dm_forge.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_forge_alive"
 DialogueLookup[DialogueLookup_n + 2] = "mission_forge_assembly_line"
 DialogueLookup[DialogueLookup_n + 3] = "mission_forge_call_elevator"

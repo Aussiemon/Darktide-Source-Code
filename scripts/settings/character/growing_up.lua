@@ -1,274 +1,276 @@
+﻿-- chunkname: @scripts/settings/character/growing_up.lua
+
 local growing_up = {
 	option_1 = {
 		description = "loc_character_growing_up_01_description",
-		name = "Isolated",
 		display_name = "loc_character_growing_up_01_name",
 		id = "growing_up_01",
+		name = "Isolated",
 		story_snippet = "loc_character_growing_up_01_description_snippet",
 		visibility = {
 			archetype = {
 				"psyker",
-				"zealot"
-			}
-		}
+				"zealot",
+			},
+		},
 	},
 	option_2 = {
 		description = "loc_character_growing_up_02_description",
-		name = "Felt calling",
 		display_name = "loc_character_growing_up_02_name",
 		id = "growing_up_02",
+		name = "Felt calling",
 		story_snippet = "loc_character_growing_up_02_description_snippet",
 		visibility = {
 			archetype = {
-				"zealot"
-			}
-		}
+				"zealot",
+			},
+		},
 	},
 	option_3 = {
 		description = "loc_character_growing_up_03_description",
-		name = "Injured",
 		display_name = "loc_character_growing_up_03_name",
 		id = "growing_up_03",
+		name = "Injured",
 		story_snippet = "loc_character_growing_up_03_description_snippet",
 		visibility = {
 			archetype = {
-				"zealot"
-			}
-		}
+				"zealot",
+			},
+		},
 	},
 	option_4 = {
 		description = "loc_character_growing_up_04_description",
-		name = "Enlisted",
 		display_name = "loc_character_growing_up_04_name",
 		id = "growing_up_04",
+		name = "Enlisted",
 		story_snippet = "loc_character_growing_up_04_description_snippet",
 		visibility = {
 			archetype = {
 				"ogryn",
-				"veteran"
-			}
-		}
+				"veteran",
+			},
+		},
 	},
 	option_5 = {
 		description = "loc_character_growing_up_05_description",
-		name = "Local Fighter",
 		display_name = "loc_character_growing_up_05_name",
 		id = "growing_up_05",
+		name = "Local Fighter",
 		story_snippet = "loc_character_growing_up_05_description_snippet",
 		visibility = {
 			archetype = {
-				"ogryn"
-			}
-		}
+				"ogryn",
+			},
+		},
 	},
 	option_6 = {
 		description = "loc_character_growing_up_06_description",
-		name = "Grew from toil",
 		display_name = "loc_character_growing_up_06_name",
 		id = "growing_up_06",
+		name = "Grew from toil",
 		story_snippet = "loc_character_growing_up_06_description_snippet",
 		visibility = {
 			archetype = {
 				"ogryn",
-				"psyker"
-			}
-		}
+				"psyker",
+			},
+		},
 	},
 	option_7 = {
 		description = "loc_character_growing_up_07_description",
-		name = "Unpaid debt",
 		display_name = "loc_character_growing_up_07_name",
 		id = "growing_up_07",
+		name = "Unpaid debt",
 		story_snippet = "loc_character_growing_up_07_description_snippet",
 		visibility = {
 			archetype = {
-				"veteran"
-			}
-		}
+				"veteran",
+			},
+		},
 	},
 	option_8 = {
 		description = "loc_character_growing_up_08_description",
-		name = "Crime Witness",
 		display_name = "loc_character_growing_up_08_name",
 		id = "growing_up_08",
+		name = "Crime Witness",
 		story_snippet = "loc_character_growing_up_08_description_snippet",
 		visibility = {
 			archetype = {
-				"veteran"
-			}
-		}
+				"veteran",
+			},
+		},
 	},
 	option_9 = {
 		description = "loc_character_growing_up_09_description",
-		name = "Escaped to the wastes",
 		display_name = "loc_character_growing_up_09_name",
 		id = "growing_up_09",
+		name = "Escaped to the wastes",
 		story_snippet = "loc_character_growing_up_09_description_snippet",
 		visibility = {
 			archetype = {
-				"psyker"
-			}
-		}
+				"psyker",
+			},
+		},
 	},
 	option_10 = {
 		description = "loc_character_growing_up_10_description",
-		name = "Joined Mining Guild",
 		display_name = "loc_character_growing_up_10_name",
 		id = "growing_up_10",
+		name = "Joined Mining Guild",
 		story_snippet = "loc_character_growing_up_10_description_snippet",
 		visibility = {
 			archetype = {
-				"ogryn"
-			}
-		}
+				"ogryn",
+			},
+		},
 	},
 	option_11 = {
 		description = "loc_character_growing_up_11_description",
-		name = "Hive ganger",
 		display_name = "loc_character_growing_up_11_name",
 		id = "growing_up_11",
+		name = "Hive ganger",
 		story_snippet = "loc_character_growing_up_11_description_snippet",
 		visibility = {
 			archetype = {
-				"veteran"
-			}
-		}
+				"veteran",
+			},
+		},
 	},
 	option_12 = {
 		description = "loc_character_growing_up_12_description",
-		name = "Pilgrimage",
 		display_name = "loc_character_growing_up_12_name",
 		id = "growing_up_12",
+		name = "Pilgrimage",
 		story_snippet = "loc_character_growing_up_12_description_snippet",
 		visibility = {
 			archetype = {
-				"zealot"
-			}
-		}
+				"zealot",
+			},
+		},
 	},
 	option_13 = {
 		description = "loc_character_growing_up_13_description",
-		name = "Hive Guide",
 		display_name = "loc_character_growing_up_13_name",
 		id = "growing_up_13",
+		name = "Hive Guide",
 		story_snippet = "loc_character_growing_up_13_description_snippet",
 		visibility = {
 			archetype = {
-				"veteran"
-			}
-		}
+				"veteran",
+			},
+		},
 	},
 	option_14 = {
 		description = "loc_character_growing_up_14_description",
-		name = "Found Discipline",
 		display_name = "loc_character_growing_up_14_name",
 		id = "growing_up_14",
+		name = "Found Discipline",
 		story_snippet = "loc_character_growing_up_14_description_snippet",
 		visibility = {
 			archetype = {
-				"veteran"
-			}
-		}
+				"veteran",
+			},
+		},
 	},
 	option_15 = {
 		description = "loc_character_growing_up_15_description",
-		name = "Salvation",
 		display_name = "loc_character_growing_up_15_name",
 		id = "growing_up_15",
+		name = "Salvation",
 		story_snippet = "loc_character_growing_up_15_description_snippet",
 		visibility = {
 			archetype = {
-				"zealot"
-			}
-		}
+				"zealot",
+			},
+		},
 	},
 	option_16 = {
 		description = "loc_character_growing_up_16_description",
-		name = "Grinding Toil",
 		display_name = "loc_character_growing_up_16_name",
 		id = "growing_up_16",
+		name = "Grinding Toil",
 		story_snippet = "loc_character_growing_up_16_description_snippet",
 		visibility = {
 			archetype = {
 				"ogryn",
-				"psyker"
-			}
-		}
+				"psyker",
+			},
+		},
 	},
 	option_17 = {
 		description = "loc_character_growing_up_17_description",
-		name = "Strong arm",
 		display_name = "loc_character_growing_up_17_name",
 		id = "growing_up_17",
+		name = "Strong arm",
 		story_snippet = "loc_character_growing_up_17_description_snippet",
 		visibility = {
 			archetype = {
-				"ogryn"
-			}
-		}
+				"ogryn",
+			},
+		},
 	},
 	option_18 = {
 		description = "loc_character_growing_up_18_description",
-		name = "Visions",
 		display_name = "loc_character_growing_up_18_name",
 		id = "growing_up_18",
+		name = "Visions",
 		story_snippet = "loc_character_growing_up_18_description_snippet",
 		visibility = {
 			archetype = {
-				"psyker"
-			}
-		}
+				"psyker",
+			},
+		},
 	},
 	option_19 = {
 		description = "loc_character_growing_up_19_description",
-		name = "Lesser Scribe",
 		display_name = "loc_character_growing_up_19_name",
 		id = "growing_up_19",
+		name = "Lesser Scribe",
 		story_snippet = "loc_character_growing_up_19_description_snippet",
 		visibility = {
 			archetype = {
-				"zealot"
-			}
-		}
+				"zealot",
+			},
+		},
 	},
 	option_20 = {
 		description = "loc_character_growing_up_20_description",
-		name = "Conscripted",
 		display_name = "loc_character_growing_up_20_name",
 		id = "growing_up_20",
+		name = "Conscripted",
 		story_snippet = "loc_character_growing_up_20_description_snippet",
 		visibility = {
 			archetype = {
-				"veteran"
-			}
-		}
+				"veteran",
+			},
+		},
 	},
 	option_21 = {
 		description = "loc_character_growing_up_21_description",
-		name = "Outcast",
 		display_name = "loc_character_growing_up_21_name",
 		id = "growing_up_21",
+		name = "Outcast",
 		story_snippet = "loc_character_growing_up_21_description_snippet",
 		visibility = {
 			archetype = {
 				"ogryn",
-				"psyker"
-			}
-		}
+				"psyker",
+			},
+		},
 	},
 	option_22 = {
 		description = "loc_character_growing_up_22_description",
-		name = "Became self-reliant",
 		display_name = "loc_character_growing_up_22_name",
 		id = "growing_up_22",
+		name = "Became self-reliant",
 		story_snippet = "loc_character_growing_up_22_description_snippet",
 		visibility = {
 			archetype = {
 				"psyker",
-				"zealot"
-			}
-		}
-	}
+				"zealot",
+			},
+		},
+	},
 }
 
 return growing_up

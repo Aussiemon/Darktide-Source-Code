@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/luggable_socket/luggable_socket_extension.lua
+
 local LuggableSocketExtension = class("LuggableSocketExtension")
 
 LuggableSocketExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._is_server = extension_init_context.is_server
 	self._unit = unit
 	self._physics_world = extension_init_context.physics_world
+
 	local mesh_id, size = self:_fetch_actor_size(unit, "g_slot")
+
 	self._actor_mesh_id = mesh_id
 	self._actor_size = Vector3Box(size)
 	self._overlapping_units = {}
@@ -142,11 +146,12 @@ LuggableSocketExtension.socket_luggable = function (self, luggable_unit, socket_
 
 		interactee_extension:set_active(false)
 
-		local slot_position, slot_rotation = nil
+		local slot_position, slot_rotation
 		local lock_offset_node = self._lock_offset_node
 
 		if lock_offset_node then
 			local node_index = Unit.node(socket_unit, lock_offset_node)
+
 			slot_position = Unit.world_position(socket_unit, node_index)
 			slot_rotation = Unit.world_rotation(socket_unit, node_index)
 		else
@@ -168,6 +173,7 @@ end
 
 LuggableSocketExtension._check_temp_locked_socket = function (self, dt)
 	local timer = self._temp_locked_timer
+
 	timer = timer - dt
 	timer = math.max(0, timer)
 
@@ -195,6 +201,7 @@ end
 
 LuggableSocketExtension.unlock_socket = function (self)
 	self._locked_luggable = nil
+
 	local socket_objective_target_ext = self._socket_objective_target_ext
 
 	if socket_objective_target_ext then

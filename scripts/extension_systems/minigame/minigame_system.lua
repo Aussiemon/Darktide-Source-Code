@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minigame/minigame_system.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 
 require("scripts/extension_systems/minigame/minigame_extension")
@@ -15,7 +17,7 @@ local CLIENT_RPCS = {
 	"rpc_minigame_sync_decode_symbols_set_target",
 	"rpc_minigame_sync_drill_generate_targets",
 	"rpc_minigame_sync_drill_set_cursor",
-	"rpc_minigame_sync_drill_set_search"
+	"rpc_minigame_sync_drill_set_search",
 }
 
 MinigameSystem.init = function (self, context, system_init_data, ...)
@@ -23,6 +25,7 @@ MinigameSystem.init = function (self, context, system_init_data, ...)
 
 	self._seed = self._is_server and system_init_data.level_seed or nil
 	self._default_minigame_type = system_init_data.mission.minigame_type or MinigameSettings.default_minigame_type
+
 	local network_event_delegate = self._network_event_delegate
 
 	if not self._is_server and network_event_delegate then

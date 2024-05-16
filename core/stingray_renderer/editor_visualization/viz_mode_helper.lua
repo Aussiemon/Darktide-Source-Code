@@ -1,3 +1,5 @@
+﻿-- chunkname: @core/stingray_renderer/editor_visualization/viz_mode_helper.lua
+
 core = rawget(_G, "core") or {}
 core.vis_modes = core.vis_modes or {}
 

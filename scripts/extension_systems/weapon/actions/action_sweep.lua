@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_sweep.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Action = require("scripts/utilities/weapon/action")
@@ -31,16 +33,16 @@ local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local POWERED_WWISE_SWITCH = {
+	[false] = "false",
 	[true] = "true",
-	[false] = "false"
 }
-local _dot = nil
+local _dot
 
 local function _calculate_attack_direction(action_settings, start_rotation, end_rotation, player_rotation, attack_direction_override)
-	local attack_direction = nil
+	local attack_direction
 
 	if attack_direction_override then
-		local direction = nil
+		local direction
 
 		if attack_direction_override == "left" then
 			direction = -Vector3.right()
@@ -60,6 +62,7 @@ local function _calculate_attack_direction(action_settings, start_rotation, end_
 	else
 		local rotation = Quaternion.lerp(start_rotation, end_rotation, 0.5)
 		local quaternion_axis = action_settings.attack_direction or action_settings.spline_settings.matrices_data_location and "forward" or "right"
+
 		attack_direction = Quaternion[quaternion_axis](rotation)
 	end
 
@@ -108,17 +111,22 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	end
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_sweep_component = unit_data_extension:write_component("action_sweep")
 	self._weapon_action_component = unit_data_extension:write_component("weapon_action")
 	self._dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
 	self._movement_state_component = unit_data_extension:write_component("movement_state")
 	self._character_state_component = unit_data_extension:read_component("character_state")
+
 	local damage_profile = action_settings.damage_profile
+
 	self._damage_profile = damage_profile
 	self._damage_profile_on_abort = action_settings.damage_profile_on_abort or damage_profile
 	self._damage_profile_special_active = action_settings.damage_profile_special_active or damage_profile
 	self._damage_profile_special_active_on_abort = action_settings.damage_profile_special_active_on_abort or self._damage_profile_special_active
+
 	local damage_type = action_settings.damage_type
+
 	self._damage_type = damage_type
 	self._damage_type_on_abort = action_settings.damage_type_on_abort or damage_type
 	self._damage_type_special_active = action_settings.damage_type_special_active or damage_type
@@ -128,6 +136,7 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	self._time_before_processing_saved_entries = 0
 	self._dealt_sticky_damage = false
 	self._current_sticky_armor_type = nil
+
 	local max_num_saved_entries = action_settings.max_num_saved_entries
 
 	if max_num_saved_entries then
@@ -136,12 +145,13 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 				hit_distance = 0,
 				hit_actor = ActorBox(),
 				hit_position = Vector3Box(),
-				hit_normal = Vector3Box()
+				hit_normal = Vector3Box(),
 			}
 		end
 	end
 
 	local weapon = action_params.weapon
+
 	self._sweep_fx_source_name = weapon.fx_sources._sweep
 end
 
@@ -150,8 +160,10 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 
 	self._weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or "none"
 	self._auto_completed = action_start_params.auto_completed
+
 	local is_chain_action = action_start_params.is_chain_action
 	local combo_count = action_start_params.combo_count
+
 	self._combo_count = combo_count
 
 	self:_check_for_critical_strike(true, false)
@@ -159,11 +171,13 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 
 	self._num_saved_entries = 0
 	self._time_before_processing_saved_entries = 0
+
 	local damage_profile = self._damage_profile
 	local damage_profile_special_active = self._damage_profile_special_active
 	local is_critical_strike = self._critical_strike_component.is_active
 	local charge_level = 1
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
+
 	self._max_hit_mass = self:_calculate_max_hit_mass(damage_profile, power_level, charge_level, is_critical_strike)
 	self._max_hit_mass_special = self:_calculate_max_hit_mass(damage_profile_special_active, power_level, charge_level, is_critical_strike)
 	self._amount_of_mass_hit = 0
@@ -202,6 +216,7 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 	end
 
 	self._buff_extension = buff_extension
+
 	local weapon_special_implementation = self._weapon.weapon_special_implementation
 
 	if weapon_special_implementation then
@@ -212,6 +227,7 @@ end
 ActionSweep._reset_sweep_component = function (self)
 	local sweep_position, sweep_rotation = self._sweep_spline:position_and_rotation(0)
 	local action_sweep_component = self._action_sweep_component
+
 	action_sweep_component.sweep_position = sweep_position
 	action_sweep_component.sweep_rotation = sweep_rotation
 	action_sweep_component.sweep_aborted = false
@@ -260,11 +276,13 @@ ActionSweep.server_correction_occurred = function (self)
 
 	self._num_saved_entries = 0
 	self._time_before_processing_saved_entries = 0
+
 	local action_settings = self._action_settings
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
 	local charge_level = 1
 	local damage_profile = self._damage_profile
 	local damage_profile_special_active = self._damage_profile_special_active
+
 	self._max_hit_mass = self:_calculate_max_hit_mass(damage_profile, power_level, charge_level)
 	self._max_hit_mass_special = self:_calculate_max_hit_mass(damage_profile_special_active, power_level, charge_level)
 	self._amount_of_mass_hit = 0
@@ -356,6 +374,7 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 
 	if before_damage_window then
 		local position, rotation = sweep_spline:position_and_rotation(0)
+
 		action_sweep_component.sweep_position = position
 		action_sweep_component.sweep_rotation = rotation
 	end
@@ -364,13 +383,10 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 	local should_do_overlap = not action_sweep_component.sweep_aborted and (is_within_damage_window or was_within_damage_window)
 
 	if should_do_overlap then
-		if is_final_frame then
-			damage_window_t = 1
-		end
-
+		damage_window_t = is_final_frame and 1 or damage_window_t
 		action_sweep_component.sweep_state = "during_damage_window"
-		local start_position = action_sweep_component.sweep_position
-		local start_rotation = action_sweep_component.sweep_rotation
+
+		local start_position, start_rotation = action_sweep_component.sweep_position, action_sweep_component.sweep_rotation
 		local end_position, end_rotation = sweep_spline:position_and_rotation(damage_window_t)
 
 		self:_do_overlap(t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, action_sweep_component)
@@ -429,8 +445,10 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	end
 
 	local action_sweep_component = self._action_sweep_component
+
 	action_sweep_component.is_sticky = true
 	action_sweep_component.attack_direction = attack_direction
+
 	local buff_to_add = hit_stickyness_settings.buff_to_add
 
 	if buff_to_add and self._is_server then
@@ -521,7 +539,7 @@ end
 
 local stickyness_impact_fx_data = {
 	will_be_predicted = true,
-	source_parameters = {}
+	source_parameters = {},
 }
 
 ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_component, hit_stickyness_settings)
@@ -529,7 +547,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	local sticky_target_unit_alive = ALIVE[stick_to_unit]
 	local stick_to_position = SweepStickyness.stick_to_position(action_sweep_component) or Unit.world_position(self._first_person_unit, 1)
 	local actor_index = action_sweep_component.sweep_aborted_actor_index
-	local stick_to_actor = nil
+	local stick_to_actor
 
 	if sticky_target_unit_alive then
 		stick_to_actor = actor_index and Unit.actor(stick_to_unit, actor_index)
@@ -566,14 +584,14 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 
 			local action_settings = self._action_settings
 			local herding_template = damage.herding_template or action_settings.herding_template
-			local wounds_shape = nil
+			local wounds_shape
 
 			if is_first_damage_instance or is_last_damage_instance then
 				wounds_shape = action_settings.wounds_shape_special_active
 			end
 
 			for i = 1, num_damage_instances_this_frame do
-				local damage_profile = nil
+				local damage_profile
 
 				if is_last_damage_instance and i == num_damage_instances_this_frame then
 					damage_profile = last_damage_profile
@@ -598,7 +616,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 				self._hit_weakspot = self._hit_weakspot or hit_weakspot
 
 				if i == 1 then
-					local hit_normal = nil
+					local hit_normal
 
 					ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage_profile)
 				end
@@ -660,7 +678,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 				local velocity_current = self._locomotion_component.velocity_current
 				local attack_direction = Vector3.normalize(velocity_current)
 				local damage_dealt, attack_result, damage_efficiency, _, _ = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
-				local hit_normal = nil
+				local hit_normal
 
 				ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)
 			end
@@ -680,8 +698,10 @@ ActionSweep._handle_stickyness = function (self, stick_to_position)
 	local stuck_direction = Vector3.normalize(stick_to_position - fp_position)
 	local rot = Unit.local_rotation(first_person_unit, 1)
 	local up_dot, right_dot = _dot(stuck_direction, rot)
+
 	up_dot = math.clamp(up_dot * -1, -1, 1)
 	right_dot = math.clamp(right_dot * -1, -1, 1)
+
 	local hit_stop_delta_x = Unit.animation_find_variable(first_person_unit, "hit_stop_delta_x")
 
 	if hit_stop_delta_x then
@@ -706,10 +726,12 @@ ActionSweep._is_within_damage_window = function (self, time_in_action, action_se
 	end
 
 	local action_time_offset = action_settings.action_time_offset or 0
+
 	damage_window_start = damage_window_start / time_scale
 	damage_window_end = damage_window_end / time_scale
 	action_time_offset = action_time_offset / time_scale
 	time_in_action = time_in_action + action_time_offset
+
 	local after_start = damage_window_start <= time_in_action
 	local before_end = time_in_action <= damage_window_end
 	local in_damage_window = after_start and before_end
@@ -719,6 +741,7 @@ ActionSweep._is_within_damage_window = function (self, time_in_action, action_se
 
 	if in_damage_window then
 		local current_time = time_in_action - damage_window_start
+
 		damage_window_t = current_time / damage_window_max
 	else
 		before_damage_window = time_in_action < damage_window_start
@@ -763,7 +786,7 @@ ActionSweep._do_overlap = function (self, t, start_position, start_rotation, end
 	PhysicsWorld.start_reusing_sweep_tables()
 
 	local use_sphere_sweep = action_settings.use_sphere_sweep
-	local sweep_results, num_sweep_results = nil
+	local sweep_results, num_sweep_results
 
 	if use_sphere_sweep then
 		sweep_results, num_sweep_results = self:_run_sphere_sweeps(start_position, end_position, action_settings)
@@ -801,7 +824,7 @@ ActionSweep._should_save_sweeps = function (self, action_settings, t, is_final_f
 			return false
 		end
 
-		if num_saved_entries > 0 and self._time_before_processing_saved_entries <= t then
+		if num_saved_entries > 0 and t >= self._time_before_processing_saved_entries then
 			return false
 		end
 
@@ -822,6 +845,7 @@ ActionSweep._save_sweep_results = function (self, sweep_results, num_sweep_resul
 
 	if num_saved_entries == 0 then
 		local num_frames_before_process = action_settings.num_frames_before_process
+
 		self._time_before_processing_saved_entries = t + num_frames_before_process * Managers.state.game_session.fixed_time_step
 	end
 
@@ -831,7 +855,9 @@ ActionSweep._save_sweep_results = function (self, sweep_results, num_sweep_resul
 		local hit_position = result.position
 		local hit_normal = result.normal
 		local hit_distance = result.distance
+
 		num_saved_entries = num_saved_entries + 1
+
 		local entry = saved_entries[num_saved_entries]
 
 		entry.hit_actor:store(hit_actor)
@@ -863,6 +889,7 @@ ActionSweep._merge_saved_entries = function (self, sweep_results, num_sweep_resu
 			local hit_position = saved_entry.hit_position:unbox()
 			local hit_normal = saved_entry.hit_normal:unbox()
 			local hit_distance = saved_entry.hit_distance
+
 			saved_entry.actor = actor
 			saved_entry.position = hit_position
 			saved_entry.normal = hit_normal
@@ -885,8 +912,7 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 	local unit_best_result, actor_to_unit = self:_pick_best_sweep_result_per_unit(sweep_results, num_sweep_results, hit_units)
 	local ordered_units = self:_order_by_significance(unit_best_result, sweep_results, actor_to_unit, action_settings)
 	local num_ordered_units = #ordered_units
-	local abort_attack = false
-	local armor_aborted_attack = false
+	local abort_attack, armor_aborted_attack = false, false
 
 	for i = 1, num_ordered_units do
 		local result = ordered_units[i]
@@ -894,7 +920,7 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 		local hit_unit = actor_to_unit[hit_actor]
 		local hit_position = result.position
 		local hit_normal = result.normal
-		local hit_zone_name = nil
+		local hit_zone_name
 		local hit_zone = HitZone.get(hit_unit, hit_actor)
 
 		if hit_zone then
@@ -930,8 +956,7 @@ ActionSweep._pick_best_sweep_result_per_unit = function (self, sweep_results, nu
 	table.clear(unit_best_result)
 	table.clear(actor_to_unit)
 
-	local first_person_extension = self._first_person_extension
-	local action_settings = self._action_settings
+	local first_person_extension, action_settings = self._first_person_extension, self._action_settings
 	local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 	local hit_zone_priority = action_settings.hit_zone_priority or default_hit_zone_priority
 	local hit_zone_priority_functions = ActionSweepSettings.hit_zone_priority_functions
@@ -960,43 +985,46 @@ ActionSweep._pick_best_sweep_result_per_unit = function (self, sweep_results, nu
 			end
 
 			actor_to_unit[hit_actor] = hit_unit
+
 			local previous_result_id = unit_best_result[hit_unit]
 
 			if previous_result_id then
-				local hit_zone = HitZone.get(hit_unit, hit_actor)
+				do
+					local hit_zone = HitZone.get(hit_unit, hit_actor)
 
-				if not hit_zone then
-					break
+					if not hit_zone then
+						break
+					end
+
+					local previous_result = sweep_results[previous_result_id]
+					local prev_actor = previous_result.actor
+					local prev_hit_zone = HitZone.get(hit_unit, prev_actor)
+					local new_hit_zone_name = hit_zone.name
+					local new_hit_zone_prio, new_hit_zone_priority_function = hit_zone_priority[new_hit_zone_name], hit_zone_priority_functions[new_hit_zone_name]
+
+					if new_hit_zone_priority_function then
+						new_hit_zone_prio = new_hit_zone_priority_function(hit_unit, player_position, new_hit_zone_prio)
+					end
+
+					local prev_hit_zone_name = prev_hit_zone.name
+					local prev_hit_zone_prio, prev_hit_zone_priority_function = hit_zone_priority[prev_hit_zone_name], hit_zone_priority_functions[prev_hit_zone_name]
+
+					if prev_hit_zone_priority_function then
+						prev_hit_zone_prio = prev_hit_zone_priority_function(hit_unit, player_position, prev_hit_zone_prio)
+					end
+
+					local disregarded_result = result
+
+					if new_hit_zone_prio < prev_hit_zone_prio then
+						unit_best_result[hit_unit] = i
+						disregarded_result = previous_result
+					end
 				end
 
-				local previous_result = sweep_results[previous_result_id]
-				local prev_actor = previous_result.actor
-				local prev_hit_zone = HitZone.get(hit_unit, prev_actor)
-				local new_hit_zone_name = hit_zone.name
-				local new_hit_zone_prio = hit_zone_priority[new_hit_zone_name]
-				local new_hit_zone_priority_function = hit_zone_priority_functions[new_hit_zone_name]
-
-				if new_hit_zone_priority_function then
-					new_hit_zone_prio = new_hit_zone_priority_function(hit_unit, player_position, new_hit_zone_prio)
-				end
-
-				local prev_hit_zone_name = prev_hit_zone.name
-				local prev_hit_zone_prio = hit_zone_priority[prev_hit_zone_name]
-				local prev_hit_zone_priority_function = hit_zone_priority_functions[prev_hit_zone_name]
-
-				if prev_hit_zone_priority_function then
-					prev_hit_zone_prio = prev_hit_zone_priority_function(hit_unit, player_position, prev_hit_zone_prio)
-				end
-
-				local disregarded_result = result
-
-				if new_hit_zone_prio < prev_hit_zone_prio then
-					unit_best_result[hit_unit] = i
-					disregarded_result = previous_result
-				end
-			else
-				unit_best_result[hit_unit] = i
+				break
 			end
+
+			unit_best_result[hit_unit] = i
 		until true
 	end
 
@@ -1065,7 +1093,7 @@ ActionSweep._context_aware_sweep_order = function (self, unit_table, sweep_units
 		local y_diff = math.abs(Vector3.dot(hit_offset, fp_up))
 		local epsilon = 0.01
 		local direct_hit = x_diff <= half_width + epsilon and y_diff <= half_height + epsilon
-		local utility = nil
+		local utility
 
 		if direct_hit then
 			utility = math.huge
@@ -1076,6 +1104,7 @@ ActionSweep._context_aware_sweep_order = function (self, unit_table, sweep_units
 			local angle_y_diff = math.atan(y_diff / distance)
 			local x_offset = math.max(angle_x_diff - angle_width, epsilon) / math.log(angle_width)
 			local y_offset = math.max(angle_y_diff - angle_height, epsilon) / math.log(angle_width)
+
 			utility = 1 / (x_offset * y_offset)
 		end
 
@@ -1105,11 +1134,12 @@ ActionSweep._current_max_hit_mass = function (self, weapon_action_component)
 end
 
 local attack_intensities = {
-	ranged = 15
+	ranged = 15,
 }
 
 ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal, action_sweep_component)
 	hit_units[hit_unit] = true
+
 	local critical_strike_component = self._critical_strike_component
 	local weapon = self._weapon
 	local is_server = self._is_server
@@ -1129,8 +1159,10 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local target_is_level_unit = Unit.level(hit_unit) ~= nil
 	local target_is_character = Breed.is_character(target_breed_or_nil) or Breed.count_as_character(target_breed_or_nil)
 	local target_is_environment = not target_is_character
+
 	target_index = target_index + 1
 	num_hit_enemies = num_hit_enemies + 1
+
 	local use_reduced_hit_mass = buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local ignore_armor_aborts_attack = is_critical_strike and buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack_critical_strike) or buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack) or use_reduced_hit_mass
 	local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
@@ -1138,9 +1170,11 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local attack_type = AttackSettings.attack_types.melee
 	local target_armor = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name_or_nil, attack_type)
 	local action_armor_hit_mass_mod = action_settings.action_armor_hit_mass_mod and action_settings.action_armor_hit_mass_mod[target_armor]
-	local amount_of_mass_hit = nil
+	local amount_of_mass_hit
 	local melee_infinite_cleave_on_headshot = buff_extension:has_keyword(buff_keywords.melee_infinite_cleave_on_headshot)
+
 	amount_of_mass_hit = current_amount_of_mass_hit + target_hit_mass * (action_armor_hit_mass_mod or 1)
+
 	local aim_assist_ramp_template = action_settings.aim_assist_ramp_template
 
 	if amount_of_mass_hit > 0 and aim_assist_ramp_template and aim_assist_ramp_template.reset_on_attack then
@@ -1153,7 +1187,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local breed_aborts_attack = not hit_ragdoll and target_is_alive and _breed_aborts_attack(action_settings, is_special_active, target_breed_or_nil)
 	local max_mass_hit = max_hit_mass <= amount_of_mass_hit
 	local abort_attack = max_mass_hit or armor_aborts_attack or breed_aborts_attack
-	local damage_profile, damage_type = nil
+	local damage_profile, damage_type
 
 	if is_special_active then
 		damage_profile = abort_attack and self._damage_profile_special_active_on_abort or self._damage_profile_special_active
@@ -1167,7 +1201,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		damage_type = damage_type[target_index] or damage_type.default
 	end
 
-	local damage, result, damage_efficiency, _ = nil
+	local damage, result, damage_efficiency, _
 
 	if not self._unit_data_extension.is_resimulating then
 		local is_damagable = Health.is_damagable(hit_unit)
@@ -1234,8 +1268,8 @@ local impact_fx_data = {
 	will_be_predicted = true,
 	source_parameters = {
 		hit_mass_percentage = 0,
-		num_melee_hits = 0
-	}
+		num_melee_hits = 0,
+	},
 }
 
 ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_actor, hit_position, hit_normal, attack_direction, target_index, num_hit_enemies, hit_zone_name_or_nil, abort_attack, amount_of_mass_hit, damage_type, is_special_active)
@@ -1245,13 +1279,15 @@ ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_a
 	local source_parameters = impact_fx_data.source_parameters
 	local max_hit_mass = self:_current_max_hit_mass(self._weapon_action_component)
 	local hit_mass_percentage = max_hit_mass == 0 and 1 or 1 - math.clamp01(amount_of_mass_hit / max_hit_mass)
+
 	source_parameters.hit_mass_percentage = hit_mass_percentage
 	source_parameters.num_melee_hits = math.min(target_index, 10)
+
 	local action_settings = self._action_settings
 	local herding_template = action_settings.herding_template
 	local is_critical_strike = self._critical_strike_component.is_active
 	local auto_completed_action = self._auto_completed
-	local wounds_shape = nil
+	local wounds_shape
 
 	if is_special_active then
 		wounds_shape = action_settings.wounds_shape_special_active
@@ -1268,7 +1304,7 @@ ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_a
 end
 
 ActionSweep._modify_sweep_position = function (self, position, rotation, weapon_half_extents, action_settings)
-	local dir, distance = nil
+	local dir, distance
 
 	if action_settings.spline_settings.matrices_data_location then
 		distance = weapon_half_extents.z
@@ -1341,7 +1377,7 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 		for i = 1, #sweep_results2 do
 			local info = sweep_results2[i]
 			local this_actor = info.actor
-			local found = nil
+			local found
 
 			for j = 1, num_results1 do
 				if SWEEP_RESULTS[j].actor == this_actor then
@@ -1360,7 +1396,7 @@ ActionSweep._run_sweeps = function (self, start_position, start_rotation, end_po
 		for i = 1, #sweep_results3 do
 			local info = sweep_results3[i]
 			local this_actor = info.actor
-			local found = nil
+			local found
 
 			for j = 1, num_results1 + num_results2 do
 				if SWEEP_RESULTS[j].actor == this_actor then
@@ -1389,8 +1425,7 @@ ActionSweep._weapon_half_extents = function (self, weapon_template, action_setti
 	local height_mod = action_settings.height_mod and action_settings.height_mod * ActionSweepSettings.sweep_height_mod or ActionSweepSettings.sweep_height_mod
 	local range_mod = action_settings.range_mod and action_settings.range_mod * ActionSweepSettings.sweep_range_mod or ActionSweepSettings.sweep_range_mod
 	local weapon_box = action_settings.weapon_box or weapon_template.weapon_box
-	local _ = nil
-	local weapon_half_extents = Vector3(weapon_box[1], weapon_box[2], weapon_box[3])
+	local _, weapon_half_extents = nil, Vector3(weapon_box[1], weapon_box[2], weapon_box[3])
 
 	if action_settings.spline_settings.matrices_data_location then
 		weapon_half_extents.x = weapon_half_extents.x * width_mod
@@ -1406,7 +1441,7 @@ ActionSweep._weapon_half_extents = function (self, weapon_template, action_setti
 end
 
 ActionSweep._play_hit_animations = function (self, action_settings, abort_attack, armor_aborts_attack, special_active)
-	local first_person_hit_anim, third_person_hit_anim = nil
+	local first_person_hit_anim, third_person_hit_anim
 
 	if special_active and action_settings.no_hit_stop_on_active then
 		return

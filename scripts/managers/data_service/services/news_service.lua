@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/news_service.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local NewsService = class("NewsService")
 
@@ -12,7 +14,7 @@ local function to_news_item(mail)
 		mark_unread = mail.mark_unread,
 		is_read = function ()
 			return mail.isRead
-		end
+		end,
 	}
 
 	table.merge(news, properties)
@@ -41,7 +43,7 @@ NewsService.init = function (self, backend_interface)
 end
 
 NewsService.get_news = function (self)
-	local promise = nil
+	local promise
 
 	if self._cached_news then
 		promise = Promise.resolved(self._cached_news)

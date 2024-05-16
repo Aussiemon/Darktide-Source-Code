@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_view/credits_view.lua
+
 local Definitions = require("scripts/ui/views/credits_view/credits_view_definitions")
 local Credits = require("scripts/ui/views/credits_view/credits")
 local CreditsViewSettings = require("scripts/ui/views/credits_view/credits_view_settings")
@@ -63,11 +65,15 @@ CreditsView._handle_credits = function (self, dt, t, input_service, layer)
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local current_offset = self._should_stop and self._current_offset or math.min(0, self._current_offset - self._speed_multiplier * dt)
+
 	self._current_offset = current_offset
+
 	local ui_scenegraph = self._ui_scenegraph
 	local h = RESOLUTION_LOOKUP.height
 
@@ -75,7 +81,7 @@ CreditsView._handle_credits = function (self, dt, t, input_service, layer)
 
 	local credit_entries = credits_settigns.entries
 	local style_settings = view_settings.style_settings
-	local widget, content, style = nil
+	local widget, content, style
 
 	for i = 1, self._num_credits do
 		local entry = credit_entries[i]
@@ -142,7 +148,7 @@ CreditsView._handle_carousel = function (self, dt, t)
 		local img_index = self._carousel_start_index + 1 <= #view_settings.carousel and self._carousel_start_index + 1 or 1
 
 		self:_start_animation("backgorund_transition", bg_widget, {
-			new_image = view_settings.carousel[img_index]
+			new_image = view_settings.carousel[img_index],
 		})
 
 		self._carousel_start_index = img_index
@@ -152,6 +158,7 @@ end
 
 CreditsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 60)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do

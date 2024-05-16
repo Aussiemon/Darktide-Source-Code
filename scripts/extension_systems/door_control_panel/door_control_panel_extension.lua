@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/door_control_panel/door_control_panel_extension.lua
+
 local DoorControlPanelExtension = class("DoorControlPanelExtension")
 local STATES = table.enum("active", "inactive")
 

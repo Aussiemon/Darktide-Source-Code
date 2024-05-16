@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_pounced.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
@@ -15,7 +17,7 @@ local SFX_SOURCE = "head"
 local STINGER_ENTER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
-	stinger_type = "pounced"
+	stinger_type = "pounced",
 }
 local VCE_ALIAS = "scream_long_vce"
 
@@ -24,6 +26,7 @@ PlayerCharacterStatePounced.init = function (self, character_state_init_context,
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.disabling_type = "none"
@@ -36,20 +39,24 @@ end
 PlayerCharacterStatePounced.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion_steering_component = self._locomotion_steering_component
 	local disabled_state_input = self._disabled_state_input
+
 	locomotion_steering_component.move_method = "script_driven"
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
 	locomotion_steering_component.calculate_fall_velocity = true
 	self._movement_state_component.method = "idle"
+
 	local pouncing_unit = disabled_state_input.disabling_unit
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
 	local unit_data_extension = ScriptUnit.extension(pouncing_unit, "unit_data_system")
+
 	self._pouncing_unit_breed = unit_data_extension:breed()
 
 	Interrupt.ability_and_action(t, unit, "pounced", nil)
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
 
 	local disabled_character_state_component = self._disabled_character_state_component
+
 	disabled_character_state_component.is_disabled = true
 	disabled_character_state_component.disabling_unit = pouncing_unit
 	disabled_character_state_component.disabling_type = "pounced"
@@ -70,6 +77,7 @@ PlayerCharacterStatePounced.on_enter = function (self, unit, dt, t, previous_sta
 	end
 
 	self._entered_state_t = t
+
 	local animation_extension = self._animation_extension
 
 	PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
@@ -79,9 +87,11 @@ end
 PlayerCharacterStatePounced.on_exit = function (self, unit, t, next_state)
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.disabling_type = "none"
+
 	local first_person_mode_component = self._first_person_mode_component
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
 
@@ -161,10 +171,11 @@ PlayerCharacterStatePounced._check_transition = function (self, unit, t, next_st
 	if not self._disabled_state_input.disabling_unit then
 		if not self._stand_up_duration then
 			self._stand_up_duration = t + STAND_UP_DURATION
+
 			local animation_extension = self._animation_extension
 
 			animation_extension:anim_event("pinned_stand_up")
-		elseif self._stand_up_duration <= t then
+		elseif t >= self._stand_up_duration then
 			self._stand_up_duration = nil
 
 			return "walking"

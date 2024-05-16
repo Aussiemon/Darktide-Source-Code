@@ -1,16 +1,20 @@
+﻿-- chunkname: @scripts/extension_systems/outline/outline_system.lua
+
 require("scripts/extension_systems/outline/player_unit_outline_extension")
 
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
 local OutlineSystem = class("OutlineSystem", "ExtensionSystemBase")
+
 OutlineSystem.system_extensions = {
 	"MinionOutlineExtension",
 	"PropOutlineExtension",
-	"PlayerUnitOutlineExtension"
+	"PlayerUnitOutlineExtension",
 }
+
 local RPCS = {
 	"rpc_add_outline_to_unit",
 	"rpc_remove_outline_from_unit",
-	"rpc_remove_all_outlines_from_unit"
+	"rpc_remove_all_outlines_from_unit",
 }
 
 OutlineSystem.init = function (self, context, system_init_data, system_name, _, ...)
@@ -37,7 +41,7 @@ end
 
 OutlineSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	local settings = OutlineSettings[extension_name]
-	local extension = nil
+	local extension
 
 	if extension_name == "PlayerUnitOutlineExtension" then
 		extension = OutlineSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
@@ -52,6 +56,7 @@ OutlineSystem.on_add_extension = function (self, world, unit, extension_name, ex
 	extension.outlines = {}
 	extension.visible_material_layers = nil
 	self._unit_extension_data[unit] = extension
+
 	local breed = extension_init_data.breed
 
 	if breed then
@@ -123,6 +128,7 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 
 	if outline_index then
 		local outline = outlines[outline_index]
+
 		outline.stack_count = outline.stack_count + 1
 
 		return
@@ -133,13 +139,15 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 		name = outline_name,
 		priority = setting.priority,
 		material_layers = setting.material_layers,
-		visibility_check = setting.visibility_check
+		visibility_check = setting.visibility_check,
 	}
+
 	outlines[#outlines + 1] = outline
 
 	table.sort(outlines, _sort_outlines_by_priority)
 
 	self._total_num_outlines = self._total_num_outlines + 1
+
 	local top_outline = outlines[1]
 
 	if top_outline.name == outline_name then

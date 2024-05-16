@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/node_builder_view_base/utilities/node_layout.lua
+
 local NodeLayout = {}
 
 NodeLayout.node_by_name = function (node_layout, name)
@@ -25,6 +27,7 @@ NodeLayout.num_steps_to_start_recursive = function (node_layout, node, ignore_li
 	end
 
 	ignore_list[node.widget_name] = true
+
 	local parents = node.parents
 
 	for i = 1, #parents do

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/party/party_manager_dummy.lua
+
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 
@@ -139,17 +141,17 @@ end
 
 PartyManagerDummy.mission_matchmaking_started = function (self, mission_id)
 	if not Managers.ui:view_active("lobby_view") then
-		local transition_time = nil
+		local transition_time
 		local close_previous = false
 		local close_all = true
-		local close_transition_time = nil
+		local close_transition_time
 		local mission_name = NetworkLookup.missions[mission_id]
 		local view_context = {
 			preview = true,
 			mission_data = {
 				circumstance_name = "default",
-				mission_name = mission_name
-			}
+				mission_name = mission_name,
+			},
 		}
 
 		Managers.ui:open_view("lobby_view", transition_time, close_previous, close_all, close_transition_time, view_context)
@@ -178,9 +180,12 @@ PartyManagerDummy.set_presence = function (self, presence_name)
 	end
 
 	local settings = PresenceSettings.settings[presence_name]
+
 	self._presence_name = presence_name
 	self._presence_id = NetworkLookup.presence_names[presence_name]
+
 	local hud_localization = settings.hud_localization
+
 	self._presence_hud_text = Managers.localization:localize(hud_localization)
 end
 

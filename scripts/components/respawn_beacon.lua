@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/respawn_beacon.lua
+
 local RespawnBeaconQueries = require("scripts/extension_systems/respawn_beacon/utilities/respawn_beacon_queries")
 local SharedNav = require("scripts/components/utilities/shared_nav")
 local RespawnBeacon = component("RespawnBeacon")
@@ -23,7 +25,9 @@ RespawnBeacon.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
 	self._physics_world = World.physics_world(world)
 	self._line_object = World.create_line_object(world)
@@ -156,7 +160,7 @@ RespawnBeacon._editor_debug_draw = function (self, unit)
 end
 
 RespawnBeacon._draw_text = function (self, unit, text, success)
-	local text_color = nil
+	local text_color
 
 	if success == true then
 		text_color = Color.green()
@@ -167,6 +171,7 @@ RespawnBeacon._draw_text = function (self, unit, text, success)
 	local text_position = Unit.local_position(unit, 1) + Vector3.up() * 3
 	local translation_matrix = Matrix4x4.from_translation(text_position)
 	local text_id = Gui.text_3d(self._gui, text, FONT_MATERIAL, FONT_SIZE, FONT, translation_matrix, Vector3.zero(), 3, text_color)
+
 	self._debug_text_id = text_id
 end
 
@@ -222,6 +227,7 @@ RespawnBeacon._unbox_positions = function (self)
 	end
 
 	positions = self._on_nav_positions
+
 	local on_nav_positions = {}
 
 	for i = 1, #positions do
@@ -229,6 +235,7 @@ RespawnBeacon._unbox_positions = function (self)
 	end
 
 	positions = self._fitting_positions
+
 	local fitting_positions = {}
 
 	for i = 1, #positions do
@@ -236,6 +243,7 @@ RespawnBeacon._unbox_positions = function (self)
 	end
 
 	positions = self._volume_positions
+
 	local volume_positions = {}
 
 	for i = 1, #positions do
@@ -266,26 +274,26 @@ end
 
 RespawnBeacon.component_data = {
 	side = {
-		value = "heroes",
-		ui_type = "combo_box",
 		ui_name = "Side",
+		ui_type = "combo_box",
+		value = "heroes",
 		options_keys = {
 			"Heroes",
-			"Villains"
+			"Villains",
 		},
 		options_values = {
 			"heroes",
-			"villains"
-		}
+			"villains",
+		},
 	},
 	debug_ignore_check_distances = {
+		ui_name = "Ignore Debug Check Distances",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Ignore Debug Check Distances"
 	},
 	extensions = {
-		"RespawnBeaconExtension"
-	}
+		"RespawnBeaconExtension",
+	},
 }
 
 return RespawnBeacon

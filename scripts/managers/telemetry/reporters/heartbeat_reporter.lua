@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/heartbeat_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local HeartbeatReporter = class("HeartbeatReporter")
 local SAMPLE_INTERVAL = 300
@@ -13,7 +15,7 @@ HeartbeatReporter.destroy = function (self)
 end
 
 HeartbeatReporter.update = function (self, dt, t)
-	if SAMPLE_INTERVAL < t - self._last_sample_time then
+	if t - self._last_sample_time > SAMPLE_INTERVAL then
 		Managers.telemetry_events:heartbeat()
 
 		self._last_sample_time = math.floor(t)

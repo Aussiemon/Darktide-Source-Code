@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/xasync/xasync_manager.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local XAsyncManager = class("XAsyncManager")
 
@@ -11,9 +13,10 @@ end
 
 XAsyncManager.wrap = function (self, async_block, debug_name)
 	local p = Promise:new()
+
 	self._async_blocks[async_block] = {
 		promise = p,
-		debug_name = debug_name
+		debug_name = debug_name,
 	}
 
 	return p
@@ -29,7 +32,7 @@ XAsyncManager.release = function (self, async_block)
 		end
 
 		promise:reject({
-			HRESULT.E_ABORT
+			HRESULT.E_ABORT,
 		})
 	end
 
@@ -54,13 +57,15 @@ XAsyncManager.update = function (self, dt)
 
 		if hr == HRESULT.S_OK then
 			data.promise:resolve(async_block)
-		elseif hr ~= HRESULT.E_PENDING then
+		elseif hr == HRESULT.E_PENDING then
+			-- Nothing
+		else
 			if data.debug_name then
 				Log.error("XAsyncManager", "Rejecting async_block with debug_name %s, error code 0x%x", data.debug_name, tostring(hr))
 			end
 
 			data.promise:reject({
-				hr
+				hr,
 			})
 		end
 	end
@@ -74,7 +79,7 @@ XAsyncManager.destroy = function (self)
 			end
 
 			data.promise:reject({
-				HRESULT.E_ABORT
+				HRESULT.E_ABORT,
 			})
 		end
 

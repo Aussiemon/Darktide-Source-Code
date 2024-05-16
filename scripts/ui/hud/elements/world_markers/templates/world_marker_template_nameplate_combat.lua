@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_combat.lua
+
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -5,38 +7,39 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	400,
-	20
+	20,
 }
 local arrow_size = {
 	60,
-	60
+	60,
 }
 local icon_size = {
 	128,
-	128
+	128,
 }
+
 template.size = size
 template.name = "nameplate_party"
 template.unit_node = "player_name"
 template.position_offset = {
 	0,
 	0,
-	-0.2
+	-0.2,
 }
 template.check_line_of_sight = false
 template.max_distance = 500
 template.screen_clamp = true
 template.screen_margins = {
 	down = 0.23148148148148148,
-	up = 0.23148148148148148,
 	left = 0.234375,
-	right = 0.234375
+	right = 0.234375,
+	up = 0.23148148148148148,
 }
 template.scale_settings = {
-	scale_to = 1,
-	scale_from = 0.8,
 	distance_max = 20,
-	distance_min = 10
+	distance_min = 10,
+	scale_from = 0.8,
+	scale_to = 1,
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -47,81 +50,81 @@ template.create_widget_defintion = function (template, scenegraph_id)
 
 	return UIWidget.create_definition({
 		{
-			style_id = "header_text",
 			pass_type = "text",
-			value_id = "header_text",
+			style_id = "header_text",
 			value = "<header_text>",
+			value_id = "header_text",
 			style = {
 				horizontal_alignment = "center",
-				text_vertical_alignment = "center",
 				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
 				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					2
+					2,
 				},
 				text_color = header_font_color,
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
 				default_font_size = header_font_settings.font_size,
 				default_text_color = header_font_color,
-				size = size
+				size = size,
 			},
 			visibility_function = function (content, style)
 				return not content.is_clamped
-			end
+			end,
 		},
 		{
-			style_id = "icon_text",
 			pass_type = "text",
-			value_id = "icon_text",
+			style_id = "icon_text",
 			value = "<icon_text>",
+			value_id = "icon_text",
 			style = {
+				drop_shadow = false,
 				font_size = 32,
 				horizontal_alignment = "center",
-				text_vertical_alignment = "center",
 				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
 				vertical_alignment = "center",
-				drop_shadow = false,
 				offset = {
 					0,
 					-3,
-					2
+					2,
 				},
 				font_type = header_font_settings.font_type,
 				default_font_size = header_font_settings.font_size,
 				text_color = header_font_color,
 				default_text_color = header_font_color,
-				size = icon_size
+				size = icon_size,
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
-			end
+			end,
 		},
 		{
-			value_id = "arrow",
 			pass_type = "rotated_texture",
-			value = "content/ui/materials/hud/interactions/frames/direction",
 			style_id = "arrow",
+			value = "content/ui/materials/hud/interactions/frames/direction",
+			value_id = "arrow",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				size = arrow_size,
 				offset = {
 					0,
 					0,
-					5
+					5,
 				},
-				color = Color.ui_hud_green_super_light(255, true)
+				color = Color.ui_hud_green_super_light(255, true),
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end
-		}
+			end,
+		},
 	}, scenegraph_id)
 end
 
@@ -134,7 +137,9 @@ local function _cb_event_titles_in_mission_setting_changed(self, option_type)
 		local player_slot = data:slot()
 		local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 		local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
+
 		header_text = color_string .. "{#reset()} " .. data:name()
+
 		local profile = data:profile()
 		local title = profile and ProfileUtils.character_title(profile)
 
@@ -145,6 +150,7 @@ local function _cb_event_titles_in_mission_setting_changed(self, option_type)
 		local player_slot = data:slot()
 		local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 		local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
+
 		header_text = color_string .. "{#reset()} " .. data:name()
 
 		if option_type == "name_and_title" then
@@ -159,6 +165,7 @@ local function _cb_event_titles_in_mission_setting_changed(self, option_type)
 
 	local widget = marker.widget
 	local content = widget.content
+
 	content.header_text = header_text
 end
 
@@ -234,11 +241,14 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local header_text_id = "header_text"
 		local header_style = style[header_text_id]
 		local header_default_font_size = header_style.default_font_size
+
 		header_style.font_size = header_style.default_font_size * scale
 		content.line_of_sight_progress = line_of_sight_progress
 		widget.alpha_multiplier = 1
 		content.edge_clamp_progress = edge_clamp_progress
+
 		local clamped_alpha = 255 - 255 * edge_clamp_progress
+
 		style.icon_text.text_color[1] = distance > 15 and clamped_alpha or 0
 		style.arrow.color[1] = distance > 15 and clamped_alpha or 0
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/mood_handler/mood_handler.lua
+
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local moods = MoodSettings.moods
 local mood_types = MoodSettings.mood_types
@@ -10,6 +12,7 @@ MoodHandler.init = function (self, world, player)
 	self._player = player
 	self._is_local_human = not player.remote and player:is_human_controlled()
 	self._wwise_world = Wwise.wwise_world(world)
+
 	local shading_environments_resources = {}
 	local created_shading_environments = {}
 
@@ -18,6 +21,7 @@ MoodHandler.init = function (self, world, player)
 
 		if resource_name then
 			local resource = World.create_shading_environment_resource(world, resource_name)
+
 			shading_environments_resources[resource_name] = resource
 			created_shading_environments[#created_shading_environments + 1] = resource
 		end
@@ -179,6 +183,7 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 
 				local sound_event = looping_sound_start_events[i]
 				local _, source_id = WwiseWorld.trigger_resource_event(wwise_world, sound_event)
+
 				self._sfx_source_ids[added_mood][i][sound_event] = source_id
 			end
 		end
@@ -267,6 +272,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 		if particle_effects_looping then
 			for i = 1, #particle_effects_looping do
 				local looping_particle_id = self:_spawn_particles(particle_effects_looping[i])
+
 				looping_particles[i] = looping_particle_id
 			end
 		end
@@ -290,6 +296,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 			World.destroy_particles(world, particle_id)
 
 			looping_particles[i] = nil
+
 			local mood = moods[removing_mood]
 			local particles_material_scalars = mood.particles_material_scalars
 
@@ -310,6 +317,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 			World.destroy_particles(world, particle_id)
 
 			looping_particles[i] = nil
+
 			local mood = moods[removed_mood]
 			local particles_material_scalars = mood.particles_material_scalars
 
@@ -357,7 +365,7 @@ MoodHandler._blend_list = function (self, blend_list, moods_data)
 		local has_shading_environment = settings.shading_environment
 
 		if is_active and has_shading_environment then
-			local weight = nil
+			local weight
 
 			if mood_data.status == mood_status.active then
 				local blend_in_time = settings.blend_in_time
@@ -366,6 +374,7 @@ MoodHandler._blend_list = function (self, blend_list, moods_data)
 					weight = 1
 				else
 					local time_alive = math.min(game_t - mood_data.entered_t, blend_in_time)
+
 					weight = math.clamp(time_alive / blend_in_time, 0, 1)
 				end
 			elseif mood_data.status == mood_status.removing then
@@ -375,6 +384,7 @@ MoodHandler._blend_list = function (self, blend_list, moods_data)
 					weight = 1
 				else
 					local time_in_remove = math.min(game_t - mood_data.removed_t, blend_out_time)
+
 					weight = math.clamp(1 - time_in_remove / blend_out_time, 0, 1)
 				end
 			end
@@ -382,6 +392,7 @@ MoodHandler._blend_list = function (self, blend_list, moods_data)
 			local blend_mask = settings.blend_mask
 			local resource_name = settings.shading_environment
 			local shading_env_resouce = self._shading_environments_resources[resource_name]
+
 			blend_list[#blend_list + 1] = shading_env_resouce
 			blend_list[#blend_list + 1] = weight
 			blend_list[#blend_list + 1] = blend_mask

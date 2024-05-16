@@ -1,8 +1,12 @@
+﻿-- chunkname: @scripts/utilities/attack/hit_zone.lua
+
 local Unit_actor = Unit.actor
 local HitZone = {}
 local hit_zone_names = table.enum("head", "torso", "lower_tail", "upper_tail", "tongue", "upper_left_arm", "lower_left_arm", "upper_right_arm", "lower_right_arm", "upper_left_leg", "lower_left_leg", "upper_right_leg", "lower_right_leg", "afro", "center_mass", "captain_void_shield", "corruptor_armor", "shield", "weakspot", "right_shoulderguard", "delayed_gib")
+
 HitZone.hit_zone_names = hit_zone_names
-local _hit_zone_position = nil
+
+local _hit_zone_position
 
 HitZone.get = function (unit, actor)
 	local unit_data_ext = ScriptUnit.has_extension(unit, "unit_data_system")
@@ -43,6 +47,7 @@ HitZone.initialize_lookup = function (unit, hit_zones)
 		local create_on_startup = hit_zone.create_on_startup
 		local actors = hit_zone.actors
 		local actors_lookup = {}
+
 		hit_zone_actors_lookup[hit_zone.name] = actors_lookup
 
 		for jj = 1, #actors do
@@ -53,6 +58,7 @@ HitZone.initialize_lookup = function (unit, hit_zones)
 			end
 
 			local actor = Unit_actor(unit, actor_name)
+
 			hit_zone_lookup[actor] = hit_zone
 			actors_lookup[#actors_lookup + 1] = actor_name
 		end
@@ -69,6 +75,7 @@ HitZone.destroy_hit_zone = function (unit, hit_zone_lookup, hit_zone_actors_look
 	for ii = 1, #actor_names do
 		local actor_name = actor_names[ii]
 		local actor = Unit_actor(unit, actor_name)
+
 		hit_zone_lookup[actor] = nil
 
 		destroy_actor(unit, actor)
@@ -89,11 +96,14 @@ end
 HitZone.hit_zone_center_of_mass = function (target_unit, hit_zone_name, average_positions)
 	local target_unit_data = ScriptUnit.extension(target_unit, "unit_data_system")
 	local target_hitzone_actors_names = target_unit_data:hit_zone_actors(hit_zone_name)
+
 	target_hitzone_actors_names = target_hitzone_actors_names or target_unit_data:hit_zone_actors(hit_zone_names.center_mass)
-	local position = nil
+
+	local position
 
 	if average_positions then
 		position = Vector3.zero()
+
 		local num_actors = #target_hitzone_actors_names
 
 		for ii = 1, num_actors do

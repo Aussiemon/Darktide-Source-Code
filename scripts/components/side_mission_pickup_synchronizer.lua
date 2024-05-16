@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/side_mission_pickup_synchronizer.lua
+
 local SideMissionPickupSynchronizer = component("SideMissionPickupSynchronizer")
 
 SideMissionPickupSynchronizer.init = function (self, unit)
@@ -32,13 +34,13 @@ end
 
 SideMissionPickupSynchronizer.component_data = {
 	automatic_start = {
+		ui_name = "Auto Start On Level Spawned",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Auto Start On Level Spawned"
 	},
 	extensions = {
-		"SideMissionPickupSynchronizerExtension"
-	}
+		"SideMissionPickupSynchronizerExtension",
+	},
 }
 
 return SideMissionPickupSynchronizer

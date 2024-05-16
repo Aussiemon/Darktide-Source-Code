@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/minion/minion_gibbing.lua
+
 local Ailment = require("scripts/utilities/ailment")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -16,7 +18,7 @@ local GibbingThresholds = GibbingSettings.gibbing_thresholds
 local GibbingTypes = GibbingSettings.gibbing_types
 local GibPushForceMultipliers = GibbingSettings.gib_push_force_multipliers
 local GibMaxExtraHitZoneGibs = GibbingSettings.max_extra_hit_zone_gibs
-local _apply_ailment_material_effect, _apply_push_forces, _create_inverse_root_node_bind_pose_lookup, _destroy_ragdoll_actors, _disable_hit_zone_actors, _get_gibbing_template, _parse_gib_template_entry, _play_root_sound, _play_gib_fx, _scale_node, _spawn_gib, _spawn_stump, _modify_gib_push_direction = nil
+local _apply_ailment_material_effect, _apply_push_forces, _create_inverse_root_node_bind_pose_lookup, _destroy_ragdoll_actors, _disable_hit_zone_actors, _get_gibbing_template, _parse_gib_template_entry, _play_root_sound, _play_gib_fx, _scale_node, _spawn_gib, _spawn_stump, _modify_gib_push_direction
 local INVERSE_ROOT_NODE_BIND_POSE_LOOKUP_BY_BREED_NAME = {}
 local MinionGibbing = class("MinionGibbing")
 
@@ -38,6 +40,7 @@ MinionGibbing.init = function (self, unit, breed, world, wwise_world, gib_templa
 
 	if optional_wounds_extension then
 		self._wounds_data = optional_wounds_extension:wounds_data()
+
 		local breed_name = breed.name
 		local inverse_root_node_bind_pose_lookup = INVERSE_ROOT_NODE_BIND_POSE_LOOKUP_BY_BREED_NAME[breed_name]
 
@@ -61,6 +64,7 @@ MinionGibbing.spawn_gib_from_queue = function (self, unit, gib_settings, gib_pos
 	Managers.state.out_of_bounds:register_soft_oob_unit(gib_unit, self, "_update_soft_oob")
 
 	local hit_zone_gibs = self._gibs[hit_zone_name]
+
 	hit_zone_gibs[#hit_zone_gibs + 1] = gib_unit
 
 	if gib_flesh_unit then
@@ -133,6 +137,7 @@ function _parse_gib_template_entry(entry)
 
 	if gib_settings then
 		local gib_spawn_node_name = gib_settings.gib_spawn_node
+
 		TEMP_GIB_NODE_NAMES[gib_spawn_node_name] = true
 	end
 
@@ -140,6 +145,7 @@ function _parse_gib_template_entry(entry)
 
 	if stump_settings then
 		local stump_attach_node_name = stump_settings.stump_attach_node
+
 		TEMP_GIB_NODE_NAMES[stump_attach_node_name] = true
 	end
 end
@@ -177,6 +183,7 @@ function _create_inverse_root_node_bind_pose_lookup(unit, gib_template)
 		local node_world_bind_pose = Unit.world_pose(unit, node_index)
 		local inv_node_world_bind_pose = Matrix4x4.inverse(node_world_bind_pose)
 		local inv_root_node_bind_pose = Matrix4x4.multiply(root_world_bind_pose, inv_node_world_bind_pose)
+
 		inverse_root_node_bind_pose_lookup[node_index] = Matrix4x4Box(inv_root_node_bind_pose)
 	end
 
@@ -242,13 +249,8 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 	if optional_is_critical_strike then
 		local critical_strike_settings = damage_profile.critical_strike
 
-		if critical_strike_settings then
-			gibbing_power = critical_strike_settings.gibbing_power or gibbing_power
-		end
-
-		if critical_strike_settings then
-			gibbing_type = critical_strike_settings.gibbing_type or gibbing_type
-		end
+		gibbing_power = critical_strike_settings and critical_strike_settings.gibbing_power or gibbing_power
+		gibbing_type = critical_strike_settings and critical_strike_settings.gibbing_type or gibbing_type
 	end
 
 	local gibs = self._gibs
@@ -279,15 +281,15 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 	local visual_loadout_extension = self._visual_loadout_extension
 	local hit_zone_gibs = {}
 	local ailment_effect = visual_loadout_extension:ailment_effect()
-	local world = self._world
-	local wwise_world = self._wwise_world
-	local wounds_data = self._wounds_data
-	local inverse_root_node_bind_pose_lookup = self._inverse_root_node_bind_pose_lookup
+	local world, wwise_world = self._world, self._wwise_world
+	local wounds_data, inverse_root_node_bind_pose_lookup = self._wounds_data, self._inverse_root_node_bind_pose_lookup
 	local stump_settings = hit_zone_gib_template.stump_settings
 
 	if stump_settings then
 		local stump_unit, stump_attach_node = _spawn_stump(minion_unit, stump_settings, world, self._gib_variations)
+
 		hit_zone_gibs[#hit_zone_gibs + 1] = stump_unit
+
 		local dissolve_extension = self._dissolve_extension
 
 		if dissolve_extension then
@@ -342,6 +344,7 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 	end
 
 	gibs[hit_zone_name] = hit_zone_gibs
+
 	local extra_hit_zone_gibs = hit_zone_gib_template.extra_hit_zone_gibs
 
 	if extra_hit_zone_gibs then
@@ -433,7 +436,7 @@ function _get_gibbing_template(gib_template, gibs, hit_zone_name, gibbing_type, 
 			local template = conditional_gibbing[i]
 			local condition = template.condition
 			local already_gibbed_condition = condition.already_gibbed
-			local conditional_template = nil
+			local conditional_template
 
 			if already_gibbed_condition then
 				if gibs[already_gibbed_condition] ~= nil then
@@ -464,7 +467,7 @@ function _spawn_stump(minion_unit, stump_settings, world, gib_variations_or_nil)
 	local stump_unit_name = stump_settings.stump_unit
 
 	if type(stump_unit_name) == "table" then
-		local wanted_variation = nil
+		local wanted_variation
 
 		if gib_variations_or_nil then
 			for i = 1, #gib_variations_or_nil do
@@ -496,7 +499,7 @@ function _spawn_gib(minion_unit, gib_settings, world, gib_variations_or_nil, pos
 	local gib_unit_name = gib_settings.gib_unit
 
 	if type(gib_unit_name) == "table" then
-		local wanted_variation = nil
+		local wanted_variation
 
 		if gib_variations_or_nil then
 			for i = 1, #gib_variations_or_nil do
@@ -518,7 +521,7 @@ function _spawn_gib(minion_unit, gib_settings, world, gib_variations_or_nil, pos
 	local gib_position = position or Unit.world_position(minion_unit, gib_node)
 	local gib_rotation = rotation or Unit.world_rotation(minion_unit, gib_node)
 	local gib_unit = Managers.state.unit_spawner:spawn_unit(gib_unit_name, gib_position, gib_rotation)
-	local gib_flesh_unit = nil
+	local gib_flesh_unit
 	local gib_flesh_unit_name = gib_settings.gib_flesh_unit
 
 	if gib_flesh_unit_name then
@@ -645,6 +648,7 @@ function _play_gib_fx(gib_unit, settings, world, wwise_world)
 
 		if type(particle_effect) == "table" then
 			local index = math.random(1, #particle_effect)
+
 			particle_effect = particle_effect[index]
 		end
 
@@ -666,10 +670,11 @@ function _play_gib_fx(gib_unit, settings, world, wwise_world)
 	local sfx = settings.sfx
 
 	if sfx then
-		local source = nil
+		local source
 
 		if sfx.node_name then
 			local node = Unit.node(gib_unit, sfx.node_name)
+
 			source = WwiseWorld.make_auto_source(wwise_world, gib_unit, node)
 		else
 			source = WwiseWorld.make_auto_source(wwise_world, gib_unit)
@@ -692,9 +697,7 @@ function _play_root_sound(root_unit, hit_zone_gib_template, wwise_world)
 end
 
 function _apply_ailment_material_effect(gib_unit, ailment_effect)
-	local include_children = true
-	local custom_duration = 0
-	local custom_offset_time = 0
+	local include_children, custom_duration, custom_offset_time = true, 0, 0
 
 	Unit.set_permutation_for_materials(gib_unit, "HAVE_BURN", true, include_children)
 	Ailment.play_ailment_effect_template(gib_unit, ailment_effect, include_children, custom_duration, custom_offset_time)
@@ -703,7 +706,7 @@ end
 function _modify_gib_push_direction(push_override_settings, original_push_direction, hit_zone_name, gib_actor)
 	local custom_push_vector = Vector3.from_array(push_override_settings.custom_push_vector)
 	local rotated_custom_push_vector = Quaternion.rotate(Quaternion.look(original_push_direction), custom_push_vector)
-	local custom_push_direction = nil
+	local custom_push_direction
 
 	if push_override_settings.ignore_attack_direction then
 		custom_push_direction = Vector3.normalize(-0.1 * original_push_direction + rotated_custom_push_vector)

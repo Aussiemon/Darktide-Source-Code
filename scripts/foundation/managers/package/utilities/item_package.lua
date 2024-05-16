@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/package/utilities/item_package.lua
+
 local WeaponTemplateResourceDependencies = require("scripts/utilities/weapon_template_resource_dependencies")
 local ItemPackage = {}
 
@@ -30,9 +32,10 @@ ItemPackage.level_resource_dependency_packages = function (item_definitions, lev
 	item_data = item_data or {
 		minion_items = {},
 		player_items = {},
-		weapon_items = {}
+		weapon_items = {},
 	}
 	item_data = _require_level_items(level_name, item_data)
+
 	local packages_to_load = {}
 
 	if item_data.player_items then
@@ -61,6 +64,7 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 		if key == "vfx_resources" or key == "sfx_resources" then
 			for i = 1, #value do
 				local vfx_resource = value[i]
+
 				resource_dependencies[vfx_resource] = true
 			end
 		elseif type(value) == "table" then
@@ -121,6 +125,7 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 
 		for i = 1, #resource_list do
 			local resource_name = resource_list[i]
+
 			resource_dependencies[resource_name] = true
 		end
 	end

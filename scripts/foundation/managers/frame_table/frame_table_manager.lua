@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/frame_table/frame_table_manager.lua
+
 local FrameTableManager = class("FrameTableManager")
 
 FrameTableManager.init = function (self, debug_enabled, buffer_size)

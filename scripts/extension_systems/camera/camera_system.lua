@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/camera/camera_system.lua
+
 require("scripts/extension_systems/camera/player_unit_camera_extension")
 require("scripts/extension_systems/camera/player_husk_camera_extension")
 
 local CameraSystem = class("CameraSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
-	"rpc_player_trigger_camera_shake"
+	"rpc_player_trigger_camera_shake",
 }
 
 CameraSystem.init = function (self, extension_system_creation_context, ...)

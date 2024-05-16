@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/smart_tag/smart_tag_extension.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local SmartTag = require("scripts/extension_systems/smart_tag/smart_tag")
 local SmartTagSettings = require("scripts/settings/smart_tag/smart_tag_settings")
@@ -8,6 +10,7 @@ local SmartTagExtension = class("SmartTagExtension")
 SmartTagExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
+
 	local target_type = extension_init_data.target_type
 
 	if target_type then
@@ -63,7 +66,7 @@ SmartTagExtension._set_tag_on_spawn = function (self)
 
 	if tag_template then
 		local target_unit = self._unit
-		local target_location = nil
+		local target_location
 		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
 		smart_tag_system:set_tag(tag_template.name, tagger_unit, target_unit, target_location)
@@ -82,6 +85,7 @@ SmartTagExtension._setup_display_name = function (self, unit)
 	elseif target_type == "breed" then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
+
 		self._breed = breed
 		self._display_name = breed.display_name
 	end
@@ -101,31 +105,31 @@ SmartTagExtension.contextual_tag_template = function (self, tagger_unit)
 end
 
 local _pickup_name_to_tag_template_name = {
-	container_01_luggable = "luggable_container_over_here",
-	medical_crate_pocketable = "pocketable_medical_crate_over_here",
-	small_grenade = "small_grenade_over_here",
-	small_platinum = "small_platinum_pickup_over_here",
-	large_metal = "large_metal_pickup_over_here",
-	control_rod_01_luggable = "luggable_control_rod_over_here",
-	syringe_corruption_pocketable = "syringe_corruption_over_here",
-	battery_02_luggable = "luggable_battery_over_here",
-	syringe_ability_boost_pocketable = "syringe_ability_boost_over_here",
-	syringe_speed_boost_pocketable = "syringe_speed_boost_over_here",
-	small_metal = "small_metal_pickup_over_here",
-	container_02_luggable = "luggable_container_over_here",
-	consumable = "side_mission_consumable_over_here",
-	large_clip = "large_clip_over_here",
-	grimoire = "side_mission_grimoire_over_here",
-	large_platinum = "large_platinum_pickup_over_here",
-	collectible_01_pickup = "side_mission_consumable_over_here",
-	small_clip = "small_clip_over_here",
-	container_03_luggable = "luggable_container_over_here",
+	ammo_cache_deployable = "deployed_ammo_cache_over_here",
 	ammo_cache_pocketable = "pocketable_ammo_cache_over_here",
 	battery_01_luggable = "luggable_battery_over_here",
+	battery_02_luggable = "luggable_battery_over_here",
+	collectible_01_pickup = "side_mission_consumable_over_here",
+	consumable = "side_mission_consumable_over_here",
+	container_01_luggable = "luggable_container_over_here",
+	container_02_luggable = "luggable_container_over_here",
+	container_03_luggable = "luggable_container_over_here",
+	control_rod_01_luggable = "luggable_control_rod_over_here",
+	grimoire = "side_mission_grimoire_over_here",
+	large_clip = "large_clip_over_here",
+	large_metal = "large_metal_pickup_over_here",
+	large_platinum = "large_platinum_pickup_over_here",
 	medical_crate_deployable = "deployed_medical_crate_over_here",
+	medical_crate_pocketable = "pocketable_medical_crate_over_here",
+	small_clip = "small_clip_over_here",
+	small_grenade = "small_grenade_over_here",
+	small_metal = "small_metal_pickup_over_here",
+	small_platinum = "small_platinum_pickup_over_here",
+	syringe_ability_boost_pocketable = "syringe_ability_boost_over_here",
+	syringe_corruption_pocketable = "syringe_corruption_over_here",
+	syringe_power_boost_pocketable = "syringe_power_boost_over_here",
+	syringe_speed_boost_pocketable = "syringe_speed_boost_over_here",
 	tome = "side_mission_tome_over_here",
-	ammo_cache_deployable = "deployed_ammo_cache_over_here",
-	syringe_power_boost_pocketable = "syringe_power_boost_over_here"
 }
 
 SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
@@ -183,6 +187,7 @@ end
 
 SmartTagExtension.register_owned_tag = function (self, tag_id)
 	local owned_tag_ids = self._owned_tag_ids
+
 	owned_tag_ids[#owned_tag_ids + 1] = tag_id
 end
 

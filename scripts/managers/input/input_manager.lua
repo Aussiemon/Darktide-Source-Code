@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/managers/input/input_manager.lua
+
 local InputAliases = require("scripts/managers/input/input_aliases")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputManagerTestify = GameParameters.testify and require("scripts/managers/input/input_manager_testify")
 local InputService = require("scripts/managers/input/input_service")
 local InputUtils = require("scripts/managers/input/input_utils")
 local InputManager = class("InputManager")
+
 InputManager.DEBUG_TAG = "Input Manager"
 InputManager.SELECTION_LOGIC = table.enum("fixed", "latest", "combined")
 
@@ -26,11 +29,11 @@ InputManager.init = function (self)
 	self._device_wwise_rumble_state = false
 	self._wwise_rumble_suppression = nil
 	self._rumble_device = nil
-	self._selection = {
-		logic = InputManager.SELECTION_LOGIC.latest,
-		controller_type = "keyboard",
-		slot = 1
-	}
+	self._selection = {}
+	self._selection.logic = InputManager.SELECTION_LOGIC.latest
+	self._selection.controller_type = "keyboard"
+	self._selection.slot = 1
+
 	local event_manager = Managers.event
 
 	event_manager:register(self, "device_activated", "_cb_device_activated")
@@ -44,8 +47,9 @@ InputManager.init = function (self)
 	if not DEDICATED_SERVER and (IS_WINDOWS or IS_XBS) then
 		self._cursor_stack_data = {
 			stack_depth = 0,
-			stack_references = {}
+			stack_references = {},
 		}
+
 		local allow_cursor_rendering = true
 
 		self:_set_allow_cursor_rendering(allow_cursor_rendering)
@@ -115,7 +119,7 @@ InputManager._select_fixed = function (self)
 		self:_set_wwise_rumble_state_from_device(device)
 		table.clear(used_devices)
 
-		local extra_device = nil
+		local extra_device
 
 		if device.device_type == "keyboard" then
 			extra_device = self:_find_active_device("mouse")
@@ -252,7 +256,7 @@ end
 InputManager.get_input_service = function (self, service_type)
 	if not self._input_services[service_type] then
 		local settings = self._input_settings[service_type]
-		local alias_table = nil
+		local alias_table
 
 		if self._aliases[service_type] then
 			alias_table = self._aliases[service_type]:alias_table()
@@ -272,6 +276,7 @@ end
 
 InputManager.destroy_input_service = function (self, service_type)
 	local service = self._input_services[service_type]
+
 	self._input_services[service_type] = nil
 
 	_log("Destroyed InputService of type [%s]", service_type)
@@ -300,7 +305,7 @@ InputManager.add_setting = function (self, service_type, aliases, raw_key_table,
 		raw = raw_key_table,
 		aliases = aliases,
 		filters = filter_table,
-		default_devices = default_devices
+		default_devices = default_devices,
 	}
 
 	if aliases then
@@ -420,8 +425,9 @@ InputManager._update_key_watch = function (self)
 			self._key_watch_result = {
 				enablers = held,
 				main = released[1],
-				disablers = {}
+				disablers = {},
 			}
+
 			local bound = "[" .. released[1] .. "]"
 
 			for _, key in ipairs(held) do
@@ -495,6 +501,7 @@ end
 
 InputManager._set_allow_cursor_rendering = function (self, allow_cursor_rendering)
 	local cursor_stack_data = self._cursor_stack_data
+
 	cursor_stack_data.allow_cursor_rendering = allow_cursor_rendering
 
 	if cursor_stack_data.stack_depth > 0 then
@@ -510,9 +517,10 @@ InputManager.set_cursor_position = function (self, reference, position)
 	if PLATFORM == "win32" then
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_references = cursor_stack_data.stack_references
+
 		self._new_cursor_position_array = {
 			position[1],
-			position[2]
+			position[2],
 		}
 	end
 end
@@ -543,6 +551,7 @@ InputManager.pop_cursor = function (self, reference)
 	if IS_WINDOWS or IS_XBS then
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_references = cursor_stack_data.stack_references
+
 		stack_references[reference] = nil
 		cursor_stack_data.stack_depth = cursor_stack_data.stack_depth - 1
 
@@ -628,6 +637,7 @@ InputManager._event_update_rumble_enabled = function (self)
 	local save_data = Managers.save:account_data()
 	local input_settings = save_data.input_settings
 	local rumble_enabled = not not input_settings.rumble_enabled
+
 	self._user_rumble_state = rumble_enabled
 end
 

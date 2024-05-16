@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/player_taken_damage_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local PlayerTakenDamageReporter = class("PlayerTakenDamageReporter")
 
@@ -33,7 +35,7 @@ local function extract_data(entry)
 		damage = entry.damage,
 		permanent_damage = entry.permanent_damage,
 		actual_damage = entry.actual_damage,
-		damage_absorbed = entry.damage_absorbed
+		damage_absorbed = entry.damage_absorbed,
 	}
 end
 
@@ -59,13 +61,14 @@ PlayerTakenDamageReporter.register_event = function (self, player, data)
 	else
 		local player_data = {
 			telemetry_subject = subject,
-			telemetry_game_session = player:telemetry_game_session()
+			telemetry_game_session = player:telemetry_game_session(),
 		}
+
 		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
-				extract_data(data)
-			}
+				extract_data(data),
+			},
 		}
 	end
 end

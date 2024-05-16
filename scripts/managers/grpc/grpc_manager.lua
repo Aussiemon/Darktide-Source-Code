@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/grpc/grpc_manager.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local GRPCStream = require("scripts/managers/grpc/grpc_stream")
 local GRPCBatchedPresenceStream = require("scripts/managers/grpc/grpc_batched_presence_stream")
@@ -54,12 +56,15 @@ end
 
 GRPCManager.delay_with_jitter_and_backoff = function (self, id)
 	local count = self._retry_count[id]
+
 	count = count or 0
 	count = count + 1
 	self._retry_count[id] = count
+
 	local retry_in_sec = math.min(2^count * 0.1, 30)
 	local jitter_margin = retry_in_sec * 0.3
 	local jitter = math.random() * jitter_margin
+
 	retry_in_sec = retry_in_sec + jitter
 
 	_info("Will retry gRPC request id=%s in %s secs, count=%s jitter=%s", id, tostring(retry_in_sec), tostring(count), tostring(jitter))
@@ -121,6 +126,7 @@ end
 GRPCManager.abort_operation = function (self, operation_id)
 	local promise = Promise:new()
 	local id = gRPC.abort_operation(operation_id)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -129,6 +135,7 @@ end
 GRPCManager.ping_with_auth = function (self)
 	local promise = Promise:new()
 	local id = gRPC.ping_with_auth()
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -140,7 +147,7 @@ GRPCManager._convert_presence_key_values = function (self, keyValues)
 	for key, value in pairs(keyValues) do
 		table.insert(result, {
 			key,
-			value
+			value,
 		})
 	end
 
@@ -152,6 +159,7 @@ GRPCManager.start_presence = function (self, keyValues)
 	local grpc_stream = GRPCStream:new(self, id, gRPC.get_push_messages, function (operation_id, keyValues)
 		gRPC.update_presence(operation_id, unpack(self:_convert_presence_key_values(keyValues)))
 	end)
+
 	self._grpc_streams[id] = grpc_stream
 
 	return grpc_stream
@@ -160,6 +168,7 @@ end
 GRPCManager.get_presence = function (self, ...)
 	local promise = Promise:new()
 	local id = gRPC.get_presence(...)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -168,6 +177,7 @@ end
 GRPCManager.get_batched_presence_stream = function (self)
 	local id = gRPC.get_batched_presence_stream()
 	local grpc_stream = GRPCBatchedPresenceStream:new(self, id, gRPC.request_presence_from_batched_stream, gRPC.abort_presence_from_batched_stream, gRPC.get_latest_presence_from_batched_stream)
+
 	self._grpc_streams[id] = grpc_stream
 
 	return grpc_stream
@@ -180,6 +190,7 @@ end
 GRPCManager.debug_get_parties = function (self, compatibility)
 	local promise = Promise:new()
 	local id = gRPC.debug_get_parties(compatibility)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -188,6 +199,7 @@ end
 GRPCManager.join_party = function (self, party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket, current_game_session_id)
 	local id = gRPC.join_party(party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket, current_game_session_id)
 	local grpc_stream = GRPCStream:new(self, id, gRPC.get_party_events)
+
 	self._grpc_streams[id] = grpc_stream
 
 	return grpc_stream
@@ -196,6 +208,7 @@ end
 GRPCManager.create_empty_party = function (self, compatibility)
 	local promise = Promise:new()
 	local id = gRPC.create_empty_party(compatibility)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -204,6 +217,7 @@ end
 GRPCManager.invite_to_party = function (self, party_id, platform, platform_user_id)
 	local promise = Promise:new()
 	local id = gRPC.invite_to_party(party_id, platform, platform_user_id)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -212,6 +226,7 @@ end
 GRPCManager.get_party = function (self, party_id)
 	local promise = Promise:new()
 	local id = gRPC.get_party(party_id)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -220,6 +235,7 @@ end
 GRPCManager.cancel_invite_to_party = function (self, party_id, invite_token, answer_code)
 	local promise = Promise:new()
 	local id = gRPC.cancel_invite_to_party(party_id, invite_token, answer_code)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -228,6 +244,7 @@ end
 GRPCManager.answer_request_to_join = function (self, party_id, requester_account_id, answer_code)
 	local promise = Promise:new()
 	local id = gRPC.answer_request_to_join(party_id, requester_account_id, answer_code)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -236,6 +253,7 @@ end
 GRPCManager.hot_join_party_hub_server = function (self, matchmaking_ticket)
 	local promise = Promise:new()
 	local id = gRPC.hot_join_party_hub_server(matchmaking_ticket)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -244,6 +262,7 @@ end
 GRPCManager.latched_hub_server_matchmaking = function (self, matchmaking_ticket)
 	local promise = Promise:new()
 	local id = gRPC.latched_hub_server_matchmaking(matchmaking_ticket)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -252,6 +271,7 @@ end
 GRPCManager.leave_party = function (self, party_id)
 	local promise = Promise:new()
 	local id = gRPC.leave_party(party_id)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -260,6 +280,7 @@ end
 GRPCManager.party_broadcast = function (self, party_id, party_version, type_as_int, payload_as_string)
 	local promise = Promise:new()
 	local id = gRPC.party_broadcast(party_id, party_version, type_as_int, payload_as_string)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -268,6 +289,7 @@ end
 GRPCManager.start_party_vote = function (self, party_id, party_version, type, params, myParams)
 	local promise = Promise:new()
 	local id = gRPC.start_party_vote(party_id, party_version, type, params, myParams)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -276,6 +298,7 @@ end
 GRPCManager.answer_party_vote = function (self, vote_id, party_id, yes, myParams)
 	local promise = Promise:new()
 	local id = gRPC.answer_party_vote(vote_id, party_id, yes, myParams)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -284,6 +307,7 @@ end
 GRPCManager.create_single_player_game = function (self, party_id, ticket)
 	local promise = Promise:new()
 	local id = gRPC.create_single_player_game(party_id, ticket)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -292,6 +316,7 @@ end
 GRPCManager.cancel_matchmaking = function (self, party_id)
 	local promise = Promise:new()
 	local id = gRPC.cancel_matchmaking(party_id)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -300,6 +325,7 @@ end
 GRPCManager.request_vivox_token = function (self, party_id, type)
 	local promise = Promise:new()
 	local id = gRPC.request_vivox_token(party_id, type)
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -308,6 +334,7 @@ end
 GRPCManager.allocate_party_id = function (self)
 	local promise = Promise:new()
 	local id = gRPC.allocate_party_id()
+
 	self._async_promises[id] = promise
 
 	return promise, id
@@ -318,7 +345,7 @@ GRPCManager.start_stay_in_party_vote = function (self)
 		Log.info("Allocated new party_id %s", response.allocated_party_id)
 
 		return Managers.voting:start_voting("stay_in_party", {
-			allocated_party_id = response.allocated_party_id
+			allocated_party_id = response.allocated_party_id,
 		})
 	end)
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/server_metrics/server_metrics_manager.lua
+
 local ServerMetricNames = require("scripts/managers/server_metrics/server_metrics_names")
 local ServerMetricsManagerInterface = require("scripts/managers/server_metrics/server_metrics_manager_dummy")
 local ServerMetricsManager = class("ServerMetricsManager")
@@ -10,7 +12,7 @@ local lagging_frame_time_bucket4 = target_frame_time
 local lagging_frame_time_bucket5 = 0.1
 local lagging_frame_time_bucket6 = 1
 local update_interval = 1
-local _log = nil
+local _log
 
 ServerMetricsManager.init = function (self)
 	self._metrics = {}
@@ -43,7 +45,7 @@ ServerMetricsManager.add_annotation = function (self, type_name, metadata)
 	local json_object = {
 		ts = os.time(),
 		type = type_name,
-		metadata = metadata
+		metadata = metadata,
 	}
 
 	_log("annotation:%s", cjson.encode(json_object))
@@ -66,7 +68,7 @@ ServerMetricsManager.set_gauge = function (self, metric_name, value)
 		metric = {
 			flush_dt = 9999,
 			type = "gauge",
-			name = metric_name
+			name = metric_name,
 		}
 		self._metrics[metric_name] = metric
 
@@ -86,10 +88,10 @@ ServerMetricsManager.add_to_counter = function (self, metric_name, value)
 
 	if not metric then
 		metric = {
-			value = 0,
 			flush_dt = 9999,
 			type = "counter",
-			name = metric_name
+			value = 0,
+			name = metric_name,
 		}
 		self._metrics[metric_name] = metric
 
@@ -103,7 +105,7 @@ ServerMetricsManager.add_to_counter = function (self, metric_name, value)
 end
 
 ServerMetricsManager._flush_metric = function (self, metric, dt)
-	if metric.dirty and metric.flush_dt > 5 or full_flush_interval < metric.flush_dt then
+	if metric.dirty and metric.flush_dt > 5 or metric.flush_dt > full_flush_interval then
 		_log("metric: %s %s %f", metric.name, metric.type, metric.value)
 
 		metric.flush_dt = 0
@@ -132,9 +134,9 @@ ServerMetricsManager._track_progression = function (self)
 		self._last_travel_progress_report = -1
 	end
 
-	if self._last_travel_progress_report == -1 and travel_progress > 0.01 or self._last_travel_progress_report ~= -1 and self._last_travel_progress_report < normalized_travel then
+	if self._last_travel_progress_report == -1 and travel_progress > 0.01 or self._last_travel_progress_report ~= -1 and normalized_travel > self._last_travel_progress_report then
 		self:add_annotation("progression", {
-			value = normalized_travel
+			value = normalized_travel,
 		})
 
 		self._last_travel_progress_report = normalized_travel
@@ -171,7 +173,7 @@ ServerMetricsManager.update = function (self, dt)
 
 	self._last_update = self._last_update + dt
 
-	if update_interval < self._last_update then
+	if self._last_update > update_interval then
 		if Managers.state and Managers.state.minion_spawn then
 			self:set_gauge(ServerMetricNames.gauge.spawned_minions, Managers.state.minion_spawn:num_spawned_minions())
 		end

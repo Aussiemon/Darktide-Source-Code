@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/explosion.lua
+
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
@@ -14,7 +16,7 @@ local proc_events = BuffSettings.proc_events
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
 local Explosion = {}
-local _get_radii, _play_effects = nil
+local _get_radii, _play_effects
 local hit_units = {}
 local attack_units_distance_sq = {}
 local attack_units_hit_actors = {}
@@ -40,10 +42,14 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 		return
 	end
 
-	power_level = explosion_template.scaled_power_level and Managers.state.difficulty:get_table_entry_by_challenge(explosion_template.scaled_power_level) or explosion_template.static_power_level or power_level
+	if explosion_template.scaled_power_level then
+		power_level = Managers.state.difficulty:get_table_entry_by_challenge(explosion_template.scaled_power_level)
+	else
+		power_level = explosion_template.static_power_level or power_level
+	end
 
 	Managers.server_metrics:add_annotation("explosion_create", {
-		power_level = power_level
+		power_level = power_level,
 	})
 
 	local collision_filter = explosion_template.collision_filter
@@ -59,7 +65,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	table.clear(attack_units_hit_actors)
 
 	local number_of_attack_units = 0
-	local sticking_to_unit, sticking_to_actor, _ = nil
+	local sticking_to_unit, sticking_to_actor, _
 	local locomotion_extension = ScriptUnit.has_extension(attacking_unit, "locomotion_system")
 
 	if locomotion_extension and locomotion_extension.sticking_to_unit then
@@ -69,9 +75,11 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 			hit_units[sticking_to_unit] = true
 			number_of_attack_units = number_of_attack_units + 1
 			attack_units_array[number_of_attack_units] = sticking_to_unit
+
 			local center_mass_actor_names = HitZone.get_actor_names(sticking_to_unit, HitZone.hit_zone_names.center_mass)
 			local center_mass_actor_name = center_mass_actor_names and center_mass_actor_names[1]
 			local center_mass_actor = center_mass_actor_name and Unit.actor(sticking_to_unit, center_mass_actor_name)
+
 			attack_units_hit_actors[sticking_to_unit] = center_mass_actor or sticking_to_actor
 			attack_units_distance_sq[sticking_to_unit] = 0
 		end
@@ -113,12 +121,15 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	for i = 1, number_of_attack_units do
 		local strided_i = (i - 1) * 2
 		local attack_unit = attack_units_array[i]
+
 		data[strided_i + 1] = attack_unit
 		data[strided_i + 2] = attack_units_hit_actors[attack_unit]
 	end
 
 	data.num_hit_units = number_of_attack_units
+
 	local x, y, z = Vector3.to_elements(source_position)
+
 	data.source_position_x = x
 	data.source_position_y = y
 	data.source_position_z = z
@@ -180,7 +191,7 @@ Explosion.lerp_values = function (attacking_unit, explosion_template_name_or_nil
 end
 
 local EMPTY_PATH = {
-	[DEFAULT_LERP_VALUE] = 0
+	[DEFAULT_LERP_VALUE] = 0,
 }
 
 Explosion.lerp_value_from_path = function (lerp_values, ...)
@@ -190,6 +201,7 @@ Explosion.lerp_value_from_path = function (lerp_values, ...)
 
 	for i = 1, depth - 1 do
 		local id = select(i, ...)
+
 		local_lerp_values = local_lerp_values[id] or EMPTY_PATH
 	end
 
@@ -200,15 +212,14 @@ Explosion.lerp_value_from_path = function (lerp_values, ...)
 end
 
 Explosion.lerp_entry = function (entry, lerp_value)
-	local min = entry[1]
-	local max = entry[2]
+	local min, max = entry[1], entry[2]
 	local t = lerp_value
 
 	return math.lerp(min, max, t)
 end
 
 function _get_radii(explosion_template, charge_level, lerp_values, attack_type, attacker_stat_buffs, attacker_breed_or_nil)
-	local radius, close_radius = nil
+	local radius, close_radius
 
 	if not explosion_template.scalable_radius then
 		charge_level = 1
@@ -218,6 +229,7 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 
 	if type(explosion_template_radius) == "table" then
 		local lerp_value = Explosion.lerp_value_from_path(lerp_values, "radius")
+
 		explosion_template_radius = Explosion.lerp_entry(explosion_template_radius, lerp_value)
 	end
 
@@ -226,6 +238,7 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 	if min_radius then
 		if type(min_radius) == "table" then
 			local lerp_value = Explosion.lerp_value_from_path(lerp_values, "min_radius")
+
 			min_radius = Explosion.lerp_entry(min_radius, lerp_value)
 		end
 
@@ -238,6 +251,7 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 
 	if type(explosion_template_close_radius) == "table" then
 		local lerp_value = Explosion.lerp_value_from_path(lerp_values, "close_radius")
+
 		explosion_template_close_radius = Explosion.lerp_entry(explosion_template_close_radius, lerp_value)
 	end
 
@@ -247,6 +261,7 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 		if min_close_radius then
 			if type(min_close_radius) == "table" then
 				local lerp_value = Explosion.lerp_value_from_path(lerp_values, "min_close_radius")
+
 				min_close_radius = Explosion.lerp_entry(min_close_radius, lerp_value)
 			end
 
@@ -267,6 +282,7 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 		if radius_stat_buffs then
 			for index, stat_buff in pairs(radius_stat_buffs) do
 				local radius_stat_buffs = (attacker_stat_buffs[stat_buff] or 1) - 1
+
 				explosion_radius_modifier = explosion_radius_modifier + radius_stat_buffs
 			end
 		end
@@ -306,7 +322,7 @@ function _play_effects(world, physics_world, attacking_unit_owner_unit, explosio
 					local effect_name = effects[j]
 
 					if fx_extension then
-						local scale = nil
+						local scale
 						local radius_variable_name = vfx_data.radius_variable_name
 
 						fx_extension:spawn_particles(effect_name, source_position, rotation, scale, radius_variable_name, Vector3(radius, radius, radius), all_clients)

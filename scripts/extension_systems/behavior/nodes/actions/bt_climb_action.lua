@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_climb_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -18,10 +20,13 @@ BtClimbAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 			local side_system = Managers.state.extension:system("side_system")
 			local side = side_system.side_by_unit[unit]
 			local enemy_side_names = side:relation_side_names("enemy")
+
 			scratchpad.enemy_side_names = enemy_side_names
 			scratchpad.units_catapulted = {}
 			scratchpad.side = side
+
 			local broadphase_system = Managers.state.extension:system("broadphase_system")
+
 			scratchpad.broadphase = broadphase_system.broadphase
 		end
 
@@ -31,17 +36,22 @@ BtClimbAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 		local nav_smart_object_component = blackboard.nav_smart_object
+
 		scratchpad.animation_extension = animation_extension
 		scratchpad.locomotion_extension = locomotion_extension
 		scratchpad.nav_smart_object_component = nav_smart_object_component
+
 		local spawn_component = blackboard.spawn
 		local anim_translation_scale_factor = spawn_component.anim_translation_scale_factor
+
 		scratchpad.anim_translation_scale_factor = anim_translation_scale_factor
+
 		local entrance_position, exit_position, ledge_position = self:_calculate_jump(navigation_extension, nav_smart_object_component, scratchpad)
 
 		self:_start_jump(unit, breed, action_data, t, scratchpad, locomotion_extension, entrance_position, exit_position, ledge_position)
 
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 		behavior_component.move_state = "jumping"
 		scratchpad.behavior_component = behavior_component
 	else
@@ -54,13 +64,14 @@ BtClimbAction._calculate_jump = function (self, navigation_extension, nav_smart_
 	local exit_position = nav_smart_object_component.exit_position:unbox()
 	local smart_object_data = navigation_extension:current_smart_object_data()
 	local ledge_type = smart_object_data.ledge_type
-	local ledge_position = nil
+	local ledge_position
 
 	if ledge_type == "thick_fence" then
 		local ledge_position1 = smart_object_data.ledge_position1:unbox()
 		local ledge_position2 = smart_object_data.ledge_position2:unbox()
 		local distance_to_ledge_position_1_sq = Vector3.distance_squared(ledge_position1, entrance_position)
 		local distance_to_ledge_position_2_sq = Vector3.distance_squared(ledge_position2, entrance_position)
+
 		ledge_position = distance_to_ledge_position_1_sq < distance_to_ledge_position_2_sq and ledge_position1 or ledge_position2
 		scratchpad.climb_height = ledge_position.z - entrance_position.z
 		scratchpad.fall_height = ledge_position.z - exit_position.z
@@ -87,9 +98,13 @@ end
 BtClimbAction._start_jump = function (self, unit, breed, action_data, t, scratchpad, locomotion_extension, entrance_position, exit_position, ledge_position)
 	local entrance_to_exit_flat = Vector3.flat(exit_position - entrance_position)
 	local wanted_rotation = Quaternion.look(entrance_to_exit_flat)
+
 	scratchpad.wanted_rotation = QuaternionBox(wanted_rotation)
+
 	local current_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = current_rotation_speed
+
 	local rotation = Unit.local_rotation(unit, 1)
 	local look_direction = Quaternion.forward(rotation)
 	local current_radians = math.atan2(look_direction.y, look_direction.x)
@@ -102,30 +117,36 @@ BtClimbAction._start_jump = function (self, unit, breed, action_data, t, scratch
 	locomotion_extension:set_movement_type("script_driven")
 	locomotion_extension:teleport_to(entrance_position)
 
-	local jump_type = scratchpad.jump_type
-	local climb_height = scratchpad.climb_height
-	local smart_object_template = breed.smart_object_template
+	local jump_type, climb_height, smart_object_template = scratchpad.jump_type, scratchpad.climb_height, breed.smart_object_template
 
 	if climb_height then
 		local anim_thresholds = smart_object_template.jump_up_anim_thresholds
 		local jump_event = self:_jump_anim_event(unit, climb_height, anim_thresholds, jump_type, scratchpad)
+
 		scratchpad.ending_anim_event = jump_event
 		scratchpad.jump_up_anim_event = jump_event
+
 		local anim_timings = action_data.anim_timings
 		local jump_duration = anim_timings[jump_event]
+
 		scratchpad.climb_done_t = t + jump_duration
 		scratchpad.climb_state = "climbing"
+
 		local blend_timings = action_data.blend_timings
 		local blend_duration = blend_timings and blend_timings[jump_event] or 0
+
 		scratchpad.blend_timing = t + blend_duration
 	else
 		local fall_height = scratchpad.fall_height
 		local anim_thresholds = smart_object_template.jump_down_anim_thresholds
 		local jump_event = self:_jump_anim_event(unit, fall_height, anim_thresholds, jump_type, scratchpad)
+
 		scratchpad.climb_state = "falling"
 		scratchpad.jump_down_anim_event = jump_event
+
 		local blend_timings = action_data.blend_timings
 		local blend_duration = blend_timings and blend_timings[jump_event] or 0
+
 		scratchpad.blend_timing = t + blend_duration
 	end
 end
@@ -165,6 +186,7 @@ BtClimbAction._jump_anim_event = function (self, unit, jump_height, anim_thresho
 
 				if land_anim_data then
 					local land_horizontal_length = land_anim_data.anim_horizontal_length
+
 					jump_horizontal_length = jump_horizontal_length - land_horizontal_length
 				end
 
@@ -179,6 +201,7 @@ BtClimbAction._jump_anim_event = function (self, unit, jump_height, anim_thresho
 			if land_anim_data then
 				local land_anim_events = land_anim_data.anim_events
 				local land_event = Animation.random_event(land_anim_events)
+
 				scratchpad.land_anim_event = land_event
 			end
 
@@ -190,9 +213,7 @@ end
 BtClimbAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	if not scratchpad.failed_to_use_smart_object then
 		local locomotion_extension = scratchpad.locomotion_extension
-		local anim_driven = false
-		local affected_by_gravity = false
-		local script_driven_rotation = false
+		local anim_driven, affected_by_gravity, script_driven_rotation = false, false, false
 
 		locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, script_driven_rotation)
 		locomotion_extension:set_movement_type("snap_to_navmesh")
@@ -208,6 +229,7 @@ BtClimbAction.leave = function (self, unit, breed, blackboard, scratchpad, actio
 			local ending_move_states = action_data.ending_move_states
 			local ending_move_state = ending_move_states[anim_event]
 			local behavior_component = scratchpad.behavior_component
+
 			behavior_component.move_state = ending_move_state
 
 			scratchpad.animation_extension:anim_event("climb_finished")
@@ -222,10 +244,8 @@ BtClimbAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 
 	local locomotion_extension = scratchpad.locomotion_extension
 
-	if scratchpad.blend_timing and scratchpad.blend_timing <= t then
-		local anim_driven = true
-		local affected_by_gravity = false
-		local script_driven_rotation = true
+	if scratchpad.blend_timing and t >= scratchpad.blend_timing then
+		local anim_driven, affected_by_gravity, script_driven_rotation = true, false, true
 
 		locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, script_driven_rotation)
 
@@ -268,7 +288,7 @@ BtClimbAction._update_climbing = function (self, unit, breed, scratchpad, action
 		self:_catapult_units(unit, scratchpad, action_data)
 	end
 
-	if scratchpad.climb_done_t <= t then
+	if t >= scratchpad.climb_done_t then
 		local jump_type = scratchpad.jump_type
 
 		if jump_type == "edge" then
@@ -294,6 +314,7 @@ BtClimbAction._update_climbing = function (self, unit, breed, scratchpad, action
 			local smart_object_template = breed.smart_object_template
 			local anim_thresholds = smart_object_template.jump_down_anim_thresholds
 			local anim_event = self:_jump_anim_event(unit, fall_height, anim_thresholds, "fence", scratchpad)
+
 			scratchpad.climb_state = "falling"
 			scratchpad.jump_down_anim_event = anim_event
 		end
@@ -323,6 +344,7 @@ BtClimbAction._update_falling = function (self, unit, scratchpad, action_data, d
 		animation_extension:anim_event(land_anim_event)
 
 		scratchpad.ending_anim_event = land_anim_event
+
 		local land_timings = action_data.land_timings
 		local jump_down_anim_event = scratchpad.jump_down_anim_event
 		local jump_up_anim_event = scratchpad.jump_up_anim_event
@@ -333,6 +355,7 @@ BtClimbAction._update_falling = function (self, unit, scratchpad, action_data, d
 		else
 			local anim_timings = action_data.anim_timings
 			local land_duration = anim_timings[land_anim_event]
+
 			scratchpad.land_done_t = t + land_duration
 		end
 
@@ -341,7 +364,7 @@ BtClimbAction._update_falling = function (self, unit, scratchpad, action_data, d
 end
 
 BtClimbAction._update_landing = function (self, scratchpad, t)
-	if scratchpad.land_done_t <= t then
+	if t >= scratchpad.land_done_t then
 		local nav_smart_object_component = scratchpad.nav_smart_object_component
 		local exit_position = nav_smart_object_component.exit_position:unbox()
 		local navigation_extension = scratchpad.navigation_extension
@@ -357,16 +380,14 @@ local broadphase_results = {}
 BtClimbAction._catapult_units = function (self, unit, scratchpad, action_data)
 	local data = action_data.catapult_units
 	local units_catapulted = scratchpad.units_catapulted
-	local speed = data.speed
-	local angle = data.angle
-	local radius = data.radius
+	local speed, angle, radius = data.speed, data.angle, data.radius
 	local radius_sq = radius * radius
 	local side = scratchpad.side
 	local valid_enemy_player_units = side.valid_enemy_player_units
 	local broadphase = scratchpad.broadphase
 	local unit_position = POSITION_LOOKUP[unit]
 	local enemy_side_names = scratchpad.enemy_side_names
-	local num_results = broadphase:query(unit_position, radius, broadphase_results, enemy_side_names, PLAYER_BREED_TYPE)
+	local num_results = broadphase.query(broadphase, unit_position, radius, broadphase_results, enemy_side_names, PLAYER_BREED_TYPE)
 
 	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]
@@ -379,7 +400,9 @@ BtClimbAction._catapult_units = function (self, unit, scratchpad, action_data)
 			local height = speed * math.sin(angle)
 			local flat_offset_direction = Vector3.normalize(Vector3.flat(offset))
 			local push_velocity = flat_offset_direction * length
+
 			push_velocity.z = height
+
 			local target_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
 			local catapulted_state_input = target_unit_data_extension:write_component("catapulted_state_input")
 

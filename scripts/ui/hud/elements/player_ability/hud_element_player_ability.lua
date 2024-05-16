@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_ability/hud_element_player_ability.lua
+
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local HudElementPlayerAbilitySettings = require("scripts/ui/hud/elements/player_ability/hud_element_player_ability_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -13,6 +15,7 @@ HudElementPlayerAbility.init = function (self, parent, draw_layer, start_scale, 
 	HudElementPlayerAbility.super.init(self, parent, draw_layer, start_scale, definitions)
 
 	self._data = data
+
 	local weapon_slots = {}
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 
@@ -54,7 +57,7 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 	local parent = self._parent
 	local ability_extension = parent:get_player_extension(player, "ability_system")
 	local ability_id = self._ability_id
-	local cooldown_progress, remaining_ability_charges = nil
+	local cooldown_progress, remaining_ability_charges
 	local has_charges_left = true
 	local uses_charges = false
 
@@ -62,8 +65,11 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 		local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_id)
 		local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_id)
 		local is_paused = ability_extension:is_cooldown_paused(ability_id)
+
 		remaining_ability_charges = ability_extension:remaining_ability_charges(ability_id)
+
 		local max_ability_charges = ability_extension:max_ability_charges(ability_id)
+
 		uses_charges = max_ability_charges and max_ability_charges > 1
 		has_charges_left = remaining_ability_charges > 0
 
@@ -75,10 +81,8 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 			if cooldown_progress == 0 then
 				cooldown_progress = 1
 			end
-		elseif uses_charges then
-			cooldown_progress = 1
 		else
-			cooldown_progress = 0
+			cooldown_progress = uses_charges and 1 or 0
 		end
 	end
 
@@ -111,6 +115,7 @@ HudElementPlayerAbility.set_charges_amount = function (self, amount)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local content = widget.content
+
 	widget.dirty = true
 	content.text = amount and tostring(amount) or nil
 end
@@ -118,7 +123,7 @@ end
 HudElementPlayerAbility._set_widget_state_colors = function (self, on_cooldown, uses_charges, has_charges_left)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
-	local source_colors = nil
+	local source_colors
 
 	if on_cooldown then
 		if uses_charges then
@@ -150,6 +155,7 @@ end
 HudElementPlayerAbility.set_input_text = function (self, text)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
+
 	widget.content.input_text = text
 	widget.dirty = true
 end
@@ -168,11 +174,14 @@ end
 
 HudElementPlayerAbility._set_progress = function (self, progress)
 	local is_nan = progress ~= progress
+
 	progress = not is_nan and progress or 0
 	self._ability_progress = progress
+
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local content = widget.content
+
 	widget.dirty = true
 	content.duration_progress = progress
 end

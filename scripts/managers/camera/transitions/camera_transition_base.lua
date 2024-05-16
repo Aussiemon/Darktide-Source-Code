@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/transitions/camera_transition_base.lua
+
 local CameraTransitionBase = class("CameraTransitionBase")
 
 CameraTransitionBase.init = function (self, node_1, node_2, duration, speed, settings)

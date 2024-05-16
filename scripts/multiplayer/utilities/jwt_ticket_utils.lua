@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/utilities/jwt_ticket_utils.lua
+
 local JwtTicketUtils = {}
 
 local function parse_jwt_payload(payload_json)
@@ -27,6 +29,7 @@ JwtTicketUtils.join_jwt_ticket_array = function (jwt_ticket_array)
 
 	for i = 1, #jwt_ticket_array do
 		local part = jwt_ticket_array[i]
+
 		str = str .. part
 	end
 

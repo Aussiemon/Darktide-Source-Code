@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/ladder.lua
+
 local Ladder = {}
 
 Ladder.started_climbing = function (ladder_character_state_component, ladder_unit, is_server, game_session, player_unit_game_object_id, player, player_unit)
 	local ladder_unit_level_id = Managers.state.unit_spawner:level_index(ladder_unit)
+
 	ladder_character_state_component.ladder_unit_id = ladder_unit_level_id
 
 	if is_server then
@@ -11,6 +14,7 @@ end
 
 Ladder.stopped_climbing = function (ladder_character_state_component, ladder_cooldown, is_server, game_session, player_unit_game_object_id, player, player_unit)
 	local invalid_ladder_unit_id = NetworkConstants.invalid_level_unit_id
+
 	ladder_character_state_component.ladder_unit_id = invalid_ladder_unit_id
 	ladder_character_state_component.ladder_cooldown = ladder_cooldown
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/minion/minion_spawn_manager.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breeds = require("scripts/settings/breed/breeds")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
@@ -14,6 +16,7 @@ MinionSpawnManager.init = function (self, level_seed, soft_cap_out_of_bounds_uni
 	self._num_spawned_minions = 0
 	self._side_system = Managers.state.extension:system("side_system")
 	self._soft_cap_out_of_bounds_units = soft_cap_out_of_bounds_units
+
 	local spawn_queue = Script.new_array(MINION_QUEUE_RING_BUFFER_SIZE)
 
 	for i = 1, MINION_QUEUE_RING_BUFFER_SIZE do
@@ -44,8 +47,7 @@ MinionSpawnManager.update = function (self, dt, t)
 		Testify:poll_requests_through_handler(MinionSpawnManagerTestify, self)
 	end
 
-	local spawned_minions = self._spawned_minions
-	local soft_cap_out_of_bounds_units = self._soft_cap_out_of_bounds_units
+	local spawned_minions, soft_cap_out_of_bounds_units = self._spawned_minions, self._soft_cap_out_of_bounds_units
 
 	for i = #spawned_minions, 1, -1 do
 		local unit = spawned_minions[i]
@@ -63,6 +65,7 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	local breed = Breeds[breed_name]
 	local seed = math.random_seed(self._seed)
 	local spawn_aggro_state = optional_aggro_state or breed.spawn_aggro_state
+
 	TEMP_INIT_DATA.side_id = side_id
 	TEMP_INIT_DATA.breed = breed
 	TEMP_INIT_DATA.random_seed = seed
@@ -72,13 +75,18 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	TEMP_INIT_DATA.optional_mission_objective_id = optional_mission_objective_id
 	TEMP_INIT_DATA.optional_attack_selection_template_name = optional_attack_selection_template_name
 	TEMP_INIT_DATA.optional_health_modifier = optional_health_modifier
+
 	local unit_template_name = breed.unit_template_name
 	local unit = Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, nil, TEMP_INIT_DATA)
+
 	self._seed = seed
+
 	local spawned_index = #self._spawned_minions + 1
+
 	self._spawned_minions[spawned_index] = unit
 	self._spawned_minions_index_lookup[unit] = spawned_index
 	self._num_spawned_minions = self._num_spawned_minions + 1
+
 	local spawn_anim_state = breed.spawn_anim_state
 
 	if spawn_anim_state then
@@ -125,6 +133,7 @@ MinionSpawnManager.queue_minion_to_spawn = function (self, breed_name, position,
 	local queue = self._spawn_queue
 	local write_index = self._spawn_queue_write_index
 	local queue_entry = queue[write_index]
+
 	queue_entry[MINION_QUEUE_PARAMETERS.breed_name] = breed_name
 	queue_entry[MINION_QUEUE_PARAMETERS.position] = Vector3Box(position)
 	queue_entry[MINION_QUEUE_PARAMETERS.rotation] = QuaternionBox(rotation)
@@ -176,6 +185,7 @@ MinionSpawnManager._initialize_blackboard_components = function (self, breed, bl
 	if size_variation_range then
 		local _, random_percentage = math.next_random(seed)
 		local scale = math.lerp(size_variation_range[1], size_variation_range[2], random_percentage)
+
 		spawn_component.anim_translation_scale_factor = 1 / scale
 	end
 
@@ -215,12 +225,14 @@ MinionSpawnManager.unregister_unit = function (self, unit)
 
 	local spawned_minions = self._spawned_minions
 	local last_index = #spawned_minions
+
 	spawned_minions_index_lookup[unit] = nil
 
 	if index == last_index then
 		spawned_minions[last_index] = nil
 	else
 		local last_minion = spawned_minions[last_index]
+
 		spawned_minions[index] = last_minion
 		spawned_minions[last_index] = nil
 		spawned_minions_index_lookup[last_minion] = index

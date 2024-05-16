@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_die_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -10,13 +12,15 @@ local BtDieAction = class("BtDieAction", "BtNode")
 
 BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local death_component = Blackboard.write_component(blackboard, "death")
+
 	scratchpad.death_component = death_component
 	scratchpad.do_ragdoll_push = true
+
 	local damage_profile_name = death_component.damage_profile_name
 	local damage_profile = DamageProfileTemplates[damage_profile_name] or DamageProfileTemplates.default
 	local instant_ragdoll_chance_allowed = not damage_profile.ignore_instant_ragdoll_chance
 	local instant_ragdoll_chance = instant_ragdoll_chance_allowed and action_data.instant_ragdoll_chance
-	local instant_ragdoll = instant_ragdoll_chance and math.random() < instant_ragdoll_chance
+	local instant_ragdoll = instant_ragdoll_chance and instant_ragdoll_chance > math.random()
 	local force_instant_ragdoll = death_component.force_instant_ragdoll
 
 	if instant_ragdoll or force_instant_ragdoll or self:_check_if_need_to_ragdoll(unit) then
@@ -30,7 +34,7 @@ BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_
 		Managers.state.decal:remove_linked_decals(unit)
 	end
 
-	local death_animation_events = nil
+	local death_animation_events
 	local death_animations = action_data.death_animations
 
 	if not damage_profile.ragdoll_only and death_animations or action_data.force_death_animation then
@@ -43,6 +47,7 @@ BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_
 		if not death_animation_events then
 			local hit_zone_name = death_component.hit_zone_name
 			local death_animation_identifier = hit_zone_name or "default"
+
 			death_animation_events = death_animations[death_animation_identifier]
 		end
 	end
@@ -55,8 +60,10 @@ BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_
 
 		local ragdoll_timings = action_data.ragdoll_timings
 		local ragdoll_timing = ragdoll_timings[death_animation_event]
+
 		scratchpad.ragdoll_timing = t + ragdoll_timing
 		scratchpad.do_ragdoll_push = false
+
 		local death_animation_vo = action_data.death_animation_vo and action_data.death_animation_vo[death_animation_event]
 
 		if death_animation_vo then
@@ -135,8 +142,7 @@ BtDieAction.run = function (self, unit, breed, blackboard, scratchpad, action_da
 	return "running"
 end
 
-local NAV_MESH_ABOVE = 0.1
-local NAV_MESH_BELOW = 0.1
+local NAV_MESH_ABOVE, NAV_MESH_BELOW = 0.1, 0.1
 local CHECK_OFFSET = 1
 
 BtDieAction._check_if_need_to_ragdoll = function (self, unit)

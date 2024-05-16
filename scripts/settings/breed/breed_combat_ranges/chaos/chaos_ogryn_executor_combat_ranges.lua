@@ -1,42 +1,44 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_executor_combat_ranges.lua
+
 local combat_ranges = {
 	name = "chaos_ogryn_executor",
 	starting_combat_range = "far",
 	config = {
 		far = {
 			{
-				distance = 30,
-				sticky_time = 1,
 				activate_slot_system = true,
+				distance = 30,
 				distance_operator = "lesser",
-				switch_combat_range = "close"
-			}
+				sticky_time = 1,
+				switch_combat_range = "close",
+			},
 		},
 		close = {
 			{
-				distance = 10,
-				sticky_time = 4,
 				activate_slot_system = true,
+				distance = 10,
 				distance_operator = "lesser",
-				switch_combat_range = "melee"
+				sticky_time = 4,
+				switch_combat_range = "melee",
 			},
 			{
-				distance = 32,
-				sticky_time = 0,
 				activate_slot_system = true,
+				distance = 32,
 				distance_operator = "greater",
-				switch_combat_range = "far"
-			}
+				sticky_time = 0,
+				switch_combat_range = "far",
+			},
 		},
 		melee = {
 			{
-				distance = 12,
-				sticky_time = 0,
 				activate_slot_system = true,
+				distance = 12,
 				distance_operator = "greater",
-				switch_combat_range = "close"
-			}
-		}
-	}
+				sticky_time = 0,
+				switch_combat_range = "close",
+			},
+		},
+	},
 }
 
 return combat_ranges

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/party_immaterium_invite_notification_handler.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local PartyImmateriumInviteNotificationHandler = class("PartyImmateriumInviteNotificationHandler")
 local INPUT_SERVICE_TYPE = "View"
@@ -30,7 +32,7 @@ PartyImmateriumInviteNotificationHandler.add_invite = function (self, party_id, 
 	self._invite_queue[#self._invite_queue + 1] = {
 		party_id = party_id,
 		invite_token = invite_token,
-		inviter_name = inviter_name
+		inviter_name = inviter_name,
 	}
 
 	if not self._active_invite then
@@ -63,8 +65,8 @@ PartyImmateriumInviteNotificationHandler.update = function (self, dt, t)
 		return
 	end
 
-	if active_invite.auto_decline_at <= t then
-		local answer_code = nil
+	if t >= active_invite.auto_decline_at then
+		local answer_code
 
 		Managers.grpc:cancel_invite_to_party(active_invite.party_id, active_invite.invite_token, answer_code):catch(function (error)
 			Log.warning("PartyImmateriumInviteNotificationHandler", "Could not cancel invite, error: %s", table.tostring(error, 3))
@@ -86,21 +88,23 @@ end
 
 PartyImmateriumInviteNotificationHandler._activate_next_invite = function (self)
 	local invite = table.remove(self._invite_queue, 1)
+
 	self._active_invite = invite
+
 	local color_tint_text = true
 	local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, ACCEPT_INPUT_ALIAS, color_tint_text)
 	local texts = {
 		Localize("loc_social_party_invite_received_header"),
 		Localize("loc_social_party_invite_received_description", true, {
-			player_name = invite.inviter_name
+			player_name = invite.inviter_name,
 		}),
-		Localize("loc_social_party_invite_accept", true, {
-			input = input_text
-		})
+		(Localize("loc_social_party_invite_accept", true, {
+			input = input_text,
+		})),
 	}
 
 	Managers.event:trigger("event_add_notification_message", "matchmaking", {
-		texts = texts
+		texts = texts,
 	}, function (notification_id)
 		invite.notification_id = notification_id
 	end)
@@ -115,7 +119,7 @@ PartyImmateriumInviteNotificationHandler._cb_invite_accepted = function (self)
 	if active_invite then
 		Managers.party_immaterium:join_party({
 			party_id = active_invite.party_id,
-			invite_token = active_invite.invite_token
+			invite_token = active_invite.invite_token,
 		})
 		self:_clear_active_invite()
 	end

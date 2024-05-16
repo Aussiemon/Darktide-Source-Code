@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_beast_of_nurgle_consume_minion.lua
+
 local BON_ATTACH_NODE_NAME = "j_tongue_mouth"
 local TARGET_ATTACH_NODE_NAME = "j_hips"
-local _link_unit = nil
+local _link_unit
 local effect_template = {
 	name = "chaos_beast_of_nurgle_consume_minion",
 	start = function (template_data, template_context)
@@ -8,8 +10,7 @@ local effect_template = {
 	end,
 	update = function (template_data, template_context, dt, t)
 		local unit = template_data.unit
-		local game_session = template_context.game_session
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+		local game_session, game_object_id = template_context.game_session, Managers.state.unit_spawner:game_object_id(unit)
 		local consumed_minion_unit_id = GameSession.game_object_field(game_session, game_object_id, "consumed_minion_unit_id")
 		local target_unit = Managers.state.unit_spawner:unit(consumed_minion_unit_id)
 
@@ -31,7 +32,7 @@ local effect_template = {
 				Managers.state.minion_spawn:despawn(template_data.target_unit)
 			end
 		end
-	end
+	end,
 }
 
 function _link_unit(template_data, template_context, unit, target_unit)

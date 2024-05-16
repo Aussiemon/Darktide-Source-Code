@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/game_states/boot/state_boot_sub_state_base.lua
+
 local StateBootSubStateBase = class("StateBootSubStateBase")
+
 StateBootSubStateBase.ENFORCED_INTERFACE = {
 	"update",
-	"_state_update"
+	"_state_update",
 }
 
 StateBootSubStateBase.on_enter = function (self, parent, params)
@@ -19,11 +22,13 @@ StateBootSubStateBase.update = function (self)
 
 	if error then
 		return StateError, {
-			error
+			error,
 		}
 	elseif done then
 		local next_index = params.sub_state_index + 1
+
 		params.sub_state_index = next_index
+
 		local next_state_data = params.states[next_index]
 
 		if next_state_data then

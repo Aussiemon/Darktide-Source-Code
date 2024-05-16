@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_rise_psyker_female_a.lua
+
 local mission_vo_dm_rise_psyker_female_a = {
 	mission_rise_first_objective_response = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local mission_vo_dm_rise_psyker_female_a = {
 			"loc_psyker_female_a__guidance_starting_area_07",
 			"loc_psyker_female_a__guidance_starting_area_08",
 			"loc_psyker_female_a__guidance_starting_area_09",
-			"loc_psyker_female_a__guidance_starting_area_10"
+			"loc_psyker_female_a__guidance_starting_area_10",
 		},
 		sound_events_duration = {
 			2.839167,
@@ -24,7 +26,7 @@ local mission_vo_dm_rise_psyker_female_a = {
 			4.030083,
 			3.321792,
 			3.639792,
-			3.531688
+			3.531688,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local mission_vo_dm_rise_psyker_female_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_rise_keep_coming_b = {
 		randomize_indexes_n = 0,
@@ -47,21 +49,21 @@ local mission_vo_dm_rise_psyker_female_a = {
 			"loc_psyker_female_a__event_survive_almost_done_01",
 			"loc_psyker_female_a__event_survive_almost_done_02",
 			"loc_psyker_female_a__event_survive_almost_done_03",
-			"loc_psyker_female_a__event_survive_almost_done_04"
+			"loc_psyker_female_a__event_survive_almost_done_04",
 		},
 		sound_events_duration = {
 			1.320125,
 			2.158938,
 			1.877583,
-			2.801604
+			2.801604,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_rise_start_b_sergeant_branch = {
 		randomize_indexes_n = 0,
@@ -69,19 +71,19 @@ local mission_vo_dm_rise_psyker_female_a = {
 		sound_events = {
 			"loc_psyker_female_a__region_habculum_01",
 			"loc_psyker_female_a__region_habculum_02",
-			"loc_psyker_female_a__region_habculum_03"
+			"loc_psyker_female_a__region_habculum_03",
 		},
 		sound_events_duration = {
 			3.069396,
 			6.564333,
-			3.171917
+			3.171917,
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333
+			0.3333333,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_rise_start_b_sergeant_branch_response = {
 		randomize_indexes_n = 0,
@@ -89,20 +91,20 @@ local mission_vo_dm_rise_psyker_female_a = {
 		sound_events = {
 			"loc_psyker_female_a__zone_transit_01",
 			"loc_psyker_female_a__zone_transit_02",
-			"loc_psyker_female_a__zone_transit_03"
+			"loc_psyker_female_a__zone_transit_03",
 		},
 		sound_events_duration = {
 			6.015896,
 			3.499208,
-			5.151208
+			5.151208,
 		},
 		sound_event_weights = {
 			0.3333333,
 			0.3333333,
-			0.3333333
+			0.3333333,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_vo_dm_rise_psyker_female_a", mission_vo_dm_rise_psyker_female_a)

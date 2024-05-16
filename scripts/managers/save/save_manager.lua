@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/save/save_manager.lua
+
 local Save = require("scripts/managers/save/utilities/save")
 local SaveData = require("scripts/managers/save/save_data")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
@@ -84,6 +86,7 @@ end
 SaveManager.cb_save_done = function (self)
 	self._token = nil
 	self._state = "idle"
+
 	local cb = self._callback
 
 	if cb then
@@ -101,6 +104,7 @@ SaveManager.cb_load_done = function (self, token)
 	self._save_data:populate(token.data)
 
 	self._state = "idle"
+
 	local cb = self._callback
 
 	if cb then

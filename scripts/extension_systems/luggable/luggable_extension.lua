@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/luggable/luggable_extension.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local LuggableExtension = class("LuggableExtension")
 
 LuggableExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._unit = unit
 	self._destroyed = false
@@ -18,6 +21,7 @@ end
 
 LuggableExtension.destroy = function (self)
 	self._destroyed = true
+
 	local player_unit = self._carrier_player_unit
 
 	if player_unit then

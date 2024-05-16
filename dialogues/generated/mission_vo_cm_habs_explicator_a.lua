@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_explicator_a.lua
+
 local mission_vo_cm_habs_explicator_a = {
 	info_get_out_habs = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local mission_vo_cm_habs_explicator_a = {
 			"loc_explicator_a__info_get_out_07",
 			"loc_explicator_a__info_get_out_08",
 			"loc_explicator_a__info_get_out_09",
-			"loc_explicator_a__info_get_out_10"
+			"loc_explicator_a__info_get_out_10",
 		},
 		sound_events_duration = {
 			1.793354,
@@ -24,7 +26,7 @@ local mission_vo_cm_habs_explicator_a = {
 			4.378875,
 			3.642146,
 			2.76175,
-			3.663604
+			3.663604,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,10 +38,10 @@ local mission_vo_cm_habs_explicator_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_vo_cm_habs_explicator_a", mission_vo_cm_habs_explicator_a)

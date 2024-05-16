@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/mover_controller.lua
+
 local MoverController = {}
+
 Unit._set_mover = Unit._set_mover or Unit.set_mover
 
 Unit.set_mover = function ()
@@ -7,7 +10,7 @@ end
 
 MoverController.create_mover_state = function ()
 	return {
-		disable_reasons = {}
+		disable_reasons = {},
 	}
 end
 
@@ -25,6 +28,7 @@ MoverController.set_disable_reason = function (unit, mover_state, reason, new_st
 	end
 
 	local disable_reasons = mover_state.disable_reasons
+
 	disable_reasons[reason] = new_state
 
 	if next(disable_reasons) == nil then

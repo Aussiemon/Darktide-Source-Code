@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/item/rarity_settings.lua
+
 local RaritySettings = {
 	[0] = {
 		display_name = "",
@@ -6,28 +8,28 @@ local RaritySettings = {
 			255,
 			255,
 			255,
-			255
+			255,
 		},
 		color_dark = {
 			255,
 			64,
 			64,
-			64
+			64,
 		},
 		color_desaturated = {
 			255,
 			64,
 			64,
-			64
+			64,
 		},
 		weapon = {
+			num_perks = 0,
 			num_traits = 0,
-			num_perks = 0
 		},
 		gadget = {
+			num_perks = 0,
 			num_traits = 0,
-			num_perks = 0
-		}
+		},
 	},
 	{
 		display_name = "loc_item_weapon_rarity_1",
@@ -36,13 +38,13 @@ local RaritySettings = {
 		color_dark = Color.item_rarity_dark_1(255, true),
 		color_desaturated = Color.item_rarity_desaturated_1(255, true),
 		weapon = {
+			num_perks = 0,
 			num_traits = 0,
-			num_perks = 0
 		},
 		gadget = {
+			num_perks = 0,
 			num_traits = 0,
-			num_perks = 0
-		}
+		},
 	},
 	{
 		display_name = "loc_item_weapon_rarity_2",
@@ -51,13 +53,13 @@ local RaritySettings = {
 		color_dark = Color.item_rarity_dark_2(255, true),
 		color_desaturated = Color.item_rarity_desaturated_2(255, true),
 		weapon = {
+			num_perks = 1,
 			num_traits = 0,
-			num_perks = 1
 		},
 		gadget = {
+			num_perks = 0,
 			num_traits = 1,
-			num_perks = 0
-		}
+		},
 	},
 	{
 		display_name = "loc_item_weapon_rarity_3",
@@ -66,13 +68,13 @@ local RaritySettings = {
 		color_dark = Color.item_rarity_dark_3(255, true),
 		color_desaturated = Color.item_rarity_desaturated_3(255, true),
 		weapon = {
+			num_perks = 1,
 			num_traits = 1,
-			num_perks = 1
 		},
 		gadget = {
+			num_perks = 1,
 			num_traits = 1,
-			num_perks = 1
-		}
+		},
 	},
 	{
 		display_name = "loc_item_weapon_rarity_4",
@@ -81,13 +83,13 @@ local RaritySettings = {
 		color_dark = Color.item_rarity_dark_4(255, true),
 		color_desaturated = Color.item_rarity_desaturated_4(255, true),
 		weapon = {
+			num_perks = 2,
 			num_traits = 1,
-			num_perks = 2
 		},
 		gadget = {
+			num_perks = 2,
 			num_traits = 1,
-			num_perks = 2
-		}
+		},
 	},
 	{
 		display_name = "loc_item_weapon_rarity_5",
@@ -96,13 +98,13 @@ local RaritySettings = {
 		color_dark = Color.item_rarity_dark_5(255, true),
 		color_desaturated = Color.item_rarity_desaturated_5(255, true),
 		weapon = {
+			num_perks = 2,
 			num_traits = 2,
-			num_perks = 2
 		},
 		gadget = {
+			num_perks = 3,
 			num_traits = 1,
-			num_perks = 3
-		}
+		},
 	},
 	{
 		display_name = "loc_item_weapon_rarity_6",
@@ -111,14 +113,14 @@ local RaritySettings = {
 		color_dark = Color.item_rarity_dark_6(255, true),
 		color_desaturated = Color.item_rarity_desaturated_6(255, true),
 		weapon = {
+			num_perks = 2,
 			num_traits = 2,
-			num_perks = 2
 		},
 		gadget = {
+			num_perks = 3,
 			num_traits = 1,
-			num_perks = 3
-		}
-	}
+		},
+	},
 }
 
 return settings("RaritySettings", RaritySettings)

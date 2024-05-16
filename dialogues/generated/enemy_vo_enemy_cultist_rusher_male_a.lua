@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_rusher_male_a.lua
+
 local enemy_vo_enemy_cultist_rusher_male_a = {
 	cultist_rusher_switch_to_melee = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			"loc_enemy_cultist_rusher_male_a__switch_to_melee_17",
 			"loc_enemy_cultist_rusher_male_a__switch_to_melee_18",
 			"loc_enemy_cultist_rusher_male_a__switch_to_melee_19",
-			"loc_enemy_cultist_rusher_male_a__switch_to_melee_20"
+			"loc_enemy_cultist_rusher_male_a__switch_to_melee_20",
 		},
 		sound_events_duration = {
 			2.887271,
@@ -44,7 +46,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			0.929542,
 			3.891792,
 			2.187417,
-			4.155917
+			4.155917,
 		},
 		sound_event_weights = {
 			0.05,
@@ -66,9 +68,9 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_rusher_take_cover = {
 		randomize_indexes_n = 0,
@@ -88,7 +90,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			"loc_enemy_cultist_rusher_male_a__take_cover_12",
 			"loc_enemy_cultist_rusher_male_a__take_cover_13",
 			"loc_enemy_cultist_rusher_male_a__take_cover_14",
-			"loc_enemy_cultist_rusher_male_a__take_cover_15"
+			"loc_enemy_cultist_rusher_male_a__take_cover_15",
 		},
 		sound_events_duration = {
 			3.335229,
@@ -105,7 +107,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			1.534,
 			3.891792,
 			2.187417,
-			4.155917
+			4.155917,
 		},
 		sound_event_weights = {
 			0.06666667,
@@ -122,9 +124,9 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			0.06666667,
 			0.06666667,
 			0.06666667,
-			0.06666667
+			0.06666667,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	enemy_cultist_rusher_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -149,7 +151,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			"loc_enemy_cultist_rusher_male_a__alerted_idle_17",
 			"loc_enemy_cultist_rusher_male_a__alerted_idle_18",
 			"loc_enemy_cultist_rusher_male_a__alerted_idle_19",
-			"loc_enemy_cultist_rusher_male_a__alerted_idle_20"
+			"loc_enemy_cultist_rusher_male_a__alerted_idle_20",
 		},
 		sound_events_duration = {
 			1.319729,
@@ -171,7 +173,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			1.746438,
 			2.489438,
 			2.538188,
-			4.077
+			4.077,
 		},
 		sound_event_weights = {
 			0.05,
@@ -193,9 +195,9 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	enemy_cultist_rusher_assault = {
 		randomize_indexes_n = 0,
@@ -220,7 +222,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			"loc_enemy_cultist_rusher_male_a__assault_17",
 			"loc_enemy_cultist_rusher_male_a__assault_18",
 			"loc_enemy_cultist_rusher_male_a__assault_19",
-			"loc_enemy_cultist_rusher_male_a__assault_20"
+			"loc_enemy_cultist_rusher_male_a__assault_20",
 		},
 		sound_events_duration = {
 			2.414833,
@@ -242,7 +244,7 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			3.390042,
 			4.618,
 			2.738875,
-			3.335229
+			3.335229,
 		},
 		sound_event_weights = {
 			0.05,
@@ -264,10 +266,10 @@ local enemy_vo_enemy_cultist_rusher_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_cultist_rusher_male_a", enemy_vo_enemy_cultist_rusher_male_a)

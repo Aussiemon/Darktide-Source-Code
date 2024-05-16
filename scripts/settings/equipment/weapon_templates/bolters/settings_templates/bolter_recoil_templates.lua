@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local AIM_ASSIST_MULTIPLIER_FUNCTIONS = RecoilTemplate.AIM_ASSIST_MULTIPLIER_FUNCTIONS
 local recoil_templates = {}
@@ -15,77 +17,77 @@ recoil_templates.default_bolter_spraynpray = {
 		rise = {
 			0.75,
 			0.35,
-			0.3
+			0.3,
 		},
 		decay = {
+			idle = 2.75,
 			shooting = 0.25,
-			idle = 2.75
 		},
 		offset = {
 			{
+				pitch = 0.05,
 				yaw = 0,
-				pitch = 0.05
 			},
 			{
+				pitch = 0.035,
 				yaw = 0,
-				pitch = 0.035
 			},
 			{
+				pitch = 0.025,
 				yaw = 0,
-				pitch = 0.025
 			},
 			{
+				pitch = 0.015,
 				yaw = 0,
-				pitch = 0.015
-			}
+			},
 		},
 		offset_random_range = {
 			{
+				pitch = 0.025,
 				yaw = 0.04,
-				pitch = 0.025
 			},
 			{
+				pitch = 0.025,
 				yaw = 0.05,
-				pitch = 0.025
 			},
 			{
+				pitch = 0.025,
 				yaw = 0.065,
-				pitch = 0.025
-			}
+			},
 		},
 		offset_limit = {
+			pitch = 2,
 			yaw = 2,
-			pitch = 2
 		},
 		visual_recoil_settings = {
 			intensity = 1,
-			lerp_scalar = 0.1
+			lerp_scalar = 0.1,
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
-		}
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
+		},
 	},
 	moving = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_bolter_spraynpray",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_bolter_spraynpray",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		new_influence_percent = 0.5,
 		inherits = {
 			"default_bolter_spraynpray",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 recoil_templates.default_bolter_killshot = {
 	still = {
@@ -95,72 +97,72 @@ recoil_templates.default_bolter_killshot = {
 		rise = {
 			0.75,
 			0.65,
-			0.5
+			0.5,
 		},
 		decay = {
+			idle = 0.8,
 			shooting = 0.2,
-			idle = 0.8
 		},
 		offset = {
 			{
+				pitch = 0.075,
 				yaw = 0,
-				pitch = 0.075
 			},
 			{
+				pitch = 0.05,
 				yaw = 0,
-				pitch = 0.05
 			},
 			{
+				pitch = 0.035,
 				yaw = 0,
-				pitch = 0.035
-			}
+			},
 		},
 		offset_random_range = {
 			{
+				pitch = 0.025,
 				yaw = 0.1,
-				pitch = 0.025
 			},
 			{
+				pitch = 0.025,
 				yaw = 0.1,
-				pitch = 0.025
 			},
 			{
+				pitch = 0.025,
 				yaw = 0.1,
-				pitch = 0.025
-			}
+			},
 		},
 		offset_limit = {
+			pitch = 1.25,
 			yaw = 1,
-			pitch = 1.25
 		},
 		visual_recoil_settings = {
 			intensity = 5,
 			lerp_scalar = 0.8,
-			yaw_intensity = 7.5
-		}
+			yaw_intensity = 7.5,
+		},
 	},
 	moving = {
 		new_influence_percent = 1,
 		inherits = {
 			"default_bolter_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_still = {
 		inherits = {
 			"default_bolter_killshot",
-			"still"
-		}
+			"still",
+		},
 	},
 	crouch_moving = {
 		inherits = {
 			"default_bolter_killshot",
-			"still"
-		}
-	}
+			"still",
+		},
+	},
 }
 
 return {
 	base_templates = recoil_templates,
-	overrides = overrides
+	overrides = overrides,
 }

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_game.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
@@ -10,12 +12,12 @@ WwiseStateGroupGame.init = function (self, wwise_world, wwise_state_group_name)
 	WwiseStateGroupGame.super.init(self, wwise_world, wwise_state_group_name)
 
 	self._wwise_state = {
-		StateLoading = "loading",
-		StateVictoryDefeat = "None",
-		StateTitle = "title",
 		StateGameScore = "game_score",
 		StateGameplay = "mission",
-		StateMainMenu = "main_menu"
+		StateLoading = "loading",
+		StateMainMenu = "main_menu",
+		StateTitle = "title",
+		StateVictoryDefeat = "None",
 	}
 end
 
@@ -84,9 +86,11 @@ WwiseStateGroupGame.update = function (self, dt, t)
 					end
 				elseif game_state_name == "StateVictoryDefeat" then
 					local end_result = Managers.mechanism:end_result()
+
 					wwise_state = self:_get_victory_defeat_wwise_state(end_result, wwise_state)
 				elseif game_state_name == "StateGameScore" then
 					local end_result = Managers.mechanism:end_result()
+
 					wwise_state = self:_get_game_score_wwise_state(end_result, wwise_state)
 				end
 

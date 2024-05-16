@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/stagger.lua
+
 local Armor = require("scripts/utilities/attack/armor")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -9,7 +11,7 @@ local MinionState = require("scripts/utilities/minion_state")
 local StaggerCalculation = require("scripts/utilities/attack/stagger_calculation")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Stagger = {}
-local _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, _apply_stagger, _get_stagger_duration_modifier, _get_stagger_count, _should_trigger_stagger, _get_system_overrides = nil
+local _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, _apply_stagger, _get_stagger_duration_modifier, _get_stagger_count, _should_trigger_stagger, _get_system_overrides
 local EMPTY_STAT_BUFFS = {}
 local DEFAULT_ACCUMULATIVE_MULTIPLIER = 0.5
 
@@ -37,10 +39,14 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	local stagger_strength_pool = stagger_component.stagger_strength_pool
 	local stagger_pool_last_modified = stagger_component.stagger_pool_last_modified
 	local time_since_last = t - stagger_pool_last_modified
+
 	time_since_last = math.max(0, time_since_last - decay_delay)
+
 	local stagger_pool_decay_multiplier = (decay_time - math.min(decay_time, time_since_last)) / decay_time
+
 	stagger_strength_pool = stagger_strength_pool * stagger_pool_decay_multiplier
 	stagger_component.stagger_pool_last_modified = t
+
 	local target_buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local target_stat_buffs = target_buff_extension and target_buff_extension:stat_buffs() or EMPTY_STAT_BUFFS
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
@@ -49,12 +55,15 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	local is_burning = MinionState.is_burning(unit)
 	local stagger_reduction_override_or_nil, action_controlled_stagger = _get_action_data_overrides(unit, blackboard, breed, damage_profile, attacking_unit)
 	local mutator_stagger_overrides = Managers.state.mutator:mutator("mutator_higher_stagger_thresholds")
+
 	mutator_stagger_overrides = mutator_stagger_overrides and mutator_stagger_overrides:stagger_overrides()
+
 	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning, mutator_stagger_overrides)
 	local accumulative_multiplier = damage_profile.accumulative_stagger_strength_multiplier or DEFAULT_ACCUMULATIVE_MULTIPLIER
 
 	if type(accumulative_multiplier) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(damage_profile_lerp_values, "accumulative_stagger_strength_multiplier")
+
 		accumulative_multiplier = DamageProfile.lerp_damage_profile_entry(accumulative_multiplier, lerp_value)
 	end
 
@@ -122,6 +131,7 @@ Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration
 	local t = Managers.time:time("gameplay")
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	stagger_component.immune_time = t + (immune_time or 0)
 	stagger_component.type = stagger_type
 
@@ -151,14 +161,14 @@ end
 
 local RUNNING_STAGGER_DEFAULT_MIN_DISTANCE = 5
 local CONTROLLED_STAGGER_IGNORED_STAGGER_TYPES = {
-	explosion = true,
 	blinding = true,
 	electrocuted = true,
-	sticky = true
+	explosion = true,
+	sticky = true,
 }
 
 function _get_action_data_overrides(unit, blackboard, breed, damage_profile, attacking_unit)
-	local stagger_reduction, action_controlled_stagger = nil
+	local stagger_reduction, action_controlled_stagger
 	local stagger_type = damage_profile.stagger_category
 	local behavior_ext = ScriptUnit.has_extension(unit, "behavior_system")
 
@@ -169,6 +179,7 @@ function _get_action_data_overrides(unit, blackboard, breed, damage_profile, att
 			local action_data = action_data_or_nil
 			local stagger_type_reduction = action_data.stagger_type_reduction and action_data.stagger_type_reduction[stagger_type]
 			local stagger_base_reduction = action_data.stagger_reduction
+
 			stagger_reduction = stagger_type_reduction or stagger_base_reduction
 
 			if action_data.controlled_stagger then
@@ -203,6 +214,7 @@ function _get_action_data_overrides(unit, blackboard, breed, damage_profile, att
 				if min_speed then
 					local current_velocity = locomotion_extension:current_velocity()
 					local move_speed = Vector3.length(current_velocity)
+
 					within_speed_threshold = min_speed <= move_speed
 				end
 
@@ -211,6 +223,7 @@ function _get_action_data_overrides(unit, blackboard, breed, damage_profile, att
 
 				if max_distance and HEALTH_ALIVE[attacking_unit] then
 					local distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[attacking_unit])
+
 					within_distance_threshold = max_distance <= distance
 				end
 
@@ -220,6 +233,7 @@ function _get_action_data_overrides(unit, blackboard, breed, damage_profile, att
 				if ignored_combat_range then
 					local behavior_component = blackboard.behavior
 					local combat_range = behavior_component.combat_range
+
 					not_in_ignored_combat_range = combat_range ~= ignored_combat_range
 				end
 
@@ -237,6 +251,7 @@ function _get_stagger_count(unit, breed)
 	if Breed.is_minion(breed) then
 		local blackboard = BLACKBOARDS[unit]
 		local stagger_component = blackboard.stagger
+
 		stagger_count = stagger_component.count
 	end
 
@@ -270,6 +285,7 @@ function _get_stagger_duration_modifier(lerp_values, damage_profile)
 
 	if type(modifier) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "stagger_duration_modifier")
+
 		modifier = DamageProfile.lerp_damage_profile_entry(modifier, lerp_value)
 	end
 
@@ -294,6 +310,7 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 
 		stagger_duration_multiplier = stagger_duration_multiplier or 1
 		duration = duration * stagger_duration_multiplier + stagger_duration_modifier
+
 		local stagger_immune_times = breed.stagger_immune_times
 		local immune_time = stagger_immune_times[stagger_type]
 
@@ -318,6 +335,7 @@ end
 function _apply_action_controlled_stagger(unit, stagger_type, attack_direction)
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	stagger_component.controlled_stagger = true
 
 	stagger_component.direction:store(attack_direction)

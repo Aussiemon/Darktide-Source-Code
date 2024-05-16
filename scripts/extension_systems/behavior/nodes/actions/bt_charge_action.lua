@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_charge_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -19,11 +21,16 @@ local BtChargeAction = class("BtChargeAction", "BtNode")
 
 BtChargeAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
+
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -34,7 +41,9 @@ BtChargeAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
 	scratchpad.velocity_stored = Vector3Box(0, 0, 0)
+
 	local original_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = original_rotation_speed
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 
@@ -109,7 +118,7 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 		self:_update_navigating(unit, scratchpad, action_data, t)
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 
-		if scratchpad.max_duration_t and scratchpad.max_duration_t < t then
+		if scratchpad.max_duration_t and t > scratchpad.max_duration_t then
 			return "done"
 		end
 	elseif state == "charged_past" then
@@ -141,11 +150,13 @@ end
 BtChargeAction._start_charging = function (self, unit, scratchpad, action_data, t)
 	scratchpad.state = "charging"
 	scratchpad.charge_started_at_t = t
+
 	local navigation_extension = scratchpad.navigation_extension
 
 	navigation_extension:set_enabled(false)
 
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "attacking"
 	scratchpad.target_dodged_during_attack = nil
 end
@@ -162,6 +173,7 @@ BtChargeAction._start_navigating = function (self, scratchpad, action_data, t)
 	scratchpad.locomotion_extension:set_rotation_speed(action_data.rotation_speed)
 
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "moving"
 	scratchpad.target_dodged_during_attack = nil
 end
@@ -189,6 +201,7 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 	local extrapolated_position = target_position + target_velocity * action_data.target_extrapolation_length_scale
 	local direction_to_target = Vector3.normalize(Vector3.flat(extrapolated_position - self_position))
 	local slowdown_percentage = self:_get_turn_slowdown_percentage(unit, direction_to_target, action_data)
+
 	wanted_charge_speed = wanted_charge_speed * slowdown_percentage
 
 	navigation_extension:set_max_speed(wanted_charge_speed)
@@ -200,6 +213,7 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 	scratchpad.velocity_stored:store(new_velocity)
 
 	scratchpad.current_charge_speed = wanted_charge_speed
+
 	local rotation = Quaternion.look(direction_to_target)
 	local distance_to_target = Vector3.distance(self_position, extrapolated_position)
 	local close_distance = action_data.close_distance
@@ -218,7 +232,7 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 		locomotion_extension:set_rotation_speed(rotation_speed)
 		locomotion_extension:set_wanted_rotation(rotation)
 
-		if action_data.min_time_spent_charging <= time_spent_charging then
+		if time_spent_charging >= action_data.min_time_spent_charging then
 			local dot = Vector3.dot(wanted_direction, direction_to_target)
 			local charged_past_dot = action_data.charged_past_dot
 
@@ -228,8 +242,11 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 				scratchpad.animation_extension:anim_event(miss_animation)
 
 				local miss_duration = action_data.miss_durations[miss_animation]
+
 				scratchpad.charged_past_exit_t = t + miss_duration
+
 				local can_hit_wall_duration = action_data.can_hit_wall_durations[miss_animation]
+
 				scratchpad.can_hit_wall_t = t + can_hit_wall_duration
 				scratchpad.state = "charged_past"
 
@@ -253,7 +270,7 @@ end
 local MIN_DISTANCE_FOR_MOVE_TO = 2
 
 BtChargeAction._update_navigating = function (self, unit, scratchpad, action_data, t)
-	local can_exit_navigating = not scratchpad.min_time_navigating or scratchpad.min_time_navigating < t
+	local can_exit_navigating = not scratchpad.min_time_navigating or t > scratchpad.min_time_navigating
 
 	if can_exit_navigating and scratchpad.navmesh_ray_can_go then
 		self:_start_charging(unit, scratchpad, action_data, t)
@@ -269,7 +286,7 @@ BtChargeAction._update_navigating = function (self, unit, scratchpad, action_dat
 	local destination = navigation_extension:destination()
 	local distance = Vector3.distance(target_position, destination)
 
-	if MIN_DISTANCE_FOR_MOVE_TO < distance then
+	if distance > MIN_DISTANCE_FOR_MOVE_TO then
 		self:_move_to_position(scratchpad, target_position)
 	end
 
@@ -295,7 +312,7 @@ BtChargeAction._update_navigating = function (self, unit, scratchpad, action_dat
 end
 
 BtChargeAction._update_charged_past = function (self, unit, scratchpad, action_data, t, dt)
-	if scratchpad.charged_past_exit_t < t then
+	if t > scratchpad.charged_past_exit_t then
 		local done = true
 
 		return done
@@ -325,14 +342,14 @@ local LATERAL = 3
 
 BtChargeAction._update_ray_can_go = function (self, unit, scratchpad)
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local target_unit = scratchpad.perception_component.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
 	local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, target_position, ABOVE, BELOW, LATERAL)
 
 	if navmesh_position then
 		local ray_can_go = GwNavQueries.raycango(nav_world, POSITION_LOOKUP[unit], navmesh_position, traverse_logic)
+
 		scratchpad.navmesh_ray_can_go = ray_can_go
 	end
 end
@@ -348,6 +365,7 @@ BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data
 
 	if not scratchpad.has_dealt_damage and attack_damage_t < t then
 		scratchpad.has_dealt_damage = true
+
 		local hit_target = scratchpad.hit_target
 		local damage_profile = action_data.damage_profile
 		local damage_type = action_data.damage_type
@@ -366,6 +384,7 @@ BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data
 		if effect_template then
 			local fx_system = scratchpad.fx_system
 			local global_effect_id = fx_system:start_template_effect(effect_template, unit)
+
 			scratchpad.global_effect_id = global_effect_id
 		end
 	end
@@ -377,8 +396,7 @@ end
 
 BtChargeAction._move_to_position = function (self, scratchpad, target_position)
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local goal_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, target_position, ABOVE, BELOW)
 
 	if goal_position then
@@ -441,21 +459,25 @@ end
 
 BtChargeAction._hit_target = function (self, unit, hit_unit, scratchpad, action_data, t)
 	scratchpad.hit_target = hit_unit
+
 	local attack_anim_duration = action_data.attack_anim_duration
 
 	if type(attack_anim_duration) == "table" then
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+
 		attack_anim_duration = attack_anim_duration[wielded_slot_name] or attack_anim_duration.default
 	end
 
 	scratchpad.attack_duration_t = t + attack_anim_duration
 	scratchpad.attack_damage_t = t + action_data.attack_anim_damage_timing
+
 	local attack_anim = action_data.attack_anim
 
 	scratchpad.animation_extension:anim_event(attack_anim)
 
 	scratchpad.state = "attacking"
+
 	local speed = scratchpad.current_charge_speed or action_data.charge_speed_min
 
 	scratchpad.navigation_extension:set_enabled(true, speed)
@@ -493,10 +515,8 @@ BtChargeAction._update_charge_buildup = function (self, unit, scratchpad, action
 		return
 	end
 
-	local behavior_component = scratchpad.behavior_component
-	local navigation_extension = scratchpad.navigation_extension
-	local _ = behavior_component.move_state
-	local is_following_path = navigation_extension:is_following_path()
+	local behavior_component, navigation_extension = scratchpad.behavior_component, scratchpad.navigation_extension
+	local _, is_following_path = behavior_component.move_state, navigation_extension:is_following_path()
 
 	if is_following_path then
 		if not scratchpad.started_charge_anim then
@@ -523,6 +543,7 @@ end
 
 BtChargeAction._start_charge_direction_anim = function (self, unit, scratchpad, action_data, t)
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
 	local charge_direction_anim_events = action_data.charge_direction_anim_events
 	local charge_anim_events = charge_direction_anim_events[moving_direction_name]
@@ -533,6 +554,7 @@ BtChargeAction._start_charge_direction_anim = function (self, unit, scratchpad, 
 
 		local start_move_rotation_timings = action_data.start_move_rotation_timings
 		local start_rotation_timing = start_move_rotation_timings[charge_anim]
+
 		scratchpad.start_rotation_timing = t + start_rotation_timing
 		scratchpad.move_start_anim_event_name = charge_anim
 	else
@@ -544,13 +566,16 @@ BtChargeAction._start_charge_direction_anim = function (self, unit, scratchpad, 
 
 	local charge_direction_durations = action_data.charge_direction_durations
 	local charge_duration = charge_direction_durations[charge_anim]
+
 	scratchpad.charge_duration = t + charge_duration
 end
 
 BtChargeAction._start_charge_anim = function (self, unit, scratchpad, action_data, t)
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local charge_anim_events = action_data.charge_anim_events
 	local charge_anim = Animation.random_event(charge_anim_events)
+
 	scratchpad.start_rotation_timing = nil
 	scratchpad.move_start_anim_event_name = nil
 
@@ -558,6 +583,7 @@ BtChargeAction._start_charge_anim = function (self, unit, scratchpad, action_dat
 
 	local charge_durations = action_data.charge_durations
 	local charge_duration = charge_durations[charge_anim]
+
 	scratchpad.charge_duration = t + charge_duration
 end
 

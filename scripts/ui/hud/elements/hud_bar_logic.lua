@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/hud_bar_logic.lua
+
 local HudBarLogic = class("HudBarLogic")
 local settings_list = {
 	"duration",
@@ -5,7 +7,7 @@ local settings_list = {
 	"alpha_fade_delay",
 	"alpha_fade_duration",
 	"alpha_fade_min_value",
-	"animate_on_fraction_increase"
+	"animate_on_fraction_increase",
 }
 
 HudBarLogic.init = function (self, settings)
@@ -15,12 +17,13 @@ HudBarLogic.init = function (self, settings)
 	self._bar_animations = {}
 	self._update_order = {
 		"bar",
-		"bar_max"
+		"bar_max",
 	}
 	self._stored_fractions = {}
 
 	for i = 1, #self._update_order do
 		local name = self._update_order[i]
+
 		self._stored_fractions[name] = 1
 	end
 end
@@ -43,9 +46,11 @@ HudBarLogic._sync_bar_progress = function (self, bar_progress, bar_max_progress)
 		end
 
 		local current_bar_max_progress = self._bar_max_progress or 1
+
 		self._bar_progress = bar_progress
 		self._bar_max_progress = bar_max_progress
 		bar_progress = bar_progress * bar_max_progress
+
 		local update_order = self._update_order
 		local animate = self:_set_bar_fraction(update_order[1], bar_progress, nil, settings.duration, settings.animation_threshold, force_update)
 
@@ -71,9 +76,12 @@ HudBarLogic._set_bar_fraction = function (self, name, fraction, current_fraction
 	local previous_fraction = stored_fractions[name]
 	local bar_animations = self._bar_animations
 	local anim_data = bar_animations[name]
+
 	anim_data = anim_data or {}
+
 	local animate = not force_update
-	local duration = nil
+	local duration
+
 	current_fraction = current_fraction or anim_data.fraction or previous_fraction
 
 	if not force_update then
@@ -81,6 +89,7 @@ HudBarLogic._set_bar_fraction = function (self, name, fraction, current_fraction
 			duration = (fraction - current_fraction) * total_duration
 		else
 			local difference = current_fraction - fraction
+
 			duration = difference * total_duration
 
 			if animation_threshold then
@@ -96,7 +105,7 @@ HudBarLogic._set_bar_fraction = function (self, name, fraction, current_fraction
 			time = 0,
 			duration = duration,
 			start_value = current_fraction,
-			end_value = fraction
+			end_value = fraction,
 		}
 		bar_animations[name] = anim_data
 	else
@@ -180,6 +189,7 @@ end
 
 HudBarLogic._set_alpha = function (self, alpha)
 	local alpha_fraction = alpha / 255
+
 	self._alpha_multiplier = alpha_fraction
 end
 
@@ -189,7 +199,7 @@ HudBarLogic._update_bar_animation = function (self, anim_data, dt)
 	local progress = math.min(time / duration, 1)
 	local start_value = anim_data.start_value
 	local end_value = anim_data.end_value
-	local fraction = nil
+	local fraction
 
 	if start_value < end_value then
 		fraction = start_value + (end_value - start_value) * progress
@@ -199,6 +209,7 @@ HudBarLogic._update_bar_animation = function (self, anim_data, dt)
 
 	anim_data.time = time + dt
 	anim_data.fraction = fraction
+
 	local complete = progress == 1
 
 	return fraction, complete

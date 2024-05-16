@@ -1,17 +1,19 @@
+﻿-- chunkname: @scripts/utilities/first_person_animation_variables.lua
+
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local Recoil = require("scripts/utilities/recoil")
 local Sway = require("scripts/utilities/sway")
 local DEFAULT_SWAY_LERP_SPEED = 10
-local _update_move, _update_aim_offset, _update_lunge_hit_mass = nil
-local FirstPersonAnimationVariables = {
-	update = function (dt, t, first_person_unit, unit_data_extension, weapon_extension, lerp_values)
-		local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+local _update_move, _update_aim_offset, _update_lunge_hit_mass
+local FirstPersonAnimationVariables = {}
 
-		_update_move(dt, t, first_person_unit, unit_data_extension, alternate_fire_component, lerp_values)
-		_update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapon_extension, alternate_fire_component, lerp_values)
-		_update_lunge_hit_mass(first_person_unit, unit_data_extension)
-	end
-}
+FirstPersonAnimationVariables.update = function (dt, t, first_person_unit, unit_data_extension, weapon_extension, lerp_values)
+	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+
+	_update_move(dt, t, first_person_unit, unit_data_extension, alternate_fire_component, lerp_values)
+	_update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapon_extension, alternate_fire_component, lerp_values)
+	_update_lunge_hit_mass(first_person_unit, unit_data_extension)
+end
 
 function _update_move(dt, t, first_person_unit, unit_data_extension, alternate_fire_component, lerp_values)
 	local first_person_component = unit_data_extension:read_component("first_person")
@@ -39,6 +41,7 @@ function _update_move(dt, t, first_person_unit, unit_data_extension, alternate_f
 	lerp_values.move_x_raw = move_x_raw
 	lerp_values.move_z = move_z
 	lerp_values.move_x = move_x
+
 	local move_x_variable = Unit.animation_find_variable(first_person_unit, "move_x")
 
 	if move_x_variable then
@@ -77,6 +80,7 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 		local current_value = Unit.animation_get_variable(first_person_unit, aim_height_variable)
 		local wanted_value = math.clamp(pitch, -1, 1)
 		local new_value = math.lerp(current_value, wanted_value, 20 * dt)
+
 		new_value = math.clamp(new_value, -1, 1)
 
 		Unit.animation_set_variable(first_person_unit, aim_height_variable, new_value)
@@ -91,10 +95,12 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 	local sway_lerp_scalar = math.min(sway_lerp_speed * dt * 2, 1)
 	local sway_offset_x = sway_component.offset_x
 	local sway_offset_y = sway_component.offset_y
+
 	sway_offset_x = math.lerp(lerp_values.sway_offset_x or 0, sway_offset_x, sway_lerp_scalar)
 	sway_offset_y = math.lerp(lerp_values.sway_offset_y or 0, sway_offset_y, sway_lerp_scalar)
 	lerp_values.sway_offset_x = sway_offset_x
 	lerp_values.sway_offset_y = sway_offset_y
+
 	local aim_offset_x = sway_offset_x * (sway_settings and sway_settings.visual_yaw_impact_mod or 1)
 	local aim_offset_y = sway_offset_y * (sway_settings and sway_settings.visual_pitch_impact_mod or 1)
 	local recoil_template = weapon_extension:recoil_template()
@@ -107,6 +113,7 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 		local lerp_scalar = visual_recoil_settings.lerp_scalar
 		local yaw_intensity = visual_recoil_settings.yaw_intensity or recoil_intensity * 0.5
 		local recoil_pitch_offset, recoil_yaw_offset = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component)
+
 		recoil_pitch_offset = math.lerp(lerp_values.recoil_pitch_offset or 0, recoil_pitch_offset * recoil_intensity, lerp_scalar)
 		recoil_yaw_offset = math.lerp(lerp_values.recoil_yaw_offset or 0, recoil_yaw_offset * yaw_intensity, lerp_scalar)
 		lerp_values.recoil_pitch_offset = recoil_pitch_offset
@@ -130,11 +137,13 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 		end
 
 		local current_fov = Managers.state.camera:fov(local_player.viewport_name)
+
 		fov_mod = base_tweak_fov / current_fov
 	end
 
 	aim_offset_x = math.clamp(aim_offset_x * fov_mod, -1, 1)
 	aim_offset_y = math.clamp(aim_offset_y * fov_mod, -1, 1)
+
 	local aim_offset_x_variable = Unit.animation_find_variable(first_person_unit, "aim_offset_x")
 
 	if aim_offset_x_variable then

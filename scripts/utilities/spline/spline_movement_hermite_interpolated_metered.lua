@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/spline/spline_movement_hermite_interpolated_metered.lua
+
 local Hermite = require("scripts/utilities/spline/hermite")
 local SplineMovementHermiteInterpolatedMetered = class("SplineMovementHermiteInterpolatedMetered")
 
@@ -20,6 +22,7 @@ end
 
 local function unpack_unbox(t, k)
 	k = k or 1
+
 	local var = t[k]
 
 	if not var then
@@ -31,13 +34,14 @@ end
 
 SplineMovementHermiteInterpolatedMetered._build_subdivisions = function (self, subdivisions, splines, spline_class)
 	local first_point = spline_class.calc_point(0, unpack_unbox(splines[1].points))
-	local points = {
-		[0] = first_point
-	}
+	local points = {}
+
+	points[0] = first_point
 
 	for index, spline in ipairs(splines) do
 		for sub_index = 1, subdivisions do
 			local point = spline_class.calc_point(sub_index / subdivisions, unpack_unbox(spline.points))
+
 			points[#points + 1] = point
 		end
 	end
@@ -48,21 +52,22 @@ SplineMovementHermiteInterpolatedMetered._build_subdivisions = function (self, s
 	for index, spline in ipairs(splines) do
 		local subs = {}
 		local point_index = (index - 1) * subdivisions
+
 		spline.length = 0
 
 		for sub_index = 1, subdivisions do
 			local sub = {}
-			local p0 = points[point_index - 1]
-			local p1 = points[point_index]
-			local p2 = points[point_index + 1]
-			local p3 = points[point_index + 2]
+			local p0, p1, p2, p3 = points[point_index - 1], points[point_index], points[point_index + 1], points[point_index + 2]
+
 			sub.points = {
 				Vector3Box(p0),
 				Vector3Box(p1),
 				Vector3Box(p2),
-				Vector3Box(p3)
+				Vector3Box(p3),
 			}
+
 			local vectors, quaternions, matrices = Script.temp_count()
+
 			sub.length = Hermite.length(10, p0, p1, p2, p3)
 
 			Script.set_temp_count(vectors, quaternions, matrices)
@@ -81,6 +86,7 @@ SplineMovementHermiteInterpolatedMetered._set_spline_lengths = function (self, s
 
 	for index, spline in ipairs(splines) do
 		local points = spline.points
+
 		spline.length = spline_class.length(segments_per_spline, unpack_unbox(points))
 	end
 end
@@ -113,7 +119,9 @@ SplineMovementHermiteInterpolatedMetered.distance = function (self, from_index, 
 
 	if to_index < from_index then
 		local from_spline = splines[from_index]
+
 		distance = distance - from_spline_t * from_spline.subdivisions[from_subdiv].length
+
 		local from_subdivs = from_spline.subdivisions
 
 		for i = 1, from_subdiv - 1 do
@@ -135,6 +143,7 @@ SplineMovementHermiteInterpolatedMetered.distance = function (self, from_index, 
 	elseif from_index < to_index then
 		local from_spline = splines[from_index]
 		local from_subdivs = from_spline.subdivisions
+
 		distance = distance + (1 - from_spline_t) * from_subdivs[from_subdiv].length
 
 		for i = from_subdiv + 1, #from_subdivs do
@@ -155,6 +164,7 @@ SplineMovementHermiteInterpolatedMetered.distance = function (self, from_index, 
 		distance = distance + to_spline_t * to_subdivs[to_subdiv].length
 	elseif from_index == to_index and from_subdiv < to_subdiv then
 		local subdivs = splines[from_index].subdivisions
+
 		distance = distance + (1 - from_spline_t) * subdivs[from_subdiv].length
 
 		for i = from_subdiv + 1, to_subdiv - 1 do
@@ -164,6 +174,7 @@ SplineMovementHermiteInterpolatedMetered.distance = function (self, from_index, 
 		distance = distance + to_spline_t * subdivs[to_subdiv].length
 	elseif from_index == to_index and to_subdiv < from_subdiv then
 		local subdivs = splines[from_index].subdivisions
+
 		distance = distance - from_spline_t * subdivs[from_subdiv].length
 
 		for i = to_subdiv + 1, from_subdiv - 1 do
@@ -198,8 +209,10 @@ SplineMovementHermiteInterpolatedMetered.move = function (self, delta)
 
 	if new_t > 1 and self._current_spline_index == #self._splines and self._current_subdivision_index == #current_spline.subdivisions then
 		self._t = 1
+
 		local remainder = (new_t - 1) * current_subdivision_length
 		local moved_distance = delta - remainder
+
 		self._current_spline_curve_distance = self._current_spline_curve_distance + moved_distance
 
 		return "end"
@@ -212,8 +225,10 @@ SplineMovementHermiteInterpolatedMetered.move = function (self, delta)
 		end
 
 		self._t = 0
+
 		local remainder = (new_t - 1) * current_subdivision_length
 		local moved_distance = delta - remainder
+
 		self._current_spline_curve_distance = self._current_spline_curve_distance + moved_distance
 
 		return self:move(remainder)
@@ -231,8 +246,10 @@ SplineMovementHermiteInterpolatedMetered.move = function (self, delta)
 		end
 
 		self._t = 1
+
 		local remainder = new_t * current_subdivision_length
 		local moved_distance = delta - remainder
+
 		self._current_spline_curve_distance = self._current_spline_curve_distance + moved_distance
 
 		return self:move(remainder)
@@ -253,15 +270,14 @@ end
 
 SplineMovementHermiteInterpolatedMetered.reset_to_end = function (self)
 	local current_spline = self:_current_spline()
+
 	self._current_spline_index = #self._splines
 	self._current_subdivision_index = #current_spline.subdivisions
 	self._t = 1
-	local from_spline_index = 1
-	local from_subdivision_index = 1
-	local from_t = 0
-	local to_spline_index = self._current_spline_index
-	local to_subdivision_index = self._current_subdivision_index
-	local to_t = self._t
+
+	local from_spline_index, from_subdivision_index, from_t = 1, 1, 0
+	local to_spline_index, to_subdivision_index, to_t = self._current_spline_index, self._current_subdivision_index, self._t
+
 	self._current_spline_curve_distance = self:distance(from_spline_index, from_subdivision_index, from_t, to_spline_index, to_subdivision_index, to_t)
 end
 
@@ -269,9 +285,9 @@ SplineMovementHermiteInterpolatedMetered.set_spline_index = function (self, spli
 	self._current_spline_index = spline_index
 	self._current_subdivision_index = subdivision_index
 	self._t = t
-	local from_spline_index = 1
-	local from_subdivision_index = 1
-	local from_t = 0
+
+	local from_spline_index, from_subdivision_index, from_t = 1, 1, 0
+
 	self._current_spline_curve_distance = self:distance(from_spline_index, from_subdivision_index, from_t, spline_index, subdivision_index, t)
 end
 

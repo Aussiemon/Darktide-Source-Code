@@ -1,28 +1,35 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_ranged_follow_target_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtRangedFollowTargetAction = class("BtRangedFollowTargetAction", "BtNode")
+
 BtRangedFollowTargetAction.TIME_TO_FIRST_EVALUATE = {
 	0.25,
-	0.75
+	0.75,
 }
 BtRangedFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	0.25,
-	0.75
+	0.75,
 }
 
 BtRangedFollowTargetAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local perception_component = blackboard.perception
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
 	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local run_speed = action_data.speed
 
 	navigation_extension:set_enabled(true, run_speed)
@@ -65,7 +72,7 @@ BtRangedFollowTargetAction.run = function (self, unit, breed, blackboard, scratc
 
 	local behavior_component = scratchpad.behavior_component
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
-	local should_evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate <= t
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and t >= scratchpad.time_to_next_evaluate
 
 	if should_start_idle or should_be_idling then
 		if should_start_idle then
@@ -87,7 +94,7 @@ BtRangedFollowTargetAction.run = function (self, unit, breed, blackboard, scratc
 		self:_start_move_anim(unit, t, behavior_component, scratchpad, action_data)
 	end
 
-	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -112,6 +119,7 @@ BtRangedFollowTargetAction._start_move_anim = function (self, unit, t, behavior_
 			MinionMovement.set_anim_driven(scratchpad, true)
 
 			local start_rotation_timing = action_data.start_move_rotation_timings[start_move_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = start_move_event
 		else

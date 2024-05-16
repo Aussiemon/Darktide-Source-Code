@@ -1,13 +1,19 @@
+﻿-- chunkname: @scripts/extension_systems/ability/equipped_ability_effect_scripts/lunge_effects.lua
+
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local LungeEffects = class("LungeEffects")
 
 LungeEffects.init = function (self, equipped_ability_effect_scripts_context, ability_template)
 	self._is_local_unit = equipped_ability_effect_scripts_context.is_local_unit
 	self._ability_template = ability_template
+
 	local unit_data_extension = equipped_ability_effect_scripts_context.unit_data_extension
+
 	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
 	self._is_sfx_active = false
+
 	local unit = equipped_ability_effect_scripts_context.unit
+
 	self._unit = unit
 	self._fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 end
@@ -26,7 +32,9 @@ LungeEffects.update = function (self, unit, dt, t)
 
 	if is_lunging and not is_sfx_active then
 		self._is_sfx_active = true
+
 		local lunge_template_name = lunge_character_state_component.lunge_template
+
 		self._lunge_template = LungeTemplates[lunge_template_name]
 
 		self:_start_effects()

@@ -1,15 +1,18 @@
+﻿-- chunkname: @scripts/utilities/bot_target_selection.lua
+
 local BotGestaltTargetSelectionWeights = require("scripts/settings/bot/bot_gestalt_target_selection_weights")
 local BotSettings = require("scripts/settings/bot/bot_settings")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local breed_types = BreedSettings.types
 local breed_type_player = breed_types.player
-local BotTargetSelection = {
-	gestalt_weight = function (gestalt, target_breed)
-		local weights = BotGestaltTargetSelectionWeights[gestalt]
+local BotTargetSelection = {}
 
-		return weights[target_breed.name]
-	end
-}
+BotTargetSelection.gestalt_weight = function (gestalt, target_breed)
+	local weights = BotGestaltTargetSelectionWeights[gestalt]
+
+	return weights[target_breed.name]
+end
+
 local DEFAULT_SLOT_WEIGHT = 1
 local ALLY_SLOT_MULTIPLIER = 0.8
 
@@ -46,6 +49,7 @@ BotTargetSelection.threat_weight = function (target_unit, threat_units)
 	if threat_units[target_unit] then
 		local threat = threat_units[target_unit]
 		local threat_multiplier = DEFAULT_THREAT_WEIGHT_MULTIPLIER
+
 		threat_weight = threat * threat_multiplier
 	end
 
@@ -104,8 +108,7 @@ BotTargetSelection.priority_weight = function (target_unit, bot_group)
 end
 
 local DEFAULT_MONSTER_WEIGHT = 2
-local MONSTER_MIN_REACTION_TIME = 0.2
-local MONSTER_MAX_REACTION_TIME = 0.65
+local MONSTER_MIN_REACTION_TIME, MONSTER_MAX_REACTION_TIME = 0.2, 0.65
 
 BotTargetSelection.monster_weight = function (unit, target_unit, target_breed, t)
 	local tags = target_breed.tags
@@ -157,10 +160,8 @@ BotTargetSelection.current_target_weight = function (target_unit, current_target
 end
 
 local DEFAULT_MELEE_DISTANCE_WEIGHT = 3
-local MELEE_DISTANCE_NO_WEIGHT = 8
-local MELEE_DISTANCE_MAX_WEIGHT = 3
-local MELEE_DISTANCE_NO_WEIGHT_SQ = MELEE_DISTANCE_NO_WEIGHT^2
-local MELEE_DISTANCE_MAX_WEIGHT_SQ = MELEE_DISTANCE_MAX_WEIGHT^2
+local MELEE_DISTANCE_NO_WEIGHT, MELEE_DISTANCE_MAX_WEIGHT = 8, 3
+local MELEE_DISTANCE_NO_WEIGHT_SQ, MELEE_DISTANCE_MAX_WEIGHT_SQ = MELEE_DISTANCE_NO_WEIGHT^2, MELEE_DISTANCE_MAX_WEIGHT^2
 
 BotTargetSelection.melee_distance_weight = function (target_distance_sq)
 	local i = math.ilerp(MELEE_DISTANCE_NO_WEIGHT_SQ, MELEE_DISTANCE_MAX_WEIGHT_SQ, target_distance_sq)
@@ -170,10 +171,8 @@ BotTargetSelection.melee_distance_weight = function (target_distance_sq)
 end
 
 local DEFAULT_RANGED_DISTANCE_WEIGHT = 1
-local RANGED_DISTANCE_NO_WEIGHT = 4
-local RANGED_DISTANCE_MAX_WEIGHT = 6
-local RANGED_DISTANCE_NO_WEIGHT_SQ = RANGED_DISTANCE_NO_WEIGHT^2
-local RANGED_DISTANCE_MAX_WEIGHT_SQ = RANGED_DISTANCE_MAX_WEIGHT^2
+local RANGED_DISTANCE_NO_WEIGHT, RANGED_DISTANCE_MAX_WEIGHT = 4, 6
+local RANGED_DISTANCE_NO_WEIGHT_SQ, RANGED_DISTANCE_MAX_WEIGHT_SQ = RANGED_DISTANCE_NO_WEIGHT^2, RANGED_DISTANCE_MAX_WEIGHT^2
 
 BotTargetSelection.ranged_distance_weight = function (target_distance_sq)
 	local i = math.ilerp(RANGED_DISTANCE_NO_WEIGHT_SQ, RANGED_DISTANCE_MAX_WEIGHT_SQ, target_distance_sq)
@@ -197,16 +196,15 @@ BotTargetSelection.line_of_sight_weight = function (unit, target_unit)
 end
 
 BotTargetSelection.reaction_time = function (use_difficulty_reaction_times, difficulty_reaction_times, default_min, default_max)
-	local min_reaction_time, max_reaction_time = nil
+	local min_reaction_time, max_reaction_time
 
 	if use_difficulty_reaction_times then
 		local difficulty = "normal"
 		local reaction_times = difficulty_reaction_times[difficulty]
-		max_reaction_time = reaction_times.max
-		min_reaction_time = reaction_times.min
+
+		min_reaction_time, max_reaction_time = reaction_times.min, reaction_times.max
 	else
-		max_reaction_time = default_max
-		min_reaction_time = default_min
+		min_reaction_time, max_reaction_time = default_min, default_max
 	end
 
 	return math.random(min_reaction_time, max_reaction_time)

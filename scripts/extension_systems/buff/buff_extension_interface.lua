@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buff_extension_interface.lua
+
 local BuffExtensionInterface = {
 	"add_externally_controlled_buff",
 	"add_internally_controlled_buff",
@@ -15,7 +17,7 @@ local BuffExtensionInterface = {
 	"rpc_add_buff",
 	"rpc_buff_proc_set_active_time",
 	"rpc_buff_set_start_time",
-	"rpc_remove_buff"
+	"rpc_remove_buff",
 }
 
 return BuffExtensionInterface

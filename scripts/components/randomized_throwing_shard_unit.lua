@@ -1,21 +1,29 @@
+﻿-- chunkname: @scripts/components/randomized_throwing_shard_unit.lua
+
 local RandomizedThrowingShardUnit = component("RandomizedThrowingShardUnit")
 local DISSOLVE_TIME = 0.3
 
 RandomizedThrowingShardUnit.init = function (self, unit)
 	self._unit = unit
+
 	local world = Unit.world(unit)
+
 	self._world = world
 	self._wwise_world = Wwise.wwise_world(world)
+
 	local visiblity_group_names = {}
+
 	self._visiblity_group_names = visiblity_group_names
 	self._dissolve_material_slot_name = self:get_data(unit, "dissolve_material_slot_name")
 	self._dissolve_variable_name = self:get_data(unit, "dissolve_variable_name")
+
 	local visiblity_groups = self:get_data(unit, "visiblity_groups")
 	local num_visiblity_groups = #visiblity_groups
 
 	for ii = 1, num_visiblity_groups do
 		local entry = visiblity_groups[ii]
 		local visiblity_group_name = entry.visiblity_group_name
+
 		visiblity_group_names[#visiblity_group_names + 1] = visiblity_group_name
 	end
 
@@ -81,6 +89,7 @@ end
 
 RandomizedThrowingShardUnit._start_dissolve = function (self, t)
 	self._dissolve_start_t = t
+
 	local unit = self._unit
 	local dissolve_material_slot_name = self._dissolve_material_slot_name
 
@@ -133,31 +142,31 @@ end
 
 RandomizedThrowingShardUnit.component_data = {
 	visiblity_groups = {
-		ui_type = "struct_array",
 		ui_name = "Visiblity Groups",
+		ui_type = "struct_array",
 		definition = {
 			visiblity_group_name = {
+				ui_name = "Visiblity Group Name",
 				ui_type = "text_box",
 				value = "",
-				ui_name = "Visiblity Group Name"
-			}
+			},
 		},
 		control_order = {
-			"visiblity_group_name"
-		}
+			"visiblity_group_name",
+		},
 	},
 	dissolve_variable_name = {
+		category = "Dissolve",
+		ui_name = "Variable Name",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Variable Name",
-		category = "Dissolve"
 	},
 	dissolve_material_slot_name = {
+		category = "Dissolve",
+		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Material Slot Name",
-		category = "Dissolve"
-	}
+	},
 }
 
 return RandomizedThrowingShardUnit

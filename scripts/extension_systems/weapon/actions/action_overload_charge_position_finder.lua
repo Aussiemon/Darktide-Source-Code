@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_overload_charge_position_finder.lua
+
 require("scripts/extension_systems/weapon/actions/action_charge")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
@@ -11,6 +13,7 @@ ActionOverloadChargePositionFinder.init = function (self, action_context, action
 	local overload_module_class_name = action_settings.overload_module_class_name
 	local position_finder_module_class_name = action_settings.position_finder_module_class_name
 	local position_component = unit_data_extension:write_component("action_module_position_finder")
+
 	self._overload_module = ActionModules[overload_module_class_name]:new(player_unit, action_settings, self._inventory_slot_component)
 	self._position_finder_module = ActionModules[position_finder_module_class_name]:new(self._physics_world, player_unit, position_component, action_settings)
 end

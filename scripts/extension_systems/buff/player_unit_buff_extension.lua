@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/player_unit_buff_extension.lua
+
 require("scripts/extension_systems/buff/buff_extension_base")
 
 local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
@@ -16,10 +18,13 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local buff_component = unit_data_extension:write_component("buff")
+
 	self._buff_component = buff_component
 	self._on_screen_effects = {}
 	self._active_effect_templates = {}
+
 	local buff_context = self._buff_context
+
 	buff_context.player = extension_init_data.player
 	self._max_component_buffs = MAX_COMPONENT_BUFFS
 	self._component_buffs = Script.new_array(MAX_COMPONENT_BUFFS)
@@ -36,6 +41,7 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 
 	local mission_name = Managers.state.mission:mission_name()
 	local mission_settings = mission_name and Missions[mission_name]
+
 	self._is_hub = mission_settings and mission_settings.is_hub
 	self._cinematic_active = false
 end
@@ -48,6 +54,7 @@ PlayerUnitBuffExtension._init_components = function (self, buff_component)
 		local active_start_time_key = key_lookup.active_start_time_key
 		local stack_count_key = key_lookup.stack_count_key
 		local proc_count_key = key_lookup.proc_count_key
+
 		buff_component[template_name_key] = "none"
 		buff_component[start_time_key] = 0
 		buff_component[active_start_time_key] = 0
@@ -57,6 +64,7 @@ PlayerUnitBuffExtension._init_components = function (self, buff_component)
 
 	local portable_random = self._portable_random
 	local seed = portable_random:seed()
+
 	buff_component.seed = seed
 end
 
@@ -78,6 +86,7 @@ end
 PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, game_object_id)
 	self._game_session = game_session
 	self._game_object_id = game_object_id
+
 	local channel_id = self._player:channel_id()
 	local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
@@ -105,7 +114,7 @@ end
 PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	local is_server = self._is_server
 	local toughness_extension = self._toughness_extension
-	local max_toughness_before = nil
+	local max_toughness_before
 
 	if is_server and toughness_extension then
 		max_toughness_before = toughness_extension:max_toughness()
@@ -119,6 +128,7 @@ PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 
 	local portable_random = self._portable_random
 	local buff_component = self._buff_component
+
 	buff_component.seed = portable_random:seed()
 
 	if is_server and toughness_extension then
@@ -142,6 +152,7 @@ PlayerUnitBuffExtension.post_update = function (self, unit, dt, t)
 
 	for ii = 1, #synced_buff_keywords do
 		local buff_keyword = synced_buff_keywords[ii]
+
 		game_object_buff_keywords[ii] = not not active_keywords[buff_keyword]
 	end
 
@@ -188,7 +199,7 @@ end
 PlayerUnitBuffExtension.add_externally_controlled_buff = function (self, template_name, t, ...)
 	local template = BuffTemplates[template_name]
 	local is_server = self._is_server
-	local client_tried_adding_rpc_buff, index, component_index = nil
+	local client_tried_adding_rpc_buff, index, component_index
 
 	if template.predicted then
 		-- Nothing
@@ -230,6 +241,7 @@ PlayerUnitBuffExtension._next_available_component_index = function (self, templa
 
 	for i = 1, max_component_buffs do
 		local buff = component_buffs[i]
+
 		buffs_error_string = buffs_error_string .. i .. ": " .. buff:template_name() .. (i < max_component_buffs and "\n" or "")
 	end
 
@@ -254,15 +266,18 @@ PlayerUnitBuffExtension._add_predicted_buff = function (self, template, t, ...)
 		local component_keys = COMPONENT_KEY_LOOKUP[component_index]
 		local stack_count_key = component_keys.stack_count_key
 		local stack_count = buff_instance:stack_count()
+
 		buff_component[stack_count_key] = stack_count
+
 		local warning_stack_count = 32
 
-		if stack_count > warning_stack_count then
+		if warning_stack_count < stack_count then
 			Log.warning("PlayerUnitBuffExtension", "Buff stack count of %s exceeding %d (%d)", template.name, warning_stack_count, stack_count)
 		end
 
 		if template.refresh_duration_on_stack or template.refresh_start_time_on_stack then
 			local start_time_key = component_keys.start_time_key
+
 			buff_component[start_time_key] = buff_instance:start_time()
 		end
 	end
@@ -280,7 +295,9 @@ PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, loca
 	end
 
 	local buff_instance = self._buffs_by_index[local_index]
+
 	buff_instance = buff_instance or self._component_buffs[component_index]
+
 	local template = buff_instance:template()
 
 	if template.predicted then
@@ -317,6 +334,7 @@ PlayerUnitBuffExtension._remove_predicted_buff = function (self, component_index
 	if stack_count > 1 then
 		local buff_component = self._buff_component
 		local stack_count_key = component_keys.stack_count_key
+
 		buff_component[stack_count_key] = stack_count - 1
 	else
 		buff_instance:remove_buff_component()
@@ -482,9 +500,10 @@ PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 				optional_lerp_value = optional_lerp_value,
 				optional_slot_id = optional_slot_id,
 				optional_parent_buff_template_id = optional_parent_buff_template_id,
-				from_talent = from_talent
+				from_talent = from_talent,
 			}
 			local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
+
 			buffs_added_before_game_object_creation[#buffs_added_before_game_object_creation + 1] = buff_added_before_game_object_creation
 		end
 	end
@@ -603,6 +622,7 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 
 		if effect_template and not active_effect_templates[index] then
 			local effect_template_id = self._fx_system:start_template_effect(effect_template, unit)
+
 			active_effect_templates[index] = effect_template_id
 		end
 	end
@@ -615,9 +635,10 @@ PlayerUnitBuffExtension.start_on_screen_effect = function (self, index, on_scree
 
 	local on_screen_effects = self._on_screen_effects[index]
 	local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1))
+
 	on_screen_effects[#on_screen_effects + 1] = {
 		particle_id = on_screen_effect_id,
-		stop_type = stop_type
+		stop_type = stop_type,
 	}
 end
 
@@ -724,6 +745,7 @@ PlayerUnitBuffExtension._update_on_screen_fx = function (self)
 
 	local prev_cinematic_active = self._cinematic_active
 	local cinematic_active = self:_is_cinematic_active()
+
 	self._cinematic_active = cinematic_active
 
 	if prev_cinematic_active ~= cinematic_active then

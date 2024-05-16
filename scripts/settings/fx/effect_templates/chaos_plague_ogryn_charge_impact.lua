@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_plague_ogryn_charge_impact.lua
+
 local SFX_ATTACK_VCE = "wwise/events/minions/play_enemy_plague_ogryn_vce_attack"
 local SFX_BELLY_BOUNCE = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_belly_bounce"
 local SFX_TONGUE_FLUTTER = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_tongue_flutter"
@@ -7,17 +9,17 @@ local SFX_START = {
 	ap_voice = SFX_ATTACK_VCE,
 	j_guts = SFX_BELLY_BOUNCE,
 	j_tongue1 = SFX_TONGUE_FLUTTER,
-	j_head = SFX_IMPACT
+	j_head = SFX_IMPACT,
 }
 local SFX_STOP = {
-	ap_voice = SFX_STOP_CHARGE_VCE
+	ap_voice = SFX_STOP_CHARGE_VCE,
 }
 local resources = {
 	sfx_attack_vce = SFX_ATTACK_VCE,
 	sfx_belly_bounce = SFX_BELLY_BOUNCE,
 	sfx_tongue_flutter = SFX_TONGUE_FLUTTER,
 	sfx_impact = SFX_IMPACT,
-	sfx_stop_charge = SFX_STOP_CHARGE_VCE
+	sfx_stop_charge = SFX_STOP_CHARGE_VCE,
 }
 local effect_template = {
 	name = "chaos_plague_ogryn_charge_impact",
@@ -47,7 +49,7 @@ local effect_template = {
 	end,
 	stop = function (template_data, template_context)
 		return
-	end
+	end,
 }
 
 return effect_template

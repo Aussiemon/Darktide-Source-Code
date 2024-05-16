@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/chain_sword_spin.lua
+
 local ChainSwordSpin = component("ChainSwordSpin")
 local DEFAULT_SPEED = 1
 
@@ -21,6 +23,7 @@ end
 
 ChainSwordSpin._set_speed = function (self, speed)
 	speed = speed or DEFAULT_SPEED
+
 	local unit = self._unit
 
 	if speed >= 0 then
@@ -60,9 +63,9 @@ ChainSwordSpin.component_data = {
 	inputs = {
 		set_speed = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return ChainSwordSpin

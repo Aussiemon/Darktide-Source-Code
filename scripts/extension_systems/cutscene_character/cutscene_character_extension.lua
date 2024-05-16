@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cutscene_character/cutscene_character_extension.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
@@ -8,9 +10,9 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local CutsceneCharacterExtension = class("CutsceneCharacterExtension")
 local AnimationType = {
-	Weapon = 2,
 	Inventory = 1,
-	None = 0
+	None = 0,
+	Weapon = 2,
 }
 
 CutsceneCharacterExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -23,17 +25,21 @@ CutsceneCharacterExtension.init = function (self, extension_init_context, unit, 
 	self._player_unique_id = nil
 	self._prop_items = {}
 	self._equip_slot_on_loadout_assign = ""
+
 	local mission_manager = Managers.state.mission
 	local mission_template = mission_manager and mission_manager:mission()
+
 	self._mission_template = mission_template
 	self._is_loading_profile = false
 	self._activate_post_spawn_weapon_specific_walk_animation = false
 	self._activate_post_spawn_inventory_specific_walk_animation = false
+
 	local world = extension_init_context.world
 	local unit_spawner = UIUnitSpawner:new(world)
 	local level_unit_id = Unit.id_string(unit)
-	local camera = nil
+	local camera
 	local force_highest_lod_step = true
+
 	self._profile_spawner = UIProfileSpawner:new("CutsceneCharacterExtension_" .. level_unit_id, world, camera, unit_spawner, force_highest_lod_step, mission_template)
 	self._inventory_animation_event = nil
 	self._weapon_animation_event = nil
@@ -106,7 +112,7 @@ CutsceneCharacterExtension._check_valid_animation = function (self, cinematic_na
 		return false
 	end
 
-	local available_animation_events = nil
+	local available_animation_events
 	local cinematic_template = CinematicSceneTemplates[cinematic_name]
 
 	if animation_type == AnimationType.Inventory then
@@ -137,6 +143,7 @@ CutsceneCharacterExtension._clear_loadout = function (self)
 	local player_character_unit = self._unit
 	local component_system = extension_manager:system("component_system")
 	local player_customization_components = component_system:get_components(player_character_unit, "PlayerCustomization")
+
 	self._equipped_weapon = nil
 
 	if _check_component_amount(player_character_unit, player_customization_components, "PlayerCustomization") then
@@ -178,10 +185,10 @@ CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique
 	local position = Unit.world_position(unit, 1)
 	local rotation = Unit.world_rotation(unit, 1)
 	local scale = Unit.world_scale(unit, 1)
-	local animation_event, face_animation_event = nil
+	local animation_event, face_animation_event
 	local force_highest_mip = true
 	local disable_hair_state_machine = false
-	local state_machine = nil
+	local state_machine
 	local ignore_state_machine = true
 	local mission_template = self._mission_template
 	local face_state_machine_key = mission_template and mission_template.face_state_machine_key
@@ -201,6 +208,7 @@ CutsceneCharacterExtension._load_props = function (self)
 
 	for i = 1, #prop_item_names do
 		local item_name = prop_item_names[i]
+
 		PROP_ITEMS[i] = rawget(item_definitions, item_name)
 	end
 

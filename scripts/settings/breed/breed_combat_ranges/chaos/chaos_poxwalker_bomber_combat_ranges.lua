@@ -1,38 +1,40 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/chaos/chaos_poxwalker_bomber_combat_ranges.lua
+
 local combat_ranges = {
 	name = "chaos_poxwalker_bomber",
 	starting_combat_range = "far",
 	config = {
 		far = {
 			{
-				switch_combat_range = "close",
-				distance_operator = "lesser",
 				distance = 30,
-				sticky_time = 0
-			}
+				distance_operator = "lesser",
+				sticky_time = 0,
+				switch_combat_range = "close",
+			},
 		},
 		close = {
 			{
-				switch_combat_range = "melee",
-				distance_operator = "lesser",
 				distance = 10,
-				sticky_time = 1
+				distance_operator = "lesser",
+				sticky_time = 1,
+				switch_combat_range = "melee",
 			},
 			{
-				switch_combat_range = "far",
-				distance_operator = "greater",
 				distance = 32,
-				sticky_time = 0
-			}
+				distance_operator = "greater",
+				sticky_time = 0,
+				switch_combat_range = "far",
+			},
 		},
 		melee = {
 			{
-				switch_combat_range = "close",
-				distance_operator = "greater",
 				distance = 13,
-				sticky_time = 0
-			}
-		}
-	}
+				distance_operator = "greater",
+				sticky_time = 0,
+				switch_combat_range = "close",
+			},
+		},
+	},
 }
 
 return combat_ranges

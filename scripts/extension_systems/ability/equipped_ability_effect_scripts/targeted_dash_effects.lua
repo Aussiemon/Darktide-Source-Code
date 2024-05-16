@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/equipped_ability_effect_scripts/targeted_dash_effects.lua
+
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local hit_zone_names = HitZone.hit_zone_names
 local SPAWN_POS = Vector3Box(400, 400, 400)
@@ -9,7 +11,9 @@ TargetedDashEffects.init = function (self, equipped_ability_effect_scripts_conte
 	self._ability_template = ability_template
 	self._targeting_fx = ability_template.targeting_fx
 	self._is_local_unit = equipped_ability_effect_scripts_context.is_local_unit
+
 	local unit_data_extension = equipped_ability_effect_scripts_context.unit_data_extension
+
 	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
 end
 
@@ -52,6 +56,7 @@ TargetedDashEffects._spawn_effects = function (self)
 	local spawn_pos = SPAWN_POS:unbox()
 	local targeting_fx = self._targeting_fx
 	local effect_id = World.create_particles(world, targeting_fx.effect_name, spawn_pos)
+
 	self._targeting_effect_id = effect_id
 end
 

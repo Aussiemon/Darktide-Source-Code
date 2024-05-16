@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/player_husk_visual_loadout_extension.lua
+
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local MasterItems = require("scripts/backend/master_items")
@@ -11,7 +13,7 @@ local PlayerHuskVisualLoadoutExtension = class("PlayerHuskVisualLoadoutExtension
 local RPCS = {
 	"rpc_player_equip_item_to_slot",
 	"rpc_player_equip_item_from_profile_to_slot",
-	"rpc_player_unequip_item_from_slot"
+	"rpc_player_unequip_item_from_slot",
 }
 
 local function _register_fx_sources(fx_extension, unit_1p, unit_3p, attachments_1p, attachments_3p, source_config, slot_name, is_in_first_person_mode)
@@ -22,7 +24,7 @@ local function _register_fx_sources(fx_extension, unit_1p, unit_3p, attachments_
 
 		fx_extension:register_sound_source(source_name, unit_1p, attachments_1p, node_name)
 
-		local parent_unit, vfx_attachments = nil
+		local parent_unit, vfx_attachments
 
 		if is_in_first_person_mode then
 			parent_unit = unit_1p
@@ -41,11 +43,9 @@ local function _register_fx_sources(fx_extension, unit_1p, unit_3p, attachments_
 end
 
 local function _move_fx_sources(fx_extension, source_config, sources, slot, is_in_first_person_mode)
-	local unit_1p = slot.unit_1p
-	local unit_3p = slot.unit_3p
-	local attachments_1p = slot.attachments_1p
-	local attachments_3p = slot.attachments_3p
-	local parent_unit, attachments = nil
+	local unit_1p, unit_3p = slot.unit_1p, slot.unit_3p
+	local attachments_1p, attachments_3p = slot.attachments_1p, slot.attachments_3p
+	local parent_unit, attachments
 
 	if is_in_first_person_mode then
 		parent_unit = unit_1p
@@ -76,43 +76,64 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 	self._unit = unit
 	self._game_object_id = game_object_id
 	self.is_husk = true
+
 	local slot_configuration = extension_init_data.slot_configuration
+
 	self._slot_configuration = slot_configuration
 	self._player = extension_init_data.player
+
 	local world = extension_init_context.world
 	local unit_spawner = Managers.state.unit_spawner
 	local extension_manager = Managers.state.extension
+
 	self._package_synchronizer_client = extension_init_data.package_synchronizer_client
+
 	local item_streaming_settings = {
 		package_synchronizer_client = self._package_synchronizer_client,
-		player = self._player
+		player = self._player,
 	}
+
 	self._item_definitions = MasterItems.get_cached()
+
 	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, item_streaming_settings)
+
 	self._equipment_component = equipment_component
+
 	local equipment = equipment_component.initialize_equipment(slot_configuration)
+
 	self._equipment = equipment
 	self._wielded_slot = PlayerHuskVisualLoadoutExtension.NO_WIELDABLE_SLOT
+
 	local network_event_delegate = extension_init_context.network_event_delegate
 
 	network_event_delegate:register_session_unit_events(self, self._game_object_id, unpack(RPCS))
 
 	self._network_event_delegate = network_event_delegate
+
 	local fx_extension = ScriptUnit.extension(unit, "fx_system")
+
 	self._fx_extension = fx_extension
 	self._fx_sources = {}
+
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
+
 	self._first_person_extension = first_person_extension
+
 	local first_person_unit = first_person_extension:first_person_unit()
+
 	self._first_person_unit = first_person_unit
+
 	local is_in_first_person_mode = first_person_extension:is_in_first_person_mode()
+
 	self._is_in_first_person_mode = is_in_first_person_mode
+
 	local wieldable_slot_scripts = {}
+
 	self._wieldable_slot_scripts = wieldable_slot_scripts
 	self._wieldable_slot_scripts_context = {
+		is_husk = true,
 		is_local_unit = false,
 		is_server = false,
-		is_husk = true,
 		owner_unit = unit,
 		equipment_component = equipment_component,
 		game_session = game_session,
@@ -123,7 +144,7 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 		visual_loadout_extension = self,
 		unit_data_extension = ScriptUnit.extension(unit, "unit_data_system"),
 		fx_extension = fx_extension,
-		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
+		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit],
 	}
 	self._mission = extension_init_data.mission
 	self._archetype_property = extension_init_data.archetype.name
@@ -266,6 +287,7 @@ end
 
 PlayerHuskVisualLoadoutExtension.wield_slot = function (self, slot_name)
 	self._wielded_slot = slot_name
+
 	local first_person_mode = self._first_person_extension:is_in_first_person_mode()
 	local equipment_component = self._equipment_component
 	local equipment = self._equipment
@@ -274,6 +296,7 @@ PlayerHuskVisualLoadoutExtension.wield_slot = function (self, slot_name)
 	self:_update_item_visibility(self._is_in_first_person_mode)
 
 	self._profile_properties = equipment_component.resolve_profile_properties(equipment, slot_name, self._archetype_property, self._selected_voice_property)
+
 	local slot_scripts = self._wieldable_slot_scripts[slot_name]
 
 	if slot_scripts then
@@ -348,6 +371,7 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 		local weapon_template_fx_sources = weapon_template.fx_sources
 		local fx_sources = _register_fx_sources(self._fx_extension, slot.unit_1p, slot.unit_3p, slot.attachments_1p, slot.attachments_3p, weapon_template_fx_sources, slot_name, is_in_first_person_mode)
+
 		self._fx_sources[slot_name] = fx_sources
 
 		if slot.attachment_spawn_status == "fully_spawned" then
@@ -380,7 +404,7 @@ PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = fu
 	local profile = package_synchronizer_client:cached_profile(peer_id, local_player_id)
 	local visual_loadout = profile.visual_loadout
 	local item = visual_loadout[slot_name]
-	local optional_existing_unit_3p = nil
+	local optional_existing_unit_3p
 	local item_name = NetworkLookup.player_item_names[item_id]
 
 	if item then
@@ -429,6 +453,7 @@ PlayerHuskVisualLoadoutExtension.rpc_player_unequip_item_from_slot = function (s
 		_unregister_fx_sources(self._fx_extension, self._fx_sources[slot_name])
 
 		self._fx_sources[slot_name] = nil
+
 		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 		local template_name = weapon_template.name
 		local decal_unit_ids = ImpactFxResourceDependencies.impact_decal_units(template_name, weapon_template)
@@ -488,6 +513,7 @@ end
 
 PlayerHuskVisualLoadoutExtension.set_force_hide_wieldable_slot = function (self, slot_name, first_person, third_person)
 	local slot = self._equipment[slot_name]
+
 	slot.wants_hidden_by_gameplay_1p = first_person
 	slot.wants_hidden_by_gameplay_3p = third_person
 

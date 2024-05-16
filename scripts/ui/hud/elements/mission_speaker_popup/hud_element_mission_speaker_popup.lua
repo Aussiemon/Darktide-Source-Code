@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup.lua
+
 local Definitions = require("scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup_definitions")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
@@ -16,10 +18,11 @@ HudElementMissionSpeakerPopup.init = function (self, parent, draw_layer, start_s
 	for i = 1, num_bars do
 		local name = "bar_" .. i
 		local widget = self._widgets_by_name[name]
+
 		widget.offset = {
 			bar_offset[1] - (bar_size[1] + bar_spacing) * (i - 1),
 			bar_offset[2],
-			bar_offset[3]
+			bar_offset[3],
 		}
 		bar_widgets[i] = widget
 	end
@@ -61,7 +64,7 @@ HudElementMissionSpeakerPopup._update_bar_value = function (self, dt)
 	local bar_height = bar_size[2]
 
 	for i = num_bars, 1, -1 do
-		local new_bar_height = nil
+		local new_bar_height
 
 		if i > 1 then
 			new_bar_height = bar_widgets[i - 1].style.bar.size[2]
@@ -70,6 +73,7 @@ HudElementMissionSpeakerPopup._update_bar_value = function (self, dt)
 		end
 
 		local widget = bar_widgets[i]
+
 		widget.style.bar.size[2] = new_bar_height
 	end
 
@@ -84,7 +88,7 @@ HudElementMissionSpeakerPopup._sync_active_speaker = function (self, dt, t, ui_r
 	end
 
 	local is_dialogue_playing = true
-	local mission_giver_speaker_name = nil
+	local mission_giver_speaker_name
 
 	if is_dialogue_playing then
 		local playing_dialogues_array = dialogue_system:playing_dialogues_array()
@@ -143,6 +147,7 @@ HudElementMissionSpeakerPopup._mission_speaker_stop = function (self)
 	end
 
 	local popup_animation_id = self:_start_animation("popup_exit", self._widgets_by_name)
+
 	self._popup_animation_id = popup_animation_id
 end
 
@@ -154,6 +159,7 @@ HudElementMissionSpeakerPopup._mission_speaker_start = function (self, name_text
 	end
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.name_text.content.name_text = name_text
 
 	if icon then
@@ -161,6 +167,7 @@ HudElementMissionSpeakerPopup._mission_speaker_start = function (self, name_text
 	end
 
 	local popup_animation_id = self:_start_animation("popup_enter", self._widgets_by_name)
+
 	self._popup_animation_id = popup_animation_id
 end
 

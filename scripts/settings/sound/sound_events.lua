@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/sound/sound_events.lua
+
 local sound_events = {
 	"wwise/events/minions/play_beast_of_nurgle_death_explode",
 	"wwise/events/minions/play_beast_of_nurgle_ground_impact",
@@ -143,7 +145,7 @@ local sound_events = {
 	"wwise/events/world/play_event_twins_arena_gas_wave_ambisonics",
 	"wwise/events/world/play_hunting_grounds_occasionals",
 	"wwise/events/world/play_int_battery_pick_up",
-	"wwise/events/world/stop_hunting_grounds_occasionals"
+	"wwise/events/world/stop_hunting_grounds_occasionals",
 }
 
 return sound_events

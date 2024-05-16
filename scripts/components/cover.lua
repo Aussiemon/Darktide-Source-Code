@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/cover.lua
+
 local CoverSlots = require("scripts/extension_systems/cover/utilities/cover_slots")
 local SharedNav = require("scripts/components/utilities/shared_nav")
 local Cover = component("Cover")
@@ -33,7 +35,9 @@ Cover.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
 	self._physics_world = World.physics_world(world)
 	self._line_object = World.create_line_object(world)
@@ -116,6 +120,7 @@ Cover._generate_cover_slots = function (self)
 		local cover_type = self:get_data(unit, "cover_type")
 		local node_positions = CoverSlots.fetch_node_positions(unit)
 		local cover_slots = CoverSlots.create(physics_world, nav_world, unit, cover_type, node_positions)
+
 		self._cover_type = cover_type
 		self._enabled = enabled
 		self._node_positions = node_positions
@@ -132,26 +137,26 @@ end
 
 Cover.component_data = {
 	cover_type = {
-		value = "high",
-		ui_type = "combo_box",
 		ui_name = "Cover Type",
+		ui_type = "combo_box",
+		value = "high",
 		options_keys = {
 			"high",
-			"low"
+			"low",
 		},
 		options_values = {
 			"high",
-			"low"
-		}
+			"low",
+		},
 	},
 	enabled = {
+		ui_name = "Enabled",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Enabled"
 	},
 	extensions = {
-		"CoverExtension"
-	}
+		"CoverExtension",
+	},
 }
 
 return Cover

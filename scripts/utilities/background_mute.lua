@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/background_mute.lua
+
 local BackgroundMute = class("BackgroundMute")
 
 BackgroundMute.init = function (self)
@@ -30,7 +32,7 @@ end
 
 BackgroundMute._update_setting = function (self)
 	local sound_settings = Application.user_setting and Application.user_setting("sound_settings")
-	local option_enabled = sound_settings and not not sound_settings.mute_in_background_enabled
+	local option_enabled = not not sound_settings and not not sound_settings.mute_in_background_enabled
 
 	if self._option_enabled and not option_enabled then
 		Wwise.set_state("options_mute_all", "false")

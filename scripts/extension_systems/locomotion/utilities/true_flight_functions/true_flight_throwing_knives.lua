@@ -1,28 +1,33 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_throwing_knives.lua
+
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local hit_zone_names = HitZone.hit_zone_names
-local true_flight_throwing_knives = {
-	throwing_knives_locomotion = function (physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
-		local velocity = integration_data.velocity
-		local position = integration_data.position
-		local new_position = position + velocity * dt
-		local new_rotation = Quaternion.look(velocity)
-		local rotation_speed = 12
-		local rotation_length = 30
-		local sin_test = math.sin(t * rotation_speed + (integration_data.time_since_start * 1)^2)
-		local cos_test = math.sin(t * rotation_speed * 0.65)
-		local test_vector = Vector3(sin_test, rotation_length, cos_test)
-		local test_look = Quaternion.look(test_vector)
-		velocity = Quaternion.rotate(test_look, velocity)
-		local new_velocity, hit_units_this_frame = nil
-		local collision_filter = integration_data.collision_filter
-		new_position, new_velocity, hit_units_this_frame = ProjectileLocomotion.impact_detection_and_resolution(integration_data, new_position, velocity, physics_world, collision_filter, dt, false, false)
-		integration_data.velocity = new_velocity
+local true_flight_throwing_knives = {}
 
-		return new_position, new_rotation
-	end
-}
+true_flight_throwing_knives.throwing_knives_locomotion = function (physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
+	local velocity = integration_data.velocity
+	local position = integration_data.position
+	local new_position = position + velocity * dt
+	local new_rotation = Quaternion.look(velocity)
+	local rotation_speed = 12
+	local rotation_length = 30
+	local sin_test = math.sin(t * rotation_speed + (integration_data.time_since_start * 1)^2)
+	local cos_test = math.sin(t * rotation_speed * 0.65)
+	local test_vector = Vector3(sin_test, rotation_length, cos_test)
+	local test_look = Quaternion.look(test_vector)
+
+	velocity = Quaternion.rotate(test_look, velocity)
+
+	local new_velocity, hit_units_this_frame
+	local collision_filter = integration_data.collision_filter
+
+	new_position, new_velocity, hit_units_this_frame = ProjectileLocomotion.impact_detection_and_resolution(integration_data, new_position, velocity, physics_world, collision_filter, dt, false, false)
+	integration_data.velocity = new_velocity
+
+	return new_position, new_rotation
+end
 
 local function _owner_check(owner_unit, owner_position, first_person_extension, target_unit, target_position, distance_to_owner_requirement_squared)
 	if not HEALTH_ALIVE[owner_unit] then
@@ -80,7 +85,7 @@ local function _throwing_knives_find_best_target(integration_data, search_positi
 	local distance_to_owner_requirement = true_flight_template.distance_to_owner_requirement
 	local distance_to_owner_requirement_squared = distance_to_owner_requirement and distance_to_owner_requirement * distance_to_owner_requirement
 	local default_hit_zone = true_flight_template.target_hit_zone
-	local best_unit, best_position = nil
+	local best_unit, best_position
 	local best_score = math.huge
 	local number_of_results, results = TrueFlightDefaults.broadphase_query(owner_unit, search_position, radius)
 
@@ -107,7 +112,7 @@ local function _throwing_knives_find_best_target(integration_data, search_positi
 						local angle_sore = angle / math.pi
 						local score = distance_score + angle_sore
 
-						if best_score > score then
+						if score < best_score then
 							best_unit = unit
 							best_score = score
 							best_position = unit_position
@@ -133,17 +138,20 @@ true_flight_throwing_knives.throwing_knives_find_highest_value_target = function
 
 	local veclocity = integration_data.velocity
 	local travel_direction = Vector3.normalize(veclocity)
-	local best_unit, best_position, best_hit_zone = nil
+	local best_unit, best_position, best_hit_zone
 
 	if integration_data.target_position then
 		local target_position = integration_data.target_position
+
 		best_unit, best_position, best_hit_zone = _throwing_knives_find_best_target(integration_data, target_position, target_position, travel_direction, nil)
 	else
 		local first_search_pos = position + travel_direction * forward_search_distance_to_find_target
+
 		best_unit, best_position, best_hit_zone = _throwing_knives_find_best_target(integration_data, first_search_pos, position, travel_direction, nil)
 
 		if not best_unit then
 			local second_search_pos = position + travel_direction * forward_search_distance_to_find_target * 2
+
 			best_unit, best_position, best_hit_zone = _throwing_knives_find_best_target(integration_data, second_search_pos, position, travel_direction, nil)
 		end
 	end
@@ -165,7 +173,9 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 	local current_speed = Vector3.length(velocity)
 	local travel_direction = Vector3.normalize(velocity)
 	local target_unit = integration_data.target_unit
+
 	integration_data.last_hit_unit = hit_unit
+
 	local bounced_to_much = false
 
 	if HEALTH_ALIVE[hit_unit] then
@@ -181,6 +191,7 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 					local towards_best = Vector3.normalize(best_position - hit_position) + Vector3(0, 1, 0)
 					local new_direction = Vector3.normalize(Vector3.lerp(travel_direction, towards_best, 0.5))
 					local new_velocity = new_direction * current_speed
+
 					integration_data.velocity = new_velocity
 					integration_data.target_unit = best_unit
 					integration_data.target_hit_zone = best_hit_zone
@@ -217,10 +228,12 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 		end
 
 		local new_velocity = current_speed * new_direction * speed_mod
+
 		integration_data.velocity = new_velocity
 		integration_data.target_position = nil
 		number_of_bounces = number_of_bounces + 1
 		integration_data.number_of_bounces = number_of_bounces
+
 		local number_of_allowed_bounces = true_flight_template.allowed_bounces
 
 		if number_of_allowed_bounces < number_of_bounces then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactee_system.lua
+
 require("scripts/extension_systems/interaction/interactee_extension")
 require("scripts/extension_systems/interaction/player_interactee_extension")
 
@@ -7,7 +9,7 @@ local RPCS = {
 	"rpc_interaction_stopped",
 	"rpc_interaction_set_active",
 	"rpc_interaction_set_missing_player",
-	"rpc_interaction_hot_join"
+	"rpc_interaction_hot_join",
 }
 
 InteracteeSystem.init = function (self, ...)

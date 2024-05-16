@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/projectile_husk_locomotion_extension.lua
+
 local Luggable = require("scripts/utilities/luggable")
 local ProjectileHuskLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_husk_locomotion")
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
@@ -8,7 +10,7 @@ local MAX_SYNCHRONIZE_COUNTER = ProjectileLocomotionSettings.MAX_SYNCHRONIZE_COU
 local NUM_BUFFERED_SNAPSHOTS = ProjectileLocomotionSettings.NUM_BUFFERED_SNAPSHOTS
 local MAX_SNAPSHOT_ID = NetworkConstants.max_projectile_locomotion_snapshot_id
 local SNAPSHOT_ID = "snapshot_id"
-local _snapshot_id_diff, _snapshot_id_add = nil
+local _snapshot_id_diff, _snapshot_id_add
 local ProjectileHuskLocomotionExtension = class("ProjectileHuskLocomotionExtension")
 
 ProjectileHuskLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
@@ -18,12 +20,17 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 	self._game_session = game_session
 	self._game_object_id = game_object_id
 	self._fx_extension = ScriptUnit.has_extension(unit, "fx_system")
+
 	local projectile_template_name = extension_init_data.projectile_template_name
 	local projectile_template = ProjectileTemplates[projectile_template_name]
+
 	self._projectile_template = projectile_template
+
 	local projectile_locomotion_template = projectile_template.locomotion_template
+
 	self._projectile_locomotion_template = projectile_locomotion_template
 	self._unit_rotation_offset = projectile_template.unit_rotation_offset
+
 	local item_or_nil = extension_init_data.optional_item
 
 	if item_or_nil then
@@ -32,6 +39,7 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 
 	self._mass, self._radius, self._dynamic_actor_id = self:_initialize_projectile_info(unit, projectile_locomotion_template)
 	self._snapshot_ring_buffer, self._snapshot_game_object_return_data, self._interpolation_data = self:_initialize_interpolation_data()
+
 	local snapshot_id = GameSession.game_object_field(game_session, game_object_id, SNAPSHOT_ID)
 	local snapshot = self._snapshot_ring_buffer[snapshot_id]
 	local time_manager = Managers.time
@@ -40,6 +48,7 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 	self:_read_snapshot(snapshot, init_t, self._snapshot_game_object_return_data)
 
 	self._latest_received_snapshot_id = snapshot_id
+
 	local dynamic_actor_id = self._dynamic_actor_id
 
 	if dynamic_actor_id then
@@ -90,7 +99,9 @@ ProjectileHuskLocomotionExtension.update = function (self, unit, dt, t)
 	local current_position = self:_update_interpolation(unit, dt, t)
 	local distance = current_position and Vector3.distance(current_position, old_position) or 0
 	local speed = distance / dt
+
 	self._current_speed = speed
+
 	local fx_extension = self._fx_extension
 
 	if fx_extension then
@@ -112,7 +123,7 @@ ProjectileHuskLocomotionExtension._num_snapshots_buffered = function (self, init
 		end
 
 		iteration_times = iteration_times + 1
-	until MAX_SNAPSHOT_ID <= iteration_times
+	until iteration_times >= MAX_SNAPSHOT_ID
 
 	return MAX_SNAPSHOT_ID
 end
@@ -124,7 +135,7 @@ ProjectileHuskLocomotionExtension._update_interpolation = function (self, unit, 
 		local latest_received_snapshot_id = self._latest_received_snapshot_id
 		local num_snapshots_buffered = self:_num_snapshots_buffered(latest_received_snapshot_id, t)
 
-		if NUM_BUFFERED_SNAPSHOTS <= num_snapshots_buffered then
+		if num_snapshots_buffered >= NUM_BUFFERED_SNAPSHOTS then
 			self:_start_interpolating(unit, interpolation_data, latest_received_snapshot_id, t)
 		else
 			return
@@ -146,14 +157,16 @@ ProjectileHuskLocomotionExtension._update_interpolation_time = function (self, i
 	local time_until_reached_latest_snapshot = time_left_in_current_snapshot + buffer_snapshot_time
 	local wanted_buffered_time = NUM_BUFFERED_SNAPSHOTS * snapshot_time
 
-	if time_until_reached_latest_snapshot > wanted_buffered_time then
+	if wanted_buffered_time < time_until_reached_latest_snapshot then
 		interpolation_data.time_scale = 1.05
 	else
 		interpolation_data.time_scale = 0.95
 	end
 
 	local new_interpolation_t = old_interpolation_t + dt * interpolation_data.time_scale
+
 	interpolation_data.t = new_interpolation_t
+
 	local snapshot_t = new_interpolation_t / snapshot_time
 
 	if snapshot_t > 1 then
@@ -169,13 +182,14 @@ ProjectileHuskLocomotionExtension._step_interpolation_snapshots = function (self
 	local start_snapshot_id = _snapshot_id_add(old_start_snapshot_id, num_snapshots_to_jump)
 	local target_snapshot_id = _snapshot_id_add(start_snapshot_id, 1)
 	local target_snapshot = snapshot_ring_buffer[target_snapshot_id]
-	local new_snapshot_t = nil
+	local new_snapshot_t
 
 	if not ProjectileHuskLocomotion.snapshot_is_outdated(target_snapshot, t, self._fixed_time_step) then
 		new_snapshot_t = snapshot_t - num_snapshots_to_jump
 		interpolation_data.t = snapshot_time * new_snapshot_t
 		interpolation_data.start_snapshot_id = start_snapshot_id
 		interpolation_data.target_snapshot_id = target_snapshot_id
+
 		local start_snapshot = snapshot_ring_buffer[start_snapshot_id]
 		local loc_state = start_snapshot.locomotion_state
 
@@ -185,11 +199,13 @@ ProjectileHuskLocomotionExtension._step_interpolation_snapshots = function (self
 	else
 		local new_target_snapshot_id = self._latest_received_snapshot_id
 		local new_start_snapshot_id = _snapshot_id_add(new_target_snapshot_id, -1)
+
 		interpolation_data.start_snapshot_id = new_start_snapshot_id
 		interpolation_data.target_snapshot_id = new_target_snapshot_id
 		interpolation_data.t = snapshot_time
 		interpolation_data.is_interpolating = false
 		new_snapshot_t = 1
+
 		local new_target_snapshot = snapshot_ring_buffer[new_target_snapshot_id]
 		local loc_state = new_target_snapshot.locomotion_state
 
@@ -248,11 +264,12 @@ ProjectileHuskLocomotionExtension._interpolate = function (self, unit, interpola
 end
 
 ProjectileHuskLocomotionExtension._initialize_projectile_info = function (self, unit, projectile_locomotion_template)
-	local mass = nil
+	local mass
 	local dynamic_actor_id = Unit.find_actor(unit, "dynamic")
 
 	if dynamic_actor_id then
 		local dynamic_actor = Unit.actor(unit, dynamic_actor_id)
+
 		mass = Actor.mass(dynamic_actor)
 	else
 		mass = projectile_locomotion_template.integrator_parameters.mass
@@ -274,14 +291,14 @@ ProjectileHuskLocomotionExtension._initialize_interpolation_data = function (sel
 	local snapshot_game_object_return_data = {
 		projectile_locomotion_state_id = 1,
 		position = {},
-		rotation = {}
+		rotation = {},
 	}
 	local interpolation_data = {
-		time_scale = 1,
 		is_interpolating = false,
+		time_scale = 1,
 		start_snapshot_id = math.huge,
 		target_snapshot_id = math.huge,
-		t = math.huge
+		t = math.huge,
 	}
 
 	return snapshot_ring_buffer, snapshot_game_object_return_data, interpolation_data
@@ -293,7 +310,7 @@ ProjectileHuskLocomotionExtension._new_snapshot = function (self)
 		read_time = 0,
 		position = Vector3Box(Vector3.zero()),
 		rotation = QuaternionBox(Quaternion.identity()),
-		locomotion_state = locomotion_states.none
+		locomotion_state = locomotion_states.none,
 	}
 
 	return snapshot
@@ -319,8 +336,7 @@ ProjectileHuskLocomotionExtension._fill_snapshot = function (self, snapshot, rea
 end
 
 ProjectileHuskLocomotionExtension._read_latest_snapshot = function (self, unit, dt, t)
-	local game_session = self._game_session
-	local game_object_id = self._game_object_id
+	local game_session, game_object_id = self._game_session, self._game_object_id
 	local latest_received_snapshot_id = self._latest_received_snapshot_id
 	local snapshot_id = GameSession.game_object_field(game_session, game_object_id, SNAPSHOT_ID)
 
@@ -363,10 +379,12 @@ ProjectileHuskLocomotionExtension._start_interpolating = function (self, unit, i
 	local target_snapshot_id = _snapshot_id_add(start_snapshot_id, 1)
 	local snapshot_ring_buffer = self._snapshot_ring_buffer
 	local start_snapshot = snapshot_ring_buffer[start_snapshot_id]
+
 	interpolation_data.is_interpolating = true
 	interpolation_data.t = 0
 	interpolation_data.start_snapshot_id = start_snapshot_id
 	interpolation_data.target_snapshot_id = target_snapshot_id
+
 	local loc_state = start_snapshot.locomotion_state
 
 	if self._current_locomotion_state ~= loc_state then

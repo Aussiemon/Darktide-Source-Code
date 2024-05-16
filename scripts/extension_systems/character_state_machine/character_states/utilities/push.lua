@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/push.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -7,7 +9,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PushSettings = require("scripts/settings/damage/push_settings")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
-local _is_push_stun_immune_from_buff, _time_to_apply_push = nil
+local _is_push_stun_immune_from_buff, _time_to_apply_push
 local MAX_PUSH_SPEED = PushSettings.default_max_push_speed
 local Push = {}
 
@@ -75,6 +77,7 @@ Push.add = function (unit, locomotion_push_component, push_direction, push_templ
 	local wanted_push_velocity = flat_push_direction * push_speed * push_speed_modifier
 	local new_push_velocity = dormant_push_velocity + wanted_push_velocity
 	local is_server = Managers.state.game_session:is_server()
+
 	locomotion_push_component.new_velocity = new_push_velocity
 
 	if is_predicted then

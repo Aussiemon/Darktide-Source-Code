@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/blend_camera.lua
+
 require("scripts/managers/camera/cameras/base_camera")
 
 local BlendCamera = class("BlendCamera", "BaseCamera")
@@ -21,7 +23,7 @@ BlendCamera.init = function (self, root_node)
 			local match = blend_definition.match_value
 
 			return 1 - math.min(math.abs(blend - match), 1)
-		end
+		end,
 	}
 end
 
@@ -36,10 +38,11 @@ BlendCamera.add_child_node = function (self, node)
 
 	local child_index = #self._blend_setups + 1
 	local def = self._child_node_definitions[child_index]
+
 	self._blend_setups[child_index] = {
 		node = node,
 		weight_function = self._blend_functions[def.blend_function],
-		definition = def
+		definition = def,
 	}
 end
 
@@ -60,6 +63,7 @@ BlendCamera.update = function (self, dt, position, rotation, data)
 
 		local offset = node:position() - position
 		local weight = blend_setup.weight_function(blend_setup.definition, data)
+
 		total_weight = total_weight + weight
 		total_offset = total_offset + offset * weight
 	end

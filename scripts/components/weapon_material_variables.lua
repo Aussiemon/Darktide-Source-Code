@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/weapon_material_variables.lua
+
 local WeaponMaterialVariables = component("WeaponMaterialVariables")
 
 WeaponMaterialVariables.init = function (self, unit)
@@ -35,25 +37,25 @@ end
 
 WeaponMaterialVariables.component_data = {
 	start_time_variable_name = {
+		ui_name = "Start Time Variable",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Start Time Variable"
 	},
 	stop_time_variable_name = {
+		ui_name = "Stop Time Variable",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Stop Time Variable"
 	},
 	on_off_variable_name = {
+		ui_name = "On/Off Variable",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "On/Off Variable"
 	},
 	material_slot_name = {
+		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Material Slot Name"
-	}
+	},
 }
 
 return WeaponMaterialVariables

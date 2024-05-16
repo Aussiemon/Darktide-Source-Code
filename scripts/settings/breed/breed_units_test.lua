@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_units_test.lua
+
 local Breed = require("scripts/utilities/breed")
 local Breeds = require("scripts/settings/breed/breeds")
 local MasterItems = require("scripts/backend/master_items")
@@ -12,10 +14,10 @@ local item_definitions = MasterItems.get_cached()
 local REQUIRED_NODES = {
 	"enemy_aim_target_01",
 	"enemy_aim_target_02",
-	"enemy_aim_target_03"
+	"enemy_aim_target_03",
 }
 local REQUIRED_MINION_RANGED_NODES = {
-	"fx_muzzle_01"
+	"fx_muzzle_01",
 }
 local FX_SOURCE_NAME = "muzzle"
 
@@ -26,7 +28,7 @@ local function _init_and_run_tests()
 		from_script_component = true,
 		is_minion = true,
 		world = world,
-		item_definitions = item_definitions
+		item_definitions = item_definitions,
 	}
 	local missing_ranged_nodes_text = ""
 	local missing_minion_ranged_nodes = false
@@ -77,7 +79,7 @@ local function _init_and_run_tests()
 					local test_data = {
 						unit = item_unit,
 						item_data = item,
-						attachments = attachment_units
+						attachments = attachment_units,
 					}
 					local attachment_unit, node_index = MinionVisualLoadout.attachment_unit_and_node_from_node_name(test_data, FX_SOURCE_NAME)
 
@@ -109,8 +111,8 @@ local function _resource_dependencies()
 	local resource_dependencies = {}
 
 	for breed_name, breed in pairs(Breeds) do
-		local base_unit = breed.base_unit
-		local state_machine = breed.state_machine
+		local base_unit, state_machine = breed.base_unit, breed.state_machine
+
 		resource_dependencies[base_unit] = true
 
 		if state_machine then
@@ -119,19 +121,19 @@ local function _resource_dependencies()
 
 		if Breed.is_player(breed) then
 			local first_person_unit = breed.first_person_unit
+
 			resource_dependencies[first_person_unit] = true
 
 			for item_name, item in pairs(item_definitions) do
 				local breeds = item.breeds
 				local weapon_template_name = item.weapon_template
 
-				if type(weapon_template_name) ~= "string" or weapon_template_name == "" then
-					weapon_template_name = false
-				end
+				weapon_template_name = type(weapon_template_name) == "string" and weapon_template_name ~= "" and weapon_template_name
 
 				if weapon_template_name and breeds and table.contains(breeds, breed_name) then
 					local weapon_template = WeaponTemplates[weapon_template_name]
 					local _, state_machine_1p = WeaponTemplate.state_machines(weapon_template, breed_name)
+
 					resource_dependencies[state_machine_1p] = true
 				end
 			end
@@ -143,5 +145,5 @@ end
 
 return {
 	resource_dependencies = _resource_dependencies,
-	test_function = _init_and_run_tests
+	test_function = _init_and_run_tests,
 }

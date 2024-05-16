@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/camera_shake_event.lua
+
 local CameraEffectSettings = require("scripts/settings/camera/camera_effect_settings")
 local CameraShakeEvent = class("CameraShakeEvent")
 local PI = math.pi
@@ -7,6 +9,7 @@ CameraShakeEvent.init = function (self, event_name, source_unit_data)
 	local fade_in = event.fade_in
 	local fade_out = event.fade_out
 	local duration = event.duration
+
 	duration = (duration or 0) + (fade_in or 0) + (fade_out or 0)
 	self._event = event
 	self._current_time = 0
@@ -18,12 +21,14 @@ CameraShakeEvent.init = function (self, event_name, source_unit_data)
 	self._is_done = false
 	self._engine_math = rawget(_G, "EditorApi") and Math or math
 	self._math_utils_or_math = rawget(_G, "EditorApi") and MathUtils or math
+
 	local save_manager = Managers.save
-	local sway_intensity = nil
+	local sway_intensity
 
 	if save_manager then
 		local account_data = save_manager:account_data()
 		local value = account_data.interface_settings.camera_movement_offset_sway_intensity
+
 		sway_intensity = math.ilerp(0, 1, value)
 	end
 
@@ -40,12 +45,14 @@ end
 
 CameraShakeEvent._apply_shake_event = function (self, dt, camera_data, camera_position)
 	local current_time = self._current_time + dt
+
 	self._current_time = current_time
+
 	local end_time = self._end_time
 	local fade_in_time = self._fade_in_time
 	local fade_out_time = self._fade_out_time
 	local _math_utils_or_math = self._math_utils_or_math
-	local fade_progress = nil
+	local fade_progress
 
 	if fade_in_time and current_time <= fade_in_time then
 		fade_progress = _math_utils_or_math.clamp(current_time / fade_in_time, 0, 1) or 0
@@ -63,11 +70,13 @@ CameraShakeEvent._apply_shake_event = function (self, dt, camera_data, camera_po
 		local near_value = unit_data.near_value
 		local far_value = unit_data.far_value
 		local d = Vector3.distance(source_position, camera_position)
+
 		scale = 1 - _math_utils_or_math.clamp((d - near_dist) / (far_dist - near_dist), 0, 1)
 		scale = far_value + scale * (near_value - far_value)
 	end
 
 	scale = scale * self._sway_intensity
+
 	local pitch_noise_value = self:_calculate_perlin_value(current_time, fade_progress) * scale
 	local yaw_noise_value = self:_calculate_perlin_value(current_time + 10, fade_progress) * scale
 	local current_rot = camera_data.rotation
@@ -75,6 +84,7 @@ CameraShakeEvent._apply_shake_event = function (self, dt, camera_data, camera_po
 	local yaw_offset = yaw_noise_value * deg_to_rad
 	local pitch_offset = pitch_noise_value * deg_to_rad
 	local total_offset = Quaternion.from_yaw_pitch_roll(yaw_offset, pitch_offset, 0)
+
 	camera_data.rotation = Quaternion.multiply(current_rot, total_offset)
 
 	if end_time <= current_time then
@@ -91,11 +101,13 @@ CameraShakeEvent._calculate_perlin_value = function (self, x, fade_progress)
 	for i = 0, number_of_octaves do
 		local frequency = 2^i
 		local amplitude = persistance^i
+
 		total = total + self:_interpolated_noise(x * frequency) * amplitude
 	end
 
 	local amplitude_multiplier = event_settings.amplitude or 1
 	local fade_multiplier = fade_progress or 1
+
 	total = total * amplitude_multiplier * fade_multiplier
 
 	return total

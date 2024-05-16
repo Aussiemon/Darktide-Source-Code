@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/voice_over_bank_reshuffled_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local VoiceOverBankReshuffledReporter = class("VoiceOverBankReshuffledReporter")
 
@@ -25,7 +27,7 @@ VoiceOverBankReshuffledReporter.register_event = function (self, bank_name)
 		index = #self._report + 1
 		self._report[index] = {
 			observations = 1,
-			vo_name = bank_name
+			vo_name = bank_name,
 		}
 		self._vo_name_to_index[bank_name] = index
 	else

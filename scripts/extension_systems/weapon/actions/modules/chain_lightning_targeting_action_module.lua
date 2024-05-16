@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/chain_lightning_targeting_action_module.lua
+
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ChainLightningTargetingActionModule = class("ChainLightningTargetingActionModule")
 local Vector3_flat = Vector3.flat
@@ -9,7 +11,9 @@ ChainLightningTargetingActionModule.init = function (self, physics_world, player
 	self._player_unit = player_unit
 	self._component = component
 	self._action_settings = action_settings
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._buff_extension = ScriptUnit.extension(player_unit, "buff_system")
@@ -17,6 +21,7 @@ end
 
 ChainLightningTargetingActionModule.start = function (self, action_settings, t)
 	local component = self._component
+
 	component.target_unit_1 = nil
 	component.target_unit_2 = nil
 	component.target_unit_3 = nil
@@ -47,7 +52,7 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	table.clear(broadphase_results)
 	table.clear(hit_units)
 
-	local num_results = broadphase:query(query_position, radius, broadphase_results, enemy_side_names)
+	local num_results = broadphase.query(broadphase, query_position, radius, broadphase_results, enemy_side_names)
 	local physics_world = self._physics_world
 	local component = self._component
 	local num_targets = 0
@@ -94,6 +99,7 @@ end
 ChainLightningTargetingActionModule.finish = function (self, reason, data, t)
 	if reason == "hold_input_released" or reason == "stunned" then
 		local component = self._component
+
 		component.target_unit_1 = nil
 		component.target_unit_2 = nil
 		component.target_unit_3 = nil

@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/components/interpolate_animation_variable.lua
+
 local InterpolateAnimationVariable = component("InterpolateAnimationVariable")
 
 InterpolateAnimationVariable.init = function (self, unit)
 	self._unit = unit
 	self._variable_name = self:get_data(unit, "variable_name")
+
 	local val_from = self:get_data(unit, "val_from")
 	local val_to = self:get_data(unit, "val_to")
+
 	self._method = self:get_data(unit, "method")
 	self._transition_time = self:get_data(unit, "transition_time")
 	self._transition_speed = 1 / self._transition_time
@@ -98,6 +102,7 @@ InterpolateAnimationVariable.start_transition = function (self, target_value)
 		self._animation_time = 1
 	else
 		local current_speed = Unit.animation_get_variable(self._unit, self._anim_variable)
+
 		self._animation_time = (current_speed - from) / (to - from)
 
 		if math.abs(self._animation_time) >= 1 then
@@ -128,63 +133,63 @@ end
 
 InterpolateAnimationVariable.component_data = {
 	variable_name = {
+		category = "Transition",
+		ui_name = "Variable Name",
 		ui_type = "text_box",
 		value = "speed",
-		ui_name = "Variable Name",
-		category = "Transition"
 	},
 	val_from = {
-		ui_type = "number",
-		decimals = 100,
 		category = "Transition",
-		value = 0,
+		decimals = 100,
+		step = 0.1,
 		ui_name = "Value From",
-		step = 0.1
+		ui_type = "number",
+		value = 0,
 	},
 	val_to = {
-		ui_type = "number",
-		decimals = 100,
 		category = "Transition",
-		value = 1,
+		decimals = 100,
+		step = 0.1,
 		ui_name = "Value To",
-		step = 0.1
+		ui_type = "number",
+		value = 1,
 	},
 	method = {
-		value = "linear",
-		ui_type = "combo_box",
 		category = "Transition",
 		ui_name = "Interpolation Method",
+		ui_type = "combo_box",
+		value = "linear",
 		options_keys = {
 			"Linear",
-			"Easing"
+			"Easing",
 		},
 		options_values = {
 			"linear",
-			"easing"
-		}
+			"easing",
+		},
 	},
 	transition_time = {
-		ui_type = "number",
-		decimals = 100,
 		category = "Transition",
-		value = 1,
+		decimals = 100,
+		step = 0.1,
 		ui_name = "Transition time",
-		step = 0.1
+		ui_type = "number",
+		value = 1,
 	},
 	inputs = {
 		function_advance = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		function_revert = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		function_stop = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return InterpolateAnimationVariable

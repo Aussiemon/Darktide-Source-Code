@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_event_intensity.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
@@ -21,7 +23,7 @@ local EVENT_INTENSITY = {
 	[MissionSoundEvents.objective_start_scanning] = 0,
 	[MissionSoundEvents.scanning_travel_start] = 80,
 	[MissionSoundEvents.scanning_scan_start] = 80,
-	[MissionSoundEvents.objective_finished] = 0
+	[MissionSoundEvents.objective_finished] = 0,
 }
 local INTENSITY_PROGRESS_RATE = {
 	[MissionSoundEvents.objective_start_collect] = DEFAULT_PROGRESS_VALUE,
@@ -31,7 +33,7 @@ local INTENSITY_PROGRESS_RATE = {
 	[MissionSoundEvents.objective_start_kill] = 0,
 	[MissionSoundEvents.objective_start_timed] = DEFAULT_PROGRESS_VALUE * 2,
 	[MissionSoundEvents.objective_start_demolition] = DEFAULT_PROGRESS_VALUE,
-	[MissionSoundEvents.objective_start_luggable] = DEFAULT_PROGRESS_VALUE * 2
+	[MissionSoundEvents.objective_start_luggable] = DEFAULT_PROGRESS_VALUE * 2,
 }
 
 WwiseStateGroupEventIntensity.init = function (self, wwise_world, wwise_state_group_name)
@@ -47,6 +49,7 @@ WwiseStateGroupEventIntensity.on_gameplay_post_init = function (self, level)
 	WwiseStateGroupEventIntensity.super.on_gameplay_post_init(self, level)
 
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
 	self._mission_objective_system = mission_objective_system
 
 	mission_objective_system:register_music_event_listener(self)
@@ -70,7 +73,9 @@ WwiseStateGroupEventIntensity.update = function (self, dt, t)
 	if self._mission_objective_system then
 		local event_progress = self._mission_objective_system:get_objective_event_music_progress()
 		local progression_intensity = math.max(event_progress - self._previous_event_progress, 0) * self._progression_rate
+
 		self._previous_event_progress = event_progress
+
 		local previous_intensity = self._intensity
 		local new_intensity = self._intensity + progression_intensity - dt
 
@@ -79,6 +84,7 @@ WwiseStateGroupEventIntensity.update = function (self, dt, t)
 		end
 
 		local intensity = math.clamp(new_intensity, -TRIGGER_THRESHOLD, MAX_INTENSITY)
+
 		self._intensity = intensity
 
 		if intensity > 0 then

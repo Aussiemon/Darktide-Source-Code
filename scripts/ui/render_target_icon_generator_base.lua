@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/render_target_icon_generator_base.lua
+
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local RenderTargetAtlasGenerator = require("scripts/ui/render_target_atlas_generator")
 local DEBUG = false
@@ -11,11 +13,13 @@ RenderTargetIconGeneratorBase.init = function (self, render_settings)
 	self._capture_render_target_size = nil
 	self._requests_queue_order = {}
 	self._requests_by_size = {}
+
 	local width = render_settings and render_settings.width
 	local height = render_settings and render_settings.height
+
 	self._default_size = {
 		width,
-		height
+		height,
 	}
 	self._default_render_target_capture_multiple = render_settings and render_settings.render_target_capture_multiple or 4
 	self._id_counter = 0
@@ -45,6 +49,7 @@ end
 
 RenderTargetIconGeneratorBase._reset_active_spawning = function (self)
 	self._request_preview_lifetime_frame_count = nil
+
 	local active_request = self._active_request
 
 	if active_request then
@@ -154,6 +159,7 @@ RenderTargetIconGeneratorBase.increment_icon_request_by_reference_id = function 
 
 	if request then
 		local new_reference_id = self._id_counter_prefix .. "_" .. self._id_counter
+
 		self._id_counter = self._id_counter + 1
 		request.references_lookup[new_reference_id] = true
 		request.references_array[#request.references_array + 1] = new_reference_id
@@ -167,7 +173,9 @@ RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_i
 	local size_key = self:_get_key_by_size(size)
 	local request_id = request_id_prefix .. "_" .. size_key
 	local reference_id = current_reference_id or self._id_counter_prefix .. "_" .. self._id_counter
+
 	self._id_counter = current_reference_id and self._id_counter or self._id_counter + 1
+
 	local requests_by_size = self._requests_by_size
 	local existing_requests = requests_by_size[size_key] and requests_by_size[size_key][request_id]
 
@@ -187,7 +195,7 @@ RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_i
 			data = data,
 			size = size,
 			id = request_id,
-			prioritized = prioritized
+			prioritized = prioritized,
 		}
 
 		if self._render_enabled then
@@ -214,6 +222,7 @@ RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_i
 	end
 
 	local request = requests_by_size[size_key][request_id]
+
 	request.references_lookup[reference_id] = true
 	request.references_array[#request.references_array + 1] = reference_id
 
@@ -241,7 +250,7 @@ RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_i
 end
 
 RenderTargetIconGeneratorBase.unload_request_reference = function (self, reference_id, keep_reference)
-	local unload_request, unload_request_size_key = nil
+	local unload_request, unload_request_size_key
 	local requests_by_size = self._requests_by_size
 
 	for size_key, requests in pairs(requests_by_size) do
@@ -334,6 +343,7 @@ RenderTargetIconGeneratorBase._handle_request_queue = function (self)
 
 				if self._request_preview_lifetime_frame_count <= 0 then
 					self._request_preview_lifetime_frame_count = nil
+
 					local grid_index = active_request.grid_index
 					local atlas_id = active_request.atlas_id
 					local render_target_atlas_generator = self._render_target_atlas_generator
@@ -408,7 +418,9 @@ RenderTargetIconGeneratorBase._initialize_world = function (self)
 	local world_name = render_settings.world_name
 	local world_layer = render_settings.world_layer
 	local world_timer_name = render_settings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name)
+
 	local level_name = render_settings.level_name
 	local ignore_level_background = true
 
@@ -432,13 +444,15 @@ RenderTargetIconGeneratorBase._setup_viewport = function (self, custom_size)
 	local width = custom_size and custom_size[1] or self._default_size[1]
 	local height = custom_size and custom_size[2] or self._default_size[2]
 	local default_render_target_capture_multiple = self._default_render_target_capture_multiple
+
 	self._capture_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, width * default_render_target_capture_multiple, height * default_render_target_capture_multiple, self._unique_id)
 	self._capture_render_target_size = {
 		width,
-		height
+		height,
 	}
+
 	local render_targets = {
-		back_buffer = self._capture_render_target
+		back_buffer = self._capture_render_target,
 	}
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment, nil, render_targets)

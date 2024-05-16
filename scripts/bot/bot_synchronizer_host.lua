@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/bot/bot_synchronizer_host.lua
+
 local BotPlayer = require("scripts/managers/player/bot_player")
 local BotSynchronizerHost = class("BotSynchronizerHost")
 local RPCS = {}
@@ -56,6 +58,7 @@ BotSynchronizerHost.update = function (self)
 			end
 
 			spawn_item.state = SPAWN_STATES.syncing_profile
+
 			local package_synchronization_manager = Managers.package_synchronization
 			local package_synchronizer_host = package_synchronization_manager:synchronizer_host()
 
@@ -86,9 +89,10 @@ end
 
 BotSynchronizerHost.add_bot = function (self, local_player_id, player_profile)
 	local spawn_group = self._spawn_group or {}
+
 	spawn_group[local_player_id] = {
 		state = SPAWN_STATES.spawn,
-		profile = player_profile
+		profile = player_profile,
 	}
 	self._bots[local_player_id] = true
 	self._spawn_group = spawn_group

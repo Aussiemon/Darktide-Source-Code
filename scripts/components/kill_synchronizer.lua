@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/kill_synchronizer.lua
+
 local KillSynchronizer = component("KillSynchronizer")
 
 KillSynchronizer.init = function (self, unit)
@@ -41,24 +43,24 @@ end
 
 KillSynchronizer.component_data = {
 	objective_name = {
+		ui_name = "Objective name",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Objective name"
 	},
 	automatic_start = {
+		ui_name = "Auto start on mission start",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Auto start on mission start"
 	},
 	inputs = {
 		start_kill_event = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"KillSynchronizerExtension"
-	}
+		"KillSynchronizerExtension",
+	},
 }
 
 return KillSynchronizer

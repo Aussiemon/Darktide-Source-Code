@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -16,9 +18,9 @@ local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local trinket_slot_order = {
 	"slot_trinket_1",
-	"slot_trinket_2"
+	"slot_trinket_2",
 }
-local find_link_attachment_item_slot_path = nil
+local find_link_attachment_item_slot_path
 
 function find_link_attachment_item_slot_path(target_table, slot_id, item, link_item, optional_path)
 	local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
@@ -40,7 +42,9 @@ function find_link_attachment_item_slot_path(target_table, slot_id, item, link_i
 				end
 			else
 				local previous_path = path
+
 				path = path and path .. "." .. k or k
+
 				local alternative_path, path_item = find_link_attachment_item_slot_path(t, slot_id, item, link_item, path)
 
 				if alternative_path then
@@ -57,16 +61,19 @@ local InventoryWeaponCosmeticsView = class("InventoryWeaponCosmeticsView", "Item
 
 InventoryWeaponCosmeticsView.init = function (self, settings, context)
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 	self._parent = context.parent
 	self._visibility_toggled_on = true
 	self._preview_player = context.player or Managers.player:local_player(1)
 	self._selected_item = context.preview_item
+
 	local selected_item = self._selected_item
 
 	if selected_item then
 		self._presentation_item = MasterItems.create_preview_item_instance(selected_item)
-		local trinket_path, trinket_item = nil
+
+		local trinket_path, trinket_item
 
 		for i = 1, #trinket_slot_order do
 			local slot_id = trinket_slot_order[i]
@@ -121,24 +128,32 @@ InventoryWeaponCosmeticsView._setup_forward_gui = function (self)
 	local world_layer = 101
 	local world_name = self._unique_id .. "_ui_forward_world"
 	local view_name = self.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = self._unique_id .. "_ui_forward_world_viewport"
 	local viewport_type = "default_with_alpha"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
+
 	local renderer_name = self._unique_id .. "_forward_renderer"
+
 	self._ui_forward_renderer = ui_manager:create_renderer(renderer_name, self._world)
+
 	local gui = self._ui_forward_renderer.gui
 	local gui_retained = self._ui_forward_renderer.gui_retained
 	local resource_renderer_name = self._unique_id
 	local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
+
 	self._ui_resource_renderer = ui_manager:create_renderer(resource_renderer_name, self._world, true, gui, gui_retained, material_name)
 end
 
 InventoryWeaponCosmeticsView._destroy_forward_gui = function (self)
 	if self._ui_resource_renderer then
 		local renderer_name = self._unique_id
+
 		self._ui_resource_renderer = nil
 
 		Managers.ui:destroy_renderer(renderer_name)
@@ -185,153 +200,152 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 	end
 
 	local grid_size = Definitions.grid_settings.grid_size
+
 	self._content_blueprints = require("scripts/ui/view_content_blueprints/item_blueprints")(grid_size)
 
 	self:_setup_input_legend()
 
-	local tabs_content = {}
-	tabs_content[1] = {
-		display_name = "loc_weapon_cosmetics_title_skins",
-		slot_name = "slot_weapon_skin",
-		item_type = "WEAPON_SKIN",
-		icon = "content/ui/materials/icons/item_types/weapon_skins",
-		filter_on_weapon_template = true,
-		get_item_filters = function (slot_name, item_type)
-			if item_type then
-				local item_type_filter = {
-					item_type
+	local tabs_content = {
+		{
+			display_name = "loc_weapon_cosmetics_title_skins",
+			filter_on_weapon_template = true,
+			icon = "content/ui/materials/icons/item_types/weapon_skins",
+			item_type = "WEAPON_SKIN",
+			slot_name = "slot_weapon_skin",
+			get_item_filters = function (slot_name, item_type)
+				local item_type_filter = item_type and {
+					item_type,
 				}
-			end
 
-			return nil, item_type_filter
-		end,
-		setup_selected_item_function = function (real_item, selected_item)
-			local selected_weapon_trinket_name = self._selected_weapon_trinket_name
+				return nil, item_type_filter
+			end,
+			setup_selected_item_function = function (real_item, selected_item)
+				local selected_weapon_trinket_name = self._selected_weapon_trinket_name
 
-			if selected_weapon_trinket_name and real_item and real_item.gear.masterDataInstance.id == selected_weapon_trinket_name then
-				self._selected_weapon_trinket = real_item
-			end
-		end,
-		get_empty_item = function (selected_item)
-			local visual_item = nil
+				if selected_weapon_trinket_name and real_item and real_item.gear.masterDataInstance.id == selected_weapon_trinket_name then
+					self._selected_weapon_trinket = real_item
+				end
+			end,
+			get_empty_item = function (selected_item)
+				local visual_item
 
-			if selected_item.gear then
-				visual_item = MasterItems.create_preview_item_instance(selected_item)
-			else
-				visual_item = table.clone_instance(selected_item)
-			end
-
-			visual_item.empty_item = true
-			visual_item.slot_weapon_skin = nil
-
-			if visual_item.gear.masterDataInstance.overrides then
-				visual_item.gear.masterDataInstance.overrides.slot_weapon_skin = nil
-			end
-
-			return visual_item
-		end,
-		generate_visual_item_function = function (real_item, selected_item)
-			local visual_item = nil
-
-			if real_item.gear then
-				visual_item = MasterItems.create_preview_item_instance(selected_item)
-			else
-				visual_item = table.clone_instance(selected_item)
-			end
-
-			visual_item.gear_id = real_item.gear_id
-			visual_item.slot_weapon_skin = real_item
-
-			if visual_item.gear.masterDataInstance.overrides then
-				visual_item.gear.masterDataInstance.overrides.slot_weapon_skin = real_item
-			end
-
-			return visual_item
-		end,
-		apply_on_preview = function (real_item, presentation_item)
-			if presentation_item.__master_item then
-				presentation_item.__master_item.slot_weapon_skin = nil
-			end
-
-			presentation_item.slot_weapon_skin = real_item
-			self._selected_weapon_skin = real_item
-			self._selected_weapon_skin_name = real_item and real_item.gear.masterDataInstance.id
-		end
-	}
-	tabs_content[2] = {
-		slot_name = "slot_trinket_1",
-		display_name = "loc_weapon_cosmetics_title_trinkets",
-		icon = "content/ui/materials/icons/item_types/weapon_trinkets",
-		get_item_filters = function (slot_name, item_type)
-			if slot_name then
-				local slot_filter = {
-					slot_name
-				}
-			end
-
-			return slot_filter, nil
-		end,
-		setup_selected_item_function = function (real_item, selected_item)
-			local selected_weapon_trinket_name = self._selected_weapon_trinket_name
-
-			if selected_weapon_trinket_name and real_item and real_item.gear.masterDataInstance.id == selected_weapon_trinket_name then
-				self._selected_weapon_trinket = real_item
-			end
-		end,
-		get_empty_item = function (selected_item)
-			local visual_item = nil
-
-			if selected_item.gear then
-				visual_item = MasterItems.create_preview_item_instance(selected_item)
-			else
-				visual_item = table.clone_instance(selected_item)
-			end
-
-			visual_item.empty_item = true
-
-			for i = 1, #trinket_slot_order do
-				local slot_id = trinket_slot_order[i]
-				local link_item_to_slot = true
-
-				if visual_item.__gear.masterDataInstance.overrides then
-					find_link_attachment_item_slot_path(visual_item.__gear.masterDataInstance.overrides, slot_id, nil, link_item_to_slot)
+				if selected_item.gear then
+					visual_item = MasterItems.create_preview_item_instance(selected_item)
+				else
+					visual_item = table.clone_instance(selected_item)
 				end
 
-				if find_link_attachment_item_slot_path(visual_item.__master_item, slot_id, nil, link_item_to_slot) then
-					break
+				visual_item.empty_item = true
+				visual_item.slot_weapon_skin = nil
+
+				if visual_item.gear.masterDataInstance.overrides then
+					visual_item.gear.masterDataInstance.overrides.slot_weapon_skin = nil
 				end
-			end
 
-			return visual_item
-		end,
-		generate_visual_item_function = function (real_item, selected_item)
-			local optional_preivew_item = selected_item.__gear.masterDataInstance.id
+				return visual_item
+			end,
+			generate_visual_item_function = function (real_item, selected_item)
+				local visual_item
 
-			return ItemUtils.weapon_trinket_preview_item(real_item)
-		end,
-		apply_on_preview = function (real_item, presentation_item)
-			local path = nil
+				if real_item.gear then
+					visual_item = MasterItems.create_preview_item_instance(selected_item)
+				else
+					visual_item = table.clone_instance(selected_item)
+				end
 
-			for i = 1, #trinket_slot_order do
-				local slot_id = trinket_slot_order[i]
-				path = find_link_attachment_item_slot_path(presentation_item.__master_item, slot_id, real_item)
+				visual_item.gear_id = real_item.gear_id
+				visual_item.slot_weapon_skin = real_item
 
-				if path then
+				if visual_item.gear.masterDataInstance.overrides then
+					visual_item.gear.masterDataInstance.overrides.slot_weapon_skin = real_item
+				end
+
+				return visual_item
+			end,
+			apply_on_preview = function (real_item, presentation_item)
+				if presentation_item.__master_item then
+					presentation_item.__master_item.slot_weapon_skin = nil
+				end
+
+				presentation_item.slot_weapon_skin = real_item
+				self._selected_weapon_skin = real_item
+				self._selected_weapon_skin_name = real_item and real_item.gear.masterDataInstance.id
+			end,
+		},
+		{
+			display_name = "loc_weapon_cosmetics_title_trinkets",
+			icon = "content/ui/materials/icons/item_types/weapon_trinkets",
+			slot_name = "slot_trinket_1",
+			get_item_filters = function (slot_name, item_type)
+				local slot_filter = slot_name and {
+					slot_name,
+				}
+
+				return slot_filter, nil
+			end,
+			setup_selected_item_function = function (real_item, selected_item)
+				local selected_weapon_trinket_name = self._selected_weapon_trinket_name
+
+				if selected_weapon_trinket_name and real_item and real_item.gear.masterDataInstance.id == selected_weapon_trinket_name then
+					self._selected_weapon_trinket = real_item
+				end
+			end,
+			get_empty_item = function (selected_item)
+				local visual_item
+
+				if selected_item.gear then
+					visual_item = MasterItems.create_preview_item_instance(selected_item)
+				else
+					visual_item = table.clone_instance(selected_item)
+				end
+
+				visual_item.empty_item = true
+
+				for i = 1, #trinket_slot_order do
+					local slot_id = trinket_slot_order[i]
 					local link_item_to_slot = true
 
-					if presentation_item.__gear.masterDataInstance.overrides then
-						find_link_attachment_item_slot_path(presentation_item.__gear.masterDataInstance.overrides, slot_id, real_item, link_item_to_slot)
+					if visual_item.__gear.masterDataInstance.overrides then
+						find_link_attachment_item_slot_path(visual_item.__gear.masterDataInstance.overrides, slot_id, nil, link_item_to_slot)
 					end
 
-					find_link_attachment_item_slot_path(presentation_item.__master_item, slot_id, real_item, link_item_to_slot)
-
-					break
+					if find_link_attachment_item_slot_path(visual_item.__master_item, slot_id, nil, link_item_to_slot) then
+						break
+					end
 				end
-			end
 
-			self._selected_weapon_trinket_name = real_item and real_item.gear.masterDataInstance.id
-			self._selected_weapon_trinket = real_item
-		end
+				return visual_item
+			end,
+			generate_visual_item_function = function (real_item, selected_item)
+				local optional_preivew_item = selected_item.__gear.masterDataInstance.id
+
+				return ItemUtils.weapon_trinket_preview_item(real_item)
+			end,
+			apply_on_preview = function (real_item, presentation_item)
+				local path
+
+				for i = 1, #trinket_slot_order do
+					local slot_id = trinket_slot_order[i]
+
+					path = find_link_attachment_item_slot_path(presentation_item.__master_item, slot_id, real_item)
+
+					if path then
+						local link_item_to_slot = true
+
+						if presentation_item.__gear.masterDataInstance.overrides then
+							find_link_attachment_item_slot_path(presentation_item.__gear.masterDataInstance.overrides, slot_id, real_item, link_item_to_slot)
+						end
+
+						find_link_attachment_item_slot_path(presentation_item.__master_item, slot_id, real_item, link_item_to_slot)
+
+						break
+					end
+				end
+
+				self._selected_weapon_trinket_name = real_item and real_item.gear.masterDataInstance.id
+				self._selected_weapon_trinket = real_item
+			end,
+		},
 	}
 
 	self:_setup_menu_tabs(tabs_content)
@@ -346,7 +360,7 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 		self._weapon_preview:center_align(0, {
 			-0.2,
 			-0.3,
-			-0.2
+			-0.2,
 		})
 	end
 
@@ -358,6 +372,7 @@ end
 InventoryWeaponCosmeticsView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local equip_button = widgets_by_name.equip_button
+
 	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
 end
 
@@ -372,6 +387,7 @@ InventoryWeaponCosmeticsView._update_equip_button_state = function (self)
 
 	local button = self._widgets_by_name.equip_button
 	local button_content = button.content
+
 	button_content.hotspot.disabled = disable_button
 	button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 end
@@ -388,8 +404,8 @@ InventoryWeaponCosmeticsView.present_grid_layout = function (self, layout, optio
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10
-		}
+			10,
+		},
 	}
 
 	table.insert(layout, 1, spacing_entry)
@@ -409,24 +425,24 @@ InventoryWeaponCosmeticsView._setup_sort_options = function (self)
 		self._sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
 					"sort_data",
-					ItemUtils.compare_item_name
-				})
+					ItemUtils.compare_item_name,
+				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
 					"sort_data",
-					ItemUtils.compare_item_name
-				})
-			}
+					ItemUtils.compare_item_name,
+				}),
+			},
 		}
 	end
 
@@ -440,10 +456,12 @@ InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
 		local reference_name = "weapon_preview"
 		local layer = 10
 		local context = {
+			draw_background = true,
 			ignore_blur = false,
-			draw_background = true
 		}
+
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
+
 		local allow_rotation = true
 
 		self._weapon_preview:set_force_allow_rotation(allow_rotation)
@@ -453,26 +471,29 @@ end
 
 InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	self._tabs_content = content
+
 	local grid_size = Definitions.grid_settings.grid_size
 	local id = "tab_menu"
 	local layer = 10
 	local button_size = {
 		80,
-		80
+		80,
 	}
 	local button_spacing = 10
 	local tab_menu_settings = {
-		vertical_alignment = "top",
 		grow_vertically = true,
+		vertical_alignment = "top",
 		button_size = button_size,
 		button_spacing = button_spacing,
 		input_label_offset = {
 			25,
-			30
-		}
+			30,
+		},
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
+
 	self._tab_menu_element = tab_menu_element
+
 	local input_action_left = "navigate_secondary_left_pressed"
 	local input_action_right = "navigate_secondary_right_pressed"
 
@@ -480,9 +501,11 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	tab_menu_element:set_is_handling_navigation_input(true)
 
 	local tab_button_template = table.clone(ButtonPassTemplates.item_category_sort_button)
+
 	tab_button_template[1].style = {
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}
+
 	local tab_ids = {}
 
 	for i = 1, #content do
@@ -491,6 +514,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 		local display_icon = tab_content.icon
 		local pressed_callback = callback(self, "cb_switch_tab", i)
 		local tab_id = tab_menu_element:add_entry(display_name, pressed_callback, tab_button_template, display_icon)
+
 		tab_ids[i] = tab_id
 	end
 
@@ -515,6 +539,7 @@ end
 
 InventoryWeaponCosmeticsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 40)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -529,7 +554,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local character_id = player:character_id()
-	local slot_filter, item_type_filter = nil
+	local slot_filter, item_type_filter
 
 	if get_item_filters_function then
 		slot_filter, item_type_filter = get_item_filters_function(slot_name, item_type)
@@ -549,18 +574,20 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 		end
 
 		self._inventory_items = items_array
+
 		local selected_item_weapon_template = selected_item.weapon_template
 		local layout = {}
 
 		if get_empty_item_function then
 			local empty_item = get_empty_item_function(selected_item)
+
 			layout[#layout + 1] = {
 				widget_type = "item_icon",
 				sort_data = {
-					display_name = "loc_weapon_cosmetic_empty"
+					display_name = "loc_weapon_cosmetic_empty",
 				},
 				item = empty_item,
-				slot_name = slot_name
+				slot_name = slot_name,
 			}
 		end
 
@@ -570,6 +597,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 
 			if filter_on_weapon_template then
 				local weapon_template_restriction = item.weapon_template_restriction
+
 				valid = weapon_template_restriction and table.contains(weapon_template_restriction, selected_item_weapon_template) and true or false
 			end
 
@@ -577,7 +605,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 				local visual_item = generate_visual_item_function(item, selected_item)
 				local gear_id = item.gear_id
 				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
-				local remove_new_marker_callback = nil
+				local remove_new_marker_callback
 
 				if is_new then
 					remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
@@ -590,12 +618,13 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 					real_item = item,
 					slot_name = slot_name,
 					new_item_marker = is_new,
-					remove_new_marker_callback = remove_new_marker_callback
+					remove_new_marker_callback = remove_new_marker_callback,
 				}
 			end
 		end
 
 		self._offer_items_layout = table.clone_instance(layout)
+
 		local start_index = #layout > 0 and 1
 
 		self:_present_layout_by_slot_filter()
@@ -645,7 +674,7 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 
 	if previewed_element then
 		local selected_item = self._selected_item
-		local promise, item_type = nil
+		local promise, item_type
 
 		if self._selected_tab_index == 1 and self._equipped_weapon_skin_name ~= self._selected_weapon_skin_name then
 			promise = ItemUtils.equip_weapon_skin(selected_item, self._selected_weapon_skin)
@@ -662,6 +691,7 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 				local gear = result.item
 				local gear_id = selected_item.gear_id
 				local item = MasterItems.get_item_instance(gear, gear_id)
+
 				self._selected_item = item
 
 				Managers.ui:item_icon_updated(item)
@@ -715,6 +745,7 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 	local presentation_item = self._presentation_item
 	local item = element.item
 	local real_item = element.real_item
+
 	self._previewed_item = item
 	self._previewed_element = element
 
@@ -722,6 +753,7 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 	self:_preview_item(presentation_item)
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.sub_display_name.content.text = ItemUtils.display_name(self._selected_item)
 	widgets_by_name.display_name.content.text = real_item and ItemUtils.display_name(real_item) or Localize("loc_weapon_cosmetic_empty")
 end
@@ -760,7 +792,7 @@ InventoryWeaponCosmeticsView._update_weapon_preview_viewport = function (self)
 		local weapon_zoom_fraction = self._weapon_zoom_fraction or 1
 		local use_custom_zoom = true
 		local optional_node_name = "p_zoom"
-		local optional_pos = nil
+		local optional_pos
 		local min_zoom = self._min_zoom
 		local max_zoom = self._max_zoom
 
@@ -770,6 +802,7 @@ end
 
 InventoryWeaponCosmeticsView._cb_on_ui_visibility_toggled = function (self, id)
 	self._visibility_toggled_on = not self._visibility_toggled_on
+
 	local display_name = self._visibility_toggled_on and "loc_menu_toggle_ui_visibility_off" or "loc_menu_toggle_ui_visibility_on"
 
 	self._input_legend_element:set_display_name(id, display_name)
@@ -785,7 +818,7 @@ InventoryWeaponCosmeticsView._handle_input = function (self, input_service, dt, 
 		local scroll_speed = 0.25
 
 		if InputDevice.gamepad_active then
-			scroll = math.abs(scroll_axis[1]) < math.abs(scroll) and scroll or 0
+			scroll = math.abs(scroll) > math.abs(scroll_axis[1]) and scroll or 0
 			scroll_speed = 0.1
 		end
 
@@ -811,11 +844,15 @@ InventoryWeaponCosmeticsView.draw = function (self, dt, t, input_service, layer)
 	local ui_default_renderer = self._ui_default_renderer
 	local ui_forward_renderer = self._ui_forward_renderer
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self.animated_alpha_multiplier or 0
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -841,7 +878,7 @@ InventoryWeaponCosmeticsView._draw_render_target = function (self)
 	local position = self:_scenegraph_world_position("canvas")
 	local size = {
 		width,
-		height
+		height,
 	}
 	local gui_position = Vector3(position[1] * scale, position[2] * scale, position[3] or 0)
 	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)
@@ -867,7 +904,7 @@ InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 	if index ~= self._selected_tab_index then
 		if self._selected_tab_index then
 			local presentation_item = self._presentation_item
-			local real_item = nil
+			local real_item
 
 			if self._selected_tab_index == 1 then
 				real_item = self._equipped_weapon_skin
@@ -890,6 +927,7 @@ InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 		local get_item_filters = content.get_item_filters
 		local generate_visual_item_function = content.generate_visual_item_function
 		local filter_on_weapon_template = content.filter_on_weapon_template
+
 		self._grid_display_name = content.display_name
 
 		self:_fetch_inventory_items(slot_name, item_type, get_item_filters, get_empty_item, generate_visual_item_function, filter_on_weapon_template)

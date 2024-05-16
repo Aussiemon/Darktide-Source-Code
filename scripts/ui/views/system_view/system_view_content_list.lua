@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/system_view/system_view_content_list.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local NarrativeStories = require("scripts/settings/narrative/narrative_stories")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -26,158 +28,158 @@ end
 
 local main_menu_list = {
 	{
-		text = "loc_achievements_view_display_name",
 		icon = "content/ui/materials/icons/system/escape/achievements",
+		text = "loc_achievements_view_display_name",
 		type = "large_button",
 		trigger_function = function ()
 			local context = {
-				can_exit = true
+				can_exit = true,
 			}
 			local view_name = "penance_overview_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-		end
+		end,
 	},
 	{
-		text = "loc_social_view_display_name",
-		required_dev_parameter = "ui_show_social_menu",
-		type = "large_button",
 		icon = "content/ui/materials/icons/system/escape/social",
+		required_dev_parameter = "ui_show_social_menu",
+		text = "loc_social_view_display_name",
+		type = "large_button",
 		trigger_function = function (parent, widget, entry)
 			Managers.ui:open_view("social_menu_view")
-		end
+		end,
 	},
 	{
-		text = "loc_store_view_display_name",
 		icon = "content/ui/materials/icons/system/escape/premium_store",
+		text = "loc_store_view_display_name",
 		type = "large_button",
 		trigger_function = function ()
 			local context = {
-				can_exit = true
+				can_exit = true,
 			}
 			local view_name = "store_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-		end
+		end,
 	},
 	{
-		type = "spacing_vertical"
+		type = "spacing_vertical",
 	},
 	{
-		type = "spacing_vertical"
+		type = "spacing_vertical",
 	},
 	{
-		type = "spacing_vertical"
+		type = "spacing_vertical",
 	},
 	{
-		text = "loc_news_view_title",
-		required_dev_parameter = "ui_debug_news_screen",
-		type = "button",
 		icon = "content/ui/materials/icons/system/escape/news",
+		required_dev_parameter = "ui_debug_news_screen",
+		text = "loc_news_view_title",
+		type = "button",
 		trigger_function = function ()
 			local context = {
-				can_exit = true
+				can_exit = true,
 			}
 			local view_name = "news_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-		end
+		end,
 	},
 	{
-		text = "loc_credits_view_title",
 		icon = "content/ui/materials/icons/system/escape/credits",
+		text = "loc_credits_view_title",
 		type = "button",
 		trigger_function = function ()
 			local context = {
-				can_exit = true
+				can_exit = true,
 			}
 			local view_name = "credits_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-		end
+		end,
 	},
 	{
-		text = "loc_options_view_display_name",
 		icon = "content/ui/materials/icons/system/escape/settings",
+		text = "loc_options_view_display_name",
 		type = "button",
 		trigger_function = function (parent, widget, entry)
 			Managers.ui:open_view("options_view")
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/leave_party",
 		text = "loc_leave_party_display_name",
 		type = "button",
-		icon = "content/ui/materials/icons/system/escape/leave_party",
 		validation_function = function ()
 			return _members_in_party() > 0
 		end,
 		trigger_function = function ()
 			local context = {
-				title_text = "loc_popup_header_leave_party",
 				description_text = "loc_popup_description_leave_party",
+				title_text = "loc_popup_header_leave_party",
 				options = {
 					{
-						text = "loc_popup_button_leave_party",
 						close_on_pressed = true,
+						text = "loc_popup_button_leave_party",
 						callback = callback(function ()
 							if GameParameters.prod_like_backend then
 								Managers.party_immaterium:leave_party()
 							end
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_cancel_leave_party",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_cancel_leave_party",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
-	}
+		end,
+	},
 }
 
 if PLATFORM == "win32" then
 	main_menu_list[#main_menu_list + 1] = {
-		type = "spacing_vertical"
+		type = "spacing_vertical",
 	}
 	main_menu_list[#main_menu_list + 1] = {
-		text = "loc_quit_game_display_name",
 		icon = "content/ui/materials/icons/system/escape/quit",
+		text = "loc_quit_game_display_name",
 		type = "button",
 		trigger_function = function (parent, widget, entry)
 			local context = {
-				title_text = "loc_popup_header_quit_game",
 				description_text = "loc_popup_description_quit_game",
+				title_text = "loc_popup_header_quit_game",
 				options = {
 					{
-						text = "loc_popup_button_quit_game",
 						close_on_pressed = true,
+						text = "loc_popup_button_quit_game",
 						callback = callback(function ()
 							Application.quit()
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_continue_game",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_continue_game",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
+		end,
 	}
 end
 
 local default_list = {
 	{
+		icon = "content/ui/materials/icons/system/escape/inventory",
 		text = "loc_character_view_display_name",
 		type = "large_button",
-		icon = "content/ui/materials/icons/system/escape/inventory",
 		trigger_function = function ()
 			local view_name = "inventory_background_view"
 
@@ -197,15 +199,15 @@ local default_list = {
 			local played_basic_training = Managers.narrative:is_chapter_complete("onboarding", "play_training")
 
 			return is_in_hub or is_prologue_hub and played_basic_training or is_in_shooting_range
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/achievements",
 		text = "loc_achievements_view_display_name",
 		type = "large_button",
-		icon = "content/ui/materials/icons/system/escape/achievements",
 		trigger_function = function ()
 			local context = {
-				can_exit = true
+				can_exit = true,
 			}
 			local view_name = "penance_overview_view"
 
@@ -222,47 +224,47 @@ local default_list = {
 			local is_in_hub = game_mode_name == "hub" or game_mode_name == "shooting_range"
 
 			return is_in_hub
-		end
+		end,
 	},
 	{
-		text = "loc_social_view_display_name",
 		icon = "content/ui/materials/icons/system/escape/social",
+		text = "loc_social_view_display_name",
 		type = "large_button",
 		trigger_function = function ()
 			local context = {
-				can_exit = true
+				can_exit = true,
 			}
 			local view_name = "social_menu_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-		end
+		end,
 	},
 	{
-		type = "spacing_vertical"
+		type = "spacing_vertical",
 	},
 	{
-		type = "spacing_vertical"
+		type = "spacing_vertical",
 	},
 	{
-		type = "spacing_vertical"
+		type = "spacing_vertical",
 	},
 	{
-		text = "loc_options_view_display_name",
 		icon = "content/ui/materials/icons/system/escape/settings",
+		text = "loc_options_view_display_name",
 		type = "button",
 		trigger_function = function ()
 			local context = {
-				can_exit = true
+				can_exit = true,
 			}
 			local view_name = "options_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/change_character",
 		text = "loc_exit_to_main_menu_display_name",
 		type = "button",
-		icon = "content/ui/materials/icons/system/escape/change_character",
 		validation_function = function ()
 			local game_mode_manager = Managers.state.game_mode
 
@@ -283,61 +285,61 @@ local default_list = {
 		end,
 		trigger_function = function ()
 			local context = {
-				title_text = "loc_popup_header_leave_game",
 				description_text = "loc_popup_description_leave_game",
+				title_text = "loc_popup_header_leave_game",
 				options = {
 					{
-						text = "loc_popup_button_leave_game",
 						close_on_pressed = true,
+						text = "loc_popup_button_leave_game",
 						callback = callback(function ()
 							Managers.multiplayer_session:leave("exit_to_main_menu")
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_leave_continue_game",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_leave_continue_game",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/leave_mission",
 		text = "loc_leave_mission_display_name",
 		type = "button",
-		icon = "content/ui/materials/icons/system/escape/leave_mission",
 		validation_function = validation_is_in_mission,
 		trigger_function = function ()
 			local context = {
-				title_text = "loc_popup_header_leave_mission",
 				description_text = "loc_popup_description_leave_mission",
+				title_text = "loc_popup_header_leave_mission",
 				options = {
 					{
-						text = "loc_popup_button_leave_mission",
 						close_on_pressed = true,
+						text = "loc_popup_button_leave_mission",
 						callback = callback(function ()
 							Managers.multiplayer_session:leave("leave_mission")
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_leave_continue_mission",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_leave_continue_mission",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/leave_mission",
 		text = "loc_menu_skip_prologue",
 		type = "button",
-		icon = "content/ui/materials/icons/system/escape/leave_mission",
 		validation_function = function ()
 			local data_service_manager = Managers.data_service
 
@@ -366,33 +368,33 @@ local default_list = {
 		end,
 		trigger_function = function ()
 			local context = {
-				title_text = "loc_menu_skip_prologue",
 				description_text = "loc_popup_description_skip_prologue",
+				title_text = "loc_menu_skip_prologue",
 				options = {
 					{
-						text = "loc_confirm",
 						close_on_pressed = true,
+						text = "loc_confirm",
 						callback = callback(function ()
 							Managers.narrative:skip_story(Managers.narrative.STORIES.onboarding)
 							Managers.state.game_mode:complete_game_mode()
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_leave_continue_mission",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_leave_continue_mission",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/leave_training",
 		text = "loc_tg_exit_training_grounds",
 		type = "button",
-		icon = "content/ui/materials/icons/system/escape/leave_training",
 		validation_function = function ()
 			local game_mode_manager = Managers.state.game_mode
 
@@ -418,32 +420,32 @@ local default_list = {
 		end,
 		trigger_function = function ()
 			local context = {
-				title_text = "loc_tg_exit_training_grounds",
 				description_text = "loc_popup_description_leave_psykhanium",
+				title_text = "loc_tg_exit_training_grounds",
 				options = {
 					{
-						text = "loc_training_grounds_choice_quit",
 						close_on_pressed = true,
+						text = "loc_training_grounds_choice_quit",
 						callback = callback(function ()
 							Managers.state.game_mode:complete_game_mode()
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_leave_continue_mission",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_leave_continue_mission",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/leave_party",
 		text = "loc_leave_party_display_name",
 		type = "button",
-		icon = "content/ui/materials/icons/system/escape/leave_party",
 		validation_function = function ()
 			if validation_is_in_mission() then
 				return false
@@ -453,65 +455,65 @@ local default_list = {
 		end,
 		trigger_function = function ()
 			local context = {
-				title_text = "loc_popup_header_leave_party",
 				description_text = "loc_popup_description_leave_party",
+				title_text = "loc_popup_header_leave_party",
 				options = {
 					{
-						text = "loc_popup_button_leave_party",
 						close_on_pressed = true,
+						text = "loc_popup_button_leave_party",
 						callback = callback(function ()
 							if GameParameters.prod_like_backend then
 								Managers.party_immaterium:leave_party()
 							end
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_cancel_leave_party",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_cancel_leave_party",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
+		end,
 	},
 	{
+		icon = "content/ui/materials/icons/system/escape/quit",
 		text = "loc_quit_game_display_name",
 		type = "button",
-		icon = "content/ui/materials/icons/system/escape/quit",
 		validation_function = function ()
 			return PLATFORM == "win32"
 		end,
 		trigger_function = function ()
 			local context = {
-				title_text = "loc_popup_header_quit_game",
 				description_text = "loc_popup_description_quit_game",
+				title_text = "loc_popup_header_quit_game",
 				options = {
 					{
-						text = "loc_popup_button_quit_game",
 						close_on_pressed = true,
+						text = "loc_popup_button_quit_game",
 						callback = callback(function ()
 							Application.quit()
-						end)
+						end),
 					},
 					{
-						text = "loc_popup_button_continue_game",
-						template_type = "terminal_button_small",
 						close_on_pressed = true,
-						hotkey = "back"
-					}
-				}
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_continue_game",
+					},
+				},
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
-		end
-	}
+		end,
+	},
 }
 local content_list = {
 	StateMainMenu = main_menu_list,
-	default = default_list
+	default = default_list,
 }
 
 return content_list

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_single_target_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local PsykerSingleTargetEffects = class("PsykerSingleTargetEffects")
 local SPAWN_POS = Vector3Box(400, 400, 400)
@@ -5,17 +7,22 @@ local SHOW_EFFECT_FOR_ALL = true
 
 PsykerSingleTargetEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local wwise_world = context.wwise_world
+
 	self._world = context.world
 	self._wwise_world = wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local source_id = WwiseWorld.make_manual_source(wwise_world, SPAWN_POS:unbox())
+
 	self._targeting_effect_id = nil
 	self._targeting_source_id = source_id
 	self._targeting_playing_id = nil
@@ -77,11 +84,12 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 	local source_id = self._targeting_source_id
 	local old_effect_id = self._targeting_effect_id
 	local old_playing_id = self._targeting_playing_id
-	local effect_id = nil
+	local effect_id
 	local new_effect_name = effect_name and effect_name ~= last_effect_name
 
 	if effect_name and (new_effect_name or not old_effect_id) then
 		local is_husk = not self._is_local_unit or self._is_husk
+
 		effect_id = World.create_particles(world, is_husk and husk_effect_name or effect_name, spawn_pos)
 		self._targeting_effect_id = effect_id
 		self._last_effect_name = effect_name
@@ -96,13 +104,14 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 	end
 
 	if wwise_event and not old_playing_id then
-		if not self._is_local_unit or self._is_husk and has_husk_events then
-			wwise_event = wwise_event .. "_husk" or wwise_event
-		end
+		wwise_event = (not self._is_local_unit or self._is_husk and has_husk_events) and wwise_event .. "_husk" or wwise_event
 
 		local playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
+
 		self._targeting_playing_id = playing_id
+
 		local stop_event = targeting_fx.wwise_event_stop
+
 		self._wwise_event_stop = (not self._is_local_unit or self._is_husk and has_husk_events) and stop_event .. "_husk" or stop_event
 	elseif not wwise_event and old_playing_id then
 		local stop_event = self._wwise_event_stop

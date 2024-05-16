@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_ledge_hanging_pull_up.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local HangLedge = require("scripts/extension_systems/character_state_machine/character_states/utilities/hang_ledge")
@@ -9,6 +11,7 @@ PlayerCharacterStateLedgeHangingPullUp.init = function (self, character_state_in
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local ledge_hanging_character_state_component = unit_data_extension:write_component("ledge_hanging_character_state")
+
 	self._ledge_hanging_character_state_component = ledge_hanging_character_state_component
 end
 
@@ -25,6 +28,7 @@ end
 
 PlayerCharacterStateLedgeHangingPullUp._restore_locomotion = function (self)
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
 	locomotion_steering.disable_velocity_rotation = false

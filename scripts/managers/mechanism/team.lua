@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/team.lua
+
 local Team = class("Team")
 
 Team.init = function (self, team_config)
@@ -29,6 +31,7 @@ end
 
 Team.remove_peer = function (self, peer_id)
 	local slot_id = self._peer_to_slot_lookup[peer_id]
+
 	self._slots[slot_id] = nil
 	self._peer_to_slot_lookup[peer_id] = nil
 	self._num_occupied_slots = self._num_occupied_slots - 1

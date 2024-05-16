@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/hud_loader.lua
+
 local Loader = require("scripts/loading/loader")
 local Missions = require("scripts/settings/mission/mission_templates")
 local HudLoader = class("HudLoader")
@@ -19,10 +21,12 @@ HudLoader.start_loading = function (self, mission_name, level_editor_level, circ
 
 		if not hud_elements_to_load then
 			hud_elements_to_load = {}
+
 			local hud_elements = require("scripts/ui/hud/hud_elements_player")
 
 			for i = 1, #hud_elements do
 				local hud_element = hud_elements[i]
+
 				hud_elements_to_load[#hud_elements_to_load + 1] = hud_element
 			end
 

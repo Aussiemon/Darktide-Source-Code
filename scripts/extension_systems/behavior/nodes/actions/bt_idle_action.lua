@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_idle_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -20,9 +22,12 @@ BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 	end
 
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local perception_component = blackboard.perception
+
 	scratchpad.perception_component = perception_component
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local vo_event = action_data.vo_event
 
 	if vo_event and perception_component.aggro_state == "passive" then

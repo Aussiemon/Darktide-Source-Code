@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_trigger_explosion.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -10,6 +12,7 @@ ActionExplosion.init = function (self, action_context, action_params, action_set
 	ActionExplosion.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")
 	self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
 	self._action_module_position_finder_component = unit_data_extension:write_component("action_module_position_finder")

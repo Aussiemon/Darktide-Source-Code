@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/projectile_trajectory.lua
+
 local ProjectileTrajectory = {}
 
 ProjectileTrajectory.trajectory_settings_from_aim_component = function (action_settings, action_aim_projectile_component, weapon_action_component, trajectory_settings)

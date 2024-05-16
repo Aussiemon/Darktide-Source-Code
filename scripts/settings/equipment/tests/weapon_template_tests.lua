@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/tests/weapon_template_tests.lua
+
 local Breed = require("scripts/utilities/breed")
 local Breeds = require("scripts/settings/breed/breeds")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -5,7 +7,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local PlayerUnitAnimationStateMachineSettings = require("scripts/settings/animation/player_unit_animation_state_machine_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local hit_zone_names = HitZone.hit_zone_names
-local _template_settings_test, _action_settings_test, _conditional_state_test, _alternate_fire_test, _validate_hit_zone_priority, _validate_chain_actions, _validate_reachable_actions, _validate_conditional_state_to_action_input, _validate_running_action_state_to_action_input, _action_input_sequence_total_time, _state_machine_settings_test, _check_state_machine_settings, _stat_and_perk_verification, _stat_verification, _validate_tweak_template_existence, _check_tweak_template_existence = nil
+local _template_settings_test, _action_settings_test, _conditional_state_test, _alternate_fire_test, _validate_hit_zone_priority, _validate_chain_actions, _validate_reachable_actions, _validate_conditional_state_to_action_input, _validate_running_action_state_to_action_input, _action_input_sequence_total_time, _state_machine_settings_test, _check_state_machine_settings, _stat_and_perk_verification, _stat_verification, _validate_tweak_template_existence, _check_tweak_template_existence
 
 local function weapon_template_tests(weapon_template)
 	_template_settings_test(weapon_template)
@@ -22,8 +24,7 @@ local weapon_component_data = inventory_component_data.weapon
 
 function _template_settings_test(weapon_template)
 	local weapon_template_name = weapon_template.name
-	local anim_state_machine_3p = weapon_template.anim_state_machine_3p
-	local breed_anim_state_machine_3p = weapon_template.breed_anim_state_machine_3p
+	local anim_state_machine_3p, breed_anim_state_machine_3p = weapon_template.anim_state_machine_3p, weapon_template.breed_anim_state_machine_3p
 
 	if breed_anim_state_machine_3p then
 		for breed_name, breed in pairs(Breeds) do
@@ -33,8 +34,7 @@ function _template_settings_test(weapon_template)
 		end
 	end
 
-	local anim_state_machine_1p = weapon_template.anim_state_machine_1p
-	local breed_anim_state_machine_1p = weapon_template.breed_anim_state_machine_1p
+	local anim_state_machine_1p, breed_anim_state_machine_1p = weapon_template.anim_state_machine_1p, weapon_template.breed_anim_state_machine_1p
 
 	if breed_anim_state_machine_1p then
 		for breed_name, breed in pairs(Breeds) do
@@ -68,6 +68,7 @@ function _template_settings_test(weapon_template)
 
 		network_type = weapon_component_data.overheat_remove_at_t.network_type
 		network_type_info = Network.type_info(network_type)
+
 		local max = network_type_info.max
 		local time_network_type_can_represent_forwards_in_time = math.abs(max * fixed_time_step)
 
@@ -78,7 +79,7 @@ function _template_settings_test(weapon_template)
 end
 
 local MANDATORY_ACTIONS = {
-	action_wield = true
+	action_wield = true,
 }
 
 function _action_settings_test(weapon_template)
@@ -103,8 +104,11 @@ function _action_settings_test(weapon_template)
 			local previus_exist = not not start_inputs[start_input]
 			local start_input_does_not_have_priority = start_inputs_no_priority[start_input]
 
-			if action_priority then
+			if not action_priority then
+				-- Nothing
+			else
 				local priority_key = start_input .. "_" .. action_priority
+
 				start_inputs_priority[priority_key] = action_name
 			end
 
@@ -113,10 +117,12 @@ function _action_settings_test(weapon_template)
 		end
 
 		local s, m = _validate_hit_zone_priority(weapon_template, action_settings)
+
 		s, m = _validate_chain_actions(weapon_template, action_settings)
 		s, m = _validate_conditional_state_to_action_input(weapon_template, action_settings)
 		s, m = _validate_running_action_state_to_action_input(weapon_template, action_settings)
 		s, m = _validate_reachable_actions(weapon_template, action_settings)
+
 		local stop_input = action_settings.stop_input
 		local minimum_hold_time = action_settings.minimum_hold_time or 0
 
@@ -162,8 +168,7 @@ end
 local TEMP_MISSING_HIT_ZONE_NAMES = {}
 
 function _validate_hit_zone_priority(weapon_template, action_settings)
-	local success = true
-	local error_msg = ""
+	local success, error_msg = true, ""
 	local hit_zone_priority = action_settings.hit_zone_priority
 
 	if hit_zone_priority == nil then
@@ -184,11 +189,11 @@ function _validate_hit_zone_priority(weapon_template, action_settings)
 	if num_missing_hit_zone_names > 0 then
 		table.sort(TEMP_MISSING_HIT_ZONE_NAMES)
 
-		error_msg = "Missing priority for the following hit zones:"
-		success = false
+		success, error_msg = false, "Missing priority for the following hit zones:"
 
 		for i = 1, num_missing_hit_zone_names do
 			local hit_zone_name = TEMP_MISSING_HIT_ZONE_NAMES[i]
+
 			error_msg = string.format("%s\n\t%s", error_msg, hit_zone_name)
 		end
 	end
@@ -197,10 +202,10 @@ function _validate_hit_zone_priority(weapon_template, action_settings)
 end
 
 local _skip_ability_check_action_kinds = {
-	unwield_to_specific = true,
-	unwield = true,
+	inspect = true,
 	toggle_special = true,
-	inspect = true
+	unwield = true,
+	unwield_to_specific = true,
 }
 
 function _validate_chain_actions(weapon_template, action_settings)
@@ -581,9 +586,10 @@ function _validate_tweak_template_existence(weapon_template)
 	local WeaponBurninatingTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_burninating_templates")
 	local WeaponSizeOfFlameTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_size_of_flame_templates")
 	local template_types = WeaponTweakTemplateSettings.template_types
-	local template_success, template_error_msg = nil
+	local template_success, template_error_msg
 	local success = true
 	local error_msg = ""
+
 	template_success, template_error_msg = _check_tweak_template_existence(weapon_template, template_types.recoil, RecoilTemplates)
 
 	if not template_success then
@@ -687,12 +693,14 @@ function _check_tweak_template_existence(weapon_template, template_type, source_
 
 	if alternate_fire_settings then
 		base_template_lookup.__locked = false
+
 		local templates = base_template_lookup[template_type]
 		local template_name = alternate_fire_settings[key]
 		local template_lookup = templates.__data.alternate_fire
 
 		if template_lookup and template_name then
 			local base_template_name = template_lookup.base_identifier
+
 			source_templates.__locked = false
 
 			if not source_templates[base_template_name] then
@@ -703,12 +711,14 @@ function _check_tweak_template_existence(weapon_template, template_type, source_
 	end
 
 	base_template_lookup.__locked = false
+
 	local templates = base_template_lookup[template_type]
 	local template_name = weapon_template[key]
 	local template_lookup = templates.__data.base
 
 	if template_lookup and template_name then
 		local base_template_name = template_lookup.base_identifier
+
 		source_templates.__locked = false
 
 		if not source_templates[base_template_name] then

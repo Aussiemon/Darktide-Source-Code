@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/tests/breed_unit_tester.lua
+
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
 local BreedUnitTester = class("BreedUnitTester")
 local REFERENCE_NAME = "BreedUnitTester"
@@ -7,6 +9,7 @@ BreedUnitTester.init = function (self, package_manager, use_time_slice)
 
 	local breed_units_test = require("scripts/settings/breed/breed_units_test")
 	local resource_dependencies = breed_units_test.resource_dependencies()
+
 	self._load_ids = {}
 	self._resource_dependencies = resource_dependencies
 	self._test_function = breed_units_test.test_function
@@ -20,15 +23,15 @@ BreedUnitTester.init = function (self, package_manager, use_time_slice)
 			resource_list[#resource_list + 1] = package_name
 		end
 
-		local init_data = {
-			last_index = 0,
-			ready = false,
-			parameters = {}
-		}
+		local init_data = {}
+
+		init_data.last_index = 0
+		init_data.ready = false
+		init_data.parameters = {}
 		init_data.parameters.resource_list = resource_list
 		self._init_data = init_data
 	else
-		local callback = nil
+		local callback
 
 		for package_name, _ in pairs(resource_dependencies) do
 			local id = package_manager:load(package_name, REFERENCE_NAME, callback)
@@ -61,7 +64,7 @@ BreedUnitTester.update_time_slice_package_load = function (self)
 	local resource_list = init_data.parameters.resource_list
 	local num_resources = #resource_list
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
-	local callback = nil
+	local callback
 	local package_manager = self._package_manager
 
 	for index = last_index + 1, num_resources do

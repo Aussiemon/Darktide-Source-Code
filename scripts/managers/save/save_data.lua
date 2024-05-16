@@ -1,73 +1,76 @@
+﻿-- chunkname: @scripts/managers/save/save_data.lua
+
 local SaveData = class("SaveData")
 local default_hold = PLATFORM == "win32"
+
 SaveData.default_account_data = {
-	latest_backend_migration_index = -1,
 	crossplay_accepted = false,
+	latest_backend_migration_index = -1,
 	profile_preset_intro_presented = false,
 	input_settings = {
-		rumble_intensity_gameplay = 100,
-		rumble_intensity = 50,
-		controller_response_curve_strength_ranged = 50,
-		controller_aim_assist = "new_full",
-		mouse_look_scale_ranged_alternate_fire = 1,
-		mouse_look_scale_ranged = 1,
-		com_wheel_single_tap = "none",
-		mouse_look_scale = 1,
-		controller_look_scale_vertical = 1,
-		controller_look_scale_ranged = 1,
-		controller_look_scale_vertical_ranged = 1,
-		controller_look_dead_zone = 0.1,
-		controller_response_curve_ranged = "linear",
-		controller_invert_look_y = false,
-		controller_response_curve_strength = 50,
-		rumble_intensity_immersive = 100,
-		controller_look_scale_ranged_alternate_fire = 1,
-		controller_response_curve = "linear",
-		controller_enable_acceleration = true,
-		controller_look_scale_vertical_ranged_alternate_fire = 1,
-		mouse_invert_look_y = false,
-		toggle_ads = false,
-		stationary_dodge = false,
-		weapon_switch_scroll_wrap = true,
-		controller_look_scale = 1,
-		rumble_enabled = true,
-		controller_layout = "default",
-		com_wheel_delay = 0.3,
 		always_dodge = false,
+		com_wheel_delay = 0.3,
 		com_wheel_double_tap = "none",
+		com_wheel_single_tap = "none",
+		controller_aim_assist = "new_full",
+		controller_enable_acceleration = true,
+		controller_invert_look_y = false,
+		controller_layout = "default",
+		controller_look_dead_zone = 0.1,
+		controller_look_scale = 1,
+		controller_look_scale_ranged = 1,
+		controller_look_scale_ranged_alternate_fire = 1,
+		controller_look_scale_vertical = 1,
+		controller_look_scale_vertical_ranged = 1,
+		controller_look_scale_vertical_ranged_alternate_fire = 1,
+		controller_response_curve = "linear",
+		controller_response_curve_ranged = "linear",
+		controller_response_curve_strength = 50,
+		controller_response_curve_strength_ranged = 50,
 		diagonal_forward_dodge = true,
+		mouse_invert_look_y = false,
+		mouse_look_scale = 1,
+		mouse_look_scale_ranged = 1,
+		mouse_look_scale_ranged_alternate_fire = 1,
+		rumble_enabled = true,
+		rumble_intensity = 50,
+		rumble_intensity_gameplay = 100,
+		rumble_intensity_immersive = 100,
+		stationary_dodge = false,
+		toggle_ads = false,
+		weapon_switch_scroll_wrap = true,
 		hold_to_sprint = default_hold,
-		hold_to_crouch = default_hold
+		hold_to_crouch = default_hold,
 	},
 	interface_settings = {
+		assist_notification_type = "notification",
+		camera_movement_offset_sway_intensity = 100,
+		character_nameplates_in_mission_type = "name_and_title",
+		character_titles_color_type = "rarity_colors",
+		character_titles_in_mission_color_type = "rarity_colors",
+		combat_feed_enabled = true,
+		combat_feed_max_messages = 8,
+		combat_feed_message_duration = 5,
+		crafting_pickup_notification_type = "notification",
+		forced_dot_crosshair_enabled = false,
+		group_buff_icon_in_categories = true,
+		input_hints_enabled = true,
+		my_title_in_hub = false,
+		news_enabled = true,
+		penance_list_setting_show_list_view = false,
+		penance_unlock_chat_message_type = "none",
+		portrait_rendering_enabled = true,
+		profanity_filter_enabled = true,
+		secondary_subtitle_enabled = true,
+		secondary_subtitle_font_size = 24,
+		show_aura_buff_icons = true,
 		subtitle_background_opacity = 60,
 		subtitle_enabled = true,
 		subtitle_font_size = 32,
-		penance_unlock_chat_message_type = "none",
-		subtitle_text_opacity = 100,
 		subtitle_speaker_enabled = true,
-		combat_feed_message_duration = 5,
-		combat_feed_max_messages = 8,
-		character_nameplates_in_mission_type = "name_and_title",
-		crafting_pickup_notification_type = "notification",
-		show_aura_buff_icons = true,
-		character_titles_color_type = "rarity_colors",
-		assist_notification_type = "notification",
-		character_titles_in_mission_color_type = "rarity_colors",
-		secondary_subtitle_enabled = true,
-		secondary_subtitle_font_size = 24,
-		profanity_filter_enabled = true,
-		news_enabled = true,
-		forced_dot_crosshair_enabled = false,
-		input_hints_enabled = true,
-		my_title_in_hub = false,
-		group_buff_icon_in_categories = true,
-		penance_list_setting_show_list_view = false,
-		portrait_rendering_enabled = true,
-		combat_feed_enabled = true,
-		camera_movement_offset_sway_intensity = 100,
+		subtitle_text_opacity = 100,
 		warp_charge_effects_intensity = 100,
-		flash_taskbar_enabled = IS_WINDOWS
+		flash_taskbar_enabled = IS_WINDOWS,
 	},
 	completed_profile_prologues = {},
 	viewed_news_slides = {},
@@ -75,7 +78,7 @@ SaveData.default_account_data = {
 	character_data = {},
 	new_account_items_by_archetype = {},
 	favorite_achievements = {},
-	selected_sort_options = {}
+	selected_sort_options = {},
 }
 SaveData.default_character_data = {
 	new_items = {},
@@ -84,8 +87,8 @@ SaveData.default_character_data = {
 	new_completed_contracts = {},
 	view_settings = {},
 	profile_presets = {
-		profile_presets_version = 1
-	}
+		profile_presets_version = 1,
+	},
 }
 
 SaveData.init = function (self)
@@ -93,7 +96,7 @@ SaveData.init = function (self)
 	self.version = 3
 	self.account_data_version = 3
 	self.data = {
-		account_data = {}
+		account_data = {},
 	}
 end
 
@@ -109,7 +112,9 @@ SaveData.populate = function (self, save_data)
 			if self.account_data_version == save_data.account_data_version then
 				for account_id, account_data in pairs(data.account_data) do
 					local new_data = table.clone(SaveData.default_account_data)
+
 					data.account_data[account_id] = table.merge_recursive(new_data, account_data)
+
 					local character_data = data.account_data[account_id].character_data
 
 					if character_data then
@@ -139,8 +144,7 @@ SaveData.populate = function (self, save_data)
 
 				for account_id, account_data in pairs(data.account_data) do
 					local new_data = table.clone(SaveData.default_account_data)
-					local saved_input_settings = account_data.input_settings
-					local new_input_settings = new_data.input_settings
+					local saved_input_settings, new_input_settings = account_data.input_settings, new_data.input_settings
 
 					for setting, default_value in pairs(new_input_settings) do
 						local saved_value = saved_input_settings[setting]

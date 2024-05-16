@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/animation/player_unit_animation_extension.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local PlayerUnitAnimationState = require("scripts/extension_systems/animation/utilities/player_unit_animation_state")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
@@ -10,8 +12,11 @@ local PlayerUnitAnimationExtension = class("PlayerUnitAnimationExtension")
 
 PlayerUnitAnimationExtension.init = function (self, extension_init_context, unit, extension_init_data)
 	self._unit = unit
+
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data
+
 	local animation_state = unit_data:write_component("animation_state")
 
 	PlayerUnitAnimationState.init_anim_state_component(animation_state)
@@ -29,6 +34,7 @@ end
 
 PlayerUnitAnimationExtension.extensions_ready = function (self, world, unit)
 	local first_person_unit = ScriptUnit.extension(unit, "first_person_system"):first_person_unit()
+
 	self._first_person_unit = first_person_unit
 
 	PlayerUnitAnimationState.cache_anim_variable_ids(unit, first_person_unit, self._anim_variable_ids_third_person, self._anim_variable_ids_first_person)
@@ -111,10 +117,10 @@ end
 
 PlayerUnitAnimationExtension.inventory_slot_wielded = function (self, weapon_template, t)
 	local weapon_template_name = weapon_template.name
+
 	self._local_wielded_weapon_template = weapon_template_name
-	local unit = self._unit
-	local first_person_unit = self._first_person_unit
-	local is_local_unit = true
+
+	local unit, first_person_unit, is_local_unit = self._unit, self._first_person_unit, true
 
 	PlayerUnitAnimationState.set_anim_state_machine(unit, first_person_unit, weapon_template, is_local_unit, self._anim_variable_ids_third_person, self._anim_variable_ids_first_person)
 	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, unit, first_person_unit)
@@ -138,7 +144,7 @@ end
 
 local ALWAYS_ROLLBACK_ACTION_KINDS = {
 	reload_shotgun = true,
-	reload_state = true
+	reload_state = true,
 }
 
 PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, from_frame, to_frame, simulated_components)
@@ -155,6 +161,7 @@ PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, 
 
 	if self._local_wielded_weapon_template ~= weapon_template_name then
 		self._local_wielded_weapon_template = weapon_template_name
+
 		local is_local_unit = true
 
 		PlayerUnitAnimationState.set_anim_state_machine(unit, first_person_unit, weapon_template, is_local_unit, self._anim_variable_ids_third_person, self._anim_variable_ids_first_person)
@@ -183,11 +190,10 @@ PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, 
 
 	if set_state_machine or mispredict_warrants_animation_rollback then
 		local anim_state_component = self._animation_state_component
-		local override_3p, override_1p = nil
+		local override_3p, override_1p
 
 		if set_state_machine then
-			override_1p = true
-			override_3p = true
+			override_3p, override_1p = true, true
 		else
 			override_3p, override_1p = PlayerUnitAnimationState.should_override_animation_state(anim_state_component, simulated_components.animation_state)
 		end

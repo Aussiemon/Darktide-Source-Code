@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/matchmaker.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local PrivilegesManagerConstants = require("scripts/managers/privileges/privileges_manager_constants")
@@ -7,7 +9,7 @@ local Interface = {
 	"fetch_queue_ticket_single_player",
 	"start",
 	"status",
-	"cancel"
+	"cancel",
 }
 local Matchmaker = class("Matchmaker")
 
@@ -25,7 +27,7 @@ Matchmaker._get_xbox_live_sandbox_id = function (self)
 end
 
 Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alias_type, dedicated_alias_parameter)
-	local platform_alias_promise = nil
+	local platform_alias_promise
 	local authenticate_method = Managers.backend:get_auth_method()
 
 	local function avoid_list_id_formatter(id)
@@ -34,6 +36,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alia
 
 	if authenticate_method == Managers.backend.AUTH_METHOD_STEAM and HAS_STEAM then
 		local beta_branch = Steam.beta_branch() or ""
+
 		platform_alias_promise = Promise.resolved(alias_type .. ":steam:" .. beta_branch)
 
 		function avoid_list_id_formatter(id)
@@ -104,7 +107,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alia
 			dedicatedAliases = dedicated_aliases,
 			disableCrossPlay = cross_play_disabled,
 			platformUserIdAvoidList = avoid_platform_user_ids,
-			latencyList = latency_list
+			latencyList = latency_list,
 		}
 	end)
 end
@@ -115,7 +118,7 @@ Matchmaker.fetch_queue_ticket_hub = function (self)
 	return data_promise:next(function (data)
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data
+			body = data,
 		}):next(function (data)
 			return data.body
 		end)
@@ -137,7 +140,7 @@ Matchmaker.fetch_queue_ticket_mission = function (self, mission_id, character_id
 
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data
+			body = data,
 		}):next(function (data)
 			return data.body
 		end)
@@ -153,7 +156,7 @@ Matchmaker.fetch_queue_ticket_mission_hotjoin = function (self, matched_game_ses
 
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data
+			body = data,
 		}):next(function (data)
 			return data.body
 		end)
@@ -169,7 +172,7 @@ Matchmaker.fetch_queue_ticket_single_player = function (self, mission_id, charac
 
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data
+			body = data,
 		}):next(function (data)
 			return data.body
 		end)
@@ -178,12 +181,12 @@ end
 
 Matchmaker.start = function (self, queue_tickets)
 	local data = {
-		queueTickets = queue_tickets
+		queueTickets = queue_tickets,
 	}
 
 	return Managers.backend:title_request("/matchmaker/start", {
 		method = "POST",
-		body = data
+		body = data,
 	}):next(function (data)
 		return data.body
 	end)

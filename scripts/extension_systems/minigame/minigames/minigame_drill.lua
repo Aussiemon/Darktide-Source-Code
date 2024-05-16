@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minigame/minigames/minigame_drill.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 
 require("scripts/extension_systems/minigame/minigames/minigame_base")
@@ -86,7 +88,7 @@ MinigameDrill.setup_game = function (self)
 
 	self._cursor_position = {
 		x = 0,
-		y = 0
+		y = 0,
 	}
 	self._selected_index = nil
 
@@ -111,18 +113,21 @@ end
 
 MinigameDrill.generate_targets = function (self, seed)
 	self._start_seed = seed
+
 	local targets = self._targets
 	local correct_targets = self._correct_targets
 
 	for stage = 1, MinigameSettings.drill_stage_amount do
 		seed, correct_targets[stage] = math.next_random(seed, 1, MinigameSettings.drill_stage_targets)
+
 		local stage_targets = targets[stage] or {}
+
 		targets[stage] = stage_targets
 
 		table.clear(stage_targets)
 
 		for target = 1, MinigameSettings.drill_stage_targets do
-			local x, y = nil
+			local x, y
 
 			repeat
 				seed, x = math.next_random(seed, 1, 100)
@@ -133,7 +138,7 @@ MinigameDrill.generate_targets = function (self, seed)
 
 			stage_targets[target] = {
 				x = x,
-				y = y
+				y = y,
 			}
 		end
 	end
@@ -159,7 +164,7 @@ MinigameDrill.update = function (self, dt, t)
 	end
 
 	if self._current_state == MinigameSettings.game_states.transition then
-		if MinigameSettings.drill_transition_time < t - self._transition_start_time then
+		if t - self._transition_start_time > MinigameSettings.drill_transition_time then
 			self:set_state(MinigameSettings.game_states.gameplay)
 		end
 
@@ -214,7 +219,7 @@ MinigameDrill.on_action_pressed = function (self, t)
 		self:send_rpc("rpc_minigame_sync_decode_set_stage", self._current_stage)
 		self:set_state(MinigameSettings.game_states.transition)
 
-		if self._stage_amount < self._current_stage then
+		if self._current_stage > self._stage_amount then
 			Unit.flow_event(self._minigame_unit, "lua_minigame_success_last")
 			self:play_sound("sfx_minigame_bio_progress_last")
 		else
@@ -243,10 +248,10 @@ MinigameDrill.on_axis_set = function (self, t, x, y)
 	end
 
 	self._last_move = t
+
 	local aim_radian = math.atan2(-y, x)
 	local targets = self._targets[self._current_stage]
-	local closest_index = nil
-	local lowest_points = math.huge
+	local closest_index, lowest_points = nil, math.huge
 	local cursor_position = self._cursor_position
 
 	for i = 1, #targets do
@@ -255,14 +260,14 @@ MinigameDrill.on_axis_set = function (self, t, x, y)
 			local radian = math.atan2(target.y - cursor_position.y, target.x - cursor_position.x)
 			local angle = math.abs(radian - aim_radian)
 
-			if math.pi < angle then
+			if angle > math.pi then
 				angle = 2 * math.pi - angle
 			end
 
 			local distance = math.sqrt((cursor_position.x - target.x) * (cursor_position.x - target.x) + (cursor_position.y - target.y) * (cursor_position.y - target.y))
 			local points = distance + angle * MinigameSettings.drill_move_distance_power
 
-			if lowest_points > points and angle < math.pi / 3 then
+			if points < lowest_points and angle < math.pi / 3 then
 				closest_index = i
 				lowest_points = points
 			end
@@ -271,7 +276,9 @@ MinigameDrill.on_axis_set = function (self, t, x, y)
 
 	if closest_index then
 		self._selected_index = closest_index
+
 		local target = targets[closest_index]
+
 		cursor_position.x = target.x
 		cursor_position.y = target.y
 
@@ -285,7 +292,7 @@ MinigameDrill.on_axis_set = function (self, t, x, y)
 end
 
 MinigameDrill.should_exit = function (self)
-	if self._current_state == MinigameSettings.game_states.outro and MinigameSettings.drill_transition_time < Managers.time:time("gameplay") - self._transition_start_time then
+	if self._current_state == MinigameSettings.game_states.outro and Managers.time:time("gameplay") - self._transition_start_time > MinigameSettings.drill_transition_time then
 		return true
 	end
 

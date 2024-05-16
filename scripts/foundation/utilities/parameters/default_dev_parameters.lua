@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/parameters/default_dev_parameters.lua
+
 local categories = {
 	"Abilities",
 	"Achievements",
@@ -120,7 +122,7 @@ local categories = {
 	"Weapon Variables",
 	"Weapon",
 	"Wwise States",
-	"Wwise"
+	"Wwise",
 }
 
 local function hang_ledge_toggle_draw(new_value, old_value)
@@ -129,105 +131,105 @@ local function hang_ledge_toggle_draw(new_value, old_value)
 	end
 end
 
-local params = {
-	replace_input_settings_with_dev_parameters = {
-		value = false,
-		category = "Input"
+local params = {}
+
+params.replace_input_settings_with_dev_parameters = {
+	category = "Input",
+	value = false,
+}
+params.controller_selection = {
+	category = "Input",
+	value = "latest",
+	options = {
+		"latest",
+		"fixed",
+		"combined",
 	},
-	controller_selection = {
-		value = "latest",
-		category = "Input",
-		options = {
-			"latest",
-			"fixed",
-			"combined"
-		},
-		on_value_set = function (new_value, old_value)
-			Managers.input:set_selection_logic(new_value)
-		end
+	on_value_set = function (new_value, old_value)
+		Managers.input:set_selection_logic(new_value)
+	end,
+}
+params.fixed_controller_type = {
+	category = "Input",
+	value = "keyboard",
+	options = {
+		"keyboard",
+		"xbox_controller",
+		"ps4_controller",
 	},
-	fixed_controller_type = {
-		value = "keyboard",
-		category = "Input",
-		options = {
-			"keyboard",
-			"xbox_controller",
-			"ps4_controller"
-		},
-		on_value_set = function (new_value, old_value)
-			Managers.input:set_selection_logic(nil, new_value)
-		end
+	on_value_set = function (new_value, old_value)
+		Managers.input:set_selection_logic(nil, new_value)
+	end,
+}
+params.override_last_pressed_device_on_start = {
+	category = "Input",
+	value = false,
+	options = {
+		"keyboard",
+		"mouse",
+		"xbox_controller",
+		"ps4_controller",
 	},
-	override_last_pressed_device_on_start = {
-		value = false,
-		category = "Input",
-		options = {
-			"keyboard",
-			"mouse",
-			"xbox_controller",
-			"ps4_controller"
-		}
-	},
-	debug_input_last_action_track_time = {
-		value = 1,
-		category = "Input"
-	},
-	debug_track_only_used_actions = {
-		value = true,
-		category = "Input"
-	},
-	grab_mouse = {
-		value = true,
-		category = "Input"
-	},
-	disable_debug_hotkeys = {
-		value = false,
-		category = "Input"
-	},
-	controller_look_scale = {
-		value = 1,
-		category = "Input"
-	},
-	controller_look_scale_ranged = {
-		value = 1,
-		category = "Input"
-	},
-	controller_look_scale_ranged_alternate_fire = {
-		value = 1,
-		category = "Input"
-	},
-	controller_invert_look_y = {
-		value = false,
-		category = "Input"
-	},
-	controller_look_dead_zone = {
-		value = 0.1,
-		category = "Input"
-	},
-	controller_enable_acceleration = {
-		value = true,
-		category = "Input"
-	},
-	show_mouse_input_filter = {
-		value = false,
-		category = "Input"
-	},
-	show_gamepad_input_filter = {
-		value = false,
-		category = "Input"
-	},
-	show_sensitivity_modifier = {
-		value = false,
-		category = "Input"
-	},
-	debug_visualize_look_raw_controller = {
-		value = false,
-		category = "Input"
-	},
-	debug_input_filter_response_curves = {
-		value = false,
-		category = "Input"
-	}
+}
+params.debug_input_last_action_track_time = {
+	category = "Input",
+	value = 1,
+}
+params.debug_track_only_used_actions = {
+	category = "Input",
+	value = true,
+}
+params.grab_mouse = {
+	category = "Input",
+	value = true,
+}
+params.disable_debug_hotkeys = {
+	category = "Input",
+	value = false,
+}
+params.controller_look_scale = {
+	category = "Input",
+	value = 1,
+}
+params.controller_look_scale_ranged = {
+	category = "Input",
+	value = 1,
+}
+params.controller_look_scale_ranged_alternate_fire = {
+	category = "Input",
+	value = 1,
+}
+params.controller_invert_look_y = {
+	category = "Input",
+	value = false,
+}
+params.controller_look_dead_zone = {
+	category = "Input",
+	value = 0.1,
+}
+params.controller_enable_acceleration = {
+	category = "Input",
+	value = true,
+}
+params.show_mouse_input_filter = {
+	category = "Input",
+	value = false,
+}
+params.show_gamepad_input_filter = {
+	category = "Input",
+	value = false,
+}
+params.show_sensitivity_modifier = {
+	category = "Input",
+	value = false,
+}
+params.debug_visualize_look_raw_controller = {
+	category = "Input",
+	value = false,
+}
+params.debug_input_filter_response_curves = {
+	category = "Input",
+	value = false,
 }
 
 local function _debug_text_color_options()
@@ -249,7 +251,7 @@ local _debug_text_font_options = {
 	"content/ui/fonts/darktide_custom_regular",
 	"content/ui/fonts/friz_quadrata",
 	"content/ui/fonts/rexlia",
-	"content/ui/fonts/machine_medium"
+	"content/ui/fonts/machine_medium",
 }
 
 table.array_remove_if(_debug_text_font_options, function (font)
@@ -257,335 +259,335 @@ table.array_remove_if(_debug_text_font_options, function (font)
 end)
 
 params.debug_text_enable = {
+	category = "Debug Print",
 	value = true,
-	category = "Debug Print"
 }
 params.debug_text_x_offset = {
+	category = "Debug Print",
 	value = 10,
-	category = "Debug Print"
 }
 params.debug_text_y_offset = {
+	category = "Debug Print",
 	value = 0,
-	category = "Debug Print"
 }
 params.debug_text_layer = {
+	category = "Debug Print",
 	value = 900,
-	category = "Debug Print"
 }
 params.debug_text_font_size = {
+	category = "Debug Print",
 	value = 20,
-	category = "Debug Print"
 }
 params.debug_text_color = {
-	value = "cheeseburger",
 	category = "Debug Print",
-	options_function = _debug_text_color_options
+	value = "cheeseburger",
+	options_function = _debug_text_color_options,
 }
 params.debug_text_font = {
 	category = "Debug Print",
 	value = _debug_text_font_options[1],
-	options = _debug_text_font_options
+	options = _debug_text_font_options,
 }
 params.debug_auspex_scanning = {
+	category = "Auspex",
 	value = false,
-	category = "Auspex"
 }
 params.debug_prevent_forced_dequip_of_auspex = {
+	category = "Auspex",
 	value = false,
-	category = "Auspex"
 }
 params.debug_breed_picker_selected_name = {
-	value = "",
+	category = "Breed Picker",
 	hidden = true,
-	category = "Breed Picker"
+	value = "",
 }
 params.debug_breed_picker_x_offset = {
+	category = "Breed Picker",
 	value = 5,
-	category = "Breed Picker"
 }
 params.debug_breed_picker_y_offset = {
+	category = "Breed Picker",
 	value = 80,
-	category = "Breed Picker"
 }
 params.debug_breed_picker_layer = {
+	category = "Breed Picker",
 	value = 910,
-	category = "Breed Picker"
 }
 params.debug_breed_picker_font_size = {
+	category = "Breed Picker",
 	value = 22,
-	category = "Breed Picker"
 }
 params.auto_select_debug_spawned_unit = {
+	category = "Breed Picker",
 	value = false,
-	category = "Breed Picker"
 }
 params.debug_spawn_multiple_amount = {
-	value = 25,
 	category = "Breed Picker",
+	value = 25,
 	options = {
 		9,
 		25,
 		49,
 		81,
 		100,
-		196
-	}
+		196,
+	},
 }
 params.perform_backend_version_check = {
+	category = "Backend",
 	value = true,
-	category = "Backend"
 }
 params.allow_backend_game_param_overrides = {
+	category = "Backend",
 	value = false,
-	category = "Backend"
 }
 params.crash_on_account_login_error = {
+	category = "Backend",
 	value = false,
-	category = "Backend"
 }
 params.enable_stat_reporting = {
+	category = "Backend",
 	value = true,
-	category = "Backend"
 }
 params.enable_contracts = {
+	category = "Backend",
 	value = true,
-	category = "Backend"
 }
 params.enable_commendations = {
+	category = "Backend",
 	value = true,
-	category = "Backend"
 }
 params.backend_debug_log = {
+	category = "Backend",
 	value = false,
-	category = "Backend"
 }
 params.debug_verify_gear_cache = {
+	category = "Backend",
 	value = false,
-	category = "Backend"
 }
 params.debug_log_data_service_backend_cache = {
+	category = "Backend",
 	value = false,
-	category = "Backend"
 }
 params.backend_telemetry_enable = {
+	category = "Backend",
 	value = false,
-	category = "Backend"
 }
 params.backend_telemetry_debug = {
+	category = "Backend",
 	value = false,
-	category = "Backend"
 }
 params.backend_telemetry_service_url = {
+	category = "Backend",
 	value = "https://telemetry.fatsharkgames.com/events",
-	category = "Backend"
 }
 params.verbose_chat_log = {
+	category = "Chat",
 	value = false,
-	category = "Chat"
 }
 params.disable_chat = {
+	category = "Chat",
 	value = false,
-	category = "Chat"
 }
 params.debug_template_effects = {
+	category = "Effects",
 	value = false,
-	category = "Effects"
 }
 params.debug_use_dev_error_levels = {
+	category = "Error",
 	value = true,
-	category = "Error"
 }
 params.show_ingame_fps = {
-	value = "simple",
 	category = "Framerate",
+	value = "simple",
 	options = {
 		false,
 		"simple",
 		"detailed",
-		"graph"
-	}
+		"graph",
+	},
 }
 params.aggregate_fps_period = {
-	value = 1,
+	category = "Framerate",
 	num_decimals = 2,
-	category = "Framerate"
+	value = 1,
 }
 params.low_fps_threshold = {
+	category = "Framerate",
 	value = 30,
-	category = "Framerate"
 }
 params.medium_fps_threshold = {
+	category = "Framerate",
 	value = 60,
-	category = "Framerate"
 }
 params.throttle_fps = {
-	value = 0,
-	user_setting = false,
 	category = "Framerate",
+	user_setting = false,
+	value = 0,
 	on_value_set = function (new_value, old_value)
 		Application.set_time_step_policy("throttle", new_value)
-	end
+	end,
 }
 params.debug_pickup_picker_selected_name = {
-	value = "",
+	category = "Pickup Picker",
 	hidden = true,
-	category = "Pickup Picker"
+	value = "",
 }
 params.debug_pickup_picker_x_offset = {
+	category = "Pickup Picker",
 	value = 5,
-	category = "Pickup Picker"
 }
 params.debug_pickup_picker_y_offset = {
+	category = "Pickup Picker",
 	value = 80,
-	category = "Pickup Picker"
 }
 params.debug_pickup_picker_layer = {
+	category = "Pickup Picker",
 	value = 910,
-	category = "Pickup Picker"
 }
 params.debug_pickup_picker_font_size = {
+	category = "Pickup Picker",
 	value = 22,
-	category = "Pickup Picker"
 }
 params.debug_hit_mass = {
+	category = "Hit Mass",
 	value = false,
-	category = "Hit Mass"
 }
 params.debug_hit_mass_calculations = {
+	category = "Hit Mass",
 	value = false,
-	category = "Hit Mass"
 }
 params.debug_lunge_hit_mass = {
+	category = "Hit Mass",
 	value = false,
-	category = "Hit Mass"
 }
 params.debug_print_wwise_hit_mass = {
+	category = "Hit Mass",
 	value = false,
-	category = "Hit Mass"
 }
 params.debug_horde_picker_selected_name = {
-	value = "",
+	category = "Horde Picker",
 	hidden = true,
-	category = "Horde Picker"
+	value = "",
 }
 params.debug_horde_picker_x_offset = {
+	category = "Horde Picker",
 	value = 5,
-	category = "Horde Picker"
 }
 params.debug_horde_picker_y_offset = {
+	category = "Horde Picker",
 	value = 80,
-	category = "Horde Picker"
 }
 params.debug_horde_picker_layer = {
+	category = "Horde Picker",
 	value = 910,
-	category = "Horde Picker"
 }
 params.debug_horde_picker_font_size = {
+	category = "Horde Picker",
 	value = 22,
-	category = "Horde Picker"
 }
 params.debug_pickup_spawners = {
+	category = "Pickups",
 	value = false,
-	category = "Pickups"
 }
 params.debug_pickup_rubberband = {
+	category = "Pickups",
 	value = false,
-	category = "Pickups"
 }
 params.show_spawned_pickups = {
+	category = "Pickups",
 	value = false,
-	category = "Pickups"
 }
 params.show_spawned_pickups_location = {
+	category = "Pickups",
 	value = false,
-	category = "Pickups"
 }
 params.debug_fill_pickup_spawners = {
-	value = false,
 	category = "Pickups",
+	value = false,
 	options = {
 		false,
 		"all",
 		"distributed",
-		"side_mission"
-	}
+		"side_mission",
+	},
 }
 params.debug_medkits = {
+	category = "Pickups",
 	value = false,
-	category = "Pickups"
 }
 params.debug_projectile_aim = {
+	category = "Projectile Locomotion",
 	value = false,
-	category = "Projectile Locomotion"
 }
 params.projectile_aim_disable_aim_offset = {
+	category = "Projectile Locomotion",
 	value = false,
-	category = "Projectile Locomotion"
 }
 params.projectile_aim_disable_fx_spawner_offset = {
+	category = "Projectile Locomotion",
 	value = false,
-	category = "Projectile Locomotion"
 }
 params.projectile_aim_disable_sway_recoil = {
+	category = "Projectile Locomotion",
 	value = false,
-	category = "Projectile Locomotion"
 }
 params.projectile_aim_time_step_multiplier = {
+	category = "Projectile Locomotion",
 	value = 1,
-	category = "Projectile Locomotion"
 }
 params.projectile_aim_max_steps = {
+	category = "Projectile Locomotion",
 	value = 500,
-	category = "Projectile Locomotion"
 }
 params.projectile_aim_max_number_of_bounces = {
+	category = "Projectile Locomotion",
 	value = 10,
-	category = "Projectile Locomotion"
 }
 params.disable_projectile_collision = {
+	category = "Projectile Locomotion",
 	value = false,
-	category = "Projectile Locomotion"
 }
 params.debug_projectile_locomotion_aiming = {
+	category = "Projectile Locomotion",
 	value = false,
-	category = "Projectile Locomotion"
 }
 params.visualize_projectile_locomotion = {
+	category = "Projectile Locomotion",
 	value = false,
-	category = "Projectile Locomotion"
 }
 params.debug_destructibles = {
+	category = "Destructibles",
 	value = false,
-	category = "Destructibles"
 }
 params.debug_destructible_collectibles = {
+	category = "Destructibles",
 	value = false,
-	category = "Destructibles"
 }
 params.dont_randomize_destructibles = {
+	category = "Destructibles",
 	value = false,
-	category = "Destructibles"
 }
 params.physics_debug = {
+	category = "Physics",
 	value = false,
-	category = "Physics"
 }
 params.physics_debug_highlight_awake = {
+	category = "Physics",
 	value = false,
-	category = "Physics"
 }
 params.physics_debug_type = {
-	value = "both",
 	category = "Physics",
+	value = "both",
 	options = {
 		"statics",
 		"dynamics",
-		"both"
-	}
+		"both",
+	},
 }
 params.physics_debug_filter = {
-	value = "filter_all",
 	category = "Physics",
+	value = "filter_all",
 	options = {
 		"filter_all",
 		"filter_debug_dynamic_actors",
@@ -609,42 +611,44 @@ params.physics_debug_filter = {
 		"filter_player_mover",
 		"filter_player_ping_target_selection",
 		"filter_ray_aim_assist",
-		"filter_simple_geometry"
-	}
+		"filter_simple_geometry",
+	},
 }
 params.physics_debug_range = {
+	category = "Physics",
 	value = 30,
-	category = "Physics"
 }
 params.physics_debug_color = {
-	value = "red",
 	category = "Physics",
+	value = "red",
 	options_function = function ()
 		return Color.short_list
-	end
+	end,
 }
 params.physics_debug_only_draw_selected_unit = {
+	category = "Physics",
 	value = false,
-	category = "Physics"
 }
 params.physics_debug_draw_no_depth = {
+	category = "Physics",
 	value = false,
-	category = "Physics"
 }
 params.disable_self_assist = {
+	category = "Player Character",
 	value = true,
-	category = "Player Character"
 }
 params.allow_character_input_in_free_flight = {
-	value = false,
+	category = "Player Character",
 	name = "allow_character_input_in_free_flight, Keybind: L-CTRL + SPACE",
-	category = "Player Character"
+	value = false,
 }
 params.box_minion_collision = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
-local _character_profile_selector_preview_value = nil
+
+local _character_profile_selector_preview_value
+
 params.character_profile_selector = {
 	category = "Player Character",
 	value = false,
@@ -738,6 +742,7 @@ params.character_profile_selector = {
 			local profile = local_profiles[ii]
 			local index = string.format("[%d]", ii)
 			local option_text = string.format(format_string, index, profile.name or "N/A", profile.loadout_description and string.format(": %s", profile.loadout_description) or "")
+
 			options_texts[#options_texts + 1] = option_text
 		end
 
@@ -801,56 +806,56 @@ params.character_profile_selector = {
 				end
 			end)
 		end
-	end
+	end,
 }
 params.debug_character_interpolated_fixed_frame_movement = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_character_ledge_hanging = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_character_state_machine = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_fixed_frame_update = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_interaction = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.print_interaction_types = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_ladder_movement = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_ledge_step_up = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_lunging = {
-	value = false,
 	category = "Player Character",
+	value = false,
 	on_value_set = function ()
 		local debug_drawer = Debug:drawer("character_state_lunging")
 
 		debug_drawer:reset()
-	end
+	end,
 }
 params.override_player_profile_current_level = {
-	value = false,
 	category = "Player Character",
+	value = false,
 	options_function = function ()
 		local ExperienceSettings = require("scripts/settings/experience_settings")
 		local options = {
-			false
+			false,
 		}
 
 		for ii = 1, ExperienceSettings.max_level do
@@ -876,73 +881,73 @@ params.override_player_profile_current_level = {
 		end):catch(function ()
 			return
 		end)
-	end
+	end,
 }
 params.debug_netted_rotation = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_player_fx = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_player_gear_fx = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_player_suppression = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_player_unit_data_sync = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_step_up = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.disable_player_catapulting = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.disable_warp_charge = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.disable_warp_charge_passive_dissipating = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.disable_warp_charge_explosion = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.always_max_warp_charge = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_draw_ledge_hanging_ik = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.disable_ledge_hanging_ik = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.hang_ledge_draw_enabled = {
-	value = false,
-	user_setting = false,
 	category = "Player Character",
-	on_value_set = hang_ledge_toggle_draw
+	user_setting = false,
+	value = false,
+	on_value_set = hang_ledge_toggle_draw,
 }
 params.infinite_ledge_hanging = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.override_ledge_hanging_time = {
-	value = false,
 	category = "Player Character",
+	value = false,
 	options = {
 		false,
 		5,
@@ -950,53 +955,53 @@ params.override_ledge_hanging_time = {
 		15,
 		20,
 		25,
-		30
-	}
+		30,
+	},
 }
 params.infinite_stamina = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_stamina = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.player_render_frame_position = {
-	value = "interpolate",
 	category = "Player Character",
+	value = "interpolate",
 	options = {
 		"interpolate",
 		"extrapolate",
-		"raw"
-	}
+		"raw",
+	},
 }
 params.print_debugged_player_data_fields = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.print_player_unit_data = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.print_player_unit_data_debug_vertically = {
+	category = "Player Character",
 	value = true,
-	category = "Player Character"
 }
 params.print_player_unit_data_lookups = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.use_super_jumps = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.use_testify_profiles = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.force_third_person_mode = {
-	value = false,
 	category = "Player Character",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		local player = Managers.player:local_player(1)
 
@@ -1011,11 +1016,11 @@ params.force_third_person_mode = {
 		end
 
 		local ext = ScriptUnit.extension(player_unit, "first_person_system")
-	end
+	end,
 }
 params.force_third_person_hub_camera_use = {
-	value = false,
 	category = "Player Character",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		local player = Managers.player:local_player(1)
 
@@ -1030,65 +1035,65 @@ params.force_third_person_hub_camera_use = {
 		end
 
 		local ext = ScriptUnit.extension(player_unit, "camera_system")
-	end
+	end,
 }
 params.debug_player_slots = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_sliding_character_state = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_likely_stuck = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.disable_likely_stuck_implementation = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.debug_push_velocity = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.add_constant_push = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.enable_player_character_scale_overrides = {
+	category = "Player Character",
 	value = false,
-	category = "Player Character"
 }
 params.player_character_first_person_scale_override = {
-	value = 1,
 	category = "Player Character",
-	num_decimals = 3
+	num_decimals = 3,
+	value = 1,
 }
 params.player_character_third_person_scale_override = {
-	value = 1,
 	category = "Player Character",
-	num_decimals = 3
+	num_decimals = 3,
+	value = 1,
 }
 params.disable_last_man_standing_wwise_state = {
+	category = "Wwise States",
 	value = false,
-	category = "Wwise States"
 }
 params.debug_wwise_states = {
+	category = "Wwise States",
 	value = false,
-	category = "Wwise States"
 }
 params.debug_wwise_state_groups = {
+	category = "Wwise States",
 	value = false,
-	category = "Wwise States"
 }
 params.debug_wwise_states_override = {
+	category = "Wwise States",
 	value = false,
-	category = "Wwise States"
 }
 params.debug_wwise_states_override_a_game = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"character_creation",
@@ -1100,15 +1105,15 @@ params.debug_wwise_states_override_a_game = {
 		"mission_intro",
 		"mission_start",
 		"title",
-		"victory"
+		"victory",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("music_game_state", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_b_zone = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"hub",
@@ -1119,28 +1124,28 @@ params.debug_wwise_states_override_b_zone = {
 		"zone_4",
 		"zone_5",
 		"zone_6",
-		"zone_7"
+		"zone_7",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("music_zone", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_c_combat = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"normal",
 		"boss",
-		"horde"
+		"horde",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("music_combat", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_d_objective = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"control_mission",
@@ -1151,87 +1156,87 @@ params.debug_wwise_states_override_d_objective = {
 		"last_stand",
 		"mid_event",
 		"purge_mission",
-		"vip_mission"
+		"vip_mission",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("music_objective", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_e_objective_progression = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"one",
 		"two",
-		"three"
+		"three",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("music_objective_progression", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_f_circumstance = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
-		"None"
+		"None",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("music_circumstance", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_g_event_type = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"mid_event",
-		"end_event"
+		"end_event",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("event_category", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_h_combat_effects = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"normal",
 		"monster",
-		"horde"
+		"horde",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("minion_aggro_intensity", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_i_options = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"ingame_menu",
-		"vendor_menu"
+		"vendor_menu",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("options", new_value)
-	end
+	end,
 }
 params.debug_wwise_states_override_j_event_intensity = {
-	value = "None",
 	category = "Wwise States",
+	value = "None",
 	options = {
 		"None",
 		"low",
-		"high"
+		"high",
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.wwise_game_sync:debug_set_override_state("event_intensity", new_value)
-	end
+	end,
 }
 params.no_ability_cooldowns = {
-	value = false,
 	category = "Abilities",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -1242,11 +1247,11 @@ params.no_ability_cooldowns = {
 
 			RPC.rpc_debug_client_request_no_ability_cooldowns(channel, new_value)
 		end
-	end
+	end,
 }
 params.short_ability_cooldowns = {
-	value = false,
 	category = "Abilities",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -1257,61 +1262,61 @@ params.short_ability_cooldowns = {
 
 			RPC.rpc_debug_client_request_short_ability_cooldowns(channel, new_value)
 		end
-	end
+	end,
 }
 params.debug_smoke_fog = {
+	category = "Abilities",
 	value = false,
-	category = "Abilities"
 }
 params.show_ability_cooldowns = {
+	category = "Abilities",
 	value = false,
-	category = "Abilities"
 }
 params.debug_bots = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.debug_bots_aoe_threat = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.debug_bots_order = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.debug_bot_input = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.debug_bots_weapon = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.debug_selected_bot_target_selection = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.disable_bot_follow = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.disable_bot_abilities = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.debug_bot_action_input = {
+	category = "Bot Character",
 	value = false,
-	category = "Bot Character"
 }
 params.max_bots = {
-	value = "default",
 	category = "Bot Character",
+	value = "default",
 	options = {
 		"default",
 		0,
 		1,
 		2,
-		3
+		3,
 	},
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
@@ -1326,11 +1331,11 @@ params.max_bots = {
 
 			RPC.rpc_debug_set_max_bots(channel, value_index)
 		end
-	end
+	end,
 }
 params.bots_enabled = {
-	value = true,
 	category = "Bot Character",
+	value = true,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -1343,23 +1348,23 @@ params.bots_enabled = {
 
 			RPC.rpc_debug_bots_enabled_changed(channel, new_value)
 		end
-	end
+	end,
 }
 params.debug_buffs = {
+	category = "Buffs",
 	value = false,
-	category = "Buffs"
 }
 params.debug_buffs_hide_predicted = {
+	category = "Buffs",
 	value = false,
-	category = "Buffs"
 }
 params.debug_buffs_hide_non_predicted = {
+	category = "Buffs",
 	value = false,
-	category = "Buffs"
 }
 params.debug_buffs_show_categories = {
-	value = "all",
 	category = "Buffs",
+	value = "all",
 	options = {
 		"all",
 		"generic",
@@ -1367,39 +1372,39 @@ params.debug_buffs_show_categories = {
 		"weapon_traits",
 		"talents_secondary",
 		"gadget",
-		"aura"
-	}
+		"aura",
+	},
 }
 params.debug_meta_buffs = {
+	category = "Buffs",
 	value = false,
-	category = "Buffs"
 }
 params.debug_minion_buff_fx = {
+	category = "Buffs",
 	value = false,
-	category = "Buffs"
 }
 params.debug_boons = {
+	category = "Buffs",
 	value = false,
-	category = "Buffs"
 }
 params.disable_buff_screen_space_effects = {
+	category = "Buffs",
 	value = false,
-	category = "Buffs"
 }
 params.debug_perception = {
-	value = false,
 	category = "Perception",
+	value = false,
 	options = {
 		false,
 		"minions",
 		"bots",
-		"both"
-	}
+		"both",
+	},
 }
 params.disable_minion_perception = {
-	value = false,
-	name = "disable_minion_perception, Keybind: L-SHIFT + Z",
 	category = "Perception",
+	name = "disable_minion_perception, Keybind: L-SHIFT + Z",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -1410,46 +1415,46 @@ params.disable_minion_perception = {
 
 			RPC.rpc_debug_client_request_disable_minion_perception(channel, new_value)
 		end
-	end
+	end,
 }
 params.ignore_players_as_targets = {
+	category = "Perception",
 	value = false,
-	category = "Perception"
 }
 params.debug_selected_minion_target_selection_weights = {
+	category = "Perception",
 	value = false,
-	category = "Perception"
 }
 params.debug_selected_unit_threat = {
+	category = "Perception",
 	value = false,
-	category = "Perception"
 }
 params.debug_blackboards = {
+	category = "Blackboard",
 	value = false,
-	category = "Blackboard"
 }
 params.debug_wwise_elevation = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 params.debug_sound_environments = {
-	value = false,
+	category = "Wwise",
 	name = "Sound environment",
-	category = "Wwise"
+	value = false,
 }
 params.use_gameplay_sound_indicators = {
-	value = false,
 	category = "Wwise",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Wwise.set_state("sound_option_gameplay_indicators", new_value == true and "true" or "false")
 		end
-	end
+	end,
 }
 params.use_bass_boost = {
-	value = 0,
-	num_decimals = 2,
 	category = "Wwise",
+	num_decimals = 2,
+	value = 0,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			local world = Application.main_world()
@@ -1457,35 +1462,35 @@ params.use_bass_boost = {
 
 			WwiseWorld.set_global_parameter(wwise_world, "sound_option_bass_boost", new_value)
 		end
-	end
+	end,
 }
 params.debug_draw_closest_point_on_line_sounds = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 params.debug_draw_moving_line_sfx = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 params.debug_print_portal = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 params.debug_player_wwise_state = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 params.disable_lua_sound_reflection = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 params.debug_lua_sound_reflection = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 params.always_play_husk_effects = {
+	category = "Wwise",
 	value = false,
-	category = "Wwise"
 }
 
 local function _debug_slots_options()
@@ -1505,247 +1510,247 @@ local function _debug_slots_options()
 end
 
 params.debug_event_manager = {
+	category = "Event",
 	value = false,
-	category = "Event"
 }
 params.debug_failed_pathing = {
+	category = "Navigation",
 	value = false,
-	category = "Navigation"
 }
 params.debug_ai_movement = {
-	value = false,
 	category = "Navigation",
+	value = false,
 	options = {
 		false,
 		"graphics_only",
-		"text_and_graphics"
-	}
+		"text_and_graphics",
+	},
 }
 params.nav_mesh_debug = {
-	value = false,
 	category = "Navigation",
+	value = false,
 	options = {
 		false,
 		"without_nav_graphs",
-		"with_nav_graphs"
-	}
+		"with_nav_graphs",
+	},
 }
 params.debug_nav_graph = {
-	value = false,
 	category = "Navigation",
+	value = false,
 	options = {
 		false,
 		"graphics_only",
-		"prints_and_graphics"
-	}
+		"prints_and_graphics",
+	},
 }
 params.nav_graph_draw_distance = {
-	value = 50,
 	category = "Navigation",
+	value = 50,
 	options = {
 		10,
 		50,
 		100,
-		math.huge
-	}
+		math.huge,
+	},
 }
 params.debug_slots = {
-	value = false,
 	category = "Navigation",
-	options_function = _debug_slots_options
+	value = false,
+	options_function = _debug_slots_options,
 }
 params.debug_doors = {
+	category = "Navigation",
 	value = false,
-	category = "Navigation"
 }
 params.always_update_doors = {
+	category = "Navigation",
 	value = false,
-	category = "Navigation"
 }
 params.debug_pathfinder_queue = {
+	category = "Navigation",
 	value = false,
-	category = "Navigation"
 }
 params.draw_smartobject_fails = {
+	category = "Navigation",
 	value = false,
-	category = "Navigation"
 }
 params.debug_nav_tag_volume_creation_times = {
+	category = "Navigation",
 	value = false,
-	category = "Navigation"
 }
 params.engine_locomotion_debug = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.debug_movement_speed = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.draw_minion_velocity = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.draw_player_mover = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.teleport_on_out_of_bounds = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.debug_draw_fall_damage = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.debug_draw_force_translation = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.draw_third_person_player_rotation = {
+	category = "Locomotion",
 	value = false,
-	category = "Locomotion"
 }
 params.debug_hub_movement_direction_variable = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.hub_locomotion_position_mode_override = {
-	value = false,
 	category = "Hub",
+	value = false,
 	options = {
 		false,
 		"simulation",
 		"animation",
-		"feet_in_air"
-	}
+		"feet_in_air",
+	},
 }
 params.debug_hub_character_rotation = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.show_predicted_hub_locomotion = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.show_hub_locomotion = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.debug_hub_movement_acceleration = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.debug_hub_movement_move_state = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.debug_fake_max_allowed_wanted_velocity_angle = {
-	value = false,
 	category = "Hub",
+	value = false,
 	options = {
 		false,
 		"left",
-		"right"
-	}
+		"right",
+	},
 }
 params.debug_visualize_input_direction = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.debug_draw_hub_aim_constraint_targets = {
-	value = false,
 	category = "Hub",
+	value = false,
 	options = {
 		false,
 		"head",
 		"torso",
-		"both"
-	}
+		"both",
+	},
 }
 params.always_jog_in_hub = {
+	category = "Hub",
 	value = false,
-	category = "Hub"
 }
 params.debug_draw_moveable_platforms = {
+	category = "Moveable Platform",
 	value = false,
-	category = "Moveable Platform"
 }
 params.debug_networked_timer = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_mission_objectives = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_mission_objective_target = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_mission_objective_zone = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_decoder_synchronizer = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_decoding_device = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_scanning_device = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_spline_follower = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_luggable_synchronizer = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.debug_show_player_wallets = {
+	category = "Mission Objectives",
 	value = false,
-	category = "Mission Objectives"
 }
 params.use_free_flight_camera_for_bone_lod = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.debug_bone_lod_radius = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.debug_skeleton = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.disable_third_person_weapon_anim_events = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.show_minion_anim_event = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.show_minion_anim_event_history = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.minion_anim_event_history_count = {
+	category = "Animation",
 	value = 10,
-	category = "Animation"
 }
 params.debug_minion_anim_logging = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.enable_first_person_anim_logging = {
-	value = false,
 	category = "Animation",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		local player = Managers.player:local_player(1)
 
@@ -1756,11 +1761,11 @@ params.enable_first_person_anim_logging = {
 
 			Unit.set_animation_logging(fp_unit, new_value)
 		end
-	end
+	end,
 }
 params.enable_third_person_anim_logging = {
-	value = false,
 	category = "Animation",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		local player = Managers.player:local_player(1)
 
@@ -1769,19 +1774,19 @@ params.enable_third_person_anim_logging = {
 
 			Unit.set_animation_logging(player_unit, new_value)
 		end
-	end
+	end,
 }
 params.debug_animation_recording = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.debug_animation_rollback = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.dump_animation_state_config = {
-	value = false,
 	category = "Animation",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value then
 			local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -1789,124 +1794,124 @@ params.dump_animation_state_config = {
 
 			PlayerUnitAnimationStateConfig.format(PlayerCharacterConstants.animation_rollback)
 		end
-	end
+	end,
 }
 params.debug_first_person_run_speed_animation_scale = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.show_player_3p_anim_event = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.show_player_1p_anim_event = {
+	category = "Animation",
 	value = false,
-	category = "Animation"
 }
 params.max_num_player_anim_events_to_show = {
+	category = "Animation",
 	value = 10,
-	category = "Animation"
 }
 params.timer_picker_selected_timer_name = {
-	value = "gameplay",
+	category = "Time Scaling",
 	hidden = true,
-	category = "Time Scaling"
+	value = "gameplay",
 }
 params.timer_picker_x_offset = {
+	category = "Time Scaling",
 	value = 5,
-	category = "Time Scaling"
 }
 params.timer_picker_y_offset = {
+	category = "Time Scaling",
 	value = 80,
-	category = "Time Scaling"
 }
 params.timer_picker_layer = {
+	category = "Time Scaling",
 	value = 910,
-	category = "Time Scaling"
 }
 params.timer_picker_font_size = {
+	category = "Time Scaling",
 	value = 22,
-	category = "Time Scaling"
 }
 params.max_time_scale = {
+	category = "Time Scaling",
 	value = 15,
-	category = "Time Scaling"
 }
 params.debug_change_time_scale = {
+	category = "Time Scaling",
 	value = true,
-	category = "Time Scaling"
 }
 params.debug_sweep_show_disregarded_actors = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_sweep_show_sweep_lines = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_sweep_log_unit_processing = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_action_sweep_log = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_weapon_actions = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.keep_last_action_drawn = {
+	category = "Action",
 	value = true,
-	category = "Action"
 }
 params.log_weapon_action_transitions = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.show_action_movement_curves = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_show_attacked_hit_zones = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_sweep_stickyness = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.draw_closest_targeting_action_module = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_print_action_combo = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_draw_ballistic_raycast = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_aim_placement_raycast = {
+	category = "Action",
 	value = false,
-	category = "Action"
 }
 params.debug_action_input_parser = {
+	category = "Action Input",
 	value = false,
-	category = "Action Input"
 }
 params.action_input_parser_mispredict_info = {
+	category = "Action Input",
 	value = false,
-	category = "Action Input"
 }
 params.debug_disable_client_action_input_parsing = {
+	category = "Action Input",
 	value = false,
-	category = "Action Input"
 }
 params.sweep_spline_selected_weapon_template = {
-	value = "thunderhammer_2h_p1_m1",
 	category = "Sweep Spline",
+	value = "thunderhammer_2h_p1_m1",
 	options_function = function ()
 		local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 		local options = {}
@@ -1922,17 +1927,17 @@ params.sweep_spline_selected_weapon_template = {
 		end
 
 		return options
-	end
+	end,
 }
 
 local function _attack_selection_template_override_options(breed_name)
 	local Breeds = require("scripts/settings/breed/breeds")
 	local data = Breeds[breed_name]
-	local options = {}
-	local attack_selection_templates = data.attack_selection_templates
+	local options, attack_selection_templates = {}, data.attack_selection_templates
 
 	for i = 1, #attack_selection_templates do
 		local template = attack_selection_templates[i]
+
 		options[i] = template.name
 	end
 
@@ -1945,266 +1950,266 @@ local function _attack_selection_template_override_options(breed_name)
 end
 
 params.renegade_captain_attack_selection_template_override = {
-	value = false,
 	category = "Minion Attack Selection",
+	value = false,
 	options_function = function ()
 		return _attack_selection_template_override_options("renegade_captain")
-	end
+	end,
 }
 params.debug_taunting = {
+	category = "Minion Attack Selection",
 	value = false,
-	category = "Minion Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_bolt_pistol_shoot = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_bolt_pistol_strafe_shoot = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_charge = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_fire_grenade = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_frag_grenade = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_hellgun_shoot = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_hellgun_spray_and_pray = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_hellgun_strafe_shoot = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_hellgun_sweep_shoot = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_kick = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_power_sword_melee_combo_attack = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_power_sword_moving_melee_attack = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_powermaul_ground_slam_attack = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_punch = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_shoot_net = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_shotgun_shoot = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_shotgun_strafe_shoot = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.renegade_captain_custom_attack_selection_void_shield_explosion = {
+	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
-	category = "Minion Renegade Captain Custom Attack Selection"
 }
 params.debug_minion_ground_impact_fx = {
-	value = false,
 	category = "Minions",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Debug:clear_world_text("minion_ground_impact")
 		end
-	end
+	end,
 }
 params.debug_disable_minion_suppression = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_dissolve = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_disable_minion_suppression_indicators = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_grenadiers = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_suppression = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_area_suppression_falloff = {
-	value = false,
 	category = "Minions",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Debug:clear_world_text("suppression_falloff")
 		end
-	end
+	end,
 }
 params.debug_minion_reuse_wounds = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_draw_minion_bind_pose = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_draw_minion_wounds_hits = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_wounds_shape = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_gibbing = {
-	value = false,
 	category = "Minions",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Debug:clear_world_text("minion_gibbing")
 		end
-	end
+	end,
 }
 params.debug_disable_minion_stagger = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_disable_minion_blocked_reaction = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_melee_attacks = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_shooting = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_toughness = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_attack_intensity = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_locked_in_melee = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_warp_teleport = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_num_minions = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_player_minion_kills = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_minion_names = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_minion_location = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_minion_health = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_aiming = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_spawners = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.minions_always_accurate = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_combat_ranges = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_phases = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_shoot_pattern = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_attack_selection_template = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_script_minion_collision = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_health_bars_on_all_minions = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.show_health_bars_on_elite_and_specials = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.minions_aggro_on_spawn = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.debug_minion_shields = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.enable_minion_auto_stagger = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.ignore_stuck_minions_warning = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.ignore_special_failed_spawn_errors = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.script_minion_collision = {
-	value = true,
 	category = "Minions",
+	value = true,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -2227,344 +2232,344 @@ params.script_minion_collision = {
 				end
 			end
 		end
-	end
+	end,
 }
 params.calculate_offset_from_peeking_to_aiming_in_cover = {
+	category = "Minions",
 	value = false,
-	category = "Minions"
 }
 params.kill_debug_spawned_minions_outside_navmesh = {
+	category = "Minions",
 	value = true,
-	category = "Minions"
 }
 params.mute_minion_sounds = {
-	value = false,
 	category = "Minions",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		Wwise.set_state("debug_mute_minions", new_value and "true" or "None")
-	end
+	end,
 }
 params.debug_stats = {
+	category = "Stats",
 	value = false,
-	category = "Stats"
 }
 params.local_stats = {
+	category = "Stats",
 	value = false,
-	category = "Stats"
 }
 params.show_stats_rpcs = {
+	category = "Stats",
 	value = false,
-	category = "Stats"
 }
 params.show_stats_performance = {
+	category = "Stats",
 	value = false,
-	category = "Stats"
 }
 params.distance_to_selected_unit = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.debug_player_orientation = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.debug_smooth_force_view_orientation = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.debug_disable_vertical_smooth_force_view_orientation = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.allow_server_control_from_client = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.debug_idle_fullbody_animation_variable = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.use_screen_timestamp = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.store_callstack_on_delete = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.disable_server_metrics_prints = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.disable_player_unit_weapon_extension_on_reload = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.lock_look_input = {
+	category = "Misc",
 	value = false,
-	category = "Misc"
 }
 params.max_num_characters_override = {
-	value = 8,
 	category = "Misc",
+	value = 8,
 	options = {
 		false,
 		5,
 		6,
 		7,
-		8
-	}
+		8,
+	},
 }
 params.challenge = {
-	value = 3,
 	category = "Difficulty",
+	value = 3,
 	options = {
 		1,
 		2,
 		3,
 		4,
 		5,
-		6
+		6,
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.state.difficulty:set_challenge(new_value)
-	end
+	end,
 }
 params.resistance = {
-	value = 3,
 	category = "Difficulty",
+	value = 3,
 	options = {
 		1,
 		2,
 		3,
 		4,
-		5
+		5,
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.state.difficulty:set_resistance(new_value)
-	end
+	end,
 }
 params.minion_friendly_fire = {
+	category = "Difficulty",
 	value = true,
-	category = "Difficulty"
 }
 params.player_friendly_fire = {
+	category = "Difficulty",
 	value = false,
-	category = "Difficulty"
 }
 params.debug_chaos_hound = {
+	category = "Chaos Hound",
 	value = false,
-	category = "Chaos Hound"
 }
 params.disable_chaos_hound_pounce = {
+	category = "Chaos Hound",
 	value = false,
-	category = "Chaos Hound"
 }
 params.debug_mutant_charger = {
+	category = "Mutant Charger",
 	value = false,
-	category = "Mutant Charger"
 }
 params.debug_chaos_spawn = {
+	category = "Chaos Spawn",
 	value = false,
-	category = "Chaos Spawn"
 }
 params.enable_chunk_lod = {
+	category = "Chunk Lod",
 	value = true,
-	category = "Chunk Lod"
 }
 params.chunk_lod_debug = {
+	category = "Chunk Lod",
 	value = false,
-	category = "Chunk Lod"
 }
 params.chunk_lod_free_flight_camera_raycast = {
+	category = "Chunk Lod",
 	value = false,
-	category = "Chunk Lod"
 }
 params.debug_print_stripped_items = {
+	category = "Item",
 	value = true,
-	category = "Item"
 }
 params.show_gear_ids = {
+	category = "Item",
 	value = false,
-	category = "Item"
 }
 params.only_fallback_items = {
+	category = "Item",
 	value = false,
-	category = "Item"
 }
 params.debug_players_immune_net = {
+	category = "Netgunner",
 	value = false,
-	category = "Netgunner"
 }
 params.debug_netgunner_shoot_position = {
+	category = "Netgunner",
 	value = false,
-	category = "Netgunner"
 }
 params.debug_netted_drag_position = {
-	value = false,
 	category = "Netgunner",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Debug:clear_world_text("netted_drag_position")
 		end
-	end
+	end,
 }
 params.debug_daemonhost = {
+	category = "Daemonhost",
 	value = false,
-	category = "Daemonhost"
 }
 params.debug_liquid_beam = {
+	category = "Liquid Beam",
 	value = false,
-	category = "Liquid Beam"
 }
 params.debug_covers = {
+	category = "Covers",
 	value = false,
-	category = "Covers"
 }
 params.debug_combat_vector = {
+	category = "Combat Vector",
 	value = false,
-	category = "Combat Vector"
 }
 params.debug_combat_vector_simple = {
+	category = "Combat Vector",
 	value = false,
-	category = "Combat Vector"
 }
 params.debug_corruptors = {
+	category = "Corruptors",
 	value = false,
-	category = "Corruptors"
 }
 params.auto_kill_corruptor_pustules = {
+	category = "Corruptors",
 	value = false,
-	category = "Corruptors"
 }
 params.disable_corruptor_damage_tick = {
+	category = "Corruptors",
 	value = false,
-	category = "Corruptors"
 }
 params.debug_roamer_pacing = {
+	category = "Roamers",
 	value = false,
-	category = "Roamers"
 }
 params.disable_roamer_pacing = {
+	category = "Roamers",
 	value = false,
-	category = "Roamers"
 }
 params.debug_patrols = {
+	category = "Roamers",
 	value = false,
-	category = "Roamers"
 }
 params.disable_cultists = {
+	category = "Roamers",
 	value = false,
-	category = "Roamers"
 }
 params.debug_hordes = {
+	category = "Hordes",
 	value = false,
-	category = "Hordes"
 }
 params.disable_horde_pacing = {
+	category = "Hordes",
 	value = false,
-	category = "Hordes"
 }
 params.disable_trickle_horde_pacing = {
+	category = "Hordes",
 	value = false,
-	category = "Hordes"
 }
 params.debug_horde_pacing = {
+	category = "Hordes",
 	value = false,
-	category = "Hordes"
 }
 params.debug_groups = {
+	category = "Groups",
 	value = false,
-	category = "Groups"
 }
 params.debug_group_sfx = {
+	category = "Groups",
 	value = false,
-	category = "Groups"
 }
 params.chaos_hound_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.chaos_hound_mutator_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.cultist_mutant_mutator_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.chaos_poxwalker_bomber_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.cultist_flamer_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.cultist_grenadier_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.cultist_mutant_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.debug_specials_pacing = {
+	category = "Specials",
 	value = false,
-	category = "Specials"
 }
 params.disable_specials_pacing = {
+	category = "Specials",
 	value = false,
-	category = "Specials"
 }
 params.freeze_specials_pacing = {
+	category = "Specials",
 	value = false,
-	category = "Specials"
 }
 params.renegade_grenadier_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.renegade_netgunner_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.renegade_sniper_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.flamer_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.grenadier_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.renegade_flamer_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.renegade_flamer_mutator_allowed = {
+	category = "Specials",
 	value = true,
-	category = "Specials"
 }
 params.disable_monster_pacing = {
+	category = "Monsters",
 	value = false,
-	category = "Monsters"
 }
 params.debug_monster_pacing = {
+	category = "Monsters",
 	value = false,
-	category = "Monsters"
 }
 params.debug_pacing = {
+	category = "Pacing",
 	value = false,
-	category = "Pacing"
 }
 params.disable_pacing = {
-	value = false,
-	name = "disable_pacing, Keybind: L-SHIFT + X",
 	category = "Pacing",
+	name = "disable_pacing, Keybind: L-SHIFT + X",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -2575,99 +2580,99 @@ params.disable_pacing = {
 
 			RPC.rpc_debug_client_request_disable_pacing(channel, new_value)
 		end
-	end
+	end,
 }
 params.debug_player_combat_states = {
+	category = "Pacing",
 	value = false,
-	category = "Pacing"
 }
 params.disable_beast_of_nurgle = {
+	category = "Pacing",
 	value = false,
-	category = "Pacing"
 }
 params.disable_daemonhost = {
+	category = "Pacing",
 	value = false,
-	category = "Pacing"
 }
 params.disable_renegade_berzerker = {
+	category = "Pacing",
 	value = false,
-	category = "Pacing"
 }
 params.debug_join_party = {
+	category = "Party",
 	value = false,
-	category = "Party"
 }
 params.immaterium_local_grpc = {
+	category = "Party",
 	value = false,
-	category = "Party"
 }
 params.party_hash = {
+	category = "Party",
 	value = false,
-	category = "Party"
 }
 params.reconnect_to_ongoing_game_session = {
+	category = "Party",
 	value = true,
-	category = "Party"
 }
 params.verbose_party_log = {
+	category = "Party",
 	value = false,
-	category = "Party"
 }
 params.debug_playload = {
+	category = "Payload",
 	value = false,
-	category = "Payload"
 }
 params.verbose_presence_log = {
+	category = "Presence",
 	value = false,
-	category = "Presence"
 }
 params.print_batched_presence_streams = {
+	category = "Presence",
 	value = false,
-	category = "Presence"
 }
 params.hide_hud = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.enemy_outlines = {
-	value = "on",
 	category = "Hud",
+	value = "on",
 	options = {
 		"off",
-		"on"
-	}
+		"on",
+	},
 }
 params.player_outlines_mode = {
-	value = "skeleton",
 	category = "Hud",
+	value = "skeleton",
 	options = {
 		"off",
 		"always",
 		"obscured",
-		"skeleton"
-	}
+		"skeleton",
+	},
 }
 params.player_outlines_type = {
-	value = "both",
 	category = "Hud",
+	value = "both",
 	options = {
 		"outlines",
 		"mesh",
-		"both"
-	}
+		"both",
+	},
 }
 params.disable_outlines = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.simulate_color_blindness = {
-	value = "off",
 	category = "Hud",
+	value = "off",
 	options = {
 		"off",
 		"rare_protanomaly",
 		"common_deuteranomaly",
-		"very_rare_tritanomaly"
+		"very_rare_tritanomaly",
 	},
 	on_value_set = function (new_value)
 		local on = true
@@ -2675,12 +2680,8 @@ params.simulate_color_blindness = {
 
 		if new_value == "off" then
 			on = false
-		elseif new_value == "rare_protanomaly" then
-			mode = 0
-		elseif new_value == "common_deuteranomaly" then
-			mode = 1
 		else
-			mode = 2
+			mode = new_value == "rare_protanomaly" and 0 or new_value == "common_deuteranomaly" and 1 or 2
 		end
 
 		if on then
@@ -2689,51 +2690,51 @@ params.simulate_color_blindness = {
 		else
 			Application.set_render_setting("simulate_color_blindness", "false")
 		end
-	end
+	end,
 }
 params.show_debug_charge_hud = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.show_debug_overheat_hud = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.show_debug_warp_charge_hud = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.show_debug_scanning_progressbar = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.always_max_warp_charge_hud_opacity = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.always_max_overheat_hud_opacity = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.hide_hud_world_markers = {
+	category = "Hud",
 	value = false,
-	category = "Hud"
 }
 params.always_show_hit_marker = {
+	category = "Crosshair",
 	value = false,
-	category = "Crosshair"
 }
 params.always_show_weakspot_hit_marker = {
+	category = "Crosshair",
 	value = false,
-	category = "Crosshair"
 }
 params.dot_crosshair_override = {
+	category = "Crosshair",
 	value = false,
-	category = "Crosshair"
 }
 params.hit_marker_color_override = {
-	value = false,
 	category = "Crosshair",
+	value = false,
 	options_function = function ()
 		local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
 		local options = table.keys(HudElementCrosshairSettings.hit_indicator_colors)
@@ -2741,526 +2742,528 @@ params.hit_marker_color_override = {
 		table.insert(options, 1, false)
 
 		return options
-	end
+	end,
 }
+
 local SHOW_INFO = BUILD == "dev" or BUILD == "debug"
+
 params.render_version_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_build_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_engine_revision_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_content_revision_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_backend_url = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_master_data_version = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_team_city_build_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_backend_account_info = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_lan_port_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_network_hash_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_screen_resolution_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_mission_name = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_level_name = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_chunk_name = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_game_mode_name = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_main_objective_type = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_num_hub_players = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_unique_instance_id = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_region = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_deployment_id = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_camera_position_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_camera_rotation_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_player_1p_position_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_player_3p_position_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_mechanism_name = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_network_info = {
 	category = "Version Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.show_progression_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_presence_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_difficulty = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_circumstances = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_selected_unit_info = {
+	category = "Version Info",
 	value = true,
-	category = "Version Info"
 }
 params.show_vo_story_stage_info = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.show_cinematic_active = {
+	category = "Version Info",
 	value = false,
-	category = "Version Info"
 }
 params.render_feature_info = {
 	category = "Feature Info",
-	value = SHOW_INFO
+	value = SHOW_INFO,
 }
 params.debug_draw_force_field_collision = {
+	category = "Force Field",
 	value = false,
-	category = "Force Field"
 }
 params.show_force_field_life_and_health = {
+	category = "Force Field",
 	value = false,
-	category = "Force Field"
 }
 params.override_burst_limit = {
+	category = "FGRL",
 	value = false,
-	category = "FGRL"
 }
 params.burst_limit_calls = {
+	category = "FGRL",
 	value = 10,
-	category = "FGRL"
 }
 params.override_sustain_limit = {
+	category = "FGRL",
 	value = false,
-	category = "FGRL"
 }
 params.sustain_limit_calls = {
+	category = "FGRL",
 	value = 30,
-	category = "FGRL"
 }
 params.perfhud_artist = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "artist")
-	end
+	end,
 }
 params.perfhud_artist_deferred_lighting = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "artist", "deferred_lighting")
-	end
+	end,
 }
 params.perfhud_artist_fx = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "artist", "fx")
-	end
+	end,
 }
 params.perfhud_artist_gui = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "artist", "gui")
-	end
+	end,
 }
 params.perfhud_artist_lighting = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "artist", "lighting")
-	end
+	end,
 }
 params.perfhud_artist_objects = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "artist", "objects")
-	end
+	end,
 }
 params.perfhud_artist_post_processing = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "artist", "post_processing")
-	end
+	end,
 }
 params.perfhud_audio = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "audio")
-	end
+	end,
 }
 params.perfhud_culling = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "culling")
-	end
+	end,
 }
 params.perfhud_extended_memory = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "extended_memory")
-	end
+	end,
 }
 params.perfhud_gui = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "gui")
-	end
+	end,
 }
 params.perfhud_lua = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "lua")
-	end
+	end,
 }
 params.perfhud_memory = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "memory")
-	end
+	end,
 }
 params.perfhud_memory_allocator_usage = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "memory", "allocator_usage")
-	end
+	end,
 }
 params.perfhud_network = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "network")
-	end
+	end,
 }
 params.perfhud_network_messages = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "network_messages")
-	end
+	end,
 }
 params.perfhud_network_peers = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "network_peers")
-	end
+	end,
 }
 params.perfhud_network_peers_bytes = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "network_peers", "bytes")
-	end
+	end,
 }
 params.perfhud_network_peers_kbps = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "network_peers", "kbps")
-	end
+	end,
 }
 params.perfhud_network_ping = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "network_ping")
-	end
+	end,
 }
 params.perfhud_texture_streaming = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "texture_streaming")
-	end
+	end,
 }
 params.perfhud_wwise = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "wwise")
-	end
+	end,
 }
 params.perfhud_backend_client = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "backend", "client")
-	end
+	end,
 }
 params.perfhud_backend_server = {
-	value = false,
 	category = "PerfHud",
+	value = false,
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "backend", "server")
-	end
+	end,
 }
 params.ui_developer_mode = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_3d_rendering = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_3d_no_slug_text = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_disable_kill_feed = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_show_active_views = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_subtitles = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_use_local_inventory = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_always_enable_inventory_access = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_always_enable_achievements_menu = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_hide_hud = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_test_view_spawning = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_scenegraph = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_pixeldistance = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_grid_enabled = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_grid_width = {
+	category = "UI",
 	value = 100,
-	category = "UI"
 }
 params.ui_grid_height = {
+	category = "UI",
 	value = 100,
-	category = "UI"
 }
 params.ui_debug_hover = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_skip_main_menu_screen = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_skip_title_screen = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_skip_splash_screen = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_disable_view_loader = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_view_scale = {
-	value = 1,
-	num_decimals = 1,
 	category = "UI",
+	num_decimals = 1,
+	value = 1,
 	on_value_set = function ()
 		local force_update = true
 
 		UPDATE_RESOLUTION_LOOKUP(force_update)
-	end
+	end,
 }
 params.ui_safe_rect = {
-	value = 0,
 	category = "UI",
+	value = 0,
 	on_value_set = function ()
 		local force_update = true
 
 		UPDATE_RESOLUTION_LOOKUP(force_update)
-	end
+	end,
 }
 params.ui_disabled = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_end_screen = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_lobby_screen = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_mission_intro = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_mission_outro = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_enable_item_names = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_enable_mission_board_debug = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_show_social_menu = {
+	category = "UI",
 	value = true,
-	category = "UI"
 }
 params.ui_enable_debug_view = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_news_screen = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_enable_notifications = {
-	value = true,
 	category = "UI",
+	value = true,
 	on_value_set = function ()
 		Managers.event:trigger("event_clear_notifications")
-	end
+	end,
 }
 params.spawn_next_to_mission_board = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.spawn_next_to_crafting = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_debug_loc_strings = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_ignore_hub_interaction_requirements = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.local_crafting = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.sticker_book_seen_all_traits = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.debug_render_target_atlas_generator = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.ui_always_show_tutorial_popup = {
+	category = "UI",
 	value = false,
-	category = "UI"
 }
 params.override_stun_type = {
-	value = false,
 	category = "Damage",
+	value = false,
 	options_function = function ()
 		local DisorientationSettings = require("scripts/settings/damage/disorientation_settings")
 		local options = {
-			false
+			false,
 		}
 
 		for key, _ in pairs(DisorientationSettings.disorientation_types) do
@@ -3268,53 +3271,53 @@ params.override_stun_type = {
 		end
 
 		return options
-	end
+	end,
 }
 params.disable_player_wounds = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.show_selected_unit_health = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.show_debug_explosions = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_async_explosions = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.enable_damage_debug = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_damage_power_level = {
-	value = 500,
 	category = "Damage",
+	value = 500,
 	options = {
 		500,
 		1000,
 		1500,
-		2000
-	}
+		2000,
+	},
 }
 params.debug_damage_calculation = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_pellet_damage = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_attack_utility = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_players_unkillable = {
-	value = false,
 	category = "Damage",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -3336,11 +3339,11 @@ params.debug_players_unkillable = {
 
 			RPC.rpc_debug_client_request_set_players_unkillable(channel, new_value)
 		end
-	end
+	end,
 }
 params.debug_players_invulnerable = {
-	value = false,
 	category = "Damage",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -3362,241 +3365,241 @@ params.debug_players_invulnerable = {
 
 			RPC.rpc_debug_client_request_set_players_invulnerable(channel, new_value)
 		end
-	end
+	end,
 }
 params.disable_toughness_damage = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_toughness = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.player_weapon_instakill = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.player_damage_disabled = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.disable_knocked_down_damage_tick = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.disable_screen_space_blood = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_draw_blood_decal_rotation = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_impact_effects = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.disable_push_from_damage = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.disable_catapult_from_damage = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.enable_auto_healing = {
+	category = "Damage",
 	value = false,
-	category = "Damage"
 }
 params.debug_minigame = {
+	category = "Minigame",
 	value = false,
-	category = "Minigame"
 }
 params.disable_minigame_angle_check = {
+	category = "Minigame",
 	value = false,
-	category = "Minigame"
 }
 params.sound = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_all_contexts = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_last_played_query = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.text_to_speech_forced = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.text_to_speech_missing = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_missing_vo_trigger_error_sound = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_last_query = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_queries = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_debug_lookat = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_disable_vo = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_mute_vo = {
-	value = false,
 	category = "Dialogue",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Wwise.set_state("debug_mute_vo", new_value == true and "true" or "false")
 		end
-	end
+	end,
 }
 params.dialogue_display_voices_and_lines = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_ruledatabase_debug_all = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_enable_sound_event_logs = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_enable_voice_data_logs = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_enable_vo_focus_mode = {
-	value = false,
 	category = "Dialogue",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Wwise.set_state("debug_focus_vo", new_value == true and "true" or "false")
 		end
-	end
+	end,
 }
 params.dialogue_show_currently_playing_vo_info = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_disable_story_lines = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_log_enemy_vo_events = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_debug_story_tickers = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_show_assault_vo_timer = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_override_player_level = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_override_player_level_value = {
+	category = "Dialogue",
 	value = 1,
-	category = "Dialogue"
 }
 params.dialogue_skip_timediff_conditions = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_override_level_time_conditions = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_override_story_tick_start_time = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_override_story_tick_start_time_value = {
-	value = 0,
 	category = "Dialogue",
+	value = 0,
 	on_value_set = function (new_value, old_value)
 		local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 
 		if new_value ~= old_value then
 			DialogueSettings.story_start_delay = new_value
 		end
-	end
+	end,
 }
 params.dialogue_override_short_story_tick_start_time = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.dialogue_override_short_story_tick_start_time_value = {
-	value = 0,
 	category = "Dialogue",
+	value = 0,
 	on_value_set = function (new_value, old_value)
 		local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 
 		if new_value ~= old_value then
 			DialogueSettings.story_start_delay = new_value
 		end
-	end
+	end,
 }
 params.dialogue_force_load_all_player_vo = {
+	category = "Dialogue",
 	value = false,
-	category = "Dialogue"
 }
 params.debug_equipment_component = {
+	category = "Equipment",
 	value = false,
-	category = "Equipment"
 }
 params.debug_item_alias_fake_loading = {
+	category = "Equipment",
 	value = false,
-	category = "Equipment"
 }
 params.always_trigger_stagger = {
+	category = "Stagger",
 	value = false,
-	category = "Stagger"
 }
 params.stagger_debug_log = {
+	category = "Stagger",
 	value = false,
-	category = "Stagger"
 }
 params.debug_herding = {
-	value = false,
 	category = "Stagger",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value then
 			Debug:clear_world_text("herding_staggers")
 		end
-	end
+	end,
 }
 params.override_accumulative_stagger_multiplier = {
+	category = "Stagger",
 	value = false,
-	category = "Stagger"
 }
 params.override_accumulative_stagger_multiplier_value = {
-	value = 1,
+	category = "Stagger",
 	num_decimals = 2,
-	category = "Stagger"
+	value = 1,
 }
 params.debug_looping_stagger = {
-	value = false,
 	category = "Stagger",
+	value = false,
 	on_value_set = function (new_value)
 		if new_value then
 			local selected_unit = Debug.selected_unit
@@ -3607,31 +3610,31 @@ params.debug_looping_stagger = {
 				Stagger.debug_trigger_minion_stagger(selected_unit)
 			end
 		end
-	end
+	end,
 }
 params.debug_stagger_length_scale = {
-	value = 1,
+	category = "Stagger",
 	num_decimals = 1,
-	category = "Stagger"
+	value = 1,
 }
 params.debug_use_stagger_keys = {
+	category = "Stagger",
 	value = false,
-	category = "Stagger"
 }
 params.debug_stagger_direction = {
-	value = "fwd",
 	category = "Stagger",
+	value = "fwd",
 	options = {
 		"left",
 		"right",
 		"fwd",
 		"bwd",
-		"dwn"
-	}
+		"dwn",
+	},
 }
 params.debug_stagger_type = {
-	value = "heavy",
 	category = "Stagger",
+	value = "heavy",
 	options_function = function ()
 		local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 		local stagger_types = StaggerSettings.stagger_types
@@ -3644,67 +3647,67 @@ params.debug_stagger_type = {
 		table.sort(options)
 
 		return options
-	end
+	end,
 }
 params.debug_draw_projectiles = {
+	category = "Projectile",
 	value = false,
-	category = "Projectile"
 }
 params.debug_projectile_penetration = {
+	category = "Projectile",
 	value = false,
-	category = "Projectile"
 }
 params.debug_draw_projectile_aiming = {
+	category = "Projectile",
 	value = false,
-	category = "Projectile"
 }
 params.debug_projectile_husk_interpolation = {
+	category = "Projectile",
 	value = false,
-	category = "Projectile"
 }
 params.debug_push_attacks = {
+	category = "Push",
 	value = false,
-	category = "Push"
 }
 params.debug_script_components = {
+	category = "Script Components",
 	value = false,
-	category = "Script Components"
 }
 params.script_components_print_data = {
+	category = "Script Components",
 	value = false,
-	category = "Script Components"
 }
 params.debug_game_mode = {
+	category = "Game Mode",
 	value = false,
-	category = "Game Mode"
 }
 params.debug_state_machine = {
+	category = "Game Mode",
 	value = false,
-	category = "Game Mode"
 }
 params.debug_darkness = {
+	category = "Game Mode",
 	value = false,
-	category = "Game Mode"
 }
 params.debug_sides = {
+	category = "Game Mode",
 	value = false,
-	category = "Game Mode"
 }
 params.debug_circumstances = {
+	category = "Game Mode",
 	value = false,
-	category = "Game Mode"
 }
 params.disable_game_end_conditions = {
+	category = "Game Mode",
 	value = false,
-	category = "Game Mode"
 }
 params.debug_alternating_toxic_gas = {
+	category = "Game Mode",
 	value = false,
-	category = "Game Mode"
 }
 params.disable_achievement_backend_update = {
-	value = false,
 	category = "Achievements",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -3715,56 +3718,56 @@ params.disable_achievement_backend_update = {
 
 			RPC.rpc_debug_client_request_disable_achievement_backend_update(channel, new_value)
 		end
-	end
+	end,
 }
 params.debug_shading_environment = {
+	category = "Shading Environment",
 	value = false,
-	category = "Shading Environment"
 }
 params.debug_gameplay_state = {
+	category = "Gameplay State",
 	value = false,
-	category = "Gameplay State"
 }
 params.debug_spawn_queue = {
+	category = "Gameplay State",
 	value = false,
-	category = "Gameplay State"
 }
 params.gameplay_timer_base_time_scale = {
-	value = 1,
+	category = "Gameplay State",
 	num_decimals = 2,
-	category = "Gameplay State"
+	value = 1,
 }
 params.debug_grow_queue_callstacks = {
+	category = "Gameplay State",
 	value = false,
-	category = "Gameplay State"
 }
 params.debug_respawn_beacon = {
+	category = "Respawn",
 	value = false,
-	category = "Respawn"
 }
 params.debug_player_spawn = {
+	category = "Respawn",
 	value = false,
-	category = "Respawn"
 }
 params.disable_respawning = {
+	category = "Respawn",
 	value = false,
-	category = "Respawn"
 }
 params.no_respawn_wait_time = {
+	category = "Respawn",
 	value = false,
-	category = "Respawn"
 }
 params.teleport_on_spawn = {
+	category = "Respawn",
 	value = false,
-	category = "Respawn"
 }
 params.teleport_on_spawn_location = {
+	category = "Respawn",
 	value = "Vector3(0,0,0)",
-	category = "Respawn"
 }
 params.teleport_on_spawn_yaw_pitch_roll = {
+	category = "Respawn",
 	value = "Vector3(0,0,0)",
-	category = "Respawn"
 }
 
 local function set_simulated_latency(new_value, old_value)
@@ -3794,76 +3797,76 @@ local function lag_compensation_toggle_draw(new_value, old_value)
 end
 
 params.debug_connection_layer = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.debug_session_layer = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.debug_matchmaking = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.debug_time_since_last_transmit = {
+	category = "Network",
 	value = true,
-	category = "Network"
 }
 params.visualize_input_packets_received = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.visualize_input_packets_with_ping = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.debug_adaptive_clock = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.disable_adaptive_clock_offset_correction = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.adaptive_clock_offset_correction_info_logging = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.debug_play_sound_on_not_received_input = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.log_mispredicts = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.mispredict_info = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.simulate_ping_variation = {
-	value = 0,
-	num_decimals = 3,
 	category = "Network",
-	on_value_set = set_simulated_latency
+	num_decimals = 3,
+	value = 0,
+	on_value_set = set_simulated_latency,
 }
 params.simulate_ping = {
+	category = "Network",
 	num_decimals = 3,
 	value = 0,
-	category = "Network",
 	options = {
 		0,
 		0.03,
 		0.08,
 		0.12,
-		0.2
+		0.2,
 	},
-	on_value_set = set_simulated_latency
+	on_value_set = set_simulated_latency,
 }
 params.debug_stall_game_duration = {
-	value = 1,
-	num_decimals = 1,
 	category = "Network",
+	num_decimals = 1,
+	value = 1,
 	options = {
 		0.1,
 		0.5,
@@ -3871,50 +3874,50 @@ params.debug_stall_game_duration = {
 		3,
 		6,
 		10,
-		15
-	}
+		15,
+	},
 }
 params.network_hash = {
+	category = "Network",
 	value = "",
-	category = "Network"
 }
 params.lag_compensation_draw_enabled = {
-	value = false,
-	user_setting = false,
 	category = "Network",
-	on_value_set = lag_compensation_toggle_draw
+	user_setting = false,
+	value = false,
+	on_value_set = lag_compensation_toggle_draw,
 }
 params.manual_lag_compensation = {
-	value = false,
-	user_setting = false,
 	category = "Network",
-	on_value_set = set_manual_lag_compensation
+	user_setting = false,
+	value = false,
+	on_value_set = set_manual_lag_compensation,
 }
 params.manual_lag_compensation_value = {
-	value = 0,
-	num_decimals = 3,
 	category = "Network",
-	on_value_set = set_manual_lag_compensation_value
+	num_decimals = 3,
+	value = 0,
+	on_value_set = set_manual_lag_compensation_value,
 }
 params.packet_loss = {
-	value = 0,
-	num_decimals = 3,
 	category = "Network",
+	num_decimals = 3,
+	value = 0,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value and Managers.state.game_session then
 			Managers.state.game_session:set_simulated_packet_loss(new_value)
 		end
-	end
+	end,
 }
 params.packet_duplication = {
-	value = 0,
-	num_decimals = 3,
 	category = "Network",
+	num_decimals = 3,
+	value = 0,
 	on_value_set = function (new_value, old_value)
 		if new_value ~= old_value and Managers.state.game_session then
 			Managers.state.game_session:set_simulated_packet_duplication(new_value)
 		end
-	end
+	end,
 }
 
 local function set_pong_timeout(new_value, old_value)
@@ -3944,7 +3947,7 @@ function enable_rpc_logging()
 		"rpc_hazard_prop_hot_join",
 		"rpc_sync_destructible",
 		"rpc_sync_anim_state",
-		"rpc_interaction_set_active"
+		"rpc_interaction_set_active",
 	}
 
 	for key, value in ipairs(to_ignore) do
@@ -3953,11 +3956,12 @@ function enable_rpc_logging()
 end
 
 params.pong_timeout = {
-	value = 10,
 	category = "Network",
-	on_value_set = set_pong_timeout
+	value = 10,
+	on_value_set = set_pong_timeout,
 }
-local cached_network_functions = nil
+
+local cached_network_functions
 
 local function set_backend_delay(new_value)
 	local Promise = require("scripts/foundation/utilities/promise")
@@ -3975,7 +3979,7 @@ local function set_backend_delay(new_value)
 		if not has_saved_values then
 			cached_network_functions = {
 				title_request = Managers.backend.title_request,
-				url_request = Managers.backend.url_request
+				url_request = Managers.backend.url_request,
 			}
 		end
 
@@ -3998,49 +4002,49 @@ local function set_backend_delay(new_value)
 end
 
 params.backend_delay = {
-	value = false,
 	category = "Network",
+	value = false,
 	options = {
 		false,
 		0.5,
 		2,
-		8
+		8,
 	},
-	on_value_set = set_backend_delay
+	on_value_set = set_backend_delay,
 }
 params.reliable_rpc_send_count_debug = {
+	category = "Network",
 	value = false,
-	category = "Network"
 }
 params.debug_pass_EAC_check = {
+	category = "Network",
 	value = true,
-	category = "Network"
 }
 params.debug_rpc_logging = {
-	value = false,
 	category = "Network",
-	on_value_set = enable_rpc_logging
+	value = false,
+	on_value_set = enable_rpc_logging,
 }
 params.debug_breed_resource_dependencies = {
+	category = "Loading",
 	value = false,
-	category = "Loading"
 }
 params.debug_loading = {
+	category = "Loading",
 	value = false,
-	category = "Loading"
 }
 params.debug_loading_times = {
+	category = "Loading",
 	value = false,
-	category = "Loading"
 }
 params.debug_package_loading = {
+	category = "Loading",
 	value = false,
-	category = "Loading"
 }
 params.delay_packages_on_profile_changed = {
-	value = false,
-	num_decimals = 1,
 	category = "Loading",
+	num_decimals = 1,
+	value = false,
 	options = {
 		false,
 		0.1,
@@ -4051,16 +4055,16 @@ params.delay_packages_on_profile_changed = {
 		4,
 		8,
 		16,
-		32
-	}
+		32,
+	},
 }
 params.draw_package_loading = {
+	category = "Loading",
 	value = false,
-	category = "Loading"
 }
 params.debug_language_override = {
-	name = "Language Override",
 	category = "Localization",
+	name = "Language Override",
 	value = "None",
 	options_function = function ()
 		local supported_languages = Managers.localization:debug_supported_languages()
@@ -4076,153 +4080,153 @@ params.debug_language_override = {
 		else
 			Managers.localization:debug_set_language(new_value)
 		end
-	end
+	end,
 }
 params.debug_localization_string_cache = {
-	value = false,
+	category = "Localization",
 	name = "Debug String Cache",
-	category = "Localization"
+	value = false,
 }
 params.volume_event_debug = {
+	category = "Volume",
 	value = false,
-	category = "Volume"
 }
 params.volume_trigger_debug = {
+	category = "Volume",
 	value = false,
-	category = "Volume"
 }
 params.debug_buff_volumes = {
+	category = "Volume",
 	value = false,
-	category = "Volume"
 }
 params.dev_params_gui_auto_expand_tree = {
+	category = "Imgui",
 	value = true,
-	category = "Imgui"
 }
 params.dev_params_gui_reset_filter_on_open = {
+	category = "Imgui",
 	value = true,
-	category = "Imgui"
 }
 params.debug_smart_targeting_template = {
+	category = "Smart Targeting",
 	value = false,
-	category = "Smart Targeting"
 }
 params.visualize_smart_targeting_precision_target = {
+	category = "Smart Targeting",
 	value = false,
-	category = "Smart Targeting"
 }
 params.visualize_smart_targeting_proximity = {
+	category = "Smart Targeting",
 	value = false,
-	category = "Smart Targeting"
 }
 params.debug_smart_tags = {
+	category = "Smart Tagging",
 	value = false,
-	category = "Smart Tagging"
 }
 params.debug_smart_tag_target_selection = {
+	category = "Smart Tagging",
 	value = false,
-	category = "Smart Tagging"
 }
 params.debug_smart_tag_log_events = {
+	category = "Smart Tagging",
 	value = true,
-	category = "Smart Tagging"
 }
 params.debug_use_local_social_backend = {
+	category = "Social Features",
 	value = false,
-	category = "Social Features"
 }
 params.use_localized_talent_names_in_debug_menu = {
+	category = "Talents",
 	value = false,
-	category = "Talents"
 }
 params.debug_skip_backend_talent_verification = {
+	category = "Talents",
 	value = false,
-	category = "Talents"
 }
 params.testify_test_suite_id = {
+	category = "Testify",
 	value = false,
-	category = "Testify"
 }
 params.draw_chain_lightning_targeting = {
+	category = "Chain Lightning",
 	value = false,
-	category = "Chain Lightning"
 }
 params.debug_chain_lightning = {
+	category = "Chain Lightning",
 	value = false,
-	category = "Chain Lightning"
 }
 params.debug_draw_chain_lightning_effects = {
+	category = "Chain Lightning",
 	value = false,
-	category = "Chain Lightning"
 }
 params.immediate_chain_lightning_jumps = {
+	category = "Chain Lightning",
 	value = false,
-	category = "Chain Lightning"
 }
 params.disable_chain_lightning_effects = {
+	category = "Chain Lightning",
 	value = false,
-	category = "Chain Lightning"
 }
 params.debug_chain_lightning_hand_effects = {
+	category = "Chain Lightning",
 	value = false,
-	category = "Chain Lightning"
 }
 params.always_max_overheat = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_allow_full_magazine_reload = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_reload_state = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_draw_hit_scan = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_draw_flamer_scan = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_draw_modified_hit_position = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_dump_tweak_template_lerp_setup = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_show_weapon_charge_level = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_weapon_special = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_shooting_status = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_weapon_trait_templates = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.disable_overheat = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.disable_overheat_explosion = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.infinite_ammo_clip = {
-	value = false,
-	name = "Infinite ammo clip",
 	category = "Weapon",
+	name = "Infinite ammo clip",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -4233,12 +4237,12 @@ params.infinite_ammo_clip = {
 
 			RPC.rpc_debug_client_request_infinite_ammo_clip(channel, new_value)
 		end
-	end
+	end,
 }
 params.infinite_ammo_reserve = {
-	value = false,
-	name = "Infinite ammo reserve",
 	category = "Weapon",
+	name = "Infinite ammo reserve",
+	value = false,
 	on_value_set = function (new_value, old_value)
 		if not Managers.state or not Managers.state.game_session then
 			return
@@ -4249,246 +4253,246 @@ params.infinite_ammo_reserve = {
 
 			RPC.rpc_debug_client_request_infinite_ammo_reserve(channel, new_value)
 		end
-	end
+	end,
 }
 params.log_weapon_template_resource_dependencies = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_alternate_fire = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_looping_sound_components = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_draw_damage_profile_ranges = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_always_extra_grenade_throw_chance = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_draw_forcesword_wind_slash_hit = {
+	category = "Weapon",
 	value = false,
-	category = "Weapon"
 }
 params.debug_aim_assist = {
+	category = "Weapon Aim Assist",
 	value = false,
-	category = "Weapon Aim Assist"
 }
 params.disable_aim_assist = {
+	category = "Weapon Aim Assist",
 	value = false,
-	category = "Weapon Aim Assist"
 }
 params.enable_mouse_and_keyboard_aim_assist = {
+	category = "Weapon Aim Assist",
 	value = false,
-	category = "Weapon Aim Assist"
 }
 params.visualize_aim_assist_trajectory = {
+	category = "Weapon Aim Assist",
 	value = false,
-	category = "Weapon Aim Assist"
 }
 params.debug_movement_aim_assist_logging = {
+	category = "Weapon Aim Assist",
 	value = false,
-	category = "Weapon Aim Assist"
 }
 params.debug_ammo_count_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_chain_weapon_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_charge_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_force_weapon_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_grimoire_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_plasmagun_overheat_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_power_weapon_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_psyker_throwing_knives_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_sticky_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_sweep_trail_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_thunder_hammer_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_weapon_flashlight = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_weapon_temperature_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_zealot_relic_effects = {
+	category = "Weapon Effects",
 	value = false,
-	category = "Weapon Effects"
 }
 params.debug_recoil = {
+	category = "Weapon Handling",
 	value = false,
-	category = "Weapon Handling"
 }
 params.debug_spread = {
+	category = "Weapon Handling",
 	value = false,
-	category = "Weapon Handling"
 }
 params.debug_sway = {
+	category = "Weapon Handling",
 	value = false,
-	category = "Weapon Handling"
 }
 params.disable_recoil = {
+	category = "Weapon Handling",
 	value = false,
-	category = "Weapon Handling"
 }
 params.disable_shooting_animations = {
+	category = "Weapon Handling",
 	value = false,
-	category = "Weapon Handling"
 }
 params.disable_spread = {
+	category = "Weapon Handling",
 	value = false,
-	category = "Weapon Handling"
 }
 params.disable_sway = {
+	category = "Weapon Handling",
 	value = false,
-	category = "Weapon Handling"
 }
 params.weapon_traits_randomization_base = {
-	value = 0.4,
+	category = "Weapon Traits",
 	num_decimals = 3,
-	category = "Weapon Traits"
+	value = 0.4,
 }
 params.weapon_traits_randomization_deviation = {
-	value = 0.1,
+	category = "Weapon Traits",
 	num_decimals = 3,
-	category = "Weapon Traits"
+	value = 0.1,
 }
 params.weapon_traits_randomization_step = {
-	value = 0.01,
+	category = "Weapon Traits",
 	num_decimals = 3,
-	category = "Weapon Traits"
+	value = 0.01,
 }
 params.weapon_traits_testify = {
+	category = "Weapon Traits",
 	value = false,
-	category = "Weapon Traits"
 }
 params.use_localized_weapon_trait_names_in_debug_menu = {
+	category = "Weapon Traits",
 	value = false,
-	category = "Weapon Traits"
 }
 params.weapon_mastery_use_override_xp = {
+	category = "Weapon Mastery",
 	value = false,
-	category = "Weapon Mastery"
 }
 params.debug_aim_weapon_offset = {
+	category = "Weapon Variables",
 	value = false,
-	category = "Weapon Variables"
 }
 params.debug_look_delta_weapon_offset = {
+	category = "Weapon Variables",
 	value = false,
-	category = "Weapon Variables"
 }
 params.debug_move_weapon_offset = {
+	category = "Weapon Variables",
 	value = false,
-	category = "Weapon Variables"
 }
 params.disable_aim_weapon_offset = {
+	category = "Weapon Variables",
 	value = false,
-	category = "Weapon Variables"
 }
 params.disable_look_delta_weapon_offset = {
+	category = "Weapon Variables",
 	value = false,
-	category = "Weapon Variables"
 }
 params.disable_move_weapon_offset = {
+	category = "Weapon Variables",
 	value = false,
-	category = "Weapon Variables"
 }
 params.disable_shooting_charge_level = {
+	category = "Weapon Variables",
 	value = false,
-	category = "Weapon Variables"
 }
 params.alternating_critical_strikes = {
+	category = "Critical Strikes",
 	value = false,
-	category = "Critical Strikes"
 }
 params.always_critical_strikes = {
+	category = "Critical Strikes",
 	value = false,
-	category = "Critical Strikes"
 }
 params.debug_critical_strike_pseudo_random_distribution = {
+	category = "Critical Strikes",
 	value = false,
-	category = "Critical Strikes"
 }
 params.no_critical_strikes = {
+	category = "Critical Strikes",
 	value = false,
-	category = "Critical Strikes"
 }
 params.debug_critical_strike_chance = {
+	category = "Critical Strikes",
 	value = false,
-	category = "Critical Strikes"
 }
 params.disable_terror_events = {
+	category = "Terror Event",
 	value = false,
-	category = "Terror Event"
 }
 params.debug_terror_events = {
+	category = "Terror Event",
 	value = false,
-	category = "Terror Event"
 }
 params.debug_main_path = {
+	category = "Main Path",
 	value = false,
-	category = "Main Path"
 }
 params.debug_main_path_spawn_points = {
+	category = "Main Path",
 	value = false,
-	category = "Main Path"
 }
 params.debug_main_path_occluded_points = {
+	category = "Main Path",
 	value = false,
-	category = "Main Path"
 }
 params.debug_health_station = {
+	category = "Health Station",
 	value = false,
-	category = "Health Station"
 }
 params.debug_moods = {
+	category = "Mood",
 	value = false,
-	category = "Mood"
 }
 params.disable_moods = {
+	category = "Mood",
 	value = false,
-	category = "Mood"
 }
 params.mood_override = {
-	value = false,
 	category = "Mood",
+	value = false,
 	options_function = function ()
 		local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 		local mood_types = MoodSettings.mood_types
@@ -4502,19 +4506,19 @@ params.mood_override = {
 		table.insert(options, 1, false)
 
 		return options
-	end
+	end,
 }
 params.disable_impact_vfx = {
+	category = "Damage Interface",
 	value = false,
-	category = "Damage Interface"
 }
 params.disable_toughness_effects = {
+	category = "Damage Interface",
 	value = false,
-	category = "Damage Interface"
 }
 params.impact_fx_override = {
-	value = false,
 	category = "Damage Interface",
+	value = false,
 	options_function = function ()
 		local ArmorSettings = require("scripts/settings/damage/armor_settings")
 		local armor_hit_types = ArmorSettings.hit_types
@@ -4528,16 +4532,16 @@ params.impact_fx_override = {
 		table.insert(options, 1, false)
 
 		return options
-	end
+	end,
 }
 params.surface_effect_material_override = {
-	value = false,
 	category = "Damage Interface",
+	value = false,
 	options_function = function ()
 		local MaterialQuerySettings = require("scripts/settings/material_query_settings")
 		local surface_materials = MaterialQuerySettings.surface_materials
 		local options = {
-			false
+			false,
 		}
 
 		for _, material in ipairs(surface_materials) do
@@ -4545,37 +4549,37 @@ params.surface_effect_material_override = {
 		end
 
 		return options
-	end
+	end,
 }
 params.debug_draw_missing_surface_materials = {
+	category = "Damage Interface",
 	value = true,
-	category = "Damage Interface"
 }
 params.debug_draw_shotshell_impacts = {
+	category = "Damage Interface",
 	value = false,
-	category = "Damage Interface"
 }
 params.debug_draw_impact_fx = {
+	category = "Damage Interface",
 	value = false,
-	category = "Damage Interface"
 }
 params.debug_draw_impact_vfx_rotation = {
+	category = "Damage Interface",
 	value = false,
-	category = "Damage Interface"
 }
 params.print_missing_impact_fx_definitions = {
+	category = "Damage Interface",
 	value = false,
-	category = "Damage Interface"
 }
 params.debug_forced_damage_efficiency = {
-	value = "none",
-	user_setting = false,
 	category = "Damage Interface",
+	user_setting = false,
+	value = "none",
 	options_function = function ()
 		local AttackSettings = require("scripts/settings/damage/attack_settings")
 		local damage_efficiencies = AttackSettings.damage_efficiencies
 		local options = {
-			"none"
+			"none",
 		}
 
 		for damage_efficiency, _ in pairs(damage_efficiencies) do
@@ -4583,252 +4587,252 @@ params.debug_forced_damage_efficiency = {
 		end
 
 		return options
-	end
+	end,
 }
 params.debug_physics_proximity_system = {
+	category = "PhysicsProximitySystem",
 	user_setting = false,
 	value = false,
-	category = "PhysicsProximitySystem",
 	on_value_set = function (new_value, old_value)
 		PhysicsProximitySystem.set_debug_enabled(new_value)
-	end
+	end,
 }
 params.debug_physics_proximity_system_afros = {
+	category = "PhysicsProximitySystem",
 	user_setting = false,
 	value = false,
-	category = "PhysicsProximitySystem",
 	on_value_set = function (new_value, old_value)
 		PhysicsProximitySystem.set_debug_afros(new_value)
-	end
+	end,
 }
 params.debug_physics_proximity_system_observers = {
+	category = "PhysicsProximitySystem",
 	user_setting = false,
 	value = false,
-	category = "PhysicsProximitySystem",
 	on_value_set = function (new_value, old_value)
 		PhysicsProximitySystem.set_debug_observers(new_value)
-	end
+	end,
 }
 params.debug_physics_proximity_system_actors = {
+	category = "PhysicsProximitySystem",
 	user_setting = false,
 	value = false,
-	category = "PhysicsProximitySystem",
 	on_value_set = function (new_value, old_value)
 		PhysicsProximitySystem.set_debug_actors(new_value)
-	end
+	end,
 }
 params.debug_physics_proximity_system_time_verification = {
+	category = "PhysicsProximitySystem",
 	user_setting = false,
 	value = false,
-	category = "PhysicsProximitySystem",
 	on_value_set = function (new_value, old_value)
 		PhysicsProximitySystem.set_debug_time_verification(new_value)
-	end
+	end,
 }
 params.debug_side_proximity = {
+	category = "ProximitySystem",
 	value = false,
-	category = "ProximitySystem"
 }
 params.debug_proximity_system = {
+	category = "ProximitySystem",
 	value = false,
-	category = "ProximitySystem"
 }
 params.debug_has_been_seen = {
+	category = "LegacyV2ProximitySystem",
 	value = false,
-	category = "LegacyV2ProximitySystem"
 }
 params.debug_proximity_fx = {
+	category = "LegacyV2ProximitySystem",
 	value = false,
-	category = "LegacyV2ProximitySystem"
 }
 params.max_allowed_proximity_fx = {
-	value = false,
 	category = "LegacyV2ProximitySystem",
+	value = false,
 	options = {
 		false,
 		8,
 		16,
 		32,
-		64
-	}
+		64,
+	},
 }
 params.override_proximity_fx = {
-	value = false,
 	category = "LegacyV2ProximitySystem",
+	value = false,
 	options = {
 		false,
 		"always_enabled",
-		"always_disabled"
-	}
+		"always_disabled",
+	},
 }
 params.debug_fov = {
+	category = "Camera",
 	value = false,
-	category = "Camera"
 }
 params.camera_tree_debug = {
+	category = "Camera",
 	value = false,
-	category = "Camera"
 }
 params.force_spectate = {
+	category = "Camera",
 	value = false,
-	category = "Camera"
 }
 params.use_far_third_person_camera = {
+	category = "Camera",
 	value = false,
-	category = "Camera"
 }
 params.override_1p_camera_movement_offset = {
+	category = "Camera",
 	value = false,
-	category = "Camera"
 }
 params.override_1p_camera_movement_offset_lerp = {
-	value = 1,
 	category = "Camera",
-	num_decimals = 2
+	num_decimals = 2,
+	value = 1,
 }
 params.disable_player_hit_reaction = {
+	category = "Camera",
 	value = false,
-	category = "Camera"
 }
 params.external_fov_multiplier = {
-	value = 1,
-	num_decimals = 2,
 	category = "Camera",
+	num_decimals = 2,
+	value = 1,
 	on_value_set = function (new_value, old_value)
 		Managers.state.camera:set_variable("player1", "external_fov_multiplier", new_value)
-	end
+	end,
 }
 params.free_flight_follow_path_speed = {
-	value = 7.4,
-	num_decimals = 1,
 	category = "Free Flight",
+	num_decimals = 1,
+	value = 7.4,
 	on_value_set = function (new_value, old_value)
 		local free_flight_manager = Managers.free_flight
 
 		if free_flight_manager then
 			free_flight_manager:set_follow_path_speed(new_value)
 		end
-	end
+	end,
 }
 params.debug_network_story = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_cinematics = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_cinematics_verbose = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_skip_cinematics = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_cinematic_scene = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_cinematic_fast_track_enable = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_show_dof_info = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_dof_override = {
+	category = "Stories",
 	value = false,
-	category = "Stories"
 }
 params.debug_dof_enabled = {
-	value = 1,
+	category = "Stories",
 	num_decimals = 5,
-	category = "Stories"
+	value = 1,
 }
 params.debug_focal_distance = {
-	value = 1,
+	category = "Stories",
 	num_decimals = 5,
-	category = "Stories"
+	value = 1,
 }
 params.debug_focal_region = {
-	value = 1,
+	category = "Stories",
 	num_decimals = 5,
-	category = "Stories"
+	value = 1,
 }
 params.debug_focal_padding = {
-	value = 1,
+	category = "Stories",
 	num_decimals = 5,
-	category = "Stories"
+	value = 1,
 }
 params.debug_focal_scale = {
-	value = 1,
+	category = "Stories",
 	num_decimals = 5,
-	category = "Stories"
+	value = 1,
 }
 params.force_hub_location_intros = {
-	value = false,
+	category = "Stories",
 	name = "Always show hub location introductions (hli)",
-	category = "Stories"
+	value = false,
 }
 params.skip_prologue = {
 	category = "Game Flow",
-	value = BUILD ~= "release"
+	value = BUILD ~= "release",
 }
 params.debug_ledge_finder_rays = {
+	category = "Ledge Finder",
 	value = false,
-	category = "Ledge Finder"
 }
 params.debug_ledge_finder_real_pos_rays = {
+	category = "Ledge Finder",
 	value = false,
-	category = "Ledge Finder"
 }
 params.debug_ledge_finder_angle_verification = {
+	category = "Ledge Finder",
 	value = false,
-	category = "Ledge Finder"
 }
 params.debug_visualize_ledge_finder_ledges = {
+	category = "Ledge Finder",
 	value = false,
-	category = "Ledge Finder"
 }
 params.debug_use_local_mission_board = {
+	category = "Level & Mission",
 	value = false,
-	category = "Level & Mission"
 }
 params.debug_light_controllers = {
+	category = "Level & Mission",
 	value = false,
-	category = "Level & Mission"
 }
 params.debug_weather_vfx = {
+	category = "Level & Mission",
 	value = false,
-	category = "Level & Mission"
 }
 params.debug_world_interaction = {
+	category = "Level & Mission",
 	value = false,
-	category = "Level & Mission"
 }
 params.debug_reportify = {
+	category = "Level & Mission",
 	value = false,
-	category = "Level & Mission"
 }
 params.debug_liquid_area = {
-	value = false,
 	category = "Liquid Area",
+	value = false,
 	options = {
 		false,
 		"area",
-		"area_and_neighbors"
-	}
+		"area_and_neighbors",
+	},
 }
 params.debug_liquid_area_paint_template = {
-	value = "debug_paint",
 	category = "Liquid Area",
+	value = "debug_paint",
 	options_function = function ()
 		local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 
 		return table.keys(LiquidAreaTemplates)
-	end
+	end,
 }
 
 local function _set_max_external_time_step(new_value, old_value)
@@ -4845,63 +4849,63 @@ local function _set_max_external_time_step(new_value, old_value)
 end
 
 params.coherency_show_self_coherency = {
+	category = "Coherency",
 	value = false,
-	category = "Coherency"
 }
 params.coherency_show_other_coherency = {
+	category = "Coherency",
 	value = false,
-	category = "Coherency"
 }
 params.coherency_log_coherency_events = {
+	category = "Coherency",
 	value = false,
-	category = "Coherency"
 }
 params.disable_coherency_toughness_effect = {
+	category = "Coherency",
 	value = false,
-	category = "Coherency"
 }
 params.mtx_store_custom_time = {
-	value = 0,
+	category = "Micro Transaction (\"Premium\") Store",
 	hidden = true,
-	category = "Micro Transaction (\"Premium\") Store"
+	value = 0,
 }
 params.unlock_all_shooting_range_enemies = {
+	category = "Shooting Range",
 	value = false,
-	category = "Shooting Range"
 }
 params.trace_rumble_activation_events = {
+	category = "Rumble",
 	value = true,
-	category = "Rumble"
 }
 params.category_log_levels = {
 	hidden = true,
 	value = {
 		"Log Internal",
-		2
-	}
+		2,
+	},
 }
 params.max_external_time_step = {
-	value = "Default",
 	num_decimals = 1,
+	value = "Default",
 	options = {
 		"Default",
 		0.2,
 		2,
-		20
+		20,
 	},
-	on_value_set = _set_max_external_time_step
+	on_value_set = _set_max_external_time_step,
 }
 params.debug_position_lookup = {
-	value = false
+	value = false,
 }
 params.stall_warnings_enabled = {
 	value = true,
 	on_value_set = function (new_value, old_value)
 		Application.set_stall_warnings_enabled(new_value)
-	end
+	end,
 }
 params.disable_fade_system = {
-	value = false
+	value = false,
 }
 params.debug_material_queries = {
 	value = false,
@@ -4909,36 +4913,37 @@ params.debug_material_queries = {
 		false,
 		"both",
 		"succeeded",
-		"failed"
-	}
+		"failed",
+	},
 }
 params.networked_flow_state = {
-	value = false
+	value = false,
 }
 params.debug_print_world_text = {
-	value = true
+	value = true,
 }
 params.debug_join_hub_server = {
-	value = false
+	value = false,
 }
 params.debug_local_test_hub_server = {
-	value = false
+	value = false,
 }
 params.longer_psyker_force_field_duration = {
-	value = false
+	value = false,
 }
 params.show_equipped_items = {
-	value = false
+	value = false,
 }
 params.debug_gadget_extension = {
-	value = false
+	value = false,
 }
 params.disable_beast_of_nurgle_consumed_effect = {
-	value = false
+	value = false,
 }
 
 local function _set_build_override_parameter(parameter_name, value)
 	local old_value = params[parameter_name].value
+
 	params[parameter_name].value = value
 end
 
@@ -4947,5 +4952,5 @@ _set_build_override_parameter("debug_change_time_scale", false)
 return {
 	enable_filter_by_defaults = true,
 	parameters = params,
-	categories = categories
+	categories = categories,
 }

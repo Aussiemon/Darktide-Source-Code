@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/light_controller/light_controller_system.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 
 require("scripts/extension_systems/light_controller/light_controller_extension")
@@ -6,7 +8,7 @@ local LightControllerSystem = class("LightControllerSystem", "ExtensionSystemBas
 local CLIENT_RPCS = {
 	"rpc_light_controller_hot_join",
 	"rpc_light_controller_set_enabled",
-	"rpc_light_controller_set_flicker_state"
+	"rpc_light_controller_set_flicker_state",
 }
 
 LightControllerSystem.init = function (self, extension_init_context, system_init_data, ...)
@@ -15,7 +17,9 @@ LightControllerSystem.init = function (self, extension_init_context, system_init
 	self._is_server = extension_init_context.is_server
 	self._network_event_delegate = nil
 	self._light_group_extensions = {}
+
 	local themes = system_init_data.themes or {}
+
 	self._mission_settings_light_groups = self:_extract_light_groups(themes) or {}
 
 	if not self._is_server and self._extension_init_context.network_event_delegate ~= nil then
@@ -81,6 +85,7 @@ LightControllerSystem._add_light_groups = function (self, unit)
 	for i = 1, #light_groups do
 		local light_group_name = light_groups[i]
 		local extensions = light_group_extensions[light_group_name] or {}
+
 		extensions[#extensions + 1] = extension
 		light_group_extensions[light_group_name] = extensions
 	end

@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/settings/boss/boss_templates/boss_templates.lua
+
 local boss_templates = {}
 
 local function _create_boss_template_entry(path)
 	local boss_template = require(path)
 	local boss_template_name = boss_template.name
+
 	boss_templates[boss_template_name] = boss_template
 end
 

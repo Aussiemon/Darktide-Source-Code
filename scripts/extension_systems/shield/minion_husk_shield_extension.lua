@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/shield/minion_husk_shield_extension.lua
+
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local Breed = require("scripts/utilities/breed")
 local MinionHuskShieldExtension = class("MinionHuskShieldExtension")
 
 MinionHuskShieldExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	local breed = extension_init_data.breed
+
 	self._template = breed.shield_template
 	self._unit = unit
 	self._game_session = game_session
@@ -11,13 +14,11 @@ MinionHuskShieldExtension.init = function (self, extension_init_context, unit, e
 end
 
 MinionHuskShieldExtension.add_damage = function (self, damage_amount, damage_profile, attacking_unit)
-	local remaining_damage = damage_amount
-	local absorbed_attack = false
+	local remaining_damage, absorbed_attack = damage_amount, false
 	local can_block_attack = self:can_block_attack(damage_profile, attacking_unit)
 
 	if can_block_attack then
-		absorbed_attack = true
-		remaining_damage = 0
+		remaining_damage, absorbed_attack = 0, true
 	end
 
 	return remaining_damage, absorbed_attack

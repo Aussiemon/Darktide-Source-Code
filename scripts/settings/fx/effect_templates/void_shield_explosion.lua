@@ -1,11 +1,13 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/void_shield_explosion.lua
+
 local SHIELD_INVENTORY_SLOT_NAME = "slot_fx_void_shield"
 local EXPLOSION_WOBBLE_MATERIAL_KEY = "size_wobble"
 local SHIELD_EXPLOSION_VFX = "content/fx/particles/enemies/renegade_captain/renegade_captain_aoe_push"
 local SHIELD_EXPLOSION_SFX = "wwise/events/minions/play_traitor_captain_shield_overload"
-local _set_shield_wobble = nil
+local _set_shield_wobble
 local resources = {
 	shield_explosion_vfx = SHIELD_EXPLOSION_VFX,
-	shield_explosion_sfx = SHIELD_EXPLOSION_SFX
+	shield_explosion_sfx = SHIELD_EXPLOSION_SFX,
 }
 local effect_template = {
 	name = "void_shield_explosion",
@@ -18,7 +20,9 @@ local effect_template = {
 		local unit = template_data.unit
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local shield_unit = visual_loadout_extension:slot_unit(SHIELD_INVENTORY_SLOT_NAME)
+
 		template_data.shield_unit = shield_unit
+
 		local j_hips_node = Unit.node(unit, "j_hips")
 		local position = Unit.world_position(unit, j_hips_node)
 		local wwise_world = template_context.wwise_world
@@ -27,6 +31,7 @@ local effect_template = {
 		WwiseWorld.trigger_resource_event(wwise_world, SHIELD_EXPLOSION_SFX, source_id)
 
 		template_data.source_id = source_id
+
 		local world = template_context.world
 
 		World.create_particles(world, SHIELD_EXPLOSION_VFX, position)
@@ -50,7 +55,7 @@ local effect_template = {
 		local source_id = template_data.source_id
 
 		WwiseWorld.destroy_manual_source(wwise_world, source_id)
-	end
+	end,
 }
 
 function _set_shield_wobble(shield_unit, wobble_amount)

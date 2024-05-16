@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/pickups/pickup_spawner_extension.lua
+
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local PickupSpawnerExtension = class("PickupSpawnerExtension")
@@ -23,10 +25,10 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 	local num_components = #self._components
 	local components = self._components
 	local pool_spawner = false
-	local data = {
-		guid = component_guid,
-		is_side_mission = false
-	}
+	local data = {}
+
+	data.guid = component_guid
+	data.is_side_mission = false
 
 	if spawn_method == "primary_distribution" then
 		pool_spawner = true
@@ -54,7 +56,7 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 	end
 
 	local num_items = #items
-	local spawnable_pickups = nil
+	local spawnable_pickups
 
 	if pool_spawner and ignore_item_list then
 		spawnable_pickups = "all"
@@ -82,6 +84,7 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 
 	if self._is_server then
 		local new_seed, rnd_index = math.next_random(self._seed, 1, #spawn_nodes)
+
 		self._seed = new_seed
 		data.target_node = spawn_nodes[rnd_index]
 	end
@@ -96,6 +99,7 @@ end
 PickupSpawnerExtension.calculate_percentage_through_level = function (self)
 	local unit_position = POSITION_LOOKUP[self._unit]
 	local _, _, percentage, _, _ = MainPathQueries.closest_position(unit_position)
+
 	self._percentage_through_level = percentage
 end
 
@@ -127,6 +131,7 @@ PickupSpawnerExtension._fetch_next_item = function (self, component_index)
 
 		if component.item_spawn_selection == FLOW_SPAWN_METHOD.next_in_list then
 			local current_index = last_index + 1
+
 			current_index = current_index % num_items
 			item = component.spawnable_pickups[current_index]
 			component.last_item_index_spawned = current_index
@@ -174,7 +179,7 @@ PickupSpawnerExtension.register_spawn_locations = function (self, node_list, dis
 			node_list[#node_list + 1] = {
 				extension = self,
 				index = i,
-				chest = not not self._chest_extension
+				chest = not not self._chest_extension,
 			}
 		end
 	end
@@ -211,6 +216,7 @@ end
 
 PickupSpawnerExtension.spawn_item = function (self, component_index)
 	component_index = component_index or 1
+
 	local pickup_name = self:_fetch_next_item(component_index)
 	local check_reserve = true
 	local unit_item, unit_item_id = self:spawn_specific_item(component_index, pickup_name, check_reserve)
@@ -220,7 +226,8 @@ end
 
 PickupSpawnerExtension.spawn_specific_item = function (self, component_index, pickup_name, check_reserve)
 	component_index = component_index or 1
-	local unit_item = nil
+
+	local unit_item
 	local unit_item_id = NetworkConstants.invalid_level_unit_id
 
 	if check_reserve and self:_check_reserve(component_index, pickup_name) then
@@ -229,6 +236,7 @@ PickupSpawnerExtension.spawn_specific_item = function (self, component_index, pi
 
 	local pickup_system = self._pickup_system
 	local position, rotation = self:spawn_position_rotation(component_index)
+
 	unit_item, unit_item_id = pickup_system:spawn_pickup(pickup_name, position, rotation, self)
 
 	Unit.flow_event(self._unit, "lua_item_spawned")
@@ -248,7 +256,9 @@ end
 
 PickupSpawnerExtension.spawn_position_rotation = function (self, component_index)
 	local unit = self._unit
+
 	component_index = component_index or 1
+
 	local component = self._components[component_index]
 	local target_node = Unit.node(unit, component.target_node)
 	local position = Unit.world_position(unit, target_node)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/character_state_orientation/default_player_orientation.lua
+
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
 local AimAssist = require("scripts/utilities/aim_assist")
@@ -11,6 +13,7 @@ DefaultPlayerOrientation.init = function (self, player, orientation)
 	DefaultPlayerOrientation.super.init(self, player, orientation)
 
 	local settings = PlayerOrientationSettings.default
+
 	self._mouse_scale = settings.mouse_scale
 	self._min_pitch = settings.min_pitch
 	self._max_pitch = settings.max_pitch
@@ -43,6 +46,7 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 	local targeting_data = self._smart_targeting_extension:targeting_data()
 	local aim_assist_context = self:_aim_assist_context()
 	local aim_assist_sensitivity_modifier = AimAssist.sensitivity_modifier(aim_assist_context)
+
 	sensitivity = sensitivity * aim_assist_sensitivity_modifier
 
 	self:_fill_look_delta_context(look_delta_context)
@@ -66,8 +70,10 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 	AimAssist.apply_movement_aim_assist(aim_assist_context, orientation, input, look_delta, main_dt, main_t)
 
 	orientation.yaw, orientation.pitch = AimAssist.apply_lock_on(aim_assist_context, main_t, targeting_data, look_delta, orientation.yaw, orientation.pitch)
+
 	local yaw = (orientation.yaw - look_delta.x) % PI_2
 	local pitch = math.clamp((orientation.pitch + PI) % PI_2 - PI + look_delta.y, min_pitch, max_pitch) % PI_2
+
 	yaw, pitch = AimAssist.apply_aim_assist(main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, yaw, pitch, position)
 	orientation.yaw = math.mod_two_pi(yaw)
 	orientation.pitch = math.mod_two_pi(pitch)
@@ -78,11 +84,11 @@ end
 
 DefaultPlayerOrientation.orientation_offset = function (self)
 	local recoil_component = self._recoil_component
-	local pitch_offset = 0
-	local yaw_offset = 0
+	local pitch_offset, yaw_offset = 0, 0
 
 	if recoil_component then
 		local recoil_template = self._weapon_extension:recoil_template()
+
 		pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, recoil_component, self._movement_state_component)
 	end
 
@@ -90,6 +96,7 @@ DefaultPlayerOrientation.orientation_offset = function (self)
 	local min_pitch = self._min_pitch
 	local max_pitch = self._max_pitch
 	local clamped_pitch = math.clamp((current_pitch + pitch_offset + PI) % PI_2 - PI, min_pitch, max_pitch) % PI_2
+
 	pitch_offset = clamped_pitch - current_pitch
 
 	return yaw_offset, pitch_offset, 0

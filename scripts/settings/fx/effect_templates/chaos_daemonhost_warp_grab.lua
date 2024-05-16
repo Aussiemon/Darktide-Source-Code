@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_daemonhost_warp_grab.lua
+
 local MinionPerception = require("scripts/utilities/minion_perception")
 local HIT_PARTICLE_NAME = "content/fx/particles/enemies/daemonhost/daemonhost_beam_hit"
 local HIT_PARTICLE_NODE_NAME = "j_hips"
@@ -5,12 +7,12 @@ local HIT_WWISE_EVENT = "wwise/events/minions/play_enemy_daemonhost_grab_beam"
 local HIT_WWISE_STOP_EVENT = "wwise/events/minions/stop_enemy_daemonhost_grab_beam"
 local GRAB_FX_NODE_NAME = "j_righthand"
 local GRAB_FX_PARTICLE_NAME = "content/fx/particles/enemies/daemonhost/daemonhost_hand_execution"
-local _start_fx = nil
+local _start_fx
 local resources = {
 	hit_particle_name = HIT_PARTICLE_NAME,
 	grab_particle_name = GRAB_FX_PARTICLE_NAME,
 	beam_sound_event = HIT_WWISE_EVENT,
-	stop_beam_sound_event = HIT_WWISE_STOP_EVENT
+	stop_beam_sound_event = HIT_WWISE_STOP_EVENT,
 }
 local effect_template = {
 	name = "chaos_daemonhost_warp_grab",
@@ -20,8 +22,7 @@ local effect_template = {
 	end,
 	update = function (template_data, template_context, dt, t)
 		local unit = template_data.unit
-		local game_session = template_context.game_session
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+		local game_session, game_object_id = template_context.game_session, Managers.state.unit_spawner:game_object_id(unit)
 		local target_unit = MinionPerception.target_unit(game_session, game_object_id)
 
 		if not ALIVE[target_unit] then
@@ -64,7 +65,7 @@ local effect_template = {
 			WwiseWorld.trigger_resource_event(wwise_world, HIT_WWISE_STOP_EVENT, source_id)
 			WwiseWorld.destroy_manual_source(wwise_world, source_id)
 		end
-	end
+	end,
 }
 
 function _start_fx(target_unit, template_data, template_context)
@@ -73,7 +74,9 @@ function _start_fx(target_unit, template_data, template_context)
 	local hit_fx_node = Unit.node(target_unit, HIT_PARTICLE_NODE_NAME)
 	local hit_fx_position = Unit.world_position(target_unit, hit_fx_node)
 	local hit_particle_id = World.create_particles(world, HIT_PARTICLE_NAME, hit_fx_position)
+
 	template_data.hit_particle_id = hit_particle_id
+
 	local source_id = WwiseWorld.make_manual_source(wwise_world, hit_fx_position, Quaternion.identity())
 
 	WwiseWorld.trigger_resource_event(wwise_world, HIT_WWISE_EVENT, source_id)

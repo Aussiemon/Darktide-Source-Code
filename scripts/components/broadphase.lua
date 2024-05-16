@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/broadphase.lua
+
 local Broadphase = component("Broadphase")
 
 Broadphase.init = function (self, unit)
@@ -48,30 +50,30 @@ end
 
 Broadphase.component_data = {
 	broadphase_categories = {
-		value = "doors",
-		ui_type = "combo_box",
 		ui_name = "Broadphase Categories",
+		ui_type = "combo_box",
+		value = "doors",
 		options_keys = {
-			"doors"
+			"doors",
 		},
 		options_values = {
-			"doors"
-		}
+			"doors",
+		},
 	},
 	broadphase_radius = {
+		decimals = 2,
+		ui_name = "Broadphase Radius",
 		ui_type = "number",
 		value = 1,
-		ui_name = "Broadphase Radius",
-		decimals = 2
 	},
 	broadphase_node_name = {
+		ui_name = "Broadphase Node Name",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Broadphase Node Name"
 	},
 	extensions = {
-		"BroadphaseExtension"
-	}
+		"BroadphaseExtension",
+	},
 }
 
 return Broadphase

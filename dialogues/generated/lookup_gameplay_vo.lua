@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_gameplay_vo.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "ability_biomancer_high"
 DialogueLookup[DialogueLookup_n + 2] = "ability_biomancer_low"
 DialogueLookup[DialogueLookup_n + 3] = "ability_bonebreaker"

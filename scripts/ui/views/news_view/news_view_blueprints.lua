@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/news_view/news_view_blueprints.lua
+
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
@@ -10,49 +12,49 @@ local widget_blueprints_by_type = {
 
 			return size and {
 				size[1],
-				size[2]
+				size[2],
 			} or {
 				225,
-				20
+				20,
 			}
-		end
+		end,
 	},
 	image = {
 		size = {
 			grid_size[1],
-			100
+			100,
 		},
 		pass_template = {
 			{
-				style_id = "texture",
-				value_id = "texture",
 				pass_type = "texture",
+				style_id = "texture",
 				value = "content/ui/materials/backgrounds/default_square",
+				value_id = "texture",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					color = Color.white(255, true),
 					offset = {
 						0,
 						0,
-						1
+						1,
 					},
 					size_addition = {
 						0,
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2]
+				size[2],
 			} or {
 				225,
-				20
+				20,
 			}
 		end,
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
@@ -60,46 +62,47 @@ local widget_blueprints_by_type = {
 			local content = widget.content
 			local image = element.image
 			local color = element.color
+
 			content.element = element
 			content.texture = image
 
 			if color then
 				style.texture.color = color
 			end
-		end
+		end,
 	},
 	header = {
 		size = {
 			grid_size[1],
-			100
+			100,
 		},
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
 					font_size = 28,
-					text_vertical_alignment = "top",
 					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_header(255, true),
 					size = {
 						grid_size[1],
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						1
+						1,
 					},
 					size_addition = {
 						0,
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -109,6 +112,7 @@ local widget_blueprints_by_type = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -116,49 +120,51 @@ local widget_blueprints_by_type = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	},
 	sub_header = {
 		size = {
 			grid_size[1],
-			100
+			100,
 		},
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
 					font_size = 20,
-					text_vertical_alignment = "top",
 					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_body_sub_header(255, true),
 					size = {
 						grid_size[1],
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						1
+						1,
 					},
 					size_addition = {
 						0,
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -168,6 +174,7 @@ local widget_blueprints_by_type = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -175,41 +182,43 @@ local widget_blueprints_by_type = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	},
 	body = {
 		size = {
 			grid_size[1],
-			100
+			100,
 		},
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 20,
-					text_vertical_alignment = "top",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
 					text_color = Color.text_default(255, true),
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -219,6 +228,7 @@ local widget_blueprints_by_type = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -226,17 +236,19 @@ local widget_blueprints_by_type = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
-	}
+		end,
+	},
 }
 
 return widget_blueprints_by_type

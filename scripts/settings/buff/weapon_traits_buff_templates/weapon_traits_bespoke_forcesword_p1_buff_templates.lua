@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_forcesword_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
@@ -15,8 +17,8 @@ templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_
 templates.weapon_trait_bespoke_forcesword_p1_can_block_ranged = table.clone(BaseWeaponTraitBuffTemplates.can_block_ranged)
 templates.weapon_trait_bespoke_forcesword_p1_warp_charge_power_bonus = table.merge({
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.05
-	}
+		[stat_buffs.power_level_modifier] = 0.05,
+	},
 }, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
 templates.weapon_trait_bespoke_forcesword_p1_stacking_rending_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_parent)
 templates.weapon_trait_bespoke_forcesword_p1_stacking_rending_on_weakspot_parent.child_buff_template = "weapon_trait_bespoke_forcesword_p1_stacking_rending_on_weakspot_child"
@@ -27,34 +29,34 @@ templates.weapon_trait_bespoke_forcesword_p1_increase_power_on_kill_child = tabl
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_finesse_bonus)
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_critical_strike_chance = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_critical_strike_chance)
 templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_parent = {
-	child_duration = 7,
-	predicted = false,
-	child_buff_template = "weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child",
 	allow_proc_while_active = true,
-	stacks_to_remove = 1,
+	child_buff_template = "weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child",
+	child_duration = 7,
 	class_name = "weapon_trait_parent_proc_buff",
+	predicted = false,
+	stacks_to_remove = 1,
 	proc_events = {
-		[proc_events.on_kill] = 1
+		[proc_events.on_kill] = 1,
 	},
 	add_child_proc_events = {
-		[proc_events.on_kill] = 1
+		[proc_events.on_kill] = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	specific_check_proc_funcs = {
-		[proc_events.on_kill] = CheckProcFunctions.on_elite_kill
-	}
+		[proc_events.on_kill] = CheckProcFunctions.on_elite_kill,
+	},
 }
 templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child = {
+	class_name = "buff",
 	hide_icon_in_hud = true,
-	stack_offset = -1,
 	max_stacks = 3,
 	predicted = false,
-	class_name = "buff",
+	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.12
+		[stat_buffs.power_level_modifier] = 0.12,
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
 templates.weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_parent)
 templates.weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance_parent.child_buff_template = "weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance_child"
@@ -64,12 +66,12 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_pow
 templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_child)
 templates.weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = table.clone(BaseWeaponTraitBuffTemplates.warpfire_on_crits_melee)
 templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
-	vent_percentage = 0.05,
-	predicted = false,
-	max_stacks = 1,
 	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = false,
+	vent_percentage = 0.05,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1
+		[proc_events.on_sweep_finish] = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_weakspot_hit,
@@ -77,6 +79,7 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:write_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 		template_data.counter = 0
 	end,
@@ -100,7 +103,7 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
 
 			WarpCharge.decrease_immediate(remove_percentage, warp_charge_component, template_context.unit)
 		end
-	end
+	end,
 }
 
 return templates

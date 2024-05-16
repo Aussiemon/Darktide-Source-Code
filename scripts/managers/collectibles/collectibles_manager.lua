@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/collectibles/collectibles_manager.lua
+
 local Component = require("scripts/utilities/component")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -5,7 +7,7 @@ local CollectiblesManager = class("CollectiblesManager")
 local CLIENT_RPCS = {
 	"rpc_player_destroyed_destructible_collectible",
 	"rpc_player_collected_collectible",
-	"rpc_player_helped_collecting_collectible"
+	"rpc_player_helped_collecting_collectible",
 }
 local NOTIFICATION_TYPES = table.enum("collected", "helped_collect")
 
@@ -26,7 +28,9 @@ end
 
 CollectiblesManager.on_gameplay_post_init = function (self, level_seed)
 	self._seed = level_seed
+
 	local destructibles = {}
+
 	self._num_destructibles = 0
 
 	for section_id = 1, #self._destructible_data do
@@ -39,8 +43,10 @@ CollectiblesManager.on_gameplay_post_init = function (self, level_seed)
 		end
 
 		local new_entry = table.clone(self._destructible_data[section_id][random_id])
+
 		new_entry.id = 1
 		destructibles[section_id][#destructibles[section_id] + 1] = new_entry
+
 		local destructible_extension = ScriptUnit.has_extension(new_entry.unit, "destructible_system")
 
 		destructible_extension:set_collectible_data(new_entry)
@@ -74,6 +80,7 @@ end
 
 CollectiblesManager._random = function (self, ...)
 	local seed, value = math.next_random(self._seed, ...)
+
 	self._seed = seed
 
 	return value
@@ -202,13 +209,14 @@ CollectiblesManager._show_delayed_destructible_notification = function (self, pe
 		peer_id = peer_id,
 		section_id = section_id,
 		id = id,
-		timer = DELAY
+		timer = DELAY,
 	}
 end
 
 CollectiblesManager._update_delayed_destructible_notification = function (self, dt)
 	for i = 1, #self._delayed_notifications do
 		local delayed_notification = self._delayed_notifications[i]
+
 		delayed_notification.timer = delayed_notification.timer - dt
 
 		if delayed_notification.timer <= 0 then
@@ -225,7 +233,9 @@ CollectiblesManager._show_destructible_notification = function (self, peer_id, s
 	local local_player_id = 1
 	local player = player_manager:player(peer_id, local_player_id)
 	local player_name = player and player:name()
+
 	self._num_destructibles_destroyed = self._num_destructibles_destroyed + 1
+
 	local player_slot = player and player.slot and player:slot()
 	local player_slot_colors = UISettings.player_slot_colors
 	local player_slot_color = player_slot and player_slot_colors[player_slot]
@@ -237,7 +247,9 @@ CollectiblesManager._show_destructible_notification = function (self, peer_id, s
 	local collectible_data = self._destructibles
 	local section_data = collectible_data[section_id]
 	local data = section_data[id]
+
 	data.collected = true
+
 	local num_collected_in_section = 0
 
 	for i = 1, #section_data do
@@ -255,7 +267,7 @@ CollectiblesManager._show_destructible_notification = function (self, peer_id, s
 		num_in_section = num_in_section,
 		num_collected_in_section = num_collected_in_section,
 		num_collected = self._num_destructibles_destroyed,
-		num_total = num_total
+		num_total = num_total,
 	})
 end
 
@@ -287,7 +299,7 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 	if notification_type == NOTIFICATION_TYPES.collected then
 		Managers.event:trigger("event_add_notification_message", "collectible", {
 			player_name = player_name,
-			player = player
+			player = player,
 		})
 	elseif notification_type == NOTIFICATION_TYPES.helped_collect then
 		local local_player_peer_id = Network.peer_id()
@@ -308,7 +320,7 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 		Managers.event:trigger("event_add_notification_message", "helped_collect_collectible", {
 			player_name = player_name,
 			player = player,
-			helped_string = helped_string
+			helped_string = helped_string,
 		})
 	end
 end

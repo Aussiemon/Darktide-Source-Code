@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/data_service_manager.lua
+
 local BackendInterface = require("scripts/backend/backend_interface")
 local SERVICES = {
 	mission_board = require("scripts/managers/data_service/services/mission_board_service"),
@@ -10,7 +12,7 @@ local SERVICES = {
 	crafting = require("scripts/managers/data_service/services/crafting_service"),
 	contracts = require("scripts/managers/data_service/services/contracts_service"),
 	news = require("scripts/managers/data_service/services/news_service"),
-	penance_track = require("scripts/managers/data_service/services/penance_track_service")
+	penance_track = require("scripts/managers/data_service/services/penance_track_service"),
 }
 local DataServiceManager = class("DataServiceManager")
 

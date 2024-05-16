@@ -1,29 +1,31 @@
+﻿-- chunkname: @scripts/managers/privileges/privileges_manager.lua
+
 local Interface = {
 	"multiplayer_privilege",
 	"communications_privilege",
 	"cross_play",
-	"update"
+	"update",
 }
-local PrivilegesManager = {
-	new = function (self)
-		local instance = nil
+local PrivilegesManager = {}
 
-		if IS_XBS or IS_GDK then
-			instance = require("scripts/managers/privileges/privileges_manager_xbox_live"):new()
+PrivilegesManager.new = function (self)
+	local instance
 
-			Log.info("PrivilegesManager", "Using Xbox Live privileges manager")
-		else
-			instance = require("scripts/managers/privileges/privileges_manager_permissive"):new()
+	if IS_XBS or IS_GDK then
+		instance = require("scripts/managers/privileges/privileges_manager_xbox_live"):new()
 
-			Log.info("PrivilegesManager", "Using permissive privileges manager")
-		end
+		Log.info("PrivilegesManager", "Using Xbox Live privileges manager")
+	else
+		instance = require("scripts/managers/privileges/privileges_manager_permissive"):new()
 
-		if rawget(_G, "implements") then
-			implements(instance, Interface)
-		end
-
-		return instance
+		Log.info("PrivilegesManager", "Using permissive privileges manager")
 	end
-}
+
+	if rawget(_G, "implements") then
+		implements(instance, Interface)
+	end
+
+	return instance
+end
 
 return PrivilegesManager

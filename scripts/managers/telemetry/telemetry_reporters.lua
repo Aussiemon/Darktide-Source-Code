@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/telemetry_reporters.lua
+
 local CombatAbilityReporter = require("scripts/managers/telemetry/reporters/combat_ability_reporter")
 local ComWheelReporter = require("scripts/managers/telemetry/reporters/com_wheel_reporter")
 local EnemySpawnedReporter = require("scripts/managers/telemetry/reporters/enemy_spawned_reporter")
@@ -45,7 +47,7 @@ local REPORTER_CLASS_MAP = {
 	tactical_overlay = TacticalOverlayReporter,
 	training_grounds = TrainingGroundsReporter,
 	voice_over_bank_reshuffled = VoiceOverBankReshuffledReporter,
-	voice_over_event_triggered = VoiceOverEventTriggeredReporter
+	voice_over_event_triggered = VoiceOverEventTriggeredReporter,
 }
 
 TelemetryReporters.init = function (self)
@@ -59,6 +61,7 @@ TelemetryReporters.start_reporter = function (self, name, params)
 	Log.debug("TelemetryReporters", "Starting reporter '%s'", name)
 
 	local reporter_class = REPORTER_CLASS_MAP[name]
+
 	self._reporters[name] = reporter_class:new(params)
 end
 

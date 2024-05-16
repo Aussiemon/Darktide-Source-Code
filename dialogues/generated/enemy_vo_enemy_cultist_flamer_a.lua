@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_flamer_a.lua
+
 local enemy_vo_enemy_cultist_flamer_a = {
 	cultist_flamer_spawned = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local enemy_vo_enemy_cultist_flamer_a = {
 			"loc_enemy_cultist_flamer_a__spawned_17",
 			"loc_enemy_cultist_flamer_a__spawned_18",
 			"loc_enemy_cultist_flamer_a__spawned_19",
-			"loc_enemy_cultist_flamer_a__spawned_20"
+			"loc_enemy_cultist_flamer_a__spawned_20",
 		},
 		sound_events_duration = {
 			3.162792,
@@ -44,7 +46,7 @@ local enemy_vo_enemy_cultist_flamer_a = {
 			2.418271,
 			1.471208,
 			2.320688,
-			1.899563
+			1.899563,
 		},
 		sound_event_weights = {
 			0.05,
@@ -66,9 +68,9 @@ local enemy_vo_enemy_cultist_flamer_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	cultist_flamer_start_shooting = {
 		randomize_indexes_n = 0,
@@ -84,7 +86,7 @@ local enemy_vo_enemy_cultist_flamer_a = {
 			"loc_enemy_cultist_flamer_a__start_shooting_14",
 			"loc_enemy_cultist_flamer_a__start_shooting_17",
 			"loc_enemy_cultist_flamer_a__start_shooting_18",
-			"loc_enemy_cultist_flamer_a__start_shooting_19"
+			"loc_enemy_cultist_flamer_a__start_shooting_19",
 		},
 		sound_events_duration = {
 			3.22925,
@@ -97,7 +99,7 @@ local enemy_vo_enemy_cultist_flamer_a = {
 			2.324375,
 			2.651146,
 			2.512521,
-			2.821708
+			2.821708,
 		},
 		sound_event_weights = {
 			0.09090909,
@@ -110,10 +112,10 @@ local enemy_vo_enemy_cultist_flamer_a = {
 			0.09090909,
 			0.09090909,
 			0.09090909,
-			0.09090909
+			0.09090909,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_cultist_flamer_a", enemy_vo_enemy_cultist_flamer_a)

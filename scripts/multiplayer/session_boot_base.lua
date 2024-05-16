@@ -1,10 +1,13 @@
+﻿-- chunkname: @scripts/multiplayer/session_boot_base.lua
+
 local function _info(...)
 	Log.info("SessionBootBase", ...)
 end
 
 local SessionBootBase = class("SessionBootBase")
+
 SessionBootBase.INTERFACE = {
-	"result"
+	"result",
 }
 
 SessionBootBase.init = function (self, states, event_object)

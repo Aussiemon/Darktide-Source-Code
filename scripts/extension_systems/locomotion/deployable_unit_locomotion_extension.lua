@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/deployable_unit_locomotion_extension.lua
+
 local DeployableUnitLocomotionExtension = class("DeployableUnitLocomotionExtension")
 
 DeployableUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data)
 	self._unit = unit
 	self._world = extension_init_context.world
+
 	local placed_on_unit = extension_init_data.placed_on_unit
 	local moveable_platform_extension = ScriptUnit.has_extension(placed_on_unit, "moveable_platform_system")
 

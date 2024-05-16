@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel.lua
+
 local Blueprints = require("scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel_blueprints")
 local Definitions = require("scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel_definition")
 local MissionBoardSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
@@ -24,6 +26,7 @@ end
 local function _clear_widgets_alpha(widgets)
 	for i = 1, #widgets do
 		local widget = widgets[i]
+
 		widget.alpha_multiplier = 0
 		widget.visible = false
 	end
@@ -35,10 +38,11 @@ ViewElementMissionInfoPanel.init = function (self, parent, draw_layer, start_sca
 	local widgets = self._widgets
 	local mission_header_definition = Definitions.widget_definitions.mission_header
 	local old_mission_header = self:_create_widget("old_mission_header", mission_header_definition)
+
 	old_mission_header.offset = {
 		0,
 		0,
-		2
+		2,
 	}
 	widgets[#widgets + 1] = old_mission_header
 	self._new_mission_data = nil
@@ -59,10 +63,10 @@ ViewElementMissionInfoPanel.init = function (self, parent, draw_layer, start_sca
 	self._handled_mouse_input = false
 	self._old_details_list_widgets = {}
 	self._mission_info_animation_params = {
-		target_heights = {}
+		target_heights = {},
 	}
 	self._status_report_animation_params = {
-		target_heights = {}
+		target_heights = {},
 	}
 
 	self:_create_offscreen_renderer()
@@ -80,6 +84,7 @@ ViewElementMissionInfoPanel.update = function (self, dt, t, input_service)
 	if input_service:get("left_pressed") or input_service:get("right_pressed") then
 		local interaction_widget = self._widgets_by_name.list_interaction
 		local hotspot = interaction_widget.content.hotspot
+
 		self._handled_mouse_input = hotspot.is_hover
 	elseif self._handled_mouse_input then
 		self._handled_mouse_input = false
@@ -89,7 +94,7 @@ end
 ViewElementMissionInfoPanel.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
 	ViewElementMissionInfoPanel.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
-	local widgets = nil
+	local widgets
 	local state = self._state
 
 	if state == STATES.mission_info or state == STATES.transition_mission_info then
@@ -172,13 +177,14 @@ ViewElementMissionInfoPanel._create_offscreen_renderer = function (self)
 	local viewport_layer = 1
 	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	local renderer_name = self.__class_name .. "_offscreen_renderer"
+
 	self._offscreen_renderer = Managers.ui:create_renderer(renderer_name, world)
 	self._offscreen_world = {
 		name = world_name,
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name
+		renderer_name = renderer_name,
 	}
 end
 
@@ -204,6 +210,7 @@ ViewElementMissionInfoPanel._setup_list_grid = function (self, widgets, alignmen
 	local grid_direction = "down"
 	local details_list_grid = UIWidgetGrid:new(widgets, alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction)
 	local scrollbar_widget = self._widgets_by_name.panel_scrollbar
+
 	scrollbar_widget.content.value = 0
 	scrollbar_widget.content.scroll_value = nil
 
@@ -237,7 +244,7 @@ ViewElementMissionInfoPanel._create_list_widgets = function (self, content, num_
 			widget_definitions[template_name] = widget_definition
 		end
 
-		local alignment_widget = nil
+		local alignment_widget
 
 		if widget_definition then
 			local widget_name = scenegraph_id .. "_widget_" .. i
@@ -253,8 +260,8 @@ ViewElementMissionInfoPanel._create_list_widgets = function (self, content, num_
 			alignment_widget = {
 				size = {
 					template.size[1],
-					template.size[2]
-				}
+					template.size[2],
+				},
 			}
 		end
 
@@ -265,6 +272,7 @@ end
 ViewElementMissionInfoPanel._clear_mission_data = function (self)
 	local header_widget = self._widgets_by_name.mission_header
 	local content = header_widget.content
+
 	content.mission_title = ""
 	content.type_and_zone = ""
 	content.time_left = ""
@@ -326,6 +334,7 @@ ViewElementMissionInfoPanel._transition_to_state_none = function (self)
 	local retract_window_animation_params = _retract_window_animation_params
 	local current_state = self._state
 	local next_state = current_state == STATES.mission_info and STATES.transition_mission_info or STATES.transition_status_report
+
 	retract_window_animation_params.from_state = current_state
 	self._active_animation = self:_start_animation("retract_window", nil, retract_window_animation_params, callback(self, "_cb_animation_complete", STATES.none))
 
@@ -345,6 +354,7 @@ ViewElementMissionInfoPanel._update_status_report = function (self, dt, t, input
 		return
 	elseif self._new_happening_data then
 		local happening_data = self._new_happening_data
+
 		self._new_happening_data = nil
 
 		self:_transition_to_state_status_report(happening_data, t)
@@ -380,8 +390,11 @@ ViewElementMissionInfoPanel._transition_to_state_status_report = function (self,
 	local panel_styles = MissionInfoPanelStyles.panel
 	local target_panel_height = math.clamp(grid_height, panel_styles.default_size[2], panel_styles.max_size[2])
 	local status_report_animation_params = self._status_report_animation_params
+
 	status_report_animation_params.is_event = happening_data.name and #happening_data.name > 1
+
 	local target_heights = status_report_animation_params.target_heights
+
 	target_heights.panel = target_panel_height
 	target_heights.list_mask = target_panel_height
 	target_heights.panel_scrollbar = target_panel_height + MissionInfoPanelStyles.panel.scroll_bar.height_addition
@@ -394,6 +407,7 @@ ViewElementMissionInfoPanel._update_formatted_time = function (self, t)
 	local happening_data = self._happening_data
 	local expiry_time = happening_data.expiry_game_time
 	local time_left = expiry_time - t
+
 	_formatted_time_params.time_left = TextUtils.format_time_span_long_form_localized(math.max(time_left, 0))
 	self._formatted_happening_time_left = Localize("loc_mission_board_event_panel_time_left", true, _formatted_time_params)
 end
@@ -417,7 +431,9 @@ ViewElementMissionInfoPanel._update_state_mission = function (self, dt, t, input
 	local time_left = expiry_time - t
 	local formatted_time = _format_mission_timer_text(math.max(time_left, 0))
 	local header_widget = self._widgets_by_name.mission_header
+
 	header_widget.content.time_left = formatted_time
+
 	local grid = self._details_list_grid
 
 	grid:update(dt, t, input_service)
@@ -428,9 +444,12 @@ local _banner_text_params = {}
 
 ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, mission_data)
 	self._mission_data = mission_data
+
 	local new_list_widgets = self._old_details_list_widgets
 	local old_list_widgets = self._details_list_widgets
+
 	self._old_details_list_widgets = old_list_widgets
+
 	local list_alignments = _list_alignments
 
 	_table_clear(list_alignments)
@@ -445,6 +464,7 @@ ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, 
 	local old_header_widget = widgets_by_name.old_mission_header
 	local new_header_content = old_header_widget.content
 	local header_widget = widgets_by_name.mission_header
+
 	old_header_widget.content = header_widget.content
 	header_widget.content = new_header_content
 	new_header_content.mission_title = map_data.mission_name and TextUtils.localize_to_title_case(map_data.mission_name) or mission_data.map
@@ -458,6 +478,7 @@ ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, 
 
 	if mission_flags.locked then
 		local banner_widget = widgets_by_name.header_banner
+
 		_banner_text_params.required_level = mission_data.required_level
 		banner_widget.content.text = Localize("loc_mission_board_view_required_level", true, _banner_text_params)
 	end
@@ -471,13 +492,18 @@ ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, 
 	_clear_widgets_alpha(new_list_widgets)
 
 	self._details_list_widgets = new_list_widgets
+
 	local play_button = widgets_by_name.play_button
 	local play_button_hotspot = play_button.content.hotspot
+
 	play_button_hotspot.pressed_callback = self._play_callback
 	play_button_hotspot.is_focused = self._play_callback ~= true
+
 	local panel_styles = MissionInfoPanelStyles.panel
 	local total_panel_height = header_widget.style.size[2] + grid_height
+
 	total_panel_height = math.clamp(total_panel_height, panel_styles.default_size[2], panel_styles.max_size[2])
+
 	local panel_header_height = MissionInfoPanelStyles.panel_header.size[2]
 	local list_mask_height = total_panel_height - panel_header_height
 	local mission_info_animation_params = self._mission_info_animation_params
@@ -491,7 +517,9 @@ ViewElementMissionInfoPanel._transition_to_state_mission_info = function (self, 
 	mission_info_animation_params.flags = mission_flags
 	mission_info_animation_params.old_details_list_widgets = old_list_widgets
 	mission_info_animation_params.new_details_list_widgets = new_list_widgets
+
 	local target_heights = mission_info_animation_params.target_heights
+
 	target_heights.panel = total_panel_height
 	target_heights.panel_header = panel_header_height
 	target_heights.list_mask = list_mask_height

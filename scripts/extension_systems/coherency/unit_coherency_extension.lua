@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/coherency/unit_coherency_extension.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local buff_keywords = BuffSettings.keywords
@@ -36,7 +38,7 @@ UnitCoherencyExtension.fixed_update = function (self, unit, dt, t)
 	if Managers.stats and player then
 		local new_time = self._stat_record_timer + dt
 
-		if STAT_REPORT_TIME <= new_time then
+		if new_time >= STAT_REPORT_TIME then
 			Managers.stats:record_private("hook_coherency_update", player, new_time, self._num_units_in_coherence)
 
 			new_time = 0
@@ -91,7 +93,7 @@ end
 
 UnitCoherencyExtension.add_external_buff = function (self, buff_name)
 	local free_external_buff_indexes = self._free_external_buff_indexes
-	local index = nil
+	local index
 	local num_free_external_buff_indexes = #free_external_buff_indexes
 
 	if num_free_external_buff_indexes == 0 then
@@ -150,10 +152,12 @@ UnitCoherencyExtension.current_radius = function (self)
 		local buffs = self._buff_extension:stat_buffs()
 		local buff_modifier = buffs.coherency_radius_modifier or 1
 		local buff_multiplier = buffs.coherency_radius_multiplier or 1
+
 		modifier = buff_modifier * buff_multiplier
 	end
 
 	local radius, stickiness_limit = self:base_radius()
+
 	radius = radius * modifier
 
 	if self._buff_extension then
@@ -175,6 +179,7 @@ UnitCoherencyExtension.current_stickiness_time = function (self)
 	if self._buff_extension then
 		local buffs = self._buff_extension:stat_buffs()
 		local stickiness_time_value = buffs.coherency_stickiness_time_value or 0
+
 		stickiness_time = stickiness_time + stickiness_time_value
 	end
 
@@ -194,7 +199,9 @@ end
 
 UnitCoherencyExtension.on_coherency_enter = function (self, coherency_unit, coherency_extension, t)
 	self._in_coherence_units[coherency_unit] = coherency_extension
+
 	local prev_num_units_in_coherency = self._num_units_in_coherence
+
 	self._num_units_in_coherence = prev_num_units_in_coherency + 1
 
 	if prev_num_units_in_coherency == 1 and self._fx_extension then
@@ -252,6 +259,7 @@ local function _add_buff_to_lists(buff_name, should_be_active_buffs, unique_cohe
 
 	if not coherency_id then
 		local stack_number = should_be_active_buffs[buff_name] or 0
+
 		should_be_active_buffs[buff_name] = stack_number + 1
 	else
 		local coherency_priority = buff_template.coherency_priority or math.huge
@@ -302,11 +310,11 @@ UnitCoherencyExtension.update_active_buffs = function (self, t)
 		local number_that_should_be_active = should_be_active_buffs[buff_name] or 0
 		local current_number = #buff_indices
 
-		if number_that_should_be_active > current_number then
+		if current_number < number_that_should_be_active then
 			local _, local_index, component_index = self._buff_extension:add_externally_controlled_buff(buff_name, t)
 			local indices = {
 				local_index = local_index,
-				component_index = component_index
+				component_index = component_index,
 			}
 
 			table.insert(buff_indices, indices)
@@ -332,7 +340,7 @@ UnitCoherencyExtension.update_active_buffs = function (self, t)
 			local _, local_index, component_index = self._buff_extension:add_externally_controlled_buff(buff_name, t)
 			local indices = {
 				local_index = local_index,
-				component_index = component_index
+				component_index = component_index,
 			}
 
 			table.insert(buff_indices, indices)

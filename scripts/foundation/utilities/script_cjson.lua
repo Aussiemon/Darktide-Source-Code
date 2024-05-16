@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/script_cjson.lua
+
 ScriptCJson = ScriptCJson or {}
 
 ScriptCJson.encode_lua_to_json_for_lua = function (data)

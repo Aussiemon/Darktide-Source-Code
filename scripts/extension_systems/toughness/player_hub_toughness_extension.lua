@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/toughness/player_hub_toughness_extension.lua
+
 local PlayerHubToughnessExtension = class("PlayerHubToughnessExtension")
 
 PlayerHubToughnessExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
+
 	local toughness_template = extension_init_data.toughness_template
 
 	self:_initialize_toughness(toughness_template)
@@ -16,8 +19,8 @@ end
 
 PlayerHubToughnessExtension._initialize_toughness = function (self, toughness_template)
 	local toughness_constant = NetworkConstants.toughness
-	local min = toughness_constant.min
-	local max = toughness_constant.max
+	local min, max = toughness_constant.min, toughness_constant.max
+
 	self._max_toughness = toughness_template.max
 end
 

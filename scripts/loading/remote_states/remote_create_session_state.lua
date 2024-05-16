@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/remote_states/remote_create_session_state.lua
+
 local RemoteCreateSessionState = class("RemoteCreateSessionState")
 
 RemoteCreateSessionState.init = function (self, state_machine, shared_state)

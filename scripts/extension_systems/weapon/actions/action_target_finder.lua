@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_target_finder.lua
+
 require("scripts/extension_systems/weapon/actions/action_charge")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
@@ -11,6 +13,7 @@ ActionTargetFinder.init = function (self, action_context, action_params, action_
 	local unit_data_extension = action_context.unit_data_extension
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local targeting_component = unit_data_extension:write_component("action_module_targeting")
+
 	self._targeting_module = ActionModules[target_finder_module_class_name]:new(self._physics_world, player_unit, targeting_component, action_settings)
 
 	if action_settings.use_alternate_fire then
@@ -26,6 +29,7 @@ ActionTargetFinder.start = function (self, action_settings, t, time_scale, actio
 
 	local weapon_template = self._weapon_template
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
+
 	weapon_tweak_templates_component.spread_template_name = action_settings.spread_template or weapon_template.spread_template or "none"
 	weapon_tweak_templates_component.recoil_template_name = action_settings.recoil_template or weapon_template.recoil_template or "none"
 	weapon_tweak_templates_component.sway_template_name = action_settings.sway_template or weapon_template.sway_template or "none"

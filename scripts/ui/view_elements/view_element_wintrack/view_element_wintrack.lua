@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_wintrack/view_element_wintrack.lua
+
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local Definitions = require("scripts/ui/view_elements/view_element_wintrack/view_element_wintrack_definitions")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
@@ -18,12 +20,13 @@ local ViewElementWintrack = class("ViewElementWintrack", "ViewElementBase")
 ViewElementWintrack.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	self._pivot_offset = {
 		0,
-		0
+		0,
 	}
 
 	ViewElementWintrack.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
 	if optional_menu_settings then
@@ -44,18 +47,22 @@ ViewElementWintrack.init = function (self, parent, draw_layer, start_scale, opti
 	if self._menu_settings.use_parent_ui_renderer then
 		local ui_renderer = self._parent:ui_renderer()
 		local world = ui_renderer.world
+
 		self._ui_reward_renderer = ui_renderer
 		self._ui_reward_renderer_is_external = true
+
 		local gui = self._ui_reward_renderer.gui
 		local gui_retained = self._ui_reward_renderer.gui_retained
 		local resource_renderer_name = self._unique_id
 		local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur_02"
+
 		self._ui_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
 	else
-		local optional_world = nil
+		local optional_world
 
 		if self._menu_settings.use_parent_world then
 			local ui_renderer = self._parent:ui_renderer()
+
 			optional_world = ui_renderer.world
 		end
 
@@ -67,10 +74,12 @@ ViewElementWintrack.init = function (self, parent, draw_layer, start_scale, opti
 	self._widgets_by_name.navigation_arrow_left.content.hotspot.on_hover_sound = UISoundEvents.penance_menu_wintrack_page_button_hovered
 	self._widgets_by_name.navigation_arrow_right.content.hotspot.on_pressed_sound = UISoundEvents.penance_menu_wintrack_page_button_pressed
 	self._widgets_by_name.navigation_arrow_right.content.hotspot.on_hover_sound = UISoundEvents.penance_menu_wintrack_page_button_hovered
+
 	local front_widgets = {}
 
 	for name, definition in pairs(Definitions.front_widget_definitions) do
 		local widget = self:_create_widget(name, definition)
+
 		front_widgets[#front_widgets + 1] = widget
 	end
 
@@ -88,27 +97,34 @@ ViewElementWintrack._setup_grid_gui = function (self, optional_world)
 		local world_name = self._unique_id .. "_ui_reward_world"
 		local parent = self._parent
 		local view_name = parent.view_name
+
 		self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 		local viewport_name = self._unique_id .. "_ui_reward_world_viewport"
 		local viewport_type = "overlay"
 		local viewport_layer = 1
+
 		self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 		self._viewport_name = viewport_name
 	end
 
 	local world = optional_world or self._world
 	local renderer_name = self._unique_id .. "_reward_renderer"
+
 	self._ui_reward_renderer = ui_manager:create_renderer(renderer_name, world)
+
 	local gui = self._ui_reward_renderer.gui
 	local gui_retained = self._ui_reward_renderer.gui_retained
 	local resource_renderer_name = self._unique_id
 	local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur_02"
+
 	self._ui_resource_renderer = ui_manager:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
 end
 
 ViewElementWintrack._destroy_grid_gui = function (self)
 	if self._ui_resource_renderer then
 		local renderer_name = self._unique_id
+
 		self._ui_resource_renderer = nil
 
 		Managers.ui:destroy_renderer(renderer_name)
@@ -143,6 +159,7 @@ ViewElementWintrack.assign_rewards = function (self, rewards, points_per_reward)
 	self._rewards = rewards
 	self._points_per_reward = points_per_reward
 	self._num_rewards_per_bar = 5
+
 	local num_pages = math.ceil(#rewards / self._num_rewards_per_bar)
 
 	if self._hint_upcoming_page then
@@ -160,11 +177,14 @@ end
 
 ViewElementWintrack._replace_border = function (self)
 	local grid_divider_top = self:widget_by_name("grid_divider_top")
+
 	grid_divider_top.content.texture = "content/ui/materials/frames/item_info_upper_slots"
+
 	local style = grid_divider_top.style.texture
 	local scale = self._default_grid_size[1] / 1060
+
 	style.size = {
-		[2] = 116 * scale
+		[2] = 116 * scale,
 	}
 end
 
@@ -355,6 +375,7 @@ ViewElementWintrack.on_reward_claimed = function (self, index)
 	local reward_widgets = self._reward_widgets
 	local reward_item_widgets = self._reward_item_widgets
 	local widget = reward_widgets[index]
+
 	widget.content.claimed = true
 
 	self:_play_sound(UISoundEvents.penance_menu_wintrack_reward_claimed)
@@ -363,6 +384,7 @@ end
 ViewElementWintrack.set_index_claimed = function (self, index)
 	local reward_widgets = self._reward_widgets
 	local widget = reward_widgets[index]
+
 	widget.content.claimed = true
 end
 
@@ -373,9 +395,11 @@ end
 ViewElementWintrack._update_reward_claim_status = function (self, dt, t, input_service)
 	local reward_widgets = self._reward_widgets
 	local reward_item_widgets = self._reward_item_widgets
+
 	self._reward_index_to_claim = nil
 	self._can_claim_rewards = false
 	self._next_reward_to_claim = nil
+
 	local is_initial_reward_claim_status_update = self._initial_reward_claim_status_update
 	local play_sounds = not is_initial_reward_claim_status_update
 	local claim_button_pressed = self._widgets_by_name.claim_button.content.hotspot.on_pressed
@@ -401,6 +425,7 @@ ViewElementWintrack._update_reward_claim_status = function (self, dt, t, input_s
 				end
 
 				self._can_claim_rewards = true
+
 				local hotspot = content.hotspot
 
 				if hotspot.on_pressed or claim_button_pressed then
@@ -442,11 +467,11 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 		if input_service:get("hotkey_menu_special_2") then
 			self._widgets_by_name.claim_button.content.hotspot.on_pressed = true
 		else
-			local current_index = nil
+			local current_index
 			local reward_item_widgets = self._reward_item_widgets
 
 			if reward_item_widgets then
-				local hovered_items = nil
+				local hovered_items
 				local num_widgets = #reward_item_widgets
 
 				for i = 1, num_widgets do
@@ -502,12 +527,14 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 
 	local anim_progress = self._anim_progress
 	local play_progress_sounds = self._play_progress_sounds
-	local visual_points, added_points = nil
+	local visual_points, added_points
 
 	if self._animate_visual_points then
 		self._current_points_anim_time = self._current_points_anim_time + dt
+
 		local anim_time_progress = math.clamp(self._current_points_anim_time / self._total_points_anim_time, 0, 1)
 		local points_to_add = self._visual_points_to_add or 0
+
 		visual_points = math.ceil((self._anim_start_points or self._points - points_to_add) + math.easeCubic(anim_time_progress) * points_to_add)
 		self._visual_points = math.clamp(visual_points, 0, self._max_points)
 		added_points = self._visual_points_to_add
@@ -549,6 +576,7 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 
 	if self._hint_upcoming_page then
 		local progress_per_reward = 1 / self._num_rewards_per_bar
+
 		page_point_reduction = self._points_per_bar * progress_per_reward
 	end
 
@@ -560,6 +588,7 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 
 	if self._hint_upcoming_page then
 		local progress_per_reward = 1 / self._num_rewards_per_bar
+
 		page_point_reduction = self._points_per_bar * progress_per_reward
 	end
 
@@ -603,7 +632,7 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 	local reward_item_widgets = self._reward_item_widgets
 
 	if reward_item_widgets then
-		local hovered_items = nil
+		local hovered_items
 		local num_widgets = #reward_item_widgets
 
 		for i = 1, num_widgets do
@@ -616,6 +645,7 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 			if is_hover or is_selected then
 				local element = content.element
 				local items = element.items
+
 				hovered_items = items
 
 				break
@@ -730,6 +760,7 @@ ViewElementWintrack._update_reward_tooltip_hint = function (self)
 				if xbox_controller.active() then
 					local ui_input_color = Color.ui_input_color(255, true)
 					local input_text = InputUtils.apply_color_to_input_text("", ui_input_color)
+
 					text = string.format("%s%s%s", input_text, "     ", Localize(loc_string))
 
 					break
@@ -759,10 +790,12 @@ ViewElementWintrack._handle_reward_scroll = function (self, input_service, dt)
 		local controller_right = "navigate_controller_right"
 		local gamepad_input = input_service:get(controller_right)
 		local axis = 2
+
 		navigation_value = gamepad_input[axis] * 10 * dt
 	else
 		local axis = 2
 		local scroll_axis = input_service:get("scroll_axis")
+
 		navigation_value = scroll_axis[axis]
 	end
 
@@ -825,7 +858,7 @@ ViewElementWintrack._handle_track_scroll = function (self, input_service, dt)
 
 	if scroll_add then
 		local speed = 3
-		local step = scroll_add * dt * speed
+		local step = scroll_add * (dt * speed)
 
 		if math.abs(scroll_add) > scroll_amount / 500 then
 			self._scroll_add = math.max(scroll_add - step * 1.5, 0)
@@ -835,6 +868,7 @@ ViewElementWintrack._handle_track_scroll = function (self, input_service, dt)
 	end
 
 	local current_scroll_direction = self._current_scroll_direction or 0
+
 	self._anim_progress = math.clamp(anim_progress + (self._scroll_add or 0) * current_scroll_direction, 0, 1)
 end
 
@@ -858,20 +892,23 @@ ViewElementWintrack.max_points = function (self)
 end
 
 ViewElementWintrack.add_points = function (self, points_to_add, animate, force_reward_page_change)
-	if self._max_points <= self._points then
+	if self._points >= self._max_points then
 		return
 	end
 
 	local new_total_points = math.min((self._points or 0) + points_to_add, self._max_points)
+
 	self._animate_visual_points = animate
 
 	if animate then
 		self._anim_start_points = self._visual_points
+
 		local points_diff = new_total_points - self._visual_points
 		local min_anim_time = 0.5
 		local max_anim_time = 6
 		local time_per_bar = 2
 		local anim_time_multiplier = points_diff / self._points_per_bar
+
 		self._total_points_anim_time = math.clamp(anim_time_multiplier * time_per_bar, min_anim_time, max_anim_time)
 		self._current_points_anim_time = 0
 		self._visual_points_to_add = points_diff
@@ -881,7 +918,7 @@ ViewElementWintrack.add_points = function (self, points_to_add, animate, force_r
 		self._play_progress_sounds = true
 
 		self:_start_animation("on_points_added", self._widgets_by_name, {
-			anim_only_experience_bar = (self._reward_bar_progress or 0) < (self._experience_bar_progress or 0)
+			anim_only_experience_bar = (self._reward_bar_progress or 0) < (self._experience_bar_progress or 0),
 		})
 	else
 		self._anim_start_points = nil
@@ -909,8 +946,10 @@ ViewElementWintrack._create_reward_widgets = function (self, rewards, ui_rendere
 	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id)
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 	local ContentBlueprints, blueprint_widget_type_by_slot = generate_blueprints_function(item_size)
+
 	self._content_blueprints = ContentBlueprints
 	self._blueprint_widget_type_by_slot = blueprint_widget_type_by_slot
+
 	local offset_x = -(reward_width * 0.5)
 	local reward_item_scenegraph_id = "reward_item"
 	local reward_item_width, reward_item_height = self:_scenegraph_size(reward_item_scenegraph_id)
@@ -930,8 +969,10 @@ ViewElementWintrack._create_reward_widgets = function (self, rewards, ui_rendere
 			local reward_item_widget_name = "reward_item_widget_" .. index
 			local item_widget_definition = UIWidget.create_definition(item_pass_template, "reward_item")
 			local item_widget = self:_create_widget(reward_item_widget_name, item_widget_definition)
+
 			item_widgets[index] = item_widget
 			item_widget.type = widget_type
+
 			local required_points = self._points_per_reward * index
 			local item_widget_element = {
 				show_icon = true,
@@ -941,16 +982,19 @@ ViewElementWintrack._create_reward_widgets = function (self, rewards, ui_rendere
 				required_points = required_points,
 				size = {
 					reward_item_width,
-					reward_item_height
-				}
+					reward_item_height,
+				},
 			}
+
 			item_widget.content.element = item_widget_element
-			local callback_name, secondary_callback_name, double_click_callback = nil
+
+			local callback_name, secondary_callback_name, double_click_callback
 
 			template.init(self, item_widget, item_widget_element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
 
 			local name = "reward_widget_" .. index
 			local widget = self:_create_widget(name, widget_definition)
+
 			widget.offset[1] = offset_x
 			widget.content.required_points = required_points
 			item_widget.style.style_id_1.on_pressed_sound = nil
@@ -977,6 +1021,7 @@ ViewElementWintrack._get_progress_required_to_page = function (self, index)
 	if self._hint_upcoming_page then
 		local progress_per_reward_per_bar = 1 / self._num_rewards_per_bar
 		local progress_per_reward = progress_per_reward_per_bar / (self._num_reward_pages - 1)
+
 		progress_required_to_page = progress_required_to_page - progress_per_reward * (index - 1)
 	end
 
@@ -989,6 +1034,7 @@ ViewElementWintrack._set_reward_page = function (self, index, animate)
 	end
 
 	local previous_index = self._current_reward_page_index
+
 	self._current_reward_page_index = index
 
 	self:_set_page_indicator_focus(index)
@@ -996,7 +1042,9 @@ ViewElementWintrack._set_reward_page = function (self, index, animate)
 	local progress_required_to_page = self:_get_progress_required_to_page(index)
 	local anim_progress = self._anim_progress or 0
 	local current_diff = progress_required_to_page - anim_progress
+
 	self._scroll_add = nil
+
 	local func = UIAnimation.function_by_time
 	local target = self
 	local target_index = "_anim_progress"
@@ -1004,6 +1052,7 @@ ViewElementWintrack._set_reward_page = function (self, index, animate)
 	local to = anim_progress + current_diff
 	local duration = 0.9
 	local easing = math.ease_quad
+
 	self._ui_animations.page_scroll = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 end
 
@@ -1039,13 +1088,15 @@ ViewElementWintrack._update_reward_widget_positions = function (self, dt, t)
 	local progress_required_to_last_page = self:_get_progress_required_to_page(num_reward_pages)
 	local normalized_progress = anim_progress / progress_required_to_last_page
 	local pixel_progress = distance_between_reward * entry_move_progress
+
 	self._widgets_by_name.reward_field.content.pixel_progress = pixel_progress
 	self._widgets_by_name.reward_field.content.normalized_progress = entry_move_progress * 0.5
+
 	local loop_end_index = num_visible_entries + 2
 	local reward_width = self:_scenegraph_size("reward")
 
 	for i = 1, num_options do
-		local widget_index = (start_reading_index + i - 1) % num_options + 1
+		local widget_index = (start_reading_index + (i - 1)) % num_options + 1
 		local visible = start_reading_index <= widget_index and widget_index < start_reading_index + loop_end_index
 		local widget = reward_widgets[widget_index]
 
@@ -1053,10 +1104,13 @@ ViewElementWintrack._update_reward_widget_positions = function (self, dt, t)
 			local item_widget = reward_item_widgets[widget_index]
 			local content = widget.content
 			local previous_visibility_state = content.visible
+
 			content.visible_last_frame = content.visible
 			content.visible = visible
 			content.render_icon = visible
+
 			local item_widget_content = item_widget.content
+
 			item_widget_content.visible_last_frame = previous_visibility_state
 			item_widget_content.visible = visible
 			item_widget_content.render_icon = visible
@@ -1073,6 +1127,7 @@ ViewElementWintrack._update_reward_widget_positions = function (self, dt, t)
 			local previous_entry_position_x = distance_between_reward * (i - 1)
 			local index_anim_offset_x = entry_move_progress * (entry_position_x - previous_entry_position_x)
 			local x = -(reward_width * 0.5) + entry_position_x - index_anim_offset_x
+
 			widget.offset[1] = x + self._reward_offset_x
 			item_widget.offset[1] = x + self._reward_offset_x
 		end
@@ -1202,6 +1257,7 @@ ViewElementWintrack._animate_progress_bars = function (self, dt, t)
 		local bar_width = self:_get_progress_bars_width()
 		local progress = math.clamp(anim_experience_progress * self._experience_bar_progress, 0, 1)
 		local bar_width_progress = (bar_width + self._reward_offset_x + experience_bar_extra_width_next_page) * progress
+
 		bar_style.size[1] = bar_width_progress
 		outer_glow_style.size[1] = bar_width_progress
 	end
@@ -1217,6 +1273,7 @@ ViewElementWintrack._animate_progress_bars = function (self, dt, t)
 		local bar_width = self:_get_progress_bars_width()
 		local progress = math.clamp(anim_reward_progress * self._reward_bar_progress, 0, 1)
 		local bar_width_progress = (bar_width + self._reward_offset_x + reward_bar_extra_width_next_page) * progress
+
 		bar_style.size[1] = bar_width_progress
 		outer_glow_style.size[1] = bar_width_progress
 	end
@@ -1233,6 +1290,7 @@ ViewElementWintrack._create_page_indicators = function (self)
 
 	for i = 1, num_reward_pages do
 		local widget = self:_create_widget("page_thumb_" .. i, widget_definition)
+
 		widgets[i] = widget
 		widget.offset[1] = offset_x
 		offset_x = offset_x + page_thumb_size_width + thumb_offset
@@ -1257,6 +1315,7 @@ ViewElementWintrack._set_page_indicator_focus = function (self, index)
 
 	for i = 1, #page_tumb_widgets do
 		local widget = page_tumb_widgets[i]
+
 		widget.content.active = i == index
 	end
 end
@@ -1269,24 +1328,24 @@ ViewElementWintrack._setup_item_stats = function (self, reference_name, scenegra
 	local grid_height = 840
 	local grid_size = {
 		grid_width - edge_padding,
-		grid_height
+		grid_height,
 	}
 	local grid_spacing = {
 		0,
-		0
+		0,
 	}
 	local mask_size = {
 		grid_width + 40,
-		grid_height
+		grid_height,
 	}
 	local context = {
-		scrollbar_width = 7,
 		ignore_blur = true,
+		scrollbar_width = 7,
 		grid_spacing = grid_spacing,
 		grid_size = grid_size,
 		mask_size = mask_size,
 		title_height = title_height,
-		edge_padding = edge_padding
+		edge_padding = edge_padding,
 	}
 	local scale = self:render_scale()
 	local item_stats = ViewElementWeaponStats:new(self, layer, scale, context)
@@ -1320,6 +1379,7 @@ ViewElementWintrack._on_reward_items_hover_start = function (self, items, index)
 	end
 
 	local item = items[index]
+
 	self._currently_hovered_item = item
 	self._currently_hovered_hovered_items = items
 	self._currently_hovered_hovered_items_index = index
@@ -1328,7 +1388,7 @@ ViewElementWintrack._on_reward_items_hover_start = function (self, items, index)
 		local context = {
 			hide_source = true,
 			show_requirement = true,
-			hide_description = item.item_type == "WEAPON_SKIN"
+			hide_description = item.item_type == "WEAPON_SKIN",
 		}
 
 		self._item_stats:present_item(item, context)
@@ -1359,9 +1419,12 @@ ViewElementWintrack.focus_on_reward = function (self, index)
 	for i = 1, #reward_item_widgets do
 		local widget = reward_item_widgets[i]
 		local content = widget.content
+
 		content.hotspot.is_selected = index == i
+
 		local frame_widget = self._reward_widgets[i]
 		local frame_content = frame_widget.content
+
 		frame_content.hotspot.is_selected = index == i
 	end
 

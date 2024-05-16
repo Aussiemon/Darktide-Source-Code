@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/timed_trigger_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local TimedTriggerBuff = class("TimedTriggerBuff", "Buff")
@@ -14,6 +16,7 @@ TimedTriggerBuff.destroy = function (self)
 	if buff_component then
 		local component_keys = self._component_keys
 		local active_start_time = component_keys.active_start_time_key
+
 		buff_component[active_start_time] = 0
 	end
 

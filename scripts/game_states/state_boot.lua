@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/state_boot.lua
+
 local PackageManager = require("scripts/foundation/managers/package/package_manager")
 
 require("scripts/foundation/managers/package/package_manager_editor")
@@ -20,8 +22,9 @@ StateBoot.on_enter = function (self, parent, params)
 
 	local sub_state_params = {
 		sub_state_index = 1,
-		states = params.states
+		states = params.states,
 	}
+
 	self._done = false
 
 	self:_create_startup_world()
@@ -36,10 +39,14 @@ end
 
 StateBoot._create_startup_world = function (self)
 	local world = Application.new_world("boot_world", Application.DISABLE_PHYSICS)
+
 	self._world = world
+
 	local shading_environment_name = GameParameters.default_ui_shading_environment
+
 	self._shading_environment = World.create_shading_environment(world, shading_environment_name)
 	self._viewport = Application.create_viewport(world, "overlay")
+
 	local camera_unit = World.spawn_unit_ex(world, "core/units/camera")
 	local camera = Unit.camera(camera_unit, "camera")
 
@@ -57,7 +64,7 @@ StateBoot.update = function (self, dt)
 		return CLASSES[self._next_state], {
 			package_manager = self._package_manager,
 			dt = dt,
-			localization_manager = self._localization_manager
+			localization_manager = self._localization_manager,
 		}
 	end
 end

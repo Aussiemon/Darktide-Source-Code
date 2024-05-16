@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_conditions/trigger_condition_base.lua
+
 local TriggerSettings = require("scripts/extension_systems/trigger/trigger_settings")
 local ONLY_ONCE = TriggerSettings.only_once
 local TriggerConditionBase = class("TriggerConditionBase")

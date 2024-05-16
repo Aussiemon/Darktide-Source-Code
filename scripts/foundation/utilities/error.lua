@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/error.lua
+
 local temp_args = {}
 
 local function format_error_message(message, ...)
@@ -17,10 +19,10 @@ end
 Application.warning = function (...)
 	if BUILD ~= "release" then
 		Application.console_send({
-			system = "Lua",
 			level = "warning",
+			system = "Lua",
 			type = "message",
-			message = format_error_message(...)
+			message = format_error_message(...),
 		})
 	end
 end
@@ -28,10 +30,10 @@ end
 Application.error = function (...)
 	if BUILD ~= "release" then
 		Application.console_send({
-			system = "Lua",
 			level = "error",
+			system = "Lua",
 			type = "message",
-			message = format_error_message(...)
+			message = format_error_message(...),
 		})
 	end
 end

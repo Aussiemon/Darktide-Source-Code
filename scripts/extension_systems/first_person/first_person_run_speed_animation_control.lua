@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/first_person_run_speed_animation_control.lua
+
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local FirstPersonRunSpeedAnimationControl = class("FirstPersonRunSpeedAnimationControl")
 
 FirstPersonRunSpeedAnimationControl.init = function (self, first_person_unit, unit)
 	self._first_person_unit = first_person_unit
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
@@ -73,16 +77,12 @@ FirstPersonRunSpeedAnimationControl._max_movement_speed = function (self, is_spr
 end
 
 FirstPersonRunSpeedAnimationControl._target_speed_scale = function (self, current_speed_scale)
-	local target_speed_scale = nil
+	local target_speed_scale
 
 	if current_speed_scale >= 0.8 then
 		target_speed_scale = math.min(current_speed_scale, 1.2)
-	elseif current_speed_scale >= 0.19 then
-		target_speed_scale = 0.8
-	elseif current_speed_scale < 0.1 then
-		target_speed_scale = 0
 	else
-		target_speed_scale = math.clamp(current_speed_scale, 0.1, 0.19)
+		target_speed_scale = current_speed_scale >= 0.19 and 0.8 or current_speed_scale < 0.1 and 0 or math.clamp(current_speed_scale, 0.1, 0.19)
 	end
 
 	return target_speed_scale

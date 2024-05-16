@@ -1,15 +1,17 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/chat/constant_element_chat_settings.lua
+
 require("scripts/foundation/utilities/color")
 
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local chat_window_size = {
 	500,
-	250
+	250,
 }
 local input_field_height = 40
 local chat_window_offset = {
 	50,
 	-490,
-	0
+	0,
 }
 local vertical_alignment = "bottom"
 local horizontal_alignment = "left"
@@ -17,25 +19,25 @@ local background_color = {
 	128,
 	0,
 	0,
-	0
+	0,
 }
 local window_margins = {
 	20,
 	20,
 	20,
-	20
+	20,
 }
 local scrollbar_margins = {
 	0,
 	15,
 	10,
-	15
+	15,
 }
 local input_field_margins = {
 	10,
 	11,
 	20,
-	11
+	11,
 }
 local scrollbar_width = 8
 local message_spacing = 15
@@ -44,32 +46,32 @@ local direct_message_color = {
 	255,
 	150,
 	203,
-	234
+	234,
 }
 local local_message_color = {
 	255,
 	96,
 	168,
-	153
+	153,
 }
 local mission_channel_color = Color.ui_brown_super_light(255, true)
 local clan_channel_color = {
 	255,
 	191,
 	107,
-	120
+	120,
 }
 local hub_channel_color = {
 	255,
 	218,
 	204,
-	130
+	130,
 }
 local selected_text_color = {
 	200,
 	255,
 	0,
-	255
+	255,
 }
 local message_color = Color.ui_brown_super_light(255, true)
 local input_field_idle_color = Color.black(0, true)
@@ -78,13 +80,13 @@ local input_text_idle_color = {
 	255,
 	102,
 	102,
-	102
+	102,
 }
 local input_text_active_color = Color.ui_brown_super_light(255, true)
 local insertion_caret_color = Color.ui_brown_super_light(255, true)
 local insertion_caret_size = {
 	2,
-	input_field_height - (input_field_margins[2] + input_field_margins[4])
+	input_field_height - (input_field_margins[2] + input_field_margins[4]),
 }
 local slug_formatted_message_color = message_color[2] .. "," .. message_color[3] .. "," .. message_color[4]
 local message_presentation_format = "{#color([channel_color],255);}[author_name]:  {# color(" .. slug_formatted_message_color .. ",255)}[message_text]{#reset()}"
@@ -100,41 +102,42 @@ local history_limit = 500
 local message_limit_in_characters = 200
 local close_on_backspace = false
 local ChannelTags = ChatManagerConstants.ChannelTag
-local channel_metadata = {
-	[ChannelTags.PARTY] = {
-		name = "loc_chat_channel_mission",
-		color = mission_channel_color
-	},
-	[ChannelTags.MISSION] = {
-		name = "loc_chat_channel_mission",
-		color = mission_channel_color
-	},
-	[ChannelTags.HUB] = {
-		name = "loc_chat_channel_hub",
-		color = hub_channel_color
-	},
-	[ChannelTags.CLAN] = {
-		color = clan_channel_color
-	},
-	[ChannelTags.PRIVATE] = {
-		color = clan_channel_color
-	},
-	[ChannelTags.SYSTEM] = {
-		name = "loc_chat_channel_system",
-		always_notify = true,
-		color = Color.ui_orange_medium(255, true)
-	},
-	placeholder = {
-		color = Color.magenta(255, true)
-	}
+local channel_metadata = {}
+
+channel_metadata[ChannelTags.PARTY] = {
+	name = "loc_chat_channel_mission",
+	color = mission_channel_color,
 }
+channel_metadata[ChannelTags.MISSION] = {
+	name = "loc_chat_channel_mission",
+	color = mission_channel_color,
+}
+channel_metadata[ChannelTags.HUB] = {
+	name = "loc_chat_channel_hub",
+	color = hub_channel_color,
+}
+channel_metadata[ChannelTags.CLAN] = {
+	color = clan_channel_color,
+}
+channel_metadata[ChannelTags.PRIVATE] = {
+	color = clan_channel_color,
+}
+channel_metadata[ChannelTags.SYSTEM] = {
+	always_notify = true,
+	name = "loc_chat_channel_system",
+	color = Color.ui_orange_medium(255, true),
+}
+channel_metadata.placeholder = {
+	color = Color.magenta(255, true),
+}
+
 local channel_priority = {
 	[ChannelTags.MISSION] = 1,
 	[ChannelTags.PARTY] = 2,
 	[ChannelTags.HUB] = 3,
 	[ChannelTags.CLAN] = 4,
 	[ChannelTags.PRIVATE] = 5,
-	[ChannelTags.SYSTEM] = 6
+	[ChannelTags.SYSTEM] = 6,
 }
 local max_message_length = 256
 local constant_element_chat_settings = {
@@ -176,7 +179,7 @@ local constant_element_chat_settings = {
 	message_presentation_format = message_presentation_format,
 	channel_metadata = channel_metadata,
 	channel_priority = channel_priority,
-	max_message_length = max_message_length
+	max_message_length = max_message_length,
 }
 
 return settings("ConstantElementChatSettings", constant_element_chat_settings)

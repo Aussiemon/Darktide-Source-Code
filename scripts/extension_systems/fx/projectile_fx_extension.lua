@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/fx/projectile_fx_extension.lua
+
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
@@ -8,30 +10,35 @@ local locomotion_states = ProjectileLocomotionSettings.states
 local surface_hit_types = SurfaceMaterialSettings.hit_types
 local WWISE_PARAMETER_NAME_SPEED = "projectile_speed"
 local SYNC_EFFECT = {
-	impact = true,
 	build_up_start = true,
-	target_aquired = true,
 	build_up_stop = true,
-	stick = true,
 	fuse = true,
-	spawn = false
+	impact = true,
+	spawn = false,
+	stick = true,
+	target_aquired = true,
 }
 local ProjectileFxExtension = class("ProjectileFxExtension")
 
 ProjectileFxExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local wwise_world = extension_init_context.wwise_world
 	local is_server = extension_init_context.is_server
+
 	self._world = extension_init_context.world
 	self._physics_world = World.physics_world(self._world)
 	self._wwise_world = wwise_world
 	self._is_server = is_server
 	self._charge_level = extension_init_data.charge_level
 	self._is_critical_strike = extension_init_data.is_critical_strike
+
 	local owner_unit = extension_init_data.owner_unit
+
 	self._owner_unit = owner_unit
+
 	local projectile_template_name = extension_init_data.projectile_template_name
 	local projectile_template = ProjectileTemplates[projectile_template_name]
 	local effects = projectile_template.effects
+
 	self._projectile_template = projectile_template
 	self._effects = effects
 	self._unit = unit
@@ -41,14 +48,18 @@ ProjectileFxExtension.init = function (self, extension_init_context, unit, exten
 	self._effect_ids = {}
 	self._source_id = WwiseWorld.make_manual_source(wwise_world, unit)
 	self._speed_parameter_value = 0
+
 	local fx_system = Managers.state.extension:system("fx_system")
 	local owner_particle_group_id = fx_system.unit_to_particle_group_lookup[owner_unit]
+
 	self._optional_particle_group_id = owner_particle_group_id
 end
 
 ProjectileFxExtension.extensions_ready = function (self, world, unit)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	self._locomotion_extension = locomotion_extension
+
 	local effects = self._effects
 
 	if effects and effects.spawn then
@@ -187,6 +198,7 @@ end
 
 ProjectileFxExtension.on_fuse_started = function (self)
 	self._fuse_started = true
+
 	local effects = self._effects
 
 	if effects and effects.fuse then
@@ -283,6 +295,7 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 
 		if looping_event_name then
 			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, looping_event_name, source_id)
+
 			self._looping_playing_ids[effect_type] = playing_id
 		end
 
@@ -306,6 +319,7 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 			local rotation = Quaternion.identity()
 			local optional_particle_group_id = self._optional_particle_group_id
 			local effect_id = World.create_particles(world, particle_name, position, rotation, nil, optional_particle_group_id)
+
 			self._effect_ids[effect_type] = effect_id
 
 			if vfx.link then
@@ -409,7 +423,7 @@ ProjectileFxExtension.set_speed_paramater = function (self, speed)
 	local prev_speed = self._speed_parameter_value
 	local delta = math.abs(prev_speed - speed)
 
-	if PARAMETER_RESOLUTION < delta then
+	if delta > PARAMETER_RESOLUTION then
 		self._speed_parameter_value = speed
 
 		WwiseWorld.set_source_parameter(self._wwise_world, self._source_id, WWISE_PARAMETER_NAME_SPEED, speed)

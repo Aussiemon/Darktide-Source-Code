@@ -1,34 +1,40 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/debug/sweep_editor.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local SweepSpline = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepSplineVisualizer = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_visualizer")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local SweepEditor = class("SweepEditor")
+
 SweepEditor.LOG_TAG = "SweepEditor"
+
 local POINT_MODIFICATION_TYPES = {
 	"up",
-	"depth"
+	"depth",
 }
 
 for i = 1, #POINT_MODIFICATION_TYPES do
 	local type_name = POINT_MODIFICATION_TYPES[i]
+
 	POINT_MODIFICATION_TYPES[type_name] = i
 end
 
 SweepEditor.init = function (self)
 	self._drawer = Debug:drawer({
 		mode = "immediate",
-		name = "SweepEditor"
+		name = "SweepEditor",
 	})
 	self._input_service = nil
 end
 
 SweepEditor.run = function (self, unit, weapon_template_name, action_name)
 	self._first_person_component = ScriptUnit.extension(unit, "unit_data_system"):read_component("first_person")
+
 	local weapon_template = WeaponTemplates[weapon_template_name]
 	local action_settings = Action.action_settings(weapon_template, action_name)
 	local spline_settings = action_settings.spline_settings
-	local sweep_type = nil
+	local sweep_type
 
 	if spline_settings.matrices_data_location then
 		self._sweep_spline = SweepSplineExported:new(action_settings, self._first_person_component)
@@ -57,12 +63,16 @@ SweepEditor._dump = function (self)
 	local spline_settings = self._action_settings.spline_settings
 	local dump_string = string.format("%s - %s\nspline_settings = {\n", self._weapon_template_name, self._action_name)
 	local apo = spline_settings.anchor_point_offset
+
 	dump_string = string.format("%s    anchor_point_offset = {%.2f, %.2f, %.2f},\n", dump_string, apo[1], apo[2], apo[3])
+
 	local points = spline_settings.points
+
 	dump_string = string.format("%s    points = {\n", dump_string)
 
 	for i = 1, #points do
 		local point = points[i]
+
 		dump_string = string.format("%s        {%.2f, %.2f, %.2f},\n", dump_string, point[1], point[2], point[3])
 	end
 
@@ -78,6 +88,7 @@ end
 
 SweepEditor.update = function (self, dt, t)
 	self._input_service = Debug:debug_input_service()
+
 	local sweep_spline = self._sweep_spline
 
 	if sweep_spline then
@@ -87,14 +98,17 @@ SweepEditor.update = function (self, dt, t)
 			self._selected_point = self:_update_point_cycling(sweep_spline, self._selected_point)
 			self._modifying_anchor_point = self:_update_anchor_point_toggle(self._modifying_anchor_point)
 			self._point_modification_index = self:_update_point_modification_cycling(self._point_modification_index)
+
 			local spline_settings = self._action_settings.spline_settings
-			local rebuild = nil
+			local rebuild
 
 			if self._modifying_anchor_point then
 				local point = spline_settings.anchor_point_offset
+
 				rebuild = self:_update_point_modification(sweep_spline, point, self._point_modification_index, dt)
 			else
 				local point = spline_settings.points[self._selected_point]
+
 				rebuild = self:_update_point_modification(sweep_spline, point, self._point_modification_index, dt)
 			end
 
@@ -208,8 +222,7 @@ end
 SweepEditor._draw = function (self, sweep_timer, sweep_time)
 	local drawer = self._drawer
 	local sweep_spline = self._sweep_spline
-	local combined_spline = true
-	local control_splines = false
+	local combined_spline, control_splines = true, false
 	local color = Color.white()
 
 	SweepSplineVisualizer.draw_splines(sweep_spline, drawer, sweep_time, combined_spline, control_splines, color)
@@ -255,7 +268,7 @@ SweepEditor._draw_points = function (self, drawer, sweep_spline, modification_in
 
 			sweep_spline:draw_vector_at_point(drawer, Color.red(), i, right * length)
 
-			local dir, dir_color = nil
+			local dir, dir_color
 			local modification_type = POINT_MODIFICATION_TYPES[modification_index]
 
 			if modification_type == "up" then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_renegade_twin_captain_disappear_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -13,26 +15,25 @@ BtRenegadeTwinCaptainDisappearAction.enter = function (self, unit, breed, blackb
 	anim_extension:anim_event(anim_event)
 
 	local disappear_timing = action_data.disappear_timings[anim_event]
+
 	scratchpad.disappear_timing = t + disappear_timing
 end
 
 BtRenegadeTwinCaptainDisappearAction.init_values = function (self, blackboard)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.should_disappear = false
 	behavior_component.should_disappear_instant = false
 	behavior_component.disappear_index = 0
 end
 
 BtRenegadeTwinCaptainDisappearAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	if scratchpad.disappear_timing <= t then
+	if t >= scratchpad.disappear_timing then
 		local explode_position_node = action_data.explode_position_node
 		local position = Unit.world_position(unit, Unit.node(unit, explode_position_node))
 		local spawn_component = blackboard.spawn
-		local world = spawn_component.world
-		local physics_world = spawn_component.physics_world
-		local impact_normal = Vector3.up()
-		local charge_level = 1
-		local attack_type = nil
+		local world, physics_world = spawn_component.world, spawn_component.physics_world
+		local impact_normal, charge_level, attack_type = Vector3.up(), 1
 		local power_level = action_data.power_level
 		local explosion_template = action_data.explosion_template
 

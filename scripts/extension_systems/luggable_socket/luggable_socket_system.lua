@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/luggable_socket/luggable_socket_system.lua
+
 require("scripts/extension_systems/luggable_socket/luggable_socket_extension")
 
 local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
@@ -5,7 +7,7 @@ local LuggableSocketSystem = class("LuggableSocketSystem", "ExtensionSystemBase"
 local CLIENT_RPCS = {
 	"rpc_luggable_socket_luggable",
 	"rpc_luggable_socket_unlock",
-	"rpc_luggable_socket_set_visibility"
+	"rpc_luggable_socket_set_visibility",
 }
 
 LuggableSocketSystem.init = function (self, extension_system_creation_context, ...)
@@ -22,6 +24,7 @@ end
 
 LuggableSocketSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	local extension = LuggableSocketSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
+
 	self._socket_units[#self._socket_units + 1] = unit
 
 	return extension

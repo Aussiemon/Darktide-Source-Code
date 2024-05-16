@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/testify_camera.lua
+
 local RootCamera = require("scripts/managers/camera/cameras/root_camera")
 local TestifyCamera = class("TestifyCamera", "RootCamera")
+
 TestifyCamera.CAMERA_NODE_ID = 1
 
 TestifyCamera.init = function (self, root_node)

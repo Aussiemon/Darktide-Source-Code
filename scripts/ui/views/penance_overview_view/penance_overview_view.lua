@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/penance_overview_view/penance_overview_view.lua
+
 local PenanceOverviewViewDefinitions = require("scripts/ui/views/penance_overview_view/penance_overview_view_definitions")
 local PenanceOverviewViewSettings = require("scripts/ui/views/penance_overview_view/penance_overview_view_settings")
 local AchievementCategories = require("scripts/settings/achievements/achievement_categories")
@@ -37,6 +39,7 @@ local _format_progress_params = {}
 
 local function _format_progress(current_progress, goal)
 	local params = _format_progress_params
+
 	params.progress = current_progress
 	params.goal = goal
 
@@ -46,6 +49,7 @@ end
 local function _penance_reward_item_to_gear(item)
 	local gear = table.clone(item)
 	local gear_id = gear.uuid
+
 	gear.overrides = nil
 	gear.id = nil
 	gear.uuid = nil
@@ -73,11 +77,13 @@ PenanceOverviewView.init = function (self, settings, context)
 	self._ui_animations = {}
 	self._total_score = 0
 	self._score_by_category = {}
+
 	local save_manager = Managers.save
 
 	if save_manager then
 		local account_data = save_manager:account_data()
 		local penance_list_setting_show_list_view = account_data.interface_settings.penance_list_setting_show_list_view
+
 		self._use_large_penance_entries = penance_list_setting_show_list_view or false
 		self._use_large_penance_entries_init_value = self._use_large_penance_entries
 	end
@@ -102,6 +108,7 @@ PenanceOverviewView.init = function (self, settings, context)
 
 		for i = 1, #rewards do
 			local reward = rewards[i]
+
 			self._penance_to_reward_bundle_map[reward.penance_id] = reward.reward_bundle
 		end
 	end)
@@ -145,17 +152,18 @@ PenanceOverviewView.on_enter = function (self)
 	self._penance_tooltip_grid:set_visibility(false)
 
 	self._penance_tooltip_visible = false
+
 	local rumour_line = math.random() > 0.9
 
 	if rumour_line then
 		local vo_event_rumour = {
-			"hub_interact_boon_vendor_rumour_politics_a"
+			"hub_interact_boon_vendor_rumour_politics_a",
 		}
 
 		self:play_vo_events(vo_event_rumour, "boon_vendor_a", nil, 0.8)
 	else
 		local vo_event_greeting = {
-			"hub_interact_penance_greeting_a"
+			"hub_interact_penance_greeting_a",
 		}
 
 		self:play_vo_events(vo_event_greeting, "boon_vendor_a", nil, 0.8)
@@ -204,6 +212,7 @@ PenanceOverviewView._setup_background_world = function (self, world_params)
 	local world_name = world_params.world_name or self.view_name .. "_world"
 	local world_layer = world_params.world_layer or 1
 	local world_timer_name = world_params.timer_name or "ui"
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	if self._context then
@@ -237,6 +246,7 @@ end
 
 PenanceOverviewView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 80)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -261,6 +271,7 @@ end
 
 PenanceOverviewView.cb_on_toggle_penance_appearance = function (self)
 	self._use_large_penance_entries = not self._use_large_penance_entries
+
 	local options = self._penance_category_options
 	local index = self._selected_option_button_index
 	local force_selection = true
@@ -270,6 +281,7 @@ end
 
 PenanceOverviewView._set_title = function (self, text)
 	local widget = self._widgets_by_name.page_header
+
 	widget.content.text = Localize(text)
 end
 
@@ -295,14 +307,16 @@ PenanceOverviewView._setup_achievements = function (self)
 				parent = parent_name,
 				display_name = parent_category and parent_category.display_name or category_config.display_name,
 				icon = PenanceOverviewViewSettings.category_icons[category] or "content/ui/materials/icons/item_types/upper_bodies",
-				child_categories = {}
+				child_categories = {},
 			}
+
 			category_button_config[#category_button_config + 1] = data
 			category_ids_added[category] = data
 		end
 
 		if parent_name then
 			local child_categories = category_ids_added[parent_name].child_categories
+
 			child_categories[#child_categories + 1] = category_id
 		end
 	end
@@ -332,7 +346,9 @@ end
 
 PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numbers_to_add)
 	local player = self:_player()
+
 	numbers_to_add = numbers_to_add or math.huge
+
 	local max_amount = math.min(numbers_to_add, PenanceOverviewViewSettings.carousel_max_entries)
 	local carousel_achievement_layouts = {}
 
@@ -365,6 +381,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 				if not is_complete or self:_can_claim_achievement_by_id(achievement_id) then
 					local layout = self:_get_achievement_card_layout(achievement_id)
+
 					carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 					layout.achievement_id = achievement_id
 				end
@@ -387,6 +404,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 				if is_tracked and can_claim then
 					local layout = self:_get_achievement_card_layout(achievement_id)
+
 					carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 					layout.achievement_id = achievement_id
 				end
@@ -409,6 +427,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 				if can_claim then
 					local layout = self:_get_achievement_card_layout(achievement_id)
+
 					carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 					layout.achievement_id = achievement_id
 				end
@@ -428,6 +447,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 			if can_add_achievement(achievement_id) then
 				local layout = self:_get_achievement_card_layout(achievement_id)
+
 				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 				layout.achievement_id = achievement_id
 				layout.tracked = true
@@ -447,6 +467,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 			if can_claim then
 				local layout = self:_get_achievement_card_layout(achievement_id)
+
 				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 				layout.achievement_id = achievement_id
 			end
@@ -468,6 +489,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 			if can_claim or not is_complete and not is_meta then
 				local layout = self:_get_achievement_card_layout(achievement_id)
+
 				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 				layout.achievement_id = achievement_id
 			end
@@ -487,6 +509,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 			if not is_complete and is_meta then
 				local layout = self:_get_achievement_card_layout(achievement_id)
+
 				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 				layout.achievement_id = achievement_id
 			end
@@ -504,6 +527,7 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 			if not can_claim and is_completed then
 				local layout = self:_get_achievement_card_layout(achievement_id)
+
 				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
 				layout.achievement_id = achievement_id
 			end
@@ -622,6 +646,7 @@ PenanceOverviewView._cache_sub_categories = function (self)
 
 		if parent_name then
 			local _sub_categories = sub_categories[parent_name] or {}
+
 			_sub_categories[#_sub_categories + 1] = category_id
 			sub_categories[parent_name] = _sub_categories
 		end
@@ -632,35 +657,35 @@ end
 
 local layout_blueprint_names_by_grid = {
 	carousel = {
-		score = "carousel_penance_reward",
-		header = "carousel_penance_header",
 		body = "carousel_penance_body",
+		category = "carousel_penance_category",
+		completed = "carousel_penance_completed",
+		dynamic_spacing = "dynamic_spacing",
+		header = "carousel_penance_header",
+		penance_icon = "carousel_penance_icon",
+		penance_icon_and_name = "carousel_penance_icon_and_name",
 		penance_icon_small = "carousel_penance_icon_small",
+		progress_bar = "carousel_penance_progress_bar",
+		score = "carousel_penance_reward",
 		score_and_reward = "carousel_penance_score_and_reward",
 		stat = "carousel_penance_stat",
-		progress_bar = "carousel_penance_progress_bar",
 		tracked = "carousel_penance_tracked",
-		completed = "carousel_penance_completed",
-		category = "carousel_penance_category",
-		dynamic_spacing = "dynamic_spacing",
-		penance_icon_and_name = "carousel_penance_icon_and_name",
-		penance_icon = "carousel_penance_icon"
 	},
 	tooltip = {
-		score = "tooltip_penance_reward",
-		header = "tooltip_penance_header",
 		body = "tooltip_penance_body",
+		category = "tooltip_penance_category",
+		completed = "tooltip_penance_completed",
+		dynamic_spacing = "dynamic_spacing",
+		header = "tooltip_penance_header",
+		penance_icon = "tooltip_penance_icon",
+		penance_icon_and_name = "tooltip_penance_icon_and_name",
 		penance_icon_small = "tooltip_penance_icon_small",
+		progress_bar = "tooltip_penance_progress_bar",
+		score = "tooltip_penance_reward",
 		score_and_reward = "tooltip_penance_score_and_reward",
 		stat = "tooltip_penance_stat",
-		progress_bar = "tooltip_penance_progress_bar",
 		tracked = "tooltip_penance_tracked",
-		completed = "tooltip_penance_completed",
-		category = "tooltip_penance_category",
-		dynamic_spacing = "dynamic_spacing",
-		penance_icon_and_name = "tooltip_penance_icon_and_name",
-		penance_icon = "tooltip_penance_icon"
-	}
+	},
 }
 
 PenanceOverviewView._get_achievement_card_layout = function (self, achievement_id, is_tooltip)
@@ -686,8 +711,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 			widget_type = "claim_overlay",
 			size = {
 				grid_size[1],
-				grid_size[2]
-			}
+				grid_size[2],
+			},
 		}
 	end
 
@@ -695,24 +720,24 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 		layout[#layout + 1] = {
 			widget_type = layout_blueprint_names.tracked,
 			achievement_id = achievement_id,
-			tracked = is_favorite
+			tracked = is_favorite,
 		}
 		layout[#layout + 1] = {
 			widget_type = layout_blueprint_names.completed,
 			achievement_id = achievement_id,
-			completed = is_complete
+			completed = is_complete,
 		}
 		layout[#layout + 1] = {
 			widget_type = layout_blueprint_names.category,
-			achievement = achievement
+			achievement = achievement,
 		}
 	else
 		layout[#layout + 1] = {
 			widget_type = layout_blueprint_names.dynamic_spacing,
 			size = {
 				grid_size[1],
-				20
-			}
+				20,
+			},
 		}
 	end
 
@@ -723,8 +748,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 			widget_type = layout_blueprint_names.dynamic_spacing,
 			size = {
 				grid_size[1],
-				10
-			}
+				10,
+			},
 		}
 		height_used = height_used + 10
 	end
@@ -734,7 +759,7 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 		texture = achievement.icon,
 		completed = is_complete,
 		can_claim = can_claim,
-		family_index = achievement_family_order
+		family_index = achievement_family_order,
 	}
 	height_used = height_used + blueprint[layout_blueprint_names.penance_icon].size[2]
 
@@ -743,8 +768,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 			widget_type = layout_blueprint_names.dynamic_spacing,
 			size = {
 				grid_size[1],
-				5
-			}
+				5,
+			},
 		}
 		height_used = height_used + 5
 	end
@@ -754,7 +779,7 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 	if title then
 		layout[#layout + 1] = {
 			widget_type = layout_blueprint_names.header,
-			text = title
+			text = title,
 		}
 		height_used = height_used + blueprint[layout_blueprint_names.header].size[2]
 	end
@@ -765,18 +790,19 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.dynamic_spacing,
 				size = {
 					grid_size[1],
-					10
-				}
+					10,
+				},
 			}
 			height_used = height_used + 10
 		end
 
 		local bar_progress, progress, goal = self:_get_achievement_bar_progress(achievement_definition)
 		local progress_text = progress > 0 and TextUtilities.apply_color_to_text(tostring(progress), Color.ui_achievement_icon_completed(255, true)) or tostring(progress)
+
 		layout[#layout + 1] = {
 			widget_type = layout_blueprint_names.progress_bar,
 			text = progress_text .. "/" .. tostring(goal),
-			progress = bar_progress
+			progress = bar_progress,
 		}
 		height_used = height_used + blueprint[layout_blueprint_names.progress_bar].size[2]
 
@@ -785,8 +811,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.dynamic_spacing,
 				size = {
 					grid_size[1],
-					10
-				}
+					10,
+				},
 			}
 			height_used = height_used + 10
 		end
@@ -794,13 +820,13 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 
 	local min_description_height = 10
 	local description = AchievementUIHelper.localized_description(achievement_definition)
-	local description_layout_entry = nil
+	local description_layout_entry
 
 	if description and not can_claim then
 		description_layout_entry = {
 			widget_type = layout_blueprint_names.body,
 			text = description,
-			size = {}
+			size = {},
 		}
 		layout[#layout + 1] = description_layout_entry
 	end
@@ -814,13 +840,13 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 			widget_type = layout_blueprint_names.score_and_reward,
 			item = reward_item,
 			item_group = item_group,
-			score = achievement_score
+			score = achievement_score,
 		}
 		reward_layouts_height = reward_layouts_height + blueprint[layout_blueprint_names.score_and_reward].size[2]
 	else
 		reward_layouts[#reward_layouts + 1] = {
 			widget_type = layout_blueprint_names.score,
-			score = achievement_score
+			score = achievement_score,
 		}
 		reward_layouts_height = reward_layouts_height + blueprint[layout_blueprint_names.score].size[2]
 	end
@@ -841,7 +867,7 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 
 		local stat_size = {
 			blueprint[layout_blueprint_names.stat].size[1],
-			blueprint[layout_blueprint_names.stat].size[2]
+			blueprint[layout_blueprint_names.stat].size[2],
 		}
 		local max_amount_on_per_column = math.floor(allowed_stats_height / stat_size[2])
 
@@ -858,24 +884,28 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 			local target_text = value == target and TextUtilities.apply_color_to_text(tostring(target), Color.ui_achievement_icon_completed(255, true)) or tostring(target)
 			local progress_text = value_text .. "/" .. target_text
 			local loc_stat_name = string.format("• %s", Localize(StatDefinitions[stat_name].stat_name or "unknown"))
+
 			stats_layouts[#stats_layouts + 1] = {
 				widget_type = layout_blueprint_names.stat,
 				text = loc_stat_name,
 				value = progress_text,
 				size = {
 					stat_size[1],
-					stat_size[2]
-				}
+					stat_size[2],
+				},
 			}
 		end
 
-		local max_stat_amount = nil
+		local max_stat_amount
 
 		if max_amount_on_per_column < #stats_layouts then
 			local num_columns = 2
+
 			stat_size[1] = stat_size[1] / num_columns
 			max_stat_amount = math.min(max_amount_on_per_column * num_columns, #stats_layouts)
+
 			local biggest_column_amount = math.ceil(max_stat_amount / num_columns)
+
 			height_used = height_used + stat_size[2] * biggest_column_amount
 		else
 			max_stat_amount = math.min(#stats_layouts, max_amount_on_per_column)
@@ -887,8 +917,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.dynamic_spacing,
 				size = {
 					grid_size[1],
-					top_spacing
-				}
+					top_spacing,
+				},
 			}
 			height_used = height_used + top_spacing
 		end
@@ -908,12 +938,12 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.body,
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				text = Localize("loc_penance_menu_additional_objectives_info", true, {
-					num_extra_objectives = tostring(#stats_layouts - max_stat_amount)
+					num_extra_objectives = tostring(#stats_layouts - max_stat_amount),
 				}),
 				size = {
 					nil,
-					20
-				}
+					20,
+				},
 			}
 			height_used = height_used + 20
 		end
@@ -923,8 +953,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.dynamic_spacing,
 				size = {
 					grid_size[1],
-					bottom_spacing
-				}
+					bottom_spacing,
+				},
 			}
 			height_used = height_used + bottom_spacing
 		end
@@ -945,23 +975,25 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 		for sub_achievement_id, _ in pairs(sub_achievements) do
 			if num_entries < max_entries then
 				num_entries = num_entries + 1
+
 				local sub_achievement = AchievementUIHelper.achievement_definition_by_id(sub_achievement_id)
 				local sub_achievement_is_complete = Managers.achievements:achievement_completed(player, sub_achievement_id)
 				local sub_achievement_title = AchievementUIHelper.localized_title(sub_achievement)
 				local sub_achievement_family_order = AchievementUIHelper.get_achievement_family_order(sub_achievement)
+
 				sub_achievement_entries[#sub_achievement_entries + 1] = {
 					widget_type = layout_blueprint_names[blueprint_name],
 					texture = sub_achievement.icon,
 					completed = sub_achievement_is_complete,
 					text = sub_achievement_title,
-					family_index = sub_achievement_family_order
+					family_index = sub_achievement_family_order,
 				}
 			else
 				break
 			end
 		end
 
-		local num_rows = nil
+		local num_rows
 
 		if blueprint_name == "penance_icon_small" then
 			local entry_width = blueprint[layout_blueprint_names[blueprint_name]].size[1]
@@ -970,12 +1002,13 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 			local mid_spacing = math.min(num_entries > 0 and width_left / (num_entries - 1) or 0, 10)
 			local total_mid_spacing = mid_spacing * (num_entries - 1)
 			local side_spacing = (grid_size[1] - (total_entries_width + total_mid_spacing)) * 0.5
+
 			layout[#layout + 1] = {
 				widget_type = layout_blueprint_names.dynamic_spacing,
 				size = {
 					side_spacing,
-					0
-				}
+					0,
+				},
 			}
 
 			for i = 1, #sub_achievement_entries do
@@ -986,8 +1019,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 						widget_type = layout_blueprint_names.dynamic_spacing,
 						size = {
 							mid_spacing,
-							0
-						}
+							0,
+						},
 					}
 				end
 			end
@@ -996,10 +1029,12 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.dynamic_spacing,
 				size = {
 					side_spacing,
-					0
-				}
+					0,
+				},
 			}
+
 			local total_width = entry_width * num_entries
+
 			num_rows = math.ceil(total_width / grid_size[1])
 		else
 			if use_spacing then
@@ -1007,8 +1042,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 					widget_type = layout_blueprint_names.dynamic_spacing,
 					size = {
 						grid_size[1],
-						20
-					}
+						20,
+					},
 				}
 				height_used = height_used + 20
 			end
@@ -1021,8 +1056,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 						widget_type = layout_blueprint_names.dynamic_spacing,
 						size = {
 							grid_size[1],
-							10
-						}
+							10,
+						},
 					}
 					height_used = height_used + 10
 				end
@@ -1039,8 +1074,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 					widget_type = layout_blueprint_names.dynamic_spacing,
 					size = {
 						grid_size[1],
-						10
-					}
+						10,
+					},
 				}
 				height_added = height_added + 10
 			end
@@ -1050,12 +1085,12 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.body,
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				text = Localize("loc_penance_menu_additional_objectives_info", true, {
-					num_extra_objectives = tostring(num_sub_achievements - max_entries)
+					num_extra_objectives = tostring(num_sub_achievements - max_entries),
 				}),
 				size = {
 					nil,
-					20
-				}
+					20,
+				},
 			}
 			height_added = height_added + 20
 
@@ -1064,8 +1099,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 					widget_type = layout_blueprint_names.dynamic_spacing,
 					size = {
 						grid_size[1],
-						10
-					}
+						10,
+					},
 				}
 				height_added = height_added + 10
 			end
@@ -1074,8 +1109,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 				widget_type = layout_blueprint_names.dynamic_spacing,
 				size = {
 					grid_size[1],
-					20
-				}
+					20,
+				},
 			}
 			height_added = height_added + 20
 		end
@@ -1092,8 +1127,8 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 			widget_type = layout_blueprint_names.dynamic_spacing,
 			size = {
 				grid_size[1],
-				space_left
-			}
+				space_left,
+			},
 		}
 		height_used = height_used + space_left
 	end
@@ -1143,9 +1178,12 @@ PenanceOverviewView._cache_achievements = function (self, player)
 
 		if is_visible then
 			local _achievements_by_category = achievements_by_category[category] or {}
+
 			_achievements_by_category[#_achievements_by_category + 1] = achievement_id
 			achievements_by_category[category] = _achievements_by_category
+
 			local _achievements_by_category_unsorted = achievements_by_category_unsorted[category] or {}
+
 			_achievements_by_category_unsorted[#_achievements_by_category_unsorted + 1] = achievement_id
 			achievements_by_category_unsorted[category] = _achievements_by_category_unsorted
 
@@ -1158,6 +1196,7 @@ PenanceOverviewView._cache_achievements = function (self, player)
 
 		if should_add_score then
 			local achievement_score = achievement_config.score or 0
+
 			score_by_category[category] = (score_by_category[category] or 0) + achievement_score
 
 			if is_completed then
@@ -1180,8 +1219,7 @@ PenanceOverviewView._cache_achievements = function (self, player)
 			return _sort_by_index(a, b)
 		end
 
-		local a_type = type(a_completion_time)
-		local b_type = type(b_completion_time)
+		local a_type, b_type = type(a_completion_time), type(b_completion_time)
 
 		if a_type == b_type then
 			return b_completion_time < a_completion_time
@@ -1238,7 +1276,7 @@ PenanceOverviewView._cache_achievements = function (self, player)
 		local b_using_progress = self:_draw_progress_bar_for_achievement(b_achievement)
 		local b_bar_progress = b_using_progress and self:_get_achievement_bar_progress(b_achievement) or 0
 
-		return a_bar_progress > b_bar_progress
+		return b_bar_progress < a_bar_progress
 	end)
 
 	self._score_by_category = score_by_category
@@ -1248,7 +1286,7 @@ end
 local _device_list = {
 	Keyboard,
 	Mouse,
-	Pad1
+	Pad1,
 }
 
 PenanceOverviewView._handle_input = function (self, input_service, dt, t)
@@ -1314,6 +1352,7 @@ PenanceOverviewView.draw = function (self, dt, t, input_service, layer)
 	local render_settings = self._render_settings
 	local alpha_multiplier = render_settings.alpha_multiplier
 	local animation_alpha_multiplier = self.animation_alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = animation_alpha_multiplier
 
 	PenanceOverviewView.super.draw(self, dt, t, input_service, layer)
@@ -1357,6 +1396,7 @@ PenanceOverviewView._add_carousel_entry = function (self, index)
 	for i = 1, #new_layouts do
 		local layout = new_layouts[i]
 		local entry = self:_create_carousel_entry(layout)
+
 		self._carousel_entries[index] = entry
 	end
 end
@@ -1428,8 +1468,10 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 			local current_progress = self._carousel_current_progress
 			local previous_progress = carousel_current_progress
 			local progress_diff = current_progress >= 0 and current_progress - previous_progress or -(current_progress - previous_progress)
+
 			self._carousel_accumulated_progress = self._carousel_accumulated_progress or 0
 			self._carousel_accumulated_progress = self._carousel_accumulated_progress + progress_diff
+
 			local carousel_state = "inactive"
 
 			if self._carousel_current_progress ~= carousel_current_progress then
@@ -1477,16 +1519,16 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 			end
 
 			local carousel_entry_anim_progress = self._carousel_entry_anim_progress or 0
-			local hovered_card_index, hovered_card_layer = nil
+			local hovered_card_index, hovered_card_layer
 			local scroll_to_card_on_pressed = false
 			local favorite_on_right_pressed = false
-			local hovered_carousel_index = nil
+			local hovered_carousel_index
 
 			for i = 1, num_visible_entries do
-				local read_index = (start_reading_index + i - 1) % num_options + 1
+				local read_index = (start_reading_index + (i - 1)) % num_options + 1
 				local index_diff = i - center_index
 				local index_diff_abs = math.abs(index_diff)
-				local entry_anim_progress = 0.8 + 0.2 * math.clamp(carousel_entry_anim_progress * (center_index - index_diff_abs) * 0.5, 0, 1)
+				local entry_anim_progress = 0.8 + 0.2 * math.clamp(carousel_entry_anim_progress * ((center_index - index_diff_abs) * 0.5), 0, 1)
 				local entry_alpha_anim_progress = math.clamp(carousel_entry_anim_progress * (center_index - index_diff_abs + 1), 0, 1)
 				local entry = carousel_entries[read_index]
 				local grid = entry.grid
@@ -1540,6 +1582,7 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.content.hovered = false
 				end
 			end
@@ -1563,6 +1606,7 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 
 					for i = 1, #widgets do
 						local widget = widgets[i]
+
 						widget.content.hovered = true
 					end
 				end
@@ -1600,14 +1644,16 @@ end
 
 PenanceOverviewView._set_carousel_index = function (self, index, animate, has_direction_changed)
 	local previous_index = self._current_carousel_index or 1
+
 	self._current_carousel_index = index
+
 	local num_carousel_entries = #self._carousel_entries
 	local progress_per_index = 1 / num_carousel_entries
 	local start = previous_index - 1
 	local goal = index - 1
 	local clockwise_distance = (goal - start) % num_carousel_entries
 	local counterclockwise_distance = (start - goal) % num_carousel_entries
-	local target_progress = nil
+	local target_progress
 
 	if clockwise_distance < counterclockwise_distance then
 		target_progress = progress_per_index * clockwise_distance
@@ -1641,6 +1687,7 @@ PenanceOverviewView._handle_carousel_scroll = function (self, input_service, dt)
 	else
 		local axis = 2
 		local scroll_axis = input_service:get("scroll_axis")
+
 		navigation_value = scroll_axis[axis]
 	end
 
@@ -1715,7 +1762,9 @@ PenanceOverviewView._setup_account_state_data = function (self, data)
 	self:_add_points(total_penance_points, animate, force_reward_bar_change)
 
 	local rewarded_tiers = state.rewarded + 1
+
 	self._rewarded_tiers = rewarded_tiers
+
 	local already_claimed_tiers = data.claims
 end
 
@@ -1788,7 +1837,7 @@ PenanceOverviewView._setup_track_data = function (self, data)
 
 				rewards[i] = {
 					points_required = xp_limit,
-					items = items
+					items = items,
 				}
 			end
 		end
@@ -1843,7 +1892,7 @@ PenanceOverviewView._update_animations = function (self, dt, t)
 	local currently_hovered_item = wintrack_element:currently_hovered_item()
 	local anim_speed = 3
 	local previous_anim_wintrack_reward_hover_progress = self._anim_wintrack_reward_hover_progress or 0
-	local anim_wintrack_reward_hover_progress = nil
+	local anim_wintrack_reward_hover_progress
 
 	if currently_hovered_item then
 		anim_wintrack_reward_hover_progress = math.min(previous_anim_wintrack_reward_hover_progress + dt * anim_speed, 1)
@@ -1867,6 +1916,7 @@ PenanceOverviewView._update_animations = function (self, dt, t)
 		end
 
 		local widgets_by_name = self._widgets_by_name
+
 		widgets_by_name.page_header.alpha_multiplier = global_alpha_multiplier
 		widgets_by_name.carousel_header.alpha_multiplier = global_alpha_multiplier
 		widgets_by_name.carousel_footer.alpha_multiplier = global_alpha_multiplier
@@ -2008,7 +2058,7 @@ PenanceOverviewView.update = function (self, dt, t, input_service)
 
 		visual_penance_points = wintrack_element:visual_points()
 
-		if wintrack_element:max_points() <= visual_penance_points then
+		if visual_penance_points >= wintrack_element:max_points() then
 			visual_penance_points = self._total_score
 		end
 	end
@@ -2019,7 +2069,7 @@ PenanceOverviewView.update = function (self, dt, t, input_service)
 		local reward_presentation_item = self._wintrack_reward_items[1]
 		local result_data = {
 			type = "item",
-			item = reward_presentation_item
+			item = reward_presentation_item,
 		}
 
 		self:_setup_result_overlay(result_data, RESULT_TYPES.wintrack)
@@ -2093,12 +2143,14 @@ PenanceOverviewView._claim_wintrack_reward = function (self, index)
 					local item_id = claimed_reward.id
 					local reward_id = claimed_reward.gearId
 					local rewarded_master_item = MasterItems.get_item(item_id)
+
 					rewarded_master_item.uuid = reward_id
 					rewarded_master_item.masterDataInstance = {
 						id = item_id,
 						overrides = {},
-						slots = rewarded_master_item.slots
+						slots = rewarded_master_item.slots,
 					}
+
 					local gear_id, gear = _penance_reward_item_to_gear(rewarded_master_item)
 
 					Managers.data_service.gear:on_gear_created(gear_id, gear)
@@ -2117,6 +2169,7 @@ PenanceOverviewView._claim_wintrack_reward = function (self, index)
 			Managers.telemetry_reporters:reporter("penance_view"):register_track_claim_event(index)
 
 			local reward_items = reward.items
+
 			self._wintrack_reward_items = {}
 
 			for i, item in ipairs(reward_items) do
@@ -2204,26 +2257,27 @@ PenanceOverviewView._setup_tooltip_grid = function (self, layout)
 	if not self._penance_tooltip_grid then
 		local mask_padding_size = 0
 		local grid_settings = {
-			scrollbar_width = 7,
-			hide_dividers = false,
-			widget_icon_load_margin = 0,
 			enable_gamepad_scrolling = true,
-			ignore_divider_height = true,
-			use_terminal_background = true,
-			title_height = 0,
-			scrollbar_horizontal_offset = -8,
 			hide_background = false,
+			hide_dividers = false,
+			ignore_divider_height = true,
+			scrollbar_horizontal_offset = -8,
+			scrollbar_width = 7,
+			title_height = 0,
+			use_terminal_background = true,
+			widget_icon_load_margin = 0,
 			grid_spacing = {
 				0,
-				0
+				0,
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1],
-				grid_size[2] + mask_padding_size
-			}
+				grid_size[2] + mask_padding_size,
+			},
 		}
 		local layer = 10
+
 		self._penance_tooltip_grid = self:_add_element(ViewElementGrid, "tooltip_grid", layer, grid_settings, grid_scenegraph_id)
 
 		self:_update_element_position(grid_scenegraph_id, self._penance_tooltip_grid)
@@ -2232,22 +2286,22 @@ PenanceOverviewView._setup_tooltip_grid = function (self, layout)
 		local top_divider_material = "content/ui/materials/frames/item_info_upper_dynamic"
 		local top_divider_size = {
 			grid_size[1] + 6,
-			36
+			36,
 		}
 		local top_divider_position = {
 			0,
 			-7,
-			0
+			0,
 		}
 		local bottom_divider_material = "content/ui/materials/frames/item_info_lower_dynamic"
 		local bottom_divider_size = {
 			grid_size[1] + 6,
-			36
+			36,
 		}
 		local bottom_divider_position = {
 			0,
 			1,
-			0
+			0,
 		}
 
 		self._penance_tooltip_grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
@@ -2268,29 +2322,30 @@ PenanceOverviewView._setup_penance_grid = function (self, layout, optional_displ
 	if not self._penance_grid then
 		local mask_padding_size = 0
 		local grid_settings = {
-			scrollbar_width = 7,
-			scrollbar_vertical_offset = -28,
-			widget_icon_load_margin = 0,
-			hide_background = false,
-			top_padding = 80,
-			ignore_divider_height = true,
-			scrollbar_horizontal_offset = -8,
-			scroll_start_margin = 110,
-			scrollbar_vertical_margin = 80,
 			enable_gamepad_scrolling = false,
-			use_terminal_background = true,
+			hide_background = false,
+			ignore_divider_height = true,
+			scroll_start_margin = 110,
+			scrollbar_horizontal_offset = -8,
 			scrollbar_vertical_alignment = "bottom",
+			scrollbar_vertical_margin = 80,
+			scrollbar_vertical_offset = -28,
+			scrollbar_width = 7,
 			title_height = 30,
+			top_padding = 80,
+			use_terminal_background = true,
 			using_custom_gamepad_navigation = true,
+			widget_icon_load_margin = 0,
 			grid_spacing = PenanceOverviewViewSettings.penance_grid_spacing,
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 40,
-				grid_size[2] + mask_padding_size
+				grid_size[2] + mask_padding_size,
 			},
-			edge_padding = background_size[1] - grid_size[1]
+			edge_padding = background_size[1] - grid_size[1],
 		}
 		local layer = 10
+
 		self._penance_grid = self:_add_element(ViewElementGrid, "penance_grid", layer, grid_settings, grid_scenegraph_id)
 
 		self:_update_element_position(grid_scenegraph_id, self._penance_grid)
@@ -2299,22 +2354,22 @@ PenanceOverviewView._setup_penance_grid = function (self, layout, optional_displ
 		local top_divider_material = "content/ui/materials/frames/achievements/panel_main_top_frame"
 		local top_divider_size = {
 			grid_size[1] + 60,
-			66
+			66,
 		}
 		local top_divider_position = {
 			0,
 			0,
-			0
+			0,
 		}
 		local bottom_divider_material = "content/ui/materials/frames/achievements/panel_main_lower_frame"
 		local bottom_divider_size = {
 			grid_size[1] + 60,
-			84
+			84,
 		}
 		local bottom_divider_position = {
 			0,
 			0,
-			0
+			0,
 		}
 
 		self._penance_grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
@@ -2328,7 +2383,7 @@ PenanceOverviewView._setup_penance_grid = function (self, layout, optional_displ
 
 	local grid = self._penance_grid
 	local left_click_callback = callback(self, "_cb_on_penance_pressed")
-	local right_click_callback = nil
+	local right_click_callback
 	local optional_on_present_callback = callback(function ()
 		grid:select_first_index()
 	end)
@@ -2339,7 +2394,8 @@ end
 
 PenanceOverviewView._on_penance_grid_selection_changed = function (self, index)
 	self._selected_grid_penance_index = index
-	local selected_achievement_id = nil
+
+	local selected_achievement_id
 	local penance_grid_widgets = self._penance_grid:widgets()
 
 	if penance_grid_widgets then
@@ -2349,6 +2405,7 @@ PenanceOverviewView._on_penance_grid_selection_changed = function (self, index)
 			local content = widget.content
 			local element = content.element
 			local achievement_id = element and element.achievement_id
+
 			selected_achievement_id = achievement_id
 		end
 	end
@@ -2383,43 +2440,50 @@ PenanceOverviewView._claim_penance = function (self, reward_bundle)
 		end
 
 		local penance_id = reward_bundle.sourceInfo.sourceIdentifier
+
 		self._penance_to_reward_bundle_map[penance_id] = nil
 
 		Managers.telemetry_reporters:reporter("penance_view"):register_penance_claim_event(penance_id)
 
 		self._refresh_carousel_entries = true
-		local item_data, total_xp_awarded = nil
+
+		local item_data, total_xp_awarded
 
 		for _, reward in pairs(rewards) do
 			local reward_type = reward.type
 
 			if reward_type == "track-xp" then
 				local xp_awarded = reward.xp
+
 				total_xp_awarded = (total_xp_awarded or 0) + xp_awarded
 			elseif reward_type == "item" then
 				local master_id = reward.id
 
 				if MasterItems.item_exists(master_id) then
 					local rewarded_master_item = MasterItems.get_item(master_id)
+
 					rewarded_master_item.uuid = reward.gearId
 					rewarded_master_item.masterDataInstance = {
 						id = master_id,
 						overrides = {},
-						slots = rewarded_master_item.slots
+						slots = rewarded_master_item.slots,
 					}
-					local gear_id, gear = _penance_reward_item_to_gear(rewarded_master_item)
 
-					Managers.data_service.gear:on_gear_created(gear_id, gear)
+					do
+						local gear_id, gear = _penance_reward_item_to_gear(rewarded_master_item)
 
-					local item = MasterItems.get_item_instance(gear, gear_id)
+						Managers.data_service.gear:on_gear_created(gear_id, gear)
 
-					if item then
-						ItemUtils.mark_item_id_as_new(item, false)
+						local item = MasterItems.get_item_instance(gear, gear_id)
+
+						if item then
+							ItemUtils.mark_item_id_as_new(item, false)
+						end
 					end
 
 					item_data = {
 						type = "item",
-						item = rewarded_master_item
+						item = rewarded_master_item,
 					}
 				end
 			end
@@ -2430,6 +2494,7 @@ PenanceOverviewView._claim_penance = function (self, reward_bundle)
 
 		if num_unclaimed_left > 0 then
 			num_unclaimed_left = num_unclaimed_left - 1
+
 			local content = self._widget_content_by_category[selected_option]
 
 			if num_unclaimed_left == 0 and content then
@@ -2484,7 +2549,7 @@ PenanceOverviewView._cb_on_penance_secondary_pressed = function (self, widget, c
 	local element = content.element
 	local achievement_id = element.achievement_id
 	local is_currently_favorited = self:is_favorite_achievement(achievement_id)
-	local is_favorited = nil
+	local is_favorited
 
 	if not is_currently_favorited and not element.completed then
 		is_favorited = self:request_achievement_favorite_add(achievement_id)
@@ -2520,14 +2585,13 @@ PenanceOverviewView._cb_on_penance_pressed = function (self, widget, config)
 
 			self._penance_claimed_callback = nil
 		end
+	else
+		self._present_reward = true
 
-		return
+		local penance_grid = self._penance_grid
+
+		penance_grid:select_grid_widget(widget)
 	end
-
-	self._present_reward = true
-	local penance_grid = self._penance_grid
-
-	penance_grid:select_grid_widget(widget)
 end
 
 PenanceOverviewView._setup_result_overlay = function (self, result_data, result_type)
@@ -2611,7 +2675,9 @@ PenanceOverviewView._get_achievement_bar_progress = function (self, achievement_
 	local achievement_type_name = achievement_definition.type
 	local achievement_type = AchievementTypes[achievement_type_name]
 	local progress, goal = achievement_type.get_progress(achievement_definition, player)
+
 	progress = math.min(progress, goal)
+
 	local fraction = progress / goal
 
 	return fraction, progress, goal
@@ -2626,7 +2692,7 @@ PenanceOverviewView._get_penance_layout_entry_by_achievement_id = function (self
 	local can_claim = self:_can_claim_achievement_by_id(achievement_id)
 	local is_complete = not can_claim and Managers.achievements:achievement_completed(player, achievement_id)
 	local draw_progress_bar = self:_draw_progress_bar_for_achievement(achievement_definition, is_complete)
-	local bar_progress, progress, goal = nil
+	local bar_progress, progress, goal
 
 	if draw_progress_bar then
 		bar_progress, progress, goal = self:_get_achievement_bar_progress(achievement_definition)
@@ -2656,7 +2722,7 @@ PenanceOverviewView._get_penance_layout_entry_by_achievement_id = function (self
 		bar_values_text = bar_values_text,
 		can_claim = can_claim,
 		achievement_id = achievement_id,
-		family_index = achievement_family_order
+		family_index = achievement_family_order,
 	}
 end
 
@@ -2684,13 +2750,14 @@ PenanceOverviewView.on_category_button_pressed = function (self, index, option, 
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_size[1],
-						10
-					}
+						10,
+					},
 				}
 			end
 
 			for i = 1, #achievements do
 				local achievement_id = achievements[i]
+
 				layout[#layout + 1] = self:_get_penance_layout_entry_by_achievement_id(achievement_id)
 			end
 		end
@@ -2708,16 +2775,17 @@ PenanceOverviewView.on_category_button_pressed = function (self, index, option, 
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							10
-						}
+							10,
+						},
 					}
 					layout[#layout + 1] = {
 						widget_type = "header",
-						text = Localize(child_category.display_name)
+						text = Localize(child_category.display_name),
 					}
 
 					for j = 1, #child_achievements do
 						local child_achievement_id = child_achievements[j]
+
 						layout[#layout + 1] = self:_get_penance_layout_entry_by_achievement_id(child_achievement_id)
 					end
 
@@ -2725,8 +2793,8 @@ PenanceOverviewView.on_category_button_pressed = function (self, index, option, 
 						widget_type = "dynamic_spacing",
 						size = {
 							grid_size[1],
-							10
-						}
+							10,
+						},
 					}
 				end
 			end
@@ -2736,8 +2804,8 @@ PenanceOverviewView.on_category_button_pressed = function (self, index, option, 
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				10
-			}
+				10,
+			},
 		}
 	end
 
@@ -2761,26 +2829,26 @@ PenanceOverviewView._create_carousel_entry = function (self, layout)
 	local grid_size = self:_get_scenegraph_size(scenegraph_id)
 	local mask_padding_size = 40
 	local grid_settings = {
-		scrollbar_width = 7,
-		hide_dividers = false,
-		widget_icon_load_margin = 0,
 		enable_gamepad_scrolling = false,
-		use_solid_terminal_background = true,
-		ignore_divider_height = true,
-		resource_renderer_background = true,
-		no_resource_rendering = true,
-		title_height = 0,
-		scrollbar_horizontal_offset = 5,
 		hide_background = false,
+		hide_dividers = false,
+		ignore_divider_height = true,
+		no_resource_rendering = true,
+		resource_renderer_background = true,
+		scrollbar_horizontal_offset = 5,
+		scrollbar_width = 7,
+		title_height = 0,
+		use_solid_terminal_background = true,
+		widget_icon_load_margin = 0,
 		grid_spacing = {
 			0,
-			0
+			0,
 		},
 		grid_size = grid_size,
 		mask_size = {
 			grid_size[1] + mask_padding_size,
-			grid_size[2] + mask_padding_size
-		}
+			grid_size[2] + mask_padding_size,
+		},
 	}
 	local layer = 10
 	local scale = self._ui_renderer.scale or RESOLUTION_LOOKUP.scale
@@ -2795,22 +2863,22 @@ PenanceOverviewView._create_carousel_entry = function (self, layout)
 	local top_divider_material = "content/ui/materials/frames/achievements/card_upper"
 	local top_divider_size = {
 		grid_size[1] + 12,
-		22
+		22,
 	}
 	local top_divider_position = {
 		0,
 		2,
-		10
+		10,
 	}
 	local bottom_divider_material = "content/ui/materials/frames/achievements/card_lower"
 	local bottom_divider_size = {
 		grid_size[1] + 12,
-		24
+		24,
 	}
 	local bottom_divider_position = {
 		0,
 		1,
-		10
+		10,
 	}
 
 	grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
@@ -2818,7 +2886,7 @@ PenanceOverviewView._create_carousel_entry = function (self, layout)
 	return {
 		grid = grid,
 		achievement_id = layout.achievement_id,
-		layout = layout
+		layout = layout,
 	}
 end
 
@@ -2840,6 +2908,7 @@ PenanceOverviewView._setup_carousel_entries = function (self, achievement_layout
 	if not self._carousel_entries then
 		for i = 1, #achievement_layouts do
 			local layout = achievement_layouts[i]
+
 			carousel_entries[#carousel_entries + 1] = self:_create_carousel_entry(layout)
 		end
 
@@ -2850,6 +2919,7 @@ PenanceOverviewView._setup_carousel_entries = function (self, achievement_layout
 	self._carousel_target_progress = nil
 	self._carousel_start_progress = nil
 	self._current_carousel_index = nil
+
 	local animate = false
 
 	self:_set_carousel_index(1, animate)
@@ -2880,16 +2950,17 @@ PenanceOverviewView._on_carousel_card_pressed = function (self, index, entry)
 		local additional_widgets = {
 			divider_top = grid._widgets_by_name.grid_divider_top,
 			divider_bottom = grid._widgets_by_name.grid_divider_bottom,
-			background = grid._widgets_by_name.grid_background
+			background = grid._widgets_by_name.grid_background,
 		}
 		local start_height = grid:grid_height()
 		local start_pivot_offset = grid._pivot_offset[2]
+
 		self._claim_animation_id = self:_start_animation("on_carousel_claimed", widgets, {
 			parent = self,
 			additional_widgets = additional_widgets,
 			grid = grid,
 			start_height = start_height,
-			start_pivot_offset = start_pivot_offset
+			start_pivot_offset = start_pivot_offset,
 		})
 		self._destroyed_carousel_index = index
 	end
@@ -2913,7 +2984,7 @@ PenanceOverviewView._on_carousel_card_secondary_pressed = function (self, index,
 	local is_currently_favorited = self:is_favorite_achievement(achievement_id)
 	local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
 	local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-	local is_favorited = nil
+	local is_favorited
 
 	if not is_currently_favorited and not is_complete and not can_claim then
 		is_favorited = self:request_achievement_favorite_add(achievement_id)
@@ -2936,39 +3007,41 @@ end
 PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 	local button_size = {
 		70,
-		60
+		60,
 	}
 	local button_spacing = 4
 	local settings = {
-		vertical_alignment = "top",
 		grow_vertically = false,
 		horizontal_alignment = "center",
+		vertical_alignment = "top",
 		button_size = button_size,
 		button_spacing = button_spacing,
 		input_label_offset = {
 			25,
-			15
-		}
+			15,
+		},
 	}
 	local categories_tab_bar = self:_add_element(ViewElementTabMenu, "categories_tab_bar", 40, settings)
+
 	self._num_unclaimed_penances_per_category = {}
+
 	local button_template = {
 		{
-			style_id = "hotspot",
-			pass_type = "hotspot",
 			content_id = "hotspot",
+			pass_type = "hotspot",
+			style_id = "hotspot",
 			content = {
 				on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
-				on_hover_sound = UISoundEvents.default_mouse_hover
+				on_hover_sound = UISoundEvents.default_mouse_hover,
 			},
 			style = {
+				anim_focus_speed = 8,
 				anim_hover_speed = 8,
 				anim_input_speed = 8,
 				anim_select_speed = 8,
-				anim_focus_speed = 8,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click
-			}
+				on_pressed_sound = UISoundEvents.default_click,
+			},
 		},
 		{
 			pass_type = "texture",
@@ -2976,178 +3049,180 @@ PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
 				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true)
+				selected_color = Color.terminal_background_selected(nil, true),
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function
+			change_function = ButtonPassTemplates.terminal_button_change_function,
 		},
 		{
 			pass_type = "texture",
 			style_id = "background_gradient",
 			value = "content/ui/materials/gradients/gradient_vertical",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				default_color = Color.terminal_background_gradient(nil, true),
 				selected_color = Color.terminal_frame_selected(nil, true),
 				disabled_color = Color.ui_grey_medium(255, true),
 				offset = {
 					0,
 					0,
-					1
-				}
+					1,
+				},
 			},
 			change_function = function (content, style)
 				ButtonPassTemplates.terminal_button_change_function(content, style)
 				ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-			end
+			end,
 		},
 		{
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style_id = "outer_shadow",
 			pass_type = "texture",
+			style_id = "outer_shadow",
+			value = "content/ui/materials/frames/dropshadow_medium",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
+				vertical_alignment = "center",
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20
+					20,
 				},
 				offset = {
 					0,
 					0,
-					3
-				}
-			}
+					3,
+				},
+			},
 		},
 		{
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				default_color = Color.terminal_frame(nil, true),
 				selected_color = Color.terminal_frame_selected(nil, true),
 				disabled_color = Color.ui_grey_medium(255, true),
 				offset = {
 					0,
 					0,
-					2
-				}
+					2,
+				},
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function
+			change_function = ButtonPassTemplates.terminal_button_change_function,
 		},
 		{
-			value = "content/ui/materials/backgrounds/default_square",
-			style_id = "text_bg",
 			pass_type = "texture",
+			style_id = "text_bg",
+			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
 				color = Color.black(150, true),
 				size = {
 					button_size[1] - 2,
-					18
+					18,
 				},
 				offset = {
 					0,
 					-1,
-					8
-				}
-			}
+					8,
+				},
+			},
 		},
 		{
-			value_id = "text_counter",
-			style_id = "text_counter",
 			pass_type = "text",
+			style_id = "text_counter",
 			value = "0/0",
+			value_id = "text_counter",
 			style = {
-				font_type = "proxima_nova_bold",
 				font_size = 16,
-				text_vertical_alignment = "bottom",
+				font_type = "proxima_nova_bold",
 				text_horizontal_alignment = "center",
+				text_vertical_alignment = "bottom",
 				text_color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					0,
-					9
-				}
-			}
-		}
-	}
-	button_template[8] = {
-		pass_type = "texture",
-		value_id = "icon",
-		style_id = "icon",
-		style = {
-			horizontal_alignment = "center",
-			vertical_alignment = "center",
-			default_color = Color.terminal_text_header(255, true),
-			disabled_color = Color.gray(255, true),
-			color = Color.terminal_text_header(255, true),
-			hover_color = Color.terminal_text_header_selected(255, true),
-			size = {
-				72,
-				52
+					9,
+				},
 			},
-			original_size_addition = {
-				-10,
-				-10
-			},
-			size_addition = {
-				0,
-				0
-			},
-			offset = {
-				0,
-				-6,
-				6
-			}
 		},
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-			local size_addition = 2 * math.easeInCubic(progress)
-			local style_size_addition = style.size_addition
-			local original_size_addition = style.original_size_addition
-			style_size_addition[1] = original_size_addition[1] + size_addition * 2
-			style_size_addition[2] = original_size_addition[1] + size_addition * 2
+		{
+			pass_type = "texture",
+			style_id = "icon",
+			value_id = "icon",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				default_color = Color.terminal_text_header(255, true),
+				disabled_color = Color.gray(255, true),
+				color = Color.terminal_text_header(255, true),
+				hover_color = Color.terminal_text_header_selected(255, true),
+				size = {
+					72,
+					52,
+				},
+				original_size_addition = {
+					-10,
+					-10,
+				},
+				size_addition = {
+					0,
+					0,
+				},
+				offset = {
+					0,
+					-6,
+					6,
+				},
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+				local size_addition = 2 * math.easeInCubic(progress)
+				local style_size_addition = style.size_addition
+				local original_size_addition = style.original_size_addition
 
-			ButtonPassTemplates.list_button_label_change_function(content, style)
-		end
-	}
-	button_template[9] = {
-		style_id = "new_indicator",
-		pass_type = "texture",
-		value = "content/ui/materials/symbols/new_item_indicator",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			size = {
-				90,
-				90
-			},
-			offset = {
-				28,
-				-10,
-				4
-			},
-			color = Color.terminal_corner_selected(255, true)
+				style_size_addition[1] = original_size_addition[1] + size_addition * 2
+				style_size_addition[2] = original_size_addition[1] + size_addition * 2
+
+				ButtonPassTemplates.list_button_label_change_function(content, style)
+			end,
 		},
-		visibility_function = function (content, style)
-			return content.has_unclaimed_penances
-		end
+		{
+			pass_type = "texture",
+			style_id = "new_indicator",
+			value = "content/ui/materials/symbols/new_item_indicator",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
+				size = {
+					90,
+					90,
+				},
+				offset = {
+					28,
+					-10,
+					4,
+				},
+				color = Color.terminal_corner_selected(255, true),
+			},
+			visibility_function = function (content, style)
+				return content.has_unclaimed_penances
+			end,
+		},
 	}
 	local category_button = table.clone(button_template)
+
 	category_button[1].style = {
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}
 
 	for i = 1, #options do
 		local option = options[i]
-		local score_progress = nil
+		local score_progress
 		local category_id = option.category_id
 		local score, completed_score = self:_category_score(category_id)
 
@@ -3292,6 +3367,7 @@ PenanceOverviewView._category_score = function (self, category_id)
 	for i = 1, sub_category_count do
 		local sub_category_id = sub_categories[i]
 		local sub_category_score, sub_category_completed_score = self:_category_score(sub_category_id)
+
 		score = score + sub_category_score
 		completed_score = completed_score + sub_category_completed_score
 	end
@@ -3301,6 +3377,7 @@ end
 
 PenanceOverviewView._present_achievement_tooltip = function (self, achievement_id)
 	self._presented_achievement_id_tooltip = achievement_id
+
 	local player = self:_player()
 	local achievement = AchievementUIHelper.achievement_definition_by_id(achievement_id)
 	local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
@@ -3310,32 +3387,34 @@ PenanceOverviewView._present_achievement_tooltip = function (self, achievement_i
 	local layout = {}
 	local grid_scenegraph_id = "tooltip_grid"
 	local grid_size = self:_get_scenegraph_size(grid_scenegraph_id)
+
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			20
-		}
+			20,
+		},
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1] - 140,
-			0
-		}
+			0,
+		},
 	}
 	layout[#layout + 1] = {
 		widget_type = "tooltip_penance",
 		texture = achievement.icon,
 		completed = is_complete,
-		can_claim = can_claim
+		can_claim = can_claim,
 	}
+
 	local title = AchievementUIHelper.localized_title(achievement_definition)
 
 	if title then
 		layout[#layout + 1] = {
 			widget_type = "tooltip_header",
-			text = title
+			text = title,
 		}
 	end
 
@@ -3343,8 +3422,8 @@ PenanceOverviewView._present_achievement_tooltip = function (self, achievement_i
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10
-		}
+			10,
+		},
 	}
 
 	if draw_progress_bar then
@@ -3352,21 +3431,23 @@ PenanceOverviewView._present_achievement_tooltip = function (self, achievement_i
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				30
-			}
+				30,
+			},
 		}
+
 		local bar_progress, progress, goal = self:_get_achievement_bar_progress(achievement_definition)
+
 		layout[#layout + 1] = {
 			widget_type = "tooltip_progress_bar",
 			text = tostring(progress) .. "/" .. tostring(goal),
-			progress = bar_progress
+			progress = bar_progress,
 		}
 		layout[#layout + 1] = {
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				10
-			}
+				10,
+			},
 		}
 	end
 
@@ -3374,15 +3455,16 @@ PenanceOverviewView._present_achievement_tooltip = function (self, achievement_i
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10
-		}
+			10,
+		},
 	}
+
 	local description = AchievementUIHelper.localized_description(achievement_definition)
 
 	if description then
 		layout[#layout + 1] = {
 			widget_type = "tooltip_body",
-			text = description
+			text = description,
 		}
 	end
 
@@ -3397,10 +3479,11 @@ PenanceOverviewView._present_achievement_tooltip = function (self, achievement_i
 			local value = math.min(Managers.stats:read_user_stat(player_id, stat_name), target)
 			local progress = _format_progress(value, target)
 			local loc_stat_name = string.format("• %s", Localize(StatDefinitions[stat_name].stat_name or "unknown"))
+
 			layout[#layout + 1] = {
 				widget_type = "tooltip_stat",
 				text = loc_stat_name,
-				value = progress
+				value = progress,
 			}
 		end
 	end
@@ -3412,20 +3495,20 @@ PenanceOverviewView._present_achievement_tooltip = function (self, achievement_i
 			text = "Rewards:",
 			widget_type = "tooltip_header",
 			size = {
-				grid_size[1]
-			}
+				grid_size[1],
+			},
 		}
 		layout[#layout + 1] = {
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				10
-			}
+				10,
+			},
 		}
 		layout[#layout + 1] = {
 			widget_type = "tooltip_reward_item",
 			item = reward_item,
-			item_group = item_group
+			item_group = item_group,
 		}
 	end
 
@@ -3441,27 +3524,33 @@ end
 PenanceOverviewView._setup_top_panel = function (self)
 	local reference_name = "top_panel"
 	local layer = 60
+
 	self._top_panel = self:_add_element(ViewElementMenuPanel, reference_name, layer)
 	self._panel_options = {
 		{
-			key = "carousel",
 			display_name = "loc_penance_menu_panel_option_highlights",
+			key = "carousel",
 			update = function (content, style, dt)
 				content.hotspot.disabled = false
+
 				local has_new_items = false
+
 				content.show_alert = has_new_items
-			end
+			end,
 		},
 		{
-			key = "browser",
 			display_name = "loc_penance_menu_panel_option_browser",
+			key = "browser",
 			update = function (content, style, dt)
 				content.hotspot.disabled = false
+
 				local has_new_items = false
+
 				content.show_alert = has_new_items
-			end
-		}
+			end,
+		},
 	}
+
 	local panel_options = self._panel_options
 
 	for i = 1, #panel_options do
@@ -3492,6 +3581,7 @@ PenanceOverviewView._on_panel_option_pressed = function (self, index)
 	local panel_options = self._panel_options
 	local option = panel_options[index]
 	local key = option.key
+
 	self._selected_top_option_key = key
 
 	if key == "carousel" then
@@ -3579,7 +3669,7 @@ PenanceOverviewView._cb_favorite_legend_visibility = function (self, add_to_favo
 		return false
 	end
 
-	local is_favorite = nil
+	local is_favorite
 	local can_change = true
 	local player = self:_player()
 
@@ -3588,19 +3678,17 @@ PenanceOverviewView._cb_favorite_legend_visibility = function (self, add_to_favo
 			local carousel = self._carousel_entries[self._hovered_carousel_card_index]
 			local grid = carousel and carousel.grid
 			local widgets = grid:widgets()
+
 			is_favorite = widgets[1].content.tracked
+
 			local achievement_id = carousel.achievement_id
 			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
 			local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
 
-			if not is_complete then
-				can_change = not can_claim
-			else
-				can_change = false
-			end
+			can_change = not is_complete and not can_claim
 		end
 	elseif self._selected_top_option_key == "browser" and not self._wintracks_focused then
-		local index = nil
+		local index
 
 		if using_cursor_navigation then
 			index = self._penance_grid:hovered_grid_index()
@@ -3609,12 +3697,15 @@ PenanceOverviewView._cb_favorite_legend_visibility = function (self, add_to_favo
 		end
 
 		local widget = self._penance_grid:widget_by_index(index)
+
 		is_favorite = widget and widget.content.tracked
+
 		local achievement_id = widget and widget.content.element.achievement_id
 
 		if achievement_id then
 			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
 			local is_complete = not can_claim and Managers.achievements:achievement_completed(player, achievement_id)
+
 			can_change = not is_complete and not can_claim
 		end
 	end
@@ -3637,12 +3728,13 @@ PenanceOverviewView._on_favorite_pressed = function (self)
 			end
 		end
 	elseif self._selected_top_option_key == "browser" then
-		local widget = nil
+		local widget
 
 		if self._using_cursor_navigation then
 			widget = self._penance_grid:hovered_widget()
 		else
 			local index = self._penance_grid:selected_grid_index()
+
 			widget = self._penance_grid:widget_by_index(index)
 		end
 
@@ -3743,12 +3835,13 @@ PenanceOverviewView.play_vo_events = function (self, events, voice_profile, opti
 			voice_profile = voice_profile,
 			optional_route_key = optional_route_key,
 			delay = optional_delay,
-			is_opinion_vo = is_opinion_vo
+			is_opinion_vo = is_opinion_vo,
 		}
 	else
 		local wwise_route_key = optional_route_key or 40
 		local callback = self._vo_callback
 		local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, nil, is_opinion_vo)
+
 		self._vo_unit = vo_unit
 	end
 end

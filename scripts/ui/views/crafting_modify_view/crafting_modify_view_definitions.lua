@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_modify_view/crafting_modify_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
@@ -9,15 +11,15 @@ local grid_width = 640
 local grid_height = 780
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height
+	grid_height,
 }
 local grid_spacing = {
 	10,
-	10
+	10,
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height
+	grid_height,
 }
 local grid_settings = {
 	scrollbar_width = 7,
@@ -26,123 +28,123 @@ local grid_settings = {
 	grid_size = grid_size,
 	mask_size = mask_size,
 	title_height = title_height,
-	edge_padding = edge_padding
+	edge_padding = edge_padding,
 }
 local weapon_stats_grid_settings = {
-	use_parent_ui_renderer = true
+	use_parent_ui_renderer = true,
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	item_grid_pivot = {
-		vertical_alignment = "bottom",
-		parent = "canvas",
 		horizontal_alignment = "left",
+		parent = "canvas",
+		vertical_alignment = "bottom",
 		size = grid_size,
 		position = {
 			100,
 			-110,
-			1
-		}
+			1,
+		},
 	},
 	crafting_recipe_pivot = {
-		vertical_alignment = "bottom",
-		parent = "canvas",
 		horizontal_alignment = "right",
+		parent = "canvas",
+		vertical_alignment = "bottom",
 		size = {
 			430,
-			400
+			400,
 		},
 		position = {
 			-150,
 			-102,
-			3
-		}
+			3,
+		},
 	},
 	weapon_stats_pivot = {
-		vertical_alignment = "bottom",
-		parent = "canvas",
 		horizontal_alignment = "left",
+		parent = "canvas",
+		vertical_alignment = "bottom",
 		size = {
 			0,
-			0
+			0,
 		},
 		position = {
 			grid_size[1] + 150 + 20,
 			-110,
-			1
-		}
+			1,
+		},
 	},
 	grid_tab_panel = {
-		vertical_alignment = "top",
-		parent = "item_grid_pivot",
 		horizontal_alignment = "center",
+		parent = "item_grid_pivot",
+		vertical_alignment = "top",
 		size = {
 			0,
-			0
+			0,
 		},
 		position = {
 			0.5 * edge_padding,
 			-42,
-			1
-		}
+			1,
+		},
 	},
 	grid_tab_panel_background = {
-		vertical_alignment = "top",
-		parent = "item_grid_pivot",
 		horizontal_alignment = "center",
+		parent = "item_grid_pivot",
+		vertical_alignment = "top",
 		size = {
 			640,
-			70
+			70,
 		},
 		position = {
 			22,
 			-57,
-			1
-		}
-	}
+			1,
+		},
+	},
 }
 local widget_definitions = {
 	tabs_background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/terminal_basic",
 			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
 				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "center",
 				size_addition = {
 					18,
-					24
+					24,
 				},
-				color = Color.terminal_grid_background(nil, true)
-			}
-		}
-	}, "grid_tab_panel_background")
+				color = Color.terminal_grid_background(nil, true),
+			},
+		},
+	}, "grid_tab_panel_background"),
 }
 local item_category_tabs_content = {
 	{
+		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/melee",
-		hide_display_name = true,
 		slot_types = {
-			"slot_primary"
-		}
+			"slot_primary",
+		},
 	},
 	{
+		hide_display_name = true,
 		icon = "content/ui/materials/icons/categories/ranged",
-		hide_display_name = true,
 		slot_types = {
-			"slot_secondary"
-		}
+			"slot_secondary",
+		},
 	},
 	{
-		icon = "content/ui/materials/icons/categories/devices",
 		hide_display_name = true,
+		icon = "content/ui/materials/icons/categories/devices",
 		slot_types = {
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3"
-		}
-	}
+			"slot_attachment_3",
+		},
+	},
 }
 
 return {
@@ -150,5 +152,5 @@ return {
 	widget_definitions = widget_definitions,
 	grid_settings = grid_settings,
 	weapon_stats_grid_settings = weapon_stats_grid_settings,
-	item_category_tabs_content = item_category_tabs_content
+	item_category_tabs_content = item_category_tabs_content,
 }

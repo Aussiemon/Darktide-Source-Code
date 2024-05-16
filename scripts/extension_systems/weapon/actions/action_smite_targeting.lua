@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_smite_targeting.lua
+
 require("scripts/extension_systems/weapon/actions/action_charge")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
@@ -21,11 +23,16 @@ ActionSmiteTargeting.init = function (self, action_context, action_params, actio
 	local physics_world = self._physics_world
 	local inventory_slot_component = self._inventory_slot_component
 	local warp_charge_component = unit_data_extension:read_component("warp_charge")
+
 	self._warp_charge_component = warp_charge_component
+
 	local targeting_component = unit_data_extension:write_component("action_module_targeting")
+
 	self._targeting_component = targeting_component
+
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local overload_module_class_name = action_settings.overload_module_class_name
+
 	self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_component, action_settings)
 	self._overload_module = ActionModules[overload_module_class_name]:new(player_unit, action_settings, inventory_slot_component)
 end
@@ -38,7 +45,9 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 	self._has_attacked_target = nil
 	self._time_on_target = 0
 	self._target_locked = action_settings.target_locked
+
 	local charge_duration = self:_calculate_charge_duration_of_target_health(action_settings)
+
 	self._charge_duration = charge_duration
 	self._charge_after_chain = action_start_params.is_chain_action and self._action_module_charge_component.charge_level
 	self._target_charge = action_settings.target_charge
@@ -51,6 +60,7 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 
 	if self._target_locked then
 		local current_warp_charge_percentage = self._warp_charge_component.current_percentage
+
 		self._starting_warp_charge_percent = current_warp_charge_percentage
 	end
 end
@@ -118,6 +128,7 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 
 		if not HEALTH_ALIVE[previously_targeted_unit] and charge_level >= 0.5 then
 			self._action_module_charge_component.charge_level = 1
+
 			local param_table = self._buff_extension:request_proc_event_param_table()
 
 			if param_table then

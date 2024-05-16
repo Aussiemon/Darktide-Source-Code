@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/animation/animation_system.lua
+
 require("scripts/extension_systems/animation/authoritative_player_unit_animation_extension")
 require("scripts/extension_systems/animation/minion_animation_extension")
 require("scripts/extension_systems/animation/player_husk_animation_extension")
@@ -16,7 +18,7 @@ local CLIENT_RPCS = {
 	"rpc_player_anim_event_variable_float",
 	"rpc_player_anim_event_variable_floats",
 	"rpc_player_anim_event_variable_int",
-	"rpc_sync_anim_state"
+	"rpc_sync_anim_state",
 }
 
 AnimationSystem.init = function (self, ...)
@@ -48,6 +50,7 @@ AnimationSystem.register_extension_update = function (self, unit, extension_name
 
 		if use_bone_lod then
 			local radius = breed.bone_lod_radius or BoneLod.DEFAULT_UNIT_RADIUS
+
 			extension.bone_lod_extension_id = Managers.state.bone_lod:register_unit(unit, radius, true)
 			self._animation_lod_units[unit] = extension
 		end
@@ -67,7 +70,7 @@ AnimationSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 AnimationSystem.anim_callback = function (self, unit, callback_name, param1)
-	local callback = nil
+	local callback
 
 	if self._is_server then
 		callback = AnimCallbackTemplates.server[callback_name]
@@ -123,11 +126,12 @@ AnimationSystem.rpc_minion_anim_event_variable_float = function (self, channel_i
 end
 
 AnimationSystem.rpc_player_anim_event = function (self, channel_id, unit_id, event_index, is_first_person)
-	local unit = nil
+	local unit
 	local third_person_unit = Managers.state.unit_spawner:unit(unit_id)
 
 	if is_first_person then
 		local first_person_ext = ScriptUnit.extension(third_person_unit, "first_person_system")
+
 		unit = first_person_ext:first_person_unit()
 	else
 		unit = third_person_unit
@@ -137,11 +141,12 @@ AnimationSystem.rpc_player_anim_event = function (self, channel_id, unit_id, eve
 end
 
 AnimationSystem.rpc_player_anim_event_variable_float = function (self, channel_id, unit_id, event_index, variable_index, variable_value, is_first_person)
-	local unit = nil
+	local unit
 	local third_person_unit = Managers.state.unit_spawner:unit(unit_id)
 
 	if is_first_person then
 		local first_person_ext = ScriptUnit.extension(third_person_unit, "first_person_system")
+
 		unit = first_person_ext:first_person_unit()
 	else
 		unit = third_person_unit
@@ -152,11 +157,12 @@ AnimationSystem.rpc_player_anim_event_variable_float = function (self, channel_i
 end
 
 AnimationSystem.rpc_player_anim_event_variable_floats = function (self, channel_id, unit_id, event_index, variable_indexes, variable_values, is_first_person)
-	local unit = nil
+	local unit
 	local third_person_unit = Managers.state.unit_spawner:unit(unit_id)
 
 	if is_first_person then
 		local first_person_ext = ScriptUnit.extension(third_person_unit, "first_person_system")
+
 		unit = first_person_ext:first_person_unit()
 	else
 		unit = third_person_unit
@@ -173,11 +179,12 @@ AnimationSystem.rpc_player_anim_event_variable_floats = function (self, channel_
 end
 
 AnimationSystem.rpc_player_anim_event_variable_int = function (self, channel_id, unit_id, event_index, variable_index, variable_value, is_first_person)
-	local unit = nil
+	local unit
 	local third_person_unit = Managers.state.unit_spawner:unit(unit_id)
 
 	if is_first_person then
 		local first_person_ext = ScriptUnit.extension(third_person_unit, "first_person_system")
+
 		unit = first_person_ext:first_person_unit()
 	else
 		unit = third_person_unit

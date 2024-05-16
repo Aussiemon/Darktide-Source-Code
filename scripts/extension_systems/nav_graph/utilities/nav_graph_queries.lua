@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/nav_graph/utilities/nav_graph_queries.lua
+
 local SmartObject = require("scripts/extension_systems/nav_graph/utilities/smart_object")
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
 local NavGraphQueries = {}
@@ -5,8 +7,7 @@ local Script_temp_byte_count = Script.temp_byte_count
 local Script_set_temp_byte_count = Script.set_temp_byte_count
 
 local function _calculate_node_position_on_navmesh(nav_world, unit, node_index)
-	local NAVMESH_ABOVE = 0.5
-	local NAVMESH_BELOW = 0.5
+	local NAVMESH_ABOVE, NAVMESH_BELOW = 0.5, 0.5
 	local NAVMESH_HORIZONTAL = 0.5
 	local NAVMESH_DISTANCE_FROM_BORDER = 0.1
 	local node_position = Unit.world_position(unit, node_index)
@@ -72,13 +73,10 @@ local function _extract_hit(hits)
 			local hit = hits[i]
 
 			if hit then
-				local position, distance, normal, actor = nil
+				local position, distance, normal, actor
 
 				if hit.position then
-					actor = hit.actor
-					normal = hit.normal
-					distance = hit.distance
-					position = hit.position
+					position, distance, normal, actor = hit.position, hit.distance, hit.normal, hit.actor
 				else
 					position, distance, normal, actor = unpack(hit)
 				end
@@ -154,8 +152,7 @@ local function _calculate_ground_positions(physics_world, ledge_normal, check_po
 end
 
 local function _calculate_ledge_on_navmesh(nav_world, ledge_detect_position1, ledge_detect_position2, position1, position2, out_debug_draw_list)
-	local NAVMESH_ABOVE = 0.4
-	local NAVMESH_BELOW = 0.4
+	local NAVMESH_ABOVE, NAVMESH_BELOW = 0.4, 0.4
 	local altitude1 = GwNavQueries.triangle_from_position(nav_world, position1, NAVMESH_ABOVE, NAVMESH_BELOW)
 
 	if altitude1 then
@@ -186,8 +183,11 @@ local function _calculate_thick_fence_edges(physics_world, ledge_position, ledge
 	end
 
 	local ledge_detect_position1 = position1_horizontal - ledge_normal * 0.01 + Vector3.up()
+
 	hit_horizontal1, position1_horizontal = _extract_hit(PhysicsWorld.raycast(physics_world, ledge_detect_position1, Vector3.down(), 2, "all", "collision_filter", "filter_ledge_test"))
+
 	local ledge_detect_position2 = position2_horizontal + ledge_normal * 0.01 + Vector3.up()
+
 	hit_horizontal2, position2_horizontal = _extract_hit(PhysicsWorld.raycast(physics_world, ledge_detect_position2, Vector3.down(), 2, "all", "collision_filter", "filter_ledge_test"))
 
 	if hit_horizontal1 and hit_horizontal2 then
@@ -202,11 +202,11 @@ local function _calculate_ledge(physics_world, nav_world, calculation_params, le
 	local ledge_normal = calculation_params.ledge_normal
 	local jump_up_max_height = calculation_params.jump_up_max_height
 	local force_one_way_ledge = calculation_params.is_one_way
-	local ledge_position1 = ledge_position
-	local ledge_position2 = ledge_position
+	local ledge_position1, ledge_position2 = ledge_position, ledge_position
 
 	if ledge_type == "thick_fence" then
-		local success_thick_ledge = nil
+		local success_thick_ledge
+
 		success_thick_ledge, ledge_position1, ledge_position2 = _calculate_thick_fence_edges(physics_world, ledge_position, ledge_normal, out_debug_draw_list)
 
 		if not success_thick_ledge then
@@ -223,7 +223,7 @@ local function _calculate_ledge(physics_world, nav_world, calculation_params, le
 	end
 
 	if ledge_type == "narrow_fence" then
-		local ground_is_below_fence = ledge_position.z < position1.z or ledge_position.z < position2.z
+		local ground_is_below_fence = position1.z > ledge_position.z or position2.z > ledge_position.z
 
 		if ground_is_below_fence then
 			return false
@@ -244,19 +244,18 @@ local function _calculate_ledge(physics_world, nav_world, calculation_params, le
 
 	local up_offset = 1
 	local too_high_to_climb = jump_up_max_height < distance1 - up_offset
+
 	too_high_to_climb = too_high_to_climb and jump_up_max_height < distance2 - up_offset
 
 	if too_high_to_climb then
 		return false
 	end
 
-	local position2_is_higher = position1.z < position2.z
+	local position2_is_higher = position2.z > position1.z
 
 	if position2_is_higher then
-		position2 = position1
-		position1 = position2
-		ledge_detect_position2 = ledge_detect_position1
-		ledge_detect_position1 = ledge_detect_position2
+		position1, position2 = position2, position1
+		ledge_detect_position1, ledge_detect_position2 = ledge_detect_position2, ledge_detect_position1
 	end
 
 	if not _calculate_ledge_on_navmesh(nav_world, ledge_detect_position1, ledge_detect_position2, position1, position2, out_debug_draw_list) then
@@ -264,7 +263,9 @@ local function _calculate_ledge(physics_world, nav_world, calculation_params, le
 	end
 
 	local is_bidirectional = not force_one_way_ledge
+
 	is_bidirectional = is_bidirectional and jump_up_max_height >= position1.z - position2.z
+
 	local layer_type = calculation_params.layer_type
 
 	if layer_type == "auto_detect" then
@@ -301,8 +302,7 @@ local function _create_climb_smart_object(nav_world, physics_world, calculation_
 end
 
 local function _calculate_jump_entrance(nav_world, physics_world, calculation_params)
-	local NAVMESH_ABOVE = 0.3
-	local NAVMESH_BELOW = 0.3
+	local NAVMESH_ABOVE, NAVMESH_BELOW = 0.3, 0.3
 	local ledge_position = calculation_params.ledge_position
 	local ledge_normal = calculation_params.ledge_normal
 	local jump_start_position_check = ledge_position + ledge_normal + Vector3.up()
@@ -322,8 +322,7 @@ local function _calculate_jump_entrance(nav_world, physics_world, calculation_pa
 end
 
 local function _calculate_jump_exit(nav_world, physics_world, calculation_params, jump_start_position_check, out_debug_draw_list)
-	local NAVMESH_ABOVE = 0.3
-	local NAVMESH_BELOW = 0.3
+	local NAVMESH_ABOVE, NAVMESH_BELOW = 0.3, 0.3
 	local ledge_normal = calculation_params.ledge_normal
 	local jump_across_min_length = calculation_params.jump_across_min_length
 	local jump_across_max_length = calculation_params.jump_across_max_length
@@ -366,11 +365,7 @@ local function _is_jump_midpoint_unobstructed(physics_world, jump_start_position
 
 	local hit_down, position_down, distance_down = _extract_hit(PhysicsWorld.raycast(physics_world, midpoint + Vector3.up() * 0.1, Vector3.down(), 1, "all", "collision_filter", "filter_ledge_test"))
 
-	if hit_down then
-		if distance_down > 0.3 then
-			-- Nothing
-		end
-
+	if hit_down and (not (distance_down > 0.3) or true) then
 		return false
 	end
 
@@ -399,8 +394,7 @@ local function _calculate_vault_ground_positions(physics_world, ledge_normal, le
 end
 
 local function _calculate_vault_on_navmesh(nav_world, ledge_detect_position1, ledge_detect_position2, position1, position2, out_debug_draw_list)
-	local NAVMESH_ABOVE = 0.4
-	local NAVMESH_BELOW = 0.4
+	local NAVMESH_ABOVE, NAVMESH_BELOW = 0.4, 0.4
 	local altitude1 = GwNavQueries.triangle_from_position(nav_world, position1, NAVMESH_ABOVE, NAVMESH_BELOW)
 
 	if altitude1 then
@@ -536,6 +530,7 @@ local function _calculate_smart_objects_from_node_pair(nav_world, physics_world,
 		for i = 0, num_splits do
 			local temp_byte_count = Script_temp_byte_count()
 			local ledge_t = ledge_t_start + i * ledge_t_stride
+
 			calculation_params.ledge_position = Vector3.lerp(position_a, position_b, ledge_t)
 
 			_create_climb_smart_object(nav_world, physics_world, calculation_params, out_smart_objects, out_debug_draw_list)
@@ -575,7 +570,7 @@ local function _calculate_smart_objects_from_node_list(nav_world, physics_world,
 		Log.warning("NavGraphQueries", "[_calculate_smart_objects_from_node_list] Layer type %q not supported for method %q.", calculation_params.layer_type, calculation_params.method)
 	end
 
-	local previous_control_point_node = nil
+	local previous_control_point_node
 	local exit_positions = {}
 	local Unit_world_position = Unit.world_position
 	local up_vector = Vector3.up()
@@ -600,7 +595,9 @@ local function _calculate_smart_objects_from_node_list(nav_world, physics_world,
 				for i = 0, num_splits do
 					local ledge_t = ledge_t_start + i * ledge_t_stride
 					local ledge_position = Vector3.lerp(position_a, position_b, ledge_t)
+
 					calculation_params.ledge_position = ledge_position
+
 					local success = _create_climb_smart_object(nav_world, physics_world, calculation_params, out_smart_objects, out_debug_draw_list)
 
 					if success then
@@ -624,7 +621,7 @@ end
 
 local COVER_Z_OFFSETS = {
 	high = 1.82,
-	low = 1.22
+	low = 1.22,
 }
 
 local function _set_cover_calculation_parameters(unit, calculation_params)
@@ -637,6 +634,7 @@ local function _set_cover_calculation_parameters(unit, calculation_params)
 
 		if #cover_components > 0 then
 			local cover_type = cover_components[1]:get_data(unit, "cover_type")
+
 			calculation_params.cover_z_offset = COVER_Z_OFFSETS[cover_type]
 			calculation_params.cover_max_distance_to_other_exit = 0.4
 
@@ -649,6 +647,7 @@ local function _set_cover_calculation_parameters(unit, calculation_params)
 
 		if cover_extension then
 			local cover_type = cover_extension:cover_type()
+
 			calculation_params.cover_z_offset = COVER_Z_OFFSETS[cover_type]
 			calculation_params.cover_max_distance_to_other_exit = 0.4
 
@@ -679,7 +678,9 @@ local function _get_smart_object_calculation_parameters(unit, component)
 
 	local is_one_way = component:get_data(unit, "is_one_way")
 	local layer_type = component:get_data(unit, "layer_type")
+
 	CALCULATION_PARAMS.layer_type = layer_type
+
 	local error = false
 	local smart_object_calculation_method = component:get_data(unit, "smart_object_calculation_method")
 
@@ -702,7 +703,7 @@ local function _get_smart_object_calculation_parameters(unit, component)
 		if not error then
 			CALCULATION_PARAMS.node_pair = {
 				Unit.node(unit, node_a_name),
-				Unit.node(unit, node_b_name)
+				Unit.node(unit, node_b_name),
 			}
 		end
 	elseif smart_object_calculation_method == "use_offset_node" then

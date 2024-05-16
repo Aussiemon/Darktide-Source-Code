@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_finalize_extensions.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepPacing = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_pacing")
 local GameplayInitStepFinalizeExtensions = class("GameplayInitStepFinalizeExtensions")
@@ -8,7 +10,9 @@ end
 
 GameplayInitStepFinalizeExtensions.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local themes = shared_state.themes
 	local level = shared_state.level
 
@@ -30,7 +34,7 @@ GameplayInitStepFinalizeExtensions.update = function (self, main_dt, main_t)
 	end
 
 	local next_step_params = {
-		shared_state = self._shared_state
+		shared_state = self._shared_state,
 	}
 
 	return GameplayInitStepPacing, next_step_params

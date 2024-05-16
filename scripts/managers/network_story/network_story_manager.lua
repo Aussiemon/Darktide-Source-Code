@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/managers/network_story/network_story_manager.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local NetworkStoryManager = class("NetworkStoryManager")
 local CLIENT_RPCS = {
 	"rpc_network_story_sync",
-	"rpc_network_story_set_position_level"
+	"rpc_network_story_set_position_level",
 }
+
 NetworkStoryManager.NETWORK_STORY_STATES = table.enum("not_created", "none", "pause_at_start", "playing", "pause_at_end")
 
 NetworkStoryManager.init = function (self, world, is_server, network_event_delegate)
@@ -25,6 +28,7 @@ end
 
 NetworkStoryManager._change_state = function (self, story, new_state, new_id)
 	local old_state = story.state
+
 	story.state = new_state
 
 	if old_state ~= new_state and story.state_change_callback then
@@ -80,12 +84,12 @@ end
 NetworkStoryManager.register_story = function (self, story_name, story_level, state_change_callback)
 	self._levels[story_level] = self._levels[story_level] or {}
 	self._levels[story_level][story_name] = {
-		speed = 0,
-		length = 0,
 		id = -1,
+		length = 0,
+		speed = 0,
 		level_id = ScriptWorld.level_id(self._world, story_level),
 		state = self.NETWORK_STORY_STATES.not_created,
-		state_change_callback = state_change_callback
+		state_change_callback = state_change_callback,
 	}
 
 	return -1
@@ -119,8 +123,11 @@ NetworkStoryManager._create_story = function (self, story_name, story_level)
 		self._storyteller:set_speed(story_id, 0)
 
 		local length = self._storyteller:length(story_id)
+
 		self._levels[story_level] = self._levels[story_level] or {}
+
 		local story_definition = self._levels[story_level][story_name]
+
 		story_definition.id = story_id
 		story_definition.length = length
 		story_definition.debug_description = story_name
@@ -135,6 +142,7 @@ end
 
 NetworkStoryManager.unregister_story = function (self, story_name, story_level)
 	local story = self._levels[story_level][story_name]
+
 	self._levels[story_level][story_name] = nil
 
 	self._storyteller:stop(story.id)
@@ -269,6 +277,7 @@ NetworkStoryManager._sync_stories = function (self, peer, channel_id)
 		for story_name, story in pairs(stories) do
 			if story.state ~= self.NETWORK_STORY_STATES.not_created then
 				local story_time = storyteller:time(story.id)
+
 				story_time = math.clamp(story_time, min_story_time, max_story_time)
 
 				RPC.rpc_network_story_sync(channel_id, story.level_id, story_name, story.speed, story_time)

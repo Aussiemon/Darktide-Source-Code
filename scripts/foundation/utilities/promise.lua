@@ -1,11 +1,13 @@
+﻿-- chunkname: @scripts/foundation/utilities/promise.lua
+
 local WARN_MISSING_CATCH = false
 local CAPTURE_PROMISE_DEBUG_DATA = true
 local queue = {}
 local State = {
 	CANCELED = "canceled",
-	REJECTED = "rejected",
 	FULFILLED = "fulfilled",
-	PENDING = "pending"
+	PENDING = "pending",
+	REJECTED = "rejected",
 }
 
 local function passthrough(x)
@@ -28,7 +30,7 @@ local function is_callable(value)
 	return t == "function" or t == "table" and callable_table(value)
 end
 
-local transition, resolve, run = nil
+local transition, resolve, run
 local Promise = class("Promise")
 
 local function do_async(callback)
@@ -63,7 +65,7 @@ function transition(promise, state, value)
 	run(promise)
 end
 
-local getinfo = nil
+local getinfo
 
 if CAPTURE_PROMISE_DEBUG_DATA then
 	getinfo = debug.getinfo
@@ -81,7 +83,7 @@ Promise.next = function (self, on_fulfilled, on_rejected)
 		reject = is_callable(on_rejected) and on_rejected or nil,
 		promise = promise,
 		debug_traceback_info_1 = getinfo(2, "Sl"),
-		debug_traceback_info_2 = getinfo(3, "Sl")
+		debug_traceback_info_2 = getinfo(3, "Sl"),
 	})
 	run(self)
 
@@ -94,6 +96,7 @@ local function extract_locals(level_base)
 
 	while getinfo(level) ~= nil do
 		res = string.format("%s\n[%i] ", res, level - level_base + 1)
+
 		local v = 1
 
 		while true do
@@ -104,6 +107,7 @@ local function extract_locals(level_base)
 			end
 
 			local var = string.format("%s = %s; ", name, value)
+
 			res = res .. var
 			v = v + 1
 		end
@@ -176,7 +180,7 @@ function resolve(promise, x)
 		if not type(err) ~= "table" then
 			err = {
 				fatal = true,
-				message = err
+				message = err,
 			}
 		end
 
@@ -214,6 +218,7 @@ function run(promise)
 
 		while i < #q do
 			i = i + 1
+
 			local obj = q[i]
 			local success, result = xpcall(function ()
 				local success = obj.fulfill or passthrough
@@ -225,7 +230,7 @@ function run(promise)
 				if type(err) ~= "table" then
 					err = {
 						fatal = true,
-						message = err
+						message = err,
 					}
 				end
 
@@ -258,7 +263,7 @@ function run(promise)
 		end
 
 		if #q == 0 and promise.state == State.REJECTED then
-			local string_value = nil
+			local string_value
 
 			if type(promise.value) == "table" then
 				string_value = table.tostring(promise.value, 3)
@@ -340,7 +345,7 @@ end
 
 Promise.all = function (...)
 	local promises = {
-		...
+		...,
 	}
 	local results = {}
 	local state = State.FULFILLED
@@ -377,7 +382,7 @@ end
 
 Promise.race = function (...)
 	local promises = {
-		...
+		...,
 	}
 	local promise = Promise.new()
 
@@ -405,7 +410,7 @@ Promise._check_delayed = function (t)
 	for i = #delayed, 1, -1 do
 		local p = delayed[i]
 
-		if p.time < latest_time then
+		if latest_time > p.time then
 			if not p.promise:is_canceled() then
 				p.promise:resolve(nil)
 			end
@@ -421,6 +426,7 @@ Promise._check_predicate = function ()
 	for i = #predicates, 1, -1 do
 		local p = predicates[i]
 		local r = p.result
+
 		r[1], r[2] = p.predicate()
 
 		if r[1] or r[2] then
@@ -456,7 +462,7 @@ Promise.delay = function (delta)
 
 	table.insert(delayed, {
 		promise = promise,
-		time = latest_time + delta
+		time = latest_time + delta,
 	})
 
 	return promise
@@ -478,7 +484,7 @@ Promise.until_value_is_true = function (predicate)
 	table.insert(predicates, {
 		promise = promise,
 		predicate = predicate,
-		result = {}
+		result = {},
 	})
 
 	return promise

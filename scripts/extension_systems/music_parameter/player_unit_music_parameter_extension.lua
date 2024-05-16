@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/music_parameter/player_unit_music_parameter_extension.lua
+
 local HordeSettings = require("scripts/settings/horde/horde_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
@@ -26,11 +28,11 @@ PlayerUnitMusicParameterExtension.init = function (self, extension_init_context,
 	self._next_last_man_standing_check = 0.45678
 	self._next_boss_near_check = 1
 	self._max_aggro_count = WwiseGameSyncSettings.minion_aggro_intensity_settings.num_threshold_high
+
 	local is_server = extension_init_context.is_server
 
 	if not is_server then
-		self._game_object_id = nil_or_game_object_id
-		self._game_session = game_object_data_or_game_session
+		self._game_session, self._game_object_id = game_object_data_or_game_session, nil_or_game_object_id
 	end
 
 	self._health_extension = ScriptUnit.extension(unit, "health_system")
@@ -42,18 +44,19 @@ PlayerUnitMusicParameterExtension.destroy = function (self)
 end
 
 PlayerUnitMusicParameterExtension.game_object_initialized = function (self, game_session, game_object_id)
-	self._game_object_id = game_object_id
-	self._game_session = game_session
+	self._game_session, self._game_object_id = game_session, game_object_id
+
 	local go_data_table = {
+		ambush_horde_near = false,
+		boss_near = false,
+		intensity_percent = 0,
 		last_man_standing = false,
 		locked_in_melee = false,
-		boss_near = false,
-		ambush_horde_near = false,
 		vector_horde_near = false,
-		intensity_percent = 0,
 		game_object_type = NetworkLookup.game_object_types.music_parameters,
-		unit_game_object_id = game_object_id
+		unit_game_object_id = game_object_id,
 	}
+
 	self._music_parameters_game_object_id = GameSession.create_game_object(game_session, "music_parameters", go_data_table)
 end
 
@@ -85,11 +88,12 @@ PlayerUnitMusicParameterExtension._update_boss_near = function (self, unit)
 
 	if boss_near then
 		local alive_witches = side:alive_units_by_tag("enemy", "witch")
-		local num_alive_monsters = alive_monsters.size
-		local num_alive_witches = alive_witches.size
+		local num_alive_monsters, num_alive_witches = alive_monsters.size, alive_witches.size
+
 		boss_near = num_alive_witches < num_alive_monsters
 	else
 		local alive_witches_lookup = side.units_by_relation_tag_lookup.enemy.witch
+
 		boss_near = self:_check_is_boss_near(alive_monsters, alive_witches_lookup)
 	end
 
@@ -112,7 +116,7 @@ PlayerUnitMusicParameterExtension._update_aggroed_minions_near = function (self,
 	local broadphase = broadphase_system.broadphase
 	local unit_position = POSITION_LOOKUP[unit]
 	local max_count = self._max_aggro_count
-	local num_results = broadphase:query(unit_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
+	local num_results = broadphase.query(broadphase, unit_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
 
 	for i = 1, num_results do
 		local enemy_unit = BROADPHASE_RESULTS[i]
@@ -169,7 +173,7 @@ PlayerUnitMusicParameterExtension._update_last_man_standing = function (self)
 	local game_session = self._game_session
 	local game_object_id = self._music_parameters_game_object_id
 	local num_players = player_manager:num_players()
-	local last_man_standing = nil
+	local last_man_standing
 
 	if num_players == 1 then
 		last_man_standing = false
@@ -184,6 +188,7 @@ PlayerUnitMusicParameterExtension._update_last_man_standing = function (self)
 
 			if is_connected then
 				connected_players = connected_players + 1
+
 				local player_unit = player.player_unit
 
 				if HEALTH_ALIVE[player_unit] then
@@ -211,32 +216,34 @@ PlayerUnitMusicParameterExtension.update = function (self, unit, dt, t)
 	local game_object_id = self._music_parameters_game_object_id
 	local attack_intensity_extension = self._attack_intensity_extension
 
-	if self._next_boss_near_check < t then
+	if t > self._next_boss_near_check then
 		self:_update_boss_near(unit)
 
 		self._next_boss_near_check = t + 1
 	end
 
-	if self._update_horde_near_time < t then
+	if t > self._update_horde_near_time then
 		self:_update_horde_near(t)
 
 		self._update_horde_near_time = t + self._horde_update_interval
 	end
 
-	if self._next_last_man_standing_check < t then
+	if t > self._next_last_man_standing_check then
 		self:_update_last_man_standing()
 
 		self._next_last_man_standing_check = t + 1
 	end
 
-	if self._next_aggroed_check < t then
+	if t > self._next_aggroed_check then
 		self:_update_aggroed_minions_near(unit)
 
 		self._next_aggroed_check = t + 1
 	end
 
 	local health_percent = self._health_extension:current_health_percent()
+
 	self._health_percent = health_percent
+
 	local intensity_percent = attack_intensity_extension:total_intensity_percent()
 
 	if intensity_percent ~= self._intensity_percent then

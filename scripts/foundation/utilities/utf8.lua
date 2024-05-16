@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/foundation/utilities/utf8.lua
+
 Utf8.string_length = function (text)
 	local length = string.len(text)
 	local index = 1
 	local num_chars = 0
-	local _ = nil
+	local _
 
 	while index <= length do
 		_, index = Utf8.location(text, index)
@@ -18,11 +20,11 @@ Utf8.sub_string = function (text, from, to)
 	end
 
 	local length = string.len(text)
-	local tmp_byte_from, tmp_byte_to, byte_from, byte_to = nil
+	local tmp_byte_from, tmp_byte_to, byte_from, byte_to
 	local index = 1
 	local i = 1
 
-	while length >= i do
+	while i <= length do
 		tmp_byte_from, tmp_byte_to = Utf8.location(text, i)
 
 		if index == from then
@@ -77,7 +79,7 @@ Utf8.find = function (text, pattern, init, plain)
 	end
 
 	local length = string.len(text)
-	local tmp_init_byte, init_byte = nil
+	local tmp_init_byte, init_byte
 	local index = 1
 	local next_byte = 1
 
@@ -92,10 +94,11 @@ Utf8.find = function (text, pattern, init, plain)
 	end
 
 	local byte_from, byte_to = string.find(text, pattern, init_byte, plain)
-	local index_from, index_to = nil
+	local index_from, index_to
 
 	if byte_from then
-		local index_byte = nil
+		local index_byte
+
 		next_byte = init_byte
 		index_from = init - 1
 		index_to = init - 1

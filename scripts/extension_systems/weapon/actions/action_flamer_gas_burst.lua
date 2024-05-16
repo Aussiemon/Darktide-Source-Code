@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_flamer_gas_burst.lua
+
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -28,21 +30,30 @@ ActionFlamerGasBurst.init = function (self, action_context, action_params, actio
 	self._killing_blow = false
 	self._action_module_position_finder_component = action_context.unit_data_extension:write_component("action_module_position_finder")
 	self._action_flamer_gas_component = action_context.unit_data_extension:write_component("action_flamer_gas")
+
 	local fire_config = action_settings.fire_configuration
+
 	self._damage_type = fire_config and fire_config.damage_type or DEFAULT_DAMAGE_TYPE
 end
 
 ActionFlamerGasBurst._setup_flame_data = function (self, action_settings)
 	local fire_config = action_settings.fire_configuration
 	local flamer_gas_template = fire_config.flamer_gas_template
+
 	self._flamer_gas_template = flamer_gas_template
+
 	local weapon_extension = self._weapon_extension
 	local burninating_template = weapon_extension:burninating_template()
+
 	self._dot_max_stacks = math.ceil(burninating_template.max_stacks)
+
 	local size_of_flame_template = weapon_extension:size_of_flame_template()
+
 	self._spread_angle = size_of_flame_template.spread_angle
 	self._suppression_cone_radius = size_of_flame_template.suppression_cone_radius
+
 	local range = size_of_flame_template.range
+
 	self._range = range
 	self._action_flamer_gas_component.range = range
 end
@@ -89,6 +100,7 @@ ActionFlamerGasBurst._shoot = function (self, position, rotation, power_level, c
 		local killing_blow = self._killing_blow
 		local has_targets = killing_blow or not table.is_empty(self._targets) or not table.is_empty(self._dot_targets)
 		local shot_result = self._shot_result
+
 		shot_result.data_valid = true
 		shot_result.hit_minion = has_targets
 		shot_result.hit_weakspot = false
@@ -177,7 +189,7 @@ ActionFlamerGasBurst._do_raycast = function (self, i, position, rotation, max_ra
 	local direction = Quaternion.forward(ray_rotation)
 	local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_range)
 	local hits = HitScan.raycast(self._physics_world, position, direction, max_range, nil, "filter_player_character_shooting_raycast", rewind_ms)
-	local stop, stop_position, stop_normal = nil
+	local stop, stop_position, stop_normal
 
 	if hits then
 		local num_hit_results = #hits
@@ -185,6 +197,7 @@ ActionFlamerGasBurst._do_raycast = function (self, i, position, rotation, max_ra
 		for j = 1, num_hit_results do
 			repeat
 				local hit = hits[j]
+
 				stop, stop_position, stop_normal = self:_process_hit(hit, targets, target_actors, player_unit, player_pos, side_system, dot_targets, t, is_server)
 			until true
 
@@ -276,11 +289,11 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	local player_pos = POSITION_LOOKUP[player_unit]
 	local target_pos = POSITION_LOOKUP[target_unit]
 	local target_index = 1
-	local actor = nil
+	local actor
 	local hit_position = target_pos
 	local hit_distance = Vector3.distance(target_pos, player_pos)
 	local direction = Vector3.normalize(target_pos - player_pos)
-	local hit_normal, hit_zone_name = nil
+	local hit_normal, hit_zone_name
 	local penetrated = false
 	local instakill = false
 	local damage_type = self._damage_type
@@ -293,12 +306,14 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	if damage_dealt then
 		local buff_extension = self._buff_extension
 		local param_table = buff_extension:request_proc_event_param_table()
+
 		param_table.attacked_unit = target_unit
 
 		buff_extension:add_proc_event(proc_events.on_direct_flamer_hit, param_table)
 	end
 
 	local killing_blow = attack_result == AttackSettings.attack_results.died
+
 	self._killing_blow = self._killing_blow or killing_blow
 end
 
@@ -339,7 +354,7 @@ ActionFlamerGasBurst._acquire_suppressed_units = function (self, t)
 	local player_position = POSITION_LOOKUP[self._player_unit]
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(player_position, suppression_cone_radius, broadphase_results, enemy_side_names)
+	local num_hits = broadphase.query(broadphase, player_position, suppression_cone_radius, broadphase_results, enemy_side_names)
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
@@ -369,6 +384,7 @@ ActionFlamerGasBurst.finish = function (self, reason, data, t, time_in_action)
 	ActionFlamerGasBurst.super.finish(self, reason, data, t, time_in_action)
 
 	local position_finder_component = self._action_module_position_finder_component
+
 	position_finder_component.position = Vector3.zero()
 	position_finder_component.position_valid = false
 end

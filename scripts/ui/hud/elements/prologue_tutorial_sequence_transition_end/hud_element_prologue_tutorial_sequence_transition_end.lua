@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/prologue_tutorial_sequence_transition_end/hud_element_prologue_tutorial_sequence_transition_end.lua
+
 local Definitions = require("scripts/ui/hud/elements/prologue_tutorial_sequence_transition_end/hud_element_prologue_tutorial_sequence_transition_end_definitions")
 local Settings = require("scripts/ui/hud/elements/prologue_tutorial_sequence_transition_end/hud_element_prologue_tutorial_sequence_transition_end_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -14,8 +16,10 @@ end
 
 HudElementPrologueTutorialSequenceTransitionEnd.show_transition_popup = function (self)
 	self._active = true
+
 	local widget = self._widgets_by_name.text
 	local content = widget.content
+
 	content.transition_text = Text.localize_to_upper(Settings.transition_text)
 
 	self:_start_animation("fade_in", self._widgets_by_name)

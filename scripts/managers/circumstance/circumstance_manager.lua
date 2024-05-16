@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/managers/circumstance/circumstance_manager.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local CircumstanceManager = class("CircumstanceManager")
+
 CircumstanceManager.DEBUG_TAG = "Circumstance"
 
 CircumstanceManager.init = function (self, circumstance_name)

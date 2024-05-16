@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/special_classes/weapon_special_deactivate_after_num_activations.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponSpecial = require("scripts/utilities/weapon_special")
@@ -60,6 +62,7 @@ end
 WeaponSpecialDeactivateAfterNumActivations.trigger_anim_event = function (self, anim_event, anim_event_3p, action_time_offset, ...)
 	local anim_ext = self._animation_extension
 	local time_scale = 1
+
 	action_time_offset = action_time_offset or 0
 
 	anim_ext:anim_event_with_variable_floats_1p(anim_event, "attack_speed", time_scale, "action_time_offset", action_time_offset, ...)

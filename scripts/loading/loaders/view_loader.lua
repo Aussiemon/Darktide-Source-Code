@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/view_loader.lua
+
 local Loader = require("scripts/loading/loader")
 local Missions = require("scripts/settings/mission/mission_templates")
 local Views = require("scripts/ui/views/views")
@@ -81,6 +83,7 @@ ViewLoader._load_done_callback = function (self)
 
 	if self._view_loading_count == 0 then
 		self._load_done = true
+
 		local ui_manager = Managers.ui
 
 		if ui_manager then

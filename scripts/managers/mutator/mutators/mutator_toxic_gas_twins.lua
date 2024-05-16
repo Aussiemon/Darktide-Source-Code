@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mutator/mutators/mutator_toxic_gas_twins.lua
+
 require("scripts/managers/mutator/mutators/mutator_base")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -19,43 +21,43 @@ local aggro_states = PerceptionSettings.aggro_states
 local MutatorToxicGasTwins = class("MutatorToxicGasTwins", "MutatorBase")
 local TWIN_SPAWN_ORDER = {
 	{
-		"renegade_twin_captain_two"
-	},
-	{
-		"renegade_twin_captain"
-	},
-	{
-		"renegade_twin_captain_two"
+		"renegade_twin_captain_two",
 	},
 	{
 		"renegade_twin_captain",
-		"renegade_twin_captain_two"
+	},
+	{
+		"renegade_twin_captain_two",
 	},
 	{
 		"renegade_twin_captain",
-		"renegade_twin_captain_two"
-	}
+		"renegade_twin_captain_two",
+	},
+	{
+		"renegade_twin_captain",
+		"renegade_twin_captain_two",
+	},
 }
 local TWIN_DESPAWN_DISTANCES = {
 	115,
 	385,
 	590,
 	700,
-	false
+	false,
 }
 local HORDE_SPAWN = {
 	false,
 	true,
 	true,
 	true,
-	false
+	false,
 }
 local SPAWN_GAS_LIST = {
 	true,
 	true,
 	true,
 	true,
-	true
+	true,
 }
 local SPECIALS_MULTIPLIER_TWINS_ACTIVE = 3
 local SPECIALS_MULTIPLIER_TWINS_ACTIVE_BOSS_FIGHT = 1
@@ -63,31 +65,31 @@ local SPECIALS_MULTIPLIER_TWINS_INACTIVE = 0.2
 local SPECIALS_MULTIPLIER_GAS_PHASE = 4
 local TWIN_IDS = {
 	renegade_twin_captain = 1,
-	renegade_twin_captain_two = 2
+	renegade_twin_captain_two = 2,
 }
 local appear_ambisonics_sound_event = "wwise/events/minions/play_minion_twins_ambush_spawn_impact"
 local gas_wave_ambisonics = "wwise/events/play_event_twins_arena_gas_wave_ambisonics"
 local MAINPATH_SOUND_EVENTS = {
 	{
+		distance = 25,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-		distance = 25
 	},
 	{
+		distance = 275,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-		distance = 275
 	},
 	{
+		distance = 485,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-		distance = 485
 	},
 	{
+		distance = 500,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-		distance = 500
 	},
 	{
+		distance = 610,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-		distance = 610
-	}
+	},
 }
 
 MutatorToxicGasTwins.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, level_seed)
@@ -108,7 +110,9 @@ MutatorToxicGasTwins.init = function (self, is_server, network_event_delegate, m
 	self._first_dead = false
 	self._both_dead = false
 	self._main_path_sound_events = table.clone(MAINPATH_SOUND_EVENTS)
+
 	local level = Managers.state.mission:mission_level()
+
 	self._level = level
 
 	if is_server then
@@ -133,7 +137,9 @@ MutatorToxicGasTwins._activate_cloud = function (self, cloud, is_other_cloud, de
 	end
 
 	local section_id = cloud.section_id
+
 	self._current_section_id = section_id
+
 	local is_last_spawn = false
 
 	if section_id == self._num_sections then
@@ -152,7 +158,7 @@ MutatorToxicGasTwins._activate_cloud = function (self, cloud, is_other_cloud, de
 
 	if not self._active_gas_clouds[section_id] then
 		self._active_gas_clouds[section_id] = {
-			cloud
+			cloud,
 		}
 	else
 		self._active_gas_clouds[section_id][#self._active_gas_clouds[section_id] + 1] = cloud
@@ -202,7 +208,7 @@ MutatorToxicGasTwins._spawn_volume_and_liquid = function (self, cloud, optional_
 		return
 	end
 
-	local liquid_area_template = nil
+	local liquid_area_template
 
 	if optional_buildup_liquid_delay then
 		if not self._first_gas_phase_started then
@@ -220,6 +226,7 @@ MutatorToxicGasTwins._spawn_volume_and_liquid = function (self, cloud, optional_
 
 	local max_liquid = cloud.max_liquid
 	local unit = LiquidArea.try_create(cloud.position:unbox(), Vector3(0, 0, 1), self._nav_world, liquid_area_template, nil, max_liquid)
+
 	cloud.liquid_unit = unit
 
 	cloud.fog_component:set_volume_enabled(true)
@@ -234,11 +241,8 @@ MutatorToxicGasTwins._spawn_volume_and_liquid = function (self, cloud, optional_
 	if ALIVE[attacking_unit] then
 		local blackboard = BLACKBOARDS[attacking_unit]
 		local spawn_component = blackboard.spawn
-		local world = spawn_component.world
-		local physics_world = spawn_component.physics_world
-		local impact_normal = Vector3.up()
-		local charge_level = 1
-		local attack_type = nil
+		local world, physics_world = spawn_component.world, spawn_component.physics_world
+		local impact_normal, charge_level, attack_type = Vector3.up(), 1
 		local power_level = 5
 		local explosion_template = self._appear_explosion_template
 
@@ -285,17 +289,16 @@ MutatorToxicGasTwins._spawn_twins = function (self, twin_spawn_data, section_id)
 			local twin_spawn_position = data.spawn_position:unbox()
 			local twin_spawn_rotation = data.spawn_rotation:unbox()
 			local twin_unit = Managers.state.minion_spawn:spawn_minion(breed_name, twin_spawn_position, twin_spawn_rotation, 2, aggro_states.aggroed, ahead_unit, nil, nil, nil, nil, not self._is_last_spawn and TWIN_TRAVERSAL_SPAWN_HEALTH_MODIFIER)
+
 			data.has_spawned = true
 			data.spawned_twin_unit = twin_unit
 			self._spawned_twins[#self._spawned_twins + 1] = twin_unit
+
 			local position = POSITION_LOOKUP[twin_unit]
 			local blackboard = BLACKBOARDS[twin_unit]
 			local spawn_component = blackboard.spawn
-			local world = spawn_component.world
-			local physics_world = spawn_component.physics_world
-			local impact_normal = Vector3.up()
-			local charge_level = 1
-			local attack_type = nil
+			local world, physics_world = spawn_component.world, spawn_component.physics_world
+			local impact_normal, charge_level, attack_type = Vector3.up(), 1
 			local power_level = 5
 			local explosion_template = self._appear_explosion_template
 
@@ -336,7 +339,9 @@ local TWIN_CLOUDS = {}
 MutatorToxicGasTwins._despawn_twin = function (self, twin_unit)
 	local blackboard = BLACKBOARDS[twin_unit]
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.should_disappear = true
+
 	local health_extension = ScriptUnit.has_extension(twin_unit, "health_system")
 
 	health_extension:set_invulnerable(true)
@@ -347,6 +352,7 @@ MutatorToxicGasTwins._despawn_twins = function (self)
 		local twin_unit = self._spawned_twins[i]
 		local blackboard = BLACKBOARDS[twin_unit]
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 		behavior_component.should_disappear = true
 	end
 end
@@ -394,10 +400,11 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 			if not twin_spawn_data[section_id][id][twin_id] then
 				local world_position = Unit.world_position(twin_captain_spawner, 1)
 				local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, world_position, 1, 1, 1)
+
 				twin_spawn_data[section_id][id][twin_id] = {
 					has_spawned = false,
 					spawn_position = Vector3Box(position_on_navmesh),
-					spawn_rotation = QuaternionBox(Unit.local_rotation(twin_captain_spawner, 1))
+					spawn_rotation = QuaternionBox(Unit.local_rotation(twin_captain_spawner, 1)),
 				}
 			end
 		end
@@ -442,7 +449,7 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 				position = boxed_position,
 				travel_distance = travel_distance,
 				fog_component = fog_component,
-				dont_trigger_this_cloud = dont_trigger_this_cloud
+				dont_trigger_this_cloud = dont_trigger_this_cloud,
 			}
 
 			table.insert(gas_clouds[section_id][id], entry)
@@ -450,6 +457,7 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 	end
 
 	self._gas_clouds = table.clone_instance(gas_clouds)
+
 	local gas_clouds_to_activate = {}
 
 	for i = 1, num_sections do
@@ -471,6 +479,7 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 			local position = Unit.local_position(cloud_unit, 1)
 			local _, travel_distance = MainPathQueries.closest_position(position)
 			local boxed_position = Vector3Box(position)
+
 			gas_clouds_to_activate[#gas_clouds_to_activate + 1] = {
 				cloud_unit = cloud_unit,
 				travel_distance = travel_distance,
@@ -480,7 +489,7 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 				id = id,
 				section_id = section_id,
 				trigger_clouds = trigger_clouds,
-				dont_trigger_this_cloud = dont_trigger_this_cloud
+				dont_trigger_this_cloud = dont_trigger_this_cloud,
 			}
 		end
 
@@ -521,6 +530,7 @@ end
 
 MutatorToxicGasTwins._random = function (self, ...)
 	local seed, value = math.next_random(self._seed, ...)
+
 	self._seed = seed
 
 	return value
@@ -530,7 +540,7 @@ local DISABLE_SPECIALS_DURATIONS = {
 	17,
 	31.4,
 	27,
-	24.3
+	24.3,
 }
 
 MutatorToxicGasTwins._update_twins = function (self, dt, t, ahead_travel_distance)
@@ -661,7 +671,7 @@ MutatorToxicGasTwins.update = function (self, dt, t)
 	if self._main_path_sound_events and #self._main_path_sound_events > 0 then
 		local next_mainpath_event = self._main_path_sound_events[1]
 
-		if next_mainpath_event.distance <= ahead_travel_distance then
+		if ahead_travel_distance >= next_mainpath_event.distance then
 			local optional_ambisonics = true
 
 			self._fx_system:trigger_wwise_event(next_mainpath_event.event, nil, nil, nil, nil, nil, optional_ambisonics)
@@ -687,7 +697,7 @@ MutatorToxicGasTwins.update = function (self, dt, t)
 		return
 	end
 
-	if self._disable_specials_duration and self._disable_specials_duration <= t then
+	if self._disable_specials_duration and t >= self._disable_specials_duration then
 		Managers.state.pacing:set_specials_timing_multiplier(SPECIALS_MULTIPLIER_TWINS_INACTIVE)
 		Managers.state.pacing:set_specials_force_move_timer(false)
 		Managers.state.pacing:set_travel_distance_spawning_override(true)
@@ -756,7 +766,7 @@ MutatorToxicGasTwins.start_boss_fight = function (self)
 	local spawn_types = {
 		"hordes",
 		"monsters",
-		"trickle_hordes"
+		"trickle_hordes",
 	}
 	local enabled = false
 
@@ -801,6 +811,7 @@ MutatorToxicGasTwins.spawn_boss_fight_twins = function (self)
 	spawned_unit_health_extension:add_damage(max_health * health_modifier)
 
 	self._spawned_twins[id] = twin_unit
+
 	local id_2 = TWIN_IDS.renegade_twin_captain_two
 	local health_modifier_2 = 1 - (self._boss_health[id_2] or 1)
 	local twin_unit_2 = Managers.state.minion_spawn:spawn_minion("renegade_twin_captain_two", spawner_2_position, spawner_2_rotation, 2, aggro_states.aggroed, ahead_unit)
@@ -814,9 +825,12 @@ MutatorToxicGasTwins.spawn_boss_fight_twins = function (self)
 	spawned_unit_health_extension_2:add_damage(max_health_2 * health_modifier_2)
 
 	self._spawned_twins[id_2] = twin_unit_2
+
 	local blackboard = BLACKBOARDS[twin_unit]
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.other_twin_unit = twin_unit_2
+
 	local move_to_position = spawner_1_position + Quaternion.forward(spawner_1_rotation) * 2
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, move_to_position, 1, 1, 1)
 
@@ -861,51 +875,51 @@ local GAS_TERROR_EVENTS = {
 		{
 			"km_enforcer_twins_gas_phase_west",
 			"km_enforcer_twins_gas_phase_north",
-			"km_enforcer_twins_gas_phase_middle"
+			"km_enforcer_twins_gas_phase_middle",
 		},
 		{
 			"km_enforcer_twins_gas_phase_east",
 			"km_enforcer_twins_gas_phase_north",
-			"km_enforcer_twins_gas_phase_middle"
-		}
+			"km_enforcer_twins_gas_phase_middle",
+		},
 	},
 	{
 		{
 			"km_enforcer_twins_gas_phase_2_west",
 			"km_enforcer_twins_gas_phase_2_north",
-			"km_enforcer_twins_gas_phase_2_middle"
+			"km_enforcer_twins_gas_phase_2_middle",
 		},
 		{
 			"km_enforcer_twins_gas_phase_2_east",
 			"km_enforcer_twins_gas_phase_2_north",
-			"km_enforcer_twins_gas_phase_2_middle"
-		}
+			"km_enforcer_twins_gas_phase_2_middle",
+		},
 	},
 	{
 		{
 			"km_enforcer_twins_gas_phase_3_west",
 			"km_enforcer_twins_gas_phase_3_north",
-			"km_enforcer_twins_gas_phase_3_middle"
+			"km_enforcer_twins_gas_phase_3_middle",
 		},
 		{
 			"km_enforcer_twins_gas_phase_3_east",
 			"km_enforcer_twins_gas_phase_3_north",
-			"km_enforcer_twins_gas_phase_3_middle"
-		}
-	}
+			"km_enforcer_twins_gas_phase_3_middle",
+		},
+	},
 }
 local FIGHT_TERROR_EVENTS = {
 	"km_enforcer_twins_elite_trickle_1",
 	"km_enforcer_twins_elite_trickle_2",
-	"km_enforcer_twins_elite_trickle_3"
+	"km_enforcer_twins_elite_trickle_3",
 }
 local LAST_PHASTE_TERROR_EVENTS = {
-	"km_enforcer_twins_last_phase_trickle"
+	"km_enforcer_twins_last_phase_trickle",
 }
 local GAS_EVENT_DURATION = {
 	30,
 	40,
-	50
+	50,
 }
 local GAS_ALARM_DURATION = 5
 
@@ -922,6 +936,7 @@ MutatorToxicGasTwins._update_boss_fight = function (self, dt, t)
 		local id = TWIN_IDS[ScriptUnit.extension(twin_unit, "unit_data_system"):breed().name]
 		local health_extension = ScriptUnit.extension(twin_unit, "health_system")
 		local current_health_percent = health_extension:current_health_percent()
+
 		self._boss_health[id] = current_health_percent
 	end
 
@@ -1006,6 +1021,7 @@ MutatorToxicGasTwins._update_boss_fight = function (self, dt, t)
 					Vo.enemy_generic_vo_event(twin_unit, "twin_dead", breed_name)
 
 					self._first_dead = true
+
 					local buff_extension = ScriptUnit.has_extension(twin_unit, "buff_system")
 
 					if buff_extension and not buff_extension:has_keyword("empowered") then
@@ -1023,7 +1039,7 @@ end
 
 MutatorToxicGasTwins._update_boss_fight_twins_alive = function (self, dt, t, health_threshold, gas_index)
 	if self._alarm_duration then
-		if self._alarm_duration <= t then
+		if t >= self._alarm_duration then
 			local gas_phase_index = gas_index
 
 			self:_start_gas_phase(gas_phase_index)
@@ -1052,73 +1068,73 @@ local ALTERNATING_GAS_BY_CHALLENGE = {
 	false,
 	true,
 	true,
-	true
+	true,
 }
 local FIRST_ALTERNATING_GAS_DURATION_RANGES = {
 	{
 		600,
-		600
+		600,
 	},
 	{
 		600,
-		600
+		600,
 	},
 	{
 		600,
-		600
+		600,
 	},
 	{
 		35,
-		40
+		40,
 	},
 	{
 		20,
-		25
-	}
+		25,
+	},
 }
 local ALTERNATING_GAS_DURATION_RANGES = {
 	{
 		40,
-		45
+		45,
 	},
 	{
 		40,
-		45
+		45,
 	},
 	{
 		18,
-		25
+		25,
 	},
 	{
 		16,
-		24
+		24,
 	},
 	{
 		15,
-		22
-	}
+		22,
+	},
 }
 local HARD_MODE_GAS_DURATION_RANGES = {
 	{
 		20,
-		30
+		30,
 	},
 	{
 		20,
-		30
+		30,
 	},
 	{
 		15,
-		20
+		20,
 	},
 	{
 		14,
-		20
+		20,
 	},
 	{
 		14,
-		18
-	}
+		18,
+	},
 }
 local GAS_PHASE_BUILDUP_DELAY = 7
 local FIRST_GAS_PHASE_BUILDUP_DELAY = 12
@@ -1142,11 +1158,12 @@ MutatorToxicGasTwins._start_gas_phase = function (self, gas_phase_index)
 	self._current_random_id = random_id
 	self._gas_phase = true
 	self._alternating_gas = Managers.state.difficulty:get_table_entry_by_challenge(ALTERNATING_GAS_BY_CHALLENGE)
+
 	local has_hard_mode = self:_has_hard_mode()
 
 	if self._alternating_gas then
 		local t = Managers.time:time("gameplay")
-		local random_gas_alternation_range = nil
+		local random_gas_alternation_range
 
 		if not self._first_gas_phase_started then
 			random_gas_alternation_range = Managers.state.difficulty:get_table_entry_by_challenge(has_hard_mode and HARD_MODE_GAS_DURATION_RANGES or FIRST_ALTERNATING_GAS_DURATION_RANGES)
@@ -1220,9 +1237,10 @@ MutatorToxicGasTwins._update_gas_phase = function (self, dt, t)
 		self._triggered_alternating_gas_alarm = true
 	end
 
-	if self._alternate_gas_at_t <= t then
+	if t >= self._alternate_gas_at_t then
 		local current_gas_phase_id = self._current_random_id
 		local random_gas_alternation_range = Managers.state.difficulty:get_table_entry_by_challenge(has_hard_mode and HARD_MODE_GAS_DURATION_RANGES or ALTERNATING_GAS_DURATION_RANGES)
+
 		self._alternate_gas_at_t = t + math.random_range(random_gas_alternation_range[1], random_gas_alternation_range[2])
 
 		self:_remove_gas_phase_gas()
@@ -1273,7 +1291,7 @@ local DISAPPEAR_INDICES = {
 	1,
 	1,
 	2,
-	2
+	2,
 }
 
 MutatorToxicGasTwins._ready_to_escape = function (self, unit)
@@ -1322,13 +1340,13 @@ MutatorToxicGasTwins._ready_to_escape = function (self, unit)
 			toughness_extension:set_override_regen_speed(nil)
 
 			local spawn_component = blackboard.spawn
-			local game_session = spawn_component.game_session
-			local game_object_id = spawn_component.game_object_id
+			local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
 
 			GameSession.set_game_object_field(game_session, game_object_id, "is_toughness_invulnerable", true)
 
 			self._force_disappear_t = FORCE_DISAPPEAR_DURATION
 			behavior_component.disappear_idle = true
+
 			local disappear_index = DISAPPEAR_INDICES[self._current_section_id]
 
 			if disappear_index then
@@ -1343,7 +1361,9 @@ end
 MutatorToxicGasTwins._spawn_horde = function (self, horde_type, horde_template, composition)
 	local horde_manager = Managers.state.horde
 	local towards_combat_vector = true
+
 	composition = Managers.state.difficulty:get_table_entry_by_challenge(composition)
+
 	local success, horde_position, target_unit, group_id = horde_manager:horde(horde_type, horde_template.name, 2, 1, composition, towards_combat_vector)
 
 	return success, horde_position, target_unit, group_id
@@ -1354,7 +1374,7 @@ local HARD_MODE_AVAILABLE = {
 	false,
 	false,
 	false,
-	true
+	true,
 }
 
 MutatorToxicGasTwins._has_hard_mode = function (self)

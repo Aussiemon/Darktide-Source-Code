@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/managers/data_service/services/invites/invites_steam.lua
+
 local InvitesSteam = class("InvitesSteam")
 
 InvitesSteam.init = function (self)
 	self._has_invite = false
 	self._invite_address = nil
+
 	local invite_type, lobby_address = Friends.boot_invite()
 
 	if invite_type == Friends.INVITE_LOBBY then
@@ -32,6 +35,7 @@ end
 InvitesSteam.get_invite = function (self)
 	if self._has_invite then
 		local address = self._invite_address
+
 		self._invite_address = nil
 		self._has_invite = false
 

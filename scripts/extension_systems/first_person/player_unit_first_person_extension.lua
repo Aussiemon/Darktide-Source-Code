@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/player_unit_first_person_extension.lua
+
 local CameraSettings = require("scripts/settings/camera/camera_settings")
 local FirstPersonAnimationVariables = require("scripts/utilities/first_person_animation_variables")
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
@@ -17,34 +19,45 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	local wwise_world = extension_init_context.wwise_world
 	local physics_world = extension_init_context.physics_world
 	local breed = extension_init_data.breed
+
 	self._wwise_world = wwise_world
 	self._world = world
 	self._unit = unit
 	self._player = extension_init_data.player
 	self._is_local_unit = extension_init_data.is_local_unit
 	self._force_third_person_mode = extension_init_data.force_third_person_mode
+
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
+
 	local heights = extension_init_data.heights
+
 	self._heights = heights
+
 	local character_height = heights.default
 
 	if is_server then
 		local game_object_data = ...
+
 		game_object_data.character_height = character_height
 	else
 		local session, id = ...
+
 		self._game_session = session
 		self._game_object_id = id
 	end
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
+
 	local character_state_component = unit_data_extension:read_component("character_state")
 	local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 	local movement_state_component = unit_data_extension:read_component("movement_state")
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
 	self._recoil_component = unit_data_extension:read_component("recoil")
 	self._character_state_component = character_state_component
@@ -55,8 +68,11 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	self._look_delta_x = 0
 	self._extrapolated_character_height = character_height
 	self._last_fixed_t = Managers.time:time("gameplay")
+
 	local input_extension = ScriptUnit.extension(unit, "input_system")
+
 	self._input_extension = input_extension
+
 	local yaw, pitch, roll = input_extension:get_orientation()
 	local look_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
 	local pose_scale = breed.first_person_pose_scale or 1
@@ -70,11 +86,13 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	Matrix4x4.set_scale(pose, Vector3(pose_scale, pose_scale, pose_scale))
 
 	local first_person_unit = unit_spawner_manager:spawn_unit(unit_name, pose)
+
 	self._first_person_unit = first_person_unit
 
 	Unit.set_data(first_person_unit, "owner_unit", unit)
 
 	local first_person_component = unit_data_extension:write_component("first_person")
+
 	first_person_component.height_change_duration = 0
 	first_person_component.height_change_start_time = 0
 	first_person_component.height = character_height
@@ -86,16 +104,22 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	first_person_component.height_change_function = "ease_out_quad"
 	self._first_person_component = first_person_component
 	self._heights = extension_init_data.heights
+
 	local first_person_mode_component = unit_data_extension:write_component("first_person_mode")
+
 	first_person_mode_component.wants_1p_camera = true
 	first_person_mode_component.show_1p_equipment_at_t = 0
 	self._first_person_mode_component = unit_data_extension:read_component("first_person_mode")
 	self._is_camera_follow_target = false
 	self._is_first_person_spectated = false
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
+
 	local fixed_t = extension_init_context.fixed_frame * self._fixed_time_step
+
 	self._show_1p_equipment, self._wants_1p_camera = self:_update_first_person_mode(fixed_t)
+
 	local force_look_rotation_component = unit_data_extension:write_component("force_look_rotation")
+
 	force_look_rotation_component.use_force_look_rotation = false
 	force_look_rotation_component.start_yaw = 0
 	force_look_rotation_component.start_pitch = 0
@@ -104,7 +128,9 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	force_look_rotation_component.start_time = 0
 	force_look_rotation_component.end_time = 0
 	self._force_look_rotation_component = force_look_rotation_component
+
 	local peeking_component = unit_data_extension:write_component("peeking")
+
 	peeking_component.has_significant_obstacle_in_front = false
 	peeking_component.in_cover = false
 	peeking_component.peeking_is_possible = false
@@ -114,7 +140,9 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	self._inair_state_component = unit_data_extension:read_component("inair_state")
 	self._state_machine_lerp_values = {}
 	self._footstep_time = 0
+
 	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
+
 	self._footstep_context = {
 		character_state_component = character_state_component,
 		sprint_character_state_component = sprint_character_state_component,
@@ -125,7 +153,7 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 		wwise_world = wwise_world,
 		unit = unit,
 		physics_world = physics_world,
-		feet_source_id = feet_source_id
+		feet_source_id = feet_source_id,
 	}
 	self._previous_frame_character_state_name = character_state_component.state_name
 	self._1p_peeking_animation_data = {}
@@ -135,6 +163,7 @@ end
 PlayerUnitFirstPersonExtension.extensions_ready = function (self, world, unit)
 	local first_person_unit = self._first_person_unit
 	local is_husk = false
+
 	self._run_animation_speed_control = FirstPersonRunSpeedAnimationControl:new(first_person_unit, unit)
 	self._look_delta_animation_control = FirstPersonLookDeltaAnimationControl:new(first_person_unit, unit, is_husk)
 	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
@@ -169,6 +198,7 @@ end
 
 local function _ease_out_quad(t, b, c, d)
 	t = t / d
+
 	local res = -c * t * (t - 2) + b
 
 	return res
@@ -194,7 +224,9 @@ end
 
 local function _ease_in_cubic(t, b, c, d)
 	local p = t / d
+
 	t = p * p * p
+
 	local res = math.lerp(b, b + c, t)
 
 	return res
@@ -206,7 +238,7 @@ local function _calculate_base_player_height(fp_component, t)
 
 	if time_changing_height < duration then
 		local old_height = fp_component.old_height
-		local new_height = nil
+		local new_height
 		local height_change_function = fp_component.height_change_function
 
 		if height_change_function == "ease_in_cubic" then
@@ -230,8 +262,10 @@ local function _peeking_player_height(unmodified_look_rotation, peeking_componen
 	local angle = math.acos(Vector3.dot(forward, up))
 	local p = angle - half_pi
 	local peeking_height = peeking_component.peeking_height
-	peeking_height = peeking_height + height_per_half_pi * p / half_pi
+
+	peeking_height = peeking_height + height_per_half_pi * (p / half_pi)
 	peeking_height = math.clamp(peeking_height, crouch_height, default_height)
+
 	local current_height = fp_component.height
 	local delta = peeking_height - current_height
 	local abs_delta = math.abs(delta)
@@ -271,7 +305,7 @@ PlayerUnitFirstPersonExtension.fixed_update = function (self, unit, dt, t, frame
 	local pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, self._recoil_component, self._movement_state_component)
 	local look_rotation = Quaternion.from_yaw_pitch_roll(yaw + yaw_offset, pitch + pitch_offset, roll)
 	local unmodified_look_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
-	local base_position_offset = nil
+	local base_position_offset
 
 	if self._inair_state_component.on_ground then
 		base_position_offset = Vector3.up() * 0.2
@@ -289,6 +323,7 @@ PlayerUnitFirstPersonExtension.fixed_update = function (self, unit, dt, t, frame
 
 	if peeking_component.is_peeking then
 		local heights = self._heights
+
 		height = _peeking_player_height(unmodified_look_rotation, peeking_component, heights.crouch, heights.default, fp_component, self._last_fixed_t, t, self._fixed_time_step)
 		position = locomotion_position + Vector3(0, 0, height)
 	end
@@ -311,6 +346,7 @@ end
 
 PlayerUnitFirstPersonExtension.update = function (self, unit, dt, t)
 	self._show_1p_equipment, self._wants_1p_camera = self:_update_first_person_mode(t)
+
 	local is_in_first_person_mode = self:is_in_first_person_mode()
 
 	if is_in_first_person_mode then
@@ -325,6 +361,7 @@ PlayerUnitFirstPersonExtension.update = function (self, unit, dt, t)
 	if not self._unit_data_extension.is_resimulating then
 		local previous_frame_character_state_name = self._previous_frame_character_state_name
 		local footstep_context = self._footstep_context
+
 		self._footstep_time = Footstep.update_1p_footsteps(t, self._footstep_time, previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 
 		Footstep.update_3p_footsteps(previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
@@ -364,7 +401,7 @@ PlayerUnitFirstPersonExtension.update_unit_position = function (self, unit, dt, 
 	local peeking_component = self._peeking_component
 
 	if self._is_local_unit and player:is_human_controlled() then
-		local height = nil
+		local height
 
 		if peeking_component.is_peeking then
 			local orientation = self._player:get_orientation()
@@ -373,12 +410,14 @@ PlayerUnitFirstPersonExtension.update_unit_position = function (self, unit, dt, 
 			local roll = orientation.roll
 			local rot = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
 			local heights = self._heights
+
 			height = _peeking_player_height(rot, peeking_component, heights.crouch, heights.default, fp_component, self._last_fixed_t, t, self._fixed_time_step)
 		else
 			height = _calculate_base_player_height(fp_component, t)
 		end
 
 		local position = position_root + Vector3(0, 0, height)
+
 		self._extrapolated_character_height = height
 
 		Unit.set_local_position(first_person_unit, 1, position)
@@ -386,7 +425,9 @@ PlayerUnitFirstPersonExtension.update_unit_position = function (self, unit, dt, 
 	elseif self._is_first_person_spectated then
 		local height = _calculate_base_player_height(fp_component, t)
 		local offset_height = Vector3(0, 0, height)
+
 		self._extrapolated_character_height = height
+
 		local position = position_root + offset_height
 
 		Unit.set_local_position(first_person_unit, 1, position)
@@ -418,7 +459,7 @@ PlayerUnitFirstPersonExtension._update_first_person_mode = function (self, t)
 		return self:_server_evaluate_other_players_first_person_mode(is_first_person_spectated, wants_1p_camera)
 	end
 
-	local show_1p_equipment = wants_1p_camera and self._first_person_mode_component.show_1p_equipment_at_t <= t
+	local show_1p_equipment = wants_1p_camera and t >= self._first_person_mode_component.show_1p_equipment_at_t
 
 	return show_1p_equipment, wants_1p_camera
 end
@@ -432,7 +473,7 @@ end
 PlayerUnitFirstPersonExtension._update_first_person_forced_rotation = function (self, dt, t)
 	local force_look = self._force_look_rotation_component
 
-	if force_look.use_force_look_rotation and force_look.end_time < t then
+	if force_look.use_force_look_rotation and t > force_look.end_time then
 		ForceLookRotation.stop(force_look)
 	end
 end
@@ -491,7 +532,9 @@ end
 
 PlayerUnitFirstPersonExtension.set_camera_follow_target = function (self, is_followed, first_person_spectating)
 	self._is_camera_follow_target = is_followed
+
 	local is_local_human = self._is_local_unit and self._player:is_human_controlled()
+
 	self._is_first_person_spectated = not is_local_human and is_followed and first_person_spectating
 end
 
@@ -516,6 +559,7 @@ local player_height_movement_speed = 3
 PlayerUnitFirstPersonExtension.set_wanted_player_height = function (self, state, time_to_change, height_change_function)
 	local player_height_wanted = self:_player_height_from_name(state)
 	local fp_component = self._first_person_component
+
 	fp_component.wanted_height = player_height_wanted
 
 	self:reset_height_change(time_to_change, height_change_function)
@@ -523,6 +567,7 @@ end
 
 PlayerUnitFirstPersonExtension.reset_height_change = function (self, time_to_change, height_change_function)
 	local fp_component = self._first_person_component
+
 	fp_component.old_height = fp_component.height
 
 	if time_to_change == nil then

@@ -1,111 +1,113 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/dm_rise_objective_template.lua
+
 local mission_objective_templates = {
 	dm_rise = {
 		main_objective_type = "demolition_objective",
 		objectives = {
 			objective_dm_rise_reach_lockdown_command = {
 				description = "loc_objective_dm_rise_reach_lockdown_command_desc",
+				header = "loc_objective_dm_rise_reach_lockdown_command_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_dm_rise_reach_lockdown_command_header"
 			},
 			objective_dm_rise_open_luggables = {
 				description = "loc_objective_dm_rise_power_trains_desc",
+				header = "loc_objective_dm_rise_power_trains_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_dm_rise_power_trains_header"
 			},
 			objective_dm_rise_power_trains = {
-				use_music_event = "collect_event",
 				description = "loc_objective_dm_rise_open_luggables_desc",
-				header = "loc_objective_dm_rise_open_luggables_header",
 				event_type = "mid_event",
-				mission_objective_type = "luggable"
+				header = "loc_objective_dm_rise_open_luggables_header",
+				mission_objective_type = "luggable",
+				use_music_event = "collect_event",
 			},
 			objective_dm_rise_lockdown = {
 				description = "loc_objective_dm_rise_lockdown_desc",
-				use_music_event = "collect_event",
-				header = "loc_objective_dm_rise_lockdown_header",
 				event_type = "mid_event",
+				header = "loc_objective_dm_rise_lockdown_header",
+				mission_objective_type = "decode",
 				progress_bar = true,
-				mission_objective_type = "decode"
+				use_music_event = "collect_event",
 			},
 			objective_dm_rise_lockdown_two = {
 				description = "loc_objective_dm_rise_lockdown_two_desc",
-				use_music_event = "collect_event",
-				header = "loc_objective_dm_rise_lockdown_two_header",
 				event_type = "mid_event",
+				header = "loc_objective_dm_rise_lockdown_two_header",
+				mission_objective_type = "decode",
 				progress_bar = true,
-				mission_objective_type = "decode"
+				use_music_event = "collect_event",
 			},
 			objective_dm_rise_open_depot_doors = {
 				description = "loc_objective_dm_rise_open_depot_doors_desc",
+				header = "loc_objective_dm_rise_open_depot_doors_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_dm_rise_open_depot_doors_header"
 			},
 			objective_dm_rise_reach_shaft_depot = {
 				description = "loc_objective_dm_rise_reach_shaft_depot_desc",
+				header = "loc_objective_dm_rise_reach_shaft_depot_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_dm_rise_reach_shaft_depot_header"
 			},
 			objective_dm_rise_enter_platform = {
 				description = "loc_objective_dm_rise_enter_platform_desc",
-				turn_off_backfill = true,
+				header = "loc_objective_dm_rise_enter_platform_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_dm_rise_enter_platform_header"
+				turn_off_backfill = true,
 			},
 			objective_dm_rise_enter_platform_two = {
-				use_music_event = "demolition_event",
 				description = "loc_objective_dm_rise_enter_platform_two_desc",
-				header = "loc_objective_dm_rise_enter_platform_two_header",
 				event_type = "end_event",
-				mission_objective_type = "goal"
+				header = "loc_objective_dm_rise_enter_platform_two_header",
+				mission_objective_type = "goal",
+				use_music_event = "demolition_event",
 			},
 			objective_dm_rise_survive = {
-				use_music_event = "demolition_event",
 				description = "loc_objective_dm_rise_survive_desc",
-				progress_bar = true,
-				header = "loc_objective_dm_rise_survive_header",
-				event_type = "end_event",
 				duration = 90,
-				mission_objective_type = "timed"
+				event_type = "end_event",
+				header = "loc_objective_dm_rise_survive_header",
+				mission_objective_type = "timed",
+				progress_bar = true,
+				use_music_event = "demolition_event",
 			},
 			objective_dm_rise_survive_two = {
-				use_music_event = "demolition_event",
 				description = "loc_objective_dm_rise_survive_two_desc",
-				progress_bar = true,
-				header = "loc_objective_dm_rise_survive_two_header",
-				event_type = "end_event",
 				duration = 90,
-				mission_objective_type = "timed"
+				event_type = "end_event",
+				header = "loc_objective_dm_rise_survive_two_header",
+				mission_objective_type = "timed",
+				progress_bar = true,
+				use_music_event = "demolition_event",
 			},
 			objective_dm_rise_demo_floor_one = {
-				use_music_event = "demolition_event",
 				description = "loc_objective_dm_rise_demo_floor_one_desc",
-				header = "loc_objective_dm_rise_demo_floor_one_header",
 				event_type = "end_event",
-				mission_objective_type = "demolition"
+				header = "loc_objective_dm_rise_demo_floor_one_header",
+				mission_objective_type = "demolition",
+				use_music_event = "demolition_event",
 			},
 			objective_dm_rise_demo_floor_two = {
-				use_music_event = "demolition_event",
 				description = "loc_objective_dm_rise_demo_floor_two_desc",
-				header = "loc_objective_dm_rise_demo_floor_two_header",
 				event_type = "end_event",
-				mission_objective_type = "demolition"
+				header = "loc_objective_dm_rise_demo_floor_two_header",
+				mission_objective_type = "demolition",
+				use_music_event = "demolition_event",
 			},
 			objective_dm_rise_escape = {
 				description = "loc_objective_dm_rise_escape_desc",
-				use_music_event = "escape_event",
+				header = "loc_objective_dm_rise_escape_header",
 				mission_objective_type = "luggable",
-				header = "loc_objective_dm_rise_escape_header"
+				use_music_event = "escape_event",
 			},
 			objective_dm_rise_luggable_secret_01 = {
+				hidden = true,
 				mission_objective_type = "luggable",
-				hidden = true
 			},
 			objective_dm_rise_luggable_secret_02 = {
+				hidden = true,
 				mission_objective_type = "luggable",
-				hidden = true
-			}
-		}
-	}
+			},
+		},
+	},
 }
 
 return mission_objective_templates

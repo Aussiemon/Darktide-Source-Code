@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/buff_volume.lua
+
 local BuffVolume = component("BuffVolume")
 
 BuffVolume.init = function (self, unit, is_server, nav_world)
@@ -38,9 +40,12 @@ BuffVolume.init = function (self, unit, is_server, nav_world)
 	self._forbidden_keyword = self:get_data(unit, "forbidden_keyword")
 	self._buff_affected_units = {}
 	self._unit = unit
+
 	local extension_manager = Managers.state.extension
 	local broadphase_system = extension_manager:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
+
 	local side_system = extension_manager:system("side_system")
 	local affected_side_name = self:get_data(unit, "affected_side_name")
 
@@ -48,6 +53,7 @@ BuffVolume.init = function (self, unit, is_server, nav_world)
 		self._affected_side_names = side_system:side_names()
 	else
 		local side = side_system:get_side_from_name(affected_side_name)
+
 		self._affected_side = side
 		self._affected_side_names = side:relation_side_names("allied")
 	end
@@ -79,16 +85,14 @@ local TEMP_ALREADY_CHECKED_UNITS = {}
 local BROADPHASE_RESULTS = {}
 
 BuffVolume.update = function (self, unit, dt, t)
-	local broadphase = self._broadphase
-	local side_names = self._affected_side_names
-	local broadphase_center = self._broadphase_center:unbox()
-	local broadphase_radius = self._broadphase_radius
+	local broadphase, side_names = self._broadphase, self._affected_side_names
+	local broadphase_center, broadphase_radius = self._broadphase_center:unbox(), self._broadphase_radius
 
 	if not self._buffs_enabled then
 		return true
 	end
 
-	local num_results = broadphase:query(broadphase_center, broadphase_radius, BROADPHASE_RESULTS, side_names)
+	local num_results = broadphase.query(broadphase, broadphase_center, broadphase_radius, BROADPHASE_RESULTS, side_names)
 
 	if num_results == 0 and not self._inverse then
 		return true
@@ -150,9 +154,10 @@ BuffVolume._update_buffs = function (self, unit, dt, t, num_results)
 
 					if not forbidden_keyword or not buff_extension:has_keyword(forbidden_keyword) then
 						local local_index, component_index = self:_add_buff(affected_unit, t)
+
 						buff_affected_units[affected_unit] = {
 							local_index = local_index,
-							component_index = component_index
+							component_index = component_index,
 						}
 					end
 				end
@@ -203,9 +208,10 @@ BuffVolume._update_inverse_buffs = function (self, unit, dt, t)
 
 				if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[affected_unit] then
 					local local_index, component_index = self:_add_buff(affected_unit, t)
+
 					buff_affected_units[affected_unit] = {
 						local_index = local_index,
-						component_index = component_index
+						component_index = component_index,
 					}
 				end
 
@@ -256,12 +262,11 @@ local TEMP_POSITIONS = {}
 
 BuffVolume._calculate_broadphase_size = function (self)
 	self._broadphase_center, self._broadphase_radius = Vector3Box()
-	local Vector3_max = Vector3.max
-	local Vector3_min = Vector3.min
+
+	local Vector3_max, Vector3_min = Vector3.max, Vector3.min
 	local volume_points = Unit.volume_points(self._unit, "volume")
 	local first_position = volume_points[1]
-	local max_position = first_position
-	local min_position = first_position
+	local max_position, min_position = first_position, first_position
 	local num_points = 0
 
 	for _, point in pairs(volume_points) do
@@ -297,6 +302,7 @@ end
 
 BuffVolume.disable_buffs = function (self)
 	self._buffs_enabled = false
+
 	local buff_affected_units = self._buff_affected_units
 
 	if not buff_affected_units then
@@ -321,8 +327,11 @@ BuffVolume.editor_init = function (self, unit)
 	end
 
 	local world = Application.main_world()
+
 	self._world = world
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
@@ -377,65 +386,65 @@ end
 
 BuffVolume.component_data = {
 	start_enabled = {
+		ui_name = "start_enabled",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "start_enabled"
 	},
 	buff_template_name = {
+		ui_name = "Buff Name",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Buff Name"
 	},
 	leaving_buff_template_name = {
+		ui_name = "Leaving Buff Name",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Leaving Buff Name"
 	},
 	heroes_buff_template_name = {
+		ui_name = "Heroes Buff Name",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Heroes Buff Name"
 	},
 	villains_buff_template_name = {
+		ui_name = "Villains Buff Name",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Villains Buff Name"
 	},
 	forbidden_keyword = {
+		ui_name = "Forbidden Keyword",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Forbidden Keyword"
 	},
 	affected_side_name = {
-		value = "heroes",
-		ui_type = "combo_box",
 		ui_name = "Side",
+		ui_type = "combo_box",
+		value = "heroes",
 		options_keys = {
 			"Heroes",
 			"Villains",
-			"Both"
+			"Both",
 		},
 		options_values = {
 			"heroes",
 			"villains",
-			"both"
-		}
+			"both",
+		},
 	},
 	inverse = {
+		ui_name = "Inverse",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Inverse"
 	},
 	inputs = {
 		enable_buffs = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		disable_buffs = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return BuffVolume

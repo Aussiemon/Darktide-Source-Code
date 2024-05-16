@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/shading_environment/shading_environment_system.lua
+
 require("scripts/extension_systems/shading_environment/shading_environment_extension")
 
 local ShadingEnvironmentSystem = class("ShadingEnvironmentSystem", "ExtensionSystemBase")

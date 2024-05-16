@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/patches.lua
+
 if IS_XBS then
 	PATCHED_USER_SETTINGS = PATCHED_USER_SETTINGS or false
 
@@ -20,12 +22,14 @@ if IS_XBS then
 
 			for i = 1, num_args - 2 do
 				local key = select(i, ...)
+
 				t[key] = type(t[key]) == "table" and t[key] or {}
 				t = t[key]
 			end
 
 			local set_key = select(num_args - 1, ...)
 			local set_value = select(num_args, ...)
+
 			t[set_key] = set_value
 		end
 
@@ -45,6 +49,7 @@ if IS_XBS then
 
 			for i = 1, num_args - 1 do
 				local key = select(i, ...)
+
 				t = t[key]
 
 				if type(t) ~= "table" then
@@ -93,7 +98,7 @@ if IS_WINDOWS and BUILD ~= "dev" and BUILD ~= "debug" then
 		date = os.date,
 		difftime = os.difftime,
 		time = os.time,
-		getenv = os.getenv
+		getenv = os.getenv,
 	}
 	package.loadlib = nil
 	package.loaders[3] = nil

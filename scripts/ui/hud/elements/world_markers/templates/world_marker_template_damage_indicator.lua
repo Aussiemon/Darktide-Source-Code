@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_damage_indicator.lua
+
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -6,9 +8,10 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	120,
-	6
+	6,
 }
 local damage_number_types = table.enum("readable", "floating", "flashy")
+
 template.show_health_bar = true
 template.show_numbers = true
 template.show_armor_types = true
@@ -22,7 +25,7 @@ template.unit_node = "root_point"
 template.position_offset = {
 	0,
 	0,
-	0
+	0,
 }
 template.check_line_of_sight = true
 template.max_distance = 200
@@ -30,62 +33,64 @@ template.screen_clamp = false
 template.remove_on_death_duration = 2
 template.damage_number_settings = {
 	add_numbers_together_timer = 0.2,
-	first_hit_size_scale = 1.2,
-	visibility_delay = 2,
-	crit_hit_size_scale = 1.5,
-	expand_bonus_scale = 30,
-	has_taken_damage_timer_y_offset = 34,
-	fade_delay = 2,
 	add_numbers_together_timer_flashy = 0,
-	default_color = "white",
-	weakspot_color = "orange",
-	shrink_duration = 1,
-	duration = 3,
-	x_offset_between_numbers = 38,
-	expand_duration = 0.2,
 	crit_color = "yellow",
-	hundreds_font_size = 14.4,
+	crit_hit_size_scale = 1.5,
+	default_color = "white",
 	default_font_size = 17,
-	has_taken_damage_timer_remove_after_time = 5,
-	max_float_y = 100,
 	dps_font_size = 14.4,
-	x_offset = 1,
 	dps_y_offset = -36,
+	duration = 3,
+	expand_bonus_scale = 30,
+	expand_duration = 0.2,
+	fade_delay = 2,
+	first_hit_size_scale = 1.2,
+	has_taken_damage_timer_remove_after_time = 5,
+	has_taken_damage_timer_y_offset = 34,
+	hundreds_font_size = 14.4,
+	max_float_y = 100,
+	shrink_duration = 1,
+	visibility_delay = 2,
+	weakspot_color = "orange",
+	x_offset = 1,
+	x_offset_between_numbers = 38,
 	y_offset = 15,
 	flashy_font_size_dmg_multiplier = {
 		1,
-		2
+		2,
 	},
 	flashy_font_size_dmg_scale_range = {
 		100,
-		600
-	}
+		600,
+	},
 }
 template.bar_settings = {
+	alpha_fade_delay = 0.5,
+	alpha_fade_duration = 0.6,
+	alpha_fade_min_value = 50,
 	animate_on_health_increase = true,
 	bar_spacing = 2,
+	duration_health = 0.5,
 	duration_health_ghost = 0.2,
 	health_animation_threshold = 0.1,
-	alpha_fade_delay = 0.5,
-	duration_health = 0.5,
-	alpha_fade_min_value = 50,
-	alpha_fade_duration = 0.6
 }
+
 local armor_type_string_lookup = {
-	disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
-	super_armor = "loc_weapon_stats_display_super_armor",
 	armored = "loc_weapon_stats_display_armored",
-	resistant = "loc_glossary_armour_type_resistant",
 	berserker = "loc_weapon_stats_display_berzerker",
-	unarmored = "loc_weapon_stats_display_unarmored"
+	disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
+	resistant = "loc_glossary_armour_type_resistant",
+	super_armor = "loc_weapon_stats_display_super_armor",
+	unarmored = "loc_weapon_stats_display_unarmored",
 }
+
 template.fade_settings = {
-	fade_to = 1,
-	fade_from = 0.5,
 	default_fade = 0.5,
+	fade_from = 0.5,
+	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp
+	easing_function = math.ease_exp,
 }
 
 local function _readable_damage_number_function(ui_content, ui_renderer, ui_style, damage_number_settings, damage_numbers, num_damage_numbers, position, default_color, text_color, crit_color, weakspot_color, default_font_size, hundreds_font_size, font_type)
@@ -128,6 +133,7 @@ local function _readable_damage_number_function(ui_content, ui_renderer, ui_styl
 			local expand_time = damage_number.expand_time
 			local expand_progress = math.clamp(expand_time / expand_duration, 0, 1)
 			local anim_progress = 1 - expand_progress
+
 			font_size = font_size + damage_number_settings.expand_bonus_scale * anim_progress
 
 			if expand_progress >= 1 then
@@ -136,10 +142,11 @@ local function _readable_damage_number_function(ui_content, ui_renderer, ui_styl
 			else
 				damage_number.expand_time = expand_time + ui_renderer.dt
 			end
-		elseif damage_number.shrink_start_t and damage_number.shrink_start_t < time then
+		elseif damage_number.shrink_start_t and time > damage_number.shrink_start_t then
 			local diff = time - damage_number.shrink_start_t
 			local percentage = diff / damage_number_settings.shrink_duration
 			local scale = 1 - percentage
+
 			font_size = font_size * scale
 			text_color[1] = text_color[1] * scale
 		end
@@ -150,6 +157,7 @@ local function _readable_damage_number_function(ui_content, ui_renderer, ui_styl
 
 		if current_order == 0 then
 			local scale_size = damage_number.was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+
 			font_size = font_size * scale_size
 		end
 
@@ -209,6 +217,7 @@ local function _floating_damage_number_function(ui_content, ui_renderer, ui_styl
 			local expand_time = damage_number.expand_time
 			local expand_progress = math.clamp(expand_time / expand_duration, 0, 1)
 			local anim_progress = 1 - expand_progress
+
 			font_size = font_size + damage_number_settings.expand_bonus_scale * anim_progress
 
 			if expand_progress >= 1 then
@@ -217,10 +226,11 @@ local function _floating_damage_number_function(ui_content, ui_renderer, ui_styl
 			else
 				damage_number.expand_time = expand_time + ui_renderer.dt
 			end
-		elseif damage_number.shrink_start_t and damage_number.shrink_start_t < time then
+		elseif damage_number.shrink_start_t and time > damage_number.shrink_start_t then
 			local diff = time - damage_number.shrink_start_t
 			local percentage = diff / damage_number_settings.shrink_duration
 			local scale = 1 - percentage
+
 			font_size = font_size * scale
 			text_color[1] = text_color[1] * scale
 		end
@@ -231,6 +241,7 @@ local function _floating_damage_number_function(ui_content, ui_renderer, ui_styl
 
 		if current_order == 0 then
 			local scale_size = damage_number.was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+
 			font_size = font_size * scale_size
 		end
 
@@ -263,6 +274,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 
 		if damage_number.hit_world_position then
 			local world_to_screen_position = Camera.world_to_screen(ui_content.player_camera, damage_number.hit_world_position:unbox())
+
 			y_position = world_to_screen_position[2] - 75
 			x_position = world_to_screen_position[1]
 		end
@@ -296,11 +308,12 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 		local font_size = value <= 99 and default_font_size or hundreds_font_size
 		local dmg_scale_multiplier = 1
 
-		if flashy_font_size_dmg_scale_range[1] < value then
+		if value > flashy_font_size_dmg_scale_range[1] then
 			local min = flashy_font_size_dmg_scale_range[1]
 			local max = flashy_font_size_dmg_scale_range[2]
 			local lerp = math.min((value - min) / (max - min), 1)
 			local multiplier = math.lerp(flashy_font_size_dmg_multiplier[1], flashy_font_size_dmg_multiplier[2], lerp)
+
 			font_size = font_size * multiplier
 			dmg_scale_multiplier = multiplier
 		end
@@ -311,6 +324,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 			local expand_time = damage_number.expand_time
 			local expand_progress = math.clamp(expand_time / expand_duration, 0, 1)
 			local anim_progress = 1 - expand_progress
+
 			font_size = font_size + damage_number_settings.expand_bonus_scale * anim_progress
 
 			if expand_progress >= 1 then
@@ -319,10 +333,11 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 			else
 				damage_number.expand_time = expand_time + ui_renderer.dt
 			end
-		elseif damage_number.shrink_start_t and damage_number.shrink_start_t < time then
+		elseif damage_number.shrink_start_t and time > damage_number.shrink_start_t then
 			local diff = time - damage_number.shrink_start_t
 			local percentage = diff / damage_number_settings.shrink_duration
 			local scale = 1 - percentage
+
 			font_size = font_size * scale
 			text_color[1] = text_color[1] * scale
 		end
@@ -333,6 +348,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 
 		if current_order == 0 then
 			local scale_size = damage_number.was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+
 			font_size = font_size * scale_size
 		end
 
@@ -341,6 +357,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 		local float_value = 45 * math.lerp(0.8, 1.2, random_number) * dmg_scale_multiplier
 		local float_y_value = float_value * 1.25
 		local float_x_value = float_right and float_value or -float_value
+
 		position[2] = y_position - math.ease_out_elastic(time) * float_y_value + time * float_y_value
 		position[1] = x_position + math.ease_out_elastic(time) * float_x_value + (float_right and time * float_value or time * -float_value) - (not float_right and font_size * 0.5 or 0)
 
@@ -437,12 +454,12 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 	local header_font_color = header_font_settings.text_color
 	local bar_size = {
 		size[1],
-		size[2]
+		size[2],
 	}
 	local bar_offset = {
 		-size[1] * 0.5,
 		0,
-		0
+		0,
 	}
 
 	if template.show_health_bar and template.show_numbers then
@@ -451,120 +468,120 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 				pass_type = "logic",
 				value = template.damage_number_function,
 				style = {
-					horizontal_alignment = "left",
 					font_size = 30,
-					text_vertical_alignment = "bottom",
+					horizontal_alignment = "left",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "bottom",
 					vertical_alignment = "center",
 					offset = {
 						-size[1] * 0.5,
 						-size[2],
-						2
+						2,
 					},
 					font_type = header_font_settings.font_type,
 					text_color = header_font_color,
 					size = {
 						600,
-						size[2]
-					}
-				}
+						size[2],
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "background",
 				pass_type = "rect",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "center",
 					offset = bar_offset,
 					size = bar_size,
-					color = UIHudSettings.color_tint_0
-				}
+					color = UIHudSettings.color_tint_0,
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "ghost_bar",
 				pass_type = "rect",
+				style_id = "ghost_bar",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						2
+						2,
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						100,
-						100
-					}
-				}
+						100,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "health_max",
 				pass_type = "rect",
+				style_id = "health_max",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						1
+						1,
 					},
 					size = bar_size,
 					color = {
 						200,
 						255,
 						255,
-						255
-					}
-				}
+						255,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "bar",
 				pass_type = "rect",
+				style_id = "bar",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						3
+						3,
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						20,
-						20
-					}
-				}
+						20,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/bars/simple/end",
-				style_id = "bar_end",
 				pass_type = "texture",
+				style_id = "bar_end",
+				value = "content/ui/materials/bars/simple/end",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "right",
+					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						4
+						4,
 					},
 					size = {
 						12,
-						bar_size[2] + 12
+						bar_size[2] + 12,
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
-					}
-				}
-			}
+						255,
+					},
+				},
+			},
 		}, scenegraph_id)
 	elseif not template.show_health_bar and template.show_numbers then
 		return UIWidget.create_definition({
@@ -572,137 +589,142 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 				pass_type = "logic",
 				value = template.damage_number_function,
 				style = {
-					horizontal_alignment = "left",
 					font_size = 30,
-					text_vertical_alignment = "bottom",
+					horizontal_alignment = "left",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "bottom",
 					vertical_alignment = "center",
 					offset = {
 						-size[1] * 0.5,
 						-size[2],
-						2
+						2,
 					},
 					font_type = header_font_settings.font_type,
 					text_color = header_font_color,
 					size = {
 						600,
-						size[2]
-					}
-				}
-			}
+						size[2],
+					},
+				},
+			},
 		}, scenegraph_id)
 	elseif template.show_health_bar and not template.show_numbers then
 		return UIWidget.create_definition({
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "background",
 				pass_type = "rect",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "center",
 					offset = bar_offset,
 					size = bar_size,
-					color = UIHudSettings.color_tint_0
-				}
+					color = UIHudSettings.color_tint_0,
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "ghost_bar",
 				pass_type = "rect",
+				style_id = "ghost_bar",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						2
+						2,
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						100,
-						100
-					}
-				}
+						100,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "health_max",
 				pass_type = "rect",
+				style_id = "health_max",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						1
+						1,
 					},
 					size = bar_size,
 					color = {
 						200,
 						255,
 						255,
-						255
-					}
-				}
+						255,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "bar",
 				pass_type = "rect",
+				style_id = "bar",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						3
+						3,
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						20,
-						20
-					}
-				}
+						20,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/bars/simple/end",
-				style_id = "bar_end",
 				pass_type = "texture",
+				style_id = "bar_end",
+				value = "content/ui/materials/bars/simple/end",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "right",
+					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						4
+						4,
 					},
 					size = {
 						12,
-						bar_size[2] + 12
+						bar_size[2] + 12,
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
-					}
-				}
-			}
+						255,
+					},
+				},
+			},
 		}, scenegraph_id)
 	end
 end
 
 template.on_enter = function (widget, marker, template)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 	content.damage_taken = 0
 	content.damage_numbers = {}
+
 	local bar_settings = template.bar_settings
+
 	marker.bar_logic = HudHealthBarLogic:new(bar_settings)
+
 	local unit = marker.unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
+
 	content.header_text = breed.name
 	content.breed = breed
 	content.unit_data_extension = unit_data_extension
@@ -718,8 +740,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local is_dead = not health_extension or not health_extension:is_alive()
 	local health_percent = is_dead and 0 or health_extension:current_health_percent()
 	local max_health = Managers.state.difficulty:get_minion_max_health(content.breed.name)
-	local damage_taken = nil
+	local damage_taken
 	local player_camera = parent._parent and parent._parent:player_camera()
+
 	content.player_camera = player_camera
 
 	if not is_dead then
@@ -734,6 +757,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		if last_damaging_unit then
 			content.last_hit_zone_name = health_extension:last_hit_zone_name() or "center_mass"
 			content.last_damaging_unit = last_damaging_unit
+
 			local breed = content.breed
 			local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
 
@@ -744,6 +768,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 			end
 
 			content.was_critical = health_extension:was_hit_by_critical_hit_this_render_frame()
+
 			local last_hit_world_position = health_extension:last_hit_world_position()
 
 			if last_hit_world_position then
@@ -801,7 +826,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 					value = damage_diff,
 					expand_duration = damage_number_settings.expand_duration,
 					random_number = math.random(),
-					float_right = math.random() > 0.5
+					float_right = math.random() > 0.5,
 				}
 				local breed = content.breed
 				local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
@@ -831,6 +856,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 				latest_damage_number.time = 0
 				latest_damage_number.y_position = nil
 				latest_damage_number.start_time = t
+
 				local breed = content.breed
 				local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
 
@@ -866,22 +892,33 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 			local bar_width = template.size[1]
 			local default_width_offset = -bar_width * 0.5
 			local health_width = bar_width * health_fraction
+
 			style.bar.size[1] = health_width
+
 			local ghost_bar_width = math.max(bar_width * health_ghost_fraction - health_width, 0)
 			local ghost_bar_style = style.ghost_bar
+
 			ghost_bar_style.offset[1] = default_width_offset + health_width
 			ghost_bar_style.size[1] = ghost_bar_width
+
 			local background_width = math.max(bar_width - ghost_bar_width - health_width, 0)
+
 			background_width = math.max(background_width - spacing, 0)
+
 			local background_style = style.background
+
 			background_style.offset[1] = default_width_offset + bar_width - background_width
 			background_style.size[1] = background_width
+
 			local health_max_style = style.health_max
 			local health_max_width = bar_width - math.max(bar_width * health_max_fraction, 0)
+
 			health_max_width = math.max(health_max_width - spacing, 0)
-			health_max_style.offset[1] = default_width_offset + bar_width - health_max_width * 0.5
+			health_max_style.offset[1] = default_width_offset + (bar_width - health_max_width * 0.5)
 			health_max_style.size[1] = health_max_width
+
 			local health_end_style = style.bar_end
+
 			health_end_style.offset[1] = -(bar_width - bar_width * health_fraction) + 6 + math.abs(default_width_offset)
 			marker.health_fraction = health_fraction
 		end
@@ -942,7 +979,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	if fade_delay then
 		fade_delay = fade_delay - dt
 		content.fade_delay = fade_delay >= 0 and fade_delay or nil
+
 		local progress = math.clamp(fade_delay / damage_number_settings.fade_delay, 0, 1)
+
 		alpha_multiplier = alpha_multiplier * progress
 
 		if template.fade_bar_on_death then

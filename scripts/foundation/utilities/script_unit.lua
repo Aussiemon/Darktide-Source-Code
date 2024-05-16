@@ -1,5 +1,9 @@
+﻿-- chunkname: @scripts/foundation/utilities/script_unit.lua
+
 local unit_alive = Unit.alive
+
 ScriptUnit = ScriptUnit or {}
+
 local Entities = rawget(_G, "G_Entities")
 
 if not Entities then
@@ -78,6 +82,7 @@ ScriptUnit.remove_extension = function (unit, system_name)
 	end
 
 	local unit_extensions = Entities[unit]
+
 	unit_extensions[system_name] = nil
 end
 
@@ -91,6 +96,7 @@ ScriptUnit.extension_definitions = function (unit)
 
 	while Unit.has_data(unit, "extensions", i) do
 		local class_name = Unit.get_data(unit, "extensions", i)
+
 		extensions[i] = class_name
 		i = i + 1
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/matchmaking_notification_handler.lua
+
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
@@ -20,11 +22,12 @@ local function _try_get_mission_text()
 
 	if quickplay then
 		local mission_id = game_state.params.backend_mission_id
-		local danger = nil
+		local danger
 
 		if mission_id then
 			local _, index = string.find(mission_id, "challenge=")
 			local challenge = index and tonumber(string.sub(mission_id, index + 1, index + 2))
+
 			danger = challenge and _danger_display_name(challenge, nil)
 		end
 
@@ -52,7 +55,7 @@ local function _cancel_matchmaking_text()
 	local color_tint_text = true
 	local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, CANCEL_INPUT_ALIAS, color_tint_text)
 	local loc_context = {
-		input = input_text
+		input = input_text,
 	}
 
 	return Localize("loc_matchmaking_cancel_search", true, loc_context)
@@ -82,6 +85,7 @@ MatchmakingNotificationHandler.state_changed = function (self, last_state, new_s
 		self:_remove_notification_if_active()
 	elseif new_state == PartyConstants.State.matchmaking then
 		local mission_text = _try_get_mission_text()
+
 		self._mission_text = mission_text
 		self._matchmaking_time = 0
 		self._matchmaking_time_update = 1
@@ -90,19 +94,20 @@ MatchmakingNotificationHandler.state_changed = function (self, last_state, new_s
 		self:_create_or_update_notification({
 			Localize("loc_matchmaking_looking_for_team"),
 			mission_text or "???",
-			_cancel_matchmaking_text()
+			(_cancel_matchmaking_text()),
 		})
 	elseif new_state == PartyConstants.State.matchmaking_acceptance_vote then
 		self:_remove_notification_if_active()
 	elseif new_state == PartyConstants.State.in_mission then
 		if last_state == PartyConstants.State.matchmaking or last_state == PartyConstants.State.matchmaking_acceptance_vote then
 			local mission_text = _try_get_mission_text()
+
 			self._mission_text = mission_text
 
 			self:_create_or_update_notification({
 				Localize("loc_matchmaking_connecting_to_mission"),
 				mission_text or "???",
-				[3.0] = ""
+				[3] = "",
 			})
 		else
 			self:_remove_notification_if_active()
@@ -134,15 +139,16 @@ MatchmakingNotificationHandler.update = function (self, dt)
 
 	if state == PartyConstants.State.matchmaking then
 		local t = self._matchmaking_time + dt
+
 		self._matchmaking_time = t
 
-		if self._matchmaking_time_update <= t then
+		if t >= self._matchmaking_time_update then
 			self._matchmaking_time_update = math.floor(t) + 1
 
 			self:_create_or_update_notification({
 				Localize("loc_matchmaking_looking_for_team"),
 				self._mission_text or "???",
-				_cancel_matchmaking_text()
+				(_cancel_matchmaking_text()),
 			})
 		end
 
@@ -163,7 +169,7 @@ MatchmakingNotificationHandler._create_or_update_notification = function (self, 
 		Managers.event:trigger("event_update_notification_message", self._notification_id, texts)
 	else
 		Managers.event:trigger("event_add_notification_message", "matchmaking", {
-			texts = texts
+			texts = texts,
 		}, function (id)
 			self._notification_id = id
 		end)

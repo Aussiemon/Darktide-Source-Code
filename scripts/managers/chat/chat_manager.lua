@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/chat/chat_manager.lua
+
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local ChatManagerInterface = require("scripts/foundation/managers/chat/chat_manager_interface")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
@@ -123,7 +125,7 @@ ChatManager.login = function (self, peer_id, account_id, vivox_token)
 			return
 		end
 
-		if type(vivox_token) ~= "string" or #vivox_token <= 0 then
+		if type(vivox_token) ~= "string" or not (#vivox_token > 0) then
 			Log.error("ChatManager", "Could not login: missing vivox_token.")
 
 			return
@@ -171,7 +173,7 @@ ChatManager.join_chat_channel = function (self, channel, host_peer_id, voice, te
 					channel,
 					text,
 					voice,
-					vivox_token
+					vivox_token,
 				})
 			end
 		else
@@ -228,6 +230,7 @@ local function _update_local_render_volume(session_handle)
 
 	if Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").options_voip_volume_slider_v2 ~= nil then
 		local voip_volume = Application.user_setting("sound_settings").options_voip_volume_slider_v2
+
 		volume = voip_volume <= 0.01 and 0 or math.lerp(25, 75, voip_volume / 100)
 	end
 
@@ -431,7 +434,7 @@ ChatManager.get_capture_devices = function (self)
 end
 
 ChatManager.set_capture_device = function (self, device_id)
-	local found_device, default_device = nil
+	local found_device, default_device
 
 	for _, device in ipairs(self:get_capture_devices()) do
 		if device.device == device_id then
@@ -496,6 +499,7 @@ end
 ChatManager._handle_event = function (self, message)
 	if message.event == Vivox.EventType_LOGIN_STATE_CHANGE then
 		local state = login_state_enum(message.state)
+
 		self._login_state = state
 
 		Managers.event:trigger("chat_manager_login_state_change", state)
@@ -537,8 +541,9 @@ ChatManager._handle_event = function (self, message)
 			session_handle = message.session_handle,
 			sessiongroup_handle = message.sessiongroup_handle,
 			name = message.name,
-			tag = tag
+			tag = tag,
 		}
+
 		self._sessions[message.session_handle] = session
 
 		Managers.event:trigger("chat_manager_added_channel", message.session_handle, session)
@@ -598,6 +603,7 @@ ChatManager._handle_event = function (self, message)
 					end
 
 					local localized_message_body = Managers.localization:localize(key, false, result)
+
 					message.message_body = localized_message_body
 				else
 					return
@@ -613,21 +619,22 @@ ChatManager._handle_event = function (self, message)
 
 		local peer_id, account_id = self:split_displayname(message.displayname)
 		local participant = {
-			is_speaking = false,
-			is_muted_for_me = false,
-			is_validated = false,
 			is_moderator_muted = false,
-			is_text_muted_for_me = false,
 			is_moderator_text_muted = false,
 			is_mute_status_set = false,
+			is_muted_for_me = false,
+			is_speaking = false,
+			is_text_muted_for_me = false,
+			is_validated = false,
 			account_name = message.account_name,
 			participant_uri = message.participant_uri,
 			packed_displayname = message.displayname,
 			peer_id = peer_id,
 			account_id = account_id,
 			joined_time = self._t,
-			is_current_user = message.is_current_user
+			is_current_user = message.is_current_user,
 		}
+
 		self._sessions[message.session_handle].participants[message.participant_uri] = participant
 
 		if participant.is_current_user then
@@ -640,6 +647,7 @@ ChatManager._handle_event = function (self, message)
 		end
 
 		local participant = self._sessions[message.session_handle].participants[message.participant_uri]
+
 		participant.is_speaking = message.is_speaking
 		participant.is_moderator_muted = message.is_moderator_muted
 		participant.is_moderator_text_muted = message.is_moderator_text_muted
@@ -654,6 +662,7 @@ ChatManager._handle_event = function (self, message)
 
 		local session = self._sessions[message.session_handle]
 		local participant = session.participants[message.participant_uri]
+
 		session.participants[message.participant_uri] = nil
 
 		Managers.event:trigger("chat_manager_participant_removed", message.session_handle, message.participant_uri, participant)
@@ -682,7 +691,7 @@ ChatManager._handle_response = function (self, message)
 			is_mic_muted = message.is_mic_muted,
 			is_speaker_muted = message.is_speaker_muted,
 			mic_volume = message.mic_volume,
-			speaker_volume = message.speaker_volume
+			speaker_volume = message.speaker_volume,
 		}
 	elseif message.response == Vivox.ResponseType_GET_CAPTURE_DEVICES then
 		self._capture_devices = message.capture_devices
@@ -726,6 +735,7 @@ ChatManager._validate_participants = function (self)
 			if not participant.is_validated then
 				if not participant.player_info and participant.account_id and Managers.data_service.social then
 					local player_info = Managers.data_service.social:get_player_info_by_account_id(participant.account_id)
+
 					participant.player_info = player_info
 				end
 
@@ -755,11 +765,13 @@ ChatManager._validate_participants = function (self)
 
 						if platform ~= my_platform then
 							local relation = player_info:is_friend() and XblAnonymousUserType.CrossNetworkFriend or XblAnonymousUserType.CrossNetworkUser
+
 							text_mute = Managers.account:has_crossplay_restriction(relation, XblPermission.CommunicateUsingText) or text_mute
 							voice_mute = Managers.account:has_crossplay_restriction(relation, XblPermission.CommunicateUsingVoice) or voice_mute
 						else
 							local platform_muted = Managers.account:is_muted(platform_user_id)
 							local communication_restricted = Managers.account:user_has_restriction(platform_user_id, XblPermission.CommunicateUsingVoice)
+
 							text_mute = communication_restricted or text_mute
 							voice_mute = platform_muted or voice_mute
 
@@ -800,9 +812,9 @@ end
 ChatManager._update_transmitting_channel_priority = function (self)
 	local priority = {
 		[ChatManagerConstants.ChannelTag.MISSION] = 1,
-		[ChatManagerConstants.ChannelTag.PARTY] = 2
+		[ChatManagerConstants.ChannelTag.PARTY] = 2,
 	}
-	local priority_channel = nil
+	local priority_channel
 
 	for session_handle, channel in pairs(self._sessions) do
 		local session_media_state = channel.session_media_state

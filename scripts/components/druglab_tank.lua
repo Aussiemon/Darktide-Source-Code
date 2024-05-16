@@ -1,20 +1,24 @@
+﻿-- chunkname: @scripts/components/druglab_tank.lua
+
 local DruglabTank = component("DruglabTank")
 
 DruglabTank.init = function (self, unit)
 	self._unit = unit
 	self._glass_material_slot_name = self:get_data(unit, "glass_material_slot_name")
 	self._glass_damage_amount_variable_name = self:get_data(unit, "glass_damage_amount_variable_name")
+
 	local has_liquid = self:get_data(unit, "has_liquid")
 
 	if has_liquid then
 		self._has_liquid = has_liquid
 		self._liquid_material_slot_name = self:get_data(unit, "liquid_material_slot_name")
 		self._liquid_drain_time = self:get_data(unit, "liquid_drain_time")
+
 		local liquid_levels = self:get_data(unit, "liquid_levels")
 		local liquid_level_variable_name = self:get_data(unit, "liquid_level_variable_name")
 
 		table.sort(liquid_levels, function (a, b)
-			return b.health_threshold < a.health_threshold
+			return a.health_threshold > b.health_threshold
 		end)
 
 		self._liquid_levels = liquid_levels
@@ -60,6 +64,7 @@ DruglabTank.update = function (self, unit, dt, t)
 
 		if current_health_percent ~= last_health_percent then
 			local material_value = 1 - current_health_percent
+
 			material_value = 0
 
 			Unit.set_scalar_for_material(unit, self._glass_material_slot_name, self._glass_damage_amount_variable_name, material_value)
@@ -76,10 +81,10 @@ DruglabTank.update = function (self, unit, dt, t)
 					local stage = liquid_levels[ii]
 					local next_stage = liquid_levels[ii + 1]
 					local liquid_level = stage.liquid_level
-					local update_liquid_level = nil
+					local update_liquid_level
 
 					if next_stage then
-						update_liquid_level = current_health_percent <= stage.health_threshold and next_stage.health_threshold < current_health_percent
+						update_liquid_level = current_health_percent <= stage.health_threshold and current_health_percent > next_stage.health_threshold
 					else
 						update_liquid_level = current_health_percent <= stage.health_threshold
 					end
@@ -96,6 +101,7 @@ DruglabTank.update = function (self, unit, dt, t)
 			if self._drain_start_t then
 				local time_draining = t - self._drain_start_t
 				local lerp_t = time_draining / self._liquid_drain_time
+
 				current_liquid_level = math.lerp(current_liquid_level, wanted_liquid_level, math.ease_in_quad(lerp_t))
 
 				Unit.set_scalar_for_material(unit, self._liquid_material_slot_name, self._liquid_level_variable_name, current_liquid_level)
@@ -109,7 +115,7 @@ DruglabTank.update = function (self, unit, dt, t)
 			self._current_liquid_level = current_liquid_level
 		end
 
-		return health_extension:is_alive() or self._has_liquid and self._liquid_levels[#self._liquid_levels].liquid_level < self._current_liquid_level
+		return health_extension:is_alive() or self._has_liquid and self._current_liquid_level > self._liquid_levels[#self._liquid_levels].liquid_level
 	end
 
 	return true
@@ -117,71 +123,71 @@ end
 
 DruglabTank.component_data = {
 	glass_material_slot_name = {
+		category = "Glass",
+		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "broken_glass_01",
-		ui_name = "Material Slot Name",
-		category = "Glass"
 	},
 	glass_damage_amount_variable_name = {
+		category = "Glass",
+		ui_name = "Damage Variable Name",
 		ui_type = "text_box",
 		value = "damage_amount",
-		ui_name = "Damage Variable Name",
-		category = "Glass"
 	},
 	has_liquid = {
+		category = "Liquid",
+		ui_name = "Has Liquid",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Has Liquid",
-		category = "Liquid"
 	},
 	liquid_material_slot_name = {
+		category = "Liquid",
+		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "goo",
-		ui_name = "Material Slot Name",
-		category = "Liquid"
 	},
 	liquid_level_variable_name = {
+		category = "Liquid",
+		ui_name = "Variable Name",
 		ui_type = "text_box",
 		value = "fluid_level",
-		ui_name = "Variable Name",
-		category = "Liquid"
 	},
 	liquid_drain_time = {
-		ui_type = "number",
-		min = 0,
-		decimals = 3,
 		category = "Liquid",
-		value = 1,
+		decimals = 3,
+		max = 10,
+		min = 0,
 		ui_name = "Drain Time",
-		max = 10
+		ui_type = "number",
+		value = 1,
 	},
 	liquid_levels = {
-		ui_type = "struct_array",
 		category = "Liquid",
 		ui_name = "Drain Levels",
+		ui_type = "struct_array",
 		definition = {
 			health_threshold = {
-				ui_type = "number",
-				min = 0,
 				decimals = 3,
-				value = 1,
+				max = 1,
+				min = 0,
 				ui_name = "Health Threshold",
-				max = 1
+				ui_type = "number",
+				value = 1,
 			},
 			liquid_level = {
-				ui_type = "number",
-				min = 0,
 				decimals = 3,
-				value = 1,
+				max = 1,
+				min = 0,
 				ui_name = "Liquid Level",
-				max = 1
-			}
+				ui_type = "number",
+				value = 1,
+			},
 		},
 		control_order = {
 			"health_threshold",
-			"liquid_level"
-		}
-	}
+			"liquid_level",
+		},
+	},
 }
 
 return DruglabTank

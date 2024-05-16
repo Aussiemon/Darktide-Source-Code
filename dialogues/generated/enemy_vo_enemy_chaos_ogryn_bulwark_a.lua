@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_chaos_ogryn_bulwark_a.lua
+
 local enemy_vo_enemy_chaos_ogryn_bulwark_a = {
 	chaos_ogryn_bulwark_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_chaos_ogryn_bulwark_a = {
 			"loc_enemy_chaos_ogryn_bulwark_a__alerted_idle_07",
 			"loc_enemy_chaos_ogryn_bulwark_a__alerted_idle_08",
 			"loc_enemy_chaos_ogryn_bulwark_a__alerted_idle_09",
-			"loc_enemy_chaos_ogryn_bulwark_a__alerted_idle_10"
+			"loc_enemy_chaos_ogryn_bulwark_a__alerted_idle_10",
 		},
 		sound_events_duration = {
 			1.281854,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_chaos_ogryn_bulwark_a = {
 			1.655938,
 			3.459208,
 			2.622688,
-			3.379375
+			3.379375,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_chaos_ogryn_bulwark_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_ogryn_bulwark_assault = {
 		randomize_indexes_n = 0,
@@ -53,7 +55,7 @@ local enemy_vo_enemy_chaos_ogryn_bulwark_a = {
 			"loc_enemy_chaos_ogryn_bulwark_a__assault_07",
 			"loc_enemy_chaos_ogryn_bulwark_a__assault_08",
 			"loc_enemy_chaos_ogryn_bulwark_a__assault_09",
-			"loc_enemy_chaos_ogryn_bulwark_a__assault_10"
+			"loc_enemy_chaos_ogryn_bulwark_a__assault_10",
 		},
 		sound_events_duration = {
 			4.045417,
@@ -65,7 +67,7 @@ local enemy_vo_enemy_chaos_ogryn_bulwark_a = {
 			2.187146,
 			3.836729,
 			3.714917,
-			4.535125
+			4.535125,
 		},
 		sound_event_weights = {
 			0.1,
@@ -77,10 +79,10 @@ local enemy_vo_enemy_chaos_ogryn_bulwark_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_chaos_ogryn_bulwark_a", enemy_vo_enemy_chaos_ogryn_bulwark_a)

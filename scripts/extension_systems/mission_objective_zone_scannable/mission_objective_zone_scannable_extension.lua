@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_zone_scannable/mission_objective_zone_scannable_extension.lua
+
 local LevelEventSettings = require("scripts/settings/level_event/level_event_settings")
 local MissionObjectiveZoneScannableExtension = class("MissionObjectiveZoneScannableExtension")
 
@@ -6,8 +8,10 @@ MissionObjectiveZoneScannableExtension.init = function (self, extension_init_con
 	self._is_server = extension_init_context.is_server
 	self._is_active = false
 	self._world = extension_init_context.world
+
 	local box = Unit.box(unit, false)
 	local center_position = Matrix4x4.translation(box)
+
 	self._center_poisition_box = Vector3Box(center_position)
 	self._has_outline = false
 	self._has_highlight = false

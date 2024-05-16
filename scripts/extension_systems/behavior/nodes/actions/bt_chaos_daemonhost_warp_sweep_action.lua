@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_chaos_daemonhost_warp_sweep_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -11,23 +13,30 @@ local BtChaosDaemonhostWarpSweepAction = class("BtChaosDaemonhostWarpSweepAction
 
 BtChaosDaemonhostWarpSweepAction.init_values = function (self, blackboard, action_data, node_data)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.warp_sweep_cooldown = 0
 end
 
 BtChaosDaemonhostWarpSweepAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	scratchpad.behavior_component = behavior_component
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 
 	navigation_extension:set_enabled(true, breed.run_speed)
 
 	scratchpad.navigation_extension = navigation_extension
+
 	local spawn_component = blackboard.spawn
+
 	scratchpad.spawn_component = spawn_component
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.broadphase_config = breed.nearby_units_broadphase_config
+
 	local effect_template = action_data.effect_template
 	local fx_system = Managers.state.extension:system("fx_system")
+
 	scratchpad.global_effect_id = fx_system:start_template_effect(effect_template, unit)
 	scratchpad.fx_system = fx_system
 
@@ -47,6 +56,7 @@ BtChaosDaemonhostWarpSweepAction.leave = function (self, unit, breed, blackboard
 	end
 
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.warp_sweep_cooldown = t + cooldown_duration
 end
 
@@ -71,16 +81,21 @@ BtChaosDaemonhostWarpSweepAction._start_attacking = function (self, scratchpad, 
 
 	local attack_anim_durations = action_data.attack_anim_durations
 	local anim_duration = attack_anim_durations[anim_event]
+
 	scratchpad.attack_duration_t = t + anim_duration
+
 	local attack_anim_damage_timings = action_data.attack_anim_damage_timings
 	local anim_damage_timing = attack_anim_damage_timings[anim_event]
+
 	scratchpad.attack_damage_t = t + anim_damage_timing
+
 	local attack_move_speed = action_data.attack_move_speed
 	local navigation_extension = scratchpad.navigation_extension
 
 	navigation_extension:set_max_speed(attack_move_speed)
 
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "attacking"
 	scratchpad.state = "attacking"
 end
@@ -88,7 +103,7 @@ end
 BtChaosDaemonhostWarpSweepAction._update_attacking = function (self, unit, action_data, scratchpad, t)
 	local has_dealt_damage = scratchpad.has_dealt_damage
 
-	if not has_dealt_damage and scratchpad.attack_damage_t < t then
+	if not has_dealt_damage and t > scratchpad.attack_damage_t then
 		self:_deal_damage(unit, action_data, scratchpad)
 	end
 
@@ -103,6 +118,7 @@ local BROADPHASE_RESULTS = {}
 
 BtChaosDaemonhostWarpSweepAction._deal_damage = function (self, unit, action_data, scratchpad)
 	scratchpad.has_dealt_damage = true
+
 	local broadphase_config = scratchpad.broadphase_config
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
@@ -112,7 +128,7 @@ BtChaosDaemonhostWarpSweepAction._deal_damage = function (self, unit, action_dat
 	local target_side_names = side:relation_side_names(broadphase_relation)
 	local radius = broadphase_config.radius
 	local from = POSITION_LOOKUP[unit]
-	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
+	local num_results = broadphase.query(broadphase, from, radius, BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
 
 	if num_results < 1 then
 		return

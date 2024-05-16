@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/animation/animation_system_tests.lua
+
 local Breed = require("scripts/utilities/breed")
 
 local function _check_anim_events_within_network_bounds(unit, state_machine_name, max_network_entries, network_variable_name)
@@ -25,15 +27,13 @@ local function _check_anim_variables_exists_in_game_object_field(breed, animatio
 end
 
 local function _init_and_run_tests(unit, breed)
-	local network_variable_name, max_network_entries = nil
+	local network_variable_name, max_network_entries
 	local is_player_character = Breed.is_player(breed)
 
 	if is_player_character then
-		max_network_entries = NetworkConstants.max_player_anim_event
-		network_variable_name = "player_anim_event"
+		network_variable_name, max_network_entries = "player_anim_event", NetworkConstants.max_player_anim_event
 	else
-		max_network_entries = NetworkConstants.max_minion_anim_event
-		network_variable_name = "minion_anim_event"
+		network_variable_name, max_network_entries = "minion_anim_event", NetworkConstants.max_minion_anim_event
 	end
 
 	local state_machine_name = breed.state_machine or breed.base_unit
@@ -44,8 +44,7 @@ local function _init_and_run_tests(unit, breed)
 		_check_layer_states(unit, state_machine_name)
 	end
 
-	max_network_entries = NetworkConstants.max_anim_variable
-	network_variable_name = "anim_variable"
+	network_variable_name, max_network_entries = "anim_variable", NetworkConstants.max_anim_variable
 
 	_check_anim_variables_within_network_bounds(unit, state_machine_name, max_network_entries, network_variable_name)
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/scanning.lua
+
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Scanning = {}
 
@@ -122,7 +124,7 @@ Scanning.find_scannable_unit = function (physics_world, first_person_component, 
 
 	local scannable_units = current_scan_mission_zone:scannable_units()
 	local best_score = -math.huge
-	local best_unit, best_scan_exension = nil
+	local best_unit, best_scan_exension
 
 	for i = 1, #scannable_units do
 		local scannable_unit = scannable_units[i]
@@ -146,11 +148,7 @@ Scanning.find_scannable_unit = function (physics_world, first_person_component, 
 end
 
 Scanning.calculate_current_scores = function (scanning_compomnent, weapon_action_component, first_person_component)
-	local total_score = 0
-	local angle_score = 0
-	local distance_score = 0
-	local angle = math.huge
-	local distance = math.huge
+	local total_score, angle_score, distance_score, angle, distance = 0, 0, 0, math.huge, math.huge
 	local is_active = scanning_compomnent.is_active
 	local line_of_sight = scanning_compomnent.line_of_sight
 	local scannable_unit = scanning_compomnent.scannable_unit
@@ -161,11 +159,7 @@ Scanning.calculate_current_scores = function (scanning_compomnent, weapon_action
 	local scan_settings = action_settings and action_settings.scan_settings
 
 	if is_active and line_of_sight then
-		distance = 0
-		angle = 0
-		distance_score = 1
-		angle_score = 1
-		total_score = 1
+		total_score, angle_score, distance_score, angle, distance = 1, 1, 1, 0, 0
 	elseif scan_settings and scannable_unit then
 		total_score, angle_score, distance_score, angle, distance = Scanning.calculate_score(scannable_unit, first_person_component, scan_settings)
 	end

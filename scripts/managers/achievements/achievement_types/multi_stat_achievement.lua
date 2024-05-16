@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/managers/achievements/achievement_types/multi_stat_achievement.lua
+
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
-local MultiStatAchievements = {
-	trigger_type = "stat"
-}
+local MultiStatAchievements = {}
+
+MultiStatAchievements.trigger_type = "stat"
 
 MultiStatAchievements.trigger = function (achievement_definition, scratch_pad, _, stat_name, stat_value)
 	local stats = achievement_definition.stats
@@ -16,12 +18,12 @@ MultiStatAchievements.trigger = function (achievement_definition, scratch_pad, _
 		_scratch_pad.__size = _scratch_pad.__size + 1
 	end
 
-	return achievement_definition.target <= _scratch_pad.__size
+	return _scratch_pad.__size >= achievement_definition.target
 end
 
 MultiStatAchievements.setup = function (achievement_definition, scratch_pad, player_id)
 	local _scratch_pad = {
-		__size = 0
+		__size = 0,
 	}
 	local stats = achievement_definition.stats
 
@@ -39,7 +41,7 @@ MultiStatAchievements.setup = function (achievement_definition, scratch_pad, pla
 
 	scratch_pad[achievement_definition.id] = _scratch_pad
 
-	return achievement_definition.target <= _scratch_pad.__size
+	return _scratch_pad.__size >= achievement_definition.target
 end
 
 MultiStatAchievements.verifier = function (achievement_definition)
@@ -52,7 +54,7 @@ MultiStatAchievements.verifier = function (achievement_definition)
 		return false
 	end
 
-	if table.size(stats) < target then
+	if target > table.size(stats) then
 		return false
 	end
 

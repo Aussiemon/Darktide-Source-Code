@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/main_menu_view/main_menu_view.lua
+
 local definition_path = "scripts/ui/views/main_menu_view/main_menu_view_definitions"
 local CharacterSelectPassTemplates = require("scripts/ui/pass_templates/character_select_pass_templates")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -104,7 +106,7 @@ end
 
 MainMenuView._create_server_migration_element = function (self, data)
 	self._server_migration_element = self:_add_element(ViewElementServerMigration, "server_migration_element", 200, {
-		on_destroy_callback = callback(self, "on_server_migration_removed")
+		on_destroy_callback = callback(self, "on_server_migration_removed"),
 	})
 
 	self._server_migration_element:present(data)
@@ -139,15 +141,15 @@ MainMenuView._create_wallet_element = function (self)
 		"credits",
 		"marks",
 		"plasteel",
-		"diamantine"
+		"diamantine",
 	}
 
 	self._wallet_element:_generate_currencies(currencies, {
 		150,
-		30
+		30,
 	}, #currencies, {
 		nil,
-		10
+		10,
 	})
 
 	self._widgets_by_name.wallet_element_background.content.visible = true
@@ -155,6 +157,7 @@ end
 
 MainMenuView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 20)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -174,7 +177,7 @@ MainMenuView._update_counts_refreshes = function (self, dt, t)
 
 	local party_time = self._refresh_party_time or 0
 
-	if t >= party_time then
+	if party_time <= t then
 		Managers.data_service.social:fetch_party_members():next(callback(self, "cb_update_strike_team_count"))
 
 		self._refresh_party_time = t + 0.5
@@ -182,7 +185,7 @@ MainMenuView._update_counts_refreshes = function (self, dt, t)
 
 	local friends_time = self._refresh_friends_time or 0
 
-	if t >= friends_time then
+	if friends_time <= t then
 		Managers.data_service.social:fetch_friends():next(callback(self, "cb_update_friends_count"))
 
 		self._refresh_friends_time = t + 30
@@ -212,6 +215,7 @@ MainMenuView.cb_update_friends_count = function (self, friends)
 	local icon_width = UIRenderer.text_size(self._ui_renderer, icon_value, icon_style.font_type, icon_style.font_size)
 	local text_count_width = UIRenderer.text_size(self._ui_renderer, text_count_value, text_count_style.font_type, text_count_style.font_size)
 	local margin = 5
+
 	icon_style.offset[1] = text_width + margin * 2
 	text_count_style.offset[1] = icon_style.offset[1] + icon_width + margin
 
@@ -242,7 +246,9 @@ MainMenuView.cb_update_strike_team_count = function (self, party)
 		end
 
 		local max_party_limit = MainMenuViewSettings.max_party_size
+
 		self._widgets_by_name.strike_team.content.text_count = string.format("%d/%d", num_party, max_party_limit)
+
 		local text_style = self._widgets_by_name.strike_team.style.text
 		local text_value = self._widgets_by_name.strike_team.content.text
 		local icon_style = self._widgets_by_name.strike_team.style.icon
@@ -253,6 +259,7 @@ MainMenuView.cb_update_strike_team_count = function (self, party)
 		local icon_width = UIRenderer.text_size(self._ui_renderer, icon_value, icon_style.font_type, icon_style.font_size)
 		local text_count_width = UIRenderer.text_size(self._ui_renderer, text_count_value, text_count_style.font_type, text_count_style.font_size)
 		local margin = 5
+
 		icon_style.offset[1] = text_width + margin * 2
 		text_count_style.offset[1] = icon_style.offset[1] + icon_width + margin
 
@@ -276,6 +283,7 @@ MainMenuView._set_waiting_for_characters = function (self, waiting)
 
 		for i = 1, #character_slot_widgets do
 			local widget = character_slot_widgets[i]
+
 			widget.content.hotspot.is_selected = false
 		end
 	end
@@ -290,8 +298,9 @@ MainMenuView._event_profiles_changed = function (self, profiles)
 	local num_characters = #profiles or 0
 	local max_num_characters = MainMenuViewSettings.max_num_characters
 	local slots_remaining = num_characters < max_num_characters and max_num_characters - num_characters or 0
+
 	self._widgets_by_name.slots_count.content.text = Localize("loc_main_menu_slots_remaining", true, {
-		count = slots_remaining
+		count = slots_remaining,
 	})
 
 	if num_characters == 0 then
@@ -302,6 +311,7 @@ end
 
 MainMenuView._event_selected_profile_changed = function (self, profile)
 	local ignore_sound_trigger = not self._selected_profile
+
 	self._selected_profile = profile
 
 	if profile then
@@ -357,12 +367,14 @@ MainMenuView._set_selected_character_list_index = function (self, index)
 	end
 
 	self._selected_character_list_index = index
+
 	local selected_widget = character_list_widgets[index]
 	local selected_profile = selected_widget.content.profile
 
 	for i = 1, #character_list_widgets do
 		local widget = character_list_widgets[i]
 		local is_selected = widget == selected_widget
+
 		widget.content.hotspot.is_selected = is_selected
 	end
 
@@ -374,7 +386,7 @@ end
 
 MainMenuView._reset_news_list = function (self)
 	return {
-		slides = {}
+		slides = {},
 	}
 end
 
@@ -385,7 +397,7 @@ MainMenuView._populate_news_list = function (self)
 		if starting_slide_index then
 			self._news_list = {
 				slides = raw_news,
-				starting_slide_index = starting_slide_index
+				starting_slide_index = starting_slide_index,
 			}
 		else
 			self._news_list = self:_reset_news_list()
@@ -437,7 +449,7 @@ MainMenuView.update = function (self, dt, t, input_service)
 
 		Managers.ui:open_view("news_view", nil, nil, nil, nil, {
 			on_startup = true,
-			slide_data = slide_data
+			slide_data = slide_data,
 		})
 
 		self._news_list = self:_reset_news_list()
@@ -552,14 +564,17 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 	local selected_character_list_index = self._selected_character_list_index
 	local create_button = self._widgets_by_name.create_button.content
 	local play_button = self._widgets_by_name.play_button.content
+
 	play_button.hotspot.disabled = self._is_main_menu_open
 	create_button.hotspot.disabled = self._is_main_menu_open or self:_are_slots_full()
+
 	local character_slot_widgets = self._character_list_widgets
 	local num_character_slots = #character_slot_widgets or 0
 
 	if selected_character_list_index then
 		for i = 1, num_character_slots do
 			local widget = character_slot_widgets[i]
+
 			widget.content.hotspot.disabled = self._is_main_menu_open
 
 			if widget.content.hotspot.on_pressed and i ~= selected_character_list_index then
@@ -613,39 +628,39 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 	end
 
 	local profile = self._selected_profile
-	local popup_params = {
-		title_text = "loc_main_menu_delete_character_popup_title",
-		title_text_params = {
-			character_name = ProfileUtils.character_name(profile)
+	local popup_params = {}
+
+	popup_params.title_text = "loc_main_menu_delete_character_popup_title"
+	popup_params.title_text_params = {
+		character_name = ProfileUtils.character_name(profile),
+	}
+	popup_params.title_text = "loc_main_menu_delete_character_popup_title"
+	popup_params.description_text = "loc_main_menu_delete_character_popup_description"
+	popup_params.type = "warning"
+	popup_params.options = {
+		{
+			close_on_pressed = true,
+			stop_exit_sound = true,
+			template_type = "terminal_button_hold_small",
+			text = "loc_main_menu_delete_character_popup_confirm",
+			on_complete_sound = UISoundEvents.delete_character_confirm,
+			callback = callback(function ()
+				local character_id = profile.character_id
+
+				Managers.event:trigger("event_request_delete_character", character_id)
+
+				self._delete_popup_id = nil
+			end),
 		},
-		title_text = "loc_main_menu_delete_character_popup_title",
-		description_text = "loc_main_menu_delete_character_popup_description",
-		type = "warning",
-		options = {
-			{
-				text = "loc_main_menu_delete_character_popup_confirm",
-				template_type = "terminal_button_hold_small",
-				stop_exit_sound = true,
-				close_on_pressed = true,
-				on_complete_sound = UISoundEvents.delete_character_confirm,
-				callback = callback(function ()
-					local character_id = profile.character_id
-
-					Managers.event:trigger("event_request_delete_character", character_id)
-
-					self._delete_popup_id = nil
-				end)
-			},
-			{
-				text = "loc_main_menu_delete_character_popup_cancel",
-				template_type = "terminal_button_small",
-				close_on_pressed = true,
-				hotkey = "back",
-				callback = callback(function ()
-					self._delete_popup_id = nil
-				end)
-			}
-		}
+		{
+			close_on_pressed = true,
+			hotkey = "back",
+			template_type = "terminal_button_small",
+			text = "loc_main_menu_delete_character_popup_cancel",
+			callback = callback(function ()
+				self._delete_popup_id = nil
+			end),
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", popup_params, function (id)
@@ -691,6 +706,7 @@ MainMenuView._sync_character_slots = function (self)
 	self:_destroy_character_grid()
 
 	self._character_slot_spawn_id = 0
+
 	local profiles = self._character_profiles
 	local num_characters = profiles and #profiles or 0
 	local grid_direction = "down"
@@ -700,10 +716,13 @@ MainMenuView._sync_character_slots = function (self)
 	for i = 1, num_characters do
 		local widget_definition = UIWidget.create_definition(CharacterSelectPassTemplates.character_select, "character_grid_content_pivot", nil, CharacterSelectPassTemplates.character_create_size)
 		local profile = profiles[i]
+
 		self._character_slot_spawn_id = self._character_slot_spawn_id + 1
+
 		local widget_name = "character_slot_" .. self._character_slot_spawn_id
 		local widget = self:_create_widget(widget_name, widget_definition)
 		local widget_content = widget.content
+
 		widget_content.profile = profile
 
 		if profile then
@@ -716,7 +735,7 @@ MainMenuView._sync_character_slots = function (self)
 
 	local grid = UIWidgetGrid:new(char_list, char_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, {
 		0,
-		0
+		0,
 	})
 	local scrollbar_widget = self._widgets_by_name.character_grid_scrollbar
 	local grid_content_scenegraph_id = "character_grid_content_pivot"
@@ -790,13 +809,14 @@ MainMenuView._create_character_list_renderer = function (self)
 	local viewport_layer = 1
 	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	local renderer_name = self.__class_name .. "character_list_renderer"
+
 	self._character_list_renderer = Managers.ui:create_renderer(renderer_name, world)
 	self._character_list_world = {
 		name = world_name,
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name
+		renderer_name = renderer_name,
 	}
 end
 
@@ -836,9 +856,11 @@ MainMenuView._show_character_details = function (self, show, profile)
 	if show == true then
 		local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 		local character_level = tostring(profile.current_level) .. " "
+
 		self._widgets_by_name.character_info.content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
 		self._widgets_by_name.character_info.content.character_name = ProfileUtils.character_name(profile)
 		self._widgets_by_name.character_info.content.archetype_icon = profile.archetype.archetype_badge
+
 		local player_title = ProfileUtils.character_title(profile)
 
 		if player_title then
@@ -859,9 +881,11 @@ MainMenuView._set_player_profile_information = function (self, profile, widget)
 	local character_name = ProfileUtils.character_name(profile)
 	local character_level = tostring(profile.current_level) .. " "
 	local character_archetype_title = ProfileUtils.character_archetype_title(profile)
+
 	widget.content.character_name = character_name
 	widget.content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
 	widget.content.archetype_icon = profile.archetype.archetype_icon_large
+
 	local player_title = ProfileUtils.character_title(profile)
 
 	if player_title then
@@ -883,6 +907,7 @@ MainMenuView._set_player_profile_information = function (self, profile, widget)
 
 	if frame_item then
 		local cb = callback(self, "_cb_set_player_frame", widget)
+
 		widget.content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
 	end
 
@@ -890,12 +915,14 @@ MainMenuView._set_player_profile_information = function (self, profile, widget)
 
 	if insignia_item then
 		local cb = callback(self, "_cb_set_player_insignia", widget)
+
 		widget.content.insignia_load_id = Managers.ui:load_item_icon(insignia_item, cb)
 	end
 end
 
 MainMenuView._cb_set_player_frame = function (self, widget, item)
 	local material_values = widget.style.character_portrait.material_values
+
 	material_values.portrait_frame_texture = item.icon
 end
 
@@ -918,6 +945,7 @@ end
 
 MainMenuView._request_player_icon = function (self, profile, widget)
 	local material_values = widget.style.character_portrait.material_values
+
 	material_values.use_placeholder_texture = 1
 
 	self:_load_portrait_icon(profile, widget)
@@ -926,11 +954,13 @@ end
 MainMenuView._load_portrait_icon = function (self, profile, widget)
 	local load_cb = callback(self, "_cb_set_player_icon", widget)
 	local unload_cb = callback(self, "_cb_unset_player_icon", widget)
+
 	widget.content.icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 end
 
 MainMenuView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.character_portrait.material_values
+
 	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base"
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
@@ -941,6 +971,7 @@ end
 
 MainMenuView._cb_unset_player_icon = function (self, widget)
 	local material_values = widget.style.character_portrait.material_values
+
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil
@@ -974,7 +1005,9 @@ MainMenuView._unload_portrait_icon = function (self, widget)
 		Managers.ui:unload_item_icon(insignia_load_id)
 
 		widget.content.insignia_load_id = nil
+
 		local icon_style = widget.style.character_insignia
+
 		icon_style.color[1] = 0
 	end
 end

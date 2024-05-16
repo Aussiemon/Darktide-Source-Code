@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/overheat_action_module.lua
+
 local Overheat = require("scripts/utilities/overheat")
 local OverheatActionModule = class("OverheatActionModule")
 
@@ -5,7 +7,9 @@ OverheatActionModule.init = function (self, player_unit, action_settings, invent
 	self._player_unit = player_unit
 	self._action_settings = action_settings
 	self._inventory_slot_component = inventory_slot_component
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._charge_component = unit_data_extension:write_component("action_module_charge")
 	self._weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 end

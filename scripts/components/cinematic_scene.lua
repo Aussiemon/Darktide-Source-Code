@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/cinematic_scene.lua
+
 local CinematicScene = component("CinematicScene")
 
 CinematicScene.init = function (self, unit)
@@ -5,11 +7,13 @@ CinematicScene.init = function (self, unit)
 
 	local cinematic_name = self:get_data(unit, "cinematic_name")
 	local cinematic_category = self:get_data(unit, "cinematic_category")
+
 	self._origin_level_name = self:get_data(unit, "origin_level_name")
 	self._unit_type = self:get_data(unit, "unit_type")
 	self._cinematic_name = self:get_data(unit, "cinematic_name")
 	self._cinematic_category = cinematic_category
-	local origin_level_name = nil
+
+	local origin_level_name
 
 	if self._unit_type == "destination" and self._origin_level_name ~= "" then
 		origin_level_name = self._origin_level_name
@@ -74,27 +78,27 @@ end
 
 CinematicScene.component_data = {
 	name = {
+		ui_name = "Name:",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Name:"
 	},
 	unit_type = {
-		value = "origin",
-		ui_type = "combo_box",
 		ui_name = "Type",
+		ui_type = "combo_box",
+		value = "origin",
 		options_keys = {
 			"Origin",
-			"Destination"
+			"Destination",
 		},
 		options_values = {
 			"origin",
-			"destination"
-		}
+			"destination",
+		},
 	},
 	cinematic_name = {
-		value = "none",
-		ui_type = "combo_box",
 		ui_name = "Cinematic Name",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"None",
 			"Intro ABC",
@@ -126,7 +130,7 @@ CinematicScene.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop"
+			"Hub Location Intro Gun Shop",
 		},
 		options_values = {
 			"none",
@@ -159,13 +163,13 @@ CinematicScene.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop"
-		}
+			"hub_location_intro_gun_shop",
+		},
 	},
 	cinematic_category = {
-		value = "none",
-		ui_type = "combo_box",
 		ui_name = "Cinematic Category",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"None",
 			"Camera A",
@@ -217,7 +221,7 @@ CinematicScene.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop"
+			"Hub Location Intro Gun Shop",
 		},
 		options_values = {
 			"none",
@@ -270,25 +274,25 @@ CinematicScene.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop"
-		}
+			"hub_location_intro_gun_shop",
+		},
 	},
 	origin_level_name = {
+		category = "Level",
+		ui_name = "Origin Level Name",
 		ui_type = "text_box",
 		validator = "ContentPathsAllowed",
-		category = "Level",
 		value = "",
-		ui_name = "Origin Level Name"
 	},
 	inputs = {
 		play_cutscene = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"CinematicSceneExtension"
-	}
+		"CinematicSceneExtension",
+	},
 }
 
 return CinematicScene

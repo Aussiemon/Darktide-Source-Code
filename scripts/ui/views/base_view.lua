@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/base_view.lua
+
 local BaseViewTestify = GameParameters.testify and require("scripts/ui/views/base_view_testify")
 local InputUtils = require("scripts/managers/input/input_utils")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -21,11 +23,15 @@ BaseView.init = function (self, definitions, settings, context, dynamic_package_
 	self._element_to_pivot = {}
 	self._local_player_id = 1
 	self._loading = true
+
 	local view_name = settings.name
+
 	self.view_name = view_name
+
 	local on_load_callback = callback(self, "_on_view_load_complete", true)
+
 	self._should_unload = Managers.ui:load_view(view_name, self.__class_name, on_load_callback, dynamic_package_name)
-	self._hub_interaction = context and not not context.hub_interaction
+	self._hub_interaction = not not context and not not context.hub_interaction
 end
 
 BaseView._create_ui_renderer = function (self, context)
@@ -84,10 +90,11 @@ end
 BaseView._on_view_requirements_complete = function (self)
 	self._can_close = true
 	self._render_scale = Managers.ui:view_render_scale()
+
 	local definitions = self._definitions
+
 	self._ui_scenegraph = self:_create_scenegraph(definitions)
-	self._widgets_by_name = {}
-	self._widgets = {}
+	self._widgets, self._widgets_by_name = {}, {}
 
 	self:_create_widgets(definitions, self._widgets, self._widgets_by_name)
 
@@ -114,11 +121,13 @@ end
 
 BaseView._create_widgets = function (self, definitions, widgets, widgets_by_name)
 	local widget_definitions = definitions.widget_definitions
+
 	widgets = widgets or {}
 	widgets_by_name = widgets_by_name or {}
 
 	for name, definition in pairs(widget_definitions) do
 		local widget = self:_create_widget(name, definition)
+
 		widgets[#widgets + 1] = widget
 	end
 
@@ -128,6 +137,7 @@ end
 BaseView._create_widget = function (self, name, definition)
 	local widgets_by_name = self._widgets_by_name
 	local widget = UIWidget.init(name, definition)
+
 	widgets_by_name[name] = widget
 
 	return widget
@@ -135,6 +145,7 @@ end
 
 BaseView._unregister_widget_name = function (self, name)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name[name] = nil
 end
 
@@ -158,7 +169,7 @@ end
 BaseView.widget_hotspot_content = function (self, name, optional_content_id)
 	local widget = self._widgets_by_name[name]
 	local content = widget.content
-	local hotspot_content = nil
+	local hotspot_content
 
 	if optional_content_id then
 		hotspot_content = content[optional_content_id]
@@ -172,6 +183,7 @@ BaseView.widget_hotspot_content = function (self, name, optional_content_id)
 
 		if pass_type == "hotspot" then
 			local content_id = pass.content_id
+
 			hotspot_content = content[content_id]
 
 			break
@@ -202,6 +214,7 @@ end
 BaseView._start_animation = function (self, animation_sequence_name, widgets, params, callback, speed, delay)
 	speed = speed or 1
 	widgets = widgets or self._widgets_by_name
+
 	local scenegraph_definition = self._definitions.scenegraph_definition
 	local ui_sequence_animator = self._ui_sequence_animator
 	local animation_id = ui_sequence_animator:start_animation(self, animation_sequence_name, widgets, params, speed, callback, delay)
@@ -233,6 +246,7 @@ BaseView.on_enter = function (self)
 
 	self._update_scenegraph = true
 	self._entered = true
+
 	local enter_sound_events = self._settings.enter_sound_events
 
 	if enter_sound_events then
@@ -272,6 +286,7 @@ BaseView.on_exit = function (self)
 
 	if self._should_unload then
 		self._should_unload = nil
+
 		local frame_delay_count = 1
 
 		Managers.ui:unload_view(self.view_name, self.__class_name, frame_delay_count)
@@ -396,7 +411,7 @@ BaseView._scenegraph_world_position = function (self, id, scale, optional_ui_sce
 end
 
 BaseView._update_element_position = function (self, scenegraph_id, element, use_local_position)
-	local position = nil
+	local position
 
 	if use_local_position then
 		position = self._ui_scenegraph[scenegraph_id].position
@@ -491,9 +506,11 @@ BaseView.draw = function (self, dt, t, input_service, layer)
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local alpha_multiplier = render_settings.alpha_multiplier
 	local ui_scenegraph = self._ui_scenegraph
 
@@ -515,6 +532,7 @@ end
 
 BaseView.trigger_on_exit_animation = function (self)
 	self._on_exit_animation_triggered = true
+
 	local exit_sound_events = self._settings.exit_sound_events
 
 	if exit_sound_events then
@@ -571,6 +589,7 @@ end
 
 BaseView._text_size_for_style = function (self, text, text_style, optional_size)
 	optional_size = optional_size or text_style.size
+
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local ui_renderer = self._ui_renderer
 
@@ -616,7 +635,9 @@ BaseView._add_element = function (self, class, reference_name, layer, context, p
 	element:set_render_scale(self._render_scale)
 
 	elements[reference_name] = element
+
 	local id = #elements_array + 1
+
 	elements_array[id] = element
 
 	if pivot then

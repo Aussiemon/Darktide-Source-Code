@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/push_attack.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Attack = require("scripts/utilities/attack/attack")
@@ -5,10 +7,10 @@ local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local IMPACT_FX_DATA_PREDICTED = {
-	will_be_predicted = true
+	will_be_predicted = true,
 }
 local IMPACT_FX_DATA_PREDICTED_NON_PREDICTED = {
-	will_be_predicted = false
+	will_be_predicted = false,
 }
 local UNIT_LENGTH_THRESHOLD = 0.99
 local PushAttack = {}
@@ -51,7 +53,7 @@ PushAttack.push = function (physics_world, push_position, push_direction, rewind
 		if not owned_by_death_manager and not hit_units[unit] then
 			local minion_position = POSITION_LOOKUP[unit]
 			local attack_direction = Vector3.normalize(Vector3.flat(minion_position - push_position))
-			local damage_profile, damage_type = nil
+			local damage_profile, damage_type
 
 			if weak_push then
 				damage_profile = push_settings.outer_damage_profile
@@ -75,6 +77,7 @@ PushAttack.push = function (physics_world, push_position, push_direction, rewind
 
 			if damage_profile then
 				hit_units[unit] = true
+
 				local hit_zone_name = "torso"
 				local damage_dealt, attack_result, damage_efficiency, stagger_result = Attack.execute(unit, damage_profile, "attacking_unit", attacking_unit, "attack_direction", attack_direction, "attack_type", attack_types.push, "hit_world_position", hit_world_position, "hit_actor", actor, "power_level", power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "item", optional_weapon_item)
 

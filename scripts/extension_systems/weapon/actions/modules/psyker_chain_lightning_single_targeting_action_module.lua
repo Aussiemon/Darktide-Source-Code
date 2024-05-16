@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/psyker_chain_lightning_single_targeting_action_module.lua
+
 local SmartTargeting = require("scripts/utilities/smart_targeting")
 local EMPTY_TABLE = {}
 local PsykerSingleTargetSmartTargetingActionModule = class("PsykerSingleTargetSmartTargetingActionModule")
@@ -7,7 +9,9 @@ PsykerSingleTargetSmartTargetingActionModule.init = function (self, physics_worl
 	self._player_unit = player_unit
 	self._component = component
 	self._action_settings = action_settings
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -21,6 +25,7 @@ PsykerSingleTargetSmartTargetingActionModule.start = function (self, action_sett
 	end
 
 	local component = self._component
+
 	component.target_unit_1 = nil
 	component.target_unit_2 = nil
 	component.target_unit_3 = nil
@@ -49,6 +54,7 @@ PsykerSingleTargetSmartTargetingActionModule.fixed_update = function (self, dt, 
 			local target_pos = POSITION_LOOKUP[new_target_unit]
 			local player_pos = POSITION_LOOKUP[self._player_unit]
 			local is_in_range = Vector3.distance_squared(target_pos, player_pos) < max_range * max_range
+
 			component.target_unit_1 = is_in_range and new_target_unit or nil
 		elseif new_target_unit == nil and current_target_unit ~= nil then
 			local stat_buffs = self._buff_extension:stat_buffs()
@@ -80,6 +86,7 @@ end
 PsykerSingleTargetSmartTargetingActionModule.finish = function (self, reason, data, t)
 	if reason == "hold_input_released" or reason == "stunned" then
 		local component = self._component
+
 		component.target_unit_1 = nil
 		component.target_unit_2 = nil
 		component.target_unit_3 = nil

@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/legacy_v2_proximity/minion_proximity_extension.lua
+
 local MinionProximityExtension = class("MinionProximityExtension")
 
 MinionProximityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local breed = extension_init_data.breed
+
 	self.breed = breed
 
 	if not DEDICATED_SERVER then

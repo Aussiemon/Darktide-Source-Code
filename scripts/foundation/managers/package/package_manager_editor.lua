@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/foundation/managers/package/package_manager_editor.lua
+
 local PackageManager = require("scripts/foundation/managers/package/package_manager")
 local PackageManagerEditor = class("PackageManagerEditor")
+
 PackageManagerEditor.FIRST_ITEM = 1
 
 PackageManagerEditor.init = function (self)
@@ -13,8 +16,9 @@ PackageManagerEditor.load = function (self, package_name, reference_name, callba
 	if callback then
 		local item = {
 			id = id,
-			callback = callback
+			callback = callback,
 		}
+
 		self._callback_queue[#self._callback_queue + 1] = item
 	end
 

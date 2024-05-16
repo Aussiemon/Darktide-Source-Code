@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/mission_board_view/mission_board_view.lua
+
 local MissionBoardViewDefinitions = require("scripts/ui/views/mission_board_view/mission_board_view_definitions")
 local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
@@ -28,33 +30,38 @@ local RegionLocalizationMappings = require("scripts/settings/backend/region_loca
 local MissionBoardView = class("MissionBoardView", "BaseView")
 local mission_types = {
 	"normal",
-	"auric"
+	"auric",
 }
 local mission_type_by_id = {}
 
 for i = 1, #mission_types do
 	local mission_type = mission_types[i]
+
 	mission_type_by_id[mission_type] = i
 end
 
 local mission_type_font = table.clone(UIFontSettings.header_1)
+
 mission_type_font.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 mission_type_font.text_horizontal_alignment = "center"
 mission_type_font.text_vertical_alignment = "center"
 mission_type_font.font_size = 32
+
 local mission_type_auric_font = table.clone(mission_type_font)
+
 mission_type_auric_font.material = "content/ui/materials/font_gradients/slug_font_gradient_gold"
+
 local mission_type_data = {
 	normal = {
-		title = "loc_mission_board_view_header_tertium_hive",
 		display_name = "loc_mission_board_type_normal",
-		display_style = mission_type_font
+		title = "loc_mission_board_view_header_tertium_hive",
+		display_style = mission_type_font,
 	},
 	auric = {
-		title = "loc_mission_board_view_header_tertium_hive_auric",
 		display_name = "loc_mission_board_type_auric",
-		display_style = mission_type_auric_font
-	}
+		title = "loc_mission_board_view_header_tertium_hive_auric",
+		display_style = mission_type_auric_font,
+	},
 }
 
 MissionBoardView.init = function (self, settings, context)
@@ -82,10 +89,12 @@ end
 MissionBoardView._on_view_requirements_complete = function (self)
 	self._can_close = true
 	self._render_scale = Managers.ui:view_render_scale()
+
 	local definitions = self._definitions
+
 	self._ui_scenegraph = self:_create_scenegraph(definitions)
-	self._widgets_by_name = {}
-	self._widgets = {}
+	self._widgets, self._widgets_by_name = {}, {}
+
 	local filtered_definitions = {}
 
 	for name, widget_definition in pairs(definitions.widget_definitions) do
@@ -108,11 +117,13 @@ end
 
 MissionBoardView._create_widgets = function (self, filtered_definitions, widgets, widgets_by_name)
 	local widget_definitions = filtered_definitions
+
 	widgets = widgets or {}
 	widgets_by_name = widgets_by_name or {}
 
 	for name, definition in pairs(widget_definitions) do
 		local widget = self:_create_widget(name, definition)
+
 		widgets[#widgets + 1] = widget
 	end
 
@@ -137,6 +148,7 @@ MissionBoardView._generate_widgets_by_mission_type = function (self, mission_Typ
 
 		local definition = function_definitions(mission_Type)
 		local widget = self:_create_widget(name, definition)
+
 		self._widgets[#self._widgets + 1] = widget
 	end
 
@@ -147,6 +159,7 @@ MissionBoardView.on_enter = function (self)
 	MissionBoardView.super.on_enter(self)
 
 	local save_data = Managers.save:account_data()
+
 	save_data.mission_board = save_data.mission_board or {}
 	self._mission_board_save_data = save_data.mission_board
 	self._mission_board_save_data.private_matchmaking = self._mission_board_save_data.private_matchmaking or false
@@ -155,12 +168,14 @@ MissionBoardView.on_enter = function (self)
 	Managers.event:register(self, "event_register_camera", "event_register_camera")
 
 	local world_spawner_settings = MissionBoardViewSettings.world_spawner_settings
+
 	self._world_spawner = UIWorldSpawner:new(world_spawner_settings.world_name, world_spawner_settings.world_layer, world_spawner_settings.world_timer_name, self.view_name)
 
 	self._world_spawner:spawn_level(world_spawner_settings.level_name)
 
 	self._ui_resource_renderer = Managers.ui:create_renderer(MissionBoardViewSettings.resource_renderer_name, nil, true, self._ui_renderer.gui, self._ui_renderer.gui_retained, MissionBoardViewSettings.resource_renderer_material)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 40)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -174,9 +189,13 @@ MissionBoardView.on_enter = function (self)
 
 	local player = self:_player()
 	local profile = player:profile()
+
 	self._player_level = profile.current_level
+
 	local party_manager = Managers.party_immaterium
+
 	self._party_manager = party_manager
+
 	local narrative_manager = Managers.narrative
 	local narrative_event_name = "onboarding_step_mission_board_introduction"
 
@@ -204,11 +223,14 @@ MissionBoardView._setup_widgets = function (self)
 	self._quickplay_difficulty = self._mission_board_save_data.quickplay_difficulty
 	self._widgets_by_name.difficulty_stepper.content.danger = self._mission_board_save_data.quickplay_difficulty
 	self._widgets_by_name.difficulty_stepper.content.on_changed_callback = callback(self, "_callback_on_danger_changed")
+
 	local gamepad_cursor = self._widgets_by_name.gamepad_cursor
+
 	gamepad_cursor.visible = InputDevice.gamepad_active
 	self._widgets_by_name.game_settings.visible = false
 	self._widgets_by_name.play_team_button.content.hotspot.pressed_callback = callback(self, "_callback_start_selected_mission")
 	self._widgets_by_name.story_mission_view_button.content.hotspot.pressed_callback = callback(self, "_callback_story_mission_menu")
+
 	local mission_medium_widget_template = MissionBoardViewDefinitions.widget_definitions_functions.mission_medium_widget_pass_function(self._selected_mission_type or "normal")
 
 	if self._quickplay_widget then
@@ -216,18 +238,24 @@ MissionBoardView._setup_widgets = function (self)
 	end
 
 	self._quickplay_widget = self:_create_widget("quickplay", mission_medium_widget_template)
+
 	local quickplay_content = self._quickplay_widget.content
+
 	quickplay_content.objective_1_icon = "content/ui/materials/icons/mission_types/mission_type_09"
 	quickplay_content.objective_2_icon = nil
 	quickplay_content.circumstance_icon = nil
 	quickplay_content.is_quickplay = true
 	self._mission_widgets[0] = self._quickplay_widget
+
 	local mission_type = self._selected_mission_type or "normal"
+
 	quickplay_content.mission_type = mission_type
 	self._quickplay_widget.offset[1] = MissionBoardViewSettings.mission_positions[mission_type].quickplay_mission_position[1]
 	self._quickplay_widget.offset[2] = MissionBoardViewSettings.mission_positions[mission_type].quickplay_mission_position[2]
+
 	local localization_id = mission_type_data[mission_type].title
 	local title = Localize(localization_id)
+
 	self._widgets_by_name.planet.content.title = title
 	self._widgets_by_name.difficulty_stepper.content.min_danger = MissionBoardViewSettings.stepper_difficulty[mission_type].min_danger
 	self._widgets_by_name.difficulty_stepper.content.max_danger = MissionBoardViewSettings.stepper_difficulty[mission_type].max_danger
@@ -252,111 +280,113 @@ MissionBoardView._generate_mission_type_selection = function (self)
 	local max_text_size = 200
 	local size = {
 		max_text_size + 100,
-		40
+		40,
 	}
 	local selection_margin = 6
 	local selection_size = {
 		30,
-		selection_margin
+		selection_margin,
 	}
 	local level_requirement_font = table.clone(UIFontSettings.body)
+
 	level_requirement_font.text_horizontal_alignment = "center"
 	level_requirement_font.text_vertical_alignment = "center"
 	level_requirement_font.offset = {
 		0,
 		50,
-		0
+		0,
 	}
 	level_requirement_font.text_color = Color.ui_orange_light(255, true)
 	level_requirement_font.font_size = 18
+
 	local pass_definitions = {
 		{
-			style_id = "background",
 			pass_type = "rect",
+			style_id = "background",
 			style = {
-				color = Color.black(170, true)
-			}
+				color = Color.black(170, true),
+			},
 		},
 		{
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style_id = "outer_shadow",
 			pass_type = "texture",
+			style_id = "outer_shadow",
+			value = "content/ui/materials/frames/dropshadow_medium",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
+				vertical_alignment = "center",
 				color = Color.black(200, true),
 				size_addition = {
 					20,
-					20
+					20,
 				},
 				offset = {
 					0,
 					0,
-					3
-				}
-			}
+					3,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style_id = "frame",
 			pass_type = "texture",
+			style_id = "frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				color = Color.terminal_frame(nil, true),
 				offset = {
 					0,
 					0,
-					3
-				}
-			}
+					3,
+				},
+			},
 		},
 		{
-			value_id = "level_requirement",
 			pass_type = "text",
-			value = "",
 			style_id = "level_requirement",
+			value = "",
+			value_id = "level_requirement",
 			style = level_requirement_font,
 			visibility_function = function (content)
-				return content.level and self._player_level < content.level
+				return content.level and content.level > self._player_level
 			end,
 			change_function = function (content, style)
 				content.level_requirement = content.level and Localize("loc_mission_board_mission_mode_level_requirement", true, {
-					player_level = content.level
+					player_level = content.level,
 				}) or ""
-			end
+			end,
 		},
 		{
-			style_id = "hotspot_arrow_left",
-			pass_type = "hotspot",
 			content_id = "hotspot_arrow_left",
+			pass_type = "hotspot",
+			style_id = "hotspot_arrow_left",
 			content = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_click,
-				on_select_sound = UISoundEvents.default_click
+				on_select_sound = UISoundEvents.default_click,
 			},
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "left",
+				vertical_alignment = "center",
 				size = {
-					30
+					30,
 				},
 				offset = {
 					0,
 					0,
-					1
-				}
-			}
+					1,
+				},
+			},
 		},
 		{
-			style_id = "arrow_background_left",
 			pass_type = "rect",
+			style_id = "arrow_background_left",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "left",
+				vertical_alignment = "center",
 				size = {
-					30
+					30,
 				},
 				default_color = Color.terminal_frame(127.5, true),
 				color = Color.terminal_frame(127.5, true),
@@ -364,8 +394,8 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				offset = {
 					0,
 					0,
-					1
-				}
+					1,
+				},
 			},
 			visibility_function = function (parent, content)
 				return Managers.ui:using_cursor_navigation()
@@ -374,41 +404,43 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				local is_disabled = content.hotspot_arrow_left.disabled
 				local is_hover = content.hotspot_arrow_left.is_hover
 				local disabled_color = table.clone(style.default_color)
+
 				disabled_color[1] = 127.5
+
 				local color = is_disabled and disabled_color or is_hover and style.hover_color or style.default_color
 
 				ColorUtilities.color_copy(color, style.color, true)
-			end
+			end,
 		},
 		{
-			value_id = "arrow_left",
 			pass_type = "texture_uv",
-			value = "content/ui/materials/buttons/arrow_01",
 			style_id = "arrow_left",
+			value = "content/ui/materials/buttons/arrow_01",
+			value_id = "arrow_left",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "left",
+				vertical_alignment = "center",
 				size = {
 					16,
-					20
+					20,
 				},
 				uvs = {
 					{
 						1,
-						0
+						0,
 					},
 					{
 						0,
-						1
-					}
+						1,
+					},
 				},
 				offset = {
 					6,
 					0,
-					2
+					2,
 				},
 				default_color = Color.terminal_text_header(255, true),
-				disabled_color = Color.terminal_text_header_disabled(255, true)
+				disabled_color = Color.terminal_text_header_disabled(255, true),
 			},
 			visibility_function = function (parent, content)
 				return Managers.ui:using_cursor_navigation()
@@ -418,25 +450,25 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				local color = is_disabled and style.disabled_color or style.default_color
 
 				ColorUtilities.color_copy(color, style.color, true)
-			end
+			end,
 		},
 		{
-			value_id = "arrow_left_text",
 			pass_type = "text",
-			value = "",
 			style_id = "arrow_left_text",
+			value = "",
+			value_id = "arrow_left_text",
 			style = {
 				font_size = 24,
-				text_vertical_alignment = "center",
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
 				offset = {
 					10,
 					0,
-					1
+					1,
 				},
 				text_color = Color.terminal_text_header(255, true),
 				default_color = Color.terminal_text_header(255, true),
-				disabled_color = Color.terminal_text_header_disabled(255, true)
+				disabled_color = Color.terminal_text_header_disabled(255, true),
 			},
 			visibility_function = function (parent, content)
 				return not Managers.ui:using_cursor_navigation()
@@ -446,25 +478,25 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				local color = is_disabled and style.disabled_color or style.default_color
 
 				ColorUtilities.color_copy(color, style.text_color, true)
-			end
+			end,
 		},
 		{
-			value_id = "arrow_right_text",
 			pass_type = "text",
-			value = "",
 			style_id = "arrow_right_text",
+			value = "",
+			value_id = "arrow_right_text",
 			style = {
 				font_size = 24,
-				text_vertical_alignment = "center",
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "center",
 				offset = {
 					-10,
 					0,
-					1
+					1,
 				},
 				text_color = Color.terminal_text_header(255, true),
 				default_color = Color.terminal_text_header(255, true),
-				disabled_color = Color.terminal_text_header_disabled(255, true)
+				disabled_color = Color.terminal_text_header_disabled(255, true),
 			},
 			visibility_function = function (parent, content)
 				return not Managers.ui:using_cursor_navigation()
@@ -474,38 +506,38 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				local color = is_disabled and style.disabled_color or style.default_color
 
 				ColorUtilities.color_copy(color, style.text_color, true)
-			end
+			end,
 		},
 		{
-			style_id = "hotspot_arrow_right",
-			pass_type = "hotspot",
 			content_id = "hotspot_arrow_right",
+			pass_type = "hotspot",
+			style_id = "hotspot_arrow_right",
 			content = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_click,
-				on_select_sound = UISoundEvents.default_click
+				on_select_sound = UISoundEvents.default_click,
 			},
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				size = {
-					30
+					30,
 				},
 				offset = {
 					-0,
 					0,
-					1
-				}
-			}
+					1,
+				},
+			},
 		},
 		{
-			style_id = "arrow_background_right",
 			pass_type = "rect",
+			style_id = "arrow_background_right",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				size = {
-					30
+					30,
 				},
 				default_color = Color.terminal_frame(127.5, true),
 				color = Color.terminal_frame(127.5, true),
@@ -513,8 +545,8 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				offset = {
 					0,
 					0,
-					1
-				}
+					1,
+				},
 			},
 			visibility_function = function (parent, content)
 				return Managers.ui:using_cursor_navigation()
@@ -523,31 +555,33 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				local is_disabled = content.hotspot_arrow_right.disabled
 				local is_hover = content.hotspot_arrow_right.is_hover
 				local disabled_color = table.clone(style.default_color)
+
 				disabled_color[1] = 127.5
+
 				local color = is_disabled and disabled_color or is_hover and style.hover_color or style.default_color
 
 				ColorUtilities.color_copy(color, style.color, true)
-			end
+			end,
 		},
 		{
-			value_id = "arrow_right",
 			pass_type = "texture",
-			value = "content/ui/materials/buttons/arrow_01",
 			style_id = "arrow_right",
+			value = "content/ui/materials/buttons/arrow_01",
+			value_id = "arrow_right",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				size = {
 					16,
-					20
+					20,
 				},
 				offset = {
 					-6,
 					0,
-					2
+					2,
 				},
 				default_color = Color.terminal_text_header(255, true),
-				disabled_color = Color.terminal_text_header_disabled(255, true)
+				disabled_color = Color.terminal_text_header_disabled(255, true),
 			},
 			visibility_function = function (parent, content)
 				return Managers.ui:using_cursor_navigation()
@@ -557,8 +591,8 @@ MissionBoardView._generate_mission_type_selection = function (self)
 				local color = is_disabled and style.disabled_color or style.default_color
 
 				ColorUtilities.color_copy(color, style.color, true)
-			end
-		}
+			end,
+		},
 	}
 
 	for i = 1, #mission_types do
@@ -566,12 +600,13 @@ MissionBoardView._generate_mission_type_selection = function (self)
 		local selection_offset = (selection_size[1] + selection_margin) * (i - 1) - total_size_selection * 0.5 + selection_size[1] * 0.5
 		local mission_type = mission_types[i]
 		local data = mission_type_data[mission_type]
+
 		pass_definitions[#pass_definitions + 1] = {
 			pass_type = "text",
 			style_id = "title_" .. i,
 			value = Localize(data.display_name),
 			value_id = "title_" .. i,
-			style = data.display_style
+			style = data.display_style,
 		}
 		pass_definitions[#pass_definitions + 1] = {
 			pass_type = "hotspot",
@@ -580,36 +615,37 @@ MissionBoardView._generate_mission_type_selection = function (self)
 			content = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_click,
-				on_select_sound = UISoundEvents.default_click
+				on_select_sound = UISoundEvents.default_click,
 			},
 			style = {
-				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
 				size = selection_size,
 				offset = {
 					selection_offset,
-					selection_size[2] + selection_margin
-				}
-			}
+					selection_size[2] + selection_margin,
+				},
+			},
 		}
 		pass_definitions[#pass_definitions + 1] = {
 			pass_type = "rect",
 			style_id = "selection_" .. i,
 			style = {
-				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
 				color = Color.terminal_text_header(255, true),
 				size = selection_size,
 				offset = {
 					selection_offset,
-					selection_size[2] + selection_margin
-				}
-			}
+					selection_size[2] + selection_margin,
+				},
+			},
 		}
 	end
 
 	local widget_definition = UIWidget.create_definition(pass_definitions, "mission_type_selection_pivot", nil, size)
 	local widget = self:_create_widget("mission_type_selection", widget_definition)
+
 	widget.content.index_length = #mission_types
 
 	local function change_mission_type(next_index)
@@ -627,6 +663,7 @@ MissionBoardView._generate_mission_type_selection = function (self)
 			for i = 1, widget.content.index_length do
 				local title_id = "title_" .. i
 				local selection_id = "selection_" .. i
+
 				widget.style[title_id].visible = selected_index == i
 				widget.style[selection_id].color = selected_index == i and Color.terminal_text_header(255, true) or Color.terminal_text_header_disabled(204, true)
 			end
@@ -649,6 +686,7 @@ MissionBoardView._generate_mission_type_selection = function (self)
 			end
 
 			local mission_type = mission_types[selected_index]
+
 			widget.content.level = PlayerProgressionUnlocks.mission_type_unlocks[mission_type]
 
 			if not first_run then
@@ -747,7 +785,7 @@ local story_mission_frame_anims = {
 	"story_mission_button_anim_1",
 	"story_mission_button_anim_2",
 	"story_mission_button_anim_3",
-	"story_mission_button_anim_4"
+	"story_mission_button_anim_4",
 }
 
 MissionBoardView._update_story_mission_button_anim = function (self, dt)
@@ -764,6 +802,7 @@ MissionBoardView._update_story_mission_button_anim = function (self, dt)
 
 			local anim_index = math.random(1, #story_mission_frame_anims)
 			local anim_name = story_mission_frame_anims[anim_index]
+
 			self._story_mission_button_animation_id = self:_start_animation(anim_name, widgets_by_name, self)
 			self._story_mission_button_anim_delay = math.random(5, 10)
 		else
@@ -863,11 +902,14 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 	local last_pressed_device = InputDevice.last_pressed_device
 	local gamepad_cursor = self._widgets_by_name.gamepad_cursor
 	local cursor_active = last_pressed_device and last_pressed_device:type() ~= "mouse"
+
 	gamepad_cursor.visible = cursor_active
 
 	if cursor_active then
 		local input = input_service:get("navigation_keys_virtual_axis") + input_service:get("navigate_controller")
+
 		input[2] = -input[2]
+
 		local input_len = Vector3.length(input)
 
 		if input_len > 1 then
@@ -882,9 +924,9 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 		local tar_pos = Vector3Box.unbox(self._gamepad_cursor_target_pos)
 		local norm_avg_vel, len_avg_vel = Vector3.direction_length(avg_vel)
 
-		if settings.snap_input_length_threshold < input_len then
+		if input_len > settings.snap_input_length_threshold then
 			self._gamepad_cursor_snap_delay = math.max(self._gamepad_cursor_snap_delay, t + settings.snap_delay)
-		elseif self._gamepad_cursor_snap_delay < t then
+		elseif t > self._gamepad_cursor_snap_delay then
 			pos = Vector3.lerp(tar_pos, pos, settings.snap_movement_rate^dt)
 		end
 
@@ -892,79 +934,82 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 		local scenegraph = self._ui_scenegraph
 		local cursor_size = Vector3.from_array_flat(scenegraph.gamepad_cursor.size)
 		local wanted_size = Vector2(settings.default_size_x, settings.default_size_y)
-		local best_pos = nil
-		local best_score = -math.huge
-		local is_sticky = len_avg_vel < settings.stickiness_speed_threshold
-		local cursor_center = pos
-		local cursor_pos = cursor_center - 0.5 * cursor_size
-		local overlapping_missions = {}
 
-		for i = 0, #mission_widgets do
-			local widget = mission_widgets[i]
-			local is_valid = widget and widget.visible and (not widget.content.is_quickplay or self._quickplay_initialized)
+		do
+			local best_pos
+			local best_score = -math.huge
+			local is_sticky = len_avg_vel < settings.stickiness_speed_threshold
+			local cursor_center = pos
+			local cursor_pos = cursor_center - 0.5 * cursor_size
+			local overlapping_missions = {}
 
-			if is_valid then
-				local widget_pos = Vector2(widget.offset[1], widget.offset[2])
-				local widget_size = Vector3.from_array_flat(scenegraph[widget.scenegraph_id].size)
-				local widget_center = widget_pos + 0.5 * widget_size
-				local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
-				local dot = math.max(1e-06, Vector3.dot(norm_avg_vel, delta_dir))
-				local score = math.sqrt(dot) / math.max(1, delta_len)
+			for i = 0, #mission_widgets do
+				local widget = mission_widgets[i]
+				local is_valid = widget and widget.visible and (not widget.content.is_quickplay or self._quickplay_initialized)
 
-				if is_sticky then
-					score = score + 10 * math.max(0, settings.stickiness_radius - delta_len * delta_len)
-				end
+				if is_valid then
+					local widget_pos = Vector2(widget.offset[1], widget.offset[2])
+					local widget_size = Vector3.from_array_flat(scenegraph[widget.scenegraph_id].size)
+					local widget_center = widget_pos + 0.5 * widget_size
+					local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
+					local dot = math.max(1e-06, Vector3.dot(norm_avg_vel, delta_dir))
+					local score = math.sqrt(dot) / math.max(1, delta_len)
 
-				local has_overlap = math.box_overlap_box(widget_pos, widget_size, cursor_pos, cursor_size)
-
-				if has_overlap then
-					if widget.content.is_quickplay then
-						overlapping_missions[#overlapping_missions + 1] = "quickplay"
-					else
-						overlapping_missions[#overlapping_missions + 1] = widget.content.mission
+					if is_sticky then
+						score = score + 10 * math.max(0, settings.stickiness_radius - delta_len * delta_len)
 					end
 
-					drag_coefficient = settings.widget_drag_coefficient
+					local has_overlap = math.box_overlap_box(widget_pos, widget_size, cursor_pos, cursor_size)
 
-					if delta_len < settings.stickiness_radius then
-						wanted_size = widget_size
-						score = score + 1000
+					if has_overlap then
+						if widget.content.is_quickplay then
+							overlapping_missions[#overlapping_missions + 1] = "quickplay"
+						else
+							overlapping_missions[#overlapping_missions + 1] = widget.content.mission
+						end
+
+						drag_coefficient = settings.widget_drag_coefficient
+
+						if delta_len < settings.stickiness_radius then
+							wanted_size = widget_size
+							score = score + 1000
+						end
+					end
+
+					if best_score < score then
+						best_score = score
+						best_pos = widget_center
 					end
 				end
+			end
 
-				if best_score < score then
-					best_score = score
-					best_pos = widget_center
+			local new_mission
+
+			for i = 1, #overlapping_missions do
+				local mission = overlapping_missions[i]
+
+				if mission == self._selected_mission or not self._selected_mission and mission == "quickplay" then
+					new_mission = nil
+
+					break
+				else
+					new_mission = mission
 				end
 			end
-		end
 
-		local new_mission = nil
-
-		for i = 1, #overlapping_missions do
-			local mission = overlapping_missions[i]
-
-			if mission == self._selected_mission or not self._selected_mission and mission == "quickplay" then
-				new_mission = nil
-
-				break
-			else
-				new_mission = mission
+			if new_mission then
+				if new_mission == "quickplay" then
+					self:_set_selected_quickplay()
+					self:_play_sound(UISoundEvents.mission_board_node_hover)
+				else
+					self:_set_selected_mission(new_mission)
+					self:_play_sound(UISoundEvents.mission_board_node_hover)
+				end
 			end
-		end
 
-		if new_mission then
-			if new_mission == "quickplay" then
-				self:_set_selected_quickplay()
-				self:_play_sound(UISoundEvents.mission_board_node_hover)
-			else
-				self:_set_selected_mission(new_mission)
-				self:_play_sound(UISoundEvents.mission_board_node_hover)
+			if len_avg_vel > settings.snap_selection_speed_threshold and best_pos then
+				Vector3Box.store(self._gamepad_cursor_target_pos, best_pos)
 			end
-		end
-
-		if settings.snap_selection_speed_threshold < len_avg_vel and best_pos then
-			Vector3Box.store(self._gamepad_cursor_target_pos, best_pos)
 		end
 
 		pos = pos + vel * dt
@@ -991,8 +1036,11 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 		self:_set_scenegraph_size("gamepad_cursor", width, height)
 
 		local arrow_style = gamepad_cursor.style.arrow
+
 		arrow_style.angle = math.radian_lerp(math.pi + math.atan2(tar_pos[2] - pos[2], pos[1] - tar_pos[1]), arrow_style.angle, settings.arrow_rotate_rate^dt)
+
 		local alpha = 255 * (1 - math.clamp(t - self._gamepad_cursor_snap_delay, 0, 1))
+
 		gamepad_cursor.style.glow.color[1] = alpha
 		gamepad_cursor.style.rect.color[1] = alpha * 0.12549019607843137
 		gamepad_cursor.style.arrow.color[1] = alpha
@@ -1002,25 +1050,26 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 end
 
 local _required_level_loc_table = {
-	required_level = -1
+	required_level = -1,
 }
 
 MissionBoardView._update_can_start_mission = function (self)
 	local selected_mission = self._selected_mission
-	local required_level = nil
+	local required_level
 
 	if selected_mission then
 		required_level = selected_mission.requiredLevel
 	else
 		local danger = self._quickplay_difficulty
 		local mission_mode = self._selected_mission_type
+
 		required_level = DangerSettings.required_level_by_mission_type(danger, mission_mode)
 	end
 
 	local widgets_by_name = self._widgets_by_name
 	local is_locked = false
 
-	if self._player_level < required_level then
+	if required_level > self._player_level then
 		_required_level_loc_table.required_level = required_level
 
 		self:_set_info_text("warning", Localize("loc_mission_board_view_required_level", true, _required_level_loc_table))
@@ -1050,6 +1099,7 @@ end
 
 MissionBoardView._set_info_text = function (self, level, text)
 	local info_box = self._widgets_by_name.info_box
+
 	info_box.visible = not not text
 
 	if text then
@@ -1061,8 +1111,8 @@ end
 MissionBoardView._set_gamepad_cursor = function (self, widget)
 	local offset = widget.offset
 	local size_x, size_y = self:_scenegraph_size(widget.scenegraph_id)
-	local x = offset[1] + 0.5 * size_x
-	local y = offset[2] + 0.5 * size_y
+	local x, y = offset[1] + 0.5 * size_x, offset[2] + 0.5 * size_y
+
 	self._gamepad_cursor_target_pos[1] = x
 	self._gamepad_cursor_target_pos[2] = y
 	self._gamepad_cursor_current_pos[1] = x
@@ -1071,6 +1121,7 @@ end
 
 MissionBoardView._reset_selection = function (self)
 	self._selected_mission = nil
+
 	local mission_widgets = self._mission_widgets
 
 	if mission_widgets then
@@ -1110,6 +1161,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	self:_reset_selection()
 
 	self._selected_mission = nil
+
 	local mission_widgets = self._mission_widgets
 
 	for i = 0, #mission_widgets do
@@ -1126,104 +1178,121 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 		self:_set_gamepad_cursor(self._quickplay_widget)
 	end
 
-	local widget = self._widgets_by_name.detail
-	widget.dirty = true
-	widget.visible = true
-	local content = widget.content
-	local style = widget.style
-	content.header_subtitle = self._widgets_by_name.planet.content.title
-	content.header_title = Localize("loc_mission_board_quickplay_header")
-	content.danger = nil
-	content.is_locked = false
-	content.start_game_time = nil
-	content.circumstance_icon = nil
-	content.is_flash = false
-	local location_image_material_values = widget.style.location_image.material_values
-	location_image_material_values.texture_map = "content/ui/textures/missions/quickplay"
-	location_image_material_values.show_static = 0
+	do
+		local widget = self._widgets_by_name.detail
 
-	if self._bonus_data and self._bonus_data.quickplay then
-		if self._bonus_widgets then
-			for i = 1, #self._bonus_widgets do
-				local widget = self._bonus_widgets[i]
+		widget.dirty = true
+		widget.visible = true
 
-				self:_unregister_widget_name(widget.name)
+		local content = widget.content
+		local style = widget.style
+
+		content.header_subtitle = self._widgets_by_name.planet.content.title
+		content.header_title = Localize("loc_mission_board_quickplay_header")
+		content.danger = nil
+		content.is_locked = false
+		content.start_game_time = nil
+		content.circumstance_icon = nil
+		content.is_flash = false
+
+		local location_image_material_values = widget.style.location_image.material_values
+
+		location_image_material_values.texture_map = "content/ui/textures/missions/quickplay"
+		location_image_material_values.show_static = 0
+
+		if self._bonus_data and self._bonus_data.quickplay then
+			if self._bonus_widgets then
+				for i = 1, #self._bonus_widgets do
+					local widget = self._bonus_widgets[i]
+
+					self:_unregister_widget_name(widget.name)
+				end
+
+				self._bonus_widgets = nil
 			end
 
-			self._bonus_widgets = nil
-		end
+			style.bonus_title.visible = true
 
-		style.bonus_title.visible = true
-		local bonus_widgets = {}
-		local count = 0
-		local start_offset = 0
+			local bonus_widgets = {}
+			local count = 0
+			local start_offset = 0
 
-		for type, value in pairs(self._bonus_data.quickplay) do
-			local currency_name, currency_icon = nil
+			for type, value in pairs(self._bonus_data.quickplay) do
+				local currency_name, currency_icon
 
-			if type == "xp" then
-				currency_name = Localize("loc_mission_board_view_experience")
-				currency_icon = "content/ui/materials/icons/currencies/experience_small"
-			else
-				currency_name = WalletSettings[type] and Localize(WalletSettings[type].display_name) or type
-				currency_icon = WalletSettings[type].icon_texture_small
+				if type == "xp" then
+					currency_name = Localize("loc_mission_board_view_experience")
+					currency_icon = "content/ui/materials/icons/currencies/experience_small"
+				else
+					currency_name = WalletSettings[type] and Localize(WalletSettings[type].display_name) or type
+					currency_icon = WalletSettings[type].icon_texture_small
+				end
+
+				local bonus_definition = MissionBoardViewDefinitions.bonus_data_widget_definitons
+				local widget = self:_create_widget("bonus_data_" .. type, bonus_definition)
+
+				widget.content.text = string.format("+ %d%% %s", value, currency_name)
+				widget.content.icon = currency_icon
+				widget.offset = {
+					20,
+					start_offset + 32 * count,
+					2,
+				}
+				count = count + 1
+				bonus_widgets[#bonus_widgets + 1] = widget
 			end
 
-			local bonus_definition = MissionBoardViewDefinitions.bonus_data_widget_definitons
-			local widget = self:_create_widget("bonus_data_" .. type, bonus_definition)
-			widget.content.text = string.format("+ %d%% %s", value, currency_name)
-			widget.content.icon = currency_icon
-			widget.offset = {
-				20,
-				start_offset + 32 * count,
-				2
-			}
-			count = count + 1
-			bonus_widgets[#bonus_widgets + 1] = widget
+			self._bonus_widgets = bonus_widgets
+		else
+			style.bonus_title.visible = false
 		end
-
-		self._bonus_widgets = bonus_widgets
-	else
-		style.bonus_title.visible = false
 	end
 
-	local vo_profile = MissionBoardViewSettings.quickplay_vo_profile
-	local speaker_settings = DialogueSpeakerVoiceSettings[vo_profile]
-	local widget = self._widgets_by_name.objective_1
-	widget.dirty = true
-	widget.visible = true
-	local content = widget.content
-	local style = widget.style
-	content.header_icon = "content/ui/materials/icons/mission_types/mission_type_09"
-	content.header_subtitle = Localize("loc_mission_board_quickplay_header")
-	content.body_text = Localize("loc_mission_board_quickplay_description")
-	content.speaker_icon = speaker_settings.material_small
-	content.speaker_text = "/ " .. Localize(speaker_settings.full_name)
-	content.xp = nil
-	content.credits = nil
-	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
-	local margin = 20
-	local bottom_spacing = content.speaker_icon and 15 or 0
-	local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
-	local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
-		max_width,
-		1080
-	}, description_style_options)
-	widget.content.size = {
-		self._ui_scenegraph.objective.size[1],
-		self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing
-	}
-	widget.style.reward_background.offset[2] = widget.content.size[2]
-	widget.style.reward_gradient.offset[2] = widget.content.size[2]
-	widget.style.reward_frame.offset[2] = widget.content.size[2]
-	widget.style.reward_icon.offset[2] = widget.content.size[2]
-	widget.style.reward_text.offset[2] = widget.content.size[2]
-	widget.style.speaker_frame.offset[2] = widget.content.size[2]
-	widget.style.speaker_corner.offset[2] = widget.content.size[2]
-	widget.style.speaker_icon.offset[2] = widget.content.size[2]
-	widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
-	self._widgets_by_name.difficulty_stepper_window.offset[2] = widget.offset[2] + widget.content.size[2] + margin
-	self._widgets_by_name.difficulty_stepper.offset[2] = widget.offset[2] + widget.content.size[2] + margin
+	do
+		local vo_profile = MissionBoardViewSettings.quickplay_vo_profile
+		local speaker_settings = DialogueSpeakerVoiceSettings[vo_profile]
+		local widget = self._widgets_by_name.objective_1
+
+		widget.dirty = true
+		widget.visible = true
+
+		local content = widget.content
+		local style = widget.style
+
+		content.header_icon = "content/ui/materials/icons/mission_types/mission_type_09"
+		content.header_subtitle = Localize("loc_mission_board_quickplay_header")
+		content.body_text = Localize("loc_mission_board_quickplay_description")
+		content.speaker_icon = speaker_settings.material_small
+		content.speaker_text = "/ " .. Localize(speaker_settings.full_name)
+		content.xp = nil
+		content.credits = nil
+
+		local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
+		local margin = 20
+		local bottom_spacing = content.speaker_icon and 15 or 0
+		local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
+		local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
+			max_width,
+			1080,
+		}, description_style_options)
+
+		widget.content.size = {
+			self._ui_scenegraph.objective.size[1],
+			self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing,
+		}
+		widget.style.reward_background.offset[2] = widget.content.size[2]
+		widget.style.reward_gradient.offset[2] = widget.content.size[2]
+		widget.style.reward_frame.offset[2] = widget.content.size[2]
+		widget.style.reward_icon.offset[2] = widget.content.size[2]
+		widget.style.reward_text.offset[2] = widget.content.size[2]
+		widget.style.speaker_frame.offset[2] = widget.content.size[2]
+		widget.style.speaker_corner.offset[2] = widget.content.size[2]
+		widget.style.speaker_icon.offset[2] = widget.content.size[2]
+		widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
+		self._widgets_by_name.difficulty_stepper_window.offset[2] = widget.offset[2] + widget.content.size[2] + margin
+		self._widgets_by_name.difficulty_stepper.offset[2] = widget.offset[2] + widget.content.size[2] + margin
+	end
+
 	self._widgets_by_name.objective_2.visible = false
 	self._widgets_by_name.difficulty_stepper.visible = true
 	self._widgets_by_name.difficulty_stepper_window.visible = true
@@ -1235,6 +1304,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	self:_reset_selection()
 
 	self._selected_mission = mission
+
 	local selected_mission_id = mission.id
 	local mission_widgets = self._mission_widgets
 
@@ -1245,6 +1315,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 			local content = widget.content
 			local widget_mission = content.mission
 			local is_selected = widget_mission.id == selected_mission_id
+
 			content.hotspot.is_selected_mission_board = is_selected
 
 			if is_selected and move_gamepad_cursor then
@@ -1254,166 +1325,143 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	end
 
 	self._quickplay_widget.content.hotspot.is_selected_mission_board = false
+
 	local is_locked = self._player_level < mission.requiredLevel
 	local xp = mission.xp
 	local credits = mission.credits
 	local mission_template = MissionTemplates[mission.map]
-	local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
-	local widget = self._widgets_by_name.detail
-	widget.dirty = true
-	widget.visible = true
-	local content = widget.content
-	local style = widget.style
-	local mission_type = MissionTypes[mission_template.mission_type]
-	content.header_icon = mission_type.icon
-	content.header_subtitle = Localize(Zones[mission_template.zone_id].name)
-	content.header_title = Localize(mission_template.mission_name)
-	content.danger = danger
-	content.is_locked = is_locked
-	content.start_game_time = mission.start_game_time
-	content.expiry_game_time = mission.expiry_game_time
-	content.is_flash = mission.flags.flash
-	local circumstance = mission.circumstance
 
-	if circumstance ~= "default" then
-		local circumstance_template = CircumstanceTemplates[circumstance]
-		local circumstance_ui_data = circumstance_template and circumstance_template.ui
+	do
+		local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
+		local widget = self._widgets_by_name.detail
 
-		if circumstance_ui_data then
-			content.has_circumstance = true
-			content.circumstance_name = Localize(circumstance_ui_data.display_name)
-			content.circumstance_description = Localize(circumstance_ui_data.description)
-			content.circumstance_icon = circumstance_ui_data.icon
-			local description_margin = 5
-			local default_height = 100
-			local description_text_box_size = {
-				self._ui_scenegraph.detail_circumstance.size[1],
-				default_height
-			}
-			local title_style_options = UIFonts.get_font_options_by_style(style.circumstance_name)
-			local description_style_options = UIFonts.get_font_options_by_style(style.circumstance_description)
-			local title_size = {
-				description_text_box_size[1] + style.circumstance_name.size_addition[1],
-				description_text_box_size[2] + style.circumstance_name.size_addition[2]
-			}
-			local description_size = {
-				description_text_box_size[1] + style.circumstance_description.size_addition[1],
-				description_text_box_size[2] + style.circumstance_description.size_addition[2]
-			}
-			local circumstance_name_width, circumstance_name_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_name, style.circumstance_name.font_type, style.circumstance_name.font_size, title_size, title_style_options)
-			local circumstance_description_width, circumstance_description_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_description, style.circumstance_description.font_type, style.circumstance_description.font_size, description_size, description_style_options)
-			local title_height = circumstance_name_height - style.circumstance_name.size_addition[2]
-			local description_height = circumstance_description_height - style.circumstance_description.size_addition[2]
-			style.circumstance_name.size = {
-				title_size[1] - style.circumstance_name.size_addition[1],
-				title_height
-			}
-			style.circumstance_description.offset[2] = style.circumstance_name.offset[2] + title_height + description_margin
-			style.circumstance_description.size = {
-				description_size[1] - style.circumstance_description.size_addition[1],
-				description_height
-			}
-			local text_height = style.circumstance_description.offset[2] + style.circumstance_description.size[2]
+		widget.dirty = true
+		widget.visible = true
 
-			self:_set_scenegraph_size("detail_circumstance", nil, text_height + 30)
+		local content = widget.content
+		local style = widget.style
+		local mission_type = MissionTypes[mission_template.mission_type]
+
+		content.header_icon = mission_type.icon
+		content.header_subtitle = Localize(Zones[mission_template.zone_id].name)
+		content.header_title = Localize(mission_template.mission_name)
+		content.danger = danger
+		content.is_locked = is_locked
+		content.start_game_time = mission.start_game_time
+		content.expiry_game_time = mission.expiry_game_time
+		content.is_flash = mission.flags.flash
+
+		local circumstance = mission.circumstance
+
+		if circumstance ~= "default" then
+			local circumstance_template = CircumstanceTemplates[circumstance]
+			local circumstance_ui_data = circumstance_template and circumstance_template.ui
+
+			if circumstance_ui_data then
+				content.has_circumstance = true
+				content.circumstance_name = Localize(circumstance_ui_data.display_name)
+				content.circumstance_description = Localize(circumstance_ui_data.description)
+				content.circumstance_icon = circumstance_ui_data.icon
+
+				local description_margin = 5
+				local default_height = 100
+				local description_text_box_size = {
+					self._ui_scenegraph.detail_circumstance.size[1],
+					default_height,
+				}
+				local title_style_options = UIFonts.get_font_options_by_style(style.circumstance_name)
+				local description_style_options = UIFonts.get_font_options_by_style(style.circumstance_description)
+				local title_size = {
+					description_text_box_size[1] + style.circumstance_name.size_addition[1],
+					description_text_box_size[2] + style.circumstance_name.size_addition[2],
+				}
+				local description_size = {
+					description_text_box_size[1] + style.circumstance_description.size_addition[1],
+					description_text_box_size[2] + style.circumstance_description.size_addition[2],
+				}
+				local circumstance_name_width, circumstance_name_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_name, style.circumstance_name.font_type, style.circumstance_name.font_size, title_size, title_style_options)
+				local circumstance_description_width, circumstance_description_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_description, style.circumstance_description.font_type, style.circumstance_description.font_size, description_size, description_style_options)
+				local title_height = circumstance_name_height - style.circumstance_name.size_addition[2]
+				local description_height = circumstance_description_height - style.circumstance_description.size_addition[2]
+
+				style.circumstance_name.size = {
+					title_size[1] - style.circumstance_name.size_addition[1],
+					title_height,
+				}
+				style.circumstance_description.offset[2] = style.circumstance_name.offset[2] + title_height + description_margin
+				style.circumstance_description.size = {
+					description_size[1] - style.circumstance_description.size_addition[1],
+					description_height,
+				}
+
+				local text_height = style.circumstance_description.offset[2] + style.circumstance_description.size[2]
+
+				self:_set_scenegraph_size("detail_circumstance", nil, text_height + 30)
+			else
+				content.has_circumstance = false
+				content.circumstance_icon = nil
+			end
+
+			local extraRewards = mission.extraRewards and mission.extraRewards.circumstance
+
+			xp = extraRewards and extraRewards.xp and extraRewards.xp + xp or xp
+
+			if extraRewards and extraRewards.credits then
+				credits = extraRewards.credits + credits or credits
+			end
 		else
-			content.has_circumstance = false
 			content.circumstance_icon = nil
 		end
 
-		local extraRewards = mission.extraRewards and mission.extraRewards.circumstance
+		local location_image_material_values = widget.style.location_image.material_values
 
-		if extraRewards and extraRewards.xp then
-			xp = extraRewards.xp + xp or xp
-		end
+		location_image_material_values.texture_map = mission_template.texture_big
+		location_image_material_values.show_static = is_locked and 1 or 0
+		style.bonus_title.visible = false
 
-		if extraRewards and extraRewards.credits then
-			credits = extraRewards.credits + credits or credits
+		if self._bonus_widgets then
+			for i = 1, #self._bonus_widgets do
+				local widget = self._bonus_widgets[i]
+
+				self:_unregister_widget_name(widget.name)
+			end
+
+			self._bonus_widgets = nil
 		end
-	else
-		content.circumstance_icon = nil
 	end
 
-	local location_image_material_values = widget.style.location_image.material_values
-	location_image_material_values.texture_map = mission_template.texture_big
-	location_image_material_values.show_static = is_locked and 1 or 0
-	style.bonus_title.visible = false
+	do
+		local vo_profile = mission.missionGiver or mission_template.mission_brief_vo.vo_profile
+		local speaker_settings = DialogueSpeakerVoiceSettings[vo_profile]
+		local mission_type = MissionTypes[mission_template.mission_type]
+		local widget = self._widgets_by_name.objective_1
 
-	if self._bonus_widgets then
-		for i = 1, #self._bonus_widgets do
-			local widget = self._bonus_widgets[i]
+		widget.dirty = true
+		widget.visible = true
 
-			self:_unregister_widget_name(widget.name)
-		end
-
-		self._bonus_widgets = nil
-	end
-
-	local vo_profile = mission.missionGiver or mission_template.mission_brief_vo.vo_profile
-	local speaker_settings = DialogueSpeakerVoiceSettings[vo_profile]
-	local mission_type = MissionTypes[mission_template.mission_type]
-	local widget = self._widgets_by_name.objective_1
-	widget.dirty = true
-	widget.visible = true
-	local content = widget.content
-	local style = widget.style
-	content.header_icon = mission_type.icon
-	content.header_subtitle = Localize(mission_type.name)
-	content.body_text = Localize(mission_template.mission_description)
-	content.speaker_icon = speaker_settings.material_small
-	content.speaker_text = "/ " .. Localize(speaker_settings.full_name)
-	content.xp = TextUtils.format_currency(xp)
-	content.credits = TextUtils.format_currency(credits)
-	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
-	local margin = 20
-	local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
-	local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
-	local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
-		max_width,
-		1080
-	}, description_style_options)
-	widget.content.size = {
-		self._ui_scenegraph.objective.size[1],
-		self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing
-	}
-	widget.style.reward_background.offset[2] = widget.content.size[2]
-	widget.style.reward_gradient.offset[2] = widget.content.size[2]
-	widget.style.reward_frame.offset[2] = widget.content.size[2]
-	widget.style.reward_icon.offset[2] = widget.content.size[2]
-	widget.style.reward_text.offset[2] = widget.content.size[2]
-	widget.style.speaker_frame.offset[2] = widget.content.size[2]
-	widget.style.speaker_corner.offset[2] = widget.content.size[2]
-	widget.style.speaker_icon.offset[2] = widget.content.size[2]
-	widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
-	local side_mission_template = MissionObjectiveTemplates.side_mission.objectives[mission.sideMission]
-	local widget = self._widgets_by_name.objective_2
-	widget.dirty = true
-	widget.visible = mission.flags.side and side_mission_template
-
-	if widget.visible then
-		local extraRewards = mission.extraRewards.sideMission
 		local content = widget.content
 		local style = widget.style
-		content.header_icon = side_mission_template.icon
-		content.header_subtitle = Localize(side_mission_template.header)
-		content.body_text = Localize(side_mission_template.description)
-		content.speaker_text = nil
-		content.speaker_icon = nil
-		content.xp = extraRewards and extraRewards.xp or 0
-		content.credits = extraRewards and extraRewards.credits or 0
-		content.xp = TextUtils.format_currency(content.xp)
-		content.credits = TextUtils.format_currency(content.credits)
+
+		content.header_icon = mission_type.icon
+		content.header_subtitle = Localize(mission_type.name)
+		content.body_text = Localize(mission_template.mission_description)
+		content.speaker_icon = speaker_settings.material_small
+		content.speaker_text = "/ " .. Localize(speaker_settings.full_name)
+		content.xp = TextUtils.format_currency(xp)
+		content.credits = TextUtils.format_currency(credits)
+
 		local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
 		local margin = 20
 		local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
 		local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
 		local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
 			max_width,
-			1080
+			1080,
 		}, description_style_options)
+
 		widget.content.size = {
 			self._ui_scenegraph.objective.size[1],
-			self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing
+			self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing,
 		}
 		widget.style.reward_background.offset[2] = widget.content.size[2]
 		widget.style.reward_gradient.offset[2] = widget.content.size[2]
@@ -1423,7 +1471,54 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		widget.style.speaker_frame.offset[2] = widget.content.size[2]
 		widget.style.speaker_corner.offset[2] = widget.content.size[2]
 		widget.style.speaker_icon.offset[2] = widget.content.size[2]
-		widget.offset[2] = self._widgets_by_name.objective_1.offset[2] + self._widgets_by_name.objective_1.content.size[2] + margin
+		widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
+	end
+
+	do
+		local side_mission_template = MissionObjectiveTemplates.side_mission.objectives[mission.sideMission]
+		local widget = self._widgets_by_name.objective_2
+
+		widget.dirty = true
+		widget.visible = mission.flags.side and side_mission_template
+
+		if widget.visible then
+			local extraRewards = mission.extraRewards.sideMission
+			local content = widget.content
+			local style = widget.style
+
+			content.header_icon = side_mission_template.icon
+			content.header_subtitle = Localize(side_mission_template.header)
+			content.body_text = Localize(side_mission_template.description)
+			content.speaker_text = nil
+			content.speaker_icon = nil
+			content.xp = extraRewards and extraRewards.xp or 0
+			content.credits = extraRewards and extraRewards.credits or 0
+			content.xp = TextUtils.format_currency(content.xp)
+			content.credits = TextUtils.format_currency(content.credits)
+
+			local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
+			local margin = 20
+			local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
+			local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
+			local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
+				max_width,
+				1080,
+			}, description_style_options)
+
+			widget.content.size = {
+				self._ui_scenegraph.objective.size[1],
+				self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing,
+			}
+			widget.style.reward_background.offset[2] = widget.content.size[2]
+			widget.style.reward_gradient.offset[2] = widget.content.size[2]
+			widget.style.reward_frame.offset[2] = widget.content.size[2]
+			widget.style.reward_icon.offset[2] = widget.content.size[2]
+			widget.style.reward_text.offset[2] = widget.content.size[2]
+			widget.style.speaker_frame.offset[2] = widget.content.size[2]
+			widget.style.speaker_corner.offset[2] = widget.content.size[2]
+			widget.style.speaker_icon.offset[2] = widget.content.size[2]
+			widget.offset[2] = self._widgets_by_name.objective_1.offset[2] + self._widgets_by_name.objective_1.content.size[2] + margin
+		end
 	end
 
 	self._widgets_by_name.difficulty_stepper.visible = false
@@ -1593,6 +1688,7 @@ MissionBoardView._join_mission_data = function (self)
 	end
 
 	self._has_queued_missions = false
+
 	local earliest_queued_mission_show_time = math.huge
 	local t = Managers.time:time("main")
 	local mission_small_widget_template = MissionBoardViewDefinitions.widget_definitions_functions.mission_small_widget_pass_function(self._selected_mission_type or "normal")
@@ -1600,57 +1696,70 @@ MissionBoardView._join_mission_data = function (self)
 	local has_story_mission_changed = false
 
 	for i = 1, #missions do
-		local mission = missions[i]
+		do
+			local mission = missions[i]
 
-		if widgets_by_name[mission.id] then
-			-- Nothing
-		elseif t < mission.start_game_time then
-			local server_time = Managers.backend:get_server_time(t)
-
-			Log.info("MissionBoardView", "Not showing mission '%s', it's from the future, (%s>%s)", mission.id, tostring(mission.start_server_time), tostring(server_time))
-
-			self._has_queued_missions = true
-			earliest_queued_mission_show_time = math.min(mission.start_game_time, earliest_queued_mission_show_time)
-		elseif mission.flags.flash and not has_flash_mission_changed then
-			if not self._flash_mission_widget or not self._flash_mission_widget.content.mission or self._flash_mission_widget.content.mission.id ~= mission.id then
-				if not self._flash_mission_widget then
-					local mission_medium_widget_template = MissionBoardViewDefinitions.widget_definitions_functions.mission_medium_widget_pass_function(self._selected_mission_type or "normal")
-					self._flash_mission_widget = self:_create_widget("flash", mission_medium_widget_template)
-					self._flash_mission_widget.content.title = Localize("loc_mission_board_maelstrom_header")
-					local mission_type = self._selected_mission_type or "normal"
-					self._flash_mission_widget.offset[1] = MissionBoardViewSettings.mission_positions[mission_type].flash_mission_position[1]
-					self._flash_mission_widget.offset[2] = MissionBoardViewSettings.mission_positions[mission_type].flash_mission_position[2]
-				end
-
-				self._flash_mission_widget.visible = false
-
-				if self:_populate_mission_widget(self._flash_mission_widget, mission, self._flash_mission_widget.offset, true) then
-					self:_start_animation("mission_enter", self._flash_mission_widget, self, nil, 1, math.random_range(0, 0.5))
-					table.insert(mission_widgets, 1, self._flash_mission_widget)
-				end
-			end
-
-			has_flash_mission_changed = true
-		else
-			local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
-			local position = self:_get_free_position(mission.displayIndex, danger)
-
-			if position then
-				local widget = self:_create_widget(mission.id, mission_small_widget_template)
-
-				if self:_populate_mission_widget(widget, mission, position) then
-					widget.visible = false
-
-					self:_start_animation("mission_enter", widget, self, nil, 1, math.random_range(0, 0.5))
-
-					mission_widgets[#mission_widgets + 1] = widget
-				end
+			if widgets_by_name[mission.id] then
+				-- Nothing
 			else
-				Log.info("MissionBoardView", "Not showing mission '%s', due to lack of free spots", mission.id)
+				if t < mission.start_game_time then
+					local server_time = Managers.backend:get_server_time(t)
 
-				self._has_queued_missions = true
+					Log.info("MissionBoardView", "Not showing mission '%s', it's from the future, (%s>%s)", mission.id, tostring(mission.start_server_time), tostring(server_time))
+
+					self._has_queued_missions = true
+					earliest_queued_mission_show_time = math.min(mission.start_game_time, earliest_queued_mission_show_time)
+
+					goto label_1_0
+				end
+
+				if mission.flags.flash and not has_flash_mission_changed then
+					if not self._flash_mission_widget or not self._flash_mission_widget.content.mission or self._flash_mission_widget.content.mission.id ~= mission.id then
+						if not self._flash_mission_widget then
+							local mission_medium_widget_template = MissionBoardViewDefinitions.widget_definitions_functions.mission_medium_widget_pass_function(self._selected_mission_type or "normal")
+
+							self._flash_mission_widget = self:_create_widget("flash", mission_medium_widget_template)
+							self._flash_mission_widget.content.title = Localize("loc_mission_board_maelstrom_header")
+
+							local mission_type = self._selected_mission_type or "normal"
+
+							self._flash_mission_widget.offset[1] = MissionBoardViewSettings.mission_positions[mission_type].flash_mission_position[1]
+							self._flash_mission_widget.offset[2] = MissionBoardViewSettings.mission_positions[mission_type].flash_mission_position[2]
+						end
+
+						self._flash_mission_widget.visible = false
+
+						if self:_populate_mission_widget(self._flash_mission_widget, mission, self._flash_mission_widget.offset, true) then
+							self:_start_animation("mission_enter", self._flash_mission_widget, self, nil, 1, math.random_range(0, 0.5))
+							table.insert(mission_widgets, 1, self._flash_mission_widget)
+						end
+					end
+
+					has_flash_mission_changed = true
+				else
+					local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
+					local position = self:_get_free_position(mission.displayIndex, danger)
+
+					if position then
+						local widget = self:_create_widget(mission.id, mission_small_widget_template)
+
+						if self:_populate_mission_widget(widget, mission, position) then
+							widget.visible = false
+
+							self:_start_animation("mission_enter", widget, self, nil, 1, math.random_range(0, 0.5))
+
+							mission_widgets[#mission_widgets + 1] = widget
+						end
+					else
+						Log.info("MissionBoardView", "Not showing mission '%s', due to lack of free spots", mission.id)
+
+						self._has_queued_missions = true
+					end
+				end
 			end
 		end
+
+		::label_1_0::
 	end
 
 	self._queued_mission_show_time = earliest_queued_mission_show_time
@@ -1679,6 +1788,7 @@ MissionBoardView._get_free_position = function (self, preferred_index, prefered_
 
 		if position then
 			local position_index = position.index
+
 			free_widget_positions[position_index] = false
 
 			return position
@@ -1702,21 +1812,29 @@ end
 MissionBoardView._populate_mission_widget = function (self, widget, mission, position, is_medium_widget)
 	local map = mission.map
 	local mission_template = MissionTemplates[map]
+
 	widget.offset[1] = position[1]
 	widget.offset[2] = position[2]
+
 	local content = widget.content
 	local style = widget.style
+
 	content.mission = mission
 	content.position = position
 	style.mission_line.size[2] = position.length or 800 - position[2]
+
 	local seed = math.floor(3511 * mission.start_game_time) + 68927 * math.floor(mission.expiry_game_time)
 	local is_locked = self._player_level < mission.requiredLevel
 	local location_image_material_values = style.location_image.material_values
+
 	location_image_material_values.texture_map = is_medium_widget and mission_template.texture_medium or mission_template.texture_small
 	location_image_material_values.show_static = is_locked and 1 or 0
+
 	local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
+
 	content.danger = danger
 	content.is_locked = is_locked
+
 	local completed_danger = self:_mission_highest_completed_danger(map)
 
 	if completed_danger and completed_danger > 0 then
@@ -1746,8 +1864,11 @@ MissionBoardView._populate_mission_widget = function (self, widget, mission, pos
 	end
 
 	local mission_type = MissionTypes[mission_template.mission_type]
+
 	content.objective_1_icon = mission_type.icon
+
 	local side_mission_template = MissionObjectiveTemplates.side_mission.objectives[mission.sideMission]
+
 	content.objective_2_icon = mission.flags.side and side_mission_template and side_mission_template.icon
 	content.start_game_time = mission.start_game_time
 	content.expiry_game_time = mission.expiry_game_time
@@ -1778,6 +1899,7 @@ MissionBoardView.event_register_camera = function (self, camera_unit)
 	Managers.event:unregister(self, "event_register_camera")
 
 	local world_spawner_settings = MissionBoardViewSettings.world_spawner_settings
+
 	self._camera_unit = camera_unit
 
 	self._world_spawner:create_viewport(camera_unit, world_spawner_settings.viewport_name, world_spawner_settings.viewport_type, world_spawner_settings.viewport_layer, world_spawner_settings.viewport_shading_environment)
@@ -1791,7 +1913,7 @@ MissionBoardView._update_fetch_missions = function (self, t)
 		self:_join_mission_data()
 
 		return
-	elseif self._has_queued_missions and self._queued_mission_show_time <= t then
+	elseif self._has_queued_missions and t >= self._queued_mission_show_time then
 		self:_join_mission_data()
 
 		return
@@ -1800,6 +1922,7 @@ MissionBoardView._update_fetch_missions = function (self, t)
 	end
 
 	self._is_fetching_missions = true
+
 	local missions_future = self:_cancel_promise_on_exit(Managers.data_service.mission_board:fetch(nil, 1))
 
 	missions_future:next(function (mission_data)
@@ -1839,6 +1962,7 @@ MissionBoardView._fetch_success = function (self, data)
 	local has_story_mission = not not narrative_mission
 	local mission_giver = narrative_mission and narrative_mission.missionGiver
 	local speaker_settings = mission_giver and DialogueSpeakerVoiceSettings[mission_giver]
+
 	self._widgets_by_name.story_mission_view_button.content.visible = has_story_mission
 	self._widgets_by_name.story_mission_view_button_frame.content.visible = has_story_mission
 
@@ -1846,7 +1970,7 @@ MissionBoardView._fetch_success = function (self, data)
 		self._widgets_by_name.story_mission_view_button_frame.style.char.material_values.main_texture = speaker_settings.icon
 		self._widgets_by_name.story_mission_view_button_frame.style.char.size = {
 			120,
-			120
+			120,
 		}
 	end
 
@@ -1893,14 +2017,16 @@ MissionBoardView._add_bonus_data = function (self)
 
 			if min_bonus == max_bonus then
 				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
-					bonus_text = tostring(max_bonus)
+					bonus_text = tostring(max_bonus),
 				})
+
 				self._quickplay_widget.content.bonus = localized_bonus
 			else
 				local bonus_range_text = string.format("%d-%d", min_bonus, max_bonus)
 				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
-					bonus_text = bonus_range_text
+					bonus_text = bonus_range_text,
 				})
+
 				self._quickplay_widget.content.bonus = localized_bonus
 			end
 		end
@@ -1916,14 +2042,16 @@ MissionBoardView._add_bonus_data = function (self)
 
 			if min_bonus == max_bonus then
 				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
-					bonus_text = tostring(max_bonus)
+					bonus_text = tostring(max_bonus),
 				})
+
 				self._flash_mission_widget.content.bonus = localized_bonus
 			else
 				local bonus_range_text = string.format("%d-%d", min_bonus, max_bonus)
 				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
-					bonus_text = bonus_range_text
+					bonus_text = bonus_range_text,
 				})
+
 				self._flash_mission_widget.content.bonus = localized_bonus
 			end
 		end
@@ -1939,14 +2067,16 @@ MissionBoardView._add_bonus_data = function (self)
 
 			if min_bonus == max_bonus then
 				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
-					bonus_text = tostring(max_bonus)
+					bonus_text = tostring(max_bonus),
 				})
+
 				self._story_mission_widget.content.bonus = localized_bonus
 			else
 				local bonus_range_text = string.format("%d-%d", min_bonus, max_bonus)
 				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
-					bonus_text = bonus_range_text
+					bonus_text = bonus_range_text,
 				})
+
 				self._story_mission_widget.content.bonus = localized_bonus
 			end
 		end
@@ -1987,15 +2117,16 @@ end
 
 MissionBoardView._callback_open_options = function (self, region_data)
 	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
-		on_destroy_callback = callback(self, "_callback_close_options")
+		on_destroy_callback = callback(self, "_callback_close_options"),
 	})
+
 	local regions_latency = self._regions_latency
 	local presentation_data = {
 		{
-			widget_type = "dropdown",
 			display_name = "loc_mission_board_view_options_Matchmaking_Location",
 			id = "region_matchmaking",
 			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
+			widget_type = "dropdown",
 			validation_function = function ()
 				return
 			end,
@@ -2034,7 +2165,7 @@ MissionBoardView._callback_open_options = function (self, region_data)
 						display_name = region_display_name,
 						ignore_localization = ignore_localization,
 						value = region_name,
-						latency_order = latency_data.min_latency
+						latency_order = latency_data.min_latency,
 					}
 				end
 
@@ -2046,11 +2177,11 @@ MissionBoardView._callback_open_options = function (self, region_data)
 			end,
 			on_changed = function (value)
 				BackendUtilities.prefered_mission_region = value
-			end
+			end,
 		},
 		{
-			id = "private_match",
 			display_name = "loc_private_tag_name",
+			id = "private_match",
 			tooltip_text = "loc_mission_board_view_options_private_game_desc",
 			widget_type = "checkbox",
 			start_value = self._private_match,
@@ -2062,8 +2193,8 @@ MissionBoardView._callback_open_options = function (self, region_data)
 			end,
 			on_changed = function (value)
 				self:_callback_toggle_private_matchmaking()
-			end
-		}
+			end,
+		},
 	}
 
 	self._mission_board_options:present(presentation_data)
@@ -2141,12 +2272,15 @@ MissionBoardView._filter_mission_board = function (self, board_type)
 
 	local localization_id = mission_type_data[self._selected_mission_type] and mission_type_data[self._selected_mission_type].title or mission_type_data.normal.title
 	local title = Localize(localization_id)
+
 	self._widgets_by_name.planet.content.title = title
 	self._backend_data.filtered_missions = filtered_missions
 end
 
 MissionBoardView._on_back_pressed = function (self)
-	if not self._mission_board_options then
+	if self._mission_board_options then
+		-- Nothing
+	else
 		self:_callback_close_view()
 	end
 end
@@ -2192,6 +2326,7 @@ MissionBoardView._callback_toggle_game_settings_visibility = function (self)
 
 	local new_state = not self._game_settings_visible
 	local animation_name = new_state and "game_settings_enter" or "game_settings_exit"
+
 	self._game_settings_animation_id = self:_start_animation(animation_name, self._widgets_by_name, self)
 	self._game_settings_visible = new_state
 end
@@ -2268,7 +2403,7 @@ MissionBoardView.fetch_regions = function (self)
 	local region_promise = Managers.backend.interfaces.region_latency:get_region_latencies()
 
 	self:_cancel_promise_on_exit(region_promise):next(function (regions_data)
-		local prefered_region_promise = nil
+		local prefered_region_promise
 
 		if BackendUtilities.prefered_mission_region == "" then
 			prefered_region_promise = self:_cancel_promise_on_exit(Managers.backend.interfaces.region_latency:get_preferred_reef())
@@ -2278,7 +2413,9 @@ MissionBoardView.fetch_regions = function (self)
 
 		prefered_region_promise:next(function (prefered_region)
 			BackendUtilities.prefered_mission_region = BackendUtilities.prefered_mission_region ~= "" and BackendUtilities.prefered_mission_region or prefered_region or regions_data[1].reefs[1]
+
 			local regions_latency = Managers.backend.interfaces.region_latency:get_reef_info_based_on_region_latencies(regions_data)
+
 			self._regions_latency = regions_latency
 		end)
 	end)

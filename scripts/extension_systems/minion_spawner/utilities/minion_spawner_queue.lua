@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minion_spawner/utilities/minion_spawner_queue.lua
+
 local MinionSpawnerQueue = class("MinionSpawnerQueue")
 
 MinionSpawnerQueue.init = function (self)
@@ -17,14 +19,17 @@ end
 
 MinionSpawnerQueue.enqueue = function (self, breed_list, spawn_data)
 	local queue_id = self._queue_id
+
 	self._queue_id = queue_id + 1
+
 	local queue = self._queue
+
 	queue[#queue + 1] = {
 		breed_list_index = 1,
 		queue_id = queue_id,
 		breed_list = breed_list,
 		breed_list_size = #breed_list,
-		spawn_data = table.set_readonly(spawn_data)
+		spawn_data = table.set_readonly(spawn_data),
 	}
 
 	return queue_id
@@ -86,10 +91,11 @@ MinionSpawnerQueue.get_debug_info = function (self)
 
 		for j = item.breed_list_index, item.breed_list_size do
 			local breed = breed_list[j]
+
 			debug_info[#debug_info + 1] = {
 				queue_id = queue_id,
 				breed = breed,
-				spawn_data = spawn_data
+				spawn_data = spawn_data,
 			}
 		end
 	end

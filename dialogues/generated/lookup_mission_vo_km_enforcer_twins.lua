@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_km_enforcer_twins.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "enemy_kill_monster_twins"
 DialogueLookup[DialogueLookup_n + 2] = "gas_cloud_a"
 DialogueLookup[DialogueLookup_n + 3] = "long_death_twin"

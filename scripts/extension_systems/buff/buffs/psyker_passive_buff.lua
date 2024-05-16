@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/psyker_passive_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local PsykerBiomancerPassiveBuff = class("PsykerBiomancerPassiveBuff", "ProcBuff")

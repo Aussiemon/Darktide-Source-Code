@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/action/chain_lightning_target.lua
+
 local GrowQueue = require("scripts/foundation/utilities/grow_queue")
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ChainLightningTarget = class("ChainLightningTarget")
@@ -9,10 +11,12 @@ ChainLightningTarget.init = function (self, chain_settings, optional_depth, use_
 
 	for i = 1, num_key_value_pairs, 2 do
 		local key, value = select(i, ...)
+
 		values[key] = value
 	end
 
 	local depth = optional_depth or 1
+
 	self._values = values
 	self._parent = optional_parent
 	self._children = {}
@@ -20,7 +24,9 @@ ChainLightningTarget.init = function (self, chain_settings, optional_depth, use_
 	self._chain_settings = chain_settings
 	self._has_variable_num_children = not not chain_settings.max_targets_at_time
 	self._use_random = use_random
+
 	local time_active = 0
+
 	self._max_num_children = ChainLightning.max_targets(time_active, chain_settings, depth + 1, use_random)
 	self._depth = depth
 	self._marked_for_deletion = false
@@ -43,6 +49,7 @@ ChainLightningTarget.add_child = function (self, on_add_func, func_context, ...)
 	end
 
 	local node = ChainLightningTarget:new(self._chain_settings, self._depth + 1, self._use_random, self, ...)
+
 	self._children[node] = node
 	self._num_children = new_num_children
 
@@ -130,6 +137,7 @@ ChainLightningTarget.recalculate_max_num_children = function (self, t, start_t)
 	end
 
 	local time_active = t - start_t
+
 	self._max_num_children = ChainLightning.max_targets(time_active, self._chain_settings, self._depth, self._use_random)
 end
 

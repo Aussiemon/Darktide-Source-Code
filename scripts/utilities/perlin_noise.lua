@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/utilities/perlin_noise.lua
+
 local PerlinNoise = {}
-local _noise, _smoothed_noise, _interpolated_noise = nil
+local _noise, _smoothed_noise, _interpolated_noise
 
 PerlinNoise.calculate_perlin_value = function (x, persistance, octaves, seed)
 	local total = 0

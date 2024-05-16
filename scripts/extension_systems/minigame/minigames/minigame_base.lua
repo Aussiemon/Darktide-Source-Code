@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minigame/minigames/minigame_base.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local MinigameBase = class("MinigameBase")
@@ -13,8 +15,10 @@ MinigameBase.init = function (self, unit, is_server, seed)
 
 	if is_server then
 		local unit_spawner_manager = Managers.state.unit_spawner
+
 		self._is_leve_unit = false
 		self._minigame_unit_id = nil
+
 		local game_object_id = unit_spawner_manager:game_object_id(unit)
 
 		if game_object_id then
@@ -147,8 +151,8 @@ MinigameBase.set_current_stage = function (self, stage)
 	if self._current_stage then
 		if stage < self._current_stage then
 			Unit.flow_event(self._minigame_unit, "lua_minigame_fail")
-		elseif self._current_stage < stage then
-			if self._stage_amount < stage then
+		elseif stage > self._current_stage then
+			if stage > self._stage_amount then
 				Unit.flow_event(self._minigame_unit, "lua_minigame_success_last")
 			else
 				Unit.flow_event(self._minigame_unit, "lua_minigame_success")

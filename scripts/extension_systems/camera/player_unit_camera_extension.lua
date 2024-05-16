@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/camera/player_unit_camera_extension.lua
+
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitCameraExtension = class("PlayerUnitCameraExtension")
 
@@ -5,7 +7,9 @@ PlayerUnitCameraExtension.init = function (self, extension_init_context, unit, e
 	self._unit = unit
 	self._use_third_person_hub_camera = not not extension_init_data.use_third_person_hub_camera
 	self._breed = extension_init_data.breed
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._assisted_state_input_component = unit_data_extension:read_component("assisted_state_input")
 	self._character_state_component = unit_data_extension:read_component("character_state")
@@ -28,10 +32,10 @@ PlayerUnitCameraExtension.fixed_update = function (self, unit, dt, t)
 end
 
 local NODE_IGNORE_SCALED_TRANSFORM_OFFSETS = {
-	consumed = true
+	consumed = true,
 }
 local NODE_OBJECT_NAMES = {
-	consumed = "j_hips"
+	consumed = "j_hips",
 }
 
 PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
@@ -48,7 +52,7 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 	local is_mutant_charged = disabling_type == "mutant_charged"
 	local is_grabbed = disabling_type == "grabbed"
 	local is_consumed = disabling_type == "consumed"
-	local tree, node = nil
+	local tree, node
 
 	if wants_first_person_camera then
 		local alternate_fire_is_active = self._alternate_fire_component.is_active
@@ -57,20 +61,7 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 		local have_sprint_over_time = sprint_overtime and sprint_overtime > 0
 		local is_lunging = self._lunge_character_state_component.is_lunging
 
-		if is_assisted then
-			node = "first_person_assisted"
-		elseif alternate_fire_is_active then
-			node = "aim_down_sight"
-		elseif wants_sprint_camera and have_sprint_over_time then
-			node = "sprint_overtime"
-		elseif wants_sprint_camera then
-			node = "sprint"
-		elseif is_lunging then
-			node = "lunge"
-		else
-			node = "first_person"
-		end
-
+		node = is_assisted and "first_person_assisted" or alternate_fire_is_active and "aim_down_sight" or wants_sprint_camera and have_sprint_over_time and "sprint_overtime" or wants_sprint_camera and "sprint" or is_lunging and "lunge" or "first_person"
 		tree = "first_person"
 	elseif self._use_third_person_hub_camera then
 		tree = "third_person_hub"
@@ -84,38 +75,26 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 		local is_disabled, requires_help = PlayerUnitStatus.is_disabled(character_state_component)
 		local is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
 
-		if is_hogtied then
-			node = "hogtied"
-		elseif is_ledge_hanging then
-			node = "ledge_hanging"
-		elseif is_grabbed then
-			node = "grabbed"
-		elseif is_pounced or is_netted or is_warp_grabbed or is_mutant_charged or is_grabbed then
-			node = "pounced"
-		elseif is_consumed then
-			node = "consumed"
-		elseif is_disabled and requires_help then
-			node = "disabled"
-		else
-			node = "third_person"
-		end
-
+		node = is_hogtied and "hogtied" or is_ledge_hanging and "ledge_hanging" or is_grabbed and "grabbed" or (is_pounced or is_netted or is_warp_grabbed or is_mutant_charged or is_grabbed) and "pounced" or is_consumed and "consumed" or is_disabled and requires_help and "disabled" or "third_person"
 		tree = "third_person"
 	end
 
 	local camera_tree_component = self._camera_tree_component
+
 	camera_tree_component.tree = tree
 	camera_tree_component.node = node
 	self._tree = tree
 	self._node = node
+
 	local object_name = NODE_OBJECT_NAMES[node]
-	local object = nil
+	local object
 
 	if object_name then
 		object = Unit.node(self._unit, object_name)
 	end
 
 	self._object = object
+
 	local ignore_offset = NODE_IGNORE_SCALED_TRANSFORM_OFFSETS[node]
 
 	if self._ignore_offset ~= ignore_offset then

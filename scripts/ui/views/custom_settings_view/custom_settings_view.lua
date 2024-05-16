@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/custom_settings_view/custom_settings_view.lua
+
 local Definitions = require("scripts/ui/views/custom_settings_view/custom_settings_view_definitions")
 local ContentBlueprints = require("scripts/ui/views/options_view/options_view_content_blueprints")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -131,12 +133,15 @@ CustomSettingsView.cb_on_settings_pressed = function (self, widget, entry)
 
 	if self._selected_settings_widget then
 		local selected_widget = self._selected_settings_widget
+
 		selected_widget.offset[3] = 0
+
 		local dependent_focus_ids = selected_widget.content and selected_widget.content.entry and selected_widget.content.entry.dependent_focus_ids
 
 		if dependent_focus_ids then
 			for i = 1, #dependent_focus_ids do
 				local id = dependent_focus_ids[i]
+
 				self._current_settings_widgets_by_id[id].offset[3] = 0
 			end
 		end
@@ -148,11 +153,13 @@ CustomSettingsView.cb_on_settings_pressed = function (self, widget, entry)
 
 		if selected_widget then
 			selected_widget.offset[3] = 90
+
 			local dependent_focus_ids = selected_widget.content.entry and selected_widget.content.entry.dependent_focus_ids
 
 			if dependent_focus_ids then
 				for i = 1, #dependent_focus_ids do
 					local id = dependent_focus_ids[i]
+
 					self._current_settings_widgets_by_id[id].offset[3] = 90
 				end
 			end
@@ -196,10 +203,13 @@ CustomSettingsView._setup_offscreen_gui = function (self)
 	local world_layer = 10
 	local world_name = class_name .. "_ui_offscreen_world"
 	local view_name = self.view_name
+
 	self._offscreen_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
 	local viewport_type = "overlay_offscreen_2"
 	local viewport_layer = 1
+
 	self._offscreen_viewport = ui_manager:create_viewport(self._offscreen_world, viewport_name, viewport_type, viewport_layer)
 	self._offscreen_viewport_name = viewport_name
 	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._offscreen_world)
@@ -227,6 +237,7 @@ CustomSettingsView._draw_grid = function (self, dt, t, input_service)
 
 	for j = 1, #widgets do
 		local widget = widgets[j]
+
 		ui_renderer.input_service = self._selected_settings_widget and self._selected_settings_widget ~= widget and null_input_service or input_service
 
 		if grid:is_widget_visible(widget) then
@@ -234,6 +245,7 @@ CustomSettingsView._draw_grid = function (self, dt, t, input_service)
 
 			if hotspot then
 				hotspot.force_disabled = not is_grid_hovered
+
 				local is_active = hotspot.is_focused or hotspot.is_hover
 
 				if is_active and widget.content.entry and (widget.content.entry.tooltip_text or widget.content.entry.disabled_by and not table.is_empty(widget.content.entry.disabled_by)) then
@@ -250,7 +262,7 @@ end
 
 CustomSettingsView._set_tooltip_data = function (self, widget)
 	local current_widget = self._tooltip_data and self._tooltip_data.widget
-	local localized_text = nil
+	local localized_text
 	local tooltip_text = widget.content.entry.tooltip_text
 	local disabled_by_list = widget.content.entry.disabled_by
 
@@ -278,21 +290,23 @@ CustomSettingsView._set_tooltip_data = function (self, widget)
 	if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
 		self._tooltip_data = {
 			widget = widget,
-			text = localized_text
+			text = localized_text,
 		}
 		self._widgets_by_name.tooltip.content.text = localized_text
+
 		local text_style = self._widgets_by_name.tooltip.style.text
 		local x_pos = starting_point[1] + widget.offset[1]
 		local width = widget.content.size[1] * 0.5
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
 			width,
-			0
+			0,
 		}, text_options)
 		local height = text_height
+
 		self._widgets_by_name.tooltip.content.size = {
 			width,
-			height
+			height,
 		}
 		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
 		self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
@@ -344,6 +358,7 @@ CustomSettingsView._setup_page_grid = function (self, config)
 	for setting_index, setting in ipairs(config) do
 		local widget_suffix = "setting_" .. tostring(setting_index)
 		local widget, alignment_widget = self:_create_settings_widget_from_config(setting, widget_suffix, callback_name, changed_callback_name)
+
 		widgets[#widgets + 1] = widget
 		alignment_widgets[#alignment_widgets + 1] = alignment_widget
 
@@ -358,9 +373,11 @@ CustomSettingsView._setup_page_grid = function (self, config)
 	local grid_content_pivot = "grid_content_pivot"
 	local grid_spacing = {
 		0,
-		10
+		10,
 	}
+
 	self._grid = UIWidgetGrid:new(widgets, alignment_widgets, ui_scenegraph, grid_scenegraph_id, direction, grid_spacing)
+
 	local widgets_by_name = self._widgets_by_name
 	local scrollbar_widget = widgets_by_name.grid_content_scrollbar
 
@@ -396,22 +413,22 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 		return nil, {
 			size = {
 				settings_grid_width,
-				20
-			}
+				20,
+			},
 		}
 	elseif widget_type == "large_spacing" then
 		return nil, {
 			size = {
 				settings_grid_width,
-				50
-			}
+				50,
+			},
 		}
 	elseif widget_type == "extra_large_spacing" then
 		return nil, {
 			size = {
 				settings_grid_width,
-				100
-			}
+				100,
+			},
 		}
 	elseif not widget_type then
 		if options then
@@ -423,15 +440,7 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 				local value = get_function(config)
 				local value_type = value ~= nil and type(value) or default_value_type
 
-				if value_type == "boolean" then
-					widget_type = "checkbox"
-				elseif value_type == "number" then
-					widget_type = "value_slider"
-				elseif value_type == "string" then
-					widget_type = "settings_button"
-				else
-					widget_type = "settings_button"
-				end
+				widget_type = value_type == "boolean" and "checkbox" or value_type == "number" and "value_slider" or value_type == "string" and "settings_button" or "settings_button"
 			end
 		end
 	end
@@ -440,15 +449,17 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 		config.ignore_focus = true
 	end
 
-	local widget = nil
+	local widget
 	local template = ContentBlueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config) or template.size
+
 	config.size = size
+
 	local indentation_level = config.indentation_level or 0
 	local indentation_spacing = OptionsViewSettings.indentation_spacing * indentation_level
 	local new_size = {
 		size[1] - indentation_spacing,
-		size[2]
+		size[2],
 	}
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
@@ -458,6 +469,7 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 	if widget_definition then
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
+
 		local init = template.init
 
 		if init then
@@ -473,14 +485,14 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 		return widget, {
 			size = {
 				size[1] + (config.alignment and config.alignment.size and config.alignment.size[1] or 0),
-				size[2] + (config.alignment and config.alignment.size and config.alignment.size[2] or 0)
+				size[2] + (config.alignment and config.alignment.size and config.alignment.size[2] or 0),
 			},
 			name = name,
-			horizontal_alignment = config.alignment and config.alignment.horizontal_alignment or "right"
+			horizontal_alignment = config.alignment and config.alignment.horizontal_alignment or "right",
 		}
 	else
 		return nil, {
-			size = size
+			size = size,
 		}
 	end
 end
@@ -501,11 +513,13 @@ CustomSettingsView._handle_input = function (self, input_service, dt, t)
 
 		if input_service:get("navigate_down_continuous") and selected_widget < #self._current_settings_widgets then
 			self._selected_index = selected_widget + 1
+
 			local scroll_progress = self._grid:get_scrollbar_percentage_by_index(self._selected_index)
 
 			self._grid:select_grid_index(self._selected_index, true, scroll_progress, true)
 		elseif input_service:get("navigate_up_continuous") and selected_widget > 1 then
 			self._selected_index = selected_widget - 1
+
 			local scroll_progress = self._grid:get_scrollbar_percentage_by_index(self._selected_index)
 
 			self._grid:select_grid_index(self._selected_index, true, scroll_progress, true)
@@ -531,13 +545,15 @@ end
 
 CustomSettingsView._set_exclusive_focus_on_grid_widget = function (self, widget_name)
 	local widgets = self._current_settings_widgets
-	local selected_widget = nil
+	local selected_widget
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
 		local selected = widget.name == widget_name
 		local content = widget.content
+
 		content.exclusive_focus = selected
+
 		local hotspot = content.hotspot or content.button_hotspot
 
 		if hotspot then
@@ -550,6 +566,7 @@ CustomSettingsView._set_exclusive_focus_on_grid_widget = function (self, widget_
 	end
 
 	self._selected_settings_widget = selected_widget
+
 	local has_exclusive_focus = selected_widget ~= nil and not self._using_cursor_navigation
 
 	self:_enable_settings_overlay(has_exclusive_focus)
@@ -561,6 +578,7 @@ end
 CustomSettingsView._enable_settings_overlay = function (self, enable)
 	local widgets_by_name = self._widgets_by_name
 	local settings_overlay_widget = widgets_by_name.settings_overlay
+
 	settings_overlay_widget.content.visible = enable
 end
 
@@ -569,7 +587,7 @@ CustomSettingsView.set_exclusive_focus_on_grid_widget = function (self, widget_n
 end
 
 CustomSettingsView._set_selected_grid_widget = function (self, widgets, widget_name)
-	local selected_widget, selected_widget_index = nil
+	local selected_widget, selected_widget_index
 
 	for i = 1, #widgets do
 		local widget = widgets[i]

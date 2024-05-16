@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/host_states/host_determine_spawn_group_state.lua
+
 local HostDetermineSpawnGroupState = class("HostDetermineSpawnGroupState")
 
 HostDetermineSpawnGroupState.init = function (self, state_machine, shared_state)

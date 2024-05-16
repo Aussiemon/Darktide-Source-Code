@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/terror_event/terror_event_nodes.lua
+
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local BreedQueries = require("scripts/utilities/breed_queries")
 local Breeds = require("scripts/settings/breed/breeds")
@@ -5,251 +7,257 @@ local MinionAttackSelection = require("scripts/utilities/minion_attack_selection
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local aggro_states = PerceptionSettings.aggro_states
-local TerrorEventNodes = {
-	debug_print = {
-		init = function (node, event, t)
-			event.scratchpad.ends_at = t + node.duration
-		end,
-		update = function (node, scratchpad, t, dt)
-			if t > scratchpad.ends_at then
-				return true
-			end
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
-		end
-	},
-	delay = {
-		init = function (node, event, t)
-			local duration = node.duration
-			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_duration_modifier)
-			duration = duration * difficulty_scale
-			event.scratchpad.ends_at = t + duration
-		end,
-		update = function (node, scratchpad, t, dt)
-			if scratchpad.ends_at < t then
-				return true
-			end
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
-		end
-	},
-	continue_when = {
-		init = function (node, event, t)
-			if node.duration then
-				event.scratchpad.ends_at = t + node.duration
-			end
-		end,
-		update = function (node, scratchpad, t, dt)
-			local ends_at = scratchpad.ends_at
+local TerrorEventNodes = {}
 
-			if ends_at and ends_at < t then
-				return true
-			end
-
-			return node.condition()
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			if node.duration then
-				return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
-			end
-		end
-	},
-	start_terror_event = {
-		init = function (node, event, t)
-			local terror_event_manager = Managers.state.terror_event
-			local start_event_name = node.start_event_name
-			local seed = nil
-
-			terror_event_manager:start_event(start_event_name, seed)
-		end,
-		update = function (node, scratchpad, t, dt)
+TerrorEventNodes.debug_print = {
+	init = function (node, event, t)
+		event.scratchpad.ends_at = t + node.duration
+	end,
+	update = function (node, scratchpad, t, dt)
+		if t <= scratchpad.ends_at then
+			-- Nothing
+		else
 			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("%q", node.start_event_name)
 		end
-	},
-	start_random_terror_event = {
-		init = function (node, event, t)
-			local terror_event_manager = Managers.state.terror_event
-			local start_event_name = node.start_event_name
-
-			terror_event_manager:start_random_event(start_event_name)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("random event: %q", node.start_event_name)
-		end
-	},
-	stop_terror_event = {
-		init = function (node, event, t)
-			local terror_event_manager = Managers.state.terror_event
-			local stop_event_name = node.stop_event_name
-
-			terror_event_manager:stop_event(stop_event_name)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("%q", node.stop_event_name)
-		end
-	},
-	flow_event = {
-		init = function (node, event, t)
-			local flow_event_name = node.flow_event_name
-
-			Managers.state.terror_event:trigger_network_synced_level_flow(flow_event_name)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("%q", node.flow_event_name)
-		end
-	},
-	play_2d_sound = {
-		init = function (node, event, t)
-			local sound_event_name = node.sound_event_name
-			local fx_system = Managers.state.extension:system("fx_system")
-
-			fx_system:trigger_wwise_event(sound_event_name)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("%q", node.sound_event_name)
-		end
-	},
-	play_3d_sound_from_spawners = {
-		init = function (node, event, t)
-			local sound_event_name = node.sound_event_name
-			local fx_system = Managers.state.extension:system("fx_system")
-			local spawner_group = node.spawner_group
-			local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
-			local position = minion_spawn_system:average_position_of_spawners(spawner_group)
-
-			fx_system:trigger_wwise_event(sound_event_name, position)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("%q from spawners %q", node.sound_event_name, node.spawner_group)
-		end
-	},
-	set_specials_pacing_spawner_groups = {
-		init = function (node, event, t)
-			local pacing_manager = Managers.state.pacing
-
-			pacing_manager:set_specials_pacing_spawner_groups(node.spawner_groups)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("set_specials_pacing_spawner_groups %q", node.spawner_group)
-		end
-	},
-	reset_specials_pacing_spawner_groups = {
-		init = function (node, event, t)
-			local pacing_manager = Managers.state.pacing
-
-			pacing_manager:set_specials_pacing_spawner_groups(nil)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("reset_specials_pacing_spawner_groups")
-		end
-	},
-	control_pacing_spawns = {
-		init = function (node, event, t)
-			local pacing_manager = Managers.state.pacing
-			local spawn_types = node.spawn_types
-			local enabled = node.enabled
-
-			for i = 1, #spawn_types do
-				local spawn_type = spawn_types[i]
-
-				pacing_manager:pause_spawn_type(spawn_type, not enabled, "terror_event")
-			end
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			local spawn_types = node.spawn_types
-			local enabled = node.enabled
-			local names = ""
-
-			for i = 1, #spawn_types do
-				local spawn_type = spawn_types[i]
-				names = names .. spawn_type .. " "
-			end
-
-			return string.format("Controlling pacing spawn: %s => %s", names, enabled and "true" or "false")
-		end
-	},
-	freeze_specials_pacing = {
-		init = function (node, event, t)
-			local pacing_manager = Managers.state.pacing
-			local enabled = node.enabled
-
-			pacing_manager:freeze_specials_pacing(enabled)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			local enabled = node.enabled
-
-			return string.format("Freezing specials pacing => %s", enabled and "true" or "false")
-		end
-	},
-	set_pacing_enabled = {
-		init = function (node, event, t)
-			local pacing_manager = Managers.state.pacing
-			local enabled = node.enabled
-
-			pacing_manager:set_enabled(enabled)
-		end,
-		update = function (node, scratchpad, t, dt)
-			return true
-		end,
-		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
-			return string.format("Set pacing enabled: %s", node.enabled and "true" or "false")
-		end
-	}
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
+	end,
 }
+TerrorEventNodes.delay = {
+	init = function (node, event, t)
+		local duration = node.duration
+		local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_duration_modifier)
+
+		duration = duration * difficulty_scale
+		event.scratchpad.ends_at = t + duration
+	end,
+	update = function (node, scratchpad, t, dt)
+		if t > scratchpad.ends_at then
+			return true
+		end
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
+	end,
+}
+TerrorEventNodes.continue_when = {
+	init = function (node, event, t)
+		if node.duration then
+			event.scratchpad.ends_at = t + node.duration
+		end
+	end,
+	update = function (node, scratchpad, t, dt)
+		local ends_at = scratchpad.ends_at
+
+		if ends_at and ends_at < t then
+			return true
+		end
+
+		return node.condition()
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		if node.duration then
+			return not is_completed and string.format("(%.1f sec)", is_running and scratchpad.ends_at - t or node.duration)
+		end
+	end,
+}
+TerrorEventNodes.start_terror_event = {
+	init = function (node, event, t)
+		local terror_event_manager = Managers.state.terror_event
+		local start_event_name = node.start_event_name
+		local seed
+
+		terror_event_manager:start_event(start_event_name, seed)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("%q", node.start_event_name)
+	end,
+}
+TerrorEventNodes.start_random_terror_event = {
+	init = function (node, event, t)
+		local terror_event_manager = Managers.state.terror_event
+		local start_event_name = node.start_event_name
+
+		terror_event_manager:start_random_event(start_event_name)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("random event: %q", node.start_event_name)
+	end,
+}
+TerrorEventNodes.stop_terror_event = {
+	init = function (node, event, t)
+		local terror_event_manager = Managers.state.terror_event
+		local stop_event_name = node.stop_event_name
+
+		terror_event_manager:stop_event(stop_event_name)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("%q", node.stop_event_name)
+	end,
+}
+TerrorEventNodes.flow_event = {
+	init = function (node, event, t)
+		local flow_event_name = node.flow_event_name
+
+		Managers.state.terror_event:trigger_network_synced_level_flow(flow_event_name)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("%q", node.flow_event_name)
+	end,
+}
+TerrorEventNodes.play_2d_sound = {
+	init = function (node, event, t)
+		local sound_event_name = node.sound_event_name
+		local fx_system = Managers.state.extension:system("fx_system")
+
+		fx_system:trigger_wwise_event(sound_event_name)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("%q", node.sound_event_name)
+	end,
+}
+TerrorEventNodes.play_3d_sound_from_spawners = {
+	init = function (node, event, t)
+		local sound_event_name = node.sound_event_name
+		local fx_system = Managers.state.extension:system("fx_system")
+		local spawner_group = node.spawner_group
+		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+		local position = minion_spawn_system:average_position_of_spawners(spawner_group)
+
+		fx_system:trigger_wwise_event(sound_event_name, position)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("%q from spawners %q", node.sound_event_name, node.spawner_group)
+	end,
+}
+TerrorEventNodes.set_specials_pacing_spawner_groups = {
+	init = function (node, event, t)
+		local pacing_manager = Managers.state.pacing
+
+		pacing_manager:set_specials_pacing_spawner_groups(node.spawner_groups)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("set_specials_pacing_spawner_groups %q", node.spawner_group)
+	end,
+}
+TerrorEventNodes.reset_specials_pacing_spawner_groups = {
+	init = function (node, event, t)
+		local pacing_manager = Managers.state.pacing
+
+		pacing_manager:set_specials_pacing_spawner_groups(nil)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("reset_specials_pacing_spawner_groups")
+	end,
+}
+TerrorEventNodes.control_pacing_spawns = {
+	init = function (node, event, t)
+		local pacing_manager = Managers.state.pacing
+		local spawn_types = node.spawn_types
+		local enabled = node.enabled
+
+		for i = 1, #spawn_types do
+			local spawn_type = spawn_types[i]
+
+			pacing_manager:pause_spawn_type(spawn_type, not enabled, "terror_event")
+		end
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		local spawn_types = node.spawn_types
+		local enabled = node.enabled
+		local names = ""
+
+		for i = 1, #spawn_types do
+			local spawn_type = spawn_types[i]
+
+			names = names .. spawn_type .. " "
+		end
+
+		return string.format("Controlling pacing spawn: %s => %s", names, enabled and "true" or "false")
+	end,
+}
+TerrorEventNodes.freeze_specials_pacing = {
+	init = function (node, event, t)
+		local pacing_manager = Managers.state.pacing
+		local enabled = node.enabled
+
+		pacing_manager:freeze_specials_pacing(enabled)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		local enabled = node.enabled
+
+		return string.format("Freezing specials pacing => %s", enabled and "true" or "false")
+	end,
+}
+TerrorEventNodes.set_pacing_enabled = {
+	init = function (node, event, t)
+		local pacing_manager = Managers.state.pacing
+		local enabled = node.enabled
+
+		pacing_manager:set_enabled(enabled)
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end,
+	debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+		return string.format("Set pacing enabled: %s", node.enabled and "true" or "false")
+	end,
+}
+
 local TEMP_SPAWN_SIDE_NAME = "villains"
 local TEMP_TARGET_SIDE_NAME = "heroes"
 local GROUP_SOUNDS_BY_BREED_NAME = {
 	cultist_melee = {
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_cultists",
 		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_cultists",
-		start = "wwise/events/minions/play_minion_terror_event_group_sfx_cultists"
 	},
 	renegade_melee = {
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_traitor_guards",
 		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_traitor_guards",
-		start = "wwise/events/minions/play_minion_terror_event_group_sfx_traitor_guards"
 	},
 	chaos_newly_infected = {
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_newly_infected",
 		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_newly_infected",
-		start = "wwise/events/minions/play_minion_terror_event_group_sfx_newly_infected"
 	},
 	chaos_poxwalker = {
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_poxwalkers",
 		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_poxwalkers",
-		start = "wwise/events/minions/play_minion_terror_event_group_sfx_poxwalkers"
-	}
+	},
 }
 local MAX_TERROR_EVENT_THRESHOLD = 100
 local MAX_POINTS = 60
+
 TerrorEventNodes.spawn_by_points = {
 	init = function (node, event, t)
 		event.scratchpad.spawned_minion_data = event.spawned_minion_data
@@ -262,6 +270,7 @@ TerrorEventNodes.spawn_by_points = {
 		end
 
 		local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
+
 		terror_events_allowed = total_minions_spawned < MAX_TERROR_EVENT_THRESHOLD
 
 		if not terror_events_allowed then
@@ -270,6 +279,7 @@ TerrorEventNodes.spawn_by_points = {
 
 		if not scratchpad.started_spawn then
 			scratchpad.started_spawn = true
+
 			local breed_tags = node.breed_tags
 			local excluded_breed_tags = node.excluded_breed_tags
 			local tags_replacement = Managers.state.terror_event:get_tags_replacement()
@@ -300,9 +310,7 @@ TerrorEventNodes.spawn_by_points = {
 			local scaled_points = node.points * difficulty_scale * Managers.state.terror_event:get_terror_event_point_modifier() * ramp_up_timer_modifier
 			local points = math.min(scaled_points, MAX_POINTS)
 			local spawner_group = node.spawner_group
-			local proximity_spawners = node.proximity_spawners
-			local limit_spawners = node.limit_spawners
-			local inverse_proximity_spawners = node.inverse_proximity_spawners
+			local proximity_spawners, limit_spawners, inverse_proximity_spawners = node.proximity_spawners, node.limit_spawners, node.inverse_proximity_spawners
 			local delay_until_all_spawned = node.delay_until_all_spawned
 			local mission_objective_id = node.mission_objective_id
 			local spawn_side_name = node.side_name or TEMP_SPAWN_SIDE_NAME
@@ -328,7 +336,7 @@ TerrorEventNodes.spawn_by_points = {
 			local target_side = side_system:get_side_from_name(target_side_name)
 			local target_side_id = target_side.side_id
 			local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
-			local spawners = nil
+			local spawners
 			local proximity_spawning = proximity_spawners or inverse_proximity_spawners
 
 			if spawner_group then
@@ -341,11 +349,14 @@ TerrorEventNodes.spawn_by_points = {
 					for i = 1, num_valid_player_units do
 						local target_unit = valid_player_units[i]
 						local position = POSITION_LOOKUP[target_unit]
+
 						average_position = average_position + position
 					end
 
 					average_position = average_position / num_valid_player_units
+
 					local optional_inverse = inverse_proximity_spawners
+
 					spawners = minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position, optional_inverse)
 				else
 					spawners = minion_spawn_system:spawners_in_group(spawner_group)
@@ -375,8 +386,7 @@ TerrorEventNodes.spawn_by_points = {
 				fx_system:trigger_wwise_event(sound_event_name, sound_position)
 			end
 
-			local attack_selection_template_tag = node.attack_selection_template_tag
-			local attack_selection_template_name_or_nil = nil
+			local attack_selection_template_tag, attack_selection_template_name_or_nil = node.attack_selection_template_tag
 
 			if attack_selection_template_tag then
 				if type(attack_selection_template_tag) == "table" then
@@ -384,6 +394,7 @@ TerrorEventNodes.spawn_by_points = {
 				end
 
 				local attack_selection_templates = breed.attack_selection_templates
+
 				attack_selection_template_name_or_nil = MinionAttackSelection.match_template_by_tag(attack_selection_templates, attack_selection_template_tag)
 			end
 
@@ -399,8 +410,8 @@ TerrorEventNodes.spawn_by_points = {
 			local horde_group_sound_event_names = GROUP_SOUNDS_BY_BREED_NAME[breed_name]
 
 			if horde_group_sound_event_names and not node.passive then
-				local start_event = horde_group_sound_event_names.start
-				local stop_event = horde_group_sound_event_names.stop
+				local start_event, stop_event = horde_group_sound_event_names.start, horde_group_sound_event_names.stop
+
 				group.group_start_sound_event = start_event
 				group.group_stop_sound_event = stop_event
 			end
@@ -421,7 +432,7 @@ TerrorEventNodes.spawn_by_points = {
 		end
 
 		return true
-	end
+	end,
 }
 TerrorEventNodes.spawn_by_breed_name = {
 	init = function (node, event, t)
@@ -440,7 +451,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 		local target_side = side_system:get_side_from_name(target_side_name)
 		local target_side_id = target_side.side_id
 		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
-		local spawners = nil
+		local spawners
 
 		if spawner_group then
 			spawners = minion_spawn_system:spawners_in_group(spawner_group)
@@ -454,8 +465,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 			end
 		end
 
-		local attack_selection_template_tag = node.attack_selection_template_tag
-		local attack_selection_template_name_or_nil = nil
+		local attack_selection_template_tag, attack_selection_template_name_or_nil = node.attack_selection_template_tag
 
 		if attack_selection_template_tag then
 			if type(attack_selection_template_tag) == "table" then
@@ -464,6 +474,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 
 			local breed = Breeds[breed_name]
 			local attack_selection_templates = breed.attack_selection_templates
+
 			attack_selection_template_name_or_nil = MinionAttackSelection.match_template_by_tag(attack_selection_templates, attack_selection_template_tag)
 		end
 
@@ -476,8 +487,8 @@ TerrorEventNodes.spawn_by_breed_name = {
 		local horde_group_sound_event_names = GROUP_SOUNDS_BY_BREED_NAME[breed_name]
 
 		if horde_group_sound_event_names and not node.passive then
-			local start_event = horde_group_sound_event_names.start
-			local stop_event = horde_group_sound_event_names.stop
+			local start_event, stop_event = horde_group_sound_event_names.start, horde_group_sound_event_names.stop
+
 			group.group_start_sound_event = start_event
 			group.group_stop_sound_event = stop_event
 		end
@@ -498,7 +509,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 		end
 
 		return true
-	end
+	end,
 }
 TerrorEventNodes.try_inject_special_minion = {
 	init = function (node, event, t)
@@ -522,7 +533,7 @@ TerrorEventNodes.try_inject_special_minion = {
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
-	end
+	end,
 }
 TerrorEventNodes.start_terror_trickle = {
 	init = function (node, event, t)
@@ -537,7 +548,7 @@ TerrorEventNodes.start_terror_trickle = {
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
-	end
+	end,
 }
 TerrorEventNodes.stop_terror_trickle = {
 	init = function (node, event, t)
@@ -545,7 +556,7 @@ TerrorEventNodes.stop_terror_trickle = {
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
-	end
+	end,
 }
 TerrorEventNodes.spawn_bot_character = {
 	init = function (node, event, t)
@@ -555,7 +566,7 @@ TerrorEventNodes.spawn_bot_character = {
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
-	end
+	end,
 }
 TerrorEventNodes.start_twin_fight = {
 	init = function (node, event, t)
@@ -565,7 +576,7 @@ TerrorEventNodes.start_twin_fight = {
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
-	end
+	end,
 }
 TerrorEventNodes.activate_hard_mode = {
 	init = function (node, event, t)
@@ -575,7 +586,7 @@ TerrorEventNodes.activate_hard_mode = {
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
-	end
+	end,
 }
 
 return TerrorEventNodes

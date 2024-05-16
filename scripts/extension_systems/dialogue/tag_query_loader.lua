@@ -1,27 +1,30 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/tag_query_loader.lua
+
 local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
-local OP = nil
+local OP
 
 if rawget(_G, "RuleDatabase") then
 	RuleDatabase.initialize_static_values()
 
 	local operator_string_lookup = {
-		GT = "GT",
-		LT = "LT",
-		NEQ = "NEQ",
-		SET_INTERSECTS = "SET_INTERSECTS",
-		LTEQ = "LTEQ",
-		GTEQ = "GTEQ",
-		SET_NOT_INTERSECTS = "SET_NOT_INTERSECTS",
-		TIMEDIFF = "TIMEDIFF",
 		EQ = "EQ",
-		SET_NOT_INCLUDES = "SET_NOT_INCLUDES",
+		GT = "GT",
+		GTEQ = "GTEQ",
+		LT = "LT",
+		LTEQ = "LTEQ",
+		NEQ = "NEQ",
 		NOT = "NOT",
 		SET_INCLUDES = "SET_INCLUDES",
+		SET_INTERSECTS = "SET_INTERSECTS",
+		SET_NOT_INCLUDES = "SET_NOT_INCLUDES",
+		SET_NOT_INTERSECTS = "SET_NOT_INTERSECTS",
+		TIMEDIFF = "TIMEDIFF",
 		TIMESET = TagQuery.OP.TIMESET,
 		ADD = TagQuery.OP.ADD,
 		SUB = TagQuery.OP.SUB,
-		NUMSET = TagQuery.OP.NUMSET
+		NUMSET = TagQuery.OP.NUMSET,
 	}
+
 	OP = operator_string_lookup
 else
 	OP = TagQuery.OP
@@ -46,16 +49,17 @@ TagQueryLoader.init = function (self, tagquery_database, dialogue_templates_dest
 				wwise_route = rule_definition.wwise_route,
 				heard_speak_routing = rule_definition.heard_speak_routing,
 				on_post_rule_execution = rule_definition.on_post_rule_execution,
-				on_pre_rule_execution = rule_definition.on_pre_rule_execution
+				on_pre_rule_execution = rule_definition.on_pre_rule_execution,
 			}
+
 			dialogue_templates_destination_table[rule_definition.name] = dialogue_template
-		end
+		end,
 	}
 	self.unload_file_environment = {
 		OP = OP,
 		define_rule = function (rule_definition)
 			tagquery_database:remove_rule(rule_definition.name)
-		end
+		end,
 	}
 	self.tagquery_database = tagquery_database
 end
@@ -78,7 +82,7 @@ TagQueryLoader.unload_file = function (self, filename)
 	if package.loaded[filename] then
 		local load_order = package.load_order
 		local n_load_order = #load_order
-		local found_file = nil
+		local found_file
 
 		for i = n_load_order, 1, -1 do
 			if load_order[i] == filename then

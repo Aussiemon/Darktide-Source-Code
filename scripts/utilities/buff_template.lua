@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/buff_template.lua
+
 local BuffTemplate = {}
 
 local function _calculate_buff_values(buff_values, i)
@@ -54,6 +56,7 @@ BuffTemplate.generate_weapon_trait_buff_templates = function (templates, templat
 		end
 
 		local name = template.name .. "_" .. i
+
 		template_clone.name = name
 		templates[name] = template_clone
 	end

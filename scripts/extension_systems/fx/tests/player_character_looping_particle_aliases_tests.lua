@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/fx/tests/player_character_looping_particle_aliases_tests.lua
+
 local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particles/player_character_looping_particle_aliases")
 local PlayerCharacterParticles = require("scripts/settings/particles/player_character_particles")
 local known_variable_types = {
+	emit_rate_multiplier = true,
 	material_scalar = true,
 	particle_variable = true,
-	emit_rate_multiplier = true
 }
 
 local function tests()

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_nurgle_rot_tech_priest_a.lua
+
 local circumstance_vo_nurgle_rot_tech_priest_a = {
 	nurgle_circumstance_start_a = {
 		randomize_indexes_n = 0,
@@ -6,15 +8,15 @@ local circumstance_vo_nurgle_rot_tech_priest_a = {
 			"loc_tech_priest_a__nurgle_circumstance_start_a_01",
 			"loc_tech_priest_a__nurgle_circumstance_start_a_02",
 			"loc_tech_priest_a__nurgle_circumstance_start_a_03",
-			"loc_tech_priest_a__nurgle_circumstance_start_a_04"
+			"loc_tech_priest_a__nurgle_circumstance_start_a_04",
 		},
 		sound_events_duration = {
 			4.816146,
 			5.982729,
 			6.370417,
-			6.577104
+			6.577104,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	nurgle_circumstance_start_b = {
 		randomize_indexes_n = 0,
@@ -23,15 +25,15 @@ local circumstance_vo_nurgle_rot_tech_priest_a = {
 			"loc_tech_priest_a__nurgle_circumstance_start_b_01",
 			"loc_tech_priest_a__nurgle_circumstance_start_b_02",
 			"loc_tech_priest_a__nurgle_circumstance_start_b_03",
-			"loc_tech_priest_a__nurgle_circumstance_start_b_04"
+			"loc_tech_priest_a__nurgle_circumstance_start_b_04",
 		},
 		sound_events_duration = {
 			4.379729,
 			6.023917,
 			5.064708,
-			5.575417
+			5.575417,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	nurgle_circumstance_start_c = {
 		randomize_indexes_n = 0,
@@ -76,7 +78,7 @@ local circumstance_vo_nurgle_rot_tech_priest_a = {
 			"loc_tech_priest_a__nurgle_circumstance_rule_two_01",
 			"loc_tech_priest_a__nurgle_circumstance_rule_two_02",
 			"loc_tech_priest_a__nurgle_circumstance_rule_two_03",
-			"loc_tech_priest_a__nurgle_circumstance_rule_two_04"
+			"loc_tech_priest_a__nurgle_circumstance_rule_two_04",
 		},
 		sound_events_duration = {
 			7.645729,
@@ -118,7 +120,7 @@ local circumstance_vo_nurgle_rot_tech_priest_a = {
 			4.911167,
 			8.278479,
 			6.815146,
-			8.427479
+			8.427479,
 		},
 		sound_event_weights = {
 			0.025,
@@ -160,10 +162,10 @@ local circumstance_vo_nurgle_rot_tech_priest_a = {
 			0.025,
 			0.025,
 			0.025,
-			0.025
+			0.025,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("circumstance_vo_nurgle_rot_tech_priest_a", circumstance_vo_nurgle_rot_tech_priest_a)

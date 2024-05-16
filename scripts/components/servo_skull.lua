@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/servo_skull.lua
+
 local ServoSkull = component("ServoSkull")
 
 ServoSkull.init = function (self, unit)
@@ -32,13 +34,13 @@ end
 
 ServoSkull.component_data = {
 	pulse_interval = {
+		ui_name = "Pulse Interval",
 		ui_type = "number",
 		value = 10,
-		ui_name = "Pulse Interval"
 	},
 	extensions = {
-		"ServoSkullExtension"
-	}
+		"ServoSkullExtension",
+	},
 }
 
 return ServoSkull

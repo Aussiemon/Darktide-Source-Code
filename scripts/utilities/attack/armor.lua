@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/utilities/attack/armor.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_keywords = BuffSettings.keywords
 local Armor = {}
 local armor_types = ArmorSettings.types
 local default_armor = armor_types.unarmored
-local _check_toughness, _character_armor_type = nil
+local _check_toughness, _character_armor_type
 
 Armor.armor_type = function (unit, breed_or_nil, hit_zone_name_or_nil, attack_type)
 	if breed_or_nil then
@@ -28,7 +30,7 @@ function _character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or
 		return armor_types.super_armor
 	end
 
-	local armor_type = nil
+	local armor_type
 	local has_toughess, toughness_armor_type = _check_toughness(unit, breed)
 
 	if has_toughess and toughness_armor_type then

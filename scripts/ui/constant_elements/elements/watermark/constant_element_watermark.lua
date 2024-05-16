@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/watermark/constant_element_watermark.lua
+
 local ConstantElementWatermarkSettings = require("scripts/ui/constant_elements/elements/watermark/constant_element_watermark_settings")
 local Definitions = require("scripts/ui/constant_elements/elements/watermark/constant_element_watermark_definitions")
 local QR = require("scripts/settings/ui/qr/qrencode")
@@ -6,15 +8,15 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local _render_settings = {
+	renderer_name = "watermark_ui",
 	shading_environment = "content/shading_environments/ui_default",
-	viewport_name = "watermark_viewport",
 	timer_name = "ui",
+	viewport_layer = 999,
+	viewport_name = "watermark_viewport",
 	viewport_type = "ui_watermark_offscreen",
 	world_layer = 999,
-	viewport_layer = 999,
-	renderer_name = "watermark_ui",
 	world_name = "watermark_world",
-	size = ConstantElementWatermarkSettings.size
+	size = ConstantElementWatermarkSettings.size,
 }
 local ConstantElementWatermark = class("ConstantElementWatermark", "ConstantElementBase")
 
@@ -46,7 +48,9 @@ ConstantElementWatermark._initialize_world = function (self)
 	local world_name = _render_settings.world_name
 	local world_layer = _render_settings.world_layer
 	local world_timer_name = _render_settings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name)
+
 	local viewport_name = _render_settings.viewport_name
 	local viewport_type = _render_settings.viewport_type
 	local viewport_layer = _render_settings.viewport_layer
@@ -121,12 +125,12 @@ end
 
 local temp_size = {
 	0,
-	0
+	0,
 }
 local temp_position = {
 	0,
 	0,
-	0
+	0,
 }
 local qr_color_alpha = 255
 local qr_color_black = Color.black(qr_color_alpha, true)
@@ -145,19 +149,20 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 		255,
 		255,
 		255,
-		255
+		255,
 	}
 	local text_options = {
 		shadow = true,
 		horizontal_alignment = Gui.HorizontalAlignRight,
-		vertical_alignment = Gui.VerticalAlignBottom
+		vertical_alignment = Gui.VerticalAlignBottom,
 	}
+
 	font_size = math.floor(16 * scale)
+
 	local title_text = GameParameters.watermark_overlay_text or ""
 	local description_text = self._description_text
 	local qr_data = self._qr_data
-	local rows = #qr_data
-	local cols = #qr_data[1]
+	local rows, cols = #qr_data, #qr_data[1]
 	local render_size = _render_settings.size
 	local qr_total_width = render_size[1] * scale
 	local qr_total_height = render_size[2] * scale
@@ -169,6 +174,7 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 		local size_width, size_height = UIScenegraph.get_size(ui_scenegraph, scenegraph_id, scale)
 		local start_pos_x = world_position[1] + size_width * 0.5 - qr_total_width * 0.5
 		local start_pos_y = world_position[2] + size_height * 0.5 - qr_total_height * 0.5
+
 		temp_size[1] = qr_total_width / rows
 		temp_size[2] = qr_total_height / cols
 
@@ -178,6 +184,7 @@ ConstantElementWatermark._render_qr_grid = function (self, ui_renderer)
 
 			for x = 1, cols do
 				temp_position[2] = pos_y
+
 				local color = qr_color_black
 
 				if row[x] < 0 then

@@ -1,6 +1,10 @@
+﻿-- chunkname: @scripts/settings/particles/player_character_particles.lua
+
 local player_character_particles = {}
 local particle_aliases = require("scripts/settings/particles/player_character_particle_aliases")
+
 player_character_particles.particle_aliases = particle_aliases
+
 local particle_names = {}
 
 local function _extract_particle_names(particles)
@@ -20,6 +24,7 @@ for alias, config in pairs(particle_aliases) do
 end
 
 player_character_particles.particle_names = particle_names
+
 local DEFAULT_EXTERNAL_PROPERTIES = {}
 
 player_character_particles.resolve_particle = function (particle_alias, properties, optional_external_properties)
@@ -81,6 +86,7 @@ player_character_particles.find_relevant_particles = function (profile_propertie
 
 		if num_switches == 0 then
 			local resource_name = particles.default
+
 			temp_relevant_particles[resource_name] = true
 		else
 			for i = 1, num_switches do
@@ -89,6 +95,7 @@ player_character_particles.find_relevant_particles = function (profile_propertie
 
 				if switch_property then
 					local default_particles = particles.default
+
 					particles = particles[switch_property] or default_particles or particles
 				else
 					_valid_particles_recursive(particles, temp_relevant_particles)

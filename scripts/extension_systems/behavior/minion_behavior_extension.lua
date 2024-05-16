@@ -1,17 +1,22 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/minion_behavior_extension.lua
+
 local AiBrain = require("scripts/extension_systems/behavior/ai_brain")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionBehaviorExtension = class("MinionBehaviorExtension")
 
 MinionBehaviorExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local blackboard = BLACKBOARDS[unit]
+
 	self._blackboard = blackboard
 	self._unit = unit
+
 	local breed = extension_init_data.breed
+
 	self._breed = breed
 	self._nearby_units_broadphase_config = breed.nearby_units_broadphase_config
+
 	local game_session = Managers.state.game_session:game_session()
-	local world = extension_init_context.world
-	local physics_world = extension_init_context.physics_world
+	local world, physics_world = extension_init_context.world, extension_init_context.physics_world
 	local selected_attack_names_or_nil = extension_init_data.selected_attack_names
 
 	self:_init_blackboard_components(blackboard, breed, unit, world, physics_world, game_session, selected_attack_names_or_nil)
@@ -26,6 +31,7 @@ end
 MinionBehaviorExtension._init_brain = function (self, unit, breed, blackboard, behavior_tree_name)
 	local behavior_system = Managers.state.extension:system("behavior_system")
 	local behavior_tree = behavior_system:behavior_tree(behavior_tree_name)
+
 	self._brain = AiBrain:new(unit, breed, blackboard, behavior_tree)
 end
 
@@ -36,6 +42,7 @@ end
 
 MinionBehaviorExtension._init_blackboard_components = function (self, blackboard, breed, unit, world, physics_world, game_session, optional_selected_attack_names)
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
+
 	spawn_component.unit = unit
 	spawn_component.world = world
 	spawn_component.physics_world = physics_world
@@ -45,8 +52,11 @@ MinionBehaviorExtension._init_blackboard_components = function (self, blackboard
 	spawn_component.spawner_unit = nil
 	spawn_component.spawner_spawn_index = -1
 	spawn_component.anim_translation_scale_factor = 1
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = ""
+
 	local component_config = Blackboard.component_config(blackboard)
 	local available_attacks_fields = component_config.available_attacks
 
@@ -55,6 +65,7 @@ MinionBehaviorExtension._init_blackboard_components = function (self, blackboard
 
 		for field_name, _ in pairs(available_attacks_fields) do
 			local is_available = optional_selected_attack_names[field_name] or false
+
 			available_attacks_component[field_name] = is_available
 		end
 	end
@@ -63,6 +74,7 @@ MinionBehaviorExtension._init_blackboard_components = function (self, blackboard
 
 	if nearby_units_broadphase_config then
 		local nearby_units_broadphase_component = Blackboard.write_component(blackboard, "nearby_units_broadphase")
+
 		nearby_units_broadphase_component.num_units = 0
 		nearby_units_broadphase_component.next_broadphase_t = 0
 		self._nearby_units_broadphase_component = nearby_units_broadphase_component
@@ -72,6 +84,7 @@ end
 MinionBehaviorExtension.game_object_initialized = function (self, game_session, game_object_id)
 	local blackboard = self._blackboard
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
+
 	spawn_component.game_object_id = game_object_id
 end
 
@@ -95,7 +108,9 @@ MinionBehaviorExtension.update_nearby_units_broadphase = function (self, unit, b
 
 	local broadphase_config = self._nearby_units_broadphase_config
 	local interval = broadphase_config.interval
+
 	nearby_units_broadphase_component.next_broadphase_t = t + interval
+
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
 	local relation = broadphase_config.relation
@@ -103,10 +118,8 @@ MinionBehaviorExtension.update_nearby_units_broadphase = function (self, unit, b
 	local side = side_system.side_by_unit[unit]
 	local target_side_names = side:relation_side_names(relation)
 	local valid_breeds = broadphase_config.valid_breeds
-	local from = POSITION_LOOKUP[unit]
-	local angle = broadphase_config.angle
-	local radius = broadphase_config.radius
-	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names)
+	local from, angle, radius = POSITION_LOOKUP[unit], broadphase_config.angle, broadphase_config.radius
+	local num_results = broadphase.query(broadphase, from, radius, BROADPHASE_RESULTS, target_side_names)
 
 	if angle and angle < FULL_FOV then
 		local num_units = 0

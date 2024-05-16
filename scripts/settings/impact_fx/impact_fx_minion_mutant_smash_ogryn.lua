@@ -1,57 +1,59 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_minion_mutant_smash_ogryn.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local blood_ball = {
-	"content/decals/blood_ball/blood_ball"
+	"content/decals/blood_ball/blood_ball",
 }
-local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker = nil
+local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker
 local player = {
 	sfx = {
 		damage = {
 			{
 				event = "wwise/events/minions/play_enemy_mutant_charger_smash_ogryn",
-				only_3p = true
-			}
+				only_3p = true,
+			},
 		},
 		damage_reduced = {
 			{
 				event = "wwise/events/minions/play_enemy_mutant_charger_smash_ogryn",
-				only_3p = true
-			}
+				only_3p = true,
+			},
 		},
 		toughness_absorbed_melee = {
 			{
 				event = "wwise/events/player/play_toughness_hits_melee",
-				hit_direction_interface = true
+				hit_direction_interface = true,
 			},
 			{
 				event = "wwise/events/minions/play_enemy_mutant_charger_smash_ogryn",
-				only_3p = true
-			}
-		}
+				only_3p = true,
+			},
+		},
 	},
 	vfx = {
 		damage = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_01",
-					only_3p = true
-				}
-			}
+					only_3p = true,
+				},
+			},
 		},
 		blocked = {
 			{
 				effects = {
 					"content/fx/particles/impacts/damage_blocked",
-					only_3p = true
-				}
-			}
-		}
+					only_3p = true,
+				},
+			},
+		},
 	},
 	blood_ball = {
 		died = blood_ball,
-		damage = blood_ball
-	}
+		damage = blood_ball,
+	},
 }
 
 return {
@@ -62,6 +64,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored
-	}
+		[armor_types.unarmored] = unarmored,
+	},
 }

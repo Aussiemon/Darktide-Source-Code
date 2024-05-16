@@ -1,8 +1,8 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions_test.lua
+
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
-local stagger_types = StaggerSettings.stagger_types
-local optional_stagger_types = StaggerSettings.optional_stagger_types
-local TEMP_SEEN_STAGGER_TYPES = {}
-local TEMP_MISSING_STAGGER_TYPES = {}
+local stagger_types, optional_stagger_types = StaggerSettings.stagger_types, StaggerSettings.optional_stagger_types
+local TEMP_SEEN_STAGGER_TYPES, TEMP_MISSING_STAGGER_TYPES = {}, {}
 local bt_node_test_functions = {
 	BtStaggerAction = function (behavior_tree_name, node_name, action_data)
 		local stagger_anims = action_data.stagger_anims
@@ -30,14 +30,13 @@ local bt_node_test_functions = {
 
 		table.clear(TEMP_SEEN_STAGGER_TYPES)
 		table.clear_array(TEMP_MISSING_STAGGER_TYPES, num_missing_stagger_types)
-	end
+	end,
 }
 local CLASS_NAME_INDEX = 1
 
 local function _evaluate_node(behavior_tree_name, node)
 	local class_name = node[CLASS_NAME_INDEX]
-	local action_data = node.action_data
-	local test_function = bt_node_test_functions[class_name]
+	local action_data, test_function = node.action_data, bt_node_test_functions[class_name]
 
 	if action_data and test_function then
 		test_function(behavior_tree_name, node.name, action_data)

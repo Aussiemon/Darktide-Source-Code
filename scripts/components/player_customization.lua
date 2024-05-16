@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/player_customization.lua
+
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
@@ -6,6 +8,7 @@ local PlayerCustomization = component("PlayerCustomization")
 PlayerCustomization.editor_init = function (self, unit)
 	local in_editor = true
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -26,6 +29,7 @@ PlayerCustomization.init = function (self, unit)
 
 	local in_editor = false
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -48,7 +52,7 @@ PlayerCustomization._construct_attach_settings = function (self, unit, world, in
 		in_editor = in_editor,
 		is_first_person = is_first_person,
 		lod_group = Unit.has_lod_group(unit, "lod") and Unit.lod_group(unit, "lod"),
-		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow")
+		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow"),
 	}
 
 	if not in_editor then
@@ -83,11 +87,14 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	local face_attachment_items = self:get_data(unit, "face_attachments")
 	local global_material_override_table = self:get_data(unit, "global_material_override")
 	local item_defs = item_definitions or attach_settings.item_definitions
+
 	attach_settings.item_definitions = item_defs
+
 	local item_table = {}
 
 	for _, item_name in pairs(item_names) do
 		local item = rawget(item_defs, item_name)
+
 		item = item or false
 		item_table[#item_table + 1] = item
 	end
@@ -98,7 +105,9 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 
 	if face_unit then
 		local face_sm_override = self:get_data(unit, "face_sm_override")
+
 		self._face_sm_override = face_sm_override
+
 		local face_sm_init_event = self:get_data(unit, "face_sm_init_event")
 
 		self:_override_face_anim(face_unit, face_sm_override, face_sm_init_event)
@@ -232,7 +241,7 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 end
 
 PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_attachment_items)
-	local face_unit, face_attachment_units = nil
+	local face_unit, face_attachment_units
 
 	if self._attach_settings.is_first_person then
 		return
@@ -249,9 +258,8 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 		end
 
 		for k, item in pairs(face_attachment_items) do
-			face_item_data_clone.attachments[k] = {
-				item = item
-			}
+			face_item_data_clone.attachments[k] = {}
+			face_item_data_clone.attachments[k].item = item
 		end
 
 		face_unit, face_attachment_units = VisualLoadoutCustomization.spawn_item(face_item_data_clone, self._attach_settings, self._unit, nil, nil, nil)
@@ -277,6 +285,7 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 		if face_slots then
 			local face_slot = face_slots[1]
 			local units_by_slot_name = self._units_by_slot_name
+
 			units_by_slot_name[face_slot] = face_unit
 		end
 
@@ -368,123 +377,123 @@ end
 PlayerCustomization.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true
+	starts_enabled_default = true,
 }
 PlayerCustomization.component_data = {
 	editor_only = {
+		category = "Settings",
+		ui_name = "Editor Only",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Editor Only",
-		category = "Settings"
 	},
 	disable_all_culling = {
+		category = "Settings",
+		ui_name = "Disable All Culling",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Disable All Culling",
-		category = "Settings"
 	},
 	force_highest_lod = {
+		category = "Settings",
+		ui_name = "Force Highest LOD",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Force Highest LOD",
-		category = "Settings"
 	},
 	is_first_person = {
+		category = "Settings",
+		ui_name = "Is First Person",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Is First Person",
-		category = "Settings"
 	},
 	face_item = {
-		ui_type = "resource",
 		category = "Facial Attachments",
-		value = "",
+		filter = "item",
 		ui_name = "Face Item",
-		filter = "item"
+		ui_type = "resource",
+		value = "",
 	},
 	face_attachments = {
 		category = "Facial Attachments",
-		ui_type = "resource_array",
+		filter = "item",
 		size = 3,
 		ui_name = "Face Attachment",
-		filter = "item"
+		ui_type = "resource_array",
 	},
 	face_material_overrides = {
-		validator = "contentpathsallowed",
 		category = "Facial Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Face Material Overrides"
+		ui_name = "Face Material Overrides",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	face_sm_override = {
-		ui_type = "resource",
 		category = "Facial Attachments",
-		value = "",
+		filter = "state_machine",
 		ui_name = "Face State Machine Override",
-		filter = "state_machine"
+		ui_type = "resource",
+		value = "",
 	},
 	face_sm_init_event = {
+		category = "Facial Attachments",
+		ui_name = "Face State Machine Init Event",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Face State Machine Init Event",
-		category = "Facial Attachments"
 	},
 	attachment_items = {
 		category = "Attachments",
-		ui_type = "resource_array",
+		filter = "item",
 		size = 3,
 		ui_name = "Item",
-		filter = "item"
+		ui_type = "resource_array",
 	},
 	attachment_material_override_1 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 1 for Item"
+		ui_name = "Material Override 1 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	attachment_material_override_2 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 2 for Item"
+		ui_name = "Material Override 2 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	attachment_material_override_3 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 3 for Item"
+		ui_name = "Material Override 3 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	attachment_material_override_4 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 4 for Item"
+		ui_name = "Material Override 4 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	attachment_material_override_5 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 5 for Item"
+		ui_name = "Material Override 5 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	attachment_material_override_6 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 6 for Item"
+		ui_name = "Material Override 6 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	global_material_override = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Global Material Override"
-	}
+		ui_name = "Global Material Override",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
+	},
 }
 
 return PlayerCustomization

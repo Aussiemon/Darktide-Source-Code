@@ -1,66 +1,68 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_coop_complete_objective.lua
+
 local settings = {
-	host_singleplay = false,
 	bot_backfilling_allowed = true,
-	name = "coop_complete_objective",
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective",
+	default_player_side_name = "heroes",
+	host_singleplay = false,
+	max_bots = 3,
 	mission_end_grace_time_dead = 4,
 	mission_end_grace_time_disabled = 10,
+	name = "coop_complete_objective",
 	use_side_color = false,
-	max_bots = 3,
 	vaulting_allowed = true,
-	default_player_side_name = "heroes",
 	states = {
 		"running",
 		"about_to_fail_disabled",
 		"about_to_fail_dead",
 		"outro_cinematic",
-		"done"
+		"done",
 	},
 	side_compositions = {
 		{
-			name = "heroes",
 			color_name = "blue",
+			name = "heroes",
 			relations = {
 				enemy = {
-					"villains"
-				}
-			}
+					"villains",
+				},
+			},
 		},
 		{
-			name = "villains",
 			color_name = "red",
+			name = "villains",
 			relations = {
 				enemy = {
-					"heroes"
-				}
-			}
-		}
+					"heroes",
+				},
+			},
+		},
 	},
 	spawn = {
+		ammo_percentage = 1,
 		grenade_percentage = 1,
 		health_percentage = 1,
-		ammo_percentage = 1
 	},
 	respawn = {
+		ammo_percentage = 0.5,
 		grenade_percentage = 0,
-		respawn_time = 20,
 		health_percentage = 0.5,
-		ammo_percentage = 0.5
+		respawn_time = 20,
 	},
 	hud_settings = {
-		player_composition = "game_session_players"
+		player_composition = "game_session_players",
 	},
 	hotkeys = {
-		hotkey_system = "system_view"
+		hotkey_system = "system_view",
 	},
 	persistent_player_data_settings = {
+		max_damage_percent = 0.75,
 		max_permanent_damage_percent = 0.75,
-		max_damage_percent = 0.75
 	},
 	afk_check = {
 		ignore_disabled_players = true,
-		location = "mission"
-	}
+		location = "mission",
+	},
 }
 
 return settings

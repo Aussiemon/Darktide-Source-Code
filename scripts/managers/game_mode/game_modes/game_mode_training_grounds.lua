@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/game_mode/game_modes/game_mode_training_grounds.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local GameModeTrainingGrounds = class("GameModeTrainingGrounds", "GameModeBase")
@@ -16,7 +18,7 @@ end
 GameModeTrainingGrounds.set_init_scenario = function (self, scenario_alias, scenario_name)
 	self._init_scenario = {
 		alias = scenario_alias,
-		name = scenario_name
+		name = scenario_name,
 	}
 end
 
@@ -62,7 +64,9 @@ GameModeTrainingGrounds.evaluate_end_conditions = function (self)
 
 		if completed or failed then
 			local t = Managers.time:time("gameplay")
+
 			self._leave_game_t = t + 2.5
+
 			local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
 			scenario_system:stop_scenario(t, nil, true)
@@ -73,7 +77,7 @@ GameModeTrainingGrounds.evaluate_end_conditions = function (self)
 	elseif current_state == "leaving_game" then
 		local t = Managers.time:time("gameplay")
 
-		if self._leave_game_t < t then
+		if t > self._leave_game_t then
 			return true, "won"
 		end
 	end

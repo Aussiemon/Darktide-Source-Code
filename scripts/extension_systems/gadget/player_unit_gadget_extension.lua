@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/gadget/player_unit_gadget_extension.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local MasterItems = require("scripts/backend/master_items")
@@ -5,20 +7,29 @@ local PlayerUnitGadgetExtension = class("PlayerUnitGadgetExtension")
 
 PlayerUnitGadgetExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
+
 	local is_server = extension_init_data.is_server
+
 	self._is_server = is_server
 	self._is_client = not DEDICATED_SERVER
+
 	local is_local_unit = extension_init_data.is_local_unit
+
 	self._is_local_unit = is_local_unit
 	self._gadget_buff_indexes = {}
 end
 
 PlayerUnitGadgetExtension.extensions_ready = function (self, world, unit)
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
 	self._buff_extension = buff_extension
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
+
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
 	self._visual_loadout_extension = visual_loadout_extension
 end
 
@@ -26,6 +37,7 @@ PlayerUnitGadgetExtension.game_object_initialized = function (self, session, obj
 	self._game_session = session
 	self._game_object_id = object_id
 	self._game_object_created = true
+
 	local gadget_system = Managers.state.extension:system("gadget_system")
 	local player = Managers.state.player_unit_spawn:owner(self._unit)
 
@@ -94,6 +106,7 @@ PlayerUnitGadgetExtension._add_gadget_buffs = function (self, item, slot_name)
 
 	local gear_id = item.gear_id
 	local id = slot_name .. ":" .. gear_id
+
 	self._gadget_buff_indexes[id] = gadget_buffs
 end
 
@@ -118,14 +131,15 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 	end
 
 	local is_meta_buff = buff_template.meta_buff
-	local buff_data = nil
+	local buff_data
 
 	if is_meta_buff then
 		local gadget_system = Managers.state.extension:system("gadget_system")
 		local player = Managers.state.player_unit_spawn:owner(self._unit)
 		local index = gadget_system:add_meta_buff(player, trait_name, t, lerp_value, slot_name)
+
 		buff_data = {
-			meta_buff_index = index
+			meta_buff_index = index,
 		}
 	else
 		local buff_extension = self._buff_extension
@@ -134,7 +148,7 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 		if not client_tried_adding_rpc_buff then
 			buff_data = {
 				local_index = local_index,
-				component_index = component_index
+				component_index = component_index,
 			}
 		end
 	end
@@ -145,7 +159,9 @@ end
 PlayerUnitGadgetExtension._remove_gadget_buffs_by_id = function (self, id)
 	local gadget_buff_indexes = self._gadget_buff_indexes
 	local gadget_buffs = gadget_buff_indexes[id]
+
 	gadget_buff_indexes[id] = nil
+
 	local gadget_system = Managers.state.extension:system("gadget_system")
 	local player = Managers.state.player_unit_spawn:owner(self._unit)
 	local buff_extension = self._buff_extension

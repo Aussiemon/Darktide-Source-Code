@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_scanning_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
@@ -28,18 +30,26 @@ AuspexScanningEffects.init = function (self, context, slot, weapon_template, fx_
 	self._wwise_world = context.wwise_world
 	self._world = context.world
 	self._is_server = context.is_server
+
 	local is_husk = context.is_husk
+
 	self._is_husk = is_husk
+
 	local is_local_unit = context.is_local_unit
+
 	self._is_local_unit = is_local_unit
+
 	local owner_unit = context.owner_unit
 	local item_unit_1p = slot.unit_1p
 	local item_unit_3p = slot.unit_3p
+
 	self._owner_unit = owner_unit
 	self._item_unit_1p = item_unit_1p
 	self._item_unit_3p = item_unit_3p
+
 	local screen_mesh_1p = Unit.mesh(item_unit_1p, "auspex_scanner_display_solid")
 	local screen_mesh_3p = Unit.mesh(item_unit_3p, "auspex_scanner_display_solid")
+
 	self._screen_material_1p = Mesh.material(screen_mesh_1p, 1)
 	self._screen_material_3p = Mesh.material(screen_mesh_3p, 1)
 	self._weapon_actions = weapon_template.actions
@@ -47,15 +57,20 @@ AuspexScanningEffects.init = function (self, context, slot, weapon_template, fx_
 	self._scanner_light_components_3p = Component.get_components_by_name(item_unit_3p, "ScannerLight")
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	self._first_person_extension = ScriptUnit.has_extension(owner_unit, "first_person_system")
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._scanning_component = unit_data_extension:read_component("scanning")
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 
 	if not is_husk then
 		local search_looping_sound_component_name = PlayerUnitData.looping_sound_component_name(SEARCH_LOOP_ALIAS)
+
 		self._seach_loop_sound_component = unit_data_extension:read_component(search_looping_sound_component_name)
+
 		local confirm_looping_sound_component_name = PlayerUnitData.looping_sound_component_name(CONFIRM_LOOP_ALIAS)
+
 		self._confirm_loop_sound_component = unit_data_extension:read_component(confirm_looping_sound_component_name)
 	end
 
@@ -64,6 +79,7 @@ AuspexScanningEffects.init = function (self, context, slot, weapon_template, fx_
 	end
 
 	local fx_sources_name = fx_sources[FX_SOURCE_NAME]
+
 	self._fx_source_name = fx_sources_name
 	self._high_light_timer = 0
 	self._current_distance_paramater = 0
@@ -95,6 +111,7 @@ AuspexScanningEffects.destroy = function (self)
 	self:_set_outline_unit(self._outline_unit, false)
 
 	self._outline_unit = nil
+
 	local player_holo_unit = self._player_holo_unit
 
 	if player_holo_unit then
@@ -143,6 +160,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	local target_angle = math.lerp(parameter_min, parameter_max, angle_score)
 	local current_distance = math.move_towards(self._current_distance_paramater, target_distance, dt * 6)
 	local current_angle = math.move_towards(self._current_angle_parameter, target_angle, dt * 6)
+
 	self._current_distance_paramater = current_distance
 	self._current_angle_parameter = current_angle
 
@@ -176,6 +194,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 
 	if can_fetch then
 		local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, fx_source)
+
 		current_beep_normalized = 1 - math.clamp01(current_beep / -48)
 	end
 
@@ -204,6 +223,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 
 	self._outline_unit = outline_unit
 	self._outline_time = outline_time
+
 	local confirm_unit = is_confirming_scanning and scannable_unit or nil
 	local highlight_unit = self._highlight_unit
 
@@ -259,6 +279,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 		Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(player_holo_unit, "custom_fov", is_in_first_person)
 
 		local player_holo_mesh = Unit.mesh(player_holo_unit, "g_auspex_scanner_holo_drop_01")
+
 		self._player_holo_material = Mesh.material(player_holo_mesh, 1)
 	end
 
@@ -304,13 +325,16 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 				local scaled_size = math.lerp(HOLO_MIN_SIZE, HOLO_INACTIVE_SIZE, current_lerp)
 				local size = is_current_scannable_unit and active_size or scaled_size
 				local holo_unit = holo_units[current_holo_unit]
+
 				current_holo_unit = current_holo_unit + 1
 
 				if not holo_unit then
 					holo_unit = World.spawn_unit_ex(self._world, SCAN_HOLO_UNIT_NAME)
 					holo_units[#holo_units + 1] = holo_unit
+
 					local holo_mesh = Unit.mesh(holo_unit, "g_auspex_scanner_holo_ball_01")
 					local holo_material = Mesh.material(holo_mesh, 1)
+
 					self._holo_materials[holo_unit] = holo_material
 				end
 
@@ -455,6 +479,7 @@ AuspexScanningEffects._set_screen_active = function (self, enabled)
 		end
 
 		self._is_screen_enabled = enabled
+
 		local emissive_value = enabled and EMISSIVE_SCREEN_ON or EMISSIVE_SCREEN_OFF
 
 		Material.set_scalar(self._screen_material_1p, EMISSIVE_SCREEN_MATERIAL_VARIABLE_NAME, emissive_value)

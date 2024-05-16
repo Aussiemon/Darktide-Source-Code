@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/interactable.lua
+
 local Component = require("scripts/utilities/component")
 local Interactable = component("Interactable")
 
@@ -11,6 +13,7 @@ Interactable.init = function (self, unit, is_server)
 	end
 
 	local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
+
 	self._interactee_extension = interactee_extension
 
 	if interactee_extension then
@@ -42,17 +45,17 @@ Interactable.init = function (self, unit, is_server)
 			self:interactable_disable(unit)
 		end
 
-		local interaction_context = {
-			duration = interaction_length,
-			shared_interaction = shared_interaction,
-			only_once = only_once,
-			interactor_item_to_equip = interactor_item_to_equip,
-			description = description,
-			action_text = action_text,
-			interaction_icon = interaction_icon ~= "use_template" and interaction_icon or nil,
-			ui_interaction_type = ui_interaction_type ~= "use_template" and ui_interaction_type or nil,
-			display_start_event = display_start_event
-		}
+		local interaction_context = {}
+
+		interaction_context.duration = interaction_length
+		interaction_context.shared_interaction = shared_interaction
+		interaction_context.only_once = only_once
+		interaction_context.interactor_item_to_equip = interactor_item_to_equip
+		interaction_context.description = description
+		interaction_context.action_text = action_text
+		interaction_context.interaction_icon = interaction_icon ~= "use_template" and interaction_icon or nil
+		interaction_context.ui_interaction_type = ui_interaction_type ~= "use_template" and ui_interaction_type or nil
+		interaction_context.display_start_event = display_start_event
 
 		interactee_extension:set_interaction_context(interaction_type, interaction_context, start_active)
 		interactee_extension:set_emissive_material_name(emissive_material_name)
@@ -62,6 +65,7 @@ Interactable.init = function (self, unit, is_server)
 		end
 
 		local has_animation_state_machine = Unit.has_animation_state_machine(unit)
+
 		self._support_simple_animation = self:get_data(unit, "support_simple_animation") and not has_animation_state_machine
 		self._support_prop_animation = self:get_data(unit, "support_prop_animation") and not self._support_simple_animation
 		self._animation_back_speed_modifier = self:get_data(unit, "animation_back_speed_modifier")
@@ -100,7 +104,9 @@ Interactable._setup_animation = function (self, interaction_length)
 	if self._support_simple_animation then
 		local unit = self._unit
 		local anim_length = Unit.simple_animation_length(unit)
+
 		self._anim_length = anim_length
+
 		local states = table.enum("forward", "backward")
 		local speed = 1
 
@@ -111,13 +117,14 @@ Interactable._setup_animation = function (self, interaction_length)
 		local anim_data = {
 			[states.forward] = {
 				time = anim_length,
-				speed = speed
+				speed = speed,
 			},
 			[states.backward] = {
 				time = 0,
-				speed = speed
-			}
+				speed = speed,
+			},
 		}
+
 		self._states = states
 		self._anim_data = anim_data
 		self._anim_length = anim_length
@@ -195,6 +202,7 @@ end
 Interactable.events.interaction_started = function (self, type, unit)
 	if self._support_simple_animation then
 		local is_playing_forward = self._is_playing_forward
+
 		is_playing_forward = is_playing_forward == nil and true or not is_playing_forward
 		self._is_playing_forward = is_playing_forward
 		self._interaction_cancled = false
@@ -238,9 +246,12 @@ Interactable._play_animation = function (self)
 		local speed = anim_data.speed * self._animation_back_speed_modifier
 
 		if state == "forward" then
-			if not self._interaction_cancled then
+			if self._interaction_cancled then
+				-- Nothing
+			else
 				local interaction_length = self._interaction_length
 				local length = interaction_length == 0 and 1 or interaction_length
+
 				speed = (self._anim_length - anim_time) / length
 			end
 		elseif self._interaction_cancled then
@@ -248,6 +259,7 @@ Interactable._play_animation = function (self)
 		else
 			local interaction_length = self._interaction_length
 			local length = interaction_length == 0 and 1 or interaction_length
+
 			speed = -(self._anim_length - (self._anim_length - anim_time)) / length
 		end
 
@@ -266,6 +278,7 @@ Interactable.update = function (self, unit, dt, t)
 
 	if Unit.is_playing_simple_animation(unit) then
 		local anim_speed = self._anim_speed
+
 		self._anim_time = math.clamp(self._anim_time + anim_speed * dt, 0, self._anim_length)
 
 		return true
@@ -298,13 +311,13 @@ end
 Interactable.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true
+	starts_enabled_default = true,
 }
 Interactable.component_data = {
 	interaction_type = {
-		value = "default",
-		ui_type = "combo_box",
 		ui_name = "Interaction Type",
+		ui_type = "combo_box",
+		value = "default",
 		options_keys = {
 			"ammunition",
 			"body_shop",
@@ -337,7 +350,7 @@ Interactable.component_data = {
 			"setup_decoding",
 			"training_ground",
 			"vendor",
-			"scripted_scenario"
+			"scripted_scenario",
 		},
 		options_values = {
 			"ammunition",
@@ -371,14 +384,14 @@ Interactable.component_data = {
 			"setup_decoding",
 			"training_ground",
 			"vendor",
-			"scripted_scenario"
-		}
+			"scripted_scenario",
+		},
 	},
 	ui_interaction_type = {
-		value = "default",
-		ui_type = "combo_box",
 		category = "UI",
 		ui_name = "UI Interaction Type",
+		ui_type = "combo_box",
+		value = "default",
 		options_keys = {
 			"critical",
 			"default",
@@ -386,7 +399,7 @@ Interactable.component_data = {
 			"pickup",
 			"point_of_interest",
 			"puzzle",
-			"use_template"
+			"use_template",
 		},
 		options_values = {
 			"critical",
@@ -395,14 +408,14 @@ Interactable.component_data = {
 			"pickup",
 			"point_of_interest",
 			"puzzle",
-			"use_template"
-		}
+			"use_template",
+		},
 	},
 	interaction_icon = {
-		value = "use_template",
-		ui_type = "combo_box",
 		category = "UI",
 		ui_name = "Interaction Icon",
+		ui_type = "combo_box",
+		value = "use_template",
 		options_keys = {
 			"ammunition",
 			"default",
@@ -414,7 +427,7 @@ Interactable.component_data = {
 			"objective_secondary",
 			"objective_side",
 			"speak",
-			"use_template"
+			"use_template",
 		},
 		options_values = {
 			"content/ui/materials/hud/interactions/icons/ammunition",
@@ -427,113 +440,113 @@ Interactable.component_data = {
 			"content/ui/materials/hud/interactions/icons/objective_secondary",
 			"content/ui/materials/hud/interactions/icons/objective_side",
 			"content/ui/materials/hud/interactions/icons/speak",
-			"use_template"
-		}
+			"use_template",
+		},
 	},
 	start_enabled = {
+		ui_name = "Start Enabled",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Start Enabled"
 	},
 	interaction_length = {
+		step = 0.5,
+		ui_name = "Interaction Length (in sec.)",
 		ui_type = "number",
 		value = 1,
-		ui_name = "Interaction Length (in sec.)",
-		step = 0.5
 	},
 	shared_interaction = {
+		ui_name = "Shared Interaction",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Shared Interaction"
 	},
 	only_once = {
+		ui_name = "Only Once",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Only Once"
 	},
 	start_active = {
+		ui_name = "Start Active (don't touch)",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Start Active (don't touch)"
 	},
 	interactor_item_to_equip = {
+		filter = "item",
+		ui_name = "Interactor Item to Equip (scanner, decoder, ...)",
 		ui_type = "resource",
 		value = "",
-		ui_name = "Interactor Item to Equip (scanner, decoder, ...)",
-		filter = "item"
 	},
 	require_all_players = {
+		category = "UI",
+		ui_name = "Show 'Require All Players'",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Show 'Require All Players'",
-		category = "UI"
 	},
 	display_start_event = {
+		category = "UI",
+		ui_name = "Show 'Start Event'",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Show 'Start Event'",
-		category = "UI"
 	},
 	hud_description = {
+		category = "UI",
+		ui_name = "Override Description",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Override Description",
-		category = "UI"
 	},
 	sub_description = {
+		category = "UI",
+		ui_name = "Override Action Text",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Override Action Text",
-		category = "UI"
 	},
 	support_simple_animation = {
+		category = "Animation",
+		ui_name = "Support Simple Animation",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Support Simple Animation",
-		category = "Animation"
 	},
 	support_prop_animation = {
+		category = "Animation",
+		ui_name = "Support State Machine",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Support State Machine",
-		category = "Animation"
 	},
 	animation_back_speed_modifier = {
-		ui_type = "number",
-		decimals = 1,
 		category = "Animation",
-		value = 1,
+		decimals = 1,
+		step = 0.5,
 		ui_name = "Animation Back Speed Modifier",
-		step = 0.5
+		ui_type = "number",
+		value = 1,
 	},
 	emissive_material = {
+		category = "Emissive",
+		ui_name = "Emissive Material",
 		ui_type = "text_box",
 		value = "emissive_interactable_01",
-		ui_name = "Emissive Material",
-		category = "Emissive"
 	},
 	inputs = {
 		interactable_enable = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		interactable_disable = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		interactable_clear_block = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		interactable_missing_players = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		disable_display_start_event = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return Interactable

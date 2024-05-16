@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/liquid_area_buff_templates.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -51,8 +53,7 @@ local function _scaled_damage_interval_function(template_data, template_context,
 
 	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
-	local damage_template = template.damage_template
-	local damage_type = template.damage_type
+	local damage_template, damage_type = template.damage_template, template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 end
@@ -71,6 +72,7 @@ local function _scaled_increasing_damage_interval_function(template_data, templa
 	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
 	local num_ticks = template_data.num_ticks or 1
 	local power_level_scale_per_tick = template.power_level_scale_per_tick[math.min(num_ticks, #template.power_level_scale_per_tick)]
+
 	power_level = power_level * power_level_scale_per_tick
 
 	if template_context.is_player then
@@ -96,8 +98,7 @@ local function _scaled_increasing_damage_interval_function(template_data, templa
 
 	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
-	local damage_template = template.damage_template
-	local damage_type = template.damage_type
+	local damage_template, damage_type = template.damage_template, template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 
@@ -109,107 +110,107 @@ local templates = {}
 table.make_unique(templates)
 
 templates.leaving_liquid_fire_spread_increase = {
-	unique_buff_id = "fire_spread_increase",
-	predicted = false,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-	unique_buff_priority = 1,
-	duration = 1.75,
 	class_name = "buff",
+	duration = 1.75,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 	is_negative = true,
+	predicted = false,
+	unique_buff_id = "fire_spread_increase",
+	unique_buff_priority = 1,
 	lerped_stat_buffs = {
 		[buff_stat_buffs.spread_modifier] = {
 			max = 0,
-			min = 1
-		}
+			min = 1,
+		},
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return math.smoothstep(t, start_time, start_time + duration)
-	end
+	end,
 }
 templates.flame_grenade_liquid_area = {
+	class_name = "interval_buff",
+	max_stacks = 1,
 	power_level_random = true,
 	predicted = false,
-	max_stacks = 1,
-	class_name = "interval_buff",
 	keywords = {
-		buff_keywords.burning
+		buff_keywords.burning,
 	},
 	power_level = {
 		default = {
 			500,
 			625,
 			750,
-			875
-		}
+			875,
+		},
 	},
 	damage_template = DamageProfileTemplates.flame_grenade_liquid_area_fire_burning,
 	damage_type = damage_types.burning,
 	interval = {
 		0.5,
-		1.25
+		1.25,
 	},
 	interval_func = _scaled_damage_interval_function,
-	minion_effects = minion_burning_buff_effects.fire
+	minion_effects = minion_burning_buff_effects.fire,
 }
 templates.fire_burninating = {
+	class_name = "interval_buff",
+	duration = 1,
+	max_stacks = 10,
 	power_level_random = true,
 	predicted = false,
-	max_stacks = 10,
-	duration = 1,
-	class_name = "interval_buff",
 	keywords = {
-		buff_keywords.burning
+		buff_keywords.burning,
 	},
 	power_level = {
 		default = {
 			250,
 			375,
 			625,
-			750
-		}
+			750,
+		},
 	},
 	damage_template = DamageProfileTemplates.liquid_area_fire_burning,
 	damage_type = damage_types.burning,
 	interval = {
 		0.5,
-		1.5
+		1.5,
 	},
 	interval_func = _scaled_damage_interval_function,
-	minion_effects = minion_burning_buff_effects.fire
+	minion_effects = minion_burning_buff_effects.fire,
 }
 templates.prop_in_corruptor_liquid_corruption = {
-	interval = 1,
-	predicted = false,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
-	max_stacks = 1,
 	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
+	interval = 1,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	power_level = {
 		default = {
 			50,
 			100,
 			150,
 			150,
-			200
-		}
+			200,
+		},
 	},
 	damage_template = DamageProfileTemplates.corruptor_liquid_corruption,
 	damage_type = damage_types.corruption,
-	interval_func = _scaled_damage_interval_function
+	interval_func = _scaled_damage_interval_function,
 }
 templates.prop_in_liquid_fire_burning_movement_slow = {
 	class_name = "interval_buff",
-	interval = 0.5,
-	predicted = true,
-	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-	max_stacks = 1,
+	hud_priority = 1,
+	interval = 0.5,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = true,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = -0.25
+		[buff_stat_buffs.movement_speed] = -0.25,
 	},
 	keywords = {
-		buff_keywords.burning
+		buff_keywords.burning,
 	},
 	power_level = {
 		default = {
@@ -217,39 +218,39 @@ templates.prop_in_liquid_fire_burning_movement_slow = {
 			600,
 			750,
 			850,
-			1000
+			1000,
 		},
 		player = {
 			100,
 			200,
 			300,
 			400,
-			500
-		}
+			500,
+		},
 	},
 	damage_template = DamageProfileTemplates.liquid_area_fire_burning_barrel,
 	damage_type = damage_types.burning,
 	interval_func = _scaled_damage_interval_function,
-	minion_effects = minion_burning_buff_effects.fire
+	minion_effects = minion_burning_buff_effects.fire,
 }
 templates.renegade_grenadier_in_fire_liquid = {
 	class_name = "interval_buff",
-	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 	hud_priority = 1,
 	interval = 0.35,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-	max_stacks = 1,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = -0.19999999999999996,
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.prevent_toughness_replenish_except_abilities
+		buff_keywords.prevent_toughness_replenish_except_abilities,
 	},
 	forbidden_keywords = {
-		buff_keywords.renegade_grenadier_liquid_immunity
+		buff_keywords.renegade_grenadier_liquid_immunity,
 	},
 	power_level = {
 		default = {
@@ -257,9 +258,9 @@ templates.renegade_grenadier_in_fire_liquid = {
 			400,
 			400,
 			400,
-			400
+			400,
 		},
-		player = MinionDifficultySettings.power_level.renegade_grenadier_fire
+		player = MinionDifficultySettings.power_level.renegade_grenadier_fire,
 	},
 	damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning,
 	damage_type = damage_types.burning,
@@ -281,27 +282,27 @@ templates.renegade_grenadier_in_fire_liquid = {
 		2.5,
 		3,
 		3,
-		3.25
+		3.25,
 	},
-	minion_effects = minion_burning_buff_effects.fire
+	minion_effects = minion_burning_buff_effects.fire,
 }
 templates.cultist_flamer_in_fire_liquid = {
 	class_name = "interval_buff",
-	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud",
 	hud_priority = 1,
 	interval = 0.35,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud",
-	max_stacks = 1,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.prevent_toughness_replenish_except_abilities
+		buff_keywords.prevent_toughness_replenish_except_abilities,
 	},
 	forbidden_keywords = {
-		buff_keywords.cultist_flamer_liquid_immunity
+		buff_keywords.cultist_flamer_liquid_immunity,
 	},
 	power_level = {
 		default = {
@@ -309,9 +310,9 @@ templates.cultist_flamer_in_fire_liquid = {
 			400,
 			400,
 			400,
-			400
+			400,
 		},
-		player = MinionDifficultySettings.power_level.cultist_flamer_fire
+		player = MinionDifficultySettings.power_level.cultist_flamer_fire,
 	},
 	damage_template = DamageProfileTemplates.cultist_flamer_liquid_fire_burning,
 	damage_type = damage_types.burning,
@@ -333,27 +334,27 @@ templates.cultist_flamer_in_fire_liquid = {
 		2.5,
 		3,
 		3,
-		3.25
+		3.25,
 	},
-	minion_effects = minion_burning_buff_effects.chemfire
+	minion_effects = minion_burning_buff_effects.chemfire,
 }
 templates.renegade_flamer_in_fire_liquid = {
 	class_name = "interval_buff",
-	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 	hud_priority = 1,
 	interval = 0.35,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-	max_stacks = 1,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.prevent_toughness_replenish_except_abilities
+		buff_keywords.prevent_toughness_replenish_except_abilities,
 	},
 	forbidden_keywords = {
-		buff_keywords.renegade_flamer_liquid_immunity
+		buff_keywords.renegade_flamer_liquid_immunity,
 	},
 	power_level = {
 		default = {
@@ -361,9 +362,9 @@ templates.renegade_flamer_in_fire_liquid = {
 			400,
 			400,
 			400,
-			400
+			400,
 		},
-		player = MinionDifficultySettings.power_level.renegade_flamer_fire
+		player = MinionDifficultySettings.power_level.renegade_flamer_fire,
 	},
 	damage_template = DamageProfileTemplates.renegade_flamer_liquid_fire_burning,
 	damage_type = damage_types.burning,
@@ -385,10 +386,11 @@ templates.renegade_flamer_in_fire_liquid = {
 		2.5,
 		3,
 		3,
-		3.25
+		3.25,
 	},
-	minion_effects = minion_burning_buff_effects.fire
+	minion_effects = minion_burning_buff_effects.fire,
 }
+
 local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 1.25
 local PLAYER_SLIDING_INTERVAL_OVERRIDE = 0.25
 
@@ -448,28 +450,27 @@ local function _beast_of_nurgle_in_slime_interval_function(template_data, templa
 	end
 
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
-	local damage_template = template.damage_template
-	local damage_type = template.damage_type
+	local damage_template, damage_type = template.damage_template, template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 end
 
 templates.beast_of_nurgle_in_slime = {
-	predicted = false,
-	interval = 0.35,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_slime_buff_hud",
-	max_stacks = 1,
 	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_slime_buff_hud",
+	interval = 0.35,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	keywords = {
-		buff_keywords.zero_slide_friction
+		buff_keywords.zero_slide_friction,
 	},
 	forbidden_keywords = {
-		buff_keywords.beast_of_nurgle_liquid_immunity
+		buff_keywords.beast_of_nurgle_liquid_immunity,
 	},
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = -0.19999999999999996,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
 	},
 	power_level = {
 		default = {
@@ -477,38 +478,38 @@ templates.beast_of_nurgle_in_slime = {
 			20,
 			30,
 			40,
-			50
-		}
+			50,
+		},
 	},
 	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
 	damage_type = damage_types.minion_vomit,
 	interval_func = _beast_of_nurgle_in_slime_interval_function,
 	player_effects = {
-		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
 		wwise_state = {
 			group = "swamped",
+			off_state = "none",
 			on_state = "on",
-			off_state = "none"
-		}
-	}
+		},
+	},
 }
 templates.cm_habs_tree_in_slime = {
-	predicted = false,
-	interval = 0.35,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_slime_buff_hud",
-	max_stacks = 1,
 	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_slime_buff_hud",
+	interval = 0.35,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	keywords = {
-		buff_keywords.zero_slide_friction
+		buff_keywords.zero_slide_friction,
 	},
 	forbidden_keywords = {
-		buff_keywords.beast_of_nurgle_liquid_immunity
+		buff_keywords.beast_of_nurgle_liquid_immunity,
 	},
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = -0.19999999999999996,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
 	},
 	power_level = {
 		default = {
@@ -516,21 +517,21 @@ templates.cm_habs_tree_in_slime = {
 			40,
 			60,
 			80,
-			100
-		}
+			100,
+		},
 	},
 	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
 	damage_type = damage_types.minion_vomit,
 	interval_func = _beast_of_nurgle_in_slime_interval_function,
 	player_effects = {
-		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
 		wwise_state = {
 			group = "swamped",
+			off_state = "none",
 			on_state = "on",
-			off_state = "none"
-		}
-	}
+		},
+	},
 }
 
 local function _toxic_gas_interval_function(template_data, template_context, template)
@@ -575,8 +576,7 @@ local function _toxic_gas_interval_function(template_data, template_context, tem
 	if should_apply_damage then
 		local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 		local optional_source_item = template_context.is_server and template_context.source_item or nil
-		local damage_template = template.damage_template
-		local damage_type = template.damage_type
+		local damage_template, damage_type = template.damage_template, template.damage_type
 
 		Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 	end
@@ -615,31 +615,31 @@ local function _toxic_gas_scaled_damage_interval_function(template_data, templat
 
 	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
-	local damage_template = template.damage_template
-	local damage_type = template.damage_type
+	local damage_template, damage_type = template.damage_template, template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 end
 
 local EMPOWERED_BREEDS = {
-	chaos_poxwalker = true
+	chaos_poxwalker = true,
 }
+
 templates.in_toxic_gas = {
-	predicted = false,
+	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	hud_priority = 1,
 	interval = 0.75,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
-	max_stacks = 1,
-	class_name = "interval_buff",
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
 		[buff_stat_buffs.toughness_replenish_multiplier] = 0.5,
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.in_toxic_gas
+		buff_keywords.in_toxic_gas,
 	},
 	power_level = {
 		default = {
@@ -647,8 +647,8 @@ templates.in_toxic_gas = {
 			10,
 			12,
 			15,
-			20
-		}
+			20,
+		},
 	},
 	damage_template = DamageProfileTemplates.toxic_gas,
 	damage_type = damage_types.corruption,
@@ -670,6 +670,7 @@ templates.in_toxic_gas = {
 				if buff_extension and not buff_extension:has_keyword("empowered") then
 					local t = Managers.time:time("gameplay")
 					local _, buff_id = buff_extension:add_externally_controlled_buff("empowered_poxwalker", t)
+
 					template_data.empowered_buff_id = buff_id
 				end
 			end
@@ -742,35 +743,35 @@ templates.in_toxic_gas = {
 	end,
 	interval_func = _toxic_gas_scaled_damage_interval_function,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
-		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
 		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
+			off_state = "none",
 			on_state = "on",
-			off_state = "none"
-		}
-	}
+		},
+	},
 }
 templates.left_toxic_gas = {
-	predicted = false,
+	class_name = "interval_buff",
+	duration = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	hud_priority = 1,
 	interval = 0.5,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
-	max_stacks = 1,
-	duration = 0.5,
-	class_name = "interval_buff",
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
 		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
 		[buff_stat_buffs.toughness_replenish_multiplier] = 0.5,
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.in_toxic_gas
+		buff_keywords.in_toxic_gas,
 	},
 	power_level = {
 		default = {
@@ -778,29 +779,30 @@ templates.left_toxic_gas = {
 			2,
 			4,
 			6,
-			8
-		}
+			8,
+		},
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
 	interval_func = _toxic_gas_scaled_damage_interval_function,
 	player_effects = {
-		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
+			off_state = "none",
 			on_state = "on",
-			off_state = "none"
-		}
-	}
+		},
+	},
 }
+
 local TWIN_GAS_BUILDUP_BY_CHALLENGE = {
 	20,
 	20,
 	20,
 	15,
-	12
+	12,
 }
 
 local function _twin_toxic_gas_interval_function(template_data, template_context, template)
@@ -840,33 +842,33 @@ local function _twin_toxic_gas_interval_function(template_data, template_context
 		local duration = t - start_t
 		local max_duration = Managers.state.difficulty:get_table_entry_by_challenge(TWIN_GAS_BUILDUP_BY_CHALLENGE)
 		local percentage = math.min(duration / max_duration, 1)
+
 		power_level = power_level * percentage
 	end
 
 	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
-	local damage_template = template.damage_template
-	local damage_type = template.damage_type
+	local damage_template, damage_type = template.damage_template, template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 end
 
 templates.in_cultist_grenadier_gas = {
-	predicted = false,
+	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	hud_priority = 1,
 	interval = 0.75,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
-	max_stacks = 1,
-	class_name = "interval_buff",
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
 		[buff_stat_buffs.toughness_replenish_multiplier] = 0.3,
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.in_toxic_gas
+		buff_keywords.in_toxic_gas,
 	},
 	power_level = {
 		default = {
@@ -874,8 +876,8 @@ templates.in_cultist_grenadier_gas = {
 			10,
 			12,
 			15,
-			20
-		}
+			20,
+		},
 	},
 	damage_template = DamageProfileTemplates.cultist_grenadier_gas,
 	damage_type = damage_types.corruption,
@@ -897,6 +899,7 @@ templates.in_cultist_grenadier_gas = {
 				if buff_extension and not buff_extension:has_keyword("empowered") then
 					local t = Managers.time:time("gameplay")
 					local _, buff_id = buff_extension:add_externally_controlled_buff("empowered_poxwalker", t)
+
 					template_data.empowered_buff_id = buff_id
 				end
 			end
@@ -969,32 +972,32 @@ templates.in_cultist_grenadier_gas = {
 	end,
 	interval_func = _toxic_gas_scaled_damage_interval_function,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
-		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
 		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
+			off_state = "none",
 			on_state = "on",
-			off_state = "none"
-		}
-	}
+		},
+	},
 }
 templates.in_twin_toxic_gas = {
-	predicted = false,
+	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	hud_priority = 1,
 	interval = 0.25,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
-	max_stacks = 1,
-	class_name = "interval_buff",
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.concealed,
 		buff_keywords.in_toxic_gas,
-		buff_keywords.prevent_toughness_replenish_except_abilities
+		buff_keywords.prevent_toughness_replenish_except_abilities,
 	},
 	power_level = {
 		default = {
@@ -1002,8 +1005,8 @@ templates.in_twin_toxic_gas = {
 			8,
 			12.5,
 			15,
-			20
-		}
+			20,
+		},
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
@@ -1024,6 +1027,7 @@ templates.in_twin_toxic_gas = {
 				if buff_extension and not buff_extension:has_keyword("empowered") then
 					local t = Managers.time:time("gameplay")
 					local _, buff_id = buff_extension:add_externally_controlled_buff("empowered_poxwalker", t)
+
 					template_data.empowered_buff_id = buff_id
 				end
 			end
@@ -1053,6 +1057,7 @@ templates.in_twin_toxic_gas = {
 		end
 
 		local t = Managers.time:time("gameplay")
+
 		template_data.start_t = t
 	end,
 	stop_func = function (template_data, template_context)
@@ -1099,32 +1104,32 @@ templates.in_twin_toxic_gas = {
 	end,
 	interval_func = _twin_toxic_gas_interval_function,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
-		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
 		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
+			off_state = "none",
 			on_state = "on",
-			off_state = "none"
-		}
-	}
+		},
+	},
 }
 templates.left_twin_toxic_gas = {
-	predicted = false,
+	class_name = "interval_buff",
+	duration = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	hud_priority = 1,
 	interval = 0.5,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
-	max_stacks = 1,
-	duration = 0.5,
-	class_name = "interval_buff",
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
-		buff_keywords.concealed
+		buff_keywords.concealed,
 	},
 	power_level = {
 		default = {
@@ -1132,27 +1137,27 @@ templates.left_twin_toxic_gas = {
 			2,
 			4,
 			6,
-			8
-		}
+			8,
+		},
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
-	interval_func = _twin_toxic_gas_interval_function
+	interval_func = _twin_toxic_gas_interval_function,
 }
 templates.in_buildup_twin_toxic_gas = {
-	predicted = false,
+	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	hud_priority = 1,
 	interval = 2,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
-	max_stacks = 1,
-	class_name = "interval_buff",
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.in_toxic_gas
+		buff_keywords.in_toxic_gas,
 	},
 	power_level = {
 		default = {
@@ -1160,8 +1165,8 @@ templates.in_buildup_twin_toxic_gas = {
 			8,
 			10,
 			12.5,
-			15
-		}
+			15,
+		},
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
@@ -1196,6 +1201,7 @@ templates.in_buildup_twin_toxic_gas = {
 		end
 
 		local t = Managers.time:time("gameplay")
+
 		template_data.start_t = t
 	end,
 	stop_func = function (template_data, template_context)
@@ -1230,31 +1236,31 @@ templates.in_buildup_twin_toxic_gas = {
 	end,
 	interval_func = _twin_toxic_gas_interval_function,
 	player_effects = {
-		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		stop_type = "stop",
 		wwise_state = {
 			group = "swamped",
+			off_state = "none",
 			on_state = "on",
-			off_state = "none"
-		}
-	}
+		},
+	},
 }
 templates.left_buildup_twin_toxic_gas = {
-	predicted = false,
+	class_name = "interval_buff",
+	duration = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	hud_priority = 1,
 	interval = 2,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
-	max_stacks = 1,
-	duration = 0.5,
-	class_name = "interval_buff",
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
-		buff_keywords.concealed
+		buff_keywords.concealed,
 	},
 	power_level = {
 		default = {
@@ -1262,53 +1268,59 @@ templates.left_buildup_twin_toxic_gas = {
 			2,
 			4,
 			6,
-			8
-		}
+			8,
+		},
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
-	interval_func = _twin_toxic_gas_interval_function
+	interval_func = _twin_toxic_gas_interval_function,
 }
 templates.prop_in_druglab_tank_goo = {
-	interval = 1,
-	predicted = false,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
-	max_stacks = 1,
 	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
+	interval = 1,
 	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
 	power_level = {
 		default = {
 			15,
 			30,
 			50,
 			50,
-			75
-		}
+			75,
+		},
 	},
 	damage_template = DamageProfileTemplates.corruptor_liquid_corruption,
 	damage_type = damage_types.corruption,
-	interval_func = _scaled_damage_interval_function
+	interval_func = _scaled_damage_interval_function,
 }
+
 local cultist_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
+
 cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
-	buff_keywords.cultist_flamer_liquid_immunity
+	buff_keywords.cultist_flamer_liquid_immunity,
 }
 templates.cultist_flamer_leaving_liquid_fire_spread_increase = cultist_flamer_leaving_liquid_fire_spread_increase
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_priority = 1
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud"
 cultist_flamer_leaving_liquid_fire_spread_increase.is_negative = true
+
 local renegade_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.cultist_flamer_leaving_liquid_fire_spread_increase)
+
 renegade_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
 renegade_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
-	buff_keywords.renegade_flamer_liquid_immunity
+	buff_keywords.renegade_flamer_liquid_immunity,
 }
 templates.renegade_flamer_leaving_liquid_fire_spread_increase = renegade_flamer_leaving_liquid_fire_spread_increase
+
 local renegade_grenadier_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
+
 renegade_grenadier_leaving_liquid_fire_spread_increase.hud_priority = 1
 renegade_grenadier_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
 renegade_grenadier_leaving_liquid_fire_spread_increase.is_negative = true
 renegade_grenadier_leaving_liquid_fire_spread_increase.forbidden_keywords = {
-	buff_keywords.renegade_grenadier_liquid_immunity
+	buff_keywords.renegade_grenadier_liquid_immunity,
 }
 templates.renegade_grenadier_leaving_liquid_fire_spread_increase = renegade_grenadier_leaving_liquid_fire_spread_increase
 

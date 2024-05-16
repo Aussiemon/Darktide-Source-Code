@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/pickup_animation/pickup_animation_system.lua
+
 require("scripts/extension_systems/pickup_animation/pickup_animation_extension")
 
 local PickupAnimationSystem = class("PickupAnimationSystem", "ExtensionSystemBase")
 local RPCS = {
 	"rpc_start_pickup_animation",
-	"rpc_start_place_animation"
+	"rpc_start_place_animation",
 }
 
 PickupAnimationSystem.init = function (self, context, system_init_data, ...)

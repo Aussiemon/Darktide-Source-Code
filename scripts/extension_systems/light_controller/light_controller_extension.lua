@@ -1,8 +1,13 @@
+﻿-- chunkname: @scripts/extension_systems/light_controller/light_controller_extension.lua
+
 local LightControllerUtilities = require("core/scripts/common/light_controller_utilities")
 local LightControllerExtension = class("LightControllerExtension")
 
 LightControllerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	local has_game_object = Managers.state.unit_spawner and Managers.state.unit_spawner:game_object_id(unit)
+	if Managers.state.unit_spawner then
+		local has_game_object = Managers.state.unit_spawner:game_object_id(unit)
+	end
+
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
 	self._is_setup = false
@@ -26,6 +31,7 @@ end
 
 LightControllerExtension.setup_from_component = function (self, is_enabled, fake_light, light_groups, flicker_start_enabled, flicker_config)
 	self._fake_light = fake_light
+
 	local deterministic_update = true
 
 	self:set_enabled(is_enabled, deterministic_update)

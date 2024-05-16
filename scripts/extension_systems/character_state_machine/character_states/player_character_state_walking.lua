@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_walking.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local AcceleratedLocalSpaceMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement")
@@ -17,12 +19,17 @@ PlayerCharacterStateWalking.init = function (self, character_state_init_context,
 	PlayerCharacterStateWalking.super.init(self, character_state_init_context, ...)
 
 	local unit_data = character_state_init_context.unit_data
+
 	self._sway_control_component = unit_data:write_component("sway_control")
 	self._spread_control_component = unit_data:write_component("spread_control")
+
 	local walking_character_state_component = unit_data:write_component("walking_character_state")
+
 	walking_character_state_component.previous_state_allowed_slide = false
 	self._walking_character_state_component = walking_character_state_component
+
 	local ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
+
 	self._ledge_vault_tweak_values = ledge_vault_tweak_values
 	self._peeking_component = unit_data:write_component("peeking")
 end
@@ -30,9 +37,11 @@ end
 PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion = self._locomotion_component
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
 	self._previous_frame_state = previous_state
+
 	local first_person = self._first_person_component
 
 	AcceleratedLocalSpaceMovement.refresh_local_move_variables(self._constants.move_speed, locomotion_steering, locomotion, first_person)
@@ -57,7 +66,7 @@ PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateWalking.on_exit = function (self, unit, t, next_state)
-	local height_time_to_change = nil
+	local height_time_to_change
 
 	if next_state == "dodging" then
 		height_time_to_change = 0.4
@@ -96,6 +105,7 @@ PlayerCharacterStateWalking.fixed_update = function (self, unit, dt, t, next_sta
 	local move_speed_multiplier = stat_buffs.movement_speed
 	local move_direction, move_speed, new_x, new_y, wants_move, stopped, moving_backwards, wants_slide = AcceleratedLocalSpaceMovement.wanted_movement(self._constants, input_extension, locomotion_steering, move_settings, self._first_person_component, is_crouching, velocity_current, dt, move_speed_multiplier)
 	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
+
 	move_speed = move_speed * action_move_speed_modifier
 	move_speed = move_speed * move_speed_multiplier
 

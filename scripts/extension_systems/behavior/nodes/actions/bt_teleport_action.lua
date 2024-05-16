@@ -1,10 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_teleport_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BtTeleportAction = class("BtTeleportAction", "BtNode")
 local WAIT_TIME_PER_DISTANCE = 1
-local MIN_WAIT_TIME = 3
-local MAX_WAIT_TIME = 5
+local MIN_WAIT_TIME, MAX_WAIT_TIME = 3, 5
 
 BtTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -17,11 +18,13 @@ BtTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 		local min_wait_time = action_data and action_data.min_wait_time or MIN_WAIT_TIME
 		local max_wait_time = action_data and action_data.max_wait_time or MAX_WAIT_TIME
 		local wait_duration = math.clamp(distance * WAIT_TIME_PER_DISTANCE, min_wait_time, max_wait_time)
+
 		scratchpad.wait_time = t + wait_duration
 
 		navigation_extension:set_nav_bot_position(exit_position)
 
 		scratchpad.navigation_extension = navigation_extension
+
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 		locomotion_extension:teleport_to(exit_position)
@@ -39,6 +42,7 @@ BtTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 		animation_extension:anim_event("idle")
 
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 		behavior_component.move_state = "idle"
 	else
 		scratchpad.failed_to_use_smart_object = true
@@ -56,7 +60,7 @@ BtTeleportAction.run = function (self, unit, breed, blackboard, scratchpad, acti
 		return "failed"
 	end
 
-	if scratchpad.wait_time < t then
+	if t > scratchpad.wait_time then
 		return "done"
 	else
 		return "running"

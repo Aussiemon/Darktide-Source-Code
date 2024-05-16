@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_charge_ammo.lua
+
 require("scripts/extension_systems/weapon/actions/action_charge")
 
 local Ammo = require("scripts/utilities/ammo")
@@ -12,7 +14,7 @@ ActionChargeAmmo.start = function (self, action_settings, t, time_scale, action_
 		local unit = self._player_unit
 		local slot_name = self._inventory_component.wielded_slot
 		local max_ammo_charge = charge_template.max_ammo_charge
-		local starting_ammo_percentage = nil
+		local starting_ammo_percentage
 		local min_charge = charge_template.min_charge or 0
 
 		if max_ammo_charge then

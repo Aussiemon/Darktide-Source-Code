@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/safe_volume.lua
+
 local TriggerSettings = require("scripts/extension_systems/trigger/trigger_settings")
 local ONLY_ONCE = TriggerSettings.only_once
 local ACTION_TARGETS = TriggerSettings.action_targets
@@ -11,7 +13,7 @@ SafeVolume.init = function (self, unit)
 		local parameters = {
 			action_player_side = "none",
 			action_target = ACTION_TARGETS.none,
-			action_machine_target = MACHINE_TARGETS.server
+			action_machine_target = MACHINE_TARGETS.server,
 		}
 		local only_once = ONLY_ONCE.only_once_for_all_units
 		local evaluate_bots = false
@@ -71,16 +73,16 @@ SafeVolume.component_data = {
 	inputs = {
 		activate = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		deactivate = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"TriggerExtension"
-	}
+		"TriggerExtension",
+	},
 }
 
 return SafeVolume

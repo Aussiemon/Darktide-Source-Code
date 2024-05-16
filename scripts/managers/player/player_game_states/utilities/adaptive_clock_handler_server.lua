@@ -1,12 +1,16 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/utilities/adaptive_clock_handler_server.lua
+
 local AdaptiveClockHandlerServer = class("AdaptiveClockHandlerServer")
 local BUFFER_MIN = 2
 
 AdaptiveClockHandlerServer.init = function (self, player, fixed_time_step)
 	local channel_id = player:channel_id()
+
 	self._player = player
 	self._channel_id = channel_id
 	self._peer_id = Managers.state.game_session:channel_to_peer(channel_id)
 	self._fixed_time_step = fixed_time_step
+
 	local ping = Network.ping(self._peer_id)
 
 	Log.info("AdaptiveClockHandlerServer", "Ping(%s) %ims", self._peer_id, ping * 1000)
@@ -16,6 +20,7 @@ AdaptiveClockHandlerServer.init = function (self, player, fixed_time_step)
 	self._buffer_fragment = 0
 	self._buffer_added_t = 0
 	self._latest_buffer_ceiling = BUFFER_MIN
+
 	local clock_offset = self:_offset()
 	local clock_start = Managers.time:time("gameplay") + clock_offset + self._estimated_ping * 0.5
 	local start_frame = math.floor(clock_start / fixed_time_step)
@@ -32,7 +37,9 @@ AdaptiveClockHandlerServer.init = function (self, player, fixed_time_step)
 
 	self._synced_offset = clock_offset
 	self._sync_epsilon = fixed_time_step * 0.5
+
 	local size = 32
+
 	self._ping_buffer_size = size
 	self._ping_buffer = Script.new_array(size)
 
@@ -54,12 +61,14 @@ end
 AdaptiveClockHandlerServer.frame_received = function (self, frame)
 	local index = self._ping_buffer_index
 	local ping = Network.ping(self._peer_id)
+
 	self._ping_buffer[index] = ping
 	self._ping_buffer_index = index % self._ping_buffer_size + 1
 	self._estimated_ping = math.max(unpack(self._ping_buffer))
+
 	local offset = self:_offset()
 
-	if self._sync_epsilon < math.abs(self._synced_offset - offset) then
+	if math.abs(self._synced_offset - offset) > self._sync_epsilon then
 		if offset > 0.5 then
 			offset = 0.5
 		end
@@ -76,8 +85,9 @@ AdaptiveClockHandlerServer.frame_missed = function (self, frame)
 	local new_buffer_fragment = self._buffer_fragment + 1
 	local fragments_needed = self._buffer - BUFFER_MIN + 1
 
-	if new_buffer_fragment >= fragments_needed then
+	if fragments_needed <= new_buffer_fragment then
 		local new_buffer = self._buffer + 1
+
 		self._buffer = new_buffer
 		self._latest_buffer_ceiling = new_buffer
 		self._buffer_fragment = new_buffer_fragment - fragments_needed
@@ -95,8 +105,9 @@ local BUFFER_REMOVE_FREQUENCY = 1
 AdaptiveClockHandlerServer.update = function (self, dt, t)
 	local buffer = self._buffer
 
-	if BUFFER_MIN < buffer then
+	if buffer > BUFFER_MIN then
 		local time_since_last_add = t - self._buffer_added_t
+
 		self._buffer = math.max(BUFFER_MIN, self._latest_buffer_ceiling - math.floor(time_since_last_add / BUFFER_REMOVE_FREQUENCY))
 
 		if self._buffer ~= buffer then
@@ -115,6 +126,7 @@ AdaptiveClockHandlerServer._calibrate_rewind_ms = function (self, frame)
 	local server_client_offset = math.max(last_client_frame - current_server_frame, 0)
 	local server_client_offset_time = server_client_offset * self._fixed_time_step + ping * 0.5
 	local buffer_index = self._rewind_ms_buffer_index
+
 	self._rewind_ms_buffer[buffer_index + 1] = (server_client_offset_time + client_unit_latency + constant_offset) * 1000
 	self._rewind_ms_buffer_index = (buffer_index + 1) % buffer_size
 end

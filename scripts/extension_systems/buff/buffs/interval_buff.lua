@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/interval_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local IntervalBuff = class("IntervalBuff", "Buff")
@@ -17,6 +19,7 @@ IntervalBuff.init = function (self, context, template, start_time, instance_id, 
 
 	local random_offset = template.start_with_frame_offset and context.fixed_time_step * (1 + math.floor(math.random() * 9)) or 0
 	local first_inteval = template.start_interval_on_apply and 0 or _next_interval_t(template)
+
 	self._next_interval_t = start_time + first_inteval + random_offset
 end
 

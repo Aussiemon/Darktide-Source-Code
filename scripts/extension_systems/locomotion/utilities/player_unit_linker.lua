@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/player_unit_linker.lua
+
 local unit_alive = Unit.alive
 local PlayerUnitLinker = class("PlayerUnitLinker")
 
@@ -9,8 +11,10 @@ PlayerUnitLinker.init = function (self, world, unit)
 	self._parent_node = nil
 	self._node = nil
 	self._world = world
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local linker_component = unit_data_extension:write_component("player_unit_linker")
+
 	linker_component.linked = false
 	linker_component.parent_unit = nil
 	linker_component.parent_node = "none"
@@ -21,6 +25,7 @@ end
 
 PlayerUnitLinker.link = function (self, parent_unit, parent_node_name, node_name)
 	local linker_component = self._linker_component
+
 	linker_component.linked = true
 	linker_component.parent_unit = parent_unit
 	linker_component.parent_node = parent_node_name
@@ -31,6 +36,7 @@ end
 
 PlayerUnitLinker.unlink = function (self)
 	local linker_component = self._linker_component
+
 	linker_component.linked = false
 	linker_component.parent_unit = nil
 	linker_component.parent_node = "none"
@@ -40,11 +46,12 @@ PlayerUnitLinker.unlink = function (self)
 end
 
 PlayerUnitLinker._link = function (self, parent_unit, parent_node_name, node_name)
-	local unlinked_parent_node = nil
+	local unlinked_parent_node
 
 	if unit_alive(parent_unit) then
 		local parent_node = Unit.node(parent_unit, parent_node_name)
 		local node = Unit.node(self._unit, node_name)
+
 		unlinked_parent_node = Unit.scene_graph_parent(self._unit, node)
 
 		World.link_unit(self._world, self._unit, node, parent_unit, parent_node, false, false)

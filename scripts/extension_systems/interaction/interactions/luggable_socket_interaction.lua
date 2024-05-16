@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/luggable_socket_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -14,6 +16,7 @@ LuggableSocketInteraction.interactor_condition_func = function (self, interactor
 		local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
 		local luggable_to_socket = inventory_slot_component.existing_unit_3p
 		local luggable_socket_extension = ScriptUnit.has_extension(interactee_unit, "luggable_socket_system")
+
 		socket_is_interactable = luggable_socket_extension:is_socketable(luggable_to_socket)
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_cutscenes_vo.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "cs_pot01_01"
 DialogueLookup[DialogueLookup_n + 2] = "cs_pot01_02"
 DialogueLookup[DialogueLookup_n + 3] = "cs_pot01_03"

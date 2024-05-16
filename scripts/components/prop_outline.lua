@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_outline.lua
+
 local PropOutline = component("PropOutline")
 
 PropOutline.init = function (self, unit)
@@ -22,8 +24,8 @@ end
 
 PropOutline.component_data = {
 	extensions = {
-		"PropOutlineExtension"
-	}
+		"PropOutlineExtension",
+	},
 }
 
 return PropOutline

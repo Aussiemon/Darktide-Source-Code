@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_wait_for_claim_state.lua
+
 local LocalWaitForClaimState = class("LocalWaitForClaimState")
 
 LocalWaitForClaimState.init = function (self, state_machine, shared_state)
@@ -14,11 +16,11 @@ LocalWaitForClaimState.update = function (self, dt)
 
 	self._time = self._time + dt
 
-	if shared_state.reserve_timeout < self._time then
+	if self._time > shared_state.reserve_timeout then
 		Log.info("LocalWaitForClaimState", "Timeout waiting for the game to get ready for claiming slots")
 
 		return "timeout", {
-			game_reason = "timeout"
+			game_reason = "timeout",
 		}
 	end
 
@@ -28,7 +30,7 @@ LocalWaitForClaimState.update = function (self, dt)
 		Log.info("LocalWaitForClaimState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason
+			engine_reason = reason,
 		}
 	end
 end

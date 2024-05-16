@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/health.lua
+
 local Breed = require("scripts/utilities/breed")
 local Health = {}
 

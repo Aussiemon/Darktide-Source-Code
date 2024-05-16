@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/tests/action_kind_tests.lua
+
 local action_kind_funcs = {}
 
 local function action_kind_tests(action_settings, weapon_template, action_name)

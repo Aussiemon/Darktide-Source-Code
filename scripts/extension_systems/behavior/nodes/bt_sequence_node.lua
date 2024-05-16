@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/bt_sequence_node.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtConditions = require("scripts/extension_systems/behavior/utilities/bt_conditions")
@@ -13,7 +15,9 @@ BtSequenceNode.init_values = function (self, blackboard, action_data, node_data)
 	BtSequenceNode.super.init_values(self, blackboard, action_data, node_data)
 
 	local node_identifier = self.identifier
+
 	node_data[node_identifier] = 1
+
 	local children = self._children
 
 	for i = 1, #children do
@@ -48,7 +52,7 @@ BtSequenceNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, e
 	local child_tree_node = child_node.tree_node
 	local last_running_node = old_running_child_nodes[node_identifier]
 	local child_is_running = last_leaf_node_running and last_running_node == child_node
-	local leaf_node = nil
+	local leaf_node
 
 	if BtConditions[child_condition_name](unit, blackboard, scratchpad, child_tree_node.condition_args, child_tree_node.action_data, child_is_running) then
 		if child_node.evaluate then

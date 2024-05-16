@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_extension.lua
+
 local TriggerActionSafeVolume = require("scripts/extension_systems/trigger/trigger_actions/trigger_action_safe_volume")
 local TriggerActionSendFlow = require("scripts/extension_systems/trigger/trigger_actions/trigger_action_send_flow")
 local TriggerActionSetLocation = require("scripts/extension_systems/trigger/trigger_actions/trigger_action_set_location")
@@ -19,12 +21,12 @@ local trigger_condition_classes = {
 	all_required_players_in_end_zone = TriggerConditionAllRequiredPlayersInEndZone,
 	at_least_one_player_inside = TriggerConditionAtLeastOnePlayerInside,
 	luggable_inside = TriggerConditionLuggableInside,
-	only_enter = TriggerConditionOnlyEnter
+	only_enter = TriggerConditionOnlyEnter,
 }
 local trigger_action_classes = {
 	send_flow = TriggerActionSendFlow,
 	set_location = TriggerActionSetLocation,
-	safe_volume = TriggerActionSafeVolume
+	safe_volume = TriggerActionSafeVolume,
 }
 
 TriggerExtension.init = function (self, extension_init_context, unit, ...)
@@ -63,6 +65,7 @@ TriggerExtension.setup_from_component = function (self, trigger_condition, condi
 	self._is_active = start_active
 	self._volume_type = volume_type_or_nil or self._volume_type
 	self._target_extension_name = target_extension_name_or_nil or self._target_extension_name
+
 	local is_server = self._is_server
 	local unit = self._unit
 	local volume_event_system = self._volume_event_system

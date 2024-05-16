@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_cm_raid.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_raid_city_view_a"
 DialogueLookup[DialogueLookup_n + 2] = "mission_raid_city_view_b"
 DialogueLookup[DialogueLookup_n + 3] = "mission_raid_closer_a"

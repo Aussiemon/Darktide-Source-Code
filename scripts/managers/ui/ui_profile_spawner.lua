@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_profile_spawner.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
@@ -39,6 +41,7 @@ UIProfileSpawner.reset = function (self)
 	end
 
 	local single_item_loader_reference_name = self._reference_name .. "_single_item"
+
 	self._single_item_profile_loader = UICharacterProfilePackageLoader:new(single_item_loader_reference_name, self._item_definitions, self._mission_template)
 	self._ignored_slots = {}
 	self._default_rotation_angle = 0
@@ -77,6 +80,7 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 	end
 
 	self._profile_loader_index = (self._profile_loader_index or 0) + 1
+
 	local reference_name = self._reference_name .. "_profile_loader_" .. tostring(self._profile_loader_index)
 	local character_profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template)
 	local loading_items = character_profile_loader:load_profile(profile)
@@ -85,6 +89,7 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 		local archetype = profile.archetype
 		local breed_name = archetype and archetype.breed or profile.breed
 		local breed_settings = Breeds[breed_name]
+
 		state_machine = breed_settings.character_creation_state_machine
 	end
 
@@ -103,7 +108,7 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 		force_highest_mip = force_highest_mip,
 		disable_hair_state_machine = disable_hair_state_machine or false,
 		optional_unit_3p = optional_unit_3p,
-		optional_ignore_state_machine = optional_ignore_state_machine
+		optional_ignore_state_machine = optional_ignore_state_machine,
 	}
 end
 
@@ -149,7 +154,7 @@ UIProfileSpawner.assign_animation_variable = function (self, index, value)
 	else
 		self._pending_animation_variable_data = {
 			index = index,
-			value = value
+			value = value,
 		}
 	end
 end
@@ -232,7 +237,9 @@ UIProfileSpawner._change_slot_item = function (self, slot_id, item)
 	local loading_profile_data = self._loading_profile_data
 	local use_loader_version = loading_profile_data ~= nil
 	local loading_items = use_loader_version and loading_profile_data.loading_items or character_spawn_data.loading_items
+
 	loading_items[slot_id] = item
+
 	local loader = use_loader_version and loading_profile_data.profile_loader or self._single_item_profile_loader
 	local complete_callback = callback(self, "cb_on_single_slot_item_loaded", slot_id, item)
 
@@ -250,6 +257,7 @@ UIProfileSpawner.cb_on_single_slot_item_loaded = function (self, slot_id, item)
 	local profile_loader = use_loader_version and loading_profile_data.profile_loader or character_spawn_data.profile_loader
 	local profile = use_loader_version and loading_profile_data.profile or character_spawn_data.profile
 	local loadout = profile.loadout
+
 	loadout[slot_id] = item
 
 	if not use_loader_version then
@@ -468,7 +476,7 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 	local slot = slots[slot_id]
 	local slot_config = PlayerCharacterConstants.slot_configuration[slot_id]
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
-	local slot_dependency_items = nil
+	local slot_dependency_items
 
 	if slot.equipped then
 		slot_dependency_items = equipment_component:unequip_slot_dependencies(slot_config, slots, slot_equip_order)
@@ -484,7 +492,8 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 
 	equipped_items[slot_id] = item
 	loading_items[slot_id] = nil
-	local parent_item_unit = nil
+
+	local parent_item_unit
 
 	if slot and item then
 		local gender = profile.gender
@@ -509,6 +518,7 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 			if parent_slot_unit_3p then
 				parent_unit_3p = parent_slot_unit_3p
 				parent_item_unit = parent_unit_3p
+
 				local apply_to_parent = item.material_override_apply_to_parent
 
 				if apply_to_parent then
@@ -551,12 +561,15 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local optional_base_unit = profile.optional_base_unit
 	local breed_settings = Breeds[breed_name]
 	local base_unit = optional_base_unit or breed_settings.base_unit
+
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
+
 	local spawn_rotation = rotation
 
 	if self._rotation_angle and self._rotation_angle ~= 0 then
 		local character_rotation_angle = Quaternion.axis_angle(Vector3(0, 0, 1), -self._rotation_angle)
+
 		spawn_rotation = Quaternion.multiply(character_rotation_angle, spawn_rotation)
 	end
 
@@ -589,11 +602,11 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 	local slot_options = {
 		slot_primary = {
-			skip_link_children = false
+			skip_link_children = false,
 		},
 		slot_secondary = {
-			skip_link_children = true
-		}
+			skip_link_children = true,
+		},
 	}
 	local slots = equipment_component.initialize_equipment(gear_slots, slot_options)
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
@@ -626,6 +639,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 				if parent_slot_unit_3p then
 					parent_unit_3p = parent_slot_unit_3p
+
 					local apply_to_parent = item.material_override_apply_to_parent
 
 					if apply_to_parent then
@@ -687,9 +701,11 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		profile = profile,
 		unit_3p = unit_3p,
 		disable_hair_state_machine = disable_hair_state_machine,
-		has_external_unit_3p = optional_unit_3p ~= nil
+		has_external_unit_3p = optional_unit_3p ~= nil,
 	}
+
 	self._character_spawn_data = spawn_data
+
 	local wield_slot_id = self._request_wield_slot_id
 
 	if not wield_slot_id or self._ignored_slots[wield_slot_id] then
@@ -724,6 +740,7 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p, tim
 
 	if character_spawn_data and character_spawn_data.unit_3p == unit_3p then
 		character_spawn_data.streaming_complete = true
+
 		local disable_hair_state_machine = character_spawn_data.disable_hair_state_machine
 
 		if disable_hair_state_machine then
@@ -751,6 +768,7 @@ UIProfileSpawner.wield_slot = function (self, slot_id)
 	end
 
 	self._request_wield_slot_id = nil
+
 	local equipment_component = spawn_data.equipment_component
 	local first_person_mode = spawn_data.first_person_mode
 	local slots = spawn_data.slots
@@ -767,6 +785,7 @@ end
 
 UIProfileSpawner.set_visibility = function (self, visible)
 	local update = visible ~= self._visible
+
 	self._visible = visible
 
 	if update then
@@ -805,7 +824,7 @@ UIProfileSpawner._update_input_rotation = function (self, dt)
 	end
 
 	local unit_3p = character_spawn_data.unit_3p
-	local rotation_angle = nil
+	local rotation_angle
 
 	if self._rotate_instantly then
 		rotation_angle = self._rotation_angle
@@ -814,11 +833,13 @@ UIProfileSpawner._update_input_rotation = function (self, dt)
 	end
 
 	self._previous_rotation_angle = rotation_angle
+
 	local character_rotation = Quaternion.axis_angle(Vector3(0, 0, 1), -rotation_angle)
 	local boxed_start_rotation = character_spawn_data.rotation
 
 	if boxed_start_rotation then
 		local start_rotation = QuaternionBox.unbox(boxed_start_rotation)
+
 		character_rotation = Quaternion.multiply(start_rotation, character_rotation)
 	end
 
@@ -866,7 +887,7 @@ UIProfileSpawner._mouse_rotation_input = function (self, input_service, dt)
 		if input_service:get("right_pressed") then
 			self._previous_rotation_angle = self._previous_rotation_angle % (math.pi * 2)
 
-			if math.pi < self._previous_rotation_angle then
+			if self._previous_rotation_angle > math.pi then
 				self._previous_rotation_angle = -(math.pi * 2 - self._previous_rotation_angle)
 			end
 
@@ -934,7 +955,9 @@ UIProfileSpawner._is_character_pressed = function (self, input_service)
 
 		if physics_world and camera then
 			local screen_height = RESOLUTION_LOOKUP.height
+
 			cursor[2] = screen_height - cursor[2]
+
 			local from = Camera.screen_to_world(camera, Vector3(cursor[1], cursor[2], 0), 0)
 			local direction = Camera.screen_to_world(camera, cursor, 1) - from
 			local to = Vector3.normalize(direction)
@@ -956,7 +979,7 @@ UIProfileSpawner._get_raycast_hit = function (self, from, to, physics_world, col
 	end
 
 	local closest_distance = math.huge
-	local closest_hit = nil
+	local closest_hit
 	local INDEX_DISTANCE = 2
 	local INDEX_ACTOR = 4
 	local num_hits = #result

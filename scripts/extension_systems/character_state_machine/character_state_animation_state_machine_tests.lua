@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_state_animation_state_machine_tests.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
@@ -9,13 +11,13 @@ local REQUIRED_EVENTS = {
 	"dodge_bwd",
 	"dodge_right",
 	"dodge_left",
-	"dodge_end"
+	"dodge_end",
 }
 local VARIABLE_BOUNDS = {
 	attack_speed = {
 		min = NetworkConstants.action_time_scale.min,
-		max = NetworkConstants.action_time_scale.max
-	}
+		max = NetworkConstants.action_time_scale.max,
+	},
 }
 
 local function _init_and_run_tests(unit_1p, breed_name, world)
@@ -25,9 +27,7 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 		local breeds = item.breeds
 		local weapon_template_name = item.weapon_template
 
-		if type(weapon_template_name) ~= "string" or weapon_template_name == "" then
-			weapon_template_name = false
-		end
+		weapon_template_name = type(weapon_template_name) == "string" and weapon_template_name ~= "" and weapon_template_name
 
 		local workflow_state = item.workflow_state
 		local testable = workflow_state == "FUNCTIONAL" or workflow_state == "SHIPPABLE" or workflow_state == "RELEASABLE"
@@ -40,8 +40,7 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 
 			Unit.set_animation_state_machine(unit_1p, state_machine_1p)
 
-			local has_events_error = false
-			local error_events = ""
+			local has_events_error, error_events = false, ""
 
 			for ii = 1, #REQUIRED_EVENTS do
 				if not Unit.has_animation_event(unit_1p, REQUIRED_EVENTS[ii]) then
@@ -50,16 +49,14 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 				end
 			end
 
-			local has_bounds_error = false
-			local error_bounds = ""
+			local has_bounds_error, error_bounds = false, ""
 
 			for variable_name, bounds in pairs(VARIABLE_BOUNDS) do
 				local variable_index = Unit.animation_find_variable(unit_1p, variable_name)
 
 				if variable_index then
 					local state_machine_min, state_machine_max = Unit.animation_get_variable_min_max(unit_1p, variable_index)
-					local min = bounds.min
-					local max = bounds.max
+					local min, max = bounds.min, bounds.max
 
 					if min < state_machine_min then
 						has_bounds_error = true

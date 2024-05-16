@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/tactical_overlay_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local TacticalOverlayReporter = class("TacticalOverlayReporter")
 
 TacticalOverlayReporter.init = function (self)
 	self._report = {
-		times_opened = 0
+		times_opened = 0,
 	}
 end
 

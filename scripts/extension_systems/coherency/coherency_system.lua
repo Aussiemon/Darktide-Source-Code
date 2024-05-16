@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/coherency/coherency_system.lua
+
 require("scripts/extension_systems/coherency/unit_coherency_extension")
 require("scripts/extension_systems/coherency/husk_coherency_extension")
 
@@ -13,9 +15,12 @@ local CoherencySystem = class("CoherencySystem", "ExtensionSystemBase")
 CoherencySystem.init = function (self, extension_system_creation_context, ...)
 	local init_result = CoherencySystem.super.init(self, extension_system_creation_context, ...)
 	local broadphase_system = extension_system_creation_context.extension_manager:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
+
 	local mission_name = Managers.state.mission:mission_name()
 	local mission_settings = Missions[mission_name]
+
 	self._is_hub = mission_settings.is_hub
 
 	return init_result
@@ -26,8 +31,9 @@ CoherencySystem.on_add_extension = function (self, world, unit, extension_name, 
 	local coherency_data = {
 		units_in_direct_coherence = {},
 		units_in_direct_coherence_temp = {},
-		units_left_coherence_stickiness_time = {}
+		units_left_coherence_stickiness_time = {},
 	}
+
 	extension._coherency_data = coherency_data
 
 	return extension
@@ -59,6 +65,7 @@ CoherencySystem._exit_removed_extension = function (self, exit_unit, exit_cohere
 		end
 
 		local data = extension:coherency_data()
+
 		data.units_in_direct_coherence[exit_unit] = nil
 		data.units_left_coherence_stickiness_time[exit_unit] = nil
 	end
@@ -186,6 +193,7 @@ CoherencySystem.update = function (self, context, dt, t, ...)
 
 				for daisy_unit, _ in pairs(my_chain) do
 					local dasy_unit_chain = daisy_chains[daisy_unit]
+
 					daisy_chains[daisy_unit] = table.merge(dasy_unit_chain, my_chain)
 				end
 			end

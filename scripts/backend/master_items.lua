@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/master_items.lua
+
 local MasterItems = {}
 
 local function assert_backend()
@@ -21,46 +23,46 @@ MasterItems.default_inventory = function (archetype_name, game_mode_settings_or_
 	end
 
 	return {
-		slot_unarmed = MasterItems.get_cached()["content/items/weapons/player/melee/unarmed"]
+		slot_unarmed = MasterItems.get_cached()["content/items/weapons/player/melee/unarmed"],
 	}
 end
 
 local FALLBACK_ITEMS_BY_SLOT = {
-	slot_body_hair = "content/items/characters/player/human/attachments_default/slot_body_hair",
-	slot_animation_emote_5 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
 	slot_animation_emote_1 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
-	slot_gear_extra_cosmetic = "content/items/characters/player/human/attachments_default/slot_attachment",
-	slot_body_skin_color = "content/items/characters/player/skin_colors/skin_color_pale_01",
-	slot_animation_emote_3 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
-	slot_pocketable = "content/items/pocketable/empty_pocketable",
-	slot_character_title = "content/items/titles/title_default",
-	slot_body_tattoo = "content/items/characters/player/human/attachments_default/slot_body_torso",
-	slot_trinket_1 = "content/items/weapons/player/trinkets/empty_trinket",
-	slot_body_face_implant = "content/items/characters/player/human/attachments_default/slot_body_face",
-	slot_gear_upperbody = "content/items/characters/player/human/attachments_default/slot_gear_torso",
-	slot_body_face_hair = "content/items/characters/player/human/attachments_default/slot_body_face",
-	slot_body_legs = "content/items/characters/player/human/attachments_default/slot_body_legs",
-	slot_secondary = "content/items/weapons/player/melee/unarmed",
-	slot_body_face = "content/items/characters/player/human/attachments_default/slot_body_face",
-	slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01",
-	slot_weapon_skin = "content/items/weapons/player/skins/lasgun/lasgun_p1_m001",
-	slot_gear_lowerbody = "content/items/characters/player/human/attachments_default/slot_gear_legs",
-	slot_portrait_frame = "content/items/2d/portrait_frames/portrait_frame_default",
-	slot_body_face_tattoo = "content/items/characters/player/human/attachments_default/slot_body_face",
-	slot_pocketable_small = "content/items/pocketable/empty_pocketable",
-	slot_insignia = "content/items/2d/insignias/insignia_default",
-	slot_body_torso = "content/items/characters/player/human/attachments_default/slot_body_torso",
-	slot_primary = "content/items/weapons/player/melee/unarmed",
-	slot_unarmed = "content/items/weapons/player/melee/unarmed",
-	slot_device = "content/items/devices/empty_device",
-	slot_animation_end_of_round = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
-	slot_animation_emote_4 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
-	slot_body_face_scar = "content/items/characters/player/human/attachments_default/slot_body_face",
-	slot_gear_head = "content/items/characters/player/human/attachments_default/slot_gear_head",
-	slot_body_arms = "content/items/characters/player/human/attachments_default/slot_body_arms",
-	slot_skin_set = "content/items/characters/player/sets/empty_set",
 	slot_animation_emote_2 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
-	slot_body_hair_color = "content/items/characters/player/hair_colors/hair_color_brown_01"
+	slot_animation_emote_3 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
+	slot_animation_emote_4 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
+	slot_animation_emote_5 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
+	slot_animation_end_of_round = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
+	slot_body_arms = "content/items/characters/player/human/attachments_default/slot_body_arms",
+	slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01",
+	slot_body_face = "content/items/characters/player/human/attachments_default/slot_body_face",
+	slot_body_face_hair = "content/items/characters/player/human/attachments_default/slot_body_face",
+	slot_body_face_implant = "content/items/characters/player/human/attachments_default/slot_body_face",
+	slot_body_face_scar = "content/items/characters/player/human/attachments_default/slot_body_face",
+	slot_body_face_tattoo = "content/items/characters/player/human/attachments_default/slot_body_face",
+	slot_body_hair = "content/items/characters/player/human/attachments_default/slot_body_hair",
+	slot_body_hair_color = "content/items/characters/player/hair_colors/hair_color_brown_01",
+	slot_body_legs = "content/items/characters/player/human/attachments_default/slot_body_legs",
+	slot_body_skin_color = "content/items/characters/player/skin_colors/skin_color_pale_01",
+	slot_body_tattoo = "content/items/characters/player/human/attachments_default/slot_body_torso",
+	slot_body_torso = "content/items/characters/player/human/attachments_default/slot_body_torso",
+	slot_character_title = "content/items/titles/title_default",
+	slot_device = "content/items/devices/empty_device",
+	slot_gear_extra_cosmetic = "content/items/characters/player/human/attachments_default/slot_attachment",
+	slot_gear_head = "content/items/characters/player/human/attachments_default/slot_gear_head",
+	slot_gear_lowerbody = "content/items/characters/player/human/attachments_default/slot_gear_legs",
+	slot_gear_upperbody = "content/items/characters/player/human/attachments_default/slot_gear_torso",
+	slot_insignia = "content/items/2d/insignias/insignia_default",
+	slot_pocketable = "content/items/pocketable/empty_pocketable",
+	slot_pocketable_small = "content/items/pocketable/empty_pocketable",
+	slot_portrait_frame = "content/items/2d/portrait_frames/portrait_frame_default",
+	slot_primary = "content/items/weapons/player/melee/unarmed",
+	slot_secondary = "content/items/weapons/player/melee/unarmed",
+	slot_skin_set = "content/items/characters/player/sets/empty_set",
+	slot_trinket_1 = "content/items/weapons/player/trinkets/empty_trinket",
+	slot_unarmed = "content/items/weapons/player/melee/unarmed",
+	slot_weapon_skin = "content/items/weapons/player/skins/lasgun/lasgun_p1_m001",
 }
 
 if BUILD == "release" then
@@ -111,7 +113,7 @@ local function _fallback_item(gear)
 	return fallback
 end
 
-local _merge_item_data_recursive = nil
+local _merge_item_data_recursive
 
 function _merge_item_data_recursive(dest, source)
 	for key, value in pairs(source) do
@@ -164,6 +166,7 @@ local function _update_master_data(item_instance)
 
 	local gear = rawget(item_instance, "__gear")
 	local item = rawget(MasterItems.get_cached(), gear.masterDataInstance.id)
+
 	item = item or _fallback_item(gear)
 
 	if item then
@@ -205,7 +208,7 @@ local function _item_plus_overrides(gear, gear_id, is_preview_item)
 		__gear = gear,
 		__gear_id = is_preview_item and math.uuid() or gear_id,
 		__original_gear_id = is_preview_item and gear_id,
-		__is_preview_item = is_preview_item and true or false
+		__is_preview_item = is_preview_item and true or false,
 	}
 
 	setmetatable(item_instance, {
@@ -257,7 +260,7 @@ local function _item_plus_overrides(gear, gear_id, is_preview_item)
 			local master_item = rawget(item_instance, "__master_item")
 
 			return string.format("master_item: [%s] gear_id: [%s]", tostring(master_item and master_item.name), tostring(rawget(item_instance, "__gear_id")))
-		end
+		end,
 	})
 
 	local success = _update_master_data(item_instance)
@@ -277,10 +280,10 @@ local function _store_item_plus_overrides(data)
 		__gear = {
 			masterDataInstance = {
 				id = data.id,
-				overrides = data.overrides
-			}
+				overrides = data.overrides,
+			},
 		},
-		__gear_id = data.gear_id or data.gearId
+		__gear_id = data.gear_id or data.gearId,
 	}
 
 	setmetatable(item_instance, {
@@ -328,7 +331,7 @@ local function _store_item_plus_overrides(data)
 			local master_item = rawget(item_instance, "__master_item")
 
 			return string.format("master_item: [%s] gear_id: [%s]", tostring(master_item and master_item.name), tostring(rawget(item_instance, "__gear_id")))
-		end
+		end,
 	})
 
 	local success = _update_master_data(item_instance)

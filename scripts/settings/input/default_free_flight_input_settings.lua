@@ -1,15 +1,17 @@
+﻿-- chunkname: @scripts/settings/input/default_free_flight_input_settings.lua
+
 local DefaultFreeFlightInputFilters = require("scripts/settings/input/default_free_flight_input_filters")
 local default_free_flight_input_settings = {
 	service_type = "FreeFlight",
 	supported_devices = {
 		"keyboard",
 		"mouse",
-		"xbox_controller"
+		"xbox_controller",
 	},
 	default_devices = {
 		"keyboard",
 		"mouse",
-		"xbox_controller"
+		"xbox_controller",
 	},
 	filters = DefaultFreeFlightInputFilters,
 	settings = {
@@ -17,170 +19,170 @@ local default_free_flight_input_settings = {
 			type = "pressed",
 			raw = {
 				"keyboard_f10",
-				"xbox_controller_x"
-			}
+				"xbox_controller_x",
+			},
 		},
 		global_toggle = {
 			type = "pressed",
 			raw = {
 				"keyboard_f9",
 				"xbox_controller_left_thumb+xbox_controller_right_thumb",
-				"xbox_controller_right_thumb+xbox_controller_left_thumb"
-			}
+				"xbox_controller_right_thumb+xbox_controller_left_thumb",
+			},
 		},
 		toggle_dof = {
 			raw = "keyboard_f",
-			type = "pressed"
+			type = "pressed",
 		},
 		reset_dof = {
 			raw = "keyboard_left ctrl+keyboard_f",
-			type = "pressed"
+			type = "pressed",
 		},
 		inc_dof_distance = {
 			raw = "keyboard_g",
-			type = "pressed"
+			type = "pressed",
 		},
 		dec_dof_distance = {
 			raw = "keyboard_b",
-			type = "pressed"
+			type = "pressed",
 		},
 		look = {
 			type = "axis",
 			raw = {
 				"mouse_mouse",
-				"xbox_controller_right"
-			}
+				"xbox_controller_right",
+			},
 		},
 		toggle_look_input = {
 			raw = "keyboard_tab",
-			type = "pressed"
+			type = "pressed",
 		},
 		toggle_input_in_free_flight = {
 			raw = "keyboard_left ctrl+keyboard_space",
-			type = "pressed"
+			type = "pressed",
 		},
 		move_controller = {
 			raw = "xbox_controller_left",
-			type = "axis"
+			type = "axis",
 		},
 		top_down_toggle = {
 			raw = "keyboard_f8",
-			type = "pressed"
+			type = "pressed",
 		},
 		keyboard_move_left = {
 			raw = "keyboard_a",
-			type = "button"
+			type = "button",
 		},
 		keyboard_move_right = {
 			raw = "keyboard_d",
-			type = "button"
+			type = "button",
 		},
 		keyboard_move_forward = {
 			raw = "keyboard_w",
-			type = "button"
+			type = "button",
 		},
 		keyboard_move_backward = {
 			raw = "keyboard_s",
-			type = "button"
+			type = "button",
 		},
 		move_up = {
 			type = "button",
 			raw = {
 				"keyboard_e",
-				"xbox_controller_right_trigger"
-			}
+				"xbox_controller_right_trigger",
+			},
 		},
 		move_down = {
 			type = "button",
 			raw = {
 				"keyboard_q",
-				"xbox_controller_left_trigger"
-			}
+				"xbox_controller_left_trigger",
+			},
 		},
 		roll_left = {
 			type = "button",
 			raw = {
-				"xbox_controller_right_shoulder"
-			}
+				"xbox_controller_right_shoulder",
+			},
 		},
 		roll_right = {
 			type = "button",
 			raw = {
-				"xbox_controller_left_shoulder"
-			}
+				"xbox_controller_left_shoulder",
+			},
 		},
 		increase_fov = {
 			type = "pressed",
 			raw = {
 				"keyboard_numpad plus",
-				"xbox_controller_d_left"
-			}
+				"xbox_controller_d_left",
+			},
 		},
 		decrease_fov = {
 			type = "pressed",
 			raw = {
 				"keyboard_num minus",
-				"xbox_controller_d_right"
-			}
+				"xbox_controller_d_right",
+			},
 		},
 		increase_fov_hold = {
 			type = "held",
 			raw = {
 				"keyboard_left ctrl+keyboard_numpad plus",
-				"xbox_controller_d_down"
-			}
+				"xbox_controller_d_down",
+			},
 		},
 		decrease_fov_hold = {
 			type = "held",
 			raw = {
 				"keyboard_left ctrl+keyboard_num minus",
-				"xbox_controller_d_up"
-			}
+				"xbox_controller_d_up",
+			},
 		},
 		pick = {
 			raw = "keyboard_l",
-			type = "pressed"
+			type = "pressed",
 		},
 		inc_dof_region = {
 			raw = "keyboard_h",
-			type = "pressed"
+			type = "pressed",
 		},
 		dec_dof_region = {
 			raw = "keyboard_n",
-			type = "pressed"
+			type = "pressed",
 		},
 		alt_action = {
 			raw = "keyboard_left ctrl",
-			type = "pressed"
+			type = "pressed",
 		},
 		inc_dof_padding = {
 			raw = "keyboard_j",
-			type = "pressed"
+			type = "pressed",
 		},
 		dec_dof_padding = {
 			raw = "keyboard_m",
-			type = "pressed"
+			type = "pressed",
 		},
 		inc_dof_scale = {
 			raw = "keyboard_k",
-			type = "pressed"
+			type = "pressed",
 		},
 		dec_dof_scale = {
 			raw = "keyboard_oem_comma",
-			type = "pressed"
+			type = "pressed",
 		},
 		mouse_wheel = {
 			raw = "mouse_wheel-keyboard_left shift",
-			type = "axis"
+			type = "axis",
 		},
 		teleport_player_to_camera = {
 			type = "pressed",
 			raw = {
 				"keyboard_enter",
-				"xbox_controller_left_trigger+xbox_controller_right_trigger"
-			}
-		}
-	}
+				"xbox_controller_left_trigger+xbox_controller_right_trigger",
+			},
+		},
+	},
 }
 
 return settings("DefaultFreeFlightInputSettings", default_free_flight_input_settings)

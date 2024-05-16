@@ -1,15 +1,17 @@
+﻿-- chunkname: @scripts/utilities/minion_patrols.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local PatrolSettings = require("scripts/settings/roamer/patrol_settings")
-local MinionPatrols = {
-	get_follow_index = function (index)
-		local is_right_side = (index + 1) % 3 == 0
-		local is_left_side = index % 3 == 0
-		local is_third = (index - 1) % 3 == 0
-		local follow_index = is_right_side and index - 1 or is_left_side and index - 2 or is_third and index - 3
+local MinionPatrols = {}
 
-		return follow_index, is_right_side, is_left_side, is_third
-	end
-}
+MinionPatrols.get_follow_index = function (index)
+	local is_right_side = (index + 1) % 3 == 0
+	local is_left_side = index % 3 == 0
+	local is_third = (index - 1) % 3 == 0
+	local follow_index = is_right_side and index - 1 or is_left_side and index - 2 or is_third and index - 3
+
+	return follow_index, is_right_side, is_left_side, is_third
+end
 
 MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world, zones)
 	local patrols = patrol_data.patrols
@@ -43,8 +45,9 @@ MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world,
 			patrol_data.astar_roamer_unit = nil
 			patrol_data.num_failed_atar_times = patrol_data.num_failed_atar_times and patrol_data.num_failed_atar_times + 1 or 1
 
-			if PatrolSettings.max_num_failed_astar_queries < patrol_data.num_failed_atar_times then
+			if patrol_data.num_failed_atar_times > PatrolSettings.max_num_failed_astar_queries then
 				local patrol_id = patrol_component.patrol_id
+
 				active_patrols[patrol_id] = nil
 				patrol_data.num_failed_atar_times = 0
 
@@ -59,6 +62,7 @@ MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world,
 		patrol_component.walk_position:store(patrol_to_position)
 
 		patrol_component.should_patrol = true
+
 		local patrol_id = patrol_component.patrol_id
 		local patrol = patrols[patrol_id]
 
@@ -86,6 +90,7 @@ MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world,
 				local follow_roamer_id = patrol[follow_index]
 				local follow_patrol_roamer = roamers[follow_roamer_id]
 				local follow_patrol_spawned_unit = follow_patrol_roamer.spawned_unit
+
 				other_patrol_component.patrol_leader_unit = follow_patrol_spawned_unit
 				other_patrol_component.patrol_index = i
 				other_patrol_component.should_patrol = true
@@ -98,7 +103,7 @@ MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world,
 		return
 	end
 
-	local current_patrol_unit, current_patrol_roamer, current_patrol_id = nil
+	local current_patrol_unit, current_patrol_roamer, current_patrol_id
 
 	for patrol_id, _ in pairs(active_patrols) do
 		local patrol = patrols[patrol_id]
@@ -165,15 +170,17 @@ MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world,
 	local claimed_sub_zone_indexes = claimed_zone_indixes[sub_zone_id]
 	local from_position = POSITION_LOOKUP[current_patrol_unit]
 	local min_patrol_distance = PatrolSettings.min_patrol_distance
-	local wanted_position, wanted_location_index = nil
+	local wanted_position, wanted_location_index
 	local random_start_location_index = math.random(1, math.max(num_sub_zone_locations - 1, 1))
 
 	for i = random_start_location_index, num_sub_zone_locations do
-		local claimed_unit = claimed_sub_zone_indexes[i]
+		repeat
+			local claimed_unit = claimed_sub_zone_indexes[i]
 
-		if claimed_unit and claimed_unit ~= current_patrol_unit then
-			-- Nothing
-		else
+			if claimed_unit and claimed_unit ~= current_patrol_unit then
+				break
+			end
+
 			local location_position = sub_zone[i].position:unbox()
 			local distance = Vector3.distance(location_position, from_position)
 
@@ -181,7 +188,9 @@ MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world,
 				wanted_position = location_position
 				wanted_location_index = i
 			end
-		end
+
+			break
+		until true
 	end
 
 	if not wanted_position then
@@ -213,6 +222,7 @@ MinionPatrols.update_roamer_patrols = function (patrol_data, roamers, nav_world,
 
 	claimed_sub_zone_indexes[wanted_location_index] = current_patrol_unit
 	current_patrol_roamer.claimed_patrol_location_index = wanted_location_index
+
 	local traverse_logic = patrol_data.patrol_traverse_logic
 	local astar = patrol_data.astar
 

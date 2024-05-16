@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/minion_spawner.lua
+
 local Component = require("scripts/utilities/component")
 local MinionSpawnerSpawnPosition = require("scripts/extension_systems/minion_spawner/utilities/minion_spawner_spawn_position")
 local SharedNav = require("scripts/components/utilities/shared_nav")
@@ -6,11 +8,14 @@ local MinionSpawner = component("MinionSpawner")
 MinionSpawner.init = function (self, unit, is_server)
 	self._unit = unit
 	self._is_server = is_server
+
 	local spawner_extension = ScriptUnit.fetch_component_extension(unit, "minion_spawner_system")
 
 	if spawner_extension then
 		local spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing, exclude_from_specials_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range = self:_get_data(unit)
+
 		self._anim_data = anim_data
+
 		local tm = Unit.world_pose(unit, 1)
 		local has_spawn_node = Unit.has_node(unit, "spawn_node")
 
@@ -33,23 +38,24 @@ MinionSpawner._get_data = function (self, unit)
 	local spawn_position_offset = self:get_data(unit, "spawn_offset")
 	local exit_position_offset = self:get_data(unit, "exit_offset")
 	local anim_duration = self:get_data(unit, "duration")
-	local anim_data = nil
+	local anim_data
 
 	if anim_duration ~= 0 then
 		local anim_length = Unit.simple_animation_length(unit)
-		local spawning_started_anim = {
-			time_from = self:get_data(unit, "spawning_started_time_from") * anim_length,
-			time_to = self:get_data(unit, "spawning_started_time_to") * anim_length
-		}
+		local spawning_started_anim = {}
+
+		spawning_started_anim.time_from = self:get_data(unit, "spawning_started_time_from") * anim_length
+		spawning_started_anim.time_to = self:get_data(unit, "spawning_started_time_to") * anim_length
 		spawning_started_anim.speed = (spawning_started_anim.time_to - spawning_started_anim.time_from) / anim_duration
-		local spawning_done_anim = {
-			time_from = self:get_data(unit, "spawning_done_time_from") * anim_length,
-			time_to = self:get_data(unit, "spawning_done_time_to") * anim_length
-		}
+
+		local spawning_done_anim = {}
+
+		spawning_done_anim.time_from = self:get_data(unit, "spawning_done_time_from") * anim_length
+		spawning_done_anim.time_to = self:get_data(unit, "spawning_done_time_to") * anim_length
 		spawning_done_anim.speed = (spawning_done_anim.time_to - spawning_done_anim.time_from) / anim_duration
 		anim_data = {
 			spawning_started = spawning_started_anim,
-			spawning_done = spawning_done_anim
+			spawning_done = spawning_done_anim,
 		}
 	end
 
@@ -112,11 +118,15 @@ MinionSpawner.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
 	self._line_object = World.create_line_object(world)
 	self._drawer = DebugDrawer(self._line_object, "retained")
+
 	local _, spawn_offset, exit_offset = self:_get_data(unit)
+
 	self._spawn_offset = spawn_offset
 	self._exit_offset = exit_offset
 
@@ -231,111 +241,111 @@ end
 
 MinionSpawner.component_data = {
 	spawn_offset = {
-		ui_type = "vector",
 		category = "Position Offset",
-		ui_name = "Spawn Position Offset",
 		step = 0.5,
-		value = Vector3Box(0, 0, 0)
+		ui_name = "Spawn Position Offset",
+		ui_type = "vector",
+		value = Vector3Box(0, 0, 0),
 	},
 	exit_offset = {
-		ui_type = "vector",
 		category = "Position Offset",
-		ui_name = "Exit Position Offset",
 		step = 0.5,
-		value = Vector3Box(0, 1, 0)
+		ui_name = "Exit Position Offset",
+		ui_type = "vector",
+		value = Vector3Box(0, 1, 0),
 	},
 	spawning_started_time_from = {
-		ui_type = "number",
+		category = "Spawning Started",
+		decimals = 1,
+		max = 1,
 		min = 0,
 		step = 0.1,
-		category = "Spawning Started",
-		value = 0,
-		decimals = 1,
 		ui_name = "Time From (Normalized)",
-		max = 1
+		ui_type = "number",
+		value = 0,
 	},
 	spawning_started_time_to = {
-		ui_type = "number",
+		category = "Spawning Started",
+		decimals = 1,
+		max = 1,
 		min = 0,
 		step = 0.1,
-		category = "Spawning Started",
-		value = 1,
-		decimals = 1,
 		ui_name = "Time To (Normalized)",
-		max = 1
+		ui_type = "number",
+		value = 1,
 	},
 	spawning_done_time_from = {
-		ui_type = "number",
+		category = "Spawning Done",
+		decimals = 1,
+		max = 1,
 		min = 0,
 		step = 0.1,
-		category = "Spawning Done",
-		value = 0,
-		decimals = 1,
 		ui_name = "Time From (Normalized)",
-		max = 1
+		ui_type = "number",
+		value = 0,
 	},
 	spawning_done_time_to = {
-		ui_type = "number",
+		category = "Spawning Done",
+		decimals = 1,
+		max = 1,
 		min = 0,
 		step = 0.1,
-		category = "Spawning Done",
-		value = 1,
-		decimals = 1,
 		ui_name = "Time To (Normalized)",
-		max = 1
+		ui_type = "number",
+		value = 1,
 	},
 	duration = {
-		ui_type = "number",
-		min = 0,
 		decimals = 1,
-		value = 0,
+		min = 0,
+		step = 0.1,
 		ui_name = "Duration (0 if no animation)",
-		step = 0.1
+		ui_type = "number",
+		value = 0,
 	},
 	spawner_groups = {
-		ui_type = "text_box_array",
+		category = "Spawner Groups",
 		size = 0,
 		ui_name = "Spawner Groups",
-		category = "Spawner Groups"
+		ui_type = "text_box_array",
 	},
 	exclude_from_pacing = {
+		ui_name = "Exclude From Pacing",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Exclude From Pacing"
 	},
 	exclude_from_specials_pacing = {
+		ui_name = "Exclude From Specials Pacing",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Exclude From Specials Pacing"
 	},
 	spawn_type = {
+		ui_name = "Spawn Type(default, from_ground)",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Spawn Type(default, from_ground)"
 	},
 	exit_rotation_random_degree_range = {
+		ui_name = "Exit Rotation Degree Range",
 		ui_type = "number",
 		value = 0,
-		ui_name = "Exit Rotation Degree Range"
 	},
 	exit_rotation_num_directions = {
+		ui_name = "Exit Rotation Num Directions",
 		ui_type = "number",
 		value = 0,
-		ui_name = "Exit Rotation Num Directions"
 	},
 	inputs = {
 		debug_started_animation = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		debug_done_animation = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"MinionSpawnerExtension"
-	}
+		"MinionSpawnerExtension",
+	},
 }
 
 return MinionSpawner

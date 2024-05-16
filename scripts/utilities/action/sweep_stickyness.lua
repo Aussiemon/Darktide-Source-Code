@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/action/sweep_stickyness.lua
+
 local SweepStickyness = {}
 
 SweepStickyness.is_sticking_to_unit = function (action_sweep_component)
@@ -52,8 +54,7 @@ SweepStickyness.num_damage_instances_this_frame = function (hit_stickyness_setti
 	local time_between_instances = duration * 0.9 / damage_instances
 	local last_instance = false
 	local first_instance = false
-	local interval_start = math.round_with_precision(t - start_t, 4)
-	local interval_end = math.round_with_precision(next_t - start_t, 4)
+	local interval_start, interval_end = math.round_with_precision(t - start_t, 4), math.round_with_precision(next_t - start_t, 4)
 
 	for i = 1, damage_instances do
 		local damage_instance_t = time_between_instances * i

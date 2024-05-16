@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/mission_objective_system.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MissionObjectiveCollect = require("scripts/extension_systems/mission_objective/utilities/mission_objective_collect")
 local MissionObjectiveDecode = require("scripts/extension_systems/mission_objective/utilities/mission_objective_decode")
@@ -21,7 +23,7 @@ local mission_objectives = {
 	demolition = MissionObjectiveDemolition,
 	luggable = MissionObjectiveLuggable,
 	scanning = MissionObjectiveZone,
-	side = MissionObjectiveSide
+	side = MissionObjectiveSide,
 }
 local MissionObjectiveSystem = class("MissionObjectiveSystem", "ExtensionSystemBase")
 local RPCS = {
@@ -36,7 +38,7 @@ local RPCS = {
 	"rpc_mission_objective_show_ui",
 	"rpc_mission_objective_show_counter",
 	"rpc_mission_objective_override_ui_string",
-	"rpc_mission_sound_event"
+	"rpc_mission_sound_event",
 }
 
 MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
@@ -58,6 +60,7 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 	self._new_ui_strings = {}
 	self._objective_start_times = {}
 	self._music_event_listener = nil
+
 	local network_event_delegate = context.network_event_delegate
 
 	if not DEDICATED_SERVER then
@@ -67,6 +70,7 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 	end
 
 	self._level_name = context.level_name
+
 	local mission = system_init_data.mission
 
 	self:_load_definitions(mission)
@@ -142,6 +146,7 @@ MissionObjectiveSystem.start_mission_objective = function (self, objective_name,
 	second_progression = second_progression or 0
 	increment = increment or 0
 	stage = stage or 1
+
 	local mission_objective_data = self:objective_definition(objective_name)
 
 	if not mission_objective_data then
@@ -168,6 +173,7 @@ MissionObjectiveSystem.start_mission_objective = function (self, objective_name,
 
 	if self._is_server then
 		self._objective_start_times[objective] = Managers.time:time("main")
+
 		local players = Managers.player:players()
 
 		for _, player in pairs(players) do
@@ -182,6 +188,7 @@ MissionObjectiveSystem._setup_mission_objective = function (self, objective_name
 	local mission_objective_data = self:objective_definition(objective_name)
 	local mission_objective_type = mission_objective_data.mission_objective_type
 	local objective = self._active_objectives[objective_name]
+
 	objective = mission_objectives[mission_objective_type]:new()
 	self._active_objectives[objective_name] = objective
 
@@ -244,6 +251,7 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name)
 
 	if self._is_server then
 		self._objective_start_times[objective] = nil
+
 		local players = Managers.player:players()
 
 		for _, player in pairs(players) do
@@ -299,7 +307,7 @@ MissionObjectiveSystem._propagate_objective_progression = function (self, object
 	local progression = objective:progression()
 	local synced_progress = self._synced_progressions[objective] or 0
 	local delta = math.abs(progression - synced_progress)
-	local should_sync_progression = not self._synced_progressions[objective] or self._progression_sync_granularity < delta
+	local should_sync_progression = not self._synced_progressions[objective] or delta > self._progression_sync_granularity
 
 	if should_sync_progression then
 		self._synced_progressions[objective] = progression
@@ -310,8 +318,10 @@ MissionObjectiveSystem._propagate_objective_progression = function (self, object
 
 	local second_progression = objective:second_progression()
 	local synced_second_progression = self._synced_second_progressions[objective] or 0
+
 	delta = math.abs(second_progression - synced_second_progression)
-	local should_sync_second_progression = not self._synced_second_progressions[objective] or self._progression_sync_granularity < delta
+
+	local should_sync_second_progression = not self._synced_second_progressions[objective] or delta > self._progression_sync_granularity
 
 	if should_sync_second_progression then
 		self._synced_second_progressions[objective] = second_progression
@@ -400,6 +410,7 @@ MissionObjectiveSystem._override_ui_string = function (self, objective_name, new
 		end
 
 		self._new_ui_strings[objective_name] = ui_string_array
+
 		local objective_name_id = NetworkLookup.mission_objective_names[objective_name]
 		local new_header_id = new_ui_header and NetworkLookup.mission_objective_ui_strings[new_ui_header] or 0
 		local new_description_id = new_ui_description and NetworkLookup.mission_objective_ui_strings[new_ui_description] or 0
@@ -412,7 +423,7 @@ MissionObjectiveSystem._change_active_objective_ui_string = function (self, is_h
 	local active_objective = self:get_active_objective(objective_name)
 
 	if active_objective then
-		local localized_new_ui_string = nil
+		local localized_new_ui_string
 
 		if new_ui_string and new_ui_string ~= "empty_objective_string" then
 			localized_new_ui_string = Managers.localization:localize(new_ui_string)
@@ -551,6 +562,7 @@ MissionObjectiveSystem.register_objective_synchronizer = function (self, objecti
 	end
 
 	local synchronizer = self._objective_registered_synchronizer[objective_name]
+
 	self._objective_registered_synchronizer[objective_name] = objective_unit
 end
 
@@ -646,6 +658,7 @@ end
 
 MissionObjectiveSystem.enable_unit = function (self, objective_name, unit, stage)
 	stage = stage or 1
+
 	local registered_units = self:active_objective(objective_name)
 	local stage_units = registered_units[stage]
 
@@ -672,6 +685,7 @@ end
 
 MissionObjectiveSystem.disable_unit = function (self, objective_name, unit, stage)
 	stage = stage or 1
+
 	local registered_units = self._objective_registered_units[objective_name]
 	local stage_units = registered_units[stage]
 

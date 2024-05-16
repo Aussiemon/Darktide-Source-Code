@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/active_time_offset_proc_buff.lua
+
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local ActiveTimeOffsetProcBuff = class("ActiveTimeOffsetProcBuff", "ProcBuff")

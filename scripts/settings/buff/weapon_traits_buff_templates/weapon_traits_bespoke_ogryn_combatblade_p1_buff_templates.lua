@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_ogryn_combatblade_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
@@ -10,34 +12,34 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
-	allow_proc_while_active = true,
-	predicted = false,
-	class_name = "proc_buff",
 	active_duration = 3,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	predicted = false,
 	proc_events = {
-		[proc_events.on_push_finish] = 1
+		[proc_events.on_push_finish] = 1,
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_critical_strike_chance] = 0.01
+		[stat_buffs.melee_critical_strike_chance] = 0.01,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
 		return params.num_hit_units and params.num_hit_units > 0
-	end
+	end,
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_kill_parent)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent.child_buff_template = "weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_child"
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_child = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_kill_child)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_attack_cleave_on_multiple_hits)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_special_follow_up_hits = {
-	predicted = false,
 	class_name = "proc_buff",
+	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_finish] = 1
+		[proc_events.on_sweep_finish] = 1,
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.1
+		[stat_buffs.power_level_modifier] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
@@ -61,25 +63,25 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 					template_data.active = false
 				end
 			end
-		end
+		end,
 	},
 	check_active_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
-	end
+	end,
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_attack = {
 	class_name = "proc_buff",
-	predicted = false,
 	force_predicted_proc = true,
+	predicted = false,
 	keywords = {
-		keywords.fully_charged_attacks_infinite_cleave
+		keywords.fully_charged_attacks_infinite_cleave,
 	},
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1
+		[proc_events.on_sweep_finish] = 1,
 	},
 	conditional_keywords = {
-		keywords.ignore_armor_aborts_attack
+		keywords.ignore_armor_aborts_attack,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active and ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
@@ -93,11 +95,11 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 		end,
 		[proc_events.on_sweep_finish] = function (params, template_data, template_context)
 			template_data.active = false
-		end
+		end,
 	},
 	check_active_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
-	end
+	end,
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_crit)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks = table.clone(BaseWeaponTraitBuffTemplates.toughness_recovery_on_chained_attacks)

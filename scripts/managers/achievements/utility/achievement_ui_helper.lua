@@ -1,60 +1,70 @@
+﻿-- chunkname: @scripts/managers/achievements/utility/achievement_ui_helper.lua
+
 local AchievementCategories = require("scripts/settings/achievements/achievement_categories")
 local MasterItems = require("scripts/backend/master_items")
 local TextUtils = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local _item_type_group_lookup = UISettings.item_type_group_lookup
-local AchievementUIHelper = {
-	achievement_definition_by_id = function (id)
-		local definitions = Managers.achievements:achievement_definitions()
+local AchievementUIHelper = {}
 
-		return definitions[id]
-	end,
-	achievement_category_label = function (category_id)
-		local localization_key = AchievementCategories[category_id].display_name
+AchievementUIHelper.achievement_definition_by_id = function (id)
+	local definitions = Managers.achievements:achievement_definitions()
 
-		return Localize(localization_key)
-	end,
-	get_reward_item = function (achievement_definition)
-		local reward_item, item_group = nil
-		local rewards = achievement_definition.rewards
+	return definitions[id]
+end
+
+AchievementUIHelper.achievement_category_label = function (category_id)
+	local localization_key = AchievementCategories[category_id].display_name
+
+	return Localize(localization_key)
+end
+
+AchievementUIHelper.get_reward_item = function (achievement_definition)
+	local reward_item, item_group
+	local rewards = achievement_definition.rewards
+
+	if rewards and #rewards > 0 then
+		local reward_id = rewards[1].masterId
+
+		reward_item = MasterItems.get_item(reward_id)
+
+		local item_type = reward_item and reward_item.item_type
+
+		item_group = item_type and _item_type_group_lookup[item_type]
+	end
+
+	return reward_item, item_group
+end
+
+AchievementUIHelper.get_acheivement_by_reward_item = function (item)
+	local achievements = Managers.achievements:achievement_definitions()
+
+	for _, achievement in pairs(achievements) do
+		local rewards = achievement.rewards
 
 		if rewards and #rewards > 0 then
 			local reward_id = rewards[1].masterId
-			reward_item = MasterItems.get_item(reward_id)
-			local item_type = reward_item and reward_item.item_type
-			item_group = item_type and _item_type_group_lookup[item_type]
-		end
+			local reward_item = MasterItems.get_item(reward_id)
 
-		return reward_item, item_group
-	end,
-	get_acheivement_by_reward_item = function (item)
-		local achievements = Managers.achievements:achievement_definitions()
-
-		for _, achievement in pairs(achievements) do
-			local rewards = achievement.rewards
-
-			if rewards and #rewards > 0 then
-				local reward_id = rewards[1].masterId
-				local reward_item = MasterItems.get_item(reward_id)
-
-				if reward_item and reward_item.name == item.name then
-					return achievement
-				end
+			if reward_item and reward_item.name == item.name then
+				return achievement
 			end
 		end
-	end,
-	localized_title = function (achievement_definition)
-		local flags = achievement_definition.flags
-		local loc_title_variables = achievement_definition.loc_title_variables
-		local localized_title = Localize(achievement_definition.title, loc_title_variables ~= nil, loc_title_variables)
-
-		if flags.private_only then
-			localized_title = string.format("%s %s", localized_title, TextUtils.apply_color_to_text("", Color.terminal_text_warning_light(255, true)))
-		end
-
-		return localized_title
 	end
-}
+end
+
+AchievementUIHelper.localized_title = function (achievement_definition)
+	local flags = achievement_definition.flags
+	local loc_title_variables = achievement_definition.loc_title_variables
+	local localized_title = Localize(achievement_definition.title, loc_title_variables ~= nil, loc_title_variables)
+
+	if flags.private_only then
+		localized_title = string.format("%s %s", localized_title, TextUtils.apply_color_to_text("", Color.terminal_text_warning_light(255, true)))
+	end
+
+	return localized_title
+end
+
 local empty = {}
 
 AchievementUIHelper.localized_description = function (achievement_definition, separate_private_discription)
@@ -147,7 +157,7 @@ AchievementUIHelper.add_favorite_achievement = function (id)
 	local save_data = Managers.save:account_data()
 	local favorite_achievements = save_data.favorite_achievements
 
-	if UISettings.max_favorite_achievements <= #favorite_achievements then
+	if #favorite_achievements >= UISettings.max_favorite_achievements then
 		return false
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_scenegraph.lua
+
 local UIScenegraph = {}
 
 UIScenegraph.init_scenegraph_cached = function (scenegraph)
@@ -9,10 +11,12 @@ UIScenegraph.init_scenegraph_cached = function (scenegraph)
 		EngineOptimized.scenegraph_cached_deinit(scenegraph_object.scene_graph_ref)
 
 		scenegraph_object.scene_graph_ref = nil
+
 		local children = scenegraph_object.children
 
 		if children then
 			local scene_graph_ref = EngineOptimized.scenegraph_cached_init(scenegraph_object.children)
+
 			scenegraph_object.scene_graph_ref = scene_graph_ref
 		end
 	end
@@ -20,6 +24,7 @@ end
 
 UIScenegraph.init_scenegraph = function (scenegraph, scale)
 	scenegraph = table.clone(scenegraph)
+
 	local hierarchical_scenegraph = {}
 	local n_hierarchical_scenegraph = 0
 	local is_static = false
@@ -33,11 +38,13 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 		if not scene_object_data.parent then
 			n_hierarchical_scenegraph = n_hierarchical_scenegraph + 1
 			hierarchical_scenegraph[n_hierarchical_scenegraph] = scene_object_data
+
 			local position = scene_object_data.position or {
 				0,
 				0,
-				0
+				0,
 			}
+
 			scene_object_data.local_position = position
 			scene_object_data.world_position = table.clone(position)
 		end
@@ -54,14 +61,18 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 
 				if parent_data.world_position then
 					num_iterated_objects = num_iterated_objects + 1
+
 					local position = scene_object_data.position or {
 						0,
 						0,
-						0
+						0,
 					}
+
 					scene_object_data.local_position = position
+
 					local parent_world_position = Vector3.from_array(parent_data.world_position)
 					local local_position = Vector3.from_array(position)
+
 					scene_object_data.world_position = Vector3.to_array(local_position + parent_world_position, {})
 					scene_object_data.size = scene_object_data.size or table.clone(parent_data.size)
 
@@ -79,6 +90,7 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 
 					local children = parent_data.children or {}
 					local num_children = parent_data.num_children or 0
+
 					children[num_children + 1] = scene_object_data
 					parent_data.children = children
 					parent_data.num_children = num_children + 1
@@ -92,8 +104,8 @@ UIScenegraph.init_scenegraph = function (scenegraph, scale)
 	scenegraph.is_static = is_static
 
 	if scenegraph.is_static then
-		local w = RESOLUTION_LOOKUP.width
-		local h = RESOLUTION_LOOKUP.height
+		local w, h = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
+
 		scenegraph.w = w
 		scenegraph.h = h
 		scenegraph.dirty = false
@@ -137,24 +149,23 @@ local function _handle_alignment(position, data, width, height, parent_size_x, p
 end
 
 local Vector3_from_array = Vector3.from_array
-local Vector3_x = Vector3.x
-local Vector3_y = Vector3.y
-local Vector3_set_x = Vector3.set_x
-local Vector3_set_y = Vector3.set_y
+local Vector3_x, Vector3_y, Vector3_set_x, Vector3_set_y = Vector3.x, Vector3.y, Vector3.set_x, Vector3.set_y
 local scenegraph_cached_update_children = EngineOptimized.scenegraph_cached_update_children
 local scenegraph_update_children = EngineOptimized.scenegraph_update_children
 
 UIScenegraph.update_scenegraph = function (scenegraph, scale)
 	local default_scale = RESOLUTION_LOOKUP.scale
 	local default_inverse_scale = 1 / default_scale
+
 	scale = scale or default_scale
+
 	local inverse_scale = 1 / scale
-	local w = RESOLUTION_LOOKUP.width
-	local h = RESOLUTION_LOOKUP.height
+	local w, h = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 	local safe_rect = _safe_rect()
 	local safe_rect_scale = 1 - safe_rect
-	local safe_rect_offset_x = w * inverse_scale * safe_rect * 0.5
-	local safe_rect_offset_y = h * inverse_scale * safe_rect * 0.5
+	local safe_rect_offset_x = w * inverse_scale * (safe_rect * 0.5)
+	local safe_rect_offset_y = h * inverse_scale * (safe_rect * 0.5)
+
 	w = w * safe_rect_scale
 	h = h * safe_rect_scale
 
@@ -173,9 +184,11 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 
 	for i = 1, n_hierarchical_scenegraph do
 		local scenegraph_object = hierarchical_scenegraph[i]
-		local current_world_position = nil
+		local current_world_position
 		local size = scenegraph_object.size
+
 		current_world_position = Vector3_from_array(scenegraph_object.local_position)
+
 		local parent_size_x = w_inverse_scale
 		local parent_size_y = h_inverse_scale
 		local size_x = size and size[1]
@@ -186,6 +199,7 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 		if not scenegraph_object_parent and not scenegraph_object_scale or scenegraph_object_scale == "fit" or scenegraph_object_scale == "hud_fit" then
 			size_x = w_inverse_scale
 			size_y = h_inverse_scale
+
 			local scale_offset_x = 0
 			local scale_offset_y = 0
 
@@ -194,6 +208,7 @@ UIScenegraph.update_scenegraph = function (scenegraph, scale)
 		elseif scenegraph_object_scale == "aspect_ratio" then
 			local aspect_ratio = w / h
 			local default_aspect_ratio = size_x / size_y
+
 			size_x = w
 			size_y = h
 
@@ -247,8 +262,7 @@ end
 UIScenegraph.get_scenegraph_id_screen_scale = function (scenegraph, scenegraph_object_name, scale)
 	local world_position = UIScenegraph.world_position(scenegraph, scenegraph_object_name, scale)
 	local size_width, size_height = UIScenegraph.get_render_size(scenegraph, scenegraph_object_name, scale)
-	local resolution_width = RESOLUTION_LOOKUP.width
-	local resolution_height = RESOLUTION_LOOKUP.height
+	local resolution_width, resolution_height = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 	local x_scale = world_position.x / resolution_width
 	local y_scale = world_position.y / resolution_height
 	local w_scale = size_width / resolution_width
@@ -280,10 +294,10 @@ UIScenegraph.get_render_size = function (scenegraph, scenegraph_object_name, opt
 	local inverse_scale = 1 / scale
 
 	if scenegraph_object_scale or not scenegraph_object_parent then
-		local w = RESOLUTION_LOOKUP.width
-		local h = RESOLUTION_LOOKUP.height
+		local w, h = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 		local safe_rect = _safe_rect()
 		local safe_rect_scale = 1 - safe_rect
+
 		w = w * safe_rect_scale
 		h = h * safe_rect_scale
 
@@ -300,6 +314,7 @@ UIScenegraph.get_render_size = function (scenegraph, scenegraph_object_name, opt
 			local size_y = size[2] * scale
 			local aspect_ratio = w / h
 			local default_aspect_ratio = size_x / size_y
+
 			size_x = w
 			size_y = h
 
@@ -327,12 +342,12 @@ UIScenegraph.get_size = function (scenegraph, scenegraph_object_name, optional_s
 	local scenegraph_object_parent = scenegraph_object.parent
 
 	if scenegraph_object_scale or not scenegraph_object_parent then
-		local w = RESOLUTION_LOOKUP.width
-		local h = RESOLUTION_LOOKUP.height
+		local w, h = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 		local safe_rect = _safe_rect()
 		local safe_rect_scale = 1 - safe_rect
 		local scale = optional_scale or RESOLUTION_LOOKUP.scale
 		local inverse_scale = 1 / scale
+
 		w = w * safe_rect_scale
 		h = h * safe_rect_scale
 
@@ -349,6 +364,7 @@ UIScenegraph.get_size = function (scenegraph, scenegraph_object_name, optional_s
 			local size_y = size[2]
 			local aspect_ratio = w / h
 			local default_aspect_ratio = size_x / size_y
+
 			size_x = w
 			size_y = h
 
@@ -379,10 +395,11 @@ UIScenegraph.size_scaled = function (scenegraph, scenegraph_object_name, optiona
 	local inverse_scale = 1 / scale
 	local safe_rect = _safe_rect()
 	local safe_rect_scale = 1 - safe_rect
-	local w = RESOLUTION_LOOKUP.width
-	local h = RESOLUTION_LOOKUP.height
+	local w, h = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
+
 	w = w * safe_rect_scale
 	h = h * safe_rect_scale
+
 	local scenegraph_object_scale = scenegraph_object.scale
 	local scenegraph_object_parent = scenegraph_object.parent
 
@@ -399,6 +416,7 @@ UIScenegraph.size_scaled = function (scenegraph, scenegraph_object_name, optiona
 		local size_y = size[2]
 		local aspect_ratio = w / h
 		local default_aspect_ratio = size_x / size_y
+
 		size_x = w
 		size_y = h
 
@@ -423,6 +441,7 @@ end
 
 UIScenegraph.set_local_position = function (scenegraph, scenegraph_object_name, new_position)
 	local old_position = scenegraph[scenegraph_object_name].local_position
+
 	old_position[1] = new_position[1]
 	old_position[2] = new_position[2]
 	old_position[3] = new_position[3]

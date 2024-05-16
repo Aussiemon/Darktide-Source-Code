@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/utilities/attack/hit_zone_tests.lua
+
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local DEFAULT_BASE_HEIGHT = 3
 
 local function _check_for_unassigned_actors(unit, world, hit_zone_lookup, breed)
 	local base_height = breed.base_height or DEFAULT_BASE_HEIGHT
 	local pos = Unit.world_position(unit, 1)
+
 	pos.z = pos.z + base_height * 0.5
+
 	local physics_world = World.physics_world(world)
 	local collision_filter = "filter_hit_zones_test"
 	local hit_actors = {}
@@ -21,6 +25,7 @@ local function _check_for_unassigned_actors(unit, world, hit_zone_lookup, breed)
 			end
 
 			hit_actors[actor] = true
+
 			local hit_zone = hit_zone_lookup[actor]
 
 			if not hit_zone then
@@ -79,7 +84,7 @@ local function _check_hit_zone_actor_index_boundaries(unit, hit_zone_lookup)
 			return false, string.format("Could not find an actor_index for hit zone %q", hit_zone.name)
 		end
 
-		if NetworkConstants.max_hit_zone_actor_index < actor_index then
+		if actor_index > NetworkConstants.max_hit_zone_actor_index then
 			return false, string.format("actor_index (%i) for hit zone %q is larger than maximum (%i). Up hit_zone_actor_index max value by a factor of 2 in global.network_conig.", actor_index, hit_zone.name, NetworkConstants.max_hit_zone_actor_index)
 		end
 
@@ -99,6 +104,7 @@ local function _hit_zone_tests(unit, breed, world)
 	local hit_zone_lookup = HitZone.initialize_lookup(unit, breed.hit_zones)
 	local error_msg = "HitZoneTests failed for unit %s using breed %q. %s"
 	local s, m = _check_for_unassigned_actors(unit, world, hit_zone_lookup, breed)
+
 	s, m = _check_hit_zone_actor_index_boundaries(unit, hit_zone_lookup)
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_server_migration/view_element_server_migration.lua
+
 local definition_path = "scripts/ui/view_elements/view_element_server_migration/view_element_server_migration_definitions"
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -14,192 +16,195 @@ local currency_order = {
 	"marks",
 	"plasteel",
 	"diamantine",
-	"aquilas"
+	"aquilas",
 }
 local widget_passes = {
 	title = {
 		size = {
 			nil,
-			30
+			30,
 		},
 		passes = {
 			{
+				content_id = "hotspot",
 				pass_type = "hotspot",
-				content_id = "hotspot"
 			},
 			{
-				value_id = "text",
-				style_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "",
+				value_id = "text",
 				style = {
 					font_size = 30,
-					text_color = Color.terminal_text_header_selected(255, true)
-				}
-			}
+					text_color = Color.terminal_text_header_selected(255, true),
+				},
+			},
 		},
 		init = function (widget, data)
 			local content = widget.content
+
 			content.text = data.display_name
-		end
+		end,
 	},
 	small_title = {
 		size = {
 			nil,
-			24
+			24,
 		},
 		passes = {
 			{
+				content_id = "hotspot",
 				pass_type = "hotspot",
-				content_id = "hotspot"
 			},
 			{
-				value_id = "text",
-				style_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "",
+				value_id = "text",
 				style = {
 					font_size = 24,
-					text_color = Color.terminal_text_header(255, true)
-				}
-			}
+					text_color = Color.terminal_text_header(255, true),
+				},
+			},
 		},
 		init = function (widget, data)
 			local content = widget.content
+
 			content.text = data.display_name
-		end
+		end,
 	},
 	currency_text = {
 		size = {
 			nil,
-			28
+			28,
 		},
 		passes = {
 			{
+				content_id = "hotspot",
 				pass_type = "hotspot",
-				content_id = "hotspot"
 			},
 			{
-				value_id = "currency",
-				style_id = "currency",
 				pass_type = "text",
+				style_id = "currency",
 				value = "",
+				value_id = "currency",
 				style = {
 					font_size = 18,
 					text_vertical_alignment = "center",
-					text_color = Color.terminal_text_body(255, true)
-				}
+					text_color = Color.terminal_text_body(255, true),
+				},
 			},
 			{
-				value_id = "icon",
 				pass_type = "texture",
 				style_id = "icon",
+				value_id = "icon",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "right",
+					vertical_alignment = "center",
 					size = {
 						40,
-						28
-					}
+						28,
+					},
 				},
 				visibilty_function = function (parent, content)
 					return not not content.icon
-				end
+				end,
 			},
 			{
-				value_id = "value",
-				style_id = "value",
 				pass_type = "text",
+				style_id = "value",
 				value = "",
+				value_id = "value",
 				style = {
 					font_size = 18,
-					text_vertical_alignment = "center",
 					text_horizontal_alignment = "right",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						-50,
 						0,
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		},
 		init = function (widget, data)
 			local content = widget.content
 			local wallet_data = WalletSettings[data.currency_type]
+
 			content.currency = Localize(wallet_data.display_name)
 			content.icon = wallet_data.icon_texture_small
 			content.value = data.value
-		end
+		end,
 	},
 	large_spacing = {
 		size = {
 			nil,
-			20
-		}
+			20,
+		},
 	},
 	spacing = {
 		size = {
 			nil,
-			10
-		}
+			10,
+		},
 	},
 	image = {
 		size = {
 			nil,
-			300
+			300,
 		},
 		passes = {
 			{
+				content_id = "hotspot",
 				pass_type = "hotspot",
-				content_id = "hotspot"
 			},
 			{
-				value_id = "texture",
-				style_id = "texture",
 				pass_type = "texture",
+				style_id = "texture",
 				value = "content/ui/materials/base/ui_default_base",
+				value_id = "texture",
 				style = {
 					horizontal_alignment = "center",
-					vertical_alignment = "center"
+					vertical_alignment = "center",
 				},
 				visibilty_function = function (parent, content)
 					return not not content.value_id
-				end
-			}
+				end,
+			},
 		},
 		init = function (widget, data)
 			widget.style.texture.material_values = {
-				texture_map = data.texture
+				texture_map = data.texture,
 			}
-		end
+		end,
 	},
 	description = {
 		size = {
 			nil,
-			70
+			70,
 		},
 		passes = {
 			{
+				content_id = "hotspot",
 				pass_type = "hotspot",
-				content_id = "hotspot"
 			},
 			{
-				value_id = "description",
-				style_id = "description",
 				pass_type = "text",
+				style_id = "description",
 				value = "",
+				value_id = "description",
 				style = {
 					font_size = 18,
 					text_vertical_alignment = "top",
-					text_color = Color.terminal_text_body(255, true)
-				}
-			}
+					text_color = Color.terminal_text_body(255, true),
+				},
+			},
 		},
 		init = function (widget, data)
 			widget.content.description = data.text
-		end
-	}
+		end,
+	},
 }
 
 ViewElemenServerMigration.init = function (self, parent, draw_layer, start_scale, context)
@@ -214,7 +219,7 @@ ViewElemenServerMigration.init = function (self, parent, draw_layer, start_scale
 	self:_create_background_gui()
 	ButtonPassTemplates.terminal_button_hold_small.init(self, self._widgets_by_name.close_button, self._ui_default_renderer, {
 		text = Localize("loc_popup_button_close"),
-		complete_function = callback(self, "_close_button_pressed", self._widgets_by_name.close_button)
+		complete_function = callback(self, "_close_button_pressed", self._widgets_by_name.close_button),
 	})
 
 	self._widgets_by_name.next_button.content.original_text = Localize("loc_next")
@@ -232,13 +237,14 @@ ViewElemenServerMigration._create_offscreen_renderer = function (self)
 	local viewport_layer = 1
 	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	local renderer_name = self.__class_name .. "server_migraton_renderer"
+
 	self._offscreen_renderer = Managers.ui:create_renderer(renderer_name, world)
 	self._offscreen_world = {
 		name = world_name,
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name
+		renderer_name = renderer_name,
 	}
 end
 
@@ -249,13 +255,16 @@ ViewElemenServerMigration._create_default_gui = function (self)
 	local world_layer = 122
 	local world_name = class_name .. "_ui_default_world"
 	local view_name = self.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	self._world_name = world_name
 	self._world_draw_layer = world_layer
 	self._world_default_layer = world_layer
+
 	local viewport_name = class_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(class_name .. "_ui_default_renderer", self._world)
@@ -268,18 +277,22 @@ ViewElemenServerMigration._create_background_gui = function (self)
 	local world_layer = 121
 	local world_name = class_name .. "_ui_background_world"
 	local view_name = self.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	self._background_world_name = world_name
 	self._background_world_draw_layer = world_layer
 	self._background_world_default_layer = world_layer
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_shading_callback")
 	local viewport_name = class_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_background_renderer = ui_manager:create_renderer(class_name .. "_ui_background_renderer", self._background_world)
+
 	local max_value = 0.75
 
 	WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, max_value)
@@ -314,10 +327,12 @@ end
 
 ViewElemenServerMigration.change_page_presentation = function (self, index)
 	local presentation_data = self._presentation_data
+
 	self._use_offscreen = {}
 
 	if self._grids then
 		for i = 1, #self._grids do
+			-- Nothing
 		end
 
 		self._grids = {}
@@ -337,6 +352,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 	for i = 1, #presentation_data do
 		for j = 1, #presentation_data[i] do
 			local scrollbar_widget = presentation_data[i][j].scrollbar_widget
+
 			scrollbar_widget.content.visible = false
 		end
 	end
@@ -361,6 +377,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 			local widget_data = grid_data.widgets[i]
 			local passes_data = widget_passes[widget_data.pass_template]
 			local size = widget_data.data and widget_data.data.size or passes_data.size
+
 			size[1] = size[1] or grid_size[1]
 			size[2] = size[2] or grid_size[2]
 
@@ -369,8 +386,8 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 				grid_alignments[#grid_alignments + 1] = {
 					size = {
 						grid_size[1],
-						size[2]
-					}
+						size[2],
+					},
 				}
 				total_height = total_height + size[2]
 			else
@@ -392,8 +409,8 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 					name = "migration_server_element_widget_" .. j .. "_" .. i,
 					size = {
 						grid_size[1],
-						size[2]
-					}
+						size[2],
+					},
 				}
 				total_height = total_height + size[2]
 			end
@@ -401,7 +418,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 
 		local grid = UIWidgetGrid:new(grid_widgets, grid_alignments, self._ui_scenegraph, grid_scenegraph_id, grid_direction, {
 			0,
-			0
+			0,
 		})
 
 		grid:assign_scrollbar(scrollbar_widget, grid_content_scenegraph_id, interaction_scenegraph_id)
@@ -438,6 +455,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 	end
 
 	self._widgets_by_name.title.content.title = presentation_data[index].display_name and Localize(presentation_data[index].display_name) or ""
+
 	local added_height = 220
 	local total_grid_height = 0
 	local total_spacing_height = 0
@@ -452,12 +470,14 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 
 		for i = 1, #grid_placement do
 			local row = grid_placement[i]
+
 			grid_row_height[i] = 0
 			spacing_by_row[i] = 0
 
 			for k = 1, #row do
 				local id = row[k]
 				local current_spacing = grid_spacing and grid_spacing[id] and grid_spacing[id][2] or 0
+
 				grid_row_height[i] = math.max(grid_row_height[i], height_by_grid[id])
 				spacing_by_row[i] = math.max(spacing_by_row[i], current_spacing)
 			end
@@ -475,6 +495,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 				local grid_data = presentation_data[index][id]
 				local grid_scenegraph_id = grid_data.grid_scenegraph_id
 				local y_position = (grid_row_height[i - 1] or 0) + start_offset
+
 				position_by_grid[id] = y_position
 			end
 		end
@@ -493,7 +514,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 		local spacing_value = grid_spacing and grid_spacing[i] and grid_spacing[i][2] or 0
 
 		if grid_placement and grid_spacing then
-			local row_id = nil
+			local row_id
 
 			for j = 1, #grid_placement do
 				local row = grid_placement[j]
@@ -521,6 +542,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 		end
 
 		local position = (position_by_grid[i] or 0) - total_grid_height * 0.5 + height_by_grid[i] * 0.5
+
 		position = position + spacing_value
 
 		self:_set_scenegraph_position(grid_scenegraph_id, nil, position)
@@ -528,11 +550,14 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 
 	for i = 1, #spacing_by_row do
 		local spacing = spacing_by_row[i]
+
 		total_spacing_height = total_spacing_height + spacing
 	end
 
 	local total_height = added_height + total_grid_height + total_spacing_height
+
 	self._grid_height = total_height
+
 	local button_size = self._ui_scenegraph.button_pivot.size
 	local slider_margin = 10
 	local height_edge_margin = 20
@@ -578,10 +603,11 @@ ViewElemenServerMigration._generate_slider_widget = function (self, current_inde
 		end
 
 		local offset = (slide_selector.size[1] + slide_selector.margin) * (i - 1)
+
 		widget.offset = {
 			offset - total_offset_size * 0.5,
 			0,
-			200
+			200,
 		}
 		widget.content.hotspot.is_selected = current_index == i
 		widgets[#widgets + 1] = widget
@@ -614,16 +640,18 @@ ViewElemenServerMigration.present = function (self, migration_data)
 		for i = 1, #profiles do
 			local character_profile = profiles[i]
 			local character_id = character_profile.character_id
+
 			migration_by_character_id[character_id] = {
-				character_profile.name
+				character_profile.name,
 			}
 		end
 
 		for currency_type, data in pairs(WalletSettings) do
 			if currency_type ~= "aquilas" then
 				wallet_currencies[currency_type] = {
-					[1.0] = 0
+					[1] = 0,
 				}
+
 				local order_id = table.find(currency_order, currency_type)
 
 				if order_id ~= nil then
@@ -653,10 +681,10 @@ ViewElemenServerMigration.present = function (self, migration_data)
 		local presentation_data = {
 			{
 				{
-					grid_scenegraph_id = "change_info_grid",
-					interaction_scenegraph_id = "change_info_grid_interaction",
 					grid_content_scenegraph_id = "change_info_grid_content_pivot",
 					grid_direction = "down",
+					grid_scenegraph_id = "change_info_grid",
+					interaction_scenegraph_id = "change_info_grid_interaction",
 					scrollbar_widget = self._widgets_by_name.change_info_grid_scrollbar,
 					mask_widget = self._widgets_by_name.change_info_grid_mask,
 					widgets = {
@@ -666,12 +694,12 @@ ViewElemenServerMigration.present = function (self, migration_data)
 								texture = "content/ui/textures/images/wallet_merge",
 								size = {
 									300,
-									300
-								}
-							}
+									300,
+								},
+							},
 						},
 						{
-							pass_template = "large_spacing"
+							pass_template = "large_spacing",
 						},
 						{
 							pass_template = "description",
@@ -679,59 +707,82 @@ ViewElemenServerMigration.present = function (self, migration_data)
 								text = Localize("loc_wallet_merge_desc"),
 								size = {
 									nil,
-									100
+									100,
 								},
 								style_overrides = {
 									description = {
-										text_horizontal_alignment = "center"
-									}
-								}
-							}
-						}
-					}
+										text_horizontal_alignment = "center",
+									},
+								},
+							},
+						},
+					},
 				},
-				display_name = "loc_wallet_merge_title"
+				display_name = "loc_wallet_merge_title",
 			},
 			{
+				grid_placement = {
+					{
+						1,
+						2,
+					},
+					{
+						3,
+					},
+				},
+				grid_spacing = {
+					{
+						0,
+						20,
+					},
+					{
+						0,
+						20,
+					},
+					{
+						0,
+						20,
+					},
+				},
 				{
-					grid_scenegraph_id = "wallet_grid_1",
-					type = "total",
-					interaction_scenegraph_id = "wallet_grid_1_interaction",
 					grid_content_scenegraph_id = "wallet_grid_1_content_pivot",
 					grid_direction = "down",
+					grid_scenegraph_id = "wallet_grid_1",
+					interaction_scenegraph_id = "wallet_grid_1_interaction",
+					type = "total",
 					scrollbar_widget = self._widgets_by_name.wallet_grid_1_scrollbar,
 					mask_widget = self._widgets_by_name.wallet_grid_1_mask,
 					widgets = {
 						{
 							pass_template = "title",
 							data = {
-								display_name = Localize("loc_wallet_merge_account_wallets")
-							}
-						}
-					}
+								display_name = Localize("loc_wallet_merge_account_wallets"),
+							},
+						},
+					},
 				},
 				{
-					grid_scenegraph_id = "wallet_grid_2",
-					type = "character_id",
-					interaction_scenegraph_id = "wallet_grid_2_interaction",
 					grid_content_scenegraph_id = "wallet_grid_2_content_pivot",
 					grid_direction = "down",
+					grid_scenegraph_id = "wallet_grid_2",
+					interaction_scenegraph_id = "wallet_grid_2_interaction",
+					type = "character_id",
 					scrollbar_widget = self._widgets_by_name.wallet_grid_2_scrollbar,
 					mask_widget = self._widgets_by_name.wallet_grid_2_mask,
 					widgets = {
 						{
 							pass_template = "title",
 							data = {
-								display_name = Localize("loc_wallet_merge_character_wallets")
-							}
-						}
-					}
+								display_name = Localize("loc_wallet_merge_character_wallets"),
+							},
+						},
+					},
 				},
 				{
-					grid_scenegraph_id = "wallet_grid_3",
-					interaction_scenegraph_id = "wallet_grid_3_interaction",
 					grid_content_scenegraph_id = "wallet_grid_3_content_pivot",
 					grid_direction = "down",
+					grid_scenegraph_id = "wallet_grid_3",
+					interaction_scenegraph_id = "wallet_grid_3_interaction",
 					scrollbar_widget = self._widgets_by_name.wallet_grid_3_scrollbar,
 					mask_widget = self._widgets_by_name.wallet_grid_3_mask,
 					widgets = {
@@ -741,38 +792,15 @@ ViewElemenServerMigration.present = function (self, migration_data)
 								text = Localize("loc_wallet_merge_receipt_desc"),
 								style_overrides = {
 									description = {
-										text_horizontal_alignment = "center"
-									}
-								}
-							}
-						}
-					}
+										text_horizontal_alignment = "center",
+									},
+								},
+							},
+						},
+					},
 				},
 				display_name = "loc_wallet_merge_receipt_title",
-				grid_placement = {
-					{
-						1,
-						2
-					},
-					{
-						3
-					}
-				},
-				grid_spacing = {
-					{
-						0,
-						20
-					},
-					{
-						0,
-						20
-					},
-					{
-						0,
-						20
-					}
-				}
-			}
+			},
 		}
 
 		for i = 1, #presentation_data[2] do
@@ -781,53 +809,55 @@ ViewElemenServerMigration.present = function (self, migration_data)
 
 			if data.type == "total" then
 				widgets[#widgets + 1] = {
-					pass_template = "large_spacing"
+					pass_template = "large_spacing",
 				}
 				widgets[#widgets + 1] = {
 					pass_template = "small_title",
 					data = {
-						display_name = Localize("loc_wallet_merge_total")
-					}
+						display_name = Localize("loc_wallet_merge_total"),
+					},
 				}
 				widgets[#widgets + 1] = {
-					pass_template = "spacing"
+					pass_template = "spacing",
 				}
 
 				for i = 1, #wallet_by_order do
 					local currency_type = currency_order[i]
 					local currency_data = wallet_by_order[i]
+
 					widgets[#widgets + 1] = {
 						pass_template = "currency_text",
 						data = {
 							currency_type = currency_type,
-							value = TextUtils.format_currency(currency_data[1])
-						}
+							value = TextUtils.format_currency(currency_data[1]),
+						},
 					}
 				end
 			elseif data.type == "character_id" then
 				for character_id, character_data in pairs(migration_by_character_id) do
 					widgets[#widgets + 1] = {
-						pass_template = "large_spacing"
+						pass_template = "large_spacing",
 					}
 					widgets[#widgets + 1] = {
 						pass_template = "small_title",
 						data = {
-							display_name = character_data[1]
-						}
+							display_name = character_data[1],
+						},
 					}
 					widgets[#widgets + 1] = {
-						pass_template = "spacing"
+						pass_template = "spacing",
 					}
 
 					for i = 1, #wallet_by_order do
 						local currency_type = currency_order[i]
 						local currency_data = wallet_by_order[i]
+
 						widgets[#widgets + 1] = {
 							pass_template = "currency_text",
 							data = {
 								currency_type = currency_type,
-								value = TextUtils.format_currency(currency_data[character_id])
-							}
+								value = TextUtils.format_currency(currency_data[character_id]),
+							},
 						}
 					end
 				end
@@ -867,7 +897,7 @@ ViewElemenServerMigration.update = function (self, dt, t, input_service)
 
 	if self._widgets_by_name.close_button and self._ui_default_renderer then
 		ButtonPassTemplates.terminal_button_hold_small.update(self, self._widgets_by_name.close_button, {
-			input_service = input_service
+			input_service = input_service,
 		}, dt)
 	end
 
@@ -884,6 +914,7 @@ ViewElemenServerMigration.draw = function (self, dt, t, ui_renderer, render_sett
 	local ui_renderer = self._ui_default_renderer
 	local ui_scenegraph = self._ui_scenegraph
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self._animated_alpha_multiplier or 1
 
 	ViewElemenServerMigration.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
@@ -936,16 +967,18 @@ end
 
 ViewElemenServerMigration._setup_presentation = function (self)
 	local height = self._grid_height
-	local on_enter_animation_callback = nil
+	local on_enter_animation_callback
 	local additional_widgets = {
 		unpack(self._grid_widgets),
-		unpack(self._selection_widgets)
+		unpack(self._selection_widgets),
 	}
 	local params = {
 		popup_height = height,
-		additional_widgets = additional_widgets
+		additional_widgets = additional_widgets,
 	}
+
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
+
 	local enter_popup_sound = UISoundEvents.system_popup_enter
 
 	self:_play_sound(enter_popup_sound)
@@ -961,12 +994,13 @@ ViewElemenServerMigration._cleanup_presentation = function (self)
 	local height = self._grid_height
 	local additional_widgets = {
 		unpack(self._grid_widgets),
-		unpack(self._selection_widgets)
+		unpack(self._selection_widgets),
 	}
 	local params = {
 		popup_height = height,
-		additional_widgets = additional_widgets
+		additional_widgets = additional_widgets,
 	}
+
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
 
 	self:_play_sound(UISoundEvents.system_popup_exit)

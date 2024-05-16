@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_credit_store_servitor_c.lua
+
 local conversations_hub_credit_store_servitor_c = {
 	credit_store_servitor_distance_restocked_c = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local conversations_hub_credit_store_servitor_c = {
 			"loc_credit_store_servitor_c__credit_store_servitor_distance_restocked_17",
 			"loc_credit_store_servitor_c__credit_store_servitor_distance_restocked_18",
 			"loc_credit_store_servitor_c__credit_store_servitor_distance_restocked_19",
-			"loc_credit_store_servitor_c__credit_store_servitor_distance_restocked_20"
+			"loc_credit_store_servitor_c__credit_store_servitor_distance_restocked_20",
 		},
 		sound_events_duration = {
 			1.828375,
@@ -44,9 +46,9 @@ local conversations_hub_credit_store_servitor_c = {
 			1.228063,
 			3.043792,
 			4.067,
-			3.506896
+			3.506896,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	credit_store_servitor_purchase_c = {
 		randomize_indexes_n = 0,
@@ -71,7 +73,7 @@ local conversations_hub_credit_store_servitor_c = {
 			"loc_credit_store_servitor_c__credit_store_servitor_purchase_17",
 			"loc_credit_store_servitor_c__credit_store_servitor_purchase_18",
 			"loc_credit_store_servitor_c__credit_store_servitor_purchase_19",
-			"loc_credit_store_servitor_c__credit_store_servitor_purchase_20"
+			"loc_credit_store_servitor_c__credit_store_servitor_purchase_20",
 		},
 		sound_events_duration = {
 			0.868063,
@@ -93,10 +95,10 @@ local conversations_hub_credit_store_servitor_c = {
 			2.336292,
 			0.716083,
 			0.948813,
-			0.819104
+			0.819104,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_credit_store_servitor_c", conversations_hub_credit_store_servitor_c)

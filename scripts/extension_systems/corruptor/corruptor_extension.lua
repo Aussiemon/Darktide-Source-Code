@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/corruptor/corruptor_extension.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local CorruptorSettings = require("scripts/settings/corruptor/corruptor_settings")
@@ -17,7 +19,9 @@ CorruptorExtension.init = function (self, extension_init_context, unit, extensio
 	self._world = extension_init_context.world
 	self._physics_world = extension_init_context.physics_world
 	self._nav_world = extension_init_context.nav_world
+
 	local position = POSITION_LOOKUP[unit]
+
 	self._root_position = Vector3Box(position)
 	self._constraint_target = Unit.animation_find_constraint_target(unit, CorruptorSettings.constraint_name)
 	self._hatch_is_open = true
@@ -25,13 +29,15 @@ CorruptorExtension.init = function (self, extension_init_context, unit, extensio
 	self._eye_is_active = false
 	self._effect_template_data = {
 		awake = {
-			template = EffectTemplates.corruptor_ambience_burrowed
+			template = EffectTemplates.corruptor_ambience_burrowed,
 		},
 		emerge = {
-			template = EffectTemplates.corruptor_ambience
-		}
+			template = EffectTemplates.corruptor_ambience,
+		},
 	}
+
 	local unit_level_index = Managers.state.unit_spawner:level_index(unit)
+
 	self._unit_level_index = unit_level_index
 end
 
@@ -117,9 +123,7 @@ CorruptorExtension.died = function (self)
 	local liquid_goo_distance = CorruptorSettings.liquid_goo_distance
 	local forward = Vector3.normalize(Quaternion.right(world_rotation))
 	local sample_position = world_position + forward * liquid_goo_distance + Vector3.down()
-	local above = CorruptorSettings.liquid_above
-	local below = CorruptorSettings.liquid_below
-	local horizontal = CorruptorSettings.liquid_horizontal
+	local above, below, horizontal = CorruptorSettings.liquid_above, CorruptorSettings.liquid_below, CorruptorSettings.liquid_horizontal
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, sample_position, above, below, horizontal)
 
 	if position_on_navmesh then
@@ -164,11 +168,12 @@ end
 
 CorruptorExtension._start_effect_template = function (self, effect_template_data_name)
 	local effect_template_data = self._effect_template_data[effect_template_data_name]
-	local optional_unit, optional_node = nil
+	local optional_unit, optional_node
 	local position = self._root_position:unbox()
 	local fx_system = Managers.state.extension:system("fx_system")
 	local template = effect_template_data.template
 	local global_effect_id = fx_system:start_template_effect(template, optional_unit, optional_node, position)
+
 	effect_template_data.global_effect_id = global_effect_id
 end
 
@@ -196,8 +201,7 @@ CorruptorExtension._update_explosion = function (self, unit, dt)
 		return
 	end
 
-	local power_level = CorruptorSettings.explosion_power_level
-	local charge_level = 1
+	local power_level, charge_level = CorruptorSettings.explosion_power_level, 1
 	local explosion_template = CorruptorSettings.emerge_explosion_template
 	local attack_type = AttackSettings.attack_types.explosion
 	local up = Quaternion.up(Unit.local_rotation(unit, 1))
@@ -218,7 +222,7 @@ CorruptorExtension._update_closest_target = function (self)
 	local target_units = side.valid_player_units
 	local position = self._root_position:unbox()
 	local closest_distance = math.huge
-	local closest_target = nil
+	local closest_target
 
 	for i = 1, #target_units do
 		local target_unit = target_units[i]
@@ -242,7 +246,7 @@ CorruptorExtension._update_eye_constraint = function (self, unit, dt, closest_ta
 	if self._is_server and self._current_state == STATES.exposed then
 		local is_looking = self._looking_at_target
 
-		if is_looking and CorruptorSettings.look_at_leave_distance < closest_distance then
+		if is_looking and closest_distance > CorruptorSettings.look_at_leave_distance then
 			self._animation_extension:anim_event("look_at_off")
 
 			self._looking_at_target = false
@@ -253,7 +257,7 @@ CorruptorExtension._update_eye_constraint = function (self, unit, dt, closest_ta
 		end
 	end
 
-	if CorruptorSettings.look_at_leave_distance < closest_distance then
+	if closest_distance > CorruptorSettings.look_at_leave_distance then
 		return closest_target, closest_distance
 	end
 
@@ -264,7 +268,7 @@ CorruptorExtension._update_eye_constraint = function (self, unit, dt, closest_ta
 	local aim_direction_normalized = Vector3.normalize(target_position - eye_position)
 	local eye_rotation = Unit.local_rotation(unit, 1)
 	local up = Quaternion.up(eye_rotation)
-	local aim_target = nil
+	local aim_target
 	local dot = Vector3.dot(up, aim_direction_normalized)
 	local dot_threshold = CorruptorSettings.contrain_dot_threshold
 
@@ -278,6 +282,7 @@ CorruptorExtension._update_eye_constraint = function (self, unit, dt, closest_ta
 		local lerp_amount = CorruptorSettings.constrain_lerp_amount
 		local projected_direction = Vector3.normalize(direction_projected_forward + direction_projected_right)
 		local final_direction = Vector3.lerp(projected_direction, up, lerp_amount)
+
 		aim_target = eye_position + final_direction
 	else
 		aim_target = eye_position + aim_direction_normalized
@@ -285,6 +290,7 @@ CorruptorExtension._update_eye_constraint = function (self, unit, dt, closest_ta
 
 	local previous_constrain_target = self._previous_constrain_target:unbox()
 	local lerp_t = math.min(dt * CorruptorSettings.constrain_aim_speed, 1)
+
 	aim_target = Vector3.lerp(previous_constrain_target, aim_target, lerp_t)
 
 	self._previous_constrain_target:store(aim_target)
@@ -332,7 +338,7 @@ CorruptorExtension._update_exposed = function (self, dt, t, closest_target, clos
 			self._next_damage_tick = t + CorruptorSettings.tick_frequency
 		end
 
-		if self._next_damage_tick <= t then
+		if t >= self._next_damage_tick then
 			local position = self._root_position:unbox()
 			local attack_direction = Vector3.normalize(POSITION_LOOKUP[closest_target] - position)
 

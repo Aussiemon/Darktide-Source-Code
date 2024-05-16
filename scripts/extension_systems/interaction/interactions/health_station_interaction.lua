@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/health_station_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -86,7 +88,7 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 	end
 
 	if success then
-		if DialogueSettings.health_hog_health_before_healing < current_health_percent then
+		if current_health_percent > DialogueSettings.health_hog_health_before_healing then
 			Vo.health_hog_event(interactor_unit)
 		end
 
@@ -127,7 +129,7 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 					corruption_damage = corruption_damage,
 					num_grims = num_grims,
 					total_main_path_percent = furthest_travel_percentage,
-					id = unit_id
+					id = unit_id,
 				}
 
 				Managers.telemetry_events:player_used_health_station(player, data)

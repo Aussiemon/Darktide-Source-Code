@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/weapon_trait_proc_conditional_switch_buff.lua
+
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local WeaponTraitProcConditionalSwitchBuff = class("WeaponTraitProcConditionalSwitchBuff", "ProcBuff")

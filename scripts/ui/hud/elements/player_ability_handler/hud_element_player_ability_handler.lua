@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_ability_handler/hud_element_player_ability_handler.lua
+
 local Definitions = require("scripts/ui/hud/elements/player_ability_handler/hud_element_player_ability_handler_definitions")
 local HudElementPlayerAbility = require("scripts/ui/hud/elements/player_ability/hud_element_player_ability")
 local HudElementPlayerSlotItemAbility = require("scripts/ui/hud/elements/player_ability/hud_element_player_slot_item_ability")
@@ -61,6 +63,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 
 					if can_add_abilities then
 						force_alignment_update = true
+
 						local definition_path = setup_settings.definition_path
 						local data = {
 							synced = true,
@@ -70,8 +73,9 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 							slot_id = slot_id,
 							ability_id = ability_id,
 							icon = hud_icon,
-							definition_path = definition_path
+							definition_path = definition_path,
 						}
+
 						instance_data_tables[ability_id] = data
 						data.instance = HudElementPlayerAbility:new(parent, draw_layer, scale, data)
 					end
@@ -113,8 +117,9 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 								weapon_template = weapon_template,
 								slot_id = slot_id,
 								icon = hud_icon,
-								definition_path = definition_path
+								definition_path = definition_path,
 							}
+
 							instance_data_tables[weapon_name] = data
 							data.instance = HudElementPlayerSlotItemAbility:new(parent, draw_layer, scale, data)
 						end

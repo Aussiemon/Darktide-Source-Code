@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns_definitions")
 local MasterItems = require("scripts/backend/master_items")
 local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
@@ -12,11 +14,13 @@ local ViewElementWeaponPatterns = class("ViewElementWeaponPatterns", "ViewElemen
 
 ViewElementWeaponPatterns.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
 	ViewElementWeaponPatterns.super.init(self, parent, draw_layer, start_scale, optional_menu_settings, Definitions)
 
 	local menu_settings = self._menu_settings
+
 	self._default_grid_size = table.clone(menu_settings.grid_size)
 	self._default_mask_size = table.clone(menu_settings.mask_size)
 	self._current_attack_index = 1
@@ -29,10 +33,15 @@ end
 
 ViewElementWeaponPatterns._hide_dividers = function (self)
 	local grid_divider_top = self:widget_by_name("grid_divider_top")
+
 	grid_divider_top.style.texture.color[1] = 0
+
 	local grid_divider_bottom = self:widget_by_name("grid_divider_bottom")
+
 	grid_divider_bottom.style.texture.color[1] = 0
+
 	local grid_divider_title = self:widget_by_name("grid_divider_title")
+
 	grid_divider_title.style.texture.color[1] = 0
 end
 
@@ -42,16 +51,16 @@ ViewElementWeaponPatterns.present_item = function (self, item)
 	local layout = {
 		{
 			widget_type = "attack_pattern_header",
-			item = item
+			item = item,
 		},
 		{
 			widget_type = "pattern_type_breakdown",
-			item = item
+			item = item,
 		},
 		{
 			widget_type = "damage_grid",
-			item = item
-		}
+			item = item,
+		},
 	}
 
 	self:present_grid_layout(layout, item)
@@ -74,6 +83,7 @@ ViewElementWeaponPatterns.present_grid_layout = function (self, layout, item)
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local default_grid_height = self._default_grid_size[2]
+
 	grid_size[2] = default_grid_height
 	mask_size[2] = default_grid_height
 
@@ -92,6 +102,7 @@ ViewElementWeaponPatterns._on_present_grid_layout_changed = function (self, layo
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local new_grid_height = math.clamp(grid_length, 0, self._default_grid_size[2])
+
 	grid_size[2] = new_grid_height
 	mask_size[2] = new_grid_height
 
@@ -123,7 +134,9 @@ ViewElementWeaponPatterns.set_active = function (self, active)
 		local to = self._pivot_offset[1]
 		local duration = 0.5
 		local easing = math.easeOutCubic
+
 		self._ui_animations.pivot = UIAnimation.init(func, target, target_index, from, to, duration, easing)
+
 		local func = UIAnimation.function_by_time
 		local target = self
 		local target_index = "_alpha_multiplier"
@@ -131,6 +144,7 @@ ViewElementWeaponPatterns.set_active = function (self, active)
 		local to = 1
 		local duration = 0.5
 		local easing = math.easeInCubic
+
 		self._ui_animations.alpha_multiplier = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 	end
 end

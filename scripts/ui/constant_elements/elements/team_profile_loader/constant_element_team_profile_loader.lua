@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/team_profile_loader/constant_element_team_profile_loader.lua
+
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
@@ -14,13 +16,14 @@ local player_template = {
 			local item_definitions = MasterItems.get_cached()
 			local profile_package_loader = UICharacterProfilePackageLoader:new(reference_name, item_definitions)
 			local loading_items = profile_package_loader:load_profile(profile)
+
 			self.loading_data = {
 				player = player,
 				profile = profile,
 				account_id = account_id,
 				loading_items = loading_items,
 				profile_package_loader = profile_package_loader,
-				item_definitions = item_definitions
+				item_definitions = item_definitions,
 			}
 			self.active = true
 		end
@@ -33,33 +36,31 @@ local player_template = {
 
 		self.loading_data = nil
 		self.active = false
-	end
-}
+	end,
+	sync_profile_changes = function (self, updated_profile)
+		local loading_data = self.loading_data
 
-player_template.sync_profile_changes = function (self, updated_profile)
-	local loading_data = self.loading_data
+		if self.active then
+			local loadout = updated_profile.loadout
+			local loading_items = loading_data.loading_items
+			local ignored_slots = loading_data.ignored_slots
+			local profile_package_loader = loading_data.profile_package_loader
 
-	if self.active then
-		local loadout = updated_profile.loadout
-		local loading_items = loading_data.loading_items
-		local ignored_slots = loading_data.ignored_slots
-		local profile_package_loader = loading_data.profile_package_loader
+			for slot_id, config in pairs(ItemSlotSettings) do
+				if not config.ignore_character_spawning and (not ignored_slots or not ignored_slots[slot_id]) then
+					local item = loadout[slot_id]
+					local loadout_item_name = item and item.name
 
-		for slot_id, config in pairs(ItemSlotSettings) do
-			if not config.ignore_character_spawning and (not ignored_slots or not ignored_slots[slot_id]) then
-				local item = loadout[slot_id]
-				local loadout_item_name = item and item.name
+					if loading_items[slot_id] ~= loadout_item_name then
+						profile_package_loader:load_slot_item(slot_id, item)
 
-				if loading_items[slot_id] ~= loadout_item_name then
-					profile_package_loader:load_slot_item(slot_id, item)
-
-					loading_items[slot_id] = loadout_item_name
+						loading_items[slot_id] = loadout_item_name
+					end
 				end
 			end
 		end
-	end
-end
-
+	end,
+}
 local PLAYER_SYNC_DELAY_TIME = 10
 local ConstantElementTeamProfileLoader = class("ConstantElementTeamProfileLoader")
 
@@ -133,7 +134,7 @@ ConstantElementTeamProfileLoader._sync_template_instances_by_players = function 
 
 		if instance and not instance.synced then
 			if not instance.active then
-				instance:on_activation()
+				instance.on_activation(instance)
 
 				instance.active = true
 			end
@@ -176,7 +177,7 @@ ConstantElementTeamProfileLoader._sync_player_template_instances = function (sel
 					end
 				end
 
-				instance:on_deactivation()
+				instance.on_deactivation(instance)
 
 				instance.active = false
 			end
@@ -205,7 +206,7 @@ ConstantElementTeamProfileLoader.event_player_profile_updated = function (self, 
 					local instance_character_profile_id = instance_profile and instance_profile.character_id
 
 					if instance_character_profile_id == character_id then
-						player_template_instance:sync_profile_changes(updated_profile)
+						player_template_instance.sync_profile_changes(player_template_instance, updated_profile)
 					end
 				end
 			end

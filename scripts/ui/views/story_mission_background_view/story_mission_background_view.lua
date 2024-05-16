@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/story_mission_background_view/story_mission_background_view.lua
+
 local Definitions = require("scripts/ui/views/story_mission_background_view/story_mission_background_view_definitions")
 local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 local ViewSettings = require("scripts/ui/views/story_mission_background_view/story_mission_background_view_settings")
@@ -46,6 +48,7 @@ end
 
 StoryMissionBackgroundView._set_wallet_background_width = function (self, width)
 	width = 130 + width
+
 	local scenegraph_id = "corner_top_right"
 	local definitions = self._definitions
 	local scenegraph_definition = definitions.scenegraph_definition
@@ -64,6 +67,7 @@ end
 
 StoryMissionBackgroundView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local render_settings_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self._alpha_multiplier or 0
 
 	StoryMissionBackgroundView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)

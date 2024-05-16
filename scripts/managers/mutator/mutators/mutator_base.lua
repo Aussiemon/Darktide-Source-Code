@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mutator/mutators/mutator_base.lua
+
 local Breed = require("scripts/utilities/breed")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MutatorBase = class("MutatorBase")
@@ -67,7 +69,9 @@ MutatorBase._add_buffs_on_unit = function (self, buff_template_names, unit, opti
 	end
 
 	local buffs = self._buffs
+
 	buffs[unit] = buffs[unit] or {}
+
 	local buff_ids = buffs[unit]
 	local current_time = FixedFrame.get_latest_fixed_time()
 
@@ -82,9 +86,10 @@ MutatorBase._add_buffs_on_unit = function (self, buff_template_names, unit, opti
 				buff_extension:add_internally_controlled_buff(buff_template_name, t)
 			else
 				local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, current_time)
+
 				buff_ids[#buff_ids + 1] = {
 					local_index = local_index,
-					component_index = component_index
+					component_index = component_index,
 				}
 			end
 
@@ -156,7 +161,7 @@ MutatorBase._on_minion_unit_spawned = function (self, unit)
 		local breed_chances = random_spawn_buff_templates.breed_chances
 		local breed_chance = breed_chances[breed_name]
 
-		if breed_chance and math.random() < breed_chance then
+		if breed_chance and breed_chance > math.random() then
 			self:_add_buffs_on_unit(buffs, unit, random_spawn_buff_templates.ignored_buff_keyword)
 		end
 	end

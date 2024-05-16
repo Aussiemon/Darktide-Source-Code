@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/level_loader.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local Loader = require("scripts/loading/loader")
@@ -23,10 +25,15 @@ end
 
 LevelLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name)
 	local level_name = Missions[mission_name].level or level_editor_level
+
 	self._level_name = level_name
+
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
+
 	self._theme_tag = circumstance_template.theme_tag
+
 	local item_definitions = MasterItems.get_cached()
+
 	self._load_state = LOAD_STATES.level_load
 
 	local function callback(_pkg_name)
@@ -39,6 +46,7 @@ end
 
 LevelLoader._level_load_done_callback = function (self, item_definitions)
 	self._level_loaded = true
+
 	local level_name = self._level_name
 	local theme_tag = self._theme_tag
 	local item_packages_to_load = ItemPackage.level_resource_dependency_packages(item_definitions, level_name)
@@ -69,6 +77,7 @@ LevelLoader._level_load_done_callback = function (self, item_definitions)
 
 		for package_name, _ in pairs(packages_to_load) do
 			local id = package_manager:load(package_name, reference_name, callback)
+
 			package_ids[id] = package_name
 		end
 	end
@@ -77,7 +86,9 @@ end
 LevelLoader._load_done_callback = function (self, package_id)
 	local package_name = self._package_ids[package_id]
 	local packages_to_load = self._packages_to_load
+
 	packages_to_load[package_name] = true
+
 	local all_packages_finished_loading = true
 
 	for name, loaded in pairs(packages_to_load) do

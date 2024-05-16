@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/special_classes/weapon_special_shovels.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Push = require("scripts/extension_systems/character_state_machine/character_states/utilities/push")
@@ -15,7 +17,9 @@ WeaponSpeciaShovels.init = function (self, context, init_data)
 	self._player_unit = context.player_unit
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
 	self._warp_charge_component = context.warp_charge_component
+
 	local unit_data_extension = context.unit_data_extension
+
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 	self._locomotion_push_component = unit_data_extension:write_component("locomotion_push")
 end
@@ -84,8 +88,10 @@ WeaponSpeciaShovels.on_exit_damage_window = function (self, t, num_hit_enemies, 
 
 	if inventory_slot_component.special_active and num_hit_enemies > 0 then
 		inventory_slot_component.special_active = false
+
 		local delay = tweak_data.deactivation_animation_delay or 0
 		local deactivation_animation_on_abort = tweak_data.deactivation_animation_on_abort
+
 		self._time_to_play_deactivation_animation = (not aborted or deactivation_animation_on_abort) and not is_sticky and delay or nil
 	end
 end
@@ -93,6 +99,7 @@ end
 WeaponSpeciaShovels.trigger_anim_event = function (self, anim_event, anim_event_3p, action_time_offset, ...)
 	local anim_ext = self._animation_extension
 	local time_scale = 1
+
 	action_time_offset = action_time_offset or 0
 
 	anim_ext:anim_event_with_variable_floats_1p(anim_event, "attack_speed", time_scale, "action_time_offset", action_time_offset, ...)

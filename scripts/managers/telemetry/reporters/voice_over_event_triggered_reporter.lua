@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/voice_over_event_triggered_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local VoiceOverEventTriggeredReporter = class("VoiceOverEventTriggeredReporter")
 
@@ -25,7 +27,7 @@ VoiceOverEventTriggeredReporter.register_event = function (self, rule_name)
 		index = #self._report + 1
 		self._report[index] = {
 			observations = 1,
-			vo_name = rule_name
+			vo_name = rule_name,
 		}
 		self._vo_name_to_index[rule_name] = index
 	else

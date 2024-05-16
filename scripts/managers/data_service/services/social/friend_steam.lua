@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/friend_steam.lua
+
 local FriendInterface = require("scripts/managers/data_service/services/social/friend_interface")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local FriendSteam = class("FriendsSteam")

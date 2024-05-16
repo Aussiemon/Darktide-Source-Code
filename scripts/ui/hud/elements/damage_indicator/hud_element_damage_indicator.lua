@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/damage_indicator/hud_element_damage_indicator.lua
+
 local definition_path = "scripts/ui/hud/elements/damage_indicator/hud_element_damage_indicator_definitions"
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local HudElementDamageIndicatorSettings = require("scripts/ui/hud/elements/damage_indicator/hud_element_damage_indicator_settings")
@@ -35,8 +37,10 @@ HudElementDamageIndicator._get_player_direction_angle = function (self)
 
 	local camera_rotation = Camera.local_rotation(camera)
 	local camera_forward = Quaternion.forward(camera_rotation)
+
 	camera_forward.z = 0
 	camera_forward = Vector3.normalize(camera_forward)
+
 	local camera_right = Vector3.cross(camera_forward, Vector3.up())
 	local direction = Vector3.forward()
 	local forward_dot_dir = Vector3.dot(camera_forward, direction)
@@ -50,11 +54,12 @@ HudElementDamageIndicator._spawn_indicator = function (self, angle, attack_resul
 	local t = Managers.ui:get_time()
 	local duration = HudElementDamageIndicatorSettings.life_time
 	local player_angle = self:_get_player_direction_angle()
+
 	self._indicators[#self._indicators + 1] = {
 		angle = player_angle + angle,
 		time = t + duration,
 		duration = duration,
-		attack_result = attack_result
+		attack_result = attack_result,
 	}
 end
 
@@ -92,16 +97,23 @@ HudElementDamageIndicator._draw_indicators = function (self, dt, t, ui_renderer)
 			local progress = (time - t) / duration
 			local anim_progress = math.ease_out_exp(1 - progress)
 			local hit_progress = math.clamp(anim_progress * pulse_speed_multiplier, 0, 1)
+
 			widget.alpha_multiplier = progress
+
 			local angle = player_angle - indicator.angle
+
 			background_style.angle = angle
 			front_style.angle = angle
+
 			local attack_result = indicator.attack_result
 			local indicator_colors_lookup = HudElementDamageIndicatorSettings.indicator_colors_lookup
 			local indicator_colors = indicator_colors_lookup[attack_result] or indicator_colors_lookup.default
+
 			background_style.color = indicator_colors.background
 			front_style.color = indicator_colors.front
+
 			local distance = center_distance - (pulse_distance - pulse_distance * hit_progress)
+
 			widget_offset[2] = -distance + size[2] * 0.5
 			widget_offset[3] = math.min(i, 50)
 			background_pivot[2] = distance

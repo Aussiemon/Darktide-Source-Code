@@ -1,28 +1,30 @@
+﻿-- chunkname: @scripts/utilities/ui/mission.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
-local Missions = {
-	get_narrative_mission_values = function (mission)
-		local mission_book, mission_chapter, mission_page = nil
+local Missions = {}
 
-		if mission and mission.category == "narrative" then
-			for id, _ in pairs(mission.flags) do
-				if string.find(id, "book-") then
-					mission_book = tonumber(string.sub(id, -1))
-				end
+Missions.get_narrative_mission_values = function (mission)
+	local mission_book, mission_chapter, mission_page
 
-				if id:find("chapter-") then
-					mission_chapter = tonumber(string.sub(id, -1))
-				end
+	if mission and mission.category == "narrative" then
+		for id, _ in pairs(mission.flags) do
+			if string.find(id, "book-") then
+				mission_book = tonumber(string.sub(id, -1))
+			end
 
-				if id:find("page-") then
-					mission_page = tonumber(string.sub(id, -1))
-				end
+			if id.find(id, "chapter-") then
+				mission_chapter = tonumber(string.sub(id, -1))
+			end
+
+			if id.find(id, "page-") then
+				mission_page = tonumber(string.sub(id, -1))
 			end
 		end
-
-		return mission_book, mission_chapter, mission_page
 	end
-}
+
+	return mission_book, mission_chapter, mission_page
+end
 
 Missions.is_mission_same_as_narrative_mission_values = function (mission, book, chapter, page)
 	local mission_book, mission_chapter, mission_page = Missions.get_narrative_mission_values(mission)
@@ -38,11 +40,11 @@ Missions.get_latest_narrative_mission = function (missions)
 	local book = 0
 	local chapter = 0
 	local page = 0
-	local current_narrative_mission = nil
+	local current_narrative_mission
 
 	for i = 1, #missions do
 		local mission = missions[i]
-		local mission_book, mission_chapter, mission_page = nil
+		local mission_book, mission_chapter, mission_page
 		local mission_book, mission_chapter, mission_page = Missions.get_narrative_mission_values(mission)
 
 		if mission_book and book < mission_book then

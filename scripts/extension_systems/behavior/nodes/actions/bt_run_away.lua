@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_run_away.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -7,13 +9,14 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtRunAwayAction = class("BtRunAwayAction", "BtNode")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
+
 BtRunAwayAction.TIME_TO_FIRST_EVALUATE = {
 	2,
-	2.75
+	2.75,
 }
 BtRunAwayAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	1,
-	1.5
+	1.5,
 }
 
 BtRunAwayAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -21,10 +24,15 @@ BtRunAwayAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.navigation_extension = navigation_extension
+
 	local nav_world = navigation_extension:nav_world()
+
 	scratchpad.nav_world = nav_world
+
 	local disable_nav_tag_layers = action_data.disable_nav_tag_layers
 
 	if disable_nav_tag_layers then
@@ -37,10 +45,13 @@ BtRunAwayAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 
 	scratchpad.time_to_next_evaluate = t + math.random_range(BtRunAwayAction.TIME_TO_FIRST_EVALUATE[1], BtRunAwayAction.TIME_TO_FIRST_EVALUATE[2])
 	scratchpad.current_move_to_position = Vector3Box()
+
 	local move_type = action_data.move_type
+
 	scratchpad.move_type = move_type
 	scratchpad.combat_vector_component = blackboard.combat_vector
 	scratchpad.current_move_to_position = Vector3Box()
+
 	local wanted_position = self:_get_wanted_position(unit, scratchpad, action_data)
 
 	self:_move_to_position(scratchpad, wanted_position, navigation_extension)
@@ -56,6 +67,7 @@ BtRunAwayAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	end
 
 	local fx_system = Managers.state.extension:system("fx_system")
+
 	scratchpad.fx_system = fx_system
 
 	self:_start_effect_template(unit, scratchpad, action_data)
@@ -96,7 +108,7 @@ end
 local MIN_MOVE_DISTANCE_CHANGE_SQ = 9
 
 BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	if scratchpad.exit_t and scratchpad.exit_t < t then
+	if scratchpad.exit_t and t > scratchpad.exit_t then
 		return "done"
 	end
 
@@ -125,13 +137,14 @@ BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 	if action_data.allow_fallback_movement and not navigation_extension:has_path() and num_failed_move_attempts >= 1 then
 		local current_move_type = scratchpad.move_type
 		local new_move_type = current_move_type == "combat_vector" and "main_path" or "combat_vector"
+
 		scratchpad.move_type = new_move_type
 		wanted_position = self:_get_wanted_position(unit, scratchpad, action_data)
 	end
 
 	local distance_sq = Vector3.distance_squared(current_move_to_position, wanted_position)
 
-	if MIN_MOVE_DISTANCE_CHANGE_SQ < distance_sq then
+	if distance_sq > MIN_MOVE_DISTANCE_CHANGE_SQ then
 		self:_move_to_position(scratchpad, wanted_position, navigation_extension)
 	end
 
@@ -145,7 +158,7 @@ BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		end
 	end
 
-	local should_evaluate = scratchpad.time_to_next_evaluate <= t
+	local should_evaluate = t >= scratchpad.time_to_next_evaluate
 
 	if should_evaluate then
 		scratchpad.time_to_next_evaluate = t + math.random_range(BtRunAwayAction.CONSECUTIVE_EVALUATE_INTERVAL[1], BtRunAwayAction.CONSECUTIVE_EVALUATE_INTERVAL[2])
@@ -190,7 +203,7 @@ BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, ignored_unit, optional_only_ahead_targets)
 	end
 
-	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -206,17 +219,20 @@ BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		if consumed_unit and ALIVE[consumed_unit] then
 			if not scratchpad.heal_frequency then
 				local heal_frequency = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_frequency)
+
 				scratchpad.heal_frequency = t + heal_frequency
 			end
 
-			if scratchpad.heal_frequency <= t then
+			if t >= scratchpad.heal_frequency then
 				local heal_amount = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_amount)
-				local heal_type = nil
+				local heal_type
 
 				Health.add(unit, heal_amount, heal_type)
 
 				scratchpad.heal_frequency = nil
+
 				local heal_frequency = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_frequency)
+
 				scratchpad.heal_frequency = t + heal_frequency
 			end
 		end
@@ -226,7 +242,7 @@ BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 end
 
 BtRunAwayAction._get_wanted_position = function (self, unit, scratchpad, action_data)
-	local wanted_position = nil
+	local wanted_position
 	local move_type = scratchpad.move_type
 
 	if move_type == "combat_vector" then
@@ -244,13 +260,15 @@ BtRunAwayAction._get_main_path_position = function (self, unit, action_data)
 	local travel_distance_random_range = move_settings.travel_distance_random_range
 	local min_distance = move_settings.min_distance
 	local main_path_manager = Managers.state.main_path
-	local travel_distance = nil
+	local travel_distance
 
 	if move_settings.direction == "fwd" then
 		local _, distance = main_path_manager:ahead_unit(position_target_side_id)
+
 		travel_distance = distance
 	else
 		local _, distance = main_path_manager:behind_unit(position_target_side_id)
+
 		travel_distance = distance
 	end
 
@@ -264,6 +282,7 @@ BtRunAwayAction._get_main_path_position = function (self, unit, action_data)
 	if distance < min_distance then
 		local fallback_distance_random_range = move_settings.fallback_distance_random_range
 		local extra_offset = math.clamp(wanted_distance + math.random_range(fallback_distance_random_range[1], fallback_distance_random_range[2]), 0, total_path_distance)
+
 		wanted_position = MainPathQueries.position_from_distance(extra_offset)
 	end
 
@@ -285,10 +304,11 @@ end
 BtRunAwayAction._start_move_anim = function (self, unit, t, behavior_component, scratchpad, action_data)
 	local animation_extension = scratchpad.animation_extension
 	local start_move_anim_events = action_data.start_move_anim_events
-	local start_move_event = nil
+	local start_move_event
 
 	if start_move_anim_events then
 		local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
+
 		start_move_event = start_move_anim_events[moving_direction_name]
 
 		animation_extension:anim_event(start_move_event)
@@ -297,6 +317,7 @@ BtRunAwayAction._start_move_anim = function (self, unit, t, behavior_component, 
 			MinionMovement.set_anim_driven(scratchpad, true)
 
 			local start_rotation_timing = action_data.start_move_rotation_timings[start_move_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = start_move_event
 		else
@@ -327,6 +348,7 @@ BtRunAwayAction._start_effect_template = function (self, unit, scratchpad, actio
 
 	local fx_system = scratchpad.fx_system
 	local effect_id = fx_system:start_template_effect(effect_template, unit)
+
 	scratchpad.effect_id = effect_id
 end
 

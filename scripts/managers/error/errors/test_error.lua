@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/test_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local TestError = class("TestError")
@@ -20,7 +22,7 @@ end
 
 TestError.loc_description = function (self)
 	return "loc_error_reason", {
-		error_reason = string.format("I'm an error, level %q", self._error_level_name)
+		error_reason = string.format("I'm an error, level %q", self._error_level_name),
 	}
 end
 

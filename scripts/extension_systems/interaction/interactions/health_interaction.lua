@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/health_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
 local DamageSettings = require("scripts/settings/damage/damage_settings")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_notification_handler.lua
+
 local Text = require("scripts/utilities/ui/text")
 local VotingNotificationHandler = class("VotingNotificationHandler")
 
@@ -25,6 +27,7 @@ VotingNotificationHandler._get_text = function (self, voting_id)
 	if text_cache then
 		if data.show_timer then
 			local t = notification.time_left
+
 			text_cache[#text_cache] = self:_format_time(t)
 		end
 
@@ -32,13 +35,14 @@ VotingNotificationHandler._get_text = function (self, voting_id)
 	end
 
 	local texts = {
-		data.title
+		data.title,
 	}
 
 	table.append(texts, data.lines)
 
 	if data.show_timer then
 		local t = notification.time_left
+
 		texts[#texts + 1] = self:_format_time(t)
 	end
 
@@ -51,6 +55,7 @@ VotingNotificationHandler.create = function (self, voting_id, data)
 	_verify_data(data)
 
 	local notification = {}
+
 	self._notifications[voting_id] = notification
 	notification.data = data
 
@@ -59,7 +64,7 @@ VotingNotificationHandler.create = function (self, voting_id, data)
 	end
 
 	Managers.event:trigger("event_add_notification_message", "voting", {
-		texts = self:_get_text(voting_id)
+		texts = self:_get_text(voting_id),
 	}, function (id)
 		notification.id = id
 	end)
@@ -92,6 +97,7 @@ VotingNotificationHandler.remove = function (self, voting_id)
 
 	if notification then
 		self._notifications[voting_id] = nil
+
 		local id = notification.id
 
 		Managers.event:trigger("event_remove_notification", id)

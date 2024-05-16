@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/backend/wallet.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Wallet = class("Wallet")
 
 Wallet.get_currency_configuration = function (self)
 	return Managers.backend:title_request("/store/currencies", {
-		method = "GET"
+		method = "GET",
 	}):next(function (data)
 		return data.body.currencies
 	end)

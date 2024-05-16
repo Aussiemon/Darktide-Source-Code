@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/item_icon_loader_ui.lua
+
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local MasterItems = require("scripts/backend/master_items")
 local ItemIconLoaderUI = class("ItemIconLoaderUI")
@@ -14,7 +16,9 @@ end
 
 ItemIconLoaderUI.load_icon = function (self, item, on_load_callback, on_unload_callback)
 	local id = self._id_prefix .. "_" .. self._id_counter
+
 	self._id_counter = self._id_counter + 1
+
 	local gear_id = item.gear_id or item.name
 
 	if not self._requests[gear_id] then
@@ -38,12 +42,13 @@ ItemIconLoaderUI.load_icon = function (self, item, on_load_callback, on_unload_c
 			item = item,
 			item_name = item_name,
 			packages_to_load = packages_to_load,
-			id = id
+			id = id,
 		}
 		self._requests_queue_order[#self._requests_queue_order + 1] = gear_id
 	end
 
 	local data = self._requests[gear_id]
+
 	data.references_lookup[id] = true
 	data.references_array[#data.references_array + 1] = id
 
@@ -73,7 +78,7 @@ ItemIconLoaderUI.unload_icon = function (self, id)
 	data.callbacks[id] = nil
 	self._requests_to_unload[#self._requests_to_unload + 1] = {
 		frame_delay_counter = 2,
-		id = id
+		id = id,
 	}
 end
 
@@ -195,12 +200,14 @@ ItemIconLoaderUI.load_request = function (self, request)
 		local reference_name = self._reference_name
 		local package_manager = Managers.package
 		local package_ids = {}
+
 		request.package_ids = package_ids
 
 		for i = 1, num_packages_to_load do
 			local package_name = packages_to_load[i]
 			local on_loaded_callback = callback(self, "_cb_on_item_package_loaded", gear_id, package_name)
 			local prioritize = true
+
 			package_ids[i] = package_manager:load(package_name, reference_name, on_loaded_callback, prioritize)
 		end
 	else
@@ -272,11 +279,13 @@ end
 
 ItemIconLoaderUI._handle_next_request_in_queue = function (self)
 	self._active_request = nil
+
 	local num_in_queue = #self._requests_queue_order
 
 	if num_in_queue > 0 then
 		local character_id = table.remove(self._requests_queue_order, 1)
 		local request = self._requests[character_id]
+
 		self._active_request = request
 		request.loading = true
 

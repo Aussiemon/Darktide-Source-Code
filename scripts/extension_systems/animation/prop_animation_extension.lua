@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/animation/prop_animation_extension.lua
+
 local PropAnimationExtension = class("PropAnimationExtension")
 
 PropAnimationExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._is_server = extension_init_context.is_server
 	self._unit = unit
+
 	local level_id = Managers.state.unit_spawner:level_index(unit)
 
 	if level_id then
@@ -15,11 +18,13 @@ PropAnimationExtension.init = function (self, extension_init_context, unit, exte
 
 	self._game_session = nil
 	self._variables = {}
+
 	local next_seed = math.random_seed()
 	local seeds, num_seeds = Unit.animation_get_seeds(unit)
 
 	for i = 1, num_seeds do
-		local seed = nil
+		local seed
+
 		next_seed, seed = math.random_seed(next_seed)
 		seeds[i] = seed
 	end
@@ -45,6 +50,7 @@ PropAnimationExtension.setup_from_component = function (self, animation_variable
 	for i = 1, #animation_variables do
 		local variable_name = animation_variables[i]
 		local variable_index = Unit.animation_find_variable(unit, variable_name)
+
 		variables[variable_name] = variable_index
 	end
 end

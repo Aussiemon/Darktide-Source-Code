@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_use_syringe.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
@@ -13,7 +15,9 @@ ActionUseSyringe.init = function (self, action_context, action_params, action_se
 	ActionUseSyringe.super.init(self, action_context, action_params, action_settings)
 
 	self._talent_extension = ScriptUnit.extension(self._player_unit, "talent_system")
+
 	local unit_data_extension = self._unit_data_extension
+
 	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
 end
 
@@ -48,13 +52,16 @@ ActionUseSyringe.finish = function (self, reason, data, t, time_in_action)
 	ActionUseSyringe.super.finish(self, reason, data, t, time_in_action)
 
 	local action_module_targeting_component = self._action_module_targeting_component
+
 	action_module_targeting_component.target_unit_1 = nil
 	action_module_targeting_component.target_unit_2 = nil
 	action_module_targeting_component.target_unit_3 = nil
+
 	local action_settings = self._action_settings
 
 	if action_settings.remove_item_from_inventory and self._did_use then
 		local inventory_slot_component = self._inventory_slot_component
+
 		inventory_slot_component.unequip_slot = true
 	end
 end
@@ -72,7 +79,9 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 
 	if should_use then
 		self._did_use = true
+
 		local action_module_targeting_component = self._action_module_targeting_component
+
 		action_module_targeting_component.target_unit_1 = nil
 		action_module_targeting_component.target_unit_2 = nil
 		action_module_targeting_component.target_unit_3 = nil
@@ -114,7 +123,7 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 					used_on_ally = not action_settings.self_use,
 					time_held = time_hoarded,
 					tension = tension,
-					combat_state = combat_state
+					combat_state = combat_state,
 				}
 
 				Managers.telemetry_events:player_used_stimm(player, data)
@@ -152,7 +161,7 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
-	if not self._did_use and not target_unit and action_settings.exit_without_target and action_settings.minimum_time < time_in_action then
+	if not self._did_use and not target_unit and action_settings.exit_without_target and time_in_action > action_settings.minimum_time then
 		return true
 	end
 end

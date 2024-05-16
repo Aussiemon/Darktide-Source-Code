@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cover/cover_extension.lua
+
 local CoverSlots = require("scripts/extension_systems/cover/utilities/cover_slots")
 local CoverExtension = class("CoverExtension")
 
@@ -21,7 +23,9 @@ CoverExtension.setup_from_component = function (self, cover_type, enabled)
 		local nav_world = self._nav_world
 		local node_positions = self._node_positions
 		local cover_slots = CoverSlots.create(physics_world, nav_world, unit, cover_type, node_positions)
+
 		self._cover_slots = cover_slots
+
 		local cover_system = Managers.state.extension:system("cover_system")
 
 		for i = 1, #cover_slots do

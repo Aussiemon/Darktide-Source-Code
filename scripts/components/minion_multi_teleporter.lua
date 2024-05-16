@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/minion_multi_teleporter.lua
+
 local MinionMultiTeleporterQueries = require("scripts/components/utilities/minion_multi_teleporter_queries")
 local SharedNav = require("scripts/components/utilities/shared_nav")
 local MinionMultiTeleporter = component("MinionMultiTeleporter")
@@ -17,13 +19,16 @@ MinionMultiTeleporter.init = function (self, unit, is_server, nav_world)
 	end
 
 	teleporter_units[unit] = self
-	local unit_id = Unit.id_string(unit)
-	local smart_object_id_lookup = {}
+
+	local unit_id, smart_object_id_lookup = Unit.id_string(unit), {}
+
 	self._unit = unit
 	self._unit_id = unit_id
 	self._nav_world = nav_world
 	self._smart_object_id_lookup = smart_object_id_lookup
+
 	local nav_graph_extension = ScriptUnit.fetch_component_extension(unit, "nav_graph_system")
+
 	self._nav_graph_extension = nav_graph_extension
 
 	if nav_graph_extension then
@@ -33,8 +38,7 @@ MinionMultiTeleporter.init = function (self, unit, is_server, nav_world)
 	end
 end
 
-local ENABLED_ON_SPAWN = true
-local EMPTY = {}
+local ENABLED_ON_SPAWN, EMPTY = true, {}
 
 MinionMultiTeleporter._setup_smart_objects = function (self, unit, unit_id, nav_world, nav_graph_extension, smart_object_id_lookup, teleporter_units)
 	local smart_objects, new_smart_object_id_lookup = MinionMultiTeleporterQueries.generate_smart_objects(unit, nav_world, teleporter_units)
@@ -132,10 +136,11 @@ MinionMultiTeleporter.editor_init = function (self, unit)
 	end
 
 	teleporter_units[unit] = self
+
 	local world = Application.main_world()
 	local line_object = World.create_line_object(world)
-	self._line_object = line_object
-	self._world = world
+
+	self._world, self._line_object = world, line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 
 	if MinionMultiTeleporter._nav_info == nil then
@@ -146,6 +151,7 @@ MinionMultiTeleporter.editor_init = function (self, unit)
 	self._is_selected = false
 	self._should_debug_draw = false
 	self._unit = unit
+
 	local update_enabled = true
 
 	return update_enabled
@@ -161,9 +167,10 @@ MinionMultiTeleporter.editor_destroy = function (self, unit)
 	end
 
 	local teleporter_units = MinionMultiTeleporter._teleporter_units
+
 	teleporter_units[unit] = nil
-	local world = self._world
-	local line_object = self._line_object
+
+	local world, line_object = self._world, self._line_object
 
 	LineObject.reset(line_object)
 	LineObject.dispatch(world, line_object)
@@ -189,9 +196,7 @@ MinionMultiTeleporter.editor_update = function (self, unit)
 	return true
 end
 
-local AVAILABLE_DESTINATION_TELEPORTERS = {}
-local GAP_PERCENTAGE = 20
-local SUBDIVISIONS = 50
+local AVAILABLE_DESTINATION_TELEPORTERS, GAP_PERCENTAGE, SUBDIVISIONS = {}, 20, 50
 
 MinionMultiTeleporter._editor_debug_draw = function (self, unit)
 	local drawer = self._drawer
@@ -214,8 +219,7 @@ MinionMultiTeleporter._editor_debug_draw = function (self, unit)
 			end
 		end
 
-		local self_toggleable = self:get_data(unit, "toggleable")
-		local line_object = self._line_object
+		local self_toggleable, line_object = self:get_data(unit, "toggleable"), self._line_object
 		local smart_objects, smart_object_id_lookup = MinionMultiTeleporterQueries.generate_smart_objects(unit, nav_world, AVAILABLE_DESTINATION_TELEPORTERS)
 
 		if smart_objects then
@@ -321,23 +325,23 @@ end
 
 MinionMultiTeleporter.component_data = {
 	toggleable = {
+		ui_name = "Toggleable",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Toggleable"
 	},
 	inputs = {
 		flow_enable = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		flow_disable = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"NavGraphExtension"
-	}
+		"NavGraphExtension",
+	},
 }
 
 return MinionMultiTeleporter

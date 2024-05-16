@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/servo_skull/servo_skull_system.lua
+
 require("scripts/extension_systems/servo_skull/servo_skull_extension")
 require("scripts/extension_systems/servo_skull/servo_skull_activator_extension")
 
@@ -6,7 +8,7 @@ local CLIENT_RPCS = {
 	"rpc_servo_skull_do_pulse_fx",
 	"rpc_servo_skull_player_nearby",
 	"rpc_servo_skull_activator_set_visibility",
-	"rpc_servo_skull_set_scanning_active"
+	"rpc_servo_skull_set_scanning_active",
 }
 
 ServoSkullSystem.init = function (self, context, system_init_data, ...)

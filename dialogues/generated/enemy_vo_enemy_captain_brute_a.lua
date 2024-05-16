@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_captain_brute_a.lua
+
 local enemy_vo_enemy_captain_brute_a = {
 	renegade_captain_long_death = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__long_death_07",
 			"loc_enemy_captain_brute_a__long_death_08",
 			"loc_enemy_captain_brute_a__long_death_09",
-			"loc_enemy_captain_brute_a__long_death_10"
+			"loc_enemy_captain_brute_a__long_death_10",
 		},
 		sound_events_duration = {
 			3.19,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_captain_brute_a = {
 			4.777,
 			5.303,
 			5.885,
-			7.256
+			7.256,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_captain_brute_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	renegade_captain_reinforcements = {
 		randomize_indexes_n = 0,
@@ -48,23 +50,23 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__reinforcements_02",
 			"loc_enemy_captain_brute_a__reinforcements_03",
 			"loc_enemy_captain_brute_a__reinforcements_04",
-			"loc_enemy_captain_brute_a__reinforcements_05"
+			"loc_enemy_captain_brute_a__reinforcements_05",
 		},
 		sound_events_duration = {
 			1.708875,
 			1.741,
 			2.359,
 			2.930438,
-			2.706417
+			2.706417,
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2
+			0.2,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	renegade_captain_taunt = {
 		randomize_indexes_n = 0,
@@ -79,7 +81,7 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__taunt_07",
 			"loc_enemy_captain_brute_a__taunt_08",
 			"loc_enemy_captain_brute_a__taunt_09",
-			"loc_enemy_captain_brute_a__taunt_10"
+			"loc_enemy_captain_brute_a__taunt_10",
 		},
 		sound_events_duration = {
 			3.143417,
@@ -91,7 +93,7 @@ local enemy_vo_enemy_captain_brute_a = {
 			3.105083,
 			4.301,
 			3.626,
-			3.134354
+			3.134354,
 		},
 		sound_event_weights = {
 			0.1,
@@ -103,9 +105,9 @@ local enemy_vo_enemy_captain_brute_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	renegade_captain_taunt_combat = {
 		randomize_indexes_n = 0,
@@ -120,7 +122,7 @@ local enemy_vo_enemy_captain_brute_a = {
 			"loc_enemy_captain_brute_a__taunt_combat_07",
 			"loc_enemy_captain_brute_a__taunt_combat_08",
 			"loc_enemy_captain_brute_a__taunt_combat_09",
-			"loc_enemy_captain_brute_a__taunt_combat_10"
+			"loc_enemy_captain_brute_a__taunt_combat_10",
 		},
 		sound_events_duration = {
 			1.668,
@@ -132,7 +134,7 @@ local enemy_vo_enemy_captain_brute_a = {
 			1.842,
 			3.277,
 			3.062,
-			4.632
+			4.632,
 		},
 		sound_event_weights = {
 			0.1,
@@ -144,10 +146,10 @@ local enemy_vo_enemy_captain_brute_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_captain_brute_a", enemy_vo_enemy_captain_brute_a)

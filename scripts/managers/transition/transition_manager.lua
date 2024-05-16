@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/transition/transition_manager.lua
+
 local TransitionManager = class("TransitionManager")
 
 TransitionManager.init = function (self)
@@ -5,7 +7,7 @@ TransitionManager.init = function (self)
 		255,
 		0,
 		0,
-		0
+		0,
 	}
 	self._fade_speed = 0
 end
@@ -47,7 +49,7 @@ TransitionManager.force_fade_out = function (self)
 end
 
 TransitionManager._render_overlay = function (self, dt)
-	local w, h = nil
+	local w, h
 
 	if Application.screen_resolution then
 		w, h = Application.screen_resolution()
@@ -79,6 +81,7 @@ TransitionManager.update = function (self, dt)
 
 		if self._callback then
 			local callback = self._callback
+
 			self._callback = nil
 
 			callback()
@@ -89,6 +92,7 @@ TransitionManager.update = function (self, dt)
 
 		if self._callback then
 			local callback = self._callback
+
 			self._callback = nil
 
 			callback()

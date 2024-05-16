@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/account_profile_overview_view/account_profile_overview_view.lua
+
 local BackendInterface = require("scripts/backend/backend_interface")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -9,8 +11,8 @@ local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local Boons = {
 	boon_one = {
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		label = "loc_boons_reduce_damage"
-	}
+		label = "loc_boons_reduce_damage",
+	},
 }
 local MIN_LIST_ITEMS = 20
 local AccountProfileOverwiewView = class("AccountProfileOverwiewView", "BaseView")
@@ -45,8 +47,11 @@ AccountProfileOverwiewView.on_enter = function (self)
 
 	local player = self:_player()
 	local player_name_widget = self._widgets_by_name.player_name
+
 	player_name_widget.content.text = player:name()
+
 	local all_commendations_button = self._widgets_by_name.all_commendations_button
+
 	all_commendations_button.content.hotspot.pressed_callback = callback(self, "cb_all_commendations_button")
 end
 
@@ -128,8 +133,8 @@ AccountProfileOverwiewView._add_list_item = function (self, list, item_data)
 	local popup_callback = callback(self, "cb_show_popup", item_data)
 	local widget_definition = UIWidget.create_definition(blueprint.passes, grid.grid_scenegraph_id, {
 		hotspot = {
-			pressed_callback = popup_callback
-		}
+			pressed_callback = popup_callback,
+		},
 	}, blueprint.size, blueprint.style)
 	local widget_index = #grid.widgets + 1
 	local alignment_index = #grid.alignment_list
@@ -161,13 +166,14 @@ AccountProfileOverwiewView._create_offscreen_renderer = function (self)
 	local viewport_layer = 1
 	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	local renderer_name = self.__class_name .. "offscreen_renderer"
+
 	self._offscreen_renderer = Managers.ui:create_renderer(renderer_name, world)
 	self._offscreen_world = {
 		name = world_name,
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name
+		renderer_name = renderer_name,
 	}
 end
 
@@ -203,6 +209,7 @@ end
 
 AccountProfileOverwiewView._fetch_data = function (self)
 	self._backend_interface = BackendInterface:new()
+
 	local overview_promise = self._backend_interface.progression:get_account_progression()
 
 	overview_promise:next(callback(self, "cb_received_overview_data"))
@@ -216,17 +223,21 @@ AccountProfileOverwiewView._set_account_overview_data = function (self, data)
 	local account_rank_widget = self._widgets_by_name.account_rank
 	local content = account_rank_widget.content
 	local style = account_rank_widget.style
+
 	content.rank_text = self:_localize("loc_account_profile_account_rank", true, {
-		account_rank = data.currentLevel
+		account_rank = data.currentLevel,
 	})
+
 	local normalized_progress = data.currentXpInLevel / data.neededXpForNextLevel
 	local progress_bar_width = self:_scenegraph_size("progress_bar")
+
 	style.progress_bar.size[1] = math.floor(progress_bar_width * normalized_progress)
 end
 
 AccountProfileOverwiewView._set_boons_data = function (self, data)
 	local boons_data = data.boons
 	local boons_grid = self._column_grids[BOONS_LIST]
+
 	boons_grid.data = boons_data
 
 	for i = 1, #boons_data do
@@ -236,21 +247,21 @@ AccountProfileOverwiewView._set_boons_data = function (self, data)
 			{
 				blueprint = "subtitle",
 				params = {
-					text = "loc_boon_types_team_boon"
-				}
+					text = "loc_boon_types_team_boon",
+				},
 			},
 			{
 				blueprint = "info_text",
 				params = {
-					text = "loc_placeholder_boon_description"
-				}
-			}
+					text = "loc_placeholder_boon_description",
+				},
+			},
 		}
 		local item_data = {
 			icon = boon.icon,
 			label = boon.label,
 			value = boon_data.count .. "x",
-			popup_data = popup_data
+			popup_data = popup_data,
 		}
 
 		self:_add_list_item(BOONS_LIST, item_data)
@@ -259,6 +270,7 @@ end
 
 AccountProfileOverwiewView._set_commendations_data = function (self, commendations_data)
 	local commendations_grid = self._column_grids[COMMENDATIONS_LIST]
+
 	commendations_grid.data = commendations_data
 
 	local function commendation_comparator(a, b)
@@ -272,7 +284,7 @@ AccountProfileOverwiewView._set_commendations_data = function (self, commendatio
 		local a_percent = a.progress_current / a.progress_goal
 		local b_percent = b.progress_current / b.progress_goal
 
-		return a_percent > b_percent
+		return b_percent < a_percent
 	end
 
 	table.sort(commendations_data, commendation_comparator)
@@ -286,7 +298,7 @@ AccountProfileOverwiewView._set_commendations_data = function (self, commendatio
 		local item_data = {
 			icon = icon,
 			label = commendation_data.label,
-			value = progress
+			value = progress,
 		}
 
 		self:_add_list_item(COMMENDATIONS_LIST, item_data)
@@ -295,10 +307,13 @@ end
 
 AccountProfileOverwiewView._set_current_contracts_data = function (self, data)
 	local current_contracts_grid = self._column_grids[CONTRACTS_LIST]
+
 	current_contracts_grid.data = data
+
 	local tasks = data.tasks
 	local contracts_widget = self._widgets_by_name.contracts
 	local num_tasks = #tasks
+
 	contracts_widget.content.num_tasks = num_tasks .. " "
 
 	for i = 1, num_tasks do
@@ -306,7 +321,7 @@ AccountProfileOverwiewView._set_current_contracts_data = function (self, data)
 		local progress = self:_format_progress(task.taskType, task.progressCurrent, task.progressGoal)
 		local item_data = {
 			label = task.label,
-			value = progress
+			value = progress,
 		}
 
 		self:_add_list_item(CONTRACTS_LIST, item_data)
@@ -320,22 +335,23 @@ AccountProfileOverwiewView._setup_column = function (self, name)
 	local grid_spacing = {
 		size = {
 			ViewStyles.column_width,
-			20
-		}
+			20,
+		},
 	}
 	local clear_mask_spacing = {
 		size = {
 			ViewStyles.column_width,
-			10
-		}
+			10,
+		},
 	}
 	local widgets = {}
 	local alignment_list = {
-		clear_mask_spacing
+		clear_mask_spacing,
 	}
 	local grid_widget = UIWidgetGrid:new(widgets, alignment_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction)
 	local scrollbar_widget = self._widgets_by_name[name .. "_scrollbar"]
 	local scrollbar_content = scrollbar_widget.content
+
 	scrollbar_content.focused = true
 
 	if name == BOONS_LIST then
@@ -356,8 +372,9 @@ AccountProfileOverwiewView._setup_column = function (self, name)
 		grid_spacing_widget = grid_spacing,
 		grid_mask_clearing_widget = clear_mask_spacing,
 		grid_scenegraph_id = grid_scenegraph_id,
-		scrollbar = scrollbar_widget
+		scrollbar = scrollbar_widget,
 	}
+
 	self._column_grids[name] = column_grid
 	self._column_grids_array[#self._column_grids_array + 1] = column_grid
 end
@@ -367,7 +384,7 @@ AccountProfileOverwiewView._show_popup = function (self, item_data)
 		parent = self,
 		icon = item_data.icon,
 		headline = item_data.label,
-		info_widgets = item_data.popup_data
+		info_widgets = item_data.popup_data,
 	}
 
 	Managers.ui:open_view(ACCOUNT_PROFILE_POPUP_VIEW, nil, nil, nil, nil, context)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_stubrevolver_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local stat_buffs = BuffSettings.stat_buffs
@@ -15,7 +17,7 @@ templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_p
 templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_child"
 templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_child)
 templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_child.conditional_stat_buffs = {
-	[stat_buffs.ranged_power_level_modifier] = 0.05
+	[stat_buffs.ranged_power_level_modifier] = 0.05,
 }
 templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_ammo_left = table.clone(BaseWeaponTraitBuffTemplates.crit_chance_based_on_ammo_left)
 templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_bonus_on_melee_kills = table.clone(BaseWeaponTraitBuffTemplates.crit_chance_bonus_on_melee_kills)

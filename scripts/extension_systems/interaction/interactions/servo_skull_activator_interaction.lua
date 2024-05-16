@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/servo_skull_activator_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
@@ -29,6 +31,7 @@ ServoSkullActivatorInteraction.stop = function (self, world, interactor_unit, un
 				local first_person_component = unit_data_extension:read_component("first_person")
 				local first_person_position = first_person_component.position
 				local first_person_rotation = first_person_component.rotation
+
 				target_unit_position = first_person_position + Vector3.up() * 0.5
 				target_unit_rotation = first_person_rotation
 			end

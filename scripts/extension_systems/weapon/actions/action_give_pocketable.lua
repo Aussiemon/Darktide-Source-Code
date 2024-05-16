@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_give_pocketable.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
@@ -14,7 +16,9 @@ ActionGivePocketable.init = function (self, action_context, action_params, actio
 	self._input_extension = action_context.input_extension
 	self._aim_ready_up_time = action_setting.aim_ready_up_time or 0
 	self._last_unit = nil
+
 	local unit_data_extension = self._unit_data_extension
+
 	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
 end
 
@@ -62,6 +66,7 @@ ActionGivePocketable.fixed_update = function (self, dt, t, time_in_action)
 					table.clear(external_properties)
 
 					external_properties.pocketable_name = pickup_name
+
 					local fx_extension = ScriptUnit.extension(target_unit, "fx_system")
 
 					fx_extension:trigger_exclusive_gear_wwise_event(RECIEVE_GIFTED_ITEM_ALIAS, external_properties)

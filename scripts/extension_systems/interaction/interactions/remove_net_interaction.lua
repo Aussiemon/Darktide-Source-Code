@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/remove_net_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/assist_base_interaction")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -18,6 +20,7 @@ RemoveNetInteraction.stop = function (self, world, interactor_unit, unit_data_co
 		local target_unit = unit_data_component.target_unit
 		local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 		local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
+
 		assisted_state_input_component.success = true
 
 		self:_handle_buffs(interactor_unit, target_unit, proc_events.on_remove_net)

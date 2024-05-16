@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/social_steam.lua
+
 local PlatformSocialInterface = require("scripts/managers/data_service/services/social/platform_social_interface")
 local FriendSteam = require("scripts/managers/data_service/services/social/friend_steam")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -36,6 +38,7 @@ SocialSteam.fetch_friends_list = function (self)
 	for i = 1, num_friends do
 		local id = Friends.id(i)
 		local friend = FriendSteam:new(id, app_id)
+
 		friend_list[i] = friend
 	end
 
@@ -61,6 +64,7 @@ SocialSteam.fetch_blocked_list = function (self)
 	for i = 1, num_blocked do
 		local id = Friends.id(i)
 		local blocked = FriendSteam:new(id, app_id)
+
 		blocked_list[i] = blocked
 	end
 
@@ -78,6 +82,7 @@ SocialSteam.fetch_blocked_list_ids_forced = function (self)
 
 	for i = 1, num_blocked do
 		local id = Friends.id(i)
+
 		blocked_list[i] = id
 	end
 
@@ -92,6 +97,7 @@ SocialSteam.update_recent_players = function (self, account_id)
 	end
 
 	self._updated_recent_players[account_id] = true
+
 	local _, promise = Managers.presence:get_presence(account_id)
 
 	promise:next(function (presence)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/weapon_flashlight.lua
+
 local WeaponFlashlight = component("WeaponFlashlight")
 
 WeaponFlashlight.init = function (self, unit)
@@ -55,7 +57,7 @@ WeaponFlashlight.set_intensity = function (self, unit, settings, scale)
 
 	local color = Light.color_with_intensity(light)
 
-	Unit.set_vector3_for_materials(unit, "light_color", color * scale * scale * scale)
+	Unit.set_vector3_for_materials(unit, "light_color", color * (scale * scale * scale))
 end
 
 WeaponFlashlight.set_template = function (self, unit, settings)
@@ -83,10 +85,10 @@ end
 
 WeaponFlashlight.component_data = {
 	start_enabled = {
+		ui_name = "Start Enabled",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Start Enabled"
-	}
+	},
 }
 
 return WeaponFlashlight

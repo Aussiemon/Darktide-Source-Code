@@ -1,19 +1,22 @@
+﻿-- chunkname: @scripts/foundation/utilities/class.lua
+
 require("scripts/foundation/utilities/error")
 
-local destroyed_mt = {
-	__index = function (t, k)
-		local message = string.format("Cannot access property %q on destroyed object of type %s", tostring(k), rawget(t, "__class_name") or "<unknown>")
+local destroyed_mt = {}
 
-		error(message, 2)
-	end
-}
+destroyed_mt.__index = function (t, k)
+	local message = string.format("Cannot access property %q on destroyed object of type %s", tostring(k), rawget(t, "__class_name") or "<unknown>")
+
+	error(message, 2)
+end
+
 local special_functions = {
+	__class_name = true,
 	__index = true,
-	super = true,
+	__interfaces = true,
 	delete = true,
 	new = true,
-	__interfaces = true,
-	__class_name = true
+	super = true,
 }
 local CLASSES = CLASSES
 
@@ -27,7 +30,7 @@ end
 
 function class(class_name, super_name)
 	local class_table = CLASSES[class_name]
-	local super = nil
+	local super
 
 	if super_name then
 		super = CLASSES[super_name]
@@ -37,9 +40,9 @@ function class(class_name, super_name)
 		class_table = {
 			super = super,
 			__class_name = class_name,
-			__index = class_table,
-			__interfaces = {}
 		}
+		class_table.__index = class_table
+		class_table.__interfaces = {}
 
 		class_table.new = function (self, ...)
 			local object = {}

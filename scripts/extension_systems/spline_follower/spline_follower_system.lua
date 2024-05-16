@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/spline_follower/spline_follower_system.lua
+
 require("scripts/extension_systems/spline_follower/spline_follower_extension")
 
 local Graph = require("scripts/utilities/graph")
@@ -5,7 +7,7 @@ local LevelEventSettings = require("scripts/settings/level_event/level_event_set
 local SplineFollowerSystem = class("SplineFollowerSystem", "ExtensionSystemBase")
 local RPCS = {
 	"rpc_spline_follower_hot_join_sync",
-	"rpc_spline_follower_system_seed_sync"
+	"rpc_spline_follower_system_seed_sync",
 }
 
 SplineFollowerSystem.init = function (self, context, system_init_data, ...)
@@ -17,6 +19,7 @@ SplineFollowerSystem.init = function (self, context, system_init_data, ...)
 	self._start_spline_indices = {}
 	self._spline_connection_radius = LevelEventSettings.spline_follower.spline_connection_radius
 	self._seed = self._is_server and system_init_data.level_seed or nil
+
 	local network_event_delegate = context.network_event_delegate
 
 	network_event_delegate:register_session_events(self, unpack(RPCS))
@@ -69,6 +72,7 @@ SplineFollowerSystem._setup_splines = function (self, level)
 
 	for objective_name, spline_names in pairs(spline_names_by_objective_name) do
 		local splines = self:_retrieve_splines_from_level(spline_names, level)
+
 		self._splines_by_name[objective_name] = splines
 	end
 end
@@ -82,6 +86,7 @@ SplineFollowerSystem._retrieve_splines_from_level = function (self, spline_names
 
 		for n = 1, #spline do
 			local boxed_spline = Vector3Box(spline[n])
+
 			spline[n] = boxed_spline
 		end
 
@@ -100,6 +105,7 @@ SplineFollowerSystem._setup_spline_paths = function (self)
 
 	for objective_name, spline in table.sorted(splines, TEMP_KEYS) do
 		local graph, start_spline_indices = self:_setup_graph_with_connected_splines(spline)
+
 		spline_path_indices_by_name[objective_name], seed = self:_new_random_spline_path_index(graph, start_spline_indices, seed)
 	end
 
@@ -164,11 +170,12 @@ end
 SplineFollowerSystem._new_random_spline_path_index = function (self, graph, start_spline_indices, seed)
 	local new_seed, spline_index = self:_next_random_spline_index(start_spline_indices, seed)
 	local spline_path_indices = {
-		spline_index
+		spline_index,
 	}
 
 	while graph:has_adjacency_nodes(spline_index) do
 		local connected_splines = graph:get_adjacency_nodes(spline_index)
+
 		new_seed, spline_index = self:_next_random_spline_index(connected_splines, new_seed)
 		spline_path_indices[#spline_path_indices + 1] = spline_index
 	end
@@ -191,8 +198,7 @@ SplineFollowerSystem.spline_path_start_position_and_rotation = function (self, n
 	local splines = self._splines_by_name[name]
 	local connected_spline = spline_path_indices[1]
 	local spline = splines[connected_spline]
-	local first_pos = spline[1]:unbox()
-	local second_pos = spline[2]:unbox()
+	local first_pos, second_pos = spline[1]:unbox(), spline[2]:unbox()
 	local to_target = second_pos - first_pos
 	local direction = Vector3.normalize(to_target)
 	local rotation = Quaternion.look(direction)
@@ -208,6 +214,7 @@ SplineFollowerSystem.spline_path_end_positions = function (self, name)
 	for i = 1, #spline_path_indices do
 		local spline_path_index = spline_path_indices[i]
 		local spline = splines[spline_path_index]
+
 		spline_path_end_positions[#spline_path_end_positions + 1] = spline[#spline]:unbox()
 	end
 

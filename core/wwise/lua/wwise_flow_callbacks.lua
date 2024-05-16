@@ -1,6 +1,10 @@
+﻿-- chunkname: @core/wwise/lua/wwise_flow_callbacks.lua
+
 local WwiseVisualization = require("core/wwise/lua/wwise_visualization")
 local WwiseBankReference = require("core/wwise/lua/wwise_bank_reference")
+
 WwiseFlowCallbacks = WwiseFlowCallbacks or {}
+
 local M = WwiseFlowCallbacks
 local Application = stingray.Application
 local Matrix4x4 = stingray.Matrix4x4
@@ -17,7 +21,7 @@ local function _get_flow_context_wwise_world()
 	return World.get_data(world, "wwise_world") or Wwise.wwise_world(world)
 end
 
-local listener_map = nil
+local listener_map
 
 if Wwise then
 	listener_map = {
@@ -28,7 +32,7 @@ if Wwise then
 		Listener4 = Wwise.LISTENER_4,
 		Listener5 = Wwise.LISTENER_5,
 		Listener6 = Wwise.LISTENER_6,
-		Listener7 = Wwise.LISTENER_7
+		Listener7 = Wwise.LISTENER_7,
 	}
 end
 
@@ -142,7 +146,7 @@ M.wwise_trigger_event = function (t)
 	local event_resource = t.Event_resource or t.event_resource or ""
 	local unit = t.Unit or t.unit
 	local use_occlusion = t.use_occlusion or false
-	local r1, r2 = nil
+	local r1, r2
 	local wwise_world = _get_flow_context_wwise_world()
 	local source_id = t.Existing_Source_Id or t.existing_source_id
 
@@ -163,6 +167,7 @@ M.wwise_trigger_event = function (t)
 
 		if position then
 			local world_position = Vector3.add(Unit.world_position(unit, unit_node_index), position)
+
 			r1, r2 = WwiseWorld.trigger_resource_event(wwise_world, event_resource, use_occlusion, world_position)
 		else
 			r1, r2 = WwiseWorld.trigger_resource_event(wwise_world, event_resource, use_occlusion, unit, unit_node_index)
@@ -181,7 +186,7 @@ M.wwise_trigger_event = function (t)
 		playing_id = r1,
 		source_id = r2,
 		Playing_Id = r1,
-		Source_Id = r2
+		Source_Id = r2,
 	}
 end
 
@@ -189,13 +194,13 @@ M.wwise_event_resource = function (t)
 	local event_resource = t.Event_resource or t.event_resource or ""
 
 	return {
-		resource = event_resource
+		resource = event_resource,
 	}
 end
 
 local function make_source(t, wwise_world_function)
 	local unit = t.Unit or t.unit
-	local r1 = nil
+	local r1
 	local wwise_world = _get_flow_context_wwise_world()
 
 	if unit then
@@ -231,7 +236,7 @@ M.wwise_make_auto_source = function (t)
 
 	return {
 		source_id = id,
-		Source_Id = id
+		Source_Id = id,
 	}
 end
 
@@ -240,7 +245,7 @@ M.wwise_make_manual_source = function (t)
 
 	return {
 		source_id = id,
-		Source_Id = id
+		Source_Id = id,
 	}
 end
 
@@ -342,13 +347,13 @@ M.wwise_has_source = function (t)
 
 	if WwiseWorld.has_source(wwise_world, id) then
 		return {
+			Yes = true,
 			yes = true,
-			Yes = true
 		}
 	else
 		return {
 			No = true,
-			no = true
+			no = true,
 		}
 	end
 end
@@ -359,13 +364,13 @@ M.wwise_is_playing = function (t)
 
 	if WwiseWorld.is_playing(wwise_world, id) then
 		return {
+			Yes = true,
 			yes = true,
-			Yes = true
 		}
 	else
 		return {
 			No = true,
-			no = true
+			no = true,
 		}
 	end
 end
@@ -374,12 +379,14 @@ M.wwise_get_playing_elapsed = function (t)
 	local id = t.Playing_Id or t.playing_id
 	local wwise_world = _get_flow_context_wwise_world()
 	local elapsed_in_ms = WwiseWorld.get_playing_elapsed(wwise_world, id)
+
 	elapsed_in_ms = elapsed_in_ms or 0
+
 	local seconds = elapsed_in_ms / 1000
 
 	return {
 		seconds = seconds,
-		Seconds = seconds
+		Seconds = seconds,
 	}
 end
 
@@ -398,20 +405,23 @@ M.wwise_add_soundscape_source = function (t)
 			if event_resource == "" then
 				return {
 					ss_source_id = result_id,
-					SS_Source_Id = result_id
+					SS_Source_Id = result_id,
 				}
 			end
 		end
 
 		shape = shape or Unit.get_data(unit, "Wwise", "shape") or "point"
 		shape = string.lower(shape)
+
 		local shape_map = {
 			point = Wwise.SHAPE_POINT,
 			sphere = Wwise.SHAPE_SPHERE,
-			box = Wwise.SHAPE_BOX
+			box = Wwise.SHAPE_BOX,
 		}
+
 		shape = shape_map[shape] or Wwise.SHAPE_POINT
 		positioning = positioning or string.lower(Unit.get_data(unit, "Wwise", "positioning") or "closest")
+
 		local default_scale = 10
 		local scale = default_scale
 
@@ -435,9 +445,11 @@ M.wwise_add_soundscape_source = function (t)
 		local positioning_map = {
 			closest = Wwise.POSITIONING_CLOSEST_TO_LISTENER,
 			["random in shape"] = Wwise.POSITIONING_RANDOM_IN_SHAPE,
-			["random around listener"] = Wwise.POSITIONING_RANDOM_AROUND_LISTENER
+			["random around listener"] = Wwise.POSITIONING_RANDOM_AROUND_LISTENER,
 		}
+
 		positioning = positioning_map[positioning] or Wwise.POSITIONING_CLOSEST_TO_LISTENER
+
 		local unit_node_index = Script.index_offset()
 
 		if (t.Unit_Node or t.unit_node) and Unit.has_node(unit, t.Unit_Node or t.unit_node) then
@@ -449,12 +461,13 @@ M.wwise_add_soundscape_source = function (t)
 		end
 
 		local wwise_world = _get_flow_context_wwise_world()
+
 		result_id = WwiseWorld.add_soundscape_unit_wwise_event_source(wwise_world, event_resource, unit, unit_node_index, shape, scale, positioning, 0, 5, trigger_range)
 	end
 
 	return {
 		ss_source_id = result_id,
-		SS_Source_Id = result_id
+		SS_Source_Id = result_id,
 	}
 end
 

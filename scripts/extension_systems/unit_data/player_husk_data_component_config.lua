@@ -1,30 +1,32 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/player_husk_data_component_config.lua
+
 local husk_data_component_config = {
 	character_state = {
-		"state_name"
+		"state_name",
 	},
 	assisted_state_input = {
-		"in_progress"
+		"in_progress",
 	},
 	locomotion_steering = {
 		"hub_active_stopping",
-		"move_method"
+		"move_method",
 	},
 	first_person = {
 		"position",
 		"rotation",
 		"previous_rotation",
-		"height"
+		"height",
 	},
 	first_person_mode = {
 		"wants_1p_camera",
-		"show_1p_equipment_at_t"
+		"show_1p_equipment_at_t",
 	},
 	camera_tree = {
 		"tree",
-		"node"
+		"node",
 	},
 	alternate_fire = {
-		"is_active"
+		"is_active",
 	},
 	weapon_action = {
 		"current_action_name",
@@ -32,21 +34,21 @@ local husk_data_component_config = {
 		"special_active_at_start",
 		"start_t",
 		"template_name",
-		"time_scale"
+		"time_scale",
 	},
 	combat_ability_action = {
 		"current_action_name",
-		"template_name"
+		"template_name",
 	},
 	sway = {
 		"pitch",
 		"yaw",
 		"offset_x",
-		"offset_y"
+		"offset_y",
 	},
 	spread = {
 		"pitch",
-		"yaw"
+		"yaw",
 	},
 	suppression = {
 		"sway_pitch",
@@ -54,34 +56,34 @@ local husk_data_component_config = {
 		"spread_pitch",
 		"spread_yaw",
 		"time",
-		"decay_time"
+		"decay_time",
 	},
 	recoil = {
 		"pitch_offset",
-		"yaw_offset"
+		"yaw_offset",
 	},
 	stamina = {
-		"current_fraction"
+		"current_fraction",
 	},
 	action_aim_projectile = {
 		"rotation",
-		"position"
+		"position",
 	},
 	action_flamer_gas = {
-		"range"
+		"range",
 	},
 	action_throw_luggable = {
-		"thrown"
+		"thrown",
 	},
 	block = {
-		"is_blocking"
+		"is_blocking",
 	},
 	inventory = {
 		"slot_primary",
 		"slot_secondary",
 		"slot_pocketable",
 		"slot_pocketable_small",
-		"wielded_slot"
+		"wielded_slot",
 	},
 	slot_primary = {
 		"current_ammunition_clip",
@@ -91,7 +93,7 @@ local husk_data_component_config = {
 		"overheat_starting_percentage",
 		"overheat_current_percentage",
 		"special_active",
-		"reload_state"
+		"reload_state",
 	},
 	slot_secondary = {
 		"current_ammunition_clip",
@@ -101,68 +103,68 @@ local husk_data_component_config = {
 		"overheat_starting_percentage",
 		"overheat_current_percentage",
 		"special_active",
-		"reload_state"
+		"reload_state",
 	},
 	minigame_character_state = {
-		"interface_unit_id"
+		"interface_unit_id",
 	},
 	slot_luggable = {
-		"existing_unit_3p"
+		"existing_unit_3p",
 	},
 	action_module_charge = {
-		"charge_level"
+		"charge_level",
 	},
 	critical_strike = {
-		"is_active"
+		"is_active",
 	},
 	exploding_character_state = {
-		"is_exploding"
+		"is_exploding",
 	},
 	sprint_character_state = {
 		"is_sprinting",
-		"sprint_overtime"
+		"sprint_overtime",
 	},
 	ledge_hanging_character_state = {
-		"is_interactible"
+		"is_interactible",
 	},
 	lunge_character_state = {
 		"is_lunging",
 		"is_aiming",
-		"lunge_template"
+		"lunge_template",
 	},
 	hub_jog_character_state = {
-		"move_state"
+		"move_state",
 	},
 	movement_state = {
-		"method"
+		"method",
 	},
 	talent_resource = {
 		"current_resource",
-		"max_resource"
+		"max_resource",
 	},
 	weapon_tweak_templates = {
 		"sway_template_name",
-		"recoil_template_name"
+		"recoil_template_name",
 	},
 	action_sweep = {
 		"is_sticky",
 		"sweep_aborted_unit",
-		"sweep_aborted_actor_index"
+		"sweep_aborted_actor_index",
 	},
 	grenade_ability = {
-		"active"
+		"active",
 	},
 	combat_ability = {
-		"active"
+		"active",
 	},
 	scanning = {
 		"is_active",
 		"line_of_sight",
-		"scannable_unit"
+		"scannable_unit",
 	},
 	peeking = {
-		"is_peeking"
-	}
+		"is_peeking",
+	},
 }
 
 return husk_data_component_config

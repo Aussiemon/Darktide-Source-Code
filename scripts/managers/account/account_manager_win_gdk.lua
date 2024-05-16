@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/account/account_manager_win_gdk.lua
+
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local render_settings = require("scripts/settings/options/render_settings")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
@@ -7,7 +9,7 @@ local SIGNIN_STATES = {
 	fetching_privileges = "loc_signin_fetch_privileges",
 	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
 	idle = "",
-	signin_profile = "loc_signin_acquiring_user_profile"
+	signin_profile = "loc_signin_acquiring_user_profile",
 }
 
 AccountManagerWinGDK.init = function (self)
@@ -55,7 +57,7 @@ AccountManagerWinGDK.signin_profile = function (self, signin_callback)
 		return
 	end
 
-	local async_task = nil
+	local async_task
 	local users = XUser.users()
 
 	if #users > 1 then
@@ -315,6 +317,7 @@ end
 AccountManagerWinGDK._set_user_data = function (self, user_id)
 	local user_info = XUser.user_info(user_id)
 	local gamertag = XUser.get_gamertag(user_id)
+
 	self._is_guest = user_info.guest
 	self._xuid = user_info.xuid
 	self._user_id = user_id
@@ -410,11 +413,11 @@ AccountManagerWinGDK._show_fatal_error = function (self, title_text, description
 		description_text = description_text,
 		options = {
 			{
-				text = "loc_popup_button_close",
 				close_on_pressed = true,
-				callback = callback(self, "_return_to_title_screen")
-			}
-		}
+				text = "loc_popup_button_close",
+				callback = callback(self, "_return_to_title_screen"),
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -428,13 +431,13 @@ AccountManagerWinGDK._show_store_account_error = function (self, title_text, des
 		description_text = description_text,
 		options = {
 			{
-				text = "loc_popup_button_close",
 				close_on_pressed = true,
+				text = "loc_popup_button_close",
 				callback = optional_callback or function ()
 					return
-				end
-			}
-		}
+				end,
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)

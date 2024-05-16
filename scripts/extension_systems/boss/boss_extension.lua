@@ -1,10 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/boss/boss_extension.lua
+
 local BossExtension = class("BossExtension")
 
 BossExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._unit = unit
+
 	local seed = extension_init_data.seed
+
 	self._seed = seed
+
 	local breed = extension_init_data.breed
+
 	self._breed = breed
 	self._is_server = extension_init_context.is_server
 	self._nav_world = extension_init_context.nav_world
@@ -94,6 +100,7 @@ end
 BossExtension.damaged = function (self)
 	if self._first_damaged_at == nil then
 		self._first_damaged_at = Managers.time:time("main")
+
 		local breed = self._breed
 
 		if breed.trigger_boss_health_bar_on_damaged and not breed.boss_health_bar_disabled then
@@ -131,6 +138,7 @@ BossExtension._generate_display_name = function (self)
 
 		if type(display_name) == "table" then
 			local next_seed, index = math.next_random(seed, 1, #display_name)
+
 			display_name = display_name[index]
 			self._seed = next_seed
 		end
@@ -153,10 +161,10 @@ BossExtension._start_boss_template = function (self, boss_template)
 		physics_world = self._physics_world,
 		nav_world = self._nav_world,
 		world = self._world,
-		wwise_world = self._wwise_world
+		wwise_world = self._wwise_world,
 	}
 	self._template_data = {
-		unit = self._unit
+		unit = self._unit,
 	}
 
 	boss_template.start(self._template_data, self._template_context)

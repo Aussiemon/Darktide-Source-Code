@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_suppressed_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -6,15 +8,19 @@ local BtSuppressedAction = class("BtSuppressedAction", "BtNode")
 
 BtSuppressedAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local perception_component = blackboard.perception
+
 	scratchpad.perception_component = perception_component
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.locomotion_extension = locomotion_extension
-	local anim_events = nil
+
+	local anim_events
 	local jump_anim_events = action_data.jump_anim_events
 	local chance_of_jump_animation = action_data.chance_of_jump_animation
 	local is_jumping = false
 
-	if jump_anim_events and math.random() < chance_of_jump_animation then
+	if jump_anim_events and chance_of_jump_animation > math.random() then
 		anim_events = self:_setup_jump_anim(unit, scratchpad, blackboard, jump_anim_events)
 		is_jumping = true
 	else
@@ -38,6 +44,7 @@ BtSuppressedAction.leave = function (self, unit, breed, blackboard, scratchpad, 
 	if out_of_suppression_anim_event then
 		if type(out_of_suppression_anim_event) == "table" then
 			local playing_suppressed_anim_event = scratchpad.suppressed_anim_event
+
 			out_of_suppression_anim_event = out_of_suppression_anim_event[playing_suppressed_anim_event]
 		end
 
@@ -85,11 +92,12 @@ end
 
 BtSuppressedAction._setup_jump_anim = function (self, unit, scratchpad, blackboard, jump_anim_events)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.navigation_extension = navigation_extension
 
 	MinionMovement.set_anim_driven(scratchpad, true)
 
-	local chosen_anim_events = nil
+	local chosen_anim_events
 	local suppression_component = blackboard.suppression
 	local direction = suppression_component.direction:unbox()
 	local forward = Quaternion.forward(Unit.local_rotation(unit, 1))

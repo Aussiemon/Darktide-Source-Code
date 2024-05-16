@@ -1,79 +1,83 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_settings.lua
+
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local RoamerLimits = require("scripts/settings/roamer/roamer_limits")
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
-local roamer_settings = {
-	density_types = {
-		"none",
-		"high",
-		"low"
-	},
-	faction_types = {
-		"renegade",
-		"cultist"
-	},
-	encampment_types = {
-		"poxwalkers"
-	}
+local roamer_settings = {}
+
+roamer_settings.density_types = {
+	"none",
+	"high",
+	"low",
 }
+roamer_settings.faction_types = {
+	"renegade",
+	"cultist",
+}
+roamer_settings.encampment_types = {
+	"poxwalkers",
+}
+
 local default_packs = {
 	melee_low = {
 		renegade = RoamerPacks.renegade_melee_low,
-		cultist = RoamerPacks.cultist_melee_low
+		cultist = RoamerPacks.cultist_melee_low,
 	},
 	melee_high = {
 		renegade = RoamerPacks.renegade_melee_high,
-		cultist = RoamerPacks.cultist_melee_high
+		cultist = RoamerPacks.cultist_melee_high,
 	},
 	close_low = {
 		renegade = RoamerPacks.renegade_close_low,
-		cultist = RoamerPacks.cultist_close_low
+		cultist = RoamerPacks.cultist_close_low,
 	},
 	close_high = {
 		renegade = RoamerPacks.renegade_close_high,
-		cultist = RoamerPacks.cultist_close_high
+		cultist = RoamerPacks.cultist_close_high,
 	},
 	far_low = {
 		renegade = RoamerPacks.renegade_far_low,
-		cultist = RoamerPacks.cultist_far_low
+		cultist = RoamerPacks.cultist_far_low,
 	},
 	far_high = {
 		renegade = RoamerPacks.renegade_far_high,
-		cultist = RoamerPacks.cultist_far_high
+		cultist = RoamerPacks.cultist_far_high,
 	},
 	none = {
 		renegade = RoamerPacks.renegade_traitor_mix_none,
-		cultist = RoamerPacks.cultist_infected_mix_none
+		cultist = RoamerPacks.cultist_infected_mix_none,
 	},
 	encampment = {
 		renegade = RoamerPacks.chaos_poxwalker_encampment,
-		cultist = RoamerPacks.chaos_poxwalker_encampment
-	}
+		cultist = RoamerPacks.chaos_poxwalker_encampment,
+	},
 }
+
 roamer_settings.density_settings = {
 	{
 		low = {
 			zone_range = {
 				10,
-				14
+				14,
 			},
 			num_roamers_range = {
 				renegade = {
 					1,
-					2
+					2,
 				},
 				cultist = {
 					2,
-					3
-				}
+					3,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 2,
-					position_offset = 1
-				}
+					position_offset = 1,
+				},
 			},
 			packs = {
 				default_packs.melee_low,
@@ -81,33 +85,33 @@ roamer_settings.density_settings = {
 				default_packs.far_low,
 				default_packs.none,
 				default_packs.none,
-				default_packs.none
+				default_packs.none,
 			},
-			limits = RoamerLimits.low
+			limits = RoamerLimits.low,
 		},
 		high = {
 			zone_range = {
 				2,
-				3
+				3,
 			},
 			num_roamers_range = {
 				renegade = {
 					5,
-					6
+					6,
 				},
 				cultist = {
 					6,
-					7
-				}
+					7,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 5,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.melee_high,
@@ -115,33 +119,33 @@ roamer_settings.density_settings = {
 				default_packs.far_high,
 				default_packs.melee_high,
 				default_packs.close_high,
-				default_packs.far_high
+				default_packs.far_high,
 			},
-			limits = RoamerLimits.high
+			limits = RoamerLimits.high,
 		},
 		none = {
 			zone_range = {
 				4,
-				6
+				6,
 			},
 			num_roamers_range = {
 				renegade = {
 					1,
-					1
+					1,
 				},
 				cultist = {
 					1,
-					1
-				}
+					1,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 1,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.none,
@@ -149,37 +153,37 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none,
-				default_packs.none
-			}
+				default_packs.none,
+			},
 		},
 		poxwalkers = {
-			try_fill_one_sub_zone = true,
 			shared_aggro_trigger = true,
+			try_fill_one_sub_zone = true,
 			empty_zone_range = {
 				2,
-				3
+				3,
 			},
 			zone_range = {
 				1,
-				1
+				1,
 			},
 			num_roamers_range = {
 				renegade = {
 					30,
-					40
+					40,
 				},
 				cultist = {
 					30,
-					40
-				}
+					40,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"flood_fill"
+				"flood_fill",
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 50
-				}
+					num_slots = 50,
+				},
 			},
 			packs = {
 				default_packs.encampment,
@@ -187,34 +191,34 @@ roamer_settings.density_settings = {
 				default_packs.encampment,
 				default_packs.encampment,
 				default_packs.encampment,
-				default_packs.encampment
-			}
-		}
+				default_packs.encampment,
+			},
+		},
 	},
 	{
 		low = {
 			zone_range = {
 				9,
-				12
+				12,
 			},
 			num_roamers_range = {
 				renegade = {
 					2,
-					3
+					3,
 				},
 				cultist = {
 					3,
-					4
-				}
+					4,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 5,
-					position_offset = 1
-				}
+					position_offset = 1,
+				},
 			},
 			packs = {
 				default_packs.melee_low,
@@ -222,33 +226,33 @@ roamer_settings.density_settings = {
 				default_packs.far_low,
 				default_packs.melee_low,
 				default_packs.close_low,
-				default_packs.far_low
+				default_packs.far_low,
 			},
-			limits = RoamerLimits.low
+			limits = RoamerLimits.low,
 		},
 		high = {
 			zone_range = {
 				3,
-				4
+				4,
 			},
 			num_roamers_range = {
 				renegade = {
 					5,
-					7
+					7,
 				},
 				cultist = {
 					8,
-					9
-				}
+					9,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 6,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.melee_high,
@@ -256,33 +260,33 @@ roamer_settings.density_settings = {
 				default_packs.far_high,
 				default_packs.melee_high,
 				default_packs.close_high,
-				default_packs.far_high
+				default_packs.far_high,
 			},
-			limits = RoamerLimits.high
+			limits = RoamerLimits.high,
 		},
 		none = {
 			zone_range = {
 				3,
-				6
+				6,
 			},
 			num_roamers_range = {
 				renegade = {
 					1,
-					1
+					1,
 				},
 				cultist = {
 					1,
-					2
-				}
+					2,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 1,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.none,
@@ -290,37 +294,37 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none,
-				default_packs.none
-			}
+				default_packs.none,
+			},
 		},
 		poxwalkers = {
-			try_fill_one_sub_zone = true,
 			shared_aggro_trigger = true,
+			try_fill_one_sub_zone = true,
 			empty_zone_range = {
 				2,
-				3
+				3,
 			},
 			zone_range = {
 				1,
-				1
+				1,
 			},
 			num_roamers_range = {
 				renegade = {
 					40,
-					50
+					50,
 				},
 				cultist = {
 					40,
-					50
-				}
+					50,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"flood_fill"
+				"flood_fill",
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 60
-				}
+					num_slots = 60,
+				},
 			},
 			packs = {
 				default_packs.encampment,
@@ -328,34 +332,34 @@ roamer_settings.density_settings = {
 				default_packs.encampment,
 				default_packs.encampment,
 				default_packs.encampment,
-				default_packs.encampment
-			}
-		}
+				default_packs.encampment,
+			},
+		},
 	},
 	{
 		low = {
 			zone_range = {
 				8,
-				10
+				10,
 			},
 			num_roamers_range = {
 				renegade = {
 					2,
-					3
+					3,
 				},
 				cultist = {
 					3,
-					4
-				}
+					4,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 4,
-					position_offset = 1
-				}
+					position_offset = 1,
+				},
 			},
 			packs = {
 				default_packs.melee_low,
@@ -363,33 +367,33 @@ roamer_settings.density_settings = {
 				default_packs.far_low,
 				default_packs.melee_low,
 				default_packs.close_low,
-				default_packs.far_low
+				default_packs.far_low,
 			},
-			limits = RoamerLimits.low
+			limits = RoamerLimits.low,
 		},
 		high = {
 			zone_range = {
 				3,
-				4
+				4,
 			},
 			num_roamers_range = {
 				renegade = {
 					6,
-					8
+					8,
 				},
 				cultist = {
 					7,
-					9
-				}
+					9,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 6,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.melee_high,
@@ -397,33 +401,33 @@ roamer_settings.density_settings = {
 				default_packs.far_high,
 				default_packs.melee_high,
 				default_packs.close_high,
-				default_packs.far_high
+				default_packs.far_high,
 			},
-			limits = RoamerLimits.high
+			limits = RoamerLimits.high,
 		},
 		none = {
 			zone_range = {
 				2,
-				6
+				6,
 			},
 			num_roamers_range = {
 				renegade = {
 					1,
-					1
+					1,
 				},
 				cultist = {
 					1,
-					2
-				}
+					2,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 1,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.none,
@@ -431,38 +435,38 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none,
-				default_packs.none
+				default_packs.none,
 			},
-			limits = RoamerLimits.none
+			limits = RoamerLimits.none,
 		},
 		poxwalkers = {
-			try_fill_one_sub_zone = true,
 			shared_aggro_trigger = true,
+			try_fill_one_sub_zone = true,
 			empty_zone_range = {
 				2,
-				2
+				2,
 			},
 			zone_range = {
 				1,
-				1
+				1,
 			},
 			num_roamers_range = {
 				renegade = {
 					40,
-					50
+					50,
 				},
 				cultist = {
 					40,
-					50
-				}
+					50,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"flood_fill"
+				"flood_fill",
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 60
-				}
+					num_slots = 60,
+				},
 			},
 			packs = {
 				default_packs.encampment,
@@ -470,34 +474,34 @@ roamer_settings.density_settings = {
 				default_packs.encampment,
 				default_packs.encampment,
 				default_packs.encampment,
-				default_packs.encampment
-			}
-		}
+				default_packs.encampment,
+			},
+		},
 	},
 	{
 		low = {
 			zone_range = {
 				6,
-				8
+				8,
 			},
 			num_roamers_range = {
 				renegade = {
 					3,
-					4
+					4,
 				},
 				cultist = {
 					4,
-					5
-				}
+					5,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 4,
-					position_offset = 1
-				}
+					position_offset = 1,
+				},
 			},
 			packs = {
 				default_packs.melee_low,
@@ -505,33 +509,33 @@ roamer_settings.density_settings = {
 				default_packs.far_low,
 				default_packs.melee_low,
 				default_packs.close_low,
-				default_packs.far_low
+				default_packs.far_low,
 			},
-			limits = RoamerLimits.low
+			limits = RoamerLimits.low,
 		},
 		high = {
 			zone_range = {
 				5,
-				6
+				6,
 			},
 			num_roamers_range = {
 				renegade = {
 					7,
-					8
+					8,
 				},
 				cultist = {
 					8,
-					10
-				}
+					10,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 6,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.melee_high,
@@ -539,33 +543,33 @@ roamer_settings.density_settings = {
 				default_packs.far_high,
 				default_packs.melee_high,
 				default_packs.close_high,
-				default_packs.far_high
+				default_packs.far_high,
 			},
-			limits = RoamerLimits.high
+			limits = RoamerLimits.high,
 		},
 		none = {
 			zone_range = {
 				1,
-				3
+				3,
 			},
 			num_roamers_range = {
 				renegade = {
 					1,
-					1
+					1,
 				},
 				cultist = {
 					1,
-					1
-				}
+					1,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 1,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.none,
@@ -573,38 +577,38 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none,
-				default_packs.none
+				default_packs.none,
 			},
-			limits = RoamerLimits.none
+			limits = RoamerLimits.none,
 		},
 		poxwalkers = {
-			try_fill_one_sub_zone = true,
 			shared_aggro_trigger = true,
+			try_fill_one_sub_zone = true,
 			empty_zone_range = {
 				1,
-				1
+				1,
 			},
 			zone_range = {
 				1,
-				1
+				1,
 			},
 			num_roamers_range = {
 				renegade = {
 					45,
-					55
+					55,
 				},
 				cultist = {
 					45,
-					55
-				}
+					55,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"flood_fill"
+				"flood_fill",
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 70
-				}
+					num_slots = 70,
+				},
 			},
 			packs = {
 				default_packs.encampment,
@@ -612,34 +616,34 @@ roamer_settings.density_settings = {
 				default_packs.encampment,
 				default_packs.encampment,
 				default_packs.encampment,
-				default_packs.encampment
-			}
-		}
+				default_packs.encampment,
+			},
+		},
 	},
 	{
 		low = {
 			zone_range = {
 				4,
-				6
+				6,
 			},
 			num_roamers_range = {
 				renegade = {
 					3,
-					5
+					5,
 				},
 				cultist = {
 					4,
-					6
-				}
+					6,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 4,
-					position_offset = 1
-				}
+					position_offset = 1,
+				},
 			},
 			packs = {
 				default_packs.melee_low,
@@ -647,34 +651,34 @@ roamer_settings.density_settings = {
 				default_packs.far_low,
 				default_packs.melee_low,
 				default_packs.close_low,
-				default_packs.far_low
+				default_packs.far_low,
 			},
-			limits = RoamerLimits.low
+			limits = RoamerLimits.low,
 		},
 		high = {
 			chance_to_skip_limits = 1,
 			zone_range = {
 				6,
-				7
+				7,
 			},
 			num_roamers_range = {
 				renegade = {
 					8,
-					10
+					10,
 				},
 				cultist = {
 					9,
-					11
-				}
+					11,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 7,
-					position_offset = 1.15
-				}
+					position_offset = 1.15,
+				},
 			},
 			packs = {
 				default_packs.melee_high,
@@ -682,33 +686,33 @@ roamer_settings.density_settings = {
 				default_packs.far_high,
 				default_packs.melee_high,
 				default_packs.close_high,
-				default_packs.far_high
+				default_packs.far_high,
 			},
-			limits = RoamerLimits.high
+			limits = RoamerLimits.high,
 		},
 		none = {
 			zone_range = {
 				1,
-				2
+				2,
 			},
 			num_roamers_range = {
 				renegade = {
 					1,
-					1
+					1,
 				},
 				cultist = {
 					1,
-					1
-				}
+					1,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"circle_placement"
+				"circle_placement",
 			},
 			roamer_slot_placement_settings = {
 				circle_placement = {
 					num_slots = 1,
-					position_offset = 1.1
-				}
+					position_offset = 1.1,
+				},
 			},
 			packs = {
 				default_packs.none,
@@ -716,38 +720,38 @@ roamer_settings.density_settings = {
 				default_packs.none,
 				default_packs.none,
 				default_packs.none,
-				default_packs.none
+				default_packs.none,
 			},
-			limits = RoamerLimits.none
+			limits = RoamerLimits.none,
 		},
 		poxwalkers = {
-			try_fill_one_sub_zone = true,
 			shared_aggro_trigger = true,
+			try_fill_one_sub_zone = true,
 			empty_zone_range = {
 				1,
-				1
+				1,
 			},
 			zone_range = {
 				1,
-				1
+				1,
 			},
 			num_roamers_range = {
 				renegade = {
 					45,
-					55
+					55,
 				},
 				cultist = {
 					45,
-					55
-				}
+					55,
+				},
 			},
 			roamer_slot_placement_functions = {
-				"flood_fill"
+				"flood_fill",
 			},
 			roamer_slot_placement_settings = {
 				flood_fill = {
-					num_slots = 80
-				}
+					num_slots = 80,
+				},
 			},
 			packs = {
 				default_packs.encampment,
@@ -755,17 +759,19 @@ roamer_settings.density_settings = {
 				default_packs.encampment,
 				default_packs.encampment,
 				default_packs.encampment,
-				default_packs.encampment
-			}
-		}
-	}
+				default_packs.encampment,
+			},
+		},
+	},
 }
+
 local density_types = roamer_settings.density_types
 
 for i = 1, #density_types do
 	local density_type = density_types[i]
 
 	for j = 1, #roamer_settings.density_settings do
+		-- Nothing
 	end
 end
 
@@ -775,6 +781,7 @@ for i = 1, #encampment_types do
 	local encampment_type = encampment_types[i]
 
 	for j = 1, #roamer_settings.density_settings do
+		-- Nothing
 	end
 end
 
@@ -782,44 +789,44 @@ roamer_settings.spawn_distance = 75
 roamer_settings.zone_length = 10
 roamer_settings.num_encampments = {
 	1,
-	2
+	2,
 }
 roamer_settings.chance_of_encampment = 0
 roamer_settings.num_encampment_blocked_zones = 30
 roamer_settings.faction_zone_length = {
 	{
 		3000,
-		3000
+		3000,
 	},
 	{
 		3000,
-		3000
+		3000,
 	},
 	{
 		20,
-		40
+		40,
 	},
 	{
 		15,
-		30
+		30,
 	},
 	{
 		15,
-		30
-	}
+		30,
+	},
 }
 roamer_settings.ambience_sfx = {
 	poxwalkers = {
 		min_members = 5,
 		start = "wwise/events/minions/play_minion_horde_poxwalker_encampment",
-		stop = "wwise/events/minions/stop_minion_horde_poxwalker_encampment"
-	}
+		stop = "wwise/events/minions/stop_minion_horde_poxwalker_encampment",
+	},
 }
 roamer_settings.aggro_sfx = {
 	poxwalkers = {
+		start = "wwise/events/minions/play_minion_horde_poxwalker_encampment_aggro",
 		stop = "wwise/events/minions/stop_horde_group_sfx_poxwalkers",
-		start = "wwise/events/minions/play_minion_horde_poxwalker_encampment_aggro"
-	}
+	},
 }
 roamer_settings.pause_spawn_type_when_aggroed = {
 	poxwalkers = {
@@ -828,9 +835,9 @@ roamer_settings.pause_spawn_type_when_aggroed = {
 			80,
 			60,
 			30,
-			20
-		}
-	}
+			20,
+		},
+	},
 }
 roamer_settings.trigger_horde_when_aggroed = {}
 

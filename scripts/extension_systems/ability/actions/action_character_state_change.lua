@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/actions/action_character_state_change.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -10,6 +12,7 @@ ActionCharacterStateChange.init = function (self, action_context, action_params,
 	ActionCharacterStateChange.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = self._unit_data_extension
+
 	self._character_sate_component = unit_data_extension:read_component("character_state")
 	self._sway_component = unit_data_extension:read_component("sway")
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
@@ -18,6 +21,7 @@ end
 
 ActionCharacterStateChange.start = function (self, action_settings, t, time_scale, action_start_params)
 	self._wanted_state_name = action_settings.state_name
+
 	local ability_template_tweak_data = self._ability_template_tweak_data
 
 	if next(ability_template_tweak_data) then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/moveable_platform/utilities/moveable_platform_queries.lua
+
 local MoveablePlatformQueries = {}
 
 MoveablePlatformQueries.interaction_hud_description = function (moveable_platform_extension, interactable_actor_node_index)

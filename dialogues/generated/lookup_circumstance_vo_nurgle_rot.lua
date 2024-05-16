@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_circumstance_vo_nurgle_rot.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "nurgle_circumstance_conversation_five_a"
 DialogueLookup[DialogueLookup_n + 2] = "nurgle_circumstance_conversation_five_b"
 DialogueLookup[DialogueLookup_n + 3] = "nurgle_circumstance_conversation_five_c"

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/talents_service.lua
+
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TalentsService = class("TalentsService")
 

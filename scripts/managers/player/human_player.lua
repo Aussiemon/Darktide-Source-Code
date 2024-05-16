@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/human_player.lua
+
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local HumanPlayer = class("HumanPlayer")
 
@@ -22,9 +24,9 @@ HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, l
 	self._account_id = account_id
 	self._cached_name = nil
 	self._orientation = {
-		yaw = 0,
 		pitch = 0,
-		roll = 0
+		roll = 0,
+		yaw = 0,
 	}
 	self._game_state_object = nil
 	self._slot = slot
@@ -118,13 +120,13 @@ HumanPlayer.set_profile = function (self, profile)
 	if self:type() == "HumanPlayer" then
 		self._telemetry_subject = {
 			account_id = self._account_id,
-			character_id = self:character_id()
+			character_id = self:character_id(),
 		}
 	elseif self:type() == "BotPlayer" then
 		self._telemetry_subject = {
 			bot = true,
 			account_id = self._debug_name,
-			character_id = self:local_player_id()
+			character_id = self:local_player_id(),
 		}
 	end
 end

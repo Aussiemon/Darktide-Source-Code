@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/hud_element_base.lua
+
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -10,8 +12,7 @@ HudElementBase.init = function (self, parent, draw_layer, start_scale, definitio
 	self._parent = parent
 	self._event_list = {}
 	self._ui_scenegraph = self:_create_scenegraph(definitions, start_scale)
-	self._widgets_by_name = {}
-	self._widgets = {}
+	self._widgets, self._widgets_by_name = {}, {}
 
 	self:_create_widgets(definitions, self._widgets, self._widgets_by_name)
 
@@ -27,11 +28,13 @@ end
 
 HudElementBase._create_widgets = function (self, definitions, widgets, widgets_by_name)
 	local widget_definitions = definitions.widget_definitions
+
 	widgets = widgets or {}
 	widgets_by_name = widgets_by_name or {}
 
 	for name, definition in pairs(widget_definitions) do
 		local widget = self:_create_widget(name, definition)
+
 		widgets[#widgets + 1] = widget
 		widget.dirty = true
 	end
@@ -42,6 +45,7 @@ end
 HudElementBase._create_widget = function (self, name, definition)
 	local widgets_by_name = self._widgets_by_name
 	local widget = UIWidget.init(name, definition)
+
 	widgets_by_name[name] = widget
 	widget.dirty = true
 
@@ -50,6 +54,7 @@ end
 
 HudElementBase._unregister_widget_name = function (self, name)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name[name] = nil
 end
 
@@ -70,6 +75,7 @@ end
 HudElementBase._start_animation = function (self, animation_sequence_name, widgets, speed, params)
 	speed = speed or 1
 	widgets = widgets or self._widgets_by_name
+
 	local ui_sequence_animator = self._ui_sequence_animator
 	local animation_id = ui_sequence_animator:start_animation(self, animation_sequence_name, widgets, params, speed)
 
@@ -109,6 +115,7 @@ HudElementBase.set_dirty = function (self)
 
 	for i = 1, n_widgets do
 		local widget = widgets[i]
+
 		widget.dirty = true
 	end
 end
@@ -139,8 +146,10 @@ end
 HudElementBase.set_scenegraph_position = function (self, id, x, y, z, horizontal_alignment, vertical_alignment)
 	local ui_scenegraph = self._ui_scenegraph
 	local scenegraph = ui_scenegraph[id]
+
 	scenegraph.horizontal_alignment = horizontal_alignment or scenegraph.horizontal_alignment
 	scenegraph.vertical_alignment = vertical_alignment or scenegraph.vertical_alignment
+
 	local position = scenegraph.position
 
 	if x then
@@ -184,6 +193,7 @@ end
 
 HudElementBase.begin_update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	render_settings.start_layer = self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -209,6 +219,7 @@ end
 
 HudElementBase.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
 	render_settings.start_layer = self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)

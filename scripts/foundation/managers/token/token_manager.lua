@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/token/token_manager.lua
+
 local TokenInterface = require("scripts/foundation/managers/token/token_interface")
 local TokenManager = class("TokenManager")
 
@@ -13,7 +15,7 @@ TokenManager.register_token = function (self, token, callback, timeout)
 		time = 0,
 		token = token,
 		callback = callback,
-		timeout = timeout or math.huge
+		timeout = timeout or math.huge,
 	}
 end
 
@@ -34,16 +36,18 @@ end
 
 TokenManager.update = function (self, dt, t)
 	local tokens = self._tokens
+
 	self._is_updating_tokens = true
 
 	for index = #tokens, 1, -1 do
 		local entry = tokens[index]
 		local token = entry.token
+
 		entry.time = entry.time + dt
 
 		token:update()
 
-		if token:done() or entry.timeout <= entry.time then
+		if token:done() or entry.time >= entry.timeout then
 			local callback = entry.callback
 
 			if callback then

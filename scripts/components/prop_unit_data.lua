@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_unit_data.lua
+
 local PropData = require("scripts/settings/prop_data/prop_data")
 local PropUnitData = component("PropUnitData")
 
@@ -69,9 +71,9 @@ end
 
 PropUnitData.component_data = {
 	armor_data_name = {
-		value = "hazard_prop",
-		ui_type = "combo_box",
 		ui_name = "Prop Data",
+		ui_type = "combo_box",
+		value = "hazard_prop",
 		options_keys = {
 			"corruptor_body",
 			"corruptor_pustule",
@@ -79,7 +81,7 @@ PropUnitData.component_data = {
 			"druglab_tank",
 			"filtration_tank",
 			"hazard_prop",
-			"hazard_sphere"
+			"hazard_sphere",
 		},
 		options_values = {
 			"corruptor_body",
@@ -88,12 +90,12 @@ PropUnitData.component_data = {
 			"druglab_tank",
 			"filtration_tank",
 			"hazard_prop",
-			"hazard_sphere"
-		}
+			"hazard_sphere",
+		},
 	},
 	extensions = {
-		"PropUnitDataExtension"
-	}
+		"PropUnitDataExtension",
+	},
 }
 
 return PropUnitData

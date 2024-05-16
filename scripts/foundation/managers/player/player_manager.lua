@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/player/player_manager.lua
+
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
 local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerManagerFixedTestify = GameParameters.testify and require("scripts/foundation/managers/player/player_manager_fixed_testify")
@@ -5,12 +7,15 @@ local PlayerManagerTestify = GameParameters.testify and require("scripts/foundat
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local PlayerManager = class("PlayerManager")
+
 PlayerManager.NO_ACCOUNT_ID = "no_account_id"
+
 local CLIENT_RPCS = {
 	"rpc_player_assisted",
-	"rpc_update_slot"
+	"rpc_update_slot",
 }
 local SERVER_RPCS = {}
+
 PlayerManager.PLAYER_INTERFACE = {
 	"type",
 	"name",
@@ -20,7 +25,7 @@ PlayerManager.PLAYER_INTERFACE = {
 	"local_player_id",
 	"account_id",
 	"character_id",
-	"unique_id"
+	"unique_id",
 }
 
 PlayerManager.init = function (self)
@@ -83,7 +88,7 @@ PlayerManager._reassign_slot = function (self, slot)
 	local claimed_slots = self._claimed_slots
 	local player_slot_count = #UISettings.player_slot_colors
 
-	if slot > player_slot_count then
+	if player_slot_count < slot then
 		return
 	end
 
@@ -104,6 +109,7 @@ PlayerManager._reassign_slot = function (self, slot)
 		if can_update_slot and player_slot_count < current_slot then
 			claimed_slots[slot] = true
 			claimed_slots[current_slot] = nil
+
 			local peer_id = player:peer_id()
 			local local_player_id = player:local_player_id()
 
@@ -117,7 +123,9 @@ end
 
 PlayerManager.release_slot = function (self, slot)
 	local claimed_slots = self._claimed_slots
+
 	claimed_slots[slot] = nil
+
 	local is_server = self._is_server
 
 	if is_server then
@@ -162,6 +170,7 @@ end
 
 PlayerManager._generate_unique_id = function (self, peer_id, local_player_id)
 	self._unique_id_counter = self._unique_id_counter + 1
+
 	local id_counter = self._unique_id_counter
 
 	return tostring(peer_id) .. ":" .. tostring(local_player_id) .. ":" .. tostring(id_counter)
@@ -182,13 +191,14 @@ PlayerManager.on_game_state_enter = function (self, game_state_class, mapping, c
 end
 
 PlayerManager.init_time_slice_on_game_state_enter = function (self, game_state_class, mapping, context)
-	local init_on_game_state_enter_data = {
-		last_index = 0,
-		ready = false,
-		parameters = {}
-	}
+	local init_on_game_state_enter_data = {}
+
+	init_on_game_state_enter_data.last_index = 0
+	init_on_game_state_enter_data.ready = false
+	init_on_game_state_enter_data.parameters = {}
 	init_on_game_state_enter_data.parameters.mapping = mapping
 	init_on_game_state_enter_data.parameters.context = context
+
 	local players = {}
 
 	for _, player in pairs(self._players) do
@@ -279,6 +289,7 @@ end
 
 PlayerManager.add_bot_player = function (self, player_class, channel_id, peer_id, local_player_id, profile, slot, ...)
 	local player, unique_id = self:add_player(player_class, channel_id, peer_id, local_player_id, profile, slot, nil, ...)
+
 	self._bot_players[unique_id] = player
 	self._remove_functions[unique_id] = "_remove_bot_player"
 
@@ -287,6 +298,7 @@ end
 
 PlayerManager.add_human_player = function (self, player_class, channel_id, peer_id, local_player_id, profile, slot, account_id, ...)
 	local player, unique_id = self:add_player(player_class, channel_id, peer_id, local_player_id, profile, slot, account_id, ...)
+
 	self._num_human_players = self._num_human_players + 1
 	self._human_players[unique_id] = player
 	self._remove_functions[unique_id] = "_remove_human_player"
@@ -304,7 +316,9 @@ PlayerManager.add_player = function (self, player_class, channel_id, peer_id, lo
 
 	self._players[unique_id] = player
 	self._num_players = self._num_players + 1
+
 	local player_table = self._players_by_peer
+
 	player_table[peer_id] = player_table[peer_id] or {}
 	player_table[peer_id][local_player_id] = player
 	self._players_by_session_id[session_id] = player
@@ -347,7 +361,9 @@ PlayerManager.remove_player = function (self, peer_id, local_player_id)
 
 	self._players[unique_id] = nil
 	self._players_by_session_id[session_id] = nil
+
 	local peer_table = self._players_by_peer[peer_id]
+
 	peer_table[local_player_id] = nil
 
 	if table.is_empty(peer_table) then
@@ -359,6 +375,7 @@ PlayerManager.remove_player = function (self, peer_id, local_player_id)
 	self:release_slot(slot)
 
 	self._num_players = self._num_players - 1
+
 	local owned_units = player.owned_units
 
 	player:delete()
@@ -558,7 +575,7 @@ PlayerManager.state_initialize_client_fixed_frame = function (self, frame)
 end
 
 PlayerManager.local_player_backend_profile = function (self)
-	local local_players = nil
+	local local_players
 
 	if Managers.connection:is_initialized() then
 		local_players = self:players_at_peer(Network.peer_id())
@@ -580,6 +597,7 @@ end
 
 PlayerManager.set_last_mission = function (self, mission_name)
 	self._last_mission_name = mission_name
+
 	local mission_settings = Missions[mission_name]
 
 	if rawget(mission_settings, "spawn_settings") then
@@ -616,12 +634,13 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 		profile_chunks_array = profile_chunks_array,
 		slot_array = {},
 		has_last_mission = not not self._last_mission_name,
-		last_mission_id = self:_last_mission_id()
+		last_mission_id = self:_last_mission_id(),
 	}
 	local i = 1
 
 	for local_player_id, player in pairs(players) do
 		local is_human_controlled = player:is_human_controlled()
+
 		sync_data.local_player_id_array[i] = local_player_id
 		sync_data.is_human_controlled_array[i] = is_human_controlled
 		sync_data.account_id_array[i] = player:account_id()
@@ -681,7 +700,7 @@ PlayerManager._show_assist_notification = function (self, peer_id, assist_type)
 	Managers.event:trigger("event_add_notification_message", "player_assist", {
 		assist_type = assist_type,
 		player = player,
-		player_name = player_name
+		player_name = player_name,
 	})
 end
 

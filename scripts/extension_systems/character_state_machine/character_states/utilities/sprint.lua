@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/sprint.lua
+
 local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local Action = require("scripts/utilities/weapon/action")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
@@ -7,7 +9,9 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_keywords = BuffSettings.keywords
 local Sprint = {}
 local SPRINT_DODGE_ANGLE_THRESHOLD_RAD = math.degrees_to_radians(50)
+
 Sprint.SPRINT_DODGE_ANGLE_THRESHOLD_RAD = SPRINT_DODGE_ANGLE_THRESHOLD_RAD
+
 local TAU = math.pi * 2
 local INPUT_ALIGNED_WITH_MOVENESS = TAU / 7
 local ENOUGH_MOVE_IN_FORWARD_DIRECTION = 0.7
@@ -72,14 +76,14 @@ Sprint.check = function (t, unit, movement_state_component, sprint_character_sta
 	local world_move = Quaternion.rotate(flat_rotation, move)
 	local input_angle = Vector3.angle(flat_velocity, world_move, true)
 
-	if INPUT_ALIGNED_WITH_MOVENESS < input_angle then
+	if input_angle > INPUT_ALIGNED_WITH_MOVENESS then
 		return false
 	end
 
 	local orientation_forward = Quaternion.forward(flat_rotation)
 	local vel_to_orientation_angle = Vector3.angle(flat_velocity, orientation_forward, true)
 
-	if VELOCITY_ALIGNED_WITH_ORIENTATION < vel_to_orientation_angle then
+	if vel_to_orientation_angle > VELOCITY_ALIGNED_WITH_ORIENTATION then
 		return false
 	end
 
@@ -87,7 +91,7 @@ Sprint.check = function (t, unit, movement_state_component, sprint_character_sta
 end
 
 Sprint.sprint_input = function (input_source, is_sprinting, sprint_requires_press_to_interrupt)
-	local wants_sprint = nil
+	local wants_sprint
 	local hold_to_sprint = input_source:get("hold_to_sprint")
 
 	if hold_to_sprint and (is_sprinting or not sprint_requires_press_to_interrupt) then
@@ -106,7 +110,7 @@ Sprint.is_sprinting = function (sprint_character_state_component)
 end
 
 local NO_STAT_BUFFS = {
-	[BuffSettings.stat_buffs.sprint_dodge_reduce_angle_threshold_rad] = 0
+	[BuffSettings.stat_buffs.sprint_dodge_reduce_angle_threshold_rad] = 0,
 }
 
 Sprint.is_sprint_dodging = function (target_unit, attacking_unit, run_away_dodge)
@@ -155,6 +159,7 @@ local _sprint_requires_press_to_interrupt_table = {}
 
 for i = 1, #ActionHandlerSettings.sprint_requires_press_to_interrupt do
 	local action_kind = ActionHandlerSettings.sprint_requires_press_to_interrupt[i]
+
 	_sprint_requires_press_to_interrupt_table[action_kind] = true
 end
 
@@ -179,6 +184,7 @@ local _no_interruption_for_sprint_table = {}
 
 for i = 1, #ActionHandlerSettings.no_interruption_for_sprint do
 	local action_kind = ActionHandlerSettings.no_interruption_for_sprint[i]
+
 	_no_interruption_for_sprint_table[action_kind] = true
 end
 
@@ -203,6 +209,7 @@ local _prevent_sprint_table = {}
 
 for i = 1, #ActionHandlerSettings.prevent_sprint do
 	local action_kind = ActionHandlerSettings.prevent_sprint[i]
+
 	_prevent_sprint_table[action_kind] = true
 end
 

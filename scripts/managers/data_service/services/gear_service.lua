@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/gear_service.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local GearService = class("GearService")
@@ -21,6 +23,7 @@ GearService._refresh_gear_cache = function (self)
 	self._backend_gear_promise:next(function (gear_list)
 		self._backend_gear_promise = nil
 		self._cached_gear_list = gear_list
+
 		local gear_promises = self._gear_promises
 
 		for i = 1, #gear_promises do
@@ -35,6 +38,7 @@ GearService._refresh_gear_cache = function (self)
 	end):catch(function (error)
 		self._backend_gear_promise = nil
 		self._cached_gear_list = nil
+
 		local gear_promises = self._gear_promises
 
 		for i = 1, #gear_promises do
@@ -198,6 +202,7 @@ GearService.fetch_inventory = function (self, character_id, slot_filter_list, it
 		for gear_id, gear in pairs(gear_list) do
 			if not gear.characterId or gear.characterId == character_id then
 				gear_id = gear.uuid or gear_id
+
 				local gear_item = MasterItems.get_item_instance(gear, gear_id)
 				local valid = gear_item
 
@@ -263,6 +268,7 @@ GearService.fetch_inventory_paged = function (self, character_id, item_amount, s
 			if include_item then
 				local gear_id = gear.uuid
 				local gear_item = MasterItems.get_item_instance(gear, gear_id)
+
 				items[gear_id] = gear_item
 			end
 		end
@@ -290,6 +296,7 @@ GearService.fetch_account_items_paged = function (self, item_amount, slot_filter
 		for _, gear in pairs(gear_list.items) do
 			local gear_id = gear.uuid
 			local gear_item = MasterItems.get_item_instance(gear, gear_id)
+
 			items[gear_id] = gear_item
 		end
 
@@ -298,7 +305,7 @@ GearService.fetch_account_items_paged = function (self, item_amount, slot_filter
 			has_next = gear_list.has_next,
 			next_page = function (data)
 				return self:fetch_account_items_paged(nil, nil, gear_list.next_page(data))
-			end
+			end,
 		})
 	end):catch(function (errors)
 		local gear_list_error = unpack(errors)
@@ -312,6 +319,7 @@ GearService.attach_item_as_override = function (self, item_id, attach_point, gea
 	return self._backend_interface.gear:attach_item_as_override(item_id, attach_point, gear_id):next(function (result)
 		local gear = table.clone(result.item)
 		local uuid = gear.uuid
+
 		gear.uuid = nil
 
 		self:on_gear_updated(uuid, gear)

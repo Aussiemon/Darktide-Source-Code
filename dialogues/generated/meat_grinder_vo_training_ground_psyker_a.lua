@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/meat_grinder_vo_training_ground_psyker_a.lua
+
 local meat_grinder_vo_training_ground_psyker_a = {
 	hub_rumour_cult_01_a = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_rumour_cult_01_a_07",
 			"loc_training_ground_psyker_a__hub_rumour_cult_01_a_08",
 			"loc_training_ground_psyker_a__hub_rumour_cult_01_a_09",
-			"loc_training_ground_psyker_a__hub_rumour_cult_01_a_10"
+			"loc_training_ground_psyker_a__hub_rumour_cult_01_a_10",
 		},
 		sound_events_duration = {
 			6.733938,
@@ -24,9 +26,9 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			7.933792,
 			6.804146,
 			6.878021,
-			7.722396
+			7.722396,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_rumour_escalation_01_a = {
 		randomize_indexes_n = 0,
@@ -41,7 +43,7 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_rumour_escalation_01_a_07",
 			"loc_training_ground_psyker_a__hub_rumour_escalation_01_a_08",
 			"loc_training_ground_psyker_a__hub_rumour_escalation_01_a_09",
-			"loc_training_ground_psyker_a__hub_rumour_escalation_01_a_10"
+			"loc_training_ground_psyker_a__hub_rumour_escalation_01_a_10",
 		},
 		sound_events_duration = {
 			8.176813,
@@ -53,9 +55,9 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			6.442,
 			12.03963,
 			6.151417,
-			8.939146
+			8.939146,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_rumour_hub_crew_01_a = {
 		randomize_indexes_n = 0,
@@ -70,7 +72,7 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_rumour_hub_crew_01_a_07",
 			"loc_training_ground_psyker_a__hub_rumour_hub_crew_01_a_08",
 			"loc_training_ground_psyker_a__hub_rumour_hub_crew_01_a_09",
-			"loc_training_ground_psyker_a__hub_rumour_hub_crew_01_a_10"
+			"loc_training_ground_psyker_a__hub_rumour_hub_crew_01_a_10",
 		},
 		sound_events_duration = {
 			6.404875,
@@ -82,9 +84,9 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			5.7685,
 			4.751396,
 			7.295896,
-			7.474729
+			7.474729,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_rumour_politics_01_a = {
 		randomize_indexes_n = 0,
@@ -99,7 +101,7 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_rumour_politics_01_a_07",
 			"loc_training_ground_psyker_a__hub_rumour_politics_01_a_08",
 			"loc_training_ground_psyker_a__hub_rumour_politics_01_a_09",
-			"loc_training_ground_psyker_a__hub_rumour_politics_01_a_10"
+			"loc_training_ground_psyker_a__hub_rumour_politics_01_a_10",
 		},
 		sound_events_duration = {
 			6.624417,
@@ -111,9 +113,9 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			7.254813,
 			7.079167,
 			9.997458,
-			5.081417
+			5.081417,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_rumour_wanderers_01_a = {
 		randomize_indexes_n = 0,
@@ -128,7 +130,7 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_rumour_wanderers_01_a_07",
 			"loc_training_ground_psyker_a__hub_rumour_wanderers_01_a_08",
 			"loc_training_ground_psyker_a__hub_rumour_wanderers_01_a_09",
-			"loc_training_ground_psyker_a__hub_rumour_wanderers_01_a_10"
+			"loc_training_ground_psyker_a__hub_rumour_wanderers_01_a_10",
 		},
 		sound_events_duration = {
 			7.138,
@@ -140,10 +142,10 @@ local meat_grinder_vo_training_ground_psyker_a = {
 			10.12002,
 			6.484438,
 			8.217083,
-			9.738188
+			9.738188,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("meat_grinder_vo_training_ground_psyker_a", meat_grinder_vo_training_ground_psyker_a)

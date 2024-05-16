@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weather/weather_extension.lua
+
 local WeatherExtension = class("WeatherExtension")
 
 WeatherExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)

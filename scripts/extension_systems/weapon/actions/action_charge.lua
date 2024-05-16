@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_charge.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
@@ -11,10 +13,13 @@ ActionCharge.init = function (self, action_context, action_params, action_settin
 	local physics_world = self._physics_world
 	local unit_data_extension = action_context.unit_data_extension
 	local action_module_charge_component = unit_data_extension:write_component("action_module_charge")
+
 	self._action_module_charge_component = action_module_charge_component
 	self._charge_module = ActionModules.charge:new(physics_world, player_unit, first_person_unit, action_module_charge_component, action_settings)
 	self._action_settings = action_settings
+
 	local weapon = action_params.weapon
+
 	self._fx_sources = weapon.fx_sources
 end
 
@@ -23,13 +28,17 @@ ActionCharge.start = function (self, action_settings, t, time_scale, action_star
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
+
 	weapon_tweak_templates_component.spread_template_name = action_settings.spread_template or weapon_template.spread_template or "none"
 	weapon_tweak_templates_component.recoil_template_name = action_settings.recoil_template or weapon_template.recoil_template or "none"
 	weapon_tweak_templates_component.sway_template_name = action_settings.sway_template or weapon_template.sway_template or "none"
 	weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or weapon_template.charge_template or "none"
+
 	local charge_template = self._weapon_extension:charge_template()
 	local fully_charged_charge_level = charge_template.fully_charged_charge_level or 1
+
 	self._action_module_charge_component.max_charge = fully_charged_charge_level
+
 	local charge_level = self._action_module_charge_component.charge_level
 	local have_charge = charge_level > 0
 	local keep_charge = action_settings.keep_charge and have_charge

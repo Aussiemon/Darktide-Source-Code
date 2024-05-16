@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_hm_strain_explicator_a.lua
+
 local mission_vo_hm_strain_explicator_a = {
 	event_demolition_first_corruptor_destroyed_strain_b = {
 		randomize_indexes_n = 0,
@@ -6,21 +8,21 @@ local mission_vo_hm_strain_explicator_a = {
 			"loc_explicator_a__event_demolition_last_corruptor_01",
 			"loc_explicator_a__event_demolition_last_corruptor_02",
 			"loc_explicator_a__event_demolition_last_corruptor_03",
-			"loc_explicator_a__event_demolition_last_corruptor_04"
+			"loc_explicator_a__event_demolition_last_corruptor_04",
 		},
 		sound_events_duration = {
 			3.450375,
 			2.914479,
 			4.606333,
-			3.969813
+			3.969813,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	info_get_out_strain = {
 		randomize_indexes_n = 0,
@@ -35,7 +37,7 @@ local mission_vo_hm_strain_explicator_a = {
 			"loc_explicator_a__info_get_out_07",
 			"loc_explicator_a__info_get_out_08",
 			"loc_explicator_a__info_get_out_09",
-			"loc_explicator_a__info_get_out_10"
+			"loc_explicator_a__info_get_out_10",
 		},
 		sound_events_duration = {
 			1.393354,
@@ -47,7 +49,7 @@ local mission_vo_hm_strain_explicator_a = {
 			3.978875,
 			3.242146,
 			2.36175,
-			3.263604
+			3.263604,
 		},
 		sound_event_weights = {
 			0.1,
@@ -59,10 +61,10 @@ local mission_vo_hm_strain_explicator_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_vo_hm_strain_explicator_a", mission_vo_hm_strain_explicator_a)

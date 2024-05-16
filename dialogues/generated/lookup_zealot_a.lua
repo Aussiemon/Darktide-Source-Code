@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_zealot_a.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "chain_weapon_kill_spree_self_a"
 DialogueLookup[DialogueLookup_n + 2] = "combat_pause_limited_zealot_a_01_a"
 DialogueLookup[DialogueLookup_n + 3] = "combat_pause_limited_zealot_a_01_b"

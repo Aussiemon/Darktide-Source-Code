@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/helper_functions/check_proc_functions.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -9,139 +11,151 @@ local damage_types = DamageSettings.damage_types
 local CLOSE_RANGE_RANGED = DamageSettings.ranged_close
 local CLOSE_RANGE_RANGED_SQUARED = CLOSE_RANGE_RANGED * CLOSE_RANGE_RANGED
 local ON_SHOOT_HIT_MULTIPLE_THRESHOLD = 2
-local CheckProcFunctions = {
-	all = function (...)
-		local conditions = {
-			...
-		}
+local CheckProcFunctions = {}
 
-		return function (...)
-			for i = 1, #conditions do
-				if not conditions[i](...) then
-					return false
-				end
+CheckProcFunctions.all = function (...)
+	local conditions = {
+		...,
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if not conditions[i](...) then
+				return false
 			end
-
-			return true
-		end
-	end,
-	any = function (...)
-		local conditions = {
-			...
-		}
-
-		return function (...)
-			for i = 1, #conditions do
-				if conditions[i](...) then
-					return true
-				end
-			end
-
-			return false
-		end
-	end,
-	always = function (params, template_data, template_context, t)
-		return true
-	end,
-	never = function (params, template_data, template_context, t)
-		return false
-	end,
-	on_kill = function (params, template_data, template_context, t)
-		if params.attack_result ~= attack_results.died then
-			return false
-		end
-
-		return true
-	end,
-	on_one_hit_kill = function (params, template_data, template_context, t)
-		if params.attack_result ~= attack_results.died then
-			return false
-		end
-
-		return params.one_hit_kill
-	end,
-	on_non_kill = function (params, template_data, template_context, t)
-		if params.attack_result == attack_results.died then
-			return false
-		end
-
-		return true
-	end,
-	on_weakspot_kill = function (params, template_data, template_context, t)
-		if params.attack_result ~= attack_results.died then
-			return false
-		end
-
-		if not params.hit_weakspot then
-			return false
-		end
-
-		return true
-	end,
-	on_elite_kill = function (params, template_data, template_context, t)
-		if params.attack_result ~= attack_results.died then
-			return false
-		end
-
-		if not params.tags or not params.tags.elite then
-			return false
-		end
-
-		return true
-	end,
-	on_special_kill = function (params, template_data, template_context, t)
-		if params.attack_result ~= attack_results.died then
-			return false
-		end
-
-		if not params.tags or not params.tags.special then
-			return false
-		end
-
-		return true
-	end,
-	on_elite_or_special_kill = function (params, template_data, template_context, t)
-		if params.attack_result ~= attack_results.died then
-			return false
-		end
-
-		if not params.tags then
-			return false
-		end
-
-		if not params.tags.elite and not params.tags.special then
-			return false
-		end
-
-		return true
-	end,
-	on_ranged_enemy_killed = function (params, template_data, template_context, t)
-		if params.attack_result ~= attack_results.died then
-			return false
-		end
-
-		if not params.tags then
-			return false
-		end
-
-		if not params.tags.far then
-			return false
-		end
-
-		return true
-	end,
-	on_elite_or_special_minion_death = function (params, template_data, template_context, t)
-		if not params.tags then
-			return false
-		end
-
-		if not params.tags.elite and not params.tags.special then
-			return false
 		end
 
 		return true
 	end
-}
+end
+
+CheckProcFunctions.any = function (...)
+	local conditions = {
+		...,
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if conditions[i](...) then
+				return true
+			end
+		end
+
+		return false
+	end
+end
+
+CheckProcFunctions.always = function (params, template_data, template_context, t)
+	return true
+end
+
+CheckProcFunctions.never = function (params, template_data, template_context, t)
+	return false
+end
+
+CheckProcFunctions.on_kill = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_one_hit_kill = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
+		return false
+	end
+
+	return params.one_hit_kill
+end
+
+CheckProcFunctions.on_non_kill = function (params, template_data, template_context, t)
+	if params.attack_result == attack_results.died then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_weakspot_kill = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
+		return false
+	end
+
+	if not params.hit_weakspot then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_elite_kill = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
+		return false
+	end
+
+	if not params.tags or not params.tags.elite then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_special_kill = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
+		return false
+	end
+
+	if not params.tags or not params.tags.special then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_elite_or_special_kill = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
+		return false
+	end
+
+	if not params.tags then
+		return false
+	end
+
+	if not params.tags.elite and not params.tags.special then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_ranged_enemy_killed = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
+		return false
+	end
+
+	if not params.tags then
+		return false
+	end
+
+	if not params.tags.far then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_elite_or_special_minion_death = function (params, template_data, template_context, t)
+	if not params.tags then
+		return false
+	end
+
+	if not params.tags.elite and not params.tags.special then
+		return false
+	end
+
+	return true
+end
 
 CheckProcFunctions.on_elite_or_special_melee_kill = function (params, template_data, template_context, t)
 	return CheckProcFunctions.on_melee_kill(params, template_data, template_context, t) and CheckProcFunctions.on_elite_or_special_kill(params, template_data, template_context, t)
@@ -430,11 +444,11 @@ CheckProcFunctions.on_chain_lightning_hit = function (params, template_data, tem
 end
 
 CheckProcFunctions.on_shoot_hit_multiple = function (params, template_data, template_context, t)
-	return ON_SHOOT_HIT_MULTIPLE_THRESHOLD < params.num_hit_units
+	return params.num_hit_units > ON_SHOOT_HIT_MULTIPLE_THRESHOLD
 end
 
 CheckProcFunctions.on_explosion_hit_multiple = function (params, template_data, template_context, t)
-	return ON_SHOOT_HIT_MULTIPLE_THRESHOLD < params.number_of_hit_units
+	return params.number_of_hit_units > ON_SHOOT_HIT_MULTIPLE_THRESHOLD
 end
 
 CheckProcFunctions.on_hit_all_pellets_on_same = function (params, template_data, template_context, t)

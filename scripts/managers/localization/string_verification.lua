@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/managers/localization/string_verification.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local forbidden_words = require("scripts/managers/localization/forbidden_words")
 local Interface = {
-	"verify"
+	"verify",
 }
 local WORD_CHARACTERS = "[^ %p]+"
 local StringVerification = class("StringVerification")
@@ -11,6 +13,7 @@ StringVerification.verify = function (text)
 
 	if Managers.save then
 		local save_data = Managers.save:account_data()
+
 		verify = save_data.interface_settings.profanity_filter_enabled == true
 	end
 
@@ -52,6 +55,7 @@ StringVerification.verify = function (text)
 					end
 
 					local phrase_length = Utf8.string_length(phrase)
+
 					filtered_text = Utf8.string_remove(filtered_text, index_from, phrase_length)
 					filtered_text = Utf8.string_insert(filtered_text, index_from, string.rep("*", phrase_length))
 					offset = index_to

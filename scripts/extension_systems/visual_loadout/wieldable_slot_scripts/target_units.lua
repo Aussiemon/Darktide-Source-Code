@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/target_units.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local TargetUnits = class("TargetUnits")
 local OUTLINE_NAME_VALID = "buff"
@@ -14,8 +16,10 @@ TargetUnits.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 	self._outline_system = Managers.state.extension:system("outline_system")
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._target_unit_1 = nil
@@ -70,18 +74,23 @@ TargetUnits._update_outlines = function (self, validate_target_func)
 	local old_unit_1 = self._target_unit_1
 	local old_outline_name_1 = self._target_unit_1_outline_name
 	local new_outline_name_1 = self:_update_unit_outline(new_unit_1, old_unit_1, old_outline_name_1, validate_target_func)
+
 	self._target_unit_1 = new_unit_1
 	self._target_unit_1_outline_name = new_outline_name_1
+
 	local new_unit_2 = self._action_module_targeting_component.target_unit_2
 	local old_unit_2 = self._target_unit_2
 	local old_outline_name_2 = self._target_unit_2_outline_name
 	local new_outline_name_2 = self:_update_unit_outline(new_unit_2, old_unit_2, old_outline_name_2, validate_target_func)
+
 	self._target_unit_2 = new_unit_2
 	self._target_unit_2_outline_name = new_outline_name_2
+
 	local new_unit_3 = self._action_module_targeting_component.target_unit_3
 	local old_unit_3 = self._target_unit_3
 	local old_outline_name_3 = self._target_unit_3_outline_name
 	local new_outline_name_3 = self:_update_unit_outline(new_unit_3, old_unit_3, old_outline_name_3, validate_target_func)
+
 	self._target_unit_3 = new_unit_3
 	self._target_unit_3_outline_name = new_outline_name_3
 end

@@ -1,22 +1,28 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_erratic_follow_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtErraticFollowAction = class("BtErraticFollowAction", "BtNode")
+
 BtErraticFollowAction.TIME_TO_FIRST_EVALUATE = 0.5
 BtErraticFollowAction.CONSECUTIVE_EVALUATE_INTERVAL = 0.25
 
 BtErraticFollowAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
+
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
 
 	navigation_extension:set_enabled(true, action_data.move_speed or breed.run_speed)
@@ -33,6 +39,7 @@ BtErraticFollowAction.enter = function (self, unit, breed, blackboard, scratchpa
 
 	if action_data.effect_template then
 		local fx_system = Managers.state.extension:system("fx_system")
+
 		scratchpad.fx_system = fx_system
 	end
 
@@ -41,7 +48,7 @@ BtErraticFollowAction.enter = function (self, unit, breed, blackboard, scratchpa
 	scratchpad.random_dirs = {
 		action_data.move_jump_fwd_anims,
 		action_data.move_jump_right_anims,
-		action_data.move_jump_fwd_anims
+		action_data.move_jump_fwd_anims,
 	}
 end
 
@@ -76,7 +83,7 @@ BtErraticFollowAction.run = function (self, unit, breed, blackboard, scratchpad,
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
 
 	if should_start_idle or should_be_idling then
-		if should_start_idle and scratchpad.time_to_next_evaluate < t then
+		if should_start_idle and t > scratchpad.time_to_next_evaluate then
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 
 			scratchpad.time_to_next_evaluate = t + BtErraticFollowAction.CONSECUTIVE_EVALUATE_INTERVAL
@@ -84,7 +91,7 @@ BtErraticFollowAction.run = function (self, unit, breed, blackboard, scratchpad,
 			self:_rotate_towards_target_unit(unit, target_unit, scratchpad)
 		end
 
-		local evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate < t
+		local evaluate = not scratchpad.running_stagger_block_evaluate and t > scratchpad.time_to_next_evaluate
 
 		return "running", evaluate
 	end
@@ -97,7 +104,7 @@ BtErraticFollowAction.run = function (self, unit, breed, blackboard, scratchpad,
 
 	local is_anim_driven = scratchpad.is_anim_driven
 
-	if is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -129,7 +136,7 @@ BtErraticFollowAction.run = function (self, unit, breed, blackboard, scratchpad,
 	local destination = navigation_extension:destination()
 	local distance_to_destination_sq = Vector3.distance_squared(destination, target_position)
 	local target_is_near_destination = distance_to_destination_sq < MOVE_CHECK_DISTANCE_SQ
-	local should_evaluate = not scratchpad.running_stagger_block_evaluate and (scratchpad.time_to_next_evaluate < t or target_is_near_destination)
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and (t > scratchpad.time_to_next_evaluate or target_is_near_destination)
 
 	if should_evaluate then
 		scratchpad.time_to_next_evaluate = t + BtErraticFollowAction.CONSECUTIVE_EVALUATE_INTERVAL
@@ -140,14 +147,18 @@ end
 
 BtErraticFollowAction._start_move_anim = function (self, unit, breed, t, scratchpad, action_data)
 	scratchpad.state = "running"
+
 	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
+
 	scratchpad.moving_direction_name = moving_direction_name
-	local start_move_event = nil
+
+	local start_move_event
 	local state = scratchpad.state
 	local using_anim_driven = false
 
 	if action_data.start_move_anim_events and action_data.start_move_anim_events[state] then
 		local start_move_anim_events = action_data.start_move_anim_events[state]
+
 		start_move_event = Animation.random_event(start_move_anim_events[moving_direction_name])
 		using_anim_driven = true
 	end
@@ -159,6 +170,7 @@ BtErraticFollowAction._start_move_anim = function (self, unit, breed, t, scratch
 
 		local start_move_rotation_timings = action_data.start_move_rotation_timings
 		local start_rotation_timing = start_move_rotation_timings[start_move_event]
+
 		scratchpad.start_rotation_timing = t + start_rotation_timing
 		scratchpad.move_start_anim_event_name = start_move_event
 	else
@@ -177,6 +189,7 @@ BtErraticFollowAction._start_move_anim = function (self, unit, breed, t, scratch
 	end
 
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "moving"
 end
 
@@ -268,7 +281,7 @@ end
 
 local RANDOM_JUMP_COOLDOWN = {
 	1,
-	4
+	4,
 }
 local JUMP_COOLDOWN_CHANCE = 0.5
 local MAX_DISTANCE_TO_TARGET_FOR_JUMP = 10
@@ -306,7 +319,7 @@ BtErraticFollowAction._investigate_jump = function (self, unit, t, scratchpad, b
 	local dot = Vector3.dot(move_dir, travel_dir)
 	local nav_world = navigation_extension:nav_world()
 	local traverse_logic = navigation_extension:traverse_logic()
-	local jump_anim, jump_data = nil
+	local jump_anim, jump_data
 	local moving_towards_target = dot > 0.25
 
 	if moving_towards_target then

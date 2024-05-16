@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/scanner_display.lua
+
 local ScannerDisplay = component("ScannerDisplay")
 
 ScannerDisplay.init = function (self, unit)
@@ -30,8 +32,8 @@ end
 
 ScannerDisplay.component_data = {
 	extensions = {
-		"ScannerDisplayExtension"
-	}
+		"ScannerDisplayExtension",
+	},
 }
 
 return ScannerDisplay

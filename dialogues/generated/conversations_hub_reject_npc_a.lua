@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_reject_npc_a.lua
+
 local conversations_hub_reject_npc_a = {
 	reject_npc_goodbye_a = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local conversations_hub_reject_npc_a = {
 			"loc_reject_npc_a__goodbye_a_17",
 			"loc_reject_npc_a__goodbye_a_18",
 			"loc_reject_npc_a__goodbye_a_19",
-			"loc_reject_npc_a__goodbye_a_20"
+			"loc_reject_npc_a__goodbye_a_20",
 		},
 		sound_events_duration = {
 			2.029146,
@@ -44,9 +46,9 @@ local conversations_hub_reject_npc_a = {
 			1.07425,
 			1.082208,
 			0.692292,
-			1.07425
+			1.07425,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	reject_npc_hub_interact_a = {
 		randomize_indexes_n = 0,
@@ -71,7 +73,7 @@ local conversations_hub_reject_npc_a = {
 			"loc_reject_npc_a__hub_interact_a_17",
 			"loc_reject_npc_a__hub_interact_a_18",
 			"loc_reject_npc_a__hub_interact_a_19",
-			"loc_reject_npc_a__hub_interact_a_20"
+			"loc_reject_npc_a__hub_interact_a_20",
 		},
 		sound_events_duration = {
 			2.323583,
@@ -93,9 +95,9 @@ local conversations_hub_reject_npc_a = {
 			2.554354,
 			4.671063,
 			1.465625,
-			1.944333
+			1.944333,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	reject_npc_purchase_a = {
 		randomize_indexes_n = 0,
@@ -120,7 +122,7 @@ local conversations_hub_reject_npc_a = {
 			"loc_reject_npc_a__purchase_a_17",
 			"loc_reject_npc_a__purchase_a_18",
 			"loc_reject_npc_a__purchase_a_19",
-			"loc_reject_npc_a__purchase_a_20"
+			"loc_reject_npc_a__purchase_a_20",
 		},
 		sound_events_duration = {
 			1.426271,
@@ -142,10 +144,10 @@ local conversations_hub_reject_npc_a = {
 			2.005271,
 			1.464167,
 			0.851438,
-			2.680063
+			2.680063,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_reject_npc_a", conversations_hub_reject_npc_a)

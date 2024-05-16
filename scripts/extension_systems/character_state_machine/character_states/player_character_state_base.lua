@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_base.lua
+
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -82,31 +84,24 @@ PlayerCharacterStateBase._air_movement = function (self, velocity_current, x, y,
 	local air_directional_speed_scale_angle = constants.air_directional_speed_scale_angle
 	local directional_speed_scale = math.min(move_angle / air_directional_speed_scale_angle, 1)
 	local air_acceleration = constants.air_acceleration
-	local speed_diff_scale = nil
+	local speed_diff_scale
 
-	if move_speed == 0 then
-		speed_diff_scale = 1
-	else
-		speed_diff_scale = math.clamp01(math.max(1 - current_speed / move_speed, 0))
-	end
+	speed_diff_scale = move_speed == 0 and 1 or math.clamp01(math.max(1 - current_speed / move_speed, 0))
 
 	local speed_scale = math.max(directional_speed_scale, speed_diff_scale)
 	local added_velocity = world_move_direction * move_speed * player_speed_scale * air_acceleration * speed_scale * dt
 	local predicted_velocity_flat = velocity_current_flat + added_velocity
 	local predicted_speed = Vector3.length(predicted_velocity_flat)
 	local air_move_speed = move_speed * constants.air_move_speed_scale
-	local use_drag = predicted_speed > air_move_speed
-	local drag_scale = nil
+	local use_drag = air_move_speed < predicted_speed
+	local drag_scale
 
 	if use_drag then
-		if air_move_speed == 0 then
-			drag_scale = 1
-		else
-			drag_scale = math.clamp01(math.max(predicted_speed / air_move_speed, 1))
-		end
+		drag_scale = air_move_speed == 0 and 1 or math.clamp01(math.max(predicted_speed / air_move_speed, 1))
 
 		local air_drag_angle = constants.air_drag_angle
 		local angle_scale = math.min(move_angle, air_drag_angle) / air_drag_angle
+
 		drag_scale = drag_scale * angle_scale
 	else
 		drag_scale = 0
@@ -120,26 +115,29 @@ end
 
 PlayerCharacterStateBase._is_colliding_with_gameplay_collision_box = function (self, unit, collision_filter, capsule_radius, vertical_offset, use_world_up)
 	local position = self._locomotion_component.position
-	local rotation = nil
+	local rotation
 
 	if use_world_up then
 		rotation = Quaternion.look(Vector3.up())
 	else
 		local unit_rotation = Unit.world_rotation(unit, 1)
+
 		rotation = Quaternion.look(Vector3.up(unit_rotation))
 	end
 
-	local radius = nil
+	local radius
 
 	if capsule_radius then
 		radius = capsule_radius
 	else
 		local mover = Unit.mover(unit)
+
 		radius = Mover.radius(mover)
 	end
 
 	if vertical_offset then
 		local offset = Vector3(0, 0, vertical_offset)
+
 		position = position + offset
 	end
 
@@ -149,8 +147,7 @@ PlayerCharacterStateBase._is_colliding_with_gameplay_collision_box = function (s
 	local size = Vector3(radius, capsule_half_height, radius)
 	local actors = PhysicsWorld.immediate_overlap(self._physics_world, "shape", "capsule", "position", position, "rotation", rotation, "size", size, "collision_filter", collision_filter)
 	local collided_actor = actors and actors[1]
-	local colliding = false
-	local collided_unit = nil
+	local colliding, collided_unit = false
 
 	if collided_actor then
 		colliding = true
@@ -268,7 +265,7 @@ local EPSILON_SQUARED_MOVEMENT_SPEED_TO_IDLE_ANIM = 0.0025000000000000005
 PlayerCharacterStateBase._update_move_method = function (self, movement_state_component, velocity_current, moving_backwards, wants_move, stopped, anim_extension, previous_frame_state)
 	local old_method = movement_state_component.method
 	local move_vector = self._input_extension:get("move")
-	local move_method = nil
+	local move_method
 
 	if (old_method == "idle" or not wants_move) and (Vector3.length_squared(velocity_current) < EPSILON_SQUARED_MOVEMENT_SPEED_TO_IDLE_ANIM or Vector3.length_squared(move_vector) == 0) then
 		move_method = "idle"
@@ -282,10 +279,8 @@ PlayerCharacterStateBase._update_move_method = function (self, movement_state_co
 		else
 			move_method = "move_bwd"
 		end
-	elseif moving_backwards then
-		move_method = "move_bwd"
 	else
-		move_method = "move_fwd"
+		move_method = moving_backwards and "move_bwd" or "move_fwd"
 	end
 
 	if previous_frame_state == "falling" or previous_frame_state == "stunned" then

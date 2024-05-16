@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/nurgle_manifestation.lua
+
 local NurgleManifestation = component("NurgleManifestation")
 
 NurgleManifestation.init = function (self, unit)
@@ -5,7 +7,8 @@ NurgleManifestation.init = function (self, unit)
 	self._unit = unit
 	self._world = Unit.world(unit)
 	self._duration = self:get_data(unit, "duration")
-	local networked_timer_extension = nil
+
+	local networked_timer_extension
 
 	if not rawget(_G, "LevelEditor") then
 		networked_timer_extension = ScriptUnit.fetch_component_extension(unit, "networked_timer_system")
@@ -24,18 +27,18 @@ NurgleManifestation.init = function (self, unit)
 		{
 			false,
 			self._stage_start_two,
-			"lua_stage_two"
+			"lua_stage_two",
 		},
 		{
 			false,
 			0.85,
-			"lua_stem_death"
+			"lua_stem_death",
 		},
 		{
 			false,
 			self._stage_start_three,
-			"lua_stage_three"
-		}
+			"lua_stage_three",
+		},
 	}
 	self._start_time = 0
 	self._stop_time = 0
@@ -51,7 +54,7 @@ NurgleManifestation.init = function (self, unit)
 		0.061,
 		0.045,
 		0.069,
-		0.073
+		0.073,
 	}
 	self._triggered_eyes = {}
 	self._timings_physics = {
@@ -71,7 +74,7 @@ NurgleManifestation.init = function (self, unit)
 		0.059,
 		0.1,
 		0.072,
-		0.115
+		0.115,
 	}
 	self._triggered_physics = {}
 	self._awake = false
@@ -181,11 +184,11 @@ NurgleManifestation.trigger_effects = function (self, unit)
 		return
 	end
 
-	if self._stage_start_two <= progress then
+	if progress >= self._stage_start_two then
 		local stage_two_progess = math.max(progress - self._stage_start_two, 0)
 
 		for i = #self._timings_eyes, 1, -1 do
-			if not self._triggered_eyes[i] and self._timings_eyes[i] < stage_two_progess then
+			if not self._triggered_eyes[i] and stage_two_progess > self._timings_eyes[i] then
 				Unit.flow_event(self._children[i], "trigger_effect")
 
 				self._triggered_eyes[i] = true
@@ -193,7 +196,7 @@ NurgleManifestation.trigger_effects = function (self, unit)
 		end
 
 		for i = #self._timings_physics, 1, -1 do
-			if not self._triggered_physics[i] and self._timings_physics[i] < stage_two_progess then
+			if not self._triggered_physics[i] and stage_two_progess > self._timings_physics[i] then
 				local actor = Unit.actor(unit, "c_dynamic_" .. string.format("%02d", i))
 
 				if actor ~= nil then
@@ -219,7 +222,7 @@ NurgleManifestation.trigger_effects = function (self, unit)
 	local events = self._lua_event_triggers
 
 	for i = 1, #events do
-		if not events[i][1] and events[i][2] <= progress then
+		if not events[i][1] and progress >= events[i][2] then
 			events[i][1] = true
 
 			Unit.flow_event(unit, events[i][3])
@@ -296,40 +299,40 @@ end
 
 NurgleManifestation.component_data = {
 	duration = {
-		ui_type = "number",
 		decimals = 0,
-		value = 20,
+		step = 1,
 		ui_name = "Duration",
-		step = 1
+		ui_type = "number",
+		value = 20,
 	},
 	eye_unit_resource = {
-		ui_type = "resource",
+		filter = "unit",
 		preview = true,
-		value = "",
 		ui_name = "Resource",
-		filter = "unit"
+		ui_type = "resource",
+		value = "",
 	},
 	inputs = {
 		start = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		stop = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		reset = {
 			accessibility = "private",
-			type = "event"
+			type = "event",
 		},
 		awake = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"NetworkedTimerExtension"
-	}
+		"NetworkedTimerExtension",
+	},
 }
 
 return NurgleManifestation

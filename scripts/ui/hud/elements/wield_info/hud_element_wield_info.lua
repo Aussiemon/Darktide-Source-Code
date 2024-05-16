@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/wield_info/hud_element_wield_info.lua
+
 local Definitions = require("scripts/ui/hud/elements/wield_info/hud_element_wield_info_definitions")
 local WieldInfoPassivesTemplates = require("scripts/ui/hud/elements/wield_info/wield_info_passives_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
@@ -23,6 +25,7 @@ HudElementWieldInfo.init = function (self, parent, draw_layer, start_scale)
 
 	if save_manager then
 		local account_data = save_manager:account_data()
+
 		self._input_hints_enabled = account_data.interface_settings.input_hints_enabled
 	end
 end
@@ -39,6 +42,7 @@ HudElementWieldInfo._draw_widgets = function (self, dt, t, input_service, ui_ren
 		local input_data = active_wield_inputs[i]
 		local widget = input_data.widget
 		local alpha_multiplier = input_data.alpha_multiplier
+
 		render_settings.alpha_multiplier = alpha_multiplier
 
 		UIWidget.draw(widget, ui_renderer)
@@ -66,7 +70,9 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 	local include_input_type = true
 	local text = TextUtils.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 	local widget_name = "input_widget_" .. self._widget_counter
+
 	self._widget_counter = self._widget_counter + 1
+
 	local widget = self:_create_widget(widget_name, self._input_info_definition)
 	local data = {
 		alpha_multiplier = 0,
@@ -78,16 +84,18 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 		widget = widget,
 		widget_name = widget_name,
 		icon = icon,
-		extra_height = icon and icon_height + 10 or 0
+		extra_height = icon and icon_height + 10 or 0,
 	}
 	local style = widget.style
 	local content = widget.content
 	local offset = widget.offset
+
 	content.icon = icon
 	content.text = text
 
 	if icon then
 		local icon_style = style.icon
+
 		icon_style.size[1] = icon_width
 		icon_style.size[2] = icon_height
 
@@ -144,13 +152,15 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 		active_wield_inputs[i].synced = false
 	end
 
-	local weapon_name, weapon_template, current_action_name, current_action, current_passive_wield_info_name = nil
+	local weapon_name, weapon_template, current_action_name, current_action, current_passive_wield_info_name
 	local condition_func_params = weapon_extention:condition_func_params(wielded_slot_id)
+
 	weapon_name = wielded_slot_id ~= "none" and inventory_component[wielded_slot_id]
 	weapon_template = weapon_name and visual_loadout_extension:weapon_template_from_slot(wielded_slot_id)
 
 	if weapon_template then
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 		current_action_name, current_action = Action.current_action(weapon_action_component, weapon_template)
 	end
 
@@ -198,6 +208,7 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 	self._previous_action_name = current_action_name
 	self._current_passive_wield_info_name = current_passive_wield_info_name
 	self._weapon_template = weapon_template
+
 	local entries_added = false
 
 	if input_descriptions and input_descriptions and #input_descriptions > 0 then
@@ -213,6 +224,7 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 
 				if not validation_function or validation_function(wielded_slot_id, item, current_action, current_action_name, player, condition_func_params) then
 					local data = self:_create_entry(input, validation_function)
+
 					active_wield_inputs[#active_wield_inputs + 1] = data
 					entries_added = true
 				end
@@ -259,6 +271,7 @@ HudElementWieldInfo._realign_input_entries = function (self)
 		local widget = data.widget
 		local offset = widget.offset
 		local extra_height = data.extra_height
+
 		offset[2] = -((num_entries - i) * 40 + previous_input_icon_size)
 		previous_input_icon_size = previous_input_icon_size + extra_height
 	end

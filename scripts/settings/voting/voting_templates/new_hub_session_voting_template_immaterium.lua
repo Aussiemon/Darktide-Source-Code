@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/settings/voting/voting_templates/new_hub_session_voting_template_immaterium.lua
+
 local new_hub_session_voting_template_immaterium = {
-	voting_impl = "party_immaterium",
-	name = "new_hub_session_immaterium",
 	immaterium_party_vote_type = "",
+	name = "new_hub_session_immaterium",
+	voting_impl = "party_immaterium",
 	required_params = {},
 	static_params = {},
 	on_started = function (voting_id, template, params)
@@ -27,7 +29,7 @@ local new_hub_session_voting_template_immaterium = {
 	end,
 	on_vote_casted = function (voting_id, template, voter_peer_id, vote_option)
 		return
-	end
+	end,
 }
 
 return new_hub_session_voting_template_immaterium

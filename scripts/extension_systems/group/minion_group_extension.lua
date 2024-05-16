@@ -1,13 +1,17 @@
+﻿-- chunkname: @scripts/extension_systems/group/minion_group_extension.lua
+
 local MinionGroupExtension = class("MinionGroupExtension")
 
 MinionGroupExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	local group_id = extension_init_data.group_id
+
 	self._group_id = group_id
 end
 
 MinionGroupExtension.extensions_ready = function (self, world, unit)
 	local group_system = Managers.state.extension:system("group_system")
 	local group = group_system:group_from_id(self._group_id)
+
 	self._group = group
 end
 

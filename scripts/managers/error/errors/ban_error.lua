@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/ban_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local Text = require("scripts/utilities/ui/text")
@@ -27,7 +29,7 @@ BanError.init = function (self, original_error)
 		if diff > 0 then
 			self._description_params = {
 				description = Localize(self._description),
-				time_remaining = Text.format_time_span_long_form_localized(diff)
+				time_remaining = Text.format_time_span_long_form_localized(diff),
 			}
 			self._description = "loc_error_banned_with_expire_time"
 		end

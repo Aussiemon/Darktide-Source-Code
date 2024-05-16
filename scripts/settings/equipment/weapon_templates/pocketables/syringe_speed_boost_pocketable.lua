@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/pocketables/syringe_speed_boost_pocketable.lua
+
 local syringe_pocketable_weapon_template_generator = require("scripts/settings/equipment/weapon_templates/weapon_template_generators/syringe_pocketable_weapon_template_generator")
 local Breed = require("scripts/utilities/breed")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -22,7 +24,7 @@ local hud_icon = "content/ui/materials/icons/pocketables/hud/syringe_speed"
 local hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_syringe_speed"
 local pickup_name = "syringe_speed_boost_pocketable"
 local assist_notification_type = "stimmed"
-local vo_event = nil
+local vo_event
 local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon, hud_icon_small, pickup_name, assist_notification_type, vo_event)
 
 return weapon_template

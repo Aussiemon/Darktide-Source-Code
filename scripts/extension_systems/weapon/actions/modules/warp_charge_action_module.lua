@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/warp_charge_action_module.lua
+
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WarpChargeActionModule = class("WarpChargeActionModule")
 
 WarpChargeActionModule.init = function (self, player_unit, action_settings, inventory_slot_component)
 	self._player_unit = player_unit
 	self._action_settings = action_settings
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 	self._charge_component = unit_data_extension:read_component("action_module_charge")
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")

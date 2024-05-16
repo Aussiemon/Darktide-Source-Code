@@ -1,49 +1,54 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_speedloader.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
-local _components = nil
+local _components
 local RevolverSpeedloader = class("RevolverSpeedloader")
 
 RevolverSpeedloader.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
 	self._is_reloading = false
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 	self._bullets = {
 		{
-			casing_attachment_name = "casing_01",
-			visible_at_reload_start = true,
 			bullet_attachment_name = "bullet_01",
-			visible = true
+			casing_attachment_name = "casing_01",
+			visible = true,
+			visible_at_reload_start = true,
 		},
 		{
-			casing_attachment_name = "casing_02",
-			visible_at_reload_start = true,
 			bullet_attachment_name = "bullet_02",
-			visible = true
+			casing_attachment_name = "casing_02",
+			visible = true,
+			visible_at_reload_start = true,
 		},
 		{
-			casing_attachment_name = "casing_03",
-			visible_at_reload_start = true,
 			bullet_attachment_name = "bullet_03",
-			visible = true
+			casing_attachment_name = "casing_03",
+			visible = true,
+			visible_at_reload_start = true,
 		},
 		{
-			casing_attachment_name = "casing_04",
-			visible_at_reload_start = true,
 			bullet_attachment_name = "bullet_04",
-			visible = true
+			casing_attachment_name = "casing_04",
+			visible = true,
+			visible_at_reload_start = true,
 		},
 		{
-			casing_attachment_name = "casing_05",
-			visible_at_reload_start = true,
 			bullet_attachment_name = "bullet_05",
-			visible = true
-		}
+			casing_attachment_name = "casing_05",
+			visible = true,
+			visible_at_reload_start = true,
+		},
 	}
 	self._components_1p = {}
 	self._components_3p = {}
@@ -92,11 +97,13 @@ RevolverSpeedloader._update_ammo_count = function (self, t, force_update)
 	if not self._is_reloading and is_reloading then
 		for ii = 1, #bullets do
 			local bullet = bullets[ii]
+
 			bullet.visible_at_reload_start = bullet.visible
 		end
 	end
 
 	self._is_reloading = is_reloading
+
 	local components_lookup_1p = self._components_lookup_1p
 	local components_lookup_3p = self._components_lookup_3p
 	local is_in_1p = self._first_person_extension:is_in_first_person_mode()
@@ -109,7 +116,7 @@ RevolverSpeedloader._update_ammo_count = function (self, t, force_update)
 		local reload_state = ReloadStates.reload_state(reload_template, inventory_slot_component)
 		local show_magazine_ammo_time = reload_state.show_magazine_ammo_time or 0
 
-		if time_in_action >= show_magazine_ammo_time then
+		if show_magazine_ammo_time <= time_in_action then
 			show_all_bullets = true
 		end
 	end
@@ -163,8 +170,9 @@ function _components(destination, destination_lookup, attachments, attachments_n
 			local data = {
 				unit = attachment_unit,
 				lookup_name = lookup_name,
-				component = component
+				component = component,
 			}
+
 			destination[#destination + 1] = data
 			destination_lookup[lookup_name] = data
 		end

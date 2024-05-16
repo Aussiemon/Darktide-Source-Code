@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_breed_tester.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepMissionServer = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_mission_server")
 local GameplayInitStepBreedTester = class("GameplayInitStepBreedTester")
@@ -8,6 +10,7 @@ end
 
 GameplayInitStepBreedTester.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
 end
 
@@ -26,7 +29,7 @@ GameplayInitStepBreedTester.update = function (self, main_dt, main_t)
 	end
 
 	local next_step_params = {
-		shared_state = shared_state
+		shared_state = shared_state,
 	}
 
 	return GameplayInitStepMissionServer, next_step_params

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_km_enforcer_twins_zealot_male_c.lua
+
 local mission_vo_km_enforcer_twins_zealot_male_c = {
 	enemy_kill_monster_twins = {
 		randomize_indexes_n = 0,
@@ -10,7 +12,7 @@ local mission_vo_km_enforcer_twins_zealot_male_c = {
 			"loc_zealot_male_c__enemy_kill_monster_05",
 			"loc_zealot_male_c__enemy_kill_monster_06",
 			"loc_zealot_male_c__enemy_kill_monster_07",
-			"loc_zealot_male_c__enemy_kill_monster_08"
+			"loc_zealot_male_c__enemy_kill_monster_08",
 		},
 		sound_events_duration = {
 			2.034885,
@@ -20,7 +22,7 @@ local mission_vo_km_enforcer_twins_zealot_male_c = {
 			3.105365,
 			4.068323,
 			1.818885,
-			2.709646
+			2.709646,
 		},
 		sound_event_weights = {
 			0.125,
@@ -30,23 +32,23 @@ local mission_vo_km_enforcer_twins_zealot_male_c = {
 			0.125,
 			0.125,
 			0.125,
-			0.125
+			0.125,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_twins_go_around = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__mission_stockpile_main_access_01"
+			[1] = "loc_zealot_male_c__mission_stockpile_main_access_01",
 		},
 		sound_events_duration = {
-			[1.0] = 1.96225
+			[1] = 1.96225,
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	response_for_enemy_kill_monster_twins = {
 		randomize_indexes_n = 0,
@@ -58,7 +60,7 @@ local mission_vo_km_enforcer_twins_zealot_male_c = {
 			"loc_zealot_male_c__response_for_enemy_kill_monster_04",
 			"loc_zealot_male_c__response_for_enemy_kill_monster_05",
 			"loc_zealot_male_c__response_for_enemy_kill_monster_08",
-			"loc_zealot_male_c__response_for_enemy_kill_monster_10"
+			"loc_zealot_male_c__response_for_enemy_kill_monster_10",
 		},
 		sound_events_duration = {
 			2.481156,
@@ -67,7 +69,7 @@ local mission_vo_km_enforcer_twins_zealot_male_c = {
 			3.092667,
 			2.474375,
 			2.878344,
-			1.522146
+			1.522146,
 		},
 		sound_event_weights = {
 			0.1428571,
@@ -76,10 +78,10 @@ local mission_vo_km_enforcer_twins_zealot_male_c = {
 			0.1428571,
 			0.1428571,
 			0.1428571,
-			0.1428571
+			0.1428571,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_vo_km_enforcer_twins_zealot_male_c", mission_vo_km_enforcer_twins_zealot_male_c)

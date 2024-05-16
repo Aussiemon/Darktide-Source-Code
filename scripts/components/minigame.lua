@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/minigame.lua
+
 local Minigame = component("Minigame")
 
 Minigame.init = function (self, unit)
@@ -34,27 +36,27 @@ end
 
 Minigame.component_data = {
 	minigame_type = {
-		value = "none",
-		ui_type = "combo_box",
 		ui_name = "Minigame Type",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"None",
 			"Default",
 			"Scan",
 			"Decode Symbols",
-			"Drill"
+			"Drill",
 		},
 		options_values = {
 			"none",
 			"default",
 			"scan",
 			"decode_symbols",
-			"drill"
-		}
+			"drill",
+		},
 	},
 	extensions = {
-		"MinigameExtension"
-	}
+		"MinigameExtension",
+	},
 }
 
 return Minigame

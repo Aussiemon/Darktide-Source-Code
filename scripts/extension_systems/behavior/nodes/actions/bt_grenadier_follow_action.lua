@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_grenadier_follow_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -10,18 +12,24 @@ local BtGrenadierFollowAction = class("BtGrenadierFollowAction", "BtNode")
 
 BtGrenadierFollowAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.combat_vector_extension = ScriptUnit.extension(unit, "combat_vector_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.nav_world = navigation_extension:nav_world()
+
 	local combat_vector_component = blackboard.combat_vector
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.combat_vector_component = combat_vector_component
 	scratchpad.perception_component = blackboard.perception
 	scratchpad.throw_grenade_component = Blackboard.write_component(blackboard, "throw_grenade")
+
 	local run_speed = action_data.speed
 
 	navigation_extension:set_enabled(true, run_speed)
@@ -64,14 +72,13 @@ local NUM_FAILED_ATTEMPTS_FOR_NEW_LOCATION = 10
 
 BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local perception_component = scratchpad.perception_component
-	local target_distance = perception_component.target_distance
-	local has_line_of_sight = perception_component.has_line_of_sight
+	local target_distance, has_line_of_sight = perception_component.target_distance, perception_component.has_line_of_sight
 	local next_throw_at_t = scratchpad.throw_grenade_component.next_throw_at_t
-	local should_check_trajectory = next_throw_at_t <= t and (action_data.min_distance_from_target <= target_distance or not has_line_of_sight)
+	local should_check_trajectory = next_throw_at_t <= t and (target_distance >= action_data.min_distance_from_target or not has_line_of_sight)
 	local behavior_component = scratchpad.behavior_component
 	local move_state = behavior_component.move_state
 
-	if should_check_trajectory and scratchpad.check_grenade_trajectory_t < t then
+	if should_check_trajectory and t > scratchpad.check_grenade_trajectory_t then
 		local has_trajectory = self:_check_grenade_trajectory(unit, blackboard, scratchpad, action_data)
 
 		if has_trajectory then
@@ -80,7 +87,7 @@ BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpa
 			scratchpad.check_grenade_trajectory_t = t + action_data.check_grenade_trajectory_frequency
 			scratchpad.num_failed_attempts = scratchpad.num_failed_attempts + 1
 
-			if NUM_FAILED_ATTEMPTS_FOR_NEW_LOCATION <= scratchpad.num_failed_attempts and move_state == "idle" then
+			if scratchpad.num_failed_attempts >= NUM_FAILED_ATTEMPTS_FOR_NEW_LOCATION and move_state == "idle" then
 				scratchpad.combat_vector_extension:look_for_new_location(action_data.new_location_min_dist, action_data.new_location_max_dist, action_data.new_location_combat_range)
 
 				scratchpad.num_failed_attempts = 0
@@ -93,7 +100,7 @@ BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpa
 	local current_move_position = scratchpad.current_move_position:unbox()
 	local distance_sq = Vector3.distance_squared(current_move_position, wanted_position)
 
-	if MIN_MOVE_DISTANCE_CHANGE_SQ < distance_sq then
+	if distance_sq > MIN_MOVE_DISTANCE_CHANGE_SQ then
 		self:_move(scratchpad, combat_vector_component, scratchpad.navigation_extension)
 	end
 
@@ -116,11 +123,11 @@ BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpa
 		self:_start_move_anim(unit, t, behavior_component, scratchpad, action_data)
 	end
 
-	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
-	if scratchpad.next_skulk_vo_t < t then
+	if t > scratchpad.next_skulk_vo_t then
 		local vo_event = action_data.vo_event
 
 		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
@@ -131,14 +138,13 @@ BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpa
 	return "running"
 end
 
-local MAX_TRIES = 20
-local SECTIONS = 20
+local MAX_TRIES, SECTIONS = 20, 20
 local COLLISION_FILTER = "filter_minion_throwing"
 
 BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackboard, scratchpad, action_data)
 	local target_unit = scratchpad.perception_component.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
-	local throw_target_position = nil
+	local throw_target_position
 	local i = 1
 
 	while i < MAX_TRIES and not throw_target_position do
@@ -152,9 +158,8 @@ BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackb
 
 	local self_position = POSITION_LOOKUP[unit]
 	local distance_to_target = Vector3.distance(self_position, target_position)
-	local throw_anim_events = action_data.throw_anim_events
-	local throw_distance_thresholds = action_data.throw_distance_thresholds
-	local throw_anim_event = nil
+	local throw_anim_events, throw_distance_thresholds = action_data.throw_anim_events, action_data.throw_distance_thresholds
+	local throw_anim_event
 
 	if distance_to_target < throw_distance_thresholds.close then
 		throw_anim_event = Animation.random_event(throw_anim_events.close)
@@ -165,8 +170,7 @@ BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackb
 	end
 
 	local flat_target_direction = Vector3.flat(throw_target_position - self_position)
-	local wanted_rotation = Quaternion.look(flat_target_direction)
-	local scale = Unit.world_scale(unit, 1)
+	local wanted_rotation, scale = Quaternion.look(flat_target_direction), Unit.world_scale(unit, 1)
 	local throw_node_local_offset = action_data.throw_node_local_offset[throw_anim_event]:unbox()
 	local rotated_root_world_pose = Matrix4x4.from_quaternion_position_scale(wanted_rotation, self_position, scale)
 	local throw_node_position = Matrix4x4.transform(rotated_root_world_pose, throw_node_local_offset)
@@ -175,9 +179,7 @@ BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackb
 	local locomotion_template = projectile_template.locomotion_template
 	local trajectory_parameters = locomotion_template.trajectory_parameters.throw
 	local integrator_parameters = locomotion_template.integrator_parameters
-	local speed = trajectory_parameters.speed_initial
-	local gravity = integrator_parameters.gravity
-	local acceptable_accuracy = throw_config.acceptable_accuracy
+	local speed, gravity, acceptable_accuracy = trajectory_parameters.speed_initial, integrator_parameters.gravity, throw_config.acceptable_accuracy
 	local target_velocity = MinionMovement.target_velocity(target_unit)
 	local angle_to_hit_target, estimated_position = Trajectory.angle_to_hit_moving_target(throw_node_position, throw_target_position, speed, target_velocity, gravity, acceptable_accuracy)
 
@@ -215,19 +217,21 @@ BtGrenadierFollowAction._get_throw_position = function (self, unit, target_posit
 	local randomized_throw_directions = scratchpad.randomized_throw_directions
 	local randomized_direction = randomized_throw_directions[throw_direction_index]:unbox()
 	local z_offset = Vector3(0, 0, RAYCAST_Z_OFFSET)
+
 	target_position = target_position + z_offset
 
 	if action_data.throw_position_distance_fwd then
 		local to_target = Vector3.normalize(POSITION_LOOKUP[unit] - target_position)
 		local dot = Vector3.dot(to_target, randomized_direction)
 
-		if action_data.throw_position_distance_fwd_dot < dot then
+		if dot > action_data.throw_position_distance_fwd_dot then
 			range = math.random_range(action_data.throw_position_distance_fwd[1], action_data.throw_position_distance_fwd[2])
 		end
 	end
 
 	local randomized_position = target_position + randomized_direction * range
 	local nav_world = scratchpad.nav_world
+
 	randomized_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, randomized_position, 2, 1, 1)
 
 	if not randomized_position then
@@ -236,7 +240,7 @@ BtGrenadierFollowAction._get_throw_position = function (self, unit, target_posit
 
 	local check_z_position = randomized_position + Vector3(0, 0, THROW_POSITION_Z_OFFSET)
 	local hit, hit_position = self:_ray_cast(physics_world, check_z_position, randomized_position)
-	local wanted_position = nil
+	local wanted_position
 
 	if hit then
 		wanted_position = hit_position + z_offset
@@ -270,7 +274,7 @@ end
 
 BtGrenadierFollowAction._move = function (self, scratchpad, combat_vector_component, navigation_extension)
 	local has_combat_vector_position = combat_vector_component.has_position
-	local wanted_position = nil
+	local wanted_position
 
 	if has_combat_vector_position then
 		wanted_position = combat_vector_component.position:unbox()
@@ -278,6 +282,7 @@ BtGrenadierFollowAction._move = function (self, scratchpad, combat_vector_compon
 		local target_unit = scratchpad.perception_component.target_unit
 		local target_position = POSITION_LOOKUP[target_unit]
 		local nav_world = scratchpad.nav_world
+
 		wanted_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, target_position)
 	end
 
@@ -301,6 +306,7 @@ BtGrenadierFollowAction._start_move_anim = function (self, unit, t, behavior_com
 			MinionMovement.set_anim_driven(scratchpad, true)
 
 			local start_rotation_timing = action_data.start_move_rotation_timings[start_move_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = start_move_event
 		else
@@ -325,7 +331,9 @@ BtGrenadierFollowAction._calculate_throw_directions = function (self, randomized
 
 	for i = 1, NUM_DIRECTIONS do
 		current_radians = current_radians + RADIANS_PER_DIRECTION
+
 		local direction = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
+
 		randomized_directions[i] = Vector3Box(direction)
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utilities/conditions/bt_minion_conditions.lua
+
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local conditions = {}
 
@@ -754,7 +756,7 @@ conditions.beast_of_nurgle_can_consume_minion = function (unit, blackboard, scra
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	local current_health_percent = health_extension:current_health_percent()
 
-	if action_data.health_percent_threshold < current_health_percent then
+	if current_health_percent > action_data.health_percent_threshold then
 		return false
 	end
 
@@ -1202,8 +1204,7 @@ conditions.beast_of_nurgle_movement = function (unit, blackboard, scratchpad, co
 end
 
 conditions.chaos_spawn_should_leap = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	local behavior_component = blackboard.behavior
-	local perception_component = blackboard.perception
+	local behavior_component, perception_component = blackboard.behavior, blackboard.perception
 	local target_unit = perception_component.target_unit
 
 	if not is_running and (behavior_component.move_state == "attacking" or not HEALTH_ALIVE[target_unit]) then

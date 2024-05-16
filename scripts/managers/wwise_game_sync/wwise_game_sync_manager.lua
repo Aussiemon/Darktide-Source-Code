@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_game_sync_manager.lua
+
 local BackgroundMute = require("scripts/utilities/background_mute")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local WwiseStateGroupCircumstance = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_circumstance")
@@ -21,12 +23,14 @@ local WWISE_STATE_GROUP_SETTINGS = {
 	circumstance = WwiseStateGroupCircumstance,
 	event_category = WwiseStateGroupEventType,
 	event_intensity = WwiseStateGroupEventIntensity,
-	options = WwiseStateGroupOptions
+	options = WwiseStateGroupOptions,
 }
 
 WwiseGameSyncManager.init = function (self, world_manager)
 	self._world = self:_create_world(world_manager)
+
 	local wwise_world = world_manager:wwise_world(self._world)
+
 	self._wwise_world = wwise_world
 
 	WwiseWorld.trigger_resource_event(wwise_world, "wwise/events/music/play_music_manager")
@@ -96,11 +100,11 @@ WwiseGameSyncManager._create_world = function (self, world_manager)
 	local timer_name = "main"
 	local parameters = {
 		layer = world_layer,
-		timer_name = timer_name
+		timer_name = timer_name,
 	}
 	local flags = {
 		Application.DISABLE_PHYSICS,
-		Application.DISABLE_RENDERING
+		Application.DISABLE_RENDERING,
 	}
 	local world = world_manager:create_world(world_name, parameters, unpack(flags))
 

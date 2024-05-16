@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_loading.lua
+
 local LoadMissionError = require("scripts/managers/error/errors/load_mission_error")
 local Missions = require("scripts/settings/mission/mission_templates")
 
@@ -45,10 +47,11 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	end
 
 	self._failed_clients = {}
+
 	local player_game_state_mapping = {}
 	local game_state_context = {
 		mission_name = params.mission_name,
-		mission_giver_vo = params.mission_giver_vo or "none"
+		mission_giver_vo = params.mission_giver_vo or "none",
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
@@ -88,7 +91,7 @@ StateLoading._reset_player_game_state = function (self, mission_name, mission_gi
 	local player_game_state_mapping = {}
 	local game_state_context = {
 		mission_name = mission_name,
-		mission_giver_vo = mission_giver_vo or "none"
+		mission_giver_vo = mission_giver_vo or "none",
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
@@ -139,7 +142,7 @@ StateLoading.update = function (self, main_dt, main_t)
 		end
 	end
 
-	local new_state, params = nil
+	local new_state, params
 
 	if self._state == STATES.waiting_for_network then
 		if Managers.multiplayer_session:is_ready() then
@@ -160,7 +163,8 @@ StateLoading.update = function (self, main_dt, main_t)
 			if new_state == StateLoading then
 				self:_reset_state_loading(params)
 
-				new_state, params = nil
+				new_state = nil
+				params = nil
 			end
 		end
 	elseif self._state == STATES.waiting_for_despawn then
@@ -181,7 +185,8 @@ StateLoading.update = function (self, main_dt, main_t)
 		if new_state == StateLoading then
 			self:_reset_state_loading(params)
 
-			new_state, params = nil
+			new_state = nil
+			params = nil
 		elseif new_state then
 			if self._needs_load_level then
 				Managers.loading:stop_load_mission()
@@ -195,9 +200,11 @@ StateLoading.update = function (self, main_dt, main_t)
 
 			self:_start_loading()
 
-			new_state, params = nil
+			new_state = nil
+			params = nil
 		elseif self._next_state then
-			local load_done = nil
+			local load_done
+
 			load_done, params = self:_update_loading(main_dt)
 
 			if load_done then
@@ -271,15 +278,16 @@ StateLoading._update_loading = function (self)
 
 	if loading_manager:load_finished() and self:_global_packages_loaded() then
 		local is_host = loading_manager:is_host()
-		local parameters = {
-			level_name = self:_current_level(),
-			mission_name = self._mission_name,
-			is_host = is_host,
-			spawn_group_id = loading_manager:spawn_group_id()
-		}
+		local parameters = {}
+
+		parameters.level_name = self:_current_level()
+		parameters.mission_name = self._mission_name
+		parameters.is_host = is_host
+		parameters.spawn_group_id = loading_manager:spawn_group_id()
 
 		if self._needs_load_level then
 			local world, level, themes, world_name = loading_manager:take_ownership_of_level()
+
 			parameters.world = world
 			parameters.level = level
 			parameters.themes = themes

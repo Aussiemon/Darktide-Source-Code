@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_weapon_effects.lua
+
 local Component = require("scripts/utilities/component")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ForceWeaponEffects = class("ForceWeaponEffects")
-local _set_start_time, _set_stop_time, _unit_components = nil
+local _set_start_time, _set_stop_time, _unit_components
 local sfx_external_properties = {}
 local SPECIAL_ACTIVE_LOOPING_SFX_ALIAS = "weapon_special_loop"
 local SPECIAL_ACTIVE_LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases[SPECIAL_ACTIVE_LOOPING_SFX_ALIAS]
@@ -16,6 +18,7 @@ local FX_SOURCE_NAME = "_special_active"
 ForceWeaponEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_husk = context.is_husk
 	local owner_unit = context.owner_unit
+
 	self._is_husk = is_husk
 	self._is_local_unit = context.is_local_unit
 	self._slot_name = slot.name
@@ -23,7 +26,9 @@ ForceWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._wwise_world = context.wwise_world
 	self._special_active_fx_source_name = fx_sources[FX_SOURCE_NAME]
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._warp_charge_component = unit_data_extension:read_component("warp_charge")
 	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
@@ -124,23 +129,20 @@ ForceWeaponEffects._start_sfx_loop = function (self)
 	local stop_config = SPECIAL_ACTIVE_LOOPING_SFX_CONFIG.stop
 	local start_event_alias = start_config.event_alias
 	local stop_event_alias = stop_config.event_alias
-	local resolved, has_husk_events, event_name = nil
+	local resolved, has_husk_events, event_name
+
 	resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, sfx_external_properties)
 
 	if resolved then
-		if use_husk_event and has_husk_events then
-			event_name = event_name .. "_husk" or event_name
-		end
+		event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
 
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
+
 		self._looping_playing_id = new_playing_id
 		resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, sfx_external_properties)
 
 		if resolved then
-			if use_husk_event and has_husk_events then
-				event_name = event_name .. "_husk" or event_name
-			end
-
+			event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
 			self._looping_stop_event_name = event_name
 		end
 	end
@@ -193,7 +195,7 @@ function _unit_components(components, attachments)
 		for _, component in ipairs(unit_components) do
 			components[#components + 1] = {
 				unit = attachment_unit,
-				component = component
+				component = component,
 			}
 		end
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_barber_a.lua
+
 local conversations_hub_barber_a = {
 	barber_distance = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local conversations_hub_barber_a = {
 			"loc_barber_a__barber_distance_17",
 			"loc_barber_a__barber_distance_18",
 			"loc_barber_a__barber_distance_19",
-			"loc_barber_a__barber_distance_20"
+			"loc_barber_a__barber_distance_20",
 		},
 		sound_events_duration = {
 			1.247417,
@@ -44,9 +46,9 @@ local conversations_hub_barber_a = {
 			2.901542,
 			3.875896,
 			4.235771,
-			5.516292
+			5.516292,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	barber_goodbye = {
 		randomize_indexes_n = 0,
@@ -71,7 +73,7 @@ local conversations_hub_barber_a = {
 			"loc_barber_a__barber_goodbye_17",
 			"loc_barber_a__barber_goodbye_18",
 			"loc_barber_a__barber_goodbye_19",
-			"loc_barber_a__barber_goodbye_20"
+			"loc_barber_a__barber_goodbye_20",
 		},
 		sound_events_duration = {
 			1.501771,
@@ -93,9 +95,9 @@ local conversations_hub_barber_a = {
 			2.59275,
 			2.452333,
 			2.032333,
-			2.757375
+			2.757375,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	barber_hello = {
 		randomize_indexes_n = 0,
@@ -119,7 +121,7 @@ local conversations_hub_barber_a = {
 			"loc_barber_a__barber_hello_17",
 			"loc_barber_a__barber_hello_18",
 			"loc_barber_a__barber_hello_19",
-			"loc_barber_a__barber_hello_20"
+			"loc_barber_a__barber_hello_20",
 		},
 		sound_events_duration = {
 			0.731479,
@@ -140,53 +142,53 @@ local conversations_hub_barber_a = {
 			4.370125,
 			2.640521,
 			2.461646,
-			4.805583
+			4.805583,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	barber_intro_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_a_01"
+			[1] = "loc_barber_a__barber_intro_a_01",
 		},
 		sound_events_duration = {
-			[1.0] = 9.263396
+			[1] = 9.263396,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	barber_intro_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_b_01"
+			[1] = "loc_barber_a__barber_intro_b_01",
 		},
 		sound_events_duration = {
-			[1.0] = 5.445479
+			[1] = 5.445479,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	barber_intro_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_c_01"
+			[1] = "loc_barber_a__barber_intro_c_01",
 		},
 		sound_events_duration = {
-			[1.0] = 4.451063
+			[1] = 4.451063,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	barber_intro_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_d_01"
+			[1] = "loc_barber_a__barber_intro_d_01",
 		},
 		sound_events_duration = {
-			[1.0] = 4.55825
+			[1] = 4.55825,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	barber_purchase = {
 		randomize_indexes_n = 0,
@@ -211,7 +213,7 @@ local conversations_hub_barber_a = {
 			"loc_barber_a__barber_purchase_17",
 			"loc_barber_a__barber_purchase_18",
 			"loc_barber_a__barber_purchase_19",
-			"loc_barber_a__barber_purchase_20"
+			"loc_barber_a__barber_purchase_20",
 		},
 		sound_events_duration = {
 			2.635125,
@@ -233,9 +235,9 @@ local conversations_hub_barber_a = {
 			1.366167,
 			2.206521,
 			3.765125,
-			3.575792
+			3.575792,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_rumour_barber_idle = {
 		randomize_indexes_n = 0,
@@ -297,7 +299,7 @@ local conversations_hub_barber_a = {
 			"loc_barber_a__hub_rumour_wolfer_01_a_06",
 			"loc_barber_a__hub_rumour_wolfer_01_a_08",
 			"loc_barber_a__hub_rumour_wolfer_01_a_09",
-			"loc_barber_a__hub_rumour_wolfer_01_a_10"
+			"loc_barber_a__hub_rumour_wolfer_01_a_10",
 		},
 		sound_events_duration = {
 			4.352625,
@@ -356,9 +358,9 @@ local conversations_hub_barber_a = {
 			7.286688,
 			4.732375,
 			6.811479,
-			9.887208
+			9.887208,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_rumour_farewell_a_barber = {
 		randomize_indexes_n = 0,
@@ -373,7 +375,7 @@ local conversations_hub_barber_a = {
 			"loc_barber_a__hub_rumour_farewell_a_07",
 			"loc_barber_a__hub_rumour_farewell_a_08",
 			"loc_barber_a__hub_rumour_farewell_a_09",
-			"loc_barber_a__hub_rumour_farewell_a_10"
+			"loc_barber_a__hub_rumour_farewell_a_10",
 		},
 		sound_events_duration = {
 			5.160625,
@@ -385,10 +387,10 @@ local conversations_hub_barber_a = {
 			4.380625,
 			5.420333,
 			4.981479,
-			5.218271
+			5.218271,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_barber_a", conversations_hub_barber_a)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker.lua
+
 local HudElementPrologueTutorialObjectivesTrackerSettings = require("scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker_settings")
 local Definitions = require("scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker_definitions")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -48,7 +50,7 @@ HudElementPrologueStepTracker.event_player_add_step_tracker = function (self, st
 		end
 
 		table.insert(self._popup_queue, 1, {
-			step_description = step_description
+			step_description = step_description,
 		})
 	else
 		self:_set_step_tracker_text(step_description)
@@ -59,6 +61,7 @@ HudElementPrologueStepTracker._set_step_tracker_text = function (self, step_desc
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.step_tracker
 	local content = widget.content
+
 	content.description_text = Localize(step_description)
 	self._popup_animation_id = self:_start_animation("add_entry", widget)
 	self._active = true
@@ -73,6 +76,7 @@ end
 HudElementPrologueStepTracker.remove_step_tracker = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.step_tracker
+
 	self._popup_animation_id = self:_start_animation("remove_entry", widget)
 	self._active = false
 end

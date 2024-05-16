@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates.lua
+
 local effect_templates = {}
 
 local function _create_effect_template_entry(path)
 	local effect_template = require(path)
 	local effect_template_name = effect_template.name
+
 	effect_templates[effect_template_name] = effect_template
 end
 

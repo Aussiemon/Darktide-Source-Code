@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/minion_visual_loadout_extension.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MasterItems = require("scripts/backend/master_items")
 local MinionGibbing = require("scripts/managers/minion/minion_gibbing")
@@ -11,7 +13,7 @@ local CLIENT_RPCS = {
 	"rpc_minion_send_on_death_event",
 	"rpc_minion_unequip_slot",
 	"rpc_minion_set_slot_visibility",
-	"rpc_minion_gib"
+	"rpc_minion_gib",
 }
 local MinionVisualLoadoutExtension = class("MinionVisualLoadoutExtension")
 
@@ -22,9 +24,9 @@ local function _link_unit(world, item_unit, target_unit, attach_node_name, map_n
 end
 
 local attach_settings_temp = {
-	spawn_with_extensions = false,
 	from_script_component = false,
-	is_minion = true
+	is_minion = true,
+	spawn_with_extensions = false,
 }
 
 local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, random_seed, item_definitions)
@@ -34,7 +36,7 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 	local item_name = items[item_index]
 	local item_data = item_definitions[item_name]
 	local attach_node_name = item_data.unwielded_attach_node or item_data.attach_node
-	local attach_node = nil
+	local attach_node
 
 	if tonumber(attach_node_name) ~= nil then
 		attach_node = tonumber(attach_node_name)
@@ -43,10 +45,11 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 	end
 
 	local extract_attachment_units_bind_poses = false
-	local item_unit, attachments = nil
+	local item_unit, attachments
 
 	if DEDICATED_SERVER and not item_slot_data.is_weapon then
-		item_unit, attachments = nil
+		item_unit = nil
+		attachments = nil
 	else
 		attach_settings_temp.world = world
 		attach_settings_temp.unit_spawner = Managers.state.unit_spawner
@@ -69,13 +72,13 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 
 	local drop_on_death = item_slot_data.drop_on_death
 	local slot_entry = {
-		visible = true,
 		state = "unwielded",
+		visible = true,
 		unit = item_unit,
 		attachments = attachments,
 		item_data = item_data,
 		drop_on_death = drop_on_death,
-		starts_invisible = item_slot_data.starts_invisible
+		starts_invisible = item_slot_data.starts_invisible,
 	}
 
 	return slot_entry, new_seed
@@ -92,7 +95,7 @@ local function _create_material_override_slot_entry(unit, item_slot_data, random
 	end
 
 	local slot_entry = {
-		item_data = item_data
+		item_data = item_data,
 	}
 
 	return slot_entry, new_seed
@@ -101,29 +104,37 @@ end
 MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
 	local world = extension_init_context.world
+
 	self._is_server = is_server
 	self._unit = unit
 	self._world = world
 	self._wwise_world = extension_init_context.wwise_world
+
 	local slots = {}
+
 	self._slots = slots
 	self._wielded_slot_name = nil
+
 	local breed = extension_init_data.breed
-	self._breed_name = breed.name
-	self._breed = breed
+
+	self._breed, self._breed_name = breed, breed.name
+
 	local lod_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod")
 	local lod_shadow_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod_shadow")
 	local item_definitions = MasterItems.get_cached()
-	local random_seed = extension_init_data.random_seed
-	local inventory = extension_init_data.inventory
+	local random_seed, inventory = extension_init_data.random_seed, extension_init_data.inventory
+
 	self._random_seed = random_seed
 	self._inventory = inventory
+
 	local material_override_slots = {}
+
 	self._material_override_slots = material_override_slots
+
 	local inventory_slots = inventory.slots
 
 	for slot_name, slot_data in pairs(inventory_slots) do
-		local slot_unit = nil
+		local slot_unit
 
 		if slot_data.is_material_override_slot then
 			material_override_slots[slot_name] = slot_data
@@ -150,6 +161,7 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 
 	if not is_server then
 		local network_event_delegate = extension_init_context.network_event_delegate
+
 		self._network_event_delegate = network_event_delegate
 		self._game_object_id = nil_or_game_object_id
 
@@ -167,8 +179,7 @@ MinionVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 
 		if tint_color then
 			local _, r, g, b = Quaternion.to_elements(tint_color)
-			local vector_color = Vector3(r, g, b)
-			local include_children = true
+			local vector_color, include_children = Vector3(r, g, b), true
 			local material_variables = breed.side_color_material_variables
 
 			for i = 1, #material_variables do
@@ -179,13 +190,13 @@ MinionVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 		end
 	end
 
-	local gib_template = breed.gib_template
-	local use_wounds = breed.use_wounds
+	local gib_template, use_wounds = breed.gib_template, breed.use_wounds
 
 	if gib_template then
 		local gib_variations_or_nil = self._inventory.gib_variations
 		local random_seed = self._random_seed
 		local wounds_extension_or_nil = use_wounds and ScriptUnit.extension(unit, "wounds_system") or nil
+
 		self._minion_gibbing = MinionGibbing:new(unit, breed, world, self._wwise_world, gib_template, self, random_seed, gib_variations_or_nil, wounds_extension_or_nil)
 	end
 end
@@ -390,11 +401,9 @@ MinionVisualLoadoutExtension._drop_slot = function (self, slot_name)
 		Actor.add_velocity(actor, velocity_vector)
 
 		local rotation = Unit.local_rotation(item_unit, 1)
-		local min_angular_x = 3
-		local max_angular_x = 6
-		local max_angular_y = 0.25
-		local max_angular_z = 0.25
+		local min_angular_x, max_angular_x, max_angular_y, max_angular_z = 3, 6, 0.25, 0.25
 		local torque_vector = Vector3(math.max(math.random() * max_angular_x, min_angular_x), math.random() * max_angular_y, math.random() * max_angular_z)
+
 		torque_vector = Quaternion.rotate(rotation, torque_vector)
 
 		Actor.add_angular_velocity(actor, torque_vector)
@@ -731,7 +740,7 @@ MinionVisualLoadoutExtension.gib = function (self, hit_zone_name_or_nil, attack_
 		gibbing_enabled_locally = GameParameters.gibbing_enabled
 	end
 
-	local spawned_gibs = nil
+	local spawned_gibs
 
 	if not DEDICATED_SERVER and gibbing_enabled_locally then
 		spawned_gibs = self._minion_gibbing:gib(hit_zone_name_or_nil, attack_direction, damage_profile, nil, nil, optional_is_critical_strike)

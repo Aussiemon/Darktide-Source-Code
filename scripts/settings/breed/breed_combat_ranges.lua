@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges.lua
+
 local breed_combat_ranges = {}
 
 local function _create_breed_combat_range_entry(path)
 	local combat_range_data = require(path)
 	local breed_name = combat_range_data.name
+
 	breed_combat_ranges[breed_name] = combat_range_data
 end
 

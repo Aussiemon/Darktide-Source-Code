@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powermaul_p1_buff_templates.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -24,12 +26,12 @@ templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent = tabl
 templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent.child_buff_template = "weapon_trait_bespoke_powermaul_p1_windup_increases_power_child"
 templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_child)
 templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
+	class_name = "proc_buff",
 	cooldown_duration = 5,
 	predicted = false,
-	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_block] = 0.25,
-		[proc_events.on_perfect_block] = 1
+		[proc_events.on_perfect_block] = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context, t)
@@ -39,14 +41,14 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 		if attacking_unit_buff_extension then
 			attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
 		end
-	end
+	end,
 }
 templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
+	class_name = "proc_buff",
 	cooldown_duration = 5,
 	predicted = false,
-	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_hit] = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -64,15 +66,15 @@ templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun =
 				stick_to_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
 			end
 		end
-	end
+	end,
 }
 templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
-	predicted = false,
 	class_name = "buff",
+	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = 0.5
+		[stat_buffs.damage_vs_electrocuted] = 0.5,
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
 
 return templates

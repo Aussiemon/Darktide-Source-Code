@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_scan_tech_priest_a.lua
+
 local event_vo_scan_tech_priest_a = {
 	cmd_wandering_skull = {
 		randomize_indexes_n = 0,
@@ -7,16 +9,16 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__cmd_wandering_skull_02",
 			"loc_tech_priest_a__cmd_wandering_skull_03",
 			"loc_tech_priest_a__cmd_wandering_skull_04",
-			"loc_tech_priest_a__cmd_wandering_skull_05"
+			"loc_tech_priest_a__cmd_wandering_skull_05",
 		},
 		sound_events_duration = {
 			5.821,
 			4.697146,
 			5.930229,
 			5.367084,
-			4.602438
+			4.602438,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	event_scan_all_targets_scanned = {
 		randomize_indexes_n = 0,
@@ -33,7 +35,7 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_all_targets_scanned_09",
 			"loc_tech_priest_a__event_scan_all_targets_scanned_10",
 			"loc_tech_priest_a__event_scan_all_targets_scanned_11",
-			"loc_tech_priest_a__event_scan_all_targets_scanned_12"
+			"loc_tech_priest_a__event_scan_all_targets_scanned_12",
 		},
 		sound_events_duration = {
 			7.119604,
@@ -47,9 +49,9 @@ local event_vo_scan_tech_priest_a = {
 			6.178354,
 			8.105417,
 			7.994625,
-			9.925563
+			9.925563,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	event_scan_find_targets_first = {
 		randomize_indexes_n = 0,
@@ -58,15 +60,15 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_find_targets_first_01",
 			"loc_tech_priest_a__event_scan_find_targets_first_02",
 			"loc_tech_priest_a__event_scan_find_targets_first_03",
-			"loc_tech_priest_a__event_scan_find_targets_first_04"
+			"loc_tech_priest_a__event_scan_find_targets_first_04",
 		},
 		sound_events_duration = {
 			7.902479,
 			8.944563,
 			7.921813,
-			11.33742
+			11.33742,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	event_scan_find_targets_more = {
 		randomize_indexes_n = 0,
@@ -83,7 +85,7 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_find_targets_more_09",
 			"loc_tech_priest_a__event_scan_find_targets_more_10",
 			"loc_tech_priest_a__event_scan_find_targets_more_11",
-			"loc_tech_priest_a__event_scan_find_targets_more_12"
+			"loc_tech_priest_a__event_scan_find_targets_more_12",
 		},
 		sound_events_duration = {
 			9.394438,
@@ -97,9 +99,9 @@ local event_vo_scan_tech_priest_a = {
 			7.320792,
 			9.586688,
 			10.03656,
-			6.868625
+			6.868625,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	event_scan_more_data = {
 		randomize_indexes_n = 0,
@@ -114,7 +116,7 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_more_data_07",
 			"loc_tech_priest_a__event_scan_more_data_08",
 			"loc_tech_priest_a__event_scan_more_data_09",
-			"loc_tech_priest_a__event_scan_more_data_10"
+			"loc_tech_priest_a__event_scan_more_data_10",
 		},
 		sound_events_duration = {
 			5.683479,
@@ -126,9 +128,9 @@ local event_vo_scan_tech_priest_a = {
 			6.056333,
 			6.786438,
 			6.307333,
-			6.099938
+			6.099938,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	event_scan_skull_waiting = {
 		randomize_indexes_n = 0,
@@ -137,15 +139,15 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_skull_waiting_01",
 			"loc_tech_priest_a__event_scan_skull_waiting_02",
 			"loc_tech_priest_a__event_scan_skull_waiting_03",
-			"loc_tech_priest_a__event_scan_skull_waiting_04"
+			"loc_tech_priest_a__event_scan_skull_waiting_04",
 		},
 		sound_events_duration = {
 			4.454063,
 			6.188708,
 			5.45325,
-			4.910208
+			4.910208,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	info_servo_skull_deployed = {
 		randomize_indexes_n = 0,
@@ -155,17 +157,17 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__info_servo_skull_deployed_02",
 			"loc_tech_priest_a__info_servo_skull_deployed_03",
 			"loc_tech_priest_a__info_servo_skull_deployed_04",
-			"loc_tech_priest_a__info_servo_skull_deployed_05"
+			"loc_tech_priest_a__info_servo_skull_deployed_05",
 		},
 		sound_events_duration = {
 			3.677833,
 			3.739771,
 			5.979063,
 			5.343063,
-			5.117229
+			5.117229,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("event_vo_scan_tech_priest_a", event_vo_scan_tech_priest_a)

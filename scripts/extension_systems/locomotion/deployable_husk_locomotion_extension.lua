@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/deployable_husk_locomotion_extension.lua
+
 local DeployableHuskLocomotionExtension = class("DeployableHuskLocomotionExtension")
 
 DeployableHuskLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._unit = unit
 	self._world = extension_init_context.world
+
 	local unit_id = GameSession.game_object_field(game_session, game_object_id, "placed_on_unit_id")
 	local placed_on_unit = unit_id and unit_id ~= 0 and Managers.state.unit_spawner:unit(unit_id, true)
 	local moveable_platform_extension = placed_on_unit and ScriptUnit.has_extension(placed_on_unit, "moveable_platform_system")

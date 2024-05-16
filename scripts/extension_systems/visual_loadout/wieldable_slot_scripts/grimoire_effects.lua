@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/grimoire_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local EQUIPPED_LOOPING_SOUND_ALIAS = "equipped_item_passive_loop"
@@ -24,14 +26,18 @@ GrimoireEffects.init = function (self, context, slot, weapon_template, fx_source
 	self._discard_playing_id = nil
 	self._looping_idle_effect_id = nil
 	self._looping_idle_playing_id = nil
+
 	local unit_data_extension = context.unit_data_extension
 	local fx_extension = context.fx_extension
 	local visual_loadout_extension = context.visual_loadout_extension
+
 	self._fx_extension = fx_extension
 	self._visual_loadout_extension = visual_loadout_extension
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local fx_source_name = fx_sources[SOURCE_NAME]
+
 	self._fx_source_name = fx_source_name
 	self._vfx_link_unit, self._vfx_link_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
 end
@@ -95,10 +101,11 @@ end
 GrimoireEffects._update_discard_finish = function (self, time_in_action, action_settings)
 	local action_kind = action_settings.kind
 
-	if action_kind == "discard" and DESTROY_TIME < time_in_action and not self._discard_finish_effect_id then
+	if action_kind == "discard" and time_in_action > DESTROY_TIME and not self._discard_finish_effect_id then
 		self:_stop_all_effects()
 
 		self._discard_finish_effect_id = self._fx_extension:spawn_gear_particle_effect_with_source(DISCARD_FINISH_PARTICLE_ALIAS, EXTERNAL_PROPERTIES, self._fx_source_name, true, "stop")
+
 		local unit_1p = self._slot.unit_1p
 		local unit_3p = self._slot.unit_3p
 
@@ -116,8 +123,7 @@ GrimoireEffects._start_idle_effects = function (self)
 
 	if not self._looping_idle_effect_id then
 		local world = self._world
-		local vfx_link_unit = self._vfx_link_unit
-		local vfx_link_node = self._vfx_link_node
+		local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
 		local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(EQUIPPED_LOOPING_PARTICLE_ALIAS, EXTERNAL_PROPERTIES)
 
 		if resolved then
@@ -133,28 +139,27 @@ GrimoireEffects._start_idle_effects = function (self)
 		local sound_config = PlayerCharacterLoopingSoundAliases[EQUIPPED_LOOPING_SOUND_ALIAS]
 		local start_config = sound_config.start
 		local start_event_alias = start_config.event_alias
-		local resolved, has_husk_events, start_event_name, stop_event_name = nil
+		local resolved, has_husk_events, start_event_name, stop_event_name
+
 		resolved, start_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, EXTERNAL_PROPERTIES)
 
 		if resolved then
 			local wwise_world = self._wwise_world
 			local source_id = fx_extension:sound_source(fx_source_name)
 
-			if (is_husk or not is_local_unit) and has_husk_events then
-				start_event_name = start_event_name .. "_husk" or start_event_name
-			end
+			start_event_name = (is_husk or not is_local_unit) and has_husk_events and start_event_name .. "_husk" or start_event_name
 
 			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, source_id)
+
 			self._looping_idle_playing_id = playing_id
+
 			local stop_config = sound_config.stop
 			local stop_event_alias = stop_config.event_alias
+
 			resolved, stop_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, EXTERNAL_PROPERTIES)
 
 			if resolved then
-				if (is_husk or not is_local_unit) and has_husk_events then
-					stop_event_name = stop_event_name .. "_husk" or stop_event_name
-				end
-
+				stop_event_name = (is_husk or not is_local_unit) and has_husk_events and stop_event_name .. "_husk" or stop_event_name
 				self._stop_event_name = stop_event_name
 			end
 		end

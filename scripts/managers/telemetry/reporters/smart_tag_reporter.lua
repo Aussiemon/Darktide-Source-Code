@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/smart_tag_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local SmartTagReporter = class("SmartTagReporter")
 
@@ -27,13 +29,14 @@ SmartTagReporter.register_event = function (self, player, template_name)
 	else
 		local player_data = {
 			telemetry_subject = subject,
-			telemetry_game_session = player:telemetry_game_session()
+			telemetry_game_session = player:telemetry_game_session(),
 		}
+
 		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {
-				[template_name] = 1
-			}
+				[template_name] = 1,
+			},
 		}
 	end
 end

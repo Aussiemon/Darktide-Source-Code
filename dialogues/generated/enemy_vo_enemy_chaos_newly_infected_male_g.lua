@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_chaos_newly_infected_male_g.lua
+
 local enemy_vo_enemy_chaos_newly_infected_male_g = {
 	chaos_newly_infected_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			"loc_enemy_chaos_newly_infected_male_g__attack_17",
 			"loc_enemy_chaos_newly_infected_male_g__attack_18",
 			"loc_enemy_chaos_newly_infected_male_g__attack_19",
-			"loc_enemy_chaos_newly_infected_male_g__attack_20"
+			"loc_enemy_chaos_newly_infected_male_g__attack_20",
 		},
 		sound_events_duration = {
 			4.103125,
@@ -44,7 +46,7 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			2.365583,
 			3.445708,
 			2.826708,
-			3.798917
+			3.798917,
 		},
 		sound_event_weights = {
 			0.05,
@@ -66,9 +68,9 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_newly_infected_assault = {
 		randomize_indexes_n = 0,
@@ -93,7 +95,7 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			"loc_enemy_chaos_newly_infected_male_g__attack_17",
 			"loc_enemy_chaos_newly_infected_male_g__attack_18",
 			"loc_enemy_chaos_newly_infected_male_g__attack_19",
-			"loc_enemy_chaos_newly_infected_male_g__attack_20"
+			"loc_enemy_chaos_newly_infected_male_g__attack_20",
 		},
 		sound_events_duration = {
 			4.103125,
@@ -115,7 +117,7 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			2.365583,
 			3.445708,
 			2.826708,
-			3.798917
+			3.798917,
 		},
 		sound_event_weights = {
 			0.05,
@@ -137,9 +139,9 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_newly_infected_melee_idle = {
 		randomize_indexes_n = 0,
@@ -164,7 +166,7 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			"loc_enemy_chaos_newly_infected_male_g__combat_idle_17",
 			"loc_enemy_chaos_newly_infected_male_g__combat_idle_18",
 			"loc_enemy_chaos_newly_infected_male_g__combat_idle_19",
-			"loc_enemy_chaos_newly_infected_male_g__combat_idle_20"
+			"loc_enemy_chaos_newly_infected_male_g__combat_idle_20",
 		},
 		sound_events_duration = {
 			2.551458,
@@ -186,7 +188,7 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			3.310167,
 			5.654313,
 			4.586688,
-			0.956833
+			0.956833,
 		},
 		sound_event_weights = {
 			0.05,
@@ -208,10 +210,10 @@ local enemy_vo_enemy_chaos_newly_infected_male_g = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_chaos_newly_infected_male_g", enemy_vo_enemy_chaos_newly_infected_male_g)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/character_state_orientation/ledge_hanging_player_orientation.lua
+
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
 local Fov = require("scripts/utilities/camera/fov")
@@ -10,6 +12,7 @@ LedgeHangingPlayerOrientation.init = function (self, player, orientation)
 	LedgeHangingPlayerOrientation.super.init(self, player, orientation)
 
 	local settings = PlayerOrientationSettings.default
+
 	self._mouse_scale = settings.mouse_scale
 	self._min_pitch = settings.min_pitch
 	self._max_pitch = settings.max_pitch
@@ -44,6 +47,7 @@ LedgeHangingPlayerOrientation._switch_to_absolute_orientation = function (self)
 	local parent_unit = self._parent_unit
 	local relative_orientation_quaternion = self._relative_orientation:unbox()
 	local absolute_orientation = PlayerMovement.calculate_absolute_rotation(parent_unit, relative_orientation_quaternion)
+
 	self._orientation.yaw = Quaternion.yaw(absolute_orientation)
 	self._orientation.pitch = Quaternion.pitch(absolute_orientation)
 	self._orientation.roll = Quaternion.roll(absolute_orientation)
@@ -52,6 +56,7 @@ end
 
 LedgeHangingPlayerOrientation._switch_to_relative_orientation = function (self, parent_unit)
 	self._parent_unit = parent_unit
+
 	local absolute_orientation_quaternion = Quaternion.from_yaw_pitch_roll(self._orientation.yaw, self._orientation.pitch, self._orientation.roll)
 	local relative_rotation = PlayerMovement.calculate_relative_rotation(parent_unit, absolute_orientation_quaternion)
 
@@ -77,7 +82,7 @@ LedgeHangingPlayerOrientation.pre_update = function (self, main_t, main_dt, inpu
 
 	local look_delta = Orientation.look_delta(main_dt, input, sensitivity, mouse_scale, look_delta_context)
 	local relative_orientation_quaternion = self._relative_orientation:unbox()
-	local absolute_orientation = nil
+	local absolute_orientation
 
 	if parent_unit then
 		absolute_orientation = PlayerMovement.calculate_absolute_rotation(parent_unit, relative_orientation_quaternion)
@@ -88,10 +93,12 @@ LedgeHangingPlayerOrientation.pre_update = function (self, main_t, main_dt, inpu
 	local absolute_yaw = Quaternion.yaw(absolute_orientation)
 	local absolute_pitch = Quaternion.pitch(absolute_orientation)
 	local absolute_roll = Quaternion.roll(absolute_orientation)
+
 	absolute_yaw = (absolute_yaw - look_delta.x) % PI_2
 	absolute_pitch = math.clamp((absolute_pitch + PI) % PI_2 - PI + look_delta.y, min_pitch, max_pitch) % PI_2
+
 	local new_absolute_orientation = Quaternion.from_yaw_pitch_roll(absolute_yaw, absolute_pitch, absolute_roll)
-	local new_relative_rotation = nil
+	local new_relative_rotation
 
 	if parent_unit then
 		new_relative_rotation = PlayerMovement.calculate_relative_rotation(parent_unit, new_absolute_orientation)

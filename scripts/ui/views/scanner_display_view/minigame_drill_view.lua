@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/minigame_drill_view.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local ScannerDisplayViewDrillSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_drill_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -78,14 +80,14 @@ MinigameDrillView.draw_widgets = function (self, dt, t, input_service, ui_render
 				255,
 				0,
 				255,
-				0
+				0,
 			}
 		else
 			widget.style.highlight.color = {
 				255,
 				0,
 				64,
-				0
+				0,
 			}
 		end
 
@@ -104,19 +106,19 @@ MinigameDrillView._create_stage_widgets = function (self)
 		local spacing = ScannerDisplayViewDrillSettings.stage_spacing
 		local pass_definitions = {
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "highlight",
 				pass_type = "texture",
+				style_id = "highlight",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					hdr = true,
 					color = {
 						255,
 						0,
 						255,
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		}
 		local stage_widgets = {}
 
@@ -124,8 +126,11 @@ MinigameDrillView._create_stage_widgets = function (self)
 			local widget_name = "stage_0" .. tostring(i)
 			local widget_definition = UIWidget.create_definition(pass_definitions, scenegraph_id, nil, widget_size)
 			local widget = UIWidget.init(widget_name, widget_definition)
+
 			stage_widgets[#stage_widgets + 1] = widget
+
 			local offset = widget.offset
+
 			offset[1] = starting_offset_x + (widget_size[1] + spacing) * (i - 1)
 			offset[2] = starting_offset_y
 			offset[3] = 3
@@ -142,19 +147,19 @@ MinigameDrillView._create_background_widgets = function (self)
 	local starting_offset_y = ScannerDisplayViewDrillSettings.board_starting_offset_y
 	local pass_definitions = {
 		{
-			value = "content/ui/materials/backgrounds/scanner/scanner_drill_wireframe_small",
-			style_id = "highlight",
 			pass_type = "texture",
+			style_id = "highlight",
+			value = "content/ui/materials/backgrounds/scanner/scanner_drill_wireframe_small",
 			style = {
 				hdr = true,
 				color = {
 					255,
 					0,
 					255,
-					0
-				}
-			}
-		}
+					0,
+				},
+			},
+		},
 	}
 	local background = {}
 
@@ -162,8 +167,11 @@ MinigameDrillView._create_background_widgets = function (self)
 		local widget_name = "background_0" .. tostring(i)
 		local widget_definition = UIWidget.create_definition(pass_definitions, scenegraph_id, nil, widget_size)
 		local widget = UIWidget.init(widget_name, widget_definition)
+
 		background[#background + 1] = widget
+
 		local offset = widget.offset
+
 		offset[1] = starting_offset_x - widget_size[1] / 2
 		offset[2] = starting_offset_y - widget_size[2] / 2
 		offset[3] = 1
@@ -194,19 +202,19 @@ MinigameDrillView._create_target_widgets = function (self)
 			local starting_offset_y = ScannerDisplayViewDrillSettings.board_starting_offset_y
 			local pass_definitions = {
 				{
-					value = "content/ui/materials/backgrounds/scanner/scanner_drill_circle_empty",
-					style_id = "highlight",
 					pass_type = "texture",
+					style_id = "highlight",
+					value = "content/ui/materials/backgrounds/scanner/scanner_drill_circle_empty",
 					style = {
 						hdr = true,
 						color = {
 							255,
 							0,
 							255,
-							0
-						}
-					}
-				}
+							0,
+						},
+					},
+				},
 			}
 			local stage_widgets = {}
 
@@ -215,8 +223,11 @@ MinigameDrillView._create_target_widgets = function (self)
 				local widget_name = string.format("target_%s-%s", stage, target_index)
 				local widget_definition = UIWidget.create_definition(pass_definitions, scenegraph_id, nil, widget_size)
 				local widget = UIWidget.init(widget_name, widget_definition)
+
 				stage_widgets[target_index] = widget
+
 				local offset = widget.offset
+
 				offset[1] = starting_offset_x + target.x * ScannerDisplayViewDrillSettings.board_width - widget_size[1] / 2
 				offset[2] = starting_offset_y + target.y * ScannerDisplayViewDrillSettings.board_height - widget_size[2] / 2
 				offset[3] = 4
@@ -231,7 +242,7 @@ end
 
 local NO_TARGET = {
 	x = 0,
-	y = 0
+	y = 0,
 }
 
 MinigameDrillView._update_background = function (self, widgets_by_name, minigame)
@@ -254,20 +265,23 @@ MinigameDrillView._update_background = function (self, widgets_by_name, minigame
 
 	if stage > 2 then
 		local s = stage - 2
+
 		previous_pos = targets[s][correct_targets[s]]
 	end
 
 	if stage > 1 then
 		local s = stage - 1
+
 		current_pos = targets[s][correct_targets[s]]
 	end
 
-	local x_pos, y_pos = nil
+	local x_pos, y_pos
 
 	if in_transition then
 		local t_gameplay = Managers.time:time("gameplay")
 		local transition_percentage = minigame:transition_percentage(t_gameplay)
 		local move_percentage = math.clamp(transition_percentage * 2, 0, 1)
+
 		x_pos = math.lerp(previous_pos.x, current_pos.x, move_percentage)
 		y_pos = math.lerp(previous_pos.y, current_pos.y, move_percentage)
 		scale_percentage = math.clamp(transition_percentage * 2 - 1, 0, 1)
@@ -278,12 +292,14 @@ MinigameDrillView._update_background = function (self, widgets_by_name, minigame
 
 	x_pos = starting_offset_x + x_pos * ScannerDisplayViewDrillSettings.board_width
 	y_pos = starting_offset_y + y_pos * ScannerDisplayViewDrillSettings.board_height
+
 	local background_widgets = self._background_widgets
 
 	for i = 1, #background_widgets do
 		local widget = background_widgets[i]
 		local size = widget.content.size
 		local scale = (i - 1 + scale_percentage) / 3
+
 		size[1] = widget_size[1] * scale
 		size[2] = widget_size[2] * scale
 		widget.offset[1] = x_pos - size[1] / 2
@@ -317,25 +333,26 @@ MinigameDrillView._update_target = function (self, widgets_by_name, minigame, t)
 					255,
 					255,
 					255,
-					255
+					255,
 				}
 			else
 				widget.style.highlight.color = {
 					255,
 					255,
 					0,
-					0
+					0,
 				}
 			end
 		else
 			local target = positions[i]
 			local distance = math.sqrt((target_position.x - target.x) * (target_position.x - target.x) + (target_position.y - target.y) * (target_position.y - target.y))
 			local alpha = math.clamp(0.55 + math.cos(t + distance * 3) * 0.45, 0, 1)
+
 			widget.style.highlight.color = {
 				alpha * 255,
 				0,
 				255,
-				0
+				0,
 			}
 		end
 	end
@@ -356,6 +373,7 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 	local starting_offset_x = ScannerDisplayViewDrillSettings.board_starting_offset_x
 	local starting_offset_y = ScannerDisplayViewDrillSettings.board_starting_offset_y
 	local widget = widgets_by_name.search_fade
+
 	widget.style.frame.offset[1] = starting_offset_x + cursor_position.x * ScannerDisplayViewDrillSettings.board_width - widget.content.size[1] / 2
 	widget.style.frame.offset[2] = starting_offset_y + cursor_position.y * ScannerDisplayViewDrillSettings.board_height - widget.content.size[2] / 2
 	widget.style.frame.offset[3] = 3
@@ -365,7 +383,7 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 			0,
 			0,
 			0,
-			0
+			0,
 		}
 	elseif is_searching then
 		if search_percentage >= 1 then
@@ -374,23 +392,24 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 					255,
 					255,
 					255,
-					255
+					255,
 				}
 			else
 				widget.style.frame.color = {
 					255,
 					255,
 					0,
-					0
+					0,
 				}
 			end
 		else
 			local alpha = search_percentage * 255
+
 			widget.style.frame.color = {
 				alpha,
 				0,
 				255,
-				0
+				0,
 			}
 		end
 	else
@@ -398,7 +417,7 @@ MinigameDrillView._update_search = function (self, widgets_by_name, minigame)
 			0,
 			0,
 			0,
-			0
+			0,
 		}
 	end
 end
@@ -418,6 +437,7 @@ MinigameDrillView._update_cursor = function (self, widgets_by_name, minigame)
 	local starting_offset_x = ScannerDisplayViewDrillSettings.board_starting_offset_x
 	local starting_offset_y = ScannerDisplayViewDrillSettings.board_starting_offset_y
 	local widget = widgets_by_name.cursor
+
 	widget.style.frame.offset[1] = starting_offset_x + cursor_position.x * ScannerDisplayViewDrillSettings.board_width - widget.content.size[1] / 2
 	widget.style.frame.offset[2] = starting_offset_y + cursor_position.y * ScannerDisplayViewDrillSettings.board_height - widget.content.size[2] / 2
 	widget.style.frame.offset[3] = 5
@@ -427,28 +447,28 @@ MinigameDrillView._update_cursor = function (self, widgets_by_name, minigame)
 			0,
 			0,
 			0,
-			0
+			0,
 		}
 	elseif on_target and search_percentage >= 1 then
 		widget.style.frame.color = {
 			255,
 			255,
 			255,
-			150
+			150,
 		}
 	elseif selected_index then
 		widget.style.frame.color = {
 			255,
 			255,
 			165,
-			0
+			0,
 		}
 	else
 		widget.style.frame.color = {
 			128,
 			255,
 			165,
-			0
+			0,
 		}
 	end
 end

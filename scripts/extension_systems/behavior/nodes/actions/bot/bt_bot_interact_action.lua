@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bot/bt_bot_interact_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -7,12 +9,15 @@ local try_again_time = 3
 BtBotInteractAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	local interaction_unit = behavior_component.interaction_unit
+
 	behavior_component.current_interaction_unit = interaction_unit
 	scratchpad.behavior_component = behavior_component
+
 	local interaction_type = action_data and action_data.interaction_type
 
 	if interaction_type == nil then
 		local interactee_extension = ScriptUnit.extension(interaction_unit, "interactee_system")
+
 		interaction_type = interactee_extension:interaction_type()
 	end
 
@@ -21,10 +26,10 @@ BtBotInteractAction.enter = function (self, unit, breed, blackboard, scratchpad,
 	interactor_extension:set_bot_interaction_unit(interaction_unit, nil, interaction_type)
 
 	scratchpad.interactor_extension = interactor_extension
+
 	local input_extension = ScriptUnit.extension(unit, "input_system")
 	local bot_unit_input = input_extension:bot_unit_input()
-	local soft_aiming = true
-	local use_rotation = false
+	local soft_aiming, use_rotation = true, false
 
 	bot_unit_input:set_aiming(true, soft_aiming, use_rotation)
 
@@ -40,7 +45,9 @@ end
 
 BtBotInteractAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.current_interaction_unit = nil
+
 	local interactor_extension = scratchpad.interactor_extension
 
 	interactor_extension:set_bot_interaction_unit(nil, nil, nil)
@@ -59,7 +66,7 @@ BtBotInteractAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	end
 
 	local bot_unit_input = scratchpad.bot_unit_input
-	local reset = self._reset_t < t
+	local reset = t > self._reset_t
 
 	if reset then
 		bot_unit_input:interact(true)

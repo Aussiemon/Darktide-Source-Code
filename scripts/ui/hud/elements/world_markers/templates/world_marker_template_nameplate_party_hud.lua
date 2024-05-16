@@ -1,35 +1,38 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_party_hud.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local template = {}
 local size = {
 	400,
-	20
+	20,
 }
+
 template.size = size
 template.name = "nameplate_party_hud"
 template.unit_node = "j_head"
 template.position_offset = {
 	0,
 	0,
-	0.4
+	0.4,
 }
 template.check_line_of_sight = false
 template.max_distance = 100
 template.screen_clamp = false
 template.scale_settings = {
-	scale_to = 1,
-	scale_from = 0.8,
 	distance_max = 20,
-	distance_min = 10
+	distance_min = 10,
+	scale_from = 0.8,
+	scale_to = 1,
 }
 template.fade_settings = {
-	fade_to = 1,
-	fade_from = 0,
 	default_fade = 1,
+	fade_from = 0,
+	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp
+	easing_function = math.ease_exp,
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -40,28 +43,28 @@ template.create_widget_defintion = function (template, scenegraph_id)
 
 	return UIWidget.create_definition({
 		{
-			style_id = "header_text",
 			pass_type = "text",
-			value_id = "header_text",
+			style_id = "header_text",
 			value = "<header_text>",
+			value_id = "header_text",
 			style = {
 				horizontal_alignment = "center",
-				text_vertical_alignment = "center",
 				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
 				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					2
+					2,
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
 				default_font_size = header_font_settings.font_size,
 				text_color = header_font_color,
 				default_text_color = header_font_color,
-				size = size
-			}
-		}
+				size = size,
+			},
+		},
 	}, scenegraph_id)
 end
 
@@ -106,7 +109,9 @@ template.on_enter = function (widget, marker)
 	local archetype = profile and profile.archetype
 	local string_symbol = archetype and archetype.string_symbol or ""
 	local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
+
 	content.header_text = text
+
 	local force_update = true
 
 	cb_event_player_profile_updated(nil, nil, nil, nil, force_update)
@@ -120,6 +125,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local scale = marker.scale
 		local header_text_id = "header_text"
 		local header_style = style[header_text_id]
+
 		header_style.font_size = header_style.default_font_size * scale
 	end
 end

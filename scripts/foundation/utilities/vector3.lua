@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/vector3.lua
+
 local Vector3 = Vector3
 local Vector3_to_elements = Vector3.to_elements
 

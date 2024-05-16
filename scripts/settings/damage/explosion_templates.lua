@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/explosion_templates.lua
+
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
 local extract_weapon_tweaks = WeaponTweaks.extract_weapon_tweaks
 local explosion_templates = {}

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/minion_shield.lua
+
 local MinionShield = {}
 
 MinionShield.init_block_timings = function (scratchpad, action_data, anim_event, t)
@@ -8,6 +10,7 @@ MinionShield.init_block_timings = function (scratchpad, action_data, anim_event,
 	end
 
 	local enable_shield_block_timing = action_data.enable_shield_block_timing and action_data.enable_shield_block_timing[anim_event]
+
 	scratchpad.disable_shield_block_t = t + disable_shield_block_timing
 	scratchpad.enable_shield_block_t = t + enable_shield_block_timing
 end

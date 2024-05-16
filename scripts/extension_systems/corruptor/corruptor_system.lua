@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/corruptor/corruptor_system.lua
+
 require("scripts/extension_systems/corruptor/corruptor_extension")
 
 local CorruptorSystem = class("CorruptorSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_set_corruptor_eye_active",
-	"rpc_set_corruptor_eye_hidden"
+	"rpc_set_corruptor_eye_hidden",
 }
 
 CorruptorSystem.init = function (self, context, ...)

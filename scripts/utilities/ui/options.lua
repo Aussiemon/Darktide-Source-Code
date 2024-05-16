@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/ui/options.lua
+
 local OptionsUtilities = {}
 
 OptionsUtilities.create_percent_slider_template = function (params)
@@ -11,11 +13,13 @@ OptionsUtilities.create_percent_slider_template = function (params)
 	local value_get_function = params.value_get_function or default_value_function
 	local value_change_function = params.on_value_changed_function or default_value_function
 	local format_value_function = params.format_value_function
+
 	format_value_function = format_value_function or function (percent_value)
 		local result = string.format("%d %%", percent_value)
 
 		return result
 	end
+
 	local slider_template = {
 		widget_type = "percent_slider",
 		display_name = params.display_name,
@@ -28,7 +32,7 @@ OptionsUtilities.create_percent_slider_template = function (params)
 		normalized_step_size = normalized_step_size,
 		apply_on_drag = params.apply_on_drag,
 		tooltip_text = params.tooltip_text,
-		id = params.id
+		id = params.id,
 	}
 
 	return slider_template
@@ -44,6 +48,7 @@ OptionsUtilities.create_value_slider_template = function (params)
 	local normalized_step_size = step_size / value_range
 	local explode_function = params.explode_function or function (normalized_value)
 		local exploded_value = min_value + normalized_value * value_range
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -56,12 +61,14 @@ OptionsUtilities.create_value_slider_template = function (params)
 	local value_get_function = params.value_get_function or default_value_function
 	local value_change_function = params.on_value_changed_function or default_value_function
 	local format_value_function = params.format_value_function
+
 	format_value_function = format_value_function or function (value)
 		local number_format = string.format("%%.%sf", num_decimals)
 		local result = string.format(number_format, value)
 
 		return result
 	end
+
 	local slider_template = {
 		widget_type = "value_slider",
 		min_value = min_value,
@@ -78,7 +85,7 @@ OptionsUtilities.create_value_slider_template = function (params)
 		normalized_step_size = normalized_step_size,
 		apply_on_drag = params.apply_on_drag,
 		tooltip_text = params.tooltip_text,
-		id = params.id
+		id = params.id,
 	}
 
 	return slider_template
@@ -89,7 +96,7 @@ OptionsUtilities.keybind_value_to_string = function (value)
 		return
 	end
 
-	local out = nil
+	local out
 
 	if type(value) == "table" then
 		for n, i in ipairs(value) do

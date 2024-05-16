@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_daemonhost_a.lua
+
 local enemy_vo_enemy_daemonhost_a = {
 	chaos_daemonhost_aggro = {
 		randomize_indexes_n = 0,
@@ -7,23 +9,23 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__aggro_02",
 			"loc_enemy_daemonhost_a__aggro_03",
 			"loc_enemy_daemonhost_a__aggro_04",
-			"loc_enemy_daemonhost_a__aggro_05"
+			"loc_enemy_daemonhost_a__aggro_05",
 		},
 		sound_events_duration = {
 			4.833333,
 			4.366667,
 			4.333333,
 			5.4,
-			5.8
+			5.8,
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2
+			0.2,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_daemonhost_death_long = {
 		randomize_indexes_n = 0,
@@ -38,7 +40,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__long_death_07",
 			"loc_enemy_daemonhost_a__long_death_08",
 			"loc_enemy_daemonhost_a__long_death_09",
-			"loc_enemy_daemonhost_a__long_death_10"
+			"loc_enemy_daemonhost_a__long_death_10",
 		},
 		sound_events_duration = {
 			4,
@@ -50,7 +52,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			4.266667,
 			4.033333,
 			4.3,
-			5.366667
+			5.366667,
 		},
 		sound_event_weights = {
 			0.1,
@@ -62,9 +64,9 @@ local enemy_vo_enemy_daemonhost_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_daemonhost_mantra_high = {
 		randomize_indexes_n = 0,
@@ -75,7 +77,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__mantra_3_03",
 			"loc_enemy_daemonhost_a__mantra_3_04",
 			"loc_enemy_daemonhost_a__mantra_3_05",
-			"loc_enemy_daemonhost_a__mantra_3_06"
+			"loc_enemy_daemonhost_a__mantra_3_06",
 		},
 		sound_events_duration = {
 			5.366667,
@@ -83,7 +85,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			4.766667,
 			5.166667,
 			4.4,
-			5.433333
+			5.433333,
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -91,9 +93,9 @@ local enemy_vo_enemy_daemonhost_a = {
 			0.1666667,
 			0.1666667,
 			0.1666667,
-			0.1666667
+			0.1666667,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_daemonhost_mantra_low = {
 		randomize_indexes_n = 0,
@@ -106,7 +108,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__mantra_1_10",
 			"loc_enemy_daemonhost_a__mantra_1_11",
 			"loc_enemy_daemonhost_a__mantra_1_12",
-			"loc_enemy_daemonhost_a__mantra_1_13"
+			"loc_enemy_daemonhost_a__mantra_1_13",
 		},
 		sound_events_duration = {
 			4.3,
@@ -116,7 +118,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			4.666646,
 			3.366625,
 			4.899979,
-			4.199979
+			4.199979,
 		},
 		sound_event_weights = {
 			0.125,
@@ -126,9 +128,9 @@ local enemy_vo_enemy_daemonhost_a = {
 			0.125,
 			0.125,
 			0.125,
-			0.125
+			0.125,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_daemonhost_mantra_medium = {
 		randomize_indexes_n = 0,
@@ -143,7 +145,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__mantra_2_07",
 			"loc_enemy_daemonhost_a__mantra_2_08",
 			"loc_enemy_daemonhost_a__mantra_2_09",
-			"loc_enemy_daemonhost_a__mantra_2_11"
+			"loc_enemy_daemonhost_a__mantra_2_11",
 		},
 		sound_events_duration = {
 			5.5,
@@ -155,7 +157,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			5.333333,
 			5.733333,
 			4.888854,
-			5.533333
+			5.533333,
 		},
 		sound_event_weights = {
 			0.1,
@@ -167,9 +169,9 @@ local enemy_vo_enemy_daemonhost_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	chaos_daemonhost_warp_grab = {
 		randomize_indexes_n = 0,
@@ -184,7 +186,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__finisher_attack_07",
 			"loc_enemy_daemonhost_a__finisher_attack_08",
 			"loc_enemy_daemonhost_a__finisher_attack_09",
-			"loc_enemy_daemonhost_a__finisher_attack_10"
+			"loc_enemy_daemonhost_a__finisher_attack_10",
 		},
 		sound_events_duration = {
 			5.066667,
@@ -196,7 +198,7 @@ local enemy_vo_enemy_daemonhost_a = {
 			4.4,
 			4.2,
 			4.1,
-			4.366667
+			4.366667,
 		},
 		sound_event_weights = {
 			0.1,
@@ -208,10 +210,10 @@ local enemy_vo_enemy_daemonhost_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_daemonhost_a", enemy_vo_enemy_daemonhost_a)

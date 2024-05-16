@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/presence/presence_manager_dummy.lua
+
 local PresenceManagerDummy = class("PresenceManagerDummy")
 local Promise = require("scripts/foundation/utilities/promise")
 local PresenceEntryImmaterium = require("scripts/managers/presence/presence_entry_immaterium")

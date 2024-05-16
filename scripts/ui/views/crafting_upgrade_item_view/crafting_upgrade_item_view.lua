@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view.lua
+
 local CraftingUpgradeItemViewDefinitions = require("scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
@@ -16,7 +18,7 @@ CraftingUpgradeItemView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._recipe = CraftingSettings.recipes.upgrade_item
 	self._ingredients = {
-		item = self._item
+		item = self._item,
 	}
 end
 
@@ -53,7 +55,7 @@ end
 CraftingUpgradeItemView._present_upgrade_result = function (self, item)
 	local result_data = {
 		type = "item",
-		item = item
+		item = item,
 	}
 
 	self:_setup_result_overlay(result_data)
@@ -82,7 +84,9 @@ CraftingUpgradeItemView._setup_result_overlay = function (self, result_data)
 
 	local reference_name = "result_overlay"
 	local layer = 40
+
 	self._result_overlay = self:_add_element(ViewElementItemResultOverlay, reference_name, layer)
+
 	local result_title_text_localized = Utf8.upper(Localize("loc_crafting_upgrade_reward_popup_title"))
 
 	self._result_overlay:set_title_text(result_title_text_localized)
@@ -132,7 +136,7 @@ end
 local _device_list = {
 	Keyboard,
 	Mouse,
-	Pad1
+	Pad1,
 }
 
 CraftingUpgradeItemView._handle_input = function (self, input_service)
@@ -244,11 +248,14 @@ CraftingUpgradeItemView._perform_crafting = function (self)
 	self._crafting_recipe:set_continue_button_force_disabled(true)
 
 	local craft_promise = self._parent:craft(self._recipe, self._ingredients)
+
 	self._craft_promise = craft_promise
 
 	craft_promise:next(function (results)
 		self._craft_promise = nil
+
 		local new_item = results.items[1]
+
 		self._item = new_item
 		self._ingredients.item = new_item
 		self._result_item = new_item

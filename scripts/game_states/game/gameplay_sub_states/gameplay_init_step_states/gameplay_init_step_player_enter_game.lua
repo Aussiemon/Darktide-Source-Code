@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_player_enter_game.lua
+
 local BotGameplay = require("scripts/managers/player/player_game_states/bot_gameplay")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepMusic = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_music")
@@ -11,7 +13,9 @@ end
 
 GameplayInitStepPlayerEnterGame.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local gameplay_state = parent:gameplay_state()
 	local themes = shared_state.themes
 	local is_server = shared_state.is_server
@@ -38,7 +42,7 @@ GameplayInitStepPlayerEnterGame.update = function (self, main_dt, main_t)
 	end
 
 	local next_step_params = {
-		shared_state = self._shared_state
+		shared_state = self._shared_state,
 	}
 
 	return GameplayInitStepMusic, next_step_params
@@ -52,7 +56,7 @@ GameplayInitStepPlayerEnterGame._player_state_enter = function (self, world, phy
 	local player_game_state_mapping = {
 		HumanPlayer = HumanGameplay,
 		BotPlayer = BotGameplay,
-		RemotePlayer = RemotePlayerGameplay
+		RemotePlayer = RemotePlayerGameplay,
 	}
 	local game_state_context = {
 		is_server = is_server,
@@ -61,7 +65,7 @@ GameplayInitStepPlayerEnterGame._player_state_enter = function (self, world, phy
 		physics_world = physics_world,
 		level = level,
 		themes = themes,
-		mission_name = mission_name
+		mission_name = mission_name,
 	}
 
 	Managers.player:init_time_slice_on_game_state_enter(gameplay_state, player_game_state_mapping, game_state_context)

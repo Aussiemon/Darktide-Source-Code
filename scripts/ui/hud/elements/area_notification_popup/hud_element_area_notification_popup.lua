@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/area_notification_popup/hud_element_area_notification_popup.lua
+
 local Definitions = require("scripts/ui/hud/elements/area_notification_popup/hud_element_area_notification_popup_definitions")
 local HudElementAreaNotificationPopupSettings = require("scripts/ui/hud/elements/area_notification_popup/hud_element_area_notification_popup_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -41,7 +43,7 @@ HudElementAreaNotificationPopup.event_player_set_new_location = function (self, 
 	if self._popup_animation_id then
 		table.insert(self._area_notificactions_queue, 1, {
 			full_text = full_text,
-			short_text = short_text
+			short_text = short_text,
 		})
 	else
 		self:_present_new_area(full_text, short_text)
@@ -52,9 +54,12 @@ HudElementAreaNotificationPopup._present_new_area = function (self, full_text_un
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.area_popup
 	local content = widget.content
+
 	content.title_text = self:_localize(full_text_unlocalized)
 	content.description_text = self:_localize(short_text_unlocalized)
+
 	local popup_animation_id = self:_start_animation("popup_enter", widgets_by_name)
+
 	self._popup_animation_id = popup_animation_id
 
 	self:_play_sound(UISoundEvents.area_notification_popup_enter)

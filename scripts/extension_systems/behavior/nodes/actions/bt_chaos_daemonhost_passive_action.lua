@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_chaos_daemonhost_passive_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -16,24 +18,33 @@ local BtChaosDaemonhostPassiveAction = class("BtChaosDaemonhostPassiveAction", "
 BtChaosDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
+
 	scratchpad.side = side
+
 	local spawn_component = blackboard.spawn
+
 	scratchpad.spawn_component = spawn_component
 	scratchpad.suppression_component = Blackboard.write_component(blackboard, "suppression")
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 	scratchpad.physics_world = spawn_component.physics_world
+
 	local aim_component = Blackboard.write_component(blackboard, "aim")
+
 	scratchpad.aim_component = aim_component
 	aim_component.controlled_aiming = true
+
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.animation_extension = animation_extension
 	scratchpad.buff_extension = buff_extension
 	scratchpad.health_extension = ScriptUnit.extension(unit, "health_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local current_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = current_rotation_speed
 	scratchpad.next_flashed_fx_t = 0
 	scratchpad.next_anger_t = 0
@@ -59,8 +70,10 @@ BtChaosDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, 
 	local nav_cost_map_name = action_data.nav_cost_map_name
 	local nav_cost_map_id = Managers.state.nav_mesh:nav_cost_map_id(nav_cost_map_name)
 	local nav_cost_map_volume_id = Managers.state.nav_mesh:add_nav_cost_map_sphere_volume(POSITION_LOOKUP[unit], radius, cost, nav_cost_map_id)
+
 	scratchpad.nav_cost_map_volume_id = nav_cost_map_volume_id
 	scratchpad.nav_cost_map_id = nav_cost_map_id
+
 	local on_enter_buff_names = action_data.on_enter_buff_names
 	local num_on_enter_buff_names = #on_enter_buff_names
 	local on_enter_buffs = Script.new_array(num_on_enter_buff_names)
@@ -68,6 +81,7 @@ BtChaosDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, 
 	for i = 1, num_on_enter_buff_names do
 		local buff_name = on_enter_buff_names[i]
 		local _, buff_id = buff_extension:add_externally_controlled_buff(buff_name, t)
+
 		on_enter_buffs[i] = buff_id
 	end
 
@@ -83,6 +97,7 @@ end
 
 BtChaosDaemonhostPassiveAction.init_values = function (self, blackboard, action_data, node_data)
 	local statistics_component = Blackboard.write_component(blackboard, "statistics")
+
 	statistics_component.player_deaths = 0
 end
 
@@ -109,8 +124,7 @@ BtChaosDaemonhostPassiveAction.leave = function (self, unit, breed, blackboard, 
 		MinionPerception.attempt_aggro(perception_extension)
 		self:_switch_stage(unit, breed, scratchpad, action_data, STAGES.aggroed)
 
-		local buff_extension = scratchpad.buff_extension
-		local on_enter_buffs = scratchpad.on_enter_buffs
+		local buff_extension, on_enter_buffs = scratchpad.buff_extension, scratchpad.on_enter_buffs
 
 		for i = 1, #on_enter_buffs do
 			local buff_id = on_enter_buffs[i]
@@ -146,6 +160,7 @@ BtChaosDaemonhostPassiveAction.leave = function (self, unit, breed, blackboard, 
 	Managers.state.pacing:set_minion_listening_for_player_deaths(unit, statistics_component, true)
 
 	local aim_component = scratchpad.aim_component
+
 	aim_component.controlled_aiming = true
 end
 
@@ -154,7 +169,7 @@ BtChaosDaemonhostPassiveAction._switch_stage = function (self, unit, breed, scra
 	local stage_settings = action_data.stage_settings[stage]
 
 	if stage_settings then
-		local anim_events = nil
+		local anim_events
 
 		if previous_stage == STAGES.passive then
 			anim_events = action_data.exit_passive.on_finished_anim_events
@@ -164,7 +179,7 @@ BtChaosDaemonhostPassiveAction._switch_stage = function (self, unit, breed, scra
 
 		if anim_events then
 			local animation_extension = scratchpad.animation_extension
-			local anim_event = nil
+			local anim_event
 
 			if anim_events.damaged ~= nil then
 				local health_extension = scratchpad.health_extension
@@ -186,6 +201,7 @@ BtChaosDaemonhostPassiveAction._switch_stage = function (self, unit, breed, scra
 
 			if durations then
 				local duration = durations[anim_event]
+
 				scratchpad.duration = t + duration
 			end
 		end
@@ -262,8 +278,7 @@ BtChaosDaemonhostPassiveAction._switch_stage = function (self, unit, breed, scra
 	end
 
 	local spawn_component = scratchpad.spawn_component
-	local game_session = spawn_component.game_session
-	local game_object_id = spawn_component.game_object_id
+	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "stage", stage)
 
@@ -286,6 +301,7 @@ BtChaosDaemonhostPassiveAction._enter_flashed = function (self, unit, scratchpad
 		fx_system:trigger_wwise_event(sfx_event, nil, unit)
 
 		local fx_trigger_delay = flashlight_settings.fx_trigger_delay
+
 		scratchpad.next_flashed_fx_t = t + fx_trigger_delay
 	end
 
@@ -315,7 +331,7 @@ BtChaosDaemonhostPassiveAction._update_flashlights = function (self, unit, posit
 	local any_flashlights_applied = false
 	local perception_extension = scratchpad.perception_extension
 	local num_enemies = #valid_enemy_player_units
-	local closest_flashlight_target = nil
+	local closest_flashlight_target
 	local closest_distance = math.huge
 
 	for i = 1, num_enemies do
@@ -350,6 +366,7 @@ BtChaosDaemonhostPassiveAction._update_flashlights = function (self, unit, posit
 	end
 
 	scratchpad.closest_flashlight_target = closest_flashlight_target
+
 	local is_flashed = scratchpad.is_flashed
 
 	if any_flashlights_applied and not is_flashed then
@@ -376,7 +393,7 @@ BtChaosDaemonhostPassiveAction._update_distances = function (self, unit, positio
 	local anger_flat = 0
 	local anger_tick = 0
 	local num_enemies = #valid_enemy_player_units
-	local closest_distance_index, closest_target_unit, closest_is_sprinting = nil
+	local closest_distance_index, closest_target_unit, closest_is_sprinting
 	local closest_distance = math.huge
 
 	for i = 1, num_enemies do
@@ -384,7 +401,7 @@ BtChaosDaemonhostPassiveAction._update_distances = function (self, unit, positio
 		local has_line_of_sight = perception_extension:has_line_of_sight(target_unit)
 
 		if has_line_of_sight then
-			local individual_closest_index = nil
+			local individual_closest_index
 			local target_position = POSITION_LOOKUP[target_unit]
 			local distance_to_target_sq = Vector3.distance_squared(position, target_position)
 
@@ -406,8 +423,10 @@ BtChaosDaemonhostPassiveAction._update_distances = function (self, unit, positio
 			if distance_to_target_sq < closest_distance then
 				closest_target_unit = target_unit
 				closest_distance = distance_to_target_sq
+
 				local unit_data_extension = ScriptUnit.extension(closest_target_unit, "unit_data_system")
 				local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
+
 				closest_is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 			end
 		end
@@ -415,6 +434,7 @@ BtChaosDaemonhostPassiveAction._update_distances = function (self, unit, positio
 
 	if closest_distance_index then
 		local closest_distance_entry = distances[closest_distance_index]
+
 		anger_flat = closest_distance_entry.flat or 0
 		anger_tick = closest_distance_entry.tick or 0
 
@@ -445,10 +465,13 @@ BtChaosDaemonhostPassiveAction._update_health = function (self, scratchpad, acti
 	local health_anger_settings = anger_settings.health
 	local missing_percent = health_anger_settings.missing_percent
 	local anger_max = health_anger_settings.max
+
 	scratchpad.current_health_percent = current_health_percent
+
 	local agitated_health_percent = scratchpad.agitated_health_percent
 	local lerp_health = (agitated_health_percent - current_health_percent) * 100 / missing_percent
 	local missing_health_anger = math.floor(math.clamp(lerp_health * anger_max, 0, anger_max))
+
 	anger_flat = anger_flat + missing_health_anger
 
 	return anger_flat, current_health_percent
@@ -463,10 +486,12 @@ BtChaosDaemonhostPassiveAction._update_suppression = function (self, scratchpad,
 	local anger_factor = suppression_anger_settings.factor
 	local anger_max = suppression_anger_settings.max
 	local suppression_anger = math.clamp(math.floor(suppress_value * anger_factor), 0, anger_max)
+
 	anger_flat = anger_flat + suppression_anger
 
 	if suppression_component.is_suppressed then
 		local anger_suppressed = suppression_anger_settings.suppressed
+
 		anger_flat = anger_flat + anger_suppressed
 	end
 
@@ -500,7 +525,9 @@ BtChaosDaemonhostPassiveAction._update = function (self, unit, breed, blackboard
 			scratchpad.animation_extension:anim_event(exit_passive_anim_event)
 
 			local duration = exit_passive_data.durations[exit_passive_anim_event]
+
 			scratchpad.exit_passive_t = t + duration
+
 			local player_vo_event = exit_passive_data.player_vo_event
 
 			if player_vo_event then
@@ -515,19 +542,26 @@ BtChaosDaemonhostPassiveAction._update = function (self, unit, breed, blackboard
 		if next_anger_t < t then
 			local decay_anger_settings = anger_settings.decay
 			local anger_decay = decay_anger_settings[stage]
+
 			anger_tick = distance_tick + flashlight_tick + anger_tick - anger_decay
 			scratchpad.next_anger_t = t + anger_settings.tick_interval
 		end
 
 		scratchpad.anger_tick = math.max(0, anger_tick)
+
 		local anger = math.max(0, math.max(anger_flat + anger_tick, anger_flat))
+
 		scratchpad.anger = anger
+
 		local wanted_stage = self:_get_stage(scratchpad, action_data)
 
 		if wanted_stage ~= stage then
 			local switch_stage_reason = self:_get_switch_stage_reason(scratchpad, distance_flat, health_flat, flashlight_flat, suppression_flat, distance_tick, flashlight_tick)
+
 			scratchpad.switch_reason = switch_stage_reason
+
 			local wanted_aggro_target = self:_get_wanted_aggro_target(unit, scratchpad, switch_stage_reason)
+
 			scratchpad.wanted_aggro_target = wanted_aggro_target
 
 			self:_switch_stage(unit, breed, scratchpad, action_data, wanted_stage, t)
@@ -565,6 +599,7 @@ BtChaosDaemonhostPassiveAction._check_flashlight = function (self, from, target_
 				local target_forward = Quaternion.forward(target_rotation)
 				local angle = Vector3.angle(direction, target_forward)
 				local is_flashed = angle < look_at_angle
+
 				is_flashed = is_flashed and perception_extension:has_line_of_sight(target_unit)
 
 				return is_flashed
@@ -611,7 +646,7 @@ BtChaosDaemonhostPassiveAction.run = function (self, unit, breed, blackboard, sc
 	local duration = scratchpad.duration
 
 	if duration then
-		if scratchpad.duration < t then
+		if t > scratchpad.duration then
 			return "done"
 		end
 	else
@@ -649,8 +684,7 @@ BtChaosDaemonhostPassiveAction._update_looping_vo = function (self, unit, breed,
 end
 
 BtChaosDaemonhostPassiveAction._get_switch_stage_reason = function (self, scratchpad, distance_flat, health_flat, flashlight_flat, suppression_flat, distance_tick, flashlight_tick)
-	local biggest_diff = 0
-	local switch_reason = "none"
+	local biggest_diff, switch_reason = 0, "none"
 	local old_flashlight_flat = scratchpad.old_flashlight_flat
 	local flashlight_flat_diff = flashlight_flat - old_flashlight_flat
 
@@ -699,18 +733,14 @@ BtChaosDaemonhostPassiveAction._get_switch_stage_reason = function (self, scratc
 	end
 
 	if switch_reason == "none" then
-		if distance_tick < flashlight_tick then
-			switch_reason = "flashlight"
-		else
-			switch_reason = "distance"
-		end
+		switch_reason = distance_tick < flashlight_tick and "flashlight" or "distance"
 	end
 
 	return switch_reason
 end
 
 BtChaosDaemonhostPassiveAction._get_wanted_aggro_target = function (self, unit, scratchpad, switch_reason)
-	local target_unit = nil
+	local target_unit
 
 	if switch_reason == "distance" then
 		target_unit = scratchpad.closest_target_unit
@@ -718,9 +748,11 @@ BtChaosDaemonhostPassiveAction._get_wanted_aggro_target = function (self, unit, 
 		target_unit = scratchpad.closest_flashlight_target
 	elseif switch_reason == "suppression" then
 		local suppression_extension = ScriptUnit.extension(unit, "suppression_system")
+
 		target_unit = suppression_extension:last_suppressing_unit()
 	elseif switch_reason == "health" then
 		local health_extension = ScriptUnit.extension(unit, "health_system")
+
 		target_unit = health_extension:last_damaging_unit()
 	end
 

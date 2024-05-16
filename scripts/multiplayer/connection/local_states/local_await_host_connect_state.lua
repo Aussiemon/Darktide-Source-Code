@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_await_host_connect_state.lua
+
 local RPCS = {
-	"rpc_check_connected_reply"
+	"rpc_check_connected_reply",
 }
 local LocalAwaitHostConnectState = class("LocalAwaitHostConnectState")
 
@@ -24,14 +26,16 @@ end
 
 LocalAwaitHostConnectState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
+
 	local state, reason = Network.channel_state(shared_state.channel_id)
 
 	if state == "disconnected" then
 		Log.info("LocalAwaitHostConnectState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason
+			engine_reason = reason,
 		}
 	end
 
@@ -39,11 +43,11 @@ LocalAwaitHostConnectState.update = function (self, dt)
 		return "connected"
 	end
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalAwaitHostConnectState", "Timeout waiting for rpc_check_connected_reply")
 
 		return "timeout", {
-			game_reason = "timeout"
+			game_reason = "timeout",
 		}
 	end
 end

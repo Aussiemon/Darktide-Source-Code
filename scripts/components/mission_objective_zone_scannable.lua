@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/mission_objective_zone_scannable.lua
+
 local MissionObjectiveZoneScannable = component("MissionObjectiveZoneScannable")
 
 MissionObjectiveZoneScannable.init = function (self, unit)
@@ -22,8 +24,8 @@ end
 
 MissionObjectiveZoneScannable.component_data = {
 	extensions = {
-		"MissionObjectiveZoneScannableExtension"
-	}
+		"MissionObjectiveZoneScannableExtension",
+	},
 }
 
 return MissionObjectiveZoneScannable

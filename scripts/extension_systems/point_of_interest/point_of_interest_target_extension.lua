@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/point_of_interest/point_of_interest_target_extension.lua
+
 local PointOfInterestSettings = require("scripts/settings/point_of_interest/point_of_interest_settings")
 local PointOfInterestTargetExtension = class("PointOfInterestTargetExtension")
 
@@ -5,6 +7,7 @@ PointOfInterestTargetExtension.init = function (self, extension_init_context, un
 	local tag = extension_init_data.tag or ""
 	local view_distance = extension_init_data.view_distance or PointOfInterestSettings.default_view_distance
 	local is_dynamic = extension_init_data.is_dynamic or false
+
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
 	self._view_distance_sq = view_distance
@@ -42,7 +45,7 @@ PointOfInterestTargetExtension.is_dynamic = function (self)
 end
 
 PointOfInterestTargetExtension.center_position = function (self)
-	local target_center = nil
+	local target_center
 	local node = self._unit_node
 	local unit = self._unit
 
@@ -50,6 +53,7 @@ PointOfInterestTargetExtension.center_position = function (self)
 		target_center = Unit.world_position(unit, node)
 	else
 		local target_center_matrix = Unit.box(unit)
+
 		target_center = Matrix4x4.translation(target_center_matrix)
 	end
 

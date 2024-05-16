@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/store.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
 local StoreFront = class("StoreFront")
@@ -55,6 +57,7 @@ end
 
 StoreFront._decorate_offer = function (self, offer, is_personal)
 	local store_front = self
+
 	offer.description.gear_id = offer.description.gearId
 
 	offer.is_personal = function (self)
@@ -66,19 +69,19 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 	end
 
 	offer.is_valid_at = function (self, now)
-		return (self.price.validFrom == nil or tonumber(self.price.validFrom) < now) and (self.price.validTo == nil or now < tonumber(self.price.validTo))
+		return (self.price.validFrom == nil or now > tonumber(self.price.validFrom)) and (self.price.validTo == nil or now < tonumber(self.price.validTo))
 	end
 
 	offer.reject = function (self)
 		local builder = BackendUtilities.url_builder():path("/store/storefront/"):path(store_front.data.name):path("/offers/"):path(self.offerId):query("accountId", store_front.account_id):query("characterId", store_front.character_id)
 
 		return Managers.backend:title_request(builder:to_string(), {
-			method = "DELETE"
+			method = "DELETE",
 		})
 	end
 
 	offer.make_purchase = function (self, wallet)
-		local offer_id, price_id = nil
+		local offer_id, price_id
 
 		if is_personal then
 			offer_id = offer.offerId
@@ -93,16 +96,17 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 			offerId = offer_id,
 			characterId = store_front.character_id,
 			latestTransactionId = wallet.lastTransactionId,
-			ownedSkus = offer.owned_skus
+			ownedSkus = offer.owned_skus,
 		}
 		local builder = BackendUtilities.url_builder():path("/store/"):path(store_front.account_id):path("/wallets/"):path(wallet.owner or store_front.wallet_owner):path("/purchases")
 
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "POST",
-			body = purchase_request
+			body = purchase_request,
 		}):next(function (purchase_result)
 			wallet.balance.amount = wallet.balance.amount - purchase_result.body.amount.amount
 			wallet.lastTransactionId = (wallet.lastTransactionId or 0) + 1
+
 			local result = purchase_result.body
 			local items = result.items
 
@@ -120,7 +124,7 @@ StoreFront.get_config = function (self, catalog)
 	return Managers.backend:title_request(self.data._links.config.href):next(function (data)
 		local config = data.body
 		local layout_ref = catalog.layoutRef
-		local layout_link = nil
+		local layout_link
 
 		if layout_ref then
 			layout_link = "/store/storefront/layouts/" .. layout_ref
@@ -149,13 +153,13 @@ end
 StoreFront.get_refund_cost = function (self, config, rerolls_this_week)
 	local reroll_config = config.temporaryGoodsConfig.rerolls
 
-	if reroll_config.rollLimit <= rerolls_this_week then
+	if rerolls_this_week >= reroll_config.rollLimit then
 		return nil
 	end
 
 	local cost = {
-		amount = reroll_config.cost.amount + reroll_config.costScalingFactor * rerolls_this_week * reroll_config.cost.amount,
-		type = reroll_config.cost.type
+		amount = reroll_config.cost.amount + reroll_config.costScalingFactor * (rerolls_this_week * reroll_config.cost.amount),
+		type = reroll_config.cost.type,
 	}
 
 	return cost
@@ -249,7 +253,7 @@ Store.get_premium_storefront = function (self, storefront, t)
 
 		return Promise.all(store:get_config(catalog), Managers.backend.interfaces.wallet:get_currency_configuration()):next(function (data)
 			local config, currencies = unpack(data)
-			local bundle_rules = nil
+			local bundle_rules
 
 			for i = 1, #currencies do
 				local currency = currencies[i]
@@ -271,9 +275,9 @@ Store.get_premium_storefront = function (self, storefront, t)
 				storefront = store,
 				catalog = {
 					valid_from = catalog_valid_from and tonumber(catalog_valid_from),
-					valid_to = catalog_valid_to and tonumber(catalog_valid_to)
+					valid_to = catalog_valid_to and tonumber(catalog_valid_to),
 				},
-				bundle_rules = bundle_rules
+				bundle_rules = bundle_rules,
 			})
 		end)
 	end)
@@ -301,6 +305,7 @@ Store._get_storefront = function (self, t, store_name, wallet_owner, character_i
 
 		return Managers.backend:title_request(builder:to_string()):next(function (data)
 			data.accountId = account.sub
+
 			local storefront = StoreFront:new(data.body, data.accountId, character_id, wallet_owner or data.accountId)
 
 			storefront:update_valid_offers(Managers.backend:get_server_time(t))

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/wield_info/wield_info_passives_templates.lua
+
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SLOT_DEVICE_NAME = "slot_device"
 local wield_info_passives_templates = {
@@ -6,12 +8,12 @@ local wield_info_passives_templates = {
 		input_descriptions = {
 			{
 				description = "loc_auspex_input_description_scan_wield_scanner",
-				input_action = "wield_5",
-				icon_width = 84,
-				icon_height = 84,
 				icon = "content/ui/materials/icons/pocketables/hud/auspex_scanner",
-				icon_color = Color.terminal_text_body(255, true)
-			}
+				icon_height = 84,
+				icon_width = 84,
+				input_action = "wield_5",
+				icon_color = Color.terminal_text_body(255, true),
+			},
 		},
 		validation_function = function (wielded_slot_id, item, current_action, current_action_name, player)
 			local player_unit = player.player_unit
@@ -43,8 +45,8 @@ local wield_info_passives_templates = {
 			end
 
 			return true
-		end
-	}
+		end,
+	},
 }
 
 return wield_info_passives_templates

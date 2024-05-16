@@ -1,70 +1,73 @@
+﻿-- chunkname: @scripts/managers/error/errors/eac_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local EAC_KICK_REASONS_LOOKUP = {
 	{
 		error_code = "1",
 		loc_message = "loc_eos_acccar_internalerror",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
 	},
 	{
 		error_code = "2",
 		loc_message = "loc_eos_acccar_invalidmessage",
-		error_level = ErrorManager.ERROR_LEVEL.error
+		error_level = ErrorManager.ERROR_LEVEL.error,
 	},
 	{
 		error_code = "3",
 		loc_message = "loc_eos_acccar_authenticationfailed",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
 	},
 	{
 		error_code = "4",
 		loc_message = "loc_eos_acccar_nullclient",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
 	},
 	{
 		error_code = "5",
 		loc_message = "loc_eos_acccar_heartbeattimeout",
-		error_level = ErrorManager.ERROR_LEVEL.error
+		error_level = ErrorManager.ERROR_LEVEL.error,
 	},
 	{
 		error_code = "6",
 		loc_message = "loc_eos_acccar_clientviolation",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
 	},
 	{
 		error_code = "7",
 		loc_message = "loc_eos_acccar_backendviolation",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
 	},
 	{
 		error_code = "8",
 		loc_message = "loc_eos_acccar_temporarycooldown",
-		error_level = ErrorManager.ERROR_LEVEL.error
+		error_level = ErrorManager.ERROR_LEVEL.error,
 	},
 	{
 		error_code = "9",
 		loc_message = "loc_eos_acccar_temporarybanned",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
 	},
 	{
 		error_code = "10",
 		loc_message = "loc_popup_description_eac_kick",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
 	},
 	{
 		error_code = "99",
 		loc_message = "loc_eos_acccar_unknown_error",
-		error_level = ErrorManager.ERROR_LEVEL.fatal
-	}
+		error_level = ErrorManager.ERROR_LEVEL.fatal,
+	},
 }
 local EACError = class("EACError")
 
 EACError.init = function (self, error_reason, optional_error_code)
-	local options = nil
+	local options
 	local error_level = ErrorManager.ERROR_LEVEL.fatal
 
 	if optional_error_code then
 		local kick_reason_data = self:_kick_reason_data(optional_error_code)
+
 		error_reason = kick_reason_data.loc_message
 		error_level = kick_reason_data.error_level
 
@@ -99,12 +102,9 @@ end
 
 EACError.loc_description = function (self)
 	local description = self._error_reason
-
-	if self._optional_error_code then
-		local params = {
-			error = self._optional_error_code
-		}
-	end
+	local params = self._optional_error_code and {
+		error = self._optional_error_code,
+	}
 
 	return description, params
 end
@@ -127,13 +127,13 @@ end
 EACError._eac_policy_link_options = function (self)
 	local options = {
 		{
-			text = "loc_popup_link_description_eac_error",
-			template_type = "url_button",
 			margin_bottom = 20,
+			template_type = "url_button",
+			text = "loc_popup_link_description_eac_error",
 			callback = function ()
 				Application.open_url_in_browser(Localize("loc_popup_link_eac_error"))
-			end
-		}
+			end,
+		},
 	}
 
 	return options

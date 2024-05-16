@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_base.lua
+
 local ActionBase = class("ActionBase")
 
 ActionBase.init = function (self, action_context, action_params, action_settings)
@@ -5,9 +7,13 @@ ActionBase.init = function (self, action_context, action_params, action_settings
 	self._physics_world = action_context.physics_world
 	self._wwise_world = action_context.wwise_world
 	self._first_person_unit = action_context.first_person_unit
+
 	local player_unit = action_context.player_unit
+
 	self._player_unit = player_unit
+
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+
 	self._player = player_unit_spawn_manager:owner(player_unit)
 	self._animation_extension = action_context.animation_extension
 	self._camera_extension = action_context.camera_extension
@@ -18,7 +24,9 @@ ActionBase.init = function (self, action_context, action_params, action_settings
 	self._smart_targeting_extension = action_context.smart_targeting_extension
 	self._unit_data_extension = action_context.unit_data_extension
 	self._dialogue_input = action_context.dialogue_input
+
 	local weapon_action_component = action_context.weapon_action_component
+
 	self._weapon_action_component = weapon_action_component
 	self._first_person_component = action_context.first_person_component
 	self._inventory_component = action_context.inventory_component
@@ -60,6 +68,7 @@ end
 ActionBase.trigger_anim_event = function (self, anim_event, anim_event_3p, action_time_offset, ...)
 	local time_scale = self._weapon_action_component.time_scale
 	local anim_ext = self._animation_extension
+
 	action_time_offset = action_time_offset or 0
 
 	anim_ext:anim_event_with_variable_floats_1p(anim_event, "attack_speed", time_scale, "action_time_offset", action_time_offset, ...)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/special_classes/weapon_special_simple_warp_charge.lua
+
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponSpecialInterface = require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")
 local WeaponSpecial = require("scripts/utilities/weapon_special")
@@ -10,7 +12,9 @@ WeaponSpecialSimpleWarpCharge.init = function (self, weapon_special_context, wea
 	self._warp_charge_component = weapon_special_context.warp_charge_component
 	self._action_module_charge_component = weapon_special_context.action_module_charge_component
 	self._inventory_slot_component = weapon_special_init_data.inventory_slot_component
+
 	local tweak_data = weapon_special_init_data.tweak_data
+
 	self._tweak_data = tweak_data
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
 end

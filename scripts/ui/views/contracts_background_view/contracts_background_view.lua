@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/contracts_background_view/contracts_background_view.lua
+
 local Definitions = require("scripts/ui/views/contracts_background_view/contracts_background_view_definitions")
 local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 local ContractsViewSettings = require("scripts/ui/views/contracts_view/contracts_view_settings")

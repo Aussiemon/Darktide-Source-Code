@@ -1,34 +1,36 @@
+﻿-- chunkname: @scripts/managers/horde/templates/flood_horde_template.lua
+
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local aggro_states = PerceptionSettings.aggro_states
 local horde_template = {
+	main_path_fallback_distance = 40,
 	max_spawn_locations = 10,
 	name = "flood_horde",
 	requires_main_path = true,
-	main_path_fallback_distance = 40,
 	minion_spawner_radius_checks = {
 		8,
 		12,
 		15,
-		25
+		25,
 	},
 	spawn_frequency = {
 		0.5,
-		3
+		3,
 	},
 	num_minion_per_spawn = {
 		1,
-		3
+		3,
 	},
 	num_minions_for_pause = {
 		60,
 		75,
 		85,
 		95,
-		110
-	}
+		110,
+	},
 }
 local breeds_to_spawn = {}
 
@@ -41,8 +43,7 @@ local function _compose_spawn_list(composition)
 
 	for i = 1, #breeds do
 		local breed_data = breeds[i]
-		local breed_name = breed_data.name
-		local amount = breed_data.amount
+		local breed_name, amount = breed_data.name, breed_data.amount
 		local num_to_spawn = Math_random(amount[1], amount[2])
 
 		for j = 1, num_to_spawn do
@@ -56,8 +57,7 @@ local function _compose_spawn_list(composition)
 end
 
 local function _position_has_line_of_sight_to_any_enemy_player(physics_world, from_position, side, collision_filter)
-	local Vector3_length_squared = Vector3.length_squared
-	local Vector3_normalize = Vector3.normalize
+	local Vector3_length_squared, Vector3_normalize = Vector3.length_squared, Vector3.normalize
 	local PhysicsWorld_raycast = PhysicsWorld.raycast
 	local offset = Vector3.up()
 	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
@@ -83,8 +83,7 @@ end
 
 local function _try_find_spawn_position(nav_world, center_position, index, num_columns, max_attempts)
 	local Math_Random = math.random
-	local above = 2
-	local below = 2
+	local above, below = 2, 2
 	local offset = Vector3(-num_columns / 2 + index % num_columns, -num_columns / 2 + math.floor(index / num_columns), 0)
 
 	for i = 1, max_attempts do
@@ -100,11 +99,9 @@ end
 
 local NUM_COLUMNS = 6
 local MAX_SPAWN_POSITION_ATTEMPTS = 8
-local MIN_DISTANCE_FROM_PLAYERS = 16
-local MAX_DISTANCE_FROM_PLAYERS = 40
+local MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS = 16, 40
 local INITIAL_GROUP_OFFSET = 2
-local nearby_spawners = {}
-local nearby_occluded_positions = {}
+local nearby_spawners, nearby_occluded_positions = {}, {}
 local SPAWNER_MIN_RANGE = 10
 
 local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_points, path_position, num_groups, target_side_id, num_to_spawn, travel_distance)
@@ -168,6 +165,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 			if occluded_positions then
 				for j = 1, #occluded_positions do
 					local occluded_position = occluded_positions[j]
+
 					nearby_occluded_positions[#nearby_occluded_positions + 1] = occluded_position
 					spawn_locations_left = spawn_locations_left - 1
 					num_spawn_locations = math.min(num_spawn_locations + 1, max_spawn_locations)
@@ -192,11 +190,12 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 			for j = 1, spawns_per_location do
 				local breed_name = spawn_list[num_spawned + 1]
+
 				num_spawned = num_spawned + 1
 				breed_list[#breed_list + 1] = breed_name
 			end
 
-			local i = spawner:add_spawns(breed_list, side_id, target_side_id, nil, nil, group_id)
+			local queue_id = spawner:add_spawns(breed_list, side_id, target_side_id, nil, nil, group_id)
 		until true
 	end
 
@@ -212,6 +211,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 			if spawn_position then
 				local breed_name = spawn_list[i]
 				local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
+
 				num_spawned = num_spawned + 1
 			end
 		end
@@ -282,10 +282,11 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		composition = composition,
 		nav_world = nav_world,
 		num_to_spawn = total_num_to_spawn,
-		physics_world = physics_world
+		physics_world = physics_world,
 	}
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
+
 	horde.group_id = group_id
 	horde.spawn_list = spawn_list
 
@@ -295,6 +296,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 	local num_to_spawn = math.random(horde_template.num_minion_per_spawn[1], horde_template.num_minion_per_spawn[2])
 	local num_spawned = _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_points, path_position, num_groups, target_side_id, num_to_spawn, travel_distance)
+
 	horde.next_flood_spawn_at = math.random_range(horde_template.spawn_frequency[1], horde_template.spawn_frequency[2])
 	horde.num_spawned = horde.num_spawned + num_spawned
 
@@ -307,11 +309,12 @@ local MAX_ATTEMPTS = 10
 
 horde_template.update = function (horde, dt, t)
 	horde.next_flood_spawn_at = horde.next_flood_spawn_at - dt
+
 	local num_minions_for_pause = Managers.state.difficulty:get_table_entry_by_challenge(horde_template.num_minions_for_pause)
 	local num_aggroed_minions = Managers.state.pacing:num_aggroed_minions()
 	local too_many_minions = num_minions_for_pause <= num_aggroed_minions
 
-	if too_many_minions or horde.next_flood_spawn_at > 0 or horde.num_to_spawn <= horde.num_spawned then
+	if too_many_minions or horde.next_flood_spawn_at > 0 or horde.num_spawned >= horde.num_to_spawn then
 		return
 	end
 
@@ -329,12 +332,14 @@ horde_template.update = function (horde, dt, t)
 	local num_to_spawn = math.random(horde_template.num_minion_per_spawn[1], horde_template.num_minion_per_spawn[2])
 	local nav_world = horde.nav_world
 	local num_spawned = _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_points, path_position, num_groups, target_side_id, num_to_spawn, travel_distance)
+
 	horde.next_flood_spawn_at = math.random_range(horde_template.spawn_frequency[1], horde_template.spawn_frequency[2])
 	horde.num_spawned = horde.num_spawned + num_spawned
+
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = horde.group_id
 
-	if horde.num_to_spawn <= horde.num_spawned or MAX_ATTEMPTS < horde.attempts then
+	if horde.num_spawned >= horde.num_to_spawn or horde.attempts > MAX_ATTEMPTS then
 		group_system:unlock_group_id(horde.group_id)
 		Log.info("FloodHorde", "Finished, spawned total %d minions.", horde.num_spawned)
 	elseif num_spawned == 0 then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/party_immaterium_connection.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local PartyImmateriumConnection = class("PartyImmateriumConnection")
 
@@ -36,10 +38,10 @@ PartyImmateriumConnection._internal_start = function (self, optional_matchmaking
 		return
 	end
 
-	local party_id = nil
+	local party_id
 	local context_account_id = ""
 	local invite_token = ""
-	local current_game_session_id = nil
+	local current_game_session_id
 
 	if self._party.party_id then
 		party_id = self._party.party_id
@@ -65,7 +67,7 @@ PartyImmateriumConnection.abort = function (self)
 
 		self:_on_error({
 			aborted = true,
-			error_details = "ABORTED"
+			error_details = "ABORTED",
 		})
 	end
 end
@@ -145,6 +147,7 @@ PartyImmateriumConnection.update = function (self, dt)
 			end
 		else
 			local error = self._stream:error()
+
 			self._stream = nil
 
 			if error then

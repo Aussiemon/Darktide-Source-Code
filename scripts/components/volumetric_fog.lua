@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/volumetric_fog.lua
+
 local VolumetricFog = component("VolumetricFog")
 
 VolumetricFog.init = function (self, unit)
@@ -47,36 +49,36 @@ end
 
 VolumetricFog.component_data = {
 	albedo = {
-		ui_type = "vector",
-		ui_name = "Albedo",
 		Category = "Fog Properties",
-		value = Vector3Box(0.1, 0.1, 0.1)
+		ui_name = "Albedo",
+		ui_type = "vector",
+		value = Vector3Box(0.1, 0.1, 0.1),
 	},
 	falloff = {
-		ui_type = "vector",
-		ui_name = "Falloff",
 		Category = "Fog Properties",
-		value = Vector3Box(0, 0, 0)
+		ui_name = "Falloff",
+		ui_type = "vector",
+		value = Vector3Box(0, 0, 0),
 	},
 	extinction = {
-		ui_type = "number",
+		Category = "Fog Properties",
+		decimals = 3,
+		max = 1,
 		min = 0,
 		step = 0.001,
-		Category = "Fog Properties",
-		value = 0.01,
-		decimals = 3,
 		ui_name = "Extinction",
-		max = 1
+		ui_type = "number",
+		value = 0.01,
 	},
 	phase = {
-		ui_type = "number",
-		min = 0,
-		decimals = 1,
 		Category = "Fog Properties",
-		value = 0,
+		decimals = 1,
+		min = 0,
+		step = 0.1,
 		ui_name = "Phase",
-		step = 0.1
-	}
+		ui_type = "number",
+		value = 0,
+	},
 }
 
 return VolumetricFog

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view.lua
+
 local CraftingExtractTraitViewDefinitions = require("scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -14,7 +16,7 @@ CraftingExtractTraitView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._recipe = CraftingSettings.recipes.extract_trait
 	self._ingredients = {
-		item = self._item
+		item = self._item,
 	}
 end
 
@@ -32,6 +34,7 @@ CraftingExtractTraitView.on_enter = function (self)
 	if self._item then
 		local trait_category = ItemUtils.trait_category(self._item)
 		local traits_promises = Managers.data_service.crafting:trait_sticker_book(trait_category)
+
 		self._traits_promises = traits_promises
 
 		traits_promises:next(callback(self, "_cb_fetch_trait_data")):catch(function (err)
@@ -105,6 +108,7 @@ CraftingExtractTraitView._perform_crafting = function (self)
 	self._crafting_recipe:set_continue_button_force_disabled(true)
 
 	local craft_promise = self._parent:craft(recipe, self._ingredients)
+
 	self._craft_promise = craft_promise
 
 	craft_promise:next(function (results)
@@ -152,6 +156,7 @@ CraftingExtractTraitView.cb_on_trait_selected = function (self, widget, config)
 	for i = 1, #recipe_widgets do
 		local recipe_widget = recipe_widgets[i]
 		local content = recipe_widget.content
+
 		content.marked = index and recipe_widget == widget or false
 	end
 

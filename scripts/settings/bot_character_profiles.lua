@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/bot_character_profiles.lua
+
 local LocalProfileBackendParser = require("scripts/utilities/local_profile_backend_parser")
 local MasterItems = require("scripts/backend/master_items")
 local IngameBotProfiles = require("scripts/settings/bot_profiles/ingame_bot_profiles")
@@ -23,6 +25,7 @@ local function bot_profiles(item_definitions)
 
 		for slot_name, item_id in pairs(loadout) do
 			local item = MasterItems.get_item_or_fallback(item_id, slot_name, item_definitions)
+
 			loadout[slot_name] = item
 		end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/boss_health/hud_element_boss_health.lua
+
 local Definitions = require("scripts/ui/hud/elements/boss_health/hud_element_boss_health_definitions")
 local HudElementBossHealthSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_health_settings")
 local HudElementBossToughnessSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_toughness_settings")
@@ -40,10 +42,11 @@ HudElementBossHealth._setup_widget_groups = function (self)
 	local single_target_widgets = create_widgets(definitions.single_target_widget_definitions)
 	local left_double_target_widgets = create_widgets(definitions.left_double_target_widget_definitions)
 	local right_double_target_widgets = create_widgets(definitions.right_double_target_widget_definitions)
+
 	self._widget_groups = {
 		single_target_widgets,
 		left_double_target_widgets,
-		right_double_target_widgets
+		right_double_target_widgets,
 	}
 end
 
@@ -70,7 +73,7 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 	local active_targets_by_unit = self._active_targets_by_unit
 	local active_targets_array = self._active_targets_array
 
-	if active_targets_by_unit[unit] or self._max_target_units <= #active_targets_array then
+	if active_targets_by_unit[unit] or #active_targets_array >= self._max_target_units then
 		return
 	end
 
@@ -86,7 +89,7 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 
 		if max_health < initial_max_health then
 			localized_display_name = Localize("loc_weakened_monster_prefix", true, {
-				breed = localized_display_name
+				breed = localized_display_name,
 			})
 		end
 	end
@@ -103,8 +106,9 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 		localized_display_name = " " .. localized_display_name,
 		health_bar_logic = health_bar_logic,
 		toughness_bar_logic = toughness_bar_logic,
-		breed = breed
+		breed = breed,
 	}
+
 	active_targets_by_unit[unit] = target
 	active_targets_array[#active_targets_array + 1] = target
 	self._force_update = true
@@ -156,7 +160,9 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 
 		if ALIVE[unit] then
 			local localized_display_name = target.localized_display_name
+
 			widget_group.health.content.text = localized_display_name
+
 			local health_extension = target.health_extension
 			local health_bar_logic = target.health_bar_logic
 			local max_health_percentage = 1
@@ -193,12 +199,12 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 				local can_have_invulnerable_toughness = target.breed.can_have_invulnerable_toughness
 
 				if can_have_invulnerable_toughness then
-					local game_session = Managers.state.game_session:game_session()
-					local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+					local game_session, game_object_id = Managers.state.game_session:game_session(), Managers.state.unit_spawner:game_object_id(unit)
 					local is_toughness_invulnerable = GameSession.game_object_field(game_session, game_object_id, "is_toughness_invulnerable")
 					local widget = widget_group.toughness
 					local texture_style = widget.style.bar
 					local color = is_toughness_invulnerable and INVULNERABLE_TOUGHNESS_COLOR or DEFAULT_TOUGHNESS_COLOR
+
 					texture_style.color = color
 					widget.style.max.color = color
 				end
@@ -263,6 +269,7 @@ end
 
 HudElementBossHealth._set_health_bar_alpha = function (self, alpha_fraction)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.health.alpha_multiplier = alpha_fraction
 	widgets_by_name.health_ghost.alpha_multiplier = alpha_fraction
 	widgets_by_name.background.alpha_multiplier = alpha_fraction
@@ -270,12 +277,17 @@ end
 
 HudElementBossHealth._apply_widget_bar_fractions = function (self, widget, bar_width_total, bar_fraction, ghost_fraction, max_fraction)
 	local bar_width = math.floor(bar_width_total * bar_fraction)
+
 	widget.style.bar.size[1] = bar_width
 	widget.style.bar.uvs[2][1] = bar_fraction
+
 	local ghost_width = math.max(bar_width_total * ghost_fraction - bar_width, 0)
+
 	widget.style.ghost.size[1] = bar_width + ghost_width
 	widget.style.ghost.uvs[2][1] = ghost_fraction
+
 	local max_width = bar_width_total - math.max(bar_width_total * max_fraction, 0)
+
 	max_width = math.max(max_width, 0)
 	widget.style.max.size[1] = max_width
 end

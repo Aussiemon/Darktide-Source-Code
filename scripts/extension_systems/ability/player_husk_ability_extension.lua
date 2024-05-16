@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/player_husk_ability_extension.lua
+
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local EquippedAbilityEffectScripts = require("scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -10,20 +12,22 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 	self._equipped_abilities = {}
 	self._enabled_abilities = {
 		combat_ability = false,
-		grenade_ability = false
+		grenade_ability = false,
 	}
 	self._ability_max_charges = {
 		combat_ability = 0,
-		grenade_ability = 0
+		grenade_ability = 0,
 	}
 	self._ability_max_cooldown = {
 		combat_ability = 0,
-		grenade_ability = 0
+		grenade_ability = 0,
 	}
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._components = {
 		grenade_ability = unit_data_extension:read_component("grenade_ability"),
-		combat_ability = unit_data_extension:read_component("combat_ability")
+		combat_ability = unit_data_extension:read_component("combat_ability"),
 	}
 	self._equipped_ability_effect_scripts = {}
 	self._equipped_ability_effect_scripts_context = {
@@ -33,7 +37,7 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 		unit = unit,
 		unit_data_extension = unit_data_extension,
 		is_local_unit = extension_init_data.is_server,
-		is_server = extension_init_data.is_local_unit
+		is_server = extension_init_data.is_local_unit,
 	}
 
 	self:_read_game_object(game_session, game_object_id)
@@ -50,7 +54,7 @@ end
 local READ_GAME_OBJECT_FREQUENCY = 0.5
 
 PlayerHuskAbilityExtension.update = function (self, unit, dt, t)
-	if READ_GAME_OBJECT_FREQUENCY < t - self._last_read_t then
+	if t - self._last_read_t > READ_GAME_OBJECT_FREQUENCY then
 		self._last_read_t = t
 
 		self:_read_game_object(self._game_session, self._game_object_id)
@@ -74,14 +78,14 @@ PlayerHuskAbilityExtension.post_update = function (self, unit, dt, t, fixed_fram
 end
 
 local game_object_fields = {
-	combat_ability_max_charges = 0,
-	grenade_ability_enabled = false,
-	grenade_ability_max_cooldown = 0,
-	grenade_ability_equipped = 0,
-	combat_ability_equipped = 0,
 	combat_ability_enabled = false,
+	combat_ability_equipped = 0,
+	combat_ability_max_charges = 0,
+	combat_ability_max_cooldown = 0,
+	grenade_ability_enabled = false,
+	grenade_ability_equipped = 0,
 	grenade_ability_max_charges = 0,
-	combat_ability_max_cooldown = 0
+	grenade_ability_max_cooldown = 0,
 }
 
 PlayerHuskAbilityExtension._read_game_object = function (self, game_session, game_object_id)
@@ -93,12 +97,17 @@ PlayerHuskAbilityExtension._read_game_object = function (self, game_session, gam
 	self:_handle_ability_equip(equipped_abilities, "combat_ability", game_object_fields.combat_ability_equipped)
 
 	local enabled_abilities = self._enabled_abilities
+
 	enabled_abilities.grenade_ability = game_object_fields.grenade_ability_enabled
 	enabled_abilities.combat_ability = game_object_fields.combat_ability_enabled
+
 	local ability_max_charges = self._ability_max_charges
+
 	ability_max_charges.grenade_ability = game_object_fields.grenade_ability_max_charges
 	ability_max_charges.combat_ability = game_object_fields.combat_ability_max_charges
+
 	local ability_max_cooldown = self._ability_max_cooldown
+
 	ability_max_cooldown.grenade_ability = game_object_fields.grenade_ability_max_cooldown
 	ability_max_cooldown.combat_ability = game_object_fields.combat_ability_max_cooldown
 end
@@ -109,6 +118,7 @@ PlayerHuskAbilityExtension._handle_ability_equip = function (self, equipped_abil
 
 	if equipped_ability == "not_equipped" and current_equipped_ability ~= nil then
 		equipped_abilities[ability_type] = nil
+
 		local equipped_ability_effect_scripts = self._equipped_ability_effect_scripts[ability_type]
 
 		if equipped_ability_effect_scripts then
@@ -122,13 +132,17 @@ PlayerHuskAbilityExtension._handle_ability_equip = function (self, equipped_abil
 
 	if equipped_ability ~= "not_equipped" and (not current_equipped_ability or current_equipped_ability.name ~= equipped_ability) then
 		local ability = PlayerAbilities[equipped_ability]
+
 		equipped_abilities[ability_type] = ability
+
 		local ability_template_name = ability.ability_template
 
 		if ability_template_name then
 			local ability_template = AbilityTemplates[ability_template_name]
 			local equipped_ability_effect_scripts = {}
+
 			self._equipped_ability_effect_scripts[ability_type] = equipped_ability_effect_scripts
+
 			local equipped_ability_effect_scripts_context = self._equipped_ability_effect_scripts_context
 
 			EquippedAbilityEffectScripts.create(equipped_ability_effect_scripts_context, equipped_ability_effect_scripts, ability_template, ability_type)

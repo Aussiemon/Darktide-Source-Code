@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_target_ally.lua
+
 require("scripts/extension_systems/weapon/actions/action_base")
 
 local ActionTargetAlly = class("ActionTargetAlly", "ActionBase")
@@ -8,7 +10,9 @@ ActionTargetAlly.init = function (self, action_context, action_params, action_se
 	self._input_extension = action_context.input_extension
 	self._aim_ready_up_time = action_setting.aim_ready_up_time or 0
 	self._last_unit = nil
+
 	local unit_data_extension = self._unit_data_extension
+
 	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
 end
 

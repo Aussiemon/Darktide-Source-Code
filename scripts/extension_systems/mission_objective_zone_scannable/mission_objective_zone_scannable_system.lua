@@ -1,15 +1,18 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_zone_scannable/mission_objective_zone_scannable_system.lua
+
 require("scripts/extension_systems/mission_objective_zone_scannable/mission_objective_zone_scannable_extension")
 
 local MissionObjectiveZoneScannableSystem = class("MissionObjectiveZoneScannableSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_mission_objective_zone_scannable_hot_join_sync",
-	"rpc_mission_objective_zone_scannable_set_active"
+	"rpc_mission_objective_zone_scannable_set_active",
 }
 
 MissionObjectiveZoneScannableSystem.init = function (self, context, system_init_data, ...)
 	MissionObjectiveZoneScannableSystem.super.init(self, context, system_init_data, ...)
 
 	local network_event_delegate = context.network_event_delegate
+
 	self._network_event_delegate = network_event_delegate
 
 	if not self._is_server then

@@ -1,24 +1,28 @@
-local TestifySnippets = {
-	create_new_character = function ()
-		Testify:make_request("wait_for_view_to_close", "main_menu_background_view")
-		Testify:make_request("create_new_character")
-	end,
-	create_character_from_main_menu = function (archetype, gender)
-		local archetype = archetype or "veteran"
-		local gender = gender or "male"
+﻿-- chunkname: @scripts/tests/testify_snippets.lua
 
+local TestifySnippets = {}
+
+TestifySnippets.create_new_character = function ()
+	Testify:make_request("wait_for_view_to_close", "main_menu_background_view")
+	Testify:make_request("create_new_character")
+end
+
+TestifySnippets.create_character_from_main_menu = function (archetype, gender)
+	local archetype = archetype or "veteran"
+	local gender = gender or "male"
+
+	Testify:make_request("navigate_to_create_character_from_main_menu")
+	Testify:make_request("create_character_by_archetype_and_gender", archetype, gender)
+end
+
+TestifySnippets.create_character_if_none = function ()
+	local is_any_character_created = Testify:make_request("is_any_character_created")
+
+	if not is_any_character_created then
 		Testify:make_request("navigate_to_create_character_from_main_menu")
-		Testify:make_request("create_character_by_archetype_and_gender", archetype, gender)
-	end,
-	create_character_if_none = function ()
-		local is_any_character_created = Testify:make_request("is_any_character_created")
-
-		if not is_any_character_created then
-			Testify:make_request("navigate_to_create_character_from_main_menu")
-			Testify:make_request("create_random_character")
-		end
+		Testify:make_request("create_random_character")
 	end
-}
+end
 
 TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function ()
 	if not DEDICATED_SERVER then
@@ -60,7 +64,7 @@ TestifySnippets.load_mission = function (mission_name, challenge, resistance, ci
 		challenge = challenge,
 		resistance = resistance,
 		circumstance_name = circumstance_name,
-		side_mission = side_mission
+		side_mission = side_mission,
 	}
 
 	Testify:make_request("load_mission", mission_context)
@@ -71,12 +75,13 @@ TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, 
 	resistance = resistance or 1
 	circumstance_name = circumstance_name or "default"
 	side_mission = side_mission or "default"
+
 	local params = {
 		map = level_key,
 		challenge = challenge,
 		resistance = resistance,
 		circumstance_name = circumstance_name,
-		side_mission = side_mission
+		side_mission = side_mission,
 	}
 
 	if peer_id == nil then
@@ -91,8 +96,7 @@ TestifySnippets.mission_circumstances = function (mission_name)
 	local level = mission_settings.level
 	local mission_themes = Testify:make_request("mission_themes", level)
 	local circumstances = Testify:make_request("circumstances")
-	local mission_circumstances = {}
-	local i = 0
+	local mission_circumstances, i = {}, 0
 
 	for circumstance_name, circumstance in pairs(circumstances) do
 		local theme_tag = circumstance.theme_tag
@@ -153,14 +157,14 @@ end
 TestifySnippets.set_difficulty = function (difficulty)
 	local resistance = {
 		name = "resistance",
-		value = difficulty.resistance
+		value = difficulty.resistance,
 	}
 
 	Testify:make_request("change_dev_parameter", resistance)
 
 	local challenge = {
 		name = "challenge",
-		value = difficulty.challenge
+		value = difficulty.challenge,
 	}
 
 	Testify:make_request("change_dev_parameter", challenge)
@@ -171,7 +175,7 @@ TestifySnippets.set_render_settings = function (setting_id, value, wait_time)
 	local new_value = value
 	local option_data = {
 		setting = setting,
-		new_value = new_value
+		new_value = new_value,
 	}
 
 	Testify:make_request("setting_on_activated", option_data)
@@ -206,7 +210,9 @@ end
 
 TestifySnippets.send_request_to_all_peers = function (request_name, wait_for_response, num_retries, ...)
 	local peer_ids = Testify:peers()
+
 	num_retries = num_retries or 1
+
 	local retry_time = 30
 
 	for _, peer_id in ipairs(peer_ids) do
@@ -291,6 +297,7 @@ TestifySnippets.lua_trace_statistics = function ()
 	TestifySnippets.wait(1)
 
 	local lua_trace_statistics = Testify:make_request_to_runner("lua_trace_statistics")
+
 	lua_trace_statistics = cjson.decode(lua_trace_statistics)
 
 	return lua_trace_statistics
@@ -302,6 +309,7 @@ TestifySnippets.memory_tree = function (depth, ascii_separator, memory_limit)
 	TestifySnippets.wait(1)
 
 	local memory_tree = Testify:make_request_to_runner("stop_memory_tree_monitoring")
+
 	memory_tree = cjson.decode(memory_tree)
 
 	return memory_tree
@@ -313,6 +321,7 @@ TestifySnippets.memory_resources_all = function (include_details)
 	TestifySnippets.wait(1)
 
 	local memory_resources_all = Testify:make_request_to_runner("stop_memory_resources_all_monitoring")
+
 	memory_resources_all = cjson.decode(memory_resources_all)
 
 	if include_details then
@@ -324,6 +333,7 @@ TestifySnippets.memory_resources_all = function (include_details)
 
 			if resource_type_size and (size_threshold == -1 or size_threshold < tonumber(resource_type_size)) then
 				local memory_resources_details = TestifySnippets.memory_resources_details(key, max_resources_number)
+
 				memory_resources_all[key].details = memory_resources_details
 			end
 		end
@@ -338,6 +348,7 @@ TestifySnippets.memory_resources_details = function (resource_name, max_resource
 	TestifySnippets.wait(0.5)
 
 	local memory_resources_details = Testify:make_request_to_runner("stop_memory_resources_details_monitoring")
+
 	memory_resources_details = cjson.decode(memory_resources_details)
 
 	return memory_resources_details
@@ -356,7 +367,7 @@ end
 TestifySnippets.trigger_vo_query_player_look_at = function (look_at_tag, distance, num_dialogues)
 	local look_at_data = {
 		look_at_tag = look_at_tag,
-		distance = distance
+		distance = distance,
 	}
 
 	Testify:make_request("trigger_vo_query_player_look_at", look_at_data)
@@ -368,7 +379,7 @@ TestifySnippets.trigger_vo_query_faction_look_at = function (faction, look_at_ta
 	local look_at_data = {
 		faction = faction,
 		look_at_tag = look_at_tag,
-		distance = distance
+		distance = distance,
 	}
 
 	Testify:make_request("trigger_vo_query_faction_look_at", look_at_data)
@@ -379,7 +390,7 @@ end
 TestifySnippets.trigger_vo_query_mission_brief = function (mission_brief_starter_line, voice_profile, num_dialogues)
 	local mission_brief_data = {
 		mission_brief_starter_line = mission_brief_starter_line,
-		voice_profile = voice_profile
+		voice_profile = voice_profile,
 	}
 
 	Testify:make_request("trigger_vo_query_mission_brief", mission_brief_data)
@@ -390,7 +401,7 @@ end
 TestifySnippets.trigger_vo_query_mission_giver_mission_info = function (trigger_id, voice_profile, num_dialogues)
 	local mission_giver_data = {
 		trigger_id = trigger_id,
-		voice_profile = voice_profile
+		voice_profile = voice_profile,
 	}
 
 	Testify:make_request("trigger_vo_query_mission_giver_mission_info", mission_giver_data)
@@ -400,7 +411,7 @@ end
 
 TestifySnippets.trigger_vo_query_player_generic_vo = function (trigger_id, num_dialogues)
 	local player_generic_vo_data = {
-		trigger_id = trigger_id
+		trigger_id = trigger_id,
 	}
 
 	Testify:make_request("trigger_vo_query_player_generic_vo", player_generic_vo_data)
@@ -410,7 +421,7 @@ end
 
 TestifySnippets.trigger_vo_query_player_environmental_story_vo = function (trigger_id, num_dialogues)
 	local player_environmental_story_vo_data = {
-		trigger_id = trigger_id
+		trigger_id = trigger_id,
 	}
 
 	Testify:make_request("trigger_vo_query_player_environmental_story_vo", player_environmental_story_vo_data)
@@ -421,7 +432,7 @@ end
 TestifySnippets.trigger_mission_giver_conversation_starter = function (trigger_id, voice_profile, num_dialogues)
 	local mission_giver_conversation_starter_vo_data = {
 		trigger_id = trigger_id,
-		voice_profile = voice_profile
+		voice_profile = voice_profile,
 	}
 
 	Testify:make_request("trigger_mission_giver_conversation_starter", mission_giver_conversation_starter_vo_data)
@@ -431,7 +442,7 @@ end
 
 TestifySnippets.trigger_vo_query_player_start_banter = function (trigger_id, num_dialogues)
 	local player_start_banter_vo_data = {
-		trigger_id = trigger_id
+		trigger_id = trigger_id,
 	}
 
 	Testify:make_request("trigger_vo_query_player_start_banter", player_start_banter_vo_data)
@@ -442,7 +453,7 @@ end
 TestifySnippets.trigger_vo_on_demand = function (vo_concept, trigger_id, num_dialogues)
 	local player_vo_on_demand_starter_data = {
 		vo_concept = vo_concept,
-		trigger_id = trigger_id
+		trigger_id = trigger_id,
 	}
 
 	Testify:make_request("trigger_vo_on_demand", player_vo_on_demand_starter_data)
@@ -485,19 +496,21 @@ TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, 
 	local data = {
 		player = player,
 		slot = slot_name,
-		item = weapon
+		item = weapon,
 	}
 	local trait_params = {
 		player = player,
 		slot_name = slot_name,
-		traits = traits
+		traits = traits,
 	}
+
 	units_to_spawn = units_to_spawn or 1
+
 	local breed_name = "chaos_ogryn_executor"
 	local minion = {
 		breed_side = 2,
 		breed_name = breed_name,
-		spawn_position = Vector3Box(Vector3.zero())
+		spawn_position = Vector3Box(Vector3.zero()),
 	}
 
 	if not has_local_profile then
@@ -528,7 +541,7 @@ TestifySnippets.reset_weapon_traits = function (player, slot_name)
 	local empty_trait_params = {
 		player = player,
 		slot_name = slot_name,
-		traits = {}
+		traits = {},
 	}
 
 	Testify:make_request("apply_select_traits", empty_trait_params)
@@ -546,9 +559,9 @@ TestifySnippets.open_barber_surgeon_shop = function ()
 	local view_data = {
 		view_name = "barber_vendor_background_view",
 		dummy_data = {
+			can_exit = true,
 			debug_preview = true,
-			can_exit = true
-		}
+		},
 	}
 
 	Testify:make_request("open_view", view_data)
@@ -564,6 +577,7 @@ TestifySnippets.appearance_options_widgets = function (appearance_slots_widget_n
 		Testify:make_request("trigger_widget_callback", slot_widget_name)
 
 		local widgets = Testify:make_request("character_appearance_view_options_widgets")
+
 		appearance_options_widgets[slot_name] = widgets
 	end
 

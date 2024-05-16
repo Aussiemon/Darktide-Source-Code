@@ -1,12 +1,16 @@
+﻿-- chunkname: @scripts/script_flow_nodes/ui_flow_callbacks.lua
+
 local MainFlowCallbacks = require("scripts/script_flow_nodes/flow_callbacks")
+
 UIFlowCallbacks = UIFlowCallbacks or {}
+
 local flow_return_table = {}
 local flow_callback_white_list = {
 	"get_component_data",
 	"set_component_data",
 	"trigger_lua_unit_event",
 	"trigger_lua_string_event",
-	"local_player_level_larger_than"
+	"local_player_level_larger_than",
 }
 
 for function_name, func in pairs(MainFlowCallbacks) do

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/steam_offline_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local SteamOfflineError = class("SteamOfflineError")
 
@@ -32,8 +34,8 @@ SteamOfflineError.options = function (self)
 				text = "loc_popup_button_quit_game",
 				callback = function ()
 					Application.quit()
-				end
-			}
+				end,
+			},
 		}
 	end
 end

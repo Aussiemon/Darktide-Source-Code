@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/gyroscope_particle_effect.lua
+
 local Component = require("scripts/utilities/component")
 local GyroscopeParticleEffect = component("GyroscopeParticleEffect")
 
@@ -52,6 +54,7 @@ end
 
 GyroscopeParticleEffect._create_particle = function (self)
 	local world_position = Unit.world_position(self._unit, 1)
+
 	self._particle_id = World.create_particles(self._world, self._particle_name, world_position, Quaternion.identity())
 end
 
@@ -88,22 +91,22 @@ end
 
 GyroscopeParticleEffect.component_data = {
 	particle = {
-		ui_type = "resource",
+		filter = "particles",
 		preview = false,
-		value = "",
 		ui_name = "Particle",
-		filter = "particles"
+		ui_type = "resource",
+		value = "",
 	},
 	inputs = {
 		create_particle = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		destroy_particle = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return GyroscopeParticleEffect

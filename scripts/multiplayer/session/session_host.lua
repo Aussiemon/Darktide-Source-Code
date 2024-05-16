@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/multiplayer/session/session_host.lua
+
 local SessionRemoteStateMachine = require("scripts/multiplayer/session/session_remote_state_machine")
 local EVENTS = {
-	"game_object_sync_done"
+	"game_object_sync_done",
 }
 local SessionHost = class("SessionHost")
 
@@ -51,6 +53,7 @@ end
 
 SessionHost.add = function (self, peer_id, gameobject_callback_object)
 	local remote_client = SessionRemoteStateMachine:new(self._network_delegate, peer_id, self._engine_lobby, self._engine_gamesession, gameobject_callback_object)
+
 	self._remote_clients[peer_id] = remote_client
 end
 

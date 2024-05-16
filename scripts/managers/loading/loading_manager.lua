@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/loading/loading_manager.lua
+
 local Missions = require("scripts/settings/mission/mission_templates")
 local LoadingManager = class("LoadingManager")
 
@@ -52,6 +54,7 @@ end
 LoadingManager._shelve_loading_client = function (self)
 	local loading_client = self._loading_client
 	local loading_clients = self._shelved_loading_clients
+
 	loading_clients[#loading_clients + 1] = loading_client
 end
 

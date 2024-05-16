@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view_definitions.lua
+
 local scanner_display_view_definitions = {}
 
 local function _extract_scanner_display_view_definitions(path)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minigame/minigames/minigame_decode_symbols.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local LagCompensation = require("scripts/utilities/lag_compensation")
@@ -52,6 +54,7 @@ MinigameDecodeSymbols._player_miss_target = function (self, player)
 	end
 
 	local unique_id = player:unique_id()
+
 	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
 end
 
@@ -70,6 +73,7 @@ MinigameDecodeSymbols.start = function (self, player)
 
 		self._fx_extension = ScriptUnit.extension(player_unit, "fx_system")
 		self._fx_source_name = fx_sources[FX_SOURCE_NAME]
+
 		local fixed_frame_t = FixedFrame.get_latest_fixed_time()
 		local rewind_ms = LagCompensation.rewind_ms(is_server, not player.remote, player)
 		local decode_start_time = fixed_frame_t + rewind_ms
@@ -149,6 +153,7 @@ MinigameDecodeSymbols.setup_game = function (self)
 
 	for stage = 1, stage_amount do
 		local new_seed, rnd_num = math.next_random(seed, 1, items_per_stage)
+
 		targets[#targets + 1] = rnd_num
 		seed = new_seed
 
@@ -172,9 +177,10 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 
 	if is_action_on_target then
 		local stage_amount = self._stage_amount
+
 		self._current_stage = math.min(self._current_stage + 1, stage_amount + 1)
 
-		if self._stage_amount < self._current_stage then
+		if self._current_stage > self._stage_amount then
 			Unit.flow_event(self._minigame_unit, "lua_minigame_success_last")
 			self:play_sound("sfx_minigame_success_last")
 		else

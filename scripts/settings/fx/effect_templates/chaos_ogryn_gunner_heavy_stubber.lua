@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_ogryn_gunner_heavy_stubber.lua
+
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -11,10 +13,9 @@ local STIMMED_PARAMETER_NAME = "minion_stimmed"
 local resources = {
 	shoot_vfx = SHOOT_VFX,
 	wwise_gun_start = WWISE_GUN_START,
-	wwise_gun_stop = WWISE_GUN_STOP
+	wwise_gun_stop = WWISE_GUN_STOP,
 }
-local FX_MUZZLE_1_SOURCE_NAME = "muzzle"
-local FX_MUZZLE_2_SOURCE_NAME = "muzzle_2"
+local FX_MUZZLE_1_SOURCE_NAME, FX_MUZZLE_2_SOURCE_NAME = "muzzle", "muzzle_2"
 local ORPHANED_POLICY = "stop"
 local effect_template = {
 	name = "chaos_ogryn_gunner_heavy_stubber",
@@ -31,19 +32,20 @@ local effect_template = {
 		WwiseWorld.trigger_resource_event(wwise_world, WWISE_GUN_START, source_id)
 
 		template_data.source_id = source_id
-		local game_session = template_context.game_session
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
+		local game_session, game_object_id = template_context.game_session, Managers.state.unit_spawner:game_object_id(unit)
 		local target_unit = MinionPerception.target_unit(game_session, game_object_id)
+
 		template_data.target_unit = target_unit
 		template_data.was_camera_following_target = Effect.update_targeted_by_ranged_minion_wwise_parameters(target_unit, wwise_world, source_id, nil)
-		local world = template_context.world
-		local position = Vector3.zero()
-		local pose = Matrix4x4.identity()
+
+		local world, position, pose = template_context.world, Vector3.zero(), Matrix4x4.identity()
 		local muzzle_1_particle_id = World.create_particles(world, SHOOT_VFX, position)
 
 		World.link_particles(world, muzzle_1_particle_id, attachment_unit, fx_muzzle_1_node_index, pose, ORPHANED_POLICY)
 
 		template_data.muzzle_1_particle_id = muzzle_1_particle_id
+
 		local muzzle_2_particle_id = World.create_particles(world, SHOOT_VFX, position)
 
 		World.link_particles(world, muzzle_2_particle_id, attachment_unit, fx_muzzle_2_node_index, pose, ORPHANED_POLICY)
@@ -75,10 +77,10 @@ local effect_template = {
 	end,
 	update = function (template_data, template_context, dt, t)
 		local wwise_world = template_context.wwise_world
-		local target_unit = template_data.target_unit
-		local source_id = template_data.source_id
+		local target_unit, source_id = template_data.target_unit, template_data.source_id
 		local was_camera_following_target = template_data.was_camera_following_target
 		local is_camera_following_target = Effect.update_targeted_by_ranged_minion_wwise_parameters(target_unit, wwise_world, source_id, was_camera_following_target)
+
 		template_data.was_camera_following_target = is_camera_following_target
 	end,
 	stop = function (template_data, template_context)
@@ -100,7 +102,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.animation_event(unit, "shoot_finished")
-	end
+	end,
 }
 
 return effect_template

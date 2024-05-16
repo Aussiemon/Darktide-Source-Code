@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/immaterium_mission_matchmaking_error.lua
+
 local ErrorCodes = require("scripts/managers/error/error_codes")
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
@@ -35,7 +37,7 @@ ImmateriumMissionMatchmakingError.loc_description = function (self)
 		local error_code_string = ErrorCodes.get_error_code_string_from_reason(error_reason)
 
 		return "loc_matchmaking_failed", {
-			error_code = error_code_string
+			error_code = error_code_string,
 		}
 	end
 end

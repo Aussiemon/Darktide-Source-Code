@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/scanning_event/scanning_event_system.lua
+
 require("scripts/extension_systems/scanning_event/scanning_device_extension")
 
 local ScanningEventSystem = class("ScanningEventSystem", "ExtensionSystemBase")
 local RPCS = {
 	"rpc_scanning_device_hot_join",
-	"rpc_scanning_device_finished"
+	"rpc_scanning_device_finished",
 }
 
 ScanningEventSystem.init = function (self, context, system_init_data, ...)

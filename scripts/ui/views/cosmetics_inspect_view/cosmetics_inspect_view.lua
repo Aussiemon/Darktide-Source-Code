@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view.lua
+
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_definitions")
 local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings")
@@ -22,8 +24,10 @@ local CosmeticsInspectView = class("CosmeticsInspectView", "BaseView")
 CosmeticsInspectView.init = function (self, settings, context)
 	self._context = context
 	self._preview_player = context.preview_player or self:_player()
+
 	local is_in_debug = context.debug
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
 	if context.bundle then
@@ -31,14 +35,23 @@ CosmeticsInspectView.init = function (self, settings, context)
 			image = context.bundle.image,
 			title = context.bundle.title,
 			description = context.bundle.description,
-			type = context.bundle.type
+			type = context.bundle.type,
 		}
 	end
 
 	if not is_in_debug then
 		local item = context.preview_item
-		item = item and (item.gear and MasterItems.create_preview_item_instance(item) or table.clone_instance(item))
+
+		if item then
+			if item.gear then
+				item = MasterItems.create_preview_item_instance(item)
+			else
+				item = table.clone_instance(item)
+			end
+		end
+
 		self._preview_item = item
+
 		local use_store_appearance = context.use_store_appearance
 
 		if use_store_appearance then
@@ -55,16 +68,22 @@ CosmeticsInspectView.init = function (self, settings, context)
 			self._animation_event_name_suffix = context.animation_event_name_suffix
 			self._animation_event_variable_data = context.animation_event_variable_data
 			self._disable_zoom = context.disable_zoom
+
 			local player = self:_player()
 			local profile = context.profile
 			local prefered_profile = profile or player and player:profile()
 			local prefered_gender = prefered_profile and prefered_profile.gender
 			local prefered_archetype = prefered_profile and prefered_profile.archetype.name
+
 			self._mannequin_profile = ItemUtils.create_mannequin_profile_by_item(item, prefered_gender, prefered_archetype)
+
 			local mannequin_profile_loadout = table.clone(self._mannequin_profile.loadout)
+
 			self._mannequin_profile.loadout = mannequin_profile_loadout
+
 			local slots = self._preview_item and self._preview_item.slots
 			local slot_name = context.slot_name or slots and slots[1]
+
 			self._selected_slot = slot_name and ItemSlotSettings[slot_name]
 
 			if not self._initial_rotation and slot_name == "slot_gear_extra_cosmetic" then
@@ -85,7 +104,9 @@ CosmeticsInspectView.init = function (self, settings, context)
 
 			if preview_with_gear and profile then
 				self._preview_profile = profile
+
 				local gear_profile = table.clone_instance(profile)
+
 				gear_profile.character_id = "cosmetics_view_preview_character"
 				self._gear_profile = gear_profile
 
@@ -123,10 +144,13 @@ CosmeticsInspectView._setup_offscreen_gui = function (self)
 	local view_name = parent.view_name
 	local world_layer = 103
 	local world_name = self._unique_id .. "_ui_offscreen_world"
+
 	self._description_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = self._unique_id .. "_ui_offscreen_world_viewport"
 	local viewport_type = "overlay_offscreen_2"
 	local viewport_layer = 1
+
 	self._description_viewport = ui_manager:create_viewport(self._description_world, viewport_name, viewport_type, viewport_layer)
 	self._description_viewport_name = viewport_name
 	self._ui_offscreen_renderer = ui_manager:create_renderer(self._unique_id .. "_ui_offscreen_renderer", self._description_world)
@@ -151,357 +175,363 @@ end
 
 CosmeticsInspectView._apply_default_appearance = function (self)
 	local scenegraph_definition = Definitions.scenegraph_definition
+
 	scenegraph_definition.corner_top_left = {
-		vertical_alignment = "top",
-		parent = "screen",
 		horizontal_alignment = "left",
+		parent = "screen",
+		vertical_alignment = "top",
 		size = {
 			180,
-			310
+			310,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.corner_top_right = {
-		vertical_alignment = "top",
-		parent = "screen",
 		horizontal_alignment = "right",
+		parent = "screen",
+		vertical_alignment = "top",
 		size = {
 			180,
-			310
+			310,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.corner_bottom_left = {
-		vertical_alignment = "bottom",
-		parent = "screen",
 		horizontal_alignment = "left",
+		parent = "screen",
+		vertical_alignment = "bottom",
 		size = {
 			180,
-			120
+			120,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.corner_bottom_right = {
-		vertical_alignment = "bottom",
-		parent = "screen",
 		horizontal_alignment = "right",
+		parent = "screen",
+		vertical_alignment = "bottom",
 		size = {
 			180,
-			120
+			120,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.description_scrollbar = {
-		vertical_alignment = "top",
-		parent = "description_grid",
 		horizontal_alignment = "right",
+		parent = "description_grid",
+		vertical_alignment = "top",
 		size = {
 			10,
-			CosmeticsInspectViewSettings.grid_height - 40
+			CosmeticsInspectViewSettings.grid_height - 40,
 		},
 		position = {
 			30,
 			-20,
-			2
-		}
+			2,
+		},
 	}
+
 	local widget_definitions = Definitions.widget_definitions
+
 	widget_definitions.corner_top_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_upper"
-		}
+			value = "content/ui/materials/frames/screen/metal_01_upper",
+		},
 	}, "corner_top_left")
 	widget_definitions.corner_top_right = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/screen/metal_01_upper",
 			pass_type = "texture_uv",
+			value = "content/ui/materials/frames/screen/metal_01_upper",
 			style = {
 				uvs = {
 					{
 						1,
-						0
+						0,
 					},
 					{
 						0,
-						1
-					}
-				}
-			}
-		}
+						1,
+					},
+				},
+			},
+		},
 	}, "corner_top_right")
 	widget_definitions.corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_lower"
-		}
+			value = "content/ui/materials/frames/screen/metal_01_lower",
+		},
 	}, "corner_bottom_left")
 	widget_definitions.corner_bottom_right = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/screen/metal_01_lower",
 			pass_type = "texture_uv",
+			value = "content/ui/materials/frames/screen/metal_01_lower",
 			style = {
 				uvs = {
 					{
 						1,
-						0
+						0,
 					},
 					{
 						0,
-						1
-					}
-				}
-			}
-		}
+						1,
+					},
+				},
+			},
+		},
 	}, "corner_bottom_right")
 	widget_definitions.description_background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/terminal_basic",
 			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
 				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "center",
 				color = Color.terminal_frame(255, true),
 				size_addition = {
 					20,
-					30
+					30,
 				},
 				offset = {
 					0,
 					0,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
 			pass_type = "texture",
+			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
 			style = {
-				vertical_alignment = "top",
 				horizontal_alignment = "center",
+				vertical_alignment = "top",
 				offset = {
 					0,
 					-18,
-					3
+					3,
 				},
 				size = {
 					nil,
-					36
-				}
-			}
+					36,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
 			pass_type = "texture",
+			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
 			style = {
-				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
 				offset = {
 					0,
 					18,
-					3
+					3,
 				},
 				size = {
 					nil,
-					36
-				}
-			}
-		}
+					36,
+				},
+			},
+		},
 	}, "left_side", {
-		visible = false
+		visible = false,
 	})
 end
 
 CosmeticsInspectView._apply_store_appearance = function (self)
 	local scenegraph_definition = Definitions.scenegraph_definition
+
 	scenegraph_definition.corner_top_left = {
-		vertical_alignment = "top",
-		parent = "screen",
 		horizontal_alignment = "left",
+		parent = "screen",
+		vertical_alignment = "top",
 		size = {
 			84,
-			224
+			224,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.corner_top_right = {
-		vertical_alignment = "top",
-		parent = "screen",
 		horizontal_alignment = "right",
+		parent = "screen",
+		vertical_alignment = "top",
 		size = {
 			84,
-			224
+			224,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.corner_bottom_left = {
-		vertical_alignment = "bottom",
-		parent = "screen",
 		horizontal_alignment = "left",
+		parent = "screen",
+		vertical_alignment = "bottom",
 		size = {
 			84,
-			224
+			224,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.corner_bottom_right = {
-		vertical_alignment = "bottom",
-		parent = "screen",
 		horizontal_alignment = "right",
+		parent = "screen",
+		vertical_alignment = "bottom",
 		size = {
 			84,
-			224
+			224,
 		},
 		position = {
 			0,
 			0,
-			62
-		}
+			62,
+		},
 	}
 	scenegraph_definition.description_scrollbar = {
-		vertical_alignment = "top",
-		parent = "description_grid",
 		horizontal_alignment = "right",
+		parent = "description_grid",
+		vertical_alignment = "top",
 		size = {
 			10,
-			CosmeticsInspectViewSettings.grid_height - 80
+			CosmeticsInspectViewSettings.grid_height - 80,
 		},
 		position = {
 			30,
 			-20,
-			2
-		}
+			2,
+		},
 	}
+
 	local widget_definitions = Definitions.widget_definitions
+
 	widget_definitions.corner_top_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_upper_left"
-		}
+			value = "content/ui/materials/frames/screen/premium_upper_left",
+		},
 	}, "corner_top_left")
 	widget_definitions.corner_top_right = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/screen/premium_upper_left",
 			pass_type = "texture_uv",
+			value = "content/ui/materials/frames/screen/premium_upper_left",
 			style = {
 				uvs = {
 					{
 						1,
-						0
+						0,
 					},
 					{
 						0,
-						1
-					}
-				}
-			}
-		}
+						1,
+					},
+				},
+			},
+		},
 	}, "corner_top_right")
 	widget_definitions.corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_lower_left"
-		}
+			value = "content/ui/materials/frames/screen/premium_lower_left",
+		},
 	}, "corner_bottom_left")
 	widget_definitions.corner_bottom_right = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/premium_lower_right"
-		}
+			value = "content/ui/materials/frames/screen/premium_lower_right",
+		},
 	}, "corner_bottom_right")
 	widget_definitions.description_background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/terminal_basic",
 			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
 				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "center",
 				color = Color.terminal_frame(255, true),
 				size_addition = {
 					20,
-					30
+					30,
 				},
 				offset = {
 					0,
 					0,
-					0
-				}
-			}
+					0,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/frames/premium_store/details_upper",
 			pass_type = "texture",
+			value = "content/ui/materials/frames/premium_store/details_upper",
 			style = {
-				vertical_alignment = "top",
 				horizontal_alignment = "center",
+				vertical_alignment = "top",
 				size_addition = {
 					52,
-					0
+					0,
 				},
 				offset = {
 					0,
 					-60,
-					3
+					3,
 				},
 				size = {
 					nil,
-					80
-				}
-			}
+					80,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/frames/premium_store/details_lower_basic",
 			pass_type = "texture",
+			value = "content/ui/materials/frames/premium_store/details_lower_basic",
 			style = {
-				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
 				size_addition = {
 					52,
-					0
+					0,
 				},
 				offset = {
 					0,
 					34,
-					3
+					3,
 				},
 				size = {
 					nil,
-					108
-				}
-			}
-		}
+					108,
+				},
+			},
+		},
 	}, "left_side", {
-		visible = false
+		visible = false,
 	})
 end
 
@@ -514,14 +544,17 @@ CosmeticsInspectView.on_enter = function (self)
 	self:_start_preview_item()
 
 	local context = self._context
-	self._spawn_player = self._preview_item and context and not context.debug
+
+	self._spawn_player = self._preview_item and not not context and not context.debug
 end
 
 CosmeticsInspectView._setup_input_legend = function (self)
 	local context = self._context
 	local preview_with_gear = context.preview_with_gear
 	local use_store_appearance = context.use_store_appearance
+
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 50)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -565,6 +598,7 @@ CosmeticsInspectView._stop_previewing = function (self)
 		local item_slot = self._context.prop_item.slots[1]
 		local presentation_profile = self._presentation_profile
 		local presentation_loadout = presentation_profile.loadout
+
 		presentation_loadout[item_slot] = nil
 	end
 end
@@ -579,6 +613,7 @@ CosmeticsInspectView._spawn_profile = function (self, profile, initial_rotation,
 	local world = self._world_spawner:world()
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
+
 	self._profile_spawner = UIProfileSpawner:new("CosmeticsInspectView", world, camera, unit_spawner)
 
 	if disable_rotation_input then
@@ -591,6 +626,7 @@ CosmeticsInspectView._spawn_profile = function (self, profile, initial_rotation,
 
 	if initial_rotation then
 		local character_initial_rotation = Quaternion.axis_angle(Vector3(0, 0, 1), initial_rotation)
+
 		spawn_rotation = Quaternion.multiply(character_initial_rotation, spawn_rotation)
 	end
 
@@ -617,17 +653,18 @@ CosmeticsInspectView._spawn_profile = function (self, profile, initial_rotation,
 end
 
 local ANIMATION_SLOTS_MAP = {
+	slot_animation_emote_1 = true,
+	slot_animation_emote_2 = true,
 	slot_animation_emote_3 = true,
-	slot_animation_end_of_round = true,
 	slot_animation_emote_4 = true,
 	slot_animation_emote_5 = true,
-	slot_animation_emote_1 = true,
-	slot_animation_emote_2 = true
+	slot_animation_end_of_round = true,
 }
 
 CosmeticsInspectView._setup_item_description = function (self, description_text, restriction_text, property_text)
 	local widgets_by_name = self._widgets_by_name
 	local description_background = widgets_by_name.description_background
+
 	description_background.content.visible = false
 
 	self:_destroy_description_grid()
@@ -646,16 +683,19 @@ CosmeticsInspectView._setup_item_description = function (self, description_text,
 	local function _add_text_widget(pass_template, text)
 		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
 			max_width,
-			0
+			0,
 		})
 		local widget = self:_create_widget(string.format("description_grid_widget_%d", #widgets), widget_definition)
+
 		widget.content.text = text
+
 		local widget_text_style = widget.style.text
 		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
 		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
 			max_width,
-			math.huge
+			math.huge,
 		}, text_options)
+
 		widget.content.size[2] = text_height
 		widgets[#widgets + 1] = widget
 		alignment_widgets[#alignment_widgets + 1] = widget
@@ -666,8 +706,8 @@ CosmeticsInspectView._setup_item_description = function (self, description_text,
 		alignment_widgets[#alignment_widgets + 1] = {
 			size = {
 				max_width,
-				height
-			}
+				height,
+			},
 		}
 	end
 
@@ -709,16 +749,19 @@ CosmeticsInspectView._setup_item_description = function (self, description_text,
 
 	self._description_grid_widgets = widgets
 	self._description_grid_alignment_widgets = alignment_widgets
+
 	local grid_scenegraph_id = "description_grid"
 	local grid_pivot_scenegraph_id = "description_content_pivot"
 	local grid_spacing = {
 		0,
-		0
+		0,
 	}
 	local grid_direction = "down"
 	local use_is_focused_for_navigation = true
 	local grid = UIWidgetGrid:new(self._description_grid_widgets, self._description_grid_alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, use_is_focused_for_navigation)
+
 	self._description_grid = grid
+
 	local scrollbar_widget = widgets_by_name.description_scrollbar
 
 	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
@@ -772,10 +815,12 @@ CosmeticsInspectView._start_preview_item = function (self)
 			local item_animation_event = item.animation_event
 			local item_face_animation_event = item.face_animation_event
 			local animation_event_name_suffix = self._animation_event_name_suffix
+
 			self._disable_zoom = context.disable_zoom or true
 			context.state_machine = context.state_machine or item.state_machine
 			context.animation_event = context.animation_event or item_animation_event
 			context.face_animation_event = self._previewed_with_gear and (context.face_animation_event or item_face_animation_event) or nil
+
 			local animation_event = item_animation_event
 
 			if animation_event_name_suffix then
@@ -799,10 +844,12 @@ CosmeticsInspectView._start_preview_item = function (self)
 
 			local prop_item_key = item.prop_item
 			local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
+
 			context.prop_item = context.prop_item or prop_item
 
 			if context.prop_item then
 				local prop_item_slot = context.prop_item.slots[1]
+
 				presentation_loadout[prop_item_slot] = context.prop_item
 
 				if self._profile_spawner then
@@ -837,7 +884,7 @@ CosmeticsInspectView._start_preview_item = function (self)
 
 		local title_item_data = {
 			item_type = Localize(UISettings.item_type_localization_lookup[Utf8.upper(self._bundle_data.type)]),
-			display_name = self._bundle_data.title
+			display_name = self._bundle_data.title,
 		}
 
 		self:_setup_title(title_item_data, true)
@@ -847,16 +894,19 @@ end
 
 CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
 	self._widgets_by_name.title.content.text = ignore_localization and item.display_name or Localize(item.display_name) or ""
+
 	local item_type = ignore_localization and item.item_type or ItemUtils.type_display_name(item)
 	local sub_text = item_type
 
 	if item.rarity then
 		local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
 		local rarity_display_name = ItemUtils.rarity_display_name(item)
+
 		sub_text = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
 	end
 
 	self._widgets_by_name.title.content.sub_text = sub_text
+
 	local title_style = self._widgets_by_name.title.style.text
 	local sub_title_style = self._widgets_by_name.title.style.sub_text
 	local title_options = UIFonts.get_font_options_by_style(title_style)
@@ -871,14 +921,16 @@ CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
 
 	local title_width, title_height = self:_text_size(self._widgets_by_name.title.content.text, title_style.font_type, title_style.font_size, {
 		max_width,
-		math.huge
+		math.huge,
 	}, title_options)
 	local sub_title_width, sub_title_height = self:_text_size(self._widgets_by_name.title.content.sub_text, sub_title_style.font_type, sub_title_style.font_size, {
 		max_width,
-		math.huge
+		math.huge,
 	}, sub_title_options)
 	local sub_title_margin = 10
+
 	sub_title_style.offset[2] = sub_title_margin + title_height
+
 	local title_total_size = sub_title_style.offset[2] + sub_title_height + self._widgets_by_name.title.style.divider.size[2] + sub_title_margin
 	local title_scenegraph_position = self._ui_scenegraph.title.position
 	local margin = 15
@@ -888,6 +940,7 @@ CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
 	self:_set_scenegraph_size("title", nil, title_total_size)
 
 	grid_height = grid_height - margin
+
 	local mask_oversize = 10
 	local start_description_position = title_scenegraph_position[2] + title_total_size + margin
 
@@ -918,6 +971,7 @@ CosmeticsInspectView._generate_mannequin_loadout = function (self, profile, item
 
 				if item_definition then
 					local slot_item = table.clone(item_definition)
+
 					new_loadout[slot_name] = slot_item
 				end
 			end
@@ -929,6 +983,7 @@ end
 
 CosmeticsInspectView.cb_on_weapon_swap_pressed = function (self)
 	local wield_slot = self._wielded_slot
+
 	wield_slot = wield_slot == "slot_primary" and "slot_secondary" or "slot_primary"
 
 	self:_play_sound(UISoundEvents.weapons_swap)
@@ -1060,6 +1115,7 @@ CosmeticsInspectView.update = function (self, dt, t, input_service)
 		self:_spawn_profile(profile, initial_rotation, disable_rotation_input)
 
 		self._spawn_player = false
+
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot and selected_slot.name
 
@@ -1145,7 +1201,7 @@ end
 CosmeticsInspectView._get_weapon_spawn_position_normalized = function (self)
 	self:_force_update_scenegraph()
 
-	local scale = nil
+	local scale
 	local pivot_world_position = self:_scenegraph_world_position("weapon_pivot", scale)
 	local parent_world_position = self:_scenegraph_world_position("weapon_viewport", scale)
 	local viewport_width, viewport_height = self:_scenegraph_size("weapon_viewport", scale)
@@ -1171,6 +1227,7 @@ CosmeticsInspectView._setup_background_world = function (self)
 		end
 
 		instance._default_camera_unit = camera_unit
+
 		local viewport_name = CosmeticsInspectViewSettings.viewport_name
 		local viewport_type = CosmeticsInspectViewSettings.viewport_type
 		local viewport_layer = CosmeticsInspectViewSettings.viewport_layer
@@ -1203,7 +1260,9 @@ CosmeticsInspectView._setup_background_world = function (self)
 	local world_name = CosmeticsInspectViewSettings.world_name
 	local world_layer = CosmeticsInspectViewSettings.world_layer
 	local world_timer_name = CosmeticsInspectViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = CosmeticsInspectViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)

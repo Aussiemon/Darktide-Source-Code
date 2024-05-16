@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cutscene_character/cutscene_character_system.lua
+
 local CutscenePlayerLoadout = require("scripts/extension_systems/cutscene_character/utilities/cutscene_player_loadout")
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
 local PlayerVisibility = require("scripts/utilities/player_visibility")
@@ -34,7 +36,9 @@ CutsceneCharacterSystem.register_cutscene_character = function (self, extension)
 
 	if cinematic_name ~= "none" then
 		self._cinematic_to_extensions[cinematic_name] = self._cinematic_to_extensions[cinematic_name] or {}
+
 		local cinematic_to_extensions = self._cinematic_to_extensions[cinematic_name]
+
 		cinematic_to_extensions[#cinematic_to_extensions + 1] = extension
 	end
 end
@@ -71,6 +75,7 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 
 		local level = unit_level(extension._unit)
 		local list = extensions_per_level[level] or {}
+
 		list[#list + 1] = extension
 		extensions_per_level[level] = list
 	end
@@ -100,7 +105,9 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 	end
 
 	local weapon_specific_walk_animations = template.available_weapon_animation_events
+
 	self._hide_players = template.hide_players
+
 	local slots_taken = {}
 	local none_slot = "none"
 
@@ -181,6 +188,7 @@ end
 local function create_loadout(cinematic_name, player)
 	local new_player_loadout = {}
 	local items = CutscenePlayerLoadout.fetch_player_items(cinematic_name, player)
+
 	new_player_loadout.breed_name = player:breed_name()
 	new_player_loadout.items = items
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/free_flight/free_flight_manager.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local FreeFlightDefaultInput = require("scripts/foundation/managers/free_flight/free_flight_default_input")
 local FreeFlightFollowPath = require("scripts/foundation/managers/free_flight/utilities/free_flight_follow_path")
@@ -6,6 +8,7 @@ local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local FreeFlightManager = class("FreeFlightManager")
+
 FreeFlightManager.DEBUG_TAG = "Free Flight"
 FreeFlightManager.STD_TRANSLATION_SPEED = 3
 FreeFlightManager.STD_ACCELERATION = 10
@@ -54,7 +57,7 @@ FreeFlightManager._setup_standard_camera = function (self, camera)
 	camera.rotation_speed = self.STD_ROTATION_SPEED
 	camera.projection_type = Camera.PERSPECTIVE
 	camera.orthographic_data = {
-		size = self.STD_ORTHOGRAPHIC_SIZE
+		size = self.STD_ORTHOGRAPHIC_SIZE,
 	}
 	camera.dof_enabled = 0
 
@@ -90,8 +93,7 @@ FreeFlightManager.set_input_source = function (self, source)
 end
 
 FreeFlightManager._get_input = function (self)
-	local imgui_manager = Managers.imgui
-	local ui_manager = Managers.ui
+	local imgui_manager, ui_manager = Managers.imgui, Managers.ui
 	local input_is_being_used_by_other_manager = imgui_manager and imgui_manager:using_input() or ui_manager and ui_manager:using_input()
 	local input = input_is_being_used_by_other_manager and self._input:null_service() or self._input
 
@@ -220,10 +222,11 @@ FreeFlightManager._exit_frustum_freeze = function (self, data, world, viewport)
 end
 
 FreeFlightManager._enter_frustum_freeze = function (self, data, world, viewport)
-	local camera = nil
+	local camera
 	local cam = ScriptViewport.camera(viewport)
 	local cam_fov = Camera.vertical_fov(cam)
 	local camera_unit = World.spawn_unit_ex(world, "core/units/camera")
+
 	camera = Unit.camera(camera_unit, "camera")
 
 	Camera.set_data(camera, "unit", camera_unit)
@@ -295,8 +298,10 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 	Camera.set_projection_type(cam, camera_data.projection_type)
 
 	local translation_change_speed = camera_data.translation_speed * self.STD_SPEED_CHANGE
+
 	camera_data.translation_speed = camera_data.translation_speed + speed_change * translation_change_speed
 	camera_data.translation_speed = math.clamp(camera_data.translation_speed, self.STD_MINIMUM_SPEED, self.STD_MAXIMUM_SPEED)
+
 	local cm = Camera.local_pose(cam)
 	local trans = Matrix4x4.translation(cm)
 
@@ -305,33 +310,41 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 	elseif self._look_input_enabled then
 		if camera_data.projection_type == Camera.ORTHOGRAPHIC then
 			local ortho_data = camera_data.orthographic_data
+
 			ortho_data.yaw = (ortho_data.yaw or 0) - Vector3.x(look) * camera_data.rotation_speed
+
 			local q1 = Quaternion(Vector3(0, 0, 1), ortho_data.yaw)
 			local q2 = Quaternion(Vector3.right(), -math.half_pi)
 			local q = Quaternion.multiply(q1, q2)
 			local x_trans = (move_right - move_left + move_controller.x) * dt * self.STD_ORTHOGRAPHIC_SPEED
 			local y_trans = (move_forward - move_back + move_controller.y) * dt * self.STD_ORTHOGRAPHIC_SPEED
 			local pos = trans + Quaternion.up(q) * y_trans + Quaternion.right(q) * x_trans
+
 			cm = Matrix4x4.from_quaternion_position(q, pos)
+
 			local size = ortho_data.size
-			size = size - speed_change * size * dt
+
+			size = size - speed_change * (size * dt)
 			ortho_data.size = size
 
 			Camera.set_orthographic_view(cam, -size, size, -size, size)
 		else
 			Matrix4x4.set_translation(cm, Vector3(0, 0, 0))
 
-			local q1 = Quaternion(Vector3(0, 0, 1), -Vector3.x(look) * camera_data.rotation_speed * (using_gamepad and 2 or 1))
-			local q2 = Quaternion(Matrix4x4.x(cm), -Vector3.y(look) * camera_data.rotation_speed * (using_gamepad and 2 or 1))
+			local q1 = Quaternion(Vector3(0, 0, 1), -Vector3.x(look) * (camera_data.rotation_speed * (using_gamepad and 2 or 1)))
+			local q2 = Quaternion(Matrix4x4.x(cm), -Vector3.y(look) * (camera_data.rotation_speed * (using_gamepad and 2 or 1)))
 			local roll = -roll_left + roll_right
-			local q3 = Quaternion(Matrix4x4.y(cm), roll * camera_data.rotation_speed * (using_gamepad and 2 or 1))
+			local q3 = Quaternion(Matrix4x4.y(cm), roll * (camera_data.rotation_speed * (using_gamepad and 2 or 1)))
 			local q = Quaternion.multiply(q1, q2)
+
 			q = Quaternion.multiply(q, q3)
 			cm = Matrix4x4.multiply(cm, Matrix4x4.from_quaternion(q))
+
 			local x_trans = move_right - move_left + move_controller.x
 			local y_trans = move_forward - move_back + move_controller.y
 			local z_trans = move_up - move_down
 			local offset = Matrix4x4.transform(cm, Vector3(x_trans, y_trans, z_trans) * camera_data.translation_speed * dt)
+
 			trans = Vector3.add(trans, offset)
 
 			Matrix4x4.set_translation(cm, trans)
@@ -545,6 +558,7 @@ FreeFlightManager._enter_global_free_flight = function (self, camera_data)
 
 	camera_data.active = true
 	camera_data.viewport_world_name = ScriptWorld.name(world)
+
 	local cam = ScriptViewport.camera(viewport)
 	local tm = Camera.local_pose(cam)
 	local position = Matrix4x4.translation(tm)

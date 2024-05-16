@@ -1,49 +1,51 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_prologue.lua
+
 local settings = {
-	use_prologue_profile = true,
 	bot_backfilling_allowed = false,
+	cache_local_player_profile = true,
+	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_prologue",
+	default_player_side_name = "heroes",
+	disable_hologram = true,
 	host_singleplay = true,
+	is_prologue = true,
 	name = "prologue",
 	talents_disabled = true,
-	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_prologue",
-	cache_local_player_profile = true,
+	use_prologue_profile = true,
 	use_side_color = false,
-	disable_hologram = true,
 	vaulting_allowed = true,
-	default_player_side_name = "heroes",
-	is_prologue = true,
 	states = {
 		"running",
-		"prologue_complete"
+		"prologue_complete",
 	},
 	side_compositions = {
 		{
-			name = "heroes",
 			color_name = "blue",
+			name = "heroes",
 			relations = {
 				enemy = {
-					"villains"
-				}
-			}
+					"villains",
+				},
+			},
 		},
 		{
-			name = "villains",
 			color_name = "red",
+			name = "villains",
 			relations = {
 				enemy = {
-					"heroes"
-				}
-			}
-		}
+					"heroes",
+				},
+			},
+		},
 	},
 	hud_settings = {
-		player_composition = "players"
+		player_composition = "players",
 	},
 	hotkeys = {
-		hotkey_system = "system_view"
+		hotkey_system = "system_view",
 	},
 	human_controlled_initial_items_excluded_slots = {
-		"slot_secondary"
-	}
+		"slot_secondary",
+	},
 }
 
 return settings

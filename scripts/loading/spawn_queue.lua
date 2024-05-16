@@ -1,13 +1,15 @@
+﻿-- chunkname: @scripts/loading/spawn_queue.lua
+
 local SpawnQueue = class("SpawnQueue")
 
 SpawnQueue.init = function (self, group_delay)
 	self._delay = group_delay
 	self._waiting = {
-		peers = {}
+		peers = {},
 	}
 	self._waiting_group_id = nil
 	self._spawning = {
-		peers = {}
+		peers = {},
 	}
 	self._spawning_group_id = nil
 	self._spawned = {}
@@ -43,6 +45,7 @@ SpawnQueue.remove_from_queue = function (self, peer_id)
 	self._waiting.peers[peer_id] = nil
 	self._spawning.peers[peer_id] = nil
 	self._peer_level_loaded[peer_id] = nil
+
 	local index = table.find(self._spawned, peer_id)
 
 	if index then
@@ -69,10 +72,8 @@ SpawnQueue.trigger_group = function (self, group_id)
 		peers[#peers + 1] = peer
 	end
 
-	self._spawning.peers = self._waiting.peers
-	self._waiting.peers = self._spawning.peers
-	self._spawning_group_id = self._waiting_group_id
-	self._waiting_group_id = self._spawning_group_id
+	self._waiting.peers, self._spawning.peers = self._spawning.peers, self._waiting.peers
+	self._waiting_group_id, self._spawning_group_id = self._spawning_group_id, self._waiting_group_id
 
 	for peer, callback in pairs(self._spawning.peers) do
 		callback(self._spawning_group_id)
@@ -113,7 +114,7 @@ SpawnQueue.update = function (self, dt)
 	self._waiting_age = self._waiting_age + dt
 
 	if self._spawning_group_id == nil then
-		local wait_reached = self._delay <= self._waiting_age
+		local wait_reached = self._waiting_age >= self._delay
 		local is_everyone_waiting = self:_is_everyone_waiting()
 		local is_game_filled = self:_is_game_filled()
 
@@ -124,7 +125,7 @@ SpawnQueue.update = function (self, dt)
 end
 
 SpawnQueue._is_everyone_waiting = function (self)
-	return Managers.connection:num_members() < table.size(self._waiting.peers)
+	return table.size(self._waiting.peers) > Managers.connection:num_members()
 end
 
 SpawnQueue._is_game_filled = function (self)
@@ -133,9 +134,10 @@ end
 
 SpawnQueue._generate_group_id = function (self)
 	local id = self._group_id_counter
+
 	self._group_id_counter = self._group_id_counter + 1
 
-	if self._group_id_type_info.max < self._group_id_counter then
+	if self._group_id_counter > self._group_id_type_info.max then
 		self._group_id_counter = self._group_id_type_info.min
 	end
 

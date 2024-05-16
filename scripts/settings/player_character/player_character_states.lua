@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/player_character/player_character_states.lua
+
 local PlayerCharacterStateCatapulted = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_catapulted")
 local PlayerCharacterStateConsumed = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_consumed")
 local PlayerCharacterStateDead = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_dead")
@@ -58,7 +60,7 @@ local class_list = {
 	sprinting = PlayerCharacterStateSprinting,
 	stunned = PlayerCharacterStateStunned,
 	walking = PlayerCharacterStateWalking,
-	warp_grabbed = PlayerCharacterStateWarpGrabbed
+	warp_grabbed = PlayerCharacterStateWarpGrabbed,
 }
 
 return settings("PlayerCharacterStates", class_list)

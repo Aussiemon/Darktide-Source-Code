@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/actions/action_stance_change.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Action = require("scripts/utilities/weapon/action")
@@ -21,7 +23,9 @@ ActionStanceChange.init = function (self, action_context, action_params, action_
 	ActionStanceChange.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local ability_template_tweak_data = self._ability_template_tweak_data
 	local slot_to_wield = action_settings.auto_wield_slot or ability_template_tweak_data.auto_wield_slot
 
@@ -30,7 +34,9 @@ ActionStanceChange.init = function (self, action_context, action_params, action_
 	end
 
 	self._ability_type = action_settings.ability_type or "none"
+
 	local player_unit = self._player_unit
+
 	self._talent_extension = ScriptUnit.extension(player_unit, "talent_system")
 end
 
@@ -136,6 +142,7 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 
 	if block_weapon_actions then
 		self._weapon_actions_blocked = true
+
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:block_actions("weapon_action")
@@ -162,6 +169,7 @@ ActionStanceChange.finish = function (self, reason, data, t, time_in_action, act
 
 	if self._weapon_actions_blocked then
 		self._weapon_actions_blocked = nil
+
 		local weapon_extension = ScriptUnit.extension(self._player_unit, "weapon_system")
 
 		weapon_extension:unblock_actions("weapon_action")

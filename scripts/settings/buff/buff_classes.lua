@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/buff_classes.lua
+
 local function _require_buff_class(buff)
 	local base_path = "scripts/extension_systems/buff/buffs/"
 	local buff_file_name = base_path .. buff
@@ -26,7 +28,7 @@ local buff_classes = {
 	psyker_passive_buff = _require_buff_class("psyker_passive_buff"),
 	zealot_passive_buff = _require_buff_class("zealot_passive_buff"),
 	parent_proc_buff = _require_buff_class("parent_proc_buff"),
-	veteran_stealth_bonuses_buff = _require_buff_class("veteran_stealth_bonuses_buff")
+	veteran_stealth_bonuses_buff = _require_buff_class("veteran_stealth_bonuses_buff"),
 }
 
 return buff_classes

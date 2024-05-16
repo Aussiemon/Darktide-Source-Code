@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/liquid_spawner.lua
+
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local NavQueries = require("scripts/utilities/nav_queries")
@@ -7,7 +9,9 @@ local LiquidSpawner = component("LiquidSpawner")
 LiquidSpawner.init = function (self, unit, is_server, nav_world)
 	self._unit = unit
 	self._nav_world = nav_world
+
 	local run_update = false
+
 	self._is_server = is_server
 	self._max_liquid = self:get_data(unit, "max_liquid")
 	self._use_template_max_liquid = self:get_data(unit, "use_template_max_liquid")
@@ -17,6 +21,7 @@ LiquidSpawner.init = function (self, unit, is_server, nav_world)
 
 	if rawget(_G, "LevelEditor") and LiquidSpawner._nav_info == nil then
 		LiquidSpawner._nav_info = SharedNav.create_nav_info()
+
 		local nav_gen_guid = SharedNav.check_new_navmesh_generated(LiquidSpawner._nav_info, self._my_nav_gen_guid, true)
 
 		if nav_gen_guid then
@@ -105,6 +110,7 @@ LiquidSpawner.editor_init = function (self, unit)
 
 	if LiquidSpawner._nav_info == nil then
 		LiquidSpawner._nav_info = SharedNav.create_nav_info()
+
 		local with_traverse_logic = true
 		local nav_gen_guid = SharedNav.check_new_navmesh_generated(LiquidSpawner._nav_info, self._my_nav_gen_guid, with_traverse_logic)
 
@@ -116,9 +122,13 @@ LiquidSpawner.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
@@ -164,14 +174,14 @@ LiquidSpawner.editor_destroy = function (self, unit)
 end
 
 local NAV_TAG_LAYER_COSTS = {
-	teleporters = 0,
-	ledges_with_fence = 0,
+	cover_ledges = 0,
+	cover_vaults = 0,
 	doors = 0,
 	jumps = 0,
 	ledges = 0,
-	cover_ledges = 0,
-	cover_vaults = 0,
-	monster_walls = 0
+	ledges_with_fence = 0,
+	monster_walls = 0,
+	teleporters = 0,
 }
 
 LiquidSpawner.editor_update = function (self, unit)
@@ -209,7 +219,9 @@ LiquidSpawner._generate_single_position = function (self, unit, nav_world, from_
 	local use_template_max_liquid = self:get_data(unit, "use_template_max_liquid")
 	local liquid_area_template_name = self:get_data(unit, "liquid_area_template_name")
 	local template = LiquidAreaTemplates[liquid_area_template_name]
+
 	max_liquid = not use_template_max_liquid and max_liquid or template.max_liquid
+
 	local traverse_logic = LiquidSpawner._nav_info.traverse_logic
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, from_position, 1, 1, 1)
 
@@ -306,45 +318,45 @@ end
 
 LiquidSpawner.component_data = {
 	max_liquid = {
-		ui_type = "slider",
+		decimals = 0,
+		max = 400,
 		min = 0,
 		step = 1,
-		decimals = 0,
-		value = 130,
 		ui_name = "Max Liquid",
-		max = 400
+		ui_type = "slider",
+		value = 130,
 	},
 	use_template_max_liquid = {
+		ui_name = "Use Template Max Liquid",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Use Template Max Liquid"
 	},
 	liquid_area_template_name = {
+		ui_name = "Liquid Area Template Name",
 		ui_type = "text_box",
 		value = "prop_fire",
-		ui_name = "Liquid Area Template Name"
 	},
 	spawn_nodes = {
-		ui_type = "text_box_array",
 		is_optional = true,
-		ui_name = "Spawn Nodes"
+		ui_name = "Spawn Nodes",
+		ui_type = "text_box_array",
 	},
 	draw_liquid = {
+		category = "Debug",
+		ui_name = "Draw Liquid (Approx)",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Draw Liquid (Approx)",
-		category = "Debug"
 	},
 	inputs = {
 		spawn_liquid = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		despawn_liquid = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return LiquidSpawner

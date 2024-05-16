@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/player_spawner/player_spawner_extension.lua
+
 local PlayerSpawnerExtension = class("PlayerSpawnerExtension")
 
 PlayerSpawnerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)

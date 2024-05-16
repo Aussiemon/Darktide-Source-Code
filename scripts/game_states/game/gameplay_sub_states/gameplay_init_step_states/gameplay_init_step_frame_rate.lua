@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_frame_rate.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepOutOfBounds = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_out_of_bounds")
 local GameplayInitStepFrameRate = class("GameplayInitStepFrameRate")
@@ -10,7 +12,7 @@ end
 
 GameplayInitStepFrameRate.update = function (self, main_dt, main_t)
 	local next_step_params = {
-		shared_state = self._shared_state
+		shared_state = self._shared_state,
 	}
 
 	return GameplayInitStepOutOfBounds, next_step_params

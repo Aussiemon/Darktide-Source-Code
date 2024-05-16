@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/circumstance_templates.lua
+
 local circumstance_templates = {}
 
 local function _extract_circumstance_templates(path)

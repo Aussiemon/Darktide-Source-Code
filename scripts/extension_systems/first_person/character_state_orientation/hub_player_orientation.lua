@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/character_state_orientation/hub_player_orientation.lua
+
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
 local Fov = require("scripts/utilities/camera/fov")
@@ -9,6 +11,7 @@ HubPlayerOrientation.init = function (self, player, orientation)
 	HubPlayerOrientation.super.init(self, player, orientation)
 
 	local settings = PlayerOrientationSettings.hub
+
 	self._mouse_scale = settings.mouse_scale
 	self._min_pitch = settings.min_pitch
 	self._max_pitch = settings.max_pitch
@@ -41,6 +44,7 @@ HubPlayerOrientation.pre_update = function (self, main_t, main_dt, input, sensit
 	local look_delta = Orientation.look_delta(main_dt, input, sensitivity, mouse_scale, look_delta_context)
 	local yaw = (orientation.yaw - look_delta.x) % PI_2
 	local pitch = math.clamp((orientation.pitch + PI) % PI_2 - PI + look_delta.y, min_pitch, max_pitch) % PI_2
+
 	orientation.yaw = math.mod_two_pi(yaw)
 	orientation.pitch = math.mod_two_pi(pitch)
 	orientation.roll = 0

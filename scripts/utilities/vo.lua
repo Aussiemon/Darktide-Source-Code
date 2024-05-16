@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/vo.lua
+
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
@@ -5,14 +7,14 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local Vo = {}
-local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event = nil
+local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event
 local Interactions = {
 	health_station = function (dialogue_extension)
 		local event_data = dialogue_extension:get_event_data_payload()
 		local event_name = "heal_start"
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
-	end
+	end,
 }
 
 Vo.health_critical_event = function (unit)
@@ -37,6 +39,10 @@ Vo.interaction_start_event = function (unit, target_unit, interaction_template_n
 		end
 	end
 
+	if interaction_template_name ~= "remove_net" and false then
+		-- Nothing
+	end
+
 	if ScriptUnit.has_extension(target_unit, "dialogue_context_system") then
 		local timeset = Managers.time:time("gameplay") + 900
 		local dialogue_extension = ScriptUnit.extension(target_unit, "dialogue_system")
@@ -51,6 +57,7 @@ Vo.throwing_item_event = function (unit, projectile_template)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.item = projectile_template
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -71,6 +78,7 @@ Vo.out_of_ammo_event = function (inventory_slot_component, visual_loadout_extens
 
 		if is_out_of_ammo then
 			local event_data = dialogue_extension:get_event_data_payload()
+
 			event_data.fail_reason = "out_of_ammo"
 
 			dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -159,6 +167,7 @@ Vo.player_interaction_vo_event = function (interactor_unit, interactee_unit, int
 
 	if query_concept and _can_player_trigger_vo(interactor_ext, query_concept) then
 		local event_data = interactor_ext:get_event_data_payload()
+
 		event_data.interactor_class = interactor_ext:vo_class_name()
 		event_data.interactee_class = interactee_ext:vo_class_name()
 		event_data.trigger_id = interaction_vo_event
@@ -196,7 +205,7 @@ Vo.player_damage_event = function (unit, damage)
 end
 
 Vo.player_land_event = function (unit, time_in_falling)
-	if unit and DialogueSettings.heavy_land_on_air_threshold < time_in_falling then
+	if unit and time_in_falling > DialogueSettings.heavy_land_on_air_threshold then
 		local fx_extension = ScriptUnit.extension(unit, "fx_system")
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
@@ -235,9 +244,9 @@ Vo.pouncing_alert_event = function (target_unit, pouncing_breed)
 		return
 	end
 
-	local event_name = "pouncing_enemy"
-	local pouncing_breed_name = pouncing_breed.name
+	local event_name, pouncing_breed_name = "pouncing_enemy", pouncing_breed.name
 	local event_data = dialogue_extension:get_event_data_payload()
+
 	event_data.enemy_tag = pouncing_breed_name
 
 	dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -249,6 +258,7 @@ Vo.warning_event = function (target_unit, trigger_id)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -298,9 +308,13 @@ Vo.friendly_fire_event = function (attacking_unit, attacked_unit)
 	if attacking_unit and attacked_unit and ScriptUnit.has_extension(attacking_unit, "dialogue_context_system") and ScriptUnit.has_extension(attacked_unit, "dialogue_context_system") then
 		local dialogue_ext_attacking_unit = ScriptUnit.extension(attacking_unit, "dialogue_system")
 		local event_data = dialogue_ext_attacking_unit:get_event_data_payload()
+
 		event_data.attacking_class = dialogue_ext_attacking_unit:vo_class_name()
+
 		local dialogue_ext_attacked_unit = ScriptUnit.extension(attacked_unit, "dialogue_system")
+
 		event_data.attacked_class = dialogue_ext_attacked_unit:vo_class_name()
+
 		local event_name = "friendly_fire"
 
 		if _can_player_trigger_vo(dialogue_ext_attacked_unit, event_name) then
@@ -340,18 +354,15 @@ Vo.enemy_kill_event = function (killer_unit, killed_unit)
 			local breed_data = _get_breed(killed_unit)
 
 			if DialogueBreedSettings[breed_data.name].vo_triggers_enemy_kill_query then
-				local killed_unit_name = nil
+				local killed_unit_name
 
-				if breed_data.tags.monster then
-					killed_unit_name = "monster"
-				else
-					killed_unit_name = breed_data.name
-				end
+				killed_unit_name = breed_data.tags.monster and "monster" or breed_data.name
 
 				local event_name = "enemy_kill"
 
 				if _can_player_trigger_vo(killer_dialogue_extension, event_name) then
 					local event_data = killer_dialogue_extension:get_event_data_payload()
+
 					event_data.killed_type = killed_unit_name
 
 					killer_dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -370,6 +381,7 @@ Vo.player_vo_enemy_attack_event = function (unit, breed_name, vo_event)
 
 		if _can_player_trigger_vo(dialogue_extension, concept) then
 			local event_data = dialogue_extension:get_event_data_payload()
+
 			event_data.enemy_tag = breed_name
 			event_data.vo_event = vo_event
 
@@ -387,6 +399,7 @@ Vo.closest_player_except_vo_enemy_attack_event = function (unit, breed_name, vo_
 
 		if _can_player_trigger_vo(dialogue_extension, concept) then
 			local event_data = dialogue_extension:get_event_data_payload()
+
 			event_data.enemy_tag = breed_name
 			event_data.vo_event = vo_event
 
@@ -427,6 +440,7 @@ Vo.monster_combat_conversation = function (unit, breed_name)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.story_type = breed_name
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -451,6 +465,7 @@ Vo.play_expression_relief_vo = function ()
 
 	if random_player ~= nil and _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.expression_type = "expression_relief"
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -483,6 +498,7 @@ Vo.player_death_event = function (dead_player_unit)
 
 	if closest_player and _can_player_trigger_vo(closest_player_dialogue_ext, event_name) then
 		local event_data = closest_player_dialogue_ext:get_event_data_payload()
+
 		event_data.died_class = dead_player_dialogue_ext:vo_class_name()
 
 		closest_player_dialogue_ext:trigger_dialogue_event(event_name, event_data)
@@ -495,6 +511,7 @@ Vo.play_combat_ability_event = function (unit, vo_tag)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.ability_name = vo_tag
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -525,6 +542,7 @@ Vo.look_at_event = function (dialogue_extension, tag, distance, target_unit)
 		local event_data = dialogue_extension:get_event_data_payload()
 		local observer_vo_class = dialogue_extension:vo_class_name()
 		local observer_vo_profile = dialogue_extension:get_voice_profile()
+
 		event_data.look_at_tag = tag
 		event_data.distance = distance
 		event_data.observer_vo_class = observer_vo_class
@@ -546,6 +564,7 @@ Vo.faction_look_at_event = function (dialogue_extension, faction_event, faction_
 	local event_data = dialogue_extension:get_event_data_payload()
 	local observer_vo_class = dialogue_extension:vo_class_name()
 	local observer_vo_profile = dialogue_extension:get_voice_profile()
+
 	event_data.look_at_tag = tag
 	event_data.distance = distance
 	event_data.observer_vo_class = observer_vo_class
@@ -596,6 +615,7 @@ Vo.seen_enemy_event = function (unit, enemy_tag, enemy_unit, distance)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.enemy_tag = enemy_tag
 		event_data.enemy_unit = enemy_unit
 		event_data.distance = distance
@@ -610,6 +630,7 @@ Vo.heard_enemy_event = function (unit, enemy_tag, enemy_unit, distance)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.enemy_tag = enemy_tag
 		event_data.enemy_unit = enemy_unit
 		event_data.distance = distance
@@ -624,6 +645,7 @@ Vo.generic_mission_vo_event = function (unit, trigger_id)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -648,6 +670,7 @@ Vo.environmental_story_vo_event = function (unit, story_name)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.story_name = story_name
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -660,6 +683,7 @@ Vo.player_enemy_alert_event = function (unit, breed_name, vo_event)
 
 	if _can_player_trigger_vo(dialogue_extension, concept) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.enemy_tag = breed_name
 		event_data.vo_event = vo_event
 
@@ -673,6 +697,7 @@ Vo.player_pounced_by_special_event = function (unit, breed_name)
 
 	if _can_player_trigger_vo(dialogue_extension, concept_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.enemy_tag = breed_name
 
 		dialogue_extension:trigger_dialogue_event(concept_name, event_data)
@@ -696,6 +721,7 @@ Vo.player_knocked_down_multiple_times_event = function (downed_unit)
 	if _can_player_trigger_vo(closest_dialogue_extension, vo_concept) then
 		local dialogue_extension = ScriptUnit.has_extension(downed_unit, "dialogue_system")
 		local query_data = dialogue_extension:get_event_data_payload()
+
 		query_data.player_class = dialogue_extension:vo_class_name()
 
 		closest_dialogue_extension:trigger_dialogue_event(vo_concept, query_data)
@@ -737,6 +763,7 @@ Vo.enemy_alerted_idle_event = function (unit, breed_name)
 	if dialogue_ext then
 		local event_data = dialogue_ext:get_event_data_payload()
 		local event_name = "alerted_idle"
+
 		event_data.enemy_tag = breed_name
 
 		dialogue_ext:trigger_dialogue_event(event_name, event_data)
@@ -744,7 +771,7 @@ Vo.enemy_alerted_idle_event = function (unit, breed_name)
 end
 
 Vo.random_player_enemy_alert_event = function (enemy_unit, enemy_breed, vo_event, optional_non_threatening_player)
-	local player_unit = nil
+	local player_unit
 
 	if optional_non_threatening_player then
 		player_unit = _get_random_non_threatening_player_unit(enemy_unit)
@@ -828,6 +855,7 @@ Vo.enemy_generic_vo_event = function (unit, trigger_id, breed_name_or_nil, targe
 	if dialogue_extension then
 		local event_name = "generic_enemy_vo_event"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 		event_data.target_distance = target_distance
 
@@ -845,6 +873,7 @@ Vo.enemy_vo_special_attack_event = function (unit, event_type)
 	if dialogue_extension then
 		local event_name = "enemy_special_attack"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.attack_name = event_type
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -862,6 +891,7 @@ Vo.mission_giver_mission_brief_event = function (unit, mission_brief_starter_lin
 	local dialogue_input = ScriptUnit.extension_input(unit, "dialogue_system")
 	local event_name = "mission_brief"
 	local event_table = dialogue_input:get_event_data_payload()
+
 	event_table.starter_line = mission_brief_starter_line
 
 	dialogue_input:trigger_dialogue_event(event_name, event_table)
@@ -873,6 +903,7 @@ Vo.mission_giver_mission_info = function (unit, trigger_id)
 	if dialogue_extension then
 		local event_name = "mission_info"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -895,6 +926,7 @@ Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, tr
 			local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 			local event_name = "mission_info"
 			local event_data = dialogue_extension:get_event_data_payload()
+
 			event_data.trigger_id = trigger_id
 
 			dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -903,10 +935,11 @@ Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, tr
 		return
 	end
 
-	local mission_giver_unit = nil
+	local mission_giver_unit
 
 	if voice_selection == "mission_default" then
 		local voice_profile = voice_over_spawn_manager:current_voice_profile()
+
 		mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
 	elseif voice_selection == "selected_voice" then
 		mission_giver_unit = voice_over_spawn_manager:voice_over_unit(selected_voice)
@@ -917,6 +950,7 @@ Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, tr
 	if dialogue_extension then
 		local event_name = "mission_info"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -931,10 +965,11 @@ Vo.mission_giver_point_of_interest_vo = function (dialogue_target_filter, look_a
 	end
 
 	local voice_over_spawn_manager = Managers.state.voice_over_spawn
-	local misison_giver_unit = nil
+	local misison_giver_unit
 
 	if dialogue_target_filter == "mission_giver_mission_default" then
 		local voice_profile = voice_over_spawn_manager:current_voice_profile()
+
 		misison_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
 	elseif dialogue_target_filter == "mission_giver_selected_voice" then
 		misison_giver_unit = voice_over_spawn_manager:voice_over_unit(mission_giver_selected_voice)
@@ -945,6 +980,7 @@ Vo.mission_giver_point_of_interest_vo = function (dialogue_target_filter, look_a
 	if dialogue_extension then
 		local event_name = "look_at"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.distance = distance
 		event_data.look_at_tag = look_at_tag
 
@@ -959,6 +995,7 @@ Vo.mission_giver_vo_event = function (voice_profile, concept, trigger_id)
 		local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 		local event_name = concept
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		if dialogue_extension then
@@ -972,6 +1009,7 @@ Vo.confessional_vo_event = function (unit, category)
 		local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 		local event_name = "confessional_vo"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.category = category
 
 		if dialogue_extension then
@@ -994,9 +1032,12 @@ Vo.play_npc_interacting_vo_event = function (unit, interactor_unit, vo_event, co
 		local interactor_voice_profile = dialogue_ext_interactor:get_voice_profile()
 		local event_name = "npc_interacting_vo"
 		local event_data = dialogue_ext_npc:get_event_data_payload()
+
 		event_data.vo_event = vo_event
 		event_data.interactor_voice_profile = interactor_voice_profile
+
 		local player_level = _get_player_level(interactor_unit)
+
 		event_data.player_level_string = tostring(player_level)
 
 		if cooldown_time then
@@ -1005,6 +1046,7 @@ Vo.play_npc_interacting_vo_event = function (unit, interactor_unit, vo_event, co
 
 		if play_in == "interactor_only" then
 			event_data.npc_profile_name = dialogue_ext_npc:get_voice_profile()
+
 			local playable = dialogue_ext_interactor:manage_targeted_cooldowns(event_data)
 
 			if playable == true then
@@ -1022,6 +1064,7 @@ Vo.play_npc_vo_event = function (unit, vo_event)
 	if dialogue_ext_npc then
 		local event_name = "npc_vo"
 		local event_data = dialogue_ext_npc:get_event_data_payload()
+
 		event_data.vo_event = vo_event
 
 		dialogue_ext_npc:trigger_dialogue_event(event_name, event_data)
@@ -1034,6 +1077,7 @@ Vo.mission_giver_conversation_starter = function (unit, trigger_id)
 	if dialogue_extension then
 		local event_name = "mission_giver_conversation_starter"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -1047,6 +1091,7 @@ Vo.play_npc_story = function (trigger_id)
 		local dialogue_extension = ScriptUnit.has_extension(vox_unit, "dialogue_system")
 		local event_name = "npc_story_talk"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -1109,6 +1154,7 @@ Vo.start_banter_vo_event = function (unit, trigger_id)
 	if dialogue_extension then
 		local event_name = "start_banter"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -1122,13 +1168,12 @@ Vo.reinforcements = function (dialogue_extension_unit, dialogue_extension)
 end
 
 Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, wwise_route_key, on_play_callback, seed, is_opinion_vo)
-	local vo_unit, dialogue_extension = nil
+	local vo_unit, dialogue_extension
 	local unit_to_extension_map = dialogue_system:unit_to_extension_map()
 
 	for unit, extension in pairs(unit_to_extension_map) do
 		if extension._vo_profile_name == voice_profile then
-			dialogue_extension = extension
-			vo_unit = unit
+			vo_unit, dialogue_extension = unit, extension
 
 			break
 		end
@@ -1146,6 +1191,7 @@ Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, ww
 				local opinion_settings = DialogueBreedSettings[npc_class].opinion_settings
 				local opinion = opinion_settings[player_voice_profile]
 				local rule = vo_rules[1]
+
 				rule = rule .. "_" .. opinion
 
 				dialogue_extension:play_local_vo_event(rule, wwise_route_key, nil, seed)
@@ -1181,6 +1227,7 @@ Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_op
 			local npc_class = dialogue_extension._context.class_name
 			local opinion_settings = DialogueBreedSettings[npc_class].opinion_settings
 			local opinion = opinion_settings[player_voice_profile]
+
 			rule_name = rule_name .. "_" .. opinion
 		end
 
@@ -1299,6 +1346,7 @@ Vo.cutscene_vo_event = function (unit, vo_line_id)
 	if dialogue_extension then
 		local event_name = "cutscene_vo_line"
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.vo_line_id = vo_line_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -1311,6 +1359,7 @@ Vo.play_debug_vo_event = function (unit)
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
+
 		event_data.trigger_id = "debug_vo"
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
@@ -1424,7 +1473,7 @@ function _get_closest_player_except(position, filtered_player_unit, optional_pla
 
 			if num_valid_player_units > 0 then
 				local closest_distance = math.huge
-				local best_player_unit = nil
+				local best_player_unit
 
 				for i = 1, num_valid_player_units do
 					local player_unit = valid_player_units[i]
@@ -1450,7 +1499,7 @@ function _get_random_non_threatening_player_unit(minion_unit)
 
 	local alive_players = _get_alive_players()
 	local least_threat = math.huge
-	local least_threatening_unit = nil
+	local least_threatening_unit
 	local num_alive_players = #alive_players
 
 	for i = 1, num_alive_players do

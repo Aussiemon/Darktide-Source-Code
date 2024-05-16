@@ -1,10 +1,13 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_charge_venting_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local WarpChargeVentingEffects = class("WarpChargeVentingEffects")
-local _start_vfx, _stop_vfx = nil
+local _start_vfx, _stop_vfx
 
 WarpChargeVentingEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_husk = context.is_husk
 	local owner_unit = context.owner_unit
+
 	self._is_husk = is_husk
 	self._slot_name = slot.name
 	self._world = context.world
@@ -16,12 +19,16 @@ WarpChargeVentingEffects.init = function (self, context, slot, weapon_template, 
 	self._wwise_playing_id = nil
 	self._is_in_first_person = nil
 	self._is_playing_in_first_person = nil
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
 	self._warp_charge_component = unit_data_extension:read_component("warp_charge")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local archetype = unit_data_extension:archetype()
 	local effects = archetype.warp_charge and archetype.warp_charge.fx
+
 	self._looping_venting_wwise_start_event = effects and effects.looping_venting_wwise_start_event
 	self._looping_venting_wwise_stop_event = effects and effects.looping_venting_wwise_stop_event
 	self._looping_wwise_parameter_name = effects and effects.looping_wwise_parameter_name
@@ -71,6 +78,7 @@ WarpChargeVentingEffects._update_sfx = function (self, is_venting, action_settin
 
 	if start_event and is_venting and is_in_first_person and not playing_id then
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event, source_id)
+
 		self._wwise_playing_id = new_playing_id
 	elseif (not is_venting or not is_in_first_person) and playing_id then
 		if source_id and stop_event then

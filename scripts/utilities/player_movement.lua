@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/player_movement.lua
+
 local PlayerMovement = {}
 
 PlayerMovement.teleport = function (player, position, rotation)
@@ -23,6 +25,7 @@ PlayerMovement._teleport = function (player_unit, position, rotation)
 
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local locomotion_component = unit_data_extension:write_component("locomotion")
+
 	locomotion_component.position = position
 
 	if rotation then
@@ -30,7 +33,9 @@ PlayerMovement._teleport = function (player_unit, position, rotation)
 	end
 
 	local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
+
 	locomotion_steering.velocity_wanted = Vector3.zero()
+
 	local player = Managers.state.player_unit_spawn:owner(player_unit)
 
 	if not player.remote and rotation then
@@ -109,13 +114,14 @@ PlayerMovement.calculate_final_unit_rotation = function (current_rotation, targe
 	local angle_to_target = Quaternion.angle(current_rotation, target_rotation)
 
 	if not is_husk then
-		if ROTATION_HARD_LIMIT < angle_to_forward then
-			local clamp_lerp = 0.95 * ROTATION_HARD_LIMIT / angle_to_forward
+		if angle_to_forward > ROTATION_HARD_LIMIT then
+			local clamp_lerp = 0.95 * (ROTATION_HARD_LIMIT / angle_to_forward)
 
 			return Quaternion.lerp(forward_rotation, current_rotation, clamp_lerp)
 		end
 
-		local angle_speed_up = 1 + (ROTATION_SOFT_LIMIT < angle_to_forward and angle_to_target or 0)
+		local angle_speed_up = 1 + (angle_to_forward > ROTATION_SOFT_LIMIT and angle_to_target or 0)
+
 		t = t * angle_speed_up
 	end
 

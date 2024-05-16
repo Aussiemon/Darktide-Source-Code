@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_reload_shotgun.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Ammo = require("scripts/utilities/ammo")
@@ -9,6 +11,7 @@ ActionReloadShotgun.init = function (self, action_context, ...)
 	ActionReloadShotgun.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_reload_component = unit_data_extension:write_component("action_reload")
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
@@ -20,8 +23,10 @@ ActionReloadShotgun.start = function (self, action_settings, t, time_scale, ...)
 	ActionReloadShotgun.super.start(self, action_settings, t, time_scale, ...)
 
 	local action_reload_component = self._action_reload_component
+
 	action_reload_component.has_refilled_ammunition = false
 	action_reload_component.has_removed_ammunition = false
+
 	local event_data = self._dialogue_input:get_event_data_payload()
 
 	self._dialogue_input:trigger_dialogue_event("reloading", event_data)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/free_flight/free_flight_default_input.lua
+
 local FreeFlightDefaultInput = class("FreeFlightDefaultInput")
 
 FreeFlightDefaultInput.frustum_toggle = function (self)
@@ -113,7 +115,7 @@ local null_service = {
 		else
 			ferror("unsupported input type %q for action %q", input_type, action_name)
 		end
-	end
+	end,
 }
 
 FreeFlightDefaultInput.null_service = function (self)

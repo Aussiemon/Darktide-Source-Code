@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/shading_environment_volume.lua
+
 local ShadingEnvironmentVolume = component("ShadingEnvironmentVolume")
 
 ShadingEnvironmentVolume.init = function (self, unit)
@@ -9,6 +11,7 @@ ShadingEnvironmentVolume.enable = function (self, unit)
 
 	if environment_extension then
 		self._extension = environment_extension
+
 		local fade_in_distance = self:get_data(unit, "fade_in_distance")
 		local blend_layer = self:get_data(unit, "blend_layer")
 		local override = self:get_data(unit, "override")
@@ -44,17 +47,17 @@ ShadingEnvironmentVolume.editor_init = function (self, unit)
 					blend_layer = self:get_data(unit, "blend_layer") or 1,
 					override = self:get_data(unit, "override"),
 					shading_environment = self:get_data(unit, "shading_environment"),
-					shading_environment_slot = self:get_data(unit, "shading_environment_slot")
+					shading_environment_slot = self:get_data(unit, "shading_environment_slot"),
 				}
 
 				LevelEditor:register_shading_environment_volume(unit, volume_data)
 			end
 		else
 			Application.console_send({
-				system = "Shading Environment Volume",
-				message = "You need to update your binaries, could not register shading environment volume with level editor!",
 				level = "error",
-				type = "message"
+				message = "You need to update your binaries, could not register shading environment volume with level editor!",
+				system = "Shading Environment Volume",
+				type = "message",
 			})
 		end
 	end
@@ -101,60 +104,60 @@ end
 
 ShadingEnvironmentVolume.component_data = {
 	fade_in_distance = {
-		ui_type = "number",
 		decimals = 0,
-		value = 1,
+		step = 1,
 		ui_name = "Fade in distance (m):",
-		step = 1
+		ui_type = "number",
+		value = 1,
 	},
 	blend_layer = {
-		ui_type = "number",
 		decimals = 0,
-		value = 1,
+		step = 1,
 		ui_name = "Layer:",
-		step = 1
+		ui_type = "number",
+		value = 1,
 	},
 	override = {
+		ui_name = "Override:",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Override:"
 	},
 	shading_environment = {
-		ui_type = "resource",
+		filter = "shading_environment",
 		preview = false,
-		value = "",
 		ui_name = "Shading environment:",
-		filter = "shading_environment"
+		ui_type = "resource",
+		value = "",
 	},
 	shading_environment_slot = {
-		value = "-1",
-		ui_type = "combo_box",
 		ui_name = "Shading environment Slot",
+		ui_type = "combo_box",
+		value = "-1",
 		options_keys = {
-			"-1 - None"
+			"-1 - None",
 		},
 		options_values = {
-			"-1"
-		}
+			"-1",
+		},
 	},
 	start_enabled = {
+		ui_name = "Start Enabled",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Start Enabled"
 	},
 	extensions = {
-		"ShadingEnvironmentExtension"
+		"ShadingEnvironmentExtension",
 	},
 	inputs = {
 		enable_environment = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		disable_environment = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return ShadingEnvironmentVolume

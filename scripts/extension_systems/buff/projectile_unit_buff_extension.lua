@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/projectile_unit_buff_extension.lua
+
 require("scripts/extension_systems/buff/buff_extension_base")
 
 local Ailment = require("scripts/utilities/ailment")
@@ -10,8 +12,11 @@ local ProjectileUnitBuffExtension = class("ProjectileUnitBuffExtension")
 
 ProjectileUnitBuffExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local owner_unit = extension_init_data.owner_unit
+
 	self._owner_unit = owner_unit
+
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._stat_buffs = extension_init_data.stat_buffs
 	self._keywords = extension_init_data.keywords

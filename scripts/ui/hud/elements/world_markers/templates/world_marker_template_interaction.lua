@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_interaction.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -8,68 +10,69 @@ local USE_HDR = true
 local template = {}
 local size = {
 	128,
-	128
+	128,
 }
 local ping_size = {
 	128,
-	128
+	128,
 }
 local arrow_size = {
 	128,
-	128
+	128,
 }
 local icon_size = {
 	64,
-	64
+	64,
 }
 local background_size = {
 	128,
-	128
+	128,
 }
 local line_size = {
 	250,
-	5
+	5,
 }
 local bar_size = {
 	210,
-	10
+	10,
 }
 local scale_fraction = 0.75
+
 template.size = size
 template.unit_node = "ui_interaction_marker"
 template.icon_size = icon_size
 template.ping_size = ping_size
 template.min_size = {
 	size[1] * scale_fraction,
-	size[2] * scale_fraction
+	size[2] * scale_fraction,
 }
 template.max_size = {
 	size[1],
-	size[2]
+	size[2],
 }
 template.icon_min_size = {
 	icon_size[1] * scale_fraction,
-	icon_size[2] * scale_fraction
+	icon_size[2] * scale_fraction,
 }
 template.icon_max_size = {
 	icon_size[1],
-	icon_size[2]
+	icon_size[2],
 }
 template.background_min_size = {
 	background_size[1] * scale_fraction,
-	background_size[2] * scale_fraction
+	background_size[2] * scale_fraction,
 }
 template.background_max_size = {
 	background_size[1],
-	background_size[2]
+	background_size[2],
 }
 template.ping_min_size = {
 	ping_size[1] * scale_fraction,
-	ping_size[2] * scale_fraction
+	ping_size[2] * scale_fraction,
 }
 template.ping_max_size = {
 	ping_size[1],
-	ping_size[2]
+	ping_size[2],
 }
 template.name = "interaction"
 template.using_smart_tag_system = true
@@ -81,36 +84,37 @@ template.line_of_sight_speed = 15
 template.position_offset = {
 	0,
 	0,
-	0
+	0,
 }
 template.screen_margins = {
 	down = 0.23148148148148148,
-	up = 0.23148148148148148,
 	left = 0.234375,
-	right = 0.234375
+	right = 0.234375,
+	up = 0.23148148148148148,
 }
 template.scale_settings = {
-	scale_to = 1,
 	scale_from = 0.4,
+	scale_to = 1,
 	distance_max = template.max_distance,
-	distance_min = template.evolve_distance
+	distance_min = template.evolve_distance,
 }
 template.fade_settings = {
-	fade_to = 1,
-	fade_from = 0,
 	default_fade = 1,
+	fade_from = 0,
+	fade_to = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance - template.evolve_distance * 2,
-	easing_function = math.easeCubic
+	easing_function = math.easeCubic,
 }
+
 local template_visual_definitions = {
 	default = {
 		template_settings_overrides = {
 			position_offset = {
 				0,
 				0,
-				0
-			}
+				0,
+			},
 		},
 		colors = {
 			background = Color.terminal_background(200, true),
@@ -118,29 +122,29 @@ local template_visual_definitions = {
 				255,
 				226,
 				199,
-				126
+				126,
 			},
 			line = Color.ui_interaction_default(255, true),
 			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_interaction_default(255, true),
-			icon = Color.ui_hud_green_super_light(255, true)
+			icon = Color.ui_hud_green_super_light(255, true),
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
 			background = "content/ui/materials/hud/interactions/frames/mission_back",
-			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			icon = "content/ui/materials/hud/interactions/icons/default",
 			line = "content/ui/materials/hud/interactions/frames/line",
-			arrow = StrictNil
-		}
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+			arrow = StrictNil,
+		},
 	},
 	pickup = {
 		template_settings_overrides = {
 			position_offset = {
 				0,
 				0,
-				0.8
-			}
+				0.8,
+			},
 		},
 		colors = {
 			background = Color.terminal_background(200, true),
@@ -148,52 +152,52 @@ local template_visual_definitions = {
 				255,
 				226,
 				199,
-				126
+				126,
 			},
 			line = Color.ui_interaction_pickup(255, true),
 			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
-			icon = Color.ui_hud_green_super_light(255, true)
+			icon = Color.ui_hud_green_super_light(255, true),
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
-			background = "content/ui/materials/hud/interactions/frames/mission_back",
-			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			arrow = "content/ui/materials/hud/interactions/frames/direction",
-			line = "content/ui/materials/hud/interactions/frames/line"
-		}
+			background = "content/ui/materials/hud/interactions/frames/mission_back",
+			line = "content/ui/materials/hud/interactions/frames/line",
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+		},
 	},
 	point_of_interest = {
 		template_settings_overrides = {
 			position_offset = {
 				0,
 				0,
-				0
+				0,
 			},
 			min_size = {
 				size[1] * scale_fraction * 1.5,
-				size[2] * scale_fraction * 1.5
+				size[2] * scale_fraction * 1.5,
 			},
 			max_size = {
 				size[1] * scale_fraction * 2,
-				size[2] * scale_fraction * 2
+				size[2] * scale_fraction * 2,
 			},
 			icon_min_size = {
 				icon_size[1] * scale_fraction * 1.5,
-				icon_size[2] * scale_fraction * 1.5
+				icon_size[2] * scale_fraction * 1.5,
 			},
 			icon_max_size = {
 				icon_size[1] * scale_fraction * 2,
-				icon_size[2] * scale_fraction * 2
+				icon_size[2] * scale_fraction * 2,
 			},
 			background_min_size = {
 				background_size[1] * 1,
-				background_size[2] * 1
+				background_size[2] * 1,
 			},
 			background_max_size = {
 				background_size[1] * 1.25,
-				background_size[2] * 1.25
-			}
+				background_size[2] * 1.25,
+			},
 		},
 		colors = {
 			background = Color.terminal_background(200, true),
@@ -201,38 +205,38 @@ local template_visual_definitions = {
 				255,
 				226,
 				199,
-				126
+				126,
 			},
 			line = Color.ui_interaction_point_of_interest(255, true),
 			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
-			icon = Color.ui_hud_green_super_light(255, true)
+			icon = Color.ui_hud_green_super_light(255, true),
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/point_of_interest_tag",
 			background = "content/ui/materials/hud/interactions/frames/pickup_back",
-			ring = "content/ui/materials/hud/interactions/frames/pickup_top",
 			line = "content/ui/materials/hud/interactions/frames/line",
-			arrow = StrictNil
-		}
+			ping = "content/ui/materials/hud/interactions/frames/point_of_interest_tag",
+			ring = "content/ui/materials/hud/interactions/frames/pickup_top",
+			arrow = StrictNil,
+		},
 	},
 	critical = {
 		template_settings_overrides = {
-			screen_clamp = true,
 			check_line_of_sight = true,
+			screen_clamp = true,
 			position_offset = {
 				0,
 				0,
-				0
+				0,
 			},
 			fade_settings = {
-				fade_to = 1,
-				fade_from = 0,
 				default_fade = 1,
 				distance_max = 5,
+				fade_from = 0,
+				fade_to = 1,
 				distance_min = 5 - template.evolve_distance * 2,
-				easing_function = math.easeCubic
-			}
+				easing_function = math.easeCubic,
+			},
 		},
 		colors = {
 			background = Color.terminal_background(200, true),
@@ -240,20 +244,20 @@ local template_visual_definitions = {
 				255,
 				226,
 				199,
-				126
+				126,
 			},
 			line = Color.ui_interaction_default(255, true),
 			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
-			icon = Color.ui_hud_green_super_light(255, true)
+			icon = Color.ui_hud_green_super_light(255, true),
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/critical_tag",
-			background = "content/ui/materials/hud/interactions/frames/mission_back",
-			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			arrow = "content/ui/materials/hud/interactions/frames/direction",
-			line = "content/ui/materials/hud/interactions/frames/line"
-		}
+			background = "content/ui/materials/hud/interactions/frames/mission_back",
+			line = "content/ui/materials/hud/interactions/frames/line",
+			ping = "content/ui/materials/hud/interactions/frames/critical_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+		},
 	},
 	mission = {
 		colors = {
@@ -262,55 +266,55 @@ local template_visual_definitions = {
 			line = Color.ui_interaction_mission(255, true),
 			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_hud_green_super_light(255, true),
-			icon = Color.ui_hud_green_super_light(255, true)
+			icon = Color.ui_hud_green_super_light(255, true),
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
-			background = "content/ui/materials/hud/interactions/frames/mission_back",
-			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			arrow = "content/ui/materials/hud/interactions/frames/direction",
-			line = "content/ui/materials/hud/interactions/frames/line"
-		}
+			background = "content/ui/materials/hud/interactions/frames/mission_back",
+			line = "content/ui/materials/hud/interactions/frames/line",
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+		},
 	},
 	player_interaction = {
 		template_settings_overrides = {
 			fade_settings = {
-				fade_to = 1,
-				fade_from = 0,
 				default_fade = 1,
 				distance_max = 7,
+				fade_from = 0,
+				fade_to = 1,
 				distance_min = 7 - template.evolve_distance * 0.5,
-				easing_function = math.easeCubic
+				easing_function = math.easeCubic,
 			},
 			position_offset = {
 				0,
 				0,
-				0.8
+				0.8,
 			},
 			background_min_size = {
 				background_size[1] * 0.5,
-				background_size[2] * 0.5
+				background_size[2] * 0.5,
 			},
 			background_max_size = {
 				background_size[1] * 0.75,
-				background_size[2] * 0.75
-			}
+				background_size[2] * 0.75,
+			},
 		},
 		template_settings_overrides_by_breed = {
 			human = {
 				position_offset = {
 					0,
 					0,
-					0.8
-				}
+					0.8,
+				},
 			},
 			ogryn = {
 				position_offset = {
 					0,
 					0,
-					0.3
-				}
-			}
+					0.3,
+				},
+			},
 		},
 		colors = {
 			background = Color.black(0, true),
@@ -318,32 +322,32 @@ local template_visual_definitions = {
 			line = Color.ui_interaction_default(0, true),
 			ping = Color.ui_terminal(0, true),
 			arrow = Color.ui_interaction_default(0, true),
-			icon = Color.terminal_text_body(0, true)
+			icon = Color.terminal_text_body(0, true),
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
 			background = "content/ui/materials/hud/interactions/icons/default",
-			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			icon = "content/ui/materials/hud/interactions/icons/default",
 			line = "content/ui/materials/hud/interactions/frames/line",
-			arrow = StrictNil
-		}
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+			arrow = StrictNil,
+		},
 	},
 	puzzle = {
 		template_settings_overrides = {
 			fade_settings = {
-				fade_to = 1,
-				fade_from = 0,
 				default_fade = 1,
 				distance_max = 5,
+				fade_from = 0,
+				fade_to = 1,
 				distance_min = 5 - template.evolve_distance,
-				easing_function = math.easeCubic
+				easing_function = math.easeCubic,
 			},
 			position_offset = {
 				0,
 				0,
-				0
-			}
+				0,
+			},
 		},
 		colors = {
 			background = Color.terminal_background(200, true),
@@ -351,22 +355,22 @@ local template_visual_definitions = {
 				255,
 				226,
 				199,
-				126
+				126,
 			},
 			line = Color.ui_interaction_default(255, true),
 			ping = Color.ui_terminal(200, true),
 			arrow = Color.ui_interaction_default(255, true),
-			icon = Color.ui_hud_green_super_light(255, true)
+			icon = Color.ui_hud_green_super_light(255, true),
 		},
 		textures = {
-			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
 			background = "content/ui/materials/hud/interactions/frames/mission_back",
-			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			icon = "content/ui/materials/hud/interactions/icons/default",
 			line = "content/ui/materials/hud/interactions/frames/line",
-			arrow = StrictNil
-		}
-	}
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+			arrow = StrictNil,
+		},
+	},
 }
 
 local function get_interactee_unit_breed(marker)
@@ -390,6 +394,7 @@ local function setup_marker_by_interaction_type(widget, marker, ui_interaction_t
 
 	if template_settings_overrides then
 		local new_template = table.clone(marker.template)
+
 		marker.template = table.merge_recursive(new_template, template_settings_overrides)
 	end
 
@@ -401,6 +406,7 @@ local function setup_marker_by_interaction_type(widget, marker, ui_interaction_t
 
 		if override_settings then
 			local new_template = table.clone(marker.template)
+
 			marker.template = table.merge_recursive(new_template, override_settings)
 		end
 	end
@@ -435,138 +441,139 @@ template.create_widget_defintion = function (self, scenegraph_id)
 
 	return UIWidget.create_definition({
 		{
-			style_id = "background",
-			value_id = "background",
 			pass_type = "texture",
+			style_id = "background",
 			value = "content/ui/materials/hud/interactions/frames/point_of_interest_back",
+			value_id = "background",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				size = background_size,
 				offset = {
 					0,
 					0,
-					1
+					1,
 				},
 				color = {
 					150,
 					80,
 					80,
-					80
-				}
+					80,
+				},
 			},
 			visibility_function = function (content, style)
 				return content.background ~= nil
-			end
+			end,
 		},
 		{
-			style_id = "ring",
-			value_id = "ring",
 			pass_type = "texture",
+			style_id = "ring",
 			value = "content/ui/materials/hud/interactions/frames/point_of_interest_top",
+			value_id = "ring",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				size = size,
 				offset = {
 					0,
 					0,
-					5
+					5,
 				},
 				color = {
 					255,
 					255,
 					255,
-					255
-				}
+					255,
+				},
 			},
 			visibility_function = function (content, style)
 				return content.ring ~= nil
-			end
+			end,
 		},
 		{
-			style_id = "ping",
-			value_id = "ping",
 			pass_type = "rotated_texture",
+			style_id = "ping",
 			value = "content/ui/materials/hud/interactions/frames/point_of_interest_tag",
+			value_id = "ping",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				size = ping_size,
 				offset = {
 					0,
 					0,
-					0
+					0,
 				},
 				color = {
 					255,
 					255,
 					255,
-					255
-				}
+					255,
+				},
 			},
 			visibility_function = function (content, style)
 				return content.tagged
-			end
+			end,
 		},
 		{
-			style_id = "icon",
-			value_id = "icon",
 			pass_type = "texture",
+			style_id = "icon",
 			value = "content/ui/materials/hud/interactions/icons/default",
+			value_id = "icon",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				size = icon_size,
 				offset = {
 					0,
 					0,
-					3
+					3,
 				},
 				color = {
 					255,
 					255,
 					255,
-					255
-				}
+					255,
+				},
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end
+			end,
 		},
 		{
-			value_id = "arrow",
 			pass_type = "rotated_texture",
-			value = "content/ui/materials/hud/interactions/icons/default",
 			style_id = "arrow",
+			value = "content/ui/materials/hud/interactions/icons/default",
+			value_id = "arrow",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "center",
+				vertical_alignment = "center",
 				size = arrow_size,
 				offset = {
 					0,
 					0,
-					2
+					2,
 				},
 				color = {
 					255,
 					255,
 					255,
-					255
-				}
+					255,
+				},
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped and content.arrow ~= nil
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end
-		}
+			end,
+		},
 	}, scenegraph_id)
 end
 
 template.on_enter = function (widget, marker, self)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 end
 
@@ -584,6 +591,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	end
 
 	local is_tagged = marker.template.get_smart_tag_id(marker) ~= nil
+
 	content.tagged = is_tagged
 	marker.block_fade_settings = is_tagged
 	marker.block_max_distance = is_tagged
@@ -627,6 +635,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	end
 
 	marker.ignore_scale = content.is_clamped
+
 	local global_scale = marker.ignore_scale and 1 or marker.scale
 
 	if marker.raycast_initialized then
@@ -645,8 +654,10 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	local default_size = self.min_size
 	local max_size = self.max_size
 	local ring_size = style.ring.size
+
 	ring_size[1] = (default_size[1] + (max_size[1] - default_size[1]) * scale_progress) * global_scale
 	ring_size[2] = (default_size[2] + (max_size[2] - default_size[2]) * scale_progress) * global_scale
+
 	local ping_min_size = self.ping_min_size
 	local ping_max_size = self.ping_max_size
 	local ping_style = style.ping
@@ -654,22 +665,31 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	local ping_speed = 7
 	local ping_anim_progress = 0.5 + math.sin(Application.time_since_launch() * ping_speed) * 0.5
 	local ping_pulse_size_increase = ping_anim_progress * 15
+
 	ping_size[1] = (ping_min_size[1] + (ping_max_size[1] - ping_min_size[1]) * scale_progress + ping_pulse_size_increase) * global_scale
 	ping_size[2] = (ping_min_size[2] + (ping_max_size[2] - ping_min_size[2]) * scale_progress + ping_pulse_size_increase) * global_scale
+
 	local ping_pivot = ping_style.pivot
+
 	ping_pivot[1] = ping_size[1] * 0.5
 	ping_pivot[2] = ping_size[2] * 0.5
+
 	local icon_max_size = self.icon_max_size
 	local icon_min_size = self.icon_min_size
 	local background_max_size = self.background_max_size
 	local background_min_size = self.background_min_size
 	local icon_size = style.icon.size
+
 	icon_size[1] = (icon_min_size[1] + (icon_max_size[1] - icon_min_size[1]) * scale_progress) * global_scale
 	icon_size[2] = (icon_min_size[2] + (icon_max_size[2] - icon_min_size[2]) * scale_progress) * global_scale
+
 	local background_size = style.background.size
+
 	background_size[1] = (background_min_size[1] + (background_max_size[1] - background_min_size[1]) * scale_progress) * global_scale
 	background_size[2] = (background_min_size[2] + (background_max_size[2] - background_min_size[2]) * scale_progress) * global_scale
+
 	local animating = scale_progress ~= content.scale_progress
+
 	content.line_of_sight_progress = line_of_sight_progress
 	content.scale_progress = scale_progress
 	widget.alpha_multiplier = line_of_sight_progress

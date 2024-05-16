@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/contracts_view/contracts_view.lua
+
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -13,6 +15,7 @@ local ContractsView = class("ContractsView", "BaseView")
 
 ContractsView.init = function (self, settings, context)
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._world_spawner = parent and parent._world_spawner
 
@@ -164,16 +167,24 @@ ContractsView._display_task_info = function (self, task_widget, task_info)
 	local task_info_widget = self._widgets_by_name.task_info
 	local task_info_content = task_info_widget.content
 	local task_info_style = task_info_widget.style
+
 	task_info_content.visible = true
+
 	local content = task_widget.content
 	local height_addition = 0
 	local task_is_fulfilled = task_info.fulfilled
+
 	task_info_content.task_is_fulfilled = task_is_fulfilled
+
 	local icon_style = task_info_style.icon
 	local task_widget_icon_style = task_widget.style.icon
+
 	icon_style.material_values.contract_type = task_widget_icon_style.material_values.contract_type
+
 	local label = content.task_name
+
 	task_info_content.label = label
+
 	local label_style = task_info_style.label
 	local label_default_size = task_is_fulfilled and label_style.fulfilled_size or label_style.default_size
 	local text_extra_options = _text_extra_options
@@ -182,16 +193,19 @@ ContractsView._display_task_info = function (self, task_widget, task_info)
 
 	local _, label_height = self:_text_size_for_style(label, label_style, label_default_size)
 	local label_size = label_style.size
+
 	label_size[1] = label_default_size[1]
 
-	if label_default_size[2] < label_height then
+	if label_height > label_default_size[2] then
 		height_addition = label_height - label_default_size[2]
 		label_size[2] = label_height
 	end
 
 	local reward_text = string.format(ViewSettings.task_info_reward_string_format, task_info.reward.amount)
+
 	task_info_content.reward_text = reward_text
 	task_info_content.completion_text = string.format("%d/%d", task_info.criteria.value, content.task_target)
+
 	local complexity = task_info.criteria.complexity
 
 	if complexity == "easy" then
@@ -210,11 +224,15 @@ ContractsView._display_task_info = function (self, task_widget, task_info)
 
 	local button = self._widgets_by_name.reroll_button
 	local button_content = button.content
+
 	button_content.visible = true
+
 	local button_hotspot = button_content.hotspot
+
 	button_hotspot.disabled = task_is_fulfilled
 	button_content.visible = not task_is_fulfilled
 	button_hotspot.pressed_callback = not task_is_fulfilled and callback(self, "_cb_reroll_task_pressed", task_info)
+
 	local total_height = task_info_style.size[2] + height_addition
 
 	self:_set_scenegraph_size("task_info_plate", nil, total_height)
@@ -222,9 +240,12 @@ end
 
 ContractsView._hide_task_info = function (self)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.task_info.content.visible = false
+
 	local reroll_button = widgets_by_name.reroll_button
 	local reroll_button_content = reroll_button.content
+
 	reroll_button_content.visible = false
 	reroll_button_content.hotspot.disabled = true
 	reroll_button_content.hotspot.is_selected = nil
@@ -252,8 +273,11 @@ ContractsView._setup_task_grid_layout = function (self)
 	local profile = player:profile()
 	local archetype = profile.archetype
 	local archetype_background_large = archetype.archetype_background_large
+
 	grid_settings.terminal_background_icon = archetype_background_large
+
 	local layer = 1
+
 	self._task_grid = self:_add_element(ViewElementGrid, "task_grid", layer, grid_settings)
 
 	self._task_grid:present_grid_layout({}, {})
@@ -261,19 +285,23 @@ ContractsView._setup_task_grid_layout = function (self)
 	local bottom_material = "content/ui/materials/frames/contracts_bottom"
 	local bottom_divider_size = {
 		732,
-		256
+		256,
 	}
 	local bottom_divider_position = {
 		0,
 		bottom_divider_size[2] * 0.5 - 40,
-		12
+		12,
 	}
 	local grid_divider_bottom_widget = self._task_grid:widget_by_name("grid_divider_bottom")
+
 	grid_divider_bottom_widget.content.texture = bottom_material
 	grid_divider_bottom_widget.style.texture.size = bottom_divider_size
 	grid_divider_bottom_widget.style.texture.offset = bottom_divider_position
+
 	local timer_text_widget = self._task_grid:widget_by_name("timer_text")
+
 	timer_text_widget.offset[2] = bottom_divider_size[2] * 0.5 + 30
+
 	local timer_text_scenegraph = timer_text_widget.scenegraph_id
 
 	self._task_grid:_set_scenegraph_size(timer_text_scenegraph, grid_settings.grid_size[1])
@@ -306,19 +334,24 @@ ContractsView._set_contract_info = function (self, contract_data)
 	local contract_tasks = contract_data.tasks
 	local num_tasks_completed = self:_populate_task_list(contract_tasks)
 	local num_tasks = #contract_tasks
+
 	self._contract_expiry_time = contract_data.refreshTime
+
 	local contract_info_widget = self._widgets_by_name.contract_info
 	local reward_amount = contract_data.reward.amount
 	local contract_info_widget_content = contract_info_widget.content
 	local reward_text = string.format(ViewSettings.contract_reward_string_format, reward_amount)
+
 	contract_info_widget_content.reward_text = reward_text
+
 	local progress_widget = self._widgets_by_name.contract_progress
 	local progress_content = progress_widget.content
 	local localization_content = {
 		tasks_completed = num_tasks_completed,
-		tasks_total = num_tasks
+		tasks_total = num_tasks,
 	}
 	local progress_text = Localize(ViewSettings.contract_progress_localization_string_format, true, localization_content)
+
 	progress_content.progress_text = progress_text
 
 	if not contract_data.fulfilled then
@@ -326,8 +359,11 @@ ContractsView._set_contract_info = function (self, contract_data)
 		local progress_style = progress_widget.style
 		local progress_bar_style = progress_style.progress_bar
 		local progress_bar_width = math.floor(bar_progress * progress_bar_style.default_size[1])
+
 		progress_bar_style.size[1] = progress_bar_width
+
 		local progress_bar_edge_style = progress_style.progress_bar_edge
+
 		progress_bar_edge_style.offset[1] = progress_bar_width + progress_bar_edge_style.offset[1]
 		progress_bar_edge_style.visible = true
 	elseif contract_data.rewarded then
@@ -367,6 +403,7 @@ ContractsView._populate_task_list = function (self, tasks)
 		local task_is_fulfilled = task_info.fulfilled
 		local task_progress = criteria.value / (target or 1)
 		local reward = task_info.reward.amount
+
 		task_list[#task_list + 1] = {
 			widget_type = "task_list_item",
 			task_info = task_info,
@@ -377,9 +414,9 @@ ContractsView._populate_task_list = function (self, tasks)
 			task_reward = reward,
 			size = {
 				task_size_normal[1],
-				task_size_normal[2] + math.max(label_height - 10, 0)
+				task_size_normal[2] + math.max(label_height - 10, 0),
 			},
-			fulfilled = task_is_fulfilled
+			fulfilled = task_is_fulfilled,
 		}
 
 		if task_is_fulfilled then
@@ -397,12 +434,13 @@ ContractsView._populate_task_list = function (self, tasks)
 	table.sort(task_list, sort_function)
 
 	local list_padding = {
-		widget_type = "list_padding"
+		widget_type = "list_padding",
 	}
 
 	table.insert(task_list, 1, list_padding)
 
 	task_list[#task_list + 1] = list_padding
+
 	local task_grid = self._task_grid
 
 	local function select_widget_function(widget, config)
@@ -415,6 +453,7 @@ ContractsView._populate_task_list = function (self, tasks)
 	local function on_present_callback(widget, config)
 		local task_grid = task_grid
 		local grid_start_index = 1
+
 		self._synced_grid_index = nil
 
 		task_grid:select_grid_index(grid_start_index)
@@ -446,6 +485,7 @@ end
 
 ContractsView._update_wallets = function (self)
 	local store_service = Managers.data_service.store
+
 	self._wallet_promise = store_service:combined_wallets()
 
 	if self._parent then
@@ -472,35 +512,35 @@ ContractsView._display_confirmation_popup = function (self, task_id, wallet)
 		popup_params.description_text = "loc_contracts_reroll_confimation_popup_description"
 		popup_params.description_text_params = {
 			cost = reroll_cost_amount,
-			balance = balance_amount
+			balance = balance_amount,
 		}
 		popup_params.options = {
 			{
-				stop_exit_sound = true,
 				close_on_pressed = true,
+				stop_exit_sound = true,
 				text = "loc_contracts_reroll_confimation_yes",
-				callback = callback(self, "cb_reroll_task_confirmed", task_id, wallet, reroll_cost)
+				callback = callback(self, "cb_reroll_task_confirmed", task_id, wallet, reroll_cost),
 			},
 			{
-				text = "loc_contracts_reroll_confimation_no",
-				template_type = "terminal_button_small",
 				close_on_pressed = true,
-				hotkey = "back"
-			}
+				hotkey = "back",
+				template_type = "terminal_button_small",
+				text = "loc_contracts_reroll_confimation_no",
+			},
 		}
 	else
 		popup_params.title_text = "loc_contracts_reroll_insufficient_funds_popup_title"
 		popup_params.description_text = "loc_contracts_reroll_insufficient_funds_popup_description"
 		popup_params.description_text_params = {
 			cost = reroll_cost_amount,
-			balance = balance_amount
+			balance = balance_amount,
 		}
 		popup_params.options = {
 			{
-				text = "loc_contracts_reroll_insufficient_funds_close",
 				close_on_pressed = true,
-				hotkey = "back"
-			}
+				hotkey = "back",
+				text = "loc_contracts_reroll_insufficient_funds_close",
+			},
 		}
 	end
 

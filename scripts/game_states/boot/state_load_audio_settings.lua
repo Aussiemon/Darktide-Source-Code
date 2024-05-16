@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/boot/state_load_audio_settings.lua
+
 require("scripts/game_states/boot/state_boot_sub_state_base")
 
 local sound_settings = require("scripts/settings/options/sound_settings")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_psyker_male_c.lua
+
 local class_rework_psyker_male_c = {
 	ability_buff_stance_a = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local class_rework_psyker_male_c = {
 			"loc_psyker_male_c__ability_buff_stance_a_07",
 			"loc_psyker_male_c__ability_buff_stance_a_08",
 			"loc_psyker_male_c__ability_buff_stance_a_09",
-			"loc_psyker_male_c__ability_buff_stance_a_10"
+			"loc_psyker_male_c__ability_buff_stance_a_10",
 		},
 		sound_events_duration = {
 			2.947521,
@@ -24,9 +26,9 @@ local class_rework_psyker_male_c = {
 			2.502667,
 			2.560688,
 			2.202917,
-			3.084208
+			3.084208,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_gunslinger = {
 		randomize_indexes_n = 0,
@@ -46,7 +48,7 @@ local class_rework_psyker_male_c = {
 			"loc_psyker_male_c__ability_gunslinger_12",
 			"loc_psyker_male_c__ability_gunslinger_13",
 			"loc_psyker_male_c__ability_gunslinger_14",
-			"loc_psyker_male_c__ability_gunslinger_15"
+			"loc_psyker_male_c__ability_gunslinger_15",
 		},
 		sound_events_duration = {
 			1.321083,
@@ -63,9 +65,9 @@ local class_rework_psyker_male_c = {
 			2.453823,
 			1.584594,
 			1.959479,
-			2.56176
+			2.56176,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_protectorate_start = {
 		randomize_indexes_n = 0,
@@ -78,7 +80,7 @@ local class_rework_psyker_male_c = {
 			"loc_psyker_male_c__ability_protectorate_start_05",
 			"loc_psyker_male_c__ability_protectorate_start_06",
 			"loc_psyker_male_c__ability_protectorate_start_07",
-			"loc_psyker_male_c__ability_protectorate_start_08"
+			"loc_psyker_male_c__ability_protectorate_start_08",
 		},
 		sound_events_duration = {
 			2.368875,
@@ -88,9 +90,9 @@ local class_rework_psyker_male_c = {
 			1.433875,
 			2.491167,
 			2.515646,
-			2.355542
+			2.355542,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_protectorate_stop = {
 		randomize_indexes_n = 0,
@@ -103,7 +105,7 @@ local class_rework_psyker_male_c = {
 			"loc_psyker_male_c__ability_protectorate_stop_05",
 			"loc_psyker_male_c__ability_protectorate_stop_06",
 			"loc_psyker_male_c__ability_protectorate_stop_07",
-			"loc_psyker_male_c__ability_protectorate_stop_08"
+			"loc_psyker_male_c__ability_protectorate_stop_08",
 		},
 		sound_events_duration = {
 			2.178375,
@@ -113,10 +115,10 @@ local class_rework_psyker_male_c = {
 			1.481938,
 			1.394563,
 			2.185583,
-			1.908104
+			1.908104,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("class_rework_psyker_male_c", class_rework_psyker_male_c)

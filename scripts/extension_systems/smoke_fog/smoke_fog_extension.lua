@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/smoke_fog/smoke_fog_extension.lua
+
 local MinionState = require("scripts/utilities/minion_state")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local SmokeFogExtension = class("SmokeFogExtension")
@@ -14,10 +16,15 @@ SmokeFogExtension.init = function (self, extension_init_context, unit, extension
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
 	self._is_server = extension_init_context.is_server
+
 	local owner_unit = extension_init_data.owner_unit
+
 	self.owner_unit = owner_unit
+
 	local owner_buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
+
 	self._owner_buff_extension = owner_buff_extension
+
 	local stat_buffs = owner_buff_extension and owner_buff_extension:stat_buffs()
 	local smoke_fog_duration_modifier = 1
 
@@ -26,10 +33,13 @@ SmokeFogExtension.init = function (self, extension_init_context, unit, extension
 	end
 
 	self._max_duration = (extension_init_data.duration or DEFAULT_DURATION) * smoke_fog_duration_modifier
+
 	local t = Managers.time:time("gameplay")
+
 	self._duration = t + self._max_duration
 	self._smoke_start_t = t
 	self._smoke_fade_t = t + self._max_duration
+
 	local block_line_of_sight = extension_init_data.block_line_of_sight
 
 	if block_line_of_sight == nil then
@@ -38,8 +48,10 @@ SmokeFogExtension.init = function (self, extension_init_context, unit, extension
 
 	self.block_line_of_sight = block_line_of_sight
 	self.is_expired = false
+
 	local inner_radius = extension_init_data.inner_radius or DEFAULT_INNER_RADIUS
 	local outer_radius = extension_init_data.outer_radius or DEFAULT_OUTER_RADIUS
+
 	self.inner_radius = inner_radius
 	self.outer_radius = outer_radius
 	self.inner_radius_squared = inner_radius * inner_radius
@@ -53,15 +65,18 @@ SmokeFogExtension.init = function (self, extension_init_context, unit, extension
 
 	if owner_unit then
 		local side_system = Managers.state.extension:system("side_system")
+
 		self.side = side_system.side_by_unit[owner_unit]
 		self.side_names = self.side:relation_side_names("enemy")
 	else
 		local side_system = Managers.state.extension:system("side_system")
+
 		self.side = side_system:get_side_from_name("heroes")
 		self.side_names = self.side:relation_side_names("enemy")
 	end
 
 	local fade_frame = math.ceil(self._smoke_fade_t / Managers.state.game_session.fixed_time_step)
+
 	game_object_data.smoke_fade_frame = fade_frame
 end
 
@@ -135,9 +150,10 @@ SmokeFogExtension.on_unit_enter = function (self, unit, t)
 
 	if in_fog_buff_template_name then
 		local _, local_index, component_index = unit_buff_extension:add_externally_controlled_buff(in_fog_buff_template_name, t, "owner_unit", fog_unit)
+
 		buff_affected_units[unit] = {
 			local_index = local_index,
-			component_index = component_index
+			component_index = component_index,
 		}
 	end
 

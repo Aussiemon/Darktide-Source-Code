@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/service_unavailable_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local ServiceUnavailableError = class("ServiceUnavailableError")

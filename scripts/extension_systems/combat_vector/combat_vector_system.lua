@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/combat_vector/combat_vector_system.lua
+
 require("scripts/extension_systems/combat_vector/combat_vector_user_extension")
 
 local AttackIntensity = require("scripts/utilities/attack_intensity")
@@ -8,14 +10,14 @@ local Navigation = require("scripts/extension_systems/navigation/utilities/navig
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local CombatVectorSystem = class("CombatVectorSystem", "ExtensionSystemBase")
-local _calculate_flank_positions, _calculate_flank_vectors, _calculate_from_position, _calculate_main_aggro_unit, _calculate_nav_mesh_locations, _calculate_segment, _calculate_to_position, _clear_data, _generate_combat_vector, _get_segment_range_identifier = nil
+local _calculate_flank_positions, _calculate_flank_vectors, _calculate_from_position, _calculate_main_aggro_unit, _calculate_nav_mesh_locations, _calculate_segment, _calculate_to_position, _clear_data, _generate_combat_vector, _get_segment_range_identifier
 local LEFT_SEGMENT_INDEX = 1
 local MID_SEGMENT_INDEX = 2
 local RIGHT_SEGMENT_INDEX = 3
 local VECTOR_TYPES = {
 	"main",
 	"left_flank",
-	"right_flank"
+	"right_flank",
 }
 
 CombatVectorSystem.init = function (self, ...)
@@ -26,43 +28,46 @@ CombatVectorSystem.init = function (self, ...)
 	if is_server then
 		local nav_world = self._nav_world
 		local astar = GwNavAStar.create(nav_world)
+
 		self._astar_data = {
-			astar_timer = 0,
 			astar_finished = true,
-			astar = astar
+			astar_timer = 0,
+			astar = astar,
 		}
 		self._current_from_position = Vector3Box()
 		self._current_to_position = Vector3Box()
 		self._combat_vector = Vector3Box()
 		self._last_known_positions = {}
+
 		local location_types = CombatVectorSettings.location_types
 		local max_segments = CombatVectorSettings.max_segments
-		local segments = {}
-		local nav_mesh_locations = {}
-		local claimed_location_counters = {}
+		local segments, nav_mesh_locations, claimed_location_counters = {}, {}, {}
 
 		for i = 1, #VECTOR_TYPES do
 			local vector_type = VECTOR_TYPES[i]
 			local vector_segments = Script.new_array(max_segments)
+
 			vector_segments[1] = Vector3Box()
 
 			for j = 2, max_segments do
 				vector_segments[j] = {
 					Vector3Box(),
 					Vector3Box(),
-					Vector3Box()
+					Vector3Box(),
 				}
 			end
 
 			segments[vector_type] = vector_segments
+
 			local location_counters = {}
 			local locations = {}
 
 			for j = 1, #location_types do
 				local location_type = location_types[j]
+
 				locations[location_type] = {
 					close = {},
-					far = {}
+					far = {},
 				}
 				location_counters[location_type] = 0
 			end
@@ -74,10 +79,12 @@ CombatVectorSystem.init = function (self, ...)
 		self._segments = segments
 		self._nav_mesh_locations = nav_mesh_locations
 		self._claimed_location_counters = claimed_location_counters
+
 		local segment_count = {}
 
 		for i = 1, #VECTOR_TYPES do
 			local vector_type = VECTOR_TYPES[i]
+
 			segment_count[vector_type] = 0
 		end
 
@@ -86,17 +93,19 @@ CombatVectorSystem.init = function (self, ...)
 		self._locked_in_melee_cooldown = 0
 		self._locked_in_melee_unit = nil
 		self._flank_positions = {}
+
 		local left_flank_astar = GwNavAStar.create(nav_world)
 		local right_flank_astar = GwNavAStar.create(nav_world)
+
 		self._flank_astar_data = {
 			left_flank = {
 				finished = true,
-				astar = left_flank_astar
+				astar = left_flank_astar,
 			},
 			right_flank = {
 				finished = true,
-				astar = right_flank_astar
-			}
+				astar = right_flank_astar,
+			},
 		}
 		self._next_update_at = 0
 		self._current_update_unit = nil
@@ -106,17 +115,17 @@ CombatVectorSystem.init = function (self, ...)
 end
 
 local NAV_TAG_LAYER_COSTS = {
-	teleporters = 100,
-	ledges_with_fence = 10,
+	cover_ledges = 10,
+	cover_vaults = 10,
 	doors = 10,
 	jumps = 10,
 	ledges = 10,
-	cover_ledges = 10,
-	cover_vaults = 10,
-	monster_walls = 0
+	ledges_with_fence = 10,
+	monster_walls = 0,
+	teleporters = 100,
 }
 local FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
-	"content/volume_types/nav_tag_volumes/minion_no_destination"
+	"content/volume_types/nav_tag_volumes/minion_no_destination",
 }
 
 CombatVectorSystem.on_gameplay_post_init = function (self, level)
@@ -125,8 +134,9 @@ CombatVectorSystem.on_gameplay_post_init = function (self, level)
 	end
 
 	local traverse_logic, nav_tag_cost_table = Navigation.create_traverse_logic(self._nav_world, NAV_TAG_LAYER_COSTS, nil, false)
-	self._nav_tag_cost_table = nav_tag_cost_table
-	self._traverse_logic = traverse_logic
+
+	self._traverse_logic, self._nav_tag_cost_table = traverse_logic, nav_tag_cost_table
+
 	local nav_mesh_manager = Managers.state.nav_mesh
 
 	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES do
@@ -170,6 +180,7 @@ CombatVectorSystem.on_add_extension = function (self, world, unit, extension_nam
 
 	if extension_name == "CombatVectorUserExtension" then
 		self._unit_extension_data[unit] = extension
+
 		local current_update_unit = self._current_update_unit
 		local unit_extension_data = self._unit_extension_data
 
@@ -237,9 +248,10 @@ end
 
 CombatVectorSystem._update_combat_vector = function (self, dt, t)
 	local nav_world = self._nav_world
-	local aggro_unit_scores = self._aggro_unit_scores
-	local current_aggro_unit = self._main_aggro_unit
+	local aggro_unit_scores, current_aggro_unit = self._aggro_unit_scores, self._main_aggro_unit
+
 	self._main_aggro_unit = _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_aggro_unit, CombatVectorSettings.aggro_decay_speed)
+
 	local traverse_logic = self._traverse_logic
 	local astar_data = self._astar_data
 	local astar = astar_data.astar
@@ -263,6 +275,7 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 				local num_locations_per_segment_meter = CombatVectorSettings.num_locations_per_segment_meter
 				local width = CombatVectorSettings.width
 				local segment_count = _generate_combat_vector(nav_world, traverse_logic, astar, segments, node_count, nav_mesh_locations, num_nav_mesh_location_types, num_locations_per_segment_meter, width)
+
 				self._segment_count.main = segment_count
 				changed = true
 			end
@@ -273,15 +286,16 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 
 	self:_check_for_locked_in_melee_unit(t)
 
-	if astar_data.astar_timer < t and astar_data.astar_finished then
+	if t > astar_data.astar_timer and astar_data.astar_finished then
 		local new_astar = astar_data.astar or GwNavAStar.create(nav_world)
 		local total_challenge_rating = Managers.state.pacing:total_challenge_rating()
-		local from_position = nil
+		local from_position
 
 		if total_challenge_rating <= 0 then
 			local main_path_manager = Managers.state.main_path
 			local target_side_id = CombatVectorSettings.target_side_id
 			local _, _, ahead_position = main_path_manager:ahead_unit(target_side_id)
+
 			from_position = ahead_position
 		else
 			from_position = _calculate_from_position(nav_world, traverse_logic, self._locked_in_melee_unit or self._main_aggro_unit, self._last_known_positions)
@@ -303,7 +317,7 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 			local from_update_distance_sq = CombatVectorSettings.from_update_distance_sq
 			local to_update_distance_sq = CombatVectorSettings.to_update_distance_sq
 
-			if self._next_update_at < t and (from_update_distance_sq <= from_position_distance_sq or to_update_distance_sq <= to_position_distance_sq) then
+			if t > self._next_update_at and (from_update_distance_sq <= from_position_distance_sq or to_update_distance_sq <= to_position_distance_sq) then
 				GwNavAStar.start(new_astar, nav_world, from_position, to_position, traverse_logic)
 
 				astar_data.astar = new_astar
@@ -312,6 +326,7 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 				self._current_from_position:store(from_position)
 
 				local update_frequency = CombatVectorSettings.combat_vector_update_frequency
+
 				self._next_update_at = t + update_frequency
 			end
 		end
@@ -477,19 +492,14 @@ CombatVectorSystem.num_aggroed_combat_vector_minions = function (self)
 	return self._num_aggroed_combat_vector_minions
 end
 
-local ABOVE = 4
-local BELOW = 4
-local LATERAL = 4
-local DISTANCE_FROM_OBSTACLE = 0.1
+local ABOVE, BELOW, LATERAL, DISTANCE_FROM_OBSTACLE = 4, 4, 4, 0.1
 
 function _generate_combat_vector(nav_world, traverse_logic, astar, segments, node_count, nav_mesh_locations, num_nav_mesh_location_types, num_locations_per_segment_meter, width)
-	local GwNavAStar_node_at_index = GwNavAStar.node_at_index
-	local Vector3_length = Vector3.length
-	local Vector3_normalize = Vector3.normalize
+	local GwNavAStar_node_at_index, Vector3_length, Vector3_normalize = GwNavAStar.node_at_index, Vector3.length, Vector3.normalize
 	local segment_count = 1
 	local node_index = 1
 	local max_segments = CombatVectorSettings.max_segments
-	local prev_node = nil
+	local prev_node
 	local min_segment_length = CombatVectorSettings.min_segment_length
 
 	while segment_count < max_segments and node_index <= node_count do
@@ -509,6 +519,7 @@ function _generate_combat_vector(nav_world, traverse_logic, astar, segments, nod
 				local percentage = i / num_segments_between_nodes
 				local length = to_prev_node_length * percentage
 				local segment_position = node + prev_node_direction * length
+
 				segment_count = segment_count + 1
 
 				_calculate_segment(nav_world, traverse_logic, segments, segment_position, prev_node_direction, segment_count, width)
@@ -530,12 +541,10 @@ function _generate_combat_vector(nav_world, traverse_logic, astar, segments, nod
 	return segment_count
 end
 
-local LOCATION_ABOVE = 1
-local LOCATION_BELOW = 1
+local LOCATION_ABOVE, LOCATION_BELOW = 1, 1
 
 function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segment_count, nav_mesh_locations, num_nav_mesh_location_types, num_locations_per_segment_meter)
-	local Vector3_distance = Vector3.distance
-	local two_pi = math.two_pi
+	local Vector3_distance, two_pi = Vector3.distance, math.two_pi
 	local min_nav_mesh_location_radius = CombatVectorSettings.min_nav_mesh_location_radius
 	local nav_mesh_location_start_index = CombatVectorSettings.nav_mesh_location_start_index
 	local num_segments_with_locations = segment_count - nav_mesh_location_start_index + 1
@@ -564,7 +573,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 			for location_type, locations in pairs(nav_mesh_locations) do
 				local range_nav_mesh_locations = locations[range_identifier]
 				local current_radians = -(radians_per_nav_mesh_location / 2)
-				local location_origin = nil
+				local location_origin
 
 				if location_type == "right" then
 					location_origin = pos_on_nav_mesh_right + right_to_mid_offset
@@ -576,6 +585,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 
 				for j = 1, num_positions do
 					current_radians = current_radians + radians_per_nav_mesh_location
+
 					local dir = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
 					local distance = math.random_range(quarter_lane_width, half_lane_width)
 					local pos = location_origin + dir * distance
@@ -585,7 +595,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 						range_nav_mesh_locations[#range_nav_mesh_locations + 1] = {
 							claimed = false,
 							position = Vector3Box(pos_on_nav_mesh),
-							location_type = location_type
+							location_type = location_type,
 						}
 					end
 				end
@@ -595,7 +605,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 end
 
 function _get_segment_range_identifier(location_segment_index, one_third_num_segments_with_locations)
-	local range_identifier = nil
+	local range_identifier
 	local range_types = CombatVectorSettings.range_types
 
 	if one_third_num_segments_with_locations <= location_segment_index then
@@ -677,7 +687,7 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 		end
 	end
 
-	local to_position = nil
+	local to_position
 
 	if num_aggroed > 0 then
 		average_position = average_position / num_aggroed
@@ -703,7 +713,7 @@ end
 
 function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_main_aggro_unit, decay_speed)
 	local highest_score = 0
-	local best_aggro_unit = nil
+	local best_aggro_unit
 	local ALIVE = ALIVE
 
 	for aggro_unit, score in pairs(aggro_unit_scores) do
@@ -720,7 +730,9 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 
 	if not best_aggro_unit then
 		local target_side_id = CombatVectorSettings.target_side_id
+
 		best_aggro_unit = Managers.state.main_path:ahead_unit(target_side_id)
+
 		local unit_data_extension = ScriptUnit.has_extension(best_aggro_unit, "unit_data_system")
 		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 
@@ -771,8 +783,7 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 	return best_aggro_unit or current_main_aggro_unit
 end
 
-local FLANK_POS_ABOVE = 5
-local FLANK_POS_BELOW = 5
+local FLANK_POS_ABOVE, FLANK_POS_BELOW = 5, 5
 local MAX_FLANK_FIND_POSITION_TRIES = 10
 local FLANK_OFFSET = 5
 local MIN_FLANK_LENGTH = 10
@@ -839,6 +850,7 @@ function _calculate_flank_vectors(t, changed, from_position, flank_positions, fl
 				local num_locations_per_segment_meter = CombatVectorSettings.num_flank_locations_per_segment_meter
 				local width = CombatVectorSettings.flank_width
 				local segment_count = _generate_combat_vector(nav_world, traverse_logic, astar, flank_segments, node_count, nav_mesh_locations, num_nav_mesh_location_types, num_locations_per_segment_meter, width)
+
 				segment_counts[vector_type] = segment_count
 			end
 

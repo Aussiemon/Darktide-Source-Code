@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_conditions/trigger_condition_all_players_inside_no_enemies.lua
+
 require("scripts/extension_systems/trigger/trigger_conditions/trigger_condition_base")
 
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -10,20 +12,22 @@ TriggerConditionAllPlayersInsideNoEnemies.init = function (self, engine_volume_e
 	local side_system = extension_manager:system("side_system")
 	local side_name = side_system:get_default_player_side_name()
 	local side = side_system:get_side_from_name(side_name)
+
 	self._side = side
 	self._enemy_side_names = side:relation_side_names("enemy")
+
 	local broadphase_system = extension_manager:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
+
 	local volume_points = Unit.volume_points(self._volume_unit, "enemy_check_volume")
-	local first_position = volume_points[1]
-	local num_volume_points = #volume_points
-	local max_position = first_position
-	local min_position = first_position
-	local Vector3_max = Vector3.max
-	local Vector3_min = Vector3.min
+	local first_position, num_volume_points = volume_points[1], #volume_points
+	local max_position, min_position = first_position, first_position
+	local Vector3_max, Vector3_min = Vector3.max, Vector3.min
 
 	for i = 2, num_volume_points do
 		local volume_point = volume_points[i]
+
 		max_position = Vector3_max(max_position, volume_point)
 		min_position = Vector3_min(min_position, volume_point)
 	end
@@ -59,15 +63,11 @@ TriggerConditionAllPlayersInsideNoEnemies.on_volume_exit = function (self, exiti
 	return self:_unregister_unit(exiting_unit)
 end
 
-local units_to_test = {}
-local broadphase_results = {}
+local units_to_test, broadphase_results = {}, {}
 
 TriggerConditionAllPlayersInsideNoEnemies.filter_passed = function (self, filter_unit, volume_id)
-	local broadphase_radius = self._broadphase_radius
-	local broadphase_center = self._broadphase_center:unbox()
-	local volume_unit = self._volume_unit
-	local enemy_found = false
-	local Unit_is_point_inside_volume = Unit.is_point_inside_volume
+	local broadphase_radius, broadphase_center = self._broadphase_radius, self._broadphase_center:unbox()
+	local volume_unit, enemy_found, Unit_is_point_inside_volume = self._volume_unit, false, Unit.is_point_inside_volume
 	local position_offset = Vector3.up() * 0.25
 	local num_results = Broadphase.query(self._broadphase, broadphase_center, broadphase_radius, broadphase_results, self._enemy_side_names)
 

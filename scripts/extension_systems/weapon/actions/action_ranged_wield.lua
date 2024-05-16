@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_ranged_wield.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
@@ -8,9 +10,11 @@ ActionRangedWield.start = function (self, action_settings, t, time_scale, action
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
 	local reload_template = weapon_template.reload_template
-	local anim, anim_3p = nil
+	local anim, anim_3p
+
 	anim = action_settings.wield_anim_event
 	anim_3p = action_settings.wield_anim_event_3p or anim
+
 	local inventory_slot_component = self._inventory_slot_component
 
 	if ReloadStates.uses_reload_states(inventory_slot_component) then
@@ -19,6 +23,7 @@ ActionRangedWield.start = function (self, action_settings, t, time_scale, action
 		if started_reload then
 			anim = action_settings.wield_reload_anim_event
 			anim_3p = action_settings.wield_reload_anim_event_3p or anim
+
 			local wield_reload_anim_event_func = action_settings.wield_reload_anim_event_func
 
 			if wield_reload_anim_event_func then

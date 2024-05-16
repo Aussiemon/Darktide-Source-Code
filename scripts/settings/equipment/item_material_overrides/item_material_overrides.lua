@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/item_material_overrides.lua
+
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local item_material_overrides_name = "ItemMaterialOverrides"
 local item_material_overrides = {}
@@ -12,6 +14,7 @@ local function _include_material_override_definition(file_name)
 		ItemPackage.compile_resource_dependencies(entry_data, entry_data.resource_dependencies)
 
 		local entry = entry_data
+
 		item_material_overrides[override_name] = entry
 	end
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_lm_cooling.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "cmd_mission_cooling_hacking_event_end"
 DialogueLookup[DialogueLookup_n + 2] = "cmd_mission_cooling_hacking_event_start"
 DialogueLookup[DialogueLookup_n + 3] = "cmd_mission_cooling_luggable_event_start"

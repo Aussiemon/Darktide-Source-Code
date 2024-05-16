@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/special_rules_based_lerped_stat_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local SpecialRulesBasedLerpedStatBuff = class("SpecialRulesBasedLerpedStatBuff", "Buff")
@@ -29,6 +31,7 @@ SpecialRulesBasedLerpedStatBuff.update_stat_buffs = function (self, current_stat
 				local min = values.min
 				local max = values.max
 				local lerped_value = math.lerp(min, max, lerp_t)
+
 				self._stat_buff_return_table[key] = lerped_value
 			end
 		end
@@ -42,6 +45,7 @@ SpecialRulesBasedLerpedStatBuff.update_stat_buffs = function (self, current_stat
 				local min = values.min
 				local max = values.max
 				local lerped_value = math.lerp(min, max, lerp_t)
+
 				self._stat_buff_return_table[key] = lerped_value
 			end
 		end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_on_demand_vo.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "com_wheel_vo_enemy_over_here"
 DialogueLookup[DialogueLookup_n + 2] = "com_wheel_vo_follow_you"
 DialogueLookup[DialogueLookup_n + 3] = "com_wheel_vo_for_the_emperor"

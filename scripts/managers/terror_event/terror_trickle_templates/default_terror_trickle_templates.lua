@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/terror_event/terror_trickle_templates/default_terror_trickle_templates.lua
+
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local MIXED_COMPOSITIONS = {
 	renegade = {
@@ -6,7 +8,7 @@ local MIXED_COMPOSITIONS = {
 		HordeCompositions.poxwalker_terror_trickle,
 		HordeCompositions.renegade_close_terror_trickle,
 		HordeCompositions.renegade_close_terror_trickle_elite,
-		HordeCompositions.renegade_melee_terror_trickle_elite
+		HordeCompositions.renegade_melee_terror_trickle_elite,
 	},
 	cultist = {
 		HordeCompositions.cultist_melee_terror_trickle,
@@ -14,108 +16,108 @@ local MIXED_COMPOSITIONS = {
 		HordeCompositions.poxwalker_terror_trickle,
 		HordeCompositions.cultist_close_terror_trickle,
 		HordeCompositions.cultist_close_terror_trickle_elite,
-		HordeCompositions.cultist_melee_terror_trickle_elite
-	}
+		HordeCompositions.cultist_melee_terror_trickle_elite,
+	},
 }
 local MELEE_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.renegade_melee_terror_trickle,
 		HordeCompositions.infected_terror_trickle,
 		HordeCompositions.poxwalker_terror_trickle,
-		HordeCompositions.renegade_terror_trickle_elite
+		HordeCompositions.renegade_terror_trickle_elite,
 	},
 	cultist = {
 		HordeCompositions.cultist_melee_terror_trickle,
 		HordeCompositions.infected_terror_trickle,
 		HordeCompositions.poxwalker_terror_trickle,
-		HordeCompositions.cultist_melee_terror_trickle_elite
-	}
+		HordeCompositions.cultist_melee_terror_trickle_elite,
+	},
 }
 local RANGED_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.renegade_close_terror_trickle,
 		HordeCompositions.renegade_close_terror_trickle,
 		HordeCompositions.renegade_close_terror_trickle_elite,
-		HordeCompositions.infected_terror_trickle
+		HordeCompositions.infected_terror_trickle,
 	},
 	cultist = {
 		HordeCompositions.cultist_close_terror_trickle,
 		HordeCompositions.cultist_close_terror_trickle,
 		HordeCompositions.cultist_close_terror_trickle_elite,
-		HordeCompositions.infected_terror_trickle
-	}
+		HordeCompositions.infected_terror_trickle,
+	},
 }
 local LOW_MIXED_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.renegade_melee_terror_trickle,
 		HordeCompositions.infected_terror_trickle,
 		HordeCompositions.poxwalker_terror_trickle,
-		HordeCompositions.renegade_close_terror_trickle
+		HordeCompositions.renegade_close_terror_trickle,
 	},
 	cultist = {
 		HordeCompositions.cultist_melee_terror_trickle,
 		HordeCompositions.infected_terror_trickle,
 		HordeCompositions.poxwalker_terror_trickle,
-		HordeCompositions.cultist_close_terror_trickle
-	}
+		HordeCompositions.cultist_close_terror_trickle,
+	},
 }
 local LOW_MELEE_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.infected_terror_trickle,
-		HordeCompositions.poxwalker_terror_trickle
+		HordeCompositions.poxwalker_terror_trickle,
 	},
 	cultist = {
 		HordeCompositions.infected_terror_trickle,
-		HordeCompositions.poxwalker_terror_trickle
-	}
+		HordeCompositions.poxwalker_terror_trickle,
+	},
 }
 local STANDARD_MELEE_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.infected_terror_trickle,
 		HordeCompositions.poxwalker_terror_trickle,
-		HordeCompositions.renegade_melee_low_terror_trickle
+		HordeCompositions.renegade_melee_low_terror_trickle,
 	},
 	cultist = {
 		HordeCompositions.infected_terror_trickle,
 		HordeCompositions.poxwalker_terror_trickle,
-		HordeCompositions.cultist_melee_low_terror_trickle
-	}
+		HordeCompositions.cultist_melee_low_terror_trickle,
+	},
 }
 local LOW_RANGED_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.renegade_close_terror_trickle,
 		HordeCompositions.renegade_close_terror_trickle,
-		HordeCompositions.infected_terror_trickle
+		HordeCompositions.infected_terror_trickle,
 	},
 	cultist = {
 		HordeCompositions.cultist_close_terror_trickle,
 		HordeCompositions.cultist_close_terror_trickle,
-		HordeCompositions.infected_terror_trickle
-	}
+		HordeCompositions.infected_terror_trickle,
+	},
 }
 local FLOOD_MELEE_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.infected_terror_trickle,
-		HordeCompositions.poxwalker_terror_trickle
+		HordeCompositions.poxwalker_terror_trickle,
 	},
 	cultist = {
 		HordeCompositions.infected_terror_trickle,
-		HordeCompositions.poxwalker_terror_trickle
-	}
+		HordeCompositions.poxwalker_terror_trickle,
+	},
 }
 local TWIN_ELITE_COMPOSITIONS = {
 	renegade = {
 		HordeCompositions.twin_elite_trickle_1,
 		HordeCompositions.twin_elite_trickle_2,
 		HordeCompositions.twin_elite_trickle_3,
-		HordeCompositions.twin_elite_trickle_4
+		HordeCompositions.twin_elite_trickle_4,
 	},
 	cultist = {
 		HordeCompositions.twin_elite_trickle_1,
 		HordeCompositions.twin_elite_trickle_2,
 		HordeCompositions.twin_elite_trickle_3,
-		HordeCompositions.twin_elite_trickle_4
-	}
+		HordeCompositions.twin_elite_trickle_4,
+	},
 }
 local terror_trickle_templates = {
 	low_mixed = {
@@ -125,16 +127,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MIXED_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 5,
@@ -142,16 +144,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MIXED_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 5,
@@ -159,16 +161,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MIXED_COMPOSITIONS,
 			num_waves = {
 				1,
-				2
+				2,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 10,
@@ -176,16 +178,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MIXED_COMPOSITIONS,
 			num_waves = {
 				2,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 10,
@@ -193,17 +195,17 @@ local terror_trickle_templates = {
 			compositions = LOW_MIXED_COMPOSITIONS,
 			num_waves = {
 				2,
-				3
+				3,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				50,
-				60
-			}
-		}
+				60,
+			},
+		},
 	},
 	medium_mixed = {
 		{
@@ -212,16 +214,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -229,16 +231,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -246,16 +248,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -263,16 +265,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -280,17 +282,17 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				50,
-				60
-			}
-		}
+				60,
+			},
+		},
 	},
 	high_mixed = {
 		{
@@ -299,16 +301,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				5,
-				6
+				6,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -316,16 +318,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				6,
-				7
+				7,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -333,16 +335,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				7,
-				8
+				8,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -350,16 +352,16 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				8,
-				9
+				9,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
+				15,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -367,17 +369,17 @@ local terror_trickle_templates = {
 			compositions = MIXED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	low_melee = {
 		{
@@ -386,16 +388,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 10,
@@ -403,16 +405,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				40,
-				50
-			}
+				50,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -420,16 +422,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				25,
-				30
-			}
+				30,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 30,
@@ -437,16 +439,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				12,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 40,
@@ -454,17 +456,17 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				2,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	standard_melee = {
 		{
@@ -473,16 +475,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				25,
-				30
-			}
+				30,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -490,16 +492,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				25,
-				30
-			}
+				30,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 30,
@@ -507,16 +509,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 40,
@@ -524,16 +526,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				8,
-				13
-			}
+				13,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 50,
@@ -541,17 +543,17 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				2,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				7,
-				11
-			}
-		}
+				11,
+			},
+		},
 	},
 	medium_melee = {
 		{
@@ -560,16 +562,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				25,
-				30
-			}
+				30,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -577,16 +579,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				25,
-				30
-			}
+				30,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 30,
@@ -594,16 +596,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 40,
@@ -611,16 +613,16 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				8,
-				13
-			}
+				13,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 50,
@@ -628,17 +630,17 @@ local terror_trickle_templates = {
 			compositions = STANDARD_MELEE_COMPOSITIONS,
 			num_waves = {
 				2,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				7,
-				11
-			}
-		}
+				11,
+			},
+		},
 	},
 	high_melee = {
 		{
@@ -647,16 +649,16 @@ local terror_trickle_templates = {
 			compositions = MELEE_COMPOSITIONS,
 			num_waves = {
 				5,
-				6
+				6,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -664,16 +666,16 @@ local terror_trickle_templates = {
 			compositions = MELEE_COMPOSITIONS,
 			num_waves = {
 				6,
-				7
+				7,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -681,16 +683,16 @@ local terror_trickle_templates = {
 			compositions = MELEE_COMPOSITIONS,
 			num_waves = {
 				7,
-				8
+				8,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -698,16 +700,16 @@ local terror_trickle_templates = {
 			compositions = MELEE_COMPOSITIONS,
 			num_waves = {
 				8,
-				9
+				9,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
+				15,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -715,17 +717,17 @@ local terror_trickle_templates = {
 			compositions = MELEE_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	flood_melee = {
 		{
@@ -734,16 +736,16 @@ local terror_trickle_templates = {
 			compositions = FLOOD_MELEE_COMPOSITIONS,
 			num_waves = {
 				2,
-				2
+				2,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				10,
-				15
-			}
+				15,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 25,
@@ -751,16 +753,16 @@ local terror_trickle_templates = {
 			compositions = FLOOD_MELEE_COMPOSITIONS,
 			num_waves = {
 				3,
-				3
+				3,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				10,
-				15
-			}
+				15,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 30,
@@ -768,16 +770,16 @@ local terror_trickle_templates = {
 			compositions = FLOOD_MELEE_COMPOSITIONS,
 			num_waves = {
 				3,
-				3
+				3,
 			},
 			time_between_waves = {
 				4,
-				7
+				7,
 			},
 			cooldown = {
 				8,
-				12
-			}
+				12,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 30,
@@ -785,16 +787,16 @@ local terror_trickle_templates = {
 			compositions = FLOOD_MELEE_COMPOSITIONS,
 			num_waves = {
 				3,
-				3
+				3,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				8,
-				12
-			}
+				12,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -802,17 +804,17 @@ local terror_trickle_templates = {
 			compositions = FLOOD_MELEE_COMPOSITIONS,
 			num_waves = {
 				4,
-				4
+				4,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				8,
-				12
-			}
-		}
+				12,
+			},
+		},
 	},
 	low_ranged = {
 		{
@@ -821,16 +823,16 @@ local terror_trickle_templates = {
 			compositions = LOW_RANGED_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 5,
@@ -838,16 +840,16 @@ local terror_trickle_templates = {
 			compositions = LOW_RANGED_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				40,
-				50
-			}
+				50,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 10,
@@ -855,16 +857,16 @@ local terror_trickle_templates = {
 			compositions = LOW_RANGED_COMPOSITIONS,
 			num_waves = {
 				1,
-				2
+				2,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				30,
-				40
-			}
+				40,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -872,16 +874,16 @@ local terror_trickle_templates = {
 			compositions = LOW_RANGED_COMPOSITIONS,
 			num_waves = {
 				2,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				20,
-				30
-			}
+				30,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -889,17 +891,17 @@ local terror_trickle_templates = {
 			compositions = LOW_RANGED_COMPOSITIONS,
 			num_waves = {
 				2,
-				3
+				3,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	medium_ranged = {
 		{
@@ -908,16 +910,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				30,
-				35
-			}
+				35,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -925,16 +927,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				30,
-				35
-			}
+				35,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -942,16 +944,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				30,
-				35
-			}
+				35,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -959,16 +961,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				30,
-				35
-			}
+				35,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -976,17 +978,17 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				30,
-				35
-			}
-		}
+				35,
+			},
+		},
 	},
 	high_ranged = {
 		{
@@ -995,16 +997,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				5,
-				6
+				6,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -1012,16 +1014,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				6,
-				7
+				7,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -1029,16 +1031,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				7,
-				8
+				8,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				15,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -1046,16 +1048,16 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				8,
-				9
+				9,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
+				15,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 35,
@@ -1063,17 +1065,17 @@ local terror_trickle_templates = {
 			compositions = RANGED_COMPOSITIONS,
 			num_waves = {
 				4,
-				5
+				5,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	low_twin_melee = {
 		{
@@ -1082,16 +1084,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				70,
-				80
-			}
+				80,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 10,
@@ -1099,16 +1101,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				60,
-				70
-			}
+				70,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 20,
@@ -1116,16 +1118,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 30,
@@ -1133,16 +1135,16 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				12,
-				20
-			}
+				20,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 40,
@@ -1150,17 +1152,17 @@ local terror_trickle_templates = {
 			compositions = LOW_MELEE_COMPOSITIONS,
 			num_waves = {
 				2,
-				2
+				2,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				10,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	hard_mode_twins_elites = {
 		{
@@ -1169,16 +1171,16 @@ local terror_trickle_templates = {
 			compositions = TWIN_ELITE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				70,
-				80
-			}
+				80,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 50,
@@ -1186,16 +1188,16 @@ local terror_trickle_templates = {
 			compositions = TWIN_ELITE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				60,
-				70
-			}
+				70,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 50,
@@ -1203,16 +1205,16 @@ local terror_trickle_templates = {
 			compositions = TWIN_ELITE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				6,
-				10
+				10,
 			},
 			cooldown = {
 				50,
-				60
-			}
+				60,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 50,
@@ -1220,16 +1222,16 @@ local terror_trickle_templates = {
 			compositions = TWIN_ELITE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				20,
-				28
-			}
+				28,
+			},
 		},
 		{
 			challenge_rating_stop_threshold = 50,
@@ -1237,18 +1239,18 @@ local terror_trickle_templates = {
 			compositions = TWIN_ELITE_COMPOSITIONS,
 			num_waves = {
 				1,
-				1
+				1,
 			},
 			time_between_waves = {
 				3,
-				6
+				6,
 			},
 			cooldown = {
 				20,
-				28
-			}
-		}
-	}
+				28,
+			},
+		},
+	},
 }
 
 return terror_trickle_templates

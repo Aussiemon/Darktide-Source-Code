@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_lm_rails.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_rails_descend_shaft"
 DialogueLookup[DialogueLookup_n + 2] = "mission_rails_disable_skyfire_a"
 DialogueLookup[DialogueLookup_n + 3] = "mission_rails_disable_skyfire_b"

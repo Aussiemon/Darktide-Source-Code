@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/minion_customization.lua
+
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
@@ -6,6 +8,7 @@ local MinionCustomization = component("MinionCustomization")
 MinionCustomization.editor_init = function (self, unit)
 	local in_editor = true
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -24,6 +27,7 @@ MinionCustomization.init = function (self, unit)
 
 	local in_editor = false
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -45,7 +49,7 @@ MinionCustomization._construct_attach_settings = function (self, unit, world, in
 		in_editor = in_editor,
 		is_first_person = is_first_person,
 		lod_group = Unit.has_lod_group(unit, "lod") and Unit.lod_group(unit, "lod"),
-		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow")
+		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow"),
 	}
 
 	if not in_editor then
@@ -77,6 +81,7 @@ MinionCustomization._customize = function (self, unit, item_definitions)
 	local attach_settings = self._attach_settings
 	local item_table = self:get_data(unit, "attachment_items")
 	local global_material_override_table = self:get_data(unit, "global_material_override")
+
 	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
 
 	self:spawn_items(item_table)
@@ -188,62 +193,62 @@ end
 MinionCustomization.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true
+	starts_enabled_default = true,
 }
 MinionCustomization.component_data = {
 	editor_only = {
+		category = "Settings",
+		ui_name = "Editor Only",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Editor Only",
-		category = "Settings"
 	},
 	is_first_person = {
+		category = "Settings",
+		ui_name = "Is First Person",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Is First Person",
-		category = "Settings"
 	},
 	is_corpse = {
+		category = "Settings",
+		ui_name = "Is Corpse",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Is Corpse",
-		category = "Settings"
 	},
 	attachment_items = {
 		category = "Attachments",
-		ui_type = "resource_array",
+		filter = "item",
 		size = 3,
 		ui_name = "Item",
-		filter = "item"
+		ui_type = "resource_array",
 	},
 	attachment_material_override_1 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 1 for Item"
+		ui_name = "Material Override 1 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	attachment_material_override_2 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 2 for Item"
+		ui_name = "Material Override 2 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	attachment_material_override_3 = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Material Override 3 for Item"
+		ui_name = "Material Override 3 for Item",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
 	},
 	global_material_override = {
-		validator = "contentpathsallowed",
 		category = "Attachments",
-		ui_type = "text_box_array",
 		size = 1,
-		ui_name = "Global Material Override"
-	}
+		ui_name = "Global Material Override",
+		ui_type = "text_box_array",
+		validator = "contentpathsallowed",
+	},
 }
 
 return MinionCustomization

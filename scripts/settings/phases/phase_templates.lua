@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/phases/phase_templates.lua
+
 local phase_templates = {}
 
 local function _extract_phase_templates(path)

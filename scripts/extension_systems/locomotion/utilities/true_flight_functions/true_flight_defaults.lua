@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults.lua
+
 local MinionState = require("scripts/utilities/minion_state")
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
@@ -22,6 +24,7 @@ local function _center_of_all_actors(target_unit)
 			for j = 1, #actors do
 				local actor = Unit_actor(target_unit, actors[j])
 				local center_of_mass = Actor_center_of_mass(actor)
+
 				position = position + center_of_mass
 				number_of_positions = number_of_positions + 1
 			end
@@ -54,6 +57,7 @@ local function _center_of_hit_zone(target_unit, target_hit_zone)
 			for i = 1, #target_actor_names do
 				local target_actor = Unit_actor(target_unit, target_actor_names[i])
 				local target_position = Actor_center_of_mass(target_actor)
+
 				position = position + target_position
 				number_of_positions = number_of_positions + 1
 			end
@@ -113,7 +117,9 @@ true_flight_defaults.default_update_towards_position = function (target_position
 	local height_over_target = height_offset + math.max(position.z - target_position.z, 0)
 	local lerp_func = _lerp_modifier_func(true_flight_template)
 	local lerp_modifier = lerp_func(integration_data, distance, height_over_target)
-	lerp_modifier = lerp_modifier * lerp_modifier * math.min(integration_data.time_since_start, 0.25) / 0.25
+
+	lerp_modifier = lerp_modifier * lerp_modifier * (math.min(integration_data.time_since_start, 0.25) / 0.25)
+
 	local lerp_value = math.min(dt * lerp_modifier * 100, 0.75)
 	local new_rotation = Quaternion.lerp(current_rotation, wanted_rotation, lerp_value)
 	local new_direction = Quaternion.forward(new_rotation)
@@ -122,8 +128,11 @@ true_flight_defaults.default_update_towards_position = function (target_position
 	local distance = (speed + new_speed) * dt * 0.5
 	local new_position = position + new_direction * distance
 	local new_velocity = new_direction * new_speed
+
 	integration_data.velocity = new_velocity
+
 	local new_rotation = Quaternion.look(velocity)
+
 	new_position = true_flight_defaults.default_check_collisions(physics_world, integration_data, position, new_position, dt, t, optional_validate_impact_func, optional_on_impact_func)
 
 	return new_position, new_rotation
@@ -134,6 +143,7 @@ true_flight_defaults.default_update_position_velocity = function (physics_world,
 	local position = integration_data.position
 	local new_position = position + velocity * dt
 	local new_rotation = Quaternion.look(velocity)
+
 	new_position = true_flight_defaults.default_check_collisions(physics_world, integration_data, position, new_position, dt, t, optional_validate_impact_func, optional_on_impact_func)
 
 	return new_position, new_rotation
@@ -155,7 +165,7 @@ true_flight_defaults.broadphase_query = function (owner_unit, position, radius)
 end
 
 true_flight_defaults.get_closest_highest_value_target = function (integration_data, number_of_results, results, position, is_valid_and_legitimate_target_func, default_hit_zone)
-	local closest_unit = nil
+	local closest_unit
 	local closest_distance = math.huge
 
 	if number_of_results > 0 then
@@ -184,19 +194,22 @@ true_flight_defaults.find_closest_highest_value_target = function (integration_d
 	local true_flight_template = integration_data.true_flight_template
 	local broadphase_radius = true_flight_template.broadphase_radius
 	local forward_search_distance_to_find_target = true_flight_template.forward_search_distance_to_find_target
-	local results, number_of_results = nil
+	local results, number_of_results
 
 	if integration_data.target_position then
 		local target_position = integration_data.target_position
+
 		number_of_results, results = true_flight_defaults.broadphase_query(owner_unit, target_position, broadphase_radius)
 	else
 		local veclocity = integration_data.velocity
 		local current_direction = Vector3.normalize(veclocity)
 		local first_search_pos = position + current_direction * forward_search_distance_to_find_target
+
 		number_of_results, results = true_flight_defaults.broadphase_query(owner_unit, first_search_pos, broadphase_radius)
 
 		if number_of_results <= 0 then
 			local second_search_pos = position + current_direction * forward_search_distance_to_find_target * 2
+
 			number_of_results, results = true_flight_defaults.broadphase_query(owner_unit, second_search_pos, broadphase_radius * 2)
 		end
 	end
@@ -348,7 +361,9 @@ true_flight_defaults.default_check_collisions = function (physics_world, integra
 
 		if is_valid_collision then
 			local hit_normal = hit.normal or hit[3]
+
 			integration_data.has_hit = true
+
 			local force_delete = false
 
 			if optional_on_impact_func then
@@ -357,7 +372,7 @@ true_flight_defaults.default_check_collisions = function (physics_world, integra
 				new_position = hit_position
 			end
 
-			local impact_result = nil
+			local impact_result
 
 			if damage_extension then
 				local is_target_unit = true

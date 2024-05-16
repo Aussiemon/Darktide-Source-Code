@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/beacon/hud_element_beacon.lua
+
 local HudElementBeaconSettings = require("scripts/ui/hud/elements/beacon/hud_element_beacon_settings")
 local HudElementBeacon = class("HudElementBeacon")
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/profile_utils.lua
+
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
@@ -11,140 +13,140 @@ local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utiliti
 local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementProfilePresetsSettings = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_settings")
-local ProfileUtils = {
-	character_names = {
-		male_names_1 = {
-			"Ackor",
-			"Barbor",
-			"Baudlarn",
-			"Brack",
-			"Candorick",
-			"Claren",
-			"Cockerill",
-			"Corot",
-			"Derlin",
-			"Dickot",
-			"Doran",
-			"Dorfan",
-			"Dorsworth",
-			"Farridge",
-			"Fascal",
-			"Foronat",
-			"Fusell",
-			"Goyan",
-			"Harken",
-			"Haveloch",
-			"Henam",
-			"Hugot",
-			"Jerican",
-			"Keating",
-			"Kradd",
-			"Lamark",
-			"Lukas",
-			"Martack",
-			"Mikel",
-			"Montov",
-			"Mussat",
-			"Narvast",
-			"Nura",
-			"Nzoni",
-			"Onceda",
-			"Rossel",
-			"Rudge",
-			"Salcan",
-			"Saldar",
-			"Scottor",
-			"Shaygor",
-			"Shiller",
-			"Skyv",
-			"Smither",
-			"Tademar",
-			"Taur",
-			"Tecker",
-			"Tuttor",
-			"Verbal",
-			"Victor",
-			"Villan",
-			"Xavier",
-			"Zapard",
-			"Zek"
-		},
-		female_names_1 = {
-			"Erith",
-			"Agda",
-			"Ambre",
-			"Amelia",
-			"Avrilia",
-			"Axella",
-			"Beretille",
-			"Blonthe",
-			"Clea",
-			"Coletta",
-			"Constanze",
-			"Dalilla",
-			"Diana",
-			"Doriana",
-			"Edithia",
-			"Eglantia",
-			"Elodine",
-			"Ephrael",
-			"Felicia",
-			"Genevieve",
-			"Greyla",
-			"Guendolys",
-			"Guenhvya",
-			"Guenievre",
-			"Heinrike",
-			"Helene",
-			"Helmia",
-			"Honorine",
-			"Ines",
-			"Iris",
-			"Isaure",
-			"Jacinta",
-			"Josea",
-			"Justine",
-			"Kelvi",
-			"Kerstin",
-			"Kinnia",
-			"Kline",
-			"Lassana",
-			"Leana",
-			"Leatha",
-			"Liari",
-			"Lorette",
-			"Lyta",
-			"Maia",
-			"Mallava",
-			"Marakanthe",
-			"Maylin",
-			"Mejara",
-			"Meliota",
-			"Melisande",
-			"Mira",
-			"Mylene",
-			"Nadia",
-			"Nalana",
-			"Natacha",
-			"Ophelia",
-			"Prothei",
-			"Rosemonde",
-			"Rosine",
-			"Ruby",
-			"Sanei",
-			"Sarine",
-			"Severa",
-			"Silvana",
-			"Undine",
-			"Unkara",
-			"Valleni",
-			"Vissia",
-			"Waynoka",
-			"Yvette",
-			"Zelie",
-			"Zellith"
-		}
-	}
+local ProfileUtils = {}
+
+ProfileUtils.character_names = {
+	male_names_1 = {
+		"Ackor",
+		"Barbor",
+		"Baudlarn",
+		"Brack",
+		"Candorick",
+		"Claren",
+		"Cockerill",
+		"Corot",
+		"Derlin",
+		"Dickot",
+		"Doran",
+		"Dorfan",
+		"Dorsworth",
+		"Farridge",
+		"Fascal",
+		"Foronat",
+		"Fusell",
+		"Goyan",
+		"Harken",
+		"Haveloch",
+		"Henam",
+		"Hugot",
+		"Jerican",
+		"Keating",
+		"Kradd",
+		"Lamark",
+		"Lukas",
+		"Martack",
+		"Mikel",
+		"Montov",
+		"Mussat",
+		"Narvast",
+		"Nura",
+		"Nzoni",
+		"Onceda",
+		"Rossel",
+		"Rudge",
+		"Salcan",
+		"Saldar",
+		"Scottor",
+		"Shaygor",
+		"Shiller",
+		"Skyv",
+		"Smither",
+		"Tademar",
+		"Taur",
+		"Tecker",
+		"Tuttor",
+		"Verbal",
+		"Victor",
+		"Villan",
+		"Xavier",
+		"Zapard",
+		"Zek",
+	},
+	female_names_1 = {
+		"Erith",
+		"Agda",
+		"Ambre",
+		"Amelia",
+		"Avrilia",
+		"Axella",
+		"Beretille",
+		"Blonthe",
+		"Clea",
+		"Coletta",
+		"Constanze",
+		"Dalilla",
+		"Diana",
+		"Doriana",
+		"Edithia",
+		"Eglantia",
+		"Elodine",
+		"Ephrael",
+		"Felicia",
+		"Genevieve",
+		"Greyla",
+		"Guendolys",
+		"Guenhvya",
+		"Guenievre",
+		"Heinrike",
+		"Helene",
+		"Helmia",
+		"Honorine",
+		"Ines",
+		"Iris",
+		"Isaure",
+		"Jacinta",
+		"Josea",
+		"Justine",
+		"Kelvi",
+		"Kerstin",
+		"Kinnia",
+		"Kline",
+		"Lassana",
+		"Leana",
+		"Leatha",
+		"Liari",
+		"Lorette",
+		"Lyta",
+		"Maia",
+		"Mallava",
+		"Marakanthe",
+		"Maylin",
+		"Mejara",
+		"Meliota",
+		"Melisande",
+		"Mira",
+		"Mylene",
+		"Nadia",
+		"Nalana",
+		"Natacha",
+		"Ophelia",
+		"Prothei",
+		"Rosemonde",
+		"Rosine",
+		"Ruby",
+		"Sanei",
+		"Sarine",
+		"Severa",
+		"Silvana",
+		"Undine",
+		"Unkara",
+		"Valleni",
+		"Vissia",
+		"Waynoka",
+		"Yvette",
+		"Zelie",
+		"Zellith",
+	},
 }
 
 local function _fill_talents_and_selected_nodes(profile, character, archetype_name)
@@ -186,7 +188,7 @@ local function profile_from_backend_data(backend_profile_data)
 		talent_points = talent_points,
 		specialization = specialization,
 		name = character.name,
-		personal = character.personal
+		personal = character.personal,
 	}
 	local items = profile_data.items
 	local loadout_item_data = backend_profile.loadout_item_data
@@ -196,14 +198,17 @@ local function profile_from_backend_data(backend_profile_data)
 			Log.error("ProfileUtil", "Equipped item %s was not present in the backend inventory", item_id)
 
 			local master_id = MasterItems.find_fallback_item_id(slot_name)
+
 			loadout_item_data[slot_name] = {
-				id = master_id
+				id = master_id,
 			}
 		else
 			local data = items[item_id].masterDataInstance
+
 			loadout_item_data[slot_name] = {
-				id = data.id
+				id = data.id,
 			}
+
 			local overrides = data.overrides
 
 			if overrides then
@@ -224,7 +229,7 @@ ProfileUtils.pack_backend_profile_data = function (backend_profile_data)
 	return profile_json
 end
 
-local _combine_item = nil
+local _combine_item
 
 function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face)
 	for child_slot_name, child_entry in pairs(entry) do
@@ -234,9 +239,10 @@ function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_pre
 			_combine_item(child_slot_name, child_entry, child_attachments, visual_items, voice_fx_presets, hide_facial_hair)
 
 			local data = visual_items[child_slot_name]
+
 			attachments[child_slot_name] = {
 				item = data.item,
-				children = child_attachments
+				children = child_attachments,
 			}
 
 			if data.item.voice_fx_preset then
@@ -295,6 +301,7 @@ local function _generate_visual_loadout(visual_items)
 		if hidden_slots then
 			for i = 1, #hidden_slots do
 				local hidden_slot_name = hidden_slots[i]
+
 				structure[hidden_slot_name] = nil
 			end
 		end
@@ -323,7 +330,7 @@ local function _generate_visual_loadout(visual_items)
 			local voice_fx_presets = {}
 			local hide_facial_hair = {
 				hide_beard = false,
-				hide_eyebrows = false
+				hide_eyebrows = false,
 			}
 			local stabilize_neck = {}
 			local mask_facial_hair = {}
@@ -354,7 +361,7 @@ local function _generate_visual_loadout(visual_items)
 				overrides = overrides or {}
 				overrides.attachments = overrides.attachments or {}
 				overrides.attachments[skin_color_slot_name] = {
-					item = skin_color_item_data.item
+					item = skin_color_item_data.item,
 				}
 			end
 
@@ -399,7 +406,9 @@ local function _generate_visual_loadout(visual_items)
 			end
 
 			gear.masterDataInstance.overrides = overrides
+
 			local item = MasterItems.get_item_instance(gear, item_id)
+
 			visual_loadout[slot_name] = item
 		end
 	end
@@ -417,13 +426,14 @@ local function _generate_loadout_from_data(loadout_item_ids, loadout_item_data)
 			local gear = {
 				masterDataInstance = {
 					id = item_data.id,
-					overrides = item_data.overrides
+					overrides = item_data.overrides,
 				},
 				slots = {
-					slot_name
-				}
+					slot_name,
+				},
 			}
 			local item = MasterItems.get_item_instance(gear, item_id)
+
 			loadout[slot_name] = item
 		end
 	end
@@ -441,11 +451,11 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 			local gear = {
 				masterDataInstance = {
 					id = item_data.id,
-					overrides = item_data.overrides and table.clone_instance(item_data.overrides)
+					overrides = item_data.overrides and table.clone_instance(item_data.overrides),
 				},
 				slots = {
-					slot_name
-				}
+					slot_name,
+				},
 			}
 			local item = MasterItems.get_item_instance(gear, item_id)
 
@@ -453,7 +463,7 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 				visual_items[slot_name] = {
 					item = item,
 					gear = gear,
-					item_id = item_id
+					item_id = item_id,
 				}
 			end
 		end
@@ -488,27 +498,35 @@ end
 local function _convert_profile_from_lookups_to_data(profile)
 	local archetype_name = profile.archetype
 	local archetype = Archetypes[archetype_name]
+
 	profile.archetype = archetype
+
 	local loadout_item_ids = profile.loadout_item_ids
 	local loadout_item_data = profile.loadout_item_data
 	local loadout = _generate_loadout_from_data(loadout_item_ids, loadout_item_data)
+
 	profile.loadout = loadout
+
 	local visual_loadout = _generate_visual_loadout_from_data(loadout_item_ids, loadout_item_data)
+
 	profile.visual_loadout = visual_loadout
+
 	local talents = profile.talents
 
 	_validate_talent_items(talents, archetype_name)
 end
 
 ProfileUtils.process_backend_body = function (body)
-	local items_by_uuid = nil
+	local items_by_uuid
 
 	if body._embedded.items then
 		local items = body._embedded.items
+
 		items_by_uuid = {}
 
 		for _, item_data in pairs(items) do
 			local uuid = item_data.uuid
+
 			items_by_uuid[uuid] = item_data
 		end
 	end
@@ -516,7 +534,7 @@ ProfileUtils.process_backend_body = function (body)
 	return {
 		character = body.character,
 		items = items_by_uuid,
-		progression = body._embedded.progression
+		progression = body._embedded.progression,
 	}
 end
 
@@ -531,9 +549,11 @@ end
 ProfileUtils.pack_profile = function (profile)
 	local profile_with_lookups = table.clone_instance(profile)
 	local archetype = profile_with_lookups.archetype
+
 	profile_with_lookups.archetype = archetype.name
 	profile_with_lookups.loadout = nil
 	profile_with_lookups.visual_loadout = nil
+
 	local profile_json = cjson.encode(profile_with_lookups)
 
 	return profile_json
@@ -557,6 +577,7 @@ ProfileUtils.split_for_network = function (profile_json, chunk_array)
 		local remaining_length = #remaining_json
 		local chunk_length = math.min(max_string_length, remaining_length)
 		local chunk = string.sub(remaining_json, 1, chunk_length)
+
 		chunk_array[i] = chunk
 		remaining_json = string.sub(remaining_json, chunk_length + 1, remaining_length)
 	end
@@ -567,6 +588,7 @@ ProfileUtils.combine_network_chunks = function (chunk_array)
 
 	for i = 1, #chunk_array do
 		local profile_chunk = chunk_array[i]
+
 		profile_json = profile_json .. profile_chunk
 	end
 
@@ -602,10 +624,12 @@ ProfileUtils.replace_profile_for_prologue = function (profile)
 	for slot_name, item_data in pairs(override_loadout) do
 		new_profile.loadout[slot_name] = item_data
 		new_profile.visual_loadout[slot_name] = item_data
+
 		local item_name = item_data.name
+
 		loadout_item_ids[slot_name] = item_name .. slot_name
 		loadout_item_data[slot_name] = {
-			id = item_name
+			id = item_name,
 		}
 	end
 
@@ -652,7 +676,7 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 		selected_nodes = {},
 		talents = {},
 		name = character.name,
-		personal = character.personal
+		personal = character.personal,
 	}
 
 	for slot, gear_id in pairs(item_ids) do
@@ -663,10 +687,13 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 			if player_item then
 				profile.loadout[slot] = player_item
 				profile.loadout_item_ids[slot] = gear_id
+
 				local data = gear.masterDataInstance
+
 				profile.loadout_item_data[slot] = {
-					id = data.id
+					id = data.id,
 				}
+
 				local overrides = data.overrides
 
 				if overrides then
@@ -679,6 +706,7 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 	end
 
 	local visual_loadout = _generate_visual_loadout_from_data(profile.loadout_item_ids, profile.loadout_item_data)
+
 	profile.visual_loadout = visual_loadout
 
 	_fill_talents_and_selected_nodes(profile, character, archetype_name)
@@ -703,7 +731,7 @@ end
 
 ProfileUtils.character_archetype_title = function (profile, exlude_symbol)
 	local archetype = profile.archetype
-	local text = nil
+	local text
 
 	if UISettings.archetype_font_icon[archetype.name] and not exlude_symbol then
 		text = string.format("%s %s", UISettings.archetype_font_icon[archetype.name], Localize(archetype.archetype_name))
@@ -804,6 +832,7 @@ ProfileUtils.character_title = function (profile)
 
 					if rarity_color then
 						local color_string = "{#color(" .. rarity_color[2] .. "," .. rarity_color[3] .. "," .. rarity_color[4] .. ")}"
+
 						text = color_string
 					end
 				end
@@ -868,11 +897,12 @@ ProfileUtils.add_profile_preset = function ()
 	local icon_index = math.index_wrapper(num_profile_presets + 1, #optional_preset_icon_reference_keys)
 	local icon_key = optional_preset_icon_reference_keys[icon_index]
 	local profile_preset_id = ProfileUtils.get_available_profile_preset_id()
+
 	profile_presets[num_profile_presets + 1] = {
 		loadout = {},
 		talents = {},
 		custom_icon_key = icon_key,
-		id = profile_preset_id
+		id = profile_preset_id,
 	}
 
 	Managers.save:queue_save()
@@ -939,6 +969,7 @@ ProfileUtils.save_item_id_for_profile_preset = function (profile_preset_id, slot
 	end
 
 	local loadout = profile_preset.loadout
+
 	loadout[slot_id] = item_gear_id
 
 	Managers.save:queue_save()
@@ -1037,6 +1068,7 @@ ProfileUtils.save_talent_node_for_profile_preset = function (profile_preset_id, 
 	end
 
 	local talents = profile_preset.talents
+
 	talents[talent_node_name] = points_spent and points_spent > 0 and points_spent or nil
 
 	Managers.save:queue_save()
@@ -1084,7 +1116,7 @@ ProfileUtils.get_profile_preset = function (profile_preset_id)
 		return
 	end
 
-	local profile_preset = nil
+	local profile_preset
 
 	for i = 1, #profile_presets do
 		local preset = profile_presets[i]

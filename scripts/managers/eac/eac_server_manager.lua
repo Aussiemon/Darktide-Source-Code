@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/eac/eac_server_manager.lua
+
 local EACError = require("scripts/managers/error/errors/eac_error")
 
 local function _info(...)
@@ -5,6 +7,7 @@ local function _info(...)
 end
 
 EACServerManager = class("EACServerManager")
+
 local EAC_STATES = table.enum("none", "ready", "in_session")
 
 EACServerManager.init = function (self)
@@ -31,7 +34,7 @@ end
 
 EACServerManager.begin_session = function (self)
 	local state = self._state
-	local user_id = nil
+	local user_id
 	local mode = "ClientServer"
 	local server_name = Managers.connection:server_name()
 
@@ -59,8 +62,9 @@ EACServerManager.add_peer = function (self, channel_id, account_name, ip_address
 	local peer_data = {
 		channel_id = channel_id,
 		account_name = account_name,
-		ip_address = ip_address
+		ip_address = ip_address,
 	}
+
 	self._peers_list[channel_id] = peer_data
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/time/timer.lua
+
 local Timer = class("Timer")
 
 Timer.init = function (self, name, parent, start_time, dt)

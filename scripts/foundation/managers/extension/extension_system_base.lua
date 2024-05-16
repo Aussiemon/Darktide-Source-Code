@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/extension/extension_system_base.lua
+
 local ExtensionSystemBase = class("ExtensionSystemBase")
 
 ExtensionSystemBase.init = function (self, extension_system_creation_context, system_init_data, system_name, extension_list, has_pre_update, has_fixed_update, has_post_update)
@@ -7,6 +9,7 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 	self._nav_world = extension_system_creation_context.nav_world
 	self._physics_world = extension_system_creation_context.physics_world
 	self._name = system_name
+
 	local extension_manager = extension_system_creation_context.extension_manager
 
 	extension_manager:register_system(self, system_name, extension_list)
@@ -26,7 +29,7 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 		is_server = self._is_server,
 		has_navmesh = extension_system_creation_context.has_navmesh,
 		soft_cap_out_of_bounds_units = extension_system_creation_context.soft_cap_out_of_bounds_units,
-		owner_system = self
+		owner_system = self,
 	}
 	self._update_list = {}
 	self._extensions = {}
@@ -43,7 +46,7 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 		local extension_name = extension_list[i]
 		local update_list = {
 			update = {},
-			hot_join_sync = {}
+			hot_join_sync = {},
 		}
 
 		if has_pre_update then
@@ -78,6 +81,7 @@ end
 ExtensionSystemBase.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	local extension_alias = self._name
 	local extension = ScriptUnit.add_extension(self._extension_init_context, unit, extension_name, extension_alias, extension_init_data, ...)
+
 	self._extensions[extension_name] = (self._extensions[extension_name] or 0) + 1
 
 	if extension.hot_join_sync then
@@ -117,7 +121,9 @@ end
 
 ExtensionSystemBase.on_remove_extension = function (self, unit, extension_name)
 	local extension = ScriptUnit.has_extension(unit, self._name)
+
 	self._extensions[extension_name] = self._extensions[extension_name] - 1
+
 	local extension_update_list = self._update_list[extension_name]
 
 	if extension.pre_update then
@@ -163,6 +169,7 @@ end
 
 ExtensionSystemBase.set_unit_local = function (self, unit)
 	self._hot_join_sync_list[unit] = nil
+
 	local extension = self._unit_to_extension_map[unit]
 
 	if extension.set_unit_local then
@@ -199,6 +206,7 @@ end
 ExtensionSystemBase.fixed_update = function (self, context, dt, t, ...)
 	local update_list = self._update_list
 	local fixed_frame = context.fixed_frame
+
 	self._extension_init_context.fixed_frame = fixed_frame
 	self._extension_init_context.fixed_frame_t = fixed_frame * Managers.state.game_session.fixed_time_step
 

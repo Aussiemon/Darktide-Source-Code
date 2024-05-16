@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_guard_rifleman_male_a.lua
+
 local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 	ranged_idle_player_low_on_health = {
 		randomize_indexes_n = 0,
@@ -6,21 +8,21 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_low_on_health_01",
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_low_on_health_02",
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_low_on_health_03",
-			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_low_on_health_04"
+			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_low_on_health_04",
 		},
 		sound_events_duration = {
 			1.089625,
 			0.945854,
 			1.976875,
-			2.397042
+			2.397042,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ranged_idle_player_out_of_ammo = {
 		randomize_indexes_n = 0,
@@ -45,7 +47,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_17",
 			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_18",
 			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_19",
-			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_20"
+			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_20",
 		},
 		sound_events_duration = {
 			0.870208,
@@ -67,7 +69,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			1.326021,
 			1.301167,
 			0.751583,
-			1.248188
+			1.248188,
 		},
 		sound_event_weights = {
 			0.05,
@@ -89,9 +91,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_rifleman_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -116,7 +118,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			"loc_enemy_traitor_guard_rifleman_male_a__alerted_idle_17",
 			"loc_enemy_traitor_guard_rifleman_male_a__alerted_idle_18",
 			"loc_enemy_traitor_guard_rifleman_male_a__alerted_idle_19",
-			"loc_enemy_traitor_guard_rifleman_male_a__alerted_idle_20"
+			"loc_enemy_traitor_guard_rifleman_male_a__alerted_idle_20",
 		},
 		sound_events_duration = {
 			1.209875,
@@ -138,7 +140,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			2.6205,
 			1.990958,
 			1.922354,
-			2.150542
+			2.150542,
 		},
 		sound_event_weights = {
 			0.05,
@@ -160,9 +162,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_rifleman_ranged_idle = {
 		randomize_indexes_n = 0,
@@ -177,7 +179,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_07",
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_08",
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_09",
-			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_10"
+			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_10",
 		},
 		sound_events_duration = {
 			2.328125,
@@ -189,7 +191,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			1.325708,
 			1.224167,
 			2.637167,
-			2.622604
+			2.622604,
 		},
 		sound_event_weights = {
 			0.1,
@@ -201,9 +203,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_rifleman_ranged_idle_player_low_on_ammo = {
 		randomize_indexes_n = 0,
@@ -212,21 +214,21 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_out_of_ammo_01",
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_out_of_ammo_02",
 			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_out_of_ammo_03",
-			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_out_of_ammo_04"
+			"loc_enemy_traitor_guard_rifleman_male_a__ranged_idle_player_out_of_ammo_04",
 		},
 		sound_events_duration = {
 			1.503188,
 			1.521313,
 			2.118896,
-			2.17675
+			2.17675,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_rifleman_take_cover = {
 		randomize_indexes_n = 0,
@@ -251,7 +253,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_17",
 			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_18",
 			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_19",
-			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_20"
+			"loc_enemy_traitor_guard_rifleman_male_a__take_cover_20",
 		},
 		sound_events_duration = {
 			0.870208,
@@ -273,7 +275,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			1.326021,
 			1.301167,
 			0.751583,
-			1.248188
+			1.248188,
 		},
 		sound_event_weights = {
 			0.05,
@@ -295,9 +297,9 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_guard_rifleman_take_position = {
 		randomize_indexes_n = 0,
@@ -322,7 +324,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			"loc_enemy_traitor_guard_rifleman_male_a__take_position_17",
 			"loc_enemy_traitor_guard_rifleman_male_a__take_position_18",
 			"loc_enemy_traitor_guard_rifleman_male_a__take_position_19",
-			"loc_enemy_traitor_guard_rifleman_male_a__take_position_20"
+			"loc_enemy_traitor_guard_rifleman_male_a__take_position_20",
 		},
 		sound_events_duration = {
 			1.390521,
@@ -344,7 +346,7 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			1.3925,
 			1.083354,
 			1.1545,
-			1.504875
+			1.504875,
 		},
 		sound_event_weights = {
 			0.05,
@@ -366,10 +368,10 @@ local enemy_vo_enemy_traitor_guard_rifleman_male_a = {
 			0.05,
 			0.05,
 			0.05,
-			0.05
+			0.05,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_traitor_guard_rifleman_male_a", enemy_vo_enemy_traitor_guard_rifleman_male_a)

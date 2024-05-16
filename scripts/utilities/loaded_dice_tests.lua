@@ -1,11 +1,13 @@
-local LoadedDice = nil
+﻿-- chunkname: @scripts/utilities/loaded_dice_tests.lua
+
+local LoadedDice
 
 local function _test_roll()
 	local weights = {
 		10,
 		5,
 		3,
-		2
+		2,
 	}
 	local weight_sum = 0
 
@@ -19,11 +21,12 @@ local function _test_roll()
 		0,
 		0,
 		0,
-		0
+		0,
 	}
 
 	for i = 1, tries do
 		local column = LoadedDice.roll(p, a)
+
 		count[column] = count[column] + 1
 	end
 
@@ -47,7 +50,7 @@ local function _test_roll_seeded()
 		25,
 		5,
 		15,
-		40
+		40,
 	}
 	local num_weights = #weights
 	local normalized_weights = Script.new_array(num_weights)
@@ -72,9 +75,9 @@ local function _test_roll_seeded()
 		5,
 		2,
 		4,
-		2
+		2,
 	}
-	local column = nil
+	local column
 	local probabilities, alias = LoadedDice.create(weights, false)
 	local seed = start_seed
 

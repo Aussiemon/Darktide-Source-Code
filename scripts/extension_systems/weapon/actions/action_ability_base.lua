@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_ability_base.lua
+
 require("scripts/extension_systems/weapon/actions/action_base")
 
 local ActionAbilityBase = class("ActionAbilityBase", "ActionBase")
@@ -6,6 +8,7 @@ ActionAbilityBase.init = function (self, action_context, action_params, action_s
 	ActionAbilityBase.super.init(self, action_context, action_params, action_settings)
 
 	local ability = action_params.ability or {}
+
 	self._ability = ability
 	self._ability_template_tweak_data = ability.ability_template_tweak_data or {}
 	self._ability_pause_cooldown_setting = ability.pause_cooldown_settings

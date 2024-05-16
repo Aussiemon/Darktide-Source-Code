@@ -1,13 +1,17 @@
+﻿-- chunkname: @scripts/managers/ui/ui_view_handler.lua
+
 require("scripts/ui/view_elements/view_element_base")
 require("scripts/ui/views/base_view")
 
 local ViewTransitionUI = require("scripts/ui/view_transition_ui")
 local UIViewHandler = class("UIViewHandler")
+
 UIViewHandler.DEBUG_TAG = "UI View Handler"
 UIViewHandler.MIN_LAYER = 1
 UIViewHandler.MAX_LAYER = 999
 UIViewHandler.LAYERS_PER_VIEW = 50
 UIViewHandler.TRANSITION_SPEED = 4
+
 local TEMP_DRAWN_VIEWS = {}
 
 UIViewHandler.init = function (self, view_list, timer_name)
@@ -115,10 +119,12 @@ end
 
 UIViewHandler.close_view = function (self, view_name, force_close)
 	force_close = force_close or Managers.account:leaving_game()
+
 	local active_views_data = self._active_views_data
 	local view_data = active_views_data[view_name]
 	local instance = view_data.instance
 	local entered = instance:entered()
+
 	force_close = force_close or not entered
 
 	if view_data.closing and not force_close then
@@ -174,6 +180,7 @@ UIViewHandler.destroy = function (self)
 	self._transition_ui:destroy()
 
 	self._transition_ui = nil
+
 	local active_views_array = self._active_views_array
 	local num_active_views = #active_views_array
 
@@ -209,7 +216,9 @@ UIViewHandler._update_transition_progress = function (self, dt, transition_progr
 				if transition_progress == 1 then
 					view_data.fade_in = nil
 					view_data.fade_out = true
+
 					local fade_in_callback = view_data.fade_in_callback
+
 					view_data.fade_in_callback = nil
 
 					if fade_in_callback then
@@ -230,7 +239,9 @@ UIViewHandler._update_transition_progress = function (self, dt, transition_progr
 
 			if transition_progress == 0 then
 				view_data.fade_out = nil
+
 				local fade_out_callback = view_data.fade_out_callback
+
 				view_data.fade_out_callback = nil
 
 				if fade_out_callback then
@@ -309,6 +320,7 @@ UIViewHandler.draw = function (self, dt, t)
 	local transitioning = _TEMP_TRANSITION_DATA.transitioning
 	local transitioning_in = _TEMP_TRANSITION_DATA.transitioning_in
 	local transitioning_out = _TEMP_TRANSITION_DATA.transitioning_out
+
 	self._drawing_views = true
 
 	self:_draw_views(dt, t, allow_input, transitioning_in, transitioning_out)
@@ -399,8 +411,7 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key]
 	local destroy_views = false
 	local input_service, null_service, gamepad_active = self:_get_input()
-	local allow_next_input = allow_input
-	local allow_next_draw = true
+	local allow_next_input, allow_next_draw = allow_input, true
 	local num_active_views = self._num_active_views
 	local highest_game_world_blur = 0
 	local draw_game_world = true
@@ -472,6 +483,7 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 				end
 
 				view_using_input = view_instance:is_using_input()
+
 				local use_real_input = allow_next_input and not is_closing and view_using_input
 				local input = use_real_input and input_service or null_service
 				local pass_on_input, pass_on_draw = view_instance:update(dt, t, input, view_data)
@@ -488,8 +500,7 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 					allow_next_draw = false
 				end
 			else
-				allow_next_draw = true
-				allow_next_input = false
+				allow_next_input, allow_next_draw = false, true
 			end
 
 			view_data.allow_next_input = allow_next_input
@@ -596,6 +607,7 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 			if draw_view then
 				draw_view = view_instance:is_view_requirements_complete()
 				draw_layer = math.max(1, layers_per_view * i - layers_per_view)
+
 				local input = allow_input and input_service or null_service
 
 				if draw_view then
@@ -706,22 +718,25 @@ UIViewHandler._open = function (self, view_name, opening_duration, context, sett
 	end
 
 	local view_data = {
-		hide_while_fade_in = true,
-		allow_next_input = true,
 		allow_next_draw = true,
+		allow_next_input = true,
+		hide_while_fade_in = true,
 		name = view_name,
 		opening_time = t,
 		disable_game_world = view_settings.disable_game_world,
 		game_world_blur = view_settings.game_world_blur,
 		fade_in = view_settings.use_transition_ui,
 		use_transition_ui = view_settings.use_transition_ui,
-		parent_transition_view = view_settings.parent_transition_view
+		parent_transition_view = view_settings.parent_transition_view,
 	}
+
 	active_views_data[view_name] = view_data
 	active_views_array[index] = view_name
+
 	local path = view_settings.path
 	local class = require(path)
 	local instance = class:new(view_settings, context)
+
 	view_data.instance = instance
 	self._num_active_views = self._num_active_views + 1
 end
@@ -756,8 +771,9 @@ UIViewHandler.register_view_world = function (self, view_name, world_name, layer
 
 	registered_view_worlds[view_name][world_name] = {
 		layer_offset = layer,
-		current_layer = layer
+		current_layer = layer,
 	}
+
 	local current_view_layer = self._curent_frame_view_layers[view_name]
 
 	if current_view_layer and current_view_layer ~= layer then
@@ -789,6 +805,7 @@ UIViewHandler._set_view_worlds_enabled = function (self, view_name, enabled)
 		for world_name, world_data in pairs(worlds_table) do
 			if world_data.enabled ~= enabled then
 				world_data.enabled = enabled
+
 				local world_enabled_state = world_manager:is_world_enabled(world_name)
 
 				if enabled and not world_enabled_state or world_enabled_state and not enabled then
@@ -812,6 +829,7 @@ UIViewHandler._set_view_worlds_layer = function (self, view_name, layer)
 
 			if current_layer - layer_offset ~= layer then
 				local new_layer = layer + layer_offset
+
 				world_data.current_layer = new_layer
 
 				world_manager:set_world_layer(world_name, new_layer)

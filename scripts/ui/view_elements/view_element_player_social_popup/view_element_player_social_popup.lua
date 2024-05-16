@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup_definitions")
 local PopupStyle = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup_styles")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -61,11 +63,13 @@ ViewElementPlayerSocialPopup._update_portrait = function (self)
 		if frame_item then
 			local cb = callback(self, "_cb_set_player_frame", player_header)
 			local unload_cb = callback(self, "_cb_unset_player_frame", player_header, self._ui_renderer)
+
 			content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb, nil, nil, nil, unload_cb)
 		end
 
 		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header)
 		local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", player_header, self._ui_renderer)
+
 		content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
 	end
 end
@@ -133,6 +137,7 @@ ViewElementPlayerSocialPopup._search_for_player = function (self, fatshark_id)
 		if player_info then
 			player_plaque.content.player_info = player_info
 			player_plaque.content.player_info_updated = true
+
 			local profile = player_info.profile and player_info:profile()
 
 			if profile then
@@ -146,13 +151,16 @@ ViewElementPlayerSocialPopup._search_for_player = function (self, fatshark_id)
 
 		local fatshark_id_entry = widgets.fatshark_id_entry
 		local hotspot = fatshark_id_entry.content.hotspot
+
 		hotspot.use_is_focused = true
 		hotspot.disabled = false
 		self._searching_for_player = false
 	end):catch(function ()
 		player_plaque.content.search_status_text = Localize("loc_social_menu_find_player_failed")
+
 		local fatshark_id_entry = widgets.fatshark_id_entry
 		local hotspot = fatshark_id_entry.content.hotspot
+
 		hotspot.use_is_focused = true
 		hotspot.disabled = false
 		self._searching_for_player = false
@@ -168,6 +176,7 @@ end
 
 ViewElementPlayerSocialPopup.on_navigation_input_changed = function (self, using_cursor_navigation)
 	self._using_cursor_navigation = using_cursor_navigation
+
 	local menu_grid = self._menu_grid
 
 	if not using_cursor_navigation then
@@ -242,6 +251,7 @@ ViewElementPlayerSocialPopup.update = function (self, dt, t, input_service)
 		local player_plaque = widgets.player_plaque
 		local remainder = math.ceil(t * 10) % 12
 		local suffix = remainder <= 1 and "." or remainder <= 6 and ".." or remainder <= 11 and "..."
+
 		player_plaque.content.search_status_text = Localize("loc_social_menu_find_player_searching") .. suffix
 	end
 
@@ -311,12 +321,14 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 	end
 
 	self._player_info = player_info
-	local player_display_name, user_display_name = nil
+
+	local player_display_name, user_display_name
 	local character_name = player_info:character_name()
 
 	if character_name and #character_name > 0 then
 		local character_level = player_info:character_level()
 		local player_header_params = _player_header_params
+
 		player_header_params.character_name = character_name
 		player_header_params.character_level = character_level
 		player_display_name = Localize("loc_social_menu_character_name_format", true, _player_header_params)
@@ -324,6 +336,7 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		if not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
 			local xuid = player_info:platform_user_id()
 			local platform_profile = parent:get_platform_profile(xuid)
+
 			user_display_name = platform_profile and platform_profile.gamertag or player_info:user_display_name() or "N/A"
 		else
 			user_display_name = player_info:user_display_name()
@@ -332,6 +345,7 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		if not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
 			local xuid = player_info:platform_user_id()
 			local platform_profile = parent:get_platform_profile(xuid)
+
 			player_display_name = platform_profile and platform_profile.gamertag or player_info:user_display_name() or "N/A"
 		else
 			player_display_name = player_info:user_display_name()
@@ -342,6 +356,7 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 
 	header_content.player_display_name = player_display_name
 	header_content.user_display_name = user_display_name
+
 	local player_display_name_style = header_style.player_display_name
 	local player_display_name_font_type = player_display_name_style.font_type
 	local player_display_name_font_size = player_display_name_style.font_size
@@ -376,26 +391,29 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 	end
 
 	local online_status = player_info:online_status()
-	local user_activity = nil
+	local user_activity
 
 	if player_info:is_blocked() then
 		user_activity = Localize("loc_social_menu_player_blocked")
 	elseif online_status == OnlineStatus.online then
 		local activity_loc_string = player_info:player_activity_loc_string()
 		local activity_param = {
-			activity = Localize(activity_loc_string)
+			activity = Localize(activity_loc_string),
 		}
+
 		user_activity = Localize("loc_social_menu_in_activity", true, activity_param)
 	elseif online_status == OnlineStatus.platform_online then
 		local platform_param = {
-			activity = social_service:platform_display_name()
+			activity = social_service:platform_display_name(),
 		}
+
 		user_activity = Localize("loc_social_menu_player_online_status_platform_online", false, platform_param)
 	else
 		user_activity = Localize("loc_social_menu_player_online_status_offline")
 	end
 
 	header_content.user_activity = user_activity
+
 	local profile = player_info.profile and player_info:profile()
 
 	if profile then
@@ -405,11 +423,13 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		if frame_item then
 			local cb = callback(self, "_cb_set_player_frame", player_header)
 			local unload_cb = callback(self, "_cb_unset_player_frame", player_header, self._ui_renderer)
+
 			header_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb, nil, nil, nil, unload_cb)
 		end
 
 		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header)
 		local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", player_header, self._ui_renderer)
+
 		header_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
 	end
 
@@ -431,8 +451,11 @@ end
 
 ViewElementPlayerSocialPopup._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local portrait_style = widget.style.portrait
+
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
+
 	local material_values = portrait_style.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -446,6 +469,7 @@ ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget, ui_
 	UIWidget.set_visible(widget, ui_renderer, false)
 
 	local material_values = widget.style.portrait.material_values
+
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil
@@ -461,6 +485,7 @@ end
 ViewElementPlayerSocialPopup._cb_set_player_frame = function (self, widget, item)
 	local icon = item.icon
 	local portrait_style = widget.style.portrait
+
 	portrait_style.material_values.portrait_frame_texture = icon
 end
 
@@ -471,6 +496,7 @@ ViewElementPlayerSocialPopup._cb_unset_player_frame = function (self, widget, ui
 
 	local widget_style = widget.style
 	local material_values = widget_style.portrait.material_values
+
 	material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
 
 	if previously_visible then
@@ -479,7 +505,7 @@ ViewElementPlayerSocialPopup._cb_unset_player_frame = function (self, widget, ui
 end
 
 local _padding_item = {
-	size = PopupStyle.menu_padding
+	size = PopupStyle.menu_padding,
 }
 
 ViewElementPlayerSocialPopup._setup_menu_items = function (self, menu_items, num_menu_items)
@@ -499,12 +525,14 @@ ViewElementPlayerSocialPopup._setup_menu_items = function (self, menu_items, num
 	for i = 1, num_menu_items do
 		local menu_item = menu_items[i]
 		local widget = self:_create_menu_widget(menu_item)
+
 		menu_widgets[#menu_widgets + 1] = widget
 		widget_alignments[#widget_alignments + 1] = widget
 	end
 
 	self._menu_widgets = menu_widgets
 	self._alignment_widgets = widget_alignments
+
 	local grid_scenegraph_id = "menu_area"
 	local grid_direction = "down"
 	local grid_spacing = PopupStyle.menu_item_spacing
@@ -526,6 +554,7 @@ ViewElementPlayerSocialPopup._create_menu_widget = function (self, menu_item_set
 
 	if not widget_definition then
 		local scenegraph_id = "menu_area"
+
 		widget_definition = UIWidget.create_definition(widget_blueprint.pass_template, scenegraph_id, nil, widget_blueprint.size, widget_blueprint.style)
 		widget_definitions[blueprint_name] = widget_definition
 	end
@@ -548,6 +577,7 @@ local _animation_parameters = {}
 
 ViewElementPlayerSocialPopup._start_fade_animation = function (self, name, on_done_callback)
 	local animation_parameters = _animation_parameters
+
 	animation_parameters.start_height = self._start_height
 	animation_parameters.popup_content_height = self._menu_height
 

@@ -1,11 +1,13 @@
+﻿-- chunkname: @scripts/managers/multiplayer/utility/session_stat_events.lua
+
 local BackendStatTypes = require("scripts/settings/stats/backend_stat_types")
 local SessionStats = require("scripts/settings/stats/session_stats")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local SessionStatEvents = {}
 local collectible_missions = {
-	side_mission_tome = "tome",
 	side_mission_consumable = "relic",
-	side_mission_grimoire = "grimoire"
+	side_mission_grimoire = "grimoire",
+	side_mission_tome = "tome",
 }
 
 SessionStatEvents.create_mission_events = function (mission_data, mission_result, account_id, character_id)
@@ -20,16 +22,20 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 	local side_mission_complete = mission_result.sideMissions[1] and mission_result.sideMissions[1].win or false
 	local side_mission_name = mission_result.sideMissions[1] and mission_result.sideMissions[1].missionName or "default"
 	local events = {}
-	local specifier = string.format("name:%s|type:%s|difficulty:%s|win:%s|side_objective_complete:%s|side_objective_name:%s", mission_name, map_type, difficulty, win, side_mission_complete, side_mission_name)
-	events[1] = {
-		type = "mission",
-		accountId = account_id,
-		characterId = character_id,
-		dataType = BackendStatTypes.statistic_by,
-		value = {
-			[specifier] = 1
+
+	do
+		local specifier = string.format("name:%s|type:%s|difficulty:%s|win:%s|side_objective_complete:%s|side_objective_name:%s", mission_name, map_type, difficulty, win, side_mission_complete, side_mission_name)
+
+		events[1] = {
+			type = "mission",
+			accountId = account_id,
+			characterId = character_id,
+			dataType = BackendStatTypes.statistic_by,
+			value = {
+				[specifier] = 1,
+			},
 		}
-	}
+	end
 
 	if win and team_deaths == 0 then
 		events[#events + 1] = {
@@ -38,8 +44,8 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 			characterId = character_id,
 			dataType = BackendStatTypes.ephemeral,
 			value = {
-				none = 1
-			}
+				none = 1,
+			},
 		}
 	end
 
@@ -47,14 +53,15 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 
 	if win and collectible_type then
 		local specifier = string.format("type:%s", collectible_type)
+
 		events[#events + 1] = {
 			type = "collect_pickup",
 			accountId = account_id,
 			characterId = character_id,
 			dataType = BackendStatTypes.ephemeral,
 			value = {
-				[specifier] = side_mission_progress
-			}
+				[specifier] = side_mission_progress,
+			},
 		}
 	end
 
@@ -83,7 +90,7 @@ SessionStatEvents.create_player_events = function (mission_data, mission_result,
 		local values = {}
 
 		for specifier, stat_name in pairs(session_stat_config.stats) do
-			local value = nil
+			local value
 
 			if StatDefinitions[stat_name].flags.team then
 				value = stats_manager:read_team_stat(stat_name)
@@ -103,7 +110,7 @@ SessionStatEvents.create_player_events = function (mission_data, mission_result,
 				characterId = character_id,
 				dataType = session_stat_config.type,
 				type = backend_id,
-				value = values
+				value = values,
 			}
 		end
 	end

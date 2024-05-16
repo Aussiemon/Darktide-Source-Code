@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_warp_grabbed.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local FirstPersonView = require("scripts/utilities/first_person_view")
@@ -10,7 +12,7 @@ local PlayerCharacterStateWarpGrabbed = class("PlayerCharacterStateWarpGrabbed",
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "warp_grabbed"
+	stinger_type = "warp_grabbed",
 }
 
 PlayerCharacterStateWarpGrabbed.init = function (self, character_state_init_context, ...)
@@ -18,6 +20,7 @@ PlayerCharacterStateWarpGrabbed.init = function (self, character_state_init_cont
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.target_drag_position = Vector3.zero()
@@ -38,15 +41,19 @@ PlayerCharacterStateWarpGrabbed.on_enter = function (self, unit, dt, t, previous
 		self._animation_extension:anim_event("to_grabbed")
 
 		local locomotion_steering_component = self._locomotion_steering_component
+
 		locomotion_steering_component.move_method = "script_driven"
 		locomotion_steering_component.velocity_wanted = Vector3.zero()
 		locomotion_steering_component.calculate_fall_velocity = false
 		self._movement_state_component.method = "idle"
+
 		local disabling_unit = self._disabled_state_input.disabling_unit
 		local disabled_character_state_component = self._disabled_character_state_component
+
 		disabled_character_state_component.is_disabled = true
 		disabled_character_state_component.disabling_unit = disabling_unit
 		disabled_character_state_component.disabling_type = "warp_grabbed"
+
 		local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 		local disabling_unit_rotation = Unit.world_rotation(disabling_unit, 1)
 		local force_rotation = Quaternion.look(-Quaternion.forward(disabling_unit_rotation))
@@ -87,6 +94,7 @@ PlayerCharacterStateWarpGrabbed.on_exit = function (self, unit, t, next_state)
 
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.disabling_type = "none"

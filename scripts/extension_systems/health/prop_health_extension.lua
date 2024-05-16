@@ -1,11 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/health/prop_health_extension.lua
+
 local Component = require("scripts/utilities/component")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PropHealthExtension = class("PropHealthExtension")
+
 PropHealthExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
 PropHealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._owner_system = extension_init_context.owner_system
+
 	local is_server = extension_init_context.is_server
+
 	self._unit = unit
 	self._is_server = is_server
 	self._health = 100
@@ -25,7 +30,7 @@ local HEALTH_DIFFICULTY_SCALING = {
 	0.6,
 	0.75,
 	1,
-	1
+	1,
 }
 
 PropHealthExtension.setup_from_component = function (self, create_health_game_object, health, difficulty_scaling, invulnerable, unkillable, regenerate_health, breed_white_list, ignored_collider_actor_names, speed_on_hit)
@@ -35,6 +40,7 @@ PropHealthExtension.setup_from_component = function (self, create_health_game_ob
 
 	if difficulty_scaling then
 		local health_scale = Managers.state.difficulty:get_table_entry_by_challenge(HEALTH_DIFFICULTY_SCALING)
+
 		health = health * health_scale
 	end
 
@@ -62,6 +68,7 @@ PropHealthExtension.setup_from_component = function (self, create_health_game_ob
 
 		for ii = 1, #ignored_collider_actor_names do
 			local actor = Unit.actor(unit, ignored_collider_actor_names[ii])
+
 			self._ignored_colliders[actor] = true
 		end
 	end
@@ -92,10 +99,11 @@ PropHealthExtension._create_game_object = function (self)
 		level_unit_id = level_unit_id,
 		health = self._health,
 		damage = self._damage,
-		is_dead = self._is_dead
+		is_dead = self._is_dead,
 	}
 	local game_session = Managers.state.game_session:game_session()
 	local game_object_id = GameSession.create_game_object(game_session, "prop_health", game_object_data)
+
 	self._game_session = game_session
 	self._game_object_id = game_object_id
 end
@@ -146,7 +154,7 @@ PropHealthExtension.fixed_update = function (self, unit, dt, t)
 		local current_health_percent = self:current_health_percent()
 		local heal_multiplier = math.lerp(1, 5, 1 - current_health_percent)
 		local heal_amount = self._health * 0.05 * heal_multiplier * dt
-		local heal_type = nil
+		local heal_type
 
 		self:add_heal(heal_amount, heal_type)
 	end
@@ -161,6 +169,7 @@ PropHealthExtension.update = function (self, unit, dt, t)
 	end
 
 	local was_dead = self._is_dead
+
 	self._damage = GameSession.game_object_field(game_session, game_object_id, "damage")
 	self._health = GameSession.game_object_field(game_session, game_object_id, "health")
 	self._is_dead = GameSession.game_object_field(game_session, game_object_id, "is_dead")
@@ -207,6 +216,7 @@ local function _add_force_on_parts(actor, mass, speed, attack_direction)
 		local random_y = math.random() * 2 - 1
 		local random_z = math.random() * 2 - 1
 		local random_direction = Vector3(random_x, random_y, random_z)
+
 		random_direction = Vector3.normalize(random_direction)
 		direction = random_direction
 	end
@@ -335,7 +345,7 @@ PropHealthExtension.health_depleted = function (self)
 	if self._is_unkillable then
 		return false
 	else
-		return self._health <= self._damage
+		return self._damage >= self._health
 	end
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/monster_pacing/templates/renegade_boss_patrols.lua
+
 local BOSS_PATROLS = {
 	name = "renegade_boss_patrols",
 	challenge_templates = {
@@ -10,7 +12,7 @@ local BOSS_PATROLS = {
 				"renegade_assault",
 				"renegade_shocktrooper",
 				"renegade_assault",
-				"renegade_assault"
+				"renegade_assault",
 			},
 			{
 				"renegade_gunner",
@@ -20,7 +22,7 @@ local BOSS_PATROLS = {
 				"renegade_rifleman",
 				"renegade_rifleman",
 				"renegade_rifleman",
-				"renegade_rifleman"
+				"renegade_rifleman",
 			},
 			{
 				"renegade_executor",
@@ -30,8 +32,8 @@ local BOSS_PATROLS = {
 				"renegade_melee",
 				"renegade_melee",
 				"renegade_melee",
-				"renegade_melee"
-			}
+				"renegade_melee",
+			},
 		},
 		{
 			{
@@ -44,7 +46,7 @@ local BOSS_PATROLS = {
 				"renegade_shocktrooper",
 				"renegade_assault",
 				"renegade_assault",
-				"renegade_shocktrooper"
+				"renegade_shocktrooper",
 			},
 			{
 				"renegade_gunner",
@@ -55,7 +57,7 @@ local BOSS_PATROLS = {
 				"renegade_rifleman",
 				"renegade_gunner",
 				"renegade_rifleman",
-				"renegade_rifleman"
+				"renegade_rifleman",
 			},
 			{
 				"renegade_executor",
@@ -66,8 +68,8 @@ local BOSS_PATROLS = {
 				"renegade_melee",
 				"renegade_executor",
 				"renegade_melee",
-				"renegade_melee"
-			}
+				"renegade_melee",
+			},
 		},
 		{
 			{
@@ -83,7 +85,7 @@ local BOSS_PATROLS = {
 				"renegade_shocktrooper",
 				"renegade_assault",
 				"renegade_assault",
-				"renegade_shocktrooper"
+				"renegade_shocktrooper",
 			},
 			{
 				"renegade_gunner",
@@ -98,7 +100,7 @@ local BOSS_PATROLS = {
 				"renegade_gunner",
 				"renegade_rifleman",
 				"renegade_rifleman",
-				"renegade_gunner"
+				"renegade_gunner",
 			},
 			{
 				"renegade_executor",
@@ -113,8 +115,8 @@ local BOSS_PATROLS = {
 				"renegade_executor",
 				"renegade_melee",
 				"renegade_melee",
-				"renegade_executor"
-			}
+				"renegade_executor",
+			},
 		},
 		{
 			{
@@ -133,7 +135,7 @@ local BOSS_PATROLS = {
 				"renegade_shocktrooper",
 				"renegade_assault",
 				"renegade_assault",
-				"renegade_shocktrooper"
+				"renegade_shocktrooper",
 			},
 			{
 				"renegade_gunner",
@@ -151,7 +153,7 @@ local BOSS_PATROLS = {
 				"renegade_gunner",
 				"renegade_rifleman",
 				"renegade_rifleman",
-				"renegade_gunner"
+				"renegade_gunner",
 			},
 			{
 				"renegade_executor",
@@ -169,7 +171,7 @@ local BOSS_PATROLS = {
 				"renegade_executor",
 				"renegade_melee",
 				"renegade_melee",
-				"renegade_executor"
+				"renegade_executor",
 			},
 			{
 				"chaos_ogryn_executor",
@@ -177,7 +179,7 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"renegade_executor",
-				"renegade_executor"
+				"renegade_executor",
 			},
 			{
 				"chaos_ogryn_gunner",
@@ -185,137 +187,7 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
 				"renegade_gunner",
-				"renegade_gunner"
-			},
-			{
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker"
-			}
-		},
-		{
-			{
-				"chaos_ogryn_bulwark",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_assault",
-				"renegade_assault",
-				"renegade_assault",
-				"renegade_assault",
-				"renegade_assault",
-				"renegade_assault",
-				"renegade_assault",
-				"renegade_assault",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"chaos_ogryn_bulwark"
-			},
-			{
-				"chaos_ogryn_bulwark",
 				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_rifleman",
-				"renegade_rifleman",
-				"renegade_gunner",
-				"renegade_rifleman",
-				"renegade_rifleman",
-				"renegade_gunner",
-				"renegade_rifleman",
-				"renegade_rifleman",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"chaos_ogryn_gunner"
-			},
-			{
-				"chaos_ogryn_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_melee",
-				"renegade_melee",
-				"renegade_executor",
-				"renegade_melee",
-				"renegade_melee",
-				"renegade_executor",
-				"renegade_melee",
-				"renegade_melee",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"chaos_ogryn_executor"
-			},
-			{
-				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
-				"chaos_ogryn_executor"
-			},
-			{
-				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner"
-			},
-			{
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor",
-				"renegade_executor"
-			},
-			{
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner",
-				"renegade_gunner"
-			},
-			{
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper",
-				"renegade_shocktrooper"
 			},
 			{
 				"renegade_berzerker",
@@ -330,10 +202,7 @@ local BOSS_PATROLS = {
 				"renegade_berzerker",
 				"renegade_berzerker",
 				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker",
-				"renegade_berzerker"
-			}
+			},
 		},
 		{
 			{
@@ -352,7 +221,7 @@ local BOSS_PATROLS = {
 				"renegade_shocktrooper",
 				"renegade_shocktrooper",
 				"renegade_shocktrooper",
-				"chaos_ogryn_bulwark"
+				"chaos_ogryn_bulwark",
 			},
 			{
 				"chaos_ogryn_bulwark",
@@ -370,7 +239,7 @@ local BOSS_PATROLS = {
 				"renegade_gunner",
 				"renegade_gunner",
 				"renegade_gunner",
-				"chaos_ogryn_gunner"
+				"chaos_ogryn_gunner",
 			},
 			{
 				"chaos_ogryn_executor",
@@ -388,7 +257,7 @@ local BOSS_PATROLS = {
 				"renegade_executor",
 				"renegade_executor",
 				"renegade_executor",
-				"chaos_ogryn_executor"
+				"chaos_ogryn_executor",
 			},
 			{
 				"chaos_ogryn_executor",
@@ -398,8 +267,6 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
-				"chaos_ogryn_executor",
-				"chaos_ogryn_executor"
 			},
 			{
 				"chaos_ogryn_gunner",
@@ -409,8 +276,6 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner",
-				"chaos_ogryn_gunner"
 			},
 			{
 				"renegade_executor",
@@ -425,9 +290,146 @@ local BOSS_PATROLS = {
 				"renegade_executor",
 				"renegade_executor",
 				"renegade_executor",
+			},
+			{
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+			},
+			{
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+			},
+			{
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+			},
+		},
+		{
+			{
+				"chaos_ogryn_bulwark",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"chaos_ogryn_bulwark",
+			},
+			{
+				"chaos_ogryn_bulwark",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_rifleman",
+				"renegade_rifleman",
+				"renegade_gunner",
+				"renegade_rifleman",
+				"renegade_rifleman",
+				"renegade_gunner",
+				"renegade_rifleman",
+				"renegade_rifleman",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"chaos_ogryn_gunner",
+			},
+			{
+				"chaos_ogryn_executor",
 				"renegade_executor",
 				"renegade_executor",
-				"renegade_executor"
+				"renegade_executor",
+				"renegade_melee",
+				"renegade_melee",
+				"renegade_executor",
+				"renegade_melee",
+				"renegade_melee",
+				"renegade_executor",
+				"renegade_melee",
+				"renegade_melee",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"chaos_ogryn_executor",
+			},
+			{
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+			},
+			{
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+			},
+			{
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
 			},
 			{
 				"renegade_gunner",
@@ -444,10 +446,10 @@ local BOSS_PATROLS = {
 				"renegade_gunner",
 				"renegade_gunner",
 				"renegade_gunner",
-				"renegade_gunner"
-			}
-		}
-	}
+				"renegade_gunner",
+			},
+		},
+	},
 }
 
 return BOSS_PATROLS

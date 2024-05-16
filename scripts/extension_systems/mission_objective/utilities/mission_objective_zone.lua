@@ -1,7 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_zone.lua
+
 require("scripts/extension_systems/mission_objective/utilities/mission_objective_base")
 
 local MissionObjectiveZone = class("MissionObjectiveZone", "MissionObjectiveBase")
+
 MissionObjectiveZone.ZONE_TYPES = table.enum("none", "capture", "scan")
+
 local ZONE_TYPES = MissionObjectiveZone.ZONE_TYPES
 
 MissionObjectiveZone.init = function (self, peer_id)
@@ -64,6 +68,7 @@ MissionObjectiveZone.update_progression = function (self)
 
 		if self._current_zone_progression ~= zone_progression then
 			self._current_zone_progression = zone_progression
+
 			local new_progression = -current_progression
 
 			self:update_increment(new_progression)
@@ -103,8 +108,8 @@ MissionObjectiveZone.set_go_to_marker = function (self, unit)
 		if not self._override_marked_units or not self._override_marked_units[unit] then
 			self._override_marked_units = {
 				unit,
-				[unit] = true
 			}
+			self._override_marked_units[unit] = true
 		end
 	else
 		self._override_marked_units = nil

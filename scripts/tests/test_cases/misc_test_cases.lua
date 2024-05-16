@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/tests/test_cases/misc_test_cases.lua
+
 local TestifySnippets = require("scripts/tests/testify_snippets")
+
 MiscTestCases = {}
 
 local function _ensure_table_structure(tbl, ...)
@@ -6,6 +9,7 @@ local function _ensure_table_structure(tbl, ...)
 
 	for i = 1, num_args do
 		local arg = select(i, ...)
+
 		tbl[arg] = tbl[arg] or {}
 		tbl = tbl[arg]
 	end
@@ -45,6 +49,7 @@ MiscTestCases.validate_minion_visual_loadout_templates = function ()
 						for item_i, item_name in ipairs(slot_data.items) do
 							if not rawget(item_definitions, item_name) then
 								local items = _ensure_table_structure(missing_items, breed_name, template_name, variation_i, slot_name)
+
 								items[item_i] = item_name
 							end
 						end
@@ -55,7 +60,7 @@ MiscTestCases.validate_minion_visual_loadout_templates = function ()
 
 		if not table.is_empty(missing_items) then
 			local error_tbl = {
-				"Minion visual loadout items missing in MasterData:"
+				"Minion visual loadout items missing in MasterData:",
 			}
 
 			for breed_name, templates in pairs(missing_items) do
@@ -129,7 +134,7 @@ MiscTestCases.ensure_no_hidden_attachments = function ()
 
 		if not table.is_empty(nil_attachments) then
 			local error_tbl = {
-				"Items contain holes in their attachment setup. They won't show up in the Item Manager, but can be found in the file, and will load unnecessary resources:\n"
+				"Items contain holes in their attachment setup. They won't show up in the Item Manager, but can be found in the file, and will load unnecessary resources:\n",
 			}
 
 			for source_item_name, nil_attachment_names in pairs(nil_attachments) do
@@ -147,7 +152,7 @@ end
 
 local _ignored_attachment_types = {
 	slot_trinket_1 = true,
-	slot_trinket_2 = true
+	slot_trinket_2 = true,
 }
 
 local function _validate_attachment_parents_recursive(item_definitions, attachment_data, loose_children, attachment_name, parent_item_name, source_item_name)
@@ -176,7 +181,7 @@ local function _validate_attachment_parents_recursive(item_definitions, attachme
 end
 
 local _ignored_item_types = {
-	WEAPON_SKIN = true
+	WEAPON_SKIN = true,
 }
 
 MiscTestCases.validate_attachment_parents = function ()
@@ -200,7 +205,7 @@ MiscTestCases.validate_attachment_parents = function ()
 
 		if not table.is_empty(loose_children) then
 			local error_tbl = {
-				"The following items contain attachments without parents:\n"
+				"The following items contain attachments without parents:\n",
 			}
 
 			for source_item_name, attachment_names in pairs(loose_children) do
@@ -248,7 +253,7 @@ MiscTestCases.validate_attachment_stripping = function ()
 	Testify:run_case(function (dt, t)
 		TestifySnippets.skip_splash_and_title_screen()
 
-		return
+		do return end
 
 		local item_definitions = Testify:make_request("all_items")
 		local stripped_children = {}
@@ -265,7 +270,7 @@ MiscTestCases.validate_attachment_stripping = function ()
 
 		if not table.is_empty(stripped_children) then
 			local error_tbl = {
-				"MasterItems contains released items with unreleased attachments:\n"
+				"MasterItems contains released items with unreleased attachments:\n",
 			}
 
 			for source_item_name, faulty_parents in pairs(stripped_children) do
@@ -325,7 +330,7 @@ MiscTestCases.check_unwanted_skin_attachments = function ()
 	Testify:run_case(function (dt, t)
 		TestifySnippets.skip_splash_and_title_screen()
 
-		return
+		do return end
 
 		local item_definitions = Testify:make_request("all_items")
 		local faulty_skin_attachment_overrides = {}
@@ -347,7 +352,7 @@ MiscTestCases.check_unwanted_skin_attachments = function ()
 
 		if not table.is_empty(faulty_skin_attachment_overrides) then
 			local error_tbl = {
-				"MasterItems contains weapon skins with invalid attachment overrides:\n"
+				"MasterItems contains weapon skins with invalid attachment overrides:\n",
 			}
 
 			for item_name, attachment_names in pairs(faulty_skin_attachment_overrides) do
@@ -368,16 +373,16 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 		local settings = cjson.decode(case_settings or "{}")
 		local flags = settings.flags or {
 			"cutscenes",
-			"load_mission"
+			"load_mission",
 		}
 		local hide_players = settings.hide_players or false
 		local mission_key = settings.mission_key
 		local use_trigger_volumes = settings.use_trigger_volumes or false
 		local intro_cutscenes = settings.intro_cutscenes or {
-			"intro_abc"
+			"intro_abc",
 		}
 		local cutscenes_to_skip = settings.cutscenes_to_skip or {
-			"intro_abc"
+			"intro_abc",
 		}
 		local measure_performance = settings.measure_performance or false
 		local performance_measurements = measure_performance and {} or nil
@@ -401,8 +406,8 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 
 			if measure_performance then
 				local values_to_measure = {
+					batchcount = true,
 					primitives_count = true,
-					batchcount = true
 				}
 
 				Testify:make_request("start_measuring_performance", values_to_measure)
@@ -450,8 +455,8 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 
 			if measure_performance then
 				local values_to_measure = {
+					batchcount = true,
 					primitives_count = true,
-					batchcount = true
 				}
 
 				Testify:make_request("start_measuring_performance", values_to_measure)
@@ -499,7 +504,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			"content/fx/particles/liquid_area/fire_lingering_enemy",
 			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			"content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
-			"content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh"
+			"content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 		}
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
@@ -513,13 +518,12 @@ MiscTestCases.play_all_vfx = function (case_settings)
 		local world = Testify:make_request("world")
 		local boxed_spawn_position = Vector3Box(0, 10, 1.8)
 		local query_handle = Testify:make_request("metadata_execute_query_deferred", {
-			type = "particles"
+			type = "particles",
 		}, {
-			include_properties = false
+			include_properties = false,
 		})
 		local particles = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local num_particles = #particles
-		local i = 1
+		local num_particles, i = #particles, 1
 		local particle_ids = {}
 
 		for particle_name, _ in pairs(particles) do
@@ -527,6 +531,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 				Log.info("Testify", "%s/%s Playing vfx %s", i, num_particles, particle_name)
 
 				local particle_id = Testify:make_request("create_particles", world, particle_name, boxed_spawn_position, particle_life_time)
+
 				particle_ids[particle_name] = particle_id
 			end
 
@@ -550,7 +555,7 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			"content/fx/meshes/shells/cylinder",
 			"content/fx/meshes/shells/lightning_pipe_discharge_tube",
 			"content/fx/meshes/vfx_plane",
-			"content/fx/units/weapons/small_caliber_plastic_large_01"
+			"content/fx/units/weapons/small_caliber_plastic_large_01",
 		}
 		local settings = cjson.decode(case_settings or "{}")
 		local interval = settings.interval or 0
@@ -568,13 +573,12 @@ MiscTestCases.spawn_all_units = function (case_settings)
 
 		local boxed_spawn_position = Vector3Box(-2, 11.76, 2)
 		local query_handle = Testify:make_request("metadata_execute_query_deferred", {
-			type = "unit"
+			type = "unit",
 		}, {
-			include_properties = false
+			include_properties = false,
 		})
 		local units = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local num_units = table.size(units)
-		local i = 1
+		local num_units, i = table.size(units), 1
 
 		TestifySnippets.wait(1)
 

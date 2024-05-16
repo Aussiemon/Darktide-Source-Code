@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/fade/fade_system.lua
+
 local FadeSystem = class("FadeSystem", "ExtensionSystemBase")
 local DEFAULT_MIN_DISTANCE = 0.5
 local DEFAULT_MAX_DISTANCE = 0.7
 local DEFAULT_MAX_HEIGHT_DIFFERENCE = 1
+
 FadeSystem.system_extensions = {
-	"FadeExtension"
+	"FadeExtension",
 }
 
 FadeSystem.init = function (self, context, system_init_data, system_name, _, ...)
@@ -27,7 +30,7 @@ FadeSystem.destroy = function (self)
 end
 
 FadeSystem.on_add_extension = function (self, world, unit, extension_name)
-	local min_distance, max_distance, max_height_difference = nil
+	local min_distance, max_distance, max_height_difference
 	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 
 	if unit_data_extension then
@@ -72,7 +75,7 @@ FadeSystem.update = function (self, context, dt, t, ...)
 	local player_manager = Managers.player
 	local camera_manager = Managers.state.camera
 	local player = player_manager and player_manager:local_player(1)
-	local fade_position = nil
+	local fade_position
 
 	if player and camera_manager then
 		fade_position = camera_manager:camera_position(player.viewport_name)

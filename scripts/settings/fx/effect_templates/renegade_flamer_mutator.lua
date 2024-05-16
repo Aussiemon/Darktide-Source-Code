@@ -1,13 +1,15 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/renegade_flamer_mutator.lua
+
 local RenegadeFlamerMutatorSettings = require("scripts/settings/specials/renegade_flamer_mutator_settings")
 local Flamer = require("scripts/utilities/flamer")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local STATES = RenegadeFlamerMutatorSettings.states
 local vfx = RenegadeFlamerMutatorSettings.vfx
 local sfx = RenegadeFlamerMutatorSettings.sfx
-local _switch_state, _get_state_and_aim_position, _get_control_positions, _get_attachment_unit_and_node_index = nil
+local _switch_state, _get_state_and_aim_position, _get_control_positions, _get_attachment_unit_and_node_index
 local resources = {
 	resources_vfx = vfx,
-	resources_sfx = sfx
+	resources_sfx = sfx,
 }
 local effect_template = {
 	name = "renegade_flamer_mutator",
@@ -15,29 +17,31 @@ local effect_template = {
 	start = function (template_data, template_context)
 		local world = template_context.world
 		local physics_world = World.physics_world(world)
+
 		template_data.physics_world = physics_world
+
 		local unit = template_data.unit
-		local game_session = Managers.state.game_session:game_session()
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
-		template_data.game_object_id = game_object_id
-		template_data.game_session = game_session
+		local game_session, game_object_id = Managers.state.game_session:game_session(), Managers.state.unit_spawner:game_object_id(unit)
+
+		template_data.game_session, template_data.game_object_id = game_session, game_object_id
+
 		local state, _ = _get_state_and_aim_position(game_session, game_object_id)
 		local inventory_slot = RenegadeFlamerMutatorSettings.inventory_slot
 		local fx_source_name = RenegadeFlamerMutatorSettings.fx_source_name
 		local attachment_unit, source_node_index = _get_attachment_unit_and_node_index(unit, inventory_slot, fx_source_name)
+
 		template_data.flamer_data = {
 			from_unit = attachment_unit,
 			from_node = source_node_index,
 			radius = RenegadeFlamerMutatorSettings.radius,
 			range = RenegadeFlamerMutatorSettings.range,
-			set_muzzle_as_control_point_1 = RenegadeFlamerMutatorSettings.set_muzzle_as_control_point_1
+			set_muzzle_as_control_point_1 = RenegadeFlamerMutatorSettings.set_muzzle_as_control_point_1,
 		}
 
 		_switch_state(nil, state, template_data, template_context)
 	end,
 	update = function (template_data, template_context, dt, t)
-		local game_session = template_data.game_session
-		local game_object_id = template_data.game_object_id
+		local game_session, game_object_id = template_data.game_session, template_data.game_object_id
 		local wanted_state, aim_position = _get_state_and_aim_position(game_session, game_object_id)
 		local control_point_1, control_point_2 = _get_control_positions(game_session, game_object_id)
 		local previous_state = template_data.state
@@ -65,7 +69,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Flamer.stop_fx(unit, vfx, sfx, wwise_world, world, flamer_data)
-	end
+	end,
 }
 
 function _get_state_and_aim_position(game_session, game_object_id)

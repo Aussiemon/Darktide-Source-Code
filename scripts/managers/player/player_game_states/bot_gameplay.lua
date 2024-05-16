@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/bot_gameplay.lua
+
 local BotGameplay = class("BotGameplay")
 
 BotGameplay.init = function (self, player, game_state_context)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/weapon_icon_ui.lua
+
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 local UISettings = require("scripts/settings/ui/ui_settings")
 
@@ -16,7 +18,7 @@ WeaponIconUI.init = function (self, render_settings)
 		viewport_type = render_settings and render_settings.viewport_type or "default_with_alpha",
 		viewport_name = render_settings and render_settings.viewport_name or "weapon_viewport",
 		level_name = render_settings and render_settings.level_name or "content/levels/ui/weapon_icon/weapon_icon",
-		shading_environment = render_settings and render_settings.shading_environment or "content/shading_environments/ui/weapon_icons"
+		shading_environment = render_settings and render_settings.shading_environment or "content/shading_environments/ui/weapon_icons",
 	}
 
 	WeaponIconUI.super.init(self, new_render_settings)
@@ -117,10 +119,11 @@ WeaponIconUI.event_register_portrait_camera_human = function (self, camera_unit)
 
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 	self._breed_camera_settings.human = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation)
+		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
 	}
 end
 
@@ -129,10 +132,11 @@ WeaponIconUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
 
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 	self._breed_camera_settings.ogryn = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation)
+		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
 	}
 end
 
@@ -196,7 +200,9 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 	local camera = world_spawner:camera()
 	local unit_spawner = world_spawner:unit_spawner()
 	local ui_weapon_spawner = UIWeaponSpawner:new("WeaponIconUI", world, camera, unit_spawner)
+
 	self._ui_weapon_spawner = ui_weapon_spawner
+
 	local alignment_key = "weapon_alignment_tag"
 
 	if render_context and render_context.alignment_key then

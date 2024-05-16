@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/stats/utility/stat_config_parser.lua
+
 local StatConfigs = require("scripts/settings/stats/stat_configs")
 local StatConfigParser = {}
 

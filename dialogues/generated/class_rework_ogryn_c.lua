@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_ogryn_c.lua
+
 local class_rework_ogryn_c = {
 	ability_bullgryn = {
 		randomize_indexes_n = 0,
@@ -17,7 +19,7 @@ local class_rework_ogryn_c = {
 			"loc_ogryn_c__ability_bullgryn_12",
 			"loc_ogryn_c__ability_bullgryn_13",
 			"loc_ogryn_c__ability_bullgryn_14",
-			"loc_ogryn_c__ability_bullgryn_15"
+			"loc_ogryn_c__ability_bullgryn_15",
 		},
 		sound_events_duration = {
 			3.862917,
@@ -34,9 +36,9 @@ local class_rework_ogryn_c = {
 			2.410729,
 			2.529625,
 			2.464458,
-			2.503083
+			2.503083,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	ability_gun_lugger = {
 		randomize_indexes_n = 0,
@@ -56,7 +58,7 @@ local class_rework_ogryn_c = {
 			"loc_ogryn_c__ability_gun_lugger_12",
 			"loc_ogryn_c__ability_gun_lugger_13",
 			"loc_ogryn_c__ability_gun_lugger_14",
-			"loc_ogryn_c__ability_gun_lugger_15"
+			"loc_ogryn_c__ability_gun_lugger_15",
 		},
 		sound_events_duration = {
 			2.680417,
@@ -73,10 +75,10 @@ local class_rework_ogryn_c = {
 			2.585688,
 			2.577625,
 			3.082104,
-			3.351458
+			3.351458,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("class_rework_ogryn_c", class_rework_ogryn_c)

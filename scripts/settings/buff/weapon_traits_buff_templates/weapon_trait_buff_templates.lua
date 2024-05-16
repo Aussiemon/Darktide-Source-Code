@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_trait_buff_templates.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -18,10 +20,10 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_ranged_first_shot_damage_increase = {
-	predicted = false,
 	class_name = "buff",
+	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.ranged_weakspot_damage] = 1
+		[buff_stat_buffs.ranged_weakspot_damage] = 1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -41,19 +43,20 @@ templates.weapon_trait_ranged_first_shot_damage_increase = {
 		end
 
 		return false
-	end
+	end,
 }
 templates.weapon_trait_ranged_crit_chance_on_max_ammo = {
-	predicted = true,
 	class_name = "buff",
+	predicted = true,
 	lerped_stat_buffs = {
 		[buff_stat_buffs.critical_strike_chance] = {
 			max = 0.75,
-			min = 0
-		}
+			min = 0,
+		},
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
@@ -67,86 +70,90 @@ templates.weapon_trait_ranged_crit_chance_on_max_ammo = {
 		local lerp = math.ilerp(ammo_min, max_ammo_in_clip, current_ammunition_clip)
 
 		return lerp
-	end
+	end,
 }
 templates.weapon_trait_ranged_reload_speed_on_kill = {
-	predicted = true,
-	class_name = "proc_buff",
 	active_duration = 5,
+	class_name = "proc_buff",
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_kill] = 1
+		[buff_proc_events.on_kill] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.5
+		[buff_stat_buffs.reload_speed] = 0.5,
 	},
-	check_proc_func = CheckProcFunctions.on_weakspot_kill
+	check_proc_func = CheckProcFunctions.on_weakspot_kill,
 }
 templates.weapon_trait_ranged_movement_speed_on_kill = {
-	predicted = true,
-	class_name = "proc_buff",
 	active_duration = 5,
+	class_name = "proc_buff",
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_kill] = 1
+		[buff_proc_events.on_kill] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.25
+		[buff_stat_buffs.movement_speed] = 0.25,
 	},
-	check_proc_func = CheckProcFunctions.on_kill
+	check_proc_func = CheckProcFunctions.on_kill,
 }
 templates.weapon_trait_melee_attack_speed_on_sticky_kill = {
-	predicted = true,
-	max_stacks = 1,
-	class_name = "proc_buff",
 	active_duration = 3,
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_kill] = 1
+		[buff_proc_events.on_kill] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.attack_speed] = 0.25
+		[buff_stat_buffs.attack_speed] = 0.25,
 	},
-	check_proc_func = CheckProcFunctions.on_sticky_kill
+	check_proc_func = CheckProcFunctions.on_sticky_kill,
 }
 templates.weapon_trait_melee_attack_speed_on_special_smite_kill = {
-	predicted = true,
-	max_stacks = 1,
-	class_name = "proc_buff",
 	active_duration = 5,
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_kill] = 1
+		[buff_proc_events.on_kill] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.attack_speed] = 0.2
+		[buff_stat_buffs.attack_speed] = 0.2,
 	},
-	check_proc_func = CheckProcFunctions.on_special_smite_kill
+	check_proc_func = CheckProcFunctions.on_special_smite_kill,
 }
 templates.weapon_trait_melee_activate_weapon_special_on_wield = {
-	predicted = true,
-	max_stacks = 1,
 	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_wield_melee] = 1
+		[buff_proc_events.on_wield_melee] = 1,
 	},
 	proc_func = function (params, template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.unit_data_extension = unit_data_extension
 		template_data.inventory_component = unit_data_extension:read_component("inventory")
+
 		local wielded_slot = template_data.inventory_component.wielded_slot
 		local inventory_slot_component = template_data.unit_data_extension:write_component(wielded_slot)
+
 		inventory_slot_component.special_active = true
 		inventory_slot_component.special_active_start_t = t
-	end
+	end,
 }
 templates.weapon_trait_bash_refunds_warpcharge = {
-	predicted = true,
 	class_name = "proc_buff",
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1
+		[buff_proc_events.on_hit] = 1,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.unit_data_extension = unit_data_extension
 	end,
 	proc_func = function (params, template_data, template_context)
@@ -160,16 +167,16 @@ templates.weapon_trait_bash_refunds_warpcharge = {
 		local warp_charge_component = template_data.unit_data_extension:write_component("warp_charge")
 
 		WarpCharge.decrease_immediate(remove_percentage_to_remove, warp_charge_component, template_context.unit)
-	end
+	end,
 }
 templates.weapon_trait_nonlethal_bops_increase_damage_of_next = {
-	predicted = false,
 	class_name = "proc_buff",
+	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1
+		[buff_proc_events.on_hit] = 1,
 	},
 	conditional_stat_buffs = {
-		[buff_stat_buffs.force_staff_single_target_damage] = 0.2
+		[buff_stat_buffs.force_staff_single_target_damage] = 0.2,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
@@ -190,14 +197,14 @@ templates.weapon_trait_nonlethal_bops_increase_damage_of_next = {
 		end
 
 		template_data.active = true
-	end
+	end,
 }
 templates.weapon_trait_burn_on_push = {
-	predicted = false,
-	max_stacks = 1,
 	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_push_hit] = 1
+		[buff_proc_events.on_push_hit] = 1,
 	},
 	proc_func = function (params, template_data, template_context)
 		local is_server = template_context.is_server
@@ -230,27 +237,30 @@ templates.weapon_trait_burn_on_push = {
 				buff_extension:add_internally_controlled_buff(dot_buff_name, start_time_with_offset, "owner_unit", template_context.unit)
 			end
 		end
-	end
+	end,
 }
 templates.weapon_trait_toughness_regen_near_burning_enemies = {
 	burning_enemies_for_max_effect = 15,
-	predicted = false,
 	class_name = "buff",
+	predicted = false,
 	lerped_stat_buffs = {
 		[buff_stat_buffs.elusiveness_modifier] = {
 			max = 2.5,
-			min = 1
-		}
+			min = 1,
+		},
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
+
 		template_data.broadphase = broadphase
 		template_data.broadphase_results = {}
+
 		local unit = template_context.unit
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
+
 		template_data.enemy_side_names = enemy_side_names
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
@@ -262,7 +272,7 @@ templates.weapon_trait_toughness_regen_near_burning_enemies = {
 
 		table.clear(broadphase_results)
 
-		local num_hits = broadphase:query(player_position, 10, broadphase_results, enemy_side_names)
+		local num_hits = broadphase.query(broadphase, player_position, 10, broadphase_results, enemy_side_names)
 		local num_burning = 0
 
 		for i = 1, num_hits do
@@ -279,29 +289,29 @@ templates.weapon_trait_toughness_regen_near_burning_enemies = {
 		local lerp = math.min(num_burning / burning_enemies_for_max_effect, 1)
 
 		return lerp
-	end
+	end,
 }
 templates.weapon_trait_melee_critical_strike_chance_on_weapon_special = {
-	predicted = true,
-	max_stacks = 1,
-	class_name = "proc_buff",
 	active_duration = 3,
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_weapon_special] = 1
+		[buff_proc_events.on_weapon_special] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 1
-	}
+		[buff_stat_buffs.critical_strike_chance] = 1,
+	},
 }
 templates.weapon_trait_guaranteed_critical_strike_after_non_fatal_weapon_special = {
+	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = true,
-	class_name = "proc_buff",
 	proc_events = {
-		[buff_proc_events.on_hit] = 1
+		[buff_proc_events.on_hit] = 1,
 	},
 	conditional_stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 1
+		[buff_stat_buffs.critical_strike_chance] = 1,
 	},
 	start_func = function (template_data, template_context)
 		template_data.active = false
@@ -319,18 +329,18 @@ templates.weapon_trait_guaranteed_critical_strike_after_non_fatal_weapon_special
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
-	end
+	end,
 }
 templates.weapon_trait_guaranteed_crit_after_parry = {
-	predicted = true,
-	max_stacks = 1,
-	class_name = "proc_buff",
 	active_duration = 2,
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_block] = 1
+		[buff_proc_events.on_block] = 1,
 	},
 	conditional_stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 1
+		[buff_stat_buffs.critical_strike_chance] = 1,
 	},
 	start_func = function (template_data, template_context)
 		template_data.active = false
@@ -347,44 +357,44 @@ templates.weapon_trait_guaranteed_crit_after_parry = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
-	end
+	end,
 }
 templates.weapon_trait_melee_damage_reduction_on_critical_strike = {
-	predicted = false,
-	max_stacks = 1,
-	class_name = "proc_buff",
 	active_duration = 10,
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1
+		[buff_proc_events.on_hit] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.damage_taken_multiplier] = -0.2
+		[buff_stat_buffs.damage_taken_multiplier] = -0.2,
 	},
-	check_proc_func = CheckProcFunctions.on_crit
+	check_proc_func = CheckProcFunctions.on_crit,
 }
 templates.weapon_trait_attack_speed_on_critical_strike = {
-	predicted = true,
-	max_stacks = 1,
-	class_name = "proc_buff",
 	active_duration = 3,
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1
+		[buff_proc_events.on_hit] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.attack_speed] = 0.2
+		[buff_stat_buffs.attack_speed] = 0.2,
 	},
-	check_proc_func = CheckProcFunctions.on_crit
+	check_proc_func = CheckProcFunctions.on_crit,
 }
 templates.weapon_trait_melee_weapon_special_max_activations = {
-	predicted = true,
 	class_name = "buff",
+	predicted = true,
 	stat_buffs = {
-		[buff_stat_buffs.weapon_special_max_activations] = 1
-	}
+		[buff_stat_buffs.weapon_special_max_activations] = 1,
+	},
 }
 templates.weapon_trait_reload_unwielded_weapons = {
-	class_name = "timed_trigger_buff",
 	active_duration = 1,
+	class_name = "timed_trigger_buff",
 	trigger_function = function (data, context)
 		local unit = context.unit
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
@@ -410,17 +420,17 @@ templates.weapon_trait_reload_unwielded_weapons = {
 				end
 			end
 		end
-	end
+	end,
 }
 templates.weapon_trait_reload_speed_on_quad_sweep = {
-	predicted = true,
 	class_name = "proc_buff",
+	predicted = true,
 	proc_events = {
 		[buff_proc_events.on_sweep_finish] = 1,
-		[buff_proc_events.on_reload] = 1
+		[buff_proc_events.on_reload] = 1,
 	},
 	conditional_stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.5
+		[buff_stat_buffs.reload_speed] = 0.5,
 	},
 	start_func = function (template_data, template_context)
 		template_data.internal_stacks = 0
@@ -434,32 +444,32 @@ templates.weapon_trait_reload_speed_on_quad_sweep = {
 		end,
 		on_reload = function (params, template_data, template_context)
 			template_data.internal_stacks = template_data.internal_stacks - 1
-		end
+		end,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.internal_stacks > 0
-	end
+	end,
 }
 templates.weapon_trait_increased_stagger_on_hip_fire = {
-	predicted = false,
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.opt_in_stagger_duration_multiplier] = 2
-	}
+		[buff_stat_buffs.opt_in_stagger_duration_multiplier] = 2,
+	},
 }
 templates.weapon_trait_uninterruptable_on_big_sweep = {
-	predicted = true,
-	class_name = "proc_buff",
 	active_duration = 4,
+	class_name = "proc_buff",
+	predicted = true,
 	proc_events = {
-		[buff_proc_events.on_sweep_finish] = 1
+		[buff_proc_events.on_sweep_finish] = 1,
 	},
 	proc_keywords = {
-		buff_keywords.uninterruptible
+		buff_keywords.uninterruptible,
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return params.num_hit_units >= 4
-	end
+	end,
 }
 
 return templates

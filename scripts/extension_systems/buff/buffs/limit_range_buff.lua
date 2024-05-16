@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/limit_range_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local LimitRangeBuff = class("LimitRangeBuff", "Buff")
@@ -13,6 +15,7 @@ LimitRangeBuff.init = function (self, context, template, start_time, instance_id
 		local max = range.max
 		local value = math.lerp(min, max, lerp_value)
 		local final_value = math.round_down_with_precision(value, 2)
+
 		stat_buffs[key] = final_value
 	end
 

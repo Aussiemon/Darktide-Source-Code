@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/character_create.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local HomePlanets = require("scripts/settings/character/home_planets")
@@ -18,35 +20,39 @@ local fallback_slots_to_strip = {
 	"slot_body_face_scar",
 	"slot_body_face_hair",
 	"slot_body_hair",
-	"slot_body_tattoo"
+	"slot_body_tattoo",
 }
 local can_use_empty_item = {
 	"slot_gear_extra_cosmetic",
 	"slot_gear_head",
 	"slot_gear_lowerbody",
-	"slot_gear_upperbody"
+	"slot_gear_upperbody",
 }
 
 if BUILD == "release" then
 	fallback_slots_to_strip = {
-		"slot_body_face"
+		"slot_body_face",
 	}
 end
 
 CharacterCreate.init = function (self, item_definitions, owned_gear, optional_real_profile)
 	self._archetype_random_names = {}
 	self._profile_value_versions = {
-		loadout = {}
+		loadout = {},
 	}
 	self._visible = false
 
 	self:_setup_default_values()
 
 	self._item_definitions = item_definitions
+
 	local verified_items = self:_verify_items(item_definitions, owned_gear)
 	local item_categories = self:_setup_item_categories(verified_items)
+
 	self._item_categories = item_categories
+
 	local appearance_presets = self:_setup_appearance_presets(verified_items)
+
 	self._appearance_presets = appearance_presets
 
 	if optional_real_profile then
@@ -56,31 +62,35 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 		local selected_voice = optional_real_profile.selected_voice
 		local gender = optional_real_profile.gender
 		local breed = optional_real_profile.archetype.breed
+
 		self._profile = {
 			name = "",
 			loadout = {},
 			selected_voice = selected_voice,
 			lore = {
-				backstory = backstory
+				backstory = backstory,
 			},
 			archetype = archetype,
 			specialization = specialization,
 			gender = gender,
-			breed = breed
+			breed = breed,
 		}
+
 		local breed_height_range = self:get_height_values_range()
-		local min_height = breed_height_range.min
-		local max_height = breed_height_range.max
+		local min_height, max_height = breed_height_range.min, breed_height_range.max
 		local default_height = math.lerp(min_height, max_height, 0.5)
 		local height = optional_real_profile.personal and optional_real_profile.personal.character_height or default_height
+
 		self._character_height = height
+
 		local loadout = optional_real_profile.loadout
 
 		if loadout then
 			self._saved_gender_loadout = {}
-			local breed_table = {
-				[gender] = {}
-			}
+
+			local breed_table = {}
+
+			breed_table[gender] = {}
 			self._saved_gender_loadout[breed] = breed_table
 
 			for slot_name, slot_settings in pairs(ItemSlotSettings) do
@@ -101,8 +111,9 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 
 			self._real_profile_gear = {
 				slot_gear_upperbody = loadout.slot_gear_upperbody,
-				slot_gear_lowerbody = loadout.slot_gear_lowerbody
+				slot_gear_lowerbody = loadout.slot_gear_lowerbody,
 			}
+
 			local crime_items_promise = self:_fetch_crime_items()
 
 			crime_items_promise:next(function (crime_items)
@@ -112,18 +123,19 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 		end
 	else
 		self._profile = {
-			selected_voice = "ogryn_a",
 			name = "",
+			selected_voice = "ogryn_a",
 			loadout = {},
 			abilities = {
+				combat_ability = "dash",
 				support_ability = "grenade",
-				combat_ability = "dash"
 			},
 			lore = {
-				backstory = {}
-			}
+				backstory = {},
+			},
 		}
 		self._character_height = 1
+
 		local randomized_archetype = self:_randomize_archetype()
 
 		self:set_archetype(randomized_archetype)
@@ -200,23 +212,25 @@ CharacterCreate._setup_default_values = function (self)
 	self._archetype_names_array = archetype_names_array
 	self._breeds_array = {
 		"human",
-		"ogryn"
+		"ogryn",
 	}
 	self._genders_array = {
 		"female",
-		"male"
+		"male",
 	}
+
 	local sorted_personalities = {}
 
 	for key, settings in pairs(Personalities) do
 		local archetype = settings.archetype
-		local destination = nil
+		local destination
 
 		if not sorted_personalities[archetype] then
 			sorted_personalities[archetype] = {}
 		end
 
 		destination = sorted_personalities[archetype]
+
 		local breed = settings.breed
 
 		if not destination[breed] then
@@ -224,6 +238,7 @@ CharacterCreate._setup_default_values = function (self)
 		end
 
 		destination = destination[breed]
+
 		local gender = settings.gender
 
 		if not destination[gender] then
@@ -235,6 +250,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._sorted_personalities = sorted_personalities
+
 	local home_planets_array = {}
 
 	for key, settings in pairs(HomePlanets) do
@@ -242,6 +258,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._home_planets_array = home_planets_array
+
 	local childhood_array = {}
 
 	for key, settings in pairs(Childhood) do
@@ -249,6 +266,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._childhood_array = childhood_array
+
 	local growing_up_array = {}
 
 	for key, settings in pairs(GrowingUp) do
@@ -256,6 +274,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._growing_up_array = growing_up_array
+
 	local formative_event_array = {}
 
 	for key, settings in pairs(FormativeEvent) do
@@ -263,10 +282,11 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._formative_event_array = formative_event_array
+
 	local sorted_crimes = {}
 
 	for key, settings in pairs(Crimes) do
-		local destination = nil
+		local destination
 		local archetype = settings.archetype
 
 		if not sorted_crimes[archetype] then
@@ -278,6 +298,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._sorted_crimes = sorted_crimes
+
 	local inventory_slots_array = {}
 
 	for slot_name, slot_info in pairs(ItemSlotSettings) do
@@ -295,7 +316,7 @@ CharacterCreate.get_height_values_range = function (self)
 	local breed = self._profile.breed
 	local height_range = {
 		max = 1,
-		min = 1
+		min = 1,
 	}
 	local breed_height_values = Breeds[breed].size_variation_range
 
@@ -318,7 +339,7 @@ CharacterCreate._setup_appearance_presets = function (self, verified_items)
 
 			for preset_name, preset_slots in pairs(appearance_presets) do
 				local preset = {
-					body_parts = {}
+					body_parts = {},
 				}
 
 				for i = 1, #self._inventory_slots_array do
@@ -420,17 +441,23 @@ CharacterCreate._setup_item_categories = function (self, source_items)
 			"archetypes",
 			"breeds",
 			"genders",
-			"slots"
+			"slots",
 		}
 		local default_table_arrays = {
 			archetypes = self._archetype_names_array,
 			breed = self._breeds_array,
 			genders = self._genders_array,
-			slots = self._inventory_slots_array
+			slots = self._inventory_slots_array,
 		}
 		local table_key = loop_table_order[lookup_index]
 		local values = {}
-		values = item[table_key] and not table.is_empty(item[table_key]) and item[table_key] or default_table_arrays[table_key] or {}
+
+		if item[table_key] and not table.is_empty(item[table_key]) then
+			values = item[table_key]
+		else
+			values = default_table_arrays[table_key] or {}
+		end
+
 		local next_lookup_index = lookup_index < #loop_table_order and lookup_index + 1 or nil
 
 		for _, key in ipairs(values) do
@@ -495,6 +522,7 @@ end
 
 CharacterCreate.set_gender = function (self, gender)
 	self._profile.gender = gender
+
 	local breed = self._profile.breed
 	local saved_preset = self._saved_gender_loadout and self._saved_gender_loadout[breed][gender]
 
@@ -517,6 +545,7 @@ end
 
 CharacterCreate.set_archetype = function (self, archetype)
 	local is_diff_archetype = self._profile.archetype ~= archetype
+
 	self._profile.archetype = archetype
 
 	self:_increase_value_version("archetype")
@@ -557,6 +586,7 @@ end
 
 CharacterCreate._fetch_suggested_names_by_profile = function (self)
 	self._archetype_random_names = {}
+
 	local archetype = self._profile.archetype.name
 	local gender = self:gender()
 	local planet_option = self:planet()
@@ -600,9 +630,9 @@ CharacterCreate.set_item_per_slot = function (self, slot_name, item)
 	if saved_preset then
 		self._saved_gender_loadout[breed][gender][slot_name] = item
 	elseif saved_preset_breed then
-		local gender_table = {
-			[slot_name] = {}
-		}
+		local gender_table = {}
+
+		gender_table[slot_name] = {}
 		self._saved_gender_loadout[breed][gender] = gender_table
 		self._saved_gender_loadout[breed][gender][slot_name] = item
 	end
@@ -611,17 +641,18 @@ CharacterCreate.set_item_per_slot = function (self, slot_name, item)
 
 	self:_increase_value_version({
 		"inventory",
-		slot_name
+		slot_name,
 	})
 end
 
 CharacterCreate.set_item_per_slot_preview = function (self, slot_name, item, profile)
 	local loadout = profile.loadout
+
 	loadout[slot_name] = item
 
 	self:_increase_value_version({
 		"inventory",
-		slot_name
+		slot_name,
 	})
 end
 
@@ -823,6 +854,7 @@ end
 
 CharacterCreate.set_gear_visible = function (self, visible)
 	local previous_visiblity = self._visible
+
 	self._visible = visible
 
 	if not visible and visible ~= previous_visiblity then
@@ -854,7 +886,7 @@ end
 
 CharacterCreate._increase_value_version = function (self, value_keys)
 	if type(value_keys) == "table" then
-		local register_value_version = nil
+		local register_value_version
 
 		function register_value_version(save_location, value_keys, current_index)
 			local current_key = value_keys[current_index]
@@ -879,24 +911,28 @@ end
 CharacterCreate._generate_backend_profile = function (self)
 	local profile = self._profile
 	local new_profile = table.create_copy_instance(nil, profile)
+
 	new_profile.archetype = profile.archetype.name
 	new_profile.career = {
-		specialization = profile.specialization
+		specialization = profile.specialization,
 	}
 	new_profile.specialization = nil
+
 	local new_loadout = {}
+
 	new_profile.inventory = new_loadout
 	new_profile.loadout = nil
 
 	for slot_name, item in pairs(profile.loadout) do
 		new_loadout[slot_name] = {
-			id = item.name
+			id = item.name,
 		}
 	end
 
 	local personality = self:personality()
 	local personality_settings = Personalities[personality]
 	local character_voice = personality_settings.character_voice
+
 	new_profile.selected_voice = character_voice
 	new_profile.character_height = self._character_height
 	new_profile.id = Application.guid()
@@ -951,8 +987,9 @@ CharacterCreate._add_crime_items_to_parsed_profile = function (self)
 
 			for slot_name, item_name in pairs(slot_items) do
 				local item = item_definitions[item_name]
+
 				prison_garbs[slot_name] = {
-					id = item.name
+					id = item.name,
 				}
 			end
 		end
@@ -964,6 +1001,7 @@ end
 local function _granted_item_to_gear(item)
 	local gear = table.clone(item)
 	local gear_id = gear.uuid
+
 	gear.overrides = nil
 	gear.id = nil
 	gear.uuid = nil
@@ -974,18 +1012,23 @@ end
 
 CharacterCreate.transform = function (self, character_id, operation_cost)
 	self._transformation_complete = {}
+
 	local parsed_profile = self:_generate_backend_profile()
+
 	parsed_profile.id = nil
 	parsed_profile.archetype = nil
 	parsed_profile.breed = nil
 	parsed_profile.abilities = nil
 	parsed_profile.career = nil
 	parsed_profile.inventory.slot_animation_end_of_round = nil
+
 	local prison_garbs = self:_add_crime_items_to_parsed_profile()
 	local upperbody_slot = "slot_gear_upperbody"
 	local lowerbody_slot = "slot_gear_lowerbody"
+
 	parsed_profile.inventory[upperbody_slot] = prison_garbs[upperbody_slot]
 	parsed_profile.inventory[lowerbody_slot] = prison_garbs[lowerbody_slot]
+
 	local real_profile_gear = self._real_profile_gear
 	local slots_to_equip = {}
 
@@ -1055,10 +1098,11 @@ end
 CharacterCreate._fetch_crime_items = function (self)
 	local player = Managers.player:local_player(1)
 	local character_id = player:character_id()
-	local body_gear_slots = {
-		"slot_gear_lowerbody",
-		"slot_gear_upperbody"
-	}
+	local body_gear_slots = {}
+
+	body_gear_slots[1] = "slot_gear_lowerbody"
+	body_gear_slots[2] = "slot_gear_upperbody"
+
 	local gear_service = Managers.data_service.gear
 
 	return gear_service:fetch_inventory(character_id, body_gear_slots):next(function (items)
@@ -1067,6 +1111,7 @@ CharacterCreate._fetch_crime_items = function (self)
 		end
 
 		self._body_gear_items = items
+
 		local crime_items = {}
 
 		for id, item in pairs(items) do
@@ -1085,7 +1130,7 @@ CharacterCreate._fetch_crime_items = function (self)
 		return crime_items
 	end):catch(function ()
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error")
+			text = Localize("loc_popup_description_backend_error"),
 		})
 		self:cb_on_close_pressed()
 	end)
@@ -1122,12 +1167,14 @@ CharacterCreate._replace_old_crime_items_in_loadouts = function (self, slots_to_
 			local item = granted_garbs[i]
 			local slot = item.slots[1]
 			local uuid = item.uuid
+
 			new_crime_items[slot] = uuid
 			item.gear_id = uuid
 			self._body_gear_items[uuid] = item
 		end
 	else
 		local all_crime_items = self._all_crime_items
+
 		new_crime_items = self:_get_current_crime_items_ids(all_crime_items)
 	end
 

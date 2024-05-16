@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view_definitions_decode_symbols.lua
+
 local ScannerDisplayViewDefinitionsBase = require("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_base")
 local ScannerDisplayViewDecodeSymbolsSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_decode_symbols_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -12,41 +14,41 @@ local widget_definitions = {
 	decoration_skull = ScannerDisplayViewDefinitionsBase.widget_definitions.decoration_skull,
 	symbol_frame = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/scanner/scanner_decode_symbol_frame",
-			style_id = "frame",
 			pass_type = "texture",
+			style_id = "frame",
+			value = "content/ui/materials/backgrounds/scanner/scanner_decode_symbol_frame",
 			style = {
 				hdr = true,
 				color = {
 					255,
 					0,
 					0,
-					0
-				}
-			}
-		}
+					0,
+				},
+			},
+		},
 	}, "center_pivot", nil, ScannerDisplayViewDecodeSymbolsSettings.decode_symbol_widget_size),
 	symbol_highlight = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/scanner/scanner_decode_symbol_highlight",
-			style_id = "highlight",
 			pass_type = "texture",
+			style_id = "highlight",
+			value = "content/ui/materials/backgrounds/scanner/scanner_decode_symbol_highlight",
 			style = {
 				hdr = true,
 				color = {
 					255,
 					0,
 					0,
-					0
-				}
-			}
-		}
-	}, "center_pivot", nil, ScannerDisplayViewDecodeSymbolsSettings.decode_symbol_widget_size)
+					0,
+				},
+			},
+		},
+	}, "center_pivot", nil, ScannerDisplayViewDecodeSymbolsSettings.decode_symbol_widget_size),
 }
 
 return {
 	decode_symbols = {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition
-	}
+		scenegraph_definition = scenegraph_definition,
+	},
 }

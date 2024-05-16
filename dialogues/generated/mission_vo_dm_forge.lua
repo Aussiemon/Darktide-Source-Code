@@ -1,60 +1,62 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge.lua
+
 return function ()
 	define_rule({
+		category = "player_prio_0",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_alive",
-		category = "player_prio_0",
-		wwise_route = 0,
 		response = "mission_forge_alive",
-		database = "mission_vo_dm_forge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_alive"
+				"mission_forge_alive",
 			},
 			{
 				"faction_memory",
 				"mission_forge_alive",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_alive",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_assembly_line",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_forge_assembly_line",
-		database = "mission_vo_dm_forge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_assembly_line"
+				"mission_forge_assembly_line",
 			},
 			{
 				"user_context",
@@ -63,49 +65,49 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_assembly_line",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_assembly_line",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_call_elevator",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_forge_call_elevator",
-		database = "mission_vo_dm_forge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_call_elevator"
+				"mission_forge_call_elevator",
 			},
 			{
 				"user_context",
@@ -114,455 +116,455 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_call_elevator",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_call_elevator",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "players"
-		}
+			target = "players",
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_elevator_conversation_one_a",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_forge_elevator_conversation_one_a",
-		database = "mission_vo_dm_forge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				50
+				50,
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_forge_elevator_conversation_one_a"
+				"mission_forge_elevator_conversation_one_a",
 			},
 			{
 				"faction_memory",
 				"mission_forge_elevator_conversation_one_a",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_elevator_conversation_one_a",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_elevator_conversation_one_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_forge_elevator_conversation_one_b",
-		database = "mission_vo_dm_forge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_elevator_conversation_one_a"
-				}
+					"mission_forge_elevator_conversation_one_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_elevator_conversation_one_c",
-		wwise_route = 0,
 		response = "mission_forge_elevator_conversation_one_c",
-		database = "mission_vo_dm_forge",
-		category = "conversations_prio_0",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_elevator_conversation_one_b"
-				}
-			}
+					"mission_forge_elevator_conversation_one_b",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_elevator_conversation_three_a",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_forge_elevator_conversation_three_a",
-		database = "mission_vo_dm_forge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				50
+				50,
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_forge_elevator_conversation_three_a"
+				"mission_forge_elevator_conversation_three_a",
 			},
 			{
 				"faction_memory",
 				"mission_forge_elevator_conversation_three_a",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_elevator_conversation_three_a",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_elevator_conversation_three_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_forge_elevator_conversation_three_b",
-		database = "mission_vo_dm_forge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_elevator_conversation_three_a"
-				}
+					"mission_forge_elevator_conversation_three_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_elevator_conversation_three_c",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_forge_elevator_conversation_three_c",
 		database = "mission_vo_dm_forge",
+		name = "mission_forge_elevator_conversation_three_c",
+		response = "mission_forge_elevator_conversation_three_c",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_elevator_conversation_three_b"
-				}
-			}
+					"mission_forge_elevator_conversation_three_b",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_elevator_conversation_two_a",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_forge_elevator_conversation_two_a",
 		database = "mission_vo_dm_forge",
+		name = "mission_forge_elevator_conversation_two_a",
+		response = "mission_forge_elevator_conversation_two_a",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				50
+				50,
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_forge_elevator_conversation_two_a"
+				"mission_forge_elevator_conversation_two_a",
 			},
 			{
 				"faction_memory",
 				"mission_forge_elevator_conversation_two_a",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_elevator_conversation_two_a",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_elevator_conversation_two_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_forge_elevator_conversation_two_b",
-		database = "mission_vo_dm_forge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_elevator_conversation_two_a"
-				}
+					"mission_forge_elevator_conversation_two_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_elevator_conversation_two_c",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_forge_elevator_conversation_two_c",
-		database = "mission_vo_dm_forge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_elevator_conversation_two_b"
-				}
-			}
+					"mission_forge_elevator_conversation_two_b",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_find_smelter",
 		category = "player_prio_0",
-		wwise_route = 0,
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_find_smelter",
 		response = "mission_forge_find_smelter",
-		database = "mission_vo_dm_forge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_find_smelter"
+				"mission_forge_find_smelter",
 			},
 			{
 				"faction_memory",
 				"mission_forge_find_smelter",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_find_smelter",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_first_objective",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_forge_first_objective",
-		database = "mission_vo_dm_forge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_strategic_asset"
-				}
+					"mission_forge_strategic_asset",
+				},
 			},
 			{
 				"user_context",
@@ -571,102 +573,102 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_first_objective_response",
-		wwise_route = 0,
 		response = "mission_forge_first_objective_response",
-		database = "mission_vo_dm_forge",
-		category = "conversations_prio_0",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_first_objective"
-				}
-			}
+					"mission_forge_first_objective",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_hellhole",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_forge_hellhole",
 		database = "mission_vo_dm_forge",
+		name = "mission_forge_hellhole",
+		response = "mission_forge_hellhole",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_job_done"
-				}
-			}
+					"mission_forge_job_done",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_job_done",
-		response = "mission_forge_job_done",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_job_done",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_job_done",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_job_done"
+				"mission_forge_job_done",
 			},
 			{
 				"user_context",
@@ -675,61 +677,61 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_job_done",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_job_done",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "players"
-		}
+			target = "players",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_labour_oversight",
-		response = "mission_forge_labour_oversight",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_labour_oversight",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_labour_oversight",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_forge_labour_oversight"
+				"mission_forge_labour_oversight",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"user_context",
@@ -738,130 +740,130 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_labour_oversight",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_labour_oversight",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
+		category = "player_prio_0",
+		database = "mission_vo_dm_forge",
 		name = "mission_forge_lifeless",
-		category = "player_prio_0",
-		wwise_route = 0,
 		response = "mission_forge_lifeless",
-		database = "mission_vo_dm_forge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_lifeless"
+				"mission_forge_lifeless",
 			},
 			{
 				"faction_memory",
 				"mission_forge_lifeless",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_lifeless",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_main_entrance",
 		category = "player_prio_0",
-		wwise_route = 0,
-		response = "mission_forge_main_entrance",
 		database = "mission_vo_dm_forge",
+		name = "mission_forge_main_entrance",
+		response = "mission_forge_main_entrance",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_main_entrance"
+				"mission_forge_main_entrance",
 			},
 			{
 				"faction_memory",
 				"mission_forge_main_entrance",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_main_entrance",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_main_entrance_response",
-		wwise_route = 0,
-		response = "mission_forge_main_entrance_response",
-		database = "mission_vo_dm_forge",
 		category = "conversations_prio_1",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_main_entrance_response",
+		response = "mission_forge_main_entrance_response",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0
+				0,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5
+				5,
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_main_entrance"
-				}
+					"mission_forge_main_entrance",
+				},
 			},
 			{
 				"user_context",
@@ -871,88 +873,88 @@ return function ()
 					"ogryn",
 					"psyker",
 					"veteran",
-					"zealot"
-				}
-			}
+					"zealot",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_propaganda",
 		category = "player_prio_0",
-		wwise_route = 0,
-		response = "mission_forge_propaganda",
 		database = "mission_vo_dm_forge",
+		name = "mission_forge_propaganda",
+		response = "mission_forge_propaganda",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_forge_propaganda"
+				"mission_forge_propaganda",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				0
+				0,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"faction_memory",
 				"mission_forge_propaganda",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_propaganda",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_purge_infestation",
-		response = "mission_forge_purge_infestation",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_purge_infestation",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_purge_infestation",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_purge_infestation"
+				"mission_forge_purge_infestation",
 			},
 			{
 				"user_context",
@@ -961,49 +963,49 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_purge_infestation",
 				OP.LT,
-				2
-			}
+				2,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_purge_infestation",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_smelter",
-		response = "mission_forge_smelter",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_smelter",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_smelter",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_smelter"
+				"mission_forge_smelter",
 			},
 			{
 				"user_context",
@@ -1012,49 +1014,49 @@ return function ()
 				args = {
 					"tech_priest",
 					"sergeant",
-					"explicator"
-				}
+					"explicator",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_smelter",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_smelter",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_smelter_working",
-		response = "mission_forge_smelter_working",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_smelter_working",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_smelter_working",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_smelter_working"
+				"mission_forge_smelter_working",
 			},
 			{
 				"user_context",
@@ -1063,259 +1065,259 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_smelter_working",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_smelter_working",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		name = "mission_forge_stand_ground",
 		category = "player_prio_0",
-		wwise_route = 0,
-		response = "mission_forge_stand_ground",
 		database = "mission_vo_dm_forge",
+		name = "mission_forge_stand_ground",
+		response = "mission_forge_stand_ground",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_stand_ground"
+				"mission_forge_stand_ground",
 			},
 			{
 				"faction_memory",
 				"mission_forge_stand_ground",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_stand_ground",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_start_banter_a",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_forge_start_banter_a",
 		database = "mission_vo_dm_forge",
+		name = "mission_forge_start_banter_a",
+		response = "mission_forge_start_banter_a",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"start_banter"
+				"start_banter",
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.EQ,
-				"dm_forge"
+				"dm_forge",
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.NEQ,
-				"thischeckisdisabled"
+				"thischeckisdisabled",
 			},
 			{
 				"faction_memory",
 				"mission_forge_start_banter_a",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_start_banter_a",
 				OP.ADD,
-				1
+				1,
 			},
 			{
 				"user_memory",
 				"mission_forge_start_banter_a_user",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_start_banter_b",
-		response = "mission_forge_start_banter_b",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_start_banter_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_start_banter_b",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_start_banter_a"
-				}
+					"mission_forge_start_banter_a",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_start_banter_c",
-		wwise_route = 0,
-		response = "mission_forge_start_banter_c",
-		database = "mission_vo_dm_forge",
 		category = "conversations_prio_0",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_start_banter_c",
+		response = "mission_forge_start_banter_c",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_start_banter_b"
-				}
+					"mission_forge_start_banter_b",
+				},
 			},
 			{
 				"user_memory",
 				"mission_forge_start_banter_a_user",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_forge_strategic_asset",
-		wwise_route = 0,
-		response = "mission_forge_strategic_asset",
-		database = "mission_vo_dm_forge",
 		category = "conversations_prio_0",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_strategic_asset",
+		response = "mission_forge_strategic_asset",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_start_banter_c"
-				}
-			}
+					"mission_forge_start_banter_c",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_giver_default",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_superstructure",
-		response = "mission_forge_superstructure",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_superstructure",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_superstructure",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_forge_superstructure"
+				"mission_forge_superstructure",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"user_context",
@@ -1324,92 +1326,92 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_superstructure",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_superstructure",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		name = "mission_forge_tutorial_corruptor",
-		wwise_route = 0,
-		response = "mission_forge_tutorial_corruptor",
-		database = "mission_vo_dm_forge",
 		category = "player_prio_0",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_tutorial_corruptor",
+		response = "mission_forge_tutorial_corruptor",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_tutorial_corruptor"
+				"mission_forge_tutorial_corruptor",
 			},
 			{
 				"faction_memory",
 				"mission_forge_tutorial_corruptor",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_tutorial_corruptor",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_giver_default",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5
-			}
-		}
+				duration = 0.5,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_tutorial_corruptor_done",
-		response = "mission_forge_tutorial_corruptor_done",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_tutorial_corruptor_done",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_tutorial_corruptor_done",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_tutorial_corruptor_done"
+				"mission_forge_tutorial_corruptor_done",
 			},
 			{
 				"user_context",
@@ -1418,56 +1420,56 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 2.5
-			}
-		}
+				duration = 2.5,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_tutorial_corruptor_response",
-		response = "mission_forge_tutorial_corruptor_response",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_tutorial_corruptor_response",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_tutorial_corruptor_response",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_forge_tutorial_corruptor"
-				}
+					"mission_forge_tutorial_corruptor",
+				},
 			},
 			{
 				"user_context",
@@ -1476,41 +1478,41 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
-			}
-		}
+				duration = 0.3,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_forge_use_elevator",
-		response = "mission_forge_use_elevator",
-		database = "mission_vo_dm_forge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_forge",
+		name = "mission_forge_use_elevator",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_forge_use_elevator",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_forge_use_elevator"
+				"mission_forge_use_elevator",
 			},
 			{
 				"user_context",
@@ -1519,26 +1521,26 @@ return function ()
 				args = {
 					"explicator",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_forge_use_elevator",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_forge_use_elevator",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 end

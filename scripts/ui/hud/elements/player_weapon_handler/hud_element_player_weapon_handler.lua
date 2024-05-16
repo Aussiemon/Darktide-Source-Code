@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler.lua
+
 local definition_path = "scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_definitions"
 local HudElementPlayerWeapon = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon")
 local HudElementPlayerWeaponHandlerSettings = require("scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings")
@@ -13,8 +15,10 @@ HudElementPlayerWeaponHandler.init = function (self, parent, draw_layer, start_s
 	self._player_weapons = {}
 	self._player_weapons_array = {}
 	self._num_weapons = 0
+
 	local slots_settings = HudElementPlayerWeaponHandlerSettings.slots_settings
 	local max_slots = table.size(slots_settings)
+
 	self._max_slots = max_slots
 
 	for slot_name, slot_settings in pairs(slots_settings) do
@@ -97,8 +101,9 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 					slot_component = slot_component,
 					weapon_template = weapon_template,
 					weapon_name = weapon_name,
-					index = order_index
+					index = order_index,
 				}
+
 				player_weapons[slot_id] = data
 				player_weapons_array[#player_weapons_array + 1] = data
 				data.weapon = HudElementPlayerWeapon:new(parent, draw_layer, scale, data)
@@ -149,8 +154,10 @@ HudElementPlayerWeaponHandler._align_weapon_scenegraphs = function (self)
 	for _, data in ipairs(player_weapons_array) do
 		local index = data.index
 		local weapon = data.weapon
+
 		index = 1
 		offset_y = -(index - 1) * (HudElementPlayerWeaponHandlerSettings.size_small[2] + weapon_spacing[2])
+
 		local x = start_x + offset_x
 		local y = start_y + offset_y
 
@@ -198,6 +205,7 @@ end
 HudElementPlayerWeaponHandler._set_wielded_slot = function (self, wielded_slot)
 	self._wielded_slot = wielded_slot
 	self._wield_anim_progress = 0
+
 	local player_weapons_array = self._player_weapons_array
 
 	for _, data in ipairs(player_weapons_array) do
@@ -280,6 +288,7 @@ HudElementPlayerWeaponHandler.update = function (self, dt, t, ui_renderer, rende
 	local inventory_component = unit_data:read_component("inventory")
 	local wielded_slot = inventory_component.wielded_slot
 	local slots_settings = HudElementPlayerWeaponHandlerSettings.slots_settings
+
 	self._wielding_none_weapon_slot = not slots_settings[wielded_slot]
 
 	if self._wielding_none_weapon_slot then

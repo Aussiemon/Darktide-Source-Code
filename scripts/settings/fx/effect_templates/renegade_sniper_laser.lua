@@ -1,8 +1,9 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/renegade_sniper_laser.lua
+
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local FX_SOURCE_NAME = "muzzle"
 local LASER_Y_OFFSET = 1
-local LASER_X = 0.05
-local LASER_Z = 0.5
+local LASER_X, LASER_Z = 0.05, 0.5
 local LASER_PARTICLE_NAME = "content/fx/particles/enemies/sniper_laser_sight"
 local LASER_PARTICLE_NAME_OUTDOORS = "content/fx/particles/enemies/renegade_sniper/renegade_sniper_beam_outdoors"
 local LASER_LENGTH_VARIABLE_NAME = "hit_distance"
@@ -12,7 +13,7 @@ local resources = {
 	laser_particle_name = LASER_PARTICLE_NAME,
 	laser_particle_name_outdoors = LASER_PARTICLE_NAME_OUTDOORS,
 	laser_sound_event = LASER_SOUND_EVENT,
-	laser_stop_sound_event = LASER_STOP_SOUND_EVENT
+	laser_stop_sound_event = LASER_STOP_SOUND_EVENT,
 }
 
 local function _get_positions(local_player_unit, template_data, game_session, game_object_id)
@@ -49,20 +50,24 @@ local effect_template = {
 
 		local wwise_world = template_context.wwise_world
 		local unit = template_data.unit
-		local game_session = Managers.state.game_session:game_session()
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
-		template_data.game_object_id = game_object_id
-		template_data.game_session = game_session
+		local game_session, game_object_id = Managers.state.game_session:game_session(), Managers.state.unit_spawner:game_object_id(unit)
+
+		template_data.game_session, template_data.game_object_id = game_session, game_object_id
+
 		local closest_point, muzzle_pos = _get_positions(local_player_unit, template_data, game_session, game_object_id)
 		local source_id = WwiseWorld.make_manual_source(wwise_world, closest_point, Quaternion.identity())
 
 		WwiseWorld.trigger_resource_event(wwise_world, LASER_SOUND_EVENT, source_id)
 
 		template_data.source_id = source_id
+
 		local world = template_context.world
 		local particle_id = World.create_particles(world, particle_name, muzzle_pos)
+
 		template_data.particle_id = particle_id
+
 		local variable_index = World.find_particles_variable(world, particle_name, LASER_LENGTH_VARIABLE_NAME)
+
 		template_data.variable_index = variable_index
 	end,
 	update = function (template_data, template_context, dt, t)
@@ -73,8 +78,7 @@ local effect_template = {
 			return
 		end
 
-		local game_session = template_data.game_session
-		local game_object_id = template_data.game_object_id
+		local game_session, game_object_id = template_data.game_session, template_data.game_object_id
 		local closest_point, muzzle_pos, laser_aim_position = _get_positions(local_player_unit, template_data, game_session, game_object_id)
 		local wwise_world = template_context.wwise_world
 
@@ -111,7 +115,7 @@ local effect_template = {
 
 			World.destroy_particles(world, particle_id)
 		end
-	end
+	end,
 }
 
 return effect_template

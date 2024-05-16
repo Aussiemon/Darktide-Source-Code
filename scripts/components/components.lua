@@ -1,17 +1,21 @@
+﻿-- chunkname: @scripts/components/components.lua
+
 Components = Components or {}
-local destroyed_mt = {
-	__index = function (t, k)
-		ferror("Tried accessing %s on destroyed component of type %s", tostring(k), rawget(t, "__component_name") or "<unknown>")
-	end
-}
+
+local destroyed_mt = {}
+
+destroyed_mt.__index = function (t, k)
+	ferror("Tried accessing %s on destroyed component of type %s", tostring(k), rawget(t, "__component_name") or "<unknown>")
+end
+
 local special_functions = {
-	__index = true,
-	name = true,
-	super = true,
 	__component_name = true,
-	new = true,
+	__index = true,
 	__interfaces = true,
-	delete = true
+	delete = true,
+	name = true,
+	new = true,
+	super = true,
 }
 
 local function _component_data_default_value(component_data, unit, guid, ...)
@@ -24,6 +28,7 @@ local function _component_data_default_value(component_data, unit, guid, ...)
 
 	for i = 1, num_args do
 		local key = select(i, ...)
+
 		data = data[key]
 
 		if not data then
@@ -52,6 +57,7 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 
 	for i = 1, num_args do
 		local key = select(i, ...)
+
 		data = data[key]
 
 		if not data then
@@ -118,6 +124,7 @@ local function _component_data_type(component_data, ...)
 
 	for i = 1, num_args do
 		local key = select(i, ...)
+
 		data = data[key]
 
 		if not data then
@@ -214,17 +221,18 @@ local function _component_data_get_color(self, unit, guid, ...)
 		255,
 		255,
 		255,
-		255
+		255,
 	}
 	local default_boxed_color = _component_data_default_value(self.component_data, unit, guid, ...)
 
 	if default_boxed_color then
 		local _, r, g, b = Quaternion.to_elements(default_boxed_color:unbox())
+
 		elements = {
 			255,
 			r * 255,
 			g * 255,
-			b * 255
+			b * 255,
 		}
 	end
 
@@ -284,17 +292,18 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 					255,
 					255,
 					255,
-					255
+					255,
 				}
 				local default_boxed_color = member_data.value
 
 				if default_boxed_color then
 					local x, y, z, _ = Quaternion.to_elements(default_boxed_color:unbox())
+
 					color_elements = {
 						x * 255,
 						y * 255,
 						z * 255,
-						255
+						255,
 					}
 				end
 
@@ -329,7 +338,7 @@ end
 
 function component(component_name, super_name, ...)
 	local component_table = Components[component_name]
-	local super = nil
+	local super
 
 	if super_name then
 		super = Components[super_name]
@@ -339,10 +348,10 @@ function component(component_name, super_name, ...)
 		component_table = {
 			super = super,
 			__component_name = component_name,
-			__index = component_table,
-			__interfaces = {},
-			events = {}
 		}
+		component_table.__index = component_table
+		component_table.__interfaces = {}
+		component_table.events = {}
 
 		component_table.new = function (self, guid, network_index, unit, is_server, ...)
 			local object = {}
@@ -353,7 +362,8 @@ function component(component_name, super_name, ...)
 			object.network_index = network_index
 			object.unit = unit
 			object.is_server = is_server
-			local run_update = nil
+
+			local run_update
 
 			if EDITOR and object.editor_init or rawget(_G, "EditorApi") and object.editor_init then
 				run_update = object:editor_init(unit, is_server, ...)
@@ -438,11 +448,13 @@ local function _require_component(component_path)
 		if not valid then
 			while index <= #package.load_order do
 				local pack = package.load_order[#package.load_order]
+
 				package.loaded[pack] = nil
 
 				table.remove(package.load_order, #package.load_order)
 
 				local name = Utils.path_to_class_name(pack)
+
 				Components[name] = nil
 			end
 		end

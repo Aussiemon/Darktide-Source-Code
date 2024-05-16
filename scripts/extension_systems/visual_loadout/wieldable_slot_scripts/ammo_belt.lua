@@ -1,13 +1,19 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_belt.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
 local AmmoBelt = class("AmmoBelt")
 
 AmmoBelt.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._weapon_actions = weapon_template.actions
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local unit_components = {}
 	local num_attachments_1p = #slot.attachments_1p
 
@@ -18,7 +24,7 @@ AmmoBelt.init = function (self, context, slot, weapon_template, fx_sources)
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = attachment_unit,
-				component = component
+				component = component,
 			}
 		end
 	end
@@ -32,7 +38,7 @@ AmmoBelt.init = function (self, context, slot, weapon_template, fx_sources)
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = attachment_unit,
-				component = component
+				component = component,
 			}
 		end
 	end
@@ -58,9 +64,7 @@ AmmoBelt.update = function (self, unit, dt, t)
 	for ii = 1, num_components do
 		local ammo_belt = unit_components[ii]
 
-		if is_reloading then
-			current_ammo_clip = math.min(max_ammo_clip, current_ammo_reserve) or current_ammo_clip
-		end
+		current_ammo_clip = is_reloading and math.min(max_ammo_clip, current_ammo_reserve) or current_ammo_clip
 
 		ammo_belt.component:set_ammo(ammo_belt.unit, current_ammo_clip, max_ammo_clip)
 	end

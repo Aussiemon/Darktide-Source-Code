@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/portrait_ui.lua
+
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 
@@ -113,7 +115,9 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local camera = world_spawner:camera()
 	local unit_spawner = world_spawner:unit_spawner()
 	local profile_spawner = UIProfileSpawner:new("PortraitUI", world, camera, unit_spawner)
+
 	self._profile_spawner = profile_spawner
+
 	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
 	local optional_state_machine = render_context and render_context.state_machine
@@ -267,24 +271,26 @@ PortraitUI._store_camera_settings_by_breed = function (self, breed, camera_unit)
 		if slot_camera_unit then
 			local slot_camera_position = Unit.world_position(slot_camera_unit, 1)
 			local slot_camera_rotation = Unit.world_rotation(slot_camera_unit, 1)
+
 			camera_settings_by_item_slot[slot_name] = {
 				breed = breed,
 				slot_name = slot_name,
 				camera_unit = slot_camera_unit,
 				boxed_camera_start_position = Vector3.to_array(slot_camera_position),
-				boxed_camera_start_rotation = QuaternionBox(slot_camera_rotation)
+				boxed_camera_start_rotation = QuaternionBox(slot_camera_rotation),
 			}
 		end
 	end
 
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 	self._breed_camera_settings[breed] = {
 		breed = breed,
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
 		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
-		camera_settings_by_item_slot = camera_settings_by_item_slot
+		camera_settings_by_item_slot = camera_settings_by_item_slot,
 	}
 end
 

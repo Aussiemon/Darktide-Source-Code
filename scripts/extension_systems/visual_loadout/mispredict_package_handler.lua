@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/mispredict_package_handler.lua
+
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local MispredictPackageHandler = class("MispredictPackageHandler")
 
@@ -15,6 +17,7 @@ end
 
 MispredictPackageHandler.item_unequipped = function (self, item, fixed_frame)
 	local pending_unloads = self._pending_unloads[fixed_frame] or {}
+
 	pending_unloads[#pending_unloads + 1] = item
 	self._pending_unloads[fixed_frame] = pending_unloads
 end
@@ -44,6 +47,7 @@ MispredictPackageHandler._load_item_packages = function (self, item)
 	for package_name, _ in pairs(dependencies) do
 		if package_manager:package_is_known(package_name) then
 			local load_id = Managers.package:load(package_name, "MispredictPackageHandler", nil, true)
+
 			self._loaded_packages[package_name] = self._loaded_packages[package_name] or {}
 
 			table.insert(self._loaded_packages[package_name], load_id)

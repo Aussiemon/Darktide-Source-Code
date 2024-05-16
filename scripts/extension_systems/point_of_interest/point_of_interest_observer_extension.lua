@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/point_of_interest/point_of_interest_observer_extension.lua
+
 local PointOfInterestObserverExtension = class("PointOfInterestObserverExtension")
 
 PointOfInterestObserverExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	local view_angle = extension_init_data.view_angle or math.pi / 2
+
 	self._view_half_angle = view_angle * 0.5
 	self._last_lookat_trigger = -math.huge
 	self._first_person_component = nil
@@ -9,6 +12,7 @@ end
 
 PointOfInterestObserverExtension.extensions_ready = function (self, world, unit)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._first_person_component = unit_data_extension:read_component("first_person")
 end
 

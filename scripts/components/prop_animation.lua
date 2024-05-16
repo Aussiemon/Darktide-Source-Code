@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_animation.lua
+
 local PropAnimation = component("PropAnimation")
 
 PropAnimation.init = function (self, unit)
@@ -41,21 +43,21 @@ end
 
 PropAnimation.component_data = {
 	state_machine_override = {
-		ui_type = "resource",
+		filter = "state_machine",
 		preview = false,
-		value = "",
 		ui_name = "State Machine Override",
-		filter = "state_machine"
+		ui_type = "resource",
+		value = "",
 	},
 	animation_variables = {
-		ui_type = "text_box_array",
+		category = "Animation Variables",
 		size = 0,
 		ui_name = "Animation Variables",
-		category = "Animation Variables"
+		ui_type = "text_box_array",
 	},
 	extensions = {
-		"PropAnimationExtension"
-	}
+		"PropAnimationExtension",
+	},
 }
 
 return PropAnimation

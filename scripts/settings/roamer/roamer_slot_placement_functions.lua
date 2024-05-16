@@ -1,7 +1,8 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_slot_placement_functions.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local roamer_slot_placement_functions = {}
-local ABOVE = 2
-local BELOW = 3
+local ABOVE, BELOW = 2, 3
 local TWO_PI = math.two_pi
 
 roamer_slot_placement_functions.circle_placement = function (nav_world, spawn_position_boxed, roamer_placement_settings, traverse_logic, roamer_pacing)
@@ -20,8 +21,9 @@ roamer_slot_placement_functions.circle_placement = function (nav_world, spawn_po
 		if position_on_navmesh then
 			local roamer_slot = {
 				position = Vector3Box(position_on_navmesh),
-				rotation = QuaternionBox(Quaternion.look(-random_direction))
+				rotation = QuaternionBox(Quaternion.look(-random_direction)),
 			}
+
 			roamer_slots[#roamer_slots + 1] = roamer_slot
 		end
 
@@ -30,6 +32,7 @@ roamer_slot_placement_functions.circle_placement = function (nav_world, spawn_po
 
 	for i = 1, num_slots do
 		current_radians = current_radians + radians_per_roamer_slot
+
 		local direction = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
 		local position = spawn_position + direction * position_offset
 		local position_on_navmesh = NavQueries.position_on_mesh(nav_world, position, ABOVE, BELOW, traverse_logic)
@@ -37,8 +40,9 @@ roamer_slot_placement_functions.circle_placement = function (nav_world, spawn_po
 		if position_on_navmesh then
 			local roamer_slot = {
 				position = Vector3Box(position_on_navmesh),
-				rotation = QuaternionBox(Quaternion.look(-direction))
+				rotation = QuaternionBox(Quaternion.look(-direction)),
 			}
+
 			roamer_slots[#roamer_slots + 1] = roamer_slot
 		end
 	end
@@ -59,9 +63,9 @@ roamer_slot_placement_functions.random_circle_placement = function (nav_world, s
 
 	for i = 1, num_slots do
 		current_radians = current_radians + radians_per_roamer_slot
+
 		local dir = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
-		local min_range = position_offset_range[1]
-		local max_range = position_offset_range[2]
+		local min_range, max_range = position_offset_range[1], position_offset_range[2]
 
 		for j = 1, max_tries do
 			local position_offset = roamer_pacing:_random(min_range, max_range)
@@ -74,8 +78,9 @@ roamer_slot_placement_functions.random_circle_placement = function (nav_world, s
 				local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 				local roamer_slot = {
 					position = Vector3Box(position_on_navmesh),
-					rotation = QuaternionBox(Quaternion.look(random_direction))
+					rotation = QuaternionBox(Quaternion.look(random_direction)),
 				}
+
 				roamer_slots[#roamer_slots + 1] = roamer_slot
 
 				break
@@ -90,8 +95,7 @@ roamer_slot_placement_functions.flood_fill = function (nav_world, spawn_position
 	local roamer_slots = {}
 	local flood_fill_positions = {}
 	local num_slots = roamer_placement_settings.num_slots
-	local below = 2
-	local above = 2
+	local below, above = 2, 2
 	local num_positions = GwNavQueries.flood_fill_from_position(nav_world, spawn_position_boxed:unbox(), above, below, num_slots, flood_fill_positions, traverse_logic)
 
 	for i = 1, num_positions do
@@ -100,8 +104,9 @@ roamer_slot_placement_functions.flood_fill = function (nav_world, spawn_position
 		local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 		local roamer_slot = {
 			position = Vector3Box(position),
-			rotation = QuaternionBox(Quaternion.look(random_direction))
+			rotation = QuaternionBox(Quaternion.look(random_direction)),
 		}
+
 		roamer_slots[#roamer_slots + 1] = roamer_slot
 	end
 

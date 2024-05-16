@@ -1,19 +1,27 @@
+﻿-- chunkname: @scripts/extension_systems/talent/player_unit_talent_extension.lua
+
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local PlayerUnitTalentExtension = class("PlayerUnitTalentExtension")
 
 PlayerUnitTalentExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
+
 	local player = extension_init_data.player
+
 	self._player = player
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
+
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
+
 	self._first_person_unit = first_person_unit
 	self._is_local_unit = extension_init_data.is_local_unit
+
 	local archetype = extension_init_data.archetype
 	local talents = extension_init_data.talents
+
 	self._archetype = archetype
 	self._talents = talents
 	self._active_special_rules = {}
@@ -31,6 +39,7 @@ PlayerUnitTalentExtension._init_components = function (self)
 	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 	local warp_charge_component = unit_data_extension:write_component("warp_charge")
 	local talent_resource_component = unit_data_extension:write_component("talent_resource")
+
 	warp_charge_component.state = "idle"
 	warp_charge_component.last_charge_at_t = 0
 	warp_charge_component.remove_at_t = 0
@@ -101,21 +110,18 @@ local class_loadout = {
 	passives = {},
 	coherency = {},
 	special_rules = {},
-	buff_template_tiers = {}
+	buff_template_tiers = {},
 }
 
 PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, fixed_t)
 	local ability_extension = self._ability_extension
 	local buff_extension = self._buff_extension
-	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers = nil
+	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers
 	local game_mode_manager = Managers.state.game_mode
 	local game_mode_settings = game_mode_manager:settings()
 
 	if game_mode_manager:talents_disabled() then
-		buff_template_tiers = {}
-		special_rules = {}
-		coherency_buffs = {}
-		passives = {}
+		passives, coherency_buffs, special_rules, buff_template_tiers = {}, {}, {}, {}
 	else
 		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 		local profile = self._player:profile()
@@ -161,9 +167,10 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 
 	for _, buff_template_name in pairs(passives) do
 		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, fixed_t, "from_talent", true)
+
 		passive_buff_indices[#passive_buff_indices + 1] = {
 			local_index = local_index,
-			component_index = component_index
+			component_index = component_index,
 		}
 	end
 

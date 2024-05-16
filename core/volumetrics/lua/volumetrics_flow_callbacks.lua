@@ -1,3 +1,5 @@
+﻿-- chunkname: @core/volumetrics/lua/volumetrics_flow_callbacks.lua
+
 VolumetricsFlowCallbacks = VolumetricsFlowCallbacks or {}
 
 VolumetricsFlowCallbacks.register_fog_volume = function (params)

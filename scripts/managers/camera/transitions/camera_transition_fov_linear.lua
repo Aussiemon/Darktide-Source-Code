@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/transitions/camera_transition_fov_linear.lua
+
 local CameraTransitionBase = require("scripts/managers/camera/transitions/camera_transition_base")
 local CameraTransitionFOVLinear = class("CameraTransitionFOVLinear", "CameraTransitionBase")
 
@@ -13,7 +15,7 @@ CameraTransitionFOVLinear.update = function (self, dt, fov, update_time)
 	local duration = self._duration
 	local speed = self._speed
 	local fov_diff = node_2_fov - node_1_fov
-	local fov_delta = nil
+	local fov_delta
 
 	if duration then
 		fov_delta = fov_diff / duration

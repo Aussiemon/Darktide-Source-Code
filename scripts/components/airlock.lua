@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/airlock.lua
+
 local Airlock = component("Airlock")
 
 Airlock.init = function (self, unit, is_server)
@@ -7,6 +9,7 @@ Airlock.init = function (self, unit, is_server)
 
 	local side_system = Managers.state.extension:system("side_system")
 	local side_name = side_system:get_default_player_side_name()
+
 	self._side = side_system:get_side_from_name(side_name)
 	self._unit_untargetable_id = Script.new_map(4)
 	self._perception_system = Managers.state.extension:system("perception_system")
@@ -45,13 +48,13 @@ Airlock.start_lockdown = function (self)
 		return
 	end
 
-	local perception_system = self._perception_system
-	local unit_untargetable_id = self._unit_untargetable_id
+	local perception_system, unit_untargetable_id = self._perception_system, self._unit_untargetable_id
 	local side = self._side
 	local valid_player_units = side.valid_player_units
 
 	for i = 1, #valid_player_units do
 		local player_unit = valid_player_units[i]
+
 		unit_untargetable_id[player_unit] = perception_system:set_untargetable(self, player_unit)
 	end
 
@@ -78,6 +81,7 @@ end
 
 Airlock._on_player_unit_spawned = function (self, player)
 	local player_unit = player.player_unit
+
 	self._unit_untargetable_id[player_unit] = self._perception_system:set_untargetable(self, player_unit)
 end
 
@@ -86,8 +90,7 @@ Airlock.stop_lockdown = function (self)
 		return
 	end
 
-	local perception_system = self._perception_system
-	local unit_untargetable_id = self._unit_untargetable_id
+	local perception_system, unit_untargetable_id = self._perception_system, self._unit_untargetable_id
 
 	for unit, id in pairs(unit_untargetable_id) do
 		if ALIVE[unit] then
@@ -104,13 +107,13 @@ Airlock.component_data = {
 	inputs = {
 		start_lockdown = {
 			accessibility = "private",
-			type = "event"
+			type = "event",
 		},
 		stop_lockdown = {
 			accessibility = "private",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return Airlock

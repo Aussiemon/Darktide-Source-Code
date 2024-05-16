@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/veteran_stealth_bonuses_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local VeteranStealthBonusesBuff = class("VeteranStealthBonusesBuff", "Buff")
@@ -20,7 +22,7 @@ VeteranStealthBonusesBuff.update = function (self, dt, t, portable_random)
 			self._stop_t = t + self._template.duration
 			self._in_invisibility = false
 		end
-	elseif not self._finished and self._stop_t < t then
+	elseif not self._finished and t > self._stop_t then
 		self._finished = true
 	end
 end

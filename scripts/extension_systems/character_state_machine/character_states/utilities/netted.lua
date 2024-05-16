@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/netted.lua
+
 local CharacterStateNettedSettings = require("scripts/settings/character_state/character_state_netted_settings")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local MasterItems = require("scripts/backend/master_items")
@@ -9,8 +11,7 @@ Netted.enter = function (unit, animation_extension, fx_extension, breed, attacke
 	Interrupt.ability_and_action(t, unit, "netted", nil)
 	PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
 
-	local cached_items = MasterItems.get_cached()
-	local breed_name = breed.name
+	local cached_items, breed_name = MasterItems.get_cached(), breed.name
 	local target_breed_items = attacker_breed.target_breed_items
 	local net_item_name = target_breed_items.netted[breed_name]
 	local net_item = cached_items[net_item_name]
@@ -37,6 +38,7 @@ Netted.exit = function (unit, unit_data_extension, t)
 	PlayerUnitVisualLoadout.unequip_item_from_slot(unit, slot_name, t)
 
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.target_drag_position = Vector3.zero()
@@ -60,7 +62,9 @@ Netted.calculate_drag_position = function (locomotion_component, navigation_exte
 	local direction = Vector3.normalize(unit_position - netting_unit_position)
 	local FRONTAL_OFFSET = 2
 	local sample_position = netting_unit_position + direction * FRONTAL_OFFSET
+
 	sample_position.z = unit_position.z
+
 	local traverse_logic = navigation_extension:traverse_logic()
 	local _, end_position = GwNavQueries.raycast(nav_world, latest_position_on_nav_mesh, sample_position, traverse_logic)
 

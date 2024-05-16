@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/dialogue.lua
+
 local Dialogue = component("Dialogue")
 
 Dialogue.init = function (self, unit)
@@ -6,11 +8,13 @@ Dialogue.init = function (self, unit)
 	local player_selected_voice = self:get_data(unit, "player_selected_voice")
 	local faction_memory_name = self:get_data(unit, "faction_memory_name")
 	local enabled = self:get_data(unit, "enabled")
+
 	self._dialogue_class = dialogue_class
 	self._dialogue_profile = dialogue_profile
 	self._player_selected_voice = player_selected_voice
 	self._faction_memory_name = faction_memory_name
 	self._enabled = enabled
+
 	local dialogue_extension = ScriptUnit.fetch_component_extension(unit, "dialogue_system")
 
 	if dialogue_extension then
@@ -64,10 +68,10 @@ end
 
 Dialogue.component_data = {
 	dialogue_class = {
-		value = "none",
-		ui_type = "combo_box",
 		category = "Dialogue",
 		ui_name = "Class",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"None",
 			"Archive Servitor",
@@ -99,7 +103,7 @@ Dialogue.component_data = {
 			"Barber",
 			"Captain Twin Female",
 			"Captain Twin Male",
-			"Reject NPC"
+			"Reject NPC",
 		},
 		options_values = {
 			"none",
@@ -132,14 +136,14 @@ Dialogue.component_data = {
 			"barber",
 			"captain_twin_female",
 			"captain_twin_male",
-			"reject_npc"
-		}
+			"reject_npc",
+		},
 	},
 	dialogue_profile = {
-		value = "none",
-		ui_type = "combo_box",
 		category = "Dialogue",
 		ui_name = "Character Voice",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"None",
 			"Archive Servitor A",
@@ -204,7 +208,7 @@ Dialogue.component_data = {
 			"Captain Twin Female",
 			"Captain Twin Male",
 			"Reject NPC",
-			"Reject NPC Servitor"
+			"Reject NPC Servitor",
 		},
 		options_values = {
 			"none",
@@ -270,41 +274,41 @@ Dialogue.component_data = {
 			"captain_twin_female_a",
 			"captain_twin_male_a",
 			"reject_npc_a",
-			"reject_npc_servitor_a"
-		}
+			"reject_npc_servitor_a",
+		},
 	},
 	faction_memory_name = {
-		value = "none",
-		ui_type = "combo_box",
 		category = "Dialogue",
 		ui_name = "Dialogue Faction Name",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"None",
 			"Enemy",
 			"NPC",
-			"Player"
+			"Player",
 		},
 		options_values = {
 			"none",
 			"enemy",
 			"npc",
-			"player"
-		}
+			"player",
+		},
 	},
 	player_selected_voice = {
+		category = "Dialogue",
+		ui_name = "Use Local Player Voice",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Use Local Player Voice",
-		category = "Dialogue"
 	},
 	enabled = {
+		ui_name = "Enabled",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Enabled"
 	},
 	extensions = {
-		"DialogueExtension"
-	}
+		"DialogueExtension",
+	},
 }
 
 return Dialogue

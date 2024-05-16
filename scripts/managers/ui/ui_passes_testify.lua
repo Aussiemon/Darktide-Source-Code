@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/managers/ui/ui_passes_testify.lua
+
 local function _center_position(position, size)
 	local center_x = position[1] + size[1] * 0.5
 	local center_y = position[2] + size[2] * 0.5
 
 	return {
 		x = center_x,
-		y = center_y
+		y = center_y,
 	}
 end
 
@@ -46,7 +48,7 @@ local UIPassesTestify = {
 		local size = pass_data.size
 
 		return _center_position(position, size)
-	end
+	end,
 }
 
 return UIPassesTestify

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/trigger.lua
+
 local Trigger = component("Trigger")
 
 Trigger.init = function (self, unit)
@@ -23,7 +25,7 @@ Trigger.init = function (self, unit)
 			action_location_name_full = action_location_name_full,
 			action_location_name_short = action_location_name_short,
 			action_player_side = action_player_side,
-			action_machine_target = action_on_machine
+			action_machine_target = action_on_machine,
 		}
 
 		trigger_extension:setup_from_component(trigger_condition, condition_evaluates_bots, trigger_action, action_parameters, only_once, start_active, volume_type, target_extension_name)
@@ -53,19 +55,16 @@ Trigger.editor_validate = function (self, unit)
 		return true, ""
 	end
 
-	local success = true
-	local error_message = ""
+	local success, error_message = true, ""
 
 	if not Unit.has_volume(unit, "c_volume") then
-		error_message = "Missing volume 'c_volume'\n"
-		success = false
+		success, error_message = false, "Missing volume 'c_volume'\n"
 	end
 
 	local trigger_condition = self:get_data(unit, "trigger_condition")
 
 	if trigger_condition == "all_players_inside_no_enemies" and not Unit.has_volume(unit, "enemy_check_volume") then
-		error_message = error_message .. "Missing volume 'enemy_check_volume' (used by 'all_players_inside_no_enemies')"
-		success = false
+		success, error_message = false, error_message .. "Missing volume 'enemy_check_volume' (used by 'all_players_inside_no_enemies')"
 	end
 
 	return success, error_message
@@ -97,15 +96,15 @@ end
 
 Trigger.component_data = {
 	start_active = {
+		ui_name = "Start Active",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Start Active"
 	},
 	trigger_condition = {
-		ui_type = "combo_box",
 		category = "Condition",
-		value = "at_least_one_player_inside",
 		ui_name = "Trigger Condition",
+		ui_type = "combo_box",
+		value = "at_least_one_player_inside",
 		options_keys = {
 			"all_alive_players_inside",
 			"all_players_inside",
@@ -113,7 +112,7 @@ Trigger.component_data = {
 			"all_required_players_in_end_zone",
 			"at_least_one_player_inside",
 			"only_enter",
-			"luggable_inside"
+			"luggable_inside",
 		},
 		options_values = {
 			"all_alive_players_inside",
@@ -122,61 +121,61 @@ Trigger.component_data = {
 			"all_required_players_in_end_zone",
 			"at_least_one_player_inside",
 			"only_enter",
-			"luggable_inside"
-		}
+			"luggable_inside",
+		},
 	},
 	only_once = {
-		ui_type = "combo_box",
 		category = "Condition",
-		value = "none",
 		ui_name = " Condition Behaviour",
+		ui_type = "combo_box",
+		value = "none",
 		options_keys = {
 			"false",
 			"only_once_per_unit",
-			"only_once_for_all_units"
+			"only_once_for_all_units",
 		},
 		options_values = {
 			"none",
 			"only_once_per_unit",
-			"only_once_for_all_units"
-		}
+			"only_once_for_all_units",
+		},
 	},
 	condition_evaluates_bots = {
+		category = "Condition",
+		ui_name = "Include Bots",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Include Bots",
-		category = "Condition"
 	},
 	trigger_action = {
-		ui_type = "combo_box",
 		category = "Action",
-		value = "send_flow",
 		ui_name = "Action on Trigger",
+		ui_type = "combo_box",
+		value = "send_flow",
 		options_keys = {
 			"send_flow",
 			"set_location",
 			"safe_volume",
-			"vector_field"
+			"vector_field",
 		},
 		options_values = {
 			"send_flow",
 			"set_location",
 			"safe_volume",
-			"vector_field"
-		}
+			"vector_field",
+		},
 	},
 	action_target = {
-		ui_type = "combo_box",
 		category = "Action",
-		value = "player_side",
 		ui_name = "Action Target",
+		ui_type = "combo_box",
+		value = "player_side",
 		options_keys = {
 			"none",
 			"player_side",
 			"entering_unit",
 			"exiting_unit",
 			"entering_and_exiting_unit",
-			"units_in_volume"
+			"units_in_volume",
 		},
 		options_values = {
 			"none",
@@ -184,53 +183,53 @@ Trigger.component_data = {
 			"entering_unit",
 			"exiting_unit",
 			"entering_and_exiting_unit",
-			"units_in_volume"
-		}
+			"units_in_volume",
+		},
 	},
 	action_on_machine = {
-		ui_type = "combo_box",
 		category = "Action",
-		value = "server_and_client",
 		ui_name = "Where to Activate",
+		ui_type = "combo_box",
+		value = "server_and_client",
 		options_keys = {
 			"server",
 			"client",
-			"server_and_client"
+			"server_and_client",
 		},
 		options_values = {
 			"server",
 			"client",
-			"server_and_client"
-		}
+			"server_and_client",
+		},
 	},
 	action_location_name = {
+		category = "Action",
+		ui_name = "Location Name",
 		ui_type = "text_box",
 		value = "loc_location_name",
-		ui_name = "Location Name",
-		category = "Action"
 	},
 	action_location_name_full = {
+		category = "Action",
+		ui_name = "Location Name (Full)",
 		ui_type = "text_box",
 		value = "loc_location_name_full",
-		ui_name = "Location Name (Full)",
-		category = "Action"
 	},
 	action_location_name_short = {
+		category = "Action",
+		ui_name = "Location Name (Short)",
 		ui_type = "text_box",
 		value = "loc_location_name_short",
-		ui_name = "Location Name (Short)",
-		category = "Action"
 	},
 	action_player_side = {
+		category = "Action",
+		ui_name = "Player Side",
 		ui_type = "text_box",
 		value = "heroes",
-		ui_name = "Player Side",
-		category = "Action"
 	},
 	volume_type = {
-		value = "content/volume_types/player_trigger",
-		ui_type = "combo_box",
 		ui_name = "Volume Type",
+		ui_type = "combo_box",
+		value = "content/volume_types/player_trigger",
 		options_keys = {
 			"content/volume_types/minion_instakill_no_cost",
 			"content/volume_types/nav_tag_volumes/minion_instakill_high_cost",
@@ -239,7 +238,7 @@ Trigger.component_data = {
 			"content/volume_types/player_instakill",
 			"content/volume_types/level_prop_trigger",
 			"content/volume_types/end_zone",
-			"content/volume_types/safe_volume"
+			"content/volume_types/safe_volume",
 		},
 		options_values = {
 			"content/volume_types/minion_instakill_no_cost",
@@ -249,41 +248,41 @@ Trigger.component_data = {
 			"content/volume_types/player_instakill",
 			"content/volume_types/level_prop_trigger",
 			"content/volume_types/end_zone",
-			"content/volume_types/safe_volume"
-		}
+			"content/volume_types/safe_volume",
+		},
 	},
 	target_extension_name = {
-		value = "PlayerVolumeEventExtension",
-		ui_type = "combo_box",
 		ui_name = "Target Extension Name",
+		ui_type = "combo_box",
+		value = "PlayerVolumeEventExtension",
 		options_keys = {
 			"PlayerVolumeEventExtension",
 			"MinionVolumeEventExtension",
-			"TriggerVolumeEventExtension"
+			"TriggerVolumeEventExtension",
 		},
 		options_values = {
 			"PlayerVolumeEventExtension",
 			"MinionVolumeEventExtension",
-			"TriggerVolumeEventExtension"
-		}
+			"TriggerVolumeEventExtension",
+		},
 	},
 	inputs = {
 		activate = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		deactivate = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		reset = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
-		"TriggerExtension"
-	}
+		"TriggerExtension",
+	},
 }
 
 return Trigger

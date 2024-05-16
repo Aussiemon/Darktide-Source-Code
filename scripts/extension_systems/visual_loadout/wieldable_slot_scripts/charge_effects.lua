@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local ChargeEffects = class("ChargeEffects")
 
@@ -5,11 +7,15 @@ ChargeEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._fx_sources = fx_sources
+
 	local owner_unit = context.owner_unit
+
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	self._weapon_template = weapon_template
 	self._weapon_template_charge_effects = weapon_template.charge_effects
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	self._is_charge_done_sound_played = true
@@ -132,11 +138,11 @@ ChargeEffects._play_charged_done_effects = function (self)
 
 	if charge_done_source_name and not self._is_charge_done_sound_played then
 		local action_module_charge_component = self._action_module_charge_component
-		local charge_done = action_module_charge_component.max_charge <= action_module_charge_component.charge_level
+		local charge_done = action_module_charge_component.charge_level >= action_module_charge_component.max_charge
 
 		if charge_done then
 			local sync_to_clients = false
-			local external_properties = nil
+			local external_properties
 			local charge_done_source = fx_sources[charge_done_source_name]
 			local charge_done_sound_alias = charge_effects.charge_done_sound_alias
 
@@ -176,8 +182,7 @@ ChargeEffects._update_sfx_parameter = function (self, t)
 
 	local fx_source_name = charge_effects.sfx_source_name
 	local source_name = self._fx_sources[fx_source_name]
-	local wwise_world = self._wwise_world
-	local source = self._fx_extension:sound_source(source_name)
+	local wwise_world, source = self._wwise_world, self._fx_extension:sound_source(source_name)
 	local charge_level = self:_charge_level(t)
 
 	WwiseWorld.set_source_parameter(wwise_world, source, charge_sfx_parameter, charge_level)

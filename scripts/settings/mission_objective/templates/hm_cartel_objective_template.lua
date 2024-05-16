@@ -1,100 +1,102 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/hm_cartel_objective_template.lua
+
 local mission_objective_templates = {
 	hm_cartel = {
 		main_objective_type = "decode_objective",
 		objectives = {
 			objective_hm_cartel_enter_slum = {
 				description = "loc_objective_hm_cartel_enter_slum_desc",
+				header = "loc_objective_hm_cartel_enter_slum_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_enter_slum_header"
 			},
 			objective_hm_cartel_find_bazaar = {
 				description = "loc_objective_hm_cartel_find_bazaar_desc",
+				header = "loc_objective_hm_cartel_find_bazaar_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_find_bazaar_header"
 			},
 			objective_hm_cartel_locate_scanner = {
 				description = "loc_objective_hm_cartel_locate_scanner_desc",
-				use_music_event = "None",
+				header = "loc_objective_hm_cartel_locate_scanner_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_locate_scanner_header"
+				use_music_event = "None",
 			},
 			objective_hm_cartel_scan_bodies = {
-				use_music_event = "scanning_event",
 				description = "loc_objective_hm_cartel_scan_bodies_desc",
-				mission_giver_voice_profile = "tech_priest_a",
-				header = "loc_objective_hm_cartel_scan_bodies_header",
-				show_progression_popup_on_update = false,
 				event_type = "mid_event",
-				mission_objective_type = "scanning"
+				header = "loc_objective_hm_cartel_scan_bodies_header",
+				mission_giver_voice_profile = "tech_priest_a",
+				mission_objective_type = "scanning",
+				show_progression_popup_on_update = false,
+				use_music_event = "scanning_event",
 			},
 			objective_hm_cartel_wait_elevator = {
-				use_music_event = "scanning_event",
 				description = "loc_objective_hm_cartel_wait_elevator_desc",
-				progress_bar = true,
-				header = "loc_objective_hm_cartel_wait_elevator_header",
-				event_type = "mid_event",
 				duration = 45,
-				mission_objective_type = "timed"
+				event_type = "mid_event",
+				header = "loc_objective_hm_cartel_wait_elevator_header",
+				mission_objective_type = "timed",
+				progress_bar = true,
+				use_music_event = "scanning_event",
 			},
 			objective_hm_cartel_elevator = {
 				description = "loc_objective_hm_cartel_elevator_desc",
+				header = "loc_objective_hm_cartel_elevator_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_elevator_header"
 			},
 			objective_hm_cartel_elevator_ride = {
 				description = "loc_objective_hm_cartel_elevator_ride_desc",
+				header = "loc_objective_hm_cartel_elevator_ride_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_elevator_ride_header"
 			},
 			objective_hm_cartel_find_datacenter = {
 				description = "loc_objective_hm_cartel_find_datacenter_desc",
+				header = "loc_objective_hm_cartel_find_datacenter_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_find_datacenter_header"
 			},
 			objective_hm_cartel_interact_deactivate_first_protocol = {
 				description = "loc_objective_hm_cartel_interact_deactivate_first_protocol_desc",
-				turn_off_backfill = true,
+				header = "loc_objective_hm_cartel_interact_deactivate_first_protocol_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_interact_deactivate_first_protocol_header"
+				turn_off_backfill = true,
 			},
 			objective_hm_cartel_deactivate_second_protocol = {
 				description = "loc_objective_hm_cartel_deactivate_second_protocol_desc",
-				use_music_event = "hacking_event",
-				header = "loc_objective_hm_cartel_deactivate_second_protocol_header",
 				event_type = "end_event",
+				header = "loc_objective_hm_cartel_deactivate_second_protocol_header",
+				mission_objective_type = "decode",
 				progress_bar = true,
-				mission_objective_type = "decode"
+				use_music_event = "hacking_event",
 			},
 			objective_hm_cartel_first_interact_deactivate_second_protocol = {
-				use_music_event = "hacking_event",
 				description = "loc_objective_hm_cartel_first_interact_deactivate_second_protocol_desc",
-				header = "loc_objective_hm_cartel_first_interact_deactivate_second_protocol_header",
 				event_type = "end_event",
-				mission_objective_type = "goal"
+				header = "loc_objective_hm_cartel_first_interact_deactivate_second_protocol_header",
+				mission_objective_type = "goal",
+				use_music_event = "hacking_event",
 			},
 			objective_hm_cartel_second_interact_deactivate_second_protocol = {
-				use_music_event = "hacking_event",
 				description = "loc_objective_hm_cartel_second_interact_deactivate_second_protocol_desc",
-				header = "loc_objective_hm_cartel_second_interact_deactivate_second_protocol_header",
 				event_type = "end_event",
-				mission_objective_type = "goal"
+				header = "loc_objective_hm_cartel_second_interact_deactivate_second_protocol_header",
+				mission_objective_type = "goal",
+				use_music_event = "hacking_event",
 			},
 			objective_hm_cartel_plant_misinformation_data = {
 				description = "loc_objective_hm_cartel_plant_misinformation_data_desc",
-				use_music_event = "hacking_event",
-				header = "loc_objective_hm_cartel_plant_misinformation_data_header",
 				event_type = "end_event",
+				header = "loc_objective_hm_cartel_plant_misinformation_data_header",
+				mission_objective_type = "decode",
 				progress_bar = true,
-				mission_objective_type = "decode"
+				use_music_event = "hacking_event",
 			},
 			objective_hm_cartel_extract = {
 				description = "loc_objective_hm_cartel_extract_desc",
-				use_music_event = "escape_event",
+				header = "loc_objective_hm_cartel_extract_header",
 				mission_objective_type = "goal",
-				header = "loc_objective_hm_cartel_extract_header"
-			}
-		}
-	}
+				use_music_event = "escape_event",
+			},
+		},
+	},
 }
 
 return mission_objective_templates

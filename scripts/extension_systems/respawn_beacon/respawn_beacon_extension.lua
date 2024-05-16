@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/respawn_beacon/respawn_beacon_extension.lua
+
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -7,7 +9,7 @@ local RespawnBeaconGuardSettings = require("scripts/extension_systems/respawn_be
 local RespawnBeaconQueries = require("scripts/extension_systems/respawn_beacon/utilities/respawn_beacon_queries")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RespawnBeaconExtension = class("RespawnBeaconExtension")
-local _player_max_radius_height = nil
+local _player_max_radius_height
 
 RespawnBeaconExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._physics_world = extension_init_context.physics_world
@@ -50,6 +52,7 @@ RespawnBeaconExtension.update = function (self, unit, dt, t, context)
 			for j = 1, #HOGTIED_PLAYERS do
 				local hogtied_player = HOGTIED_PLAYERS[j]
 				local hogtied_player_unit = hogtied_player.player_unit
+
 				is_still_hogtied = occupied_unit == hogtied_player_unit
 
 				if is_still_hogtied then
@@ -66,14 +69,16 @@ end
 
 RespawnBeaconExtension.setup_from_component = function (self, side, debug_ignore_check_distances)
 	self._side = side
+
 	local max_player_radius, max_player_height = _player_max_radius_height()
 	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
 	local num_valid_spawn_positions = #valid_spawn_positions
+
 	self._valid_spawn_positions = {}
 
 	for i = 1, #valid_spawn_positions do
 		self._valid_spawn_positions[#self._valid_spawn_positions + 1] = {
-			position = Vector3Box(valid_spawn_positions[i])
+			position = Vector3Box(valid_spawn_positions[i]),
 		}
 	end
 end
@@ -100,7 +105,7 @@ RespawnBeaconExtension.respawn_players = function (self)
 				if spawn_position then
 					self:_try_spawn_guards(spawn_position, beacon_unit, valid_spawn_positions)
 
-					local spawn_parent = nil
+					local spawn_parent
 					local spawn_rotation = Quaternion.look(beacon_position - spawn_position, Vector3.up())
 
 					player_unit_spawn_manager:spawn_player(player, spawn_position, spawn_rotation, spawn_parent, force_spawn, side, nil, "hogtied", is_respawn)
@@ -156,13 +161,13 @@ end
 RespawnBeaconExtension.best_respawn_positions = function (self)
 	local max_player_radius, max_player_height = _player_max_radius_height()
 	local valid_spawn_positions, navmesh_positions, fitting_positions, spawn_volume_positions = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
+
 	valid_spawn_positions = self._valid_spawn_positions
 
 	return valid_spawn_positions, navmesh_positions, fitting_positions, spawn_volume_positions
 end
 
-local NAV_ABOVE = 1
-local NAV_BELOW = 1
+local NAV_ABOVE, NAV_BELOW = 1, 1
 local TOO_CLOSE_TO_SPAWN_POSITION_DISTANCE = 1
 
 RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beacon_unit, valid_spawn_positions)
@@ -207,6 +212,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 
 	for i = 1, num_guards do
 		current_degree = current_degree + degree_per_direction
+
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = -Vector3(math.sin(radians), math.cos(radians), 0)
 		local rotation = Quaternion.look(direction)
@@ -231,6 +237,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 			if not too_close_to_spawn_position then
 				local breed_name = faction_breeds[math.random(1, #faction_breeds)]
 				local guard_unit = minion_spawn_manager:spawn_minion(breed_name, navmesh_position, Quaternion.look(wanted_direction), settings.side_id)
+
 				self._guards[#self._guards + 1] = guard_unit
 				has_spawned_guards = true
 			end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/terror_event/terror_event_templates/terror_events_lm_scavenge.lua
+
 local TerrorEventQueries = require("scripts/managers/terror_event/utilities/terror_event_queries")
 local template = {
 	random_events = {
@@ -7,7 +9,7 @@ local template = {
 			"event_hacking_scavenge_b",
 			1,
 			"event_hacking_scavenge_c",
-			1
+			1,
 		},
 		lm_scavenge_hacking_wave_2 = {
 			"event_hacking_scavenge_d",
@@ -15,7 +17,7 @@ local template = {
 			"event_hacking_scavenge_e",
 			1,
 			"event_hacking_scavenge_f",
-			1
+			1,
 		},
 		lm_scavenge_luggable_wave_1 = {
 			"event_luggable_scavenge_a",
@@ -29,39 +31,39 @@ local template = {
 			"event_luggable_scavenge_e",
 			1,
 			"event_luggable_scavenge_f",
-			1
-		}
+			1,
+		},
 	},
 	events = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false
-			}
+				enabled = false,
+			},
 		},
 		event_pacing_on = {
 			{
 				"set_pacing_enabled",
-				enabled = true
-			}
+				enabled = true,
+			},
 		},
 		event_hordes_off = {
 			{
 				"control_pacing_spawns",
 				enabled = false,
 				spawn_types = {
-					"hordes"
-				}
-			}
+					"hordes",
+				},
+			},
 		},
 		event_hordes_on = {
 			{
 				"control_pacing_spawns",
 				enabled = true,
 				spawn_types = {
-					"hordes"
-				}
-			}
+					"hordes",
+				},
+			},
 		},
 		event_only_roamers_specials_enabled = {
 			{
@@ -69,9 +71,9 @@ local template = {
 				enabled = false,
 				spawn_types = {
 					"hordes",
-					"trickle_hordes"
-				}
-			}
+					"trickle_hordes",
+				},
+			},
 		},
 		event_only_specials_enabled = {
 			{
@@ -80,17 +82,17 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes"
-				}
-			}
+					"trickle_hordes",
+				},
+			},
 		},
 		event_pacing_on_stop_trickle = {
 			{
-				"stop_terror_trickle"
+				"stop_terror_trickle",
 			},
 			{
 				"set_pacing_enabled",
-				enabled = true
+				enabled = true,
 			},
 			{
 				"control_pacing_spawns",
@@ -100,26 +102,26 @@ local template = {
 					"roamers",
 					"trickle_hordes",
 					"specials",
-					"monsters"
-				}
-			}
+					"monsters",
+				},
+			},
 		},
 		event_elevator_scavenge = {
 			{
 				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "scavenge_port_elevator_1",
 				limit_spawners = 3,
 				points = 16,
+				spawner_group = "scavenge_port_elevator_1",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -127,15 +129,15 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"debug_print",
+				duration = 30,
 				text = "event_elevator_scavenge",
-				duration = 30
-			}
+			},
 		},
 		event_hacking_scavenge_a = {
 			{
@@ -143,24 +145,24 @@ local template = {
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
-				end
+				end,
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_security_office_west",
 				limit_spawners = 3,
 				points = 30,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_security_office_west",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -169,32 +171,32 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_security_office_north",
 				max_breed_amount = 1,
 				points = 8,
+				spawner_group = "spawner_security_office_north",
 				breed_tags = {
 					{
 						"special",
-						"sniper"
-					}
-				}
+						"sniper",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_security_office_far",
-				template_name = "standard_melee"
-			}
+				template_name = "standard_melee",
+			},
 		},
 		event_hacking_scavenge_b = {
 			{
@@ -202,43 +204,43 @@ local template = {
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
-				end
+				end,
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_security_office_north",
 				limit_spawners = 3,
 				points = 16,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_security_office_north",
 				breed_tags = {
 					{
 						"far",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_security_office_north",
 				limit_spawners = 3,
 				points = 8,
+				spawner_group = "spawner_security_office_north",
 				breed_tags = {
 					{
 						"far",
-						"elite"
-					}
-				}
+						"elite",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_security_office_far",
-				template_name = "standard_melee"
-			}
+				template_name = "standard_melee",
+			},
 		},
 		event_hacking_scavenge_c = {
 			{
@@ -246,56 +248,56 @@ local template = {
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
-				end
+				end,
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
+				limit_spawners = 3,
+				points = 8,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_east",
-				limit_spawners = 3,
-				points = 8,
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
 				points = 8,
+				spawner_group = "spawner_security_office_east",
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
 				points = 10,
+				spawner_group = "spawner_security_office_east",
 				breed_tags = {
 					{
 						"melee",
-						"elite"
-					}
-				}
+						"elite",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -304,16 +306,16 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_security_office_close",
-				template_name = "standard_melee"
-			}
+				template_name = "standard_melee",
+			},
 		},
 		event_hacking_scavenge_d = {
 			{
@@ -321,36 +323,36 @@ local template = {
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
-				end
+				end,
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
 				points = 14,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_security_office_east",
 				breed_tags = {
 					{
 						"close",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
 				points = 8,
+				spawner_group = "spawner_security_office_east",
 				breed_tags = {
 					{
 						"close",
-						"elite"
-					}
-				}
+						"elite",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -359,32 +361,32 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_security_office_west",
 				max_breed_amount = 1,
 				points = 8,
+				spawner_group = "spawner_security_office_west",
 				breed_tags = {
 					{
 						"special",
-						"sniper"
-					}
-				}
+						"sniper",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_security_office_close",
-				template_name = "standard_melee"
-			}
+				template_name = "standard_melee",
+			},
 		},
 		event_hacking_scavenge_e = {
 			{
@@ -392,24 +394,24 @@ local template = {
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
-				end
+				end,
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_security_office_south",
 				limit_spawners = 3,
 				points = 30,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_security_office_south",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -418,13 +420,13 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"disabler"
-					}
-				}
+						"disabler",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"try_inject_special_minion",
@@ -433,16 +435,16 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_security_office_close",
-				template_name = "standard_melee"
-			}
+				template_name = "standard_melee",
+			},
 		},
 		event_hacking_scavenge_f = {
 			{
@@ -450,884 +452,884 @@ local template = {
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 15
-				end
+				end,
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
+				limit_spawners = 3,
+				points = 8,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_east",
-				limit_spawners = 3,
-				points = 8,
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
 				points = 8,
+				spawner_group = "spawner_security_office_east",
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
 				points = 10,
+				spawner_group = "spawner_security_office_east",
 				breed_tags = {
 					{
 						"melee",
-						"elite"
-					}
-				}
+						"elite",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_security_office_east",
 				max_breed_amount = 1,
 				points = 8,
+				spawner_group = "spawner_security_office_east",
 				breed_tags = {
 					{
-						"special"
-					}
-				}
+						"special",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_security_office_far",
-				template_name = "standard_melee"
-			}
+				template_name = "standard_melee",
+			},
 		},
 		lm_scavenge_luggable_wave_1 = {
 			{
 				"start_random_terror_event",
-				start_event_name = "lm_scavenge_luggable_wave_1"
-			}
+				start_event_name = "lm_scavenge_luggable_wave_1",
+			},
 		},
 		lm_scavenge_luggable_guards = {
 			{
 				"spawn_by_points",
-				passive = true,
 				limit_spawners = 9,
 				max_breed_amount = 9,
-				spawner_group = "spawner_vaults_guard_door",
+				passive = true,
 				points = 29,
+				spawner_group = "spawner_vaults_guard_door",
 				breed_tags = {
 					{
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
-			}
+				duration = 3,
+			},
 		},
 		lm_scavenge_luggable_guards_middle = {
 			{
 				"spawn_by_points",
-				passive = true,
 				limit_spawners = 3,
 				max_breed_amount = 3,
-				spawner_group = "spawner_vaults_guard_center_elite",
+				passive = true,
 				points = 15,
+				spawner_group = "spawner_vaults_guard_center_elite",
 				breed_tags = {
 					{
-						"elite"
-					}
-				}
+						"elite",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
-				passive = true,
 				limit_spawners = 6,
 				max_breed_amount = 6,
-				spawner_group = "spawner_vaults_guard_center",
+				passive = true,
 				points = 24,
+				spawner_group = "spawner_vaults_guard_center",
 				breed_tags = {
 					{
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
-			}
+				duration = 3,
+			},
 		},
 		event_luggable_scavenge_a = {
 			{
 				"delay",
-				duration = 17
+				duration = 17,
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 20
-				end
+				end,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_vaults_north",
 				limit_spawners = 3,
 				points = 25,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_vaults_north",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
-				spawner_group = "spawner_vaults_trickle",
-				proximity_spawners = true,
-				template_name = "standard_melee",
 				delay = 8,
-				limit_spawners = 2
+				limit_spawners = 2,
+				proximity_spawners = true,
+				spawner_group = "spawner_vaults_trickle",
+				template_name = "standard_melee",
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end
+				end,
 			},
 			{
 				"continue_when",
 				duration = 100,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 8
-				end
+				end,
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "lm_scavenge_luggable_wave_1"
-			}
+				start_event_name = "lm_scavenge_luggable_wave_1",
+			},
 		},
 		event_luggable_scavenge_b = {
 			{
 				"delay",
-				duration = 17
+				duration = 17,
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 20
-				end
+				end,
 			},
 			{
 				"spawn_by_points",
+				limit_spawners = 3,
+				points = 8,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_vaults_east",
-				limit_spawners = 3,
-				points = 8,
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_vaults_east",
 				limit_spawners = 3,
 				points = 8,
+				spawner_group = "spawner_vaults_east",
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_vaults_east",
 				limit_spawners = 3,
 				points = 8,
+				spawner_group = "spawner_vaults_east",
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_vaults_trickle",
 				max_breed_amount = 1,
 				points = 12,
+				spawner_group = "spawner_vaults_trickle",
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_vaults_trickle",
 				max_breed_amount = 1,
 				points = 6,
+				spawner_group = "spawner_vaults_trickle",
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
-				spawner_group = "spawner_vaults_trickle",
-				proximity_spawners = true,
-				template_name = "standard_melee",
 				delay = 8,
-				limit_spawners = 2
+				limit_spawners = 2,
+				proximity_spawners = true,
+				spawner_group = "spawner_vaults_trickle",
+				template_name = "standard_melee",
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end
+				end,
 			},
 			{
 				"continue_when",
 				duration = 100,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 8
-				end
+				end,
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "lm_scavenge_luggable_wave_1"
-			}
+				start_event_name = "lm_scavenge_luggable_wave_1",
+			},
 		},
 		event_luggable_scavenge_c = {
 			{
 				"delay",
-				duration = 17
+				duration = 17,
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 20
-				end
+				end,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_vaults_south",
 				limit_spawners = 3,
 				points = 25,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_vaults_south",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_vaults_trickle",
 				max_breed_amount = 1,
 				points = 12,
+				spawner_group = "spawner_vaults_trickle",
 				breed_tags = {
 					{
 						"special",
-						"disabler"
-					}
-				}
+						"disabler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
-				spawner_group = "spawner_vaults_trickle",
-				proximity_spawners = true,
-				template_name = "standard_melee",
 				delay = 8,
-				limit_spawners = 2
+				limit_spawners = 2,
+				proximity_spawners = true,
+				spawner_group = "spawner_vaults_trickle",
+				template_name = "standard_melee",
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end
+				end,
 			},
 			{
 				"continue_when",
 				duration = 100,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 8
-				end
+				end,
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "lm_scavenge_luggable_wave_1"
-			}
+				start_event_name = "lm_scavenge_luggable_wave_1",
+			},
 		},
 		event_luggable_scavenge_d = {
 			{
 				"delay",
-				duration = 17
+				duration = 17,
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 20
-				end
+				end,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_vaults_west",
 				limit_spawners = 3,
 				points = 12,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_vaults_west",
 				breed_tags = {
 					{
 						"close",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_vaults_trickle",
 				max_breed_amount = 1,
 				points = 12,
+				spawner_group = "spawner_vaults_trickle",
 				breed_tags = {
 					{
 						"special",
-						"disabler"
-					}
-				}
+						"disabler",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 3
+				duration = 3,
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_vaults_trickle",
 				max_breed_amount = 1,
 				points = 6,
+				spawner_group = "spawner_vaults_trickle",
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
-					}
-				}
+						"scrambler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
-				spawner_group = "spawner_vaults_trickle",
-				proximity_spawners = true,
-				template_name = "standard_melee",
 				delay = 8,
-				limit_spawners = 2
+				limit_spawners = 2,
+				proximity_spawners = true,
+				spawner_group = "spawner_vaults_trickle",
+				template_name = "standard_melee",
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end
+				end,
 			},
 			{
 				"continue_when",
 				duration = 100,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 8
-				end
+				end,
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "lm_scavenge_luggable_wave_1"
-			}
+				start_event_name = "lm_scavenge_luggable_wave_1",
+			},
 		},
 		event_luggable_scavenge_e = {
 			{
 				"delay",
-				duration = 17
+				duration = 17,
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 20
-				end
+				end,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_vaults_north",
 				limit_spawners = 3,
 				points = 16,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_vaults_north",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_vaults_north",
 				limit_spawners = 3,
 				points = 6,
+				spawner_group = "spawner_vaults_north",
 				breed_tags = {
 					{
 						"melee",
-						"elite"
-					}
-				}
+						"elite",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
-				spawner_group = "spawner_vaults_trickle",
-				proximity_spawners = true,
-				template_name = "standard_melee",
 				delay = 8,
-				limit_spawners = 2
+				limit_spawners = 2,
+				proximity_spawners = true,
+				spawner_group = "spawner_vaults_trickle",
+				template_name = "standard_melee",
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end
+				end,
 			},
 			{
 				"continue_when",
 				duration = 100,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 8
-				end
+				end,
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "lm_scavenge_luggable_wave_1"
-			}
+				start_event_name = "lm_scavenge_luggable_wave_1",
+			},
 		},
 		event_luggable_scavenge_f = {
 			{
 				"delay",
-				duration = 17
+				duration = 17,
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 20
-				end
+				end,
 			},
 			{
 				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_vaults_south",
 				limit_spawners = 3,
 				points = 12,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_vaults_south",
 				breed_tags = {
 					{
 						"close",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_vaults_south",
 				limit_spawners = 3,
 				points = 8,
+				spawner_group = "spawner_vaults_south",
 				breed_tags = {
 					{
 						"close",
-						"elite"
-					}
-				}
+						"elite",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_vaults_west",
 				max_breed_amount = 1,
 				points = 8,
+				spawner_group = "spawner_vaults_west",
 				breed_tags = {
 					{
 						"special",
-						"sniper"
-					}
-				}
+						"sniper",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
-				spawner_group = "spawner_vaults_trickle",
-				proximity_spawners = true,
-				template_name = "standard_melee",
 				delay = 8,
-				limit_spawners = 2
+				limit_spawners = 2,
+				proximity_spawners = true,
+				spawner_group = "spawner_vaults_trickle",
+				template_name = "standard_melee",
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end
+				end,
 			},
 			{
 				"continue_when",
 				duration = 100,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 8
-				end
+				end,
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "lm_scavenge_luggable_wave_1"
-			}
+				start_event_name = "lm_scavenge_luggable_wave_1",
+			},
 		},
 		event_luggable_monster_1 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_1",
 				points = 6,
+				spawner_group = "event_luggable_monster_1",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_luggable_monster_2 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_2",
 				points = 6,
+				spawner_group = "event_luggable_monster_2",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_luggable_monster_3 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_3",
 				points = 6,
+				spawner_group = "event_luggable_monster_3",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_luggable_monster_4 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_4",
 				points = 6,
+				spawner_group = "event_luggable_monster_4",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_luggable_monster_5 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_5",
 				points = 6,
+				spawner_group = "event_luggable_monster_5",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_luggable_monster_6 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_6",
 				points = 6,
+				spawner_group = "event_luggable_monster_6",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_luggable_monster_7 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_7",
 				points = 6,
+				spawner_group = "event_luggable_monster_7",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_luggable_monster_8 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				spawner_group = "event_luggable_monster_8",
 				points = 6,
+				spawner_group = "event_luggable_monster_8",
 				breed_tags = {
 					{
-						"monster"
-					}
-				}
+						"monster",
+					},
+				},
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end
+				end,
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_luggable_monster_dead"
-			}
+				flow_event_name = "event_luggable_monster_dead",
+			},
 		},
 		event_scavenge_escape_1 = {
 			{
 				"spawn_by_points",
-				spawner_group = "scavenge_escape_a",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				points = 14,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "scavenge_escape_a",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "scavenge_escape_b",
 				points = 6,
+				spawner_group = "scavenge_escape_b",
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
-					}
-				}
+						"roamer",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 3,
 				limit_spawners = 2,
 				spawner_group = "scavenge_escape_trickle",
-				template_name = "standard_melee"
+				template_name = "standard_melee",
 			},
 			{
 				"delay",
-				duration = 5
+				duration = 5,
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "scavenge_escape_special",
 				max_breed_amount = 1,
 				points = 8,
+				spawner_group = "scavenge_escape_special",
 				breed_tags = {
 					{
-						"special"
-					}
-				}
+						"special",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 5
+				duration = 5,
 			},
 			{
 				"continue_when",
 				duration = 60,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
-				end
+				end,
 			},
 			{
 				"delay",
-				duration = 10
+				duration = 10,
 			},
 			{
 				"start_terror_event",
-				start_event_name = "event_scavenge_escape_1"
-			}
+				start_event_name = "event_scavenge_escape_1",
+			},
 		},
 		event_scavenge_escape_2 = {
 			{
 				"spawn_by_points",
-				spawner_group = "scavenge_escape_d",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				points = 5,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "scavenge_escape_d",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "scavenge_escape_c",
 				points = 5,
+				spawner_group = "scavenge_escape_c",
 				breed_tags = {
 					{
 						"melee",
-						"horde"
-					}
-				}
+						"horde",
+					},
+				},
 			},
 			{
 				"delay",
-				duration = 5
+				duration = 5,
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "scavenge_escape_d",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				points = 4,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "scavenge_escape_d",
 				breed_tags = {
 					{
 						"close",
-						"roamer"
-					}
-				}
-			}
-		}
-	}
+						"roamer",
+					},
+				},
+			},
+		},
+	},
 }
 
 return template

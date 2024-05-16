@@ -1,11 +1,10 @@
+﻿-- chunkname: @scripts/managers/bot_nav_transition/utilities/bot_nav_transition.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local fall_damage_settings = PlayerCharacterConstants.fall_damage
 local BotNavTransition = {}
-local NAV_MESH_ABOVE = 0.3
-local NAV_MESH_BELOW = 0.3
-local NAV_MESH_LATERAL = 0.9
-local NAV_MESH_DISTANCE = 1
+local NAV_MESH_ABOVE, NAV_MESH_BELOW, NAV_MESH_LATERAL, NAV_MESH_DISTANCE = 0.3, 0.3, 0.9, 1
 
 BotNavTransition.check_nav_mesh = function (wanted_from, wanted_to, nav_world, traverse_logic, drawer)
 	local from = NavQueries.position_on_mesh(nav_world, wanted_from, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic)
@@ -27,8 +26,7 @@ BotNavTransition.check_nav_mesh = function (wanted_from, wanted_to, nav_world, t
 	return true, from, to
 end
 
-local BOT_DROP_HEIGHT = 0.5
-local BOT_JUMP_HEIGHT = 0.3
+local BOT_DROP_HEIGHT, BOT_JUMP_HEIGHT = 0.5, 0.3
 
 BotNavTransition.calculate_nav_tag_layer = function (from, to, player_jumped)
 	if player_jumped then
@@ -47,7 +45,7 @@ BotNavTransition.calculate_nav_tag_layer = function (from, to, player_jumped)
 		return "bot_damage_drops"
 	elseif height < -BOT_DROP_HEIGHT then
 		return "bot_drops"
-	elseif BOT_JUMP_HEIGHT < height then
+	elseif height > BOT_JUMP_HEIGHT then
 		return "bot_jumps"
 	end
 
@@ -57,7 +55,7 @@ end
 local EXTRA_FALL_TRANSITION_WAYPOINT_DISTANCE = 0.1
 
 BotNavTransition.resolve_waypoint_position = function (from, via, player_jumped, physics_world)
-	local waypoint = nil
+	local waypoint
 
 	if player_jumped then
 		waypoint = via

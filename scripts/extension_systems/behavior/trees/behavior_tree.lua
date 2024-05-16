@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/behavior_tree.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 require("scripts/extension_systems/behavior/nodes/bt_random_node")
 require("scripts/extension_systems/behavior/nodes/bt_selector_node")

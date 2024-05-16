@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/smoke_fog_area_spawner.lua
+
 local UNIT_NAME = "content/smoke_fog/empty_unit/empty_unit"
 local UNIT_TEMPLATE = "smoke_fog"
 local SmokeFogAreaSpawner = component("SmokeFogAreaSpawner")
@@ -5,7 +7,9 @@ local SmokeFogAreaSpawner = component("SmokeFogAreaSpawner")
 SmokeFogAreaSpawner.init = function (self, unit, is_server, nav_world)
 	self._unit = unit
 	self._nav_world = nav_world
+
 	local run_update = false
+
 	self._is_server = is_server
 	self._inner_radius = self:get_data(unit, "inner_radius")
 	self._outer_radius = self:get_data(unit, "outer_radius")
@@ -38,16 +42,17 @@ SmokeFogAreaSpawner.spawn_smoke_fog = function (self)
 	local unit = self._unit
 	local position = POSITION_LOOKUP[unit]
 	local rotation = Quaternion.identity()
-	local material, placed_on_unit, owner_unit = nil
+	local material, placed_on_unit, owner_unit
 	local unit_template_parameters = {
+		block_line_of_sight = true,
 		in_fog_buff_template_name = "in_smoke_fog",
 		leaving_fog_buff_template_name = "left_smoke_fog",
-		block_line_of_sight = true,
 		duration = math.huge,
 		inner_radius = self._inner_radius,
-		outer_radius = self._outer_radius
+		outer_radius = self._outer_radius,
 	}
 	local smoke_fog_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, unit_template_parameters)
+
 	self._smoke_fog_spawned = true
 	self._spawned_unit = smoke_fog_unit
 end
@@ -75,9 +80,13 @@ SmokeFogAreaSpawner.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
@@ -164,41 +173,41 @@ end
 
 SmokeFogAreaSpawner.component_data = {
 	inner_radius = {
-		ui_type = "number",
+		category = "Radius",
+		decimals = 1,
+		max = 100,
 		min = 0,
 		step = 0.1,
-		category = "Radius",
-		value = 4.5,
-		decimals = 1,
 		ui_name = "Inner",
-		max = 100
+		ui_type = "number",
+		value = 4.5,
 	},
 	outer_radius = {
-		ui_type = "number",
+		category = "Radius",
+		decimals = 1,
+		max = 100,
 		min = 0,
 		step = 0.1,
-		category = "Radius",
-		value = 5.5,
-		decimals = 1,
 		ui_name = "Outer",
-		max = 100
+		ui_type = "number",
+		value = 5.5,
 	},
 	draw_smoke_fog = {
+		category = "Debug",
+		ui_name = "Draw Smoke (Approx)",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Draw Smoke (Approx)",
-		category = "Debug"
 	},
 	inputs = {
 		spawn_smoke_fog = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		despawn_smoke_fog = {
 			accessibility = "public",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return SmokeFogAreaSpawner

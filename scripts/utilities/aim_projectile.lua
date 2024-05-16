@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/utilities/aim_projectile.lua
+
 local AimProjectile = {}
 local PI = math.pi
 local parameter_table = {}
 
 AimProjectile.aim_parameters = function (initial_position, initial_rotation, look_rotation, locomotion_template, throw_type, time_in_action)
 	time_in_action = time_in_action or 0
+
 	local throw_config = locomotion_template.trajectory_parameters[throw_type]
 	local local_shoot_offset = Vector3(throw_config.offset_right or 0, throw_config.offset_forward or 0, throw_config.offset_up or 0)
 	local offset = Quaternion.rotate(look_rotation, local_shoot_offset)
@@ -16,12 +19,13 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 		speed_maximal = speed_initial
 	end
 
-	local speed = nil
+	local speed
 
 	if speed_charge_duration == 0 then
 		speed = speed_maximal
 	else
 		local alpha = time_in_action / speed_charge_duration
+
 		alpha = math.clamp(alpha, 0, 1)
 		speed = math.lerp(speed_initial, speed_maximal, alpha)
 	end
@@ -30,17 +34,20 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 	local rotation_offset_maximal = throw_config.rotation_offset_maximal:unbox()
 	local rotation_charge_duration = throw_config.rotation_charge_duration
 	local max_iterations = throw_config.aim_max_iterations
-	local direction = nil
+	local direction
 
 	if rotation_charge_duration == 0 then
 		local maximal_ypr = rotation_offset_maximal
 		local maximal_offset = Quaternion.from_yaw_pitch_roll(maximal_ypr.x, maximal_ypr.y, maximal_ypr.z)
 		local new_look_rotation = Quaternion.multiply(look_rotation, maximal_offset)
+
 		direction = Quaternion.forward(new_look_rotation)
 	else
 		local charge_direction_time = time_in_action
 		local alpha = charge_direction_time / rotation_charge_duration
+
 		alpha = math.clamp(alpha, 0, 1)
+
 		local initial_ypr = rotation_offset_initial
 		local initial_offset = Quaternion.from_yaw_pitch_roll(initial_ypr.x, initial_ypr.y, initial_ypr.z)
 		local maximal_ypr = rotation_offset_maximal
@@ -48,14 +55,16 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 		local new_offset = Quaternion.lerp(initial_offset, maximal_offset, alpha)
 		local current_pitch = Quaternion.pitch(look_rotation)
 		local offset_pitch = Quaternion.pitch(new_offset)
-		local offseted_pitch = current_pitch + offset_pitch + current_pitch * 0.5
+		local offseted_pitch = current_pitch + (offset_pitch + current_pitch * 0.5)
 		local pitch_limit = PI / 2 * 0.73
 		local actual_pitch = math.min(offseted_pitch, PI / 2 * 0.73)
 		local pitch_scale = math.max(actual_pitch - pitch_limit * 0.75, 0) / (pitch_limit * 0.25)
+
 		speed = speed + 0.5 * speed * pitch_scale * pitch_scale
-		local yaw = Quaternion.yaw(look_rotation)
-		local roll = Quaternion.roll(look_rotation)
+
+		local yaw, roll = Quaternion.yaw(look_rotation), Quaternion.roll(look_rotation)
 		local aim_rotation = Quaternion.from_yaw_pitch_roll(yaw, actual_pitch, roll)
+
 		direction = Quaternion.forward(aim_rotation)
 	end
 
@@ -90,10 +99,11 @@ AimProjectile.get_spawn_parameters_from_current_aim = function (action_settings,
 	local direction = aim_parameters.direction
 	local speed = aim_parameters.speed
 	local throw_config = projectile_locomotion_template.trajectory_parameters[throw_type]
-	local angular_velocity = nil
+	local angular_velocity
 
 	if throw_config.randomized_angular_velocity then
 		local max = throw_config.randomized_angular_velocity
+
 		angular_velocity = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
 	elseif throw_config.initial_angular_velocity then
 		angular_velocity = throw_config.initial_angular_velocity:unbox()
@@ -122,15 +132,17 @@ AimProjectile.check_throw_position = function (throw_position, look_position, pr
 
 	while not ok_pos and itterations < 5 do
 		itterations = itterations + 1
+
 		local hits = PhysicsWorld.linear_sphere_sweep(physics_world, look_position, throw_position, radius, 1, "types", collision_type, "collision_filter", collision_filter)
 		local hit = hits and hits[1]
 		local hit_position = hit and hit.position
 		local hit_distance = hit and hit.distance
-		local hit_normal = hit and hit.normal
+		local hit_position, hit_distance, hit_normal = hit_position, hit_distance, hit and hit.normal
 
 		if hit then
 			local back_tracking_vector = hit_normal * (radius + 0.1)
 			local new_aim_position = hit_position + back_tracking_vector
+
 			throw_position = new_aim_position
 		else
 			ok_pos = true

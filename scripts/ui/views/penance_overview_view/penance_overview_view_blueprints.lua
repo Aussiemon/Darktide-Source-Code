@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/penance_overview_view/penance_overview_view_blueprints.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -19,41 +21,43 @@ local tooltip_grid_size = PenanceOverviewViewSettings.tooltip_grid_size
 local tooltip_entries_width = PenanceOverviewViewSettings.tooltip_entries_width
 local tooltip_blueprint_size = {
 	tooltip_entries_width,
-	tooltip_grid_size[2]
+	tooltip_grid_size[2],
 }
 local reward_icon_large = {
 	164,
-	164
+	164,
 }
 local reward_glow_large = {
 	328,
-	328
+	328,
 }
 local reward_icon_medium = {
 	112,
-	112
+	112,
 }
 local reward_glow_medium = {
 	224,
-	224
+	224,
 }
 local reward_icon_small = {
 	94,
-	94
+	94,
 }
 local reward_glow_small = {
 	188,
-	188
+	188,
 }
 local default_button_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_click
+	on_pressed_sound = UISoundEvents.default_click,
 }
 
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon_style = widget.style.icon
 	local widget_content = widget.content
+
 	widget_content.icon = "content/ui/materials/icons/items/containers/item_container_square"
+
 	local item_slot = ItemUtils.item_slot(item)
 	local material_values = icon_style.material_values
 
@@ -80,9 +84,12 @@ local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, true)
 
 	local material_values = widget.style.icon.material_values
+
 	material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
+
 	local icon_style = widget.style.icon
+
 	icon_style.size = widget.style.icon_original_size or icon_style.size
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 
@@ -95,9 +102,12 @@ end
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local widget_style = widget.style
 	local widget_content = widget.content
+
 	widget_content.icon = "content/ui/materials/icons/items/containers/item_container_landscape"
+
 	local icon_style = widget_style.icon
 	local material_values = icon_style.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
 	material_values.rows = rows
@@ -112,6 +122,7 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, true)
 
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 1
 	material_values.render_target = nil
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -121,12 +132,12 @@ local function _setup_blueprint_penance_tracked(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			20
+			20,
 		},
 		pass_template = {
 			{
-				value = "content/ui/materials/icons/generic/bookmark",
 				pass_type = "texture",
+				value = "content/ui/materials/icons/generic/bookmark",
 				style = {
 					horizontal_alignment = "right",
 					vertical_alignment = "top",
@@ -137,24 +148,25 @@ local function _setup_blueprint_penance_tracked(input_size, edge_padding)
 					hover_color = Color.terminal_frame_hover(180, true),
 					size = {
 						40,
-						40
+						40,
 					},
 					offset = {
 						-10,
 						-5,
-						1
-					}
+						1,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.tracked
-				end
-			}
+				end,
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local content = widget.content
+
 			content.element = element
 			content.tracked = element.tracked
-		end
+		end,
 	}
 end
 
@@ -162,58 +174,58 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			120
+			120,
 		},
 		pass_template = {
 			{
-				value = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
-				style_id = "texture",
 				pass_type = "texture",
+				style_id = "texture",
+				value = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
 				style = {
 					horizontal_alignment = "center",
 					size = {
 						120,
-						120
+						120,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010"
+						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					offset = {
 						0,
 						0,
-						1
-					}
-				}
+						1,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
-				style_id = "outer_shadow",
 				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
 					scale_to_material = true,
+					vertical_alignment = "center",
 					size = {
 						136,
-						136
+						136,
 					},
 					color = Color.black(200, true),
 					size_addition = {
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -226,6 +238,7 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 
 			content.completed = element.completed
 			content.can_claim = element.can_claim
+
 			local family_index = element.family_index
 
 			if family_index then
@@ -235,7 +248,7 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
-		end
+		end,
 	}
 end
 
@@ -243,20 +256,20 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 	return {
 		size = {
 			50,
-			50
+			50,
 		},
 		pass_template = {
 			{
-				style_id = "background",
 				pass_type = "rect",
+				style_id = "background",
 				style = {
 					color = {
 						0,
 						0,
 						0,
-						0
-					}
-				}
+						0,
+					},
+				},
 			},
 			{
 				pass_type = "texture",
@@ -264,73 +277,74 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 				value = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
 				style = {
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010"
+						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					offset = {
 						0,
 						0,
-						1
-					}
+						1,
+					},
 				},
 				change_function = function (content, style)
 					local completed = content.completed
 					local color_value = completed and 120 or 255
+
 					style.color[2] = color_value
 					style.color[3] = color_value
 					style.color[4] = color_value
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
-				style_id = "outer_shadow",
 				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
 					scale_to_material = true,
+					vertical_alignment = "center",
 					size = {
 						57,
-						57
+						57,
 					},
 					color = Color.black(200, true),
 					size_addition = {
 						0,
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						0
-					}
-				}
+						0,
+					},
+				},
 			},
 			{
-				style_id = "complete_sign",
 				pass_type = "text",
+				style_id = "complete_sign",
 				value = "",
 				style = {
-					font_type = "proxima_nova_bold",
-					font_size = 48,
 					drop_shadow = true,
-					text_vertical_alignment = "center",
+					font_size = 48,
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.ui_terminal(255, true),
 					offset = {
 						0,
 						0,
-						2
-					}
+						2,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end
-			}
+				end,
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -352,7 +366,7 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 			end
 
 			content.completed = element.completed
-		end
+		end,
 	}
 end
 
@@ -362,43 +376,43 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			50
+			50,
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1] or input_size[1],
-				size[2] or 50
+				size[2] or 50,
 			} or {
 				input_size[1],
-				50
+				50,
 			}
 		end,
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 24,
+					font_type = "proxima_nova_bold",
 					horizontal_alignment = "center",
-					text_vertical_alignment = "center",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						0,
 						0,
-						3
+						3,
 					},
 					size_addition = {
 						-(20 + edge_padding),
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -408,6 +422,7 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -415,6 +430,7 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
@@ -423,7 +439,7 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	}
 end
 
@@ -433,43 +449,43 @@ local function _setup_blueprint_penance_body(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			100
+			100,
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1] or input_size[1],
-				size[2] or 100
+				size[2] or 100,
 			} or {
 				input_size[1],
-				100
+				100,
 			}
 		end,
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
 					font_size = 18,
-					horizontal_alignment = "center",
-					text_vertical_alignment = "center",
 					font_type = "proxima_nova_bold",
+					horizontal_alignment = "center",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					size_addition = {
 						-(0 + edge_padding),
-						0
+						0,
 					},
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -483,6 +499,7 @@ local function _setup_blueprint_penance_body(input_size, edge_padding)
 
 			content.element = element
 			content.text = text
+
 			local strict_size = element.strict_size
 
 			if not strict_size then
@@ -490,13 +507,14 @@ local function _setup_blueprint_penance_body(input_size, edge_padding)
 				local text_style = style.text
 				local text_options = UIFonts.get_font_options_by_style(text_style)
 				local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 				size[2] = math.max(height, size[2])
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	}
 end
 
@@ -504,79 +522,79 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 	return {
 		size = {
 			input_size[1],
-			130
+			130,
 		},
 		pass_template = {
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "background",
 				pass_type = "texture",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
-					color = Color.terminal_background_dark(nil, true)
-				}
+					color = Color.terminal_background_dark(nil, true),
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "icon_background",
 				pass_type = "texture",
+				style_id = "icon_background",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = {
 						100,
-						100
+						100,
 					},
 					offset = {
 						-80,
 						0,
-						1
+						1,
 					},
-					color = Color.terminal_background_dark(nil, true)
-				}
+					color = Color.terminal_background_dark(nil, true),
+				},
 			},
 			{
-				value = "content/ui/materials/gradients/gradient_vertical",
-				style_id = "icon_background_gradient",
 				pass_type = "texture",
+				style_id = "icon_background_gradient",
+				value = "content/ui/materials/gradients/gradient_vertical",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = {
 						100,
-						100
+						100,
 					},
 					color = Color.terminal_grid_background_gradient(nil, true),
 					offset = {
 						-80,
 						0,
-						2
-					}
-				}
+						2,
+					},
+				},
 			},
 			{
-				value_id = "icon",
-				style_id = "icon",
 				pass_type = "texture",
+				style_id = "icon",
 				value = "content/ui/materials/icons/items/containers/item_container_square",
+				value_id = "icon",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = {
 						100,
-						100
+						100,
 					},
 					material_values = {},
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					offset = {
 						-80,
 						0,
-						4
-					}
+						4,
+					},
 				},
 				visibility_function = function (content, style)
 					local use_placeholder_texture = content.use_placeholder_texture
@@ -586,93 +604,95 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 					end
 
 					return false
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/frames/dropshadow_heavy",
-				style_id = "outer_shadow",
 				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/frames/dropshadow_heavy",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
 					scale_to_material = true,
+					vertical_alignment = "center",
 					size = {
 						100,
-						100
+						100,
 					},
 					color = Color.black(180, true),
 					size_addition = {
 						20,
-						20
+						20,
 					},
 					offset = {
 						-80,
 						0,
-						4
-					}
-				}
+						4,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/frames/frame_tile_2px",
-				style_id = "frame",
 				pass_type = "texture",
+				style_id = "frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = {
 						100,
-						100
+						100,
 					},
 					color = Color.terminal_frame(nil, true),
 					offset = {
 						-80,
 						0,
-						7
-					}
-				}
+						7,
+					},
+				},
 			},
 			{
-				value = "",
-				style_id = "reward_emblem",
 				pass_type = "text",
+				style_id = "reward_emblem",
+				value = "",
 				style = {
-					font_type = "proxima_nova_bold",
-					font_size = 70,
 					drop_shadow = false,
-					text_vertical_alignment = "center",
+					font_size = 70,
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						80,
 						-20,
-						3
-					}
-				}
+						3,
+					},
+				},
 			},
 			{
-				style_id = "reward_score",
 				pass_type = "text",
-				value_id = "reward_score",
+				style_id = "reward_score",
 				value = "999",
+				value_id = "reward_score",
 				style = {
-					font_type = "proxima_nova_bold",
-					font_size = 36,
 					drop_shadow = false,
-					text_vertical_alignment = "center",
+					font_size = 36,
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						80,
 						35,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
 			local content = widget.content
+
 			content.element = element
+
 			local texture = element.texture
 
 			if texture then
@@ -680,28 +700,35 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 			end
 
 			local bar_progress = element.bar_progress
+
 			content.bar_progress = bar_progress
 			content.completed = element.completed
 			content.can_claim = element.can_claim
 			content.reward_score = "+" .. element.score
+
 			local item = element.item
 			local step = element.step
 
 			if step then
 				content.label = Localize("loc_achievements_view_family_reward_label", true, {
-					step = step
+					step = step,
 				})
 			end
 
 			local reward_display_name = ItemUtils.display_name(item)
+
 			content.display_name = reward_display_name
+
 			local rarity = item.rarity
 			local item_type = ItemUtils.type_display_name(item)
 
 			if rarity then
 				local rarity_color, dark_rarity_color = ItemUtils.rarity_color(item)
+
 				style.icon_background_gradient.color = table.clone(dark_rarity_color)
+
 				local rarity_display_name = ItemUtils.rarity_display_name(item)
+
 				content.sub_display_name = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
 			else
 				content.sub_display_name = item_type
@@ -715,11 +742,12 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 			local item_icon_size = slot.item_icon_size
 
 			if item_icon_size then
-				local icon_width = item_icon_size[1] * 100 / ItemPassTemplates.ui_item_size[1]
-				local icon_height = item_icon_size[2] * 100 / ItemPassTemplates.ui_item_size[2]
+				local icon_width = item_icon_size[1] * (100 / ItemPassTemplates.ui_item_size[1])
+				local icon_height = item_icon_size[2] * (100 / ItemPassTemplates.ui_item_size[2])
+
 				item_icon_size = {
 					icon_width,
-					icon_height
+					icon_height,
 				}
 				style.icon.material_values.icon_size = item_icon_size
 			end
@@ -728,6 +756,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 
 			if texture_color then
 				local color = style.texture.color
+
 				color[1] = texture_color[1]
 				color[2] = texture_color[2]
 				color[3] = texture_color[3]
@@ -750,9 +779,9 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 				local render_context = {
 					camera_focus_slot_name = slot_name,
 					state_machine = item_state_machine,
-					animation_event = item_animation_event
+					animation_event = item_animation_event,
 				}
-				local cb, unload_cb = nil
+				local cb, unload_cb
 
 				if item_group == "nameplates" or item_group == "emotes" or item_group == "titles" then
 					cb = callback(_apply_package_item_icon_cb_func, widget, item)
@@ -792,7 +821,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 			if content.icon_load_id then
 				Managers.ui:update_item_icon_priority(content.icon_load_id)
 			end
-		end
+		end,
 	}
 end
 
@@ -800,70 +829,71 @@ local function _setup_blueprint_penance_score(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			130
+			130,
 		},
 		pass_template = {
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "background",
 				pass_type = "texture",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					color = {
 						120,
 						0,
 						0,
-						0
-					}
-				}
+						0,
+					},
+				},
 			},
 			{
-				value = "",
-				style_id = "reward_emblem",
 				pass_type = "text",
+				style_id = "reward_emblem",
+				value = "",
 				style = {
-					font_type = "proxima_nova_bold",
-					font_size = 70,
 					drop_shadow = false,
-					text_vertical_alignment = "center",
+					font_size = 70,
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						0,
 						-20,
-						3
-					}
-				}
+						3,
+					},
+				},
 			},
 			{
-				style_id = "reward_score",
 				pass_type = "text",
-				value_id = "reward_score",
+				style_id = "reward_score",
 				value = "999",
+				value_id = "reward_score",
 				style = {
-					font_type = "proxima_nova_bold",
-					font_size = 36,
 					drop_shadow = false,
-					text_vertical_alignment = "center",
+					font_size = 36,
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						0,
 						35,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
 			local content = widget.content
+
 			content.element = element
 			content.reward_score = "+" .. element.score
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	}
 end
 
@@ -873,91 +903,91 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			37
+			37,
 		},
 		pass_template = {
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "background",
 				pass_type = "texture",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "top",
 					color = Color.terminal_background_dark(255, true),
 					size = {
 						input_size[1] - (40 + edge_padding),
-						12
+						12,
 					},
 					offset = {
 						20 + edge_padding * 0.5,
 						0,
-						0
-					}
-				}
+						0,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/frames/frame_tile_2px",
-				style_id = "frame",
 				pass_type = "texture",
+				style_id = "frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "left",
+					vertical_alignment = "top",
 					size = {
 						input_size[1] - (40 + edge_padding),
-						12
+						12,
 					},
 					color = Color.terminal_frame(nil, true),
 					offset = {
 						20 + edge_padding * 0.5,
 						0,
-						4
-					}
-				}
+						4,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/bars/simple/fill",
-				style_id = "progress_bar",
 				pass_type = "texture",
+				style_id = "progress_bar",
+				value = "content/ui/materials/bars/simple/fill",
 				style = {
 					vertical_alignment = "top",
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					size = {
 						input_size[1] - (40 + edge_padding),
-						12
+						12,
 					},
 					offset = {
 						20 + edge_padding * 0.5,
 						0,
-						1
-					}
-				}
+						1,
+					},
+				},
 			},
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
 					font_size = 20,
-					horizontal_alignment = "center",
-					text_vertical_alignment = "bottom",
 					font_type = "proxima_nova_bold",
+					horizontal_alignment = "center",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "bottom",
 					text_color = Color.terminal_text_body(255, true),
 					size = {
-						input_size[1] - (40 + edge_padding)
+						input_size[1] - (40 + edge_padding),
 					},
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -970,6 +1000,7 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 			end
 
 			local progress = element.progress or 0
+
 			style.progress_bar.size[1] = style.background.size[1] * progress
 			content.element = element
 			content.text = text
@@ -977,7 +1008,7 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	}
 end
 
@@ -987,56 +1018,56 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			25
+			25,
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1] or input_size[1] * 0.5,
-				size[2] or 25
+				size[2] or 25,
 			} or {
 				input_size[1] * 0.5,
-				25
+				25,
 			}
 		end,
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 16,
-					text_vertical_alignment = "top",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						10 + edge_padding * 0.5,
 						0,
-						3
-					}
-				}
+						3,
+					},
+				},
 			},
 			{
-				style_id = "value",
-				value_id = "value",
 				pass_type = "text",
+				style_id = "value",
 				value = "n/a",
+				value_id = "value",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 16,
-					text_vertical_alignment = "top",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "right",
+					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						-(10 + edge_padding * 0.5),
 						0,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1054,6 +1085,7 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local max_width = size[1] - (40 + math.abs(text_style.offset[1]))
 			local croped_text = UIRenderer.crop_text_width(ui_renderer, text, text_style.font_type, text_style.font_size, max_width)
+
 			content.element = element
 			content.text = croped_text
 			content.value = value
@@ -1061,7 +1093,7 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	}
 end
 
@@ -1071,17 +1103,17 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			50
+			50,
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1] or input_size[1],
-				size[2] or 50
+				size[2] or 50,
 			} or {
 				input_size[1],
-				50
+				50,
 			}
 		end,
 		pass_template = {
@@ -1093,101 +1125,102 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 					horizontal_alignment = "left",
 					size = {
 						50,
-						50
+						50,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010"
+						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					offset = {
 						edge_padding * 0.5,
 						0,
-						1
-					}
+						1,
+					},
 				},
 				change_function = function (content, style)
 					local completed = content.completed
 					local color_value = completed and 120 or 255
+
 					style.color[2] = color_value
 					style.color[3] = color_value
 					style.color[4] = color_value
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
-				style_id = "outer_shadow",
 				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
 				style = {
 					horizontal_alignment = "left",
 					scale_to_material = true,
 					size = {
 						56,
-						56
+						56,
 					},
 					color = Color.black(200, true),
 					size_addition = {
 						0,
-						0
+						0,
 					},
 					offset = {
 						12,
 						-3,
-						7
-					}
-				}
+						7,
+					},
+				},
 			},
 			{
-				style_id = "complete_sign",
 				pass_type = "text",
+				style_id = "complete_sign",
 				value = "",
 				style = {
-					font_size = 48,
-					text_vertical_alignment = "center",
 					drop_shadow = true,
+					font_size = 48,
 					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					size = {
 						50,
-						50
+						50,
 					},
 					text_color = Color.ui_terminal(255, true),
 					offset = {
 						edge_padding * 0.5,
 						0,
-						2
-					}
+						2,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end
+				end,
 			},
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 16,
-					text_vertical_alignment = "center",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						edge_padding * 0.5 + 50 + 10,
 						0,
-						3
+						3,
 					},
 					size_addition = {
 						-(50 + edge_padding + 10),
-						0
-					}
-				}
-			}
+						0,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1204,9 +1237,11 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local max_width = (size[1] - (20 + math.abs(text_style.size_addition[1]))) * 1.2
 			local croped_text = UIRenderer.crop_text_width(ui_renderer, text, text_style.font_type, text_style.font_size, max_width, nil, text_options)
+
 			content.element = element
 			content.text = croped_text
 			content.completed = element.completed
+
 			local texture = element.texture
 
 			if texture then
@@ -1222,7 +1257,7 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
-		end
+		end,
 	}
 end
 
@@ -1230,57 +1265,58 @@ local function _setup_blueprint_penance_completed(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			0
+			0,
 		},
 		pass_template = {
 			{
-				value = "content/ui/materials/icons/generic/top_right_triangle",
 				pass_type = "texture",
+				value = "content/ui/materials/icons/generic/top_right_triangle",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "right",
+					vertical_alignment = "top",
 					size = {
 						62.400000000000006,
-						62.400000000000006
+						62.400000000000006,
 					},
 					color = Color.terminal_frame_hover(180, true),
 					offset = {
 						0,
 						-20,
-						8
-					}
+						8,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end
+				end,
 			},
 			{
-				style_id = "complete_sign",
 				pass_type = "text",
+				style_id = "complete_sign",
 				value = "",
 				style = {
-					font_type = "proxima_nova_bold",
-					font_size = 28.6,
 					drop_shadow = true,
-					text_vertical_alignment = "top",
+					font_size = 28.6,
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "right",
+					text_vertical_alignment = "top",
 					text_color = Color.ui_terminal(255, true),
 					offset = {
 						-6,
 						-16,
-						10
-					}
+						10,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed
-				end
-			}
+				end,
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
 			local content = widget.content
+
 			content.completed = element.completed
-		end
+		end,
 	}
 end
 
@@ -1288,13 +1324,13 @@ local function _setup_blueprint_penance_category(input_size, edge_padding)
 	return {
 		size = {
 			input_size[1],
-			0
+			0,
 		},
 		pass_template = {
 			{
-				value_id = "icon",
 				pass_type = "texture",
 				style_id = "icon",
+				value_id = "icon",
 				style = {
 					horizontal_alignment = "left",
 					vertical_alignment = "top",
@@ -1305,32 +1341,35 @@ local function _setup_blueprint_penance_category(input_size, edge_padding)
 					hover_color = Color.terminal_frame_hover(180, true),
 					size = {
 						70,
-						50
+						50,
 					},
 					offset = {
 						0,
 						-10,
-						1
-					}
-				}
-			}
+						1,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local content = widget.content
+
 			content.element = element
+
 			local achievement = element.achievement
 			local achivement_category = achievement.category
-			local category = nil
+			local category
 
 			if AchievementCategories[achivement_category] then
 				local category_config = AchievementCategories[achivement_category]
 				local parent_name = category_config.parent_name
 				local sort_index = category_config.sort_index
+
 				category = parent_name or achivement_category
 			end
 
 			content.icon = PenanceOverviewViewSettings.category_icons[category] or "content/ui/materials/icons/item_types/upper_bodies"
-		end
+		end,
 	}
 end
 
@@ -1362,117 +1401,117 @@ local grid_blueprints = {
 	claim_overlay = {
 		size = {
 			carousel_penance_size[1],
-			0
+			0,
 		},
 		pass_template = {
 			{
-				value = "content/ui/materials/backgrounds/default_square",
-				style_id = "overlay",
 				pass_type = "texture",
+				style_id = "overlay",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					size = {
 						0,
-						0
+						0,
 					},
 					color = {
 						160,
 						0,
 						0,
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						10
-					}
-				}
+						10,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/frames/achievements/penance_reward_symbol",
-				style_id = "icon",
 				pass_type = "texture",
+				style_id = "icon",
+				value = "content/ui/materials/frames/achievements/penance_reward_symbol",
 				style = {
 					size = reward_icon_large,
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					offset = {
 						0,
 						0,
-						12
-					}
-				}
+						12,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/frames/achievements/wintrack_claimed_reward_display_background_glow",
-				style_id = "glow",
 				pass_type = "texture",
+				style_id = "glow",
+				value = "content/ui/materials/frames/achievements/wintrack_claimed_reward_display_background_glow",
 				style = {
 					scale_to_material = true,
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
 						0,
-						11
+						11,
 					},
-					size = reward_glow_large
-				}
+					size = reward_glow_large,
+				},
 			},
 			{
-				style_id = "title",
-				value_id = "title",
 				pass_type = "text",
+				style_id = "title",
 				value = "Completed ",
+				value_id = "title",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 30,
-					text_vertical_alignment = "center",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_key_value(255, true),
 					offset = {
 						20,
 						100,
-						13
+						13,
 					},
 					size = {
 						0,
-						0
+						0,
 					},
 					size_addition = {
 						-40,
-						0
-					}
-				}
+						0,
+					},
+				},
 			},
 			{
+				pass_type = "text",
 				style_id = "description",
 				value_id = "description",
-				pass_type = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 24,
-					text_vertical_alignment = "center",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						20,
 						135,
-						13
+						13,
 					},
 					size = {
 						0,
-						0
+						0,
 					},
 					size_addition = {
 						-40,
-						0
-					}
+						0,
+					},
 				},
-				value = Localize("loc_penance_menu_claim_button")
-			}
+				value = Localize("loc_penance_menu_claim_button"),
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local size = element.size
@@ -1483,6 +1522,7 @@ local grid_blueprints = {
 
 				if title_style then
 					local title_size = title_style.size
+
 					title_size[1] = size[1]
 					title_size[2] = size[2]
 				end
@@ -1491,6 +1531,7 @@ local grid_blueprints = {
 
 				if description_style then
 					local description_size = description_style.size
+
 					description_size[1] = size[1]
 					description_size[2] = size[2]
 				end
@@ -1499,6 +1540,7 @@ local grid_blueprints = {
 
 				if overlay_style then
 					local texture_size = overlay_style.size
+
 					texture_size[1] = size[1]
 					texture_size[2] = size[2]
 				end
@@ -1508,6 +1550,7 @@ local grid_blueprints = {
 				if icon_style then
 					local texture_size = icon_style.size
 					local offset = icon_style.offset
+
 					offset[1] = (size[1] - texture_size[1]) * 0.5
 					offset[2] = (size[2] - texture_size[2]) * 0.5
 				end
@@ -1517,6 +1560,7 @@ local grid_blueprints = {
 				if glow_style then
 					local texture_size = glow_style.size
 					local offset = glow_style.offset
+
 					offset[1] = (size[1] - texture_size[1]) * 0.5
 					offset[2] = (size[2] - texture_size[2]) * 0.5
 				end
@@ -1530,42 +1574,43 @@ local grid_blueprints = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(action, service_type)
 				local input_text = InputUtilities.input_text_for_current_input_device(service_type, alias_key)
+
 				widget.content.description = string.format("%s %s", input_text, Localize("loc_penance_menu_claim_button"))
 			else
 				widget.content.description = ""
 			end
-		end
+		end,
 	},
 	texture = {
 		size = {
 			64,
-			64
+			64,
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2]
+				size[2],
 			} or {
 				64,
-				64
+				64,
 			}
 		end,
 		pass_template = {
 			{
+				pass_type = "texture",
 				style_id = "texture",
 				value_id = "texture",
-				pass_type = "texture",
 				style = {
 					color = {
 						255,
 						255,
 						255,
-						255
-					}
-				}
-			}
+						255,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1580,6 +1625,7 @@ local grid_blueprints = {
 
 			if texture_color then
 				local color = style.texture.color
+
 				color[1] = texture_color[1]
 				color[2] = texture_color[2]
 				color[3] = texture_color[3]
@@ -1589,32 +1635,32 @@ local grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	},
 	header = {
 		size = {
 			penance_grid_size[1],
-			100
+			100,
 		},
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 24,
-					text_vertical_alignment = "center",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1624,6 +1670,7 @@ local grid_blueprints = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -1631,41 +1678,43 @@ local grid_blueprints = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	},
 	body = {
 		size = {
 			penance_grid_size[1],
-			100
+			100,
 		},
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 20,
-					text_vertical_alignment = "center",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "center",
 					text_color = Color.text_default(255, true),
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1679,41 +1728,43 @@ local grid_blueprints = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	},
 	body_centered = {
 		size = {
 			penance_grid_size[1],
-			100
+			100,
 		},
 		pass_template = {
 			{
-				style_id = "text",
-				value_id = "text",
 				pass_type = "text",
+				style_id = "text",
 				value = "n/a",
+				value_id = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 20,
-					text_vertical_alignment = "center",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.text_default(255, true),
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
-			}
+						3,
+					},
+				},
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -1727,16 +1778,18 @@ local grid_blueprints = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end
+		end,
 	},
 	dynamic_spacing = {
 		size_function = function (parent, element, ui_renderer)
@@ -1744,12 +1797,12 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2]
+				size[2],
 			} or {
 				225,
-				20
+				20,
 			}
-		end
+		end,
 	},
 	penance = {
 		size = penance_size,
@@ -1758,85 +1811,85 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2]
+				size[2],
 			} or penance_size
 		end,
 		pass_template = {
 			{
-				pass_type = "hotspot",
 				content_id = "hotspot",
-				content = default_button_content
+				pass_type = "hotspot",
+				content = default_button_content,
 			},
 			{
-				value = "content/ui/materials/frames/dropshadow_heavy",
-				style_id = "outer_shadow",
 				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/frames/dropshadow_heavy",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
 					scale_to_material = true,
+					vertical_alignment = "center",
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20
+						20,
 					},
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
+						3,
+					},
+				},
 			},
 			{
 				pass_type = "texture",
 				style_id = "background_gradient",
 				value = "content/ui/materials/gradients/gradient_vertical",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					default_color = Color.terminal_background_gradient(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					disabled_color = Color.ui_grey_medium(255, true),
 					offset = {
 						0,
 						0,
-						1
-					}
+						1,
+					},
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/icons/generic/bookmark",
 				pass_type = "texture",
+				value = "content/ui/materials/icons/generic/bookmark",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "right",
 					scale_to_material = true,
+					vertical_alignment = "top",
 					color = Color.terminal_corner_selected(255, true),
 					size = {
 						20,
-						20
+						20,
 					},
 					offset = {
 						-2,
 						-2,
-						7
-					}
+						7,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.tracked
-				end
+				end,
 			},
 			{
 				pass_type = "texture",
 				style_id = "frame",
 				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					disabled_color = Color.ui_grey_medium(255, true),
@@ -1844,18 +1897,18 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						8
-					}
+						8,
+					},
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
 				pass_type = "texture",
 				style_id = "corner",
 				value = "content/ui/materials/frames/frame_corner_2px",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					default_color = Color.terminal_corner(nil, true),
 					selected_color = Color.terminal_corner_selected(nil, true),
 					disabled_color = Color.ui_grey_light(255, true),
@@ -1863,36 +1916,36 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						9
-					}
+						9,
+					},
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
 				pass_type = "texture",
 				style_id = "texture",
 				value = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size_addition = {
 						-20,
-						-20
+						-20,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010"
+						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					offset = {
 						0,
 						0,
-						3
-					}
+						3,
+					},
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -1905,144 +1958,145 @@ local grid_blueprints = {
 					local hover_color = anim_hover_progress * 55
 					local select_color = math.max(anim_select_progress, anim_focus_progress) * 50
 					local color_value = math.clamp(default_color + select_color + hover_color, 0, 255)
+
 					style.color[2] = color_value
 					style.color[3] = color_value
 					style.color[4] = color_value
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
-				style_id = "icon_outer_shadow",
 				pass_type = "texture",
+				style_id = "icon_outer_shadow",
+				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
 					scale_to_material = true,
+					vertical_alignment = "center",
 					color = Color.black(200, true),
 					size_addition = {
 						-10,
-						-10
+						-10,
 					},
 					offset = {
 						0,
 						0,
-						5
-					}
-				}
+						5,
+					},
+				},
 			},
 			{
-				style_id = "claim_icon",
 				pass_type = "texture",
+				style_id = "claim_icon",
 				value = "content/ui/materials/frames/achievements/penance_reward_symbol_small",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = reward_icon_small,
 					size_addition = {
 						-20,
-						-20
+						-20,
 					},
 					color = Color.white(255, true),
 					offset = {
 						0,
 						0,
-						9
-					}
+						9,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end
+				end,
 			},
 			{
-				style_id = "claim_icon_glow",
 				pass_type = "texture",
+				style_id = "claim_icon_glow",
 				value = "content/ui/materials/frames/achievements/wintrack_claimed_reward_display_background_glow",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = reward_glow_small,
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
 						0,
-						8
-					}
+						8,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
 				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					color = {
 						220,
 						0,
 						0,
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						3
-					}
+						3,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
 				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					color = {
 						100,
 						0,
 						0,
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						2
-					}
+						2,
+					},
 				},
 				visibility_function = function (content, style)
 					return not content.completed and not content.can_claim
-				end
+				end,
 			},
 			{
-				style_id = "claim_description",
-				value_id = "claim_description",
 				pass_type = "text",
+				style_id = "claim_description",
 				value = "",
+				value_id = "claim_description",
 				style = {
-					font_type = "proxima_nova_bold",
-					font_size = 24,
 					drop_shadow = true,
-					text_vertical_alignment = "center",
+					font_size = 24,
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						0,
 						0,
-						9
-					}
+						9,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed and (content.hotspot.is_hover or content.hotspot.is_selected)
-				end
+				end,
 			},
 			{
 				pass_type = "texture",
 				value = "content/ui/materials/icons/generic/top_right_triangle",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "right",
+					vertical_alignment = "top",
 					size = {
 						penance_size[1] / 100 * 40,
-						penance_size[2] / 100 * 40
+						penance_size[2] / 100 * 40,
 					},
 					default_color = Color.terminal_frame(180, true),
 					selected_color = Color.terminal_frame_selected(180, true),
@@ -2051,22 +2105,22 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						8
-					}
+						8,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
 				pass_type = "text",
-				value = "",
 				style_id = "complete_sign",
+				value = "",
 				style = {
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "right",
 					text_vertical_alignment = "top",
-					font_type = "proxima_nova_bold",
 					font_size = penance_size[1] / 100 * 22,
 					text_color = Color.black(255, true),
 					default_color = Color.ui_terminal(nil, true),
@@ -2076,19 +2130,21 @@ local grid_blueprints = {
 					offset = {
 						-4,
 						-1,
-						9
-					}
+						9,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function
-			}
+				change_function = ButtonPassTemplates.terminal_button_change_function,
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
 			local content = widget.content
+
 			content.element = element
+
 			local texture = element.texture
 
 			if texture then
@@ -2107,17 +2163,22 @@ local grid_blueprints = {
 
 			local can_claim = element.can_claim
 			local bar_progress = not can_claim and element.bar_progress or nil
+
 			content.bar_progress = bar_progress
 			content.completed = element.completed
 			content.can_claim = can_claim
+
 			local tracked = element.tracked
+
 			content.tracked = tracked
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			content.hotspot.right_pressed_callback = callback(parent, secondary_callback_name, widget, element)
+
 			local texture_color = element.color
 
 			if texture_color then
 				local color = style.texture.color
+
 				color[1] = texture_color[1]
 				color[2] = texture_color[2]
 				color[3] = texture_color[3]
@@ -2137,9 +2198,10 @@ local grid_blueprints = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(action, service_type)
 				local input_text = InputUtilities.input_text_for_current_input_device(service_type, alias_key)
+
 				widget.content.claim_description = input_text
 			end
-		end
+		end,
 	},
 	penance_large = {
 		size = penance_size_large,
@@ -2148,85 +2210,85 @@ local grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2]
+				size[2],
 			} or penance_size_large
 		end,
 		pass_template = {
 			{
-				pass_type = "hotspot",
 				content_id = "hotspot",
-				content = default_button_content
+				pass_type = "hotspot",
+				content = default_button_content,
 			},
 			{
-				value = "content/ui/materials/frames/dropshadow_heavy",
-				style_id = "outer_shadow",
 				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/frames/dropshadow_heavy",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
 					scale_to_material = true,
+					vertical_alignment = "center",
 					color = Color.black(200, true),
 					size_addition = {
 						20,
-						20
+						20,
 					},
 					offset = {
 						0,
 						0,
-						3
-					}
-				}
+						3,
+					},
+				},
 			},
 			{
 				pass_type = "texture",
 				style_id = "background_gradient",
 				value = "content/ui/materials/gradients/gradient_vertical",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					default_color = Color.terminal_background_gradient(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					disabled_color = Color.ui_grey_medium(255, true),
 					offset = {
 						0,
 						0,
-						1
-					}
+						1,
+					},
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
 					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/icons/generic/bookmark",
 				pass_type = "texture",
+				value = "content/ui/materials/icons/generic/bookmark",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "right",
 					scale_to_material = true,
+					vertical_alignment = "top",
 					color = Color.terminal_corner_selected(255, true),
 					size = {
 						20,
-						20
+						20,
 					},
 					offset = {
 						-2,
 						-2,
-						9
-					}
+						9,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.tracked
-				end
+				end,
 			},
 			{
 				pass_type = "texture",
 				style_id = "frame",
 				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					disabled_color = Color.ui_grey_medium(255, true),
@@ -2234,18 +2296,18 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						10
-					}
+						10,
+					},
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
 				pass_type = "texture",
 				style_id = "corner",
 				value = "content/ui/materials/frames/frame_corner_2px",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					default_color = Color.terminal_corner(nil, true),
 					selected_color = Color.terminal_corner_selected(nil, true),
 					disabled_color = Color.ui_grey_light(255, true),
@@ -2253,10 +2315,10 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						11
-					}
+						11,
+					},
 				},
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
 				pass_type = "texture",
@@ -2265,22 +2327,22 @@ local grid_blueprints = {
 				style = {
 					size = {
 						70,
-						70
+						70,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010"
+						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
+						255,
 					},
 					offset = {
 						10,
 						10,
-						6
-					}
+						6,
+					},
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
@@ -2293,64 +2355,65 @@ local grid_blueprints = {
 					local hover_color = anim_hover_progress * 100 * complete_multiplier
 					local select_color = math.max(anim_select_progress, anim_focus_progress) * 50 * complete_multiplier
 					local color_value = math.clamp(default_color + select_color + hover_color, 0, 255)
+
 					style.color[2] = color_value
 					style.color[3] = color_value
 					style.color[4] = color_value
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
-				style_id = "icon_outer_shadow",
 				pass_type = "texture",
+				style_id = "icon_outer_shadow",
+				value = "content/ui/materials/icons/achievements/frames/achievements_dropshadow_medium",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "left",
 					scale_to_material = true,
+					vertical_alignment = "top",
 					size = {
 						79,
-						79
+						79,
 					},
 					color = Color.black(200, true),
 					size_addition = {
 						0,
-						0
+						0,
 					},
 					offset = {
 						5,
 						5,
-						5
-					}
-				}
+						5,
+					},
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
 				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					color = {
 						120,
 						0,
 						0,
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						2
-					}
+						2,
+					},
 				},
 				visibility_function = function (content, style)
 					return not content.completed and not content.hotspot.is_selected
-				end
+				end,
 			},
 			{
 				pass_type = "texture",
 				value = "content/ui/materials/icons/generic/top_right_triangle",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "right",
+					vertical_alignment = "top",
 					size = {
 						penance_size[1] / 100 * 40,
-						penance_size[2] / 100 * 40
+						penance_size[2] / 100 * 40,
 					},
 					default_color = Color.terminal_frame(180, true),
 					selected_color = Color.terminal_frame_selected(180, true),
@@ -2359,22 +2422,22 @@ local grid_blueprints = {
 					offset = {
 						0,
 						0,
-						8
-					}
+						8,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
 				pass_type = "text",
-				value = "",
 				style_id = "complete_sign",
+				value = "",
 				style = {
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "right",
 					text_vertical_alignment = "top",
-					font_type = "proxima_nova_bold",
 					font_size = penance_size[1] / 100 * 22,
 					text_color = Color.black(255, true),
 					default_color = Color.ui_terminal(nil, true),
@@ -2384,360 +2447,362 @@ local grid_blueprints = {
 					offset = {
 						-4,
 						-1,
-						9
-					}
+						9,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.completed and not content.can_claim
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
-				style_id = "title",
-				value_id = "title",
 				pass_type = "text",
+				style_id = "title",
 				value = "n/a",
+				value_id = "title",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 24,
+					font_type = "proxima_nova_bold",
 					horizontal_alignment = "left",
-					text_vertical_alignment = "top",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						90,
 						10,
-						3
+						3,
 					},
 					size_addition = {
 						-170,
-						0
-					}
-				}
+						0,
+					},
+				},
 			},
 			{
-				style_id = "description",
-				value_id = "description",
 				pass_type = "text",
+				style_id = "description",
 				value = "n/a",
+				value_id = "description",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 18,
+					font_type = "proxima_nova_bold",
 					horizontal_alignment = "left",
-					text_vertical_alignment = "top",
 					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						90,
 						40,
-						3
+						3,
 					},
 					size_addition = {
 						-170,
-						0
-					}
-				}
+						0,
+					},
+				},
 			},
 			{
-				style_id = "bar_background",
 				pass_type = "texture",
+				style_id = "bar_background",
 				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					vertical_alignment = "top",
 					size = {
 						penance_size_large[1] - 230,
-						12
+						12,
 					},
 					offset = {
 						90,
 						45,
-						4
+						4,
 					},
-					color = Color.terminal_background_dark(255, true)
+					color = Color.terminal_background_dark(255, true),
 				},
 				visibility_function = function (content, style)
 					return not content.completed and content.bar_progress
-				end
+				end,
 			},
 			{
 				pass_type = "texture",
-				value = "content/ui/materials/frames/frame_tile_2px",
 				style_id = "bar_frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
 					horizontal_alignment = "left",
 					vertical_alignment = "top",
 					size = {
 						penance_size_large[1] - 230,
-						12
+						12,
 					},
 					offset = {
 						90,
 						45,
-						6
+						6,
 					},
 					color = Color.terminal_frame(nil, true),
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					disabled_color = Color.ui_grey_medium(255, true),
-					hover_color = Color.terminal_frame_hover(nil, true)
+					hover_color = Color.terminal_frame_hover(nil, true),
 				},
 				visibility_function = function (content, style)
 					return not content.completed and content.bar_progress
 				end,
-				change_function = ButtonPassTemplates.terminal_button_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 			},
 			{
-				style_id = "bar",
 				pass_type = "texture",
+				style_id = "bar",
 				value = "content/ui/materials/bars/simple/fill",
 				style = {
 					vertical_alignment = "top",
 					size = {
 						penance_size_large[1] - 230,
-						12
+						12,
 					},
 					default_size = {
 						penance_size_large[1] - 230,
-						12
+						12,
 					},
 					offset = {
 						90,
 						45,
-						5
+						5,
 					},
 					color = {
 						255,
 						255,
 						255,
-						255
-					}
+						255,
+					},
 				},
 				visibility_function = function (content, style)
 					return not content.completed and content.bar_progress
-				end
+				end,
 			},
 			{
-				style_id = "bar_values_text",
-				value_id = "bar_values_text",
 				pass_type = "text",
+				style_id = "bar_values_text",
 				value = "n/a",
+				value_id = "bar_values_text",
 				style = {
-					horizontal_alignment = "right",
-					text_vertical_alignment = "center",
 					font_size = 16,
 					font_type = "proxima_nova_bold",
+					horizontal_alignment = "right",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
 					offset = {
 						-70,
 						45,
-						3
+						3,
 					},
 					size = {
 						70,
-						12
+						12,
 					},
-					text_color = Color.terminal_text_body(255, true)
-				}
+					text_color = Color.terminal_text_body(255, true),
+				},
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
 				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					horizontal_alignment = "right",
 					size = {
-						70
+						70,
 					},
 					color = {
 						200,
 						0,
 						0,
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						2
-					}
-				}
+						2,
+					},
+				},
 			},
 			{
-				value_id = "reward_icon",
-				style_id = "reward_icon",
 				pass_type = "texture",
+				style_id = "reward_icon",
 				value = "content/ui/materials/base/ui_default_base",
+				value_id = "reward_icon",
 				style = {
-					vertical_alignment = "top",
 					horizontal_alignment = "right",
+					vertical_alignment = "top",
 					size = {
 						40,
-						40
+						40,
 					},
 					material_values = {},
 					color = Color.terminal_text_body(255, true),
 					offset = {
 						-15,
 						10,
-						3
-					}
+						3,
+					},
 				},
 				visibility_function = function (content, style)
 					return style.material_values.texture_map
-				end
+				end,
 			},
 			{
-				value = "",
+				pass_type = "text",
 				style_id = "reward_emblem",
-				pass_type = "text",
+				value = "",
 				style = {
-					horizontal_alignment = "right",
+					drop_shadow = false,
 					font_size = 64,
-					text_vertical_alignment = "center",
-					text_horizontal_alignment = "center",
-					drop_shadow = false,
 					font_type = "proxima_nova_bold",
-					size = {
-						70
-					},
-					text_color = Color.terminal_text_body(255, true),
-					offset = {
-						0,
-						25,
-						3
-					}
-				}
-			},
-			{
-				style_id = "reward_score",
-				pass_type = "text",
-				value_id = "reward_score",
-				value = "n/a",
-				style = {
 					horizontal_alignment = "right",
-					font_size = 14,
-					text_vertical_alignment = "center",
 					text_horizontal_alignment = "center",
-					drop_shadow = false,
-					font_type = "proxima_nova_bold",
+					text_vertical_alignment = "center",
 					size = {
-						70
+						70,
 					},
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						0,
 						25,
-						4
-					}
-				}
+						3,
+					},
+				},
 			},
 			{
-				style_id = "claim_icon",
+				pass_type = "text",
+				style_id = "reward_score",
+				value = "n/a",
+				value_id = "reward_score",
+				style = {
+					drop_shadow = false,
+					font_size = 14,
+					font_type = "proxima_nova_bold",
+					horizontal_alignment = "right",
+					text_horizontal_alignment = "center",
+					text_vertical_alignment = "center",
+					size = {
+						70,
+					},
+					text_color = Color.terminal_text_body(255, true),
+					offset = {
+						0,
+						25,
+						4,
+					},
+				},
+			},
+			{
 				pass_type = "texture",
+				style_id = "claim_icon",
 				value = "content/ui/materials/frames/achievements/penance_reward_symbol_medium",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = reward_icon_medium,
 					size_addition = {
 						-20,
-						-20
+						-20,
 					},
 					color = Color.white(255, true),
 					offset = {
 						0,
 						-20,
-						9
-					}
+						9,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end
+				end,
 			},
 			{
-				style_id = "claim_icon_glow",
 				pass_type = "texture",
+				style_id = "claim_icon_glow",
 				value = "content/ui/materials/frames/achievements/wintrack_claimed_reward_display_background_glow",
 				style = {
-					vertical_alignment = "center",
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					size = reward_glow_medium,
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
 						-20,
-						8
-					}
+						8,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end
+				end,
 			},
 			{
-				style_id = "claim_title",
-				value_id = "claim_title",
 				pass_type = "text",
+				style_id = "claim_title",
 				value = "Completed ",
+				value_id = "claim_title",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 22,
-					text_vertical_alignment = "bottom",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "bottom",
 					text_color = Color.terminal_text_key_value(255, true),
 					offset = {
 						0,
 						-20,
-						9
-					}
+						9,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end
+				end,
 			},
 			{
+				pass_type = "text",
 				style_id = "claim_description",
 				value_id = "claim_description",
-				pass_type = "text",
 				style = {
-					font_type = "proxima_nova_bold",
 					font_size = 16,
-					text_vertical_alignment = "bottom",
+					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "center",
+					text_vertical_alignment = "bottom",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						0,
 						-5,
-						9
-					}
+						9,
+					},
 				},
 				value = Localize("loc_penance_menu_claim_button"),
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
-				end
+				end,
 			},
 			{
-				value = "content/ui/materials/backgrounds/default_square",
 				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
 					color = {
 						220,
 						0,
 						0,
-						0
+						0,
 					},
 					offset = {
 						0,
 						0,
-						7
-					}
+						7,
+					},
 				},
 				visibility_function = function (content, style)
 					return content.can_claim
-				end
-			}
+				end,
+			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
 			local content = widget.content
+
 			content.element = element
+
 			local texture = element.texture
 
 			if texture then
@@ -2755,18 +2820,27 @@ local grid_blueprints = {
 			end
 
 			local can_claim = element.can_claim
+
 			content.can_claim = can_claim
+
 			local bar_progress = element.bar_progress
+
 			content.bar_progress = bar_progress
+
 			local completed = element.completed
+
 			content.completed = completed
+
 			local tracked = element.tracked
+
 			content.tracked = tracked
+
 			local reward_icon = element.reward_icon
 
 			if reward_icon then
 				local reward_icon_style = style.reward_icon
 				local material_values = reward_icon_style.material_values
+
 				material_values.texture_map = reward_icon
 			else
 				style.reward_emblem.offset[2] = 0
@@ -2781,6 +2855,7 @@ local grid_blueprints = {
 				local text_max_width = size[1] + title_text_style.size_addition[1] - 30
 				local text_options = UIFonts.get_font_options_by_style(title_text_style)
 				local title_text_croped = UIRenderer.crop_text_width(ui_renderer, title_text, title_text_style.font_type, title_text_style.font_size, text_max_width, nil, text_options)
+
 				content.title = title_text_croped
 			end
 
@@ -2793,6 +2868,7 @@ local grid_blueprints = {
 				local text_max_width = (size[1] + description_text_style.size_addition[1] - 60) * num_rows
 				local text_options = UIFonts.get_font_options_by_style(description_text_style)
 				local description_text_croped = UIRenderer.crop_text_width(ui_renderer, description_text, description_text_style.font_type, description_text_style.font_size, text_max_width, nil, text_options)
+
 				content.description = description_text_croped
 			end
 
@@ -2814,6 +2890,7 @@ local grid_blueprints = {
 
 			if texture_color then
 				local color = style.texture.color
+
 				color[1] = texture_color[1]
 				color[2] = texture_color[2]
 				color[3] = texture_color[3]
@@ -2829,12 +2906,13 @@ local grid_blueprints = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(action, service_type)
 				local input_text = InputUtilities.input_text_for_current_input_device(service_type, alias_key)
+
 				widget.content.claim_description = string.format("%s %s", input_text, Localize("loc_penance_menu_claim_button"))
 			else
 				widget.content.claim_description = Localize("loc_penance_menu_claim_button")
 			end
-		end
-	}
+		end,
+	},
 }
 
 return grid_blueprints

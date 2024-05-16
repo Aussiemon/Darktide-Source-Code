@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_queries.lua
+
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 
 local function record_telemetry(dialogue)
@@ -57,7 +59,7 @@ DialogueQueries = {
 		dialogue.last_variation = dialogue.randomize_indexes[current_index]
 
 		return dialogue.randomize_indexes[current_index]
-	end
+	end,
 }
 
 return DialogueQueries

@@ -1,10 +1,13 @@
+﻿-- chunkname: @scripts/foundation/utilities/state_machine.lua
+
 local StateMachine = class("StateMachine")
+
 StateMachine.IGNORE_EVENT = StateMachine.IGNORE_EVENT or {}
 
 StateMachine.init = function (self, name, parent, ...)
 	self._name = name
 	self._global_args = {
-		...
+		...,
 	}
 	self._events = {}
 	self._pending_event = nil
@@ -18,11 +21,12 @@ StateMachine.init = function (self, name, parent, ...)
 
 	if parent ~= nil then
 		local parent_stack = parent._root_state_machine._state_machine_stack
+
 		self._state_machine_stack = parent_stack
 		parent_stack[#parent_stack + 1] = self
 	else
 		self._state_machine_stack = {
-			self
+			self,
 		}
 	end
 
@@ -32,6 +36,7 @@ end
 
 StateMachine.destroy = function (self)
 	local state = self._current_state
+
 	self._current_state = nil
 
 	if state ~= nil then
@@ -60,6 +65,7 @@ StateMachine.add_transition = function (self, source_class_name, event_name, tar
 	end
 
 	local target_transitions = transitions[source_class_name]
+
 	target_transitions[event_name] = target_class or StateMachine.IGNORE_EVENT
 end
 
@@ -79,14 +85,14 @@ end
 
 StateMachine.set_initial_state = function (self, state_class, ...)
 	self._current_state = self:_enter_state(state_class, {
-		...
+		...,
 	})
 end
 
 local function pop_first(first, ...)
 	if first ~= nil then
 		return first, {
-			...
+			...,
 		}
 	end
 end
@@ -101,7 +107,7 @@ StateMachine.update = function (self, dt)
 
 	for ii = 1, #stack do
 		local state = stack[ii]._current_state
-		local update_func = nil
+		local update_func
 
 		if ii == leaf_index then
 			if state ~= nil and state.update ~= nil then
@@ -111,7 +117,7 @@ StateMachine.update = function (self, dt)
 			update_func = state.parent_update
 		end
 
-		local args, event_name = nil
+		local args, event_name
 
 		if update_func ~= nil then
 			event_name, args = pop_first(update_func(state, dt))
@@ -138,9 +144,10 @@ end
 
 StateMachine.event = function (self, event_name, ...)
 	local root = self._root_state_machine
+
 	root._pending_event = event_name
 	root._pending_args = {
-		...
+		...,
 	}
 end
 
@@ -155,7 +162,9 @@ StateMachine.state_report = function (self)
 
 	for ii = start_index, #stack do
 		local state_machine = stack[ii]
+
 		s = s .. string.format("State %q waits for:\n", self._current_state_name(state_machine))
+
 		local transitions = state_machine:_transitions_from_state()
 		local had_transitions = false
 
@@ -266,6 +275,7 @@ StateMachine._received_event = function (self, event_name, args)
 	end
 
 	local report = string.format("none of the active states (%s) handled the event %q\n", table.concat(state_names, ", "), event_name)
+
 	report = report .. self._root_state_machine:state_report()
 end
 
@@ -291,6 +301,7 @@ end
 
 StateMachine._enter_state = function (self, state_class, args)
 	local state = state_class:new(self, unpack(self._global_args))
+
 	self._current_state = state
 
 	if state.enter then

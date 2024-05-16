@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/training_grounds_options_view/training_grounds_options_view.lua
+
 local TrainingGroundsOptionsViewSettings = require("scripts/ui/views/training_grounds_options_view/training_grounds_options_view_settings")
 local definition_path = "scripts/ui/views/training_grounds_options_view/training_grounds_options_view_definitions"
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
@@ -43,11 +45,13 @@ TrainingGroundsOptionsView._register_button_callbacks = function (self)
 	local mechanism_context = self._context.mechanism_context
 	local widgets_by_name = self._widgets_by_name
 	local play_button = widgets_by_name.play_button
+
 	play_button.content.hotspot.pressed_callback = callback(self, "_start_training_grounds", mechanism_context)
 end
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -61,7 +65,7 @@ TrainingGroundsOptionsView._load_reward_item_icons = function (self)
 	local loadout = profile.loadout
 	local slot_name = "slot_primary"
 	local render_context = {
-		camera_focus_slot_name = slot_name
+		camera_focus_slot_name = slot_name,
 	}
 	local primary_item = loadout.slot_primary
 	local reward_1 = self._widgets_by_name.reward_1
@@ -69,6 +73,7 @@ TrainingGroundsOptionsView._load_reward_item_icons = function (self)
 	if primary_item then
 		local cb = callback(_apply_live_item_icon_cb_func, reward_1)
 		local load_icon_id = Managers.ui:load_item_icon(primary_item, cb, render_context)
+
 		reward_1.content.icon_load_id = load_icon_id
 		reward_1.content.text = Localize(primary_item.display_name)
 		self._icons_load_ids[#self._icons_load_ids + 1] = load_icon_id
@@ -82,8 +87,10 @@ TrainingGroundsOptionsView._load_reward_item_icons = function (self)
 
 	if secondary_item then
 		render_context.camera_focus_slot_name = slot_name
+
 		local cb = callback(_apply_live_item_icon_cb_func, reward_2)
 		local load_icon_id = Managers.ui:load_item_icon(secondary_item, cb, render_context)
+
 		reward_2.content.icon_load_id = load_icon_id
 		reward_2.content.text = Localize(secondary_item.display_name)
 		self._icons_load_ids[#self._icons_load_ids + 1] = load_icon_id
@@ -103,6 +110,7 @@ TrainingGroundsOptionsView._set_play_button_text = function (self)
 	local settings = view_settings.play_settings[self.training_grounds_settings]
 	local input_text = get_input_text("confirm_pressed", "View")
 	local text = gamepad_active and string.format("%s %s", input_text, Utf8.upper(settings.play_button_text)) or Utf8.upper(settings.play_button_text)
+
 	button_content.original_text = text
 	button_content.hotspot.is_selected = gamepad_active
 end
@@ -119,7 +127,9 @@ TrainingGroundsOptionsView._start_training_grounds = function (self, mechanism_c
 	local widgets_by_name = self._widgets_by_name
 	local difficulty_stepper = widgets_by_name.difficulty_stepper
 	local challenge_level = difficulty_stepper.content.danger
+
 	mechanism_context.challenge_level = challenge_level
+
 	local mission_name = mechanism_context.mission_name
 	local Missions = require("scripts/settings/mission/mission_templates")
 	local mission_settings = Missions[mission_name]
@@ -155,10 +165,12 @@ TrainingGroundsOptionsView._setup_info = function (self)
 	local body_content = body.content
 	local play_button_content = play_button.content
 	local settings = view_settings.play_settings[self.training_grounds_settings]
+
 	header_content.header = settings.header_text
 	header_content.sub_header = settings.sub_header_text
 	body_content.body_text = settings.body_text
 	play_button_content.text = settings.play_button_text
+
 	local in_matchmaking = Managers.data_service.social:is_in_matchmaking()
 
 	if in_matchmaking then
@@ -184,12 +196,14 @@ TrainingGroundsOptionsView._setup_info = function (self)
 	if self.training_grounds_settings ~= "basic" then
 		if self.training_grounds_settings == "advanced" then
 			local separator_widget = self._widgets_by_name.separator
+
 			separator_widget.content.visible = false
 		end
 
 		widgets_by_name.rewards_header.content.visible = false
 		widgets_by_name.reward_1.content.visible = false
 		widgets_by_name.reward_2.content.visible = false
+
 		local panel_size_small = view_settings.panel_size.small
 
 		self:_resize_background(panel_size_small)
@@ -199,6 +213,7 @@ TrainingGroundsOptionsView._setup_info = function (self)
 		if Managers.narrative:is_chapter_complete("onboarding", "play_training") then
 			widgets_by_name.reward_1.content.visible = false
 			widgets_by_name.reward_2.content.visible = false
+
 			local panel_size_small = view_settings.panel_size.small
 
 			self:_resize_background(panel_size_small)
@@ -213,9 +228,10 @@ TrainingGroundsOptionsView._resize_background = function (self, new_size)
 
 	local background_widget = self._widgets_by_name.background
 	local style = background_widget.style
+
 	style.background.size = {
 		new_size[1] - 40,
-		new_size[2] + 136
+		new_size[2] + 136,
 	}
 	background_widget.dirty = true
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mutator/mutator_templates.lua
+
 local mutator_templates = {}
 
 local function _extract_mutator_templates(path)

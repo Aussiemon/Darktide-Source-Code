@@ -1,24 +1,27 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/crouch.lua
+
 local Spread = require("scripts/utilities/spread")
 local Sway = require("scripts/utilities/sway")
-local Crouch = {
-	crouch_input = function (input_source, is_crouching, requires_press_to_interrupt, force_hold_to_crouch)
-		local wants_crouch = nil
-		local hold_to_crouch = force_hold_to_crouch or input_source:get("hold_to_crouch")
+local Crouch = {}
 
-		if hold_to_crouch and (is_crouching or not requires_press_to_interrupt) then
-			wants_crouch = input_source:get("crouching")
-		elseif input_source:get("crouch") then
-			wants_crouch = not is_crouching
-		else
-			wants_crouch = is_crouching
-		end
+Crouch.crouch_input = function (input_source, is_crouching, requires_press_to_interrupt, force_hold_to_crouch)
+	local wants_crouch
+	local hold_to_crouch = force_hold_to_crouch or input_source:get("hold_to_crouch")
 
-		return wants_crouch
-	end,
-	can_crouch = function (unit, first_person_extension, animation_extension, weapon_extensio, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
-		return movement_state_component.can_crouch
+	if hold_to_crouch and (is_crouching or not requires_press_to_interrupt) then
+		wants_crouch = input_source:get("crouching")
+	elseif input_source:get("crouch") then
+		wants_crouch = not is_crouching
+	else
+		wants_crouch = is_crouching
 	end
-}
+
+	return wants_crouch
+end
+
+Crouch.can_crouch = function (unit, first_person_extension, animation_extension, weapon_extensio, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
+	return movement_state_component.can_crouch
+end
 
 Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t, force_hold_to_crouch)
 	local is_crouching = movement_state_component.is_crouching
@@ -54,6 +57,7 @@ Crouch.enter = function (unit, first_person_extension, animation_extension, weap
 
 	movement_state_component.is_crouching = true
 	movement_state_component.is_crouching_transition_start_t = t
+
 	local spread_template = weapon_extension:spread_template()
 	local sway_template = weapon_extension:sway_template()
 

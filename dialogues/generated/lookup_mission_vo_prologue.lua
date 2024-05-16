@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_prologue.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "melee_gameplay_01"
 DialogueLookup[DialogueLookup_n + 2] = "melee_gameplay_02"
 DialogueLookup[DialogueLookup_n + 3] = "melee_gameplay_03"

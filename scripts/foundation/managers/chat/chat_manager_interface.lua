@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/chat/chat_manager_interface.lua
+
 local Interface = {
 	"initialize",
 	"is_initialized",
@@ -19,7 +21,7 @@ local Interface = {
 	"player_mute_status_changed",
 	"mic_volume_changed",
 	"get_capture_devices",
-	"set_capture_device"
+	"set_capture_device",
 }
 
 return Interface

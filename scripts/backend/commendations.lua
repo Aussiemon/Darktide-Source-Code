@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/backend/commendations.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
-	"get_commendations"
+	"get_commendations",
 }
 local Commendations = class("Commendations")
 
@@ -15,7 +17,7 @@ Commendations.delete_commendations = function (self, account_id)
 	local path = BackendUtilities.url_builder():path("/data/" .. account_id .. "/account/commendations"):to_string()
 
 	return Managers.backend:title_request(path, {
-		method = "DELETE"
+		method = "DELETE",
 	})
 end
 
@@ -23,7 +25,7 @@ Commendations.create_update = function (self, account_id, stat_updates, complete
 	return {
 		accountId = account_id,
 		stats = stat_updates,
-		completed = completed_commendations
+		completed = completed_commendations,
 	}
 end
 
@@ -31,7 +33,7 @@ Commendations.init_commendation_score = function (self, account_id)
 	local path = BackendUtilities.url_builder():path("/data/" .. account_id .. "/account/commendations/score"):to_string()
 
 	return Managers.backend:title_request(path, {
-		method = "POST"
+		method = "POST",
 	})
 end
 
@@ -44,7 +46,7 @@ Commendations.bulk_update_commendations = function (self, commendation_update)
 
 	return Managers.backend:title_request(path, {
 		method = "PATCH",
-		body = commendation_update
+		body = commendation_update,
 	})
 end
 

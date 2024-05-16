@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/social.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
@@ -20,6 +22,7 @@ local _friend_request_options = {}
 
 Social.send_friend_request = function (self, account_id, method)
 	local options = _friend_request_options
+
 	options.method = method or "POST"
 
 	return BackendUtilities.make_account_title_request("friends", BackendUtilities.url_builder(account_id):path("/invite"), options, nil, "social"):next(function (data)
@@ -29,6 +32,7 @@ end
 
 Social.unfriend_player = function (self, account_id)
 	local options = _friend_request_options
+
 	options.method = "DELETE"
 
 	return BackendUtilities.make_account_title_request("friends", BackendUtilities.url_builder(account_id), options, nil, "social"):next(function (data)
@@ -83,7 +87,7 @@ Social.fetch_blocked_accounts = function (self)
 end
 
 local _add_blocked_account_options = {
-	method = "PUT"
+	method = "PUT",
 }
 
 Social.add_blocked_account = function (self, account_id)
@@ -93,7 +97,7 @@ Social.add_blocked_account = function (self, account_id)
 end
 
 local _remove_blocked_account_options = {
-	method = "DELETE"
+	method = "DELETE",
 }
 
 Social.remove_blocked_account = function (self, account_id)

@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/pocketables/medical_crate_pocketable.lua
+
 local Deployables = require("scripts/settings/deployables/deployables")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PocketablesTemplateSettings = require("scripts/settings/equipment/weapon_templates/pocketables/settings_templates/pocketables_template_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local weapon_template = {
-	action_inputs = {}
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = {}
 
 table.add_missing(weapon_template.action_inputs, PocketablesTemplateSettings.action_inputs)
 
@@ -15,34 +17,34 @@ table.add_missing(weapon_template.action_input_hierarchy, PocketablesTemplateSet
 weapon_template.actions = {
 	action_place_complete = {
 		allowed_during_sprint = true,
-		start_input = "place",
-		remove_item_from_inventory = true,
-		kind = "place_deployable",
-		use_aim_date = false,
 		anim_cancel_event = "action_finished",
-		uninterruptible = true,
 		anim_event = "drop",
+		kind = "place_deployable",
+		remove_item_from_inventory = true,
+		start_input = "place",
 		total_time = 0.54,
+		uninterruptible = true,
+		use_aim_date = false,
 		deployable_settings = Deployables.medical_crate,
 		place_configuration = {
-			distance = 2
-		}
-	}
+			distance = 2,
+		},
+	},
 }
 
 table.add_missing(weapon_template.actions, PocketablesTemplateSettings.actions)
 
 weapon_template.keywords = {
-	"pocketable"
+	"pocketable",
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.breed_anim_state_machine_3p = {
 	human = "content/characters/player/human/third_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables"
+	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
 }
 weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables"
+	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables",
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {}

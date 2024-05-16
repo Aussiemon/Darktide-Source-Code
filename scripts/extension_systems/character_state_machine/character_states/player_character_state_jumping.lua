@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_jumping.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
@@ -14,17 +16,21 @@ PlayerCharacterStateJumping.init = function (self, ...)
 	PlayerCharacterStateJumping.super.init(self, ...)
 
 	local unit_data_ext = ScriptUnit.extension(self._unit, "unit_data_system")
+
 	self._sprint_character_state_component = unit_data_ext:write_component("sprint_character_state")
 	self._stamina_component = unit_data_ext:write_component("stamina")
 	self._locomotion_component = unit_data_ext:read_component("locomotion")
+
 	local ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
+
 	self._ledge_vault_tweak_values = ledge_vault_tweak_values
 end
 
 PlayerCharacterStateJumping._play_jump_animation = function (self, animation_extension)
-	local event_name_3p = nil
+	local event_name_3p
 	local input_ext = self._input_extension
 	local move = input_ext:get("move")
+
 	event_name_3p = Vector3.length_squared(move) > 0 and "jump_fwd" or "jump_idle"
 
 	animation_extension:anim_event(event_name_3p)
@@ -36,10 +42,12 @@ end
 
 PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = false
 	self._inair_state_component.on_ground = false
-	local jump_velocity = nil
+
+	local jump_velocity
 
 	if previous_state == "ladder_climbing" then
 		local ladder_unit = params.ladder_unit
@@ -47,6 +55,7 @@ PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_sta
 		local is_distrupted = params.is_distrupted
 		local constants = self._constants
 		local force = is_distrupted and constants.ladder_distrupted_backwards_force or constants.ladder_jump_backwards_force
+
 		jump_velocity = direction * force
 	else
 		local velocity_current = self._locomotion_component.velocity_current
@@ -56,11 +65,14 @@ PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_sta
 
 		if previous_state == "dodging" then
 			velocity_current = Vector3.normalize(velocity_current)
+
 			local modified_velocity = jump_speed * action_move_speed_modifier
+
 			jump_velocity = Vector3(velocity_current.x * modified_velocity, velocity_current.y * modified_velocity, jump_speed)
 		else
 			local speed = Vector3.length(velocity_current)
 			local speed_mod = speed == 0 and 0 or 5 / math.max(speed, 5)
+
 			jump_velocity = Vector3(velocity_current.x * speed_mod, velocity_current.y * speed_mod, jump_speed)
 		end
 	end
@@ -122,8 +134,10 @@ PlayerCharacterStateJumping.fixed_update = function (self, unit, dt, t, next_sta
 	local locomotion_steering = self._locomotion_steering_component
 	local gravity_acceleration = self._constants.gravity
 	local fall_speed = velocity_wanted.z - gravity_acceleration * dt
+
 	velocity_wanted.z = fall_speed
 	locomotion_steering.velocity_wanted = velocity_wanted
+
 	local sprint_character_state_component = self._sprint_character_state_component
 
 	if self._sprint_character_state_component.is_sprint_jumping then

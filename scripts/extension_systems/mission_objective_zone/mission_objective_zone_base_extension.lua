@@ -1,5 +1,9 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_zone/mission_objective_zone_base_extension.lua
+
 local MissionObjectiveZoneBaseExtension = class("MissionObjectiveZoneBaseExtension")
+
 MissionObjectiveZoneBaseExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
 local UNIT_MARKER_STATES = table.enum("add", "remove")
 
 MissionObjectiveZoneBaseExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -9,7 +13,9 @@ MissionObjectiveZoneBaseExtension.init = function (self, extension_init_context,
 	self._activated = false
 	self._mission_objective_target_extension = nil
 	self._zone_type = ""
+
 	local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
+
 	self._mission_objective_zone_system = mission_objective_zone_system
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 end

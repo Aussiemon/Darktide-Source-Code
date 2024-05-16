@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utilities/bt_conditions.lua
+
 local BtConditions = {}
 
 local function _add_conditions(path)

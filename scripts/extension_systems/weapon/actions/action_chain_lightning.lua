@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_chain_lightning.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
@@ -14,7 +16,7 @@ local Vector3_normalize = Vector3.normalize
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local DEFAULT_POWER_LEVEL_RANDOM_RANGE = {
 	max = 1.25,
-	min = 0.75
+	min = 0.75,
 }
 local PROC_EVENTS = BuffSettings.proc_events
 local EXTERNAL_PROPERTIES = {}
@@ -26,9 +28,9 @@ local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
 local ACTION_MODULE_TARGETING_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
-	"target_unit_3"
+	"target_unit_3",
 }
-local _on_add_func, _on_remove_func, _set_charge_level, _trigger_gear_sound, _trigger_gear_tail_sound, _trigger_exclusive_gear_sound = nil
+local _on_add_func, _on_remove_func, _set_charge_level, _trigger_gear_sound, _trigger_gear_tail_sound, _trigger_exclusive_gear_sound
 
 ActionChainLightning.init = function (self, action_context, action_params, action_settings)
 	ActionChainLightning.super.init(self, action_context, action_params, action_settings)
@@ -38,13 +40,15 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 		self._temp_targets = {}
 		self._hit_units = {}
 		self._next_jump_time = 0
+
 		local talent_extension = ScriptUnit.has_extension(self._player_unit, "talent_system")
+
 		self._func_context = {
 			action_settings = self._action_settings,
 			buff_extension = self._buff_extension,
 			hit_units = self._hit_units,
 			player_unit = self._player_unit,
-			talent_extension = talent_extension
+			talent_extension = talent_extension,
 		}
 
 		self._jump_on_add_func = function (node, func_context)
@@ -57,18 +61,25 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 
 	self._action_settings = action_settings
 	self._ability_extension = action_context.ability_extension
+
 	local first_person_unit = self._first_person_unit
 	local player_unit = self._player_unit
 	local physics_world = self._physics_world
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_component = unit_data_extension:write_component("action_shoot")
+
 	local action_module_charge_component = unit_data_extension:write_component("action_module_charge")
+
 	self._action_module_charge_component = action_module_charge_component
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")
+
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local targeting_module_component = unit_data_extension:write_component("action_module_targeting")
+
 	self._targeting_module_component = targeting_module_component
 	self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_module_component, action_settings)
+
 	local overload_module_class_name = action_settings.overload_module_class_name
 
 	if overload_module_class_name then
@@ -76,11 +87,13 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 	end
 
 	self._charge_module = ActionModules.charge:new(physics_world, player_unit, first_person_unit, action_module_charge_component, action_settings)
+
 	local fx_settings = action_settings.fx
 	local looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
 
 	if looping_shoot_sfx_alias then
 		local component_name = PlayerUnitData.looping_sound_component_name(looping_shoot_sfx_alias)
+
 		self._looping_shoot_sound_component = unit_data_extension:read_component(component_name)
 	end
 
@@ -88,10 +101,12 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 
 	if looping_shoot_critical_strike_sfx_alias then
 		local component_name = PlayerUnitData.looping_sound_component_name(looping_shoot_critical_strike_sfx_alias)
+
 		self._looping_shoot_critial_strike_sound_component = unit_data_extension:read_component(component_name)
 	end
 
 	local weapon = action_params.weapon
+
 	self._left_fx_source_name = weapon.fx_sources._left
 	self._right_fx_source_name = weapon.fx_sources._right
 	self._both_fx_source_name = weapon.fx_sources._both
@@ -117,6 +132,7 @@ ActionChainLightning.start = function (self, action_settings, t, time_scale, act
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
+
 	weapon_tweak_templates_component.spread_template_name = action_settings.spread_template or weapon_template.spread_template or "none"
 	weapon_tweak_templates_component.recoil_template_name = action_settings.recoil_template or weapon_template.recoil_template or "none"
 	weapon_tweak_templates_component.sway_template_name = action_settings.sway_template or weapon_template.sway_template or "none"
@@ -178,6 +194,7 @@ ActionChainLightning.fixed_update = function (self, dt, t, time_in_action)
 		local action_module_charge_component = self._action_module_charge_component
 		local charge_cost = charge_template and charge_template.charge_cost or 0
 		local new_charge = action_module_charge_component.charge_level - charge_cost * dt
+
 		action_module_charge_component.charge_level = math.clamp01(new_charge)
 
 		self:_find_root_targets(t, time_in_action)
@@ -320,6 +337,7 @@ ActionChainLightning._handle_modules_and_components_start = function (self, t, a
 	end
 
 	action_module_charge_component.max_charge = 1
+
 	local charge_template = self._weapon_extension:charge_template()
 
 	if charge_template and charge_template.charge_on_action_start then
@@ -486,7 +504,7 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 		return
 	end
 
-	local attack_charge = nil
+	local attack_charge
 	local charge_template = self._weapon_extension:charge_template()
 	local time_in_action_to_attack_charge = charge_template.time_in_action_to_attack_charge
 
@@ -516,6 +534,7 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 		if damage_profile.random_damage then
 			local random_range = damage_profile.random_damage[depth] or DEFAULT_POWER_LEVEL_RANDOM_RANGE
 			local random_mod = random_range.min + math.random() * (random_range.max - random_range.min)
+
 			power_level = power_level * random_mod
 		end
 
@@ -526,7 +545,9 @@ end
 function _on_add_func(node, context)
 	local target_unit = node:value("unit")
 	local start_t = node:value("start_t") or 0
+
 	context.hit_units[target_unit] = true
+
 	local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 	if target_buff_extension then
@@ -551,7 +572,9 @@ end
 function _on_remove_func(node, context)
 	local target_unit = node:value("unit")
 	local buff_id = node:value("buff_id")
+
 	context.hit_units[target_unit] = nil
+
 	local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 	if buff_id and target_buff_extension then
@@ -572,6 +595,7 @@ function _trigger_gear_sound(fx_extension, fx_source_name, sound_alias, action_m
 	table.clear(EXTERNAL_PROPERTIES)
 
 	local charge_level = action_module_charge_component.charge_level
+
 	EXTERNAL_PROPERTIES.charge_level = charge_level >= 1 and "fully_charged"
 
 	fx_extension:trigger_gear_wwise_event_with_source(sound_alias, EXTERNAL_PROPERTIES, fx_source_name, SYNC_TO_CLIENTS)

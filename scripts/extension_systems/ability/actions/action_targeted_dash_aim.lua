@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/actions/action_targeted_dash_aim.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Lunge = require("scripts/utilities/player_state/lunge")
@@ -9,7 +11,9 @@ ActionTargetedDashAim.init = function (self, action_context, action_params, acti
 
 	self._input_extension = action_context.input_extension
 	self._aim_ready_up_time = action_setting.aim_ready_up_time or 0
+
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._lunge_character_state_component = unit_data_extension:write_component("lunge_character_state")
 end
 
@@ -31,13 +35,14 @@ ActionTargetedDashAim.fixed_update = function (self, dt, t, time_in_action)
 	end
 
 	local new_target = self:_find_target(time_in_action)
+
 	self._lunge_character_state_component.lunge_target = new_target
 end
 
 ActionTargetedDashAim._find_target = function (self, time_in_action)
-	local new_target = nil
+	local new_target
 
-	if self._aim_ready_up_time <= time_in_action then
+	if time_in_action >= self._aim_ready_up_time then
 		local lunge_template = self:_lunge_template()
 		local smart_targeting_data = self._smart_targeting_extension:targeting_data()
 		local smart_target_unit = smart_targeting_data.unit
@@ -47,7 +52,7 @@ ActionTargetedDashAim._find_target = function (self, time_in_action)
 			local has_target = true
 			local lunge_distance = Lunge.distance(lunge_template, has_target)
 
-			if smart_targeting_data.distance <= lunge_distance then
+			if lunge_distance >= smart_targeting_data.distance then
 				new_target = smart_target_unit
 			end
 		end
@@ -78,7 +83,7 @@ end
 ActionTargetedDashAim._lunge_template = function (self)
 	local action_settings = self._action_settings
 	local ability_template_tweak_data = self._ability_template_tweak_data
-	local lunge_template_name = nil
+	local lunge_template_name
 
 	if ability_template_tweak_data and ability_template_tweak_data.lunge_template_name then
 		lunge_template_name = ability_template_tweak_data.lunge_template_name

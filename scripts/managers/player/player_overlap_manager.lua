@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_overlap_manager.lua
+
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerOverlapManager = class("PlayerOverlapManager")
 
@@ -19,7 +21,9 @@ PlayerOverlapManager.add_listening_actor = function (self, actor)
 	end
 
 	self._active = true
+
 	local overlap_results = {}
+
 	self._overlap_result[actor] = overlap_results
 
 	return overlap_results
@@ -79,7 +83,7 @@ PlayerOverlapManager._send_overlap_request = function (self, player_unit)
 
 	PhysicsWorld.overlap(self._physics_world, function (...)
 		self:_receive_overlap_result(player_unit, ...)
-	end, "shape", "capsule", "position", player_position + Vector3.up() * HEIGHT / 2, "rotation", capsule_rotation, "size", capsule_size, "collision_filter", "filter_platform_wall_trigger")
+	end, "shape", "capsule", "position", player_position + Vector3.up() * (HEIGHT / 2), "rotation", capsule_rotation, "size", capsule_size, "collision_filter", "filter_platform_wall_trigger")
 end
 
 PlayerOverlapManager._receive_overlap_result = function (self, player_unit, _, hit_actors)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loading_host.lua
+
 local function _info(...)
 	Log.info("LoadingHost", ...)
 end
@@ -7,11 +9,13 @@ local LoadingHostStateMachine = require("scripts/loading/loading_host_state_mach
 local LoadingRemoteStateMachine = require("scripts/loading/loading_remote_state_machine")
 local SpawnQueue = require("scripts/loading/spawn_queue")
 local LoadingHost = class("LoadingHost")
+
 LoadingHost.SPAWN_QUEUE_DELAY = 10
 
 LoadingHost.init = function (self, network_delegate, loaders, connection_class_name)
 	self._network_delegate = network_delegate
 	self._loaders = loaders
+
 	local spawn_queue_delay = LoadingHost.SPAWN_QUEUE_DELAY
 	local connection_manager = Managers.connection
 	local host_type = connection_manager:host_type()
@@ -89,6 +93,7 @@ LoadingHost.update = function (self, dt)
 
 	if spawn_group then
 		local peers = self._spawn_queue:trigger_group(spawn_group)
+
 		self._spawn_group = spawn_group
 		self._spawn_peers = peers
 		self._profile_loading_enabled = false
@@ -127,6 +132,7 @@ end
 
 LoadingHost.add = function (self, client_channel_id)
 	local client = LoadingRemoteStateMachine:new(self._network_delegate, client_channel_id, self._spawn_queue, self._done_loading_level_func)
+
 	self._clients[client_channel_id] = client
 end
 
@@ -191,6 +197,7 @@ LoadingHost.stop_load_mission = function (self)
 	self._spawn_queue:reset()
 
 	self._mission = nil
+
 	local old_channels = {}
 
 	for channel_id, client in pairs(self._clients) do
@@ -209,6 +216,7 @@ LoadingHost.stop_load_mission = function (self)
 
 	for _, channel_id in ipairs(old_channels) do
 		local client = LoadingRemoteStateMachine:new(self._network_delegate, channel_id, self._spawn_queue, self._done_loading_level_func)
+
 		self._clients[channel_id] = client
 	end
 
@@ -234,6 +242,7 @@ LoadingHost._trigger_spawn_group = function (self)
 
 	self._spawn_group = nil
 	self._spawn_peers = nil
+
 	local state = self._state
 
 	if state ~= "hot_join" then

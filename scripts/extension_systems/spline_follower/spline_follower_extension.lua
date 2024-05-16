@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/spline_follower/spline_follower_extension.lua
+
 local SplineCurve = require("scripts/utilities/spline/spline_curve")
 local LevelEventSettings = require("scripts/settings/level_event/level_event_settings")
 local SplineFollowerExtension = class("SplineFollowerExtension")
@@ -24,16 +26,18 @@ SplineFollowerExtension.init = function (self, extension_init_context, unit, ext
 		self._game_object_id = nil
 	else
 		self._game_session = Managers.state.game_session:game_session()
+
 		local unit_spawner_manager = Managers.state.unit_spawner
+
 		self._game_object_id = unit_spawner_manager:game_object_id(unit)
 	end
 
 	self._last_synced_spline_values = {
-		subdivision_index = 0,
 		error_compensation_speed = 0,
-		spline_index = 0,
 		last_sync_time = 0,
-		spline_t = 0
+		spline_index = 0,
+		spline_t = 0,
+		subdivision_index = 0,
 	}
 end
 
@@ -85,6 +89,7 @@ SplineFollowerExtension.update = function (self, unit, dt, t)
 					local velocity_current = locomotion_component.velocity_current
 					local velocity_current_flat = Vector3.flat(velocity_current)
 					local speed = Vector3.length(velocity_current_flat)
+
 					player_speed = speed
 				end
 
@@ -120,12 +125,14 @@ SplineFollowerExtension.update = function (self, unit, dt, t)
 		elseif go_id and GameSession.game_object_exists(game_session, go_id) then
 			local error_compensation_speed = self:_error_speed_calculation(dt, t, game_session, go_id, movement)
 			local network_speed = GameSession.game_object_field(game_session, go_id, "speed")
+
 			new_speed = network_speed + error_compensation_speed
 		end
 
 		movement:set_speed(new_speed)
 
 		local movement_status = movement:update(dt, t)
+
 		self._current_movment_status = movement_status
 
 		if movement_status ~= "end" then
@@ -147,7 +154,9 @@ SplineFollowerExtension.update = function (self, unit, dt, t)
 		end
 	elseif self._current_state == STATES.end_of_spline then
 		local last_spline = self._last_spline
+
 		self._is_moving = false
+
 		local state = last_spline and STATES.finished or STATES.waiting
 
 		self:_set_state(state)
@@ -189,12 +198,13 @@ SplineFollowerExtension._error_speed_calculation = function (self, dt, t, game, 
 		local current_subdivision_index = movement:current_subdivision_index()
 		local current_spline_t = movement:current_t()
 		local error_distance = movement:distance(current_spline_index, current_subdivision_index, current_spline_t, spline_index, subdivision_index, spline_t)
+
 		old_values.spline_index = spline_index
 		old_values.subdivision_index = subdivision_index
 		old_values.spline_t = spline_t
 		old_values.error_compensation_speed = error_distance / ERROR_RECOUP_TIME
 		old_values.last_sync_time = t
-	elseif ERROR_RECOUP_TIME <= t - old_values.last_sync_time then
+	elseif t - old_values.last_sync_time >= ERROR_RECOUP_TIME then
 		old_values.error_compensation_speed = 0
 	end
 
@@ -207,7 +217,7 @@ SplineFollowerExtension._players_in_proximity = function (self)
 	local valid_player_units = side.valid_player_units
 	local follow_unit_position = Unit.world_position(self._unit, 1)
 	local proximity_check_distance_squared = self._proximity_check_distance_squared
-	local closest_player, closest_distance = nil
+	local closest_player, closest_distance
 
 	for i = 1, #valid_player_units do
 		local unit = valid_player_units[i]
@@ -235,19 +245,22 @@ end
 
 SplineFollowerExtension.follow_spline = function (self, name)
 	self._objective_name = name
+
 	local current_spline_index = self._current_spline_index
 	local spline_follower_system = self._spline_follower_system
 
 	if spline_follower_system:has_connected_spline(name, current_spline_index) then
 		local spline = spline_follower_system:get_connected_spline(name, current_spline_index)
+
 		current_spline_index = current_spline_index + 1
 		self._last_spline = not spline_follower_system:has_connected_spline(name, current_spline_index)
+
 		local unit = self._unit
 		local follower_unit_position = Unit.world_position(unit, 1)
 		local spline_start_position = spline[1]:unbox()
 		local distance_squared = Vector3.distance_squared(follower_unit_position, spline_start_position)
 
-		if self._connect_spline_distance and self._connect_spline_distance < distance_squared then
+		if self._connect_spline_distance and distance_squared > self._connect_spline_distance then
 			spline[1] = Vector3Box(follower_unit_position)
 		end
 
@@ -257,6 +270,7 @@ SplineFollowerExtension.follow_spline = function (self, name)
 
 		self._is_moving = true
 		self._current_spline_index = current_spline_index
+
 		local servo_skull_extension = ScriptUnit.has_extension(unit, "servo_skull_system")
 
 		if servo_skull_extension then

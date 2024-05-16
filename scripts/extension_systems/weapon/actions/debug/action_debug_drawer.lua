@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/debug/action_debug_drawer.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ActionDebugDrawer = class("ActionDebugDrawer")
-local _screenspace_position, _chain_actions_size_y, _action_duration, _timeline_bars_size_y = nil
+local _screenspace_position, _chain_actions_size_y, _action_duration, _timeline_bars_size_y
 local DRAWER_ALIGNMENT_X = "right"
 local DRAWER_ALIGNMENT_Y = "top"
 local DRAWER_POS_X = 0
@@ -52,14 +54,14 @@ ActionDebugDrawer.add_variable = function (self, name, source, id)
 	self._variables[#self._variables + 1] = {
 		name = name,
 		source = source,
-		id = id
+		id = id,
 	}
 end
 
 ActionDebugDrawer.add_timeline_bar = function (self, name, indicators)
 	self._timeline_bars[#self._timeline_bars + 1] = {
 		name = name,
-		indicators = indicators
+		indicators = indicators,
 	}
 end
 
@@ -106,10 +108,12 @@ ActionDebugDrawer._draw_single_chain_action = function (self, action_timeline, t
 	local chain_start_t = chain_time / time_scale
 	local chain_end_t = action_timeline
 	local chain_time_window = chain_end_t == math.huge and 1 or chain_end_t - chain_start_t
+
 	chain_time_window = action_timeline > 0 and chain_time_window / action_timeline or 0
+
 	local offset_y = CHAIN_ACTION_BAR_OFFSET_Y * (chain_action_index - 1)
 	local chain_bar_size_x = bar_size_x * chain_time_window
-	local pos = Vector3(anchor_position.x + (anchor_size.x - bar_size_x) * 0.5 + bar_size_x - chain_bar_size_x, CHAIN_ACTION_BAR_POS_Y + offset_y, DRAWER_LAYER + 1)
+	local pos = Vector3(anchor_position.x + (anchor_size.x - bar_size_x) * 0.5 + (bar_size_x - chain_bar_size_x), CHAIN_ACTION_BAR_POS_Y + offset_y, DRAWER_LAYER + 1)
 	local size = Vector2(chain_bar_size_x, CHAIN_ACTION_BAR_SIZE_Y + (extra_background_y_size or 0))
 	local chain_color = chain_action.auto_chain and Color.red() or Color.cheeseburger()
 	local font_size = 12
@@ -137,6 +141,7 @@ ActionDebugDrawer._draw_chain_actions = function (self, gui, anchor_position, an
 		else
 			for ii = 1, num_chain_actions do
 				chain_action_index = chain_action_index + 1
+
 				local extra_background_y_size = ii < num_chain_actions and CHAIN_ACTION_BAR_GAP or 0
 
 				self:_draw_single_chain_action(action_timeline, time_scale, chain_action_index, chain_action[ii], gui, anchor_position, anchor_size, extra_background_y_size)
@@ -185,6 +190,7 @@ ActionDebugDrawer._draw_timeline_bars = function (self, gui, anchor_position, an
 		Gui.slug_text(gui, timeline_bar.name, DevParameters.debug_text_font, ACTION_NAME_FONT_SIZE * 0.75, pos, nil, Color.white())
 
 		pos.y = pos.y + ACTION_NAME_FONT_SIZE
+
 		local size = Vector2(bar_size_x, TIMELINEBAR_SIZE_Y)
 
 		Gui.rect(gui, pos, size, Color.white())
@@ -228,7 +234,7 @@ end
 
 function _screenspace_position(x, y, size, alignment_x, alignment_y)
 	local w, h = Gui.resolution()
-	local screenspace_x, screenspace_y = nil
+	local screenspace_x, screenspace_y
 
 	if alignment_x == "center" then
 		screenspace_x = w * 0.5 - size.x * 0.5 + x

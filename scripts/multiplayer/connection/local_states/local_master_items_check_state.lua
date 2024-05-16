@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_master_items_check_state.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local RPCS = {
-	"rpc_master_items_version_reply"
+	"rpc_master_items_version_reply",
 }
 local LocalMasterItemsCheckState = class("LocalMasterItemsCheckState")
 
@@ -34,11 +36,11 @@ LocalMasterItemsCheckState.update = function (self, dt)
 	if not self._got_reply then
 		self._time = self._time + dt
 
-		if shared_state.timeout < self._time then
+		if self._time > shared_state.timeout then
 			Log.info("LocalMasterItemsCheckState", "Timeout waiting for rpc_master_items_version_reply")
 
 			return "timeout", {
-				game_reason = "timeout"
+				game_reason = "timeout",
 			}
 		end
 	end
@@ -49,13 +51,13 @@ LocalMasterItemsCheckState.update = function (self, dt)
 		Log.info("LocalMasterItemsCheckState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason
+			engine_reason = reason,
 		}
 	end
 
 	if self._items_update_failed then
 		return "update failed", {
-			game_reason = "master_item_update_failed"
+			game_reason = "master_item_update_failed",
 		}
 	end
 
@@ -66,6 +68,7 @@ end
 
 LocalMasterItemsCheckState.rpc_master_items_version_reply = function (self, channel_id, host_items_version, host_items_url)
 	self._got_reply = true
+
 	local local_items_version = tostring(MasterItems.get_cached_version())
 
 	if local_items_version == host_items_version then

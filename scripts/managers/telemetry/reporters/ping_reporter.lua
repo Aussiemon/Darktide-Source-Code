@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/ping_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local PingReporter = class("PingReporter")
 local SAMPLE_INTERVAL = 1
@@ -13,7 +15,7 @@ PingReporter.destroy = function (self)
 end
 
 PingReporter.update = function (self, dt, t)
-	if SAMPLE_INTERVAL < t - self._last_sample_time then
+	if t - self._last_sample_time > SAMPLE_INTERVAL then
 		self:_take_measure(dt)
 
 		self._last_sample_time = math.floor(t)
@@ -35,6 +37,7 @@ PingReporter._take_measure = function (self, dt)
 
 	local ping = Network.ping(host_peer_id)
 	local ping_ms = ping * 1000
+
 	self._measures[#self._measures + 1] = ping_ms
 end
 

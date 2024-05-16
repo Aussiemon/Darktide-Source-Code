@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/moveable_platform.lua
+
 local MoveablePlatform = component("MoveablePlatform")
 
 MoveablePlatform.init = function (self, unit, is_server)
 	self._is_server = is_server
+
 	local moveable_platform_extension = ScriptUnit.fetch_component_extension(unit, "moveable_platform_system")
 
 	if moveable_platform_extension then
@@ -27,7 +30,9 @@ MoveablePlatform.editor_init = function (self, unit)
 	if rawget(_G, "LevelEditor") then
 		self._unit = unit
 		self._stop_units = {}
+
 		local world = Application.main_world()
+
 		self._world = world
 		self._debug_text_id = nil
 		self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
@@ -145,6 +150,7 @@ MoveablePlatform.editor_destroy = function (self, unit)
 
 	local world = self._world
 	local gui = self._gui
+
 	self._line_object = nil
 	self._world = nil
 
@@ -200,15 +206,17 @@ MoveablePlatform._calculate_story_speed = function (self, unit)
 
 			if NetworkConstants then
 				local story_speed_constants = NetworkConstants.story_speed
+
 				min_speed = story_speed_constants.min
 				max_speed = story_speed_constants.max
 			end
 
 			if override_forward then
 				local story_time_forward = self:get_data(unit, "story_time_forward")
+
 				story_speed_forward = story_length / story_time_forward
 
-				if min_speed > story_speed_forward then
+				if story_speed_forward < min_speed then
 					self:_draw_warning(unit, string.format("forward override time is %s vs %s base time, causing speed multiplier to be too small %sx (%sx min)", story_time_forward, story_length, story_speed_forward, min_speed))
 
 					story_speed_forward = min_speed
@@ -221,9 +229,10 @@ MoveablePlatform._calculate_story_speed = function (self, unit)
 
 			if override_backward then
 				local story_time_backward = self:get_data(unit, "story_time_backward")
+
 				story_speed_backward = story_length / story_time_backward
 
-				if min_speed > story_speed_backward then
+				if story_speed_backward < min_speed then
 					self:_draw_warning(unit, string.format("backward override time is %ss vs %ss base time, causing speed multiplier to be too small %sx (%sx min)", story_time_backward, story_length, story_speed_backward, min_speed))
 
 					story_speed_backward = min_speed
@@ -326,115 +335,115 @@ end
 
 MoveablePlatform.component_data = {
 	story = {
+		category = "Story",
+		ui_name = "Story",
 		ui_type = "text_box",
 		value = "story_name",
-		ui_name = "Story",
-		category = "Story"
 	},
 	story_override_forward = {
+		category = "Story",
+		ui_name = "Override Forward Story Time",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Override Forward Story Time",
-		category = "Story"
 	},
 	story_time_forward = {
-		ui_type = "number",
-		decimals = 100,
 		category = "Story",
-		value = 0,
+		decimals = 100,
+		step = 0.1,
 		ui_name = "Forward Play Time (sec.)",
-		step = 0.1
+		ui_type = "number",
+		value = 0,
 	},
 	story_override_backward = {
+		category = "Story",
+		ui_name = "Override Backward Story Time",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Override Backward Story Time",
-		category = "Story"
 	},
 	story_time_backward = {
-		ui_type = "number",
-		decimals = 100,
 		category = "Story",
-		value = 0,
+		decimals = 100,
+		step = 0.1,
 		ui_name = "Backward Story Time (sec.)",
-		step = 0.1
+		ui_type = "number",
+		value = 0,
 	},
 	player_side = {
+		ui_name = "Player Side",
 		ui_type = "text_box",
 		value = "heroes",
-		ui_name = "Player Side"
 	},
 	walls_collision = {
+		ui_name = "Walls Collision",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Walls Collision"
 	},
 	walls_collision_filter = {
+		ui_name = "Walls Collision Filter",
 		ui_type = "text_box",
 		value = "default",
-		ui_name = "Walls Collision Filter"
 	},
 	require_all_players_onboard = {
+		ui_name = "Require All Players Onboard",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Require All Players Onboard"
 	},
 	interactable_story_actions = {
-		ui_type = "text_box_array",
+		category = "Interactables",
 		size = 0,
 		ui_name = "Story Actions",
-		category = "Interactables"
+		ui_type = "text_box_array",
 	},
 	interactable_hud_descriptions = {
-		ui_type = "text_box_array",
+		category = "Interactables",
 		size = 0,
 		ui_name = "HUD Descriptions",
-		category = "Interactables"
+		ui_type = "text_box_array",
 	},
 	end_sound_time = {
+		ui_name = "End Sound Time",
 		ui_type = "number",
 		value = 0,
-		ui_name = "End Sound Time"
 	},
 	nav_handling_enabled = {
+		category = "Nav",
+		ui_name = "Nav Handling",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Nav Handling",
-		category = "Nav"
 	},
 	stop_unit = {
-		ui_type = "resource",
-		preview = true,
 		category = "Nav",
-		value = "",
+		filter = "unit",
+		preview = true,
 		ui_name = "Stop Unit",
-		filter = "unit"
+		ui_type = "resource",
+		value = "",
 	},
 	stop_position = {
-		ui_type = "vector",
 		category = "Nav",
-		ui_name = "Stop Position",
 		step = 0.1,
-		value = Vector3Box(0, 0, 0)
+		ui_name = "Stop Position",
+		ui_type = "vector",
+		value = Vector3Box(0, 0, 0),
 	},
 	inputs = {
 		move_forward = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		move_backward = {
 			accessibility = "public",
-			type = "event"
+			type = "event",
 		},
 		toggle_require_all_players_onboard = {
 			accessibility = "public",
-			type = "event"
-		}
+			type = "event",
+		},
 	},
 	extensions = {
 		"MoveablePlatformExtension",
-		"InteracteeExtension"
-	}
+		"InteracteeExtension",
+	},
 }
 
 return MoveablePlatform

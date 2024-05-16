@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/onboarding_handler/constant_element_onboarding_handler.lua
+
 local OnboardingTemplates = require("scripts/ui/constant_elements/elements/onboarding_handler/onboarding_templates")
 local ConstantElementOnboardingHandler = class("ConstantElementOnboardingHandler")
 
@@ -13,6 +15,7 @@ ConstantElementOnboardingHandler._initialize_settings = function (self)
 
 	for i = 1, #OnboardingTemplates do
 		local settings = table.clone(OnboardingTemplates[i])
+
 		settings.active = false
 		tutorial_settings[#tutorial_settings + 1] = settings
 	end
@@ -72,7 +75,7 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 		for i = 1, #current_state_tutorial_settings do
 			local settings = current_state_tutorial_settings[i]
 
-			if settings:validation_func() then
+			if settings.validation_func(settings) then
 				local settings_name = settings.name
 
 				if not settings.active and not once_per_state_tracker[settings_name] then
@@ -90,11 +93,11 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 		local settings = tutorial_settings[i]
 
 		if settings.active then
-			local close_condition = on_destroy or settings.close_condition and settings:close_condition()
+			local close_condition = on_destroy or settings.close_condition and settings.close_condition(settings)
 
 			if close_condition then
 				if settings.on_deactivation then
-					settings:on_deactivation()
+					settings.on_deactivation(settings)
 				end
 
 				settings.active = false
@@ -118,7 +121,7 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 			end
 
 			if settings.on_deactivation then
-				settings:on_deactivation()
+				settings.on_deactivation(settings)
 			end
 
 			settings.active = false
@@ -135,7 +138,7 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 				settings.should_activate = nil
 
 				if settings.on_activation then
-					settings:on_activation()
+					settings.on_activation(settings)
 				end
 
 				settings.active = true

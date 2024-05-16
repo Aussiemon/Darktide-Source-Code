@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/options/controller_settings.lua
+
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -5,16 +7,17 @@ local SettingsUtilitiesFunction = require("scripts/settings/options/settings_uti
 local SettingsUtilities = {}
 
 local function construct_interface_settings_boolean(template)
-	local entry = {
-		default_value = template.default_value,
-		display_name = template.display_name,
-		on_value_changed = template.on_value_changed,
-		indentation_level = template.indentation_level,
-		validation_function = template.validation_function,
-		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules,
-		id = template.id
-	}
+	local entry = {}
+
+	entry.default_value = template.default_value
+	entry.display_name = template.display_name
+	entry.on_value_changed = template.on_value_changed
+	entry.indentation_level = template.indentation_level
+	entry.validation_function = template.validation_function
+	entry.tooltip_text = template.tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.id = template.id
+
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
@@ -65,6 +68,7 @@ local function construct_interface_settings_percent_slider(template)
 
 	local function explode_value(percent_value)
 		local exploded_value = min_value + percent_value * convertion_value
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -116,7 +120,7 @@ local function construct_interface_settings_percent_slider(template)
 		indentation_level = template.indentation_level,
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
 	}
 
 	return OptionsUtilities.create_percent_slider_template(params)
@@ -163,7 +167,7 @@ local function construct_interface_settings_value_slider(template)
 		validation_function = template.validation_function,
 		id = template.id,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
 	}
 
 	return OptionsUtilities.create_value_slider_template(params)
@@ -182,10 +186,11 @@ local function construct_interface_settings_dropdown(template)
 
 	for i = 1, #template.options do
 		local value = template.options[i]
+
 		options[#options + 1] = {
 			id = value.name,
 			value = value.name,
-			display_name = value.display_name
+			display_name = value.display_name,
 		}
 	end
 
@@ -212,7 +217,7 @@ local function construct_interface_settings_dropdown(template)
 		id = template.id,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		default_value = template.default_value
+		default_value = template.default_value,
 	}
 
 	return params
@@ -222,20 +227,20 @@ local function _aim_assist_options()
 	local options = {
 		{
 			display_name = "loc_setting_aim_assist_off",
-			name = "off"
+			name = "off",
 		},
 		{
 			display_name = "loc_setting_aim_assist_old",
-			name = "old"
+			name = "old",
 		},
 		{
 			display_name = "loc_setting_aim_assist_new_slim",
-			name = "new_slim"
+			name = "new_slim",
 		},
 		{
 			display_name = "loc_setting_aim_assist_new_full",
-			name = "new_full"
-		}
+			name = "new_full",
+		},
 	}
 
 	return options
@@ -245,27 +250,27 @@ local function _response_curve_options()
 	local options = {
 		{
 			display_name = "loc_setting_controller_rotation_speed_curves_linear",
-			name = "linear"
+			name = "linear",
 		},
 		{
 			display_name = "loc_setting_controller_rotation_speed_curves_exponential",
-			name = "exponential"
+			name = "exponential",
 		},
 		{
 			display_name = "loc_setting_controller_rotation_speed_curves_dynamic",
-			name = "dynamic"
-		}
+			name = "dynamic",
+		},
 	}
 
 	return options
 end
 
-local settings_definitions = {
-	[#settings_definitions + 1] = {
-		group_name = "controller_settings",
-		display_name = "loc_settings_menu_group_controller_settings",
-		widget_type = "group_header"
-	}
+local settings_definitions = {}
+
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_settings_menu_group_controller_settings",
+	group_name = "controller_settings",
+	widget_type = "group_header",
 }
 
 function get_gamepad_input_layout_names(layouts)
@@ -275,7 +280,7 @@ function get_gamepad_input_layout_names(layouts)
 		layout_names[#layout_names + 1] = {
 			name = name,
 			display_name = values.display_name,
-			sort_order = values.sort_order
+			sort_order = values.sort_order,
 		}
 
 		table.sort(layout_names, function (a, b)
@@ -288,10 +293,11 @@ end
 
 local gamepad_input_layouts = require("scripts/settings/input/gamepad_input_layouts")
 local gamepad_layout_names = get_gamepad_input_layout_names(gamepad_input_layouts)
+
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	display_name = "loc_setting_controller_layout",
 	id = "controller_layout",
+	save_location = "input_settings",
 	widget_type = "dropdown",
 	options = gamepad_layout_names,
 	validation_function = function ()
@@ -299,7 +305,7 @@ settings_definitions[#settings_definitions + 1] = {
 	end,
 	on_value_changed = function (value)
 		local devices = {
-			"xbox_controller"
+			"xbox_controller",
 		}
 		local alias_array_index = 1
 		local input_manager = Managers.input
@@ -314,7 +320,7 @@ settings_definitions[#settings_definitions + 1] = {
 
 				for alias_name, new_values in pairs(aliases) do
 					if alias:bindable(alias_name) then
-						local key_info = nil
+						local key_info
 
 						if new_values ~= StrictNil then
 							key_info = alias:get_keys_for_alias_row(new_values, alias_array_index, devices)
@@ -328,34 +334,34 @@ settings_definitions[#settings_definitions + 1] = {
 				input_manager:save_key_mappings(service_type)
 			end
 		end
-	end
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
-	id = "controller_layout_image",
 	display_name = "setting_controller_image_layout",
-	widget_type = "controller_image"
+	id = "controller_layout_image",
+	widget_type = "controller_image",
 }
 settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_xbox_controller_chat_button_description",
 	shrink_to_fit = true,
 	widget_type = "description",
 	display_params = {
-		input = "+"
+		input = "+",
 	},
 	validation_function = function ()
 		return IS_XBS
-	end
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
-	group_name = "controller_aim_settings",
 	display_name = "loc_settings_menu_group_controller_rumble_settings",
-	widget_type = "group_header"
+	group_name = "controller_aim_settings",
+	widget_type = "group_header",
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
+	default_value = true,
 	display_name = "loc_interface_setting_rumble_enabled",
 	id = "rumble_enabled",
-	default_value = true,
+	save_location = "input_settings",
 	widget_type = "boolean",
 	on_value_changed = function (value)
 		Managers.event:trigger("event_update_rumble_enabled", value)
@@ -363,54 +369,54 @@ settings_definitions[#settings_definitions + 1] = {
 		if value then
 			Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
 		end
-	end
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	default_value = 50,
 	display_name = "loc_settings_menu_rumble_intensity",
-	min_value = 0,
 	id = "rumble_intensity",
+	min_value = 0,
+	save_location = "input_settings",
 	tooltip_text = "loc_settings_menu_rumble_intensity_mouseover",
 	widget_type = "percent_slider",
 	on_value_changed = function (value)
 		Managers.event:trigger("event_update_rumble_intensity", value)
 		Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
-	end
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	default_value = 100,
 	display_name = "loc_settings_menu_rumble_gameplay",
-	min_value = 0,
 	id = "rumble_intensity_gameplay",
+	min_value = 0,
+	save_location = "input_settings",
 	tooltip_text = "loc_settings_menu_rumble_gameplay_mouseover",
 	widget_type = "percent_slider",
 	on_value_changed = function (value)
 		Managers.event:trigger("event_update_rumble_intensity", value)
-	end
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	default_value = 100,
 	display_name = "loc_settings_menu_rumble_immersive",
-	min_value = 0,
 	id = "rumble_intensity_immersive",
+	min_value = 0,
+	save_location = "input_settings",
 	tooltip_text = "loc_settings_menu_rumble_immersive_mouseover",
 	widget_type = "percent_slider",
 	on_value_changed = function (value)
 		Managers.event:trigger("event_update_rumble_intensity", value)
-	end
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
-	group_name = "controller_aim_settings",
 	display_name = "loc_settings_menu_group_controller_aim_settings_new",
-	widget_type = "group_header"
+	group_name = "controller_aim_settings",
+	widget_type = "group_header",
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	display_name = "loc_setting_aim_assist",
 	id = "controller_aim_assist",
+	save_location = "input_settings",
 	widget_type = "dropdown",
 	options = _aim_assist_options(),
 	tooltip_text = function ()
@@ -431,137 +437,138 @@ settings_definitions[#settings_definitions + 1] = {
 			assist_title_3 = assist_title_3,
 			assist_desc_3 = assist_desc_3,
 			assist_title_4 = assist_title_4,
-			assist_desc_4 = assist_desc_4
+			assist_desc_4 = assist_desc_4,
 		})
-	end
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_controller_invert_look_y",
 	id = "controller_invert_look_y",
 	save_location = "input_settings",
-	display_name = "loc_setting_controller_invert_look_y",
-	widget_type = "boolean"
+	widget_type = "boolean",
 }
 settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_controller_enable_acceleration_new",
 	id = "controller_enable_acceleration",
 	save_location = "input_settings",
-	display_name = "loc_setting_controller_enable_acceleration_new",
-	widget_type = "boolean"
+	widget_type = "boolean",
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	display_name = "loc_setting_controller_rotation_speed_curves",
 	id = "controller_response_curve",
+	save_location = "input_settings",
 	widget_type = "dropdown",
-	options = _response_curve_options()
+	options = _response_curve_options(),
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	default_value = 0,
 	display_name = "loc_setting_controller_rotation_speed_curves_strength",
-	min_value = -100,
 	id = "controller_response_curve_strength",
 	max_value = 100,
+	min_value = -100,
+	save_location = "input_settings",
 	tooltip_text = "loc_setting_controller_rotation_speed_curves_strength_mouseover",
-	widget_type = "percent_slider"
+	widget_type = "percent_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	display_name = "loc_setting_controller_rotation_speed_curves_ranged",
 	id = "controller_response_curve_ranged",
+	save_location = "input_settings",
 	widget_type = "dropdown",
-	options = _response_curve_options()
+	options = _response_curve_options(),
 }
 settings_definitions[#settings_definitions + 1] = {
-	save_location = "input_settings",
 	default_value = 0,
 	display_name = "loc_setting_controller_rotation_speed_curves_strength_ranged",
-	min_value = -100,
 	id = "controller_response_curve_strength_ranged",
 	max_value = 100,
+	min_value = -100,
+	save_location = "input_settings",
 	tooltip_text = "loc_setting_controller_rotation_speed_curves_strength_mouseover",
-	widget_type = "percent_slider"
+	widget_type = "percent_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	step_size_value = 0.01,
 	apply_on_drag = true,
 	display_name = "loc_setting_controller_look_dead_zone_new",
-	num_decimals = 2,
+	id = "controller_look_dead_zone",
 	max_value = 1,
 	min_value = 0,
-	widget_type = "value_slider",
-	id = "controller_look_dead_zone",
-	save_location = "input_settings"
-}
-settings_definitions[#settings_definitions + 1] = {
-	group_name = "controller_aim_settings",
-	display_name = "loc_settings_menu_group_controller_sensitivity_settings",
-	widget_type = "group_header"
-}
-settings_definitions[#settings_definitions + 1] = {
+	num_decimals = 2,
 	save_location = "input_settings",
-	step_size_value = 0.1,
+	step_size_value = 0.01,
+	widget_type = "value_slider",
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_settings_menu_group_controller_sensitivity_settings",
+	group_name = "controller_aim_settings",
+	widget_type = "group_header",
+}
+settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_setting_controller_look_scale_horizontal",
-	num_decimals = 1,
 	id = "controller_look_scale",
 	max_value = 10,
 	min_value = 0.1,
-	widget_type = "value_slider"
-}
-settings_definitions[#settings_definitions + 1] = {
+	num_decimals = 1,
 	save_location = "input_settings",
 	step_size_value = 0.1,
+	widget_type = "value_slider",
+}
+settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_setting_controller_look_scale_horizontal_ranged",
-	num_decimals = 1,
 	id = "controller_look_scale_ranged",
 	max_value = 10,
 	min_value = 0.1,
-	widget_type = "value_slider"
-}
-settings_definitions[#settings_definitions + 1] = {
+	num_decimals = 1,
 	save_location = "input_settings",
 	step_size_value = 0.1,
+	widget_type = "value_slider",
+}
+settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_setting_controller_look_scale_horizontal_ranged_alternate_fire",
-	num_decimals = 1,
 	id = "controller_look_scale_ranged_alternate_fire",
 	max_value = 10,
 	min_value = 0.1,
-	widget_type = "value_slider"
-}
-settings_definitions[#settings_definitions + 1] = {
+	num_decimals = 1,
 	save_location = "input_settings",
 	step_size_value = 0.1,
+	widget_type = "value_slider",
+}
+settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_setting_controller_look_scale_vertical",
-	num_decimals = 1,
 	id = "controller_look_scale_vertical",
 	max_value = 10,
 	min_value = 0.1,
-	widget_type = "value_slider"
-}
-settings_definitions[#settings_definitions + 1] = {
+	num_decimals = 1,
 	save_location = "input_settings",
 	step_size_value = 0.1,
+	widget_type = "value_slider",
+}
+settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_setting_controller_look_scale_vertical_ranged",
-	num_decimals = 1,
 	id = "controller_look_scale_vertical_ranged",
 	max_value = 10,
 	min_value = 0.1,
-	widget_type = "value_slider"
-}
-settings_definitions[#settings_definitions + 1] = {
+	num_decimals = 1,
 	save_location = "input_settings",
 	step_size_value = 0.1,
+	widget_type = "value_slider",
+}
+settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_setting_controller_look_scale_vertical_ranged_alternate_fire",
-	num_decimals = 1,
 	id = "controller_look_scale_vertical_ranged_alternate_fire",
 	max_value = 10,
 	min_value = 0.1,
-	widget_type = "value_slider"
+	num_decimals = 1,
+	save_location = "input_settings",
+	step_size_value = 0.1,
+	widget_type = "value_slider",
 }
+
 local template_functions = {
 	boolean = construct_interface_settings_boolean,
 	value_slider = construct_interface_settings_value_slider,
 	percent_slider = construct_interface_settings_percent_slider,
-	dropdown = construct_interface_settings_dropdown
+	dropdown = construct_interface_settings_dropdown,
 }
 local settings = {}
 
@@ -592,9 +599,9 @@ end
 SettingsUtilities = SettingsUtilitiesFunction(settings)
 
 return {
-	icon = "content/ui/materials/icons/system/settings/category_controls",
 	display_name = "loc_settings_menu_group_controller_settings",
+	icon = "content/ui/materials/icons/system/settings/category_controls",
 	settings_utilities = SettingsUtilities,
 	settings_by_id = SettingsUtilities.settings_by_id,
-	settings = settings
+	settings = settings,
 }

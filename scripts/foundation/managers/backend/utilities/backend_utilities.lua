@@ -1,11 +1,15 @@
+﻿-- chunkname: @scripts/foundation/managers/backend/utilities/backend_utilities.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = {}
 local TEMPLATE_PATTERN = "{(%a+)}"
+
 BackendUtilities.prefered_mission_region = ""
 BackendUtilities.ERROR_METATABLE = {
 	__tostring = function (t)
 		local msg = "Backend error:\n"
+
 		msg = msg .. "Code: " .. t.code .. "\n"
 
 		if t.description then
@@ -33,7 +37,7 @@ BackendUtilities.ERROR_METATABLE = {
 		end
 
 		return msg
-	end
+	end,
 }
 
 local function page_from_link(paged, link, prev_links)
@@ -90,14 +94,14 @@ BackendUtilities.wrap_paged_response = function (paged, prev_links)
 		end,
 		first_page = function ()
 			return page_from_hal_link(paged, "first", {})
-		end
+		end,
 	}
 end
 
 BackendUtilities.create_error = function (code, description)
 	local t = {
 		code = code,
-		description = tostring(description)
+		description = tostring(description),
 	}
 
 	setmetatable(t, BackendUtilities.ERROR_METATABLE)
@@ -112,7 +116,7 @@ BackendUtilities.fetch_link = function (data, link_name, template_data)
 		error(BackendUtilities.create_error(BackendError.UnknownError, "No such link " .. link_name))
 	end
 
-	local href = nil
+	local href
 
 	if link.templated == true then
 		local template_error = false
@@ -135,6 +139,7 @@ BackendUtilities.fetch_link = function (data, link_name, template_data)
 
 				for i = 1, #template_keys do
 					local key = template_keys[i]
+
 					href = href:gsub("%{" .. key .. "%}", template_data[key])
 				end
 			end
@@ -149,6 +154,7 @@ BackendUtilities.fetch_link = function (data, link_name, template_data)
 
 	if not string.starts_with(href, "/") then
 		local self_href = data._links.self.href
+
 		href = self_href .. "/" .. href
 	end
 
@@ -228,22 +234,22 @@ local function _fetch_root(optional_top_node)
 			body = {
 				_links = {
 					self = {
-						href = "/data"
+						href = "/data",
 					},
 					characters = {
+						href = "{accountSub}/characters",
 						templated = true,
-						href = "{accountSub}/characters"
 					},
 					progression = {
+						href = "{accountSub}/progression",
 						templated = true,
-						href = "{accountSub}/progression"
 					},
 					account = {
+						href = "{accountSub}/account",
 						templated = true,
-						href = "{accountSub}/account"
-					}
-				}
-			}
+					},
+				},
+			},
 		})
 	end
 end
@@ -254,7 +260,7 @@ BackendUtilities.build_account_path = function (hal_link, requested_account_id, 
 	end):next(function (account_id)
 		return _fetch_root(optional_top_node):next(function (data)
 			return BackendUtilities.fetch_link(data.body, hal_link, {
-				accountSub = requested_account_id or account_id
+				accountSub = requested_account_id or account_id,
 			})
 		end)
 	end)

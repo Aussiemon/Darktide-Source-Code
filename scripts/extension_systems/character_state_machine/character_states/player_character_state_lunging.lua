@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_lunging.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local ActionAvailability = require("scripts/extension_systems/weapon/utilities/action_availability")
@@ -31,13 +33,14 @@ local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local LUNGE_ATTACK_POWER_LEVEL = 1000
 local HIT_WEAKSPOT = false
-local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete, _apply_buff_to_hit_unit = nil
+local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete, _apply_buff_to_hit_unit
 local PlayerCharacterStateLunging = class("PlayerCharacterStateLunging", "PlayerCharacterStateBase")
 
 PlayerCharacterStateLunging.init = function (self, character_state_init_context, ...)
 	PlayerCharacterStateLunging.super.init(self, character_state_init_context, ...)
 
 	local lunge_character_state_component = character_state_init_context.unit_data:write_component("lunge_character_state")
+
 	lunge_character_state_component.is_lunging = false
 	lunge_character_state_component.is_aiming = false
 	lunge_character_state_component.distance_left = 0
@@ -45,7 +48,9 @@ PlayerCharacterStateLunging.init = function (self, character_state_init_context,
 	lunge_character_state_component.lunge_template = "none"
 	lunge_character_state_component.lunge_target = nil
 	self._lunge_character_state_component = lunge_character_state_component
+
 	local character_state_hit_mass_component = character_state_init_context.unit_data:write_component("character_state_hit_mass")
+
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
 	self._character_state_hit_mass_component = character_state_hit_mass_component
 	self._locomotion_push_component = character_state_init_context.unit_data:write_component("locomotion_push")
@@ -66,12 +71,14 @@ local stop_action_data = {}
 
 PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
 	self._locomotion_push_component.new_velocity = Vector3.zero()
 	self._push_sfx_cooldown = 0
 	self._moving_backwards = self._input_extension:get("move").y < -0.1
 	self._has_pushback = false
+
 	local lunge_template_name = params.lunge_template_name
 	local lunge_template = LungeTemplates[lunge_template_name]
 
@@ -98,6 +105,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		local lunge_target_position = POSITION_LOOKUP[lunge_target]
 		local unit_position = POSITION_LOOKUP[unit]
 		local distance_to_unit = Vector3.distance(unit_position, lunge_target_position)
+
 		distance = math.min(distance, distance_to_unit)
 	end
 
@@ -109,11 +117,13 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		local move_input = self._input_extension:get("move")
 		local rotation = self._first_person_component.rotation
 		local move_direction = Quaternion.rotate(rotation, move_input)
+
 		move_direction = Vector3.flat(move_direction)
 		flat_direction = move_direction
 
 		if Vector3.length_squared(move_direction) == 0 then
 			local forward_direction = Quaternion.forward(rotation)
+
 			flat_direction = forward_direction
 		end
 	end
@@ -147,12 +157,15 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	end
 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
+
 	lunge_character_state_component.is_lunging = true
 	lunge_character_state_component.distance_left = distance
 	lunge_character_state_component.direction = flat_direction
 	lunge_character_state_component.lunge_template = lunge_template.name
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
+
 	local movement_state_component = self._movement_state_component
+
 	movement_state_component.method = "lunging"
 
 	if lunge_template.is_dodging then
@@ -190,11 +203,13 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	table.clear(self._hit_enemy_units)
 
 	self._last_hit_unit = nil
-	local target_is_wielding_ranged_weapon = nil
+
+	local target_is_wielding_ranged_weapon
 	local visual_loadout_extension = ScriptUnit.has_extension(lunge_target, "visual_loadout_system")
 
 	if visual_loadout_extension then
 		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+
 		target_is_wielding_ranged_weapon = visual_loadout_extension:is_inventory_slot_ranged(wielded_slot_name)
 	end
 
@@ -205,12 +220,16 @@ local temp_hit_units = {}
 
 PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	local movement_state_component = self._movement_state_component
+
 	movement_state_component.is_dodging = false
+
 	local lunge_character_state_component = self._lunge_character_state_component
+
 	lunge_character_state_component.is_lunging = false
 	self._moving_backwards = false
 	self._has_pushback = false
 	self._locomotion_steering_component.disable_minion_collision = false
+
 	local hit_enemy_units = self._hit_enemy_units
 
 	if next_state == "sprinting" then
@@ -258,9 +277,9 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		local forward_offset = on_finish_explosion.forward_offset
 		local vertical_offset = on_finish_explosion.vertical_offset or 0
 		local position = self._locomotion_component.position
-		local impact_normal = nil
+		local impact_normal
 		local power_level = 600
-		local charge_level, attack_type = nil
+		local charge_level, attack_type
 
 		table.clear(temp_hit_units)
 		Explosion.create_explosion(self._world, self._physics_world, position + direction * forward_offset + Vector3.up() * vertical_offset, impact_normal, unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, temp_hit_units)
@@ -284,7 +303,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	if add_delayed_buff then
 		local add_buff_delay = lunge_template.add_buff_delay or 0
 		local time_in_lunge = t - self._character_state_component.entered_t
-		local has_exit_before_delay = add_buff_delay > time_in_lunge
+		local has_exit_before_delay = time_in_lunge < add_buff_delay
 
 		if has_exit_before_delay then
 			if type(add_delayed_buff) == "table" then
@@ -318,7 +337,7 @@ PlayerCharacterStateLunging.fixed_update = function (self, unit, dt, t, next_sta
 		max_mass_hit = self:_update_enemy_hit_detection(unit, lunge_template)
 	end
 
-	local still_lunging = nil
+	local still_lunging
 
 	if lunge_template then
 		still_lunging = self:_update_lunge(unit, dt, time_in_lunge, lunge_template)
@@ -391,7 +410,7 @@ PlayerCharacterStateLunging._check_transition = function (self, unit, t, input_e
 		return "walking"
 	end
 
-	if self._moving_backwards and input_extension:get("move").y >= -0.1 then
+	if self._moving_backwards and not (input_extension:get("move").y < -0.1) then
 		self._moving_backwards = false
 	end
 
@@ -468,11 +487,14 @@ PlayerCharacterStateLunging._update_lunge = function (self, unit, dt, time_in_lu
 		direction = Vector3.flat(Vector3.normalize(lunge_target_position - unit_position))
 	elseif lunge_template.allow_steering then
 		local target_rotation = locomotion_steering_component.target_rotation
+
 		direction = Quaternion.forward(target_rotation)
 	end
 
 	locomotion_steering_component.velocity_wanted = direction * speed
+
 	local move_delta = speed * dt
+
 	lunge_character_state_component.distance_left = math.max(lunge_character_state_component.distance_left - move_delta, 0)
 
 	Managers.stats:record_private("hook_lunge_distance", self._player, move_delta)
@@ -495,13 +517,12 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	local max_hit_mass = _max_hit_mass(damage_settings, lunge_template, unit)
 	local used_hit_mass_percentage = character_state_hit_mass_component.used_hit_mass_percentage
-	local current_mass_hit = math.huge <= max_hit_mass and 0 or max_hit_mass * used_hit_mass_percentage
+	local current_mass_hit = max_hit_mass >= math.huge and 0 or max_hit_mass * used_hit_mass_percentage
 	local should_stop = false
 	local fp_position = self._first_person_component.position
 	local lunge_direction = self._lunge_character_state_component.direction
 	local lunge_dir_right = Vector3.cross(lunge_direction, Vector3.up())
-	local forward = Vector3.forward()
-	local right = Vector3.right()
+	local forward, right = Vector3.forward(), Vector3.right()
 	local lunge_rotation = Quaternion.look(lunge_direction)
 	local left_attack_direction = Quaternion.rotate(lunge_rotation, Vector3.normalize(forward - right))
 	local right_attack_direction = Quaternion.rotate(lunge_rotation, Vector3.normalize(forward + right))
@@ -513,9 +534,10 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 
 		if side_system:is_enemy(unit, hit_unit) and not hit_enemy_units[hit_unit] then
 			self._last_hit_unit = hit_unit
+
 			local hit_position = POSITION_LOOKUP[hit_unit]
 			local hit_direction = Vector3.normalize(Vector3.flat(hit_position - fp_position))
-			local attack_direction = nil
+			local attack_direction
 			local dot = Vector3.dot(hit_direction, lunge_dir_right)
 
 			if dot > 0 then
@@ -531,7 +553,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
-			if self._push_sfx_cooldown <= t and self._is_server then
+			if t >= self._push_sfx_cooldown and self._is_server then
 				MinionPushFx.play_sfx_for_clients_except(hit_unit, MinionPushFxTemplates.lunge_push, self._player)
 
 				self._push_sfx_cooldown = t + math.random_range(0, 0.2)
@@ -562,10 +584,12 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 						local hit_dot_check = lunge_template.hit_dot_check
 
 						if hit_dot_check then
-							local hit_dot = Vector3.dot(lunge_direction, hit_direction)
+							do
+								local hit_dot = Vector3.dot(lunge_direction, hit_direction)
 
-							if hit_dot_check < hit_dot then
-								should_stop = true
+								if hit_dot_check < hit_dot then
+									should_stop = true
+								end
 							end
 
 							break
@@ -676,6 +700,7 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 
 	for hit_unit, _ in pairs(hit_units) do
 		number_of_hit_units = number_of_hit_units + 1
+
 		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 		local breed = unit_data_extension and unit_data_extension:breed()
 

@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/backend/master_data.lua
+
 local CacheWrapper = require("scripts/backend/cache_wrapper")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
-	"items_cache"
+	"items_cache",
 }
 local MasterData = class("MasterData")
 local ITEMS_TO_PROCESS_PER_BATCH = 100
@@ -26,6 +28,7 @@ MasterData.items_cache = function (self)
 		local metadata_cb = callback(self, "_get_items_metadata")
 		local fetch_cb = callback(self, "_get_items_from_backend")
 		local fallback_cb = callback(self, "_fail_on_missing_metadata")
+
 		self._fetch_items_wrapper = CacheWrapper:new(metadata_cb, fetch_cb, fallback_cb)
 	end
 
@@ -61,12 +64,12 @@ local function _process_batch_slice(data, max_events_per_batch, process_func)
 		return Promise.resolved()
 	end
 
-	local batches = {}
-	local from = {}
+	local batches, from = {}, {}
 
 	for position = 1, #data, max_events_per_batch do
 		local remaining_size = math.min(#data - position + 1, max_events_per_batch)
 		local batch = table.slice(data, position, remaining_size)
+
 		batches[#batches + 1] = batch
 		from[#from + 1] = position
 	end
@@ -112,18 +115,18 @@ MasterData._get_items_from_metadata_db = function (self)
 end
 
 MasterData._get_items_from_backend = function (self, version, url)
-	local promise = nil
+	local promise
 
 	if version ~= nil and url ~= nil then
 		promise = Managers.backend:url_request(url, {
-			require_auth = true
+			require_auth = true,
 		})
 	else
 		promise = self:_get_items_metadata():next(function (metadata)
 			Log.info("MasterData", "Fetching master items at %s", metadata.url)
 
 			return Managers.backend:url_request(metadata.url, {
-				require_auth = true
+				require_auth = true,
 			})
 		end)
 	end
@@ -144,7 +147,7 @@ MasterData._get_local_items_metadata = function (self)
 	local promise = Promise.new()
 
 	promise:resolve({
-		version = self._local_item_version
+		version = self._local_item_version,
 	})
 
 	return promise
@@ -152,7 +155,7 @@ end
 
 MasterData._fail_on_missing_metadata = function (self)
 	return Promise.rejected({
-		message = "Failed fetching item master data"
+		message = "Failed fetching item master data",
 	})
 end
 
@@ -162,7 +165,7 @@ MasterData._get_items_metadata = function (self)
 	end):next(function (metadata)
 		return {
 			version = metadata.playerItems.version,
-			url = metadata.playerItems.href
+			url = metadata.playerItems.href,
 		}
 	end)
 end

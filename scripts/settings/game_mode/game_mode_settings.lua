@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings.lua
+
 local game_mode_settings = {}
 local default_settings = {}
 
@@ -43,12 +45,14 @@ local function _add_game_mode_settings(file_name)
 
 		local hotkey_settings = {
 			hotkeys = hotkeys,
-			lookup = hotkey_lookup
+			lookup = hotkey_lookup,
 		}
+
 		settings.hotkeys = hotkey_settings
 	end
 
 	local game_mode_name = settings.name
+
 	game_mode_settings[game_mode_name] = settings
 end
 

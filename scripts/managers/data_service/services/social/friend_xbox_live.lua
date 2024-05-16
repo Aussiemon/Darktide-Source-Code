@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/friend_xbox_live.lua
+
 local FriendInterface = require("scripts/managers/data_service/services/social/friend_interface")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local FriendXboxLive = class("FriendXboxLive")

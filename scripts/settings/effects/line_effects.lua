@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/effects/line_effects.lua
+
 local line_effects = {}
 
 local function _include_effects(template_path)

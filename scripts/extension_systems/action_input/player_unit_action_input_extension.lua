@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/action_input/player_unit_action_input_extension.lua
+
 local ActionInputParser = require("scripts/extension_systems/action_input/action_input_parser")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
@@ -23,25 +25,30 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 			action_input_type = "weapon",
 			debug_draw = true,
 			templates = WeaponTemplates,
-			action_extension = weapon_extension
+			action_extension = weapon_extension,
 		},
 		combat_ability_action = {
 			action_input_type = "ability",
 			debug_draw = true,
 			templates = AbilityTemplates,
-			action_extension = ability_extension
+			action_extension = ability_extension,
 		},
 		grenade_ability_action = {
 			action_input_type = "ability",
 			templates = AbilityTemplates,
-			action_extension = ability_extension
-		}
+			action_extension = ability_extension,
+		},
 	}
 	local network_data_cache = {}
+
 	self._network_data_cache = network_data_cache
+
 	local network_data_cache_configs = {}
+
 	self._network_data_cache_configs = network_data_cache_configs
+
 	local authoritative_network_data = {}
+
 	self._authoritative_network_data = authoritative_network_data
 
 	if not self._disabled then
@@ -49,7 +56,9 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 
 		for action_component_name, data in pairs(config) do
 			local action_component = unit_data:read_component(action_component_name)
+
 			self._action_input_parsers[action_component_name] = ActionInputParser:new(unit, action_component_name, action_component, data, debug_index)
+
 			local cache_config = {
 				input_sequences_is_running = string.format("%s_input_sequences_is_running", action_component_name),
 				input_sequences_current_element_index = string.format("%s_input_sequences_current_element_index", action_component_name),
@@ -59,8 +68,9 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 				input_queue_produced_by_hierarchy = string.format("%s_input_queue_produced_by_hierarchy", action_component_name),
 				input_queue_hierarchy_position = string.format("%s_input_queue_hierarchy_position", action_component_name),
 				input_queue_first_entry_became_first_entry_t = string.format("%s_input_queue_first_entry_became_first_entry_t", action_component_name),
-				hierarchy_position = string.format("%s_hierarchy_position", action_component_name)
+				hierarchy_position = string.format("%s_hierarchy_position", action_component_name),
 			}
+
 			network_data_cache_configs[action_component_name] = cache_config
 
 			for collection_name, game_object_field_name in pairs(cache_config) do
@@ -194,6 +204,7 @@ PlayerUnitActionInputExtension.network_data = function (self)
 
 	for id, parser in pairs(self._action_input_parsers) do
 		local config = configs[id]
+
 		data_cache[config.input_queue_first_entry_became_first_entry_t] = parser:pack_input_sequences_and_queue(data_cache[config.input_sequences_is_running], data_cache[config.input_sequences_current_element_index], data_cache[config.input_sequences_element_start_t], data_cache[config.input_queue_hierarchy_position], data_cache[config.input_queue_produced_by_hierarchy], data_cache[config.input_queue_action_input], data_cache[config.input_queue_raw_input], data_cache[config.hierarchy_position])
 	end
 

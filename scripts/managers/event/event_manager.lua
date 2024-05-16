@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/event/event_manager.lua
+
 local EventManager = class("EventManager")
 
 EventManager.init = function (self)
@@ -9,8 +11,9 @@ EventManager.register = function (self, object, ...)
 	for i = 1, select("#", ...), 2 do
 		local event_name = select(i, ...)
 		local callback_name = select(i + 1, ...)
+
 		self._events[event_name] = self._events[event_name] or setmetatable({}, {
-			__mode = "v"
+			__mode = "v",
 		})
 		self._events[event_name][object] = callback_name
 	end
@@ -40,16 +43,17 @@ end
 
 EventManager.register_with_parameters = function (self, object, function_name, event_name, ...)
 	local cb = callback(object, function_name, ...)
+
 	self._callbacks[event_name] = self._callbacks[event_name] or {}
 	self._callbacks[event_name][object] = cb
 end
 
 local WARNING_SUPPRESSED = {
-	event_player_buff_removed = true,
+	event_player_buff_added = true,
 	event_player_buff_proc_start = true,
-	voip_manager_updated_channel_state = true,
 	event_player_buff_proc_stop = true,
-	event_player_buff_added = true
+	event_player_buff_removed = true,
+	voip_manager_updated_channel_state = true,
 }
 
 EventManager.trigger = function (self, event_name, ...)

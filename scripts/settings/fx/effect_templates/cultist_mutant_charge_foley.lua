@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/cultist_mutant_charge_foley.lua
+
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local START_CHARGE_SOUND_EVENT = "wwise/events/minions/play_enemy_mutant_charger_charge_growl"
@@ -10,9 +12,9 @@ local FLOW_STOP_EVENT = "charge_foley_stop"
 local resources = {
 	start_charge_sound_event = START_CHARGE_SOUND_EVENT,
 	stop_charge_sound_event = STOP_CHARGE_SOUND_EVENT,
-	vfx_foley_name = VFX_FOLEY_NAME
+	vfx_foley_name = VFX_FOLEY_NAME,
 }
-local _trigger_sound = nil
+local _trigger_sound
 local TRIGGER_DISTANCE = 20
 local effect_template = {
 	name = "cultist_mutant_charge_foley",
@@ -37,27 +39,24 @@ local effect_template = {
 		end
 	end,
 	update = function (template_data, template_context, dt, t)
-		local game_session = template_context.game_session
-		local game_object_id = template_data.game_object_id
+		local game_session, game_object_id = template_context.game_session, template_data.game_object_id
 		local target_unit = MinionPerception.target_unit(game_session, game_object_id)
 
 		if not ALIVE[target_unit] then
 			return
 		end
 
-		local unit = template_data.unit
-		local source_id = template_data.source_id
-		local wwise_world = template_context.wwise_world
-		local is_server = template_context.is_server
+		local unit, source_id = template_data.unit, template_data.source_id
+		local wwise_world, is_server = template_context.wwise_world, template_context.is_server
 
 		if source_id then
 			local was_camera_following_target = template_data.was_camera_following_target
 			local is_camera_following_target = Effect.update_targeted_by_special_wwise_parameters(target_unit, wwise_world, source_id, was_camera_following_target, unit)
+
 			template_data.was_camera_following_target = is_camera_following_target
 		elseif is_server then
 			local navigation_extension = template_data.navigation_extension
-			local navigation_enabled = navigation_extension:enabled()
-			local is_following_path = navigation_extension:is_following_path()
+			local navigation_enabled, is_following_path = navigation_extension:enabled(), navigation_extension:is_following_path()
 
 			if navigation_enabled and is_following_path then
 				local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(TRIGGER_DISTANCE)
@@ -67,8 +66,7 @@ local effect_template = {
 					template_data.source_id = _trigger_sound(unit, wwise_world, game_session, game_object_id, is_server)
 				end
 			elseif not navigation_enabled then
-				local unit_position = POSITION_LOOKUP[unit]
-				local target_position = POSITION_LOOKUP[target_unit]
+				local unit_position, target_position = POSITION_LOOKUP[unit], POSITION_LOOKUP[target_unit]
 				local distance_to_target_unit = Vector3.distance(unit_position, target_position)
 
 				if distance_to_target_unit <= TRIGGER_DISTANCE then
@@ -90,11 +88,10 @@ local effect_template = {
 			WwiseWorld.trigger_resource_event(wwise_world, STOP_CHARGE_SOUND_EVENT, source_id)
 		end
 
-		local world = template_context.world
-		local particle_id = template_data.particle_id
+		local world, particle_id = template_context.world, template_data.particle_id
 
 		World.stop_spawning_particles(world, particle_id)
-	end
+	end,
 }
 
 function _trigger_sound(unit, wwise_world, game_session, game_object_id, is_server)

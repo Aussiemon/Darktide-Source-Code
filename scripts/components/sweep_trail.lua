@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/sweep_trail.lua
+
 local SweepTrail = component("SweepTrail")
 
 SweepTrail.init = function (self, unit)
 	self._critical_strike_variable_name = self:get_data(unit, "critical_strike_variable_name")
 	self._powered_variable_name = self:get_data(unit, "powered_variable_name")
 	self._critical_material_slot_names = {}
+
 	local critical_material_slot_names = self:get_data(unit, "critical_material_slot_name")
 
 	if critical_material_slot_names then
@@ -14,6 +17,7 @@ SweepTrail.init = function (self, unit)
 
 	self._is_powered = self:get_data(unit, "powered")
 	self._powered_material_slot_names = {}
+
 	local powered_material_slot_name = self:get_data(unit, "powered_material_slot_name")
 
 	if powered_material_slot_name then
@@ -84,48 +88,48 @@ end
 
 SweepTrail.component_data = {
 	critical_strike_variable_name = {
+		ui_name = "Critical Variable",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Critical Variable"
 	},
 	powered_variable_name = {
+		ui_name = "Powered Variable",
 		ui_type = "text_box",
 		value = "",
-		ui_name = "Powered Variable"
 	},
 	critical_material_slot_name = {
-		ui_type = "struct_array",
 		ui_name = "Critical Material Slot Name",
+		ui_type = "struct_array",
 		definition = {
 			slot_name = {
+				ui_name = "Slot Name",
 				ui_type = "text_box",
 				value = "",
-				ui_name = "Slot Name"
-			}
+			},
 		},
 		control_order = {
-			"slot_name"
-		}
+			"slot_name",
+		},
 	},
 	powered_material_slot_name = {
-		ui_type = "struct_array",
 		ui_name = "Powered Material Slot Name",
+		ui_type = "struct_array",
 		definition = {
 			slot_name = {
+				ui_name = "Slot Name",
 				ui_type = "text_box",
 				value = "",
-				ui_name = "Slot Name"
-			}
+			},
 		},
 		control_order = {
-			"slot_name"
-		}
+			"slot_name",
+		},
 	},
 	powered = {
+		ui_name = "Powered",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Powered"
-	}
+	},
 }
 
 return SweepTrail

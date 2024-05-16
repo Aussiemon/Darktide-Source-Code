@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loading_host_state_machine.lua
+
 local HostCreateWorldState = require("scripts/loading/host_states/host_create_world_state")
 local HostDetermineSpawnGroupState = require("scripts/loading/host_states/host_determine_spawn_group_state")
 local HostIngameState = require("scripts/loading/host_states/host_in_game_state")
@@ -21,10 +23,12 @@ LoadingHostStateMachine.init = function (self, mission_name, level_editor_level,
 		done_loading_level_func = done_loading_level_func,
 		loaders = loaders,
 		themes = {},
-		single_player = single_player
+		single_player = single_player,
 	}
+
 	self._shared_state = shared_state
-	local parent = nil
+
+	local parent
 	local state_machine = StateMachine:new("LoadingHostStateMachine", parent, shared_state)
 
 	state_machine:add_transition("HostDetermineSpawnGroupState", "spawn_group_done", HostLoadersState)
@@ -98,15 +102,13 @@ LoadingHostStateMachine.update = function (self, dt)
 end
 
 LoadingHostStateMachine.take_ownership_of_level = function (self)
-	local world, level = nil
+	local world, level
 	local themes = {}
 	local shared_state = self._shared_state
-	shared_state.world = world
-	world = shared_state.world
-	shared_state.level = level
-	level = shared_state.level
-	shared_state.themes = themes
-	themes = shared_state.themes
+
+	world, shared_state.world = shared_state.world, world
+	level, shared_state.level = shared_state.level, level
+	themes, shared_state.themes = shared_state.themes, themes
 
 	return world, level, themes, shared_state.world_name
 end

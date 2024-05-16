@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_actions/trigger_action_base.lua
+
 local TriggerSettings = require("scripts/extension_systems/trigger/trigger_settings")
 local ACTION_TARGETS = TriggerSettings.action_targets
 local MACHINE_TARGETS = TriggerSettings.machine_targets
@@ -10,10 +12,12 @@ TriggerActionBase.init = function (self, is_server, volume_unit, parameters, tri
 	self._target = parameters.action_target
 	self._player_side = parameters.action_player_side
 	self._trigger_action_name = trigger_action_name
+
 	local action_machine_target = parameters.action_machine_target
 	local trigger_on_client = action_machine_target == MACHINE_TARGETS.client
 	local trigger_on_server = action_machine_target == MACHINE_TARGETS.server
 	local trigger_on_server_and_client = action_machine_target == MACHINE_TARGETS.server_and_client
+
 	self._triggers_on_client = trigger_on_client or trigger_on_server_and_client
 	self._triggers_on_server = trigger_on_server or trigger_on_server_and_client
 end

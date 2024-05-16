@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/raycast_targeting_action_module.lua
+
 local RaycastTargetingActionModule = class("RaycastTargetingActionModule")
 
 RaycastTargetingActionModule.init = function (self, physics_world, player_unit, component, action_settings)
@@ -5,12 +7,15 @@ RaycastTargetingActionModule.init = function (self, physics_world, player_unit, 
 	self._player_unit = player_unit
 	self._component = component
 	self._action_settings = action_settings
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._first_person_component = unit_data_extension:read_component("first_person")
 end
 
 RaycastTargetingActionModule.start = function (self, action_settings, t)
 	local component = self._component
+
 	component.target_unit_1 = nil
 	component.target_unit_2 = nil
 	component.target_unit_3 = nil
@@ -60,6 +65,7 @@ end
 RaycastTargetingActionModule.finish = function (self, reason, data, t)
 	if reason == "hold_input_released" or reason == "stunned" then
 		local component = self._component
+
 		component.target_unit_1 = nil
 		component.target_unit_2 = nil
 		component.target_unit_3 = nil

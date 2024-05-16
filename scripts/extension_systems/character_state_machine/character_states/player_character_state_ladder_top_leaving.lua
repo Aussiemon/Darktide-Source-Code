@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_ladder_top_leaving.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
@@ -13,18 +15,24 @@ local PlayerCharacterStateLadderTopLeaving = class("PlayerCharacterStateLadderTo
 
 PlayerCharacterStateLadderTopLeaving.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = false
+
 	local ladder_unit = params.ladder_unit
+
 	self._ladder_unit = ladder_unit
+
 	local animation_time = self._constants.ladder_top_leaving_animation_time
 	local duration = self._constants.ladder_top_leaving_time
 	local ladder_character_state_component = self._ladder_character_state_component
 	local start_pos = self._locomotion_component.position
 	local exit_pos = Unit.world_position(ladder_unit, Unit.node(ladder_unit, "node_leave"))
+
 	ladder_character_state_component.top_enter_leave_timer = t + duration
 	ladder_character_state_component.end_position = exit_pos
 	ladder_character_state_component.start_position = start_pos
+
 	local animation_extension = self._animation_extension
 	local animation_speed = animation_time / duration
 
@@ -72,6 +80,7 @@ PlayerCharacterStateLadderTopLeaving.fixed_update = function (self, unit, dt, t,
 	local length = Vector3.length(current_to_leave)
 	local wanted_speed = length / duration
 	local wanted_velocity = direction * wanted_speed
+
 	self._locomotion_steering_component.velocity_wanted = wanted_velocity
 
 	return self:_check_transition(t, next_state_params)
@@ -85,7 +94,7 @@ PlayerCharacterStateLadderTopLeaving._check_transition = function (self, t, next
 		return health_transition
 	end
 
-	if self._ladder_character_state_component.top_enter_leave_timer <= t then
+	if t >= self._ladder_character_state_component.top_enter_leave_timer then
 		return "walking"
 	end
 end

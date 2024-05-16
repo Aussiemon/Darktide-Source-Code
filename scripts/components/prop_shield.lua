@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/prop_shield.lua
+
 local PropShield = component("PropShield")
 
 PropShield.init = function (self, unit)
 	self._unit = unit
+
 	local shield_extension = ScriptUnit.fetch_component_extension(unit, "shield_system")
 
 	if shield_extension then
@@ -33,14 +36,14 @@ end
 
 PropShield.component_data = {
 	actor_names = {
-		ui_type = "text_box_array",
 		size = 0,
 		ui_name = "Shield Actors",
-		values = {}
+		ui_type = "text_box_array",
+		values = {},
 	},
 	extensions = {
-		"PropShieldExtension"
-	}
+		"PropShieldExtension",
+	},
 }
 
 return PropShield

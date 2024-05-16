@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minion_spawner/utilities/minion_spawner_spawn_position.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local MinionSpawnerSpawnPosition = {}
 local NAV_MESH_ABOVE = 1

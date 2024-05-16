@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_enforcer_executor_a.lua
+
 local enemy_vo_enemy_traitor_enforcer_executor_a = {
 	traitor_enforcer_executor_alerted_idle = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			"loc_enemy_traitor_enforcer_executor_a__alerted_idle_07",
 			"loc_enemy_traitor_enforcer_executor_a__alerted_idle_08",
 			"loc_enemy_traitor_enforcer_executor_a__alerted_idle_09",
-			"loc_enemy_traitor_enforcer_executor_a__alerted_idle_10"
+			"loc_enemy_traitor_enforcer_executor_a__alerted_idle_10",
 		},
 		sound_events_duration = {
 			1.677833,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			1.122229,
 			2.094417,
 			1.662542,
-			1.043917
+			1.043917,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_enforcer_executor_executor_assault = {
 		randomize_indexes_n = 0,
@@ -53,7 +55,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			"loc_enemy_traitor_enforcer_executor_a__assault_07",
 			"loc_enemy_traitor_enforcer_executor_a__assault_08",
 			"loc_enemy_traitor_enforcer_executor_a__assault_09",
-			"loc_enemy_traitor_enforcer_executor_a__assault_10"
+			"loc_enemy_traitor_enforcer_executor_a__assault_10",
 		},
 		sound_events_duration = {
 			2.356104,
@@ -65,7 +67,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			2.152604,
 			2.094458,
 			2.646354,
-			1.312396
+			1.312396,
 		},
 		sound_event_weights = {
 			0.1,
@@ -77,9 +79,9 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_enforcer_executor_executor_melee_idle = {
 		randomize_indexes_n = 0,
@@ -94,7 +96,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			"loc_enemy_traitor_enforcer_executor_a__melee_idle_07",
 			"loc_enemy_traitor_enforcer_executor_a__melee_idle_08",
 			"loc_enemy_traitor_enforcer_executor_a__melee_idle_09",
-			"loc_enemy_traitor_enforcer_executor_a__melee_idle_10"
+			"loc_enemy_traitor_enforcer_executor_a__melee_idle_10",
 		},
 		sound_events_duration = {
 			2.317146,
@@ -106,7 +108,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			1.99975,
 			2.095229,
 			1.330854,
-			2.039625
+			2.039625,
 		},
 		sound_event_weights = {
 			0.1,
@@ -118,9 +120,9 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	traitor_enforcer_executor_special_attack = {
 		randomize_indexes_n = 0,
@@ -140,7 +142,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			"loc_enemy_traitor_enforcer_executor_a__special_attack_12",
 			"loc_enemy_traitor_enforcer_executor_a__special_attack_13",
 			"loc_enemy_traitor_enforcer_executor_a__special_attack_14",
-			"loc_enemy_traitor_enforcer_executor_a__special_attack_15"
+			"loc_enemy_traitor_enforcer_executor_a__special_attack_15",
 		},
 		sound_events_duration = {
 			1.510313,
@@ -157,7 +159,7 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			1.619542,
 			2.008021,
 			2.490833,
-			2.267771
+			2.267771,
 		},
 		sound_event_weights = {
 			0.06666667,
@@ -174,10 +176,10 @@ local enemy_vo_enemy_traitor_enforcer_executor_a = {
 			0.06666667,
 			0.06666667,
 			0.06666667,
-			0.06666667
+			0.06666667,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_traitor_enforcer_executor_a", enemy_vo_enemy_traitor_enforcer_executor_a)

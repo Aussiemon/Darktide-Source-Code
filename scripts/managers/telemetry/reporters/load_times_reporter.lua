@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/load_times_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local LoadTimesReporter = class("LoadTimesReporter")
 
@@ -111,7 +113,7 @@ local TIMERS = {
 	"wait_for_network_timer",
 	"resource_loading_timer",
 	"wait_for_spawn_timer",
-	"mission_intro_timer"
+	"mission_intro_timer",
 }
 
 LoadTimesReporter.reset_timers = function (self)

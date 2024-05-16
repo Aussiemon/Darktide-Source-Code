@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/wwise_portal_volume.lua
+
 local WwisePortalVolume = component("WwisePortalVolume")
 
 WwisePortalVolume.init = function (self, unit)
 	self._unit = unit
 	self._wwise_world = Wwise.wwise_world(Unit.world(unit))
 	self._open = false
+
 	local register_portal = self:get_data(unit, "register_portal")
 
 	if not register_portal then
@@ -29,7 +32,9 @@ WwisePortalVolume.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
 	self._line_object = World.create_line_object(self._world)
 	self._drawer = DebugDrawer(self._line_object, "retained")
@@ -182,6 +187,7 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 
 			if new_length > 0 then
 				local new_anim_time = anim_time - actual_open_time
+
 				new_anim_time = math.max(new_anim_time, 0)
 				normalize_anim_time = new_anim_time / new_length
 			else
@@ -195,9 +201,11 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 
 		local min_obstruction = self:get_data(unit, "min_obstruction")
 		local max_obstruction = self:get_data(unit, "max_obstruction")
+
 		normalize_anim_time = 1 - normalize_anim_time
 		normalize_anim_time = math.clamp(normalize_anim_time, 0, 1)
 		normalize_anim_time = math.lerp(min_obstruction, max_obstruction, normalize_anim_time)
+
 		local obstruction = normalize_anim_time
 		local occlusion = normalize_anim_time
 
@@ -219,58 +227,58 @@ end
 
 WwisePortalVolume.component_data = {
 	start_enabled = {
+		ui_name = "Start Enabled",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Start Enabled"
 	},
 	register_portal = {
+		ui_name = "Register Portal",
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Register Portal"
 	},
 	min_obstruction = {
-		ui_type = "number",
+		decimals = 2,
+		max = 1,
 		min = 0,
 		step = 0.01,
-		decimals = 2,
-		value = 0,
 		ui_name = "Lowest Possible Obstruction & Occlusion Ratio",
-		max = 1
+		ui_type = "number",
+		value = 0,
 	},
 	max_obstruction = {
-		ui_type = "number",
+		decimals = 2,
+		max = 1,
 		min = 0,
 		step = 0.01,
-		decimals = 2,
-		value = 1,
 		ui_name = "Higest Possible Obstruction & Occlusion Ratio",
-		max = 1
+		ui_type = "number",
+		value = 1,
 	},
 	adjust_open_anim_time = {
+		category = "Adjust Open Anim",
+		ui_name = "Adjust Open Anim Time Calculation",
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Adjust Open Anim Time Calculation",
-		category = "Adjust Open Anim"
 	},
 	actual_open_time = {
-		ui_type = "number",
-		min = 0,
-		decimals = 2,
 		category = "Adjust Open Anim",
-		value = 0,
+		decimals = 2,
+		min = 0,
+		step = 0.01,
 		ui_name = "Actual Open Start Time (in sec.)",
-		step = 0.01
+		ui_type = "number",
+		value = 0,
 	},
 	inputs = {
 		flow_enable = {
 			accessibility = "private",
-			type = "event"
+			type = "event",
 		},
 		flow_disable = {
 			accessibility = "private",
-			type = "event"
-		}
-	}
+			type = "event",
+		},
+	},
 }
 
 return WwisePortalVolume

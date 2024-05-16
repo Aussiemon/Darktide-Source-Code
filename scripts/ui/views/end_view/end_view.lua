@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_view/end_view.lua
+
 local Definitions = require("scripts/ui/views/end_view/end_view_definitions")
 local Breeds = require("scripts/settings/breed/breeds")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
@@ -28,6 +30,7 @@ local EndView = class("EndView", "BaseView")
 
 EndView.init = function (self, settings, context)
 	local definitions = Definitions
+
 	self._context = context
 	self._can_exit = context and context.can_exit
 	self._can_skip = false
@@ -74,6 +77,7 @@ EndView.on_enter = function (self)
 		end
 
 		self._end_time = context.end_time
+
 		local played_mission = context.played_mission
 		local session_report = self._session_report
 		local render_scale = self._render_scale
@@ -83,8 +87,11 @@ EndView.on_enter = function (self)
 
 	local t = Managers.time:time("main")
 	local server_time = Managers.backend:get_server_time(t)
+
 	self._show_player_view_time = server_time + self._delay_before_summary * 1000
+
 	local continue_button = self._widgets_by_name.continue_button
+
 	continue_button.content.hotspot.pressed_callback = callback(self, "_cb_on_continue_pressed")
 
 	self:_setup_stay_in_party_vote()
@@ -175,6 +182,7 @@ EndView.update = function (self, dt, t, input_service)
 	end
 
 	self._skip_grace_time = grace_time
+
 	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == STAY_IN_PARTY.yes
 	local can_skip = not has_shown_summary_view or not is_waiting_for_vote_to_end
 
@@ -190,6 +198,7 @@ EndView.update = function (self, dt, t, input_service)
 		if progression_manager:session_report_success() then
 			session_report = progression_manager:session_report()
 			self._session_report = session_report
+
 			local context = self._context
 
 			if context then
@@ -207,6 +216,7 @@ EndView.update = function (self, dt, t, input_service)
 
 		if end_time then
 			local min_show_player_view_time = server_time + EndViewSettings.min_delay_before_summary * 1000
+
 			show_player_view_time = math.max(show_player_view_time, min_show_player_view_time)
 			self._show_player_view_time = show_player_view_time
 		end
@@ -216,6 +226,7 @@ EndView.update = function (self, dt, t, input_service)
 		local character_session_report = self._session_report.character
 		local context = self._context
 		local summary_view_context = self._end_player_view_context
+
 		summary_view_context.can_exit = false
 		summary_view_context.round_won = context.round_won
 		summary_view_context.session_report = character_session_report
@@ -363,7 +374,9 @@ EndView._draw_widgets = function (self, dt, t, input_service, ui_renderer, rende
 
 		for i = 1, #game_mode_condition_widgets do
 			local widget = game_mode_condition_widgets[i]
+
 			widget.alpha_multiplier = widget_alpha
+
 			local widget_content = widget.content
 			local boxed_position = widget_content.boxed_position
 
@@ -371,6 +384,7 @@ EndView._draw_widgets = function (self, dt, t, input_service, ui_renderer, rende
 				local position = Vector3Box.unbox(boxed_position)
 				local world_to_screen = Camera.world_to_screen(camera, position)
 				local widget_offset_x = world_to_screen.x * inverse_scale
+
 				widget.offset[1] = widget_offset_x
 			end
 
@@ -393,8 +407,11 @@ EndView._create_game_mode_condition_widgets = function (self)
 	local game_mode_condition_widgets = self._game_mode_condition_widgets
 	local title_text_widget_name = "title_text"
 	local title_text_widget_definition = dynamic_widget_definitions[title_text_widget_name]
+
 	game_mode_condition_widgets[#game_mode_condition_widgets + 1] = self:_create_widget(title_text_widget_name, title_text_widget_definition)
+
 	local player_widget_definition_name = "player_panel"
+
 	self._player_widget_definition = dynamic_widget_definitions[player_widget_definition_name]
 end
 
@@ -445,24 +462,31 @@ EndView._update_buttons = function (self)
 
 	if time and self._has_shown_summary_view then
 		local timer_text = self:_get_timer_text(time)
+
 		button_text = button_text .. " (" .. timer_text .. ")"
 	end
 
 	continue_button_content.text = button_text
 	continue_button_content.vote_completed = vote_completed and all_voted_yes
 	continue_button_content.hotspot.disabled = not can_skip
+
 	local voting_widget = self._widgets_by_name.stay_in_party_vote
 	local voting_widget_content = voting_widget.content
+
 	voting_widget_content.vote_completed = vote_completed
 	voting_widget_content.voted_yes = player_voted_yes
 	voting_widget_content.can_skip = can_skip
 	voting_widget_content.already_in_party = already_in_party
+
 	local loc_string = EndViewSettings.stay_in_party_vote_text
 	local vote_button_action = _vote_button_action
 	local vote_button_text = TextUtilities.localize_with_button_hint(vote_button_action, loc_string, nil, service_type, input_legend_text_template)
+
 	voting_widget_content.vote_text = vote_button_text
+
 	local voting_widget_style = voting_widget.style
 	local vote_count_style = voting_widget_style.vote_count_text
+
 	vote_count_style.text_color = all_voted_yes and vote_count_style.voted_yes_color or vote_count_style.default_text_color
 end
 
@@ -499,6 +523,7 @@ EndView._setup_stay_in_party_vote = function (self)
 
 	local vote_widget = self._widgets_by_name.stay_in_party_vote
 	local hotspot = vote_widget.content.hotspot
+
 	hotspot.pressed_callback = callback(self, "_cb_on_stay_in_party_pressed")
 end
 
@@ -520,7 +545,6 @@ EndView._setup_background_world = function (self)
 				Managers.data_service.social:fetch_party_members():next(callback(self, "_setup_spawn_slots"))
 			end
 		end
-
 		self[event_name_ogryn] = function (self, spawn_unit)
 			self._ogryn_spawn_point_units[i] = spawn_unit
 
@@ -538,7 +562,9 @@ EndView._setup_background_world = function (self)
 	local world_name = EndViewSettings.world_name
 	local world_layer = EndViewSettings.world_layer
 	local world_timer_name = EndViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = EndViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)
@@ -561,6 +587,7 @@ EndView._setup_spawn_slots = function (self, players)
 
 	for unique_id, player_info in pairs(players) do
 		players_in_mission = players_in_mission + 1
+
 		local party_status = player_info:party_status()
 		local num_party_members = player_info:num_party_members()
 
@@ -573,12 +600,14 @@ EndView._setup_spawn_slots = function (self, players)
 	end
 
 	local more_than_one_party = is_own_party and is_other_party
+
 	self._all_in_same_party = members_in_my_party == players_in_mission or players_in_mission == 1
 	self._num_members_in_my_party = members_in_my_party
 	self._num_players_in_mission = players_in_mission
 
 	for unique_id, player_info in pairs(players) do
 		player_index = player_index + 1
+
 		local profile_spawner = UIProfileSpawner:new("EndView_" .. player_index, world, camera, unit_spawner)
 
 		profile_spawner:disable_rotation_input()
@@ -594,8 +623,9 @@ EndView._setup_spawn_slots = function (self, players)
 			index = player_index,
 			profile_spawner = profile_spawner,
 			ogryn_spawn_point_unit = self._ogryn_spawn_point_units[player_index],
-			human_spawn_point_unit = self._human_spawn_point_units[player_index]
+			human_spawn_point_unit = self._human_spawn_point_units[player_index],
 		}
+
 		spawn_slots[player_index] = spawn_slot
 
 		self:_assign_player_to_slot(player_info, spawn_slot, more_than_one_party)
@@ -653,18 +683,20 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 
 	local preview_profile = table.clone_instance(profile)
 	local loadout = preview_profile.loadout
-	local item_state_machine, item_animation_event, item_face_animation_event, item_wield_slot = nil
+	local item_state_machine, item_animation_event, item_face_animation_event, item_wield_slot
 	local end_of_round_pose_item = loadout.slot_animation_end_of_round
 
 	if end_of_round_pose_item then
 		item_state_machine = end_of_round_pose_item.state_machine
 		item_animation_event = end_of_round_pose_item.animation_event
 		item_face_animation_event = end_of_round_pose_item.face_animation_event
+
 		local prop_item_key = end_of_round_pose_item.prop_item
 		local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
 
 		if prop_item then
 			local prop_item_slot = prop_item.slots[1]
+
 			loadout[prop_item_slot] = prop_item
 			item_wield_slot = prop_item_slot
 		end
@@ -672,7 +704,7 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 
 	local archetype_settings = preview_profile.archetype
 	local breed_name = archetype_settings.breed
-	local spawn_point_unit = nil
+	local spawn_point_unit
 
 	if breed_name == "ogryn" then
 		spawn_point_unit = slot.ogryn_spawn_point_unit
@@ -684,8 +716,10 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
 	local profile_size = profile.personal and profile.personal.character_height
 	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
+
 	slot.boxed_position = Vector3Box(spawn_position)
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)
+
 	local profile_spawner = slot.profile_spawner
 
 	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, nil, item_face_animation_event)
@@ -707,9 +741,11 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 	local widget = self:_create_widget(widget_name, widget_definition)
 	local widget_content = widget.content
 	local profile = player_info:profile()
+
 	widget_content.player_info = player_info
 	widget_content.boxed_position = slot.boxed_position
 	widget_content.character_archetype_title = ProfileUtils.character_archetype_title(profile)
+
 	local player_title = ProfileUtils.character_title(profile)
 
 	if player_title and player_title ~= "" then
@@ -717,6 +753,7 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 	end
 
 	widget_content.peer_id = player_info:peer_id()
+
 	local party_status = player_info:party_status()
 
 	if more_than_one_party then
@@ -728,19 +765,23 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 	end
 
 	local widget_style = widget.style
+
 	widget_style.party_status.visible = player_info:num_party_members() > 1
 
 	if player_info:is_own_player() then
 		local character_name_style = widget_style.character_name
+
 		character_name_style.text_color = character_name_style.own_player_text_color
 	end
 
 	local portrait_material_values = widget_style.character_portrait.material_values
+
 	portrait_material_values.use_placeholder_texture = 1
 
 	self:_load_portrait_icon(widget, profile)
 
 	local widget_index = #self._game_mode_condition_widgets + 1
+
 	self._game_mode_condition_widgets[widget_index] = widget
 
 	return widget
@@ -805,13 +846,16 @@ EndView._set_character_names = function (self)
 					widget_content.character_name = character_name
 				elseif not self._has_shown_summary_view then
 					local character_level = report.currentLevel
+
 					widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
 				elseif player_info:is_own_player() then
 					local character_level = player_info:character_level()
+
 					widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
 				else
 					local xp = report.currentXp
 					local level_after_mission = self:_level_from_xp(experience_settings, xp)
+
 					widget_content.character_name = TextUtilities.formatted_character_name(character_name, level_after_mission)
 				end
 
@@ -826,7 +870,9 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 	local display_name = mission_settings.mission_name
 	local widget = self._widgets_by_name.title_text
 	local widget_content = widget.content
+
 	widget_content.mission_header = self:_localize(display_name)
+
 	local team_session_report = session_report and session_report.team
 
 	if self._round_won and team_session_report then
@@ -838,9 +884,11 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 			total_deaths = team_session_report.total_deaths,
 			mission_time = TextUtilities.format_time_span_long_form_localized(mission_time_in_sec),
 			font_size = mission_sub_header_style.stats_font_size * render_scale,
-			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4])
+			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4]),
 		}
+
 		widget_content.mission_sub_header = Localize("loc_end_view_mission_sub_header_victory", true, text_params)
+
 		local narrative_story = mission_settings.narrative_story
 
 		if narrative_story then
@@ -886,7 +934,7 @@ EndView._level_from_xp = function (self, experience_settings, xp)
 	local xp_table = experience_settings.experience_table
 	local level = 0
 
-	while max_level > level and xp_table[level + 1] <= xp do
+	while level < max_level and xp >= xp_table[level + 1] do
 		level = level + 1
 	end
 
@@ -906,16 +954,20 @@ EndView._load_portrait_icon = function (self, widget, profile)
 	end
 
 	local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", widget)
+
 	widget_content.awaiting_portrait_callback = true
 	widget_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback)
 	widget_content.portrait_character_id = profile.character_id
+
 	local loadout = profile.loadout
 	local frame_item = loadout and loadout.slot_portrait_frame
 	local frame_id = frame_item and frame_item.gear_id
+
 	widget_content.frame_id = frame_id
 
 	if frame_item then
 		local cb = callback(self, "_cb_set_player_frame", widget)
+
 		widget_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
 	else
 		widget_content.frame_load_id = nil
@@ -923,8 +975,11 @@ EndView._load_portrait_icon = function (self, widget, profile)
 
 	local insignia_item = loadout and loadout.slot_insignia or MasterItems.find_fallback_item("slot_insignia")
 	local insignia_id = insignia_item and insignia_item.name
+
 	widget_content.insignia_id = insignia_id
+
 	local cb = callback(self, "_cb_set_player_insignia", widget)
+
 	widget_content.insignia_load_id = Managers.ui:load_item_icon(insignia_item, cb)
 end
 
@@ -955,7 +1010,9 @@ EndView._sync_votes = function (self)
 				end
 
 				num_votes = num_votes + 1
+
 				local checkmark_style = widget.style.checkmark
+
 				checkmark_style.visible = vote == STAY_IN_PARTY.yes
 			end
 		end
@@ -964,6 +1021,7 @@ EndView._sync_votes = function (self)
 	local num_votes_text = string.format("%d/%d", yes_votes, num_votes)
 	local voting_widget = self._widgets_by_name.stay_in_party_vote
 	local widget_content = voting_widget.content
+
 	widget_content.vote_count_text = num_votes_text
 	self._all_voted_yes = yes_votes == num_votes
 	self._stay_in_party = player_vote
@@ -993,6 +1051,7 @@ EndView._unload_portrait_icon = function (self, widget, ui_renderer)
 	end
 
 	local material_values = portrait_style.material_values
+
 	material_values.use_placeholder_texture = 1
 
 	Managers.ui:unload_profile_portrait(portrait_load_id)
@@ -1004,7 +1063,9 @@ EndView._unload_portrait_frame = function (self, widget, ui_renderer)
 	local frame_style = widget.style.character_portrait
 	local material_values = frame_style.material_values
 	local portrait_frame_texture = material_values.portrait_frame_texture
+
 	material_values.portrait_frame_texture = UISettings.portrait_frame_default_texture
+
 	local widget_content = widget.content
 
 	Managers.ui:unload_item_icon(widget_content.frame_load_id)
@@ -1014,10 +1075,14 @@ end
 
 EndView._unload_insignia = function (self, widget)
 	local insignia_style = widget.style.character_insignia
+
 	widget.content.character_insignia = "content/ui/materials/nameplates/insignias/default"
+
 	local material_values = insignia_style.material_values
 	local character_insignia_texture = material_values.texture_map
+
 	material_values.texture_map = UISettings.insignia_default_texture
+
 	local widget_content = widget.content
 
 	Managers.ui:unload_item_icon(widget_content.insignia_load_id)
@@ -1032,6 +1097,7 @@ end
 EndView._cb_on_stay_in_party_pressed = function (self)
 	local voting_id = self._stay_in_party_voting_id
 	local player_vote = self._stay_in_party == STAY_IN_PARTY.no and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
+
 	self._stay_in_party = player_vote
 
 	if voting_id then
@@ -1044,6 +1110,7 @@ end
 EndView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local portrait_style = widget.style.character_portrait
 	local material_values = portrait_style.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -1053,6 +1120,7 @@ end
 
 EndView._cb_set_player_frame = function (self, widget, item)
 	local portrait_style = widget.style.character_portrait
+
 	portrait_style.material_values.portrait_frame_texture = item.icon
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_emissive.lua
+
 local material_overrides = {
 	emissive_red_01 = {
 		property_overrides = {
@@ -5,9 +7,9 @@ local material_overrides = {
 				1,
 				1,
 				0,
-				0
-			}
-		}
+				0,
+			},
+		},
 	},
 	emissive_green_01 = {
 		property_overrides = {
@@ -15,9 +17,9 @@ local material_overrides = {
 				1,
 				0,
 				1,
-				0
-			}
-		}
+				0,
+			},
+		},
 	},
 	emissive_blue_01 = {
 		property_overrides = {
@@ -25,9 +27,9 @@ local material_overrides = {
 				1,
 				0,
 				0,
-				1
-			}
-		}
+				1,
+			},
+		},
 	},
 	emissive_orange_01 = {
 		property_overrides = {
@@ -35,9 +37,9 @@ local material_overrides = {
 				1,
 				0.2,
 				0,
-				1
-			}
-		}
+				1,
+			},
+		},
 	},
 	emissive_orange_02 = {
 		property_overrides = {
@@ -45,10 +47,10 @@ local material_overrides = {
 				0.55,
 				0.2,
 				0.05,
-				0.75
-			}
-		}
-	}
+				0.75,
+			},
+		},
+	},
 }
 
 return material_overrides

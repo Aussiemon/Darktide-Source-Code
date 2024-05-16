@@ -1,13 +1,18 @@
+﻿-- chunkname: @scripts/extension_systems/suppression/minion_suppression_husk_extension.lua
+
 local MinionSuppressionHuskExtension = class("MinionSuppressionHuskExtension")
 local CLIENT_RPCS = {
-	"rpc_server_reported_unit_suppression"
+	"rpc_server_reported_unit_suppression",
 }
 
 MinionSuppressionHuskExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	local is_server = extension_init_context.is_server
+
 	self._unit = unit
 	self._breed = extension_init_data.breed
+
 	local network_event_delegate = extension_init_context.network_event_delegate
+
 	self._network_event_delegate = network_event_delegate
 	self._game_object_id = game_object_id
 

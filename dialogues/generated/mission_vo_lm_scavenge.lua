@@ -1,37 +1,39 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_scavenge.lua
+
 return function ()
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "cmd_mission_scavenge_entering_ship_port",
-		response = "cmd_mission_scavenge_entering_ship_port",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "cmd_mission_scavenge_entering_ship_port",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "cmd_mission_scavenge_entering_ship_port",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"cmd_mission_scavenge_entering_ship_port"
+				"cmd_mission_scavenge_entering_ship_port",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"user_context",
@@ -41,49 +43,49 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"cmd_mission_scavenge_entering_ship_port",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"cmd_mission_scavenge_entering_ship_port",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "cmd_mission_scavenge_hacking_event_end",
-		response = "cmd_mission_scavenge_hacking_event_end",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "cmd_mission_scavenge_hacking_event_end",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "cmd_mission_scavenge_hacking_event_end",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cmd_mission_scavenge_hacking_event_end"
+				"cmd_mission_scavenge_hacking_event_end",
 			},
 			{
 				"user_context",
@@ -92,51 +94,51 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"user_memory",
 				"cmd_mission_scavenge_hacking_event_end",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cmd_mission_scavenge_hacking_event_end",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "cmd_mission_scavenge_hacking_event_start",
-		response = "cmd_mission_scavenge_hacking_event_start",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "cmd_mission_scavenge_hacking_event_start",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "cmd_mission_scavenge_hacking_event_start",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_servitors"
-				}
+					"mission_scavenge_servitors",
+				},
 			},
 			{
 				"user_context",
@@ -145,41 +147,41 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_lm_scavenge",
 		name = "cmd_mission_scavenge_luggable_event_end",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "cmd_mission_scavenge_luggable_event_end",
-		database = "mission_vo_lm_scavenge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cmd_mission_scavenge_luggable_event_end"
+				"cmd_mission_scavenge_luggable_event_end",
 			},
 			{
 				"user_context",
@@ -189,49 +191,49 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_luggable_event_end",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_luggable_event_end",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "cmd_mission_scavenge_luggable_event_start",
-		response = "cmd_mission_scavenge_luggable_event_start",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "cmd_mission_scavenge_luggable_event_start",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "cmd_mission_scavenge_luggable_event_start",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cmd_mission_scavenge_luggable_event_start"
+				"cmd_mission_scavenge_luggable_event_start",
 			},
 			{
 				"user_context",
@@ -241,53 +243,53 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"cmd_mission_scavenge_luggable_event_start",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"cmd_mission_scavenge_luggable_event_start",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
+		database = "mission_vo_lm_scavenge",
 		name = "cmd_mission_scavenge_vault_access",
+		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",
-		wwise_route = 1,
 		response = "cmd_mission_scavenge_vault_access",
-		database = "mission_vo_lm_scavenge",
-		category = "vox_prio_0",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cmd_mission_scavenge_vault_access"
+				"cmd_mission_scavenge_vault_access",
 			},
 			{
 				"user_context",
@@ -297,61 +299,61 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"cmd_mission_scavenge_vault_access",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"cmd_mission_scavenge_vault_access",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_lm_scavenge",
 		name = "info_mission_scavenge_hangar_guidance_one",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "info_mission_scavenge_hangar_guidance_one",
-		database = "mission_vo_lm_scavenge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"info_mission_scavenge_hangar_guidance_one"
+				"info_mission_scavenge_hangar_guidance_one",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"user_context",
@@ -361,61 +363,61 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"info_mission_scavenge_hangar_guidance_one",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"info_mission_scavenge_hangar_guidance_one",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_lm_scavenge",
 		name = "info_mission_scavenge_hangar_guidance_two",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "info_mission_scavenge_hangar_guidance_two",
-		database = "mission_vo_lm_scavenge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"info_mission_scavenge_hangar_guidance_two"
+				"info_mission_scavenge_hangar_guidance_two",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"user_context",
@@ -425,49 +427,49 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"info_mission_scavenge_hangar_guidance_two",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"info_mission_scavenge_hangar_guidance_two",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "info_mission_scavenge_ship_elevator_vista",
-		response = "info_mission_scavenge_ship_elevator_vista",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "info_mission_scavenge_ship_elevator_vista",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "info_mission_scavenge_ship_elevator_vista",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"info_mission_scavenge_ship_elevator_vista"
+				"info_mission_scavenge_ship_elevator_vista",
 			},
 			{
 				"user_context",
@@ -477,95 +479,95 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"info_mission_scavenge_ship_elevator_vista",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"info_mission_scavenge_ship_elevator_vista",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_atmosphere_shield",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_scavenge_atmosphere_shield",
 		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_atmosphere_shield",
+		response = "mission_scavenge_atmosphere_shield",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"start_banter"
+				"start_banter",
 			},
 			{
 				"global_context",
 				"current_mission",
 				OP.EQ,
-				"lm_scavenge"
+				"lm_scavenge",
 			},
 			{
 				"global_context",
 				"circumstance_vo_id",
 				OP.NEQ,
-				"thischeckisdisabled"
+				"thischeckisdisabled",
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_start_banter",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_start_banter",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "players"
-		}
+			target = "players",
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_scavenge_cmd_load_pneumatic",
-		response = "mission_scavenge_cmd_load_pneumatic",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_cmd_load_pneumatic",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_scavenge_cmd_load_pneumatic",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"luggable_mission_pick_up_lm_scavenge"
-				}
+					"luggable_mission_pick_up_lm_scavenge",
+				},
 			},
 			{
 				"user_context",
@@ -575,524 +577,524 @@ return function ()
 					"contract_vendor",
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_daylight",
-		wwise_route = 0,
 		response = "mission_scavenge_daylight",
-		database = "mission_vo_lm_scavenge",
-		category = "conversations_prio_0",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_atmosphere_shield"
-				}
-			}
+					"mission_scavenge_atmosphere_shield",
+				},
+			},
 		},
 		on_done = {
 			{
 				"user_memory",
 				"mission_scavenge_daylight_user",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
+			target = "mission_givers",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_daylight_response",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_scavenge_daylight_response",
-		database = "mission_vo_lm_scavenge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_daylight"
-				}
+					"mission_scavenge_daylight",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot"
-				}
-			}
+					"pilot",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_daylight_response_b",
-		wwise_route = 0,
-		response = "mission_scavenge_daylight_response_b",
-		database = "mission_vo_lm_scavenge",
 		category = "conversations_prio_0",
+		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_daylight_response_b",
+		response = "mission_scavenge_daylight_response_b",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_daylight_response"
-				}
+					"mission_scavenge_daylight_response",
+				},
 			},
 			{
 				"user_memory",
 				"mission_scavenge_daylight_user",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_giver_default",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_elevator_conversation_one_line_one",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_scavenge_elevator_conversation_one_line_one",
-		database = "mission_vo_lm_scavenge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0
+				0,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				20
+				20,
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_scavenge_elevator_conversation_one_line_one"
+				"mission_scavenge_elevator_conversation_one_line_one",
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_elevator_conversation_one_line_one",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_elevator_conversation_one_line_one",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_elevator_conversation_one_line_three",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_scavenge_elevator_conversation_one_line_three",
-		database = "mission_vo_lm_scavenge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_elevator_conversation_one_line_two"
-				}
-			}
+					"mission_scavenge_elevator_conversation_one_line_two",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
+		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_elevator_conversation_one_line_two",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
 		response = "mission_scavenge_elevator_conversation_one_line_two",
-		database = "mission_vo_lm_scavenge",
 		wwise_route = 1,
-		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_elevator_conversation_one_line_one"
-				}
+					"mission_scavenge_elevator_conversation_one_line_one",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot"
-				}
-			}
+					"pilot",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_elevator_conversation_three_line_one",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_scavenge_elevator_conversation_three_line_one",
-		database = "mission_vo_lm_scavenge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0
+				0,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				20
+				20,
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_scavenge_elevator_conversation_three_line_one"
+				"mission_scavenge_elevator_conversation_three_line_one",
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_elevator_conversation_three_line_one",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_elevator_conversation_three_line_one",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_elevator_conversation_three_line_three",
-		category = "conversations_prio_0",
-		wwise_route = 0,
 		response = "mission_scavenge_elevator_conversation_three_line_three",
-		database = "mission_vo_lm_scavenge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_elevator_conversation_three_line_two"
-				}
-			}
+					"mission_scavenge_elevator_conversation_three_line_two",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_scavenge_elevator_conversation_three_line_two",
-		response = "mission_scavenge_elevator_conversation_three_line_two",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_elevator_conversation_three_line_two",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_scavenge_elevator_conversation_three_line_two",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_elevator_conversation_three_line_one"
-				}
+					"mission_scavenge_elevator_conversation_three_line_one",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot"
-				}
-			}
+					"pilot",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_elevator_conversation_two_line_one",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_scavenge_elevator_conversation_two_line_one",
 		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_elevator_conversation_two_line_one",
+		response = "mission_scavenge_elevator_conversation_two_line_one",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"environmental_story"
+				"environmental_story",
 			},
 			{
 				"user_context",
 				"friends_close",
 				OP.GT,
-				0
+				0,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				20
+				20,
 			},
 			{
 				"query_context",
 				"story_name",
 				OP.EQ,
-				"mission_scavenge_elevator_conversation_two_line_one"
+				"mission_scavenge_elevator_conversation_two_line_one",
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_elevator_conversation_two_line_one",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_elevator_conversation_two_line_one",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
-		}
+			target = "mission_givers",
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_elevator_conversation_two_line_three",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_scavenge_elevator_conversation_two_line_three",
 		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_elevator_conversation_two_line_three",
+		response = "mission_scavenge_elevator_conversation_two_line_three",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_elevator_conversation_two_line_two"
-				}
-			}
+					"mission_scavenge_elevator_conversation_two_line_two",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_scavenge_elevator_conversation_two_line_two",
-		response = "mission_scavenge_elevator_conversation_two_line_two",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_elevator_conversation_two_line_two",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_scavenge_elevator_conversation_two_line_two",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_elevator_conversation_two_line_one"
-				}
+					"mission_scavenge_elevator_conversation_two_line_one",
+				},
 			},
 			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"pilot"
-				}
-			}
+					"pilot",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_scavenge_first_objective",
-		response = "mission_scavenge_first_objective",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_first_objective",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_scavenge_first_objective",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_daylight_response_b"
-				}
+					"mission_scavenge_daylight_response_b",
+				},
 			},
 			{
 				"user_context",
@@ -1101,141 +1103,141 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
-			}
+					"tech_priest",
+				},
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players"
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_first_objective_response",
 		category = "conversations_prio_0",
-		wwise_route = 0,
-		response = "mission_scavenge_first_objective_response",
 		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_first_objective_response",
+		response = "mission_scavenge_first_objective_response",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"heard_speak",
 			},
 			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_scavenge_first_objective"
-				}
-			}
+					"mission_scavenge_first_objective",
+				},
+			},
 		},
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.2
-			}
-		}
+				duration = 0.2,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_interior",
 		category = "conversations_prio_1",
-		wwise_route = 0,
-		response = "mission_scavenge_interior",
 		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_interior",
+		response = "mission_scavenge_interior",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_scavenge_interior"
+				"mission_scavenge_interior",
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.EQ,
-				"low"
+				"low",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				10
+				10,
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_interior",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				20,
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_interior",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_interior",
-				OP.TIMESET
+				OP.TIMESET,
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_interior",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_scavenge_pneumatic_press",
-		response = "mission_scavenge_pneumatic_press",
-		database = "mission_vo_lm_scavenge",
-		wwise_route = 1,
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_pneumatic_press",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_scavenge_pneumatic_press",
+		wwise_route = 1,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"mission_info"
+				"mission_info",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_scavenge_pneumatic_press"
+				"mission_scavenge_pneumatic_press",
 			},
 			{
 				"user_context",
@@ -1244,146 +1246,146 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest"
-				}
+					"tech_priest",
+				},
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_pneumatic_press",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_pneumatic_press",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "disabled"
-		}
+			target = "disabled",
+		},
 	})
 	define_rule({
+		category = "player_prio_0",
+		database = "mission_vo_lm_scavenge",
 		name = "mission_scavenge_servitors",
-		category = "player_prio_0",
-		wwise_route = 0,
 		response = "mission_scavenge_servitors",
-		database = "mission_vo_lm_scavenge",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_scavenge_servitors"
+				"mission_scavenge_servitors",
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_servitors",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_servitors",
 				OP.ADD,
-				1
-			}
+				1,
+			},
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default"
-		}
+			target = "mission_giver_default",
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_ship_elevator_end",
 		category = "player_prio_0",
-		wwise_route = 0,
-		response = "mission_scavenge_ship_elevator_end",
 		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_ship_elevator_end",
+		response = "mission_scavenge_ship_elevator_end",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"generic_mission_vo"
+				"generic_mission_vo",
 			},
 			{
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_scavenge_ship_elevator_end"
+				"mission_scavenge_ship_elevator_end",
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_ship_elevator_end",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_ship_elevator_end",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 	define_rule({
-		name = "mission_scavenge_underhalls",
 		category = "conversations_prio_1",
-		wwise_route = 0,
-		response = "mission_scavenge_underhalls",
 		database = "mission_vo_lm_scavenge",
+		name = "mission_scavenge_underhalls",
+		response = "mission_scavenge_underhalls",
+		wwise_route = 0,
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"look_at",
 			},
 			{
 				"query_context",
 				"look_at_tag",
 				OP.EQ,
-				"mission_scavenge_underhalls"
+				"mission_scavenge_underhalls",
 			},
 			{
 				"query_context",
 				"distance",
 				OP.GT,
-				1
+				1,
 			},
 			{
 				"query_context",
 				"distance",
 				OP.LT,
-				17
+				17,
 			},
 			{
 				"faction_memory",
 				"mission_scavenge_underhalls",
 				OP.EQ,
-				0
-			}
+				0,
+			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"mission_scavenge_underhalls",
 				OP.ADD,
-				1
-			}
-		}
+				1,
+			},
+		},
 	})
 end

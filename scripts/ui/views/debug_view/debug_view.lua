@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/debug_view/debug_view.lua
+
 local definition_path = "scripts/ui/views/debug_view/debug_view_definitions"
 local DebugView = class("DebugView", "BaseView")
 

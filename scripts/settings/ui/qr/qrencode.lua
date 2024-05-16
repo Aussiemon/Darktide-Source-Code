@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ui/qr/qrencode.lua
+
 local debugging = false
 local testing = false
 local bit_xor = require("bit").bxor
@@ -7,17 +9,19 @@ local function binary(x, digits)
 	local a = {
 		["0"] = "000",
 		["1"] = "001",
-		["6"] = "110",
 		["2"] = "010",
-		["5"] = "101",
 		["3"] = "011",
+		["4"] = "100",
+		["5"] = "101",
+		["6"] = "110",
 		["7"] = "111",
-		["4"] = "100"
 	}
+
 	s = string.gsub(s, "(.)", function (d)
 		return a[d]
 	end)
 	s = string.gsub(s, "^0*(.*)$", "%1")
+
 	local fmtstring = string.format("%%%ds", digits)
 	local ret = string.format(fmtstring, s)
 
@@ -33,7 +37,7 @@ local function fill_matrix_position(matrix, bitstring, x, y)
 end
 
 local function get_mode(str)
-	local mode = nil
+	local mode
 
 	if string.match(str, "^[0-9]+$") then
 		return 1
@@ -51,242 +55,242 @@ local capacity = {
 		19,
 		16,
 		13,
-		9
+		9,
 	},
 	{
 		34,
 		28,
 		22,
-		16
+		16,
 	},
 	{
 		55,
 		44,
 		34,
-		26
+		26,
 	},
 	{
 		80,
 		64,
 		48,
-		36
+		36,
 	},
 	{
 		108,
 		86,
 		62,
-		46
+		46,
 	},
 	{
 		136,
 		108,
 		76,
-		60
+		60,
 	},
 	{
 		156,
 		124,
 		88,
-		66
+		66,
 	},
 	{
 		194,
 		154,
 		110,
-		86
+		86,
 	},
 	{
 		232,
 		182,
 		132,
-		100
+		100,
 	},
 	{
 		274,
 		216,
 		154,
-		122
+		122,
 	},
 	{
 		324,
 		254,
 		180,
-		140
+		140,
 	},
 	{
 		370,
 		290,
 		206,
-		158
+		158,
 	},
 	{
 		428,
 		334,
 		244,
-		180
+		180,
 	},
 	{
 		461,
 		365,
 		261,
-		197
+		197,
 	},
 	{
 		523,
 		415,
 		295,
-		223
+		223,
 	},
 	{
 		589,
 		453,
 		325,
-		253
+		253,
 	},
 	{
 		647,
 		507,
 		367,
-		283
+		283,
 	},
 	{
 		721,
 		563,
 		397,
-		313
+		313,
 	},
 	{
 		795,
 		627,
 		445,
-		341
+		341,
 	},
 	{
 		861,
 		669,
 		485,
-		385
+		385,
 	},
 	{
 		932,
 		714,
 		512,
-		406
+		406,
 	},
 	{
 		1006,
 		782,
 		568,
-		442
+		442,
 	},
 	{
 		1094,
 		860,
 		614,
-		464
+		464,
 	},
 	{
 		1174,
 		914,
 		664,
-		514
+		514,
 	},
 	{
 		1276,
 		1000,
 		718,
-		538
+		538,
 	},
 	{
 		1370,
 		1062,
 		754,
-		596
+		596,
 	},
 	{
 		1468,
 		1128,
 		808,
-		628
+		628,
 	},
 	{
 		1531,
 		1193,
 		871,
-		661
+		661,
 	},
 	{
 		1631,
 		1267,
 		911,
-		701
+		701,
 	},
 	{
 		1735,
 		1373,
 		985,
-		745
+		745,
 	},
 	{
 		1843,
 		1455,
 		1033,
-		793
+		793,
 	},
 	{
 		1955,
 		1541,
 		1115,
-		845
+		845,
 	},
 	{
 		2071,
 		1631,
 		1171,
-		901
+		901,
 	},
 	{
 		2191,
 		1725,
 		1231,
-		961
+		961,
 	},
 	{
 		2306,
 		1812,
 		1286,
-		986
+		986,
 	},
 	{
 		2434,
 		1914,
 		1354,
-		1054
+		1054,
 	},
 	{
 		2566,
 		1992,
 		1426,
-		1096
+		1096,
 	},
 	{
 		2702,
 		2102,
 		1502,
-		1142
+		1142,
 	},
 	{
 		2812,
 		2216,
 		1582,
-		1222
+		1222,
 	},
 	{
 		2956,
 		2334,
 		1666,
-		1276
-	}
+		1276,
+	},
 }
 
 local function get_version_eclevel(len, mode, requested_ec_level)
@@ -298,31 +302,30 @@ local function get_version_eclevel(len, mode, requested_ec_level)
 		local_mode = 4
 	end
 
-	local bytes, bits, digits, modebits, c = nil
+	local bytes, bits, digits, modebits, c
 	local tab = {
 		{
 			10,
 			9,
 			8,
-			8
+			8,
 		},
 		{
 			12,
 			11,
 			16,
-			10
+			10,
 		},
 		{
 			14,
 			13,
 			16,
-			12
-		}
+			12,
+		},
 	}
 	local minversion = 40
 	local maxec_level = requested_ec_level or 1
-	local min = 1
-	local max = 4
+	local min, max = 1, 4
 
 	if requested_ec_level and requested_ec_level >= 1 and requested_ec_level <= 4 then
 		min = requested_ec_level
@@ -382,22 +385,22 @@ local function get_length(str, version, mode)
 			10,
 			9,
 			8,
-			8
+			8,
 		},
 		{
 			12,
 			11,
 			16,
-			10
+			10,
 		},
 		{
 			14,
 			13,
 			16,
-			12
-		}
+			12,
+		},
 	}
-	local digits = nil
+	local digits
 
 	if version < 10 then
 		digits = tab[1][i]
@@ -413,7 +416,7 @@ local function get_length(str, version, mode)
 end
 
 local function get_version_eclevel_mode_bistringlength(str, requested_ec_level, mode)
-	local local_mode = nil
+	local local_mode
 
 	if mode then
 		local_mode = mode
@@ -421,8 +424,10 @@ local function get_version_eclevel_mode_bistringlength(str, requested_ec_level, 
 		local_mode = get_mode(str)
 	end
 
-	local version, ec_level = nil
+	local version, ec_level
+
 	version, ec_level = get_version_eclevel(#str, local_mode, requested_ec_level)
+
 	local length_string = get_length(str, version, local_mode)
 
 	return version, ec_level, binary(local_mode, 4), local_mode, length_string
@@ -523,12 +528,12 @@ local asciitbl = {
 	-1,
 	-1,
 	-1,
-	-1
+	-1,
 }
 
 local function encode_string_numeric(str)
 	local bitstring = ""
-	local int = nil
+	local int
 
 	string.gsub(str, "..?.?", function (a)
 		int = tonumber(a)
@@ -547,7 +552,7 @@ end
 
 local function encode_string_ascii(str)
 	local bitstring = ""
-	local int, b1, b2 = nil
+	local int, b1, b2
 
 	string.gsub(str, "..?", function (a)
 		if #a == 2 then
@@ -585,8 +590,9 @@ local function encode_data(str, mode)
 end
 
 local function add_pad_data(version, ec_level, data)
-	local count_to_pad, missing_digits = nil
+	local count_to_pad, missing_digits
 	local cpty = capacity[version][ec_level] * 8
+
 	count_to_pad = math.min(4, cpty - #data)
 
 	if count_to_pad > 0 then
@@ -865,7 +871,7 @@ local alpha_int = {
 	173,
 	71,
 	142,
-	1
+	1,
 }
 local int_alpha = {
 	[0] = 0,
@@ -1123,7 +1129,7 @@ local int_alpha = {
 	168,
 	80,
 	88,
-	175
+	175,
 }
 local generator_polynomial = {
 	[7] = {
@@ -1134,7 +1140,7 @@ local generator_polynomial = {
 		146,
 		229,
 		87,
-		0
+		0,
 	},
 	[10] = {
 		45,
@@ -1147,7 +1153,7 @@ local generator_polynomial = {
 		46,
 		67,
 		251,
-		0
+		0,
 	},
 	[13] = {
 		78,
@@ -1163,7 +1169,7 @@ local generator_polynomial = {
 		176,
 		152,
 		74,
-		0
+		0,
 	},
 	[15] = {
 		105,
@@ -1181,7 +1187,7 @@ local generator_polynomial = {
 		61,
 		183,
 		8,
-		0
+		0,
 	},
 	[16] = {
 		120,
@@ -1200,7 +1206,7 @@ local generator_polynomial = {
 		107,
 		104,
 		120,
-		0
+		0,
 	},
 	[17] = {
 		136,
@@ -1220,7 +1226,7 @@ local generator_polynomial = {
 		206,
 		139,
 		43,
-		0
+		0,
 	},
 	[18] = {
 		153,
@@ -1241,7 +1247,7 @@ local generator_polynomial = {
 		158,
 		234,
 		215,
-		0
+		0,
 	},
 	[20] = {
 		190,
@@ -1264,7 +1270,7 @@ local generator_polynomial = {
 		79,
 		60,
 		17,
-		0
+		0,
 	},
 	[22] = {
 		231,
@@ -1289,7 +1295,7 @@ local generator_polynomial = {
 		247,
 		171,
 		210,
-		0
+		0,
 	},
 	[24] = {
 		21,
@@ -1316,7 +1322,7 @@ local generator_polynomial = {
 		135,
 		121,
 		229,
-		0
+		0,
 	},
 	[26] = {
 		70,
@@ -1345,7 +1351,7 @@ local generator_polynomial = {
 		158,
 		125,
 		173,
-		0
+		0,
 	},
 	[28] = {
 		123,
@@ -1376,7 +1382,7 @@ local generator_polynomial = {
 		200,
 		223,
 		168,
-		0
+		0,
 	},
 	[30] = {
 		180,
@@ -1409,8 +1415,8 @@ local generator_polynomial = {
 		145,
 		173,
 		41,
-		0
-	}
+		0,
+	},
 }
 
 local function convert_bitstring_to_bytes(data)
@@ -1424,7 +1430,7 @@ end
 
 local function get_generator_polynominal_adjusted(num_ec_codewords, highest_exponent)
 	local gp_alpha = {
-		[0] = 0
+		[0] = 0,
 	}
 
 	for i = 0, highest_exponent - num_ec_codewords - 1 do
@@ -1461,7 +1467,7 @@ local function convert_to_int(tab, len_message)
 end
 
 local function calculate_error_correction(data, num_ec_codewords)
-	local mp = nil
+	local mp
 
 	if type(data) == "string" then
 		mp = convert_bitstring_to_bytes(data)
@@ -1471,10 +1477,9 @@ local function calculate_error_correction(data, num_ec_codewords)
 
 	local len_message = #mp
 	local highest_exponent = len_message + num_ec_codewords - 1
-	local gp_alpha, tmp, he = nil
+	local gp_alpha, tmp, he
 	local gp_int = {}
-	local mp_int = {}
-	local mp_alpha = {}
+	local mp_int, mp_alpha = {}, {}
 
 	for i = 1, len_message do
 		mp_int[highest_exponent - i + 1] = mp[i]
@@ -1489,6 +1494,7 @@ local function calculate_error_correction(data, num_ec_codewords)
 
 	while num_ec_codewords <= highest_exponent do
 		gp_alpha = get_generator_polynominal_adjusted(num_ec_codewords, highest_exponent)
+
 		local exp = mp_alpha[highest_exponent]
 
 		for i = highest_exponent, highest_exponent - num_ec_codewords, -1 do
@@ -1546,33 +1552,33 @@ local ecblocks = {
 			{
 				26,
 				19,
-				2
-			}
+				2,
+			},
 		},
 		{
 			1,
 			{
 				26,
 				16,
-				4
-			}
+				4,
+			},
 		},
 		{
 			1,
 			{
 				26,
 				13,
-				6
-			}
+				6,
+			},
 		},
 		{
 			1,
 			{
 				26,
 				9,
-				8
-			}
-		}
+				8,
+			},
+		},
 	},
 	{
 		{
@@ -1580,33 +1586,33 @@ local ecblocks = {
 			{
 				44,
 				34,
-				4
-			}
+				4,
+			},
 		},
 		{
 			1,
 			{
 				44,
 				28,
-				8
-			}
+				8,
+			},
 		},
 		{
 			1,
 			{
 				44,
 				22,
-				11
-			}
+				11,
+			},
 		},
 		{
 			1,
 			{
 				44,
 				16,
-				14
-			}
-		}
+				14,
+			},
+		},
 	},
 	{
 		{
@@ -1614,33 +1620,33 @@ local ecblocks = {
 			{
 				70,
 				55,
-				7
-			}
+				7,
+			},
 		},
 		{
 			1,
 			{
 				70,
 				44,
-				13
-			}
+				13,
+			},
 		},
 		{
 			2,
 			{
 				35,
 				17,
-				9
-			}
+				9,
+			},
 		},
 		{
 			2,
 			{
 				35,
 				13,
-				11
-			}
-		}
+				11,
+			},
+		},
 	},
 	{
 		{
@@ -1648,33 +1654,33 @@ local ecblocks = {
 			{
 				100,
 				80,
-				10
-			}
+				10,
+			},
 		},
 		{
 			2,
 			{
 				50,
 				32,
-				9
-			}
+				9,
+			},
 		},
 		{
 			2,
 			{
 				50,
 				24,
-				13
-			}
+				13,
+			},
 		},
 		{
 			4,
 			{
 				25,
 				9,
-				8
-			}
-		}
+				8,
+			},
+		},
 	},
 	{
 		{
@@ -1682,45 +1688,45 @@ local ecblocks = {
 			{
 				134,
 				108,
-				13
-			}
+				13,
+			},
 		},
 		{
 			2,
 			{
 				67,
 				43,
-				12
-			}
+				12,
+			},
 		},
 		{
 			2,
 			{
 				33,
 				15,
-				9
+				9,
 			},
 			2,
 			{
 				34,
 				16,
-				9
-			}
+				9,
+			},
 		},
 		{
 			2,
 			{
 				33,
 				11,
-				11
+				11,
 			},
 			2,
 			{
 				34,
 				12,
-				11
-			}
-		}
+				11,
+			},
+		},
 	},
 	{
 		{
@@ -1728,33 +1734,33 @@ local ecblocks = {
 			{
 				86,
 				68,
-				9
-			}
+				9,
+			},
 		},
 		{
 			4,
 			{
 				43,
 				27,
-				8
-			}
+				8,
+			},
 		},
 		{
 			4,
 			{
 				43,
 				19,
-				12
-			}
+				12,
+			},
 		},
 		{
 			4,
 			{
 				43,
 				15,
-				14
-			}
-		}
+				14,
+			},
+		},
 	},
 	{
 		{
@@ -1762,45 +1768,45 @@ local ecblocks = {
 			{
 				98,
 				78,
-				10
-			}
+				10,
+			},
 		},
 		{
 			4,
 			{
 				49,
 				31,
-				9
-			}
+				9,
+			},
 		},
 		{
 			2,
 			{
 				32,
 				14,
-				9
+				9,
 			},
 			4,
 			{
 				33,
 				15,
-				9
-			}
+				9,
+			},
 		},
 		{
 			4,
 			{
 				39,
 				13,
-				13
+				13,
 			},
 			1,
 			{
 				40,
 				14,
-				13
-			}
-		}
+				13,
+			},
+		},
 	},
 	{
 		{
@@ -1808,51 +1814,51 @@ local ecblocks = {
 			{
 				121,
 				97,
-				12
-			}
+				12,
+			},
 		},
 		{
 			2,
 			{
 				60,
 				38,
-				11
+				11,
 			},
 			2,
 			{
 				61,
 				39,
-				11
-			}
+				11,
+			},
 		},
 		{
 			4,
 			{
 				40,
 				18,
-				11
+				11,
 			},
 			2,
 			{
 				41,
 				19,
-				11
-			}
+				11,
+			},
 		},
 		{
 			4,
 			{
 				40,
 				14,
-				13
+				13,
 			},
 			2,
 			{
 				41,
 				15,
-				13
-			}
-		}
+				13,
+			},
+		},
 	},
 	{
 		{
@@ -1860,51 +1866,51 @@ local ecblocks = {
 			{
 				146,
 				116,
-				15
-			}
+				15,
+			},
 		},
 		{
 			3,
 			{
 				58,
 				36,
-				11
+				11,
 			},
 			2,
 			{
 				59,
 				37,
-				11
-			}
+				11,
+			},
 		},
 		{
 			4,
 			{
 				36,
 				16,
-				10
+				10,
 			},
 			4,
 			{
 				37,
 				17,
-				10
-			}
+				10,
+			},
 		},
 		{
 			4,
 			{
 				36,
 				12,
-				12
+				12,
 			},
 			4,
 			{
 				37,
 				13,
-				12
-			}
-		}
+				12,
+			},
+		},
 	},
 	{
 		{
@@ -1912,57 +1918,57 @@ local ecblocks = {
 			{
 				86,
 				68,
-				9
+				9,
 			},
 			2,
 			{
 				87,
 				69,
-				9
-			}
+				9,
+			},
 		},
 		{
 			4,
 			{
 				69,
 				43,
-				13
+				13,
 			},
 			1,
 			{
 				70,
 				44,
-				13
-			}
+				13,
+			},
 		},
 		{
 			6,
 			{
 				43,
 				19,
-				12
+				12,
 			},
 			2,
 			{
 				44,
 				20,
-				12
-			}
+				12,
+			},
 		},
 		{
 			6,
 			{
 				43,
 				15,
-				14
+				14,
 			},
 			2,
 			{
 				44,
 				16,
-				14
-			}
-		}
+				14,
+			},
+		},
 	},
 	{
 		{
@@ -1970,51 +1976,51 @@ local ecblocks = {
 			{
 				101,
 				81,
-				10
-			}
+				10,
+			},
 		},
 		{
 			1,
 			{
 				80,
 				50,
-				15
+				15,
 			},
 			4,
 			{
 				81,
 				51,
-				15
-			}
+				15,
+			},
 		},
 		{
 			4,
 			{
 				50,
 				22,
-				14
+				14,
 			},
 			4,
 			{
 				51,
 				23,
-				14
-			}
+				14,
+			},
 		},
 		{
 			3,
 			{
 				36,
 				12,
-				12
+				12,
 			},
 			8,
 			{
 				37,
 				13,
-				12
-			}
-		}
+				12,
+			},
+		},
 	},
 	{
 		{
@@ -2022,57 +2028,57 @@ local ecblocks = {
 			{
 				116,
 				92,
-				12
+				12,
 			},
 			2,
 			{
 				117,
 				93,
-				12
-			}
+				12,
+			},
 		},
 		{
 			6,
 			{
 				58,
 				36,
-				11
+				11,
 			},
 			2,
 			{
 				59,
 				37,
-				11
-			}
+				11,
+			},
 		},
 		{
 			4,
 			{
 				46,
 				20,
-				13
+				13,
 			},
 			6,
 			{
 				47,
 				21,
-				13
-			}
+				13,
+			},
 		},
 		{
 			7,
 			{
 				42,
 				14,
-				14
+				14,
 			},
 			4,
 			{
 				43,
 				15,
-				14
-			}
-		}
+				14,
+			},
+		},
 	},
 	{
 		{
@@ -2080,51 +2086,51 @@ local ecblocks = {
 			{
 				133,
 				107,
-				13
-			}
+				13,
+			},
 		},
 		{
 			8,
 			{
 				59,
 				37,
-				11
+				11,
 			},
 			1,
 			{
 				60,
 				38,
-				11
-			}
+				11,
+			},
 		},
 		{
 			8,
 			{
 				44,
 				20,
-				12
+				12,
 			},
 			4,
 			{
 				45,
 				21,
-				12
-			}
+				12,
+			},
 		},
 		{
 			12,
 			{
 				33,
 				11,
-				11
+				11,
 			},
 			4,
 			{
 				34,
 				12,
-				11
-			}
-		}
+				11,
+			},
+		},
 	},
 	{
 		{
@@ -2132,57 +2138,57 @@ local ecblocks = {
 			{
 				145,
 				115,
-				15
+				15,
 			},
 			1,
 			{
 				146,
 				116,
-				15
-			}
+				15,
+			},
 		},
 		{
 			4,
 			{
 				64,
 				40,
-				12
+				12,
 			},
 			5,
 			{
 				65,
 				41,
-				12
-			}
+				12,
+			},
 		},
 		{
 			11,
 			{
 				36,
 				16,
-				10
+				10,
 			},
 			5,
 			{
 				37,
 				17,
-				10
-			}
+				10,
+			},
 		},
 		{
 			11,
 			{
 				36,
 				12,
-				12
+				12,
 			},
 			5,
 			{
 				37,
 				13,
-				12
-			}
-		}
+				12,
+			},
+		},
 	},
 	{
 		{
@@ -2190,57 +2196,57 @@ local ecblocks = {
 			{
 				109,
 				87,
-				11
+				11,
 			},
 			1,
 			{
 				110,
 				88,
-				11
-			}
+				11,
+			},
 		},
 		{
 			5,
 			{
 				65,
 				41,
-				12
+				12,
 			},
 			5,
 			{
 				66,
 				42,
-				12
-			}
+				12,
+			},
 		},
 		{
 			5,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			7,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			11,
 			{
 				36,
 				12,
-				12
+				12,
 			},
 			7,
 			{
 				37,
 				13,
-				12
-			}
-		}
+				12,
+			},
+		},
 	},
 	{
 		{
@@ -2248,57 +2254,57 @@ local ecblocks = {
 			{
 				122,
 				98,
-				12
+				12,
 			},
 			1,
 			{
 				123,
 				99,
-				12
-			}
+				12,
+			},
 		},
 		{
 			7,
 			{
 				73,
 				45,
-				14
+				14,
 			},
 			3,
 			{
 				74,
 				46,
-				14
-			}
+				14,
+			},
 		},
 		{
 			15,
 			{
 				43,
 				19,
-				12
+				12,
 			},
 			2,
 			{
 				44,
 				20,
-				12
-			}
+				12,
+			},
 		},
 		{
 			3,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			13,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2306,57 +2312,57 @@ local ecblocks = {
 			{
 				135,
 				107,
-				14
+				14,
 			},
 			5,
 			{
 				136,
 				108,
-				14
-			}
+				14,
+			},
 		},
 		{
 			10,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			1,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			1,
 			{
 				50,
 				22,
-				14
+				14,
 			},
 			15,
 			{
 				51,
 				23,
-				14
-			}
+				14,
+			},
 		},
 		{
 			2,
 			{
 				42,
 				14,
-				14
+				14,
 			},
 			17,
 			{
 				43,
 				15,
-				14
-			}
-		}
+				14,
+			},
+		},
 	},
 	{
 		{
@@ -2364,57 +2370,57 @@ local ecblocks = {
 			{
 				150,
 				120,
-				15
+				15,
 			},
 			1,
 			{
 				151,
 				121,
-				15
-			}
+				15,
+			},
 		},
 		{
 			9,
 			{
 				69,
 				43,
-				13
+				13,
 			},
 			4,
 			{
 				70,
 				44,
-				13
-			}
+				13,
+			},
 		},
 		{
 			17,
 			{
 				50,
 				22,
-				14
+				14,
 			},
 			1,
 			{
 				51,
 				23,
-				14
-			}
+				14,
+			},
 		},
 		{
 			2,
 			{
 				42,
 				14,
-				14
+				14,
 			},
 			19,
 			{
 				43,
 				15,
-				14
-			}
-		}
+				14,
+			},
+		},
 	},
 	{
 		{
@@ -2422,57 +2428,57 @@ local ecblocks = {
 			{
 				141,
 				113,
-				14
+				14,
 			},
 			4,
 			{
 				142,
 				114,
-				14
-			}
+				14,
+			},
 		},
 		{
 			3,
 			{
 				70,
 				44,
-				13
+				13,
 			},
 			11,
 			{
 				71,
 				45,
-				13
-			}
+				13,
+			},
 		},
 		{
 			17,
 			{
 				47,
 				21,
-				13
+				13,
 			},
 			4,
 			{
 				48,
 				22,
-				13
-			}
+				13,
+			},
 		},
 		{
 			9,
 			{
 				39,
 				13,
-				13
+				13,
 			},
 			16,
 			{
 				40,
 				14,
-				13
-			}
-		}
+				13,
+			},
+		},
 	},
 	{
 		{
@@ -2480,57 +2486,57 @@ local ecblocks = {
 			{
 				135,
 				107,
-				14
+				14,
 			},
 			5,
 			{
 				136,
 				108,
-				14
-			}
+				14,
+			},
 		},
 		{
 			3,
 			{
 				67,
 				41,
-				13
+				13,
 			},
 			13,
 			{
 				68,
 				42,
-				13
-			}
+				13,
+			},
 		},
 		{
 			15,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			5,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			15,
 			{
 				43,
 				15,
-				14
+				14,
 			},
 			10,
 			{
 				44,
 				16,
-				14
-			}
-		}
+				14,
+			},
+		},
 	},
 	{
 		{
@@ -2538,51 +2544,51 @@ local ecblocks = {
 			{
 				144,
 				116,
-				14
+				14,
 			},
 			4,
 			{
 				145,
 				117,
-				14
-			}
+				14,
+			},
 		},
 		{
 			17,
 			{
 				68,
 				42,
-				13
-			}
+				13,
+			},
 		},
 		{
 			17,
 			{
 				50,
 				22,
-				14
+				14,
 			},
 			6,
 			{
 				51,
 				23,
-				14
-			}
+				14,
+			},
 		},
 		{
 			19,
 			{
 				46,
 				16,
-				15
+				15,
 			},
 			6,
 			{
 				47,
 				17,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2590,45 +2596,45 @@ local ecblocks = {
 			{
 				139,
 				111,
-				14
+				14,
 			},
 			7,
 			{
 				140,
 				112,
-				14
-			}
+				14,
+			},
 		},
 		{
 			17,
 			{
 				74,
 				46,
-				14
-			}
+				14,
+			},
 		},
 		{
 			7,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			16,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			34,
 			{
 				37,
 				13,
-				12
-			}
-		}
+				12,
+			},
+		},
 	},
 	{
 		{
@@ -2636,57 +2642,57 @@ local ecblocks = {
 			{
 				151,
 				121,
-				15
+				15,
 			},
 			5,
 			{
 				152,
 				122,
-				15
-			}
+				15,
+			},
 		},
 		{
 			4,
 			{
 				75,
 				47,
-				14
+				14,
 			},
 			14,
 			{
 				76,
 				48,
-				14
-			}
+				14,
+			},
 		},
 		{
 			11,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			14,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			16,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			14,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2694,57 +2700,57 @@ local ecblocks = {
 			{
 				147,
 				117,
-				15
+				15,
 			},
 			4,
 			{
 				148,
 				118,
-				15
-			}
+				15,
+			},
 		},
 		{
 			6,
 			{
 				73,
 				45,
-				14
+				14,
 			},
 			14,
 			{
 				74,
 				46,
-				14
-			}
+				14,
+			},
 		},
 		{
 			11,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			16,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			30,
 			{
 				46,
 				16,
-				15
+				15,
 			},
 			2,
 			{
 				47,
 				17,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2752,57 +2758,57 @@ local ecblocks = {
 			{
 				132,
 				106,
-				13
+				13,
 			},
 			4,
 			{
 				133,
 				107,
-				13
-			}
+				13,
+			},
 		},
 		{
 			8,
 			{
 				75,
 				47,
-				14
+				14,
 			},
 			13,
 			{
 				76,
 				48,
-				14
-			}
+				14,
+			},
 		},
 		{
 			7,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			22,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			22,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			13,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2810,57 +2816,57 @@ local ecblocks = {
 			{
 				142,
 				114,
-				14
+				14,
 			},
 			2,
 			{
 				143,
 				115,
-				14
-			}
+				14,
+			},
 		},
 		{
 			19,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			4,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			28,
 			{
 				50,
 				22,
-				14
+				14,
 			},
 			6,
 			{
 				51,
 				23,
-				14
-			}
+				14,
+			},
 		},
 		{
 			33,
 			{
 				46,
 				16,
-				15
+				15,
 			},
 			4,
 			{
 				47,
 				17,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2868,57 +2874,57 @@ local ecblocks = {
 			{
 				152,
 				122,
-				15
+				15,
 			},
 			4,
 			{
 				153,
 				123,
-				15
-			}
+				15,
+			},
 		},
 		{
 			22,
 			{
 				73,
 				45,
-				14
+				14,
 			},
 			3,
 			{
 				74,
 				46,
-				14
-			}
+				14,
+			},
 		},
 		{
 			8,
 			{
 				53,
 				23,
-				15
+				15,
 			},
 			26,
 			{
 				54,
 				24,
-				15
-			}
+				15,
+			},
 		},
 		{
 			12,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			28,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2926,57 +2932,57 @@ local ecblocks = {
 			{
 				147,
 				117,
-				15
+				15,
 			},
 			10,
 			{
 				148,
 				118,
-				15
-			}
+				15,
+			},
 		},
 		{
 			3,
 			{
 				73,
 				45,
-				14
+				14,
 			},
 			23,
 			{
 				74,
 				46,
-				14
-			}
+				14,
+			},
 		},
 		{
 			4,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			31,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			11,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			31,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -2984,57 +2990,57 @@ local ecblocks = {
 			{
 				146,
 				116,
-				15
+				15,
 			},
 			7,
 			{
 				147,
 				117,
-				15
-			}
+				15,
+			},
 		},
 		{
 			21,
 			{
 				73,
 				45,
-				14
+				14,
 			},
 			7,
 			{
 				74,
 				46,
-				14
-			}
+				14,
+			},
 		},
 		{
 			1,
 			{
 				53,
 				23,
-				15
+				15,
 			},
 			37,
 			{
 				54,
 				24,
-				15
-			}
+				15,
+			},
 		},
 		{
 			19,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			26,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3042,57 +3048,57 @@ local ecblocks = {
 			{
 				145,
 				115,
-				15
+				15,
 			},
 			10,
 			{
 				146,
 				116,
-				15
-			}
+				15,
+			},
 		},
 		{
 			19,
 			{
 				75,
 				47,
-				14
+				14,
 			},
 			10,
 			{
 				76,
 				48,
-				14
-			}
+				14,
+			},
 		},
 		{
 			15,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			25,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			23,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			25,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3100,57 +3106,57 @@ local ecblocks = {
 			{
 				145,
 				115,
-				15
+				15,
 			},
 			3,
 			{
 				146,
 				116,
-				15
-			}
+				15,
+			},
 		},
 		{
 			2,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			29,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			42,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			1,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			23,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			28,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3158,51 +3164,51 @@ local ecblocks = {
 			{
 				145,
 				115,
-				15
-			}
+				15,
+			},
 		},
 		{
 			10,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			23,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			10,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			35,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			19,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			35,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3210,57 +3216,57 @@ local ecblocks = {
 			{
 				145,
 				115,
-				15
+				15,
 			},
 			1,
 			{
 				146,
 				116,
-				15
-			}
+				15,
+			},
 		},
 		{
 			14,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			21,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			29,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			19,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			11,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			46,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3268,57 +3274,57 @@ local ecblocks = {
 			{
 				145,
 				115,
-				15
+				15,
 			},
 			6,
 			{
 				146,
 				116,
-				15
-			}
+				15,
+			},
 		},
 		{
 			14,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			23,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			44,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			7,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			59,
 			{
 				46,
 				16,
-				15
+				15,
 			},
 			1,
 			{
 				47,
 				17,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3326,57 +3332,57 @@ local ecblocks = {
 			{
 				151,
 				121,
-				15
+				15,
 			},
 			7,
 			{
 				152,
 				122,
-				15
-			}
+				15,
+			},
 		},
 		{
 			12,
 			{
 				75,
 				47,
-				14
+				14,
 			},
 			26,
 			{
 				76,
 				48,
-				14
-			}
+				14,
+			},
 		},
 		{
 			39,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			14,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			22,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			41,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3384,57 +3390,57 @@ local ecblocks = {
 			{
 				151,
 				121,
-				15
+				15,
 			},
 			14,
 			{
 				152,
 				122,
-				15
-			}
+				15,
+			},
 		},
 		{
 			6,
 			{
 				75,
 				47,
-				14
+				14,
 			},
 			34,
 			{
 				76,
 				48,
-				14
-			}
+				14,
+			},
 		},
 		{
 			46,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			10,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			2,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			64,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3442,57 +3448,57 @@ local ecblocks = {
 			{
 				152,
 				122,
-				15
+				15,
 			},
 			4,
 			{
 				153,
 				123,
-				15
-			}
+				15,
+			},
 		},
 		{
 			29,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			14,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			49,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			10,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			24,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			46,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3500,57 +3506,57 @@ local ecblocks = {
 			{
 				152,
 				122,
-				15
+				15,
 			},
 			18,
 			{
 				153,
 				123,
-				15
-			}
+				15,
+			},
 		},
 		{
 			13,
 			{
 				74,
 				46,
-				14
+				14,
 			},
 			32,
 			{
 				75,
 				47,
-				14
-			}
+				14,
+			},
 		},
 		{
 			48,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			14,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			42,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			32,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3558,57 +3564,57 @@ local ecblocks = {
 			{
 				147,
 				117,
-				15
+				15,
 			},
 			4,
 			{
 				148,
 				118,
-				15
-			}
+				15,
+			},
 		},
 		{
 			40,
 			{
 				75,
 				47,
-				14
+				14,
 			},
 			7,
 			{
 				76,
 				48,
-				14
-			}
+				14,
+			},
 		},
 		{
 			43,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			22,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			10,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			67,
 			{
 				46,
 				16,
-				15
-			}
-		}
+				15,
+			},
+		},
 	},
 	{
 		{
@@ -3616,58 +3622,58 @@ local ecblocks = {
 			{
 				148,
 				118,
-				15
+				15,
 			},
 			6,
 			{
 				149,
 				119,
-				15
-			}
+				15,
+			},
 		},
 		{
 			18,
 			{
 				75,
 				47,
-				14
+				14,
 			},
 			31,
 			{
 				76,
 				48,
-				14
-			}
+				14,
+			},
 		},
 		{
 			34,
 			{
 				54,
 				24,
-				15
+				15,
 			},
 			34,
 			{
 				55,
 				25,
-				15
-			}
+				15,
+			},
 		},
 		{
 			20,
 			{
 				45,
 				15,
-				15
+				15,
 			},
 			61,
 			{
 				46,
 				16,
-				15
-			}
-		}
-	}
+				15,
+			},
+		},
+	},
 }
 local remainder = {
 	0,
@@ -3709,7 +3715,7 @@ local remainder = {
 	0,
 	0,
 	0,
-	0
+	0,
 }
 
 local function arrange_codewords_and_calculate_ec(version, ec_level, data)
@@ -3724,7 +3730,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	end
 
 	local blocks = ecblocks[version][ec_level]
-	local size_datablock_bytes, size_ecblock_bytes = nil
+	local size_datablock_bytes, size_ecblock_bytes
 	local datablocks = {}
 	local ecblocks = {}
 	local count = 1
@@ -3737,6 +3743,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 			size_ecblock_bytes = blocks[2 * i][1] - blocks[2 * i][2]
 			cpty_ec_bits = cpty_ec_bits + size_ecblock_bytes * 8
 			datablocks[#datablocks + 1] = string.sub(data, pos * 8 + 1, (pos + size_datablock_bytes) * 8)
+
 			local tmp_tab = calculate_error_correction(datablocks[#datablocks], size_ecblock_bytes)
 			local tmp_str = ""
 
@@ -3751,6 +3758,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	end
 
 	local arranged_data = ""
+
 	pos = 1
 
 	repeat
@@ -3764,6 +3772,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	until #arranged_data == #data
 
 	local arranged_ec = ""
+
 	pos = 1
 
 	repeat
@@ -3815,7 +3824,8 @@ local function add_position_detection_patterns(tab_x)
 end
 
 local function add_timing_pattern(tab_x)
-	local line, col = nil
+	local line, col
+
 	line = 7
 	col = 9
 
@@ -3840,149 +3850,107 @@ local alignment_pattern = {
 	{},
 	{
 		6,
-		18
-	},
-	{
-		6,
-		22
-	},
-	{
-		6,
-		26
-	},
-	{
-		6,
-		30
-	},
-	{
-		6,
-		34
+		18,
 	},
 	{
 		6,
 		22,
-		38
-	},
-	{
-		6,
-		24,
-		42
 	},
 	{
 		6,
 		26,
-		46
-	},
-	{
-		6,
-		28,
-		50
 	},
 	{
 		6,
 		30,
-		54
-	},
-	{
-		6,
-		32,
-		58
 	},
 	{
 		6,
 		34,
-		62
+	},
+	{
+		6,
+		22,
+		38,
+	},
+	{
+		6,
+		24,
+		42,
 	},
 	{
 		6,
 		26,
 		46,
-		66
-	},
-	{
-		6,
-		26,
-		48,
-		70
-	},
-	{
-		6,
-		26,
-		50,
-		74
-	},
-	{
-		6,
-		30,
-		54,
-		78
-	},
-	{
-		6,
-		30,
-		56,
-		82
-	},
-	{
-		6,
-		30,
-		58,
-		86
-	},
-	{
-		6,
-		34,
-		62,
-		90
 	},
 	{
 		6,
 		28,
 		50,
-		72,
-		94
+	},
+	{
+		6,
+		30,
+		54,
+	},
+	{
+		6,
+		32,
+		58,
+	},
+	{
+		6,
+		34,
+		62,
+	},
+	{
+		6,
+		26,
+		46,
+		66,
+	},
+	{
+		6,
+		26,
+		48,
+		70,
 	},
 	{
 		6,
 		26,
 		50,
 		74,
-		98
 	},
 	{
 		6,
 		30,
 		54,
 		78,
-		102
 	},
 	{
 		6,
-		28,
-		54,
-		80,
-		106
-	},
-	{
-		6,
-		32,
-		58,
-		84,
-		110
+		30,
+		56,
+		82,
 	},
 	{
 		6,
 		30,
 		58,
 		86,
-		114
 	},
 	{
 		6,
 		34,
 		62,
 		90,
-		118
+	},
+	{
+		6,
+		28,
+		50,
+		72,
+		94,
 	},
 	{
 		6,
@@ -3990,7 +3958,6 @@ local alignment_pattern = {
 		50,
 		74,
 		98,
-		122
 	},
 	{
 		6,
@@ -3998,31 +3965,20 @@ local alignment_pattern = {
 		54,
 		78,
 		102,
-		126
 	},
 	{
 		6,
-		26,
-		52,
-		78,
-		104,
-		130
+		28,
+		54,
+		80,
+		106,
 	},
 	{
 		6,
-		30,
-		56,
-		82,
-		108,
-		134
-	},
-	{
-		6,
-		34,
-		60,
-		86,
-		112,
-		138
+		32,
+		58,
+		84,
+		110,
 	},
 	{
 		6,
@@ -4030,7 +3986,6 @@ local alignment_pattern = {
 		58,
 		86,
 		114,
-		142
 	},
 	{
 		6,
@@ -4038,7 +3993,14 @@ local alignment_pattern = {
 		62,
 		90,
 		118,
-		146
+	},
+	{
+		6,
+		26,
+		50,
+		74,
+		98,
+		122,
 	},
 	{
 		6,
@@ -4047,43 +4009,30 @@ local alignment_pattern = {
 		78,
 		102,
 		126,
-		150
-	},
-	{
-		6,
-		24,
-		50,
-		76,
-		102,
-		128,
-		154
-	},
-	{
-		6,
-		28,
-		54,
-		80,
-		106,
-		132,
-		158
-	},
-	{
-		6,
-		32,
-		58,
-		84,
-		110,
-		136,
-		162
 	},
 	{
 		6,
 		26,
-		54,
+		52,
+		78,
+		104,
+		130,
+	},
+	{
+		6,
+		30,
+		56,
 		82,
-		110,
+		108,
+		134,
+	},
+	{
+		6,
+		34,
+		60,
+		86,
+		112,
 		138,
-		166
 	},
 	{
 		6,
@@ -4092,14 +4041,75 @@ local alignment_pattern = {
 		86,
 		114,
 		142,
-		170
-	}
+	},
+	{
+		6,
+		34,
+		62,
+		90,
+		118,
+		146,
+	},
+	{
+		6,
+		30,
+		54,
+		78,
+		102,
+		126,
+		150,
+	},
+	{
+		6,
+		24,
+		50,
+		76,
+		102,
+		128,
+		154,
+	},
+	{
+		6,
+		28,
+		54,
+		80,
+		106,
+		132,
+		158,
+	},
+	{
+		6,
+		32,
+		58,
+		84,
+		110,
+		136,
+		162,
+	},
+	{
+		6,
+		26,
+		54,
+		82,
+		110,
+		138,
+		166,
+	},
+	{
+		6,
+		30,
+		58,
+		86,
+		114,
+		142,
+		170,
+	},
 }
 
 local function add_alignment_pattern(tab_x)
 	local version = (#tab_x - 17) / 4
 	local ap = alignment_pattern[version]
-	local pos_x, pos_y = nil
+	local pos_x, pos_y
 
 	for x = 1, #ap do
 		for y = 1, #ap do
@@ -4146,7 +4156,7 @@ local typeinfo = {
 		"110001100011000",
 		"110110001000001",
 		"110100101110110",
-		[-1.0] = "111111111111111"
+		[-1] = "111111111111111",
 	},
 	{
 		[0] = "101010000010010",
@@ -4157,7 +4167,7 @@ local typeinfo = {
 		"100000011001110",
 		"100111110010111",
 		"100101010100000",
-		[-1.0] = "111111111111111"
+		[-1] = "111111111111111",
 	},
 	{
 		[0] = "011010101011111",
@@ -4168,7 +4178,7 @@ local typeinfo = {
 		"010000110000011",
 		"010111011011010",
 		"010101111101101",
-		[-1.0] = "111111111111111"
+		[-1] = "111111111111111",
 	},
 	{
 		[0] = "001011010001001",
@@ -4179,13 +4189,13 @@ local typeinfo = {
 		"000001001010101",
 		"000110100001100",
 		"000100000111011",
-		[-1.0] = "111111111111111"
-	}
+		[-1] = "111111111111111",
+	},
 }
 
 local function add_typeinfo_to_matrix(matrix, ec_level, mask)
 	local ec_mask_type = typeinfo[ec_level][mask]
-	local bit = nil
+	local bit
 
 	for i = 1, 7 do
 		bit = string.sub(ec_mask_type, i, i)
@@ -4256,7 +4266,7 @@ local version_information = {
 	"011101000010101001",
 	"001001100101011001",
 	"100000101010111001",
-	"100101100011000101"
+	"100101100011000101",
 }
 
 local function add_version_information(matrix, version)
@@ -4266,7 +4276,8 @@ local function add_version_information(matrix, version)
 
 	local size = #matrix
 	local bitstring = version_information[version - 6]
-	local x, y, bit, start_x, start_y = nil
+	local x, y, bit, start_x, start_y
+
 	start_x = #matrix - 10
 	start_y = 1
 
@@ -4291,8 +4302,9 @@ local function add_version_information(matrix, version)
 end
 
 local function prepare_matrix_with_mask(version, ec_level, mask)
-	local size = nil
+	local size
 	local tab_x = {}
+
 	size = version * 4 + 17
 
 	for i = 1, size do
@@ -4318,6 +4330,7 @@ end
 local function get_pixel_with_mask(mask, x, y, value)
 	x = x - 1
 	y = y - 1
+
 	local invert = false
 
 	if mask == -1 then
@@ -4370,14 +4383,14 @@ local function get_next_free_positions(matrix, x, y, dir, byte)
 		if mode == "right" and matrix[x][y] == 0 then
 			ret[#ret + 1] = {
 				x,
-				y
+				y,
 			}
 			mode = "left"
 			count = count + 1
 		elseif mode == "left" and matrix[x - 1][y] == 0 then
 			ret[#ret + 1] = {
 				x - 1,
-				y
+				y,
 			}
 			mode = "right"
 			count = count + 1
@@ -4390,7 +4403,7 @@ local function get_next_free_positions(matrix, x, y, dir, byte)
 		elseif mode == "right" and matrix[x - 1][y] == 0 then
 			ret[#ret + 1] = {
 				x - 1,
-				y
+				y,
 			}
 			count = count + 1
 
@@ -4427,11 +4440,11 @@ end
 
 local function add_data_to_matrix(matrix, data, mask)
 	local size = #matrix
-	local x, y, positions, _x, _y, m = nil
+	local x, y, positions, _x, _y, m
 	local dir = "up"
 	local byte_number = 0
-	y = size
-	x = size
+
+	x, y = size, size
 
 	string.gsub(data, ".?.?.?.?.?.?.?.?", function (byte)
 		byte_number = byte_number + 1
@@ -4452,13 +4465,10 @@ local function add_data_to_matrix(matrix, data, mask)
 end
 
 local function calculate_penalty(matrix)
-	local penalty1 = 0
-	local penalty2 = 0
-	local penalty3 = 0
-	local penalty4 = 0
+	local penalty1, penalty2, penalty3, penalty4 = 0, 0, 0, 0
 	local size = #matrix
 	local number_of_dark_cells = 0
-	local last_bit_blank, is_blank, number_of_consecutive_bits = nil
+	local last_bit_blank, is_blank, number_of_consecutive_bits
 
 	for x = 1, size do
 		number_of_consecutive_bits = 0
@@ -4534,6 +4544,7 @@ local function calculate_penalty(matrix)
 	end
 
 	local dark_ratio = number_of_dark_cells / (size * size)
+
 	penalty4 = math.floor(math.abs(dark_ratio * 100 - 50)) * 2
 
 	return penalty1 + penalty2 + penalty3 + penalty4
@@ -4550,7 +4561,8 @@ local function get_matrix_and_penalty(version, ec_level, data, mask)
 end
 
 local function get_matrix_with_lowest_penalty(version, ec_level, data)
-	local tab, penalty, tab_min_penalty, min_penalty = nil
+	local tab, penalty, tab_min_penalty, min_penalty
+
 	tab_min_penalty, min_penalty = get_matrix_and_penalty(version, ec_level, data, 0)
 
 	for i = 1, 7 do
@@ -4566,7 +4578,8 @@ local function get_matrix_with_lowest_penalty(version, ec_level, data)
 end
 
 local function qrcode(str, ec_level, mode)
-	local arranged_data, version, data_raw, mode, len_bitstring = nil
+	local arranged_data, version, data_raw, mode, len_bitstring
+
 	version, ec_level, data_raw, mode, len_bitstring = get_version_eclevel_mode_bistringlength(str, ec_level)
 	data_raw = data_raw .. len_bitstring
 	data_raw = data_raw .. encode_data(str, mode)
@@ -4578,6 +4591,7 @@ local function qrcode(str, ec_level, mode)
 	end
 
 	arranged_data = arranged_data .. string.rep("0", remainder[version])
+
 	local tab = get_matrix_with_lowest_penalty(version, ec_level, arranged_data)
 
 	return true, tab
@@ -4599,10 +4613,10 @@ if testing then
 		arrange_codewords_and_calculate_ec = arrange_codewords_and_calculate_ec,
 		calculate_error_correction = calculate_error_correction,
 		convert_bitstring_to_bytes = convert_bitstring_to_bytes,
-		bit_xor = bit_xor
+		bit_xor = bit_xor,
 	}
 end
 
 return {
-	qrcode = qrcode
+	qrcode = qrcode,
 }

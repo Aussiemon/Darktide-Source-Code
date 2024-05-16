@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/minion_perception.lua
+
 local MinionPerception = {}
 
 MinionPerception.attempt_alert = function (perception_extension, enemy_unit)
@@ -70,6 +72,7 @@ end
 MinionPerception.switched_multi_target_unit = function (scratchpad, t, multi_target_config)
 	scratchpad.multi_target_changed_t = t
 	scratchpad.num_multi_target_switches = (scratchpad.num_multi_target_switches or 0) + 1
+
 	local rotation_speed = multi_target_config.rotation_speed
 
 	if rotation_speed then
@@ -86,6 +89,7 @@ MinionPerception.line_of_sight_positions = function (unit, target_unit, from_nod
 	if from_offsets_or_nil then
 		local right = Quaternion.right(Unit.local_rotation(unit, 1))
 		local from_offset = from_offsets_or_nil:unbox()
+
 		los_from_position = los_from_position + Vector3(right.x * from_offset.x, right.y * from_offset.x, from_offset.z)
 	end
 

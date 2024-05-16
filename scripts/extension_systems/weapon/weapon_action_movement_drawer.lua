@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/weapon_action_movement_drawer.lua
+
 local ScriptGui = require("scripts/foundation/utilities/script_gui")
 local SharedFunctions = require("scripts/extension_systems/weapon/weapon_action_movement_shared")
-local _get_anchor_point = nil
+local _get_anchor_point
 local WeaponActionMovementDrawer = class("WeaponActionMovementDrawer")
 
 WeaponActionMovementDrawer.init = function (self, weapon_action_movement, unit_data_extension)
@@ -32,11 +34,11 @@ end
 
 local MOVEMENT_CURVE_EXTENTS = {
 	400,
-	300
+	300,
 }
 local ANCHOR_POINT = {
 	-50,
-	50
+	50,
 }
 local SCREEN_ALIGNMENT_X = "right"
 local LAYER = 10
@@ -85,6 +87,7 @@ WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve
 
 	if _end_t == math.huge then
 		local last_segment = movement_curve[#movement_curve]
+
 		max_t = last_segment.t
 
 		if max_t == 0 then
@@ -100,8 +103,10 @@ WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve
 	Gui.slug_text(gui, extent_x_start, DevParameters.debug_text_font, font_size, extent_x_start_pos, font_color)
 
 	local extent_x_end = string.format("%.1f", tostring(max_t))
+
 	min, max = Gui.slug_text_extents(gui, extent_x_end, DevParameters.debug_text_font, font_size)
 	x_range = max.x - min.x
+
 	local extent_x_end_pos = x_line_pos + Vector3(extents_x - x_range / 2, 3, 0)
 
 	Gui.slug_text(gui, extent_x_end, DevParameters.debug_text_font, font_size, extent_x_end_pos, font_color)
@@ -109,14 +114,16 @@ WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve
 	local start_mod = movement_curve.start_modifier or 1
 	local prev_mod = 1 - start_mod / max_mod
 	local prev_t = 0 / max_t
-	local p1 = nil
+	local p1
 	local p2 = Vector2(x_line_pos.x + extents_x * prev_t, y_line_pos.y + extents_y * prev_mod)
 
 	for i = 1, #movement_curve do
 		p1 = p2
+
 		local segment = movement_curve[i]
 		local mod = segment.modifier
 		local t = segment.t
+
 		prev_mod = 1 - mod / max_mod
 		prev_t = t / max_t
 		p2 = Vector2(x_line_pos.x + extents_x * prev_t, y_line_pos.y + extents_y * prev_mod)

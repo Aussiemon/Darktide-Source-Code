@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_captain_spiritual_b.lua
+
 local enemy_vo_enemy_captain_spiritual_b = {
 	renegade_captain_long_death = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			"loc_enemy_captain_spiritual_b__long_death_07",
 			"loc_enemy_captain_spiritual_b__long_death_08",
 			"loc_enemy_captain_spiritual_b__long_death_09",
-			"loc_enemy_captain_spiritual_b__long_death_10"
+			"loc_enemy_captain_spiritual_b__long_death_10",
 		},
 		sound_events_duration = {
 			5.336188,
@@ -24,7 +26,7 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			5.345479,
 			6.604229,
 			5.759979,
-			6.012167
+			6.012167,
 		},
 		sound_event_weights = {
 			0.1,
@@ -36,9 +38,9 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	renegade_captain_reinforcements = {
 		randomize_indexes_n = 0,
@@ -48,23 +50,23 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			"loc_enemy_captain_spiritual_b__reinforcements_02",
 			"loc_enemy_captain_spiritual_b__reinforcements_03",
 			"loc_enemy_captain_spiritual_b__reinforcements_04",
-			"loc_enemy_captain_spiritual_b__reinforcements_05"
+			"loc_enemy_captain_spiritual_b__reinforcements_05",
 		},
 		sound_events_duration = {
 			4.434792,
 			4.379333,
 			2.879563,
 			2.853229,
-			2.877271
+			2.877271,
 		},
 		sound_event_weights = {
 			0.2,
 			0.2,
 			0.2,
 			0.2,
-			0.2
+			0.2,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	renegade_captain_taunt = {
 		randomize_indexes_n = 0,
@@ -79,7 +81,7 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			"loc_enemy_captain_spiritual_b__taunt_07",
 			"loc_enemy_captain_spiritual_b__taunt_08",
 			"loc_enemy_captain_spiritual_b__taunt_09",
-			"loc_enemy_captain_spiritual_b__taunt_10"
+			"loc_enemy_captain_spiritual_b__taunt_10",
 		},
 		sound_events_duration = {
 			3.120417,
@@ -91,7 +93,7 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			2.931729,
 			3.093313,
 			6.367438,
-			2.469104
+			2.469104,
 		},
 		sound_event_weights = {
 			0.1,
@@ -103,9 +105,9 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	renegade_captain_taunt_combat = {
 		randomize_indexes_n = 0,
@@ -120,7 +122,7 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			"loc_enemy_captain_spiritual_b__taunt_combat_07",
 			"loc_enemy_captain_spiritual_b__taunt_combat_08",
 			"loc_enemy_captain_spiritual_b__taunt_combat_09",
-			"loc_enemy_captain_spiritual_b__taunt_combat_10"
+			"loc_enemy_captain_spiritual_b__taunt_combat_10",
 		},
 		sound_events_duration = {
 			2.220396,
@@ -132,7 +134,7 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			4.309083,
 			4.006604,
 			4.376875,
-			3.049625
+			3.049625,
 		},
 		sound_event_weights = {
 			0.1,
@@ -144,10 +146,10 @@ local enemy_vo_enemy_captain_spiritual_b = {
 			0.1,
 			0.1,
 			0.1,
-			0.1
+			0.1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("enemy_vo_enemy_captain_spiritual_b", enemy_vo_enemy_captain_spiritual_b)

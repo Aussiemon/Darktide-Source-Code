@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_extension.lua
+
 local Breed = require("scripts/utilities/breed")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueQueries = require("scripts/extension_systems/dialogue/dialogue_queries")
@@ -9,15 +11,16 @@ local WwiseRouting = require("scripts/settings/dialogue/wwise_vo_routing_setting
 local DialogueExtension = class("DialogueExtension")
 
 local function _has_wwise_voice_switch_config(breed_configuration)
-	local wwise_voice_switch_group = breed_configuration.wwise_voice_switch_group
-	local wwise_voices = breed_configuration.wwise_voices
+	local wwise_voice_switch_group, wwise_voices = breed_configuration.wwise_voice_switch_group, breed_configuration.wwise_voices
 
 	return wwise_voice_switch_group ~= nil and wwise_voice_switch_group ~= "" and wwise_voices ~= nil and #wwise_voices > 0
 end
 
 DialogueExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self.input = self
+
 	local vo_sources_cache = extension_init_context.vo_sources_cache
+
 	self._dialogue_system = extension_init_context.owner_system
 	self._dialogue_system_wwise = extension_init_context.dialogue_system_wwise
 	self._unit = unit
@@ -59,27 +62,27 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 	self._use_local_player_vo_profile = false
 	self._stop_vce_event = nil
 	self._context = {
-		is_catapulted = "false",
-		is_ledge_hanging = "false",
-		is_hogtied = "false",
-		is_disabled = false,
-		is_netted = "false",
-		player_level = 0,
-		weapon_type = "none",
-		story_stage = "none",
-		is_warp_grabbed = "false",
-		is_pounced_down = "false",
-		is_local_player = false,
-		is_knocked_down = "false",
-		voice_fx_preset = 0,
-		is_disabled_override = false,
-		class_name = "none",
-		is_consumed = "false",
-		is_mutant_charged = "false",
-		voice_template = "none",
-		is_player = false,
 		breed_name = "unknown_breed_name",
-		health = 1
+		class_name = "none",
+		health = 1,
+		is_catapulted = "false",
+		is_consumed = "false",
+		is_disabled = false,
+		is_disabled_override = false,
+		is_hogtied = "false",
+		is_knocked_down = "false",
+		is_ledge_hanging = "false",
+		is_local_player = false,
+		is_mutant_charged = "false",
+		is_netted = "false",
+		is_player = false,
+		is_pounced_down = "false",
+		is_warp_grabbed = "false",
+		player_level = 0,
+		story_stage = "none",
+		voice_fx_preset = 0,
+		voice_template = "none",
+		weapon_type = "none",
 	}
 
 	if self._local_player then
@@ -91,6 +94,7 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 	if breed then
 		local breed_name = breed.name
 		local dialogue_breed_settings = DialogueBreedSettings[breed_name]
+
 		self._faction_breed_name = breed.faction_name
 
 		if _has_wwise_voice_switch_config(dialogue_breed_settings) then
@@ -100,10 +104,11 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 				extension_per_breed_wwise_voice_index[breed_name] = 1
 			end
 
-			local selected_voice_index = nil
+			local selected_voice_index
 
 			if dialogue_breed_settings.randomize_voice then
 				local voice_selection_seed = extension_init_data.seed
+
 				voice_selection_seed, selected_voice_index = math.next_random(voice_selection_seed, 1, #dialogue_breed_settings.wwise_voices)
 			else
 				selected_voice_index = extension_per_breed_wwise_voice_index[breed_name]
@@ -124,9 +129,11 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 		if Breed.is_player(breed) then
 			self._is_a_player = true
 			self._context.is_player = "true"
+
 			local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 			local first_person_unit = first_person_extension:first_person_unit()
 			local fx_extension = ScriptUnit.extension(unit, "fx_system")
+
 			self._fx_extension = fx_extension
 
 			PlayerVoiceGrunts.create_voice(fx_extension, first_person_unit, "ap_camera_node")
@@ -134,6 +141,7 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 
 		self._context.breed_name = breed_name
 		self._stop_vce_event = dialogue_breed_settings.stop_vce_event
+
 		local vo_events = dialogue_breed_settings.vo_events
 
 		if vo_events then
@@ -158,6 +166,7 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 	if selected_voice then
 		self._is_a_player = true
 		self._context.is_player = "true"
+
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 		local player = player_unit_spawn_manager:owner(unit)
 
@@ -192,6 +201,7 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 	end
 
 	local profile_name, voice_content = vo_sources_cache:get_default_voice_profile()
+
 	self._vo_profile_name = profile_name
 	self._vo_choice = voice_content
 	self._context.voice_template = self._vo_profile_name
@@ -272,7 +282,7 @@ end
 DialogueExtension.extensions_ready = function (self, world, unit)
 	local play_unit = unit
 	local vo_center_percent = 0
-	local voice_node = nil
+	local voice_node
 
 	if self._local_player then
 		play_unit = ScriptUnit.extension(unit, "first_person_system"):first_person_unit()
@@ -313,11 +323,13 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 
 	if next_random_talk_line_update_t < t then
 		self._next_random_talk_line_update_t = t + self._random_talk_tick_time_t + math.random(-20, 20)
+
 		local event_name = "generic_vo_event"
 
 		table.clear(self._trigger_event_data_payload)
 
 		local event_data = self:get_event_data_payload()
+
 		event_data.trigger_id = self._random_talk_trigger_id
 
 		self:trigger_dialogue_event(event_name, event_data)
@@ -327,7 +339,7 @@ end
 DialogueExtension._update_mission_update_vo = function (self)
 	local t = Managers.time:time("main")
 
-	if self._next_mission_fetch_t <= t then
+	if t >= self._next_mission_fetch_t then
 		local missions_data, missions = self._dialogue_system:mission_board()
 
 		if not missions_data or not missions_data.expiry_game_time then
@@ -341,7 +353,7 @@ DialogueExtension._update_mission_update_vo = function (self)
 		self._next_mission_play_vo_t = 0
 	end
 
-	if self._next_mission_play_vo_t <= t then
+	if t >= self._next_mission_play_vo_t then
 		local missions = self._missions
 
 		for i = 1, #missions do
@@ -354,17 +366,14 @@ DialogueExtension._update_mission_update_vo = function (self)
 					local mission_name = mission_data.map
 					local circumstance = mission_data.circumstance or "default"
 					local event_name = "mission_update_vo"
-					local is_circumstance = nil
+					local is_circumstance
 
-					if circumstance == "default" then
-						is_circumstance = "false"
-					else
-						is_circumstance = "true"
-					end
+					is_circumstance = circumstance == "default" and "false" or "true"
 
 					table.clear(self._trigger_event_data_payload)
 
 					local event_data = self:get_event_data_payload()
+
 					event_data.mission = mission_name
 					event_data.is_circumstance = is_circumstance
 					event_data.trigger_id = "mission_update"
@@ -417,8 +426,7 @@ DialogueExtension.trigger_factions_dialogue_query = function (self, event_name, 
 		return
 	end
 
-	local unit = self._unit
-	local dialogue_system = self._dialogue_system
+	local unit, dialogue_system = self._unit, self._dialogue_system
 
 	for _, faction in pairs(breed_factions) do
 		dialogue_system:append_faction_event(unit, event_name, event_data, identifier, faction, exclude_me)
@@ -476,6 +484,7 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 
 		for key, value in pairs(event_data) do
 			local context_name_id = self._dialogue_system.dialogueLookupContexts.all_context_names[key]
+
 			array_event_data[current_pair] = context_name_id
 			array_event_data_is_number[current_pair] = false
 			current_pair = current_pair + 1
@@ -489,6 +498,7 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 				end
 
 				local value_id = self._dialogue_system.dialogueLookupContexts[key][value]
+
 				array_event_data[current_pair] = value_id
 				array_event_data_is_number[current_pair] = false
 			end
@@ -511,11 +521,13 @@ end
 
 DialogueExtension.set_vo_profile = function (self, profile_name)
 	local vo_sources_cache = self._vo_sources_cache
+
 	self._wwise_voice_switch_group = self._wwise_voice_switch_group or DialogueSettings.default_voice_switch_group
 	self._wwise_voice_switch_value = profile_name
 	self._vo_profile_name = profile_name
 	self._context.voice_template = self._vo_profile_name
 	self._vo_choice = vo_sources_cache:get_vo_source(self._vo_profile_name)
+
 	local fx_extension = self._fx_extension
 
 	if fx_extension then
@@ -574,6 +586,7 @@ end
 
 DialogueExtension.set_voice_fx_preset = function (self, optional_voice_fx_preset_name)
 	local voice_fx_preset = VoiceFxPresetSettings[optional_voice_fx_preset_name] or VoiceFxPresetSettings.voice_fx_rtpc_none
+
 	self._voice_fx_preset = voice_fx_preset
 	self._context.voice_fx_preset = voice_fx_preset
 end
@@ -647,16 +660,12 @@ end
 
 DialogueExtension.stop_currently_playing_vo = function (self)
 	if self._is_currently_playing_dialogue then
-		local unit = self._unit
-		local dialogue_system = self._dialogue_system
-		local animation_event = "stop_talking"
+		local unit, dialogue_system, animation_event = self._unit, self._dialogue_system, "stop_talking"
 
 		dialogue_system:_trigger_face_animation_event(unit, animation_event)
 
-		local dialogue = self._dialogue
-		local dialogue_system_wwise = self._dialogue_system_wwise
-		local currently_playing_event_id = dialogue.currently_playing_event_id
-		local concurrent_wwise_event_id = dialogue.concurrent_wwise_event_id
+		local dialogue, dialogue_system_wwise = self._dialogue, self._dialogue_system_wwise
+		local currently_playing_event_id, concurrent_wwise_event_id = dialogue.currently_playing_event_id, dialogue.concurrent_wwise_event_id
 
 		dialogue_system_wwise:stop_if_playing(concurrent_wwise_event_id)
 		dialogue_system_wwise:stop_if_playing(currently_playing_event_id)
@@ -670,9 +679,7 @@ end
 
 DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback, seed)
 	local dialogue_system = self._dialogue_system
-	local vo_choice = self._vo_choice
-	local rule_queue = dialogue_system._vo_rule_queue
-	local unit = self._unit
+	local vo_choice, rule_queue, unit = self._vo_choice, dialogue_system._vo_rule_queue, self._unit
 
 	for i = 1, #rule_names do
 		local rule = rule_names[i]
@@ -683,8 +690,9 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 				rule_name = rule,
 				wwise_route_key = wwise_route_key,
 				on_play_callback = on_play_callback,
-				seed = seed
+				seed = seed,
 			}
+
 			rule_queue[#rule_queue + 1] = vo_event
 		end
 	end
@@ -701,10 +709,11 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		return
 	end
 
-	local dialogue_index = nil
+	local dialogue_index
 
 	if seed then
 		local _, random_n = math.next_random(seed, 1, rule.sound_events_n)
+
 		dialogue_index = random_n
 	else
 		dialogue_index = DialogueQueries.get_dialogue_event_index(rule)
@@ -717,14 +726,15 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 	end
 
 	self._last_query_sound_event = sound_event
-	local pre_wwise_event, post_wwise_event = nil
-	local dialogue_system = self._dialogue_system
+
+	local pre_wwise_event, post_wwise_event, dialogue_system = nil, nil, self._dialogue_system
 	local wwise_route = WwiseRouting[wwise_route_key]
 	local dialog_sequence_events = dialogue_system:_create_sequence_events_table(pre_wwise_event, wwise_route, sound_event, post_wwise_event)
 	local event_id = self:play_event(dialog_sequence_events[1])
 	local unit = self._unit
 	local speaker_name = self:get_context().voice_template
 	local dialogue = self:request_empty_dialogue_table()
+
 	dialogue.currently_playing_event_id = event_id
 	dialogue.currently_playing_unit = unit
 	dialogue.speaker_name = speaker_name
@@ -780,6 +790,7 @@ end
 
 DialogueExtension.store_in_memory = function (self, memory_name, argument_name, value)
 	local target_memory = self["_" .. memory_name]
+
 	target_memory[argument_name] = value
 end
 

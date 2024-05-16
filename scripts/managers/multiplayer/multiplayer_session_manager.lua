@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/multiplayer/multiplayer_session_manager.lua
+
 require("scripts/foundation/utilities/parameters/parameter_resolver")
 
 local BreedLoader = require("scripts/loading/loaders/breed_loader")
@@ -103,6 +105,7 @@ end
 
 MultiplayerSessionManager.boot_singleplayer_session = function (self)
 	local new_session = MultiplayerSession:new()
+
 	self._session_boot = SingleplayerSessionBoot:new(new_session)
 
 	_info("Booting multiplayer session as host")
@@ -114,6 +117,7 @@ MultiplayerSessionManager.party_immaterium_hot_join_hub_server = function (self)
 	self:clear_session_boot()
 
 	local new_session = MultiplayerSession:new()
+
 	self._session_boot = PartyImmateriumHubSessionBoot:new(new_session, Managers.party_immaterium:consume_matched_hub_server_session_id())
 
 	return new_session
@@ -123,6 +127,7 @@ MultiplayerSessionManager.party_immaterium_join_server = function (self, matched
 	self:clear_session_boot()
 
 	local new_session = MultiplayerSession:new()
+
 	self._session_boot = PartyImmateriumMissionSessionBoot:new(new_session, matched_game_session_id, party_id)
 
 	return new_session
@@ -166,7 +171,7 @@ MultiplayerSessionManager.start_singleplayer_session = function (self, mission_n
 
 	mechanism_manager:change_mechanism(mechanism_name, {
 		mission_name = mission_name,
-		singleplay_type = singeplay_type
+		singleplay_type = singeplay_type,
 	})
 
 	return mechanism_manager:wanted_transition()
@@ -206,9 +211,10 @@ MultiplayerSessionManager._handle_session_error = function (self, session)
 
 	local params = {
 		left_session_reason = disconnection_info.reason,
-		session_was_booting = disconnection_info.session_was_booting
+		session_was_booting = disconnection_info.session_was_booting,
 	}
 	local session_errors = (self._session_errors or 0) + 1
+
 	params.session_errors = session_errors
 
 	Managers.mechanism:change_mechanism("left_session", params)
@@ -251,17 +257,19 @@ MultiplayerSessionManager.update = function (self, dt)
 
 			self._session_boot = nil
 			self._session_errors = nil
+
 			local connection_class_name = connection_object.__class_name
 
 			if connection_class_name == "ConnectionSingleplayer" then
 				Managers.connection:set_connection_host(connection_object, session_object)
 
 				self._session = session_object
+
 				local loaders = {
 					ViewLoader:new(),
 					LevelLoader:new(),
 					self._breed_loader,
-					HudLoader:new()
+					HudLoader:new(),
 				}
 				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
 
@@ -270,11 +278,12 @@ MultiplayerSessionManager.update = function (self, dt)
 				Managers.connection:set_connection_host(connection_object, session_object)
 
 				self._session = session_object
+
 				local loaders = {
 					ViewLoader:new(),
 					LevelLoader:new(),
 					self._breed_loader,
-					HudLoader:new()
+					HudLoader:new(),
 				}
 				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
 
@@ -295,7 +304,7 @@ MultiplayerSessionManager.update = function (self, dt)
 					ViewLoader:new(),
 					LevelLoader:new(),
 					self._breed_loader,
-					HudLoader:new()
+					HudLoader:new(),
 				}
 				local loading_client = LoadingClient:new(Managers.connection:network_event_delegate(), host_channel_id, loaders)
 
@@ -307,6 +316,7 @@ MultiplayerSessionManager.update = function (self, dt)
 			session_boot:delete()
 
 			self._session_boot = nil
+
 			local mode = GameParameters.multiplayer_mode
 
 			if mode ~= "join" then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/gameplay_session.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
@@ -5,7 +7,7 @@ local Interface = {
 	"fetch",
 	"create",
 	"complete",
-	"events"
+	"events",
 }
 local game_session_poll_interval_s = 2
 local max_events_per_batch = 20
@@ -30,6 +32,7 @@ GameplaySession._poll_for_end_of_round_internal = function (self, session_id, pa
 				end
 			else
 				local character_data = data.session.participants[participant]
+
 				ok_to_fetch = character_data and character_data.rewarded
 			end
 
@@ -44,7 +47,7 @@ GameplaySession._poll_for_end_of_round_internal = function (self, session_id, pa
 
 		Log.debug("GamePlaySession", "Not complete yet")
 
-		if game_session_timeout_s < now - start_time then
+		if now - start_time > game_session_timeout_s then
 			Log.warning("GamePlaySession", "Timeout reached waiting for eor")
 
 			return Promise.rejected(BackendUtilities.create_error(BackendError.NoIdentifier, "Timeout reached waiting for eor"))
@@ -81,15 +84,15 @@ GameplaySession.create = function (self, server_id, ip_address)
 				type = "dedicated",
 				properties = {
 					serverId = server_id,
-					ipAddress = ip_address
-				}
-			}
-		}
+					ipAddress = ip_address,
+				},
+			},
+		},
 	}
 
 	return Managers.backend:title_request("/gameplay/sessions", {
 		method = "POST",
-		body = data
+		body = data,
 	}):next(function (data)
 		return data.body
 	end):next(function (results)
@@ -110,15 +113,15 @@ GameplaySession.update = function (self, session_id, participants, kicked_partic
 		info = {
 			participants = participants,
 			kickedParticipants = kicked_participants_account_ids,
-			backfillWanted = backfill_wanted
-		}
+			backfillWanted = backfill_wanted,
+		},
 	}
 
 	Log.info("GameplaySession", "Posting gameplay session update (%s) with participant_count=%s, kicked_participants_count=%s, backfill_wanted=%s", session_id, #participants, kicked_participants_account_ids and #kicked_participants_account_ids or -1, backfill_wanted and "true" or "false")
 
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id .. "/update", {
 		method = "POST",
-		body = data
+		body = data,
 	}):next(function (data)
 		return data.body
 	end)
@@ -131,7 +134,7 @@ local function to_backend_modifier(reward_modifier)
 		rareLoot = reward_modifier.mission_reward_rare_loot_modifier,
 		gearInsteadOfWeapon = reward_modifier.mission_reward_gear_instead_of_weapon_modifier,
 		sideMissionXp = reward_modifier.side_mission_reward_xp_modifier,
-		sideMissionCredit = reward_modifier.side_mission_reward_credit_modifier
+		sideMissionCredit = reward_modifier.side_mission_reward_credit_modifier,
 	}
 end
 
@@ -157,13 +160,13 @@ GameplaySession.complete = function (self, session_id, participants, mission_res
 	local data = {
 		info = {
 			participants = participants,
-			missionResult = mission_result
-		}
+			missionResult = mission_result,
+		},
 	}
 
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id .. "/complete", {
 		method = "POST",
-		body = data
+		body = data,
 	}):next(function (data)
 		return data.body
 	end)
@@ -186,8 +189,8 @@ local function _events_batched(session_id, events, from)
 		return Managers.backend:title_request(url, {
 			method = "POST",
 			body = {
-				updates = events
-			}
+				updates = events,
+			},
 		}):next(function (data)
 			return data.body
 		end)
@@ -197,16 +200,16 @@ end
 GameplaySession.events = function (self, session_id, events)
 	if #events == 0 then
 		return Promise.resolved({
-			sessionId = session_id
+			sessionId = session_id,
 		})
 	end
 
-	local batches = {}
-	local from = {}
+	local batches, from = {}, {}
 
 	for position = 1, #events, max_events_per_batch do
 		local remaining_size = math.min(#events - position + 1, max_events_per_batch)
 		local batch = table.slice(events, position, remaining_size)
+
 		batches[#batches + 1] = batch
 		from[#from + 1] = position
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/nav_graph/nav_graph_extension.lua
+
 local NavGraphQueries = require("scripts/extension_systems/nav_graph/utilities/nav_graph_queries")
 local SmartObject = require("scripts/extension_systems/nav_graph/utilities/smart_object")
 local NavGraphExtension = class("NavGraphExtension")
@@ -36,15 +38,14 @@ local NAV_GRAPH_POINTS = {}
 local SLOT_COUNT = 1
 local OCCUPIED_COST = 2
 local REGISTER_FOR_CROWD_DISPERSION = {
-	teleporters = false
+	teleporters = false,
 }
 
 NavGraphExtension._create_nav_graphs = function (self)
 	local nav_graphs = self._nav_graphs
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local nav_world = self._nav_world
-	local smart_objects = self._smart_objects
-	local smart_object_id_to_nav_graph = self._smart_object_id_to_nav_graph
+	local smart_objects, smart_object_id_to_nav_graph = self._smart_objects, self._smart_object_id_to_nav_graph
 	local debug_color = Color.orange()
 
 	for i = 1, #smart_objects do
@@ -54,8 +55,10 @@ NavGraphExtension._create_nav_graphs = function (self)
 		local entrance_position, exit_position = smart_object:get_entrance_exit_positions()
 		local is_bidirectional = smart_object:is_bidirectional()
 		local layer_id = nav_mesh_manager:nav_tag_layer_id(layer_type)
+
 		NAV_GRAPH_POINTS[1] = entrance_position
 		NAV_GRAPH_POINTS[2] = exit_position
+
 		local created, nav_graph = GwNavGraph.create(nav_world, is_bidirectional, NAV_GRAPH_POINTS, debug_color, layer_id, smart_object_id)
 
 		if created then
@@ -85,9 +88,10 @@ local TEMP_SMART_OBJECT_IDS = {}
 
 NavGraphExtension.setup_from_component = function (self, component, unit, enabled_on_spawn, optional_simple_smart_objects, optional_smart_objects)
 	local component_guid = component.guid
+
 	self._enabled_on_spawn = enabled_on_spawn
-	local smart_objects = self._smart_objects
-	local component_lookup = self._smart_object_id_to_component
+
+	local smart_objects, component_lookup = self._smart_objects, self._smart_object_id_to_component
 
 	table.clear_array(TEMP_SMART_OBJECT_IDS, #TEMP_SMART_OBJECT_IDS)
 
@@ -99,12 +103,14 @@ NavGraphExtension.setup_from_component = function (self, component, unit, enable
 			smart_object:from_simple(simple_smart_object)
 
 			smart_objects[#smart_objects + 1] = smart_object
+
 			local smart_object_id = smart_object:id()
+
 			component_lookup[smart_object_id] = component_guid
 			TEMP_SMART_OBJECT_IDS[i] = smart_object_id
 		end
 	else
-		local new_smart_objects = nil
+		local new_smart_objects
 
 		if optional_smart_objects then
 			new_smart_objects = optional_smart_objects
@@ -115,6 +121,7 @@ NavGraphExtension.setup_from_component = function (self, component, unit, enable
 		for i = 1, #new_smart_objects do
 			local smart_object = new_smart_objects[i]
 			local smart_object_id = smart_object:id()
+
 			smart_objects[#smart_objects + 1] = smart_object
 			component_lookup[smart_object_id] = component_guid
 			TEMP_SMART_OBJECT_IDS[i] = smart_object_id
@@ -140,6 +147,7 @@ end
 
 NavGraphExtension.add_smart_object = function (self, smart_object, smart_object_id)
 	local smart_objects = self._smart_objects
+
 	smart_objects[#smart_objects + 1] = smart_object
 
 	self._nav_graph_system:register_smart_object_id_to_extension(smart_object_id, self)
@@ -149,14 +157,15 @@ end
 
 NavGraphExtension._create_nav_graph = function (self, smart_object, smart_object_id)
 	local smart_object_id_to_nav_graph = self._smart_object_id_to_nav_graph
-	local nav_world = self._nav_world
-	local debug_color = Color.orange()
+	local nav_world, debug_color = self._nav_world, Color.orange()
 	local layer_type = smart_object:layer_type()
 	local entrance_position, exit_position = smart_object:get_entrance_exit_positions()
 	local is_bidirectional = smart_object:is_bidirectional()
 	local layer_id = Managers.state.nav_mesh:nav_tag_layer_id(layer_type)
+
 	NAV_GRAPH_POINTS[1] = entrance_position
 	NAV_GRAPH_POINTS[2] = exit_position
+
 	local created, nav_graph = GwNavGraph.create(nav_world, is_bidirectional, NAV_GRAPH_POINTS, debug_color, layer_id, smart_object_id)
 
 	if created then
@@ -167,13 +176,14 @@ NavGraphExtension._create_nav_graph = function (self, smart_object, smart_object
 		end
 
 		local nav_graphs = self._nav_graphs
+
 		nav_graphs[#nav_graphs + 1] = nav_graph
 		smart_object_id_to_nav_graph[smart_object_id] = nav_graph
 	end
 end
 
 NavGraphExtension.remove_smart_object = function (self, smart_object_id)
-	local smart_object_index_to_remove = nil
+	local smart_object_index_to_remove
 	local smart_objects = self._smart_objects
 
 	for i = 1, #smart_objects do
@@ -220,8 +230,7 @@ NavGraphExtension.smart_object_from_id = function (self, smart_object_id)
 end
 
 NavGraphExtension.add_nav_graph_to_database = function (self, smart_object_id)
-	local nav_graph = self._smart_object_id_to_nav_graph[smart_object_id]
-	local unit_id = self._unit_id
+	local nav_graph, unit_id = self._smart_object_id_to_nav_graph[smart_object_id], self._unit_id
 
 	if nav_graph then
 		local nav_graph_added = self._nav_graph_added
@@ -233,8 +242,7 @@ NavGraphExtension.add_nav_graph_to_database = function (self, smart_object_id)
 end
 
 NavGraphExtension.add_nav_graphs_to_database = function (self)
-	local nav_graphs = self._nav_graphs
-	local nav_graph_added = self._nav_graph_added
+	local nav_graphs, nav_graph_added = self._nav_graphs, self._nav_graph_added
 
 	for i = 1, #nav_graphs do
 		local nav_graph = nav_graphs[i]
@@ -248,8 +256,7 @@ NavGraphExtension.add_nav_graphs_to_database = function (self)
 end
 
 NavGraphExtension.remove_nav_graph_from_database = function (self, smart_object_id)
-	local nav_graph = self._smart_object_id_to_nav_graph[smart_object_id]
-	local unit_id = self._unit_id
+	local nav_graph, unit_id = self._smart_object_id_to_nav_graph[smart_object_id], self._unit_id
 	local nav_graph_added = self._nav_graph_added
 
 	GwNavGraph.remove_from_database(nav_graph)
@@ -258,8 +265,7 @@ NavGraphExtension.remove_nav_graph_from_database = function (self, smart_object_
 end
 
 NavGraphExtension.remove_nav_graphs_from_database = function (self)
-	local nav_graphs = self._nav_graphs
-	local nav_graph_added = self._nav_graph_added
+	local nav_graphs, nav_graph_added = self._nav_graphs, self._nav_graph_added
 
 	for i = 1, #nav_graphs do
 		local nav_graph = nav_graphs[i]

@@ -1,34 +1,36 @@
-local InputUtils = {
-	input_device_list = {
-		xbox_controller = {
-			rawget(_G, "Pad1"),
-			rawget(_G, "Pad2"),
-			rawget(_G, "Pad3"),
-			rawget(_G, "Pad4"),
-			rawget(_G, "Pad5"),
-			rawget(_G, "Pad6"),
-			rawget(_G, "Pad7"),
-			rawget(_G, "Pad8")
-		},
-		ps4_controller = {
-			rawget(_G, "PS5Pad1"),
-			rawget(_G, "PS5Pad2"),
-			rawget(_G, "PS5Pad3"),
-			rawget(_G, "PS5Pad4"),
-			rawget(_G, "PS5Pad5"),
-			rawget(_G, "PS5Pad6"),
-			rawget(_G, "PS5Pad7"),
-			rawget(_G, "PS5Pad8")
-		},
-		mouse = {
-			rawget(_G, "Mouse")
-		},
-		keyboard = {
-			rawget(_G, "Keyboard")
-		}
+﻿-- chunkname: @scripts/managers/input/input_utils.lua
+
+local InputUtils = {}
+
+InputUtils.input_device_list = {
+	xbox_controller = {
+		rawget(_G, "Pad1"),
+		rawget(_G, "Pad2"),
+		rawget(_G, "Pad3"),
+		rawget(_G, "Pad4"),
+		rawget(_G, "Pad5"),
+		rawget(_G, "Pad6"),
+		rawget(_G, "Pad7"),
+		rawget(_G, "Pad8"),
 	},
-	replaced_strings = {}
+	ps4_controller = {
+		rawget(_G, "PS5Pad1"),
+		rawget(_G, "PS5Pad2"),
+		rawget(_G, "PS5Pad3"),
+		rawget(_G, "PS5Pad4"),
+		rawget(_G, "PS5Pad5"),
+		rawget(_G, "PS5Pad6"),
+		rawget(_G, "PS5Pad7"),
+		rawget(_G, "PS5Pad8"),
+	},
+	mouse = {
+		rawget(_G, "Mouse"),
+	},
+	keyboard = {
+		rawget(_G, "Keyboard"),
+	},
 }
+InputUtils.replaced_strings = {}
 InputUtils.replaced_strings.oem_period = "oem_period (> .)"
 InputUtils.replaced_strings.oem_minus = "oem_minus (_ -)"
 InputUtils.replaced_strings["numpad plus"] = "numpad +"
@@ -70,6 +72,7 @@ InputUtils.local_key_name = function (global_name, device_type)
 
 	if i then
 		local k = string.sub(global_name, j + 1)
+
 		k = InputUtils.replaced_strings[k] or k
 
 		return k
@@ -90,9 +93,11 @@ InputUtils.split_key = function (inputstr)
 	end
 
 	local k = t[#t]
+
 	t[#t] = nil
+
 	local d = {}
-	local m = nil
+	local m
 
 	for str in string.gmatch(k, "([^(%-)]+)") do
 		if not m then
@@ -199,6 +204,7 @@ InputUtils.localized_string_from_key_info = function (key_info, color_tint_text)
 
 	if color_tint_text then
 		local ui_input_color = Color.ui_input_color(255, true)
+
 		keystring = InputUtils.apply_color_to_input_text(keystring, ui_input_color)
 	end
 
@@ -211,15 +217,15 @@ end
 
 local _keyboard_devices = {
 	"keyboard",
-	"mouse"
+	"mouse",
 }
 local _gamepad_devices = {
 	xbox_controller = {
-		"xbox_controller"
+		"xbox_controller",
 	},
 	ps4_controller = {
-		"ps4_controller"
-	}
+		"ps4_controller",
+	},
 }
 
 InputUtils.input_text_for_current_input_device = function (service_type, alias_key, color_tint_text)
@@ -233,6 +239,7 @@ InputUtils.input_text_for_current_input_device = function (service_type, alias_k
 		else
 			local device = input_manager:last_pressed_device()
 			local type = device:type()
+
 			device_types = _gamepad_devices[type] or _keyboard_devices
 		end
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/group/player_group_extension.lua
+
 local PlayerGroupExtension = class("PlayerGroupExtension")
 
 PlayerGroupExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -10,6 +12,7 @@ end
 PlayerGroupExtension.extensions_ready = function (self, world, unit)
 	local group_system = Managers.state.extension:system("group_system")
 	local group = group_system:group_from_id(self._group_id)
+
 	self._group = group
 end
 

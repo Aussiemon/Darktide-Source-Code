@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/chat/constant_element_chat_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -16,7 +18,7 @@ local background_color = {
 	0,
 	0,
 	0,
-	0
+	0,
 }
 
 ColorUtilities.color_copy(ChatSettings.background_color, background_color, true)
@@ -24,31 +26,31 @@ ColorUtilities.color_copy(ChatSettings.background_color, background_color, true)
 local chat_window_size = ChatSettings.chat_window_size
 local chat_message_area_size = {
 	chat_window_size[1] - (window_margins[1] + window_margins[3] + scrollbar_width + scrollbar_margins[1] + scrollbar_margins[3]),
-	chat_window_size[2] - (window_margins[2] + window_margins[4])
+	chat_window_size[2] - (window_margins[2] + window_margins[4]),
 }
 local chat_scrollbar_size = {
 	scrollbar_width,
-	chat_window_size[2] - (scrollbar_margins[2] + scrollbar_margins[4])
+	chat_window_size[2] - (scrollbar_margins[2] + scrollbar_margins[4]),
 }
 local input_field_size = {
 	chat_window_size[1],
-	ChatSettings.input_field_height
+	ChatSettings.input_field_height,
 }
 local chat_window_position = ChatSettings.chat_window_offset
 local chat_scrollbar_position = {
 	-scrollbar_margins[3],
 	scrollbar_margins[2],
-	3
+	3,
 }
 local chat_message_area_position = {
 	window_margins[1],
 	window_margins[2],
-	4
+	4,
 }
 local input_field_position = {
 	0,
 	input_field_size[2] + 5,
-	chat_window_position[3]
+	chat_window_position[3],
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -57,88 +59,88 @@ local scenegraph_definition = {
 		size = chat_window_size,
 		position = chat_window_position,
 		horizontal_alignment = chat_horizontal_alignment,
-		vertical_alignment = chat_vertical_alignment
+		vertical_alignment = chat_vertical_alignment,
 	},
 	chat_message_area = {
-		vertical_alignment = "top",
-		parent = "chat_window",
 		horizontal_alignment = "left",
+		parent = "chat_window",
+		vertical_alignment = "top",
 		size = chat_message_area_size,
-		position = chat_message_area_position
+		position = chat_message_area_position,
 	},
 	chat_scrollbar = {
-		vertical_alignment = "top",
-		parent = "chat_window",
 		horizontal_alignment = "right",
+		parent = "chat_window",
+		vertical_alignment = "top",
 		size = chat_scrollbar_size,
-		position = chat_scrollbar_position
+		position = chat_scrollbar_position,
 	},
 	input_field = {
-		vertical_alignment = "bottom",
-		parent = "chat_window",
 		horizontal_alignment = "left",
+		parent = "chat_window",
+		vertical_alignment = "bottom",
 		size = input_field_size,
-		position = input_field_position
-	}
+		position = input_field_position,
+	},
 }
 local widget_definitions = {
 	chat_window = UIWidget.create_definition({
 		{
-			pass_type = "hotspot",
 			content_id = "hotspot",
+			pass_type = "hotspot",
 			style = {
 				offset = {
 					0,
 					0,
-					2
-				}
-			}
+					2,
+				},
+			},
 		},
 		{
-			style_id = "background",
 			pass_type = "rect",
+			style_id = "background",
 			style = {
-				color = background_color
-			}
-		}
+				color = background_color,
+			},
+		},
 	}, "chat_window"),
 	input_field = UIWidget.create_definition(TextInputPassTemplates.chat_input_field, "input_field", {
 		close_on_backspace = ChatSettings.close_on_backspace,
-		max_length = ChatSettings.message_limit_in_characters
+		max_length = ChatSettings.message_limit_in_characters,
 	}),
 	chat_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.simple_scrollbar, "chat_scrollbar"),
 	chat_window_mask = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/masks/color_mask",
 			pass_type = "texture",
+			value = "content/ui/materials/masks/color_mask",
 			style = {
 				color = {
 					255,
 					255,
 					255,
-					255
-				}
-			}
-		}
-	}, "chat_message_area")
+					255,
+				},
+			},
+		},
+	}, "chat_message_area"),
 }
 local message_widget_blueprints = {
 	chat_message = UIWidget.create_definition({
 		{
+			pass_type = "text",
 			style_id = "message",
 			value_id = "message",
-			pass_type = "text",
-			style = table.clone(UIFontSettings.chat_message)
-		}
+			style = table.clone(UIFontSettings.chat_message),
+		},
 	}, "chat_message_area"),
 	notification = UIWidget.create_definition({
 		{
+			pass_type = "text",
 			style_id = "message",
 			value_id = "message",
-			pass_type = "text",
-			style = table.clone(UIFontSettings.chat_notification)
-		}
-	}, "chat_message_area")
+			style = table.clone(UIFontSettings.chat_notification),
+		},
+	}, "chat_message_area"),
 }
 local animations = {
 	fade_chat_window = {
@@ -177,6 +179,7 @@ local animations = {
 
 				for i = 1, #message_widgets do
 					local widget = message_widgets[i]
+
 					widget.alpha_multiplier = alpha_multiplier
 				end
 
@@ -190,8 +193,8 @@ local animations = {
 				end
 
 				parent._alpha = params.target_alpha
-			end
-		}
+			end,
+		},
 	},
 	fade_input_field = {
 		{
@@ -202,6 +205,7 @@ local animations = {
 				local input_field_widget = widgets.input_field
 				local input_field_content = input_field_widget.content
 				local is_controller_controlled = IS_XBS and InputDevice.gamepad_active
+
 				input_field_content.visible = true
 
 				if is_controller_controlled then
@@ -209,6 +213,7 @@ local animations = {
 					params.input_field_target = params.target_alpha
 				else
 					local active = input_field_content.is_writing
+
 					params.input_field_source = input_field_widget.alpha_multiplier or 0
 					params.input_field_target = active and 1 or 0
 				end
@@ -216,20 +221,22 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local eased_progress = math.easeCubic(progress)
 				local input_field_widget = widgets.input_field
+
 				input_field_widget.alpha_multiplier = math.lerp(params.input_field_source, params.input_field_target, eased_progress)
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local input_field = widgets.input_field
 				local input_field_content = input_field.content
+
 				input_field_content.visible = params.input_field_target > 0
-			end
-		}
-	}
+			end,
+		},
+	},
 }
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	animations = animations,
-	message_widget_blueprints = message_widget_blueprints
+	message_widget_blueprints = message_widget_blueprints,
 }

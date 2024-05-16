@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/fire_step_functions.lua
+
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local FireStepFunctions = {
 	default_continuous_fire_step_func = function (template_data, template_context)
@@ -59,7 +61,7 @@ local FireStepFunctions = {
 		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.025))
-	end
+	end,
 }
 
 return FireStepFunctions

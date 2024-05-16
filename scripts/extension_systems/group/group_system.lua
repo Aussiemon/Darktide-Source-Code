@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/group/group_system.lua
+
 require("scripts/extension_systems/group/minion_group_extension")
 require("scripts/extension_systems/group/player_group_extension")
 
@@ -5,11 +7,11 @@ local BotGroup = require("scripts/extension_systems/group/bot_group")
 local GroupSystem = class("GroupSystem", "ExtensionSystemBase")
 local BOT_SERVER_RPCS = {
 	"rpc_bot_unit_order",
-	"rpc_bot_lookup_order"
+	"rpc_bot_lookup_order",
 }
 local MINION_RPCS = {
 	"rpc_start_group_sfx",
-	"rpc_stop_group_sfx"
+	"rpc_stop_group_sfx",
 }
 
 local function _register_bot_rpc(rpc_name)
@@ -39,12 +41,14 @@ GroupSystem.init = function (self, extension_system_creation_context, ...)
 
 		for i = 1, num_server_rpcs do
 			local rpc_name = BOT_SERVER_RPCS[i]
+
 			self[rpc_name] = _register_bot_rpc(rpc_name)
 		end
 
 		self._network_event_delegate:register_session_events(self, unpack(BOT_SERVER_RPCS))
 
 		local extension_manager = extension_system_creation_context.extension_manager
+
 		self._side_system = extension_manager:system("side_system")
 		self._bot_groups = {}
 	end
@@ -64,6 +68,7 @@ GroupSystem.on_add_extension = function (self, world, unit, extension_name, exte
 		local side_system = self._side_system
 		local side = side_system:get_side(side_id)
 		local bot_group = self._bot_groups[side]
+
 		bot_group = bot_group or self:_create_bot_group(side)
 		extension_init_data.bot_group = bot_group
 	end
@@ -93,10 +98,10 @@ GroupSystem.register_extension_update = function (self, unit, extension_name, ex
 end
 
 GroupSystem._create_bot_group = function (self, side)
-	local nav_world = self._nav_world
-	local extension_manager = self._extension_manager
+	local nav_world, extension_manager = self._nav_world, self._extension_manager
 	local bot_traverse_logic = Managers.state.bot_nav_transition:traverse_logic()
 	local bot_group = BotGroup:new(side, nav_world, bot_traverse_logic, extension_manager)
+
 	self._bot_groups[side] = bot_group
 
 	return bot_group
@@ -186,15 +191,18 @@ GroupSystem._create_group = function (self, id)
 	local group = {
 		min_members_spawned = false,
 		id = id,
-		members = {}
+		members = {},
 	}
+
 	groups[index] = group
 	self._num_groups = index
 end
 
 GroupSystem.generate_group_id = function (self)
 	local group_id = self._current_group_id + 1
+
 	self._current_group_id = group_id
+
 	local group = self:group_from_id(group_id)
 
 	if not group then
@@ -279,12 +287,11 @@ local function _get_group_average_position(group)
 	for i = 1, num_members do
 		local member_unit = members[i]
 		local position = Unit.world_position(member_unit, 1)
+
 		average_position = average_position + position
 	end
 
-	if num_members > 0 then
-		average_position = average_position / num_members
-	end
+	average_position = num_members > 0 and average_position / num_members or average_position
 
 	return average_position
 end
@@ -334,11 +341,14 @@ GroupSystem.start_group_sfx = function (self, group_id, start_event_name, stop_e
 
 	local wwise_world = self._wwise_world
 	local position = _get_group_average_position(group)
+
 	group.average_position = Vector3Box(position)
+
 	local group_sfx = {}
 	local wwise_source_id = WwiseWorld.make_manual_source(wwise_world, position)
 	local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, false, wwise_source_id)
 	local min_members = optional_min_members or DEFAULT_MIN_MINIONS
+
 	group_sfx.source_id = wwise_source_id
 	group_sfx.playing_id = playing_id
 	group_sfx.stop_event = stop_event_name_or_nil

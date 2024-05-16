@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/chunk_lod/chunk_lod_manager.lua
+
 local ChunkLodUnits = require("scripts/managers/chunk_lod/chunk_lod_units")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ChunkLodManager = class("ChunkLodManager")
@@ -9,8 +11,8 @@ ChunkLodManager.init = function (self, world, mission, local_player)
 	self._raycast_interval = 2
 	self._raycast_timer = 0
 	self._raycast_lengths = {
+		first_person = 10,
 		free_flight = 10,
-		first_person = 10
 	}
 	self._current_level_name = nil
 	self._show_all = false
@@ -55,6 +57,7 @@ ChunkLodManager.register_unit = function (self, unit, callback_function)
 	end
 
 	local level = Unit.level(unit)
+
 	self._chunk_units[level] = self._chunk_units[level] or ChunkLodUnits:new(level)
 
 	self._chunk_units[level]:register_unit(unit, callback_function)
@@ -77,7 +80,7 @@ ChunkLodManager.update = function (self, dt, t)
 	local cinematic_camera, is_testify_camera = cinematic_manager:active_camera()
 	local is_in_cutscene = cinematic_camera ~= nil and not is_testify_camera
 
-	if self._raycast_timer < t or not self._current_level_name or is_in_cutscene then
+	if t > self._raycast_timer or not self._current_level_name or is_in_cutscene then
 		self:_do_level_check(false, t)
 	end
 end
@@ -112,6 +115,7 @@ ChunkLodManager._do_level_check = function (self, force_show_all, t)
 	local cinematic_manager = Managers.state.cinematic
 	local cinematic_camera, is_testify_camera = cinematic_manager:active_camera()
 	local is_using_cinematic_levels = cinematic_manager:is_using_cinematic_levels()
+
 	self._raycast_timer = t + self._raycast_interval
 
 	if not is_using_cinematic_levels and cinematic_camera ~= nil and not is_testify_camera then
@@ -158,7 +162,7 @@ ChunkLodManager._async_raycast_result_cb = function (self, id, hits, num_hits, d
 end
 
 ChunkLodManager._get_raycast_parameters = function (self)
-	local use_free_flight_camera_as_raycast_position = nil
+	local use_free_flight_camera_as_raycast_position
 	local free_flight_manager = Managers.free_flight
 	local is_in_free_flight = free_flight_manager and free_flight_manager:is_in_free_flight() and use_free_flight_camera_as_raycast_position
 
@@ -192,6 +196,7 @@ ChunkLodManager._get_neighbours = function (self, level, ...)
 		local neighbour_data = {}
 		local neighbour_level_name = Level.get_data(level, ..., i, "level")
 		local neighbour_lod_state = Level.get_data(level, ..., i, "state")
+
 		neighbour_data.level_name = neighbour_level_name
 		neighbour_data.lod_state = neighbour_lod_state
 		neighbours[#neighbours + 1] = neighbour_data

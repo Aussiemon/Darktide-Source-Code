@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/utilities/player_input_stream_visualizer.lua
+
 local ScriptGui = require("scripts/foundation/utilities/script_gui")
 local PlayerInputStreamVisualizer = class("PlayerInputStreamVisualizer")
 local BUFFER_BACKWARDS = 200
@@ -6,7 +8,9 @@ local FRAMETIME_BUFFER_SIZE = 512
 
 PlayerInputStreamVisualizer.init = function (self, player, peer_id)
 	self._gui = Debug:debug_gui()
+
 	local size = BUFFER_SIZE
+
 	self._cache = Script.new_array(size)
 
 	for i = 1, size do
@@ -24,7 +28,7 @@ end
 PlayerInputStreamVisualizer._bounded_index = function (self, frame)
 	if frame < self._start_frame then
 		return self:_raw_index(self._start_frame), self._start_frame, -BUFFER_BACKWARDS - 1
-	elseif self._end_frame < frame then
+	elseif frame > self._end_frame then
 		return self:_raw_index(self._end_frame), self._end_frame, BUFFER_SIZE - 1 - BUFFER_BACKWARDS - 1
 	end
 
@@ -76,6 +80,7 @@ PlayerInputStreamVisualizer.step_frame = function (self, frame)
 	end
 
 	local index = self:_raw_index(self._start_frame)
+
 	self._cache[index] = false
 	self._start_frame = self._start_frame + 1
 	self._end_frame = self._end_frame + 1
@@ -83,6 +88,7 @@ end
 
 PlayerInputStreamVisualizer._store_frame_time = function (self, dt)
 	local index = self._frame_time_index % FRAMETIME_BUFFER_SIZE + 1
+
 	self._frame_time_buffer[index] = dt
 	self._frame_time_index = index
 end
@@ -94,7 +100,7 @@ local TIME_INDICATORS = {
 	0,
 	0.1,
 	0.2,
-	0.3
+	0.3,
 }
 
 PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offset)
@@ -122,7 +128,7 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 		local value = cache[cache_index]
 
 		if value then
-			local pos, size, color = nil
+			local pos, size, color
 
 			if value == 0 then
 				pos = Vector3(i * width, y_0 - height * 0.5, layer)
@@ -144,23 +150,28 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 	end
 
 	local x_0 = BUFFER_BACKWARDS * width + math.floor(width * 0.5)
-	local pos = Vector3(x_0, y_offset, layer)
 
-	Gui.rect(gui, pos, Vector2(1, (y_0 - y_offset) * 2), Color.black())
+	do
+		local pos = Vector3(x_0, y_offset, layer)
 
-	local num_frames = server_clock_offset / time_step
-	local x = x_0 + num_frames * width
-	local y = y_0
-	local layer = layer + 1
+		Gui.rect(gui, pos, Vector2(1, (y_0 - y_offset) * 2), Color.black())
+	end
 
-	Gui.rect(gui, Vector3(x, y, layer), Vector2(1, 5), Color.red())
-	ScriptGui.text(gui, "Name: " .. self._player:name(), DevParameters.debug_text_font, 12, Vector3(x_0, y + 15, layer), Color.red(), Color.black())
-	ScriptGui.text(gui, "Peer id: " .. self._peer_id, DevParameters.debug_text_font, 12, Vector3(x_0, y + 30, layer), Color.red(), Color.black())
-	ScriptGui.text(gui, string.format("Average ping: %ims", Network.ping(self._peer_id) * 1000), DevParameters.debug_text_font, 12, Vector3(x_0, y + 45, layer), Color.red(), Color.black())
+	do
+		local num_frames = server_clock_offset / time_step
+		local x = x_0 + num_frames * width
+		local y = y_0
+		local layer = layer + 1
 
-	local str = string.format("Clock offset: %ims", server_clock_offset * 1000)
+		Gui.rect(gui, Vector3(x, y, layer), Vector2(1, 5), Color.red())
+		ScriptGui.text(gui, "Name: " .. self._player:name(), DevParameters.debug_text_font, 12, Vector3(x_0, y + 15, layer), Color.red(), Color.black())
+		ScriptGui.text(gui, "Peer id: " .. self._peer_id, DevParameters.debug_text_font, 12, Vector3(x_0, y + 30, layer), Color.red(), Color.black())
+		ScriptGui.text(gui, string.format("Average ping: %ims", Network.ping(self._peer_id) * 1000), DevParameters.debug_text_font, 12, Vector3(x_0, y + 45, layer), Color.red(), Color.black())
 
-	ScriptGui.text(gui, str, DevParameters.debug_text_font, 12, Vector3(x_0, y + 60, layer), Color.red(), Color.black())
+		local str = string.format("Clock offset: %ims", server_clock_offset * 1000)
+
+		ScriptGui.text(gui, str, DevParameters.debug_text_font, 12, Vector3(x_0, y + 60, layer), Color.red(), Color.black())
+	end
 
 	local frame_lines_color = Color.black(25)
 

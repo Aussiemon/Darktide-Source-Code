@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_modify_view/crafting_modify_view.lua
+
 local CraftingModifyViewDefinitions = require("scripts/ui/views/crafting_modify_view/crafting_modify_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
@@ -23,20 +25,22 @@ CraftingModifyView.on_enter = function (self)
 	self._parent:set_active_view_instance(self)
 	self._item_grid:update_dividers("content/ui/materials/frames/item_list_top_hollow", {
 		652,
-		118
+		118,
 	}, {
 		0,
 		-88,
-		200
+		200,
 	}, "content/ui/materials/frames/item_info_lower", nil, nil)
 
 	self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
+
 	local character_id = self:_player():character_id()
 	local item_type_filter_list = {
 		"WEAPON_MELEE",
 		"WEAPON_RANGED",
-		"GADGET"
+		"GADGET",
 	}
+
 	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, nil, item_type_filter_list)
 
 	self._inventory_promise:next(callback(self, "_cb_fetch_inventory_items"))
@@ -48,24 +52,24 @@ CraftingModifyView._setup_crafting_recipe = function (self, reference_name, scen
 	local grid_width = 430
 	local grid_height = 600
 	local context = {
-		scrollbar_width = 7,
 		hide_continue_button = true,
-		top_padding = 10,
+		scrollbar_width = 7,
 		title_height = 0,
+		top_padding = 10,
 		use_parent_ui_renderer = true,
 		grid_spacing = {
 			0,
-			10
+			10,
 		},
 		grid_size = {
 			grid_width,
-			grid_height
+			grid_height,
 		},
 		mask_size = {
 			grid_width + edge_padding,
-			grid_height
+			grid_height,
 		},
-		edge_padding = edge_padding
+		edge_padding = edge_padding,
 	}
 
 	return self:_add_element(ViewElementCraftingRecipe, reference_name, layer, context)
@@ -76,7 +80,7 @@ CraftingModifyView._setup_sort_options = function (self)
 		self._sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -87,12 +91,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_name
-				})
+					ItemUtils.compare_item_name,
+				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -103,12 +107,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_name
-				})
+					ItemUtils.compare_item_name,
+				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -119,12 +123,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					ItemUtils.compare_item_rarity,
 					"<",
 					"item",
-					ItemUtils.compare_item_name
-				})
+					ItemUtils.compare_item_name,
+				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -135,12 +139,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					ItemUtils.compare_item_rarity,
 					"<",
 					"item",
-					ItemUtils.compare_item_name
-				})
+					ItemUtils.compare_item_name,
+				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -151,12 +155,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					">",
 					"item",
-					ItemUtils.compare_item_rarity
-				})
+					ItemUtils.compare_item_rarity,
+				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -167,9 +171,9 @@ CraftingModifyView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					">",
 					"item",
-					ItemUtils.compare_item_rarity
-				})
-			}
+					ItemUtils.compare_item_rarity,
+				}),
+			},
 		}
 	end
 
@@ -214,6 +218,7 @@ end
 CraftingModifyView._set_trait_inventory_focused = function (self, focus)
 	local crafting_recipe = self._crafting_recipe
 	local trait_inventory = self._trait_inventory
+
 	self._trait_inventory_focused = focus
 
 	if focus then
@@ -257,7 +262,7 @@ CraftingModifyView._set_selected_grid = function (self, new_selected_grid)
 	elseif new_selected_grid == "crafting_recipe" then
 		local previously_active_view_name = self._parent:previously_active_view_name()
 		local widgets = crafting_recipe:widgets()
-		local selection_index = nil
+		local selection_index
 
 		for i = 1, #widgets do
 			local widget = widgets[i]
@@ -321,6 +326,7 @@ CraftingModifyView._handle_input = function (self, input_service)
 
 			if self._current_select_grid_index ~= selected_index then
 				self._current_select_grid_index = selected_index
+
 				local widgets = self._item_grid:widgets()
 				local widget = widgets[selected_index]
 
@@ -383,6 +389,7 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 	end
 
 	self._inventory_items = items
+
 	local layout = {}
 
 	for item_id, item in pairs(items) do
@@ -390,15 +397,17 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 
 		if not item.no_crafting and slots then
 			local slot_name = slots[1]
+
 			layout[#layout + 1] = {
 				widget_type = "item",
 				item = item,
-				slot = ItemSlotSettings[slot_name]
+				slot = ItemSlotSettings[slot_name],
 			}
 		end
 	end
 
 	self._offer_items_layout = layout
+
 	local tabs_content = CraftingModifyViewDefinitions.item_category_tabs_content
 
 	self:_setup_menu_tabs(tabs_content)
@@ -451,15 +460,17 @@ CraftingModifyView._setup_menu_tabs = function (self, content)
 		horizontal_alignment = "center",
 		button_size = {
 			132,
-			38
+			38,
 		},
 		input_label_offset = {
 			10,
-			5
-		}
+			5,
+		},
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
+
 	self._tab_menu_element = tab_menu_element
+
 	local input_action_left = "navigate_primary_left_pressed"
 	local input_action_right = "navigate_primary_right_pressed"
 
@@ -473,6 +484,7 @@ CraftingModifyView._setup_menu_tabs = function (self, content)
 		local display_icon = tab_content.icon
 		local pressed_callback = callback(self, "cb_switch_tab", i)
 		local tab_id = tab_menu_element:add_entry(i, pressed_callback, tab_button_template, display_icon, nil, true)
+
 		tab_ids[i] = tab_id
 	end
 

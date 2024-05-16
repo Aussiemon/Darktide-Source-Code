@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_mourningstar_officer_male_a.lua
+
 local conversations_hub_mourningstar_officer_male_a = {
 	hub_idle_greeting_dislike_a = {
 		randomize_indexes_n = 0,
@@ -12,7 +14,7 @@ local conversations_hub_mourningstar_officer_male_a = {
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_dislike_a_07",
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_dislike_a_08",
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_dislike_a_09",
-			"loc_mourningstar_officer_male_a__hub_idle_greeting_dislike_a_10"
+			"loc_mourningstar_officer_male_a__hub_idle_greeting_dislike_a_10",
 		},
 		sound_events_duration = {
 			2.511854,
@@ -24,9 +26,9 @@ local conversations_hub_mourningstar_officer_male_a = {
 			2.921667,
 			1.824208,
 			1.460896,
-			2.050417
+			2.050417,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_idle_greeting_like_a = {
 		randomize_indexes_n = 0,
@@ -41,7 +43,7 @@ local conversations_hub_mourningstar_officer_male_a = {
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_like_a_07",
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_like_a_08",
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_like_a_09",
-			"loc_mourningstar_officer_male_a__hub_idle_greeting_like_a_10"
+			"loc_mourningstar_officer_male_a__hub_idle_greeting_like_a_10",
 		},
 		sound_events_duration = {
 			3.490438,
@@ -53,9 +55,9 @@ local conversations_hub_mourningstar_officer_male_a = {
 			1.986729,
 			1.922521,
 			2.430063,
-			2.490125
+			2.490125,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_idle_greeting_neutral_a = {
 		randomize_indexes_n = 0,
@@ -70,7 +72,7 @@ local conversations_hub_mourningstar_officer_male_a = {
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_neutral_a_07",
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_neutral_a_08",
 			"loc_mourningstar_officer_male_a__hub_idle_greeting_neutral_a_09",
-			"loc_mourningstar_officer_male_a__hub_idle_greeting_neutral_a_10"
+			"loc_mourningstar_officer_male_a__hub_idle_greeting_neutral_a_10",
 		},
 		sound_events_duration = {
 			2.468188,
@@ -82,24 +84,24 @@ local conversations_hub_mourningstar_officer_male_a = {
 			1.888354,
 			2.007167,
 			2.063229,
-			3.436854
+			3.436854,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	hub_idle_oath_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_mourningstar_officer_male_a__hub_idle_oath_a_01"
+			[1] = "loc_mourningstar_officer_male_a__hub_idle_oath_a_01",
 		},
 		sound_events_duration = {
-			[1.0] = 1.455292
+			[1] = 1.455292,
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_mourningstar_officer_male_a", conversations_hub_mourningstar_officer_male_a)

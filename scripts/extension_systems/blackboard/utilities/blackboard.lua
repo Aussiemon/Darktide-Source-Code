@@ -1,33 +1,38 @@
-local Blackboard = {
-	create = function (component_config)
-		local read_only_blackboard = nil
-		local num_config = table.size(component_config)
-		local data_container = Script.new_map(num_config)
-		data_container.__config = component_config
+﻿-- chunkname: @scripts/extension_systems/blackboard/utilities/blackboard.lua
 
-		for component_name, fields in pairs(component_config) do
-			local component = {}
+local Blackboard = {}
 
-			for field_name, field_type in pairs(fields) do
-				if field_type == "Vector3Box" then
-					local value_box = Vector3Box(Vector3.invalid_vector())
-					component[field_name] = value_box
-				elseif field_type == "QuaternionBox" then
-					local value_box = QuaternionBox(Quaternion.from_elements(math.huge, math.huge, math.huge, math.huge))
-					component[field_name] = value_box
-				elseif field_type == "table" then
-					ferror("Unsupported field type %q, please create a new component instead!", field_type)
-				end
+Blackboard.create = function (component_config)
+	local read_only_blackboard
+	local num_config = table.size(component_config)
+	local data_container = Script.new_map(num_config)
+
+	data_container.__config = component_config
+
+	for component_name, fields in pairs(component_config) do
+		local component = {}
+
+		for field_name, field_type in pairs(fields) do
+			if field_type == "Vector3Box" then
+				local value_box = Vector3Box(Vector3.invalid_vector())
+
+				component[field_name] = value_box
+			elseif field_type == "QuaternionBox" then
+				local value_box = QuaternionBox(Quaternion.from_elements(math.huge, math.huge, math.huge, math.huge))
+
+				component[field_name] = value_box
+			elseif field_type == "table" then
+				ferror("Unsupported field type %q, please create a new component instead!", field_type)
 			end
-
-			data_container[component_name] = component
 		end
 
-		local blackboard = read_only_blackboard or data_container
-
-		return blackboard
+		data_container[component_name] = component
 	end
-}
+
+	local blackboard = read_only_blackboard or data_container
+
+	return blackboard
+end
 
 Blackboard.validate = function (blackboard)
 	local component_config = blackboard.__config

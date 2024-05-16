@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/legacy_v2_proximity/legacy_v2_proximity_system.lua
+
 require("scripts/extension_systems/legacy_v2_proximity/minion_proximity_extension")
 require("scripts/extension_systems/legacy_v2_proximity/player_proximity_extension")
 
@@ -15,7 +17,7 @@ local MINION_BREED_TYPE = breed_types.minion
 local PLAYER_BREED_TYPE = breed_types.player
 local CHARACTER_BREED_TYPES = {
 	MINION_BREED_TYPE,
-	PLAYER_BREED_TYPE
+	PLAYER_BREED_TYPE,
 }
 local PROXIMITY_FX_DISTANCE = 40
 local PROXIMITY_FX_DISTANCE_SQ = PROXIMITY_FX_DISTANCE^2
@@ -23,16 +25,13 @@ local RAYCAST_ENEMY_CHECK_INTERVAL = DialogueSettings.raycast_enemy_check_interv
 local SEEN_RAYCAST_TARGET_NODE_NAME = "enemy_aim_target_02"
 local SEEN_ENEMY_PRECISION = DialogueSettings.seen_enemy_precision
 local LegacyV2ProximitySystem = class("LegacyV2ProximitySystem", "ExtensionSystemBase")
-local BEHIND_MULTIPLIER = 2
-local CAMERA_FOLLOW_TARGET_MULTIPLIER = 3
-local HAS_TARGET_MULTIPLIER = 2
+local BEHIND_MULTIPLIER, CAMERA_FOLLOW_TARGET_MULTIPLIER, HAS_TARGET_MULTIPLIER = 2, 3, 2
 
 LegacyV2ProximitySystem.init = function (self, extension_system_creation_context, ...)
 	LegacyV2ProximitySystem.super.init(self, extension_system_creation_context, ...)
 
 	if not DEDICATED_SERVER then
-		local game_session = extension_system_creation_context.game_session
-		local target_unit_id_field_name = "target_unit_id"
+		local game_session, target_unit_id_field_name = extension_system_creation_context.game_session, "target_unit_id"
 
 		FxProximityCulling.init(game_session, NetworkConstants.invalid_game_object_id, BEHIND_MULTIPLIER, CAMERA_FOLLOW_TARGET_MULTIPLIER, HAS_TARGET_MULTIPLIER, target_unit_id_field_name)
 	end
@@ -50,7 +49,9 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 	self._broadphase_result = Script.new_array(128)
 	self._broadphase_system = self._extension_manager:system("broadphase_system")
 	self._distance_based_vo_queries = {}
+
 	local cb = callback(self, "_async_raycast_result_cb")
+
 	self._raycast_object = PhysicsWorld.make_raycast(self._physics_world, cb, "all", "collision_filter", "filter_see_enemies")
 	self._raycast_data = Script.new_map(3)
 end
@@ -75,8 +76,7 @@ local function _camera_position_forward_direction_and_follow_go_id()
 	end
 
 	local pose = Managers.state.camera:camera_pose(local_player.viewport_name)
-	local position = Matrix4x4.translation(pose)
-	local forward = Matrix4x4.forward(pose)
+	local position, forward = Matrix4x4.translation(pose), Matrix4x4.forward(pose)
 	local camera_handler = local_player.camera_handler
 	local camera_follow_unit = camera_handler:camera_follow_unit()
 	local camera_follow_go_id = Managers.state.unit_spawner:game_object_id(camera_follow_unit) or NetworkConstants.invalid_game_object_id
@@ -97,7 +97,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 				num = 0,
 				side_relation = "allied",
 				breed_types = PLAYER_BREED_TYPE,
-				distance = DialogueSettings.friends_close_distance
+				distance = DialogueSettings.friends_close_distance,
 			},
 			{
 				count_start = -1,
@@ -105,7 +105,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 				num = 0,
 				side_relation = "allied",
 				breed_types = PLAYER_BREED_TYPE,
-				distance = DialogueSettings.friends_distant_distance
+				distance = DialogueSettings.friends_distant_distance,
 			},
 			{
 				count_start = 0,
@@ -113,7 +113,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 				num = 0,
 				side_relation = "enemy",
 				breed_types = CHARACTER_BREED_TYPES,
-				distance = DialogueSettings.enemies_close_distance
+				distance = DialogueSettings.enemies_close_distance,
 			},
 			{
 				count_start = 0,
@@ -121,12 +121,13 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 				num = 0,
 				side_relation = "enemy",
 				breed_types = CHARACTER_BREED_TYPES,
-				distance = DialogueSettings.enemies_distant_distance
-			}
+				distance = DialogueSettings.enemies_distant_distance,
+			},
 		}
 		self._player_unit_extensions_map[unit] = extension
 		extension.raycast_timer = 0
 		extension.hear_timer = 0
+
 		local trigger_heard_vo, trigger_seen_vo = _can_trigger_vo(DialogueBreedSettings[breed.name])
 
 		if trigger_heard_vo or trigger_seen_vo then
@@ -139,6 +140,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local first_person_component = unit_data_extension:read_component("first_person")
+
 		self._player_unit_component_map[unit] = first_person_component
 	elseif extension_name == "MinionProximityExtension" then
 		local trigger_heard_vo, trigger_seen_vo = _can_trigger_vo(DialogueBreedSettings[breed.name])
@@ -192,10 +194,11 @@ LegacyV2ProximitySystem.add_distance_based_vo_query = function (self, source_uni
 	end
 
 	local next_element = #self._distance_based_vo_queries + 1
+
 	self._distance_based_vo_queries[next_element] = {
 		source = source_unit,
 		concept_name = concept_name,
-		query_data = query_data
+		query_data = query_data,
 	}
 end
 
@@ -204,8 +207,7 @@ LegacyV2ProximitySystem.update = function (self, ...)
 end
 
 LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
-	local broadphase = self._broadphase_system.broadphase
-	local broadphase_result = self._broadphase_result
+	local broadphase, broadphase_result = self._broadphase_system.broadphase, self._broadphase_result
 
 	if not DEDICATED_SERVER then
 		self:_update_nearby_minions(broadphase, broadphase_result)
@@ -234,14 +236,16 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 	end
 
 	local unit, extension = next(player_unit_extensions_map, self._next_unit)
+
 	self._next_unit = unit
 
 	if ALIVE[unit] then
 		local POSITION_LOOKUP = POSITION_LOOKUP
-		local position = POSITION_LOOKUP[unit]
-		local proximity_array = extension.proximity_array
+		local position, proximity_array = POSITION_LOOKUP[unit], extension.proximity_array
 		local num_proximity_types = #proximity_array
+
 		extension.current_ptype = extension.current_ptype % num_proximity_types + 1
+
 		local proximity_data = extension.proximity_array[extension.current_ptype]
 		local radius = proximity_data.distance
 		local side_relation = proximity_data.side_relation
@@ -262,31 +266,30 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 
 		if num_matching_units < last_num_matching_units * 0.67 or num_matching_units > last_num_matching_units * 1.49 then
 			proximity_data.num = num_matching_units
+
 			local proximity_type = proximity_data.id
 			local send_friends_distant = proximity_type == "friends_distant" and num_matching_units == 0
 
 			if proximity_type == "friends_close" or send_friends_distant then
 				local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 				local event_data = dialogue_extension:get_event_data_payload()
+
 				event_data.num_units = num_matching_units
 				self._cache_delayed_vo = {
 					timer = 0.5,
 					unit = unit,
 					proximity_type = proximity_type,
-					event_data = event_data
+					event_data = event_data,
 				}
 			end
 		end
 
-		if extension.raycast_timer < t then
+		if t > extension.raycast_timer then
 			if self._num_units_that_support_proximity_driven_vo > 0 then
 				local enemy_check_raycasts = self._enemy_check_raycasts
-				local ray_read_index = self._raycast_read_index
-				local ray_write_index = self._raycast_write_index
-				local ray_max = self._raycast_max_index
+				local ray_read_index, ray_write_index, ray_max = self._raycast_read_index, self._raycast_write_index, self._raycast_max_index
 				local first_person_component = self._player_unit_component_map[unit]
-				local look_rot = first_person_component.rotation
-				local look_position = first_person_component.position
+				local look_rot, look_position = first_person_component.rotation, first_person_component.position
 				local look_direction = Quaternion.forward(look_rot)
 				local pos_flat = Vector3.flat(position)
 				local unit_to_extension_map = self._unit_to_extension_map
@@ -295,13 +298,14 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 
 				for i = 1, num_nearby_enemy_units do
 					local nearby_unit = broadphase_result[i]
+
 					broadphase_result[i] = nil
+
 					local nearby_unit_extension = unit_to_extension_map[nearby_unit]
-					local trigger_heard_vo = nearby_unit_extension.trigger_heard_vo
-					local trigger_seen_vo = nearby_unit_extension.trigger_seen_vo
+					local trigger_heard_vo, trigger_seen_vo = nearby_unit_extension.trigger_heard_vo, nearby_unit_extension.trigger_seen_vo
 
 					if (trigger_heard_vo or trigger_seen_vo) and HEALTH_ALIVE[nearby_unit] then
-						if trigger_heard_vo and extension.hear_timer < t then
+						if trigger_heard_vo and t > extension.hear_timer then
 							local nearby_unit_pos = POSITION_LOOKUP[nearby_unit]
 							local distance_sq = Vector3.distance_squared(nearby_unit_pos, position)
 
@@ -324,7 +328,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 							local to_nearby_unit_node_normalized = Vector3.normalize(nearby_unit_node_pos - look_position)
 							local result = Vector3.dot(to_nearby_unit_node_normalized, look_direction)
 
-							if SEEN_ENEMY_PRECISION < result then
+							if result > SEEN_ENEMY_PRECISION then
 								enemy_check_raycasts[ray_write_index] = unit
 								enemy_check_raycasts[ray_write_index + 1] = nearby_unit
 								ray_write_index = (ray_write_index + 1) % ray_max + 1
@@ -337,8 +341,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 					end
 				end
 
-				self._raycast_write_index = ray_write_index
-				self._raycast_read_index = ray_read_index
+				self._raycast_read_index, self._raycast_write_index = ray_read_index, ray_write_index
 			end
 
 			extension.raycast_timer = t + RAYCAST_ENEMY_CHECK_INTERVAL
@@ -361,8 +364,7 @@ LegacyV2ProximitySystem._update_nearby_minions = function (self, broadphase, bro
 	local num_units_in_broadphase = Broadphase.query(broadphase, camera_position, PROXIMITY_FX_DISTANCE, broadphase_result, MINION_BREED_TYPE)
 	local minion_units_near_sorted_by_score = FxProximityCulling.sort_by_score(camera_position, camera_forward, camera_follow_go_id, PROXIMITY_FX_DISTANCE, broadphase_result, num_units_in_broadphase)
 	local unit_to_extension_map = self._unit_to_extension_map
-	local minion_units_proximity_new = self._minion_units_proximity_new
-	local minion_units_proximity_last = self._minion_units_proximity_last
+	local minion_units_proximity_new, minion_units_proximity_last = self._minion_units_proximity_new, self._minion_units_proximity_last
 	local num_units = math.min(max_allowed, num_units_in_broadphase)
 
 	for i = 1, num_units do
@@ -403,8 +405,7 @@ LegacyV2ProximitySystem._process_distance_based_vo_query = function (self, broad
 		return
 	end
 
-	local concept_name = to_query.concept_name
-	local query_data = to_query.query_data
+	local concept_name, query_data = to_query.concept_name, to_query.query_data
 	local position = POSITION_LOOKUP[source_unit]
 	local num_nearby_minions = Broadphase.query(broadphase, position, HEARD_SPEAK_DISTANCE, broadphase_result, MINION_BREED_TYPE)
 	local num_answering_minions = math.min(num_nearby_minions, MAX_ANSWERING_MINIONS)
@@ -439,9 +440,8 @@ LegacyV2ProximitySystem._make_async_raycast_to_center = function (self, raycast_
 	local nearby_unit_node_pos = Unit.world_position(nearby_unit, nearby_unit_node)
 	local ray_direction, ray_length = Vector3.direction_length(nearby_unit_node_pos - unit_position)
 	local id = raycast_object:cast(unit_position, ray_direction, ray_length)
-	raycast_data.nearby_unit = nearby_unit
-	raycast_data.unit = unit
-	raycast_data.id = id
+
+	raycast_data.id, raycast_data.unit, raycast_data.nearby_unit = id, unit, nearby_unit
 end
 
 local INDEX_POSITION = 1
@@ -480,7 +480,7 @@ LegacyV2ProximitySystem._async_raycast_result_cb = function (self, id, hits, num
 		return
 	end
 
-	local hit_target = nil
+	local hit_target
 
 	for i = 1, num_hits do
 		local hit_data = hits[i]
@@ -529,9 +529,9 @@ LegacyV2ProximitySystem.post_update = function (self, ...)
 
 	if read_index ~= self._raycast_write_index then
 		self._raycast_read_index = (read_index + 1) % self._raycast_max_index + 1
+
 		local enemy_check_raycasts = self._enemy_check_raycasts
-		local unit = enemy_check_raycasts[read_index]
-		local nearby_unit = enemy_check_raycasts[read_index + 1]
+		local unit, nearby_unit = enemy_check_raycasts[read_index], enemy_check_raycasts[read_index + 1]
 		local ALIVE = ALIVE
 
 		if ALIVE[unit] and ALIVE[nearby_unit] then

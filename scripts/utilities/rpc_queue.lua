@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/rpc_queue.lua
+
 local RPCQueue = class("RPCQueue")
 local REMAINING_BUFFER_SIZE_MINIMUM = 8000
 
@@ -5,11 +7,12 @@ RPCQueue.init = function (self, channel_id, settings)
 	self._queue = {}
 	self._num_rpcs_per_send = settings.num_rpcs_per_send or 1
 	self._time_between_sends = settings.time_between_sends or 0
+
 	local max_rpcs = settings.max_rpcs
 
 	for i = 1, max_rpcs do
 		self._queue[i] = {
-			args = {}
+			args = {},
 		}
 	end
 
@@ -78,11 +81,14 @@ end
 RPCQueue.queue_rpc = function (self, rpc_name, ...)
 	local index = self._queue_index
 	local rpc = self._queue[index]
+
 	rpc.name = rpc_name
+
 	local num_args = select("#", ...)
 
 	for i = 1, num_args do
 		local arg = select(i, ...)
+
 		rpc.args[i] = arg
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/mission_templates.lua
+
 local mission_templates = {}
 
 local function _extract_mission_templates(path)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/options_view/options_view_content_blueprints.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CheckboxPassTemplates = require("scripts/ui/pass_templates/checkbox_pass_templates")
 local DropdownPassTemplates = require("scripts/ui/pass_templates/dropdown_pass_templates")
@@ -16,170 +18,183 @@ local settings_value_height = 64
 local group_header_height = 80
 local DEFAULT_NUM_DECIMALS = 0
 local value_font_style = table.clone(UIFontSettings.list_button)
+
 value_font_style.offset = {
 	settings_grid_width - settings_value_width + 25,
 	0,
-	8
+	8,
 }
+
 local header_font_style = table.clone(UIFontSettings.header_2)
+
 header_font_style.text_vertical_alignment = "bottom"
 header_font_style.font_size = 28
 header_font_style.offset = {
 	30,
 	0,
-	0
+	0,
 }
-local blueprints = {
-	spacing_vertical = {
-		size_function = function (parent, entry)
-			return {
-				entry.size and entry.size[1] or grid_width,
-				entry.size and entry.size[2] or 20
-			}
-		end
-	},
-	settings_button = {
-		size_function = function (parent, entry)
-			return {
-				entry.size and entry.size[1] or grid_width,
-				entry.size and entry.size[2] or settings_value_height
-			}
-		end,
-		pass_template = ButtonPassTemplates.list_button_with_icon,
-		init = function (parent, widget, entry, callback_name, changed_callback_name)
-			local content = widget.content
-			local hotspot = content.hotspot
 
-			hotspot.pressed_callback = function ()
-				local is_disabled = entry.disabled or false
+local blueprints = {}
 
-				if is_disabled then
-					return
-				end
+blueprints.spacing_vertical = {
+	size_function = function (parent, entry)
+		return {
+			entry.size and entry.size[1] or grid_width,
+			entry.size and entry.size[2] or 20,
+		}
+	end,
+}
+blueprints.settings_button = {
+	size_function = function (parent, entry)
+		return {
+			entry.size and entry.size[1] or grid_width,
+			entry.size and entry.size[2] or settings_value_height,
+		}
+	end,
+	pass_template = ButtonPassTemplates.list_button_with_icon,
+	init = function (parent, widget, entry, callback_name, changed_callback_name)
+		local content = widget.content
+		local hotspot = content.hotspot
 
-				callback(parent, callback_name, widget, entry)()
-			end
-
-			local display_name = entry.display_name
-			content.text = Managers.localization:localize(display_name)
-			content.icon = entry.icon
-			content.entry = entry
-		end
-	},
-	button = {
-		size_function = function (parent, entry)
-			return {
-				entry.size and entry.size[1] or settings_grid_width,
-				entry.size and entry.size[2] or settings_value_height
-			}
-		end,
-		pass_template_function = function (parent, entry, size)
-			return ButtonPassTemplates.settings_button(size[1], size[2], entry.value_width or settings_value_width, true)
-		end,
-		init = function (parent, widget, entry, callback_name, changed_callback_name)
-			local content = widget.content
-
-			content.hotspot.pressed_callback = function ()
-				local is_disabled = entry.disabled or false
-
-				if is_disabled then
-					return
-				end
-
-				callback(parent, callback_name, widget, entry)()
-			end
-
-			local display_name = entry.display_name
-			content.text = Managers.localization:localize(display_name)
-			content.button_text = Localize("loc_settings_change")
-			content.entry = entry
-			content.entry.value_width = entry.value_width or settings_value_width
-
-			entry.changed_callback = function (changed_value)
-				callback(parent, changed_callback_name, widget, entry)()
-			end
-		end
-	},
-	group_header = {
-		size_function = function (parent, entry)
-			return {
-				entry.size and entry.size[1] or settings_grid_width,
-				entry.size and entry.size[2] or group_header_height
-			}
-		end,
-		pass_template = {
-			{
-				pass_type = "text",
-				value_id = "text",
-				style = header_font_style,
-				value = Localize("loc_settings_option_unavailable")
-			}
-		},
-		init = function (parent, widget, entry, callback_name, changed_callback_name)
-			local content = widget.content
-			local display_name = entry.display_name
-			content.text = Managers.localization:localize(display_name)
-		end
-	},
-	checkbox = {
-		size_function = function (parent, entry)
-			return {
-				entry.size and entry.size[1] or settings_grid_width,
-				entry.size and entry.size[2] or settings_value_height
-			}
-		end,
-		pass_template_function = function (parent, entry, size)
-			return CheckboxPassTemplates.settings_checkbox(size[1], size[2], entry.value_width or settings_value_width, 2, true)
-		end,
-		init = function (parent, widget, entry, callback_name, changed_callback_name)
-			local content = widget.content
-			local display_name = entry.display_name or "loc_settings_option_unavailable"
-			content.text = Managers.localization:localize(display_name)
-			content.entry = entry
-			content.entry.value_width = entry.value_width or settings_value_width
-
-			for i = 1, 2 do
-				local widget_option_id = "option_" .. i
-				content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
-			end
-
-			entry.changed_callback = function (changed_value)
-				callback(parent, callback_name, widget, entry)()
-				callback(parent, changed_callback_name, widget, entry)()
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t)
-			local content = widget.content
-			local entry = content.entry
-			local value = entry:get_function()
-			local on_activated = entry.on_activated
-			local pass_input = true
-			local hotspot = content.hotspot
+		hotspot.pressed_callback = function ()
 			local is_disabled = entry.disabled or false
-			content.disabled = is_disabled
-			local new_value = nil
 
-			if hotspot.on_pressed and not parent._navigation_column_changed_this_frame and not is_disabled then
-				new_value = not value
+			if is_disabled then
+				return
 			end
 
-			for i = 1, 2 do
-				local widget_option_id = "option_hotspot_" .. i
-				local option_hotspot = content[widget_option_id]
-				local is_selected = value and i == 1 or not value and i == 2
-				option_hotspot.is_selected = is_selected
-			end
-
-			if new_value ~= nil and new_value ~= value then
-				on_activated(new_value, entry)
-			end
+			callback(parent, callback_name, widget, entry)()
 		end
-	}
+
+		local display_name = entry.display_name
+
+		content.text = Managers.localization:localize(display_name)
+		content.icon = entry.icon
+		content.entry = entry
+	end,
+}
+blueprints.button = {
+	size_function = function (parent, entry)
+		return {
+			entry.size and entry.size[1] or settings_grid_width,
+			entry.size and entry.size[2] or settings_value_height,
+		}
+	end,
+	pass_template_function = function (parent, entry, size)
+		return ButtonPassTemplates.settings_button(size[1], size[2], entry.value_width or settings_value_width, true)
+	end,
+	init = function (parent, widget, entry, callback_name, changed_callback_name)
+		local content = widget.content
+
+		content.hotspot.pressed_callback = function ()
+			local is_disabled = entry.disabled or false
+
+			if is_disabled then
+				return
+			end
+
+			callback(parent, callback_name, widget, entry)()
+		end
+
+		local display_name = entry.display_name
+
+		content.text = Managers.localization:localize(display_name)
+		content.button_text = Localize("loc_settings_change")
+		content.entry = entry
+		content.entry.value_width = entry.value_width or settings_value_width
+
+		entry.changed_callback = function (changed_value)
+			callback(parent, changed_callback_name, widget, entry)()
+		end
+	end,
+}
+blueprints.group_header = {
+	size_function = function (parent, entry)
+		return {
+			entry.size and entry.size[1] or settings_grid_width,
+			entry.size and entry.size[2] or group_header_height,
+		}
+	end,
+	pass_template = {
+		{
+			pass_type = "text",
+			value_id = "text",
+			style = header_font_style,
+			value = Localize("loc_settings_option_unavailable"),
+		},
+	},
+	init = function (parent, widget, entry, callback_name, changed_callback_name)
+		local content = widget.content
+		local display_name = entry.display_name
+
+		content.text = Managers.localization:localize(display_name)
+	end,
+}
+blueprints.checkbox = {
+	size_function = function (parent, entry)
+		return {
+			entry.size and entry.size[1] or settings_grid_width,
+			entry.size and entry.size[2] or settings_value_height,
+		}
+	end,
+	pass_template_function = function (parent, entry, size)
+		return CheckboxPassTemplates.settings_checkbox(size[1], size[2], entry.value_width or settings_value_width, 2, true)
+	end,
+	init = function (parent, widget, entry, callback_name, changed_callback_name)
+		local content = widget.content
+		local display_name = entry.display_name or "loc_settings_option_unavailable"
+
+		content.text = Managers.localization:localize(display_name)
+		content.entry = entry
+		content.entry.value_width = entry.value_width or settings_value_width
+
+		for i = 1, 2 do
+			local widget_option_id = "option_" .. i
+
+			content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
+		end
+
+		entry.changed_callback = function (changed_value)
+			callback(parent, callback_name, widget, entry)()
+			callback(parent, changed_callback_name, widget, entry)()
+		end
+	end,
+	update = function (parent, widget, input_service, dt, t)
+		local content = widget.content
+		local entry = content.entry
+		local value = entry.get_function(entry)
+		local on_activated = entry.on_activated
+		local pass_input = true
+		local hotspot = content.hotspot
+		local is_disabled = entry.disabled or false
+
+		content.disabled = is_disabled
+
+		local new_value
+
+		if hotspot.on_pressed and not parent._navigation_column_changed_this_frame and not is_disabled then
+			new_value = not value
+		end
+
+		for i = 1, 2 do
+			local widget_option_id = "option_hotspot_" .. i
+			local option_hotspot = content[widget_option_id]
+			local is_selected = value and i == 1 or not value and i == 2
+
+			option_hotspot.is_selected = is_selected
+		end
+
+		if new_value ~= nil and new_value ~= value then
+			on_activated(new_value, entry)
+		end
+	end,
 }
 
 local function slider_init_function(parent, widget, entry, callback_name, changed_callback_name)
 	local content = widget.content
 	local display_name = entry.display_name or "loc_settings_option_unavailable"
+
 	content.text = Managers.localization:localize(display_name)
 	content.entry = entry
 	content.entry.value_width = entry.value_width
@@ -188,12 +203,15 @@ local function slider_init_function(parent, widget, entry, callback_name, change
 
 	if not entry.normalized_step_size and entry.step_size_value then
 		local value_range = entry.max_value - entry.min_value
+
 		content.step_size = entry.step_size_value / value_range
 	end
 
 	content.apply_on_drag = entry.apply_on_drag and true
+
 	local get_function = entry.get_function
 	local value = get_function(entry)
+
 	content.previous_slider_value = value
 	content.slider_value = value
 
@@ -216,7 +234,7 @@ blueprints.percent_slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height
+			entry.size and entry.size[2] or settings_value_height,
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -230,13 +248,15 @@ blueprints.percent_slider = {
 		local entry = content.entry
 		local pass_input = true
 		local is_disabled = entry.disabled or false
+
 		content.disabled = is_disabled
+
 		local using_gamepad = not parent:using_cursor_navigation()
 		local get_function = entry.get_function
 		local value = get_function(entry) / 100
 		local on_activated = entry.on_activated
 		local format_value_function = entry.format_value_function
-		local drag_value, new_value = nil
+		local drag_value, new_value
 		local apply_on_drag = content.apply_on_drag and not is_disabled
 		local drag_active = content.drag_active and not is_disabled
 		local focused = using_gamepad and content.exclusive_focus and not is_disabled
@@ -247,6 +267,7 @@ blueprints.percent_slider = {
 			end
 
 			local slider_value = content.slider_value
+
 			drag_value = slider_value or get_function(entry) / 100
 		elseif not focused then
 			local previous_slider_value = content.previous_slider_value
@@ -269,6 +290,7 @@ blueprints.percent_slider = {
 		end
 
 		content.drag_previously_active = drag_active
+
 		local display_value = format_value_function((drag_value or value) * 100)
 
 		if display_value then
@@ -302,13 +324,13 @@ blueprints.percent_slider = {
 		end
 
 		return pass_input
-	end
+	end,
 }
 blueprints.value_slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height
+			entry.size and entry.size[2] or settings_value_height,
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -322,7 +344,9 @@ blueprints.value_slider = {
 		local entry = content.entry
 		local pass_input = true
 		local is_disabled = entry.disabled or false
+
 		content.disabled = is_disabled
+
 		local using_gamepad = not parent:using_cursor_navigation()
 		local min_value = entry.min_value
 		local max_value = entry.max_value
@@ -332,7 +356,7 @@ blueprints.value_slider = {
 		local normalized_value = math.normalize_01(value, min_value, max_value)
 		local on_activated = entry.on_activated
 		local format_value_function = entry.format_value_function
-		local drag_value, new_normalized_value = nil
+		local drag_value, new_normalized_value
 		local apply_on_drag = content.apply_on_drag and not is_disabled
 		local drag_active = content.drag_active and not is_disabled
 		local drag_previously_active = content.drag_previously_active
@@ -344,6 +368,7 @@ blueprints.value_slider = {
 			end
 
 			local slider_value = content.slider_value
+
 			drag_value = slider_value and explode_function(slider_value, entry) or get_function(entry)
 		elseif not focused or drag_previously_active then
 			local previous_slider_value = content.previous_slider_value
@@ -366,6 +391,7 @@ blueprints.value_slider = {
 		end
 
 		content.drag_previously_active = drag_active
+
 		local display_value = format_value_function(drag_value or value)
 
 		if display_value then
@@ -401,13 +427,13 @@ blueprints.value_slider = {
 		end
 
 		return pass_input
-	end
+	end,
 }
 blueprints.slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height
+			entry.size and entry.size[2] or settings_value_height,
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -416,14 +442,17 @@ blueprints.slider = {
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
 		local display_name = entry.display_name or "loc_settings_option_unavailable"
+
 		content.text = Managers.localization:localize(display_name)
 		content.entry = entry
 		content.entry.value_width = entry.value_width or settings_value_width
 		content.area_length = content.entry.value_width
 		content.step_size = entry.step_size_fraction
 		content.apply_on_drag = entry.apply_on_drag and true
+
 		local get_function = entry.get_function
 		local value, value_fraction = get_function(entry)
+
 		content.previous_slider_value = value_fraction
 		content.slider_value = value_fraction
 		entry.pressed_callback = callback(parent, callback_name, widget, entry)
@@ -437,14 +466,16 @@ blueprints.slider = {
 		local entry = content.entry
 		local pass_input = true
 		local is_disabled = entry.disabled or false
+
 		content.disabled = is_disabled
+
 		local using_gamepad = not parent:using_cursor_navigation()
 		local get_function = entry.get_function
 		local value, value_fraction = get_function(entry)
 		local on_activated = entry.on_activated
 		local format_value_function = entry.format_value_function
 		local num_decimals = entry.num_decimals
-		local drag_value, new_value_fraction = nil
+		local drag_value, new_value_fraction
 		local apply_on_drag = entry.apply_on_drag and not is_disabled
 		local drag_active = content.drag_active and not is_disabled
 		local drag_previously_active = content.drag_previously_active
@@ -471,12 +502,14 @@ blueprints.slider = {
 		end
 
 		content.drag_previously_active = drag_active
-		local display_value = nil
+
+		local display_value
 
 		if format_value_function then
 			display_value = format_value_function(entry, drag_value or value)
 		else
 			local number_format = string.format("%%.%sf", num_decimals or DEFAULT_NUM_DECIMALS)
+
 			display_value = string.format(number_format, drag_value or value)
 		end
 
@@ -513,14 +546,16 @@ blueprints.slider = {
 		end
 
 		return pass_input
-	end
+	end,
 }
+
 local max_visible_options = OptionsViewSettings.max_visible_dropdown_options or 5
+
 blueprints.dropdown = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height
+			entry.size and entry.size[2] or settings_value_height,
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -535,15 +570,19 @@ blueprints.dropdown = {
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
 		local display_name = entry.display_name or "loc_settings_option_unavailable"
+
 		content.text = Managers.localization:localize(display_name)
 		content.entry = entry
 		content.entry.value_width = entry.value_width or settings_value_width
+
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
 		local options = entry.options or entry.options_function and entry.options_function()
 		local num_options = #options
 		local num_visible_options = math.min(num_options, max_visible_options)
+
 		content.num_visible_options = num_visible_options
+
 		local optional_num_decimals = entry.optional_num_decimals
 		local number_format = string.format("%%.%sf", optional_num_decimals or DEFAULT_NUM_DECIMALS)
 		local options_by_id = {}
@@ -567,11 +606,16 @@ blueprints.dropdown = {
 		end
 
 		local size = entry.size
+
 		content.area_length = size[2] * num_visible_options
+
 		local scroll_length = math.max(size[2] * num_options - content.area_length, 0)
+
 		content.scroll_length = scroll_length
+
 		local spacing = 0
 		local scroll_amount = scroll_length > 0 and (size[2] + spacing) / scroll_length or 0
+
 		content.scroll_amount = scroll_amount
 
 		entry.changed_callback = function (changed_value)
@@ -583,7 +627,9 @@ blueprints.dropdown = {
 		local entry = content.entry
 		local pass_input = true
 		local is_disabled = entry.disabled or false
+
 		content.disabled = is_disabled
+
 		local using_gamepad = not parent:using_cursor_navigation()
 		local offset = widget.offset
 		local style = widget.style
@@ -600,7 +646,7 @@ blueprints.dropdown = {
 		end
 
 		local selected_index = content.selected_index
-		local value, new_value = nil
+		local value, new_value
 		local hotspot = content.hotspot
 		local hotspot_style = style.hotspot
 
@@ -614,13 +660,20 @@ blueprints.dropdown = {
 			hotspot_style.on_pressed_sound = hotspot_style.on_pressed_fold_out_sound
 		end
 
-		value = entry.get_function and entry:get_function() or content.internal_value or "<not selected>"
+		if entry.get_function then
+			value = entry.get_function(entry)
+		else
+			value = content.internal_value or "<not selected>"
+		end
+
 		local localization_manager = Managers.localization
 		local preview_option = options_by_id[value]
 		local preview_option_id = preview_option and preview_option.id
 		local preview_value = preview_option and preview_option.display_name or "loc_settings_option_unavailable"
 		local ignore_localization = preview_option and preview_option.ignore_localization
+
 		content.value_text = ignore_localization and preview_value or localization_manager:localize(preview_value)
+
 		local size = entry.size
 		local scroll_amount = parent:settings_scroll_amount()
 		local scroll_area_height = parent:settings_grid_length()
@@ -633,7 +686,8 @@ blueprints.dropdown = {
 		end
 
 		content.grow_downwards = grow_downwards
-		local new_selection_index = nil
+
+		local new_selection_index
 
 		if not selected_index or not focused then
 			for i = 1, #options do
@@ -673,6 +727,7 @@ blueprints.dropdown = {
 			if num_visible_options < num_options then
 				local step_size = 1 / num_options
 				local new_scroll_percentage = math.min(selected_index - 1, num_options) * step_size
+
 				content.scroll_percentage = new_scroll_percentage
 				content.scroll_add = nil
 			end
@@ -684,6 +739,7 @@ blueprints.dropdown = {
 
 		if scroll_percentage then
 			local step_size = 1 / (num_options - (num_visible_options - 1))
+
 			content.start_index = math.max(1, math.ceil(scroll_percentage / step_size))
 		end
 
@@ -704,8 +760,10 @@ blueprints.dropdown = {
 			local option_hotspot_id = "option_hotspot_" .. option_index
 			local outline_style_id = "outline_" .. option_index
 			local option_hotspot = content[option_hotspot_id]
+
 			option_hovered = option_hovered or option_hotspot.is_hover
 			option_hotspot.is_selected = actual_i == selected_index
+
 			local option = options[actual_i]
 
 			if not new_value and focused and not using_gamepad and option_hotspot.on_pressed then
@@ -716,11 +774,16 @@ blueprints.dropdown = {
 
 			local option_display_name = option.display_name
 			local option_ignore_localization = option.ignore_localization
+
 			content[option_text_id] = option_ignore_localization and option_display_name or localization_manager:localize(option_display_name)
+
 			local options_y = size[2] * option_index
+
 			style[option_hotspot_id].offset[2] = grow_downwards and options_y or -options_y
 			style[option_text_id].offset[2] = grow_downwards and options_y or -options_y
+
 			local entry_length = using_scrollbar and content.entry.value_width - style.scrollbar_hotspot.size[1] or content.entry.value_width
+
 			style[outline_style_id].size[1] = entry_length
 			style[option_text_id].size[1] = content.entry.value_width
 			option_index = option_index + 1
@@ -736,16 +799,17 @@ blueprints.dropdown = {
 
 		local scrollbar_hotspot = content.scrollbar_hotspot
 		local scrollbar_hovered = scrollbar_hotspot.is_hover
+
 		pass_input = using_gamepad or value_changed or not option_hovered and not scrollbar_hovered
 
 		return pass_input
-	end
+	end,
 }
 blueprints.keybind = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height
+			entry.size and entry.size[2] or settings_value_height,
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -754,6 +818,7 @@ blueprints.keybind = {
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
 		local display_name = entry.display_name or "loc_settings_option_unavailable"
+
 		content.text = parent:_localize(display_name)
 		content.entry = entry
 		content.entry.value_width = content.entry.value_width or settings_value_width
@@ -762,21 +827,25 @@ blueprints.keybind = {
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
-		local value = entry:get_function()
+		local value = entry.get_function(entry)
 		local preview_value = value and InputUtils.localized_string_from_key_info(value) or content.key_unassigned_string
+
 		content.value_text = preview_value
+
 		local hotspot = content.hotspot
 
 		if hotspot.on_released then
 			parent:show_keybind_popup(widget, entry, content.entry.cancel_keys)
 		end
-	end
+	end,
 }
+
 local description_font_style = table.clone(UIFontSettings.body_small)
+
 description_font_style.offset = {
 	25,
 	0,
-	3
+	3,
 }
 description_font_style.text_horizontal_alignment = "left"
 description_font_style.text_vertical_alignment = "center"
@@ -785,17 +854,17 @@ blueprints.description = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width - 225,
-			entry.size and entry.size[2] or settings_value_height
+			entry.size and entry.size[2] or settings_value_height,
 		}
 	end,
 	pass_template = {
 		{
-			value_id = "text",
 			pass_type = "text",
 			style_id = "text",
+			value_id = "text",
 			style = description_font_style,
-			value = Localize("loc_settings_option_unavailable")
-		}
+			value = Localize("loc_settings_option_unavailable"),
+		},
 	},
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
@@ -819,14 +888,15 @@ blueprints.description = {
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		return
-	end
+	end,
 }
+
 local controller_image_height = 594
 local controller_image_input_services = {
-	"Ingame"
+	"Ingame",
 }
 local controller_image_input_devices = {
-	"xbox_controller"
+	"xbox_controller",
 }
 local temp_input_display_values = {}
 
@@ -900,388 +970,388 @@ blueprints.controller_image = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width - 225,
-			entry.size and entry.size[2] or controller_image_height
+			entry.size and entry.size[2] or controller_image_height,
 		}
 	end,
 	pass_template = {
 		{
-			value_id = "image",
 			pass_type = "texture",
 			style_id = "image",
 			value = "content/ui/materials/controller_image_xbox",
+			value_id = "image",
 			style = {
-				vertical_alignment = "top",
 				horizontal_alignment = "left",
+				vertical_alignment = "top",
 				size = {
 					970,
-					controller_image_height
+					controller_image_height,
 				},
 				offset = {
 					30,
 					0,
-					0
+					0,
 				},
-				color = Color.terminal_text_body(255, true)
-			}
+				color = Color.terminal_text_body(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_back",
-			value_id = "xbox_controller_back",
 			pass_type = "text",
+			style_id = "xbox_controller_back",
 			value = "",
+			value_id = "xbox_controller_back",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 110,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_left_trigger",
-			value_id = "xbox_controller_left_trigger",
 			pass_type = "text",
+			style_id = "xbox_controller_left_trigger",
 			value = "",
+			value_id = "xbox_controller_left_trigger",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 173,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_left_shoulder",
-			value_id = "xbox_controller_left_shoulder",
 			pass_type = "text",
+			style_id = "xbox_controller_left_shoulder",
 			value = "",
+			value_id = "xbox_controller_left_shoulder",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 172 + 65,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_left",
-			value_id = "xbox_controller_left",
 			pass_type = "text",
+			style_id = "xbox_controller_left",
 			value = "",
+			value_id = "xbox_controller_left",
 			style = {
 				font_size = 18,
-				text_vertical_alignment = "bottom",
-				text_horizontal_alignment = "left",
-				line_spacing = 1.2,
 				font_type = "proxima_nova_bold",
+				line_spacing = 1.2,
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				additional_inputs = {
-					"xbox_controller_left_thumb"
+					"xbox_controller_left_thumb",
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 300,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_d_up",
-			value_id = "xbox_controller_d_up",
 			pass_type = "text",
+			style_id = "xbox_controller_d_up",
 			value = "",
+			value_id = "xbox_controller_d_up",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 244 + 145,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_d_left",
-			value_id = "xbox_controller_d_left",
 			pass_type = "text",
+			style_id = "xbox_controller_d_left",
 			value = "",
+			value_id = "xbox_controller_d_left",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 276 + 176,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_d_down",
-			value_id = "xbox_controller_d_down",
 			pass_type = "text",
+			style_id = "xbox_controller_d_down",
 			value = "",
+			value_id = "xbox_controller_d_down",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 307 + 208,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_d_right",
-			value_id = "xbox_controller_d_right",
 			pass_type = "text",
+			style_id = "xbox_controller_d_right",
 			value = "",
+			value_id = "xbox_controller_d_right",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "left",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					30,
 					-controller_image_height - 35 + 338 + 240,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_start",
-			value_id = "xbox_controller_start",
 			pass_type = "text",
+			style_id = "xbox_controller_start",
 			value = "",
+			value_id = "xbox_controller_start",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 110,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_right_trigger",
-			value_id = "xbox_controller_right_trigger",
 			pass_type = "text",
+			style_id = "xbox_controller_right_trigger",
 			value = "",
+			value_id = "xbox_controller_right_trigger",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 173,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_right_shoulder",
-			value_id = "xbox_controller_right_shoulder",
 			pass_type = "text",
+			style_id = "xbox_controller_right_shoulder",
 			value = "",
+			value_id = "xbox_controller_right_shoulder",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 172 + 65,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_y",
-			value_id = "xbox_controller_y",
 			pass_type = "text",
+			style_id = "xbox_controller_y",
 			value = "",
+			value_id = "xbox_controller_y",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 308,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_b",
-			value_id = "xbox_controller_b",
 			pass_type = "text",
+			style_id = "xbox_controller_b",
 			value = "",
+			value_id = "xbox_controller_b",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 195 + 177,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_a",
-			value_id = "xbox_controller_a",
 			pass_type = "text",
+			style_id = "xbox_controller_a",
 			value = "",
+			value_id = "xbox_controller_a",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 226 + 208,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_x",
-			value_id = "xbox_controller_x",
 			pass_type = "text",
+			style_id = "xbox_controller_x",
 			value = "",
+			value_id = "xbox_controller_x",
 			style = {
-				text_vertical_alignment = "bottom",
+				font_size = 18,
 				font_type = "proxima_nova_bold",
 				line_spacing = 1.2,
-				font_size = 18,
 				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 257 + 240,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
+				text_color = Color.text_default(255, true),
+			},
 		},
 		{
-			style_id = "xbox_controller_right",
-			value_id = "xbox_controller_right",
 			pass_type = "text",
+			style_id = "xbox_controller_right",
 			value = "",
+			value_id = "xbox_controller_right",
 			style = {
 				font_size = 18,
-				text_vertical_alignment = "bottom",
-				text_horizontal_alignment = "right",
-				line_spacing = 1.2,
 				font_type = "proxima_nova_bold",
+				line_spacing = 1.2,
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
 				size = {
-					250
+					250,
 				},
 				additional_inputs = {
-					"xbox_controller_right_thumb"
+					"xbox_controller_right_thumb",
 				},
 				offset = {
 					750,
 					-controller_image_height - 35 + 338 + 240,
-					3
+					3,
 				},
-				text_color = Color.text_default(255, true)
-			}
-		}
+				text_color = Color.text_default(255, true),
+			},
+		},
 	},
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
@@ -1291,6 +1361,7 @@ blueprints.controller_image = {
 		if player and save_manager then
 			local account_data = save_manager:account_data()
 			local saved_layout_name = account_data.input_settings.controller_layout
+
 			content.controller_layout = saved_layout_name
 
 			controller_image_apply_text_function(widget)
@@ -1311,81 +1382,83 @@ blueprints.controller_image = {
 				controller_image_apply_text_function(widget)
 			end
 		end
-	end
+	end,
 }
 blueprints.gamma_texture = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or 250
+			entry.size and entry.size[2] or 250,
 		}
 	end,
 	pass_template = {
 		{
-			style_id = "background",
 			pass_type = "rect",
+			style_id = "background",
 			style = {
-				color = Color.black(255, true)
-			}
+				color = Color.black(255, true),
+			},
 		},
 		{
-			value = "content/ui/materials/patterns/brightness_comparison_dark_01",
-			style_id = "texture_dark",
 			pass_type = "texture",
+			style_id = "texture_dark",
+			value = "content/ui/materials/patterns/brightness_comparison_dark_01",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "left",
+				vertical_alignment = "center",
 				size = {
 					400,
-					200
+					200,
 				},
 				offset = {
 					25,
-					0
+					0,
 				},
 				material_values = {
-					tonemap = 0.5
-				}
-			}
+					tonemap = 0.5,
+				},
+			},
 		},
 		{
-			value = "content/ui/materials/patterns/brightness_comparison_light_01",
-			style_id = "texture_light",
 			pass_type = "texture",
+			style_id = "texture_light",
+			value = "content/ui/materials/patterns/brightness_comparison_light_01",
 			style = {
-				vertical_alignment = "center",
 				horizontal_alignment = "right",
+				vertical_alignment = "center",
 				size = {
 					400,
-					200
+					200,
 				},
 				offset = {
 					-25,
 					0,
-					0
+					0,
 				},
 				material_values = {
-					tonemap = 0.5
-				}
-			}
-		}
+					tonemap = 0.5,
+				},
+			},
+		},
 	},
 	init = function (parent, widget, entry, callback_name)
 		local template = entry
+
 		widget.entry = template
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		local template = widget.entry
-		local tonemap = template:update()
+		local tonemap = template.update(template)
+
 		widget.style.texture_dark.material_values.tonemap = tonemap
 		widget.style.texture_light.material_values.tonemap = tonemap
-	end
+	end,
 }
 blueprints.large_value_slider = {
 	size_function = function (parent, entry)
 		return {
 			entry.size and entry.size[1] or settings_grid_width,
-			entry.size and entry.size[2] or settings_value_height
+			entry.size and entry.size[2] or settings_value_height,
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
@@ -1393,13 +1466,16 @@ blueprints.large_value_slider = {
 	end,
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
+
 		content.entry = entry
 		content.area_length = entry.size[1]
 		content.step_size = entry.normalized_step_size
 		content.apply_on_drag = entry.apply_on_drag and true
+
 		local get_function = entry.get_function
 		local value = get_function(entry)
 		local slider_value = math.normalize_01(value, entry.min_value, entry.max_value)
+
 		content.previous_slider_value = slider_value
 		content.slider_value = slider_value
 		content.pressed_callback = callback(parent, callback_name, widget, entry)
@@ -1416,7 +1492,7 @@ blueprints.large_value_slider = {
 		local normalized_value = math.normalize_01(value, min_value, max_value)
 		local on_activated = entry.on_activated
 		local format_value_function = entry.format_value_function
-		local drag_value, new_normalized_value = nil
+		local drag_value, new_normalized_value
 		local apply_on_drag = content.apply_on_drag
 		local drag_active = content.drag_active
 		local drag_previously_active = content.drag_previously_active
@@ -1424,6 +1500,7 @@ blueprints.large_value_slider = {
 
 		if drag_active or focused then
 			local slider_value = content.slider_value
+
 			drag_value = slider_value and explode_function(slider_value, entry) or get_function(entry)
 		elseif not focused or drag_previously_active then
 			local previous_slider_value = content.previous_slider_value
@@ -1444,6 +1521,7 @@ blueprints.large_value_slider = {
 		end
 
 		content.drag_previously_active = drag_active
+
 		local display_value = format_value_function(drag_value or value)
 
 		if display_value then
@@ -1483,7 +1561,7 @@ blueprints.large_value_slider = {
 		local pass_input = true
 
 		return pass_input
-	end
+	end,
 }
 
 return settings("OptionsViewContentBlueprints", blueprints)

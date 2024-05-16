@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flashlight.lua
+
 local Component = require("scripts/utilities/component")
 local FlashlightTemplates = require("scripts/settings/equipment/flashlight_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local PerlinNoise = require("scripts/utilities/perlin_noise")
 local Flashlight = class("Flashlight")
-local _get_components, _disable_light, _enable_light, _set_template, _set_intensity, _falloff_position_rotation, _trigger_wwise_event, _trigger_aggro = nil
+local _get_components, _disable_light, _enable_light, _set_template, _set_intensity, _falloff_position_rotation, _trigger_wwise_event, _trigger_aggro
 local AGGRO_CHECK_INTERVAL = 0.5
 local DEFAULT_TEST_AGAINST = "both"
 local DEFAULT_COLLISION_FILTER = "filter_player_character_shooting_raycast"
@@ -24,17 +26,23 @@ Flashlight.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_local_unit = context.is_local_unit
 	self._is_husk = context.is_husk
 	self._is_server = context.is_server
+
 	local owner_unit = context.owner_unit
+
 	self._owner_unit = owner_unit
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	local slot_name = slot.name
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot_name)
 	self._seed = math.random_seed()
 	self._first_person_mode = false
 	self._enabled = false
 	self._next_check_at_t = 0
+
 	local flashlight_template = weapon_template.flashlight_template or FlashlightTemplates.default
+
 	self._light_settings = flashlight_template.light
 	self._flicker_settings = flashlight_template.flicker
 	self._flashlights_1p = {}
@@ -106,7 +114,7 @@ Flashlight.update = function (self, unit, dt, t)
 	local time_since_aggro = t - self._last_aggro_time
 	local owner_unit = self._owner_unit
 
-	if self._is_server and HEALTH_ALIVE[owner_unit] and self._enabled and AGGRO_CHECK_INTERVAL < time_since_aggro then
+	if self._is_server and HEALTH_ALIVE[owner_unit] and self._enabled and time_since_aggro > AGGRO_CHECK_INTERVAL then
 		_trigger_aggro(self._light_settings.first_person, self._flashlights_1p, self._physics_world, owner_unit)
 
 		self._last_aggro_time = t
@@ -116,7 +124,7 @@ end
 Flashlight._update_flicker = function (self, t)
 	local settings = self._flicker_settings
 
-	if not self._flickering and self._next_check_at_t <= t then
+	if not self._flickering and t >= self._next_check_at_t then
 		local chance = settings.chance
 		local roll = math.random()
 
@@ -131,12 +139,14 @@ Flashlight._update_flicker = function (self, t)
 			local duration = settings.duration
 			local min = duration.min
 			local max = duration.max
+
 			self._flicker_duration = math.random() * (max - min) + min
 			self._seed = math.random_seed()
 		else
 			local interval = settings.interval
 			local min = interval.min
 			local max = interval.max
+
 			self._next_check_at_t = t + math.random(min, max)
 
 			return
@@ -148,13 +158,15 @@ Flashlight._update_flicker = function (self, t)
 		local current_flicker_time = t - self._flicker_start_t
 		local flicker_end_time = self._flicker_start_t + self._flicker_duration
 		local progress = current_flicker_time / flicker_duration
-		local intensity_scale = nil
+		local intensity_scale
 
 		if progress >= 1 then
 			self._flickering = false
+
 			local interval = settings.interval
 			local min = interval.min
 			local max = interval.max
+
 			self._next_check_at_t = t + math.random(min, max)
 			intensity_scale = 1
 		else
@@ -164,6 +176,7 @@ Flashlight._update_flicker = function (self, t)
 			local frequence_multiplier = settings.frequence_multiplier
 			local persistance = settings.persistance
 			local octaves = settings.octaves
+
 			intensity_scale = 1 - PerlinNoise.calculate_perlin_value((flicker_end_time - t) * frequence_multiplier, persistance, octaves * fade_progress, self._seed)
 		end
 
@@ -198,7 +211,7 @@ function _get_components(components, attachments)
 		for _, flash_light_component in ipairs(flash_light_components) do
 			components[#components + 1] = {
 				unit = attachment_unit,
-				component = flash_light_component
+				component = flash_light_component,
 			}
 		end
 	end
@@ -257,7 +270,7 @@ end
 
 local FLASHLIGHT_AGGRO_MUTATORS = {
 	"mutator_darkness_los",
-	"mutator_ventilation_purge_los"
+	"mutator_ventilation_purge_los",
 }
 
 function _trigger_aggro(template_1p, flashlights_1p, physics_world, owner_unit)
@@ -324,7 +337,7 @@ function _trigger_aggro(template_1p, flashlights_1p, physics_world, owner_unit)
 			HANDLED_UNITS[hit_unit] = true
 
 			if not HEALTH_ALIVE[hit_unit] then
-				break
+				do break end
 				break
 			end
 

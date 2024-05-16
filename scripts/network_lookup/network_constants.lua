@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/network_lookup/network_constants.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local MechanismManager = require("scripts/managers/mechanism/mechanism_manager")
@@ -5,6 +7,7 @@ local MinionToughnessTemplates = require("scripts/settings/toughness/minion_toug
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local TagQueryDatabase = require("scripts/extension_systems/dialogue/tag_query_database")
+
 NetworkConstants = NetworkConstants or {}
 
 local function _check_network_lookup_boundaries(network_type_name, network_lookup_name)
@@ -98,6 +101,7 @@ _check_network_lookup_boundaries("camera_shake_id", "camera_shake_events")
 _check_network_lookup_boundaries("dialogue_breed_id", "dialogue_breed_names")
 
 NetworkConstants.check_network_lookup_boundaries = _check_network_lookup_boundaries
+
 local max_mechanism_events = Network.type_info("mechanism_event_id").max
 local num_mechanism_events = #MechanismManager.EVENT_LOOKUP
 local max_mechanisms = Network.type_info("mechanism_id").max
@@ -105,11 +109,14 @@ local num_mechanisms = #MechanismManager.LOOKUP
 local max_buff_stack_count = Network.type_info("buff_stack_count").max
 local max_allowed_buff_stack_count = BuffSettings.max_stack_count
 local level_unit_id = Network.type_info("level_unit_id")
+
 NetworkConstants.invalid_level_unit_id = level_unit_id.min
 NetworkConstants.health_small = Network.type_info("health_small")
 NetworkConstants.health_medium = Network.type_info("health_medium")
 NetworkConstants.health_large = Network.type_info("health_large")
+
 local toughness = Network.type_info("toughness")
+
 NetworkConstants.toughness = toughness
 
 for name, data in pairs(MinionToughnessTemplates) do
@@ -119,26 +126,43 @@ for name, data in pairs(MinionToughnessTemplates) do
 end
 
 local game_object_id = Network.type_info("game_object_id")
+
 NetworkConstants.invalid_game_object_id = game_object_id.min
+
 local level_name_hash = Network.type_info("level_name_hash")
+
 NetworkConstants.invalid_level_name_hash = level_name_hash.min
+
 local minion_anim_event = Network.type_info("minion_anim_event")
+
 NetworkConstants.max_minion_anim_event = minion_anim_event.max
+
 local player_anim_event = Network.type_info("player_anim_event")
+
 NetworkConstants.max_player_anim_event = player_anim_event.max
+
 local anim_variable = Network.type_info("anim_variable")
+
 NetworkConstants.max_anim_variable = anim_variable.max
+
 local anim_variable_float = Network.type_info("anim_variable_float")
+
 NetworkConstants.anim_variable_float = anim_variable_float
 NetworkConstants.short_time_index = Network.type_index("short_time")
+
 local consecutive_dodges = Network.type_info("consecutive_dodges")
+
 NetworkConstants.max_consecutive_dodges = consecutive_dodges.max
 NetworkConstants.story_time = Network.type_info("story_time")
 NetworkConstants.story_speed = Network.type_info("story_speed")
 NetworkConstants.flow_state_id = Network.type_info("flow_state_id")
+
 local game_mode_state_id = Network.type_info("game_mode_state_id")
+
 NetworkConstants.max_game_mode_state_id = game_mode_state_id.max
+
 local projectile_locomotion_snapshot_id = Network.type_info("projectile_locomotion_snapshot_id")
+
 NetworkConstants.max_projectile_locomotion_snapshot_id = projectile_locomotion_snapshot_id.max
 NetworkConstants.weapon_charge_level = Network.type_info("weapon_charge_level")
 NetworkConstants.weapon_input_sequence_is_running = Network.type_info("weapon_input_sequence_is_running")
@@ -155,38 +179,66 @@ NetworkConstants.ability_input_sequence_element_start_t = Network.type_info("abi
 NetworkConstants.ability_input_queue_action_input = Network.type_info("ability_input_queue_action_input")
 NetworkConstants.ability_input_queue_raw_input = Network.type_info("ability_input_queue_raw_input")
 NetworkConstants.ability_input_queue_hierarchy_position = Network.type_info("ability_input_queue_hierarchy_position")
+
 local action_input_hierarchy_position = Network.type_info("action_input_hierarchy_position")
+
 NetworkConstants.action_input_hierarchy_position_max_size = action_input_hierarchy_position.max_size
+
 local liquid_real_index_array = Network.type_info("liquid_real_index_array")
+
 NetworkConstants.liquid_real_index_array_max_size = liquid_real_index_array.max_size
+
 local liquid_offset_position_array = Network.type_info("liquid_offset_position_array")
 local liquid_area_is_filled_array = Network.type_info("liquid_area_is_filled_array")
 local action_time_scale = Network.type_info("action_time_scale")
+
 NetworkConstants.action_time_scale = action_time_scale
+
 local player_anim_state = Network.type_info("player_anim_state")
+
 NetworkConstants.invalid_player_anim_state = player_anim_state.max
+
 local player_anim = Network.type_info("player_anim")
+
 NetworkConstants.invalid_player_anim = player_anim.min
+
 local player_anim_time = Network.type_info("player_anim_time")
+
 NetworkConstants.invalid_player_anim_time = player_anim_time.max
+
 local time_offset = Network.type_info("time_offset")
+
 NetworkConstants.max_time_offset = time_offset.max
+
 local nav_tag_layer_id = Network.type_info("nav_tag_layer_id")
+
 NetworkConstants.max_nav_tag_layer_id = nav_tag_layer_id.max
+
 local hit_zone_actor_index = Network.type_info("hit_zone_actor_index")
+
 NetworkConstants.invalid_hit_zone_actor_index = hit_zone_actor_index.min
 NetworkConstants.max_hit_zone_actor_index = hit_zone_actor_index.max
+
 local position_id = Network.type_info("position")
+
 NetworkConstants.min_position = position_id.min
 NetworkConstants.max_position = position_id.max
+
 local movement_settings = Network.type_info("movement_settings")
+
 NetworkConstants.max_movement_settings = movement_settings.max
+
 local mover_frames = Network.type_info("mover_frames")
+
 NetworkConstants.max_mover_frames = mover_frames.max
 NetworkConstants.action_combo_count = Network.type_info("action_combo_count")
+
 local template_effect_buffer_index = Network.type_info("template_effect_buffer_index")
+
 NetworkConstants.max_template_effect_buffer_index = template_effect_buffer_index.max
+
 local fixed_frame_time = Network.type_info("fixed_frame_time")
+
 NetworkConstants.max_fixed_frame_time = fixed_frame_time.max
 NetworkConstants.fixed_frame_offset = Network.type_info("fixed_frame_offset")
 NetworkConstants.fixed_frame_offset_small = Network.type_info("fixed_frame_offset_small")
@@ -197,8 +249,11 @@ NetworkConstants.fixed_frame_offset_start_t_9bit = Network.type_info("fixed_fram
 NetworkConstants.fixed_frame_offset_end_t_4bit = Network.type_info("fixed_frame_offset_end_t_4bit")
 NetworkConstants.fixed_frame_offset_end_t_6bit = Network.type_info("fixed_frame_offset_end_t_6bit")
 NetworkConstants.fixed_frame_offset_end_t_7bit = Network.type_info("fixed_frame_offset_end_t_7bit")
+
 local prd_state = Network.type_info("prd_state")
+
 NetworkConstants.max_prd_state = prd_state.max
+
 local ability_charges = Network.type_info("ability_charges")
 local ability_cooldown = Network.type_info("ability_cooldown")
 
@@ -214,6 +269,7 @@ end
 local dialogue_rule_index = Network.type_info("dialogue_rule_index")
 local max_dialogue_rules = dialogue_rule_index.max
 local database_rules_number = TagQueryDatabase.NUM_DATABASE_RULES
+
 NetworkConstants.ammunition_large = Network.type_info("ammunition_large")
 NetworkConstants.ammunition_small = Network.type_info("ammunition_small")
 
@@ -225,6 +281,7 @@ local function _check_dialogue_breed_settings_voices()
 
 		if wwise_voices then
 			local num_wwise_voices = #wwise_voices
+
 			max_num_wwise_voices = math.max(max_num_wwise_voices, num_wwise_voices)
 		end
 	end

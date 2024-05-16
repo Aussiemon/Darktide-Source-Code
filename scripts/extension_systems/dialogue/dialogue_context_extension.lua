@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_context_extension.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local DialogueContextSettings = require("scripts/settings/dialogue/dialogue_context_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -32,12 +34,14 @@ end
 
 DialogueContextExtension._update_player_equipment_context = function (self)
 	self._target_context.total_ammo_percentage = Ammo.current_total_percentage(self._unit)
+
 	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 	local inventory_component = unit_data_extension:read_component("inventory")
 	local wielded_slot = inventory_component.wielded_slot
 
 	if wielded_slot ~= "none" then
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 		self._target_context.weapon_type = weapon_action_component.template_name
 		self._target_context.current_slot_percentage = Ammo.current_slot_percentage(self._unit, wielded_slot)
 	end
@@ -46,6 +50,7 @@ end
 DialogueContextExtension._update_player_unit_status = function (self)
 	if self._unit then
 		local player_unit_combat_state = Managers.state.pacing:player_unit_combat_state(self._unit)
+
 		self._target_context.threat_level = player_unit_combat_state
 	end
 
@@ -77,13 +82,15 @@ end
 
 DialogueContextExtension._update_extensions_context = function (self)
 	local target_context = self._target_context
+
 	target_context.health = self._health_extension:current_health_percent()
+
 	local proximity_array = self._legacy_v2_proximity_extension.proximity_array
 
 	for i = 1, #proximity_array do
 		local proximity_data = proximity_array[i]
-		local id = proximity_data.id
-		local num = proximity_data.num
+		local id, num = proximity_data.id, proximity_data.num
+
 		target_context[id] = num
 	end
 end
@@ -93,22 +100,24 @@ DialogueContextExtension._update_timed_timers_context = function (self, t)
 		repeat
 			value.time_lived = value.time_lived + t * 5
 
-			if value.time_to_live < value.time_lived then
+			if value.time_lived > value.time_to_live then
 				self._target_context.count = 0
 				self._target_context[key] = nil
 				self._timed_counters[key] = nil
-			else
-				if value.delta and value.delta > 0 then
-					value.count = value.count + value.delta
-					value.delta = 0
 
-					if value.trigger_when_higher and value.trigger_function and value.trigger_when_higher < value.count then
-						value.trigger_function(self, value, t)
-					end
-				end
-
-				self._target_context[key] = value.count
+				break
 			end
+
+			if value.delta and value.delta > 0 then
+				value.count = value.count + value.delta
+				value.delta = 0
+
+				if value.trigger_when_higher and value.trigger_function and value.count > value.trigger_when_higher then
+					value.trigger_function(self, value, t)
+				end
+			end
+
+			self._target_context[key] = value.count
 		until true
 	end
 end

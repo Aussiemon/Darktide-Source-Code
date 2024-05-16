@@ -1,31 +1,33 @@
+﻿-- chunkname: @scripts/extension_systems/side/side_tests.lua
+
 local function init_and_run_tests(Side)
 	local side_extension_dummy = {
 		breed_tags = {},
-		side = {}
+		side = {},
 	}
 	local player_side_extension_dummy = {
 		is_player_unit = true,
 		breed_tags = {},
-		side = {}
+		side = {},
 	}
 	local side1 = Side:new({
-		name = "test1"
+		name = "test1",
 	}, 1)
 	local side2 = Side:new({
-		name = "test2"
+		name = "test2",
 	}, 2)
 
 	side1:set_relation("enemy", {
-		side2
+		side2,
 	})
 	side2:set_relation("enemy", {
-		side1
+		side1,
 	})
 	side1:set_relation("allied", {
-		side1
+		side1,
 	})
 	side2:set_relation("allied", {
-		side2
+		side2,
 	})
 
 	local side_one_allies = side1:relation_sides("allied")

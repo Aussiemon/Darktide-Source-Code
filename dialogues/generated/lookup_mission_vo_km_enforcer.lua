@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_km_enforcer.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_enforcer_activate_stair"
 DialogueLookup[DialogueLookup_n + 2] = "mission_enforcer_courtroom"
 DialogueLookup[DialogueLookup_n + 3] = "mission_enforcer_courtroom_waypoint"

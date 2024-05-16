@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/social_interface.lua
+
 local Interface = {
 	"fetch_friends",
 	"send_friend_request",
@@ -6,7 +8,7 @@ local Interface = {
 	"fetch_blocked_accounts",
 	"add_blocked_account",
 	"remove_blocked_account",
-	"suggested_names_by_archetype"
+	"suggested_names_by_archetype",
 }
 
 return Interface

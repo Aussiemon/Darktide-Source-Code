@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/point_of_interest/point_of_interest_system.lua
+
 require("scripts/extension_systems/point_of_interest/point_of_interest_observer_extension")
 require("scripts/extension_systems/point_of_interest/point_of_interest_target_extension")
 
@@ -37,6 +39,7 @@ PointOfInterestSystem.on_add_extension = function (self, world, unit, extension_
 
 	if extension_name == "PointOfInterestTargetExtension" then
 		local broadphase_id = Broadphase.add(self._broadphase, unit, Unit.world_position(unit, 1), 0.5)
+
 		self._broadphase_by_extension[extension] = broadphase_id
 		self._targets[unit] = extension
 	elseif extension_name == "PointOfInterestObserverExtension" then
@@ -119,6 +122,7 @@ PointOfInterestSystem._update_lookat = function (self, t)
 	end
 
 	self._current_observer_unit = next(observers, self._current_observer_unit)
+
 	local observer_unit = self._current_observer_unit
 
 	if observer_unit == nil then

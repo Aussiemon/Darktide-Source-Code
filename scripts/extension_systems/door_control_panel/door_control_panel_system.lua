@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/door_control_panel/door_control_panel_system.lua
+
 require("scripts/extension_systems/door_control_panel/door_control_panel_extension")
 
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local DoorControlPanelSystem = class("DoorControlPanelSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_door_panel_register_door",
-	"rpc_sync_door_control_panel_state"
+	"rpc_sync_door_control_panel_state",
 }
 
 DoorControlPanelSystem.init = function (self, extension_system_creation_context, ...)

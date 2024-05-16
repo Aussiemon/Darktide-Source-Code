@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/backend/mission_board.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Interface = {
 	"fetch",
-	"create_mission"
+	"create_mission",
 }
 local MissionBoard = class("MissionBoard")
 local missionboard_path = "/mission-board"
@@ -32,16 +34,16 @@ MissionBoard.create_mission = function (self, mission_data)
 	if #mission_data.flags == 0 then
 		mission_data.flags = {
 			none = {
-				none = "test"
-			}
+				none = "test",
+			},
 		}
 	end
 
 	return Managers.backend:title_request(missionboard_path .. "/create", {
 		method = "POST",
 		body = {
-			mission = mission_data
-		}
+			mission = mission_data,
+		},
 	}):next(function (data)
 		return data.body
 	end)
@@ -49,7 +51,7 @@ end
 
 MissionBoard.get_rewards = function (self, on_expiry, pause_time)
 	return Managers.backend:title_request(missionboard_path .. "/rewards", {
-		method = "GET"
+		method = "GET",
 	}):next(function (data)
 		return data.body
 	end)

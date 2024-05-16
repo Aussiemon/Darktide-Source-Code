@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_km_enforcer_twins_zealot_male_a.lua
+
 local mission_vo_km_enforcer_twins_zealot_male_a = {
 	enemy_kill_monster_twins = {
 		randomize_indexes_n = 0,
@@ -6,35 +8,35 @@ local mission_vo_km_enforcer_twins_zealot_male_a = {
 			"loc_zealot_male_a__enemy_kill_monster_03",
 			"loc_zealot_male_a__enemy_kill_monster_05",
 			"loc_zealot_male_a__enemy_kill_monster_06",
-			"loc_zealot_male_a__enemy_kill_monster_10"
+			"loc_zealot_male_a__enemy_kill_monster_10",
 		},
 		sound_events_duration = {
 			3.209396,
 			3.400896,
 			5.110188,
-			5.397042
+			5.397042,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	mission_twins_go_around = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__mission_stockpile_main_access_01"
+			[1] = "loc_zealot_male_a__mission_stockpile_main_access_01",
 		},
 		sound_events_duration = {
-			[1.0] = 5.673604
+			[1] = 5.673604,
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1,
 		},
-		randomize_indexes = {}
+		randomize_indexes = {},
 	},
 	response_for_enemy_kill_monster_twins = {
 		randomize_indexes_n = 0,
@@ -43,22 +45,22 @@ local mission_vo_km_enforcer_twins_zealot_male_a = {
 			"loc_zealot_male_a__response_for_enemy_kill_monster_03",
 			"loc_zealot_male_a__response_for_enemy_kill_monster_05",
 			"loc_zealot_male_a__response_for_enemy_kill_monster_06",
-			"loc_zealot_male_a__response_for_enemy_kill_monster_10"
+			"loc_zealot_male_a__response_for_enemy_kill_monster_10",
 		},
 		sound_events_duration = {
 			3.300094,
 			2.469417,
 			5.483375,
-			4.543
+			4.543,
 		},
 		sound_event_weights = {
 			0.25,
 			0.25,
 			0.25,
-			0.25
+			0.25,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_vo_km_enforcer_twins_zealot_male_a", mission_vo_km_enforcer_twins_zealot_male_a)

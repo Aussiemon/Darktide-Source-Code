@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/stats/stat_macros.lua
+
 local StatMacros = {}
 
 StatMacros.forward = function (self, stat_data, ...)
@@ -6,6 +8,7 @@ end
 
 StatMacros.increment = function (self, stat_data)
 	local id = self.id
+
 	stat_data[id] = (stat_data[id] or self.default) + 1
 
 	return id, stat_data[id]
@@ -13,6 +16,7 @@ end
 
 StatMacros.decrement = function (self, stat_data)
 	local id = self.id
+
 	stat_data[id] = (stat_data[id] or self.default) - 1
 
 	return id, stat_data[id]

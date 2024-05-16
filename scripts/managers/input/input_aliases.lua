@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/input/input_aliases.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local InputAliases = class("InputAliases")
 
@@ -56,6 +58,7 @@ end
 InputAliases.save = function (self, service_name)
 	local save_manager = Managers.save
 	local save_data = save_manager:account_data()
+
 	save_data.key_bindings[service_name] = self:overrides()
 
 	save_manager:queue_save()
@@ -86,6 +89,7 @@ InputAliases.load = function (self, service_name)
 
 	for i = 1, #TO_REMOVE do
 		local alias_to_remove = TO_REMOVE[i]
+
 		service_overrides[alias_to_remove] = nil
 
 		Application.warning(string.format("[InputAliases] Removed missing/old keybinding alias %q", alias_to_remove))
@@ -132,6 +136,7 @@ InputAliases._get_key = function (self, element, index, device_types)
 
 	local key_info = {}
 	local found = 0
+
 	key_info.main, key_info.enablers, key_info.disablers = InputUtils.split_key(element)
 
 	if table.contains(device_types, InputUtils.key_device_type(key_info.main)) then
@@ -150,7 +155,7 @@ InputAliases.set_keys_for_alias = function (self, name, index, device_types, new
 		return
 	end
 
-	local col = nil
+	local col
 	local key_info = {}
 	local found = 0
 

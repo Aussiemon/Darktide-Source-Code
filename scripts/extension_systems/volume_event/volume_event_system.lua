@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/volume_event/volume_event_system.lua
+
 local VolumeEventSettings = require("scripts/settings/volume_event/volume_event_settings")
 local volume_type_events = VolumeEventSettings.volume_type_events
 local VolumeEventSystem = class("VolumeEventSystem", "ExtensionSystemBase")
@@ -13,14 +15,18 @@ VolumeEventSystem.init = function (self, extension_system_creation_context, syst
 
 	self._extension_list = extension_list
 	self._engine_volume_event_system = VolumeEvent.init_system(nil, VolumeEventSettings.updates_per_frame)
+
 	local level_name = extension_system_creation_context.level_name
 	local level_volumes = self:_require_level_volumes(level_name, {})
+
 	self._level_volumes_by_name = self:_create_event_volume_data(level_volumes)
+
 	local units_by_extension = {}
 	local traversal_costs = {}
 
 	for i = 1, #extension_list do
 		local extension_name = extension_list[i]
+
 		units_by_extension[extension_name] = {}
 		traversal_costs[extension_name] = {}
 	end
@@ -77,9 +83,9 @@ VolumeEventSystem._create_event_volume_data = function (self, level_volumes)
 					connected_units = {},
 					levels = {},
 					level_names = {
-						[level_name] = true
+						[level_name] = true,
 					},
-					volume_ids = {}
+					volume_ids = {},
 				}
 				volumes_by_name[volume_name] = volume
 			else
@@ -96,6 +102,7 @@ VolumeEventSystem._add_nested_levels = function (self, level, levels)
 
 	for i = 1, #nested_levels do
 		local nested_level = nested_levels[i]
+
 		levels[#levels + 1] = nested_level
 
 		self:_add_nested_levels(nested_level, levels)
@@ -110,7 +117,7 @@ VolumeEventSystem.on_gameplay_post_init = function (self, main_level)
 	end
 
 	local levels = {
-		main_level
+		main_level,
 	}
 
 	self:_add_nested_levels(main_level, levels)
@@ -141,12 +148,10 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 	local volume_levels = volume.levels
 
 	for extension_name, event_settings in pairs(volume_events) do
-		local func = event_settings.func
-		local on_enter, on_exit = nil
+		local func, on_enter, on_exit = event_settings.func
 
 		if func then
-			on_exit = func.on_exit
-			on_enter = func.on_enter
+			on_enter, on_exit = func.on_enter, func.on_exit
 		end
 
 		local filter = event_settings.filter
@@ -160,7 +165,7 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 
 		local volume_data = {
 			params = params,
-			connected_units = connected_units
+			connected_units = connected_units,
 		}
 
 		if self._init_done then
@@ -189,7 +194,7 @@ VolumeEventSystem.register_unit_volume = function (self, unit, volume_name, exte
 	local params = event_settings.params
 	local volume_data = {
 		params = params,
-		connected_units = unit
+		connected_units = unit,
 	}
 	local volume_id = VolumeEvent.register_volume(engine_volume_event_system, unit, volume_name, extension_name, invert_volume, volume_data, on_enter, on_exit, filter)
 
@@ -258,6 +263,7 @@ VolumeEventSystem.on_add_extension = function (self, world, unit, extension_name
 		VolumeEvent.on_add_extension(self._engine_volume_event_system, unit, extension_name)
 
 		local extension_units = self._units_by_extension[extension_name]
+
 		extension_units[#extension_units + 1] = unit
 	end
 
@@ -355,6 +361,7 @@ VolumeEventSystem.connect_unit_to_volume = function (self, volume_name, unit)
 
 	local volume = self._level_volumes_by_name[volume_name]
 	local connected_units = volume.connected_units
+
 	connected_units[#connected_units + 1] = unit
 end
 

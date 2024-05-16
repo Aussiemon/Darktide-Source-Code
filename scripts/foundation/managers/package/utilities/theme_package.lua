@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/package/utilities/theme_package.lua
+
 local ThemePackage = {}
 
 local function _get_theme_packages(level_name, theme_tag)

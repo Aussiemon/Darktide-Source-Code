@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/tests/recoil_template_tests.lua
+
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_states
 
@@ -9,7 +11,9 @@ local function recoil_template_test(name, template)
 
 		if offset_range then
 			-- Nothing
-		elseif not offset then
+		elseif offset then
+			-- Nothing
+		else
 			ferror("Recoil template [%q] has neither offset_range nor offset table defined!", name)
 		end
 

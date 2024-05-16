@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/extension_systems/destructible/destructible_extension.lua
+
 local LightControllerUtilities = require("core/scripts/common/light_controller_utilities")
 local NavTagVolumeBox = require("scripts/extension_systems/navigation/utilities/nav_tag_volume_box")
-local _add_force_on_parts, _calculate_total_health, _set_lights_enabled, _set_meshes_visiblity, _setup_stages, _wake_up_dynamic_actors, _wake_up_static_actors = nil
+local _add_force_on_parts, _calculate_total_health, _set_lights_enabled, _set_meshes_visiblity, _setup_stages, _wake_up_dynamic_actors, _wake_up_static_actors
 local FORCE_DIRECTION = table.enum("random_direction", "attack_direction", "provided_direction_relative", "provided_direction_world")
 local DestructibleExtension = class("DestructibleExtension")
 
@@ -18,7 +20,7 @@ DestructibleExtension.init = function (self, extension_init_context, unit, exten
 	self._visibility_info = {
 		fake_light = false,
 		lights_enabled = true,
-		visible = true
+		visible = true,
 	}
 end
 
@@ -41,17 +43,19 @@ end
 
 DestructibleExtension.setup_from_component = function (self, despawn_timer_duration, despawn_when_destroyed, collision_actor_names, mass, speed, direction, force_direction_type, start_visible, is_nav_gate, broadphase_radius, use_health_extension_health, collectible_data)
 	local unit = self._unit
+
 	self._despawn_when_destroyed = despawn_when_destroyed
 	self._despawn_timer_duration = despawn_timer_duration
 	self._broadphase_radius = broadphase_radius
 	self._use_health_extension_health = use_health_extension_health
+
 	local parameters = {
 		parts_mass = mass,
 		parts_speed = speed,
 		force_direction = direction,
 		force_direction_type = force_direction_type,
 		start_visible = start_visible,
-		collision_actors = {}
+		collision_actors = {},
 	}
 
 	if #collision_actor_names > 0 then
@@ -72,6 +76,7 @@ DestructibleExtension.setup_from_component = function (self, despawn_timer_durat
 
 	if collectible_data then
 		collectible_data.unit = unit
+
 		local collectibles_manager = Managers.state.collectibles
 
 		collectibles_manager:register_destructible(collectible_data)
@@ -84,6 +89,7 @@ DestructibleExtension.setup_stages = function (self)
 	local unit = self._unit
 	local health_extension = ScriptUnit.has_extension(unit, "health_system")
 	local parameters = self._parameters
+
 	self._destruction_info = _setup_stages(unit, parameters, health_extension)
 
 	self:set_visibility(parameters.start_visible)
@@ -106,13 +112,13 @@ DestructibleExtension.hot_join_sync = function (self, unit, peer_id, channel_id)
 			if peer_id then
 				local channel = game_session_manager:peer_to_channel(peer_id)
 
-				if destruction_info.health < max_health then
+				if max_health > destruction_info.health then
 					RPC.rpc_destructible_damage_taken(channel, unit_id, is_level_unit)
 				end
 
 				RPC.rpc_sync_destructible(channel, unit_id, is_level_unit, current_stage_index, visible, from_hot_join_sync)
 			else
-				if destruction_info.health < max_health then
+				if max_health > destruction_info.health then
 					game_session_manager:send_rpc_clients("rpc_destructible_damage_taken", unit_id, is_level_unit)
 				end
 
@@ -222,8 +228,10 @@ end
 
 DestructibleExtension.light_controller_setup = function (self, are_lights_enabled, fake_light)
 	local visibility_info = self._visibility_info
+
 	visibility_info.lights_enabled = are_lights_enabled
 	visibility_info.fake_light = fake_light
+
 	local destruction_info = self._destruction_info
 
 	if destruction_info then
@@ -233,7 +241,9 @@ end
 
 DestructibleExtension.set_lights_enabled = function (self, are_lights_enabled)
 	local visibility_info = self._visibility_info
+
 	visibility_info.lights_enabled = are_lights_enabled
+
 	local destruction_info = self._destruction_info
 
 	if destruction_info then
@@ -311,6 +321,7 @@ DestructibleExtension._dequeue_stage = function (self, attack_direction, from_ho
 				elseif force_direction_type == FORCE_DIRECTION.provided_direction_relative then
 					local local_direction = destruction_info.force_direction:unbox()
 					local unit_rotation = Unit.world_rotation(unit, 1)
+
 					attack_direction = Quaternion.rotate(unit_rotation, local_direction)
 				end
 
@@ -347,7 +358,7 @@ DestructibleExtension._add_damage = function (self, damage_amount, attack_direct
 	local current_stage_index = destruction_info.current_stage_index
 
 	if current_stage_index > 0 and damage_amount > 0 then
-		local health_after_damage = nil
+		local health_after_damage
 		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
 		if health_extension and self._use_health_extension_health then
@@ -390,13 +401,16 @@ end
 
 function _setup_stages(unit, parameters, health_extension)
 	local destructible_parameters = table.shallow_copy(parameters)
+
 	destructible_parameters.current_stage_index = 1
+
 	local initial_actor = Unit.actor(unit, "c_destructible")
+
 	destructible_parameters.initial_actor = ActorBox(initial_actor)
 
 	Unit.set_visibility(unit, "main", true)
 
-	local parent_node = nil
+	local parent_node
 
 	if Unit.has_node(unit, "ds_1") then
 		parent_node = Unit.node(unit, "ds_1")
@@ -419,6 +433,7 @@ function _setup_stages(unit, parameters, health_extension)
 		_set_meshes_visiblity(unit, destructible_parameters.meshes, false)
 
 		destructible_parameters.lights = Unit.get_node_lights(unit, parent_node, true, false) or {}
+
 		local unit_actors = Unit.get_node_actors(unit, parent_node, true, false) or {}
 		local dynamic_actors = {}
 		local static_actors = {}
@@ -479,6 +494,7 @@ function _add_force_on_parts(actors, mass, speed, attack_direction)
 			local random_y = math.random() * 2 - 1
 			local random_z = math.random() * 2 - 1
 			local random_direction = Vector3(random_x, random_y, random_z)
+
 			direction = Vector3.normalize(random_direction)
 		end
 

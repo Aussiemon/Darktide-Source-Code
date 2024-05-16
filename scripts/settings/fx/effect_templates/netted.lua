@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/netted.lua
+
 local Unit_has_node = Unit.has_node
 local Unit_node = Unit.node
 local Unit_world_position = Unit.world_position
@@ -32,7 +34,7 @@ local effect_template = {
 		local effect_id = template_data.effect_id
 
 		World.stop_spawning_particles(world, effect_id)
-	end
+	end,
 }
 
 return effect_template

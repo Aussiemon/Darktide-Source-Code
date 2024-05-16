@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_guidance_vo.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "guidance_correct_doorway"
 DialogueLookup[DialogueLookup_n + 2] = "guidance_correct_path"
 DialogueLookup[DialogueLookup_n + 3] = "guidance_correct_path_1"

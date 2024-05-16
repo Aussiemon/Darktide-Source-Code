@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/servo_skull_activator.lua
+
 local ServoSkullActivator = component("ServoSkullActivator")
 
 ServoSkullActivator.init = function (self, unit)
@@ -34,8 +36,8 @@ end
 
 ServoSkullActivator.component_data = {
 	extensions = {
-		"ServoSkullActivatorExtension"
-	}
+		"ServoSkullActivatorExtension",
+	},
 }
 
 return ServoSkullActivator

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/options_view/options_view.lua
+
 local definition_path = "scripts/ui/views/options_view/options_view_definitions"
 local ViewElementKeybindPopup = require("scripts/ui/view_elements/view_element_keybind_popup/view_element_keybind_popup")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
@@ -54,7 +56,7 @@ OptionsView._map_validations = function (self, config)
 		categories[category_config.display_name] = {
 			validation_function = category_config.validation_function,
 			validation_result = validation_result,
-			settings = {}
+			settings = {},
 		}
 	end
 
@@ -69,7 +71,7 @@ OptionsView._map_validations = function (self, config)
 
 		categories[setting.category].settings[setting.display_name] = {
 			validation_function = setting.validation_function,
-			validation_result = validation_result
+			validation_result = validation_result,
 		}
 	end
 
@@ -130,13 +132,13 @@ OptionsView.cb_reset_category_to_default = function (self)
 	local reset_functions_by_category = self._reset_functions_by_category
 	local reset_function = reset_functions_by_category[selected_category]
 	local context = {
-		title_text = "loc_popup_header_settings_reset_default",
 		description_text = "loc_popup_description_settings_reset_default",
+		title_text = "loc_popup_header_settings_reset_default",
 		type = "warning",
 		options = {
 			{
-				text = "loc_popup_button_settings_reset_default",
 				close_on_pressed = true,
+				text = "loc_popup_button_settings_reset_default",
 				callback = callback(function ()
 					if reset_function then
 						reset_function()
@@ -156,18 +158,18 @@ OptionsView.cb_reset_category_to_default = function (self)
 					end
 
 					self._popup_id = nil
-				end)
+				end),
 			},
 			{
-				text = "loc_popup_button_cancel_settings_reset_default",
-				template_type = "terminal_button_small",
 				close_on_pressed = true,
 				hotkey = "back",
+				template_type = "terminal_button_small",
+				text = "loc_popup_button_cancel_settings_reset_default",
 				callback = function ()
 					self._popup_id = nil
-				end
-			}
-		}
+				end,
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -177,21 +179,23 @@ end
 
 OptionsView._restart_popup_info = function (self)
 	local context = {
-		title_text = "loc_popup_settings_require_restart_header",
 		description_text = "loc_popup_settings_require_restart_description",
+		title_text = "loc_popup_settings_require_restart_header",
 		options = {
 			{
-				text = "loc_confirm",
 				close_on_pressed = true,
+				text = "loc_confirm",
 				callback = callback(function ()
 					self._popup_id = nil
+
 					local view_name = "options_view"
+
 					self._require_restart = false
 
 					Managers.ui:close_view(view_name)
-				end)
-			}
-		}
+				end),
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -201,6 +205,7 @@ end
 
 OptionsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -226,11 +231,14 @@ OptionsView._setup_offscreen_gui = function (self)
 	local world_layer = 10
 	local world_name = class_name .. "_ui_offscreen_world"
 	local view_name = self.view_name
+
 	self._offscreen_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local shading_environment = OptionsViewSettings.shading_environment
 	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
 	local viewport_type = "overlay_offscreen"
 	local viewport_layer = 1
+
 	self._offscreen_viewport = ui_manager:create_viewport(self._offscreen_world, viewport_name, viewport_type, viewport_layer, shading_environment)
 	self._offscreen_viewport_name = viewport_name
 	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._offscreen_world)
@@ -249,7 +257,7 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 
 		if verified then
 			local widget_type = entry.widget_type
-			local widget = nil
+			local widget
 			local template = ContentBlueprints[widget_type]
 			local size = template.size_function and template.size_function(self, entry) or template.size
 			local pass_template_function = template.pass_template_function
@@ -257,6 +265,7 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 
 			if pass_template and not widget_definitions[widget_type] then
 				local scenegraph_definition = definitions.scenegraph_definition
+
 				widget_definitions[widget_type] = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 			end
 
@@ -264,7 +273,9 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 
 			if widget_definition then
 				local name = scenegraph_id .. "_widget_" .. i
+
 				widget = self:_create_widget(name, widget_definition)
+
 				local init = template.init
 
 				if init then
@@ -281,7 +292,7 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 			end
 
 			alignment_list[#alignment_list + 1] = widget or {
-				size = size
+				size = size,
 			}
 		end
 	end
@@ -292,6 +303,7 @@ end
 OptionsView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	local widgets_by_name = self._widgets_by_name
 	local scrollbar_widget = widgets_by_name.scrollbar
+
 	scrollbar_widget.content.visible = self._category_content_grid:can_scroll()
 
 	if self._selected_settings_widget then
@@ -355,6 +367,7 @@ OptionsView._draw_grid = function (self, grid, widgets, interaction_widget, dt, 
 
 				if hotspot then
 					hotspot.force_disabled = not is_grid_hovered
+
 					local is_active = hotspot.is_focused or hotspot.is_hover
 
 					if is_active and widget.content.entry and (widget.content.entry.tooltip_text or widget.content.entry.disabled_by and not table.is_empty(widget.content.entry.disabled_by)) then
@@ -423,9 +436,13 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 	end
 
 	local category_grid_is_focused = self._selected_navigation_column_index == CATEGORIES_GRID
-	local category_grid_input_service = category_grid_is_focused and input_service or input_service:null_service()
 
-	self._category_content_grid:update(dt, t, category_grid_input_service)
+	do
+		local category_grid_input_service = category_grid_is_focused and input_service or input_service:null_service()
+
+		self._category_content_grid:update(dt, t, category_grid_input_service)
+	end
+
 	self:_update_category_content_widgets(dt, t)
 
 	local settings_content_grid = self._settings_content_grid
@@ -529,6 +546,7 @@ OptionsView._reset_options_view = function (self, reset_all)
 
 		for i = 1, #self._category_content_widgets do
 			local widget = self._category_content_widgets[i]
+
 			widget.content.hotspot.is_focused = widget.content.entry.display_name == self._selected_category
 			widget.content.hotspot.is_selected = widget.content.entry.display_name == self._selected_category
 		end
@@ -627,6 +645,7 @@ end
 
 OptionsView.present_category_widgets = function (self, category)
 	self._selected_category = category
+
 	local settings_category_widgets = self._settings_category_widgets
 	local grid_data = settings_category_widgets[category]
 
@@ -637,16 +656,19 @@ OptionsView.present_category_widgets = function (self, category)
 		for i = 1, #grid_data do
 			local widget = grid_data[i].widget
 			local alignment_widget = grid_data[i].alignment_widget
+
 			widgets[#widgets + 1] = widget
 			alignment_widgets[#alignment_widgets + 1] = alignment_widget
 		end
 
 		self._settings_content_widgets = widgets
 		self._settings_alignment_list = alignment_widgets
+
 		local scrollbar_widget_id = "settings_scrollbar"
 		local grid_scenegraph_id = "settings_grid_background"
 		local grid_pivot_scenegraph_id = "settings_grid_content_pivot"
 		local grid_spacing = OptionsViewSettings.grid_spacing
+
 		self._settings_content_grid = self:_setup_grid(self._settings_content_widgets, self._settings_alignment_list, grid_scenegraph_id, grid_spacing, false)
 
 		self:_setup_content_grid_scrollbar(self._settings_content_grid, scrollbar_widget_id, grid_scenegraph_id, grid_pivot_scenegraph_id)
@@ -702,8 +724,9 @@ OptionsView._setup_category_config = function (self, config)
 				end,
 				select_function = function (parent, widget, entry)
 					self:present_category_widgets(category_display_name)
-				end
+				end,
 			}
+
 			entries[#entries + 1] = entry
 			categories_by_display_name[category_display_name] = entry
 			reset_functions_by_category[category_display_name] = category_reset_function
@@ -711,13 +734,17 @@ OptionsView._setup_category_config = function (self, config)
 	end
 
 	self._default_category = config_categories[1].display_name
+
 	local scenegraph_id = "grid_content_pivot"
 	local callback_name = "cb_on_category_pressed"
+
 	self._category_content_widgets, self._category_alignment_list = self:_setup_content_widgets(entries, scenegraph_id, callback_name)
+
 	local scrollbar_widget_id = "scrollbar"
 	local grid_scenegraph_id = "background"
 	local grid_pivot_scenegraph_id = "grid_content_pivot"
 	local grid_spacing = OptionsViewSettings.grid_spacing
+
 	self._category_content_grid = self:_setup_grid(self._category_content_widgets, self._category_alignment_list, grid_scenegraph_id, grid_spacing, true)
 
 	self:_setup_content_grid_scrollbar(self._category_content_grid, scrollbar_widget_id, grid_scenegraph_id, grid_pivot_scenegraph_id)
@@ -725,10 +752,10 @@ OptionsView._setup_category_config = function (self, config)
 	self._reset_functions_by_category = reset_functions_by_category
 	self._categories_by_display_name = categories_by_display_name
 	self._navigation_widgets = {
-		self._category_content_widgets
+		self._category_content_widgets,
 	}
 	self._navigation_grids = {
-		self._category_content_grid
+		self._category_content_grid,
 	}
 end
 
@@ -774,9 +801,10 @@ OptionsView._setup_settings_config = function (self, config)
 
 			local widget_suffix = "setting_" .. tostring(setting_index)
 			local widget, alignment_widget = self:_create_settings_widget_from_config(setting, category, widget_suffix, callback_name, changed_callback_name)
+
 			category_widgets[category][#widgets + 1] = {
 				widget = widget,
-				alignment_widget = alignment_widget
+				alignment_widget = alignment_widget,
 			}
 		end
 	end
@@ -801,6 +829,7 @@ OptionsView._update_category_content_widgets = function (self, dt, t)
 
 				if widget ~= selected_category_widget then
 					self._selected_category_widget = widget
+
 					local entry = widget.content.entry
 
 					if entry and entry.select_function then
@@ -816,7 +845,7 @@ end
 
 OptionsView._set_tooltip_data = function (self, widget)
 	local current_widget = self._tooltip_data and self._tooltip_data.widget
-	local localized_text = nil
+	local localized_text
 	local tooltip_text = widget.content.entry.tooltip_text
 	local disabled_by_list = widget.content.entry.disabled_by
 
@@ -844,21 +873,23 @@ OptionsView._set_tooltip_data = function (self, widget)
 	if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
 		self._tooltip_data = {
 			widget = widget,
-			text = localized_text
+			text = localized_text,
 		}
 		self._widgets_by_name.tooltip.content.text = localized_text
+
 		local text_style = self._widgets_by_name.tooltip.style.text
 		local x_pos = starting_point[1] + widget.offset[1]
 		local width = widget.content.size[1] * 0.5
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
 			width,
-			0
+			0,
 		}, text_options)
 		local height = text_height
+
 		self._widgets_by_name.tooltip.content.size = {
 			width,
-			height
+			height,
 		}
 		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
 		self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
@@ -916,15 +947,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 				local value = get_function(config)
 				local value_type = value ~= nil and type(value) or default_value_type
 
-				if value_type == "boolean" then
-					widget_type = "checkbox"
-				elseif value_type == "number" then
-					widget_type = "value_slider"
-				elseif value_type == "string" then
-					widget_type = "settings_button"
-				else
-					widget_type = "settings_button"
-				end
+				widget_type = value_type == "boolean" and "checkbox" or value_type == "number" and "value_slider" or value_type == "string" and "settings_button" or "settings_button"
 			end
 		end
 	end
@@ -933,15 +956,17 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		config.ignore_focus = true
 	end
 
-	local widget = nil
+	local widget
 	local template = ContentBlueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config) or template.size
+
 	config.size = size
+
 	local indentation_level = config.indentation_level or 0
 	local indentation_spacing = OptionsViewSettings.indentation_spacing * indentation_level
 	local new_size = {
 		size[1] - indentation_spacing,
-		size[2]
+		size[2],
 	}
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
@@ -951,6 +976,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	if widget_definition then
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
+
 		local init = template.init
 
 		if init then
@@ -966,11 +992,11 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		return widget, {
 			horizontal_alignment = "right",
 			size = size,
-			name = name
+			name = name,
 		}
 	else
 		return nil, {
-			size = size
+			size = size,
 		}
 	end
 end
@@ -1010,9 +1036,12 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 	if not self:_handling_keybinding() then
 		self._active_keybind_entry = entry
 		self._active_keybind_widget = widget
+
 		local layer = 100
 		local reference_name = "keybind_popup"
+
 		self._keybind_popup = self:_add_element(ViewElementKeybindPopup, reference_name, layer)
+
 		local display_name = self:_localize(entry.display_name or "loc_settings_option_unavailable")
 
 		self._keybind_popup:set_action_text(display_name)
@@ -1020,13 +1049,13 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 		if entry.cancel_keys then
 			local input_text = entry.cancel_keys[1]
 			local description_text = Localize("loc_setting_keybinding_press_new_button", true, {
-				cancel_input = InputUtils.key_axis_locale(input_text)
+				cancel_input = InputUtils.key_axis_locale(input_text),
 			})
 
 			self._keybind_popup:set_description_text(description_text)
 		end
 
-		local value = entry:get_function()
+		local value = entry.get_function(entry)
 		local devices = entry.devices
 		local value_text = value and InputUtils.localized_string_from_key_info(value) or self:_localize("loc_keybind_unassigned")
 
@@ -1044,6 +1073,7 @@ OptionsView.close_keybind_popup = function (self, force_close)
 		Managers.input:stop_key_watch()
 
 		local reference_name = "keybind_popup"
+
 		self._keybind_popup = nil
 
 		self:_remove_element(reference_name)
@@ -1063,6 +1093,7 @@ OptionsView._set_warning_text = function (self)
 	local action = "TEST"
 	local color_1 = self:_get_color_string_by_color(Color.ui_brown_light(255, true))
 	local color_2 = self:_get_color_string_by_color(Color.red(255, true))
+
 	warning_text.content.text = string.format("Warning! Input for action %s%s%s has been unassigned.", color_1, action, color_2)
 end
 
@@ -1087,12 +1118,15 @@ OptionsView.cb_on_settings_pressed = function (self, widget, entry)
 
 	if self._selected_settings_widget then
 		local selected_widget = self._selected_settings_widget
+
 		selected_widget.offset[3] = 0
+
 		local dependent_focus_ids = selected_widget.content and selected_widget.content.entry and selected_widget.content.entry.dependent_focus_ids
 
 		if dependent_focus_ids then
 			for i = 1, #dependent_focus_ids do
 				local id = dependent_focus_ids[i]
+
 				self._current_settings_widgets_by_id[id].offset[3] = 0
 			end
 		end
@@ -1104,11 +1138,13 @@ OptionsView.cb_on_settings_pressed = function (self, widget, entry)
 
 		if selected_widget then
 			selected_widget.offset[3] = 90
+
 			local dependent_focus_ids = selected_widget.content.entry and selected_widget.content.entry.dependent_focus_ids
 
 			if dependent_focus_ids then
 				for i = 1, #dependent_focus_ids do
 					local id = dependent_focus_ids[i]
+
 					self._current_settings_widgets_by_id[id].offset[3] = 90
 				end
 			end
@@ -1137,18 +1173,21 @@ end
 OptionsView._enable_settings_overlay = function (self, enable)
 	local widgets_by_name = self._widgets_by_name
 	local settings_overlay_widget = widgets_by_name.settings_overlay
+
 	settings_overlay_widget.content.visible = enable
 end
 
 OptionsView._set_exclusive_focus_on_grid_widget = function (self, widget_name)
 	local widgets = self._settings_content_widgets
-	local selected_widget = nil
+	local selected_widget
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
 		local selected = widget.name == widget_name
 		local content = widget.content
+
 		content.exclusive_focus = selected
+
 		local hotspot = content.hotspot or content.button_hotspot
 
 		if hotspot then
@@ -1161,6 +1200,7 @@ OptionsView._set_exclusive_focus_on_grid_widget = function (self, widget_name)
 	end
 
 	self._selected_settings_widget = selected_widget
+
 	local has_exclusive_focus = selected_widget ~= nil and not self._using_cursor_navigation
 
 	self:_enable_settings_overlay(has_exclusive_focus)
@@ -1227,7 +1267,7 @@ end
 
 OptionsView._set_selected_navigation_widget = function (self, widget)
 	local widget_name = widget and widget.name
-	local selected_row, selected_column = nil
+	local selected_row, selected_column
 	local navigation_widgets = self._navigation_widgets
 
 	for column_index = 1, #navigation_widgets do
@@ -1256,7 +1296,7 @@ OptionsView._set_selected_navigation_widget = function (self, widget)
 end
 
 OptionsView._set_focused_grid_widget = function (self, widgets, widget_name)
-	local selected_widget, selected_widget_index = nil
+	local selected_widget, selected_widget_index
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
@@ -1278,7 +1318,7 @@ OptionsView._set_focused_grid_widget = function (self, widgets, widget_name)
 end
 
 OptionsView._set_selected_grid_widget = function (self, widgets, widget_name)
-	local selected_widget, selected_widget_index = nil
+	local selected_widget, selected_widget_index
 
 	for i = 1, #widgets do
 		local widget = widgets[i]

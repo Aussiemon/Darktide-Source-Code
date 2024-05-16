@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/broadphase/broadphase_extension.lua
+
 local BroadphaseExtension = class("BroadphaseExtension")
 local unit_node = Unit.node
 local unit_world_position = Unit.world_position
@@ -39,6 +41,7 @@ BroadphaseExtension._add_to_broadphase = function (self)
 	local optional_node_name = self._broadphase_node_name
 	local optional_node = optional_node_name and unit_node(unit, optional_node_name)
 	local position = optional_node and unit_world_position(unit, optional_node) or POSITION_LOOKUP[unit]
+
 	self._broadphase_id = broadphase_add(broadphase, unit, position, broadphase_radius, broadphase_categories)
 	self._broadphase_node_id = optional_node
 end

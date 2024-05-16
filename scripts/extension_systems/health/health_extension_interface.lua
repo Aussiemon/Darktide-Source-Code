@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/health/health_extension_interface.lua
+
 local HealthExtensionInterface = {
 	"pre_update",
 	"add_damage",
@@ -21,7 +23,7 @@ local HealthExtensionInterface = {
 	"last_damaging_unit",
 	"last_hit_zone_name",
 	"last_hit_was_critical",
-	"was_hit_by_critical_hit_this_render_frame"
+	"was_hit_by_critical_hit_this_render_frame",
 }
 
 return HealthExtensionInterface

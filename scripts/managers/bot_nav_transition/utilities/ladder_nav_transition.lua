@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/managers/bot_nav_transition/utilities/ladder_nav_transition.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
-local LadderNavTransition = {
-	NAV_TAG_LAYER = "bot_ladders"
-}
+local LadderNavTransition = {}
+
+LadderNavTransition.NAV_TAG_LAYER = "bot_ladders"
+
 local CLIMBING_OFFSET = 0.25
 local MAX_DISTANCE_FROM_GROUND = 10
 
@@ -13,13 +16,11 @@ LadderNavTransition.find_ground_position = function (top_position, ladder_length
 	return hit_position
 end
 
-local NAV_MESH_STEP_SIZE = 0.2
-local NAV_MESH_MAX_STEPS = 7
-local NAV_MESH_ABOVE = 0.3
-local NAV_MESH_BELOW = 0.5
+local NAV_MESH_STEP_SIZE, NAV_MESH_MAX_STEPS = 0.2, 7
+local NAV_MESH_ABOVE, NAV_MESH_BELOW = 0.3, 0.5
 
 LadderNavTransition.find_position_on_nav_mesh = function (start_position, nav_world, search_direction, traverse_logic, drawer)
-	local check_position, nav_mesh_position = nil
+	local check_position, nav_mesh_position
 
 	for step_index = 0, NAV_MESH_MAX_STEPS do
 		check_position = start_position + search_direction * NAV_MESH_STEP_SIZE * step_index

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_blueprints.lua
+
 local ColorUtils = require("scripts/utilities/ui/colors")
 local ItemUtils = require("scripts/utilities/items")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
@@ -12,7 +14,7 @@ local blueprint_styles = ViewStyles.blueprints
 local ITEM_TYPES = UISettings.ITEM_TYPES
 local folded_card_size = {
 	ViewStyles.card_width,
-	ViewStyles.card_folded_height
+	ViewStyles.card_folded_height,
 }
 local end_player_view_blueprints = {}
 
@@ -23,42 +25,42 @@ end
 local function _get_card_default_frame_pass_template()
 	local card_frame_pass_template = {
 		{
-			value_id = "frame_default_top",
+			pass_type = "texture",
 			style_id = "frame_default_top",
-			pass_type = "texture",
 			value = "content/ui/materials/frames/end_of_round/reward_default_upper",
-			visibility_function = _card_default_frame_visibility_function
+			value_id = "frame_default_top",
+			visibility_function = _card_default_frame_visibility_function,
 		},
 		{
-			value_id = "frame_default_middle",
+			pass_type = "texture",
 			style_id = "frame_default_middle",
-			pass_type = "texture",
 			value = "content/ui/materials/frames/end_of_round/reward_default_middle",
-			visibility_function = _card_default_frame_visibility_function
+			value_id = "frame_default_middle",
+			visibility_function = _card_default_frame_visibility_function,
 		},
 		{
-			value_id = "frame_default_bottom",
-			style_id = "frame_default_bottom",
 			pass_type = "texture",
+			style_id = "frame_default_bottom",
 			value = "content/ui/materials/frames/end_of_round/reward_default_lower",
-			visibility_function = _card_default_frame_visibility_function
+			value_id = "frame_default_bottom",
+			visibility_function = _card_default_frame_visibility_function,
 		},
 		{
 			pass_type = "rect",
-			style_id = "background_rect"
+			style_id = "background_rect",
 		},
 		{
+			pass_type = "texture",
+			style_id = "background",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			value_id = "background",
-			pass_type = "texture",
-			style_id = "background"
 		},
 		{
+			pass_type = "text",
+			style_id = "label",
 			value = "",
 			value_id = "label",
-			pass_type = "text",
-			style_id = "label"
-		}
+		},
 	}
 
 	return card_frame_pass_template
@@ -66,9 +68,12 @@ end
 
 local function _card_default_frame_pass_template_init(widget, index)
 	local style = widget.style
+
 	widget.alpha_multiplier = 0
 	widget.offset[1] = index * ViewStyles.card_offset_x
+
 	local frame_color = table.clone(style.dimmed_out_color)
+
 	style.frame_default_top.color = frame_color
 	style.frame_default_middle.color = frame_color
 	style.frame_default_bottom.color = frame_color
@@ -80,38 +85,38 @@ local function _get_card_levelup_frame_pass_template()
 	local card_frame_pass_template = _get_card_default_frame_pass_template()
 	local levelup_frame_pass_template = {
 		{
-			value_id = "frame_levelup_top",
+			pass_type = "texture",
 			style_id = "frame_levelup_top",
-			pass_type = "texture",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_upper",
-			visibility_function = _card_default_frame_visibility_function
+			value_id = "frame_levelup_top",
+			visibility_function = _card_default_frame_visibility_function,
 		},
 		{
-			value_id = "frame_levelup_bottom",
+			pass_type = "texture",
 			style_id = "frame_levelup_bottom",
-			pass_type = "texture",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_lower",
-			visibility_function = _card_default_frame_visibility_function
+			value_id = "frame_levelup_bottom",
+			visibility_function = _card_default_frame_visibility_function,
 		},
 		{
-			value_id = "frame_levelup_effect",
-			style_id = "frame_levelup_effect",
 			pass_type = "texture",
+			style_id = "frame_levelup_effect",
 			value = "content/ui/materials/effects/end_of_round/level_up_frame",
-			visibility_function = _card_default_frame_visibility_function
+			value_id = "frame_levelup_effect",
+			visibility_function = _card_default_frame_visibility_function,
 		},
 		{
+			pass_type = "texture",
+			style_id = "spires",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_upper_spikes",
 			value_id = "spires",
-			pass_type = "texture",
-			style_id = "spires"
 		},
 		{
+			pass_type = "texture",
+			style_id = "frame_detail",
 			value = "content/ui/materials/frames/end_of_round/reward_levelup_upper_skull",
 			value_id = "frame_detail",
-			pass_type = "texture",
-			style_id = "frame_detail"
-		}
+		},
 	}
 
 	table.append(card_frame_pass_template, levelup_frame_pass_template)
@@ -124,6 +129,7 @@ local function _card_levelup_frame_pass_template_init(widget, index)
 
 	local style = widget.style
 	local frame_color = table.clone(style.start_color)
+
 	style.frame_levelup_top.color = frame_color
 	style.frame_levelup_bottom.color = frame_color
 	style.spires.color = frame_color
@@ -132,7 +138,7 @@ local function _card_levelup_frame_pass_template_init(widget, index)
 end
 
 local function _get_currency_icon(pass_template, currency)
-	local background_id, icon_id, icon_material = nil
+	local background_id, icon_id, icon_material
 
 	if currency == "experience" then
 		background_id = "experience_icon_background"
@@ -141,7 +147,9 @@ local function _get_currency_icon(pass_template, currency)
 	elseif currency then
 		background_id = currency .. "_icon_background"
 		icon_id = currency .. "_icon"
+
 		local wallet_settings = WalletSettings[currency]
+
 		icon_material = wallet_settings and wallet_settings.icon_texture_big
 	else
 		background_id = "icon_background"
@@ -149,16 +157,16 @@ local function _get_currency_icon(pass_template, currency)
 	end
 
 	pass_template[#pass_template + 1] = {
+		pass_type = "texture",
 		value = "content/ui/materials/effects/end_of_round/reward_background",
 		value_id = "icon_background",
-		pass_type = "texture",
-		style_id = background_id
+		style_id = background_id,
 	}
 	pass_template[#pass_template + 1] = {
 		pass_type = "texture",
 		value_id = icon_id,
 		style_id = icon_id,
-		value = icon_material
+		value = icon_material,
 	}
 end
 
@@ -168,20 +176,24 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 
 	if not offset_y then
 		local previous_row_style = pass_template[last_index].style
+
 		offset_y = previous_row_style.offset[2] + previous_row_style.size[2]
 	end
 
 	local next_index = pass_template[last_index].is_empty_row and last_index or last_index + 1
 	local label_style = row_type == "small" and table.clone(card_content_styles.text_small) or table.clone(card_content_styles.text_normal)
+
 	label_style.offset[2] = offset_y
 	pass_template[next_index] = {
 		pass_type = "text",
 		value_id = stat .. "_label",
 		style_id = stat .. "_label",
 		value = Localize(label),
-		style = label_style
+		style = label_style,
 	}
+
 	local value_style = table.clone(label_style)
+
 	value_style.text_horizontal_alignment = "right"
 	next_index = next_index + 1
 	pass_template[next_index] = {
@@ -189,19 +201,15 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 		value = "0",
 		value_id = stat .. "_text",
 		style_id = stat,
-		style = value_style
+		style = value_style,
 	}
 end
 
 local function _get_item_pass_templates(pass_template, item_data)
 	local item_group = item_data.item_group
-	local icon_material = nil
+	local icon_material
 
-	if item_group == "nameplates" then
-		icon_material = "content/ui/materials/icons/items/containers/item_container_square"
-	else
-		icon_material = "content/ui/materials/icons/items/containers/item_container_landscape"
-	end
+	icon_material = item_group == "nameplates" and "content/ui/materials/icons/items/containers/item_container_square" or "content/ui/materials/icons/items/containers/item_container_landscape"
 
 	if not icon_material then
 		return
@@ -209,33 +217,33 @@ local function _get_item_pass_templates(pass_template, item_data)
 
 	table.append(pass_template, {
 		{
+			pass_type = "text",
 			style_id = "item_display_name",
 			value_id = "item_display_name",
-			pass_type = "text"
 		},
 		{
+			pass_type = "texture",
+			style_id = "item_icon",
 			value = "content/ui/materials/icons/items/containers/item_container_landscape",
 			value_id = "item_icon",
-			pass_type = "texture",
-			style_id = "item_icon"
 		},
 		{
+			pass_type = "text",
 			style_id = "item_sub_display_name",
 			value_id = "item_sub_display_name",
-			pass_type = "text"
 		},
 		{
+			pass_type = "text",
+			style_id = "item_level",
 			value = "",
 			value_id = "item_level",
-			pass_type = "text",
-			style_id = "item_level"
 		},
 		{
-			value_id = "added_to_inventory_text",
 			pass_type = "text",
 			style_id = "added_to_inventory_text",
-			value = Localize("loc_notification_desc_added_to_inventory")
-		}
+			value_id = "added_to_inventory_text",
+			value = Localize("loc_notification_desc_added_to_inventory"),
+		},
 	})
 end
 
@@ -245,7 +253,7 @@ local function _get_item_pass_styles(pass_style, item_data)
 	local item_rarity_color = RaritySettings[item_rarity].color
 	local item_rarity_dark_color = RaritySettings[item_rarity].color_dark
 	local item_icon_style = pass_style.item_icon
-	local horizontal_aspect_ratio = nil
+	local horizontal_aspect_ratio
 
 	if item_group == "weapons" or item_group == "devices" then
 		horizontal_aspect_ratio = 2
@@ -258,35 +266,53 @@ local function _get_item_pass_styles(pass_style, item_data)
 
 	local icon_size = item_icon_style.size
 	local icon_height = icon_size[2]
+
 	icon_size[1] = icon_height * horizontal_aspect_ratio
+
 	local item_icon_offset = item_icon_style.offset
 	local item_icon_bottom = item_icon_offset[2] + icon_height
 	local item_display_name_style = pass_style.item_display_name
+
 	item_display_name_style.in_focus_text_color = table.clone(item_rarity_color)
 	item_display_name_style.dimmed_out_text_color = table.clone(item_rarity_dark_color)
+
 	local item_sub_display_name_style = pass_style.item_sub_display_name
+
 	item_sub_display_name_style.in_focus_text_color = table.clone(item_rarity_color)
 	item_sub_display_name_style.dimmed_out_text_color = table.clone(item_rarity_dark_color)
+
 	local sub_display_name_offset = item_sub_display_name_style.offset
+
 	sub_display_name_offset[2] = item_icon_bottom + sub_display_name_offset[2]
+
 	local item_level_style = pass_style.item_level
 	local item_level_offset = item_level_style.offset
+
 	item_level_offset[2] = item_icon_bottom + item_level_offset[2]
+
 	local added_to_inventory_text_style = pass_style.added_to_inventory_text
 	local added_to_inventory_text_offset = added_to_inventory_text_style.offset
+
 	added_to_inventory_text_offset[2] = item_icon_bottom + added_to_inventory_text_offset[2]
+
 	local offset_compressed = item_icon_style.offset_compressed
 
 	if offset_compressed then
 		item_icon_style.offset_original[2] = item_icon_offset[2]
+
 		local icon_bottom_compressed = offset_compressed[2] + icon_height * 0.5
 		local item_sub_display_name_offset_compressed = item_sub_display_name_style.offset_compressed
+
 		item_sub_display_name_offset_compressed[2] = icon_bottom_compressed + item_sub_display_name_offset_compressed[2]
 		item_sub_display_name_style.offset_original[2] = sub_display_name_offset[2]
+
 		local item_level_offset_compressed = item_level_style.offset_compressed
+
 		item_level_offset_compressed[2] = icon_bottom_compressed + item_level_offset_compressed[2]
 		item_level_style.offset_original[2] = item_level_offset[2]
+
 		local added_text_offset_compressed = added_to_inventory_text_style.offset_compressed
+
 		added_text_offset_compressed[2] = icon_bottom_compressed + added_text_offset_compressed[2]
 		added_to_inventory_text_style.offset_original[2] = added_to_inventory_text_offset[2]
 	end
@@ -304,10 +330,12 @@ local function _item_pass_template_init(widget, config)
 	local item_group = config.item_group
 	local item_rarity = config.rarity or 1
 	local item_level = config.item_level
+
 	content.reward_item = reward_item
 	content.item_display_name = ItemUtils.display_name(reward_item)
 	content.item_sub_display_name = ItemUtils.sub_display_name(reward_item)
 	content.item_group = item_group
+
 	local item_level_style = widget.style.item_level
 
 	if item_level_style then
@@ -320,6 +348,7 @@ local function _apply_live_nameplate_icon_cb_func(widget, item)
 	local widget_style = widget.style
 	local icon_style = widget_style.item_icon
 	local material_values = icon_style.material_values
+
 	material_values.texture_icon = item.icon
 
 	if item.item_type == ITEM_TYPES.CHARACTER_INSIGNIA then
@@ -335,6 +364,7 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	local widget_style = widget.style
 	local icon_style = widget_style.item_icon
 	local material_values = icon_style.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
 	material_values.rows = rows
@@ -347,6 +377,7 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	local widget_style = widget.style
 	local icon_style = widget_style.item_icon
 	local material_values = icon_style.material_values
+
 	material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
 	material_values.use_render_target = 0
@@ -369,21 +400,25 @@ local function _reward_load_icon_func(parent, widget, config, optional_icon_size
 			camera_focus_slot_name = slot_name,
 			state_machine = item_state_machine,
 			animation_event = item_animation_event,
-			size = optional_icon_size
+			size = optional_icon_size,
 		}
 		local item_group = content.item_group
-		local cb = nil
+		local cb
 
 		if item_group == "nameplates" then
 			cb = callback(_apply_live_nameplate_icon_cb_func, widget)
 			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context)
 		elseif item_group == "weapon_skin" then
 			cb = callback(_apply_live_item_icon_cb_func, widget)
+
 			local preview_item = ItemUtils.weapon_skin_preview_item(reward_item)
+
 			content.icon_load_id = parent:load_weapon_pattern_icon(preview_item or reward_item, cb, render_context)
 		else
 			cb = callback(_apply_live_item_icon_cb_func, widget)
+
 			local prioritize = true
+
 			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context, prioritize)
 		end
 	end
@@ -391,16 +426,16 @@ end
 
 local function _get_level_up_label_pass_template(pass_template)
 	pass_template[#pass_template + 1] = {
+		pass_type = "text",
+		style_id = "level_up_label",
 		value = "",
 		value_id = "level_up_label",
-		pass_type = "text",
-		style_id = "level_up_label"
 	}
 	pass_template[#pass_template + 1] = {
+		pass_type = "texture",
+		style_id = "level_up_label_divider",
 		value = "content/ui/materials/dividers/skull_center_02",
 		value_id = "level_up_label_divider",
-		pass_type = "texture",
-		style_id = "level_up_label_divider"
 	}
 end
 
@@ -408,9 +443,10 @@ local function _insert_empty_row(pass_template)
 	local previous_row_style = pass_template[#pass_template].style
 	local offset_y = previous_row_style.offset[2] + previous_row_style.size[2]
 	local size = {
-		[2] = ViewStyles.card_content_empty_row_height
+		[2] = ViewStyles.card_content_empty_row_height,
 	}
 	local pass_type = "rect"
+
 	pass_template[#pass_template + 1] = {
 		is_empty_row = true,
 		pass_type = pass_type,
@@ -418,16 +454,16 @@ local function _insert_empty_row(pass_template)
 			offset = {
 				0,
 				offset_y,
-				0
+				0,
 			},
 			size = size,
 			color = {
 				0,
 				0,
 				0,
-				0
-			}
-		}
+				0,
+			},
+		},
 	}
 end
 
@@ -453,12 +489,14 @@ end_player_view_blueprints.experience = {
 		_card_default_frame_pass_template_init(widget, index)
 
 		content.label = Localize("loc_eor_card_title_experience")
+
 		local details = config.rewards[1].details
 		local circumstance_xp = details.from_circumstance
 		local side_mission_xp = details.from_side_mission
 		local side_mission_bonus_xp = details.from_side_mission_bonus
 		local total_bonus_xp = details.from_total_bonus
 		local total_xp_gained = details.total
+
 		content.base_xp = total_xp_gained - (circumstance_xp + side_mission_xp + side_mission_bonus_xp + total_bonus_xp)
 		content.base_xp_previous_value = 0
 		content.side_mission_xp = side_mission_xp
@@ -472,7 +510,7 @@ end_player_view_blueprints.experience = {
 		content.total_xp_gained = total_xp_gained
 		content.content_animation = "experience_card_show_content"
 		content.dim_out_animation = "experience_card_dim_out_content"
-	end
+	end,
 }
 
 local function _add_currency_passes(pass_template, currency, rewards, optional_offset_y)
@@ -520,6 +558,7 @@ end_player_view_blueprints.salary = {
 		_card_default_frame_pass_template_init(widget, index)
 
 		content.label = Localize("loc_eor_card_title_salary")
+
 		local rewards = config.rewards
 
 		for i = 1, #rewards do
@@ -558,7 +597,7 @@ end_player_view_blueprints.salary = {
 		content.update_progress_func = callback(parent, "belate_wallet_update")
 		content.content_animation = "salary_card_show_content"
 		content.dim_out_animation = "salary_card_dim_out_content"
-	end
+	end,
 }
 end_player_view_blueprints.level_up = {
 	pass_template_function = function (parent, config)
@@ -601,7 +640,7 @@ end_player_view_blueprints.level_up = {
 
 			content.icon_load_id = nil
 		end
-	end
+	end,
 }
 end_player_view_blueprints.weapon_unlock = {
 	pass_template_function = function (parent, config)
@@ -610,33 +649,33 @@ end_player_view_blueprints.weapon_unlock = {
 		_get_level_up_label_pass_template(pass_template)
 		table.append(pass_template, {
 			{
+				pass_type = "text",
 				style_id = "item_display_name",
 				value_id = "item_display_name",
-				pass_type = "text"
 			},
 			{
+				pass_type = "rect",
 				style_id = "item_icon_background",
 				value_id = "item_icon_background",
-				pass_type = "rect"
 			},
 			{
+				pass_type = "texture",
+				style_id = "item_icon_frame",
 				value = "content/ui/materials/frames/eor_weapon_frame",
 				value_id = "item_icon_frame",
-				pass_type = "texture",
-				style_id = "item_icon_frame"
 			},
 			{
+				pass_type = "texture",
+				style_id = "item_icon",
 				value = "content/ui/materials/icons/items/containers/item_container_landscape",
 				value_id = "item_icon",
-				pass_type = "texture",
-				style_id = "item_icon"
 			},
 			{
-				value_id = "weapon_unlocked_text",
 				pass_type = "text",
 				style_id = "weapon_unlocked_text",
-				value = Localize("loc_eor_weapon_unlocked_desc")
-			}
+				value_id = "weapon_unlocked_text",
+				value = Localize("loc_eor_weapon_unlocked_desc"),
+			},
 		})
 
 		return pass_template
@@ -676,48 +715,48 @@ end_player_view_blueprints.weapon_unlock = {
 
 			content.icon_load_id = nil
 		end
-	end
+	end,
 }
 end_player_view_blueprints.item_reward = {
 	pass_template_function = function (parent, config)
 		local pass_template = {
 			{
-				value_id = "frame_top",
+				pass_type = "texture",
 				style_id = "frame_top",
-				pass_type = "texture",
 				value = "content/ui/materials/frames/end_of_round/reward_random_item_upper",
-				visibility_function = _card_default_frame_visibility_function
+				value_id = "frame_top",
+				visibility_function = _card_default_frame_visibility_function,
 			},
 			{
-				value_id = "frame_middle",
+				pass_type = "texture",
 				style_id = "frame_middle",
-				pass_type = "texture",
 				value = "content/ui/materials/frames/end_of_round/reward_random_item_middle",
-				visibility_function = _card_default_frame_visibility_function
+				value_id = "frame_middle",
+				visibility_function = _card_default_frame_visibility_function,
 			},
 			{
-				value_id = "frame_bottom",
-				style_id = "frame_bottom",
 				pass_type = "texture",
+				style_id = "frame_bottom",
 				value = "content/ui/materials/frames/end_of_round/reward_random_item_lower",
-				visibility_function = _card_default_frame_visibility_function
+				value_id = "frame_bottom",
+				visibility_function = _card_default_frame_visibility_function,
 			},
 			{
 				pass_type = "rect",
-				style_id = "background"
+				style_id = "background",
 			},
 			{
+				pass_type = "texture",
+				style_id = "rarity_background",
 				value = "content/ui/materials/gradients/gradient_vertical",
 				value_id = "rarity_background",
-				pass_type = "texture",
-				style_id = "rarity_background"
 			},
 			{
+				pass_type = "text",
+				style_id = "label",
 				value = "",
 				value_id = "label",
-				pass_type = "text",
-				style_id = "label"
-			}
+			},
 		}
 
 		_get_item_pass_templates(pass_template, config)
@@ -735,15 +774,19 @@ end_player_view_blueprints.item_reward = {
 	init = function (parent, widget, index, config)
 		local content = widget.content
 		local style = widget.style
+
 		widget.offset[1] = index * ViewStyles.card_offset_x
 		widget.alpha_multiplier = 0
 		widget.content.size = table.clone(style.size)
+
 		local frame_color = table.clone(style.default_frame_dimmed_out_color)
+
 		style.frame_top.color = frame_color
 		style.frame_middle.color = frame_color
 		style.frame_bottom.color = frame_color
 		style.frame_color = frame_color
 		style.text_color = table.clone(style.in_focus_text_color)
+
 		local item_rarity = config.rarity or 1
 		local background_color = style.rarity_background.color
 
@@ -774,7 +817,7 @@ end_player_view_blueprints.item_reward = {
 
 			content.icon_load_id = nil
 		end
-	end
+	end,
 }
 end_player_view_blueprints.empty_test_card = {
 	pass_template_function = function (parent, config)
@@ -792,7 +835,7 @@ end_player_view_blueprints.empty_test_card = {
 		content.label = config.label or "Test"
 		content.content_animation = "test"
 		content.dim_out_animation = "test"
-	end
+	end,
 }
 
 return settings("EndPlayerViewBlueprints", end_player_view_blueprints)

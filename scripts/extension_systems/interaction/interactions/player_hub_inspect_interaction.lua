@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/player_hub_inspect_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local PlayerHubInspectInteraction = class("PlayerHubInspectInteraction", "BaseInteraction")
@@ -16,7 +18,7 @@ PlayerHubInspectInteraction.start = function (self, world, interactor_unit, unit
 	if ui_manager and not ui_manager:has_active_view() then
 		Managers.ui:open_view("player_character_options_view", nil, nil, nil, nil, {
 			is_readonly = true,
-			player = player
+			player = player,
 		})
 	end
 end

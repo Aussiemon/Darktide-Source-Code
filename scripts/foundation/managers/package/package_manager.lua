@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/foundation/managers/package/package_manager.lua
+
 local PackageManager = class("PackageManager")
+
 PackageManager.FIRST_ITEM = 1
 PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES = 64
 
@@ -24,8 +27,9 @@ PackageManager._new_load_call_item = function (self, package_name, reference_nam
 		package_name = package_name,
 		reference_name = reference_name,
 		callback = callback,
-		load_call_time = self._current_time
+		load_call_time = self._current_time,
 	}
+
 	self._load_call_data[self._current_item] = load_call_item
 	self._current_item = self._current_item + 1
 
@@ -34,6 +38,7 @@ end
 
 PackageManager.load = function (self, package_name, reference_name, callback, prioritize, use_resident_loading)
 	local load_call_item = self:_new_load_call_item(package_name, reference_name, callback)
+
 	self._packages_to_unload[package_name] = nil
 
 	if self._package_to_load_call_item[package_name] then
@@ -46,7 +51,7 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 		end
 
 		if self._queued_async_packages[package_name] and prioritize then
-			local index = nil
+			local index
 
 			for i = 1, #self._queue_order do
 				local package_data = self._queue_order[i]
@@ -62,7 +67,7 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 
 			local package_data = {
 				package_name = package_name,
-				use_resident_loading = use_resident_loading
+				use_resident_loading = use_resident_loading,
 			}
 
 			table.insert(self._queue_order, 1, package_data)
@@ -72,14 +77,15 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 	end
 
 	self._package_to_load_call_item[package_name] = {
-		load_call_item
+		load_call_item,
 	}
 
-	if PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES <= table.size(self._asynch_packages) then
+	if table.size(self._asynch_packages) >= PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES then
 		self._queued_async_packages[package_name] = true
+
 		local package_data = {
 			package_name = package_name,
-			use_resident_loading = use_resident_loading
+			use_resident_loading = use_resident_loading,
 		}
 
 		if prioritize then
@@ -109,6 +115,7 @@ PackageManager._bring_in = function (self, package_name)
 
 	self._packages[package_name] = resource_handle
 	self._asynch_packages[package_name] = nil
+
 	local items = self._package_to_load_call_item[package_name]
 
 	for i = 1, #items do
@@ -126,12 +133,13 @@ PackageManager._pop_queue = function (self)
 		return
 	end
 
-	local queued_package_name = nil
+	local queued_package_name
 	local use_resident_loading = false
 	local index = 1
 
 	while #self._queue_order > 0 and index <= #self._queue_order do
 		local queued_package_data = self._queue_order[index]
+
 		queued_package_name = queued_package_data.package_name
 		use_resident_loading = queued_package_data.use_resident_loading
 
@@ -174,10 +182,10 @@ PackageManager.release = function (self, id)
 	if table.is_empty(load_call_list) then
 		self._packages_to_unload[package_name] = load_call_item
 
-		if not self._pause_unloading then
-			if not self._asynch_packages[package_name] or self._shutdown_has_started then
-				self:_release_internal(package_name)
-			end
+		if self._pause_unloading or self._asynch_packages[package_name] and not self._shutdown_has_started then
+			-- Nothing
+		else
+			self:_release_internal(package_name)
 		end
 	end
 
@@ -302,6 +310,7 @@ local temp_callback_items = {}
 
 PackageManager.update = function (self, dt, t)
 	self._current_time = t
+
 	local freed_slots = 0
 
 	for package_name, resource_handle in pairs(self._asynch_packages) do
@@ -321,6 +330,7 @@ PackageManager.update = function (self, dt, t)
 	end
 
 	local queued_callback_items = self._queued_callback_items
+
 	self._queued_callback_items = temp_callback_items
 
 	for i = 1, #queued_callback_items do

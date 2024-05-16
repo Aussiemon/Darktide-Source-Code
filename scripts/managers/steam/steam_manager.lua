@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/steam/steam_manager.lua
+
 local SteamManager = class("SteamManager")
 
 SteamManager.init = function (self)
@@ -33,7 +35,7 @@ SteamManager.on_micro_txn = function (self, authorized, order_id)
 		self.callbacks[order_id] = nil
 	else
 		self.micro_txn_data[order_id] = {
-			authorized = authorized
+			authorized = authorized,
 		}
 	end
 end

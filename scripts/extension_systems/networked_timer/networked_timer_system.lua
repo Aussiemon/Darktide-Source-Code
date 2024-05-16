@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/networked_timer/networked_timer_system.lua
+
 require("scripts/extension_systems/networked_timer/networked_timer_extension")
 
 local NetworkedTimerSystem = class("NetworkedTimerSystem", "ExtensionSystemBase")
@@ -8,7 +10,7 @@ local RPCS = {
 	"rpc_networked_timer_stop",
 	"rpc_networked_timer_fast_forward",
 	"rpc_networked_timer_rewind",
-	"rpc_networked_timer_finished"
+	"rpc_networked_timer_finished",
 }
 
 NetworkedTimerSystem.init = function (self, context, system_init_data, ...)

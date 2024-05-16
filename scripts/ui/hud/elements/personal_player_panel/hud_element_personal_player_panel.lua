@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/personal_player_panel/hud_element_personal_player_panel.lua
+
 local definition_path = "scripts/ui/hud/elements/personal_player_panel/hud_element_personal_player_panel_definitions"
 local HudElementPersonalPlayerPanelSettings = require("scripts/ui/hud/elements/personal_player_panel/hud_element_personal_player_panel_settings")
 local HudElementPersonalPlayerPanel = class("HudElementPersonalPlayerPanel", "HudElementPlayerPanelBase")

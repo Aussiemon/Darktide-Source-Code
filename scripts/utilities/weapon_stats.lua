@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/weapon_stats.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breeds = require("scripts/settings/breed/breeds")
@@ -20,7 +22,7 @@ local WeaponTweakStatsUIData = require("scripts/settings/equipment/weapon_tweak_
 local DAMAGE_BODY = WeaponUIStatsDamageSettings.DAMAGE_BODY
 local DAMAGE_FINESSE = WeaponUIStatsDamageSettings.DAMAGE_FINESSE
 local WeaponTweakStatsUIDataGroups = WeaponTweakStatsUIData.groups
-local _get_display_data_from_path, _calculate_weapon_statistics, _resolve_damage_template_lerps, _resolve_explosion_template_lerps, _get_weapon_stats = nil
+local _get_display_data_from_path, _calculate_weapon_statistics, _resolve_damage_template_lerps, _resolve_explosion_template_lerps, _get_weapon_stats
 
 local function _resolve_stat_path(table_tree, path, start_idx, end_idx)
 	local resolved_value = table_tree
@@ -56,9 +58,11 @@ WeaponStats.init = function (self, item)
 	self._item = item
 	self._ranged = {}
 	self._melee = {}
+
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local weapon_tweak_templates, damage_profile_lerp_values, explosion_template_lerp_values, buffs = Weapon._init_traits(nil, weapon_template, item, nil, nil, {})
 	local weapon_stats = self:calculate_stats(weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
+
 	self._name = weapon_stats.name
 	self._is_ranged_weapon = weapon_stats.is_ranged_weapon
 	self._type = weapon_stats.is_ranged_weapon and "Ranged" or "Melee"
@@ -79,9 +83,11 @@ WeaponStats.init = function (self, item)
 	self._charge_duration = weapon_stats.charge_duration or 0
 	self._ranged = self:get_all_ranged()
 	self._melee = self:get_all_melee()
+
 	local grouped_stats = {}
 	local late_group_stats = {}
 	local late_groups = {}
+
 	self._weapon_statistics = _calculate_weapon_statistics(weapon_template, weapon_tweak_templates, damage_profile_lerp_values) or {}
 
 	if self._weapon_statistics then
@@ -98,7 +104,7 @@ WeaponStats.init = function (self, item)
 				name = bar_name,
 				display_name = bar_stats_def.display_name,
 				description = bar_stats_def.description,
-				value = bar_lerp_value
+				value = bar_lerp_value,
 			}
 			local stat_n = 0
 
@@ -122,7 +128,7 @@ WeaponStats.init = function (self, item)
 										local ui_data = stat_display_data.use_override_only and stat_display_data or WeaponTweakTemplates.get_stat_ui_data(template_name, stat_data)
 
 										if ui_data then
-											local min, max = nil
+											local min, max
 											local custom_range = stat_display_data.custom_range or ui_data.custom_range
 
 											if custom_range then
@@ -136,6 +142,7 @@ WeaponStats.init = function (self, item)
 												min, max = _resolve_explosion_template_lerps(weapon_template, target_name, stat_data, min, max)
 											else
 												local base_stats = WeaponTweakTemplates.get_base_stats(weapon_template, template_name, target_name)
+
 												min, max = WeaponTweakTemplates.get_base_stats_values(base_stats, stat_data)
 											end
 
@@ -179,7 +186,7 @@ WeaponStats.init = function (self, item)
 															count = 1,
 															min = min,
 															max = max,
-															current = current
+															current = current,
 														}
 														grouped_stats[group_key] = grouped_stat
 
@@ -203,7 +210,7 @@ WeaponStats.init = function (self, item)
 														override_data = stat_display_data,
 														min = min,
 														max = max,
-														value = current
+														value = current,
 													}
 												end
 											end
@@ -242,6 +249,7 @@ WeaponStats.init = function (self, item)
 
 													for i = 1, #damage_profile_path do
 														local path_segment = damage_profile_path[i]
+
 														damage_profile = damage_profile[path_segment]
 
 														if not damage_profile then
@@ -250,7 +258,7 @@ WeaponStats.init = function (self, item)
 													end
 
 													if damage_profile then
-														local min, max = nil
+														local min, max
 
 														if template_name == template_types.damage then
 															min, max = WeaponTweakTemplates.get_base_stats_lerp_values(stat_data)
@@ -262,6 +270,7 @@ WeaponStats.init = function (self, item)
 
 														if min ~= max then
 															local current = math.lerp(min, max, bar_lerp_value)
+
 															stat_n = stat_n + 1
 															entry[stat_n] = {
 																group_type_data = override_display_data,
@@ -269,7 +278,7 @@ WeaponStats.init = function (self, item)
 																override_data = stat_display_data,
 																min = min,
 																max = max,
-																value = current
+																value = current,
 															}
 														end
 													end
@@ -283,6 +292,7 @@ WeaponStats.init = function (self, item)
 
 						for grouped_stat_key, grouped_stat in pairs(grouped_stats) do
 							local count = grouped_stat.count
+
 							grouped_stat.min = grouped_stat.min / count
 							grouped_stat.max = grouped_stat.max / count
 							grouped_stat.current = grouped_stat.current / count
@@ -311,7 +321,7 @@ WeaponStats.init = function (self, item)
 														grouped_stats[dependancy_key] = {
 															min = value,
 															max = value,
-															current = value
+															current = value,
 														}
 													end
 												end
@@ -334,7 +344,7 @@ WeaponStats.init = function (self, item)
 												override_data = override_data,
 												min = min,
 												max = max,
-												value = current
+												value = current,
 											}
 										end
 									end
@@ -361,7 +371,7 @@ WeaponStats.init = function (self, item)
 						override_data = override_data,
 						min = min,
 						max = max,
-						value = current
+						value = current,
 					}
 				end
 			end
@@ -377,13 +387,13 @@ WeaponStats.init = function (self, item)
 end
 
 WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
-	local breed_or_nil, hit_zone_name, target_health_extension, target_toughness_extension = nil
+	local breed_or_nil, hit_zone_name, target_health_extension, target_toughness_extension
 	local armor_type = ArmorSettings.types.unarmored
 	local breed_name = "chaos_poxwalker"
 	local breed = Breeds[breed_name]
 	local attacker_stat_buffs = {}
 	local target_stat_buffs = {}
-	local target_buff_extension = nil
+	local target_buff_extension
 	local charge_level = 1
 	local distance = 1
 	local is_backstab = false
@@ -395,14 +405,14 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local uses_overheat = weapon_template.uses_overheat
 	local uses_ammunition = weapon_template.uses_ammunition
 	local actions = weapon_template.actions
-	local rate_of_fire = nil
+	local rate_of_fire
 	local ammo_templates = weapon_tweak_templates[template_types.ammo]
 	local ammo_template_name = weapon_template.ammo_template or "none"
 	local ammo_template = ammo_templates[ammo_template_name]
 	local stamina_templates = weapon_tweak_templates[template_types.stamina]
 	local stamina_template_name = weapon_template.stamina_template or "none"
 	local stamina_template = stamina_templates[stamina_template_name]
-	local ammo_clip_size, ammo_reserve_size = nil
+	local ammo_clip_size, ammo_reserve_size
 
 	if uses_ammunition then
 		ammo_clip_size = ammo_template.ammunition_clip
@@ -423,9 +433,9 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local weapon_handling = weapon_tweak_templates[template_types.weapon_handling]
 	local charge_settings = weapon_tweak_templates[template_types.charge]
 	local reload_start_ammo_refil = 0
-	local reload_start_time = nil
+	local reload_start_time
 	local reload_loop_ammo_refil = 0
-	local reload_loop_time, reload_start_scale, reload_loop_scale, reload_scale = nil
+	local reload_loop_time, reload_start_scale, reload_loop_scale, reload_scale
 	local charge_duration = 0
 
 	for action_name, action in pairs(actions) do
@@ -438,9 +448,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 			if lerped_identifier then
 				local action_stats = weapon_handling[lerped_identifier]
 
-				if action_stats then
-					action_time_scale = action_stats.time_scale or action_time_scale
-				end
+				action_time_scale = action_stats and action_stats.time_scale or action_time_scale
 			end
 		end
 
@@ -494,6 +502,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 
 				if lerped_identifier then
 					local action_stats = weapon_handling[lerped_identifier]
+
 					fire_rate = action_stats.fire_rate
 				end
 
@@ -545,15 +554,16 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 					if index == target_index then
 						local target_settings = DamageProfile.target_settings(damage_profile, target_index)
 						local target_damage_values = {
-							current_target_settings_lerp_values = damage_profile_lerp_values[action_name]
+							current_target_settings_lerp_values = damage_profile_lerp_values[action_name],
 						}
 						local is_critical_strike = false
 						local armor_penetrating = false
 						local auto_completed_action = false
-						local target_unit, attacker_breed_or_nil = nil
+						local target_unit, attacker_breed_or_nil
 						local hit_shield = false
 						local dropoff_scalar = DamageProfile.dropoff_scalar(distance, damage_profile, target_damage_values)
 						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
+
 						damage = damage * num_damage_iterations
 
 						if damage > 0 then
@@ -562,7 +572,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						end
 
 						local stagger_strength_pool = 0
-						local stagger_reduction_override_or_nil, optional_stagger_strength_multiplier = nil
+						local stagger_reduction_override_or_nil, optional_stagger_strength_multiplier
 						local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, target_damage_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs)
 
 						if stagger_strength and stagger_strength > 0 then
@@ -574,6 +584,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 				if num_targets_counted > 0 then
 					local average_action_damage = num_targets_total_damage / num_targets_counted
 					local average_action_stagger_strength = num_targets_total_stagger_strength / num_targets_counted
+
 					total_attacks_duration = total_attacks_duration + total_time
 					num_attack_actions = num_attack_actions + 1
 					total_attacks_damage = total_attacks_damage + average_action_damage
@@ -592,14 +603,14 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local average_action_stagger_strength = num_attack_actions > 0 and total_stagger_strength > 0 and total_stagger_strength / num_attack_actions or 0
 	local dps_raw = average_action_duration > 0 and average_action_damage > 0 and average_action_damage / average_action_duration or average_action_damage
 	local dps = math.round_with_precision(dps_raw, 1)
-	local stats = {
-		name = weapon_template.name,
-		is_ranged_weapon = is_ranged_weapon,
-		type = is_ranged_weapon and "Ranged" or "Melee",
-		uses_ammunition = uses_ammunition,
-		uses_overheat = uses_overheat,
-		charge_duration = charge_duration
-	}
+	local stats = {}
+
+	stats.name = weapon_template.name
+	stats.is_ranged_weapon = is_ranged_weapon
+	stats.type = is_ranged_weapon and "Ranged" or "Melee"
+	stats.uses_ammunition = uses_ammunition
+	stats.uses_overheat = uses_overheat
+	stats.charge_duration = charge_duration
 
 	if dps and num_attack_actions > 0 then
 		stats.dps = dps
@@ -628,6 +639,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 			if reload_time and ammo_clip_size then
 				if reload_loop_time and reload_start_time then
 					local ammo_to_refill = math.ceil((ammo_clip_size - reload_start_ammo_refil) / reload_loop_ammo_refil)
+
 					stats.reload_time = reload_start_time + reload_loop_time * ammo_to_refill
 					stats.base_reload_time = reload_start_time * reload_start_scale + reload_loop_time * reload_loop_scale * ammo_to_refill
 					stats.base_reload_start_time = reload_start_time * reload_start_scale
@@ -667,13 +679,13 @@ WeaponStats.construct_placeholder_item = function (self, weapon_template, use_ma
 				if stat_definition.is_stat_trait == true then
 					stats[#stats + 1] = {
 						value = 1,
-						name = stat_name
+						name = stat_name,
 					}
 				end
 			end
 
 			return {
-				base_stats = stats
+				base_stats = stats,
 			}
 		end
 	end
@@ -721,7 +733,7 @@ WeaponStats.get_all_melee = function (self)
 end
 
 WeaponStats.get_compare_stats_limits = function (self, weapon_template)
-	local templates_to_compare = nil
+	local templates_to_compare
 	local min_stats = {}
 	local max_stats = {}
 	local min_stats_total = {}
@@ -740,7 +752,7 @@ WeaponStats.get_compare_stats_limits = function (self, weapon_template)
 		"rate_of_fire",
 		"bullets_per_second",
 		"reload_time",
-		"attack_speed"
+		"attack_speed",
 	}
 
 	for name, compare_weapon_template in pairs(templates_to_compare) do
@@ -748,14 +760,17 @@ WeaponStats.get_compare_stats_limits = function (self, weapon_template)
 		local weapon_tweak_templates, damage_profile_lerp_values, explosion_template_lerp_values, buffs = Weapon._init_traits(nil, compare_weapon_template, min_item, nil, nil, {})
 		local min_compare_stats = self:calculate_stats(compare_weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
 		local max_item = self:construct_placeholder_item(compare_weapon_template, true)
+
 		weapon_tweak_templates, damage_profile_lerp_values, explosion_template_lerp_values, buffs = Weapon._init_traits(nil, compare_weapon_template, max_item, nil, nil, {})
+
 		local max_compare_stats = self:calculate_stats(compare_weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
 
 		for i = 1, #stats_list do
 			local stat_name = stats_list[i]
 			local min_compare_stat = min_compare_stats[stat_name] or 0
 			local max_compare_stat = max_compare_stats[stat_name] or 0
-			min_stats[stat_name] = min_stats[stat_name] and min_stats[stat_name] < min_compare_stat and min_stats[stat_name] or min_compare_stat
+
+			min_stats[stat_name] = min_stats[stat_name] and min_compare_stat > min_stats[stat_name] and min_stats[stat_name] or min_compare_stat
 			max_stats[stat_name] = max_stats[stat_name] and max_compare_stat < max_stats[stat_name] and max_stats[stat_name] or max_compare_stat
 			min_stats_total[stat_name] = (min_stats_total[stat_name] or 0) + min_compare_stat
 			max_stats_total[stat_name] = (max_stats_total[stat_name] or 0) + max_compare_stat
@@ -767,11 +782,12 @@ WeaponStats.get_compare_stats_limits = function (self, weapon_template)
 
 	for i = 1, #stats_list do
 		local stat_name = stats_list[i]
+
 		stats[stat_name] = {
 			min = min_stats[stat_name],
 			max = max_stats[stat_name],
 			min_average = min_stats_total[stat_name] / num_compare_templates,
-			max_average = max_stats_total[stat_name] / num_compare_templates
+			max_average = max_stats_total[stat_name] / num_compare_templates,
 		}
 	end
 
@@ -799,13 +815,14 @@ WeaponStats.get_compairing_stats = function (self)
 			if stat_template then
 				local display_name = stat_template.display_name
 				local description = stat_template.description
+
 				values[#values + 1] = {
-					min = 0,
 					max = 1,
+					min = 0,
 					display_name = display_name,
 					description = description,
 					fraction = stat_value,
-					current = stat_value
+					current = stat_value,
 				}
 			end
 		end
@@ -825,12 +842,12 @@ WeaponStats.get_main_stats = function (self)
 		stamina = self._stamina,
 		magazine = self._uses_ammunition and {
 			ammo = self._ammo,
-			reserve = self._ammo_reserve
+			reserve = self._ammo_reserve,
 		},
 		attack_speed = self._attack_speed,
 		rate_of_fire = self._rate_of_fire,
 		reload_time = self._reload_time,
-		charge_duration = self._charge_duration
+		charge_duration = self._charge_duration,
 	}
 end
 
@@ -840,6 +857,7 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 
 	if target_settings.power_level_multiplier then
 		local power_level_lerp_value = DamageProfile.lerp_value_from_path(current_hit_lerp_values, "targets", 1, "power_level_multiplier")
+
 		action_power_level = action_power_level * DamageProfile.lerp_damage_profile_entry(target_settings.power_level_multiplier, power_level_lerp_value)
 	end
 
@@ -849,6 +867,7 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 	local attack_idx = 1
 	local attack = Script.new_array(num_armor_types * 2 * 4)
 	local impact = Script.new_array(num_armor_types * 2 * 4)
+
 	attack.base_power = scaled_base_attack_power
 	impact.base_power = scaled_base_impact_power
 
@@ -871,6 +890,7 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 
 		if bit.band(attack_flags, DAMAGE_FINESSE) == DAMAGE_FINESSE then
 			local armor_mod_crit = DamageProfile.armor_damage_modifier("attack", damage_profile, target_settings, current_hit_lerp_values, armor_type, true, dropoff_scalar, armor_penetrating)
+
 			finnesse_dmg = scaled_base_attack_power * armor_mod * finesse_mult
 			crit_dmg = scaled_base_attack_power * armor_mod_crit * crit_mult
 			crit_finesse_dmg = scaled_base_attack_power * armor_mod_crit * finesse_crit_mult
@@ -880,6 +900,7 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 		attack[attack_idx + 1] = finnesse_dmg
 		attack[attack_idx + 2] = crit_dmg
 		attack[attack_idx + 3] = crit_finesse_dmg
+
 		local normal_imp = 0
 		local finnesse_imp = 0
 		local crit_imp = 0
@@ -892,6 +913,7 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 
 		if bit.band(impact_flags, DAMAGE_FINESSE) == DAMAGE_FINESSE then
 			local impact_armor_mod_crit = DamageProfile.armor_damage_modifier("impact", damage_profile, target_settings, current_hit_lerp_values, armor_type, true, dropoff_scalar, armor_penetrating)
+
 			finnesse_imp = scaled_base_impact_power * impact_armor_mod * finesse_mult
 			crit_imp = scaled_base_impact_power * impact_armor_mod_crit * crit_mult
 			crit_finesse_imp = scaled_base_impact_power * impact_armor_mod_crit * finesse_crit_mult
@@ -925,13 +947,14 @@ local function _calculate_action_stats(action_name, damage_profile, weapon_templ
 
 			if lerpable_value then
 				local lerp_value = DamageProfile.lerp_value_from_path(damage_profile_leprs, damage_profile_key, stat_key)
+
 				value = DamageProfile.lerp_damage_profile_entry(value, lerp_value)
 			end
 
 			stats_n = stats_n + 1
 			stats[stats_n] = {
 				value = value,
-				type_data = stat_data
+				type_data = stat_data,
 			}
 		end
 	end
@@ -951,10 +974,11 @@ local function _calculate_action_stats(action_name, damage_profile, weapon_templ
 		for stat_idx = 1, #stat_group do
 			local stat_data = stat_group[stat_idx]
 			local stat_key = stat_data.stat_key
+
 			stats_n = stats_n + 1
 			stats[stats_n] = {
 				value = action_tweak_stats_group[stat_key],
-				type_data = stat_data
+				type_data = stat_data,
 			}
 		end
 	end
@@ -972,7 +996,7 @@ function _get_display_data_from_path(display_stats, stat_data)
 			local array_range = resolved_table._array_range
 			local path_index = tonumber(path_name)
 
-			if array_range[1] <= path_index and path_index <= array_range[2] then
+			if path_index >= array_range[1] and path_index <= array_range[2] then
 				resolved_table = array_range
 			else
 				return nil
@@ -1001,6 +1025,7 @@ function _resolve_damage_template_lerps(weapon_template, target_name, stat_data,
 
 			for i = 1, #stat_data - (path_length_offset or 1) do
 				local path_name = stat_data[i]
+
 				resolved_table = resolved_table[path_name]
 
 				if not resolved_table then
@@ -1034,6 +1059,7 @@ function _resolve_explosion_template_lerps(weapon_template, target_name, stat_da
 
 			for i = 1, #stat_data - (path_length_offset or 1) do
 				local path_name = stat_data[i]
+
 				resolved_table = resolved_table[path_name]
 
 				if not resolved_table then
@@ -1066,7 +1092,7 @@ function _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_val
 		local ui_data = WeaponTweakTemplates.get_stat_ui_data(template_type, stat_data, 0)
 
 		if ui_data then
-			local current = nil
+			local current
 
 			if template_type == template_types.damage then
 				local resolved_table = damage_profile_lerp_values[target_name]
@@ -1074,6 +1100,7 @@ function _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_val
 				if resolved_table then
 					for i = 1, #stat_data do
 						local path = stat_data[i]
+
 						resolved_table = resolved_table[path]
 
 						if not resolved_table then
@@ -1085,6 +1112,7 @@ function _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_val
 				end
 
 				local default_lerp = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
+
 				current = _resolve_damage_template_lerps(weapon_template, target_name, stat_data, resolved_table or default_lerp, nil, 0)
 			else
 				local base_identifier, lerped_identifier = WeaponTweakTemplates.get_template_identifiers(weapon_template, template_type, target_name)
@@ -1093,6 +1121,7 @@ function _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_val
 				if resolved_table then
 					for i = 1, #stat_data do
 						local path = stat_data[i]
+
 						resolved_table = resolved_table[path]
 
 						if not resolved_table then
@@ -1114,8 +1143,9 @@ function _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_val
 				stats_n = stats_n + 1
 				stats[stats_n] = {
 					type_data = ui_data,
-					value = current
+					value = current,
 				}
+
 				local ui_identifier = stat_data.ui_identifier
 
 				if ui_identifier then
@@ -1132,18 +1162,23 @@ local function _calculate_power_stat(action, action_name, damage_profile, power_
 	local target_settings = DamageProfile.target_settings(damage_profile, target_index)
 	local damage_profile_name = damage_profile.name
 	local cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
+
 	cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
+
 	local targets = cur_lerps.targets
 	local target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
 	local old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
+
 	cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
 
 	if target_settings.power_level_multiplier then
 		local power_level_lerp_value = DamageProfile.lerp_value_from_path(cur_lerps, "targets", 1, "power_level_multiplier")
+
 		power_level = power_level * DamageProfile.lerp_damage_profile_entry(target_settings.power_level_multiplier, power_level_lerp_value)
 	end
 
 	local scaled_base_attack_power, scaled_base_impact_power = DamageCalculation.base_ui_damage(damage_profile, target_settings, power_level, charge_level, dropoff_scalar, cur_lerps)
+
 	cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
 
 	return scaled_base_attack_power, scaled_base_impact_power
@@ -1174,6 +1209,7 @@ local function _get_weapon_power_stats(weapon_template, damage_profile_lerp_valu
 				if inner and inner ~= damage_profile then
 					local explosion_power = explosion_template.static_power_level or action_power_level
 					local explosion_scaled_base_attack_power, explosion_scaled_base_impact_power = _calculate_power_stat(action, action_name, inner, explosion_power, damage_profile_lerp_values, target_index, charge_level, dropoff_scalar)
+
 					scaled_base_attack_power = scaled_base_attack_power + explosion_scaled_base_attack_power
 					scaled_base_impact_power = scaled_base_impact_power + explosion_scaled_base_impact_power
 				end
@@ -1183,7 +1219,7 @@ local function _get_weapon_power_stats(weapon_template, damage_profile_lerp_valu
 			power_stats[power_stats_n] = {
 				attack = scaled_base_attack_power,
 				impact = scaled_base_impact_power,
-				type_data = action_data
+				type_data = action_data,
 			}
 		end
 	end
@@ -1195,12 +1231,17 @@ local function _calculate_damage(weapon_template, action, action_name, action_da
 	local action_power_level = Action.power_level(action)
 	local damage_profile_name = damage_profile.name
 	local cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
+
 	cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
+
 	local targets = cur_lerps.targets
 	local target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
 	local old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
+
 	cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
+
 	local attack, impact = _calculcate_action_damage(action_power_level, damage_profile, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
+
 	cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
 
 	if explosion_template then
@@ -1214,6 +1255,7 @@ local function _calculate_damage(weapon_template, action, action_name, action_da
 			target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
 			old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
 			cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
+
 			local explosion_power = explosion_template.static_power_level or action_power_level
 			local special_attack, special_impact = _calculcate_action_damage(explosion_power, inner, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
 
@@ -1241,20 +1283,20 @@ function _calculate_weapon_statistics(weapon_template, lerp_values, damage_profi
 	local hit_types = {
 		{
 			display_name = "loc_weapon_details_body",
-			name = "body"
+			name = "body",
 		},
 		{
 			display_name = "loc_weapon_details_weakspot",
-			name = "weakspot"
+			name = "weakspot",
 		},
 		{
 			display_name = "loc_weapon_details_crit",
-			name = "critical"
+			name = "critical",
 		},
 		{
 			display_name = "loc_weapon_details_crit_hs",
-			name = "critical weakspot"
-		}
+			name = "critical weakspot",
+		},
 	}
 	local stats = _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_values, statistics_template.stats)
 	local power_stats = _get_weapon_power_stats(weapon_template, damage_profile_lerp_values, statistics_template.power_stats)
@@ -1263,7 +1305,7 @@ function _calculate_weapon_statistics(weapon_template, lerp_values, damage_profi
 		stats = stats,
 		damage = damage,
 		power_stats = power_stats,
-		hit_types = hit_types
+		hit_types = hit_types,
 	}
 	local damage_stats = statistics_template.damage
 	local weapon_actions = weapon_template.actions
@@ -1277,24 +1319,21 @@ function _calculate_weapon_statistics(weapon_template, lerp_values, damage_profi
 			local action_name = action_data.action_name
 			local action = weapon_actions[action_name]
 			local entry = {
-				type_data = action_data
+				type_data = action_data,
 			}
 			local target_index = action_data.target_index
 			local charge_level = action_data.charge_level
 			local dropoff_scalar = action_data.dropoff_scalar
 			local damage_profile, special_damage_profile = Action.damage_template(action)
 
-			if action.activate_special_on_required_ammo or action_data.use_special_damage_profile then
-				damage_profile = special_damage_profile or damage_profile
-			end
+			damage_profile = (action.activate_special_on_required_ammo or action_data.use_special_damage_profile) and special_damage_profile or damage_profile
 
 			local explosion_template = Action.explosion_template(action)
 
 			if damage_profile then
 				local attack, impact, action_stats = _calculate_damage(weapon_template, action, action_name, action_data, damage_profile, explosion_template, damage_profile_lerp_values, lerp_values, target_index, charge_level, dropoff_scalar)
-				entry.action_stats = action_stats
-				entry.impact = impact
-				entry.attack = attack
+
+				entry.attack, entry.impact, entry.action_stats = attack, impact, action_stats
 				chain_entry[#chain_entry + 1] = entry
 			end
 		end

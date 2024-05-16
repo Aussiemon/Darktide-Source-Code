@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combatsword_p2_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
@@ -25,18 +27,18 @@ templates.weapon_trait_bespoke_combatsword_p2_windup_increases_power_parent = ta
 templates.weapon_trait_bespoke_combatsword_p2_windup_increases_power_parent.child_buff_template = "weapon_trait_bespoke_combatsword_p2_windup_increases_power_child"
 templates.weapon_trait_bespoke_combatsword_p2_windup_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_child)
 templates.weapon_trait_bespoke_combatsword_p2_increased_crit_chance_on_weakspot_kill = {
-	allow_proc_while_active = true,
-	predicted = false,
-	class_name = "proc_buff",
 	active_duration = 3,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1
+		[proc_events.on_kill] = 1,
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_critical_strike_chance] = 0.1
+		[stat_buffs.melee_critical_strike_chance] = 0.1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_weakspot_kill)
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_weakspot_kill),
 }
 
 return templates

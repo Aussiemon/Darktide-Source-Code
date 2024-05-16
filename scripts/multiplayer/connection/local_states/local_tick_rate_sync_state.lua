@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_tick_rate_sync_state.lua
+
 local RPCS = {
-	"rpc_sync_tick_rate"
+	"rpc_sync_tick_rate",
 }
 local LocalTickRateSyncState = class("LocalTickRateSyncState")
 
@@ -27,11 +29,11 @@ LocalTickRateSyncState.update = function (self, dt)
 
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalTickRateSyncState", "Timeout waiting for rpc_sync_tick_rate")
 
 		return "timeout", {
-			game_reason = "timeout"
+			game_reason = "timeout",
 		}
 	end
 end

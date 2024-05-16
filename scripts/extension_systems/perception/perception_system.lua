@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/perception/perception_system.lua
+
 require("scripts/extension_systems/perception/minion_perception_extension")
 require("scripts/extension_systems/perception/bot_perception_extension")
 
@@ -36,10 +38,12 @@ PerceptionSystem._init_line_of_sight_raycasts = function (self, physics_world)
 		local line_of_sight_collision_filter = data.line_of_sight_collision_filter
 
 		if line_of_sight_collision_filter and not line_of_sight_raycast_data[line_of_sight_collision_filter] then
-			local los_data = {
-				current_casting_units = {}
-			}
+			local los_data = {}
+
+			los_data.current_casting_units = {}
+
 			local cb = callback(self, "physics_cb_line_of_sight_hit", line_of_sight_collision_filter)
+
 			los_data.raycast = PhysicsWorld.make_raycast(physics_world, cb, "closest", "types", "both", "collision_filter", line_of_sight_collision_filter)
 			line_of_sight_raycast_data[line_of_sight_collision_filter] = los_data
 		end
@@ -97,6 +101,7 @@ end
 
 PerceptionSystem.register_prioritized_unit_update = function (self, unit)
 	local perception_extension = self._unit_to_extension_map[unit]
+
 	self._prioritized_update_units[unit] = perception_extension
 end
 
@@ -173,11 +178,14 @@ end
 PerceptionSystem.set_untargetable = function (self, caller_class, unit)
 	local unit_untargetable_data = self._unit_untargetable_data
 	local untargetable_data = unit_untargetable_data[unit] or {
-		num_ids = 0
+		num_ids = 0,
 	}
+
 	unit_untargetable_data[unit] = untargetable_data
+
 	local global_untargetable_id = self._next_global_untargetable_id
 	local caller_name = caller_class.__class_name or caller_class.__component_name
+
 	untargetable_data[caller_name] = global_untargetable_id
 	untargetable_data[global_untargetable_id] = caller_name
 	untargetable_data.num_ids = untargetable_data.num_ids + 1
@@ -189,6 +197,7 @@ end
 PerceptionSystem.set_targetable = function (self, unit, untargetable_id)
 	local untargetable_data = self._unit_untargetable_data[unit]
 	local caller_name = untargetable_data[untargetable_id]
+
 	untargetable_data[caller_name] = nil
 	untargetable_data[untargetable_id] = nil
 	untargetable_data.num_ids = untargetable_data.num_ids - 1

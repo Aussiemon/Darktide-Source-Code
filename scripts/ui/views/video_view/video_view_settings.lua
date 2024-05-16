@@ -1,11 +1,13 @@
+﻿-- chunkname: @scripts/ui/views/video_view/video_view_settings.lua
+
 local VideoViewSettings = {
-	viewport_layer = 1,
 	level_name = "content/levels/ui/video_view/video_view",
 	timer_name = "ui",
-	world_layer = 1,
-	viewport_type = "default",
+	viewport_layer = 1,
 	viewport_name = "ui_video_view_world_viewport",
-	world_name = "ui_video_view_world"
+	viewport_type = "default",
+	world_layer = 1,
+	world_name = "ui_video_view_world",
 }
 local cinematic_video_templates = {}
 

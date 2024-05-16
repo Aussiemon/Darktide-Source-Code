@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_hitscan_templates.lua
+
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
@@ -15,29 +17,29 @@ hitscan_templates.default_plasma_rifle_killshot = {
 			destroy_on_impact = false,
 			damage_profile = DamageProfileTemplates.default_plasma_killshot,
 			armor_explosion = {
-				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit
-			}
+				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit,
+			},
 		},
 		penetration = {
-			target_index_increase = 2,
 			depth = 0.5,
 			destroy_on_exit = false,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit
-		}
+			target_index_increase = 2,
+			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit,
+		},
 	},
 	collision_tests = {
 		{
 			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
-			test = "sphere",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			collision_filter = "filter_player_character_shooting_raycast_dynamics"
-		}
-	}
+			test = "sphere",
+		},
+	},
 }
 hitscan_templates.default_plasma_rifle_bfg = {
 	range = 100,
@@ -46,29 +48,29 @@ hitscan_templates.default_plasma_rifle_bfg = {
 			destroy_on_impact = false,
 			damage_profile = DamageProfileTemplates.default_plasma_bfg,
 			armor_explosion = {
-				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit
-			}
+				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit,
+			},
 		},
 		penetration = {
-			target_index_increase = 2,
 			depth = 1.25,
 			destroy_on_exit = false,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit
-		}
+			target_index_increase = 2,
+			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit,
+		},
 	},
 	collision_tests = {
 		{
 			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
-			test = "sphere",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			collision_filter = "filter_player_character_shooting_raycast_dynamics"
-		}
-	}
+			test = "sphere",
+		},
+	},
 }
 hitscan_templates.default_plasma_rifle_demolition = {
 	range = 100,
@@ -76,31 +78,31 @@ hitscan_templates.default_plasma_rifle_demolition = {
 		impact = {
 			destroy_on_impact = false,
 			damage_profile = DamageProfileTemplates.default_plasma_bfg,
-			explosion_template = ExplosionTemplates.plasma_rifle
+			explosion_template = ExplosionTemplates.plasma_rifle,
 		},
 		penetration = {
-			target_index_increase = 2,
 			depth = 2,
 			destroy_on_exit = false,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle
-		}
+			target_index_increase = 2,
+			exit_explosion_template = ExplosionTemplates.plasma_rifle,
+		},
 	},
 	collision_tests = {
 		{
 			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
 			test = "ray",
-			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
-			test = "sphere",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
 			radius = 0.1,
-			collision_filter = "filter_player_character_shooting_raycast_dynamics"
-		}
-	}
+			test = "sphere",
+		},
+	},
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides
+	overrides = overrides,
 }

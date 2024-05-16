@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mutator/mutators/mutator_toxic_gas.lua
+
 require("scripts/managers/mutator/mutators/mutator_base")
 
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
@@ -31,6 +33,7 @@ MutatorToxicGas.init = function (self, is_server, network_event_delegate, mutato
 
 	for i = 1, num_gas_clouds do
 		current_distance = current_distance + math.random_range(distance_range[1], distance_range[2])
+
 		local wanted_position = MainPathQueries.position_from_distance(current_distance)
 
 		if not wanted_position then
@@ -39,7 +42,7 @@ MutatorToxicGas.init = function (self, is_server, network_event_delegate, mutato
 
 		self._gas_clouds[#self._gas_clouds + 1] = {
 			position = Vector3Box(wanted_position),
-			travel_distance = current_distance
+			travel_distance = current_distance,
 		}
 	end
 end
@@ -47,6 +50,7 @@ end
 MutatorToxicGas._activate_cloud = function (self, cloud)
 	local liquid_area_template = LiquidAreaTemplates.toxic_gas
 	local unit = LiquidArea.try_create(cloud.position:unbox(), Vector3(0, 0, 1), self._nav_world, liquid_area_template)
+
 	cloud.active = true
 	cloud.unit = unit
 end
@@ -96,7 +100,11 @@ MutatorToxicGas.update = function (self, dt, t)
 
 			if should_activate and not is_active then
 				self:_activate_cloud(gas_cloud)
-			elseif not should_activate and is_active then
+
+				break
+			end
+
+			if not should_activate and is_active then
 				self:_deactivate_cloud(gas_cloud)
 			end
 		until true

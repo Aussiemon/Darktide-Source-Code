@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_main_menu.lua
+
 local CharacterCreate = require("scripts/utilities/character_create")
 local MasterItems = require("scripts/backend/master_items")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
@@ -16,10 +18,12 @@ end
 
 StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._creation_context = creation_context
+
 	local profiles = params.profiles
 	local selected_profile = params.selected_profile
 	local has_created_first_character = params.has_created_first_character
 	local main_menu_loader = params.main_menu_loader
+
 	self._main_menu_loader = main_menu_loader
 	self._is_booting = params.is_booting or false
 	self._item_definitions = MasterItems.get_cached()
@@ -108,6 +112,7 @@ end
 
 StateMainMenu.event_request_delete_character = function (self, character_id)
 	local selected_profile = self._selected_profile
+
 	self._wait_for_character_profile_delete = true
 
 	Managers.data_service.profiles:delete_profile(character_id):next(function ()
@@ -174,6 +179,7 @@ StateMainMenu.event_continue_cb = function (self)
 
 	local set_selected_character_promise = Managers.data_service.account:set_selected_character_id(character_id)
 	local load_narrative_promise = Managers.narrative:load_character_narrative(character_id)
+
 	self._promise = Promise.all(set_selected_character_promise, load_narrative_promise)
 
 	self._promise:next(function (_)
@@ -192,6 +198,7 @@ StateMainMenu._refresh_profiles = function (self)
 
 	Managers.data_service.profiles:fetch_all_profiles():next(function (profile_data)
 		self._wait_for_character_profiles_refresh = false
+
 		local profiles = profile_data.profiles
 		local selected_profile = profile_data.selected_profile
 		local gear = profile_data.gear
@@ -225,11 +232,11 @@ StateMainMenu._create_new_character_start = function (self)
 	if not self._character_create then
 		self._character_create_state_views = {
 			{
-				"class_selection_view"
+				"class_selection_view",
 			},
 			{
-				"character_appearance_view"
-			}
+				"character_appearance_view",
+			},
 		}
 		self._character_create = CharacterCreate:new(self._item_definitions, self._gear)
 	end
@@ -312,7 +319,9 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 	self._character_create = nil
 	self._current_character_create_state_views_index = nil
 	self._wait_for_character_profile_upload = false
+
 	local skip_onboarding = self._skip_onboarding_for_created_character or GameParameters.skip_prologue
+
 	self._skip_onboarding_for_created_character = nil
 
 	if created_profile then
@@ -326,10 +335,10 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 
 		self:_set_selected_profile(created_profile)
 
-		local promises = {
-			Managers.data_service.account:set_selected_character_id(character_id),
-			Managers.narrative:load_character_narrative(character_id)
-		}
+		local promises = {}
+
+		promises[1] = Managers.data_service.account:set_selected_character_id(character_id)
+		promises[2] = Managers.narrative:load_character_narrative(character_id)
 
 		if self._force_create_first_character then
 			self._force_create_first_character = nil
@@ -378,7 +387,7 @@ StateMainMenu._open_character_create_state_views = function (self, index)
 			character_create = self._character_create,
 			parent = self,
 			force_character_creation = self._force_create_first_character,
-			migration_data = self._migration_data
+			migration_data = self._migration_data,
 		}
 
 		for i = 1, #next_views do
@@ -398,8 +407,8 @@ end
 
 local state_views = {
 	main_menu = {
-		"main_menu_background_view"
-	}
+		"main_menu_background_view",
+	},
 }
 
 StateMainMenu._close_current_state_views = function (self)
@@ -442,13 +451,14 @@ StateMainMenu._set_view_state_cb = function (self, state)
 	end
 
 	self._current_view_state = state
+
 	local new_state_views = state_views[state]
 
 	if new_state_views then
 		local view_context = {
 			parent = self,
 			migration_data = self._migration_data,
-			show_news_popup = show_news_popup
+			show_news_popup = show_news_popup,
 		}
 
 		for i = 1, #new_state_views do
@@ -520,7 +530,8 @@ StateMainMenu.update = function (self, main_dt, main_t)
 
 	if self._continue and not is_syncing then
 		self._reconnect_pressed = false
-		local next_state, state_context = nil
+
+		local next_state, state_context
 
 		if self._onboarding_mission_name then
 			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name, SINGLEPLAY_TYPES.onboarding)
@@ -602,6 +613,7 @@ StateMainMenu._rejoin_game = function (self)
 
 	local set_selected_character_promise = Managers.data_service.account:set_selected_character_id(character_id)
 	local load_narrative_promise = Managers.narrative:load_character_narrative(character_id)
+
 	self._promise = Promise.all(set_selected_character_promise, load_narrative_promise)
 
 	self._promise:next(function (_)
@@ -613,28 +625,28 @@ end
 
 StateMainMenu._show_reconnect_popup = function (self)
 	local context = {
-		title_text = "loc_popup_header_reconnect_to_session",
 		description_text = "loc_popup_description_reconnect_to_session",
+		title_text = "loc_popup_header_reconnect_to_session",
 		options = {
 			{
-				text = "loc_popup_reconnect_to_session_reconnect_button",
 				close_on_pressed = true,
+				text = "loc_popup_reconnect_to_session_reconnect_button",
 				callback = function ()
 					self._reconnect_popup_id = nil
 					self._reconnect_pressed = true
 
 					self:_rejoin_game()
-				end
+				end,
 			},
 			{
-				text = "loc_popup_reconnect_to_session_leave_button",
 				close_on_pressed = true,
 				hotkey = "back",
+				text = "loc_popup_reconnect_to_session_leave_button",
 				callback = function ()
 					Managers.party_immaterium:leave_party()
-				end
-			}
-		}
+				end,
+			},
+		},
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

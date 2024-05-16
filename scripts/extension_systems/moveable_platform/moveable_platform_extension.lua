@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/moveable_platform/moveable_platform_extension.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local PlayerMovement = require("scripts/utilities/player_movement")
@@ -26,7 +28,9 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	self._require_all_players_onboard = false
 	self._units_locked = false
 	self._teleport_node_index = 1
+
 	local initial_position = Unit.local_position(unit, 1)
+
 	self._previous_update_position = Vector3Box(initial_position)
 	self._movement_this_render_frame = Vector3.zero()
 	self._movement_since_last_fixed_update = Vector3.zero()
@@ -37,10 +41,14 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	self._play_end_sound = false
 	self._level = Unit.level(unit)
 	self._unit_spawner = Managers.state.unit_spawner
+
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
+
 	self._side_system = side_system
+
 	local broadphase_system = extension_manager:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
 	self._chunk_lod_manager = Managers.state.chunk_lod
 	self._locked_chunk_lod = false
@@ -56,7 +64,7 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 		while interactable_id ~= nil do
 			self._interactables[interactable_count] = {
 				name = interactable_name,
-				node_id = interactable_id
+				node_id = interactable_id,
 			}
 			interactable_count = interactable_count + 1
 			interactable_name = interactable_prefix .. tostring(interactable_count)
@@ -93,6 +101,7 @@ end
 
 MoveablePlatformExtension.setup_from_component = function (self, story_name, player_side, wall_collision_enabled, wall_collision_filter, require_all_players_onboard, interactable_story_actions, interactable_hud_descriptions, story_speed_forward, story_speed_backward, end_sound_time, nav_handling_enabled, stop_position)
 	local unit = self._unit
+
 	self._story_name = story_name
 
 	self._network_story_manager:register_story(story_name, self._level)
@@ -178,6 +187,7 @@ MoveablePlatformExtension._set_direction = function (self, direction)
 		self:_lock_units_on_platform()
 
 		self._story_direction = MOVEABLE_PLATFORM_DIRECTION.forward
+
 		local play_direction = self._story_speed_forward
 
 		Unit.flow_event(self._unit, "lua_story_move_forward")
@@ -195,6 +205,7 @@ MoveablePlatformExtension._set_direction = function (self, direction)
 		self:_lock_units_on_platform()
 
 		self._story_direction = MOVEABLE_PLATFORM_DIRECTION.backward
+
 		local play_direction = -self._story_speed_backward
 
 		Unit.flow_event(self._unit, "lua_story_move_backward")
@@ -301,7 +312,7 @@ end
 local teleport_location_node_names = {
 	"bot_teleport_location_01",
 	"bot_teleport_location_02",
-	"bot_teleport_location_03"
+	"bot_teleport_location_03",
 }
 local num_teleport_location_node_names = #teleport_location_node_names
 
@@ -316,7 +327,9 @@ MoveablePlatformExtension._force_teleport_bots = function (self, bot_player_unit
 		if has_node then
 			local blackboard = BLACKBOARDS[bot_player_unit]
 			local follow_component = Blackboard.write_component(blackboard, "follow")
+
 			follow_component.level_forced_teleport = true
+
 			local node = Unit.node(moveable_platform_unit, current_node_name)
 			local node_position = Unit.world_position(moveable_platform_unit, node)
 
@@ -517,8 +530,11 @@ end
 MoveablePlatformExtension._update_broadphase = function (self)
 	local tm, half_size = Unit.box(self._unit)
 	local bottom_center_position = Matrix4x4.translation(tm) + Vector3.down() * half_size.z
+
 	self._broadphase_check_position = Vector3Box(bottom_center_position)
+
 	local radius = math.max(half_size.x, half_size.y)
+
 	self._broadphase_check_radius = radius
 	self._bounding_box = Matrix4x4Box(tm)
 	self._bounding_box_half_extents = Vector3Box(half_size)
@@ -530,8 +546,7 @@ MoveablePlatformExtension._check_hostile_onboard = function (self)
 	local check_radius = self._broadphase_check_radius
 	local check_position = self._broadphase_check_position:unbox()
 	local broadphase = self._broadphase
-	local bounding_box = self._bounding_box:unbox()
-	local half_extents = self._bounding_box_half_extents:unbox()
+	local bounding_box, half_extents = self._bounding_box:unbox(), self._bounding_box_half_extents:unbox()
 	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, MINION_BREED_TYPE)
 
 	for i = 1, num_results do
@@ -802,7 +817,7 @@ MoveablePlatformExtension.player_side = function (self)
 end
 
 MoveablePlatformExtension._get_volume_alt_min_max = function (self, volume_points, volume_height)
-	local alt_min, alt_max = nil
+	local alt_min, alt_max
 
 	for i = 1, #volume_points do
 		local alt = volume_points[i].z
@@ -830,6 +845,7 @@ MoveablePlatformExtension._setup_nav_gates = function (self, unit)
 	Managers.state.nav_mesh:add_nav_tag_volume(volume_points, volume_alt_min, volume_alt_max, layer_name_start, true)
 
 	self._layer_name_start = layer_name_start
+
 	local offset_position = self._stop_position:unbox() - Unit.world_position(unit, 1)
 
 	for i, volume_point in ipairs(volume_points) do

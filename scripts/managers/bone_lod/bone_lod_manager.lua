@@ -1,10 +1,13 @@
+﻿-- chunkname: @scripts/managers/bone_lod/bone_lod_manager.lua
+
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
 local BoneLodManager = class("BoneLodManager")
 
 BoneLodManager.init = function (self, world, is_dedicated_server, is_server)
 	self._world = world
 	self._bone_lod_viewport = nil
-	local update_mode = nil
+
+	local update_mode
 
 	if is_dedicated_server then
 		update_mode = BoneLod.USE_HIGHEST_NON_ROOT_BONE_LOD

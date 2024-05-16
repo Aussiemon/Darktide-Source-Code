@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_mourningstar_wing_commander_a.lua
+
 local conversations_hub_mourningstar_wing_commander_a = {
 	mourningstar_announcement_a = {
 		randomize_indexes_n = 0,
@@ -22,7 +24,7 @@ local conversations_hub_mourningstar_wing_commander_a = {
 			"loc_mourningstar_wing_commander_a__mourningstar_announcement_a_17",
 			"loc_mourningstar_wing_commander_a__mourningstar_announcement_a_18",
 			"loc_mourningstar_wing_commander_a__mourningstar_announcement_a_19",
-			"loc_mourningstar_wing_commander_a__mourningstar_announcement_a_20"
+			"loc_mourningstar_wing_commander_a__mourningstar_announcement_a_20",
 		},
 		sound_events_duration = {
 			7.769063,
@@ -44,10 +46,10 @@ local conversations_hub_mourningstar_wing_commander_a = {
 			7.372625,
 			5.731896,
 			9.238812,
-			8.008459
+			8.008459,
 		},
-		randomize_indexes = {}
-	}
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_mourningstar_wing_commander_a", conversations_hub_mourningstar_wing_commander_a)

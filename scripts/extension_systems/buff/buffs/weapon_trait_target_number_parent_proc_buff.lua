@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/weapon_trait_target_number_parent_proc_buff.lua
+
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
@@ -27,11 +29,13 @@ WeaponTraitTargetNumberParentProcBuff.update = function (self, dt, t, ...)
 		if num_child_stacks > 1 and duration and start_t ~= 0 then
 			local remove_t = start_t + duration
 
-			if t > remove_t then
+			if remove_t < t then
 				local template_data = self._template_data
+
 				template_data.attacked_unit = nil
 				template_data.number_of_hits = 0
 				template_data.target_number_of_stacks = 0
+
 				local num_stacks_to_remove = num_child_stacks - 1
 
 				self:_remove_child_buff_stack(t, num_stacks_to_remove)
@@ -40,6 +44,7 @@ WeaponTraitTargetNumberParentProcBuff.update = function (self, dt, t, ...)
 			else
 				local time_until_remove = remove_t - t
 				local remove_progress = time_until_remove / duration
+
 				self._duration_progress = 1 - remove_progress
 			end
 		end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_shoot_net_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -13,10 +15,13 @@ local BtShootNetAction = class("BtShootNetAction", "BtNode")
 
 BtShootNetAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
 	scratchpad.spawn_component = spawn_component
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	behavior_component.move_state = "attacking"
 	scratchpad.behavior_component = behavior_component
 	scratchpad.perception_component = perception_component
@@ -32,13 +37,16 @@ BtShootNetAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local weapon_item = visual_loadout_extension:slot_item(action_data.inventory_slot)
+
 	scratchpad.weapon_item = weapon_item
 	scratchpad.current_aim_position = Vector3Box()
 	scratchpad.aim_target_node = breed.aim_config.target_node
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 	scratchpad.fx_extension = ScriptUnit.extension(unit, "fx_system")
 	scratchpad.force_field_system = Managers.state.extension:system("force_field_system")
+
 	local num_shots = action_data.num_shots
+
 	scratchpad.num_shots = Managers.state.difficulty:get_table_entry_by_challenge(num_shots)
 	scratchpad.num_shots_fired = 0
 
@@ -55,11 +63,14 @@ end
 
 BtShootNetAction.init_values = function (self, blackboard, action_data, node_data)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.is_dragging = false
 	behavior_component.shoot_net_cooldown = 0
 	behavior_component.hit_target = false
 	behavior_component.net_is_ready = true
+
 	local record_state_component = Blackboard.write_component(blackboard, "record_state")
+
 	record_state_component.has_disabled_player = false
 end
 
@@ -67,12 +78,14 @@ BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, ac
 	local behavior_component = scratchpad.behavior_component
 	local record_state_component = scratchpad.record_state_component
 	local shoot_net_cooldown = action_data.shoot_net_cooldown or Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.shoot_net_cooldown)
+
 	behavior_component.shoot_net_cooldown = t + shoot_net_cooldown
 	behavior_component.net_is_ready = false
 
 	if behavior_component.is_dragging then
 		behavior_component.is_dragging = false
 		behavior_component.hit_target = true
+
 		local hit_unit = scratchpad.hit_unit
 		local is_player_unit = Managers.state.player_unit_spawn:is_player_unit(hit_unit)
 
@@ -99,8 +112,7 @@ BtShootNetAction.run = function (self, unit, breed, blackboard, scratchpad, acti
 	elseif internal_state == "dragging" then
 		self:_update_dragging(unit, t, scratchpad, action_data)
 	elseif internal_state == "shot_finished" then
-		local num_shots_fired = scratchpad.num_shots_fired
-		local num_shots = scratchpad.num_shots
+		local num_shots_fired, num_shots = scratchpad.num_shots_fired, scratchpad.num_shots
 
 		if num_shots_fired < num_shots then
 			self:_stop_effect_template(scratchpad)
@@ -124,6 +136,7 @@ BtShootNetAction._start_aiming = function (self, t, scratchpad, action_data)
 	self:_play_wwise_event(action_data.aim_wwise_event, scratchpad, action_data)
 
 	local aim_duration = action_data.aim_duration
+
 	scratchpad.shoot_t = t + aim_duration
 	scratchpad.internal_state = "aiming"
 
@@ -144,9 +157,8 @@ BtShootNetAction._update_aiming = function (self, unit, t, scratchpad, action_da
 
 	scratchpad.current_aim_position:store(aim_position)
 
-	if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-		local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
-		local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+	if scratchpad.aoe_bot_threat_timing and t >= scratchpad.aoe_bot_threat_timing then
+		local aoe_bot_threat_size, aoe_bot_threat_duration = action_data.aoe_bot_threat_size:unbox(), action_data.aoe_bot_threat_duration
 		local target_unit_position = POSITION_LOOKUP[target_unit]
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
@@ -164,7 +176,7 @@ BtShootNetAction._update_aiming = function (self, unit, t, scratchpad, action_da
 		scratchpad.aoe_bot_threat_timing = nil
 	end
 
-	if scratchpad.shoot_t < t then
+	if t > scratchpad.shoot_t then
 		self:_start_shooting(unit, scratchpad, action_data)
 	end
 end
@@ -180,21 +192,21 @@ BtShootNetAction._start_shooting = function (self, unit, scratchpad, action_data
 
 	scratchpad.animation_extension:anim_event(shoot_event)
 
-	local weapon_item = scratchpad.weapon_item
-	local fx_source_name = action_data.fx_source_name
+	local weapon_item, fx_source_name = scratchpad.weapon_item, action_data.fx_source_name
 	local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(weapon_item, fx_source_name)
 	local from_position = Unit.world_position(attachment_unit, node)
 	local to_position = scratchpad.current_aim_position:unbox()
 	local direction = Vector3.normalize(to_position - from_position)
 	local max_net_distance = action_data.max_net_distance
+
 	scratchpad.shoot_data = {
 		direction = Vector3Box(direction),
 		sweep_position = Vector3Box(from_position),
-		available_travel_distance = max_net_distance
+		available_travel_distance = max_net_distance,
 	}
+
 	local spawn_component = scratchpad.spawn_component
-	local game_session = spawn_component.game_session
-	local game_object_id = spawn_component.game_object_id
+	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "net_sweep_position", from_position)
 	self:_start_effect_template(unit, scratchpad, action_data)
@@ -206,8 +218,7 @@ end
 
 BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchpad, action_data)
 	local shoot_data = scratchpad.shoot_data
-	local wanted_travel_distance = action_data.net_speed * dt
-	local available_travel_distance = shoot_data.available_travel_distance
+	local wanted_travel_distance, available_travel_distance = action_data.net_speed * dt, shoot_data.available_travel_distance
 	local travel_distance = math.min(wanted_travel_distance, available_travel_distance)
 	local target_unit = scratchpad.perception_component.target_unit
 	local is_dodging, dodge_type = Dodge.is_dodging(target_unit)
@@ -217,10 +228,8 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 		scratchpad.target_dodged_type = dodge_type
 	end
 
-	local old_sweep_position = shoot_data.sweep_position:unbox()
-	local direction = shoot_data.direction:unbox()
-	local radius = action_data.net_sweep_radius
-	local physics_world = scratchpad.physics_world
+	local old_sweep_position, direction = shoot_data.sweep_position:unbox(), shoot_data.direction:unbox()
+	local radius, physics_world = action_data.net_sweep_radius, scratchpad.physics_world
 	local hit_geometry_ray_length = travel_distance + radius
 	local hit_geometry = PhysicsWorld.raycast(physics_world, old_sweep_position, direction, hit_geometry_ray_length, "any", "types", "both", "collision_filter", "filter_minion_line_of_sight_check_no_transparent")
 
@@ -232,6 +241,7 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 
 	local new_available_travel_distance = available_travel_distance - travel_distance
 	local new_sweep_position = old_sweep_position + direction * travel_distance
+
 	shoot_data.available_travel_distance = new_available_travel_distance
 
 	shoot_data.sweep_position:store(new_sweep_position)
@@ -252,8 +262,7 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 	end
 
 	local spawn_component = scratchpad.spawn_component
-	local game_session = spawn_component.game_session
-	local game_object_id = spawn_component.game_object_id
+	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "net_sweep_position", new_sweep_position)
 
@@ -306,12 +315,17 @@ end
 BtShootNetAction._start_dragging = function (self, unit, t, scratchpad, action_data, hit_unit)
 	local hit_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
 	local disabled_state_input = hit_unit_data_extension:write_component("disabled_state_input")
+
 	disabled_state_input.wants_disable = true
 	disabled_state_input.disabling_unit = unit
 	disabled_state_input.disabling_type = "netted"
+
 	local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
+
 	scratchpad.hit_unit_disabled_character_state_component = disabled_character_state_component
+
 	local lag_t = self:_get_lag_compensation(hit_unit)
+
 	scratchpad.drag_anim_delay_t = t - lag_t + action_data.drag_anim_delay
 	scratchpad.behavior_component.is_dragging = true
 
@@ -319,6 +333,7 @@ BtShootNetAction._start_dragging = function (self, unit, t, scratchpad, action_d
 
 	scratchpad.internal_state = "dragging"
 	scratchpad.hit_unit = hit_unit
+
 	local drag_event = action_data.drag_anim_event
 
 	scratchpad.animation_extension:anim_event(drag_event)
@@ -327,6 +342,7 @@ end
 BtShootNetAction._update_dragging = function (self, unit, t, scratchpad, action_data)
 	local disabled_character_state_component = scratchpad.hit_unit_disabled_character_state_component
 	local is_netted, netting_unit = PlayerUnitStatus.is_netted(disabled_character_state_component)
+
 	scratchpad.was_netted = scratchpad.was_netted or is_netted
 
 	if netting_unit ~= unit or scratchpad.was_netted and not is_netted then
@@ -340,13 +356,14 @@ BtShootNetAction._update_dragging = function (self, unit, t, scratchpad, action_
 	if drag_anim_exit_t then
 		if drag_anim_exit_t < t then
 			scratchpad.internal_state = "shot_finished"
+
 			local vo_event = action_data.captured_vo_event
 
 			if vo_event then
 				Vo.enemy_vo_event(unit, vo_event)
 			end
 		end
-	elseif scratchpad.drag_anim_delay_t < t then
+	elseif t > scratchpad.drag_anim_delay_t then
 		scratchpad.drag_anim_exit_t = t + action_data.drag_anim_exit_delay
 
 		self:_play_wwise_event(action_data.drag_wwise_event, scratchpad, action_data)
@@ -365,6 +382,7 @@ end
 BtShootNetAction._start_effect_template = function (self, unit, scratchpad, action_data)
 	local effect_template = action_data.effect_template
 	local global_effect_id = scratchpad.fx_system:start_template_effect(effect_template, unit)
+
 	scratchpad.global_effect_id = global_effect_id
 end
 

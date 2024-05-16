@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/darkness/darkness_system.lua
+
 local DarknessSystem = class("DarknessSystem", "ExtensionSystemBase")
 local extensions = {
 	"LightSourceExtension",
-	"PlayerUnitDarknessExtension"
+	"PlayerUnitDarknessExtension",
 }
+
 DarknessSystem.DARKNESS_THRESHOLD = 0.025
 DarknessSystem.TOTAL_DARKNESS_TRESHOLD = 0.0125
 
@@ -11,10 +14,12 @@ DarknessSystem.init = function (self, entity_system_creation_context, system_ini
 
 	self._light_source_data = {}
 	self._player_unit_darkness_data = {}
+
 	local darkness_settings = system_init_data.mission.darkness_settings
 
 	if darkness_settings then
 		local volumes = darkness_settings.volumes
+
 		self._darkness_volumes = volumes
 		self._num_volumes = #volumes
 	else
@@ -38,16 +43,16 @@ DarknessSystem.destroy = function (self)
 end
 
 DarknessSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data)
-	local extension = nil
+	local extension
 
 	if extension_name == "LightSourceExtension" then
 		extension = {
-			intensity = extension_init_data and extension_init_data.intensity or 1
+			intensity = extension_init_data and extension_init_data.intensity or 1,
 		}
 	elseif extension_name == "PlayerUnitDarknessExtension" then
 		extension = {
 			darkness_intensity = 0,
-			intensity = extension_init_data and extension_init_data.intensity or 1
+			intensity = extension_init_data and extension_init_data.intensity or 1,
 		}
 	end
 
@@ -102,15 +107,15 @@ DarknessSystem._update_player_unit_darkness = function (self, dt, t)
 		local unit_position = POSITION_LOOKUP[unit]
 		local pos = unit_position + Vector3(0, 0, 1)
 		local in_darkness = self:is_in_darkness_volume(pos)
-		local light_value = nil
+		local light_value
 
 		if in_darkness then
 			light_value = self:calculate_light_value(pos)
 
-			if IN_LIGHT_LIGHT_VALUE < light_value then
+			if light_value > IN_LIGHT_LIGHT_VALUE then
 				data.darkness_intensity = 0
 				data.in_darkness = false
-			elseif IN_TWILIGHT_LIGHT_VALUE < light_value then
+			elseif light_value > IN_TWILIGHT_LIGHT_VALUE then
 				data.darkness_intensity = math.auto_lerp(IN_LIGHT_LIGHT_VALUE, IN_TWILIGHT_LIGHT_VALUE, 0, TWILIGHT_MAX_INTENSITY, light_value)
 				data.in_darkness = true
 			else
@@ -154,7 +159,8 @@ DarknessSystem.calculate_light_value = function (self, position)
 		local pos = POSITION_LOOKUP[unit]
 		local dist_sq = math.max(Vector3.distance_squared(position, pos), 1)
 		local intensity = data.intensity
-		light_value = light_value + intensity * 1 / dist_sq
+
+		light_value = light_value + intensity * (1 / dist_sq)
 	end
 
 	return light_value

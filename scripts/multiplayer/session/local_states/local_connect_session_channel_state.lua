@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/local_states/local_connect_session_channel_state.lua
+
 local LocalConnectSessionChannelState = class("LocalConnectSessionChannelState")
 
 LocalConnectSessionChannelState.init = function (self, state_machine, shared_state)
@@ -17,7 +19,7 @@ LocalConnectSessionChannelState.update = function (self, dt)
 				Log.info("LocalConnectSessionChannelState", "Denied a channel to %s after several attempts", shared_state.peer_id)
 
 				return "denied", {
-					engine_reason = reason
+					engine_reason = reason,
 				}
 			end
 

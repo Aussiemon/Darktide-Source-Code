@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/player_rewards.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
 local PlayerRewards = class("PlayerRewards")
@@ -17,9 +19,10 @@ PlayerRewards.get_penance_rewards_by_source = function (self, wrapped, promise, 
 		for _, item in pairs(wrapped.items) do
 			local source_info = item.sourceInfo
 			local penance_id = source_info.sourceIdentifier
+
 			all_rewards[#all_rewards + 1] = {
 				penance_id = penance_id,
-				reward_bundle = item
+				reward_bundle = item,
 			}
 		end
 
@@ -48,7 +51,7 @@ PlayerRewards.claim_bundle_reward = function (self, bundle_reward_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/rewards/"):path(bundle_reward_id)
 		local options = {
-			method = "PUT"
+			method = "PUT",
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)

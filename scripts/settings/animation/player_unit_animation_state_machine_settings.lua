@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/animation/player_unit_animation_state_machine_settings.lua
+
 local state_machine_settings = {}
 
 local function _extract_state_machine_settings(path)

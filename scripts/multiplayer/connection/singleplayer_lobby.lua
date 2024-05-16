@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/singleplayer_lobby.lua
+
 local SingleplayerLobby = class("SingleplayerLobby")
 
 SingleplayerLobby.init = function (self)

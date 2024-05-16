@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/utilities/minion_death.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local attack_results = AttackSettings.attack_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local MinionDeath = {}
-local _gib, _push_ragdoll = nil
+local _gib, _push_ragdoll
 
 MinionDeath.die = function (unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, is_critical_strike_or_nil, damage_type_or_nil)
 	Managers.state.minion_death:die(unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, damage_type_or_nil)
@@ -25,7 +27,7 @@ MinionDeath.set_dead = function (unit, attack_direction, hit_zone_name, damage_p
 end
 
 local IMPACT_FX_DATA = {
-	local_only = true
+	local_only = true,
 }
 
 MinionDeath.attack_ragdoll = function (ragdoll_unit, attack_direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_world_position_or_nil, attacking_unit_or_nil, hit_actor_or_nil, herding_template_or_nil, critical_strike_or_nil)
@@ -47,7 +49,7 @@ MinionDeath.attack_ragdoll = function (ragdoll_unit, attack_direction, damage_pr
 
 		local damage = 1
 		local attack_result = attack_results.damaged
-		local hit_normal = nil
+		local hit_normal
 		local attack_was_stopped = false
 		local damage_efficiency = damage_efficiencies.full
 
@@ -64,26 +66,26 @@ function _push_ragdoll(ragdoll_unit, hit_zone_name, attack_direction, damage_pro
 end
 
 local VALID_HIT_ZONES = {
-	lower_left_arm = true,
-	upper_right_arm = true,
-	torso = true,
-	lower_right_arm = true,
-	upper_tail = true,
-	upper_left_leg = true,
-	lower_right_leg = true,
-	upper_right_leg = true,
-	head = true,
 	center_mass = true,
-	upper_left_arm = true,
+	head = true,
+	lower_left_arm = true,
 	lower_left_leg = true,
-	lower_tail = true
+	lower_right_arm = true,
+	lower_right_leg = true,
+	lower_tail = true,
+	torso = true,
+	upper_left_arm = true,
+	upper_left_leg = true,
+	upper_right_arm = true,
+	upper_right_leg = true,
+	upper_tail = true,
 }
 
 local function _find_random_hitzone(ragdoll_unit, optional_is_critical_strike)
 	local breed = Breed.unit_breed_or_nil(ragdoll_unit)
 	local breed_hit_zones = breed.hit_zones
 	local num_breed_hit_zones = #breed_hit_zones
-	local hit_zone_name = nil
+	local hit_zone_name
 	local num_iterations = 0
 
 	if not optional_is_critical_strike then

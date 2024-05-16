@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/force_rotation.lua
+
 local ForceRotation = {}
 
 ForceRotation.start = function (locomotion_force_rotation_component, locomotion_steering_component, force_rotation, start_rotation, start_time, duration)

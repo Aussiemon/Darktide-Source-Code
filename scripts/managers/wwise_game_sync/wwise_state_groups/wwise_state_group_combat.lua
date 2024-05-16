@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_combat.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
@@ -24,14 +26,14 @@ WwiseStateGroupCombat.update = function (self, dt, t)
 		return
 	end
 
-	if self._next_fast_parameter_update < t then
+	if t > self._next_fast_parameter_update then
 		self:_update_health()
 		self:_update_intensity()
 
 		self._next_fast_parameter_update = t + FAST_PARAMETER_UPDATE_RATE
 	end
 
-	if self._next_slow_parameter_update < t then
+	if t > self._next_slow_parameter_update then
 		self:_update_locked_in_melee()
 		self:_update_num_aggroed_minions()
 
@@ -59,8 +61,8 @@ WwiseStateGroupCombat._wwise_state = function (self)
 	local music_parameter_extension = self._music_parameter_extension
 	local intensity_percent = music_parameter_extension:intensity_percent()
 	local num_aggroed_minions = music_parameter_extension:num_aggroed_minions() or 0
-	local horde_high_minimum_aggroed_minions = HORDE_HIGH_MINIMUM_AGGROED_MINIONS <= num_aggroed_minions
-	local horde_low_minimum_aggroed_minions = num_aggroed_minions < HORDE_HIGH_MINIMUM_AGGROED_MINIONS and HORDE_LOW_MINIMUM_AGGROED_MINIONS <= num_aggroed_minions
+	local horde_high_minimum_aggroed_minions = num_aggroed_minions >= HORDE_HIGH_MINIMUM_AGGROED_MINIONS
+	local horde_low_minimum_aggroed_minions = num_aggroed_minions < HORDE_HIGH_MINIMUM_AGGROED_MINIONS and num_aggroed_minions >= HORDE_LOW_MINIMUM_AGGROED_MINIONS
 
 	if music_parameter_extension:boss_near() then
 		return STATES.boss

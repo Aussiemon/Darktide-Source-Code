@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/frame_rate/frame_rate_manager.lua
+
 local FrameRateManager = class("FrameRateManager")
 
 FrameRateManager.init = function (self)
@@ -31,6 +33,7 @@ FrameRateManager.request_full_frame_rate = function (self, reason)
 
 	if self._num_reasons == 0 then
 		self._num_reasons = 1
+
 		local fps = not Application.rendering_enabled() and GameParameters.tick_rate or 0
 
 		Log.info("FrameRateManager", "Reason %q requested. Setting frame rate to %d", reason, fps)

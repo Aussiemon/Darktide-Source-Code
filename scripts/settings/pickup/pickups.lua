@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups.lua
+
 local pickups = {
 	by_group = {},
 	by_name = {},
-	data = {}
+	data = {},
 }
 
 local function _create_pickup_entry(path)
