@@ -133,13 +133,15 @@ contract_type_icon_style.vertical_alignment = "top"
 hud_element_tactical_overlay_settings.styles = styles
 hud_element_tactical_overlay_settings.line_width = 5
 hud_element_tactical_overlay_settings.buffer = 8
+hud_element_tactical_overlay_settings.section_buffer = 4
 hud_element_tactical_overlay_settings.internal_buffer = 2
 hud_element_tactical_overlay_settings.max_penance_description_height = 64
 hud_element_tactical_overlay_settings.right_grid_width = 450
 hud_element_tactical_overlay_settings.right_header_height = 40
+hud_element_tactical_overlay_settings.right_timer_height = 30
 hud_element_tactical_overlay_settings.right_grid_spacing = {
 	0,
-	5,
+	hud_element_tactical_overlay_settings.internal_buffer,
 }
 hud_element_tactical_overlay_settings.right_panel_grids = {
 	achievements = {
@@ -156,6 +158,20 @@ hud_element_tactical_overlay_settings.right_panel_grids = {
 		icon = {
 			blueprint_type = "texture_icon",
 			value = "content/ui/materials/hud/interactions/icons/contracts",
+		},
+	},
+	event = {
+		index = 3,
+		loc_key = "loc_event_category_label",
+		icon = {
+			blueprint_type = "text_icon",
+			value = "",
+		},
+		timer = {
+			loc_key = "loc_event_time_left",
+			func = function (t)
+				return Managers.live_event:active_time_left(t)
+			end,
 		},
 	},
 }

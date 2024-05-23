@@ -20,6 +20,8 @@ NewsView.init = function (self, settings, context)
 	local slide_data = context and context.slide_data
 	local content_package = context and context.content_package
 
+	self._should_save = context == nil or context.should_save ~= false
+
 	if not slide_data then
 		self:_load_slides()
 	else
@@ -47,7 +49,12 @@ local function to_news_view(news_item)
 
 	if backend_contents then
 		for _, content_item in ipairs(backend_contents) do
-			if content_item.type == "title" then
+			local presentation = content.presentation
+			local is_default = not presentation or table.array_contains(presentation, "default")
+
+			if not is_default then
+				-- Nothing
+			elseif content_item.type == "title" then
 				table.insert(content, {
 					widget_type = "header",
 					text = content_item.data or "",
@@ -116,7 +123,9 @@ end
 NewsView._add_viewed_slide = function (self, slide_to_add)
 	local backend_news = slide_to_add.backend_news
 
-	backend_news:mark_read()
+	if self._should_save then
+		backend_news:mark_read()
+	end
 end
 
 NewsView.on_enter = function (self)
@@ -160,11 +169,11 @@ NewsView._create_slide_page_circles = function (self)
 	local circle_size_width = NewsViewSettings.slide_thumb_size[1]
 	local circle_offset = 10
 	local total_width = 0
-	local slides_amount = #self._slides
-	local offset_x = -(slides_amount * circle_size_width + (slides_amount - 1) * circle_offset - circle_size_width) * 0.5
+	local circle_count = self:_circle_count()
+	local offset_x = -(circle_count * circle_size_width + (circle_count - 1) * circle_offset - circle_size_width) * 0.5
 	local view_triggered_by_user = self._view_triggered_by_user
 
-	for i = 1, slides_amount do
+	for i = 1, circle_count do
 		circles[i] = self:_create_widget("slide_circ_" .. i, circle_widget_definition)
 		circles[i].offset[1] = offset_x
 		offset_x = offset_x + circle_size_width + circle_offset
@@ -175,7 +184,7 @@ NewsView._create_slide_page_circles = function (self)
 
 		total_width = total_width + circle_size_width
 
-		if i < slides_amount then
+		if i < circle_count then
 			total_width = total_width + circle_offset
 		end
 	end
@@ -183,14 +192,6 @@ NewsView._create_slide_page_circles = function (self)
 	self._slide_page_circles = circles
 
 	self:_set_scenegraph_size("slide_page_indicator", total_width)
-end
-
-NewsView._setup_grid = function (self, widgets, alignment_list)
-	local grid_direction = "down"
-	local grid_scenegraph_id = "slide_content_grid"
-	local grid = UIWidgetGrid:new(widgets, alignment_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction)
-
-	return grid
 end
 
 NewsView._change_slide = function (self, slide_index, ignore_animation)
@@ -322,6 +323,12 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 	end
 end
 
+NewsView._circle_count = function (self)
+	local slide_count = #self._slides
+
+	return slide_count > 1 and slide_count or 0
+end
+
 NewsView.load_texture = function (self, image_url, image_element)
 	if image_url then
 		local style = image_element.style
@@ -329,28 +336,17 @@ NewsView.load_texture = function (self, image_url, image_element)
 		style.texture.material_values.texture = nil
 
 		local url_textures = self._url_textures
-		local cached_texture = url_textures[image_url]
 
-		if cached_texture then
-			style.texture.material_values.texture = cached_texture.texture
-		else
-			Managers.url_loader:load_texture(image_url):next(function (data)
-				local racing_texture = url_textures[image_url]
+		url_textures[#url_textures + 1] = image_url
 
-				if racing_texture then
-					data:destroy()
+		Managers.url_loader:load_texture(image_url):next(function (data)
+			style.texture.material_values.texture = data.texture
+			url_textures[image_url] = data
+		end):catch(function (error)
+			local error_string = tostring(error)
 
-					data = racing_texture
-				end
-
-				style.texture.material_values.texture = data.texture
-				url_textures[image_url] = data
-			end):catch(function (error)
-				local error_string = tostring(error)
-
-				Log.error("NewsService", "Error fetching news images", error_string)
-			end)
-		end
+			Log.error("NewsService", "Error fetching news images", error_string)
+		end)
 	end
 end
 
@@ -599,14 +595,13 @@ end
 
 NewsView._unload_url_textures = function (self)
 	local url_textures = self._url_textures
+	local url_texture_count = url_textures and #url_textures or 0
 
-	if url_textures then
-		for url, texture_data in pairs(url_textures) do
-			texture_data:destroy()
-		end
-
-		self._url_textures = {}
+	for i = 1, url_texture_count do
+		Managers.url_loader:unload_texture(url_textures[i])
 	end
+
+	self._url_textures = {}
 end
 
 return NewsView

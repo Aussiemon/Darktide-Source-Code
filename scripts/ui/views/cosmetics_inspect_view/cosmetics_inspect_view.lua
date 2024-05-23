@@ -876,10 +876,16 @@ CosmeticsInspectView._start_preview_item = function (self)
 
 		self:_setup_item_description(description)
 
-		if self._bundle_data.image then
-			Managers.url_loader:load_local_texture(self._bundle_data.image)
+		local texture_data = self._bundle_data.image
 
-			self._widgets_by_name.bundle_background.style.bundle.material_values.texture_map = self._bundle_data.image.texture
+		if texture_data then
+			local url = texture_data.url
+
+			self._image_url = url
+
+			Managers.url_loader:load_texture(url)
+
+			self._widgets_by_name.bundle_background.style.bundle.material_values.texture_map = texture_data.texture
 		end
 
 		local title_item_data = {
@@ -1082,14 +1088,10 @@ CosmeticsInspectView.on_exit = function (self)
 
 	self:_destroy_offscreen_gui()
 
-	if self._bundle_data then
-		local texture_data = self._bundle_data.image
+	local image_url = self._image_url
 
-		if texture_data then
-			Managers.url_loader:unload_texture(texture_data)
-		end
-
-		self._bundle_data = nil
+	if image_url then
+		Managers.url_loader:unload_texture(image_url)
 	end
 
 	CosmeticsInspectView.super.on_exit(self)

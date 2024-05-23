@@ -438,9 +438,9 @@ local animation_definitions = {
 				parent._content_alpha_multiplier = 0
 
 				if parent._slides then
-					local slides_amount = #parent._slides
+					local circle_count = parent:_circle_count()
 
-					for i = 1, slides_amount do
+					for i = 1, circle_count do
 						local slide_circle_widget = widgets["slide_circ_" .. i]
 
 						if slide_circle_widget then
@@ -525,9 +525,9 @@ local animation_definitions = {
 				widgets.window_image.alpha_multiplier = anim_progress
 
 				if parent._slides then
-					local slides_amount = #parent._slides
+					local circle_count = parent:_circle_count()
 
-					for i = 1, slides_amount do
+					for i = 1, circle_count do
 						local slide_circle_widget = widgets["slide_circ_" .. i]
 
 						if slide_circle_widget then
@@ -580,9 +580,9 @@ local animation_definitions = {
 				widgets.next_button.alpha_multiplier = anim_progress
 				widgets.window_image.alpha_multiplier = anim_progress
 
-				local slides_amount = #parent._slides
+				local circle_count = parent:_circle_count()
 
-				for i = 1, slides_amount do
+				for i = 1, circle_count do
 					widgets["slide_circ_" .. i].alpha_multiplier = anim_progress
 				end
 			end,

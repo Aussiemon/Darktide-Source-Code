@@ -815,9 +815,12 @@ StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules
 
 				promises[#promises + 1] = url_load_promise
 
+				local url_textures = self._url_textures
+
+				url_textures[#url_textures + 1] = imageURL
+
 				Managers.url_loader:load_texture(imageURL):next(function (data)
 					element.texture_map = data.texture
-					self._url_textures[#self._url_textures + 1] = data
 
 					url_load_promise:resolve(element)
 				end):catch(function (error)
@@ -1000,13 +1003,23 @@ StoreView._create_aquilas_presentation = function (self, offers)
 			}
 
 			local init = template.init
+			local media_url = offer.mediaUrl
 
-			element.media_url = offer.mediaUrl
+			element.media_url = media_url
 
-			if element.media_url then
-				Managers.url_loader:load_texture(element.media_url):next(function (data)
-					element.texture_map = data.texture
-					self._url_textures[#self._url_textures + 1] = data
+			if media_url then
+				local url_textures = self._url_textures
+
+				url_textures[#url_textures + 1] = media_url
+
+				Managers.url_loader:load_texture(media_url):next(function (data)
+					local texture = data.texture
+
+					if not texture then
+						return
+					end
+
+					element.texture_map = texture
 
 					if init then
 						init(self, widget, element, "cb_on_grid_entry_left_pressed")
@@ -1499,16 +1512,15 @@ end
 
 StoreView._unload_url_textures = function (self)
 	local url_textures = self._url_textures
+	local url_texture_count = url_textures and #url_textures or 0
 
-	if url_textures and #url_textures > 0 then
-		for i = 1, #url_textures do
-			local texture_data = url_textures[i]
+	for i = 1, url_texture_count do
+		local url = url_textures[i]
 
-			Managers.url_loader:unload_texture(texture_data)
-		end
-
-		self._url_textures = {}
+		Managers.url_loader:unload_texture(url)
 	end
+
+	self._url_textures = {}
 end
 
 StoreView._setup_input_legend = function (self)

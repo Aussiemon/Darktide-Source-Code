@@ -602,6 +602,26 @@ StoreService.on_contract_task_rerolled = function (self, reroll_cost)
 	end)
 end
 
+StoreService.on_event_tier_completed = function (self, backend_result)
+	local rewards = backend_result and backend_result.rewards
+
+	if not rewards then
+		return Promise.resolved()
+	end
+
+	return self:verify_wallet_caps():next(function ()
+		for i = 1, #rewards do
+			local reward = rewards[i]
+
+			if reward.type == "currency" then
+				local currency, amount = reward.currency, reward.amount
+
+				self:_change_cached_wallet_balance(currency, amount, false, "on_event_tier_completed")
+			end
+		end
+	end)
+end
+
 StoreService.on_contract_completed = function (self, backend_result)
 	local reward = backend_result and backend_result.reward
 

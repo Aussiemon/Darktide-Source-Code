@@ -29,7 +29,7 @@ local function filter_news(news)
 		local news_item = news[i]
 		local platform = news_item.platform
 
-		if not platform or platform == "xbox" and IS_XBS then
+		if not platform or platform == "xbox" and IS_XBS or platform == "pc" and IS_WINDOWS then
 			table.insert(filtered_news, news_item)
 		end
 	end
@@ -39,41 +39,59 @@ end
 
 NewsService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
-	self._cached_news = nil
+	self._cached_data = {}
+	self._cached_promise = {}
+end
+
+NewsService._get_category = function (self, category, use_cache)
+	local cached_promise = self._cached_promise[category]
+
+	if cached_promise then
+		return cached_promise
+	end
+
+	local cached_data = self._cached_data[category]
+
+	if use_cache ~= false and cached_data then
+		return Promise.resolved(cached_data)
+	end
+
+	local promise = self._backend_interface.mailbox:get_mail_paged(nil, 100, true, true, category):next(function (data)
+		local news = {}
+
+		for i = 1, #data.globals do
+			table.insert(news, to_news_item(data.globals[i]))
+		end
+
+		for i = 1, #data.items do
+			table.insert(news, to_news_item(data.items[i]))
+		end
+
+		return news
+	end):catch(function (error)
+		local error_string = tostring(error)
+
+		Log.error("NewsService", "Error fetching news: %s", error_string)
+
+		return {}
+	end):next(function (news)
+		self._cached_promise[category] = nil
+		self._cached_data[category] = news
+
+		return filter_news(news)
+	end)
+
+	self._cached_promise[category] = promise
+
+	return promise
 end
 
 NewsService.get_news = function (self)
-	local promise
+	return self:_get_category("news", true)
+end
 
-	if self._cached_news then
-		promise = Promise.resolved(self._cached_news)
-	else
-		promise = self._backend_interface.mailbox:get_mail_paged(nil, 100, true, true, "news"):next(function (data)
-			local news = {}
-
-			for i = 1, #data.globals do
-				table.insert(news, to_news_item(data.globals[i]))
-			end
-
-			for i = 1, #data.items do
-				table.insert(news, to_news_item(data.items[i]))
-			end
-
-			self._cached_news = news
-
-			return news
-		end):catch(function (error)
-			local error_string = tostring(error)
-
-			Log.error("NewsService", "Error fetching news: %s", error_string)
-
-			return {}
-		end)
-	end
-
-	return promise:next(function (news)
-		return filter_news(news)
-	end)
+NewsService.get_events = function (self)
+	return self:_get_category("event", false)
 end
 
 return NewsService

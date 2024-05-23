@@ -220,6 +220,10 @@ StoreItemDetailView.on_enter = function (self)
 	end
 
 	if imageURL then
+		local url_textures = self._url_textures
+
+		url_textures[#url_textures + 1] = imageURL
+
 		Managers.url_loader:load_texture(imageURL):next(function (data)
 			self._bundle_image = data
 
@@ -2961,15 +2965,15 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			if media_url then
 				element.media_url = media_url
 
+				local url_textures = self._url_textures
+
+				url_textures[#url_textures + 1] = media_url
+
 				Managers.url_loader:load_texture(media_url):next(function (media_data)
 					local texture = media_data.texture
 
 					element.texture_map = texture
 					widget.style.texture.material_values.main_texture = texture
-
-					local url_textures = self._url_textures
-
-					url_textures[#url_textures + 1] = media_data
 				end)
 			end
 
@@ -3261,25 +3265,17 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 end
 
 StoreItemDetailView._unload_url_textures = function (self)
-	if self._bundle_image then
-		local texture_data = self._bundle_image
-
-		Managers.url_loader:unload_texture(texture_data)
-
-		self._bundle_image = nil
-	end
-
 	local url_textures = self._url_textures
+	local url_texture_count = url_textures and #url_textures or 0
 
-	if url_textures and #url_textures > 0 then
-		for i = 1, #url_textures do
-			local texture_data = url_textures[i]
+	for i = 1, url_texture_count do
+		local url = url_textures[i]
 
-			Managers.url_loader:unload_texture(texture_data)
-		end
-
-		self._url_textures = {}
+		Managers.url_loader:unload_texture(url)
 	end
+
+	self._bundle_image = nil
+	self._url_textures = {}
 end
 
 StoreItemDetailView.dialogue_system = function (self)

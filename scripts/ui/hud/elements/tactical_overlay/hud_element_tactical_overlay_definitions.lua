@@ -147,7 +147,7 @@ local scenegraph_definition = {
 		size = right_header_size,
 		position = {
 			0,
-			-(right_header_size[2] + ElementSettings.right_grid_spacing[2]),
+			-(right_header_size[2] + ElementSettings.section_buffer),
 			0,
 		},
 	},
@@ -530,8 +530,13 @@ local right_panel_widgets_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "top",
 				size = {
-					ElementSettings.right_grid_width,
+					ElementSettings.right_grid_width + ElementSettings.right_header_height,
 					ElementSettings.right_header_height,
+				},
+				offset = {
+					-ElementSettings.right_header_height / 2,
+					0,
+					0,
 				},
 				color = {
 					100,
@@ -620,6 +625,92 @@ local right_panel_widgets_definitions = {
 			},
 		},
 	}, "right_panel_content"),
+	right_timer = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "stick",
+			value = "content/ui/materials/backgrounds/default_square",
+			style = {
+				horizontal_alignment = "right",
+				vertical_alignment = "top",
+				offset = {
+					line_width,
+					-(ElementSettings.right_timer_height + ElementSettings.section_buffer),
+					0,
+				},
+				size = {
+					line_width,
+					ElementSettings.right_timer_height,
+				},
+				color = Color.terminal_corner_hover(255, true),
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "background",
+			value = "content/ui/materials/gradients/gradient_horizontal",
+			style = {
+				horizontal_alignment = "right",
+				vertical_alignment = "top",
+				offset = {
+					0,
+					-(ElementSettings.right_timer_height + ElementSettings.section_buffer),
+					0,
+				},
+				size = {
+					ElementSettings.right_grid_width / 2,
+					ElementSettings.right_timer_height,
+				},
+				color = Color.terminal_grid_background_gradient(100, true),
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "time_left",
+			value = "<UNDEFINED>",
+			value_id = "time_left",
+			style = {
+				font_size = 18,
+				horizontal_alignment = "right",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					-ElementSettings.buffer,
+					5 - (ElementSettings.right_timer_height + ElementSettings.section_buffer),
+					1,
+				},
+				size = {
+					ElementSettings.right_grid_width / 2,
+					ElementSettings.right_timer_height,
+				},
+				text_color = Color.ui_input_color(255, true),
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "time_name",
+			value = "<UNDEFINED>",
+			value_id = "time_name",
+			style = {
+				font_size = 18,
+				horizontal_alignment = "right",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					0,
+					5 - (ElementSettings.right_timer_height + ElementSettings.section_buffer),
+					1,
+				},
+				size = {
+					ElementSettings.right_grid_width / 2,
+					ElementSettings.right_timer_height,
+				},
+				text_color = Color.terminal_text_header(255, true),
+			},
+		},
+	}, "right_panel_header"),
 }
 
 local function for_all_left_widgets(parent, func)

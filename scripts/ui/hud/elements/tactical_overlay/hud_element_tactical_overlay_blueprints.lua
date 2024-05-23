@@ -8,6 +8,7 @@ local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_el
 local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local Blueprints = {}
 local internal_buffer = ElementSettings.internal_buffer
 local buffer = ElementSettings.buffer
@@ -41,8 +42,9 @@ local function _format_progress(current, goal, use_complete_text)
 end
 
 local _achievement_completed_color = Color.termianl_icon_dark(255, true)
-local text_width = ElementSettings.right_grid_width - icon_size - 3 * buffer
-local right_content_description_style = {
+local content_width = ElementSettings.right_grid_width - 2 * buffer
+local text_width = content_width - icon_size - buffer
+local base_text_style = {
 	font_size = 19,
 	horizontal_alignment = "right",
 	text_horizontal_alignment = "left",
@@ -59,41 +61,45 @@ local right_content_description_style = {
 	},
 	text_color = Color.terminal_text_body(255, true),
 }
-local right_content_progression_style = {
-	font_size = 21,
-	horizontal_alignment = "right",
-	text_horizontal_alignment = "left",
-	text_vertical_alignment = "top",
-	vertical_alignment = "top",
-	offset = {
-		-buffer,
-		buffer,
-		1,
-	},
-	size = {
-		text_width,
-		100,
-	},
+local right_content_description_style = table.add_missing({
+	font_size = 19,
 	text_color = Color.terminal_text_body(255, true),
-}
-local right_content_progress_border = {
+}, base_text_style)
+local right_content_header_style = table.add_missing({
+	font_size = 16,
+	text_color = Color.terminal_text_body_sub_header(255, true),
+}, base_text_style)
+local right_content_title_style = table.add_missing({
+	font_size = 21,
+	text_color = Color.terminal_text_header(255, true),
+}, base_text_style)
+local right_content_progression_style = table.add_missing({
+	font_size = 21,
+	text_color = Color.terminal_text_body(255, true),
+}, base_text_style)
+local right_content_reward_style = table.add_missing({
+	font_size = 22,
+	text_horizontal_alignment = "right",
+	text_color = Color.terminal_text_body(255, true),
+}, base_text_style)
+local base_bar_style = {
 	horizontal_alignment = "left",
 	vertical_alignment = "top",
-	offset = {
-		2 * buffer + icon_size,
-		buffer,
-		1,
-	},
 	size = {
 		text_width,
 		line_width,
 		1,
 	},
-	color = Color.terminal_frame(255, true),
 }
-local right_content_progress_background = {
-	horizontal_alignment = "left",
-	vertical_alignment = "top",
+local right_content_progress_border = table.add_missing({
+	offset = {
+		2 * buffer + icon_size,
+		buffer,
+		1,
+	},
+	color = Color.terminal_frame(255, true),
+}, base_bar_style)
+local right_content_progress_background = table.add_missing({
 	offset = {
 		2 * buffer + icon_size + 1,
 		buffer + 1,
@@ -105,27 +111,56 @@ local right_content_progress_background = {
 		1,
 	},
 	color = Color.ui_hud_green_dark(255, true),
-}
-local right_content_progress_bar = {
-	horizontal_alignment = "left",
-	vertical_alignment = "top",
+}, base_bar_style)
+local right_content_progress_bar = table.add_missing({
 	offset = {
 		2 * buffer + icon_size,
 		buffer,
 		3,
 	},
+	color = Color.terminal_text_body(255, true),
+}, base_bar_style)
+local right_full_progress_border = table.add_missing({
+	offset = {
+		buffer,
+		buffer,
+		1,
+	},
 	size = {
-		0,
+		content_width,
 		line_width,
 		1,
 	},
-	color = Color.terminal_text_body(255, true),
-}
+}, right_content_progress_border)
+local right_full_progress_background = table.add_missing({
+	offset = {
+		buffer + 1,
+		buffer,
+		2,
+	},
+	size = {
+		content_width - 2,
+		line_width - 2,
+		1,
+	},
+}, right_content_progress_background)
+local right_full_progress_bar = table.add_missing({
+	offset = {
+		buffer,
+		buffer,
+		3,
+	},
+	size = {
+		content_width,
+		line_width,
+		1,
+	},
+}, right_content_progress_bar)
 
 Blueprints.achievement = {
 	size = {
 		ElementSettings.right_grid_width,
-		100,
+		0,
 	},
 	pass_template = {
 		{
@@ -133,23 +168,7 @@ Blueprints.achievement = {
 			style_id = "title",
 			value = "<UNDEFINED>",
 			value_id = "title",
-			style = {
-				font_size = 21,
-				horizontal_alignment = "right",
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
-				offset = {
-					-buffer,
-					buffer,
-					1,
-				},
-				size = {
-					ElementSettings.right_grid_width - icon_size - 3 * buffer,
-					100,
-				},
-				text_color = Color.terminal_text_header(255, true),
-			},
+			style = right_content_title_style,
 		},
 		{
 			pass_type = "rect",
@@ -222,7 +241,7 @@ Blueprints.achievement = {
 		local achievement_id = config.id
 		local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
 		local content, style = widget.content, widget.style
-		local size = internal_buffer
+		local size = widget.content.size[2]
 		local player = Managers.player:local_player(1)
 		local is_complete = Managers.achievements:achievement_completed(player, achievement_definition.id)
 
@@ -315,7 +334,7 @@ Blueprints.achievement = {
 Blueprints.contract = {
 	size = {
 		ElementSettings.right_grid_width,
-		100,
+		0,
 	},
 	pass_template = {
 		{
@@ -355,23 +374,7 @@ Blueprints.contract = {
 			style_id = "reward",
 			value = "<UNDEFINED>",
 			value_id = "reward",
-			style = {
-				font_size = 22,
-				horizontal_alignment = "right",
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
-				offset = {
-					-buffer,
-					buffer,
-					1,
-				},
-				size = {
-					ElementSettings.right_grid_width - icon_size - 3 * buffer,
-					100,
-				},
-				text_color = Color.terminal_text_body(255, true),
-			},
+			style = right_content_reward_style,
 		},
 		{
 			pass_type = "texture",
@@ -415,7 +418,7 @@ Blueprints.contract = {
 		local criteria = task.criteria
 		local title, _ = ContractCriteriaParser.localize_criteria(criteria)
 		local content, style = widget.content, widget.style
-		local size = internal_buffer
+		local size = widget.content.size[2]
 		local parsed_criteria = ContractCriteriaParser.parse_backend_criteria(criteria)
 		local at, target = parsed_criteria.at, parsed_criteria.target
 
@@ -434,7 +437,7 @@ Blueprints.contract = {
 		style.progress_bar.size[1] = text_width * percent_done
 		size = size + style.progress_bar.size[2] + internal_buffer
 		content.progress = _format_progress(at, target, true)
-		content.reward = string.format("%d ", config.reward or 0)
+		content.reward = string.format("%d %s", config.reward or 0, WalletSettings.marks.string_symbol)
 		style.progress.offset[2] = size
 		style.reward.offset[2] = size
 		size = size + _text_height(ui_renderer, content.progress, style.progress) + internal_buffer
@@ -473,65 +476,200 @@ Blueprints.contract = {
 		end
 	end,
 }
-Blueprints.title = {
+Blueprints.event_tier = {
 	size = {
 		ElementSettings.right_grid_width,
-		100,
+		0,
 	},
 	pass_template = {
+		{
+			pass_type = "rect",
+			style_id = "progress_border",
+			value = "content/ui/materials/backgrounds/default_square",
+			style = right_full_progress_border,
+		},
+		{
+			pass_type = "rect",
+			style_id = "progress_background",
+			value = "content/ui/materials/backgrounds/default_square",
+			style = right_full_progress_background,
+		},
+		{
+			pass_type = "rect",
+			style_id = "progress_bar",
+			value = "content/ui/materials/backgrounds/default_square",
+			style = right_full_progress_bar,
+		},
+		{
+			pass_type = "text",
+			style_id = "reward",
+			value = "<UNDEFINED>",
+			value_id = "reward",
+			style = right_content_reward_style,
+		},
 		{
 			pass_type = "text",
 			style_id = "title",
 			value = "<UNDEFINED>",
 			value_id = "title",
-			style = {
-				font_size = 22,
-				horizontal_alignment = "center",
-				text_horizontal_alignment = "center",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
-				offset = {
-					-buffer,
-					buffer,
-					1,
-				},
+			style = table.add_missing({
 				size = {
-					ElementSettings.right_grid_width - 2 * buffer,
+					content_width,
 					100,
 				},
-				text_color = Color.terminal_text_header(255, true),
-			},
+			}, right_content_description_style),
 		},
 		{
-			pass_type = "texture",
-			style_id = "divider",
-			value = "content/ui/materials/dividers/faded_line_01",
-			value_id = "divider",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "top",
+			pass_type = "text",
+			style_id = "progress",
+			value = "<UNDEFINED>",
+			value_id = "progress",
+			style = table.add_missing({
 				size = {
-					ElementSettings.right_grid_width - 2 * buffer,
-					2,
+					content_width,
+					100,
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+			}, right_content_progression_style),
 		},
 	},
-	init = function (parent, widget, config, ui_renderer)
-		local name = config.name
-		local content = widget.content
-		local style = widget.style
-		local size = buffer
+	complete = function (widget)
+		widget.is_complete = true
 
-		content.title = name
+		local _, style = widget.content, widget.style
+
+		style.progress_bar.color = _disabled_color
+		style.title.text_color = _disabled_color
+		style.progress.text_color = _disabled_color
+		style.reward.visible = false
+	end,
+	init = function (parent, widget, config, ui_renderer)
+		local target = config.target
+		local at = math.min(Managers.live_event:active_progress(), target)
+		local template = Managers.live_event:active_template()
+		local content, style = widget.content, widget.style
+		local size = widget.content.size[2]
+		local title = Localize(template.condition, true, {
+			target = target,
+		})
+
+		content.title = title
 		style.title.offset[2] = size
-		size = size + _text_height(ui_renderer, content.title, style.title)
-		style.divider.offset[2] = size
-		size = size + style.divider.size[2] + buffer
+		size = size + _text_height(ui_renderer, content.title, style.title) + internal_buffer
+
+		local percent_done = at / target
+
+		style.progress_border.offset[2] = size
+		style.progress_background.offset[2] = size + 1
+		style.progress_bar.offset[2] = size
+		style.progress_bar.size[1] = content_width * percent_done
+		size = size + style.progress_bar.size[2] + internal_buffer
+
+		local rewards = config.rewards
+		local reward_strings = {}
+
+		for i = 1, #rewards do
+			local reward = rewards[i]
+
+			if reward.type == "currency" and WalletSettings[reward.currency] then
+				reward_strings[#reward_strings + 1] = string.format("%d %s", reward.amount or 0, WalletSettings[reward.currency].string_symbol)
+			end
+		end
+
+		content.reward = table.concat(reward_strings, " ")
+		content.progress = _format_progress(at, target, true)
+		style.reward.offset[2] = size
+		style.progress.offset[2] = size
+		size = size + _text_height(ui_renderer, content.progress, style.progress) + internal_buffer
+		widget.target = target
 		content.size[2] = size
+
+		local is_complete = at == target
+
+		if is_complete and not widget.is_complete then
+			Blueprints.event_tier.complete(widget)
+		end
+	end,
+	update = function (parent, widget, ui_renderer)
+		local content, style = widget.content, widget.style
+		local target = widget.target
+		local at = math.min(Managers.live_event:active_progress(), target)
+		local percent_done = math.min(at / target, 1)
+
+		content.progress = _format_progress(at, target, true)
+		style.progress_bar.size[1] = content_width * percent_done
+
+		local is_complete = at == target
+
+		if is_complete and not widget.is_complete then
+			Blueprints.event_tier.complete(widget)
+		end
 	end,
 }
+
+do
+	local function init_text(parent, widget, config, ui_renderer)
+		local text = config.text
+		local size = widget.content.size[2]
+		local content = widget.content
+		local style = widget.style
+
+		content.text = text
+		style.text.offset[2] = size
+		style.text.size[1] = ElementSettings.right_grid_width - 2 * buffer
+		size = size + _text_height(ui_renderer, content.text, style.text)
+		content.size[2] = size
+	end
+
+	Blueprints.body = {
+		size = {
+			ElementSettings.right_grid_width,
+			0,
+		},
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "<UNDEFINED>",
+				value_id = "text",
+				style = right_content_description_style,
+			},
+		},
+		init = init_text,
+	}
+	Blueprints.header = {
+		size = {
+			ElementSettings.right_grid_width,
+			ElementSettings.section_buffer,
+		},
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "<UNDEFINED>",
+				value_id = "text",
+				style = right_content_header_style,
+			},
+		},
+		init = init_text,
+	}
+	Blueprints.title = {
+		size = {
+			ElementSettings.right_grid_width,
+			ElementSettings.internal_buffer,
+		},
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "<UNDEFINED>",
+				value_id = "text",
+				style = right_content_title_style,
+			},
+		},
+		init = init_text,
+	}
+end
+
 Blueprints.text_icon = {
 	size = {
 		icon_size,
@@ -554,8 +692,8 @@ Blueprints.text_icon = {
 					1,
 				},
 				size = {
-					icon_size - line_width,
-					icon_size - line_width,
+					icon_size,
+					icon_size - (3 + internal_buffer),
 				},
 				text_color = Color.terminal_text_header(255, true),
 				font_size = icon_size - 8,
@@ -569,8 +707,8 @@ Blueprints.text_icon = {
 				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
 				size = {
-					icon_size - buffer,
-					line_width,
+					icon_size - 2 * internal_buffer,
+					3,
 				},
 				offset = {
 					0,
@@ -584,6 +722,7 @@ Blueprints.text_icon = {
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
 		local selected = config.selected
+		local is_left = config.is_left
 		local content = widget.content
 		local style = widget.style
 
@@ -591,7 +730,11 @@ Blueprints.text_icon = {
 
 		if not selected then
 			style.icon.text_color = _disabled_color
+		end
+
+		if not selected or is_left then
 			style.rect.size[1] = 0
+			style.icon.offset[2] = style.icon.offset[2] + (3 + internal_buffer) / 2
 		end
 	end,
 }
@@ -615,8 +758,8 @@ Blueprints.texture_icon = {
 					1,
 				},
 				size = {
-					icon_size - line_width,
-					icon_size - line_width,
+					icon_size - (3 + internal_buffer),
+					icon_size - (3 + internal_buffer),
 				},
 				color = Color.terminal_text_header(255, true),
 			},
@@ -629,8 +772,8 @@ Blueprints.texture_icon = {
 				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
 				size = {
-					icon_size - buffer,
-					line_width,
+					icon_size - 2 * internal_buffer,
+					3,
 				},
 				offset = {
 					0,
@@ -644,6 +787,7 @@ Blueprints.texture_icon = {
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
 		local selected = config.selected
+		local is_left = config.is_left
 		local content = widget.content
 		local style = widget.style
 
@@ -651,7 +795,11 @@ Blueprints.texture_icon = {
 
 		if not selected then
 			style.icon.color = _disabled_color
+		end
+
+		if not selected or is_left then
 			style.rect.size[1] = 0
+			style.icon.offset[2] = style.icon.offset[2] + (3 + internal_buffer) / 2
 		end
 	end,
 }

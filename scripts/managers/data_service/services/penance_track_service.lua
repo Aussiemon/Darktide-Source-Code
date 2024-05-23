@@ -12,9 +12,7 @@ PenanceTrackService.get_track = function (self, trackId)
 	local promise
 
 	if self._cached_track_data then
-		promise = Promise.resolved(self._cached_track_data):next(function (data)
-			return self._cached_track_data
-		end)
+		promise = Promise.resolved(self._cached_track_data)
 	else
 		promise = self._backend_interface.tracks:get_track(trackId):next(function (data)
 			self._cached_track_data = data

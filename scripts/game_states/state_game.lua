@@ -25,6 +25,7 @@ local FreeFlightManager = require("scripts/foundation/managers/free_flight/free_
 local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
 local GRPCManager = require("scripts/managers/grpc/grpc_manager")
 local InputManager = require("scripts/managers/input/input_manager")
+local LiveEventManager = require("scripts/managers/live_event/live_event_manager")
 local LoadingManager = require("scripts/managers/loading/loading_manager")
 local MechanismManager = require("scripts/managers/mechanism/mechanism_manager")
 local MultiplayerSessionManager = require("scripts/managers/multiplayer/multiplayer_session_manager")
@@ -248,6 +249,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	Managers.achievements = AchievementsManager:new(not DEDICATED_SERVER, event_delegate, use_batched_saving, broadcast_unlocks)
 	Managers.voting = VotingManager:new(event_delegate)
 	Managers.progression = ProgressionManager:new()
+	Managers.live_event = LiveEventManager:new(DEDICATED_SERVER)
 	Managers.telemetry = TelemetryManager:new()
 	Managers.telemetry_events = TelemetryEvents:new(Managers.telemetry, Managers.connection)
 	Managers.telemetry_reporters = TelemetryReporters:new()
@@ -343,6 +345,10 @@ StateGame.update = function (self, dt)
 	Managers.steam:update()
 	Managers.backend:update(dt, t)
 
+	if Managers.url_loader then
+		Managers.url_loader:update(dt, t)
+	end
+
 	if Managers.chat then
 		Managers.chat:update(dt, t)
 	end
@@ -390,6 +396,7 @@ StateGame.update = function (self, dt)
 		Testify:update(dt, t)
 	end
 
+	Managers.live_event:update(dt, dt)
 	Managers.telemetry_reporters:update(dt, t)
 	Managers.telemetry:update(dt, t)
 	Managers.server_metrics:update(dt, t)

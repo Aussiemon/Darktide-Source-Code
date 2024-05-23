@@ -172,6 +172,22 @@ table.compact_array = function (t)
 	return t
 end
 
+table.filter_array = function (arr, condition, o)
+	o = o or {}
+
+	local skipped = 0
+
+	for i = 1, #arr do
+		if condition(arr[i]) then
+			o[i - skipped] = arr[i]
+		else
+			skipped = skipped + 1
+		end
+	end
+
+	return o
+end
+
 table.filter = function (t, func)
 	local copy = {}
 
@@ -188,6 +204,18 @@ table.add_missing = function (dest, source)
 	for key, value in pairs(source) do
 		if dest[key] == nil then
 			dest[key] = value
+		end
+	end
+
+	return dest
+end
+
+table.add_missing_recursive = function (dest, source)
+	for key, value in pairs(source) do
+		if dest[key] == nil then
+			dest[key] = value
+		elseif type(dest[key]) == "table" and type(source[key]) == "table" then
+			table.add_missing_recursive(dest[key], source[key])
 		end
 	end
 

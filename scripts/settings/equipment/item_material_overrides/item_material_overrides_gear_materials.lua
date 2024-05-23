@@ -1488,6 +1488,43 @@ local material_overrides = {
 			},
 		},
 	},
+	oxidized_metal_steel_iron_02_wear_01 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_02_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_01",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_02_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.3,
+			},
+			oxid_level = {
+				0.1,
+				0.3,
+			},
+		},
+	},
 	oxidized_metal_iron_wear_01 = {
 		texture_overrides = {
 			oxid1_gradient = {

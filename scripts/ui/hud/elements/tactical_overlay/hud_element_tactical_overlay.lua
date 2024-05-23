@@ -13,6 +13,18 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local HudElementTacticalOverlay = class("HudElementTacticalOverlay", "HudElementBase")
 local default_mission_type_icon = "content/ui/materials/icons/mission_types/mission_type_08"
+local _text_extra_options = {}
+
+local function _text_width(ui_renderer, text, style)
+	local text_extra_options = _text_extra_options
+
+	table.clear(text_extra_options)
+	UIFonts.get_font_options_by_style(style, text_extra_options)
+
+	local width = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, style.size, text_extra_options)
+
+	return math.round(width)
+end
 
 HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale, optional_context)
 	HudElementTacticalOverlay.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -26,6 +38,7 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 	self:_fetch_task_list()
 
 	self._context = table.add_missing(optional_context or {}, ElementSettings.default_context)
+	self._grid_overrides = {}
 
 	self:_setup_left_panel_widgets()
 	self:_setup_right_panel_widgets()
@@ -82,6 +95,8 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 
 	self:_update_contracts(dt, ui_renderer)
 	self:_update_achievements(dt, ui_renderer)
+	self:_update_live_event(dt, ui_renderer)
+	self:_update_right_panel_widgets(ui_renderer)
 
 	if self._gamepad_active ~= InputDevice.gamepad_active then
 		self._gamepad_active = InputDevice.gamepad_active
@@ -103,6 +118,7 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 
 	if self._active then
 		self:_update_materials_collected()
+		self:_update_right_timer_text(dt, t, ui_renderer)
 	end
 
 	self._active = active
@@ -202,7 +218,7 @@ HudElementTacticalOverlay._update_right_grid_size = function (self)
 	local current_key = self._right_panel_key
 	local should_be_visible = current_key ~= nil
 	local grid = self._right_panel_grid
-	local height = should_be_visible and grid:length() or 0
+	local height = should_be_visible and grid:length() + ElementSettings.buffer or 0
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.right_grid_background.style.rect.size[2] = height
@@ -221,6 +237,52 @@ HudElementTacticalOverlay._update_right_hint = function (self)
 	end
 end
 
+HudElementTacticalOverlay._update_right_timer_text = function (self, dt, t, ui_renderer)
+	local right_timer_function = self._right_timer_function
+
+	if not right_timer_function then
+		return
+	end
+
+	local timer_value = right_timer_function(t)
+	local last_seen_value = self._last_seen_time
+
+	if not last_seen_value or math.floor(timer_value) ~= math.floor(last_seen_value) then
+		self._last_seen_time = timer_value
+
+		local timer_widget = self._widgets_by_name.right_timer
+		local timer_text = TextUtils.format_time_span_long_form_localized(timer_value)
+
+		timer_widget.content.time_left = timer_text
+		timer_widget.style.time_name.offset[1] = -(2 * ElementSettings.buffer + _text_width(ui_renderer, timer_text, timer_widget.style.time_name))
+	end
+end
+
+HudElementTacticalOverlay._update_right_timer = function (self)
+	local current_key = self._right_panel_key
+
+	if not current_key then
+		return
+	end
+
+	local page_settings = self:_get_page(current_key)
+	local timer_widget = self._widgets_by_name.right_timer
+	local timer_data = page_settings.timer
+
+	if timer_data == nil then
+		self._last_seen_time = nil
+		self._right_timer_function = nil
+		timer_widget.visible = false
+
+		return
+	end
+
+	self._right_timer_function = timer_data.func
+	timer_widget.visible = true
+	timer_widget.content.time_name = Localize(timer_data.loc_key)
+	timer_widget.content.time_left = ""
+end
+
 HudElementTacticalOverlay._delete_tab_bar = function (self, ui_renderer)
 	local tab_bar_widgets = self._tab_bar_widgets
 	local tab_bar_widgets_size = tab_bar_widgets and #tab_bar_widgets or 0
@@ -235,8 +297,15 @@ HudElementTacticalOverlay._delete_tab_bar = function (self, ui_renderer)
 	self._tab_bar_widgets = nil
 end
 
+HudElementTacticalOverlay._get_page = function (self, page_key)
+	local grid_overrides = self._grid_overrides
+
+	return grid_overrides[page_key] or ElementSettings.right_panel_grids[page_key]
+end
+
 HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 	self:_update_right_hint()
+	self:_update_right_timer()
 	self:_delete_tab_bar(ui_renderer)
 
 	local entries = self._right_panel_entries
@@ -251,19 +320,22 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 		local tab_bar_widgets = {}
 		local ordered_keys = ElementSettings.right_panel_order
 		local total_width = ElementSettings.buffer - ElementSettings.internal_buffer
+		local selected_blueprint, selected_definition, selected_config
 
 		for _, page_key in ipairs(ordered_keys) do
 			if entries[page_key] then
-				local page_settings = ElementSettings.right_panel_grids[page_key]
+				local page_settings = self:_get_page(page_key)
 				local blueprint_type = page_settings.icon.blueprint_type
 				local blueprint = Blueprints[blueprint_type]
 				local definition = definitions[blueprint_type] or UIWidget.create_definition(blueprint.pass_template, "right_panel_header", nil, blueprint.size)
 
 				definitions[blueprint_type] = definition
 
+				local selected = current_key == page_key
 				local config = {
+					is_left = false,
 					value = page_settings.icon.value,
-					selected = current_key == page_key,
+					selected = selected,
 				}
 				local index = #tab_bar_widgets + 1
 				local name = string.format("tab_%d", index)
@@ -276,6 +348,10 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 
 				tab_bar_widgets[index] = widget
 				total_width = total_width + widget.content.size[1] + ElementSettings.internal_buffer
+
+				if selected then
+					selected_blueprint, selected_definition, selected_config = blueprint, definition, table.clone(config)
+				end
 			end
 		end
 
@@ -288,6 +364,22 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 			current_width = current_width + widget.content.size[1] + ElementSettings.internal_buffer
 		end
 
+		if selected_definition and selected_blueprint and selected_config then
+			local index = #tab_bar_widgets + 1
+			local name = string.format("tab_%d", index)
+			local widget = self:_create_widget(name, selected_definition)
+			local init_function = selected_blueprint.init
+
+			if init_function then
+				selected_config.is_left = true
+
+				init_function(self, widget, selected_config, ui_renderer)
+			end
+
+			tab_bar_widgets[index] = widget
+			widget.offset[1] = -widget.content.size[1]
+		end
+
 		self._tab_bar_widgets = tab_bar_widgets
 	else
 		widgets_by_name.right_header_stick.content.visible = false
@@ -295,10 +387,20 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 	end
 
 	local title_widget = widgets_by_name.right_header_title
-	local selected_page = ElementSettings.right_panel_grids[current_key]
+	local selected_page = self:_get_page(current_key)
 	local selected_title = selected_page and Localize(selected_page.loc_key) or ""
 
 	title_widget.content.text = Utf8.upper(selected_title)
+end
+
+HudElementTacticalOverlay._override_right_panel_category = function (self, key, data, ui_renderer)
+	local original = ElementSettings.right_panel_grids[key]
+
+	self._grid_overrides[key] = data and table.add_missing_recursive(data, original)
+
+	if ui_renderer then
+		self:_update_right_tab_bar(ui_renderer)
+	end
 end
 
 HudElementTacticalOverlay._swap_right_grid = function (self, page_key, ui_renderer)
@@ -401,32 +503,92 @@ HudElementTacticalOverlay._setup_contracts = function (self, contracts_data, ui_
 	self:_create_right_panel_widgets(page_key, configs, ui_renderer)
 end
 
-HudElementTacticalOverlay._update_contracts = function (self, dt, ui_renderer)
-	if self._contracts_fetched then
-		self:_setup_contracts(self._contract_data, ui_renderer)
-
-		self._contracts_fetched = false
-	end
-
-	local page_key = "contracts"
-	local current_key = self._right_panel_key
-
-	if page_key ~= current_key then
-		return
-	end
-
-	local contract_widgets = self._right_panel_entries[page_key]
+HudElementTacticalOverlay._on_right_panel_widgets = function (self, key, func_name, ...)
+	local updated_key = key or self._right_panel_key
+	local contract_widgets = self._right_panel_entries[updated_key]
 	local widget_count = contract_widgets and #contract_widgets or 0
 
 	for i = 1, widget_count do
 		local widget = contract_widgets[i]
 		local blueprint_type = widget.blueprint_type
 		local blueprint = Blueprints[blueprint_type]
-		local update = blueprint.update
+		local func = blueprint[func_name]
 
-		if update then
-			update(self, widget, ui_renderer)
+		if func then
+			func(self, widget, ...)
 		end
+	end
+end
+
+HudElementTacticalOverlay._update_right_panel_widgets = function (self, ui_renderer, desired_page)
+	return self:_on_right_panel_widgets(desired_page, "update", ui_renderer)
+end
+
+HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
+	local live_event_id = Managers.live_event:active_event_id()
+
+	self._live_event_id = live_event_id
+
+	local page_key = "event"
+	local template = Managers.live_event:active_template()
+	local event_icon = template.icon
+
+	self:_override_right_panel_category(page_key, {
+		icon = {
+			value = event_icon,
+		},
+	})
+
+	local event_name = template.name
+	local event_description = template.description
+	local configs = {
+		{
+			blueprint = "title",
+			text = Localize(event_name),
+		},
+		{
+			blueprint = "header",
+			text = Localize("loc_event_briefing"),
+		},
+		{
+			blueprint = "body",
+			text = Localize(event_description),
+		},
+		{
+			blueprint = "header",
+			text = Localize("loc_event_objectives"),
+		},
+	}
+	local tiers = Managers.live_event:active_tiers()
+
+	for i = 1, #tiers do
+		local tier = tiers[i]
+
+		configs[#configs + 1] = {
+			blueprint = "event_tier",
+			target = tier.target,
+			rewards = tier.rewards,
+		}
+	end
+
+	self:_create_right_panel_widgets(page_key, configs, ui_renderer)
+end
+
+HudElementTacticalOverlay._update_live_event = function (self, dt, ui_renderer)
+	local current_live_event_id = self._live_event_id
+	local backend_live_event_id = Managers.live_event:active_event_id()
+	local should_create = current_live_event_id ~= backend_live_event_id and backend_live_event_id ~= nil
+
+	if should_create then
+		self:_setup_live_event(ui_renderer)
+	end
+end
+
+HudElementTacticalOverlay._update_contracts = function (self, dt, ui_renderer)
+	if self._contracts_fetched then
+		self:_setup_contracts(self._contract_data, ui_renderer)
+
+		self._contracts_fetched = false
 	end
 end
 
@@ -471,27 +633,6 @@ HudElementTacticalOverlay._update_achievements = function (self, dt, ui_renderer
 
 	if should_update then
 		self:_setup_achievements(ui_renderer)
-	end
-
-	local page_key = "achievements"
-	local current_key = self._right_panel_key
-
-	if page_key ~= current_key then
-		return
-	end
-
-	local achievement_widgets = self._right_panel_entries[page_key]
-	local widget_count = achievement_widgets and #achievement_widgets or 0
-
-	for i = 1, widget_count do
-		local widget = achievement_widgets[i]
-		local blueprint_type = widget.blueprint_type
-		local blueprint = Blueprints[blueprint_type]
-		local update = blueprint.update
-
-		if update then
-			update(self, widget, ui_renderer)
-		end
 	end
 end
 

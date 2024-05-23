@@ -15,6 +15,7 @@ local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementServerMigration = require("scripts/ui/view_elements/view_element_server_migration/view_element_server_migration")
 local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
+local ViewElementNewsSlide = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -39,6 +40,7 @@ MainMenuView.on_enter = function (self)
 	self._character_list_grid = nil
 	self._news_list_requested = false
 	self._news_list = self:_reset_news_list()
+	self._news_element = self:_add_element(ViewElementNewsSlide, "news_element", 101)
 
 	self:_create_character_list_renderer()
 	self:_setup_input_legend()
@@ -392,12 +394,14 @@ end
 
 MainMenuView._populate_news_list = function (self)
 	Managers.data_service.news:get_news():next(function (raw_news)
-		local starting_slide_index = self:_get_news_starting_slide_index(raw_news)
+		local slides = table.filter_array(raw_news, function (item)
+			return not item:is_read()
+		end)
 
-		if starting_slide_index then
+		if #slides > 0 then
 			self._news_list = {
-				slides = raw_news,
-				starting_slide_index = starting_slide_index,
+				starting_slide_index = 1,
+				slides = slides,
 			}
 		else
 			self._news_list = self:_reset_news_list()
@@ -405,18 +409,6 @@ MainMenuView._populate_news_list = function (self)
 
 		self._news_list_requested = false
 	end)
-end
-
-MainMenuView._get_news_starting_slide_index = function (self, news)
-	for i = 1, #news do
-		local news_item = news[i]
-
-		if not news_item:is_read() then
-			return i
-		end
-	end
-
-	return nil
 end
 
 MainMenuView._is_processing_backend_request = function (self)
@@ -685,6 +677,12 @@ MainMenuView.on_exit = function (self)
 		self._input_legend_element = nil
 
 		self:_remove_element("input_legend")
+	end
+
+	if self._news_element then
+		self._news_element = nil
+
+		self:_remove_element("news_element")
 	end
 
 	if self._delete_popup_id then
@@ -1010,6 +1008,18 @@ MainMenuView._unload_portrait_icon = function (self, widget)
 
 		icon_style.color[1] = 0
 	end
+end
+
+MainMenuView._news_requested = function (self)
+	local news_element = self._news_element
+
+	return news_element and news_element:view_requested()
+end
+
+MainMenuView._can_show_news = function (self)
+	local news_element = self._news_element
+
+	return news_element and news_element:can_open_view()
 end
 
 return MainMenuView

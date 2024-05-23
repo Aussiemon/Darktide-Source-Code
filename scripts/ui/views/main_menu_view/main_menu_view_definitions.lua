@@ -1,12 +1,12 @@
 ﻿-- chunkname: @scripts/ui/views/main_menu_view/main_menu_view_definitions.lua
 
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local TextUtils = require("scripts/utilities/ui/text")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputDevice = require("scripts/managers/input/input_device")
+local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
+local TextUtils = require("scripts/utilities/ui/text")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local text_style = table.clone(UIFontSettings.body_small)
 
 text_style.vertical_alignment = "center"
@@ -125,14 +125,14 @@ slots_count_text_style.offset = {
 
 local gamertag_style = table.clone(UIFontSettings.header_2)
 
-gamertag_style.text_horizontal_alignment = "right"
+gamertag_style.text_horizontal_alignment = "left"
 gamertag_style.text_vertical_alignment = "top"
 gamertag_style.text_color = Color.terminal_text_body_sub_header(255, true)
 gamertag_style.font_size = 24
 
 local gamertag_input_style = table.clone(UIFontSettings.body)
 
-gamertag_input_style.text_horizontal_alignment = "right"
+gamertag_input_style.text_horizontal_alignment = "left"
 gamertag_input_style.text_vertical_alignment = "top"
 gamertag_input_style.text_color = {
 	255,
@@ -421,7 +421,7 @@ local scenegraph_definition = {
 		},
 	},
 	gamertag = {
-		horizontal_alignment = "right",
+		horizontal_alignment = "left",
 		parent = "canvas",
 		vertical_alignment = "top",
 		size = {
@@ -429,13 +429,13 @@ local scenegraph_definition = {
 			40,
 		},
 		position = {
-			-200,
+			200,
 			30,
 			2,
 		},
 	},
 	gamertag_input = {
-		horizontal_alignment = "right",
+		horizontal_alignment = "left",
 		parent = "gamertag",
 		vertical_alignment = "top",
 		size = {
@@ -458,7 +458,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-90,
+			-60,
 			0,
 		},
 	},
@@ -975,6 +975,15 @@ local legend_inputs = {
 		on_pressed_callback = "_on_delete_selected_character_pressed",
 		visibility_function = function (parent)
 			return not parent._is_main_menu_open and parent._character_details_active
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_main_menu_show_news",
+		input_action = "navigate_primary_right_pressed",
+		on_pressed_callback = "_news_requested",
+		visibility_function = function (parent)
+			return InputDevice.gamepad_active and not parent._is_main_menu_open and parent:_can_show_news()
 		end,
 	},
 }

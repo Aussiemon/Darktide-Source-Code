@@ -629,6 +629,9 @@ StateTitle._signin = function (self)
 			narrative_promise = Managers.narrative:load_character_narrative(character_id)
 		end
 
+		Managers.live_event:add_player(1, account_id, true)
+		Managers.live_event:refresh()
+
 		local stats_promise = Managers.stats:add_user(1, account_id)
 		local sync_promises = Promise.all(narrative_promise, stats_promise)
 

@@ -102,6 +102,8 @@ MechanismHub.wanted_transition = function (self)
 
 		if not self._fetching_client_data then
 			if Managers.backend:authenticated() then
+				Managers.live_event:refresh_progress()
+
 				self._client_data_promise = _fetch_client_data()
 
 				self._client_data_promise:next(function ()

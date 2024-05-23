@@ -619,7 +619,7 @@ do
 	}
 end
 
-StatDefinitions.head_shot_kill = {
+StatDefinitions.weakspot_kill = {
 	flags = {
 		StatFlags.no_sync,
 	},
@@ -627,9 +627,35 @@ StatDefinitions.head_shot_kill = {
 		{
 			id = "hook_kill",
 			trigger = function (self, stat_data, attack_data)
-				local is_head_shot = attack_data.attack_type == "ranged" and is_weakspot_hit(attack_data)
-
-				if is_head_shot then
+				if is_weakspot_hit(attack_data) then
+					return self.id, attack_data
+				end
+			end,
+		},
+	},
+}
+StatDefinitions.team_weakspot_kill = {
+	flags = {
+		StatFlags.team,
+		StatFlags.never_log,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "weakspot_kill",
+			trigger = StatMacros.forward,
+		},
+	},
+}
+StatDefinitions.head_shot_kill = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "weakspot_kill",
+			trigger = function (self, stat_data, attack_data)
+				if attack_data.attack_type == "ranged" then
 					return self.id, attack_data
 				end
 			end,
@@ -650,6 +676,15 @@ StatDefinitions.non_head_shot_kill = {
 					return self.id, attack_data
 				end
 			end,
+		},
+	},
+}
+StatDefinitions.session_weakspot_kills = {
+	flags = {},
+	triggers = {
+		{
+			id = "team_weakspot_kill",
+			trigger = StatMacros.increment,
 		},
 	},
 }
