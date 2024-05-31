@@ -49,7 +49,7 @@ local function to_news_view(news_item)
 
 	if backend_contents then
 		for _, content_item in ipairs(backend_contents) do
-			local presentation = content.presentation
+			local presentation = content_item.presentation
 			local is_default = not presentation or table.array_contains(presentation, "default")
 
 			if not is_default then

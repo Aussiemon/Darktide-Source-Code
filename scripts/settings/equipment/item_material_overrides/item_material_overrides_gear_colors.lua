@@ -625,6 +625,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_2_colour_brown_08 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_mars_12",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_mars_12",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_mars_12",
+			},
+		},
+	},
 	color_2_colour_black_01 = {
 		texture_overrides = {
 			color_gradient = {
