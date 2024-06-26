@@ -318,48 +318,6 @@ local conversations_hub_tech_priest_a = {
 		},
 		randomize_indexes = {},
 	},
-	hub_idle_conversation_eight_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1] = "loc_tech_priest_a__hub_idle_conversation_eight_a_01",
-		},
-		sound_events_duration = {
-			[1] = 8.477542,
-		},
-		sound_event_weights = {
-			[1] = 1,
-		},
-		randomize_indexes = {},
-	},
-	hub_idle_conversation_seven_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1] = "loc_tech_priest_a__hub_idle_conversation_seven_a_01",
-		},
-		sound_events_duration = {
-			[1] = 7.878583,
-		},
-		sound_event_weights = {
-			[1] = 1,
-		},
-		randomize_indexes = {},
-	},
-	hub_idle_conversation_six_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1] = "loc_tech_priest_a__hub_idle_conversation_six_b_01",
-		},
-		sound_events_duration = {
-			[1] = 6.159938,
-		},
-		sound_event_weights = {
-			[1] = 1,
-		},
-		randomize_indexes = {},
-	},
 	hub_idle_crafting = {
 		randomize_indexes_n = 0,
 		sound_events_n = 18,

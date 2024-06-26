@@ -65,6 +65,21 @@ local mission_vo_fm_resurgence_pilot_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_resurgence_aegis_sighted_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_pilot_a__mission_resurgence_aegis_sighted_a_01",
+			"loc_pilot_a__mission_resurgence_aegis_sighted_a_02",
+			"loc_pilot_a__mission_resurgence_aegis_sighted_a_03",
+		},
+		sound_events_duration = {
+			2.55525,
+			2.970125,
+			4.035729,
+		},
+		randomize_indexes = {},
+	},
 	mission_resurgence_archive_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -113,6 +128,21 @@ local mission_vo_fm_resurgence_pilot_a = {
 			5.010604,
 			5.018625,
 			5.335188,
+		},
+		randomize_indexes = {},
+	},
+	mission_resurgence_bridge_powered_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_pilot_a__mission_bridge_powered_a_01",
+			"loc_pilot_a__mission_bridge_powered_a_02",
+			"loc_pilot_a__mission_bridge_powered_a_03",
+		},
+		sound_events_duration = {
+			4.169833,
+			3.641,
+			5.376667,
 		},
 		randomize_indexes = {},
 	},
@@ -245,6 +275,36 @@ local mission_vo_fm_resurgence_pilot_a = {
 			4.546917,
 			6.197063,
 			5.588083,
+		},
+		randomize_indexes = {},
+	},
+	mission_resurgence_statue_riga_consora_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_pilot_a__mission_resurgence_statue_riga_consora_a_01",
+			"loc_pilot_a__mission_resurgence_statue_riga_consora_a_02",
+			"loc_pilot_a__mission_resurgence_statue_riga_consora_a_03",
+		},
+		sound_events_duration = {
+			7.106271,
+			4.883375,
+			6.874542,
+		},
+		randomize_indexes = {},
+	},
+	mission_resurgence_streets_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_pilot_a__mission_resurgence_streets_a_01",
+			"loc_pilot_a__mission_resurgence_streets_a_02",
+			"loc_pilot_a__mission_resurgence_streets_a_03",
+		},
+		sound_events_duration = {
+			5.317125,
+			4.139417,
+			4.197188,
 		},
 		randomize_indexes = {},
 	},

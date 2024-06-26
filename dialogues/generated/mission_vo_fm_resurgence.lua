@@ -157,6 +157,58 @@ return function ()
 		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
 		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_aegis_sighted_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_aegis_sighted_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_resurgence_aegis_sighted_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"pilot",
+					"sergeant",
+					"boon_vendor",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_aegis_sighted_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_resurgence_aegis_sighted_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
 		name = "mission_resurgence_archive_a",
 		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",
@@ -183,6 +235,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -301,6 +354,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -387,6 +441,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -444,6 +499,58 @@ return function ()
 		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
 		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_bridge_powered_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_bridge_powered_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_resurgence_bridge_powered_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"pilot",
+					"sergeant",
+					"boon_vendor",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_bridge_powered_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_resurgence_bridge_powered_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
 		name = "mission_resurgence_bridges_up_a",
 		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",
@@ -470,6 +577,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -626,6 +734,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 		},
@@ -704,6 +813,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -755,6 +865,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -885,6 +996,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -976,6 +1088,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 		},
@@ -1076,6 +1189,7 @@ return function ()
 					"explicator",
 					"pilot",
 					"sergeant",
+					"boon_vendor",
 				},
 			},
 			{
@@ -1089,6 +1203,122 @@ return function ()
 			{
 				"faction_memory",
 				"mission_resurgence_statue_baross",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_statue_riga_consora_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_statue_riga_consora_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at",
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"mission_resurgence_statue_riga_consora_a",
+			},
+			{
+				"query_context",
+				"distance",
+				OP.GT,
+				1,
+			},
+			{
+				"query_context",
+				"distance",
+				OP.LT,
+				26,
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"pilot",
+					"sergeant",
+					"boon_vendor",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_statue_riga_consora_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_resurgence_statue_riga_consora_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_resurgence",
+		name = "mission_resurgence_streets_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_resurgence_streets_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_resurgence_streets_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"pilot",
+					"sergeant",
+					"boon_vendor",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_resurgence_streets_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_resurgence_streets_a",
 				OP.ADD,
 				1,
 			},

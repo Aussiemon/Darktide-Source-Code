@@ -29,34 +29,6 @@ local conversations_hub_mourningstar_servitor_d = {
 		},
 		randomize_indexes = {},
 	},
-	hub_mission_board_announcement_generic = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1] = "loc_mourningstar_servitor_d__hub_mission_board_announcement_05",
-		},
-		sound_events_duration = {
-			[1] = 4.928938,
-		},
-		sound_event_weights = {
-			[1] = 1,
-		},
-		randomize_indexes = {},
-	},
-	hub_mission_board_announcement_generic_circumstance = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1] = "loc_mourningstar_servitor_d__hub_mission_circumstance_announcement_05",
-		},
-		sound_events_duration = {
-			[1] = 6.409709,
-		},
-		sound_event_weights = {
-			[1] = 1,
-		},
-		randomize_indexes = {},
-	},
 	hub_mission_board_announcement_tank_foundry = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

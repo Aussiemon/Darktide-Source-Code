@@ -219,37 +219,6 @@ return function ()
 	define_rule({
 		category = "player_prio_1",
 		database = "class_rework",
-		name = "ability_litany_temp",
-		response = "ability_litany_temp",
-		wwise_route = 31,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"combat_ability",
-			},
-			{
-				"query_context",
-				"ability_name",
-				OP.EQ,
-				"ability_litany",
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "disabled",
-		},
-	})
-	define_rule({
-		category = "player_prio_1",
-		database = "class_rework",
 		name = "ability_pious_stabber",
 		response = "ability_pious_stabber",
 		wwise_route = 31,
@@ -327,6 +296,37 @@ return function ()
 				"ability_name",
 				OP.EQ,
 				"ability_protectorate_stop",
+			},
+			{
+				"user_context",
+				"enemies_distant",
+				OP.GT,
+				0,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "player_prio_1",
+		database = "class_rework",
+		name = "ability_repent_a",
+		response = "ability_repent_a",
+		wwise_route = 31,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"combat_ability",
+			},
+			{
+				"query_context",
+				"ability_name",
+				OP.EQ,
+				"ability_litany",
 			},
 			{
 				"user_context",

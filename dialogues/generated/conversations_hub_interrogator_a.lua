@@ -8,7 +8,7 @@ local conversations_hub_interrogator_a = {
 			[1] = "loc_interrogator_a__twins_epilogue_01_a_01",
 		},
 		sound_events_duration = {
-			[1] = 3.395351,
+			[1] = 3.795351,
 		},
 		randomize_indexes = {},
 	},
@@ -96,7 +96,7 @@ local conversations_hub_interrogator_a = {
 			[1] = "loc_interrogator_a__twins_epilogue_01_i_01",
 		},
 		sound_events_duration = {
-			[1] = 4.538776,
+			[1] = 4.938776,
 		},
 		randomize_indexes = {},
 	},

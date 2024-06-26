@@ -976,7 +976,7 @@ local gameplay_vo_veteran_male_b = {
 	},
 	enemy_kill_netgunner = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 9,
 		sound_events = {
 			"loc_veteran_male_b__enemy_kill_netgunner_01",
 			"loc_veteran_male_b__enemy_kill_netgunner_02",
@@ -987,7 +987,6 @@ local gameplay_vo_veteran_male_b = {
 			"loc_veteran_male_b__enemy_kill_netgunner_07",
 			"loc_veteran_male_b__enemy_kill_netgunner_08",
 			"loc_veteran_male_b__enemy_kill_netgunner_09",
-			"loc_veteran_male_b__enemy_kill_netgunner_10",
 		},
 		sound_events_duration = {
 			1.359792,
@@ -999,7 +998,6 @@ local gameplay_vo_veteran_male_b = {
 			2.481917,
 			1.804833,
 			3.266104,
-			2.135854,
 		},
 		randomize_indexes = {},
 	},

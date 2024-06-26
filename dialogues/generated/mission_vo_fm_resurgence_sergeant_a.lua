@@ -65,6 +65,21 @@ local mission_vo_fm_resurgence_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_resurgence_aegis_sighted_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_resurgence_aegis_sighted_a_01",
+			"loc_sergeant_a__mission_resurgence_aegis_sighted_a_02",
+			"loc_sergeant_a__mission_resurgence_aegis_sighted_a_03",
+		},
+		sound_events_duration = {
+			3.53075,
+			3.101083,
+			3.156708,
+		},
+		randomize_indexes = {},
+	},
 	mission_resurgence_archive_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -113,6 +128,21 @@ local mission_vo_fm_resurgence_sergeant_a = {
 			4.310583,
 			4.567333,
 			4.632104,
+		},
+		randomize_indexes = {},
+	},
+	mission_resurgence_bridge_powered_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_bridge_powered_a_01",
+			"loc_sergeant_a__mission_bridge_powered_a_02",
+			"loc_sergeant_a__mission_bridge_powered_a_03",
+		},
+		sound_events_duration = {
+			3.025125,
+			3.569083,
+			3.818729,
 		},
 		randomize_indexes = {},
 	},
@@ -245,6 +275,36 @@ local mission_vo_fm_resurgence_sergeant_a = {
 			4.180833,
 			5.251458,
 			6.081063,
+		},
+		randomize_indexes = {},
+	},
+	mission_resurgence_statue_riga_consora_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_resurgence_statue_riga_consora_a_01",
+			"loc_sergeant_a__mission_resurgence_statue_riga_consora_a_02",
+			"loc_sergeant_a__mission_resurgence_statue_riga_consora_a_03",
+		},
+		sound_events_duration = {
+			5.283458,
+			5.594729,
+			5.260813,
+		},
+		randomize_indexes = {},
+	},
+	mission_resurgence_streets_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_resurgence_streets_a_01",
+			"loc_sergeant_a__mission_resurgence_streets_a_02",
+			"loc_sergeant_a__mission_resurgence_streets_a_03",
+		},
+		sound_events_duration = {
+			3.3205,
+			4.401521,
+			3.951354,
 		},
 		randomize_indexes = {},
 	},
