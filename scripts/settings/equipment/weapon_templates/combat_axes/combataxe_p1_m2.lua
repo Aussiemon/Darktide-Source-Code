@@ -1134,7 +1134,7 @@ weapon_template.overclocks = {
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 
 weapon_template.base_stats = {
-	combataxe_p1_m2_dps_stat = {
+	combataxe_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1189,7 +1189,7 @@ weapon_template.base_stats = {
 			},
 		},
 	},
-	combataxe_p1_m2_armor_pierce_stat = {
+	combataxe_p1_m1_armor_pierce_stat = {
 		display_name = "loc_stats_display_ap_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1240,7 +1240,7 @@ weapon_template.base_stats = {
 			},
 		},
 	},
-	combataxe_p1_m2_cleave_targets_stat = {
+	combataxe_cleave_targets_stat = {
 		display_name = "loc_stats_display_cleave_targets_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1279,7 +1279,7 @@ weapon_template.base_stats = {
 			},
 		},
 	},
-	combataxe_p1_m2_first_target_stat = {
+	combataxe_p1_m1_first_target_stat = {
 		display_name = "loc_stats_display_first_target_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1326,7 +1326,7 @@ weapon_template.base_stats = {
 			},
 		},
 	},
-	combataxe_p1_m2_mobility_stat = {
+	combataxe_p1_m1_mobility_stat = {
 		display_name = "loc_stats_display_mobility_stat",
 		is_stat_trait = true,
 		dodge = {

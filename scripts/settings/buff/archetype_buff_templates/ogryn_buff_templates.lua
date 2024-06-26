@@ -477,9 +477,9 @@ templates.ogryn_carapace_armor_parent = {
 			local attacking_unit = params.attacking_unit
 
 			if attacking_unit then
-				local unit_data_extension = ScriptUnit.extension(attacking_unit, "unit_data_system")
-				local breed_name = unit_data_extension:breed_name()
-				local breed = Breeds[breed_name]
+				local unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
+				local breed_name = unit_data_extension and unit_data_extension:breed_name()
+				local breed = breed_name and Breeds[breed_name]
 				local faction_name = breed and breed.faction_name
 
 				if faction_name and faction_name == "imperium" then

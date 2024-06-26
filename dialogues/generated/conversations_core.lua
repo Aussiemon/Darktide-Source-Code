@@ -4650,7 +4650,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_01_b",
+				"enemy_kill_berserker_ext",
 				OP.EQ,
 				0,
 			},
@@ -4658,7 +4658,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_01_b",
+				"enemy_kill_berserker_ext",
 				OP.ADD,
 				1,
 			},
@@ -4875,7 +4875,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_02_b",
+				"enemy_kill_berserker_ext",
 				OP.EQ,
 				0,
 			},
@@ -4883,7 +4883,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_02_b",
+				"enemy_kill_berserker_ext",
 				OP.ADD,
 				1,
 			},
@@ -5100,7 +5100,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_03_b",
+				"enemy_kill_berserker_ext",
 				OP.EQ,
 				0,
 			},
@@ -5108,7 +5108,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_03_b",
+				"enemy_kill_berserker_ext",
 				OP.ADD,
 				1,
 			},
@@ -5281,7 +5281,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_04_b",
+				"enemy_kill_berserker_ext",
 				OP.EQ,
 				0,
 			},
@@ -5289,7 +5289,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_04_b",
+				"enemy_kill_berserker_ext",
 				OP.ADD,
 				1,
 			},
@@ -5471,7 +5471,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_05_b",
+				"enemy_kill_berserker_ext",
 				OP.EQ,
 				0,
 			},
@@ -5479,7 +5479,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_berserker_ext_05_b",
+				"enemy_kill_berserker_ext",
 				OP.ADD,
 				1,
 			},
@@ -5674,7 +5674,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_monster_ext_01_b",
+				"enemy_kill_monster_ext",
 				OP.EQ,
 				0,
 			},
@@ -5682,7 +5682,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_monster_ext_01_b",
+				"enemy_kill_monster_ext",
 				OP.ADD,
 				1,
 			},
@@ -5848,7 +5848,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_01_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.EQ,
 				0,
 			},
@@ -5856,7 +5856,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_01_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.ADD,
 				1,
 			},
@@ -6065,7 +6065,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_02_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.EQ,
 				0,
 			},
@@ -6073,7 +6073,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_02_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.ADD,
 				1,
 			},
@@ -6244,7 +6244,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_03_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.EQ,
 				0,
 			},
@@ -6252,7 +6252,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_03_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.ADD,
 				1,
 			},
@@ -6424,7 +6424,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_04_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.EQ,
 				0,
 			},
@@ -6432,7 +6432,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_04_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.ADD,
 				1,
 			},
@@ -6594,7 +6594,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_05_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.EQ,
 				0,
 			},
@@ -6602,7 +6602,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_kill_poxwalker_bomber_ext_05_b",
+				"enemy_kill_poxwalker_bomber_ext",
 				OP.ADD,
 				1,
 			},

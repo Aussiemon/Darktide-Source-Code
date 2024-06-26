@@ -2445,7 +2445,7 @@ local material_overrides = {
 			},
 		},
 	},
-	color_2_colour_enforcer_01 = {
+	color_2_colour_enforcer_02 = {
 		texture_overrides = {
 			color_gradient = {
 				resource = "content/textures/colors/2_colour_enforcer_01",

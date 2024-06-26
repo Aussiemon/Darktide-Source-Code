@@ -19,6 +19,10 @@ StoryMissionBackgroundView.on_enter = function (self)
 	local narrative_story = "s1_twins"
 	local narrative_chapter = "s1_twins_epilogue_2"
 	local current_chapter = Managers.narrative:current_chapter(narrative_story)
+	local viewport_name = Definitions.background_world_params.viewport_name
+
+	self._world_spawner:set_listener(viewport_name)
+
 	local current_chapter_name = current_chapter and current_chapter.name
 
 	if narrative_chapter == current_chapter_name then

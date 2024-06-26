@@ -1407,6 +1407,15 @@ DialogueSystem._process_query = function (self, query, t, is_a_delayed_query)
 
 			if random_ignore_vo.chance < math.random() then
 				if random_ignore_vo.max_failed_tries == 0 then
+					local category_config = DialogueCategoryConfig[dialogue_template.category]
+
+					if category_config.add_rule_memory_on_discard then
+						local rule_name = query.validated_rule.name
+						local memory_name = "faction_memory"
+
+						extension:store_in_memory(memory_name, rule_name, 1)
+					end
+
 					return
 				end
 

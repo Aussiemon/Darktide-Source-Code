@@ -6,6 +6,7 @@ local CinematicManagerTestify = GameParameters.testify and require("scripts/mana
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local Vo = require("scripts/utilities/vo")
 local CinematicManager = class("CinematicManager")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local CLIENT_RPCS = {
@@ -286,6 +287,7 @@ CinematicManager.update = function (self, dt, t)
 									self._count_released = 0
 
 									self:_play_next_in_queue()
+									Vo.stop_all_currently_playing_vo()
 								end),
 							},
 						},

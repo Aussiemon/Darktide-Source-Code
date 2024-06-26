@@ -141,13 +141,12 @@ CutsceneView.can_exit = function (self)
 	return self._can_exit
 end
 
-local system_name = "dialogue_system"
-
 CutsceneView.dialogue_system = function (self)
 	local state_managers = Managers.state
 
 	if state_managers then
 		local extension_manager = state_managers.extension
+		local system_name = "dialogue_system"
 
 		return extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
 	end

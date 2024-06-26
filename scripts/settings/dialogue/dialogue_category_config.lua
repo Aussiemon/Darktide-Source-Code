@@ -208,6 +208,7 @@ dialogue_category_config.conversations_prio_0 = {
 	},
 }
 dialogue_category_config.conversations_prio_1 = {
+	add_rule_memory_on_discard = true,
 	mutually_exclusive = true,
 	query_score = 15,
 	queue_vox_prio_0 = true,

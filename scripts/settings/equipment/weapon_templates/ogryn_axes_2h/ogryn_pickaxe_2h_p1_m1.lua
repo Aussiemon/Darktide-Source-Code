@@ -1347,6 +1347,7 @@ weapon_template.actions = {
 		outer_damage_type = damage_types.ogryn_physical,
 	},
 	action_special = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_special",
 		anim_event_3p = "attack_pushfollow_stab",
@@ -1359,7 +1360,6 @@ weapon_template.actions = {
 		invalid_start_action_for_stat_calculation = true,
 		kind = "sweep",
 		range_mod = 1.5,
-		sprint_requires_press_to_interrupt = "true",
 		start_input = "special_action",
 		total_time = 1.42,
 		weapon_handling_template = "time_scale_0_8",

@@ -101,7 +101,7 @@ StatsManager._get_smallest_send_rpc = function (self, size)
 		end
 	end
 
-	return rpcs_calls[#rpcs_calls]
+	return rpcs_calls[StatNetworkTypes.u24bit]
 end
 
 StatsManager._update_rpcs = function (self, user)

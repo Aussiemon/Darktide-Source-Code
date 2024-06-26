@@ -243,6 +243,7 @@ VideoView.update = function (self, dt, t, input_service)
 		self:_update_dummy_video(dt)
 	elseif self._loading_packages then
 		self:_update_package_loading()
+		self:_set_background_visibility(true)
 	elseif not self._sound_ready then
 		local playing_elapsed = self:_get_sound_playing_elapsed()
 
