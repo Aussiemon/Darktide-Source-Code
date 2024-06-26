@@ -1746,6 +1746,15 @@ local legend_inputs = {
 			return false
 		end,
 	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_preview_voice",
+		input_action = "hotkey_item_inspect",
+		on_pressed_callback = "cb_preview_voice",
+		visibility_function = function (parent, id)
+			return parent:_can_preview_voice()
+		end,
+	},
 }
 local text_description_pass_template = {
 	{

@@ -197,6 +197,7 @@ end
 ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
+	local inventory_slot_component = self._inventory_slot_component
 
 	self._has_shot_this_frame = false
 
@@ -210,9 +211,10 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		local has_no_ammo_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
 		local has_no_ammo_on_crit_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption_on_crits)
 		local no_ammo_consumption = has_no_ammo_keyword or is_critical_strike and has_no_ammo_on_crit_keyword or self._leadbelcher_shot
-		local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, action_settings)
+		local has_ammo = ActionUtility.has_ammunition(inventory_slot_component, action_settings)
+		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
-		if not has_ammo and not no_ammo_consumption then
+		if not has_ammo and not no_ammo_consumption and current_ammunition_reserve > 0 then
 			return true
 		end
 	end
@@ -990,11 +992,20 @@ ActionShoot._muzzle_fx_source = function (self)
 	local action_settings = self._action_settings
 	local fx = action_settings.fx
 	local alternate_muzzle_flashes = fx.alternate_muzzle_flashes
+	local double_barrel_shotgun_muzzle_flashes = fx.double_barrel_shotgun_muzzle_flashes
 
 	if alternate_muzzle_flashes then
 		local action_component = self._action_component
 		local num_shots_fired = action_component.num_shots_fired
 		local use_primary_node = num_shots_fired % 2 == 0
+
+		return use_primary_node and self._muzzle_fx_source_name or self._muzzle_fx_source_secondary_name
+	end
+
+	if double_barrel_shotgun_muzzle_flashes then
+		local inventory_slot_component = self._inventory_slot_component
+		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+		local use_primary_node = current_ammunition_clip % 2 == 0
 
 		return use_primary_node and self._muzzle_fx_source_name or self._muzzle_fx_source_secondary_name
 	end

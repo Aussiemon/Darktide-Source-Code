@@ -104,6 +104,7 @@ Dialogue.component_data = {
 			"Captain Twin Female",
 			"Captain Twin Male",
 			"Reject NPC",
+			"Travelling Salesman",
 		},
 		options_values = {
 			"none",
@@ -137,6 +138,7 @@ Dialogue.component_data = {
 			"captain_twin_female",
 			"captain_twin_male",
 			"reject_npc",
+			"travelling_salesman",
 		},
 	},
 	dialogue_profile = {
@@ -209,6 +211,9 @@ Dialogue.component_data = {
 			"Captain Twin Male",
 			"Reject NPC",
 			"Reject NPC Servitor",
+			"Travelling Salesman A",
+			"Travelling Salesman B",
+			"Travelling Salesman C",
 		},
 		options_values = {
 			"none",
@@ -275,6 +280,9 @@ Dialogue.component_data = {
 			"captain_twin_male_a",
 			"reject_npc_a",
 			"reject_npc_servitor_a",
+			"travelling_salesman_a",
+			"travelling_salesman_b",
+			"travelling_salesman_c",
 		},
 	},
 	faction_memory_name = {

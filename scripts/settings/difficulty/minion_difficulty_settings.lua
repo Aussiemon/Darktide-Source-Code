@@ -591,11 +591,11 @@ minion_difficulty_settings.shooting = {
 	},
 	renegade_rifleman = {
 		aim_durations = _shoot_steps_desc(0.3, 0.5),
-		shoot_cooldown = _shoot_steps_desc(2.25, 2.75),
+		shoot_cooldown = _shoot_steps_desc(1.25, 1.75),
 		time_per_shot = _equal_difficulty_values(0.2, 0.25),
 		time_per_shot_tg_sprint = _equal_difficulty_values(0.4, 0.6),
 		num_shots = _equal_difficulty_values(2, 3),
-		num_shots_cover = _equal_difficulty_values(2, 4, true),
+		num_shots_cover = _equal_difficulty_values(2, 3, true),
 		shoot_dodge_window = _equal_difficulty_values(0.5, 0.5),
 	},
 	renegade_shocktrooper = {
@@ -607,11 +607,11 @@ minion_difficulty_settings.shooting = {
 	},
 	cultist_assault = {
 		aim_durations = _shoot_steps_desc(0.4, 0.5),
-		shoot_cooldown = _shoot_steps_desc(1.5, 2),
+		shoot_cooldown = _shoot_steps_desc(1, 2),
 		time_per_shot = _equal_difficulty_values(0.0923, 0.0923),
-		num_shots = _equal_difficulty_values(4, 5, true),
+		num_shots = _equal_difficulty_values(6, 8, true),
 		shoot_dodge_window = _equal_difficulty_values(0.5, 0.5),
-		num_shots_cover = _equal_difficulty_values(4, 7, true),
+		num_shots_cover = _equal_difficulty_values(8, 10, true),
 	},
 	cultist_gunner = {
 		aim_durations = _shoot_steps_desc(0.5, 0.75),

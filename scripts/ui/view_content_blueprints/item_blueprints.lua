@@ -848,7 +848,9 @@ local function generate_blueprints_function(grid_size)
 				end
 
 				if style.item_level then
-					content.item_level = ItemUtils.item_level(item)
+					local item_level, has_level = ItemUtils.item_level(item)
+
+					content.item_level = has_level and item_level or ""
 				end
 
 				local item_type = item.item_type
@@ -1224,14 +1226,14 @@ local function generate_blueprints_function(grid_size)
 					icon_offset[1] = icon_offset[1] - icon_size[1] * 0.3
 				end
 
-				local item_level, has_item_level
+				local item_rating, has_item_rating
 
 				if presentation_item then
-					item_level, has_item_level = ItemUtils.item_level(presentation_item)
+					item_rating, has_item_rating = ItemUtils.item_level(presentation_item)
 				end
 
 				if content.item_level then
-					content.item_level = has_item_level and item_level or ""
+					content.item_level = has_item_rating and item_rating or ""
 				end
 
 				local required_level = presentation_item and ItemUtils.character_level(presentation_item)
@@ -1680,27 +1682,26 @@ local function generate_blueprints_function(grid_size)
 
 				local item_name_options = UIFonts.get_font_options_by_style(item_name_style)
 				local display_description_options = UIFonts.get_font_options_by_style(display_description_style)
+				local item_name_margin = 15
 				local item_name_size = {
 					widget.content.size[1],
 					1080,
 				}
-				local item_name_width, item_name_height = UIRenderer.text_size(ui_renderer, widget.content.title, item_name_style.font_type, item_name_style.font_size, item_name_size, item_name_options)
-				local display_description_width, display_description_height = UIRenderer.text_size(ui_renderer, widget.content.description, display_description_style.font_type, display_description_style.font_size, item_name_size, display_description_options)
-				local item_name_margin = 15
+				local _, item_name_height = UIRenderer.text_size(ui_renderer, widget.content.title, item_name_style.font_type, item_name_style.font_size, item_name_size, item_name_options)
+				local _, display_description_height = UIRenderer.text_size(ui_renderer, widget.content.description, display_description_style.font_type, display_description_style.font_size, item_name_size, display_description_options)
 
 				widget.content.size[2] = item_name_height + item_name_margin + display_description_height
 				widget.style.title.size = {
-					item_name_width + item_name_margin,
+					widget.content.size[1],
 					item_name_height,
 				}
 				widget.style.description.size = {
-					display_description_width + item_name_margin,
+					widget.content.size[1],
 					display_description_height,
 				}
 				widget.style.description.offset[2] = item_name_height + item_name_margin
 
-				local offset_x = 0
-				local offset_y = 0
+				local offset_x, offset_y = 0, 0
 
 				if element.horizontal_alignment == "right" then
 					offset_x = -widget.content.size[1]

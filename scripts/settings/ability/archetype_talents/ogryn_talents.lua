@@ -820,7 +820,7 @@ local archetype_talents = {
 				toughness_multiplier = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings_2.defensive_3.toughness_replenish_multiplier,
+					value = talent_settings_2.defensive_3.toughness_replenish_modifier,
 				},
 				health = {
 					format_type = "percentage",
@@ -1826,7 +1826,7 @@ local archetype_talents = {
 			},
 			passive = {
 				buff_template_name = "ogryn_fully_charged_attacks_gain_damage_and_stagger",
-				identifier = "blocking_reduces_push_cost",
+				identifier = "ogryn_fully_charged_attacks_gain_damage_and_stagger",
 			},
 		},
 	},

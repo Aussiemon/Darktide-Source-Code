@@ -518,7 +518,7 @@ StateMainMenu.update = function (self, main_dt, main_t)
 
 	if error_state then
 		return error_state, error_state_params
-	elseif IS_XBS or IS_GDK then
+	elseif IS_XBS or IS_GDK or IS_PLAYSTATION then
 		local error_state, error_state_params = Managers.account:wanted_transition()
 
 		if error_state then

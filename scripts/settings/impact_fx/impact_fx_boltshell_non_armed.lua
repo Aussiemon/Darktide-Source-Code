@@ -432,7 +432,15 @@ local super_armor = {
 				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
 			},
 			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
+				only_1p = true,
+			},
+			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
 				only_1p = true,
 			},
 		},
@@ -441,27 +449,31 @@ local super_armor = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
 			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 			},
 			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
 				only_1p = true,
 			},
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 			},
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 			},
 		},
 		damage_negated = {
@@ -485,7 +497,7 @@ local super_armor = {
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 			},
 		},
 	},
@@ -503,7 +515,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored",
+					"content/fx/particles/weapons/rifles/boltpistol/boltpistol_impact_armor_01",
 				},
 			},
 		},
@@ -520,7 +532,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored",
+					"content/fx/particles/weapons/rifles/boltpistol/boltpistol_impact_armor_01",
 				},
 			},
 		},
@@ -537,7 +549,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored",
+					"content/fx/particles/weapons/rifles/boltpistol/boltpistol_impact_armor_01",
 				},
 			},
 		},
@@ -554,7 +566,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored",
+					"content/fx/particles/weapons/rifles/boltpistol/boltpistol_impact_armor_01",
 				},
 			},
 		},
@@ -571,7 +583,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored",
+					"content/fx/particles/weapons/rifles/boltpistol/boltpistol_impact_armor_01",
 				},
 			},
 		},
@@ -583,7 +595,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet",
+					"content/fx/particles/weapons/rifles/boltpistol/boltpistol_impact_armor_nodamage_01",
 				},
 			},
 		},
@@ -915,7 +927,7 @@ local default_surface_fx = {
 		sfx = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen",
+				event = "wwise/events/weapon/play_bullet_hits_gen_large",
 				group = "surface_material",
 				normal_rotation = true,
 			},
@@ -933,7 +945,7 @@ local default_surface_fx = {
 		sfx = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen",
+				event = "wwise/events/weapon/play_bullet_hits_gen_large",
 				group = "surface_material",
 				normal_rotation = true,
 			},

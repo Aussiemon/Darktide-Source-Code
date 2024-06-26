@@ -1404,4 +1404,28 @@ conditions.has_last_los_pos = function (unit, blackboard, scratchpad, condition_
 	return last_los_postion ~= nil
 end
 
+conditions.berzerker_leap_attack_allowed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local perception_component = blackboard.perception
+
+	if not is_running and perception_component.lock_target then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local AttackIntensity = require("scripts/utilities/attack_intensity")
+	local target_unit = perception_component.target_unit
+	local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
+
+	return attack_allowed
+end
+
 return conditions

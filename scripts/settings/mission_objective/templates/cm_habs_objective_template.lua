@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	cm_habs = {
-		main_objective_type = "control_objective",
 		objectives = {
 			objective_cm_habs_cross_street = {
 				description = "loc_objective_cm_habs_cross_street_desc",
@@ -24,8 +23,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_cm_habs_scan_hab_a_header",
 				mission_objective_type = "scanning",
+				music_wwise_state = "scanning_event",
 				show_progression_popup_on_update = false,
-				use_music_event = "scanning_event",
 			},
 			objective_cm_habs_to_pipe = {
 				description = "loc_objective_cm_habs_to_pipe_desc",
@@ -37,9 +36,9 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_cm_habs_hab_b_interrogators_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "hacking_event",
 				progress_bar = true,
 				turn_off_backfill = true,
-				use_music_event = "hacking_event",
 			},
 			objective_cm_habs_b_wait = {
 				description = "loc_objective_cm_habs_b_wait_poison_desc",
@@ -50,7 +49,7 @@ local mission_objective_templates = {
 				description = "loc_objective_cm_habs_to_deck_desc",
 				header = "loc_objective_cm_habs_to_deck_header",
 				mission_objective_type = "goal",
-				use_music_event = "escape_event",
+				music_wwise_state = "escape_event",
 			},
 		},
 	},

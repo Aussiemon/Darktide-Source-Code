@@ -73,8 +73,8 @@ local function _add_presentation_perks(item, layout, grid_size)
 		}
 	end
 
-	for i = 1, num_perks do
-		local perk = perks[i]
+	for ii = 1, num_perks do
+		local perk = perks[ii]
 		local perk_id = perk.id
 		local perk_value = perk.value
 		local perk_rarity = perk.rarity
@@ -84,13 +84,15 @@ local function _add_presentation_perks(item, layout, grid_size)
 			local is_locked = item_locked and not perk.modified
 			local is_modified = perk.modified
 			local show_glow = perk.is_fake
+			local is_gadget = item_type == "GADGET"
 
 			layout[#layout + 1] = {
 				widget_type = "weapon_perk",
+				is_gadget = is_gadget,
 				perk_item = perk_item,
 				perk_value = perk_value,
 				perk_rarity = perk_rarity,
-				perk_index = i,
+				perk_index = ii,
 				show_glow = show_glow,
 				is_locked = is_locked,
 				is_modified = is_modified,
@@ -113,6 +115,7 @@ end
 
 local function _add_presentation_traits(item, layout, grid_size)
 	local item_type = item.item_type
+	local is_gadget = item_type == "GADGET"
 	local add_end_margin = false
 	local traits = item.traits
 	local num_traits = traits and #traits or 0
@@ -146,8 +149,8 @@ local function _add_presentation_traits(item, layout, grid_size)
 		add_end_margin = true
 	end
 
-	for i = 1, num_traits do
-		local trait = traits[i]
+	for ii = 1, num_traits do
+		local trait = traits[ii]
 		local trait_id = trait.id
 		local trait_value = trait.value
 		local trait_rarity = trait.rarity
@@ -155,7 +158,7 @@ local function _add_presentation_traits(item, layout, grid_size)
 		local trait_item = MasterItems.get_item(trait_id)
 
 		if trait_item then
-			local widget_type = item_type == "GADGET" and "gadget_trait" or "weapon_trait"
+			local widget_type = is_gadget and "gadget_trait" or "weapon_trait"
 			local is_locked = item_locked and not trait.modified
 			local is_modified = trait.modified
 			local show_glow = trait.is_fake
@@ -166,14 +169,14 @@ local function _add_presentation_traits(item, layout, grid_size)
 				trait_item = trait_item,
 				trait_value = trait_value,
 				trait_rarity = trait_rarity,
-				trait_index = i,
+				trait_index = ii,
 				show_glow = show_glow,
 				is_locked = is_locked,
 				is_modified = is_modified,
 				trait_category = trait_category,
 			}
 
-			if i < num_traits then
+			if ii < num_traits then
 				layout[#layout + 1] = {
 					add_background = true,
 					widget_type = "dynamic_spacing",
@@ -186,7 +189,7 @@ local function _add_presentation_traits(item, layout, grid_size)
 		end
 	end
 
-	if num_traits > 0 and item_type == "GADGET" then
+	if num_traits > 0 and is_gadget then
 		layout[#layout + 1] = {
 			add_background = true,
 			widget_type = "dynamic_spacing",
@@ -484,9 +487,15 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			item = item,
 		}
 		layout[#layout + 1] = {
+			widget_type = "divider_line",
+		}
+		layout[#layout + 1] = {
 			widget_type = "cosmetic_gear_icon",
 			item = item,
 			profile = profile,
+		}
+		layout[#layout + 1] = {
+			widget_type = "divider_line",
 		}
 
 		if show_requirement and ItemUtils.class_requirement_text(item) ~= "" then
@@ -561,6 +570,7 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 		layout[#layout + 1] = {
 			widget_type = "insignia",
 			item = item,
+			profile = profile,
 		}
 
 		if item.description and item.description ~= "" and not hide_description then
@@ -744,6 +754,21 @@ ViewElementWeaponStats.select_trait = function (self, index)
 			widget.style.glow.visible = widget.content.entry.trait_index == index
 			widget.style.glow_background.visible = widget.content.entry.trait_index == index
 		end
+	end
+end
+
+ViewElementWeaponStats.update_modification_cap = function (self, override_value)
+	local item = self._item
+	local grid_divider_bottom_weapon = self._widgets_by_name.grid_divider_bottom_weapon
+
+	if item and (item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED") then
+		ItemUtils.modifications_by_item(item):next(function (values)
+			grid_divider_bottom_weapon.content.modified_text = string.format(" %i/%i", values.modifications, override_value or values.max_modifications)
+		end):catch(function (values)
+			grid_divider_bottom_weapon.style.modified_frame.visible = false
+			grid_divider_bottom_weapon.style.modified_text.visible = false
+			grid_divider_bottom_weapon.content.modified_text = ""
+		end)
 	end
 end
 

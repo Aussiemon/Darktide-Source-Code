@@ -936,12 +936,12 @@ local PlayerComponentConfig = {
 		scannable_unit = "Unit",
 	},
 }
-local inventory_component_data = PlayerCharacterConstants.inventory_component_data
+local inventory_slot_component_data = PlayerCharacterConstants.inventory_slot_component_data
 
 for slot_name, config in pairs(slot_configuration) do
 	if config.wieldable then
 		local slot_type = config.slot_type
-		local component_data = inventory_component_data[slot_type]
+		local component_data = inventory_slot_component_data[slot_type]
 		local component_config = {}
 
 		for key, data in pairs(component_data) do

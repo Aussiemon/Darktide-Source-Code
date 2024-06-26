@@ -12,6 +12,7 @@ local Vo = require("scripts/utilities/vo")
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local projectile_locomotion_states = ProjectileLocomotionSettings.states
+local ALL_CLIENTS = false
 local EXTERNAL_PROPERTIES
 local SYNC_TO_CLIENTS = true
 local ActionSpawnProjectile = class("ActionSpawnProjectile", "ActionWeaponBase")
@@ -98,8 +99,10 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	if vfx_name then
 		local vfx_effect_source_name = action_settings.vfx_effect_source_name
 		local source_name = self._fx_sources[vfx_effect_source_name] or vfx_effect_source_name
+		local position_offset, rotation_offset, scale
+		local create_network_index = true
 
-		self._particle_id = self._fx_extension:spawn_unit_particles(vfx_name, source_name, true, "stop", nil, nil, nil, false)
+		self._particle_id = self._fx_extension:spawn_unit_particles(vfx_name, source_name, true, "stop", position_offset, rotation_offset, scale, ALL_CLIENTS, create_network_index)
 	end
 
 	if self._is_server then
@@ -246,7 +249,9 @@ ActionSpawnProjectile.finish = function (self, reason, data, t, time_in_action)
 	local particle_id = self._particle_id
 
 	if particle_id then
-		self._fx_extension:stop_player_particles(particle_id)
+		self._fx_extension:stop_player_particles(particle_id, ALL_CLIENTS)
+
+		self._particle_id = nil
 	end
 
 	local action_settings = self._action_settings
@@ -352,9 +357,10 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strik
 	local starting_state = projectile_locomotion_states.sleep
 	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension:stat_buffs()
+	local override_origin_slot = action_settings.override_origin_slot
 	local direction, speed, momentum
 	local owner_unit = self._player_unit
-	local origin_item_slot = self._inventory_component.wielded_slot
+	local origin_item_slot = override_origin_slot or self._inventory_component.wielded_slot
 	local charge_level
 
 	if action_settings.use_charge then
@@ -374,7 +380,14 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strik
 		target_unit, target_position = self:_target_unit_and_position()
 	end
 
-	local weapon_item = self._weapon.item
+	local weapon_item
+
+	if override_origin_slot then
+		weapon_item = self._visual_loadout_extension:item_in_slot(override_origin_slot)
+	end
+
+	weapon_item = weapon_item or self._weapon.item
+
 	local owner_side = self._side_system.side_by_unit[self._player_unit]
 	local owner_side_name = owner_side and owner_side:name()
 	local projectile_unit = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item, nil, owner_side_name)
@@ -566,10 +579,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	end
 
 	if projectile_template.play_vce then
-		local fx_extension = ScriptUnit.extension(unit, "fx_system")
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-
-		PlayerVoiceGrunts.trigger_voice("attack_short_vce", visual_loadout_extension, fx_extension, false)
+		PlayerVoiceGrunts.trigger_voice("attack_short_vce", self._visual_loadout_extension, self._fx_extension, false)
 	end
 end
 

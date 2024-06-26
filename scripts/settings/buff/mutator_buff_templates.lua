@@ -176,7 +176,7 @@ templates.empowered_poxwalker = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.3999999999999999,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -328,7 +328,7 @@ templates.empowered_poxwalker_with_duration = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.3999999999999999,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -464,7 +464,7 @@ templates.empowered_by_pox_gas = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.3999999999999999,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then

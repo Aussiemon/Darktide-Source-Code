@@ -325,8 +325,21 @@ MinionSuppressionExtension.attack_delay = function (self)
 	return self._attack_delay
 end
 
+MinionSuppressionExtension.add_suppression_immunity_duration = function (self, duration)
+	local t = Managers.time:time("gameplay")
+
+	self._suppressed_immunity_t = t + duration
+end
+
 MinionSuppressionExtension.last_suppressing_unit = function (self)
 	return self._last_suppressing_unit
+end
+
+MinionSuppressionExtension.suppress_value = function (self)
+	local suppression_component = self._suppression_component
+	local suppress_value = suppression_component.suppress_value
+
+	return suppress_value
 end
 
 MinionSuppressionExtension.apply_suppression_decay_delay = function (self, decay_delay)

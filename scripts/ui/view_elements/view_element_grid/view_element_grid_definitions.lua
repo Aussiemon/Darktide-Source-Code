@@ -605,7 +605,7 @@ local function create_definitions(settings)
 	}
 
 	if not hide_dividers then
-		widget_definitions.grid_divider_top = UIWidget.create_definition({
+		local top_divider_passes = {
 			{
 				pass_type = "texture",
 				style_id = "texture",
@@ -617,8 +617,13 @@ local function create_definitions(settings)
 					vertical_alignment = "top",
 				},
 			},
-		}, "grid_divider_top")
-		widget_definitions.grid_divider_bottom = UIWidget.create_definition({
+		}
+
+		if settings.top_divider_passes then
+			table.append(top_divider_passes, settings.top_divider_passes)
+		end
+
+		local bottom_divider_passes = {
 			{
 				pass_type = "texture",
 				style_id = "texture",
@@ -630,7 +635,14 @@ local function create_definitions(settings)
 					vertical_alignment = "center",
 				},
 			},
-		}, "grid_divider_bottom")
+		}
+
+		if settings.bottom_divider_passes then
+			table.append(bottom_divider_passes, settings.bottom_divider_passes)
+		end
+
+		widget_definitions.grid_divider_top = UIWidget.create_definition(top_divider_passes, "grid_divider_top")
+		widget_definitions.grid_divider_bottom = UIWidget.create_definition(bottom_divider_passes, "grid_divider_bottom")
 	end
 
 	return {

@@ -43,7 +43,7 @@ local breed_data = {
 	psyker_mark_target = true,
 	ranged = true,
 	run_speed = 4.8,
-	slot_template = "chaos_poxwalker",
+	slot_template = "renegade_melee",
 	spawn_anim_state = "to_riflemen",
 	spawn_inventory_slot = "slot_ranged_weapon",
 	stagger_resistance = 1,
@@ -112,8 +112,8 @@ local breed_data = {
 		max_distance_from_target = 45,
 		max_distance_from_target_z = 10,
 		max_distance_from_target_z_below = -10,
-		max_distance_modifier_duration = 50,
-		max_distance_modifier_percentage = 0.7,
+		max_distance_modifier_duration = 15,
+		max_distance_modifier_percentage = 0.5,
 		search_radius = 35,
 		suppressed_max_distance_from_combat_vector = 60,
 		suppressed_max_distance_from_target = 60,
@@ -153,6 +153,10 @@ local breed_data = {
 		moving_melee = {
 			0.7,
 			0.8,
+		},
+		grenade = {
+			2,
+			3,
 		},
 	},
 	line_of_sight_data = {

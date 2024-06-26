@@ -2,6 +2,7 @@
 
 local BreedQueries = require("scripts/utilities/breed_queries")
 local minion_breeds = BreedQueries.minion_breeds()
+local path = "content/ui/textures/icons/achievements/"
 local AchievementBreedGroups = {}
 
 AchievementBreedGroups.all = {

@@ -236,6 +236,8 @@ InputUtils.input_text_for_current_input_device = function (service_type, alias_k
 	if input_manager:device_in_use("gamepad") then
 		if IS_XBS then
 			device_types = _gamepad_devices.xbox_controller
+		elseif IS_PLAYSTATION then
+			device_types = _gamepad_devices.ps4_controller
 		else
 			local device = input_manager:last_pressed_device()
 			local type = device:type()
@@ -245,7 +247,7 @@ InputUtils.input_text_for_current_input_device = function (service_type, alias_k
 	end
 
 	local alias = input_manager:alias_object(service_type)
-	local key_info = alias:get_keys_for_alias(alias_key, alias_array_index, device_types)
+	local key_info = alias:get_keys_for_alias(alias_key, device_types)
 	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info, color_tint_text) or ""
 
 	return input_key
@@ -265,6 +267,27 @@ InputUtils.stop_simulate_action = function (input_service_name, action_name)
 	local input_service = Managers.input:get_input_service(input_service_name)
 
 	input_service:stop_simulate_action(action_name)
+end
+
+local _temp_device_list = {}
+
+InputUtils.platform_device_list = function ()
+	table.clear(_temp_device_list)
+
+	local input_device_list = InputUtils.input_device_list
+
+	if IS_XBS then
+		table.append(_temp_device_list, input_device_list.xbox_controller)
+	elseif IS_PLAYSTATION then
+		table.append(_temp_device_list, input_device_list.ps4_controller)
+	else
+		table.append(_temp_device_list, input_device_list.mouse)
+		table.append(_temp_device_list, input_device_list.keyboard)
+
+		_temp_device_list[#_temp_device_list + 1] = Pad1
+	end
+
+	return _temp_device_list
 end
 
 return InputUtils

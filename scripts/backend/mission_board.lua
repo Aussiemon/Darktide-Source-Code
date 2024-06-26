@@ -31,7 +31,7 @@ MissionBoard.fetch = function (self, on_expiry, pause_time)
 end
 
 MissionBoard.create_mission = function (self, mission_data)
-	if #mission_data.flags == 0 then
+	if not next(mission_data.flags) then
 		mission_data.flags = {
 			none = {
 				none = "test",

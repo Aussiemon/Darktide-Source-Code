@@ -3,14 +3,12 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
-local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local Vo = require("scripts/utilities/vo")
 local BtShootPositionAction = class("BtShootPositionAction", "BtNode")
-local DEFAULT_NOT_ALLOWED_COOLDOWN = 0.5
 
 BtShootPositionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
@@ -59,11 +57,8 @@ BtShootPositionAction.leave = function (self, unit, breed, blackboard, scratchpa
 		MinionMovement.set_anim_rotation_driven(scratchpad, false)
 	end
 
-	scratchpad.navigation_extension:set_enabled(false)
 	scratchpad.locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
 end
-
-local MIN_NEEDED_PATH_DISTANCE = 5
 
 BtShootPositionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local state = scratchpad.state

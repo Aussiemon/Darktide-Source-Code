@@ -50,7 +50,11 @@ AccountService.signin = function (self)
 			})
 		end
 
-		local store_account_verified = Managers.account:verify_gdk_store_account(nil, true)
+		local store_account_verified
+
+		if IS_XBS or IS_GDK then
+			store_account_verified = Managers.account:verify_gdk_store_account(nil, true)
+		end
 
 		if store_account_verified then
 			Log.debug("AccountService", "Store account update")

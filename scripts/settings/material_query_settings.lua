@@ -27,6 +27,12 @@ local surface_materials = {
 	"wood_plywood",
 	"wood_solid",
 }
+local footstep_effects = {
+	world_interaction = {
+		water_deep = true,
+		water_puddle = true,
+	},
+}
 local surface_materials_lookup = {}
 local Unit_material_id = Unit.material_id
 
@@ -86,5 +92,6 @@ material_query_settings.surface_materials = surface_materials
 material_query_settings.surface_materials_lookup = surface_materials_lookup
 material_query_settings.surface_material_groups = surface_material_groups
 material_query_settings.surface_material_groups_lookup = surface_material_groups_lookup
+material_query_settings.footstep_effects = footstep_effects
 
 return settings("MaterialQuerySettings", material_query_settings)

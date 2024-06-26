@@ -204,7 +204,7 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local input_field_widget = widgets.input_field
 				local input_field_content = input_field_widget.content
-				local is_controller_controlled = IS_XBS and InputDevice.gamepad_active
+				local is_controller_controlled = (IS_XBS or IS_PLAYSTATION) and InputDevice.gamepad_active
 
 				input_field_content.visible = true
 

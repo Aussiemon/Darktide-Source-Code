@@ -10,7 +10,7 @@ local hit_zone_names = HitZone.hit_zone_names
 local prop_data = {
 	hit_mass = 50,
 	name = "filtration_tank",
-	breed_type = breed_types.prop,
+	breed_type = breed_types.objective_prop,
 	armor_type = armor_types.armored,
 	hit_effect_armor_override = hit_effect_armor_type.prop_druglab_tank,
 	hit_zones = {
@@ -19,6 +19,11 @@ local prop_data = {
 			actors = {
 				"c_destructible",
 			},
+		},
+	},
+	hitzone_damage_multiplier = {
+		ranged = {
+			[hit_zone_names.center_mass] = 0.25,
 		},
 	},
 	tags = {

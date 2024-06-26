@@ -45,6 +45,12 @@ NavQueries.position_on_mesh_with_outside_position = function (nav_world, travers
 		projected_position = Vector3(position.x, position.y, altitude)
 	elseif traverse_logic then
 		projected_position = GwNavQueries.inside_position_from_outside_position(nav_world, position, above, below, lateral, distance_from_nav_mesh, traverse_logic)
+
+		local on_nav_mesh = projected_position and GwNavQueries.triangle_from_position(nav_world, projected_position, above, below, traverse_logic)
+
+		if not on_nav_mesh and projected_position then
+			projected_position = nil
+		end
 	else
 		projected_position = GwNavQueries.inside_position_from_outside_position(nav_world, position, above, below, lateral, distance_from_nav_mesh)
 	end
@@ -123,7 +129,7 @@ local RADIUS = PlayerCharacterConstants.respawn_hot_join_radius
 local HEIGHT = PlayerCharacterConstants.respawn_hot_join_height
 local MARGIN = PlayerCharacterConstants.respawn_hot_join_margin
 
-function _check_space_empty(physics_world, position, capsule_rotation, capsule_size)
+local function _check_space_empty(physics_world, position, capsule_rotation, capsule_size)
 	local _, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "capsule", "position", position + Vector3.up() * (HEIGHT / 2 + MARGIN), "rotation", capsule_rotation, "size", capsule_size, "collision_filter", "filter_player_mover")
 
 	return actor_count == 0

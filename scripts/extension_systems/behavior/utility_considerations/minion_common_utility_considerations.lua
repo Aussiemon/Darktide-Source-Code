@@ -579,9 +579,9 @@ local considerations = {
 			invert = true,
 			is_condition = true,
 		},
-		last_done_time = {
-			component_field = "last_done_time",
-			max_value = 5,
+		last_time = {
+			component_field = "last_time",
+			max_value = 20,
 			time_diff = true,
 			spline = {
 				0,
@@ -715,6 +715,60 @@ local considerations = {
 			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
 			is_condition = true,
+		},
+	},
+	frag_grenade = {
+		distance_to_target = {
+			blackboard_component = "perception",
+			component_field = "target_distance",
+			max_value = 20,
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1,
+			},
+		},
+		has_good_last_los_position = {
+			blackboard_component = "perception",
+			component_field = "has_good_last_los_position",
+			is_condition = true,
+		},
+		last_done_time = {
+			component_field = "last_done_time",
+			max_value = 30,
+			time_diff = true,
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1,
+			},
+		},
+	},
+	sergeant_shout = {
+		last_done_time = {
+			component_field = "last_done_time",
+			max_value = 20,
+			time_diff = true,
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1,
+			},
 		},
 	},
 }

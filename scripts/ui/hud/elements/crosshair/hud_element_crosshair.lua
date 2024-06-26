@@ -3,6 +3,7 @@
 local definition_path = "scripts/ui/hud/elements/crosshair/hud_element_crosshair_definitions"
 local Action = require("scripts/utilities/weapon/action")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Fov = require("scripts/utilities/camera/fov")
 local Hud = require("scripts/utilities/ui/hud")
 local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -60,6 +61,10 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 
 	event_manager:register(self, "event_crosshair_hit_report", "event_crosshair_hit_report")
 	event_manager:register(self, "event_update_forced_dot_crosshair", "event_update_forced_dot_crosshair")
+	event_manager:register(self, "event_update_crosshair_type_override", "event_update_crosshair_type_override")
+	event_manager:register(self, "event_update_crosshair_enabled", "event_update_crosshair_enabled")
+	event_manager:register(self, "event_update_hit_indicator_enabled", "event_update_hit_indicator_enabled")
+	event_manager:register(self, "event_update_hit_indicator_duration", "event_update_hit_indicator_duration")
 
 	local save_manager = Managers.save
 
@@ -67,6 +72,10 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 		local account_data = save_manager:account_data()
 
 		self._forced_dot_crosshair = account_data.interface_settings.forced_dot_crosshair_enabled
+		self._crosshair_type_override = account_data.interface_settings.crosshair_type_override
+		self._crosshair_enabled = account_data.interface_settings.crosshair_enabled
+		self._hit_indicator_enabled = account_data.interface_settings.hit_indicator_enabled
+		self._hit_indicator_duration = account_data.interface_settings.hit_indicator_duration
 	end
 end
 
@@ -75,6 +84,10 @@ HudElementCrosshair.destroy = function (self, ui_renderer)
 
 	event_manager:unregister(self, "event_crosshair_hit_report")
 	event_manager:unregister(self, "event_update_forced_dot_crosshair")
+	event_manager:unregister(self, "event_update_crosshair_type_override")
+	event_manager:unregister(self, "event_update_crosshair_enabled")
+	event_manager:unregister(self, "event_update_hit_indicator_enabled")
+	event_manager:unregister(self, "event_update_hit_indicator_duration")
 	HudElementCrosshair.super.destroy(self, ui_renderer)
 end
 
@@ -93,7 +106,7 @@ HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, a
 
 	table.clear(hit_report_array)
 
-	hit_report_array[1] = HudElementCrosshairSettings.hit_duration
+	hit_report_array[1] = self._hit_indicator_duration or HudElementCrosshairSettings.hit_duration
 	hit_report_array[2] = hit_weakspot
 	hit_report_array[3] = attack_result
 	hit_report_array[4] = did_damage
@@ -111,6 +124,30 @@ HudElementCrosshair.event_update_forced_dot_crosshair = function (self, value)
 	self:_sync_active_crosshair(crosshair_settings)
 end
 
+HudElementCrosshair.event_update_crosshair_type_override = function (self, value)
+	self._crosshair_type_override = value
+
+	local crosshair_settings = self:_crosshair_settings()
+
+	self:_sync_active_crosshair(crosshair_settings)
+end
+
+HudElementCrosshair.event_update_crosshair_enabled = function (self, value)
+	self._crosshair_enabled = value
+
+	local crosshair_settings = self:_crosshair_settings()
+
+	self:_sync_active_crosshair(crosshair_settings)
+end
+
+HudElementCrosshair.event_update_hit_indicator_enabled = function (self, value)
+	self._hit_indicator_enabled = value
+end
+
+HudElementCrosshair.event_update_hit_indicator_duration = function (self, value)
+	self._hit_indicator_duration = value
+end
+
 local hit_indicator_colors = HudElementCrosshairSettings.hit_indicator_colors
 
 HudElementCrosshair.hit_indicator = function (self)
@@ -126,11 +163,11 @@ HudElementCrosshair.hit_indicator = function (self)
 		local is_critical_strike = hit_report_array[7]
 		local color
 
-		if attack_result == attack_results.blocked or attack_result == attack_results.shield_blocked or not did_damage then
+		if attack_result == attack_results.blocked or attack_result == attack_results.shield_blocked or not did_damage or damage_efficiency == damage_efficiencies.negated then
 			color = hit_indicator_colors.blocked
 		elseif attack_result == attack_results.damaged then
-			if hit_weakspot then
-				color = hit_indicator_colors.damage_weakspot
+			if is_critical_strike then
+				color = hit_indicator_colors.damage_crit
 			else
 				color = hit_indicator_colors.damage_normal
 			end
@@ -142,10 +179,10 @@ HudElementCrosshair.hit_indicator = function (self)
 
 		local anim_progress = math.easeOutCubic(progress)
 
-		return anim_progress, color
+		return anim_progress, color, hit_weakspot
 	end
 
-	return nil, nil
+	return nil, nil, nil
 end
 
 HudElementCrosshair.hit_report_array = function (self)
@@ -177,6 +214,7 @@ HudElementCrosshair._spread_yaw_pitch = function (self)
 			end
 
 			pitch, yaw = Suppression.apply_suppression_offsets_to_spread(suppression_component, pitch, yaw)
+			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
 		end
 
 		return yaw, pitch
@@ -228,7 +266,9 @@ HudElementCrosshair.update = function (self, dt, t, ui_renderer, render_settings
 		local update_function = template and template.update_function
 
 		if update_function then
-			update_function(self, ui_renderer, self._widget, template, crosshair_settings, dt, t)
+			local draw_hit_indicator = self._hit_indicator_enabled
+
+			update_function(self, ui_renderer, self._widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 		end
 	end
 end
@@ -269,6 +309,7 @@ end
 
 HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_settings)
 	local crosshair_type
+	local can_override = false
 
 	if crosshair_settings then
 		local parent = self._parent
@@ -288,7 +329,17 @@ HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_sett
 			end
 
 			crosshair_type = is_special_active and crosshair_settings.crosshair_type_special_active or crosshair_settings.crosshair_type
+			can_override = wielded_slot == "slot_secondary"
 		end
+	end
+
+	local crosshair_enabled = self._crosshair_enabled
+	local crosshair_type_override = self._crosshair_type_override
+
+	if not crosshair_enabled then
+		crosshair_type = "ironsight"
+	elseif can_override and crosshair_type_override ~= "weapon" and crosshair_type ~= "ironsight" then
+		crosshair_type = crosshair_type_override
 	end
 
 	if self._forced_dot_crosshair and (not crosshair_type or crosshair_type == "none") then

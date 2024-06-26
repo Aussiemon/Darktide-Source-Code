@@ -26,7 +26,7 @@ charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat = {
 		},
 	},
 	{
-		"extra_warp_charge_percent",
+		"full_charge_warp_charge_percent",
 		{
 			max = 0.75,
 			min = 0.25,
@@ -46,7 +46,7 @@ charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_perk = {
 		0.05,
 	},
 	{
-		"extra_warp_charge_percent",
+		"full_charge_warp_charge_percent",
 		0.05,
 	},
 }
@@ -59,7 +59,7 @@ charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat = {
 		},
 	},
 	{
-		"extra_warp_charge_percent",
+		"full_charge_warp_charge_percent",
 		{
 			max = 0.75,
 			min = 0.25,
@@ -75,7 +75,7 @@ charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat = {
 		},
 	},
 	{
-		"extra_warp_charge_percent",
+		"full_charge_warp_charge_percent",
 		{
 			max = 0.75,
 			min = 0.25,
@@ -109,7 +109,7 @@ charge_trait_templates.forcestaff_p4_m1_warp_charge_cost_stat = {
 		},
 	},
 	{
-		"extra_warp_charge_percent",
+		"full_charge_warp_charge_percent",
 		{
 			max = 0.75,
 			min = 0.25,
@@ -134,7 +134,7 @@ charge_trait_templates.forcesword_p1_m1_warp_charge_cost_stat = {
 		},
 	},
 	{
-		"extra_warp_charge_percent",
+		"full_charge_warp_charge_percent",
 		{
 			max = 0.75,
 			min = 0.25,
@@ -147,7 +147,7 @@ charge_trait_templates.forcesword_p1_m1_warp_charge_cost_perk = {
 		0.05,
 	},
 	{
-		"extra_warp_charge_percent",
+		"full_charge_warp_charge_percent",
 		0.05,
 	},
 }
@@ -178,7 +178,7 @@ charge_trait_templates.plasmagun_charge_cost_stat = {
 		},
 	},
 	{
-		"extra_overheat_percent",
+		"full_charge_overheat_percent",
 		{
 			max = 1,
 			min = 0,

@@ -324,11 +324,10 @@ end
 MinionBuffExtension._start_fx = function (self, index, template)
 	MinionBuffExtension.super._start_fx(self, index, template)
 
-	local buff_context = self._buff_context
-	local unit = buff_context.unit
 	local minion_effects = template.minion_effects
 
 	if minion_effects then
+		local unit = self._unit
 		local ailment_effect = minion_effects.ailment_effect
 
 		if ailment_effect then
@@ -355,7 +354,7 @@ MinionBuffExtension._start_fx = function (self, index, template)
 			local name = material_vector.name
 			local value = material_vector.value
 
-			Unit.set_vector3_for_materials(self._unit, name, Vector3(value[1], value[2], value[3]), true)
+			Unit.set_vector3_for_materials(unit, name, Vector3(value[1], value[2], value[3]), true)
 		end
 
 		if self._is_server then

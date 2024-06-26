@@ -42,6 +42,7 @@ local elements = {
 			"in_loading",
 			"skippable_cinematic",
 			"default",
+			"tactical_overlay",
 		},
 	},
 	{

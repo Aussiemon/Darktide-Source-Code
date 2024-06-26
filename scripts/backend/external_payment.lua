@@ -2,7 +2,7 @@
 
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
-local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local ExternalPayment = class("ExternalPayment")
 
 local function is_steam()

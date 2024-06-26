@@ -624,6 +624,7 @@ local dialogue_speaker_voice_settings = {
 	boon_vendor_a = {
 		full_name = "loc_npc_full_name_boon_vendor_a",
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/hestia_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/hestia_a_small",
 		player_voice = false,
 		short_name = "loc_npc_short_name_boon_vendor_a",
 		subtitles_enabled = true,
@@ -652,6 +653,35 @@ local dialogue_speaker_voice_settings = {
 		full_name = "loc_npc_short_name_warp_echo",
 		player_voice = false,
 		short_name = "loc_npc_short_name_warp_echo",
+		subtitles_enabled = true,
+	},
+	cargo_pilot_a = {
+		full_name = "loc_npc_full_name_cargo_pilot_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
+		player_voice = false,
+		short_name = "loc_npc_short_name_cargo_pilot_a",
+		subtitles_enabled = true,
+	},
+	travelling_salesman_a = {
+		full_name = "loc_npc_full_name_travelling_salesman_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/swagger_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/swagger_a_small",
+		player_voice = false,
+		short_name = "loc_npc_short_name_travelling_salesman_a",
+		subtitles_enabled = true,
+	},
+	travelling_salesman_b = {
+		full_name = "loc_npc_full_name_travelling_salesman_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/swagger_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_travelling_salesman_a",
+		subtitles_enabled = true,
+	},
+	travelling_salesman_c = {
+		full_name = "loc_npc_full_name_travelling_salesman_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/swagger_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_travelling_salesman_a",
 		subtitles_enabled = true,
 	},
 }

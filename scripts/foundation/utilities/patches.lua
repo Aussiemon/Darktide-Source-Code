@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/foundation/utilities/patches.lua
 
-if IS_XBS then
+if IS_XBS or IS_PLAYSTATION then
 	PATCHED_USER_SETTINGS = PATCHED_USER_SETTINGS or false
 
 	if not PATCHED_USER_SETTINGS then

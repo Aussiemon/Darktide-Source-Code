@@ -185,7 +185,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.5,
+				chain_time = 0.53,
 			},
 			block = {
 				action_name = "action_block",
@@ -478,7 +478,7 @@ weapon_template.actions = {
 			},
 			light_attack = {
 				action_name = "action_right_down_light",
-				chain_time = 0.1,
+				chain_time = 0.12,
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
@@ -566,7 +566,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.55,
+				chain_time = 0.62,
 			},
 			block = {
 				action_name = "action_block",
@@ -960,7 +960,7 @@ weapon_template.actions = {
 			},
 			light_attack = {
 				action_name = "action_right_light",
-				chain_time = 0.17,
+				chain_time = 0.13,
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
@@ -990,7 +990,7 @@ weapon_template.actions = {
 		range_mod = 1.15,
 		special_active_hit_stop_anim = "attack_hit_power",
 		total_time = 2,
-		weapon_handling_template = "time_scale_1_2",
+		weapon_handling_template = "time_scale_1_1",
 		action_movement_curve = {
 			{
 				modifier = 1.25,
@@ -1165,7 +1165,7 @@ weapon_template.actions = {
 		special_active_hit_stop_anim = "attack_hit_power",
 		sprint_requires_press_to_interrupt = "true",
 		total_time = 2,
-		weapon_handling_template = "time_scale_1_1",
+		weapon_handling_template = "time_scale_0_9",
 		action_movement_curve = {
 			{
 				modifier = 1.2,

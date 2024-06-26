@@ -11,10 +11,11 @@ local RPCS = {
 	"rpc_prop_on_hit_physics",
 }
 
-ComponentSystem.init = function (self, ...)
-	ComponentSystem.super.init(self, ...)
+ComponentSystem.init = function (self, context, system_init_data, ...)
+	ComponentSystem.super.init(self, context, system_init_data, ...)
 
 	self._component_name_to_units_map = {}
+	self._level_seed = system_init_data.level_seed
 
 	for _, rpc_name in pairs(RPCS) do
 		self[rpc_name] = Component.receive_client_event
@@ -135,6 +136,10 @@ local EMPTY_TABLE = {}
 
 ComponentSystem.get_units_from_component_name = function (self, component_name)
 	return self._component_name_to_units_map[component_name] or EMPTY_TABLE
+end
+
+ComponentSystem.get_level_seed = function (self)
+	return self._level_seed
 end
 
 return ComponentSystem

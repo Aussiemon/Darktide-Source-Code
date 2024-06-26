@@ -2476,6 +2476,86 @@ local material_overrides = {
 			},
 		},
 	},
+	blood_01 = {
+		texture_overrides = {
+			environment_noise_map = {
+				resource = "content/environment/textures/shader_masks/grunge/grunge_mask_05",
+			},
+		},
+		property_overrides = {
+			environment_mask = {
+				0.05,
+				-1,
+				0,
+			},
+			environment_mask_properties = {
+				0.053,
+				0.001,
+				0.001,
+				-0.5,
+			},
+		},
+	},
+	blood_02 = {
+		texture_overrides = {
+			environment_noise_map = {
+				resource = "content/environment/textures/shader_masks/grunge/grunge_mask_02",
+			},
+		},
+		property_overrides = {
+			environment_mask = {
+				0.1,
+				-1,
+				0,
+			},
+			environment_mask_properties = {
+				0.053,
+				0.001,
+				0.001,
+				-0.5,
+			},
+		},
+	},
+	blood_03 = {
+		texture_overrides = {
+			environment_noise_map = {
+				resource = "content/environment/textures/shader_masks/grunge/grunge_mask_10",
+			},
+		},
+		property_overrides = {
+			environment_mask = {
+				0.2,
+				-1,
+				0,
+			},
+			environment_mask_properties = {
+				0.053,
+				0.001,
+				0.001,
+				-0.5,
+			},
+		},
+	},
+	blood_covered_01 = {
+		texture_overrides = {
+			environment_noise_map = {
+				resource = "content/environment/textures/shader_masks/grunge/grunge_mask_04",
+			},
+		},
+		property_overrides = {
+			environment_mask = {
+				0.2,
+				-1,
+				0,
+			},
+			environment_mask_properties = {
+				0.053,
+				0.001,
+				0.001,
+				-0.5,
+			},
+		},
+	},
 	chaos_skin_color_01 = {
 		property_overrides = {
 			hsv_skin = {

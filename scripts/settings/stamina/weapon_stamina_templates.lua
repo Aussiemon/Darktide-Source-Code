@@ -271,5 +271,47 @@ weapon_stamina_templates.powersword_p1_m2 = {
 		lerp_perfect = 1,
 	},
 }
+weapon_stamina_templates.tank_pickaxe_m1 = {
+	stamina_modifier = 6,
+	sprint_cost_per_second = {
+		lerp_basic = 2.2,
+		lerp_perfect = 1.1,
+	},
+	block_cost_default = {
+		inner = {
+			lerp_basic = 1,
+			lerp_perfect = 0.5,
+		},
+		outer = {
+			lerp_basic = 2,
+			lerp_perfect = 1,
+		},
+	},
+	push_cost = {
+		lerp_basic = 3,
+		lerp_perfect = 1,
+	},
+}
+weapon_stamina_templates.tank_pickaxe_m3 = {
+	stamina_modifier = 6,
+	sprint_cost_per_second = {
+		lerp_basic = 1.8,
+		lerp_perfect = 0.9,
+	},
+	block_cost_default = {
+		inner = {
+			lerp_basic = 1,
+			lerp_perfect = 0.5,
+		},
+		outer = {
+			lerp_basic = 2,
+			lerp_perfect = 1,
+		},
+	},
+	push_cost = {
+		lerp_basic = 2,
+		lerp_perfect = 0.6,
+	},
+}
 
 return settings("WeaponStaminaTemplates", weapon_stamina_templates)

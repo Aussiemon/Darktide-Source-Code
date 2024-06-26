@@ -41,7 +41,14 @@ local PresenceManagerDummy = require("scripts/managers/presence/presence_manager
 local ProfileSynchronizationManager = require("scripts/managers/loading/profile_synchronization_manager")
 local ProgressionManager = require("scripts/managers/progression/progression_manager")
 local Promise = require("scripts/foundation/utilities/promise")
-local SaveManager = require("scripts/managers/save/save_manager")
+local SaveManager
+
+if IS_PLAYSTATION then
+	SaveManager = require("scripts/managers/save/save_manager_ps5")
+else
+	SaveManager = require("scripts/managers/save/save_manager")
+end
+
 local ServerMetricsManager = require("scripts/managers/server_metrics/server_metrics_manager")
 local ServerMetricsManagerDummy = require("scripts/managers/server_metrics/server_metrics_manager_dummy")
 local StateGameTestify = GameParameters.testify and require("scripts/game_states/state_game_testify")
@@ -319,6 +326,10 @@ StateGame.update = function (self, dt)
 	Managers.package:update(dt, t)
 	Managers.token:update(dt, t)
 	Managers.input:update(dt, t)
+
+	if IS_PLAYSTATION then
+		Managers.save:update()
+	end
 
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(StateGameTestify, self)

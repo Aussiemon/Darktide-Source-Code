@@ -127,8 +127,8 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 				local spawner_position = spawner:position()
 				local is_valid_spawner = true
 
-				for j = 1, num_target_units do
-					local player_unit = target_units[j]
+				for k = 1, num_target_units do
+					local player_unit = target_units[k]
 					local player_position = POSITION_LOOKUP[player_unit]
 					local distance = Vector3.distance(spawner_position, player_position)
 
@@ -160,10 +160,10 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 		for i = 1, #minion_spawner_radius_checks do
 			local radius = minion_spawner_radius_checks[i]
-			local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET, optional_only_search_forward)
+			local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET, optional_only_search_forward)
 
 			if occluded_positions then
-				for j = 1, #occluded_positions do
+				for j = 1, num_occluded_positions do
 					local occluded_position = occluded_positions[j]
 
 					nearby_occluded_positions[#nearby_occluded_positions + 1] = occluded_position

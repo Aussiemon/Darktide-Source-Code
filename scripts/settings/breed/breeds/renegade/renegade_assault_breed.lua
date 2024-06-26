@@ -117,6 +117,10 @@ local breed_data = {
 			0.7,
 			0.8,
 		},
+		grenade = {
+			2,
+			3,
+		},
 	},
 	line_of_sight_data = {
 		{

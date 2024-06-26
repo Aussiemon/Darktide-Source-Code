@@ -23,8 +23,7 @@ GameplayInitStepNavSpawnPoints.update = function (self, main_dt, main_t)
 		return nil, nil
 	end
 
-	local main_path_manager = Managers.state.main_path
-	local spawn_points_initialized = main_path_manager:update_time_slice_spawn_points()
+	local spawn_points_initialized = Managers.state.main_path:update_time_slice_spawn_points()
 
 	if not spawn_points_initialized then
 		return nil, nil

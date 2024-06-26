@@ -1,15 +1,9 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns.lua
 
-local Definitions = require("scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns_definitions")
-local MasterItems = require("scripts/backend/master_items")
-local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local Item = require("scripts/utilities/items")
-local UIAnimation = require("scripts/managers/ui/ui_animation")
-
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
+local Definitions = require("scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns_definitions")
+local UIAnimation = require("scripts/managers/ui/ui_animation")
 local ViewElementWeaponPatterns = class("ViewElementWeaponPatterns", "ViewElementGrid")
 
 ViewElementWeaponPatterns.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
@@ -46,8 +40,6 @@ ViewElementWeaponPatterns._hide_dividers = function (self)
 end
 
 ViewElementWeaponPatterns.present_item = function (self, item)
-	local menu_settings = self._menu_settings
-	local grid_size = menu_settings.grid_size
 	local layout = {
 		{
 			widget_type = "attack_pattern_header",
@@ -78,10 +70,8 @@ ViewElementWeaponPatterns.present_grid_layout = function (self, layout, item)
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_stats_blueprints")
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
-	local ContentBlueprints = generate_blueprints_function(grid_size, item)
-	local menu_settings = self._menu_settings
-	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
+	local ContentBlueprints = generate_blueprints_function(grid_size, item)
 	local default_grid_height = self._default_grid_size[2]
 
 	grid_size[2] = default_grid_height
@@ -136,15 +126,13 @@ ViewElementWeaponPatterns.set_active = function (self, active)
 		local easing = math.easeOutCubic
 
 		self._ui_animations.pivot = UIAnimation.init(func, target, target_index, from, to, duration, easing)
-
-		local func = UIAnimation.function_by_time
-		local target = self
-		local target_index = "_alpha_multiplier"
-		local from = 0
-		local to = 1
-		local duration = 0.5
-		local easing = math.easeInCubic
-
+		func = UIAnimation.function_by_time
+		target = self
+		target_index = "_alpha_multiplier"
+		from = 0
+		to = 1
+		duration = 0.5
+		easing = math.easeInCubic
 		self._ui_animations.alpha_multiplier = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 	end
 end

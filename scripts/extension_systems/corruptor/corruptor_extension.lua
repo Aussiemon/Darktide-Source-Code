@@ -138,7 +138,7 @@ end
 CorruptorExtension.activate_segment_units = function (self)
 	local target_extension = self._mission_objective_target_extension
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-	local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(target_extension:objective_name())
+	local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(target_extension:objective_name())
 	local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
 	synchronizer_extension:activate_units()

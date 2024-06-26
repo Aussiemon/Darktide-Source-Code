@@ -1946,15 +1946,6 @@ local material_overrides = {
 	fabric_burlap_01_leather_02_wear_01 = {
 		texture_overrides = {
 			mat2_bc = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc",
-			},
-			mat2_nm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm",
-			},
-			mat2_orm = {
-				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm",
-			},
-			mat2_bc = {
 				resource = "content/characters/tiling_materials/leather_01/leather_01_bc",
 			},
 			mat2_nm = {

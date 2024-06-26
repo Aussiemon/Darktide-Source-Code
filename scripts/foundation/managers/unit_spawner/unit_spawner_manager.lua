@@ -63,10 +63,6 @@ UnitSpawnerManager.is_unit_template = function (self, game_object_type)
 	return game_object_type == "unit_template"
 end
 
-UnitSpawnerManager.get_network_units = function (self)
-	return self._network_units
-end
-
 UnitSpawnerManager._build_network_lookup = function (self, templates)
 	local lookup = {}
 	local i = 1

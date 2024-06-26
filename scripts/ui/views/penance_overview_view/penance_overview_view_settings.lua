@@ -201,6 +201,7 @@ local penance_overview_view = {
 		psyker_2 = "content/ui/materials/icons/achievements/categories/category_psyker",
 		tactical = "content/ui/materials/icons/achievements/categories/category_tactical",
 		veteran_2 = "content/ui/materials/icons/achievements/categories/category_veteran",
+		weapons = "content/ui/materials/icons/achievements/categories/category_weapons",
 		zealot_2 = "content/ui/materials/icons/achievements/categories/category_zealot",
 	},
 	default_highlight_penances = {

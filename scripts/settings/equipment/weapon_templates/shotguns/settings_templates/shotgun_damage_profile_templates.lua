@@ -135,8 +135,8 @@ damage_templates.default_shotgun_killshot = {
 		},
 	},
 	ragdoll_push_force = {
-		50,
-		50,
+		450,
+		550,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
 }
@@ -250,8 +250,8 @@ damage_templates.default_shotgun_assault = {
 		},
 	},
 	ragdoll_push_force = {
-		50,
-		50,
+		750,
+		850,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
 }
@@ -362,8 +362,8 @@ damage_templates.shotgun_assault_p2 = {
 		},
 	},
 	ragdoll_push_force = {
-		400,
-		600,
+		750,
+		850,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
 }
@@ -374,8 +374,8 @@ overrides.shotgun_assault_p2_special = {
 			"power_distribution",
 			"attack",
 			{
-				900,
-				2200,
+				1080,
+				2400,
 			},
 		},
 		{
@@ -426,7 +426,7 @@ overrides.shotgun_assault_p2_special_high_gibbing = {
 			"power_distribution",
 			"attack",
 			{
-				800,
+				1080,
 				2400,
 			},
 		},
@@ -858,8 +858,8 @@ damage_templates.shotgun_slug_special = {
 		},
 	},
 	ragdoll_push_force = {
-		500,
-		500,
+		450,
+		550,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 }
@@ -1088,8 +1088,8 @@ damage_templates.shotgun_p1_m2_killshot = {
 		},
 	},
 	ragdoll_push_force = {
-		50,
-		50,
+		450,
+		550,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
 }

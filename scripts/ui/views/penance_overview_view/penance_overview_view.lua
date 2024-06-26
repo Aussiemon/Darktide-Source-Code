@@ -376,6 +376,10 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 
 	if default_highlight_penances_by_archetype then
 		for _, achievement_id in ipairs(default_highlight_penances_by_archetype) do
+			if max_amount <= #carousel_achievement_layouts then
+				break
+			end
+
 			if can_add_achievement(achievement_id) then
 				local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
 
@@ -1296,38 +1300,30 @@ PenanceOverviewView._handle_input = function (self, input_service, dt, t)
 
 	local wintrack_element = self._wintrack_element
 
-	if wintrack_element and self._draw_carousel then
-		local currently_hovered_item = wintrack_element:currently_hovered_item()
+	if wintrack_element then
+		local handle_wintrack_element_input = not self._result_overlay
 
-		if not currently_hovered_item and math.abs((self._carousel_target_progress or 0) - (self._carousel_current_progress or 0)) < PenanceOverviewViewSettings.carousel_scroll_input_handle_threshold then
-			self:_handle_carousel_scroll(input_service, dt)
+		wintrack_element:set_handle_input(handle_wintrack_element_input)
+
+		if self._draw_carousel then
+			local currently_hovered_item = wintrack_element:currently_hovered_item()
+
+			if not currently_hovered_item and math.abs((self._carousel_target_progress or 0) - (self._carousel_current_progress or 0)) < PenanceOverviewViewSettings.carousel_scroll_input_handle_threshold then
+				self:_handle_carousel_scroll(input_service, dt)
+			end
 		end
 	end
 
 	local any_input_pressed = false
+	local input_device_list = InputUtils.platform_device_list()
 
-	if IS_XBS then
-		local input_device_list = InputUtils.input_device_list
-		local xbox_controllers = input_device_list.xbox_controller
+	for i = 1, #input_device_list do
+		local device = input_device_list[i]
 
-		for i = 1, #xbox_controllers do
-			local xbox_controller = xbox_controllers[i]
+		if device.active() and device.any_pressed() then
+			any_input_pressed = true
 
-			if xbox_controller.active() and xbox_controller.any_pressed() then
-				any_input_pressed = true
-
-				break
-			end
-		end
-	else
-		for i = 1, #_device_list do
-			local device = _device_list[i]
-
-			if device and device.active and device.any_pressed() then
-				any_input_pressed = true
-
-				break
-			end
+			break
 		end
 	end
 
@@ -2343,6 +2339,7 @@ PenanceOverviewView._setup_penance_grid = function (self, layout, optional_displ
 				grid_size[2] + mask_padding_size,
 			},
 			edge_padding = background_size[1] - grid_size[1],
+			bottom_divider_passes = PenanceOverviewViewDefinitions.bottom_divider_passes,
 		}
 		local layer = 10
 
@@ -2373,7 +2370,6 @@ PenanceOverviewView._setup_penance_grid = function (self, layout, optional_displ
 		}
 
 		self._penance_grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
-		self:_set_scenegraph_size("penance_grid_bottom_candles", bottom_divider_size[1], 100)
 		self._penance_grid:update_dividers_alpha(0, 1)
 	else
 		self._selected_grid_penance_index = nil
@@ -3602,8 +3598,6 @@ PenanceOverviewView._on_panel_option_pressed = function (self, index)
 
 		if self._penance_grid then
 			self._penance_grid:set_visibility(false)
-
-			self._widgets_by_name.bottom_panel_candles.content.visible = false
 		end
 
 		if self._categories_tab_bar then
@@ -3623,8 +3617,6 @@ PenanceOverviewView._on_panel_option_pressed = function (self, index)
 
 		if self._penance_grid then
 			self._penance_grid:set_visibility(true)
-
-			self._widgets_by_name.bottom_panel_candles.content.visible = true
 		end
 
 		if self._categories_tab_bar then

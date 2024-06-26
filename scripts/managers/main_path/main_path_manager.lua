@@ -70,11 +70,12 @@ MainPathManager.init = function (self, world, nav_world, level_name, level_seed,
 		self._level_seed = level_seed
 
 		if use_nav_point_time_slice then
-			local spawn_points_time_slice_data = {}
+			local spawn_points_time_slice_data = {
+				last_index = 0,
+				ready = false,
+				parameters = {},
+			}
 
-			spawn_points_time_slice_data.last_index = 0
-			spawn_points_time_slice_data.ready = false
-			spawn_points_time_slice_data.parameters = {}
 			self._spawn_points_time_slice_data = spawn_points_time_slice_data
 		end
 	end
@@ -281,7 +282,7 @@ MainPathManager.on_gameplay_post_init = function (self)
 end
 
 MainPathManager._generate_spawn_points = function (self)
-	local world, nav_world = self._world, self._nav_world
+	local nav_world = self._nav_world
 	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, TRIANGLE_GROUP_DISTANCE, TRIANGLE_GROUP_CUTOFF_VALUES)
 
 	self._nav_triangle_group = nav_triangle_group
@@ -290,22 +291,14 @@ MainPathManager._generate_spawn_points = function (self)
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local spawn_point_cost_table = GwNavTagLayerCostTable.create()
 
+	nav_mesh_manager:initialize_nav_tag_cost_table(spawn_point_cost_table, {})
+
 	for i = 1, #SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES do
 		local volume_type = SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES[i]
 		local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
 
 		for j = 1, #layer_ids do
 			GwNavTagLayerCostTable.forbid_layer(spawn_point_cost_table, layer_ids[j])
-		end
-	end
-
-	local allowed_layers = nav_mesh_manager:allowed_nav_tag_layers()
-
-	for layer_name, allowed in pairs(allowed_layers) do
-		if not allowed then
-			local layer_id = nav_mesh_manager:nav_tag_layer_id(layer_name)
-
-			GwNavTagLayerCostTable.forbid_layer(spawn_point_cost_table, layer_id)
 		end
 	end
 
@@ -321,24 +314,24 @@ end
 MainPathManager._init_time_slice_nav_points = function (self, nav_world, nav_triangle_group, min_free_radius, min_distance_to_others, num_spawn_points_per_subgroup, nav_tag_cost_table, start_seed)
 	local spawn_points_time_slice_data = self._spawn_points_time_slice_data
 	local nav_spawn_points = GwNavSpawnPoints.create(nav_world, nav_triangle_group)
-
-	self._nav_spawn_points = nav_spawn_points
-	self._spawn_point_positions = {}
-	spawn_points_time_slice_data.last_index = 0
-	spawn_points_time_slice_data.ready = false
-	spawn_points_time_slice_data.parameters.nav_world = nav_world
-	spawn_points_time_slice_data.parameters.min_free_radius = min_free_radius
-	spawn_points_time_slice_data.parameters.min_distance_to_others = min_distance_to_others
-	spawn_points_time_slice_data.parameters.num_spawn_points_per_subgroup = num_spawn_points_per_subgroup
-	spawn_points_time_slice_data.parameters.nav_tag_cost_table = nav_tag_cost_table
-
 	local num_groups, num_sub_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 
-	spawn_points_time_slice_data.parameters.num_groups = num_groups
-	spawn_points_time_slice_data.parameters.num_sub_groups = num_sub_groups
-	spawn_points_time_slice_data.parameters.spawn_point_positions = Script.new_array(num_groups)
-	spawn_points_time_slice_data.parameters.num_spawn_points = 0
-	spawn_points_time_slice_data.parameters.seed = start_seed
+	self._nav_spawn_points = nav_spawn_points
+	self._spawn_point_positions = Script.new_array(num_groups)
+	spawn_points_time_slice_data.last_index = 0
+	spawn_points_time_slice_data.ready = false
+
+	local parameters = spawn_points_time_slice_data.parameters
+
+	parameters.nav_world = nav_world
+	parameters.min_free_radius = min_free_radius
+	parameters.min_distance_to_others = min_distance_to_others
+	parameters.num_spawn_points_per_subgroup = num_spawn_points_per_subgroup
+	parameters.nav_tag_cost_table = nav_tag_cost_table
+	parameters.num_groups = num_groups
+	parameters.num_sub_groups = num_sub_groups
+	parameters.num_spawn_points = 0
+	parameters.seed = start_seed
 end
 
 MainPathManager.update_time_slice_spawn_points = function (self)
@@ -451,20 +444,19 @@ MainPathManager._update_progress_on_path = function (self, t)
 
 		progress_on_path.ahead_path_position:store(ahead_path_position)
 
-		progress_on_path.behind_unit = behind_unit
-
-		if worst_travel_distance > progress_on_path.furthest_worst_travel_distance then
-			progress_on_path.behind_travel_changed_t = t
-			progress_on_path.furthest_worst_travel_distance = worst_travel_distance
+		if best_travel_distance > progress_on_path.furthest_travel_distance then
+			progress_on_path.furthest_travel_distance = best_travel_distance
+			progress_on_path.forward_travel_changed_t = t
 		end
 
+		progress_on_path.behind_unit = behind_unit
 		progress_on_path.behind_travel_distance = behind_unit and worst_travel_distance or nil
 
 		progress_on_path.behind_path_position:store(behind_path_position)
 
-		if best_travel_distance > progress_on_path.furthest_travel_distance then
-			progress_on_path.furthest_travel_distance = best_travel_distance
-			progress_on_path.forward_travel_changed_t = t
+		if worst_travel_distance > progress_on_path.furthest_worst_travel_distance then
+			progress_on_path.furthest_worst_travel_distance = worst_travel_distance
+			progress_on_path.behind_travel_changed_t = t
 		end
 	end
 end

@@ -144,6 +144,12 @@ LightController.disable_flicker = function (self)
 	end
 end
 
+LightController.update_state = function (self)
+	local unit = self._unit
+
+	LightControllerUtilities.set_intensity(unit)
+end
+
 LightController.editor_destroy = function (self, unit)
 	if LevelEditor then
 		LevelEditor.light_groups:unregister_component(self)
@@ -207,6 +213,10 @@ LightController.component_data = {
 			type = "event",
 		},
 		disable_flicker = {
+			accessibility = "public",
+			type = "event",
+		},
+		update_state = {
 			accessibility = "public",
 			type = "event",
 		},

@@ -220,7 +220,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 							end
 						end
 					else
-						debug("Undecleared development parameter [%s] read from user settings, parameter skipped!", param)
+						debug("Undeclared development parameter [%s] read from user settings, parameter skipped!", param)
 					end
 				end
 			end
@@ -250,7 +250,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 		local old_value = DevParameters[param]
 
 		if old_value == nil then
-			debug("Runtime change of undecleared development parameter [%s], skipping!", param)
+			debug("Runtime change of undeclared development parameter [%s], skipping!", param)
 
 			return
 		end
@@ -284,7 +284,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 						dev_parameters[param] = value
 					elseif param ~= "mode" then
-						debug("Undecleared development parameter [%s], parameter skipped!", param)
+						debug("Undeclared development parameter [%s], parameter skipped!", param)
 					end
 				end
 			elseif mode == "replacing" then

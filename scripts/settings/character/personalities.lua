@@ -8,6 +8,7 @@ local personalities = {
 		description = "loc_veteran_male_a__intro_01",
 		display_name = "loc_personality_name_male_veteran_1",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_veteran_male_a",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_male_a",
 		unlocks = {
 			{
@@ -23,6 +24,7 @@ local personalities = {
 		description = "loc_veteran_male_b__intro_01",
 		display_name = "loc_personality_name_male_veteran_2",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_veteran_male_b",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_male_b",
 		unlocks = {
 			{
@@ -38,6 +40,7 @@ local personalities = {
 		description = "loc_veteran_male_c__intro_01",
 		display_name = "loc_personality_name_male_veteran_3",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_veteran_male_c",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_male_c",
 		home_planets = {
 			"option_7",
@@ -56,6 +59,7 @@ local personalities = {
 		description = "loc_veteran_female_a__intro_01",
 		display_name = "loc_personality_name_female_veteran_1",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_veteran_female_a",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_female_a",
 		unlocks = {
 			{
@@ -71,6 +75,7 @@ local personalities = {
 		description = "loc_veteran_female_b__intro_01",
 		display_name = "loc_personality_name_female_veteran_2",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_veteran_female_b",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_female_b",
 		unlocks = {
 			{
@@ -86,6 +91,7 @@ local personalities = {
 		description = "loc_veteran_female_c__intro_01",
 		display_name = "loc_personality_name_female_veteran_3",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_veteran_female_c",
 		sample_sound_event = "wwise/events/vo/play_preview_veteran_female_c",
 		home_planets = {
 			"option_7",
@@ -104,6 +110,7 @@ local personalities = {
 		description = "loc_zealot_male_a__intro_01",
 		display_name = "loc_personality_name_male_zealot_1",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_zealot_male_a",
 		sample_sound_event = "wwise/events/vo/play_preview_zealot_male_a",
 		unlocks = {
 			{
@@ -119,6 +126,7 @@ local personalities = {
 		description = "loc_zealot_male_b__intro_01",
 		display_name = "loc_personality_name_male_zealot_2",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_zealot_male_b",
 		sample_sound_event = "wwise/events/vo/play_preview_zealot_male_b",
 		unlocks = {
 			{
@@ -134,6 +142,7 @@ local personalities = {
 		description = "loc_zealot_male_c__intro_01",
 		display_name = "loc_personality_name_male_zealot_3",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_zealot_male_c",
 		sample_sound_event = "wwise/events/vo/play_preview_zealot_male_c",
 		unlocks = {
 			{
@@ -149,6 +158,7 @@ local personalities = {
 		description = "loc_zealot_female_a__intro_01",
 		display_name = "loc_personality_name_female_zealot_1",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_zealot_female_a",
 		sample_sound_event = "wwise/events/vo/play_preview_zealot_female_a",
 		unlocks = {
 			{
@@ -164,6 +174,7 @@ local personalities = {
 		description = "loc_zealot_female_b__intro_01",
 		display_name = "loc_personality_name_female_zealot_2",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_zealot_female_b",
 		sample_sound_event = "wwise/events/vo/play_preview_zealot_female_b",
 		unlocks = {
 			{
@@ -179,6 +190,7 @@ local personalities = {
 		description = "loc_zealot_female_c__intro_01",
 		display_name = "loc_personality_name_female_zealot_3",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_zealot_female_c",
 		sample_sound_event = "wwise/events/vo/play_preview_zealot_female_c",
 		unlocks = {
 			{
@@ -194,6 +206,7 @@ local personalities = {
 		description = "loc_psyker_male_a__intro_01",
 		display_name = "loc_personality_name_male_psyker_1",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_psyker_male_a",
 		sample_sound_event = "wwise/events/vo/play_preview_psyker_male_a",
 		unlocks = {
 			{
@@ -209,6 +222,7 @@ local personalities = {
 		description = "loc_psyker_male_b__intro_01",
 		display_name = "loc_personality_name_male_psyker_2",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_psyker_male_b",
 		sample_sound_event = "wwise/events/vo/play_preview_psyker_male_b",
 		unlocks = {
 			{
@@ -224,6 +238,7 @@ local personalities = {
 		description = "loc_psyker_male_c__intro_01",
 		display_name = "loc_personality_name_male_psyker_3",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_psyker_male_c",
 		sample_sound_event = "wwise/events/vo/play_preview_psyker_male_c",
 		unlocks = {
 			{
@@ -239,6 +254,7 @@ local personalities = {
 		description = "loc_psyker_female_a__intro_01",
 		display_name = "loc_personality_name_female_psyker_1",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_psyker_female_a",
 		sample_sound_event = "wwise/events/vo/play_preview_psyker_female_a",
 		unlocks = {
 			{
@@ -254,6 +270,7 @@ local personalities = {
 		description = "loc_psyker_female_b__intro_01",
 		display_name = "loc_personality_name_female_psyker_2",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_psyker_female_b",
 		sample_sound_event = "wwise/events/vo/play_preview_psyker_female_b",
 		unlocks = {
 			{
@@ -269,6 +286,7 @@ local personalities = {
 		description = "loc_psyker_female_c__intro_01",
 		display_name = "loc_personality_name_female_psyker_3",
 		gender = "female",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_psyker_female_c",
 		sample_sound_event = "wwise/events/vo/play_preview_psyker_female_c",
 		unlocks = {
 			{
@@ -284,6 +302,7 @@ local personalities = {
 		description = "loc_ogryn_a__intro_01",
 		display_name = "loc_personality_name_ogryn_1",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_ogryn_a",
 		sample_sound_event = "wwise/events/vo/play_preview_ogryn_a",
 		unlocks = {
 			{
@@ -299,6 +318,7 @@ local personalities = {
 		description = "loc_ogryn_b__intro_01",
 		display_name = "loc_personality_name_ogryn_2",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_ogryn_b",
 		sample_sound_event = "wwise/events/vo/play_preview_ogryn_b",
 		unlocks = {
 			{
@@ -314,6 +334,7 @@ local personalities = {
 		description = "loc_ogryn_c__intro_01",
 		display_name = "loc_personality_name_ogryn_3",
 		gender = "male",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_ogryn_c",
 		sample_sound_event = "wwise/events/vo/play_preview_ogryn_c",
 		unlocks = {
 			{

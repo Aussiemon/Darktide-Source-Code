@@ -40,6 +40,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	shared_state.nav_data = nil
 	shared_state.hard_cap_out_of_bounds_units = nil
 	shared_state.soft_cap_out_of_bounds_units = nil
+	shared_state.nvidia_ai_agent = nil
 	shared_state.free_flight_teleporter = nil
 	shared_state.clock_handler_client = nil
 	shared_state.breed_unit_tester = nil
@@ -153,7 +154,7 @@ StateGameplay._check_transition = function (self)
 		if error_state then
 			self._next_state = error_state
 			self._next_state_context = error_state_params
-		elseif IS_XBS or IS_GDK then
+		elseif IS_XBS or IS_GDK or IS_PLAYSTATION then
 			local error_state, error_state_params = Managers.account:wanted_transition()
 
 			if error_state then

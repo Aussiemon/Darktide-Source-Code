@@ -54,6 +54,10 @@ InvitesSteam.reset = function (self)
 	self._has_invite = false
 end
 
+InvitesSteam.on_profile_signed_in = function (self, user_id)
+	return
+end
+
 InvitesSteam.destroy = function (self)
 	return
 end

@@ -11,19 +11,19 @@ local category_settings = {
 	{
 		path = "scripts/settings/options/render_settings",
 		validation_function = function ()
-			return IS_GDK or IS_XBS or IS_WINDOWS
+			return IS_GDK or IS_XBS or IS_WINDOWS or IS_PLAYSTATION
 		end,
 	},
 	{
 		path = "scripts/settings/options/keybind_settings",
 		validation_function = function ()
-			return (IS_GDK or IS_XBS or IS_WINDOWS) and Managers.ui:using_cursor_navigation()
+			return (IS_GDK or IS_XBS or IS_WINDOWS or IS_PLAYSTATION) and Managers.ui:using_cursor_navigation()
 		end,
 	},
 	{
 		path = "scripts/settings/options/controller_settings",
 		validation_function = function ()
-			return IS_GDK or IS_XBS or IS_WINDOWS
+			return IS_GDK or IS_XBS or IS_WINDOWS or IS_PLAYSTATION
 		end,
 	},
 	{

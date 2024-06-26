@@ -61,6 +61,7 @@ DefaultGameParameters.machine_name = ""
 DefaultGameParameters.steam_branch = ""
 DefaultGameParameters.svn_branch = ""
 DefaultGameParameters.skip_gamertag_popup = false
+DefaultGameParameters.nvidia_ai_agent = true
 DefaultGameParameters.show_premium_store = true
 DefaultGameParameters.show_marks_store = true
 DefaultGameParameters.show_contracts = true

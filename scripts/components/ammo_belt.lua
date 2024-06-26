@@ -5,6 +5,7 @@ local AmmoBelt = component("AmmoBelt")
 AmmoBelt.editor_init = function (self, unit)
 	self._anim_speed = self:get_data(unit, "anim_speed")
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
+	self._num_belts = self:get_data(unit, "num_belts")
 	self._dismantled = self:get_data(unit, "dismantled")
 	self._dismantled_ammo_mask = self:get_data(unit, "dismantled_ammo_mask")
 
@@ -27,6 +28,7 @@ end
 AmmoBelt.init = function (self, unit)
 	self._anim_speed = self:get_data(unit, "anim_speed")
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
+	self._num_belts = self:get_data(unit, "num_belts")
 	self._dismantled = self:get_data(unit, "dismantled")
 	self._dismantled_ammo_mask = self:get_data(unit, "dismantled_ammo_mask")
 
@@ -58,12 +60,13 @@ AmmoBelt._update_ammo_representation = function (self, unit, is_animated)
 	local remaining_ammo = self._ammo
 	local max_ammo = self._max_ammo
 	local ammo_in_unit = self._ammo_in_unit
+	local num_belts = self._num_belts
 	local above_cutoff = ammo_in_unit <= remaining_ammo
 
 	if above_cutoff then
 		local spent_ammo = max_ammo - remaining_ammo
 
-		remaining_ammo = ammo_in_unit - spent_ammo % 2 - 1
+		remaining_ammo = ammo_in_unit - spent_ammo % num_belts - 1
 		max_ammo = ammo_in_unit
 	else
 		max_ammo = ammo_in_unit
@@ -157,6 +160,15 @@ AmmoBelt.component_data = {
 		ui_name = "Use Anim Length",
 		ui_type = "check_box",
 		value = false,
+	},
+	num_belts = {
+		decimals = 0,
+		max = 4,
+		min = 1,
+		step = 1,
+		ui_name = "Number of Ammo Belts",
+		ui_type = "slider",
+		value = 1,
 	},
 	dismantled = {
 		ui_name = "Dismantled",

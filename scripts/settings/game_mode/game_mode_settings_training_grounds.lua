@@ -37,6 +37,13 @@ local settings = {
 			},
 		},
 	},
+	side_sub_faction_types = {
+		villains = {
+			"chaos",
+			"cultist",
+			"renegade",
+		},
+	},
 	hud_settings = {
 		player_composition = "party",
 	},

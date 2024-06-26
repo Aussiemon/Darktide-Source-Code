@@ -671,8 +671,13 @@ blueprints.dropdown = {
 		local preview_option_id = preview_option and preview_option.id
 		local preview_value = preview_option and preview_option.display_name or "loc_settings_option_unavailable"
 		local ignore_localization = preview_option and preview_option.ignore_localization
+		local preview_icon = preview_option and preview_option.icon
+		local has_preview_icon = not not preview_icon
 
 		content.value_text = ignore_localization and preview_value or localization_manager:localize(preview_value)
+		content.value_icon = preview_icon
+		style.text.offset = has_preview_icon and style.text.icon_offset or style.text.default_offset
+		style.icon.visible = has_preview_icon
 
 		local size = entry.size
 		local scroll_amount = parent:settings_scroll_amount()
@@ -757,6 +762,7 @@ blueprints.dropdown = {
 			end
 
 			local option_text_id = "option_text_" .. option_index
+			local option_icon_id = "option_icon_" .. option_index
 			local option_hotspot_id = "option_hotspot_" .. option_index
 			local outline_style_id = "outline_" .. option_index
 			local option_hotspot = content[option_hotspot_id]
@@ -774,13 +780,19 @@ blueprints.dropdown = {
 
 			local option_display_name = option.display_name
 			local option_ignore_localization = option.ignore_localization
+			local option_icon = option.icon
+			local has_option_icon = not not option_icon
 
+			content[option_icon_id] = option_icon
 			content[option_text_id] = option_ignore_localization and option_display_name or localization_manager:localize(option_display_name)
 
 			local options_y = size[2] * option_index
 
 			style[option_hotspot_id].offset[2] = grow_downwards and options_y or -options_y
 			style[option_text_id].offset[2] = grow_downwards and options_y or -options_y
+			style[option_icon_id].offset[2] = grow_downwards and options_y or -options_y
+			style[option_text_id].offset[1] = has_option_icon and style[option_text_id].icon_offset[1] or style[option_text_id].default_offset[1]
+			style[option_icon_id].visible = has_option_icon
 
 			local entry_length = using_scrollbar and content.entry.value_width - style.scrollbar_hotspot.size[1] or content.entry.value_width
 
@@ -895,16 +907,21 @@ local controller_image_height = 594
 local controller_image_input_services = {
 	"Ingame",
 }
-local controller_image_input_devices = {
-	"xbox_controller",
-}
+local controller_image_input_devices = {}
+
+if IS_PLAYSTATION then
+	controller_image_input_devices[#controller_image_input_devices + 1] = "ps4_controller"
+else
+	controller_image_input_devices[#controller_image_input_devices + 1] = "xbox_controller"
+end
+
 local temp_input_display_values = {}
 
 local function controller_image_apply_text_function(widget)
 	local content = widget.content
 	local style = widget.style
 
-	if IS_XBS or IS_WINDOWS then
+	if IS_XBS or IS_PLAYSTATION or IS_WINDOWS then
 		for input_key, _ in pairs(temp_input_display_values) do
 			content[input_key] = ""
 		end
@@ -920,8 +937,7 @@ local function controller_image_apply_text_function(widget)
 				local alias_table = alias:alias_table()
 
 				for alias_name, _ in pairs(alias_table) do
-					local alias_array_index = 1
-					local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, controller_image_input_devices)
+					local key_info = alias:get_keys_for_alias(alias_name, controller_image_input_devices)
 
 					if key_info then
 						local display_name = alias:description(alias_name)
@@ -944,7 +960,7 @@ local function controller_image_apply_text_function(widget)
 									local additional_input = additional_inputs[i]
 
 									for extra_alias_name, _ in pairs(alias_table) do
-										local additional_input_key_info = alias:get_keys_for_alias(extra_alias_name, alias_array_index, controller_image_input_devices)
+										local additional_input_key_info = alias:get_keys_for_alias(extra_alias_name, controller_image_input_devices)
 
 										if additional_input_key_info and additional_input_key_info.main == additional_input then
 											local additional_alias_display_name = alias:description(extra_alias_name)
@@ -966,6 +982,772 @@ local function controller_image_apply_text_function(widget)
 	end
 end
 
+local controller_image_pass_template = {}
+
+local function add_to_controller_template(entry)
+	controller_image_pass_template[#controller_image_pass_template + 1] = entry
+end
+
+if IS_PLAYSTATION then
+	add_to_controller_template({
+		pass_type = "texture",
+		style_id = "image",
+		value = "content/ui/materials/controller_image_ps5",
+		value_id = "image",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "top",
+			size = {
+				970,
+				controller_image_height,
+			},
+			offset = {
+				30,
+				0,
+				0,
+			},
+			color = Color.terminal_text_body(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_touch",
+		value = "",
+		value_id = "ps4_controller_touch",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 110,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_l2",
+		value = "",
+		value_id = "ps4_controller_l2",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 173,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_l1",
+		value = "",
+		value_id = "ps4_controller_l1",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 172 + 65,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_left",
+		value = "",
+		value_id = "ps4_controller_left",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			additional_inputs = {
+				"xbox_controller_left_thumb",
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 300,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_d_up",
+		value = "",
+		value_id = "ps4_controller_d_up",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 244 + 145,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_d_left",
+		value = "",
+		value_id = "ps4_controller_d_left",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 276 + 176,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_d_down",
+		value = "",
+		value_id = "ps4_controller_d_down",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 307 + 208,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_d_right",
+		value = "",
+		value_id = "ps4_controller_d_right",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 338 + 240,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_options",
+		value = "",
+		value_id = "ps4_controller_options",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 110,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_r2",
+		value = "",
+		value_id = "ps4_controller_r2",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 173,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_r1",
+		value = "",
+		value_id = "ps4_controller_r1",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 172 + 65,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_triangle",
+		value = "",
+		value_id = "ps4_controller_triangle",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 308,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_circle",
+		value = "",
+		value_id = "ps4_controller_circle",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 195 + 177,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_cross",
+		value = "",
+		value_id = "ps4_controller_cross",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 226 + 208,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_square",
+		value = "",
+		value_id = "ps4_controller_square",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 257 + 240,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "ps4_controller_right",
+		value = "",
+		value_id = "ps4_controller_right",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			additional_inputs = {
+				"xbox_controller_right_thumb",
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 338 + 240,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+else
+	add_to_controller_template({
+		pass_type = "texture",
+		style_id = "image",
+		value = "content/ui/materials/controller_image_xbox",
+		value_id = "image",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "top",
+			size = {
+				970,
+				controller_image_height,
+			},
+			offset = {
+				30,
+				0,
+				0,
+			},
+			color = Color.terminal_text_body(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_back",
+		value = "",
+		value_id = "xbox_controller_back",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 110,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_left_trigger",
+		value = "",
+		value_id = "xbox_controller_left_trigger",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 173,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_left_shoulder",
+		value = "",
+		value_id = "xbox_controller_left_shoulder",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 172 + 65,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_left",
+		value = "",
+		value_id = "xbox_controller_left",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			additional_inputs = {
+				"xbox_controller_left_thumb",
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 300,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_d_up",
+		value = "",
+		value_id = "xbox_controller_d_up",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 244 + 145,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_d_left",
+		value = "",
+		value_id = "xbox_controller_d_left",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 276 + 176,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_d_down",
+		value = "",
+		value_id = "xbox_controller_d_down",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 307 + 208,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_d_right",
+		value = "",
+		value_id = "xbox_controller_d_right",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				30,
+				-controller_image_height - 35 + 338 + 240,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_start",
+		value = "",
+		value_id = "xbox_controller_start",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 110,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_right_trigger",
+		value = "",
+		value_id = "xbox_controller_right_trigger",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 173,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_right_shoulder",
+		value = "",
+		value_id = "xbox_controller_right_shoulder",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 172 + 65,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_y",
+		value = "",
+		value_id = "xbox_controller_y",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 308,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_b",
+		value = "",
+		value_id = "xbox_controller_b",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 195 + 177,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_a",
+		value = "",
+		value_id = "xbox_controller_a",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 226 + 208,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_x",
+		value = "",
+		value_id = "xbox_controller_x",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 257 + 240,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+	add_to_controller_template({
+		pass_type = "text",
+		style_id = "xbox_controller_right",
+		value = "",
+		value_id = "xbox_controller_right",
+		style = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			line_spacing = 1.2,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "bottom",
+			size = {
+				250,
+			},
+			additional_inputs = {
+				"xbox_controller_right_thumb",
+			},
+			offset = {
+				750,
+				-controller_image_height - 35 + 338 + 240,
+				3,
+			},
+			text_color = Color.text_default(255, true),
+		},
+	})
+end
+
 blueprints.controller_image = {
 	size_function = function (parent, entry)
 		return {
@@ -973,386 +1755,7 @@ blueprints.controller_image = {
 			entry.size and entry.size[2] or controller_image_height,
 		}
 	end,
-	pass_template = {
-		{
-			pass_type = "texture",
-			style_id = "image",
-			value = "content/ui/materials/controller_image_xbox",
-			value_id = "image",
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "top",
-				size = {
-					970,
-					controller_image_height,
-				},
-				offset = {
-					30,
-					0,
-					0,
-				},
-				color = Color.terminal_text_body(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_back",
-			value = "",
-			value_id = "xbox_controller_back",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 110,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_left_trigger",
-			value = "",
-			value_id = "xbox_controller_left_trigger",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 173,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_left_shoulder",
-			value = "",
-			value_id = "xbox_controller_left_shoulder",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 172 + 65,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_left",
-			value = "",
-			value_id = "xbox_controller_left",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				additional_inputs = {
-					"xbox_controller_left_thumb",
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 300,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_d_up",
-			value = "",
-			value_id = "xbox_controller_d_up",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 244 + 145,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_d_left",
-			value = "",
-			value_id = "xbox_controller_d_left",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 276 + 176,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_d_down",
-			value = "",
-			value_id = "xbox_controller_d_down",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 307 + 208,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_d_right",
-			value = "",
-			value_id = "xbox_controller_d_right",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					30,
-					-controller_image_height - 35 + 338 + 240,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_start",
-			value = "",
-			value_id = "xbox_controller_start",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 110,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_right_trigger",
-			value = "",
-			value_id = "xbox_controller_right_trigger",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 173,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_right_shoulder",
-			value = "",
-			value_id = "xbox_controller_right_shoulder",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 172 + 65,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_y",
-			value = "",
-			value_id = "xbox_controller_y",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 308,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_b",
-			value = "",
-			value_id = "xbox_controller_b",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 195 + 177,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_a",
-			value = "",
-			value_id = "xbox_controller_a",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 226 + 208,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_x",
-			value = "",
-			value_id = "xbox_controller_x",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 257 + 240,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "xbox_controller_right",
-			value = "",
-			value_id = "xbox_controller_right",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.2,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "bottom",
-				size = {
-					250,
-				},
-				additional_inputs = {
-					"xbox_controller_right_thumb",
-				},
-				offset = {
-					750,
-					-controller_image_height - 35 + 338 + 240,
-					3,
-				},
-				text_color = Color.text_default(255, true),
-			},
-		},
-	},
+	pass_template = controller_image_pass_template,
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
 		local player = Managers.player:local_player(1)

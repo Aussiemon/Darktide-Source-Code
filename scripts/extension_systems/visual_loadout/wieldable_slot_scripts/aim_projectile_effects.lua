@@ -61,6 +61,24 @@ AimProjectileEffects.init = function (self, context, slot, weapon_template, fx_s
 	end
 
 	self._splines = {}
+
+	local event_manager = Managers.event
+
+	if event_manager then
+		event_manager:register(self, "event_update_aim_trajectory_enabled", "_event_update_aim_trajectory_enabled")
+	end
+
+	local save_manager = Managers.save
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+
+		self._aim_trajectory_enabled = account_data.interface_settings.aim_trajectory_enabled
+	end
+end
+
+AimProjectileEffects._event_update_aim_trajectory_enabled = function (self, value)
+	self._aim_trajectory_enabled = value
 end
 
 AimProjectileEffects._trajectory_settings_from_aim_action = function (self, action_settings, trajectory_settings)
@@ -130,6 +148,8 @@ AimProjectileEffects.update_unit_position = function (self, unit, dt, t)
 	end
 
 	local draw_trajectory, trajectory_settings = self:_trajectory_settings(t)
+
+	draw_trajectory = draw_trajectory and self._aim_trajectory_enabled
 
 	if draw_trajectory then
 		self:_update_trajectory(trajectory_settings, dt, t)
@@ -243,6 +263,12 @@ end
 
 AimProjectileEffects.destroy = function (self)
 	self:_stop_trajectory_spline()
+
+	local event_manager = Managers.event
+
+	if event_manager then
+		event_manager:unregister(self, "event_update_aim_trajectory_enabled")
+	end
 end
 
 local function _add_aim_data(aim_data, new_position, old_position, has_hit, distance_in_arc, distance_traveled)

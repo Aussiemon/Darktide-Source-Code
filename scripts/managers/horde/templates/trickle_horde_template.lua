@@ -145,7 +145,7 @@ local function _try_find_horde_position(nav_world, physics_world, nav_spawn_poin
 	return nil, nil, nil
 end
 
-local PATROL_CHALLENGE_RAITNG_THRESHOLD = 30
+local PATROL_CHALLENGE_RAITNG_THRESHOLD = 8
 
 horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier)
 	local target_side_id = target_side.side_id

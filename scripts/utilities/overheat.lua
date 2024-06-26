@@ -39,10 +39,10 @@ Overheat.increase_over_time = function (dt, t, charge_level, inventory_slot_comp
 	local stat_buffs = buff_extension:stat_buffs()
 	local buff_multiplier = stat_buffs and stat_buffs.overheat_amount * stat_buffs.overheat_over_time_amount or 1
 	local add_percentage = buff_multiplier * charge_template.overheat_percent
-	local extra_add_percentage = buff_multiplier * charge_template.extra_overheat_percent
+	local full_charge_add_percentage = buff_multiplier * charge_template.full_charge_overheat_percent
 	local duration = charge_template.charge_duration
 	local current_percentage = inventory_slot_component.overheat_current_percentage
-	local new_heat = SharedFunctions.increase_over_time(dt, charge_level, add_percentage, extra_add_percentage, duration, current_percentage)
+	local new_heat = SharedFunctions.increase_over_time(dt, charge_level, add_percentage, full_charge_add_percentage, duration, current_percentage)
 
 	inventory_slot_component.overheat_current_percentage = new_heat
 	inventory_slot_component.overheat_last_charge_at_t = t
@@ -157,8 +157,8 @@ Overheat.slot_percentage = function (unit, slot_name, threshold_type)
 
 	if overheat_configuration then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local wieldable_component = unit_data_extension:read_component(slot_name)
-		local current_overheat = wieldable_component.overheat_current_percentage
+		local inventory_slot_component = unit_data_extension:read_component(slot_name)
+		local current_overheat = inventory_slot_component.overheat_current_percentage
 		local threshold = overheat_configuration[threshold_type]
 		local percentage = current_overheat / threshold
 

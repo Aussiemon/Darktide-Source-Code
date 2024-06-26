@@ -185,4 +185,26 @@ Action.power_level = function (action)
 	return power_level or DEFAULT_POWER_LEVEL
 end
 
+Action.stat_power_level = function (action)
+	local power_level = action.stat_power_level
+
+	if not power_level then
+		local fire_configuration = action.fire_configuration
+
+		if fire_configuration then
+			if fire_configuration.flamer_gas_template then
+				power_level = fire_configuration.flamer_gas_template.stat_power_level
+			elseif fire_configuration.hit_scan_template then
+				power_level = fire_configuration.hit_scan_template.stat_power_level
+			elseif fire_configuration.projectile then
+				power_level = fire_configuration.projectile.stat_power_level
+			elseif fire_configuration.shotshell then
+				power_level = fire_configuration.shotshell.stat_power_level
+			end
+		end
+	end
+
+	return power_level or Action.power_level(action)
+end
+
 return Action

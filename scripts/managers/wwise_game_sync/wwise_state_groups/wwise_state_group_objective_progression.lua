@@ -31,7 +31,7 @@ WwiseStateGroupObjectiveProgression.update = function (self, dt, t)
 	local wwise_state = WwiseGameSyncSettings.default_group_state
 
 	if self._mission_objective_system then
-		local event_progress = self._mission_objective_system:get_objective_event_music_progress()
+		local event_progress = self._mission_objective_system:objective_event_music_progress()
 
 		if event_progress then
 			if event_progress >= 0 and event_progress < 0.33 then

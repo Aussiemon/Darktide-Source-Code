@@ -440,7 +440,7 @@ local systems = {
 	{
 		"weapon_system",
 		"WeaponSystem",
-		false,
+		true,
 		true,
 		false,
 		true,
@@ -611,9 +611,10 @@ local systems = {
 			"DecoderSynchronizerExtension",
 			"DemolitionSynchronizerExtension",
 			"LuggableSynchronizerExtension",
-			"SideMissionPickupSynchronizerExtension",
 			"MissionObjectiveZoneSynchronizerExtension",
 			"KillSynchronizerExtension",
+			"SideMissionPickupSynchronizerExtension",
+			"TimedSynchronizerExtension",
 		},
 	},
 	{

@@ -11,8 +11,8 @@ local CollectiblesManager = require("scripts/managers/collectibles/collectibles_
 local DecalManager = require("scripts/managers/decal/decal_manager")
 local DifficultyManager = require("scripts/managers/difficulty/difficulty_manager")
 local EmoteManager = require("scripts/managers/emote/emote_manager")
-local GameplayInitStepExtensionUnits = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_extension_units")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
+local GameplayInitStepNvidiaAiAgent = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nvidia_ai_agent")
 local HordeManager = require("scripts/managers/horde/horde_manager")
 local MinionDeathManager = require("scripts/managers/minion/minion_death_manager")
 local MinionSpawnManager = require("scripts/managers/minion/minion_spawn_manager")
@@ -63,7 +63,7 @@ GameplayInitStepManagers.update = function (self, main_dt, main_t)
 		shared_state = self._shared_state,
 	}
 
-	return GameplayInitStepExtensionUnits, next_step_params
+	return GameplayInitStepNvidiaAiAgent, next_step_params
 end
 
 GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_time_step, time_query_handle)
@@ -96,7 +96,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 		Managers.state.minion_spawn = MinionSpawnManager:new(level_seed, soft_cap_out_of_bounds_units, network_event_delegate)
 		Managers.state.voice_over_spawn = VoiceOverSpawnManager:new(is_server, mission_giver_vo)
 		Managers.state.horde = HordeManager:new(nav_world, physics_world)
-		Managers.state.pacing = PacingManager:new(world, nav_world, level_name, level_seed, pacing_control)
+		Managers.state.pacing = PacingManager:new(world, nav_world, level_seed, pacing_control)
 	end
 
 	Managers.player:set_network(is_server, network_event_delegate)

@@ -13,7 +13,7 @@ local icons = {
 	loot = "content/ui/materials/icons/generic/loot",
 }
 local quickplay_data = {
-	icon = "content/ui/materials/icons/mission_types/mission_type_09",
+	icon = "content/ui/materials/icons/mission_types/mission_type_quick",
 	mission_title = "loc_mission_board_quickplay_header",
 	mission_type = "loc_mission_board_view_header_tertium_hive",
 }
@@ -133,10 +133,10 @@ local details_widgets_blueprints = {
 				local mission_template = MissionTemplates[data.map]
 				local mission_type = MissionTypes[mission_template.mission_type]
 				local mission_type_name = mission_type and mission_type.name
-				local main_objective_type_header = Localize(mission_type_name)
+				local mission_type_header = Localize(mission_type_name)
 				local widget_content = widget.content
 
-				widget_content.objective_header = main_objective_type_header
+				widget_content.objective_header = mission_type_header
 				widget_content.main_objective_icon = mission_type.icon
 
 				local experience = math.floor(data.xp)

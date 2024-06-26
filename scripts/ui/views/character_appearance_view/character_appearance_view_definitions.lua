@@ -1359,7 +1359,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_change_name",
 		input_action = "confirm_pressed",
 		visibility_function = function (parent)
-			return IS_XBS and parent._active_page_name == "final" and not parent._loading_overlay_visible
+			return (IS_XBS or IS_PLAYSTATION) and parent._active_page_name == "final" and not parent._loading_overlay_visible
 		end,
 	},
 	{

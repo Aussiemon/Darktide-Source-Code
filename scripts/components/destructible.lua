@@ -34,6 +34,10 @@ Destructible.init = function (self, unit, is_server)
 			local is_nav_gate = self:get_data(unit, "is_nav_gate")
 			local broadphase_radius = self:get_data(unit, "broadphase_radius")
 			local use_health_extension_health = self:get_data(unit, "use_health_extension_health")
+
+			self._damage_material_slot_name = self:get_data(unit, "damage_material_slot_name")
+			self._damage_amount_variable_name = self:get_data(unit, "damage_amount_variable_name")
+
 			local destructible_stages = self:get_data(unit, "destructible_stages")
 
 			if destructible_stages and #destructible_stages > 0 then
@@ -72,7 +76,10 @@ Destructible.init = function (self, unit, is_server)
 		end
 	end
 
-	return not not self._destructible_stages
+	local has_stages = not not self._destructible_stages
+	local has_damage_material = not not self._damage_material_slot_name and not not self._damage_amount_variable_name
+
+	return has_stages or has_damage_material
 end
 
 Destructible.destroy = function (self, unit)
@@ -91,15 +98,25 @@ end
 
 Destructible.update = function (self, unit, dt, t)
 	local destructible_stages = self._destructible_stages
+	local damage_material_slot_name = self._damage_material_slot_name
+	local damage_amount_variable_name = self._damage_amount_variable_name
+	local has_damage_material = damage_material_slot_name and damage_amount_variable_name
 
-	if not destructible_stages then
+	if not destructible_stages or not has_damage_material then
 		return false
 	end
 
 	local health_extension = self._health_extension
+
+	if not health_extension then
+		return false
+	end
+
+	local last_stage_index = self._current_stage_index
+	local last_health_percent = self._current_health_percent
 	local current_health_percent = health_extension:current_health_percent()
 
-	if not self._is_server and not self._has_run_first_stage_update then
+	if destructible_stages and not self._is_server and not self._has_run_first_stage_update then
 		for ii = #destructible_stages, 1, -1 do
 			local stage = destructible_stages[ii]
 			local next_stage = destructible_stages[ii + 1]
@@ -120,6 +137,8 @@ Destructible.update = function (self, unit, dt, t)
 
 				self._current_health_percent = current_health_percent
 				self._current_stage_index = ii
+				last_health_percent = current_health_percent
+				last_stage_index = ii
 
 				break
 			end
@@ -128,27 +147,34 @@ Destructible.update = function (self, unit, dt, t)
 		self._has_run_first_stage_update = true
 	end
 
-	local last_health_percent = self._current_health_percent
-	local last_stage_index = self._current_stage_index
-
 	if current_health_percent ~= last_health_percent then
-		for ii = #destructible_stages, 1, -1 do
-			local stage = destructible_stages[ii]
-			local next_stage = destructible_stages[ii + 1]
-			local within_threshold
+		if has_damage_material then
+			local material_value = 1 - current_health_percent
 
-			if next_stage then
-				within_threshold = current_health_percent <= stage.health_threshold and current_health_percent > next_stage.health_threshold
-			else
-				within_threshold = current_health_percent <= stage.health_threshold
-			end
+			material_value = 0
 
-			local stage_lowered = last_stage_index < ii
+			Unit.set_scalar_for_material(unit, damage_material_slot_name, damage_amount_variable_name, material_value)
+		end
 
-			if within_threshold and stage_lowered then
-				Unit.flow_event(unit, stage.event_name)
+		if destructible_stages then
+			for ii = #destructible_stages, 1, -1 do
+				local stage = destructible_stages[ii]
+				local next_stage = destructible_stages[ii + 1]
+				local within_threshold
 
-				self._current_stage_index = ii
+				if next_stage then
+					within_threshold = current_health_percent <= stage.health_threshold and current_health_percent > next_stage.health_threshold
+				else
+					within_threshold = current_health_percent <= stage.health_threshold
+				end
+
+				local stage_lowered = last_stage_index < ii
+
+				if within_threshold and stage_lowered then
+					Unit.flow_event(unit, stage.event_name)
+
+					self._current_stage_index = ii
+				end
 			end
 		end
 
@@ -279,6 +305,18 @@ Destructible.force_destruct = function (self)
 end
 
 Destructible.component_data = {
+	damage_material_slot_name = {
+		category = "Destruction Stages",
+		ui_name = "Material Slot Name",
+		ui_type = "text_box",
+		value = "",
+	},
+	damage_amount_variable_name = {
+		category = "Destruction Stages",
+		ui_name = "Damage Variable Name",
+		ui_type = "text_box",
+		value = "damage_amount",
+	},
 	destructible_stages = {
 		category = "Destruction Stages",
 		ui_name = "Health Flow Callbacks",

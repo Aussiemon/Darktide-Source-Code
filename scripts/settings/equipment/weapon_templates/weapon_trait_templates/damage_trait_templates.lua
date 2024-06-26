@@ -2652,6 +2652,24 @@ damage_trait_templates.powersword_cleave_targets_stat = {
 		},
 	},
 }
+damage_trait_templates.pickaxe_cleave_targets_stat = {
+	{
+		"cleave_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"cleave_distribution",
+		"impact",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+}
 damage_trait_templates.powersword_dps_perk = {
 	{
 		"targets",

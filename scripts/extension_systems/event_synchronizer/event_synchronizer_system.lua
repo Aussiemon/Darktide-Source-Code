@@ -7,6 +7,7 @@ require("scripts/extension_systems/event_synchronizer/kill_synchronizer_extensio
 require("scripts/extension_systems/event_synchronizer/luggable_synchronizer_extension")
 require("scripts/extension_systems/event_synchronizer/mission_objective_zone_synchronizer_extension")
 require("scripts/extension_systems/event_synchronizer/side_mission_pickup_synchronizer_extension")
+require("scripts/extension_systems/event_synchronizer/timed_synchronizer_extension")
 
 local EventSynchronizerSystem = class("EventSynchronizerSystem", "ExtensionSystemBase")
 local RPCS = {
@@ -30,6 +31,28 @@ EventSynchronizerSystem.init = function (self, context, system_init_data, ...)
 	self._network_event_delegate:register_session_events(self, unpack(RPCS))
 
 	self._mission_objective_zone_synchronizers = {}
+	self._loaded_view = false
+	self._scanner_display_view_requests = 0
+end
+
+EventSynchronizerSystem.load_scanner_view = function (self)
+	self._scanner_display_view_requests = self._scanner_display_view_requests + 1
+
+	if self._scanner_display_view_requests > 0 and not self._loaded_view and Managers.ui then
+		Managers.ui:load_view("scanner_display_view", self.__class_name)
+
+		self._loaded_view = true
+	end
+end
+
+EventSynchronizerSystem.unload_scanner_view = function (self)
+	self._scanner_display_view_requests = self._scanner_display_view_requests - 1
+
+	if self._scanner_display_view_requests == 0 and self._loaded_view then
+		Managers.ui:unload_view("scanner_display_view", self.__class_name)
+
+		self._loaded_view = false
+	end
 end
 
 EventSynchronizerSystem.on_gameplay_post_init = function (self, level)

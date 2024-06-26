@@ -56,7 +56,7 @@ local function chained_hits_start_func(template_data, template_context)
 	template_data.weapon_action_component = weapon_action_component
 end
 
-function chain_hits_reset_update_func(template_data, template_context)
+local function chain_hits_reset_update_func(template_data, template_context)
 	return false
 end
 
@@ -439,6 +439,9 @@ base_templates.infinite_melee_cleave_on_weakspot_kill = {
 base_templates.pass_past_armor_on_crit = {
 	class_name = "buff",
 	predicted = false,
+	conditional_stat_buffs = {
+		[stat_buffs.melee_critical_strike_damage] = 0.025,
+	},
 	conditional_keywords = {
 		keywords.use_reduced_hit_mass,
 		keywords.ignore_armor_aborts_attack,
@@ -840,12 +843,13 @@ base_templates.consecutive_hits_increases_ranged_power_child = {
 base_templates.pass_trough_armor_on_weapon_special = {
 	class_name = "buff",
 	hide_icon_in_hud = true,
-	max_stacks = 5,
 	predicted = false,
-	stack_offset = -1,
 	conditional_keywords = {
 		keywords.use_reduced_hit_mass,
 		keywords.ignore_armor_aborts_attack,
+	},
+	conditional_stat_buffs = {
+		[stat_buffs.melee_impact_modifier] = 0.05,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
@@ -992,7 +996,8 @@ base_templates.guaranteed_melee_crit_after_crit_weakspot_kill = {
 		[proc_events.on_kill] = 1,
 	},
 	buff_data = {
-		internal_buff_name = "guaranteed_melee_crit_after_crit_weakspot_kill_effect",
+		internal_buff_name = "guaranteed_melee_crit_after_crit_weakspot_kill_effect_percentage",
+		num_stacks_on_proc = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -1010,8 +1015,9 @@ base_templates.guaranteed_melee_crit_after_crit_weakspot_kill = {
 		local t = FixedFrame.get_latest_fixed_time()
 		local item_slot_name = template_context.item_slot_name
 		local template_name = template_context.template.name
+		local num_stacks = override_buff_data and override_buff_data.num_stacks_on_proc or buff_data.num_stacks_on_proc
 
-		template_data.buff_extension:add_internally_controlled_buff(internal_buff_name, t, "item_slot_name", item_slot_name, "parent_buff_template", template_name)
+		template_data.buff_extension:add_internally_controlled_buff_with_stacks(internal_buff_name, num_stacks, t, "item_slot_name", item_slot_name, "parent_buff_template", template_name)
 	end,
 }
 base_templates.guaranteed_melee_crit_after_crit_weakspot_kill_effect = {
@@ -1032,6 +1038,24 @@ base_templates.guaranteed_melee_crit_after_crit_weakspot_kill_effect = {
 		return template_data.finish
 	end,
 }
+base_templates.guaranteed_melee_crit_after_crit_weakspot_kill_effect_percentage = {
+	class_name = "proc_buff",
+	duration = 5,
+	max_stacks = 10,
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.melee_critical_strike_chance] = 0.1,
+	},
+	proc_events = {
+		[proc_events.on_sweep_start] = 1,
+	},
+	proc_func = function (params, template_data, template_context)
+		template_data.finish = true
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		return template_data.finish
+	end,
+}
 base_templates.guaranteed_melee_crit_on_activated_kill = {
 	class_name = "proc_buff",
 	predicted = false,
@@ -1039,7 +1063,8 @@ base_templates.guaranteed_melee_crit_on_activated_kill = {
 		[proc_events.on_kill] = 1,
 	},
 	buff_data = {
-		internal_buff_name = "guaranteed_melee_crit_on_activated_kill_effect",
+		internal_buff_name = "guaranteed_melee_crit_on_activated_kill_effect_percentage",
+		num_stacks_on_proc = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -1054,11 +1079,12 @@ base_templates.guaranteed_melee_crit_on_activated_kill = {
 		local template_override_data = template_context.template_override_data
 		local override_buff_data = template_override_data.buff_data
 		local internal_buff_name = override_buff_data and override_buff_data.internal_buff_name or buff_data.internal_buff_name
+		local num_stacks = override_buff_data and override_buff_data.num_stacks_on_proc or buff_data.num_stacks_on_proc
 		local t = FixedFrame.get_latest_fixed_time()
 		local item_slot_name = template_context.item_slot_name
 		local template_name = template_context.template.name
 
-		template_data.buff_extension:add_internally_controlled_buff(internal_buff_name, t, "item_slot_name", item_slot_name, "parent_buff_template", template_name)
+		template_data.buff_extension:add_internally_controlled_buff_with_stacks(internal_buff_name, num_stacks, t, "item_slot_name", item_slot_name, "parent_buff_template", template_name)
 	end,
 }
 base_templates.guaranteed_melee_crit_on_activated_kill_effect = {
@@ -1071,6 +1097,24 @@ base_templates.guaranteed_melee_crit_on_activated_kill_effect = {
 	},
 	proc_events = {
 		[proc_events.on_critical_strike] = 1,
+	},
+	proc_func = function (params, template_data, template_context)
+		template_data.finish = true
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		return template_data.finish
+	end,
+}
+base_templates.guaranteed_melee_crit_on_activated_kill_effect_percentage = {
+	class_name = "proc_buff",
+	duration = 5,
+	max_stacks = 10,
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.melee_critical_strike_chance] = 0.1,
+	},
+	proc_events = {
+		[proc_events.on_sweep_start] = 1,
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.finish = true
@@ -1118,6 +1162,9 @@ base_templates.pass_past_armor_on_weapon_special = {
 		keywords.use_reduced_hit_mass,
 		keywords.ignore_armor_aborts_attack,
 	},
+	conditional_stat_buffs = {
+		[stat_buffs.melee_heavy_damage] = 0.05,
+	},
 	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.melee_weapon_special_active),
 }
 base_templates.extra_explosion_on_activated_attacks_on_armor = {
@@ -1125,6 +1172,7 @@ base_templates.extra_explosion_on_activated_attacks_on_armor = {
 	predicted = false,
 	conditional_stat_buffs = {
 		[stat_buffs.weapon_special_max_activations] = 1,
+		[stat_buffs.explosion_radius_modifier] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.melee_weapon_special_active),
 }
@@ -1263,7 +1311,6 @@ base_templates.hipfire_while_sprinting = {
 		[stat_buffs.spread_modifier] = -0.3,
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.spread_modifier] = 0.1,
 		[stat_buffs.damage_near] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.is_sprinting),
@@ -1497,7 +1544,7 @@ base_templates.crit_chance_bonus_on_melee_kills = {
 	proc_stat_buffs = {
 		[stat_buffs.ranged_critical_strike_chance] = 0.05,
 	},
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_kill),
+	check_proc_func = CheckProcFunctions.on_melee_kill,
 }
 base_templates.crit_chance_on_multiple_pellet_hit_parent = {
 	child_buff_template = "crit_chance_on_multiple_pellet_hit_child",
@@ -1688,7 +1735,11 @@ base_templates.infinite_cleave_on_crit = {
 	conditional_keywords = {
 		keywords.critical_hit_infinite_cleave,
 	},
+	conditional_stat_buffs = {
+		[stat_buffs.ranged_impact_modifier] = 0.05,
+	},
 	conditional_keywords_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
 base_templates.burninating_on_crit_ranged = {
 	class_name = "proc_buff",
@@ -2181,6 +2232,9 @@ base_templates.double_shot_on_crit = {
 	conditional_keywords = {
 		keywords.critical_strike_second_projectile,
 	},
+	conditional_stat_buffs = {
+		[stat_buffs.ranged_critical_strike_chance] = 0.05,
+	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
 base_templates.uninterruptable_while_charging = {
@@ -2191,6 +2245,9 @@ base_templates.uninterruptable_while_charging = {
 	conditional_keywords = {
 		keywords.uninterruptible,
 		keywords.stun_immune,
+	},
+	conditional_stat_buffs = {
+		[stat_buffs.charge_movement_reduction_multiplier] = 0.9,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2438,6 +2495,10 @@ base_templates.weakspot_hit_resets_dodge_count = {
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_weakspot_hit),
+	conditional_stat_buffs = {
+		[stat_buffs.melee_weakspot_damage] = 0.025,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")

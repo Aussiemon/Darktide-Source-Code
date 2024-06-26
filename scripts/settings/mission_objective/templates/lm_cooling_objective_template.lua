@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	lm_cooling = {
-		main_objective_type = "luggable_objective",
 		objectives = {
 			objective_lm_cooling_leave_start = {
 				description = "loc_objective_lm_cooling_leave_start_desc",
@@ -19,8 +18,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_lm_cooling_decrypt_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "hacking_event",
 				progress_bar = true,
-				use_music_event = "hacking_event",
 			},
 			objective_lm_cooling_send_elevator = {
 				description = "loc_objective_lm_cooling_send_elevator_desc",
@@ -42,15 +41,15 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_lm_cooling_reactor_header",
 				mission_objective_type = "luggable",
+				music_wwise_state = "collect_event",
 				turn_off_backfill = true,
-				use_music_event = "collect_event",
 			},
 			objective_lm_cooling_machine = {
 				description = "loc_objective_lm_cooling_machine_desc",
 				event_type = "end_event",
 				header = "loc_objective_lm_cooling_machine_header",
 				mission_objective_type = "goal",
-				use_music_event = "collect_event",
+				music_wwise_state = "collect_event",
 			},
 			objective_lm_cooling_wait = {
 				description = "loc_objective_lm_cooling_wait_desc",
@@ -58,21 +57,21 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_lm_cooling_wait_header",
 				mission_objective_type = "timed",
+				music_wwise_state = "collect_event",
 				progress_bar = true,
-				use_music_event = "collect_event",
 			},
 			objective_lm_cooling_clear = {
 				description = "loc_objective_lm_cooling_clear_desc",
 				event_type = "end_event",
 				header = "loc_objective_lm_cooling_clear_header",
 				mission_objective_type = "goal",
-				use_music_event = "collect_event",
+				music_wwise_state = "collect_event",
 			},
 			objective_lm_cooling_escape = {
 				description = "loc_objective_lm_cooling_escape_desc",
 				header = "loc_objective_lm_cooling_escape_header",
 				mission_objective_type = "goal",
-				use_music_event = "escape_event",
+				music_wwise_state = "escape_event",
 			},
 		},
 	},

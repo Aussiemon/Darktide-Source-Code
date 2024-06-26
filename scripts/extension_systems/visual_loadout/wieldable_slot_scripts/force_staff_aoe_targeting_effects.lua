@@ -1,26 +1,30 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_staff_aoe_targeting_effects.lua
 
 local Action = require("scripts/utilities/weapon/action")
+local Explosion = require("scripts/utilities/attack/explosion")
 local ForceStaffAoeTargetingEffects = class("ForceStaffAoeTargetingEffects")
 local SPAWN_POS = Vector3Box(400, 400, 400)
 
 ForceStaffAoeTargetingEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local wwise_world = context.wwise_world
+	local owner_unit = context.owner_unit
 
 	self._world = context.world
 	self._wwise_world = wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
+	self._owner_unit = owner_unit
 	self._fx_extension = context.fx_extension
+	self._buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
 
-	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	self._action_module_position_finder_component = unit_data_extension:read_component("action_module_position_finder")
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+	self._breed = unit_data_extension:breed()
 
 	local source_id = WwiseWorld.make_manual_source(wwise_world, SPAWN_POS:unbox())
 
@@ -149,10 +153,10 @@ ForceStaffAoeTargetingEffects._update_targeting_effects = function (self)
 		self._targeting_playing_id = nil
 	end
 
-	self:_update_effect_positions(action_settings, self._decal_unit, self._effect_id, self._scaling_effect_id, self._scale_variable_index, self._source_id, wwise_parameter_name)
+	self:_update_effect_positions(action_settings, position_finder_fx, self._decal_unit, self._effect_id, self._scaling_effect_id, self._scale_variable_index, self._source_id, wwise_parameter_name)
 end
 
-ForceStaffAoeTargetingEffects._update_effect_positions = function (self, action_settings, decal_unit, effect_id, scaling_effect_id, scale_variable_index, source_id, parameter_name)
+ForceStaffAoeTargetingEffects._update_effect_positions = function (self, action_settings, position_finder_fx, decal_unit, effect_id, scaling_effect_id, scale_variable_index, source_id, parameter_name)
 	if not decal_unit and not effect_id and not source_id then
 		return
 	end
@@ -162,11 +166,15 @@ ForceStaffAoeTargetingEffects._update_effect_positions = function (self, action_
 	local first_person_rotation = self._first_person_component.rotation
 	local target_position = self._action_module_position_finder_component.position
 	local charge_level = self._action_module_charge_component.charge_level
+	local explode_action_name = position_finder_fx.explode_action_name
+	local explode_action = self._weapon_actions[explode_action_name]
+	local explosion_template = explode_action.explosion_template
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local lerp_values = Explosion.lerp_values(self._owner_unit, explosion_template.name, explode_action_name)
+	local _, close_radius = Explosion.radii(explosion_template, 1, lerp_values, "explosion", stat_buffs, self._breed)
 	local flat_forward_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(first_person_rotation)))
 	local rotation = Quaternion.look(flat_forward_direction, Vector3.up())
-	local min_scale = action_settings.min_scale
-	local max_scale = action_settings.max_scale
-	local scale = math.max(charge_level * max_scale, min_scale)
+	local scale = charge_level * close_radius * 2.2
 
 	if decal_unit then
 		Unit.set_local_position(decal_unit, 1, target_position)

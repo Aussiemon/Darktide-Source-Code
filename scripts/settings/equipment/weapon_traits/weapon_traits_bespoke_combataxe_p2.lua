@@ -169,7 +169,26 @@ templates.weapon_trait_bespoke_combataxe_p2_power_bonus_scaled_on_stamina = {
 }
 templates.weapon_trait_bespoke_combataxe_p2_guaranteed_melee_crit_after_crit_weakspot_kill = {
 	weapon_trait_bespoke_combataxe_p2_guaranteed_melee_crit_after_crit_weakspot_kill = {
-		{},
+		{
+			buff_data = {
+				num_stacks_on_proc = 4,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 6,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 8,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 10,
+			},
+		},
 	},
 }
 

@@ -38,6 +38,7 @@ local talent_settings = {
 			max_stacks = 1,
 			melee_critical_strike_chance = 1,
 			melee_damage = 0.25,
+			melee_rending_multiplier = 1,
 			on_hit_proc_chance = 1,
 			radius = 3,
 			toughness = 0.5,
@@ -88,7 +89,7 @@ local talent_settings = {
 		offensive_2 = {
 			damage = 0.2,
 			duration = 5,
-			impact_modifier = 0.3,
+			impact_modifier = 0.05,
 			max_stacks = 5,
 			min_hits = 3,
 		},

@@ -760,6 +760,31 @@ local template = {
 				template_name = "standard_melee",
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				spawner_group = "spawner_corruptor_a",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
+			},
+			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 6,
@@ -813,6 +838,31 @@ local template = {
 				delay = 2,
 				spawner_group = "spawner_corruptor_a",
 				template_name = "standard_melee",
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_corruptor_a",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -870,6 +920,31 @@ local template = {
 				template_name = "standard_melee",
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				spawner_group = "spawner_corruptor_b",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
+			},
+			{
 				"continue_when",
 				duration = 150,
 				condition = function ()
@@ -893,7 +968,7 @@ local template = {
 				points = 16,
 				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_corruptor_a",
+				spawner_group = "spawner_corruptor_b",
 				breed_tags = {
 					{
 						"horde",
@@ -923,6 +998,31 @@ local template = {
 				delay = 2,
 				spawner_group = "spawner_corruptor_b",
 				template_name = "standard_melee",
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_corruptor_b",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
 			},
 			{
 				"continue_when",
@@ -980,6 +1080,31 @@ local template = {
 				template_name = "standard_melee",
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				spawner_group = "spawner_corruptor_c",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
+			},
+			{
 				"continue_when",
 				duration = 150,
 				condition = function ()
@@ -1033,6 +1158,31 @@ local template = {
 				delay = 0,
 				spawner_group = "spawner_corruptor_c",
 				template_name = "standard_melee",
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_corruptor_c",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -1090,6 +1240,31 @@ local template = {
 				template_name = "standard_melee",
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				spawner_group = "spawner_corruptor_d",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
+			},
+			{
 				"continue_when",
 				duration = 150,
 				condition = function ()
@@ -1143,6 +1318,31 @@ local template = {
 				delay = 0,
 				spawner_group = "spawner_corruptor_d",
 				template_name = "standard_melee",
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 14,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_corruptor_d",
+				breed_tags = {
+					{
+						"horde",
+						"melee",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 16,
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
 			},
 			{
 				"continue_when",
@@ -1228,13 +1428,6 @@ local template = {
 				template_name = "standard_melee",
 			},
 			{
-				"continue_when",
-				duration = 150,
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
-				end,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 2,
 				points = 14,
@@ -1258,6 +1451,36 @@ local template = {
 					},
 				},
 			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 15,
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
+					},
+				},
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 6,
+				breed_tags = {
+					{
+						"special",
+						"scrambler",
+					},
+				},
+			},
+			{
+				"continue_when",
+				duration = 150,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 10
+				end,
+			},
 		},
 		event_foundry_finale = {
 			{
@@ -1280,13 +1503,13 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 13,
+				points = 15,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_foundry_west",
+				spawner_group = "spawner_foundry_trickle",
 				breed_tags = {
 					{
-						"melee",
-						"horde",
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -1343,6 +1566,18 @@ local template = {
 				},
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 10,
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"far",
+						"elite",
+					},
+				},
+			},
+			{
 				"continue_when",
 				duration = 180,
 				condition = function ()
@@ -1352,7 +1587,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 6,
+				points = 12,
 				spawner_group = "spawner_foundry_north",
 				breed_tags = {
 					{
@@ -1364,9 +1599,9 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 10,
+				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_foundry_north",
+				spawner_group = "spawner_foundry_trickle",
 				breed_tags = {
 					{
 						"melee",
@@ -1379,37 +1614,22 @@ local template = {
 				limit_spawners = 3,
 				points = 10,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_foundry_west",
+				spawner_group = "spawner_foundry_trickle",
 				breed_tags = {
 					{
-						"melee",
-						"horde",
+						"far",
+						"roamer",
 					},
 				},
 			},
 			{
-				"spawn_by_points",
-				limit_spawners = 3,
-				points = 10,
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_foundry_east",
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
 				breed_tags = {
 					{
-						"melee",
-						"horde",
-					},
-				},
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 3,
-				points = 10,
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_foundry_south",
-				breed_tags = {
-					{
-						"melee",
-						"horde",
+						"special",
+						"disabler",
 					},
 				},
 			},
@@ -1434,12 +1654,24 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 20,
+				points = 18,
 				spawner_group = "spawner_foundry_north",
 				breed_tags = {
 					{
 						"melee",
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 12,
+				spawner_group = "spawner_foundry_trickle",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -1452,6 +1684,20 @@ local template = {
 			{
 				"flow_event",
 				flow_event_name = "event_foundry_finale_completed",
+			},
+		},
+		event_foundry_extract = {
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 10,
+				spawner_group = "foundry_extract",
+				breed_tags = {
+					{
+						"roamer",
+						"close",
+					},
+				},
 			},
 		},
 	},

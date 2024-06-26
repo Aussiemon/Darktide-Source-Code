@@ -368,7 +368,7 @@ damage_templates.close_krak_grenade = {
 		},
 	},
 	power_distribution = {
-		attack = 2000,
+		attack = 2400,
 		impact = 100,
 	},
 	targets = {

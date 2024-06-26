@@ -441,7 +441,7 @@ end
 MissionObjectiveZoneScanExtension._play_vo = function (self, player, scanning_vo_line, is_mission_giver_line)
 	if is_mission_giver_line then
 		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
-		local mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
+		local mission_objective = self._mission_objective_system:active_objective(current_objective_name)
 		local voice_profile = mission_objective:mission_giver_voice_profile()
 
 		if voice_profile then

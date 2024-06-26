@@ -10,9 +10,11 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local StatFlags = require("scripts/managers/stats/stat_flags")
 local StatMacros = require("scripts/managers/stats/stat_macros")
 local StatNetworkTypes = require("scripts/settings/stats/stat_network_types")
+local StatsCircumstanceUtil = require("scripts/managers/stats/utility/stats_circumstance_util")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
+local NewWeapons = require("scripts/settings/equipment/weapon_templates/new_weapons")
 local Zones = require("scripts/settings/zones/zones")
 local _stat_count = 0
 local _stat_data = {}
@@ -32,6 +34,20 @@ local function _sorted(t)
 	return t
 end
 
+local function _sort_adventure_missions()
+	local sorted_list = {}
+
+	for _, mission_type in pairs(MissionTypes) do
+		local i = mission_type.index
+
+		if i then
+			sorted_list[i] = mission_type
+		end
+	end
+
+	return sorted_list
+end
+
 local breed_name_to_sub_faction_lookup = {}
 
 for breed_name, breed in pairs(Breeds) do
@@ -44,7 +60,7 @@ local archetype_names = _sorted(table.keys(Archetypes))
 local breed_names = _sorted(table.keys(table.conditional_copy(Breeds, function (_, value)
 	return value.faction_name == "chaos"
 end)))
-local mission_types = _sorted(table.keys(MissionTypes))
+local adventure_mission_types = _sort_adventure_missions()
 local mission_templates = _sorted(table.keys(table.conditional_copy(MissionTemplates, function (_, value)
 	return not value.is_dev_mission and not value.is_hub
 end)))
@@ -86,6 +102,7 @@ end)))
 local general_breed_lookup = table.set(table.keys(table.conditional_copy(Breeds, function (_, breed)
 	return breed.tags.minion
 end)))
+local weapon_names = _sorted(table.keys(WeaponTemplates))
 local weapons_with_activated_specials = table.set(table.keys(table.conditional_copy(WeaponTemplates, function (_, weapon)
 	return WeaponTemplate.has_keyword(weapon, "activated")
 end)))
@@ -96,6 +113,20 @@ local function is_weakspot_hit(attack_data)
 	local is_weak_spot_hit = Weakspot.hit_weakspot(breed, hit_zone_name)
 
 	return is_weak_spot_hit
+end
+
+local function is_ranged_close_hit(attack_data)
+	local CLOSE_RANGE_RANGED = DamageSettings.ranged_close
+	local is_close = CLOSE_RANGE_RANGED >= attack_data.distance_between_units
+
+	return is_close
+end
+
+local function non_horde_target(attack_data)
+	local breed = Breeds[attack_data.target_breed_name]
+	local non_horde = not breed.tags or not breed.tags.horde
+
+	return non_horde
 end
 
 local function read_stat(stat_definition, stat_data)
@@ -258,7 +289,6 @@ do
 	StatDefinitions.accuracy = {
 		default = 0,
 		flags = {},
-		network_size = StatNetworkTypes.u8bit,
 		triggers = {
 			{
 				id = "shots_fired",
@@ -406,7 +436,6 @@ StatDefinitions.total_kills = {
 	flags = {
 		StatFlags.backend,
 	},
-	network_size = StatNetworkTypes.u24bit,
 	triggers = {
 		{
 			id = "hook_kill",
@@ -1306,7 +1335,7 @@ do
 		triggers = {
 			{
 				id = "whole_mission_won",
-				trigger = function (self, stat_data, difficulty)
+				trigger = function (self, stat_data)
 					local personal_deaths = read_stat(StatDefinitions.session_deaths, stat_data)
 
 					if personal_deaths == 0 then
@@ -1324,7 +1353,7 @@ do
 			},
 		},
 		include_condition = function (self, config)
-			return config.is_auric_mission
+			return config.is_auric_mission and config.joined_at <= 0.2
 		end,
 	}
 	StatDefinitions.mission_maelstrom = {
@@ -1364,10 +1393,10 @@ do
 		triggers = {
 			{
 				id = "whole_mission_won",
-				trigger = function (self, stat_data, difficulty)
+				trigger = function (self, stat_data)
 					local team_knock_downs = read_stat(StatDefinitions.team_knock_downs, stat_data)
 
-					if team_knock_downs == 0 and difficulty == 5 then
+					if team_knock_downs == 0 then
 						return increment(self, stat_data)
 					end
 				end,
@@ -1384,7 +1413,7 @@ do
 		triggers = {
 			{
 				id = "whole_mission_won",
-				trigger = function (self, stat_data, difficulty)
+				trigger = function (self, stat_data)
 					local personal_deaths = read_stat(StatDefinitions.session_deaths, stat_data)
 
 					if personal_deaths == 0 then
@@ -1402,7 +1431,7 @@ do
 			},
 		},
 		include_condition = function (self, config)
-			return config.is_flash_mission and config.is_auric_mission and config.difficulty >= 5
+			return config.is_flash_mission and config.is_auric_mission and config.difficulty >= 5 and config.joined_at <= 0.2
 		end,
 	}
 	StatDefinitions.flawless_auric_maelstrom_won = {
@@ -1496,11 +1525,7 @@ do
 					local has_hard_mode = Managers.state.pacing:has_hard_mode()
 
 					if has_hard_mode and difficulty >= 5 then
-						local id = self.id
-
-						stat_data[id] = (stat_data[id] or self.default) + 1
-
-						return id, stat_data[id]
+						return increment(self, stat_data)
 					end
 				end,
 			},
@@ -1523,11 +1548,7 @@ do
 					local has_hard_mode = Managers.state.pacing:has_hard_mode()
 
 					if has_hard_mode then
-						local id = self.id
-
-						stat_data[id] = (stat_data[id] or self.default) + 1
-
-						return id, stat_data[id]
+						return increment(self, stat_data)
 					end
 				end,
 			},
@@ -1540,7 +1561,6 @@ do
 		end,
 	}
 	StatDefinitions.mission_twins_kills_within_x = {
-		running_stat = "mission_twins_kills_within_x",
 		flags = {
 			StatFlags.always_log,
 		},
@@ -1549,7 +1569,7 @@ do
 				id = "hook_boss_died",
 				trigger = function (self, stat_data, breed_name, boss_max_health, boss_unit_id, time_since_first_damage)
 					if breed_name == "renegade_twin_captain" or breed_name == "renegade_twin_captain_two" then
-						return increment_by(self, stat_data, 1)
+						return increment(self, stat_data)
 					end
 				end,
 			},
@@ -1557,10 +1577,10 @@ do
 				id = "hook_boss_died",
 				trigger = function (self, stat_data, breed_name, boss_max_health, boss_unit_id, time_since_first_damage)
 					if breed_name == "renegade_twin_captain" or breed_name == "renegade_twin_captain_two" then
-						return set_to_min(self, stat_data, 0)
+						return decrement(self, stat_data)
 					end
 				end,
-				delay = seconds(6),
+				delay = seconds(5),
 			},
 		},
 		include_condition = function (self, config)
@@ -1570,16 +1590,15 @@ do
 		end,
 	}
 	StatDefinitions.mission_twins_killed_successfully_within_x = {
+		running_stat = "mission_twins_kills_within_x",
 		flags = {
 			StatFlags.backend,
 		},
 		triggers = {
 			{
 				id = "mission_twins_kills_within_x",
-				trigger = function (self, stat_data)
-					local track_twins = read_stat(StatDefinitions.mission_twins_kills_within_x, stat_data) == 2
-
-					if track_twins then
+				trigger = function (self, stat_data, value)
+					if value == 2 then
 						return increment(self, stat_data)
 					end
 				end,
@@ -1684,7 +1703,6 @@ do
 	StatDefinitions.team_win_without_ally_downed_longer_then_x = {
 		flags = {
 			StatFlags.backend,
-			StatFlags.team,
 		},
 		data = {
 			threshold = 5,
@@ -1692,133 +1710,66 @@ do
 		triggers = {
 			{
 				id = "whole_mission_won",
-				trigger = function (self, stat_data, difficulty)
+				trigger = function (self, stat_data)
 					local team_knock_downs = read_stat(StatDefinitions.team_knock_downs, stat_data)
 
-					if team_knock_downs < self.data.threshold and difficulty >= 4 then
+					if team_knock_downs < self.data.threshold then
 						return increment(self, stat_data)
 					end
 				end,
 			},
 		},
-	}
-
-	local darkness_list = {
-		"darkness_01",
-		"darkness_hunting_grounds_01",
-		"darkness_less_resistance_01",
-		"darkness_more_resistance_01",
-		"flash_mission_05",
-		"high_flash_mission_05",
-		"six_one_flash_mission_03",
-	}
-
-	StatDefinitions.darkness_circumstance_completed = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "mission_won",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
-			},
-		},
 		include_condition = function (self, config)
-			local circumstance_name = config.circumstance_name
-
-			for _, circumstances in pairs(darkness_list) do
-				if circumstances == circumstance_name then
-					return circumstance_name
-				end
-			end
+			return config.difficulty >= 4
 		end,
 	}
 
-	local ventilation_list = {
-		"ventilation_purge_01",
-		"ventilation_purge_less_resistance_01",
-		"ventilation_purge_more_resistance_01",
-		"ventilation_purge_with_snipers_01",
-		"ventilation_purge_with_snipers_less_resistance_01",
-		"ventilation_purge_with_snipers_more_resistance_01",
-		"flash_mission_06",
-		"flash_mission_09",
-		"high_flash_mission_06",
-		"high_flash_mission_09",
-		"six_one_flash_mission_02",
-	}
-
-	StatDefinitions.ventilation_circumstance_completed = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
+	do
+		local circumstance_entries = {
 			{
-				id = "mission_won",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
+				mutator = "mutator_darkness_los",
+				name = "darkness",
 			},
-		},
-		include_condition = function (self, config)
+			{
+				mutator = "mutator_ventilation_purge_los",
+				name = "ventilation",
+			},
+			{
+				mutator = "mutator_toxic_gas_volumes",
+				name = "toxic_gas",
+			},
+		}
+
+		local function has_correct_mutator(self, config)
 			local circumstance_name = config.circumstance_name
 
-			for _, circumstances in pairs(ventilation_list) do
-				if circumstances == circumstance_name then
-					return circumstance_name
-				end
-			end
-		end,
-	}
+			return circumstance_name ~= "default" and table.array_contains(StatsCircumstanceUtil[circumstance_name], self.data.mutator)
+		end
 
-	local toxic_gas_list = {
-		"toxic_gas_01",
-		"toxic_gas_less_resistance_01",
-		"toxic_gas_more_resistance_01",
-		"toxic_gas_volumes_01",
-		"flash_mission_15",
-		"flash_mission_16",
-		"flash_mission_17",
-		"flash_mission_18",
-		"flash_mission_19",
-		"high_flash_mission_15",
-		"high_flash_mission_16",
-		"high_flash_mission_17",
-		"high_flash_mission_18",
-		"high_flash_mission_19",
-	}
+		for _, entry in ipairs(circumstance_entries) do
+			local stat_name = string.format("%s_circumstance_completed", entry.name)
 
-	StatDefinitions.toxic_gas_circumstance_completed = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "mission_won",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
-			},
-		},
-		include_condition = function (self, config)
-			local circumstance_name = config.circumstance_name
+			StatDefinitions[stat_name] = {
+				flags = {
+					StatFlags.backend,
+				},
+				data = {
+					mutator = entry.mutator,
+				},
+				triggers = {
+					{
+						id = "mission_won",
+						trigger = StatMacros.increment,
+					},
+				},
+				include_condition = has_correct_mutator,
+			}
+		end
+	end
 
-			for _, circumstances in pairs(toxic_gas_list) do
-				if circumstances == circumstance_name then
-					return circumstance_name
-				end
-			end
-		end,
-	}
-
-	for i = 1, #mission_types do
-		local mission_type = mission_types[i]
-		local stat_name = string.format("type_%s_missions", MissionTypes[mission_type].id)
+	for i = 1, #adventure_mission_types do
+		local mission_type = adventure_mission_types[i]
+		local stat_name = string.format("type_%s_missions", i)
 
 		StatDefinitions[stat_name] = {
 			flags = {
@@ -1839,10 +1790,9 @@ do
 		}
 	end
 
-	for i = 1, #mission_types do
-		local mission_type = mission_types[i]
-		local mission_type_id = MissionTypes[mission_type].id
-		local stat_name = string.format("max_difficulty_%s_mission", mission_type_id)
+	for i = 1, #adventure_mission_types do
+		local mission_type = adventure_mission_types[i]
+		local stat_name = string.format("max_difficulty_%s_mission", i)
 
 		StatDefinitions[stat_name] = {
 			flags = {
@@ -1851,7 +1801,7 @@ do
 			data = {
 				mission_type = mission_type,
 			},
-			stat_name = MissionTypes[mission_type].name,
+			stat_name = mission_type.name,
 			triggers = {
 				{
 					id = "mission_won",
@@ -1863,7 +1813,7 @@ do
 			end,
 			init = function (self, stat_data)
 				for difficulty = 5, 1, -1 do
-					local old_id = string.format("_mission_difficulty_%s_objectives_%s_flag", difficulty, mission_type_id)
+					local old_id = string.format("_mission_difficulty_%s_objectives_%s_flag", difficulty, i)
 
 					if stat_data[old_id] then
 						return difficulty
@@ -2008,16 +1958,15 @@ do
 			}
 		end
 
-		for j = 1, #mission_types do
-			local mission_type = mission_types[j]
-			local mission_type_id = MissionTypes[mission_type].id
-			local stat_name = string.format("mission_type_%s_max_difficulty_%s", mission_type_id, archetype_name)
+		for j = 1, #adventure_mission_types do
+			local mission_type = adventure_mission_types[j]
+			local stat_name = string.format("mission_type_%s_max_difficulty_%s", j, archetype_name)
 
 			StatDefinitions[stat_name] = {
 				flags = {
 					StatFlags.backend,
 				},
-				stat_name = MissionTypes[mission_type].name,
+				stat_name = mission_type.name,
 				data = {
 					mission_type = mission_type,
 					archetype_name = archetype_name,
@@ -2039,7 +1988,7 @@ do
 					local data = self.data
 
 					for difficulty = 3, 1, -1 do
-						local old_id = string.format("_mission_%s_2_%s_objectives_%s_flag", data.archetype_name, difficulty, mission_type_id)
+						local old_id = string.format("_mission_%s_2_%s_objectives_%s_flag", data.archetype_name, difficulty, j)
 
 						if stat_data[old_id] then
 							return difficulty
@@ -2109,7 +2058,7 @@ do
 			},
 		},
 		include_condition = function (self, config)
-			return config.difficulty >= 3
+			return config.difficulty >= 3 and config.joined_at <= 0.2
 		end,
 		init = function (self, stat_data)
 			return math.max(stat_data.flawless_missions_in_a_row or 0, stat_data.flawless_mission_in_a_row or 0)
@@ -2134,7 +2083,7 @@ do
 		triggers = {
 			{
 				id = "whole_mission_won",
-				trigger = function (self, stat_data, difficulty)
+				trigger = function (self, stat_data)
 					local team_downs = read_stat(StatDefinitions.team_knock_downs, stat_data)
 
 					if team_downs == 0 then
@@ -2152,7 +2101,7 @@ do
 		triggers = {
 			{
 				id = "whole_mission_won",
-				trigger = function (self, stat_data, difficulty)
+				trigger = function (self, stat_data)
 					local damage_taken = read_stat(StatDefinitions.session_damage_taken, stat_data)
 
 					return set_to_min(self, stat_data, damage_taken)
@@ -2407,7 +2356,7 @@ StatDefinitions.bulwark_backstab_damage_inflicted = {
 				local damage_amount = attack_data.damage_dealt
 				local is_backstab = attack_data.is_backstab
 
-				if breed_name == "chaos_ogryn_bulwark" and is_backstab then
+				if is_backstab and breed_name == "chaos_ogryn_bulwark" then
 					return increment_by(self, stat_data, damage_amount)
 				end
 			end,
@@ -2423,7 +2372,7 @@ StatDefinitions.cultist_gunner_shot_dodged = {
 		{
 			id = "hook_dodged_attack",
 			trigger = function (self, stat_data, breed_name, attack_type, dodge_type)
-				if (breed_name == "cultist_gunner" or breed_name == "renegade_gunner") and attack_type == "ranged" and (dodge_type == "sprint" or dodge_type == "slide") then
+				if attack_type == "ranged" and (breed_name == "cultist_gunner" or breed_name == "renegade_gunner") and (dodge_type == "sprint" or dodge_type == "slide") then
 					return increment(self, stat_data)
 				end
 			end,
@@ -2877,6 +2826,7 @@ StatDefinitions.session_time_spent_in_captivity = {
 StatDefinitions.different_players_rescued = {
 	flags = {
 		StatFlags.no_sync,
+		StatFlags.team,
 	},
 	triggers = {
 		{
@@ -2896,22 +2846,28 @@ StatDefinitions.different_players_rescued = {
 		},
 	},
 }
+StatDefinitions.amount_different_players_rescued = {
+	flags = {
+		StatFlags.team,
+	},
+	triggers = {
+		{
+			id = "different_players_rescued",
+			trigger = StatMacros.increment,
+		},
+	},
+}
 StatDefinitions.max_different_players_rescued = {
 	flags = {
 		StatFlags.backend,
-		StatFlags.team,
 	},
 	triggers = {
 		{
 			id = "mission_won",
 			trigger = function (self, stat_data, difficulty)
-				local rescued_players = stat_data.different_players_rescued
+				local amount_different_players_rescued = read_stat(StatDefinitions.amount_different_players_rescued, stat_data)
 
-				if rescued_players then
-					local amount_of_different_rescued_players = table.size(rescued_players)
-
-					return set_to_max(self, stat_data, amount_of_different_rescued_players)
-				end
+				return set_to_max(self, stat_data, amount_different_players_rescued)
 			end,
 		},
 	},
@@ -3013,9 +2969,7 @@ for i = 1, #mission_zones do
 		triggers = {
 			{
 				id = "mission_destructible_destroyed",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
+				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = function (self, config)
@@ -3088,11 +3042,7 @@ StatDefinitions.total_renegade_grenadier_melee = {
 				local attack_type = attack_data.attack_type
 
 				if attack_type == "melee" then
-					local id = self.id
-
-					stat_data[id] = (stat_data[id] or self.default) + 1
-
-					return id, stat_data[id]
+					return increment(self, stat_data)
 				end
 			end,
 		},
@@ -3514,9 +3464,7 @@ do
 			triggers = {
 				{
 					id = "hook_veteran_damage_aura",
-					trigger = function (self, stat_data)
-						return increment(self, stat_data)
-					end,
+					trigger = StatMacros.increment,
 				},
 			},
 			include_condition = include_condition,
@@ -4948,9 +4896,7 @@ do
 			triggers = {
 				{
 					id = "hook_psyker_team_elite_aura_kills",
-					trigger = function (self, stat_data)
-						return increment(self, stat_data)
-					end,
+					trigger = StatMacros.increment,
 				},
 			},
 			include_condition = include_condition,
@@ -4964,9 +4910,7 @@ do
 			triggers = {
 				{
 					id = "hook_psyker_team_critical_hits_aura",
-					trigger = function (self, stat_data)
-						return increment(self, stat_data)
-					end,
+					trigger = StatMacros.increment,
 				},
 			},
 			include_condition = include_condition,
@@ -5282,11 +5226,7 @@ do
 					local stagger_type_lookup = self.data.stagger_types
 
 					if attack_result ~= "died" and stagger_type_lookup[stagger_type] then
-						local id = self.id
-
-						stat_data[id] = (stat_data[id] or self.default) + 1
-
-						return id, stat_data[id]
+						return increment(self, stat_data)
 					end
 				end,
 			},
@@ -5417,9 +5357,7 @@ do
 		triggers = {
 			{
 				id = "hook_ogryn_feel_no_pain_kills_at_max",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
+				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = include_condition,
@@ -5432,9 +5370,7 @@ do
 		triggers = {
 			{
 				id = "hook_ogryn_leadbelcher_free_shot",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
+				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = include_condition,
@@ -5447,9 +5383,7 @@ do
 		triggers = {
 			{
 				id = "hook_ogryn_heavy_aura_kills",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
+				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = include_condition,
@@ -5462,9 +5396,7 @@ do
 		triggers = {
 			{
 				id = "hook_ogryn_suppressed_aura_kills",
-				trigger = function (self, stat_data)
-					return increment(self, stat_data)
-				end,
+				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = include_condition,
@@ -5577,13 +5509,9 @@ do
 					local hit_elite_or_special = num_impact_hit_elite + num_impact_hit_special > 0
 
 					if hit_elite_or_special then
-						stat_data[id] = current_value + 1
-
-						return id, stat_data[id]
+						return increment(self, stat_data)
 					elseif current_value ~= default then
-						stat_data[id] = default
-
-						return id, stat_data[id]
+						return set_to(self, stat_data, default)
 					end
 				end,
 			},
@@ -5614,11 +5542,88 @@ do
 	}
 end
 
+do
+	local function template_name_to_id(template_name)
+		return string.format("%s_kill", template_name)
+	end
+
+	local weapon_to_stat = {}
+
+	for _, template_name in ipairs(weapon_names) do
+		local id = template_name_to_id(template_name)
+
+		weapon_to_stat[template_name] = id
+		StatDefinitions[id] = {
+			flags = {
+				StatFlags.no_sync,
+			},
+		}
+	end
+
+	StatDefinitions.weapon_kill_splitter = {
+		flags = {
+			StatFlags.no_sync,
+			StatFlags.never_log,
+		},
+		data = {
+			weapon_to_stat = weapon_to_stat,
+		},
+		triggers = {
+			{
+				id = "hook_kill",
+				trigger = function (self, _, attack_data)
+					local weapon_name = attack_data.weapon_template_name
+					local id = self.data.weapon_to_stat[weapon_name]
+
+					return id, attack_data
+				end,
+			},
+		},
+	}
+
+	local triggers = {}
+
+	for _, template_name in ipairs(NewWeapons) do
+		triggers[#triggers + 1] = {
+			id = template_name_to_id(template_name),
+			trigger = function (self, stat_data, attack_data)
+				local breed_name = attack_data.target_breed_name
+				local breed_lookup = self.data.breed_lookup
+
+				if breed_lookup[breed_name] then
+					return self.id, attack_data
+				end
+			end,
+		}
+	end
+
+	StatDefinitions._session_new_weapon_kills = {
+		flags = {
+			StatFlags.team,
+			StatFlags.no_sync,
+			StatFlags.never_log,
+		},
+		data = {
+			breed_lookup = special_and_elite_breed_lookup,
+		},
+		triggers = triggers,
+	}
+	StatDefinitions.session_new_weapon_kills = {
+		flags = {},
+		data = {},
+		triggers = {
+			{
+				id = "_session_new_weapon_kills",
+				trigger = StatMacros.increment,
+			},
+		},
+	}
+end
+
 StatDefinitions = _stat_data
 
 for _, stat in pairs(StatDefinitions) do
 	stat.flags = table.set(stat.flags)
-	stat.network_size = stat.network_size or StatNetworkTypes.u16bit
 	stat.default = stat.default or 0
 end
 

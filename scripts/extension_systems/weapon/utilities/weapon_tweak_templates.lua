@@ -28,7 +28,7 @@ local WeaponTweakStatsUIDataStats = WeaponTweakStatsUIData.stats
 local WeaponTweakTemplates = {}
 local math_lerp = math.lerp
 local math_clamp = math.clamp
-local _preparse_templates, _preparse_damage_templates, _preparse_explosion_templates, _lookup_entry, _build_templates, _lerp_array, _verify_base_templates, _add_tweak_modifiers, _add_lerped_tweak_modifiers, _resolve_template
+local _preparse_templates, _preparse_damage_templates, _preparse_explosion_templates, _lookup_entry, _add_tweak_stats, _build_templates, _lerp_array, _verify_base_templates, _add_tweak_modifiers, _add_lerped_tweak_modifiers, _resolve_template
 
 WeaponTweakTemplates.preparse_weapon_template = function (weapon_template)
 	local base_template_lookup = {}

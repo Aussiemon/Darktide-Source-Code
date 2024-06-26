@@ -19,7 +19,7 @@ HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 	self._scan_delay = HudElementMissionObjectiveFeedSettings.scan_delay
 	self._scan_delay_duration = 0
-	self._objectives_counter = 0
+	self._objective_widgets_counter = 0
 	self._event_objectives_to_add = {}
 
 	self:_set_background_visibility(false)
@@ -40,7 +40,7 @@ HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, rend
 		self._scan_delay_duration = self._scan_delay
 	end
 
-	if self._objectives_counter > 0 then
+	if self._objective_widgets_counter > 0 then
 		if not self._background_visible then
 			self:_set_background_visibility(true)
 		end
@@ -86,7 +86,7 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self, ui_ren
 	end
 
 	local hud_objectives = self._hud_objectives
-	local active_objectives = self._mission_objective_system:get_active_objectives()
+	local active_objectives = self._mission_objective_system:active_objectives()
 
 	for objective_name, hud_objective in pairs(hud_objectives) do
 		local active_objective = active_objectives[objective_name]
@@ -96,8 +96,11 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self, ui_ren
 		if should_show then
 			if not locally_added and not hud_objective:is_synchronized_with_objective(active_objective) then
 				hud_objective:synchronize_objective(active_objective)
-				self:_synchronize_widget_with_hud_objective(objective_name)
-				self:_align_objective_widgets()
+
+				if self:has_widget(objective_name) then
+					self:_synchronize_widget_with_hud_objective(objective_name)
+					self:_align_objective_widgets()
+				end
 			end
 
 			hud_objective:update_markers()
@@ -128,7 +131,12 @@ HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_re
 
 	self._hud_objectives_names_array[#self._hud_objectives_names_array + 1] = objective_name
 	self._hud_objectives[objective_name] = new_hud_objective
-	self._objectives_counter = self._objectives_counter + 1
+
+	if objective:hide_widget() then
+		return
+	end
+
+	self._objective_widgets_counter = self._objective_widgets_counter + 1
 
 	local widget = self:_create_widget(objective_name, self._mission_widget_definition)
 
@@ -164,8 +172,10 @@ HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_re
 end
 
 HudElementMissionObjectiveFeed._remove_objective = function (self, objective_name)
-	if self._objective_widgets_by_name[objective_name] then
-		self._objective_widgets_by_name[objective_name] = nil
+	if self._hud_objectives[objective_name] then
+		self._hud_objectives[objective_name]:delete()
+
+		self._hud_objectives[objective_name] = nil
 
 		local array_index = table.find(self._hud_objectives_names_array, objective_name)
 
@@ -173,13 +183,14 @@ HudElementMissionObjectiveFeed._remove_objective = function (self, objective_nam
 			table.remove(self._hud_objectives_names_array, array_index)
 		end
 
-		self:_unregister_widget_name(objective_name)
-		self._hud_objectives[objective_name]:delete()
+		if self._objective_widgets_by_name[objective_name] then
+			self:_unregister_widget_name(objective_name)
 
-		self._hud_objectives[objective_name] = nil
-		self._objectives_counter = self._objectives_counter - 1
+			self._objective_widgets_by_name[objective_name] = nil
+			self._objective_widgets_counter = self._objective_widgets_counter - 1
 
-		self:_align_objective_widgets()
+			self:_align_objective_widgets()
+		end
 	else
 		local event_objectives_to_add = self._event_objectives_to_add
 
@@ -300,7 +311,7 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 	local offset_y = 0
 	local objective_widgets_by_name = self._objective_widgets_by_name
 	local total_background_height = 0
-	local objectives_counter = self._objectives_counter
+	local objectives_counter = self._objective_widgets_counter
 	local index_counter = 0
 	local hud_objectives = self._hud_objectives
 
@@ -328,29 +339,32 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 	for i = 1, #hud_objectives_names_array do
 		local objective_name = hud_objectives_names_array[i]
 		local widget = objective_widgets_by_name[objective_name]
-		local hud_objective = hud_objectives[objective_name]
-		local is_side_mission = hud_objective:is_side_mission()
-		local entry_spacing
 
-		if is_side_mission then
-			entry_spacing = entry_spacing_by_mission_type.side_mission
-		else
-			entry_spacing = entry_spacing_by_mission_type.default
-		end
+		if widget then
+			local hud_objective = hud_objectives[objective_name]
+			local is_side_mission = hud_objective:is_side_mission()
+			local entry_spacing
 
-		index_counter = index_counter + 1
+			if is_side_mission then
+				entry_spacing = entry_spacing_by_mission_type.side_mission
+			else
+				entry_spacing = entry_spacing_by_mission_type.default
+			end
 
-		local widget_offset = widget.offset
+			index_counter = index_counter + 1
 
-		widget_offset[2] = offset_y
+			local widget_offset = widget.offset
 
-		local widget_height = self:_get_objectives_height(widget, ui_renderer)
+			widget_offset[2] = offset_y
 
-		offset_y = offset_y + widget_height + entry_spacing
-		total_background_height = total_background_height + widget_height
+			local widget_height = self:_get_objectives_height(widget, ui_renderer)
 
-		if index_counter < objectives_counter then
-			total_background_height = total_background_height + entry_spacing
+			offset_y = offset_y + widget_height + entry_spacing
+			total_background_height = total_background_height + widget_height
+
+			if index_counter < objectives_counter then
+				total_background_height = total_background_height + entry_spacing
+			end
 		end
 	end
 
@@ -360,7 +374,7 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 end
 
 HudElementMissionObjectiveFeed._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
-	if self._objectives_counter > 0 then
+	if self._objective_widgets_counter > 0 then
 		HudElementMissionObjectiveFeed.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
 		local objective_widgets_by_name = self._objective_widgets_by_name

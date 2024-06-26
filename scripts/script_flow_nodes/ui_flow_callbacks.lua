@@ -35,6 +35,10 @@ UIFlowCallbacks.player_fx = function (params)
 	return
 end
 
+UIFlowCallbacks.player_footstep = function (params)
+	return
+end
+
 UIFlowCallbacks.player_material_fx = function (params)
 	return
 end

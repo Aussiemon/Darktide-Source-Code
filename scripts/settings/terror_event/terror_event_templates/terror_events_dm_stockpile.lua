@@ -448,18 +448,14 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 7,
-				spawner_group = "spawner_stockpile_left",
+				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
-						"horde",
-						"melee",
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -478,16 +474,12 @@ local template = {
 						"melee",
 					},
 				},
-			},
-			{
-				"delay",
-				duration = 3,
 			},
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 6,
-				spawner_group = "spawner_stockpile_left",
+				spawner_group = "spawner_stockpile_right",
 				breed_tags = {
 					{
 						"melee",
@@ -539,14 +531,10 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
-				spawner_group = "spawner_stockpile_left",
+				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
 						"special",
@@ -599,17 +587,13 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 8,
-				spawner_group = "spawner_stockpile_right",
+				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
-						"close",
+						"far",
 						"roamer",
 					},
 				},
@@ -622,7 +606,7 @@ local template = {
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 8,
-				spawner_group = "spawner_stockpile_right",
+				spawner_group = "spawner_stockpile_left",
 				breed_tags = {
 					{
 						"close",
@@ -687,17 +671,13 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 10,
-				spawner_group = "spawner_stockpile_right",
+				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
-						"melee",
+						"far",
 						"roamer",
 					},
 				},
@@ -721,7 +701,7 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_stockpile_left",
+				spawner_group = "spawner_stockpile_right",
 				template_name = "standard_melee",
 			},
 			{
@@ -750,7 +730,7 @@ local template = {
 				limit_spawners = 3,
 				points = 5,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_stockpile_forward",
+				spawner_group = "spawner_stockpile_right",
 				breed_tags = {
 					{
 						"melee",
@@ -769,20 +749,16 @@ local template = {
 				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
-						"melee",
+						"far",
 						"roamer",
 					},
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 5,
-				spawner_group = "spawner_stockpile_forward",
+				spawner_group = "spawner_stockpile_left",
 				breed_tags = {
 					{
 						"melee",
@@ -801,20 +777,16 @@ local template = {
 				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
-						"melee",
+						"far",
 						"roamer",
 					},
 				},
 			},
 			{
-				"delay",
-				duration = 1,
-			},
-			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
-				spawner_group = "spawner_stockpile_left",
+				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
 						"special",
@@ -858,7 +830,7 @@ local template = {
 				limit_spawners = 3,
 				points = 12,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_stockpile_right",
+				spawner_group = "spawner_stockpile_forward",
 				breed_tags = {
 					{
 						"close",

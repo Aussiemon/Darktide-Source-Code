@@ -181,7 +181,7 @@ power_level_settings.default_finesse_boost_no_base_damage_amount = {
 }
 power_level_settings.default_crit_boost_amount = 0.5
 power_level_settings.default_boost_curve_multiplier = 0.5
-power_level_settings.rending_armor_conversion = {
+power_level_settings.boost_damage_armor_conversion = {
 	[armor_types.unarmored] = armor_types.unarmored,
 	[armor_types.armored] = armor_types.unarmored,
 	[armor_types.resistant] = armor_types.resistant,

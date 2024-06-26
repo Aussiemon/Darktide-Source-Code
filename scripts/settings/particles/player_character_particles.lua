@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/settings/particles/player_character_particles.lua
 
-local player_character_particles = {}
+local PlayerCharacterParticles = {}
 local particle_aliases = require("scripts/settings/particles/player_character_particle_aliases")
 
-player_character_particles.particle_aliases = particle_aliases
+PlayerCharacterParticles.particle_aliases = particle_aliases
 
 local particle_names = {}
 
@@ -23,12 +23,12 @@ for alias, config in pairs(particle_aliases) do
 	_extract_particle_names(particles)
 end
 
-player_character_particles.particle_names = particle_names
+PlayerCharacterParticles.particle_names = particle_names
 
 local DEFAULT_EXTERNAL_PROPERTIES = {}
 
-player_character_particles.resolve_particle = function (particle_alias, properties, optional_external_properties)
-	local settings = player_character_particles.particle_aliases[particle_alias]
+PlayerCharacterParticles.resolve_particle = function (particle_alias, properties, optional_external_properties)
+	local settings = PlayerCharacterParticles.particle_aliases[particle_alias]
 
 	if settings then
 		local particles = settings.particles
@@ -75,10 +75,10 @@ end
 
 local temp_relevant_particles = {}
 
-player_character_particles.find_relevant_particles = function (profile_properties)
+PlayerCharacterParticles.find_relevant_particles = function (profile_properties)
 	table.clear(temp_relevant_particles)
 
-	for particle_alias, settings in pairs(player_character_particles.particle_aliases) do
+	for particle_alias, settings in pairs(PlayerCharacterParticles.particle_aliases) do
 		local particles = settings.particles
 		local switches = settings.switch
 		local no_default = settings.no_default
@@ -115,4 +115,4 @@ player_character_particles.find_relevant_particles = function (profile_propertie
 	return temp_relevant_particles
 end
 
-return player_character_particles
+return PlayerCharacterParticles

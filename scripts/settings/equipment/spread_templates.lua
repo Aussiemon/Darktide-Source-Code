@@ -13,6 +13,7 @@ local loaded_template_files = {}
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_spread_templates", spread_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_spread_templates", spread_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_spread_templates", spread_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_spread_templates", spread_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_spread_templates", spread_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_spread_templates", spread_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_spread_templates", spread_templates, loaded_template_files)
@@ -3069,6 +3070,88 @@ spread_templates.boltgun_hip_spray_n_pray = {
 		continuous_spread = {
 			min_pitch = 2,
 			min_yaw = 2,
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.25,
+			suppression_hit = {
+				{
+					pitch = 0.25,
+					yaw = 0.25,
+				},
+			},
+			damage_hit = {
+				{
+					pitch = 0.4,
+					yaw = 0.4,
+				},
+			},
+			shooting = {
+				{
+					pitch = 1.6,
+					yaw = 1.6,
+				},
+				{
+					pitch = 1.8,
+					yaw = 1.8,
+				},
+				{
+					pitch = 2,
+					yaw = 2,
+				},
+				{
+					pitch = 2,
+					yaw = 2,
+				},
+				{
+					pitch = 1.8,
+					yaw = 1.8,
+				},
+			},
+		},
+	},
+	[moving] = {
+		inherits = {
+			"boltgun_hip_spray_n_pray",
+			still,
+		},
+		continuous_spread = {
+			min_pitch = 2.5,
+			min_yaw = 2.5,
+		},
+	},
+	[crouch_still] = {
+		inherits = {
+			"boltgun_hip_spray_n_pray",
+			still,
+		},
+	},
+	[crouch_moving] = {
+		inherits = {
+			"boltgun_hip_spray_n_pray",
+			still,
+		},
+	},
+}
+spread_templates.boltpistol_hip_spray_n_pray = {
+	[still] = {
+		max_spread = {
+			pitch = 30,
+			yaw = 30,
+		},
+		decay = {
+			from_shooting_grace_time = 0.02,
+			shooting = {
+				pitch = 2,
+				yaw = 2,
+			},
+			idle = {
+				pitch = 1,
+				yaw = 1,
+			},
+		},
+		continuous_spread = {
+			min_pitch = 4,
+			min_yaw = 4,
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,

@@ -3,7 +3,7 @@
 local navigation_gameplay_settings = {
 	nav_world_config = {
 		budget = {
-			pathfinder_outside_world_update = 0.01,
+			pathfinder_outside_world_update = 0.005,
 			pathfinder_working_memory = 10,
 			pathfinder_world_update = 0.001,
 		},

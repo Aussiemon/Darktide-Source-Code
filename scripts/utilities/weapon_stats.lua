@@ -87,10 +87,9 @@ WeaponStats.init = function (self, item)
 	local grouped_stats = {}
 	local late_group_stats = {}
 	local late_groups = {}
+	local weapon_statistics = _calculate_weapon_statistics(weapon_template, weapon_tweak_templates, damage_profile_lerp_values) or {}
 
-	self._weapon_statistics = _calculate_weapon_statistics(weapon_template, weapon_tweak_templates, damage_profile_lerp_values) or {}
-
-	if self._weapon_statistics then
+	if weapon_statistics then
 		local bar_breakdown = {}
 		local bar_stats = item.base_stats or EMPTY_TABLE
 		local bar_stats_template = weapon_template.base_stats or {}
@@ -194,7 +193,7 @@ WeaponStats.init = function (self, item)
 															late_group_stats[group_key] = grouped_stat
 														end
 													end
-												elseif min ~= max then
+												elseif math.round_with_precision(min, 5) ~= math.round_with_precision(max, 5) then
 													local rounding_func = ui_data.rounding
 
 													if rounding_func then
@@ -268,7 +267,7 @@ WeaponStats.init = function (self, item)
 															min, max = _resolve_explosion_template_lerps(weapon_template, target_name, stat_data, min, max, nil, damage_profile)
 														end
 
-														if min ~= max then
+														if math.round_with_precision(min, 5) ~= math.round_with_precision(max, 5) then
 															local current = math.lerp(min, max, bar_lerp_value)
 
 															stat_n = stat_n + 1
@@ -336,7 +335,7 @@ WeaponStats.init = function (self, item)
 										local override_data = group_data.type_data or EMPTY_TABLE
 										local min, max, current = func(grouped_stats, weapon_stats)
 
-										if min ~= max then
+										if math.round_with_precision(min, 5) ~= math.round_with_precision(max, 5) then
 											stat_n = stat_n + 1
 											entry[stat_n] = {
 												group_type_data = display_data,
@@ -363,7 +362,7 @@ WeaponStats.init = function (self, item)
 				local override_data = group_data.type_data or EMPTY_TABLE
 				local min, max, current = func(late_group_stats, weapon_stats)
 
-				if min ~= max then
+				if math.round_with_precision(min, 5) ~= math.round_with_precision(max, 5) then
 					stat_n = stat_n + 1
 					entry[stat_n] = {
 						group_type_data = EMPTY_TABLE,
@@ -382,8 +381,10 @@ WeaponStats.init = function (self, item)
 			bar_breakdown[base_stat_idx] = entry
 		end
 
-		self._weapon_statistics.bar_breakdown = bar_breakdown
+		weapon_statistics.bar_breakdown = bar_breakdown
 	end
+
+	self._weapon_statistics = weapon_statistics
 end
 
 WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
@@ -798,7 +799,7 @@ WeaponStats.get_attributes = function (self)
 	return {}
 end
 
-WeaponStats.get_compairing_stats = function (self)
+WeaponStats.get_comparing_stats = function (self)
 	local item = self._item
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local item_base_stats = item.base_stats
@@ -851,7 +852,7 @@ WeaponStats.get_main_stats = function (self)
 	}
 end
 
-local function _calculcate_action_damage(action_power_level, damage_profile, current_hit_lerp_values, target_index, charge_level, dropoff_scalar, attack_settings)
+local function _calculate_action_damage(action_power_level, damage_profile, current_hit_lerp_values, target_index, charge_level, dropoff_scalar, attack_settings)
 	local target_settings = DamageProfile.target_settings(damage_profile, target_index)
 	local armor_penetrating = false
 
@@ -879,7 +880,7 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 		local crit_mult = DamageCalculation.ui_finesse_multiplier(damage_profile, target_settings, armor_type, false, true, current_hit_lerp_values)
 		local finesse_crit_mult = DamageCalculation.ui_finesse_multiplier(damage_profile, target_settings, armor_type, true, true, current_hit_lerp_values)
 		local normal_dmg = 0
-		local finnesse_dmg = 0
+		local finesse_dmg = 0
 		local crit_dmg = 0
 		local crit_finesse_dmg = 0
 		local armor_mod = DamageProfile.armor_damage_modifier("attack", damage_profile, target_settings, current_hit_lerp_values, armor_type, false, dropoff_scalar, armor_penetrating)
@@ -891,18 +892,18 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 		if bit.band(attack_flags, DAMAGE_FINESSE) == DAMAGE_FINESSE then
 			local armor_mod_crit = DamageProfile.armor_damage_modifier("attack", damage_profile, target_settings, current_hit_lerp_values, armor_type, true, dropoff_scalar, armor_penetrating)
 
-			finnesse_dmg = scaled_base_attack_power * armor_mod * finesse_mult
+			finesse_dmg = scaled_base_attack_power * armor_mod * finesse_mult
 			crit_dmg = scaled_base_attack_power * armor_mod_crit * crit_mult
 			crit_finesse_dmg = scaled_base_attack_power * armor_mod_crit * finesse_crit_mult
 		end
 
 		attack[attack_idx] = normal_dmg
-		attack[attack_idx + 1] = finnesse_dmg
+		attack[attack_idx + 1] = finesse_dmg
 		attack[attack_idx + 2] = crit_dmg
 		attack[attack_idx + 3] = crit_finesse_dmg
 
 		local normal_imp = 0
-		local finnesse_imp = 0
+		local finesse_imp = 0
 		local crit_imp = 0
 		local crit_finesse_imp = 0
 		local impact_armor_mod = DamageProfile.armor_damage_modifier("impact", damage_profile, target_settings, current_hit_lerp_values, armor_type, false, dropoff_scalar, armor_penetrating)
@@ -914,13 +915,13 @@ local function _calculcate_action_damage(action_power_level, damage_profile, cur
 		if bit.band(impact_flags, DAMAGE_FINESSE) == DAMAGE_FINESSE then
 			local impact_armor_mod_crit = DamageProfile.armor_damage_modifier("impact", damage_profile, target_settings, current_hit_lerp_values, armor_type, true, dropoff_scalar, armor_penetrating)
 
-			finnesse_imp = scaled_base_impact_power * impact_armor_mod * finesse_mult
+			finesse_imp = scaled_base_impact_power * impact_armor_mod * finesse_mult
 			crit_imp = scaled_base_impact_power * impact_armor_mod_crit * crit_mult
 			crit_finesse_imp = scaled_base_impact_power * impact_armor_mod_crit * finesse_crit_mult
 		end
 
 		impact[attack_idx] = normal_imp
-		impact[attack_idx + 1] = finnesse_imp
+		impact[attack_idx + 1] = finesse_imp
 		impact[attack_idx + 2] = crit_imp
 		impact[attack_idx + 3] = crit_finesse_imp
 		attack_idx = attack_idx + 4
@@ -1227,8 +1228,8 @@ local function _get_weapon_power_stats(weapon_template, damage_profile_lerp_valu
 	return power_stats
 end
 
-local function _calculate_damage(weapon_template, action, action_name, action_data, damage_profile, explosion_template, damage_profile_lerp_values, lerp_values, target_index, charge_level, dropoff_scalar)
-	local action_power_level = Action.power_level(action)
+local function _calculate_damage(weapon_template, action, action_name, action_data, damage_profile, explosion_template, damage_profile_lerp_values, lerp_values, target_index, charge_level, dropoff_scalar, stat_power_level)
+	local action_power_level = Action.stat_power_level(action)
 	local damage_profile_name = damage_profile.name
 	local cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
 
@@ -1240,7 +1241,7 @@ local function _calculate_damage(weapon_template, action, action_name, action_da
 
 	cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
 
-	local attack, impact = _calculcate_action_damage(action_power_level, damage_profile, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
+	local attack, impact = _calculate_action_damage(action_power_level, damage_profile, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
 
 	cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
 
@@ -1257,7 +1258,7 @@ local function _calculate_damage(weapon_template, action, action_name, action_da
 			cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
 
 			local explosion_power = explosion_template.static_power_level or action_power_level
-			local special_attack, special_impact = _calculcate_action_damage(explosion_power, inner, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
+			local special_attack, special_impact = _calculate_action_damage(explosion_power, inner, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
 
 			for i = 1, #special_attack do
 				attack[i] = attack[i] + special_attack[i]

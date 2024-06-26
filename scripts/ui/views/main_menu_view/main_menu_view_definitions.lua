@@ -717,12 +717,12 @@ local widget_definitions = {
 			style = slots_count_text_style,
 		},
 	}, "slots_count"),
-	gamertag = IS_XBS and UIWidget.create_definition({
+	gamertag = (IS_XBS or IS_PLAYSTATION) and UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "gamertag_style",
 			value_id = "gamertag",
-			value = Managers.account:gamertag(),
+			value = Managers.account:user_display_name(),
 			style = gamertag_style,
 		},
 	}, "gamertag") or nil,

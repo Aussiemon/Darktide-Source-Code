@@ -4,6 +4,7 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local ActionActivateSpecial = class("ActionActivateSpecial", "ActionWeaponBase")
+local ALL_CLIENTS = false
 
 ActionActivateSpecial.init = function (self, action_context, action_params, action_settings)
 	ActionActivateSpecial.super.init(self, action_context, action_params, action_settings)
@@ -28,8 +29,10 @@ ActionActivateSpecial.start = function (self, action_settings, t, time_scale, pa
 
 	if particle_name then
 		local node_name = action_settings.pre_activation_vfx_node
+		local position_offset, rotation_offset, scale
+		local create_network_index = true
 
-		self._pre_activation_particle_id = self._fx_extension:spawn_unit_particles(particle_name, node_name, true, "stop", nil, nil, nil, false)
+		self._pre_activation_particle_id = self._fx_extension:spawn_unit_particles(particle_name, node_name, true, "stop", position_offset, rotation_offset, scale, ALL_CLIENTS, create_network_index)
 	end
 end
 
@@ -42,7 +45,9 @@ ActionActivateSpecial.fixed_update = function (self, dt, t, time_in_action)
 		local particle_id = self._pre_activation_particle_id
 
 		if particle_id then
-			self._fx_extension:stop_player_particles(particle_id)
+			self._fx_extension:stop_player_particles(particle_id, ALL_CLIENTS)
+
+			self._pre_activation_particle_id = nil
 		end
 
 		self:_set_weapon_special(true, t)

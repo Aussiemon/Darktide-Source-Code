@@ -106,8 +106,8 @@ local basic_renegade_assault_template = {
 	},
 }
 local default_1 = table.clone(basic_renegade_assault_template)
+local default_2 = table.clone(basic_renegade_assault_template)
 
-default_2 = table.clone(basic_renegade_assault_template)
 default_2.gib_variations = {
 	"face_02_b",
 }
@@ -118,7 +118,9 @@ default_2.slots.slot_face = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_02",
 	},
 }
-default_3 = table.clone(basic_renegade_assault_template)
+
+local default_3 = table.clone(basic_renegade_assault_template)
+
 default_3.gib_variations = {
 	"face_03_b",
 }

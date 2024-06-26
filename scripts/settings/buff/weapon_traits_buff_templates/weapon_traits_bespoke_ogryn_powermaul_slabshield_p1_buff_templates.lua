@@ -85,8 +85,11 @@ local _push_settings = {
 
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes = {
 	class_name = "proc_buff",
-	cooldown_duration = 15,
+	cooldown_duration = 18,
 	predicted = false,
+	stat_buffs = {
+		[stat_buffs.block_cost_multiplier] = 0.85,
+	},
 	proc_events = {
 		[proc_events.on_block] = 1,
 	},

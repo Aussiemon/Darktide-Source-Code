@@ -71,7 +71,7 @@ WwiseStateGroupEventIntensity.update = function (self, dt, t)
 	local wwise_state = STATES.none
 
 	if self._mission_objective_system then
-		local event_progress = self._mission_objective_system:get_objective_event_music_progress()
+		local event_progress = self._mission_objective_system:objective_event_music_progress()
 		local progression_intensity = math.max(event_progress - self._previous_event_progress, 0) * self._progression_rate
 
 		self._previous_event_progress = event_progress

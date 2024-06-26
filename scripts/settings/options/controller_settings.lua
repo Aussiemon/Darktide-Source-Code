@@ -191,6 +191,7 @@ local function construct_interface_settings_dropdown(template)
 			id = value.name,
 			value = value.name,
 			display_name = value.display_name,
+			icon = value.icon,
 		}
 	end
 
@@ -250,14 +251,17 @@ local function _response_curve_options()
 	local options = {
 		{
 			display_name = "loc_setting_controller_rotation_speed_curves_linear",
+			icon = "content/ui/materials/icons/system/settings/dropdown/icon_response_curve_linear",
 			name = "linear",
 		},
 		{
 			display_name = "loc_setting_controller_rotation_speed_curves_exponential",
+			icon = "content/ui/materials/icons/system/settings/dropdown/icon_response_curve_exponential",
 			name = "exponential",
 		},
 		{
 			display_name = "loc_setting_controller_rotation_speed_curves_dynamic",
+			icon = "content/ui/materials/icons/system/settings/dropdown/icon_response_curve_dynamic",
 			name = "dynamic",
 		},
 	}
@@ -305,9 +309,13 @@ settings_definitions[#settings_definitions + 1] = {
 	end,
 	on_value_changed = function (value)
 		local devices = {
-			"xbox_controller",
+			{
+				"ps4_controller",
+			},
+			{
+				"xbox_controller",
+			},
 		}
-		local alias_array_index = 1
 		local input_manager = Managers.input
 		local gamepad_input_layout = gamepad_input_layouts[value]
 		local input_settings = gamepad_input_layout.input_settings
@@ -320,13 +328,16 @@ settings_definitions[#settings_definitions + 1] = {
 
 				for alias_name, new_values in pairs(aliases) do
 					if alias:bindable(alias_name) then
-						local key_info
+						for i = 1, #devices do
+							local device_table = devices[i]
+							local key_info
 
-						if new_values ~= StrictNil then
-							key_info = alias:get_keys_for_alias_row(new_values, alias_array_index, devices)
+							if new_values ~= StrictNil then
+								key_info = alias:get_keys_for_alias_row(new_values, device_table)
+							end
+
+							alias:set_keys_for_alias(alias_name, device_table, key_info, i)
 						end
-
-						alias:set_keys_for_alias(alias_name, alias_array_index, devices, key_info)
 					end
 				end
 

@@ -79,7 +79,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 				local server_time = Managers.backend:get_server_time(Managers.time:time("main"))
 				local time_left = math.max(tonumber(content.data) - server_time, 0) / 1000
 
-				body_number = TextUtils.format_time_span_long_form_localized(time_left)
+				body_number = TextUtils.format_time_span_localized(time_left, true)
 			end
 		end
 

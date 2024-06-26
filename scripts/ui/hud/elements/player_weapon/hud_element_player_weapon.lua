@@ -521,7 +521,7 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 	end
 end
 
-function _find_input_key(alias_names, service_type, color_tint_text)
+local function _find_input_key(alias_names, service_type, color_tint_text)
 	for _, sub_alias_name in ipairs(alias_names) do
 		local input_key = InputUtils.input_text_for_current_input_device(service_type, sub_alias_name, color_tint_text)
 

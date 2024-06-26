@@ -30,4 +30,8 @@ InvitesDummy.destroy = function (self)
 	return
 end
 
+InvitesDummy.on_profile_signed_in = function (self)
+	return
+end
+
 return InvitesDummy

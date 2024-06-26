@@ -120,7 +120,26 @@ templates.weapon_trait_bespoke_ogryn_club_p1_staggered_targets_receive_increased
 }
 templates.weapon_trait_bespoke_ogryn_club_p1_pass_past_armor_on_crit = {
 	weapon_trait_bespoke_ogryn_club_p1_pass_past_armor_on_crit = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.025,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.05,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.075,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.1,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_ogryn_club_p1_rending_vs_staggered = {

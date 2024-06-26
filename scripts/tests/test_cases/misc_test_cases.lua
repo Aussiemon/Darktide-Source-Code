@@ -505,6 +505,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			"content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
 			"content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
+			"content/fx/particles/environment/ice_zone/lightnings_emit_from_mesh_01",
 		}
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then

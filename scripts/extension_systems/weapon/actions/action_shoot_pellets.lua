@@ -61,6 +61,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 
 	self._saved_pellet_hits = saved_pellet_hits
 	self._hit_units = {}
+	self._hit_ragdoll_units = {}
 	self._suppressed_hits_per_unit = {}
 	self._suppressed_hit_positions_per_unit = {}
 	self._num_hits_per_unit_per_hit_zone = {}
@@ -118,6 +119,7 @@ end
 ActionShootPellets.start = function (self, ...)
 	ActionShootPellets.super.start(self, ...)
 	table.clear(self._hit_units)
+	table.clear(self._hit_ragdoll_units)
 	table.clear(self._suppressed_hits_per_unit)
 	table.clear(self._suppressed_hit_positions_per_unit)
 	table.clear(self._num_hits_per_unit_per_hit_zone)
@@ -381,6 +383,8 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 
 	local scaled_power_levels = self:_scale_power_level_with_num_hits(shotshell_template, power_level)
 
+	table.clear(self._hit_ragdoll_units)
+
 	for i = 1, num_saved_pellets do
 		table.clear(self._hit_units)
 
@@ -445,10 +449,12 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 				local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
 				local is_damagable_hazard_prop = target_is_hazard_prop and hazard_prop_is_active
 
-				if Health.is_ragdolled(hit_unit) then
+				if Health.is_ragdolled(hit_unit) and not self._hit_ragdoll_units[hit_unit] then
 					if hit_afro then
 						break
 					end
+
+					self._hit_ragdoll_units[hit_unit] = true
 
 					MinionDeath.attack_ragdoll(hit_unit, direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_position, player_unit, hit_actor, nil, is_critical_strike)
 				elseif is_damagable then
@@ -491,7 +497,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 								local percentage__of_pellets_hit = num_pellets_hits / shotshell_template.num_pellets
 								local scaled_damage_profile = _damage_template_from_impact_config(impact_config, percentage__of_pellets_hit)
 								local scaled_damage_profile_lerp_values = DamageProfile.lerp_values(scaled_damage_profile, player_unit)
-								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, scaled_damage_profile, scaled_damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item, triggered_proc_events)
+								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, scaled_damage_profile, scaled_damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item, triggered_proc_events)
 
 								total_damage_dealt = total_damage_dealt + damage_dealt
 								damage_per_unit[hit_unit] = (damage_per_unit[hit_unit] or 0) + damage_dealt

@@ -152,55 +152,55 @@ local toxic_gas_mission_overrides = {
 		rubberband_pool = {
 			wounds = {
 				syringe_corruption_pocketable = {
-					20,
-					20,
-					20,
-					20,
-					20,
+					10,
+					10,
+					10,
+					10,
+					10,
 				},
 			},
 		},
 		mid_event = {
 			wounds = {
 				syringe_corruption_pocketable = {
-					20,
-					20,
-					20,
-					20,
-					20,
+					1,
+					1,
+					1,
+					1,
+					1,
 				},
 			},
 		},
 		end_event = {
 			wounds = {
 				syringe_corruption_pocketable = {
-					20,
-					20,
-					20,
-					20,
-					20,
+					1,
+					1,
+					1,
+					1,
+					1,
 				},
 			},
 		},
 		primary = {
 			wounds = {
 				syringe_corruption_pocketable = {
-					20,
-					20,
-					20,
-					20,
-					20,
+					10,
+					10,
+					10,
+					10,
+					10,
 				},
 			},
 		},
 		secondary = {
 			wounds = {
 				syringe_corruption_pocketable = {
-					20,
-					20,
-					20,
-					20,
-					20,
+					10,
+					10,
+					10,
+					10,
+					10,
 				},
 			},
 		},

@@ -4,7 +4,7 @@ local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CameraShake = require("scripts/utilities/camera/camera_shake")
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local Footstep = require("scripts/utilities/footstep")
+local MaterialFx = require("scripts/utilities/material_fx")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MaterialQuery = require("scripts/utilities/material_query")
@@ -767,11 +767,29 @@ FlowCallbacks.player_fx = function (params)
 	return flow_return_table
 end
 
+FlowCallbacks.player_footstep = function (params)
+	local unit = params.unit
+	local should_play_fx = _should_play_player_fx("3p only", unit)
+
+	if should_play_fx then
+		local particle_alias = params.particle_gear_alias
+		local sound_alias = params.sound_gear_alias
+		local foot = params.foot
+		local use_cached_material_hit = params.use_cached_material_hit
+		local world = Managers.world:world("level_world")
+		local wwise_world = World.get_data(world, "wwise_world")
+		local physics_world = World.get_data(world, "physics_world")
+
+		MaterialFx.flow_cb_3p_footstep(world, wwise_world, physics_world, unit, sound_alias, foot, use_cached_material_hit)
+	end
+
+	return flow_return_table
+end
+
 FlowCallbacks.player_material_fx = function (params)
 	local unit = params.unit
 	local play_in = params.play_in
 	local should_play_fx = _should_play_player_fx(play_in, unit)
-	local wwise_playing_id
 
 	if should_play_fx then
 		local source_id = params.sound_source_id
@@ -780,13 +798,12 @@ FlowCallbacks.player_material_fx = function (params)
 		local world = Managers.world:world("level_world")
 		local wwise_world = World.get_data(world, "wwise_world")
 		local physics_world = World.get_data(world, "physics_world")
-		local query_from = POSITION_LOOKUP[unit] + Vector3(0, 0, 0.5)
+		local unit_pos = Unit.world_position(unit, query_position_object)
+		local query_from = unit_pos + Vector3(0, 0, 0.5)
 		local query_to = query_from + Vector3(0, 0, -1)
 
-		wwise_playing_id = Footstep.trigger_material_footstep(sound_alias, wwise_world, physics_world, source_id, unit, query_position_object, query_from, query_to, params.sound_set_speed_parameter, params.sound_set_first_person_parameter)
+		MaterialFx.trigger_material_fx(unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, params.sound_set_speed_parameter, params.sound_set_first_person_parameter)
 	end
-
-	flow_return_table.playing_id = wwise_playing_id
 
 	return flow_return_table
 end
@@ -1582,8 +1599,10 @@ FlowCallbacks.trigger_local_vo_event = function (params)
 	local rule_name = params.rule_name
 	local wwise_route_key = params.wwise_route_key
 	local opinion_vo = params.opinion_vo
+	local use_radio_pre = params.use_radio_pre
+	local use_radio_post = params.use_radio_post
 
-	Vo.play_local_vo_event(unit, rule_name, wwise_route_key, nil, opinion_vo)
+	Vo.play_local_vo_event(unit, rule_name, wwise_route_key, nil, opinion_vo, use_radio_pre, use_radio_post)
 end
 
 FlowCallbacks.trigger_on_demand_vo = function (params)
@@ -1698,6 +1717,24 @@ FlowCallbacks.spawn_3d_vo_unit = function (params)
 	local vo_unit = Vo.spawn_3d_unit(breed_name, voice_profile, position)
 
 	flow_return_table.unit = vo_unit
+
+	return flow_return_table
+end
+
+FlowCallbacks.set_unit_voice_profile = function (params)
+	local unit = params.unit
+	local voice_profile = params.voice_profile
+	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+
+	if dialogue_extension then
+		dialogue_extension:set_vo_profile(voice_profile)
+	end
+end
+
+FlowCallbacks.is_mission_active = function (params)
+	local mission_name = params.mission_name
+
+	flow_return_table.active = Vo.is_mission_available(mission_name)
 
 	return flow_return_table
 end
@@ -1949,6 +1986,18 @@ FlowCallbacks.mission_objective_show_ui = function (params)
 	end
 end
 
+FlowCallbacks.mission_objective_increment = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local objective_name = params.mission_objective_name
+		local amount = params.amount
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+		mission_objective_system:external_update_mission_objective(objective_name, 0, amount)
+	end
+end
+
 FlowCallbacks.mission_objective_show_counter = function (params)
 	local is_server = Managers.state.game_session:is_server()
 
@@ -2149,11 +2198,30 @@ end
 FlowCallbacks.camera_set_far_range = function (params)
 	local camera_manager = Managers.state.camera
 	local local_player = Managers.player:local_player(1)
+
+	if not local_player then
+		return
+	end
+
 	local viewport_name = local_player.viewport_name
 	local camera = camera_manager:camera(viewport_name)
 	local far_range = params.far_range
 
 	Camera.set_data(camera, "far_range", far_range)
+end
+
+FlowCallbacks.camera_reset_far_range = function (params)
+	local camera_manager = Managers.state.camera
+	local local_player = Managers.player:local_player(1)
+
+	if not local_player then
+		return
+	end
+
+	local viewport_name = local_player.viewport_name
+	local camera = camera_manager:camera(viewport_name)
+
+	Camera.set_data(camera, "far_range", nil)
 end
 
 FlowCallbacks.get_unit_from_item_slot = function (params)
@@ -2522,6 +2590,13 @@ FlowCallbacks.any_player_has_achievement_completed = function (params)
 	flow_return_table.required_achievement_completed = false
 
 	return flow_return_table
+end
+
+FlowCallbacks.set_actor_scene_query_enabled = function (params)
+	local actor = params.actor
+	local enabled = params.enabled
+
+	Actor.set_scene_query_enabled(actor, enabled)
 end
 
 return FlowCallbacks

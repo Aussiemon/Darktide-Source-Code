@@ -27,9 +27,13 @@ TerrorEventNodes.debug_print = {
 TerrorEventNodes.delay = {
 	init = function (node, event, t)
 		local duration = node.duration
-		local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_duration_modifier)
 
-		duration = duration * difficulty_scale
+		if not node.skip_scaling then
+			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_duration_modifier)
+
+			duration = duration * difficulty_scale
+		end
+
 		event.scratchpad.ends_at = t + duration
 	end,
 	update = function (node, scratchpad, t, dt)
@@ -236,7 +240,6 @@ TerrorEventNodes.set_pacing_enabled = {
 }
 
 local TEMP_SPAWN_SIDE_NAME = "villains"
-local TEMP_TARGET_SIDE_NAME = "heroes"
 local GROUP_SOUNDS_BY_BREED_NAME = {
 	cultist_melee = {
 		start = "wwise/events/minions/play_minion_terror_event_group_sfx_cultists",
@@ -269,9 +272,9 @@ TerrorEventNodes.spawn_by_points = {
 			return false
 		end
 
-		local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
+		local num_aggroed_minions = Managers.state.pacing:num_aggroed_minions()
 
-		terror_events_allowed = total_minions_spawned < MAX_TERROR_EVENT_THRESHOLD
+		terror_events_allowed = num_aggroed_minions < MAX_TERROR_EVENT_THRESHOLD
 
 		if not terror_events_allowed then
 			return false
@@ -311,17 +314,33 @@ TerrorEventNodes.spawn_by_points = {
 			local points = math.min(scaled_points, MAX_POINTS)
 			local spawner_group = node.spawner_group
 			local proximity_spawners, limit_spawners, inverse_proximity_spawners = node.proximity_spawners, node.limit_spawners, node.inverse_proximity_spawners
+
+			limit_spawners = limit_spawners and math.floor(limit_spawners * difficulty_scale)
+
 			local delay_until_all_spawned = node.delay_until_all_spawned
 			local mission_objective_id = node.mission_objective_id
 			local spawn_side_name = node.side_name or TEMP_SPAWN_SIDE_NAME
-			local target_side_name = node.target_side_name or TEMP_TARGET_SIDE_NAME
-			local wanted_sub_faction = Managers.state.pacing:current_faction()
+			local wanted_sub_faction = Managers.state.pacing:current_faction(spawn_side_name)
 			local breed_pool = BreedQueries.match_minions_by_tags(breed_tags, excluded_breed_tags, wanted_sub_faction)
 			local breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)
 
 			if not breed then
-				breed_pool = BreedQueries.match_minions_by_tags(breed_tags)
-				breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)
+				local game_mode_settings = Managers.state.game_mode:settings()
+				local side_sub_faction_types = game_mode_settings.side_sub_faction_types
+				local sub_faction_types = side_sub_faction_types[spawn_side_name]
+
+				for i = 1, #sub_faction_types do
+					local sub_faction = sub_faction_types[i]
+
+					if sub_faction ~= wanted_sub_faction then
+						breed_pool = BreedQueries.match_minions_by_tags(breed_tags, excluded_breed_tags, sub_faction)
+						breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)
+
+						if breed then
+							break
+						end
+					end
+				end
 			end
 
 			local breed_name = breed.name
@@ -333,7 +352,17 @@ TerrorEventNodes.spawn_by_points = {
 			local side_system = Managers.state.extension:system("side_system")
 			local spawn_side = side_system:get_side_from_name(spawn_side_name)
 			local spawn_side_id = spawn_side.side_id
-			local target_side = side_system:get_side_from_name(target_side_name)
+			local target_side
+			local target_side_name = node.target_side_name
+
+			if target_side_name then
+				target_side = side_system:get_side_from_name(target_side_name)
+			else
+				local enemy_sides = spawn_side:relation_sides("enemy")
+
+				target_side = enemy_sides[math.random(1, #enemy_sides)]
+			end
+
 			local target_side_id = target_side.side_id
 			local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 			local spawners
@@ -444,11 +473,20 @@ TerrorEventNodes.spawn_by_breed_name = {
 		local mission_objective_id = node.mission_objective_id
 		local max_health_modifier = node.max_health_modifier
 		local spawn_side_name = node.side_name or TEMP_SPAWN_SIDE_NAME
-		local target_side_name = node.target_side_name or TEMP_TARGET_SIDE_NAME
 		local side_system = Managers.state.extension:system("side_system")
 		local spawn_side = side_system:get_side_from_name(spawn_side_name)
 		local spawn_side_id = spawn_side.side_id
-		local target_side = side_system:get_side_from_name(target_side_name)
+		local target_side
+		local target_side_name = node.target_side_name
+
+		if target_side_name then
+			target_side = side_system:get_side_from_name(target_side_name)
+		else
+			local enemy_sides = spawn_side:relation_sides("enemy")
+
+			target_side = enemy_sides[math.random(1, #enemy_sides)]
+		end
+
 		local target_side_id = target_side.side_id
 		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 		local spawners

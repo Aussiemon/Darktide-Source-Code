@@ -1,10 +1,10 @@
 ﻿-- chunkname: @scripts/managers/account/account_manager_win_gdk.lua
 
-local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
-local render_settings = require("scripts/settings/options/render_settings")
-local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
+local AccountManagerBase = require("scripts/managers/account/account_manager_base")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local Promise = require("scripts/foundation/utilities/promise")
-local AccountManagerWinGDK = class("AccountManagerWinGDK")
+local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
+local AccountManagerWinGDK = class("AccountManagerWinGDK", "AccountManagerBase")
 local SIGNIN_STATES = {
 	fetching_privileges = "loc_signin_fetch_privileges",
 	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
@@ -32,8 +32,6 @@ AccountManagerWinGDK.reset = function (self)
 	self._leave_game = nil
 	self._network_fatal_error = nil
 	self._network_connectivity = nil
-	self._wanted_state = nil
-	self._wanted_state_params = nil
 	self._wanted_state = nil
 	self._wanted_state_params = nil
 	self._signin_state = SIGNIN_STATES.idle
@@ -84,12 +82,16 @@ AccountManagerWinGDK.user_id = function (self)
 	return self._user_id
 end
 
-AccountManagerWinGDK.is_guest = function (self)
-	return self._is_guest
+AccountManagerWinGDK.platform_user_id = function (self)
+	return self._xuid
 end
 
-AccountManagerWinGDK.gamertag = function (self)
+AccountManagerWinGDK.user_display_name = function (self)
 	return self._gamertag
+end
+
+AccountManagerWinGDK.is_guest = function (self)
+	return self._is_guest
 end
 
 AccountManagerWinGDK.get_privilege = function (self, privilege)

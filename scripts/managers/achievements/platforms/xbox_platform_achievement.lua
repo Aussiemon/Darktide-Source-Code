@@ -1,8 +1,9 @@
 ﻿-- chunkname: @scripts/managers/achievements/platforms/xbox_platform_achievement.lua
 
+local BasePlatformAchievement = "scripts/managers/achievements/platforms/base_platform_achievement"
 local Promise = require("scripts/foundation/utilities/promise")
-local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
-local XboxPlatformAchievement = class("XboxPlatformAchievement")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
+local XboxPlatformAchievement = class("XboxPlatformAchievement", "BasePlatformAchievement")
 local ProgressStates = {}
 
 ProgressStates.UNLOCKED = 1
@@ -61,7 +62,7 @@ XboxPlatformAchievement._add_achievement = function (self, lookup, platform_data
 end
 
 XboxPlatformAchievement.init = function (self, definitions)
-	self._backend_promise = XboxLiveUtilities.get_all_achievements()
+	self._backend_promise = XboxLiveUtils.get_all_achievements()
 	self._progress = {}
 
 	return self._backend_promise:next(function (platform_data)
@@ -108,7 +109,7 @@ XboxPlatformAchievement._set_progress = function (self, achievement_definition, 
 	if (will_unlock or show_progress) and current_progress < progress then
 		self._progress[id] = progress
 
-		return XboxLiveUtilities.update_achievement(platform_id, progress)
+		return XboxLiveUtils.update_achievement(platform_id, progress)
 	end
 
 	return Promise.resolved()

@@ -19,7 +19,7 @@ RangedAction.target_index = function (target_index, penetrated, penetration_conf
 	return new_target_index
 end
 
-RangedAction.execute_attack = function (target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, attack_direction, hit_normal, hit_zone_name_or_nil, damage_profile, lerp_values, power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item_or_nil, triggered_proc_events_or_nil)
+RangedAction.execute_attack = function (target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, attack_direction, hit_normal, hit_zone_name_or_nil, damage_profile, lerp_values, power_level, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item_or_nil, triggered_proc_events_or_nil)
 	local dropoff_scalar = DamageProfile.dropoff_scalar(hit_distance, damage_profile, lerp_values)
 	local attack_type = AttackSettings.attack_types.ranged
 	local herding_template = damage_profile.herding_template
@@ -28,11 +28,7 @@ RangedAction.execute_attack = function (target_index, attacker_unit, hit_unit, h
 	return damage_dealt, attack_result, damage_efficiency, hit_weakspot
 end
 
-RangedAction.armor_explosion = function (is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, attack_direction, damage_config, power_level, charge_level, weapon_item_or_nil, origin_slot_or_nil)
-	if not is_server then
-		return false
-	end
-
+RangedAction.explosion_arming_distance = function (attacker_unit, damage_config)
 	local explosion_arming_distance = damage_config.explosion_arming_distance
 
 	if explosion_arming_distance then
@@ -42,9 +38,19 @@ RangedAction.armor_explosion = function (is_server, world, physics_world, attack
 
 		explosion_arming_distance = explosion_arming_distance * explosion_arming_distance_multiplier
 
-		if hit_distance < explosion_arming_distance then
-			return false
-		end
+		return explosion_arming_distance
+	end
+end
+
+RangedAction.armor_explosion = function (is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, attack_direction, damage_config, power_level, charge_level, weapon_item_or_nil, origin_slot_or_nil)
+	if not is_server then
+		return false
+	end
+
+	local explosion_arming_distance = RangedAction.explosion_arming_distance(attacker_unit, damage_config)
+
+	if explosion_arming_distance and hit_distance < explosion_arming_distance then
+		return false
 	end
 
 	local impact_config = damage_config.impact
@@ -82,18 +88,10 @@ RangedAction.hitmass_explosion = function (is_server, world, physics_world, hit_
 		return false
 	end
 
-	local explosion_arming_distance = damage_config.explosion_arming_distance
+	local explosion_arming_distance = RangedAction.explosion_arming_distance(attacker_unit, damage_config)
 
-	if explosion_arming_distance then
-		local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
-		local stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs()
-		local explosion_arming_distance_multiplier = stat_buffs and stat_buffs.explosion_arming_distance_multiplier or 1
-
-		explosion_arming_distance = explosion_arming_distance * explosion_arming_distance_multiplier
-
-		if hit_distance < explosion_arming_distance then
-			return false
-		end
+	if explosion_arming_distance and hit_distance < explosion_arming_distance then
+		return false
 	end
 
 	local hit_mass_depleted = HitMass.hit_mass_limit_reached(hit_mass_budget_attack, hit_mass_budget_impact)

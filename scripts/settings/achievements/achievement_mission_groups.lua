@@ -256,6 +256,20 @@ AchievementMissionGroups.missions = {
 			challange = path .. "default",
 		},
 	},
+	{
+		local_variable = "loc_mission_name_core_research",
+		name = "core_research",
+		category = {
+			default = "endeavours_void",
+			puzzle = "exploration_void",
+		},
+		icon = {
+			mission_default = path .. "mission_achievements/missions_achievement_difficulty_0037",
+			collectible = path .. "mission_achievements/missions_achievement_puzzle_0019",
+			auric = path .. "mission_achievements/missions_achievement_difficulty_0038",
+			challange = path .. "default",
+		},
+	},
 }
 AchievementMissionGroups.level_overview_meta = {
 	{
@@ -510,6 +524,15 @@ AchievementMissionGroups.zones = {
 		icon = {
 			zone_default = path .. "mission_achievements/missions_achievement_0011",
 			destructible = path .. "mission_achievements/missions_achievement_0016",
+		},
+	},
+	{
+		category = "exploration_void",
+		local_variable = "loc_zone_name_void_short",
+		name = "void",
+		icon = {
+			zone_default = path .. "mission_achievements/missions_achievement_0001",
+			destructible = path .. "mission_achievements/missions_achievement_0002",
 		},
 	},
 }

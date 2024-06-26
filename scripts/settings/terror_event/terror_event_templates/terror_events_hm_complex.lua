@@ -103,12 +103,24 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				points = 25,
+				points = 14,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_complex_upper_right",
 				breed_tags = {
 					{
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 12,
+				spawner_group = "spawner_complex_close_left",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -150,12 +162,24 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				points = 25,
+				points = 14,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_complex_upper_left",
 				breed_tags = {
 					{
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 12,
+				spawner_group = "spawner_complex_close_right",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
 					},
 				},
 			},

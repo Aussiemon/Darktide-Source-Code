@@ -433,37 +433,5 @@ CharacterSelectPassTemplates.character_select = {
 		end,
 	},
 }
-CharacterSelectPassTemplates.character_info = {
-	{
-		pass_type = "texture",
-		style_id = "character_portrait",
-		value = "content/ui/materials/base/ui_portrait_frame_base",
-		value_id = "character_portrait",
-		style = {
-			vertical_alignment = "center",
-			size = portrait_size,
-			offset = {
-				badge_size[1] + character_info_margin[1],
-				0,
-				1,
-			},
-			material_values = {
-				use_placeholder_texture = 1,
-			},
-		},
-	},
-	{
-		pass_type = "text",
-		value = "text",
-		value_id = "character_name",
-		style = character_name_style,
-	},
-	{
-		pass_type = "text",
-		value = "text",
-		value_id = "character_archetype_title",
-		style = character_archetype_title_style,
-	},
-}
 
 return CharacterSelectPassTemplates

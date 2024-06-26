@@ -196,8 +196,8 @@ templates.veteran_combat_ability_stance_master = {
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		local disabled_character_state_component = template_data.disabled_character_state_component
-		local inventory_component = template_data.inventory_component
 		local is_disabled = disabled_character_state_component.is_disabled
+		local inventory_component = template_data.inventory_component
 		local wielded_slot_name = inventory_component.wielded_slot
 		local correct_slot = wielded_slot_name == template_data.starting_slot_name
 
@@ -879,6 +879,13 @@ templates.veteran_reduce_sprinting_cost = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.sprinting_cost_multiplier] = 0.8,
+	},
+}
+templates.veteran_reduce_swap_time = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.wield_speed] = 0.25,
 	},
 }
 templates.veteran_melee_kills_grant_range_damage = {
@@ -2574,6 +2581,10 @@ templates.veteran_snipers_focus = {
 			if kill then
 				template_data.stacks = math.min(template_data.stacks + snipers_focus_stacks_per_weakspot_kill, template_data.max_stacks)
 				template_data.talent_resource_component.current_resource = template_data.stacks
+
+				if template_data.toughness_bonus then
+					-- Nothing
+				end
 			end
 
 			_snipers_focus_handle_stacks(template_data, template_context, previous_stacks, t)
@@ -2721,7 +2732,7 @@ templates.veteran_snipers_focus_toughness_buff = {
 	max_stacks = 1,
 	predicted = false,
 	lerped_stat_buffs = {
-		[stat_buffs.toughness_replenish_multiplier] = {
+		[stat_buffs.toughness_replenish_modifier] = {
 			min = 0,
 			max = 0.05 * snipers_focus_max_stacks,
 		},

@@ -23,18 +23,19 @@ SharedOverheatAndWarpChargeFunctions.remove_immediate = function (remove_percent
 	return clamped_percentage, new_state
 end
 
-SharedOverheatAndWarpChargeFunctions.increase_over_time = function (dt, charge_level, add_percentage, extra_add_percentage, duration, current_percentage)
-	local total_percentage, charge_duration
+SharedOverheatAndWarpChargeFunctions.increase_over_time = function (dt, charge_level, add_percentage, full_charge_add_percentage, charge_duration, current_percentage)
+	local actual_add_percentage, actual_charge_duration
+	local actual_charge_level = charge_level
 
-	if charge_level < 1 then
-		total_percentage = add_percentage
-		charge_duration = duration
+	if actual_charge_level < 1 then
+		actual_add_percentage = add_percentage
+		actual_charge_duration = charge_duration
 	else
-		total_percentage = extra_add_percentage
-		charge_duration = 1
+		actual_add_percentage = full_charge_add_percentage
+		actual_charge_duration = 1
 	end
 
-	local increase = total_percentage / charge_duration * dt
+	local increase = actual_add_percentage / actual_charge_duration * dt
 	local new_percentage = math.clamp(current_percentage + increase, 0, 1)
 
 	return new_percentage

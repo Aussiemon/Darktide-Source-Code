@@ -96,7 +96,26 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_r
 }
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_pass_past_armor_on_crit = {
 	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_pass_past_armor_on_crit = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.025,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.05,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.075,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.1,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_rending_vs_staggered = {
@@ -149,7 +168,30 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_
 }
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes = {
 	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes = {
-		{},
+		{
+			cooldown_duration = 18,
+			stat_buffs = {
+				[stat_buffs.block_cost_multiplier] = 0.85,
+			},
+		},
+		{
+			cooldown_duration = 15,
+			stat_buffs = {
+				[stat_buffs.block_cost_multiplier] = 0.8,
+			},
+		},
+		{
+			cooldown_duration = 12,
+			stat_buffs = {
+				[stat_buffs.block_cost_multiplier] = 0.75,
+			},
+		},
+		{
+			cooldown_duration = 9,
+			stat_buffs = {
+				[stat_buffs.block_cost_multiplier] = 0.7,
+			},
+		},
 	},
 }
 

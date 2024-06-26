@@ -937,7 +937,6 @@ params.disable_ledge_hanging_ik = {
 }
 params.hang_ledge_draw_enabled = {
 	category = "Player Character",
-	user_setting = false,
 	value = false,
 	on_value_set = hang_ledge_toggle_draw,
 }
@@ -1469,6 +1468,10 @@ params.debug_draw_closest_point_on_line_sounds = {
 	value = false,
 }
 params.debug_draw_moving_line_sfx = {
+	category = "Wwise",
+	value = false,
+}
+params.debug_draw_moving_line_vfx = {
 	category = "Wwise",
 	value = false,
 }
@@ -2807,10 +2810,6 @@ params.show_game_mode_name = {
 	category = "Version Info",
 	value = false,
 }
-params.show_main_objective_type = {
-	category = "Version Info",
-	value = true,
-}
 params.show_num_hub_players = {
 	category = "Version Info",
 	value = SHOW_INFO,
@@ -3392,10 +3391,6 @@ params.disable_screen_space_blood = {
 	value = false,
 }
 params.debug_draw_blood_decal_rotation = {
-	category = "Damage",
-	value = false,
-}
-params.debug_impact_effects = {
 	category = "Damage",
 	value = false,
 }
@@ -4864,7 +4859,7 @@ params.disable_coherency_toughness_effect = {
 	category = "Coherency",
 	value = false,
 }
-params.mtx_store_custom_time = {
+params.premium_store_custom_time = {
 	category = "Micro Transaction (\"Premium\") Store",
 	hidden = true,
 	value = 0,
@@ -4915,6 +4910,9 @@ params.debug_material_queries = {
 		"succeeded",
 		"failed",
 	},
+}
+params.debug_draw_footstep_decals = {
+	value = false,
 }
 params.networked_flow_state = {
 	value = false,

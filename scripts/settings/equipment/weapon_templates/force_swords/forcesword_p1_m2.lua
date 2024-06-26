@@ -714,6 +714,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_attack_stab",
 		anim_event_3p = "attack_swing_heavy_stab",
+		attack_direction_override = "push",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		damage_window_end = 0.3,
 		damage_window_start = 0.23333333333333334,
@@ -804,6 +805,7 @@ weapon_template.actions = {
 		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.default,
 		wounds_shape_special_active = wounds_shapes.default,
+		herding_template = HerdingTemplates.stab,
 	},
 	action_melee_start_left_2 = {
 		allowed_during_sprint = true,

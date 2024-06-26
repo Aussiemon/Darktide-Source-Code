@@ -15,6 +15,7 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
@@ -35,9 +36,11 @@ local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
+local warp_damage_types = DamageSettings.warp_damage_types
+local talent_settings = TalentSettings.psyker
 local talent_settings_2 = TalentSettings.psyker_2
 local talent_settings_3 = TalentSettings.psyker_3
-local _psyker_passive_start, _psyker_passive_stop, _psyker_passive_conditional_stat_buffs, _psyker_passive_lerp_t, _psyker_passive_proc_on_combat_ability, _add_soul_function, _start_soul_function, _update_soul_function, _souls_stop_function, _souls_conditional_exit_function, _souls_proc_func, _psyker_marked_enemies_select_unit
+local _psyker_passive_start, _psyker_passive_stop, _psyker_passive_conditional_stat_buffs, _psyker_passive_lerp_t, _psyker_passive_proc_on_kill, _psyker_passive_proc_on_combat_ability, _add_soul_function, _start_soul_function, _update_soul_function, _souls_stop_function, _souls_conditional_exit_function, _souls_proc_func, _psyker_marked_enemies_select_unit
 
 local function _overcharge_stance_penance_start(template_data, template_context)
 	local player = template_context.player
@@ -169,7 +172,7 @@ templates.psyker_passive_souls_from_elite_kills = {
 		[proc_events.on_combat_ability] = talent_settings_2.passive_1.on_combat_ability_proc_chance,
 	},
 	conditional_stat_buffs = {
-		toughness_replenish_multiplier = talent_settings_2.defensive_2.toughness_replenish_multiplier,
+		toughness_replenish_modifier = talent_settings_2.defensive_2.toughness_replenish_modifier,
 	},
 	conditional_stat_buffs_func = _psyker_passive_conditional_stat_buffs,
 	lerp_t_func = _psyker_passive_lerp_t,
@@ -747,6 +750,14 @@ local function _give_stack_of_unnatural_talent(template_data, template_context, 
 	Toughness.replenish_percentage(template_context.unit, template.toughness_percentage)
 end
 
+local function _send_time_spent_to_stat_system(player, time_spent)
+	local rounded_time_value = math.floor(time_spent)
+
+	Managers.stats:record_private("hook_psyker_spent_max_unnatural_stack", player, rounded_time_value)
+
+	return 0
+end
+
 templates.psyker_marked_enemies_passive = {
 	chance_to_vent_proc_chance = 0.2,
 	chance_to_vent_warp_charge_percent = 0.15,
@@ -773,6 +784,7 @@ templates.psyker_marked_enemies_passive = {
 		local current_stack = 0
 		local final_time_spent = 0
 
+		template_data.unmodified_max_stacks = max_stacks
 		template_data.max_stacks = max_stacks
 		template_data.last_stack = last_stack
 		template_data.current_stack = current_stack
@@ -878,12 +890,10 @@ templates.psyker_marked_enemies_passive = {
 			template_data.final_time_spent = template_data.final_time_spent + dt
 		end
 
-		if template_data.current_stack < template_data.max_stacks and template_data.last_stack > template_data.current_stack then
-			local rounded_time_value = math.floor(template_data.final_time_spent)
-
-			Managers.stats:record_private("hook_psyker_spent_max_unnatural_stack", template_context.player, rounded_time_value)
-
-			template_data.final_time_spent = 0
+		if template_data.current_stack < template_data.unmodified_max_stacks and template_data.last_stack > template_data.current_stack then
+			template_data.final_time_spent = _send_time_spent_to_stat_system(template_context.player, template_data.final_time_spent)
+		elseif template_data.final_time_spent >= 10 then
+			template_data.final_time_spent = _send_time_spent_to_stat_system(template_context.player, template_data.final_time_spent)
 		end
 
 		template_data.last_stack = template_data.current_stack
@@ -1169,6 +1179,14 @@ templates.psyker_overcharge_reduced_warp_charge = {
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.active
 	end,
+}
+templates.psyker_overcharge_stance_infinite_casting = {
+	class_name = "buff",
+	predicted = false,
+	duration = TalentSettings.overcharge_stance.post_stance_duration + TalentSettings.overcharge_stance.cooloff_duration,
+	keywords = {
+		keywords.psychic_fortress,
+	},
 }
 templates.psyker_overcharge_reduced_toughness_damage_taken = {
 	class_name = "buff",
@@ -2600,13 +2618,21 @@ templates.psyker_throwing_knives_piercing = {
 		[stat_buffs.psyker_smite_max_hit_mass_impact_modifier] = 0.5,
 	},
 }
-templates.psyker_throwing_knives_cooldown = {
-	class_name = "buff",
+templates.psyker_throwing_knives_ability_recharge = {
+	class_name = "proc_buff",
 	predicted = false,
-	stat_buffs = {
-		[stat_buffs.psyker_smite_max_hit_mass_attack_modifier] = 0.5,
-		[stat_buffs.psyker_smite_max_hit_mass_impact_modifier] = 0.5,
+	proc_events = {
+		[proc_events.on_combat_ability] = 1,
 	},
+	proc_func = function (params, template_data, template_context, t)
+		local ability_extension = ScriptUnit.has_extension(template_context.unit, "ability_system")
+
+		if ability_extension then
+			local charges = talent_settings.throwing_knives.charges_restored
+
+			ability_extension:restore_ability_charge("grenade_ability", charges)
+		end
+	end,
 }
 templates.psyker_throwing_knife_stacking_speed = {
 	class_name = "proc_buff",
@@ -2707,8 +2733,9 @@ templates.psyker_cycle_stacking_ranged_damage_stacks = {
 templates.psyker_crits_empower_warp = {
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_critical_strike] = 1,
+		[proc_events.on_hit] = 1,
 	},
+	check_proc_func = CheckProcFunctions.on_crit,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("psyker_crits_empower_warp_buff", t)
 	end,
@@ -2877,6 +2904,347 @@ templates.psyker_chain_lightning_increases_movement_speed = {
 		[stat_buffs.movement_speed] = talent_settings_3.defensive_3.movement_speed,
 	},
 	active_duration = talent_settings_3.defensive_3.active_duration,
+}
+templates.psyker_melee_attack_speed = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.melee_attack_speed] = talent_settings.melee_attack_speed.attack_speed,
+	},
+}
+templates.psyker_cleave_from_peril = {
+	class_name = "buff",
+	predicted = false,
+	lerped_stat_buffs = {
+		[stat_buffs.max_hit_mass_attack_modifier] = {
+			min = talent_settings.cleave_from_peril.min,
+			max = talent_settings.cleave_from_peril.max,
+		},
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
+		template_data.warp_charge_component = unit_data_extension:read_component("warp_charge")
+	end,
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		local current_percent = template_data.warp_charge_component.current_percentage
+
+		return current_percent
+	end,
+}
+
+local soulblaze_range = DamageSettings.in_melee_range
+
+templates.psyker_blocking_soulblaze = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_block] = 1,
+	},
+	proc_func = function (params, template_data, template_context, t)
+		local unit_hit = params.attacking_unit
+		local unit = template_context.unit
+		local unit_position = POSITION_LOOKUP[unit_hit]
+		local self_position = POSITION_LOOKUP[unit]
+		local block_distance = Vector3.distance(unit_position, self_position)
+
+		if block_distance > soulblaze_range then
+			return
+		end
+
+		local buff_extension = ScriptUnit.has_extension(unit_hit, "buff_system")
+		local num_warpfire_stacks = talent_settings.blocking_soulbaze.stacks
+
+		if buff_extension and HEALTH_ALIVE[unit_hit] and num_warpfire_stacks > 0 then
+			buff_extension:add_internally_controlled_buff_with_stacks("warp_fire", num_warpfire_stacks, t, "owner_unit", unit)
+		end
+	end,
+}
+
+local soublaze_dr_max_stacks = talent_settings.nearby_soublaze_defense.max_stacks
+
+templates.psyker_nearby_soulblaze_reduced_damage = {
+	always_show_in_hud = true,
+	class_name = "buff",
+	hud_always_show_stacks = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_nearby_soulblaze_reduced_damage",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	predicted = false,
+	lerped_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = {
+			min = talent_settings.nearby_soublaze_defense.min,
+			max = talent_settings.nearby_soublaze_defense.max,
+		},
+	},
+	start_func = function (template_data, template_context)
+		local broadphase_system = Managers.state.extension:system("broadphase_system")
+		local broadphase = broadphase_system.broadphase
+
+		template_data.broadphase = broadphase
+		template_data.broadphase_results = {}
+		template_data.num_stacks = 0
+
+		local unit = template_context.unit
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[unit]
+		local enemy_side_names = side:relation_side_names("enemy")
+		local t = FixedFrame.get_latest_fixed_time()
+
+		template_data.next_soulblaze_check = t + 0.25
+		template_data.enemy_side_names = enemy_side_names
+	end,
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		local next_soulblaze_check = template_data.next_soulblaze_check
+
+		if next_soulblaze_check < t then
+			local player_unit = template_context.unit
+			local player_position = POSITION_LOOKUP[player_unit]
+			local broadphase = template_data.broadphase
+			local enemy_side_names = template_data.enemy_side_names
+			local broadphase_results = template_data.broadphase_results
+
+			table.clear(broadphase_results)
+
+			local num_stacks = 0
+			local num_hits = broadphase.query(broadphase, player_position, soulblaze_range, broadphase_results, enemy_side_names)
+
+			for i = 1, num_hits do
+				local enemy_unit = broadphase_results[i]
+				local buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
+
+				if buff_extension then
+					local target_is_bleeding = buff_extension:has_keyword(keywords.warpfire_burning)
+
+					if target_is_bleeding then
+						num_stacks = num_stacks + 1
+					end
+				end
+			end
+
+			template_data.num_stacks = num_stacks
+			template_data.next_soulblaze_check = t + 1
+		end
+
+		return math.clamp(template_data.num_stacks / soublaze_dr_max_stacks, 0, 1)
+	end,
+	visual_stack_count = function (template_data, template_context)
+		return math.clamp(template_data.num_stacks, 0, soublaze_dr_max_stacks)
+	end,
+}
+templates.psyker_warp_glass_cannon = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.warp_charge_amount] = talent_settings.glass_cannon.warp_charge_amount,
+		[stat_buffs.toughness_replenish_multiplier] = talent_settings.glass_cannon.toughness_replenish_multiplier,
+	},
+}
+templates.psyker_warp_attacks_rending = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.warp_attacks_rending_multiplier] = talent_settings.warp_attacks_rending.warp_rending,
+	},
+}
+templates.psyker_soulblaze_reduces_damage_taken = {
+	active_duration = 3,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_soulblaze_reduces_damage_taken",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_warp_fire_applied] = 1,
+	},
+	proc_stat_buffs = {
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.soulblaze_reduces_damage_taken.toughness_damage_taken_multiplier,
+	},
+	check_proc_func = function (params, template_data, template_context)
+		return params.buffer_unit == template_context.unit
+	end,
+}
+templates.psyker_ranged_shots_soulblaze = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = talent_settings.ranged_shots_soulblaze.proc_chance,
+	},
+	check_proc_func = function (params, template_data, template_context)
+		if not params.is_critical_strike then
+			return false
+		end
+
+		local damage_type = params.damage_type
+
+		if warp_damage_types[damage_type] then
+			return false
+		end
+
+		return params.attack_type == attack_types.ranged
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local unit_hit = params.attacked_unit
+		local buff_extension = ScriptUnit.has_extension(unit_hit, "buff_system")
+		local num_warpfire_stacks = talent_settings.ranged_shots_soulblaze.stacks
+
+		if buff_extension and HEALTH_ALIVE[unit_hit] and num_warpfire_stacks > 0 then
+			buff_extension:add_internally_controlled_buff_with_stacks("warp_fire", num_warpfire_stacks, t, "owner_unit", template_context.unit)
+		end
+	end,
+}
+templates.psyker_chain_lightning_heavy_attacks = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_heavy_hit,
+	proc_func = function (params, template_data, template_context, t)
+		local buff_ext = ScriptUnit.has_extension(params.attacked_unit, "buff_system")
+
+		if buff_ext then
+			local talent_extension = ScriptUnit.has_extension(template_context.unit, "talent_system")
+			local improved_target_buff = talent_extension and talent_extension:has_special_rule(special_rules.psyker_chain_lightning_improved_target_buff)
+			local buff_name = improved_target_buff and "psyker_protectorate_spread_chain_lightning_interval_temporary_improved" or "psyker_protectorate_spread_chain_lightning_interval_temporary"
+
+			buff_ext:add_internally_controlled_buff(buff_name, t)
+		end
+	end,
+}
+templates.psyker_force_staff_quick_attack_bonus = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = function (params, template_data, template_context)
+		return params.damage_type == damage_types.force_staff_single_target
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local attacked_unit = params.attacked_unit
+		local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+
+		if buff_extension then
+			buff_extension:add_internally_controlled_buff("psyker_force_staff_quick_attack_debuff", t)
+		end
+	end,
+}
+templates.psyker_force_staff_quick_attack_debuff = {
+	class_name = "buff",
+	duration = 10,
+	max_stacks = 5,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[stat_buffs.warp_damage_taken_multiplier] = 1.05,
+	},
+}
+templates.psyker_force_staff_melee_attack_bonus = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_sweep_finish] = 1,
+	},
+	check_proc_func = function (params, template_data, template_context)
+		local wielded_slot = template_data.inventory_component.wielded_slot
+
+		return wielded_slot == "slot_secondary"
+	end,
+	lerped_stat_buffs = {
+		[stat_buffs.force_staff_melee_damage] = {
+			min = talent_settings.psyker_force_staff_melee_attack_bonus.min,
+			max = talent_settings.psyker_force_staff_melee_attack_bonus.max,
+		},
+	},
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		local current_percent = template_data.warp_charge_component.current_percentage
+
+		return current_percent
+	end,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local warp_charge_component = unit_data_extension:write_component("warp_charge")
+		local inventory_component = unit_data_extension:read_component("inventory")
+
+		template_data.warp_charge_component = warp_charge_component
+		template_data.inventory_component = inventory_component
+		template_data.counter = 0
+	end,
+	proc_func = function (params, template_data, template_context)
+		template_data.procced = true
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if template_data.procced then
+			local warp_charge_component = template_data.warp_charge_component
+			local remove_percentage = talent_settings.psyker_force_staff_melee_attack_bonus.venting
+			local unit = template_context.unit
+
+			WarpCharge.decrease_immediate(remove_percentage, warp_charge_component, unit)
+
+			template_data.procced = false
+		end
+	end,
+}
+templates.psyker_alternative_peril_explosion = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.overheat_explosion_speed_modifier] = 1.5,
+	},
+}
+templates.psyker_force_staff_bonus = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_action_finish] = 1,
+	},
+	check_proc_func = function (params, template_data, template_context)
+		local wielded_slot = template_data.inventory_component.wielded_slot
+
+		if wielded_slot ~= "slot_secondary" then
+			return false
+		end
+
+		local action_settings = params.action_settings
+		local name = action_settings.name
+		local wielded_weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(template_data.visual_loadout_extension, template_data.inventory_component)
+		local template_name = wielded_weapon_template.name
+
+		if template_name == "forcestaff_p2_m1" then
+			return name and name == "action_charge_flame"
+		else
+			return name and name == "action_charge"
+		end
+	end,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local inventory_component = unit_data_extension:read_component("inventory")
+
+		template_data.inventory_component = inventory_component
+		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		if params.charge_level < 0.95 then
+			return
+		end
+
+		template_context.buff_extension:add_internally_controlled_buff("psyker_force_staff_bonus_buff", t)
+	end,
+}
+templates.psyker_force_staff_bonus_buff = {
+	class_name = "buff",
+	duration = 5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_force_staff_bonus",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[stat_buffs.force_staff_single_target_damage] = 0.3,
+	},
 }
 
 return templates

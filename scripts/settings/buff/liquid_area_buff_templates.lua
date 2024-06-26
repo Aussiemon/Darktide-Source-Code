@@ -634,7 +634,7 @@ templates.in_toxic_gas = {
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
-		[buff_stat_buffs.toughness_replenish_multiplier] = 0.5,
+		[buff_stat_buffs.toughness_replenish_modifier] = 0.5,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
@@ -746,7 +746,7 @@ templates.in_toxic_gas = {
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
 		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
-		stop_type = "destroy",
+		stop_type = "stop",
 		wwise_state = {
 			group = "swamped",
 			off_state = "none",
@@ -766,7 +766,7 @@ templates.left_toxic_gas = {
 	target = buff_targets.player_only,
 	stat_buffs = {
 		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
-		[buff_stat_buffs.toughness_replenish_multiplier] = 0.5,
+		[buff_stat_buffs.toughness_replenish_modifier] = 0.5,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {
@@ -863,7 +863,7 @@ templates.in_cultist_grenadier_gas = {
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
-		[buff_stat_buffs.toughness_replenish_multiplier] = 0.3,
+		[buff_stat_buffs.toughness_replenish_modifier] = -0.3,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0,
 	},
 	keywords = {

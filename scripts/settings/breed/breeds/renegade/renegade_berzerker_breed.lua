@@ -391,7 +391,6 @@ local breed_data = {
 	},
 	hitzone_damage_multiplier = {
 		ranged = {
-			[hit_zone_names.head] = 0.85,
 			[hit_zone_names.lower_left_arm] = 0.5,
 			[hit_zone_names.lower_right_arm] = 0.5,
 			[hit_zone_names.lower_left_leg] = 0.5,

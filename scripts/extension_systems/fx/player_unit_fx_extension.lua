@@ -6,26 +6,28 @@ local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particle
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PlayerUnitFxExtension = class("PlayerUnitFxExtension")
-local VFX_RING_BUFFER_SIZE = 128
-local ALIGNED_VFX_RING_BUFFER_SIZE = 64
-local MOVING_SFX_RING_BUFFER_SIZE = 64
+local PARTICLE_INDEX_MIN = NetworkConstants.particle_index_min
+local PARTICLE_INDEX_MAX = NetworkConstants.particle_index_max
+local ALIGNED_VFX_RING_BUFFER_SIZE = 256
+local MOVING_FX_RING_BUFFER_SIZE = 256
 local CLIENT_RPCS = {
-	"rpc_play_looping_player_sound",
-	"rpc_stop_looping_player_sound",
-	"rpc_set_source_parameter",
-	"rpc_play_player_sound",
-	"rpc_play_player_sound_with_position",
+	"rpc_destroy_player_particles",
 	"rpc_play_exclusive_player_sound",
+	"rpc_play_looping_player_sound",
 	"rpc_play_player_server_controlled_explosion_sound",
+	"rpc_play_player_sound_with_position",
+	"rpc_play_player_sound",
+	"rpc_player_trigger_wwise_event_synced",
+	"rpc_set_source_parameter",
 	"rpc_spawn_exclusive_particle",
 	"rpc_spawn_looping_player_particles",
-	"rpc_spawn_player_particles",
-	"rpc_destroy_player_particles",
-	"rpc_stop_player_particles",
-	"rpc_spawn_player_particles_with_variable",
-	"rpc_stop_looping_particles",
+	"rpc_spawn_moving_player_fx",
 	"rpc_spawn_player_fx_line",
-	"rpc_player_trigger_wwise_event_synced",
+	"rpc_spawn_player_particles_with_variable",
+	"rpc_spawn_player_particles",
+	"rpc_stop_looping_particles",
+	"rpc_stop_looping_player_sound",
+	"rpc_stop_player_particles",
 }
 local FLOW_CONTROLLED_WWISE_SOURCES = {
 	j_hips = true,
@@ -68,10 +70,10 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 		buffer = aligned_vfx_buffer,
 	}
 
-	local moving_sfx_buffer = Script.new_array(MOVING_SFX_RING_BUFFER_SIZE)
+	local moving_sfx_buffer = Script.new_array(MOVING_FX_RING_BUFFER_SIZE)
 
-	for i = 1, MOVING_SFX_RING_BUFFER_SIZE do
-		moving_sfx_buffer[i] = {
+	for ii = 1, MOVING_FX_RING_BUFFER_SIZE do
+		moving_sfx_buffer[ii] = {
 			position = Vector3Box(),
 			direction = Vector3Box(),
 		}
@@ -81,14 +83,31 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 		size = 0,
 		buffer = moving_sfx_buffer,
 	}
-	self._looping_vfx = Script.new_array(VFX_RING_BUFFER_SIZE)
-	self._next_vfx_index = 1
-	self._num_vfx_ids = 0
+
+	local moving_vfx_buffer = Script.new_array(MOVING_FX_RING_BUFFER_SIZE)
+
+	for ii = 1, MOVING_FX_RING_BUFFER_SIZE do
+		moving_vfx_buffer[ii] = {
+			position = Vector3Box(),
+			direction = Vector3Box(),
+		}
+	end
+
+	self._moving_vfx = {
+		size = 0,
+		buffer = moving_vfx_buffer,
+	}
 	self._wwise_source_node_cache = {}
 	self._sources = {}
 	self._vfx_spawners = {}
 	self._specials_targeting_me = {}
-	self._player_particles = {}
+
+	if self._is_server then
+		self._particle_id_to_index = Script.new_map(PARTICLE_INDEX_MAX)
+		self._next_server_particle_index = PARTICLE_INDEX_MIN
+	end
+
+	self._particle_index_to_id = Script.new_table(PARTICLE_INDEX_MAX, 2)
 
 	if not is_server then
 		self._game_object_id = nil_or_game_object_id
@@ -232,8 +251,29 @@ PlayerUnitFxExtension.extensions_ready = function (self, world, unit)
 	self:_update_first_person_mode_all_sources(is_in_first_person_mode)
 end
 
-PlayerUnitFxExtension._create_particles_wrapper = function (self, world, particle_name, position, rotation, scale)
-	return World.create_particles(world, particle_name, position, rotation, scale, self._player_particle_group_id)
+PlayerUnitFxExtension._create_particles_wrapper = function (self, world, particle_name, position, rotation, scale, create_network_index)
+	local particle_id = World.create_particles(world, particle_name, position, rotation, scale, self._player_particle_group_id)
+
+	if self._is_server and create_network_index then
+		local server_particle_index = self._next_server_particle_index
+		local existing_particle_id = self._particle_index_to_id[server_particle_index]
+
+		if existing_particle_id then
+			self:destroy_player_particles(existing_particle_id, true)
+		end
+
+		self._particle_id_to_index[particle_id] = server_particle_index
+		self._particle_index_to_id[server_particle_index] = particle_id
+		server_particle_index = server_particle_index + 1
+
+		if server_particle_index > PARTICLE_INDEX_MAX then
+			server_particle_index = PARTICLE_INDEX_MIN
+		end
+
+		self._next_server_particle_index = server_particle_index
+	end
+
+	return particle_id
 end
 
 PlayerUnitFxExtension.hot_join_sync = function (self, unit, peer, channel_id)
@@ -301,7 +341,7 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 
 	local moving_sfx = self._moving_sfx
 
-	for i = 1, MOVING_SFX_RING_BUFFER_SIZE do
+	for i = 1, MOVING_FX_RING_BUFFER_SIZE do
 		local data = moving_sfx[i]
 
 		if data then
@@ -343,6 +383,7 @@ PlayerUnitFxExtension.update = function (self, unit, dt, t)
 	end
 
 	self:_update_moving_sfx(dt, t)
+	self:_update_moving_vfx(dt, t)
 	self:_update_looping_particle_variables(dt, t)
 	self:_update_targeted_by_special()
 end
@@ -373,7 +414,7 @@ PlayerUnitFxExtension._update_first_person_mode_looping_particles = function (se
 				if first_person_mode then
 					local particle_name = data.particle_name
 
-					data.id = self:_create_particles_wrapper(world, particle_name, Vector3(0, 0, 1))
+					data.id = self:_create_particles_wrapper(world, particle_name, nil, nil, Vector3(0, 0, 1), false)
 				else
 					local id = data.id
 
@@ -551,6 +592,69 @@ PlayerUnitFxExtension._update_moving_sfx = function (self, dt, t)
 	moving_sfx.size = size
 end
 
+PlayerUnitFxExtension._update_moving_vfx = function (self, dt, t)
+	local moving_vfx = self._moving_vfx
+	local size = moving_vfx.size
+
+	if size <= 0 then
+		return
+	end
+
+	local world = self._world
+	local buffer = moving_vfx.buffer
+	local index = 1
+
+	while index <= size do
+		local data = buffer[index]
+		local effect_id = data.effect_id
+		local speed = data.speed
+		local distance = data.distance
+		local range = data.range
+		local position = data.position:unbox()
+		local direction = data.direction:unbox()
+		local distance_this_frame = speed * dt
+		local travelled_distance = distance + distance_this_frame
+		local new_position = position + direction * distance_this_frame
+		local remove = false
+
+		if not effect_id or range <= travelled_distance then
+			remove = true
+		elseif not World.are_particles_playing(world, effect_id) then
+			Log.warning("FxExtension", "Removing moving sound as the source_id has been deleted from some other place.")
+
+			remove = true
+		end
+
+		if remove then
+			if effect_id then
+				World.stop_spawning_particles(world, effect_id)
+
+				data.effect_id = nil
+			end
+
+			buffer[index].effect_id = buffer[size].effect_id
+			buffer[index].speed = buffer[size].speed
+			buffer[index].distance = buffer[size].distance
+			buffer[index].range = buffer[size].range
+
+			buffer[index].position:store(buffer[size].position:unbox())
+			buffer[index].direction:store(buffer[size].direction:unbox())
+
+			size = size - 1
+		else
+			data.position:store(new_position)
+
+			data.distance = travelled_distance
+
+			World.move_particles(world, effect_id, new_position, Quaternion.look(direction), nil)
+
+			index = index + 1
+		end
+	end
+
+	moving_vfx.size = size
+end
+
 local World_set_particles_material_scalar = World.set_particles_material_scalar
 local World_set_particles_variable = World.set_particles_variable
 
@@ -600,11 +704,10 @@ PlayerUnitFxExtension.server_correction_occurred = function (self, unit, from_fr
 
 	for alias_name, data in pairs(looping_sounds) do
 		local event_alias = data.event_alias
-		local resolved = false
-		local event_name
+		local _, event_name
 
 		if event_alias then
-			resolved, event_name = visual_loadout_extension:resolve_gear_sound(event_alias)
+			_, event_name = visual_loadout_extension:resolve_gear_sound(event_alias)
 		end
 
 		local sound_config = PlayerCharacterLoopingSoundAliases[alias_name]
@@ -1057,6 +1160,37 @@ PlayerUnitFxExtension._trigger_explosion_wwise_event = function (self, event_nam
 	return self:trigger_wwise_event(event_name, append_husk_to_event_name, source_id)
 end
 
+PlayerUnitFxExtension.spawn_moving_player_fx_alias = function (self, particle_alias, sound_alias, external_properties, position, direction, range, duration)
+	local _, particle_name = self._visual_loadout_extension:resolve_gear_particle(particle_alias, external_properties)
+	local _, event_name, has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias, external_properties)
+
+	if has_husk_events and self:should_play_husk_effect() then
+		event_name = event_name .. "_husk"
+	end
+
+	self:_spawn_moving_player_fx(particle_name, event_name, position, direction, range, duration)
+
+	if self._is_server then
+		local channel_id, game_object_id = self._player:channel_id(), self._game_object_id
+
+		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_moving_player_fx", channel_id, game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_sounds[event_name], position, direction, range, duration)
+	end
+end
+
+PlayerUnitFxExtension.rpc_spawn_moving_player_fx = function (self, channel_id, game_object_id, particle_name_id, event_name_id, position, direction, range, duration)
+	local particle_name = NetworkLookup.player_character_particles[particle_name_id]
+	local event_name = NetworkLookup.player_character_sounds[event_name_id]
+
+	self:_spawn_moving_player_fx(particle_name, event_name, position, direction, range, duration)
+end
+
+PlayerUnitFxExtension._spawn_moving_player_fx = function (self, particle_name, event_name, position, direction, range, duration)
+	local speed = range / duration
+
+	self:_add_moving_vfx(position, direction, speed, range, particle_name)
+	self:_add_moving_sfx(position, direction, speed, range, event_name, nil)
+end
+
 PlayerUnitFxExtension.spawn_unit_fx_line = function (self, line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
 	self:_spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
 
@@ -1083,7 +1217,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 	local critical_effect_name = line_effect.vfx_crit
 	local width = line_effect.vfx_width
 	local wwise_event = line_effect.sfx
-	local moving_wwise_config = line_effect.moving_sfx
+	local moving_sfx_config = line_effect.moving_sfx
 	local keep_aligned = line_effect.keep_aligned
 	local emitters = line_effect.emitters
 	local critical_emitters = line_effect.emitters_crit
@@ -1098,7 +1232,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 		local delta_pose = Matrix4x4.multiply(line_pose, Matrix4x4.inverse(spawner_pose))
 		local position_offset = link and Matrix4x4.translation(delta_pose)
 		local rotation_offset = Matrix4x4.rotation(delta_pose)
-		local particle_id = self:_spawn_unit_particles(effect_to_use, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale)
+		local particle_id = self:_spawn_unit_particles(effect_to_use, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, false)
 		local variable_index = World.find_particles_variable(self._world, effect_to_use, "hit_distance")
 
 		World.set_particles_variable(self._world, particle_id, variable_index, Vector3(width, line_length, line_length))
@@ -1154,7 +1288,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance
 				local chosen_effect_name = num_emitters == 0 and start_emitter_effect_name or emitter_effect_name
 
-				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation)
+				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation, nil, false)
 
 				emitter_distance = new_emitter_distance
 				num_emitters = num_emitters + 1
@@ -1178,11 +1312,10 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			if line_length < new_emitter_distance + 1 or num_critical_emitters >= MAX_EMITTERS then
 				spawn_critical_emitters = false
 			else
-				local line_rotation = Quaternion.look(line_direction)
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance
 				local chosen_effect_name = num_critical_emitters == 0 and start_emitter_effect_name or emitter_effect_name
 
-				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation)
+				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation, nil, false)
 
 				emitter_distance = new_emitter_distance
 				num_critical_emitters = num_critical_emitters + 1
@@ -1194,44 +1327,17 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 		self:_trigger_wwise_event_on_line(wwise_event, spawner_position, end_position, append_husk_to_event_name)
 	end
 
-	if moving_wwise_config then
-		local moving_sfx = self._moving_sfx
-		local buffer = moving_sfx.buffer
-		local size = moving_sfx.size
-		local data
-
-		if size + 1 > MOVING_SFX_RING_BUFFER_SIZE then
-			data = buffer[1]
-			moving_sfx.size = size
-
-			local wwise_world = self._wwise_world
-			local old_source_id = data.source_id
-			local old_playing_id = data.playing_id
-
-			WwiseWorld.stop_event(self._wwise_world, old_playing_id)
-
-			data.playing_id = nil
-
-			if old_source_id then
-				WwiseWorld.destroy_manual_source(wwise_world, old_source_id)
-
-				data.source_id = nil
-			end
-		else
-			data = buffer[size + 1]
-			moving_sfx.size = size + 1
-		end
-
-		local sound_alias = moving_wwise_config.event_alias
-		local early_stop_sound_alias = moving_wwise_config.early_stop_event_alias
-		local distance_offset = moving_wwise_config.distance_offset
-		local duration = moving_wwise_config.duration
+	if moving_sfx_config then
+		local sound_alias = moving_sfx_config.event_alias
+		local early_stop_sound_alias = moving_sfx_config.early_stop_event_alias
+		local distance_offset = moving_sfx_config.distance_offset
+		local duration = moving_sfx_config.duration
 		local total_distance = distance_offset * 2
 		local speed = total_distance / duration
 		local resolved, start_event_name, start_has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias)
-		local sound_position
 		local unit = self._unit
 		local player = Managers.player:local_player(1)
+		local sound_position
 
 		if player then
 			local camera_position = Managers.state.camera:camera_position(player.viewport_name)
@@ -1256,17 +1362,8 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			total_distance = distance_to_end
 		end
 
-		local manual_source_id, playing_id, _
-
-		if resolved then
-			if start_has_husk_events and self:should_play_husk_effect() then
-				start_event_name = start_event_name .. "_husk"
-			end
-
-			local rotation = Quaternion.look(end_position - spawner_position)
-
-			manual_source_id = WwiseWorld.make_manual_source(self._wwise_world, sound_position, rotation)
-			playing_id, _ = WwiseWorld.trigger_resource_event(self._wwise_world, start_event_name, manual_source_id)
+		if resolved and start_has_husk_events and self:should_play_husk_effect() then
+			start_event_name = start_event_name .. "_husk"
 		end
 
 		local wwise_stop_event
@@ -1283,16 +1380,94 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			end
 		end
 
-		data.source_id = manual_source_id
-		data.playing_id = playing_id
-		data.speed = speed
-		data.distance = 0
-		data.range = total_distance
-		data.wwise_stop_event = wwise_stop_event
-
-		data.position:store(sound_position)
-		data.direction:store(line_direction)
+		self:_add_moving_sfx(sound_position, line_direction, speed, total_distance, start_event_name, wwise_stop_event)
 	end
+end
+
+PlayerUnitFxExtension._add_moving_sfx = function (self, position, direction, speed, range, event_name, stop_event_name)
+	local wwise_world = self._wwise_world
+	local moving_sfx = self._moving_sfx
+	local buffer = moving_sfx.buffer
+	local size = moving_sfx.size
+	local data
+
+	if size + 1 > MOVING_FX_RING_BUFFER_SIZE then
+		data = buffer[1]
+		moving_sfx.size = size
+
+		local old_source_id = data.source_id
+		local old_playing_id = data.playing_id
+
+		WwiseWorld.stop_event(wwise_world, old_playing_id)
+
+		data.playing_id = nil
+
+		if old_source_id then
+			WwiseWorld.destroy_manual_source(wwise_world, old_source_id)
+
+			data.source_id = nil
+		end
+	else
+		data = buffer[size + 1]
+		moving_sfx.size = size + 1
+	end
+
+	local manual_source_id, playing_id, _
+
+	if event_name then
+		local rotation = Quaternion.look(direction)
+
+		manual_source_id = WwiseWorld.make_manual_source(wwise_world, position, rotation)
+		playing_id, _ = WwiseWorld.trigger_resource_event(wwise_world, event_name, manual_source_id)
+	end
+
+	data.source_id = manual_source_id
+	data.playing_id = playing_id
+	data.speed = speed
+	data.distance = 0
+	data.range = range
+	data.wwise_stop_event = stop_event_name
+
+	data.position:store(position)
+	data.direction:store(direction)
+end
+
+PlayerUnitFxExtension._add_moving_vfx = function (self, position, direction, speed, range, effect_name)
+	local world = self._world
+	local moving_vfx = self._moving_vfx
+	local buffer = moving_vfx.buffer
+	local size = moving_vfx.size
+	local data
+
+	if size + 1 > MOVING_FX_RING_BUFFER_SIZE then
+		data = buffer[1]
+		moving_vfx.size = size
+
+		local old_effect_id = data.effect_id
+
+		World.destroy_particles(world, old_effect_id)
+
+		data.effect_id = nil
+	else
+		data = buffer[size + 1]
+		moving_vfx.size = size + 1
+	end
+
+	local effect_id
+
+	if effect_name then
+		local rotation = Quaternion.look(direction)
+
+		effect_id = World.create_particles(world, effect_name, position, rotation)
+	end
+
+	data.effect_id = effect_id
+	data.speed = speed
+	data.distance = 0
+	data.range = range
+
+	data.position:store(position)
+	data.direction:store(direction)
 end
 
 PlayerUnitFxExtension._trigger_wwise_event_on_line = function (self, event_name, start_position, end_position, append_husk_to_event_name)
@@ -1555,7 +1730,7 @@ PlayerUnitFxExtension.spawn_exclusive_particle = function (self, particle_name, 
 	local is_camera_follow_target = self._first_person_extension:is_camera_follow_target()
 
 	if is_camera_follow_target then
-		self:_create_particles_wrapper(self._world, particle_name, position, rotation, scale)
+		self:_create_particles_wrapper(self._world, particle_name, position, rotation, scale, false)
 	end
 
 	local is_server = self._is_server
@@ -1893,12 +2068,12 @@ PlayerUnitFxExtension._spawn_looping_particles = function (self, looping_particl
 
 	if screen_space then
 		if self._is_in_first_person_mode then
-			particle_id = self:_create_particles_wrapper(self._, particle_name, Vector3(0, 0, 1))
+			particle_id = self:_create_particles_wrapper(self._, particle_name, nil, nil, Vector3(0, 0, 1), false)
 		end
 	else
 		local orphaned_policy = "unlink"
 
-		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale)
+		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, false)
 	end
 
 	data.id = particle_id
@@ -1971,14 +2146,16 @@ PlayerUnitFxExtension.is_looping_particles_playing = function (self, looping_par
 	return component and component.is_playing
 end
 
-PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position, rotation, scale, optional_variable_name, optional_variable_value, all_clients)
+PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position, rotation, scale, optional_variable_name, optional_variable_value, all_clients, create_network_index)
 	local world = self._world
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if not is_resim then
-		local particle_id = self:_create_particles_wrapper(world, particle_name, position, rotation, scale)
+		local particle_id = self:_create_particles_wrapper(world, particle_name, position, rotation, scale, create_network_index)
 
 		if self._is_server then
+			local server_particle_index_or_nil = self._particle_id_to_index[particle_id]
+
 			if optional_variable_name then
 				local variable_index = World.find_particles_variable(world, particle_name, optional_variable_name)
 
@@ -1990,9 +2167,9 @@ PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position,
 					Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles_with_variable", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
 				end
 			elseif not all_clients then
-				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), particle_id)
+				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			else
-				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), particle_id)
+				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			end
 		end
 
@@ -2000,17 +2177,19 @@ PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position,
 	end
 end
 
-PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients)
+PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index)
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if not is_resim then
-		local particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale)
+		local particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, create_network_index)
 
 		if self._is_server then
+			local server_particle_index_or_nil = self._particle_id_to_index[particle_id]
+
 			if not all_clients then
-				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), particle_id)
+				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			else
-				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), particle_id)
+				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			end
 		end
 
@@ -2018,7 +2197,7 @@ PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spaw
 	end
 end
 
-PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, test)
+PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, create_network_index)
 	local world = self._world
 	local pose = Matrix4x4.identity()
 
@@ -2050,14 +2229,14 @@ PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spa
 	local particle_id
 
 	if link then
-		particle_id = self:_create_particles_wrapper(world, particle_name, Vector3.zero())
+		particle_id = self:_create_particles_wrapper(world, particle_name, Vector3.zero(), nil, nil, create_network_index)
 
 		World.link_particles(world, particle_id, node_unit, node, pose, orphaned_policy)
 	else
 		local spawner_pose = Unit.world_pose(node_unit, node)
 		local spawn_pose = Matrix4x4.multiply(pose, spawner_pose)
 
-		particle_id = self:_create_particles_wrapper(world, particle_name, Matrix4x4.translation(spawn_pose), Matrix4x4.rotation(spawn_pose), Matrix4x4.scale(spawn_pose))
+		particle_id = self:_create_particles_wrapper(world, particle_name, Matrix4x4.translation(spawn_pose), Matrix4x4.rotation(spawn_pose), Matrix4x4.scale(spawn_pose), create_network_index)
 	end
 
 	if is_first_person then
@@ -2067,19 +2246,37 @@ PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spa
 	return particle_id
 end
 
-PlayerUnitFxExtension.destroy_player_particles = function (self, particle_id)
+PlayerUnitFxExtension.destroy_player_particles = function (self, particle_id, all_clients)
 	World.destroy_particles(self._world, particle_id)
 
 	if self._is_server then
-		Managers.state.game_session:send_rpc_clients("rpc_destroy_player_particles", self._game_object_id, particle_id)
+		local server_particle_index = self._particle_id_to_index[particle_id]
+
+		if server_particle_index == nil then
+			return
+		end
+
+		Managers.state.game_session:send_rpc_clients("rpc_destroy_player_particles", self._game_object_id, server_particle_index)
+
+		self._particle_id_to_index[particle_id] = nil
+		self._particle_index_to_id[server_particle_index] = nil
 	end
 end
 
-PlayerUnitFxExtension.stop_player_particles = function (self, particle_id)
+PlayerUnitFxExtension.stop_player_particles = function (self, particle_id, all_clients)
 	World.stop_spawning_particles(self._world, particle_id)
 
 	if self._is_server then
-		Managers.state.game_session:send_rpc_clients("rpc_stop_player_particles", self._game_object_id, particle_id)
+		local server_particle_index = self._particle_id_to_index[particle_id]
+
+		if server_particle_index == nil then
+			return
+		end
+
+		Managers.state.game_session:send_rpc_clients("rpc_stop_player_particles", self._game_object_id, server_particle_index)
+
+		self._particle_id_to_index[particle_id] = nil
+		self._particle_index_to_id[server_particle_index] = nil
 	end
 end
 
@@ -2171,33 +2368,39 @@ PlayerUnitFxExtension.rpc_stop_looping_player_sound = function (self, channel_id
 	self:_stop_looping_wwise_event(sound_alias)
 end
 
-PlayerUnitFxExtension.rpc_spawn_player_particles = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, link, position_offset, rotation_offset, scale, particle_id)
+PlayerUnitFxExtension.rpc_spawn_player_particles = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, link, position_offset, rotation_offset, scale, optional_server_particle_index)
 	local particle_name = NetworkLookup.player_character_particles[particle_name_id]
 	local spawner_name = NetworkLookup.player_character_fx_sources[particle_spawner_id]
-	local id
+	local particle_id
 
 	if spawner_name == "n/a" then
-		id = self:_create_particles_wrapper(self._world, particle_name, position_offset, rotation_offset, scale)
+		particle_id = self:_create_particles_wrapper(self._world, particle_name, position_offset, rotation_offset, scale, false)
 	else
-		id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale)
+		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale, false)
 	end
 
-	self._player_particles[particle_id] = id
-end
-
-PlayerUnitFxExtension.rpc_destroy_player_particles = function (self, channel_id, game_object_id, key_id)
-	local particle_id = self._player_particles[key_id]
-
-	if particle_id then
-		self:destroy_player_particles(particle_id)
+	if optional_server_particle_index then
+		self._particle_index_to_id[optional_server_particle_index] = particle_id
 	end
 end
 
-PlayerUnitFxExtension.rpc_stop_player_particles = function (self, channel_id, game_object_id, key_id)
-	local particle_id = self._player_particles[key_id]
+PlayerUnitFxExtension.rpc_destroy_player_particles = function (self, channel_id, game_object_id, server_particle_index, all_clients)
+	local particle_id = self._particle_index_to_id[server_particle_index]
 
 	if particle_id then
-		self:stop_player_particles(particle_id)
+		self:destroy_player_particles(particle_id, all_clients)
+
+		self._particle_index_to_id[server_particle_index] = nil
+	end
+end
+
+PlayerUnitFxExtension.rpc_stop_player_particles = function (self, channel_id, game_object_id, server_particle_index, all_clients)
+	local particle_id = self._particle_index_to_id[server_particle_index]
+
+	if particle_id then
+		self:stop_player_particles(particle_id, all_clients)
+
+		self._particle_index_to_id[server_particle_index] = nil
 	end
 end
 
@@ -2208,9 +2411,9 @@ PlayerUnitFxExtension.rpc_spawn_player_particles_with_variable = function (self,
 	local particle_id
 
 	if spawner_name == "n/a" then
-		particle_id = self:_create_particles_wrapper(world, particle_name, position_offset, rotation_offset, scale)
+		particle_id = self:_create_particles_wrapper(world, particle_name, position_offset, rotation_offset, scale, false)
 	else
-		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale)
+		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale, false)
 	end
 
 	local variable_name = NetworkLookup.player_character_particle_variable_names[variable_name_id]
@@ -2228,10 +2431,10 @@ PlayerUnitFxExtension.rpc_spawn_looping_player_particles = function (self, chann
 
 	if particle_config.screen_space then
 		if self._is_in_first_person_mode then
-			particle_id = self:_create_particles_wrapper(self._world, particle_name, Vector3(0, 0, 1))
+			particle_id = self:_create_particles_wrapper(self._world, particle_name, nil, nil, Vector3(0, 0, 1), false)
 		end
 	else
-		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, "unlink")
+		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, "unlink", nil, nil, nil, false)
 	end
 
 	local data = self._looping_particles[looping_particle_alias]

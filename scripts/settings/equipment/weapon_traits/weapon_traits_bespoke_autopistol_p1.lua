@@ -34,13 +34,13 @@ templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_f
 templates.weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = {
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.01,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.02,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.03,
 		},
 		{
 			toughness_fixed_percentage = 0.04,
@@ -51,17 +51,17 @@ templates.weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.05,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.06,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.07,
 			},
 		},
 		{

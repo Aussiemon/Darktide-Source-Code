@@ -1380,7 +1380,7 @@ local blueprints = {
 					elseif down_axis then
 						slider_value = math.clamp(slider_value + scroll_amount, 0, 1)
 					else
-						local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, renderer.inverse_scale)
+						local cursor = (IS_XBS or IS_PLAYSTATION) and base_cursor or UIResolution.inverse_scale_vector(base_cursor, renderer.inverse_scale)
 						local input_coordinate = cursor[2] - (position[2] + 60)
 
 						input_coordinate = math.clamp(input_coordinate, 0, 300)

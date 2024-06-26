@@ -148,8 +148,8 @@ MinionLocomotionExtension.set_traverse_logic = function (self, traverse_logic)
 	MinionLocomotion.set_traverse_logic(self._engine_extension_id, traverse_logic)
 end
 
-MinionLocomotionExtension.engine_debug_info = function (self)
-	return MinionLocomotion.extension_debug_info(self._engine_extension_id)
+MinionLocomotionExtension.is_getting_back_to_nav_mesh = function (self)
+	return MinionLocomotion.is_in_get_to_nav_mesh(self._engine_extension_id)
 end
 
 return MinionLocomotionExtension

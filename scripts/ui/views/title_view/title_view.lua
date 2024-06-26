@@ -110,15 +110,15 @@ TitleView.update = function (self, dt, t, input_service)
 	if not self._continue_triggered and input_service and not input_service:is_null_service() then
 		local continue_input_name = self._continue_input_name
 
-		if IS_XBS then
-			local input_device_list = InputUtils.input_device_list
-			local xbox_controllers = input_device_list.xbox_controller
+		if IS_XBS or IS_PLAYSTATION then
+			local input_device_list = InputUtils.platform_device_list()
+			local button_index = IS_XBS and "a" or IS_PLAYSTATION and "cross"
 
-			for i = 1, #xbox_controllers do
-				local xbox_controller = xbox_controllers[i]
+			for i = 1, #input_device_list do
+				local device = input_device_list[i]
 
-				if xbox_controller.active() and (Managers.account:do_re_signin() or xbox_controller.pressed(xbox_controller.button_index("a"))) then
-					self:_continue(nil, xbox_controller)
+				if device.active() and (Managers.account:do_re_signin() or device.pressed(device.button_index(button_index))) then
+					self:_continue(nil, device)
 				end
 			end
 		else

@@ -187,7 +187,7 @@ local pacing_template = {
 		hordes = _challenge_rating_multiplier_steps(30),
 		trickle_hordes = _challenge_rating_multiplier_steps(20),
 		roamers = _challenge_rating_multiplier_steps(90),
-		terror_events = _challenge_rating_multiplier_steps(90),
+		terror_events = _challenge_rating_multiplier_steps(100),
 	},
 	ramp_up_frequency_modifiers = DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS,
 	min_wound_tension_requirement = {

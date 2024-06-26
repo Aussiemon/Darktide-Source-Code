@@ -1,33 +1,35 @@
 ﻿-- chunkname: @scripts/ui/views/store_item_detail_view/store_item_detail_view.lua
 
-local Breeds = require("scripts/settings/breed/breeds")
-local Definitions = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_definitions")
-local StoreItemDetailViewSettings = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_settings")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local MasterItems = require("scripts/backend/master_items")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local Archetypes = require("scripts/settings/archetype/archetypes")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
-local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
-local WalletSettings = require("scripts/settings/wallet_settings")
-local Promise = require("scripts/foundation/utilities/promise")
-local Text = require("scripts/utilities/ui/text")
-local ItemUtils = require("scripts/utilities/items")
-local UISettings = require("scripts/settings/ui/ui_settings")
+local Breeds = require("scripts/settings/breed/breeds")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ContentBlueprints = require("scripts/ui/views/store_view/store_view_content_blueprints")
+local Definitions = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_definitions")
+local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local Personalities = require("scripts/settings/character/personalities")
+local Promise = require("scripts/foundation/utilities/promise")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local StoreItemDetailViewSettings = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_settings")
+local Text = require("scripts/utilities/ui/text")
 local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
+local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
+local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
+local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local StoreItemDetailView = class("StoreItemDetailView", "BaseView")
 
 StoreItemDetailView.init = function (self, settings, context)
@@ -1642,6 +1644,69 @@ StoreItemDetailView._can_zoom = function (self)
 	return item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_UPPERBODY"
 end
 
+StoreItemDetailView._can_preview_voice = function (self)
+	local has_profile = self._preview_profile and self._previewed_with_gear
+	local has_voice_fx = table.nested_get(self, "_selected_element", "item", "voice_fx_preset") ~= nil
+	local can_inspect = self._valid_inspect
+
+	return not self._aquilas_showing and has_profile and has_voice_fx and not can_inspect
+end
+
+StoreItemDetailView._stop_current_voice = function (self)
+	local ui_world = Managers.ui:world()
+	local wwise_world = Managers.world:wwise_world(ui_world)
+
+	if not wwise_world then
+		return
+	end
+
+	local current_event = self._sound_event_id
+
+	if not current_event then
+		return
+	end
+
+	if not WwiseWorld.is_playing(wwise_world, current_event) then
+		return
+	end
+
+	WwiseWorld.stop_event(wwise_world, current_event)
+
+	self._sound_event_id = nil
+end
+
+StoreItemDetailView.cb_preview_voice = function (self)
+	local voice_fx_preset_key = table.nested_get(self, "_selected_element", "item", "voice_fx_preset")
+	local voice_fx_preset_rtcp = VoiceFxPresetSettings[voice_fx_preset_key]
+
+	if not voice_fx_preset_key then
+		return
+	end
+
+	local personality_key = table.nested_get(self, "_profile", "lore", "backstory", "personality")
+	local personality_settings = Personalities[personality_key]
+	local sound_event = personality_settings and personality_settings.preview_sound_event
+
+	if not sound_event then
+		return
+	end
+
+	local ui_world = Managers.ui:world()
+	local wwise_world = Managers.world:wwise_world(ui_world)
+
+	if not wwise_world then
+		return
+	end
+
+	self:_stop_current_voice()
+
+	local source = WwiseWorld.make_auto_source(wwise_world, Vector3.zero())
+
+	WwiseWorld.set_source_parameter(wwise_world, source, "voice_fx_preset", voice_fx_preset_rtcp)
+
+	self._sound_event_id = WwiseWorld.trigger_resource_event(wwise_world, sound_event, source)
+end
+
 StoreItemDetailView._trigger_zoom_logic = function (self, instant, optional_slot_name)
 	local world_spawner = self._world_spawner
 	local selected_slot = self._selected_slot
@@ -1711,6 +1776,7 @@ StoreItemDetailView._set_initial_viewport_camera_position = function (self, defa
 end
 
 StoreItemDetailView.on_exit = function (self)
+	self:_stop_current_voice()
 	self:_destroy_profile()
 	self:_destroy_side_panel()
 
@@ -2640,7 +2706,7 @@ StoreItemDetailView._make_purchase = function (self, is_bundle, offer, wallet_da
 					item = offer.sku.name,
 				})
 
-				Managers.event:trigger("event_add_notification_message", "default", message)
+				Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_item_received_rarity_6)
 			end
 
 			local items = self._items

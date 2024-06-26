@@ -43,7 +43,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			92,
+			110,
 		},
 	},
 	corner_top_right = {
@@ -57,7 +57,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			92,
+			110,
 		},
 	},
 	corner_bottom_left = {
@@ -71,7 +71,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			92,
+			110,
 		},
 	},
 	corner_bottom_right = {
@@ -85,7 +85,19 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			92,
+			110,
+		},
+	},
+	transition_background = {
+		scale = "fit",
+		size = {
+			1920,
+			1080,
+		},
+		position = {
+			0,
+			0,
+			93,
 		},
 	},
 	profile_presets_pivot = {
@@ -113,7 +125,7 @@ local scenegraph_definition = {
 		position = {
 			52,
 			15,
-			94,
+			110,
 		},
 	},
 	character_portrait = {
@@ -141,7 +153,7 @@ local scenegraph_definition = {
 		position = {
 			200,
 			8,
-			93,
+			111,
 		},
 	},
 	character_title = {
@@ -155,7 +167,7 @@ local scenegraph_definition = {
 		position = {
 			200,
 			42,
-			93,
+			111,
 		},
 	},
 	character_archetype_title = {
@@ -169,7 +181,7 @@ local scenegraph_definition = {
 		position = {
 			200,
 			68,
-			93,
+			111,
 		},
 	},
 	character_name_no_title = {
@@ -183,7 +195,7 @@ local scenegraph_definition = {
 		position = {
 			200,
 			20,
-			93,
+			111,
 		},
 	},
 	character_archetype_title_no_title = {
@@ -197,7 +209,7 @@ local scenegraph_definition = {
 		position = {
 			200,
 			55,
-			93,
+			111,
 		},
 	},
 	character_level = {
@@ -211,7 +223,7 @@ local scenegraph_definition = {
 		position = {
 			113,
 			97,
-			93,
+			111,
 		},
 	},
 	character_level_next = {
@@ -225,7 +237,7 @@ local scenegraph_definition = {
 		position = {
 			381,
 			97,
-			93,
+			111,
 		},
 	},
 	character_experience = {
@@ -236,7 +248,7 @@ local scenegraph_definition = {
 		position = {
 			175,
 			116,
-			93,
+			109,
 		},
 	},
 	loading = {
@@ -405,6 +417,16 @@ local widget_definitions = {
 			value_id = "texture",
 		},
 	}, "corner_bottom_right"),
+	transition_background = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style = {
+				color = Color.black(255, true),
+			},
+		},
+	}, "transition_background", {
+		visible = false,
+	}),
 }
 local legend_inputs = {
 	{
@@ -478,9 +500,29 @@ local legend_inputs = {
 		end,
 	},
 }
+local animations = {
+	transition_fade = {
+		{
+			end_time = 0.4,
+			name = "fade_out",
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				widgets.transition_background.alpha_multiplier = 1
+				widgets.transition_background.content.visible = true
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				widgets.transition_background.alpha_multiplier = 1 - progress
+			end,
+			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				widgets.transition_background.content.visible = false
+			end,
+		},
+	},
+}
 
 return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
+	animations = animations,
 }

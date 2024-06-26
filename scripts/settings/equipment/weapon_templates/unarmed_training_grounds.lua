@@ -1,12 +1,14 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/unarmed_training_grounds.lua
 
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {}
@@ -86,6 +88,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.overheat_explosion_speed_modifier,
 		},
 	},
 }

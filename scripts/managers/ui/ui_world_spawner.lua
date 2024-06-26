@@ -281,6 +281,7 @@ UIWorldSpawner._setup_extension_manager = function (self)
 		light_controller_system = {
 			mission = {},
 		},
+		component_system = {},
 	}
 	local unit_categories = {
 		"flow_spawned",

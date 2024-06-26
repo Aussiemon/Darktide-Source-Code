@@ -224,7 +224,7 @@ DialogueExtension._setup_random_talk_settings = function (self, random_talk_sett
 	self._mission_update_enabled = random_talk_settings.mission_update_enabled
 end
 
-DialogueExtension.setup_from_component = function (self, vo_class, vo_proile_name, use_local_player_voice_profile, dialogue_faction_name, enabled)
+DialogueExtension.setup_from_component = function (self, vo_class, vo_profile_name, use_local_player_voice_profile, dialogue_faction_name, enabled)
 	self._enabled = enabled
 
 	if not enabled then
@@ -252,7 +252,7 @@ DialogueExtension.setup_from_component = function (self, vo_class, vo_proile_nam
 	end
 
 	if not self._profile then
-		self:set_vo_profile(vo_proile_name)
+		self:set_vo_profile(vo_profile_name)
 		self:_set_vo_class(vo_class)
 	end
 end
@@ -702,7 +702,7 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 	dialogue_system:_trigger_face_animation_event(unit, animation_event)
 end
 
-DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed, optional_keep_talking)
+DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed, optional_keep_talking, pre_wwise_event, post_wwise_event)
 	local rule = self._vo_choice[rule_name]
 
 	if not rule or self._is_currently_playing_dialogue then
@@ -727,7 +727,7 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 
 	self._last_query_sound_event = sound_event
 
-	local pre_wwise_event, post_wwise_event, dialogue_system = nil, nil, self._dialogue_system
+	local dialogue_system = self._dialogue_system
 	local wwise_route = WwiseRouting[wwise_route_key]
 	local dialog_sequence_events = dialogue_system:_create_sequence_events_table(pre_wwise_event, wwise_route, sound_event, post_wwise_event)
 	local event_id = self:play_event(dialog_sequence_events[1])

@@ -44,6 +44,11 @@ MinionAttackIntensityExtension.update = function (self, unit, dt, t)
 		return
 	end
 
+	if self._allow_all_attacks_duration and t >= self._allow_all_attacks_duration then
+		self._allow_all_attacks_duration = nil
+		self._allow_all_attacks = false
+	end
+
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local breed = target_unit_data_extension:breed()
 	local target_movement_state
@@ -146,11 +151,22 @@ MinionAttackIntensityExtension.set_attacked_melee = function (self)
 	return
 end
 
+MinionAttackIntensityExtension.set_allow_all_attacks_duration = function (self, duration)
+	local t = Managers.time:time("gameplay")
+
+	self._allow_all_attacks_duration = t + duration
+	self._allow_all_attacks = true
+end
+
 MinionAttackIntensityExtension.remove_attacked_melee = function (self)
 	return
 end
 
 MinionAttackIntensityExtension.can_attack = function (self, attack_type)
+	if self._allow_all_attacks then
+		return true
+	end
+
 	return self._allowed_attacks[attack_type]
 end
 

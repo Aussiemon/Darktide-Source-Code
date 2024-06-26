@@ -13,7 +13,7 @@ local collectible_missions = {
 SessionStatEvents.create_mission_events = function (mission_data, mission_result, account_id, character_id)
 	local difficulty = Managers.state.difficulty:get_difficulty()
 	local win = mission_result.win
-	local map_type = Managers.state.mission:main_objective_type()
+	local mission_type = Managers.state.mission:mission_type_index()
 	local mission_name = Managers.state.mission:mission_name()
 	local circumstance = Managers.state.circumstance:circumstance_name()
 	local team_kills = Managers.stats:read_team_stat("session_team_kills")
@@ -24,7 +24,7 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 	local events = {}
 
 	do
-		local specifier = string.format("name:%s|type:%s|difficulty:%s|win:%s|side_objective_complete:%s|side_objective_name:%s", mission_name, map_type, difficulty, win, side_mission_complete, side_mission_name)
+		local specifier = string.format("name:%s|type:%s|difficulty:%s|win:%s|side_objective_complete:%s|side_objective_name:%s", mission_name, mission_type, difficulty, win, side_mission_complete, side_mission_name)
 
 		events[1] = {
 			type = "mission",

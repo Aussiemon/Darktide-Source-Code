@@ -8,7 +8,7 @@ LasgunAmmoDisplay.init = function (self, context, slot, weapon_template, fx_sour
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
-	self._wieldable_component = unit_data_extension:read_component(slot.name)
+	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 
 	local unit_components = {}
 	local num_attachments_1p = #slot.attachments_1p
@@ -47,9 +47,9 @@ LasgunAmmoDisplay.fixed_update = function (self, unit, dt, t, frame)
 end
 
 LasgunAmmoDisplay.update = function (self, unit, dt, t)
-	local wieldable_component = self._wieldable_component
-	local current_ammo = wieldable_component.current_ammunition_clip
-	local max_ammo = wieldable_component.max_ammunition_clip
+	local inventory_slot_component = self._inventory_slot_component
+	local current_ammo = inventory_slot_component.current_ammunition_clip
+	local max_ammo = inventory_slot_component.max_ammunition_clip
 	local critical_threshold = max_ammo * CRITICAL_THRESHOLD_MULTIPLIER
 	local unit_components = self._unit_components
 	local num_displays = #unit_components

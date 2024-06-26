@@ -5,6 +5,7 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionTargetSelection = require("scripts/utilities/minion_target_selection")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local aggro_states = PerceptionSettings.aggro_states
+local _is_valid_target
 
 local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, threat_units, perception_component, t, debug_target_weighting_or_nil)
 	local target_selection_weights = breed.target_selection_weights

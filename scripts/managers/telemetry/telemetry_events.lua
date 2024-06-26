@@ -1116,4 +1116,18 @@ TelemetryEvents.player_kicked = function (self, peer_id, reason, option_details)
 	end
 end
 
+TelemetryEvents.crashify_properties = function (self)
+	local func = Application.get_crash_properties
+
+	if not func then
+		return
+	end
+
+	local event = self:_create_event("crashify_properties")
+	local crashify_properties = func()
+
+	event:set_data(crashify_properties)
+	self._manager:register_event(event)
+end
+
 return TelemetryEvents

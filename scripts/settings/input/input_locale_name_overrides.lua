@@ -57,6 +57,26 @@ local input_locale_name_overrides = {
 		x = "",
 		y = "",
 	},
+	ps4_controller = {
+		circle = "",
+		cross = "",
+		d_down = "",
+		d_left = "",
+		d_right = "",
+		d_up = "",
+		l1 = "",
+		l2 = "",
+		l3 = "",
+		left = "",
+		options = "",
+		r1 = "",
+		r2 = "",
+		r3 = "",
+		right = "",
+		square = "",
+		touch = "",
+		triangle = "",
+	},
 }
 
 return settings("InputLocaleNameOverrides", input_locale_name_overrides)

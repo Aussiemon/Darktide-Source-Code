@@ -68,9 +68,9 @@ WarpCharge.increase_immediate = function (t, charge_level, warp_charge_component
 	local use_charge = charge_template.use_charge
 	local base_add_percentage = charge_template.warp_charge_percent or 0
 	local add_percentage = buff_multiplier * base_add_percentage
-	local new_charge, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage, prevent_explosion)
+	local new_warp_charge, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage, prevent_explosion)
 
-	_set_current_percentage(warp_charge_component, new_charge, buff_extension)
+	_set_current_percentage(warp_charge_component, new_warp_charge, buff_extension)
 
 	warp_charge_component.last_charge_at_t = t
 	warp_charge_component.state = new_state or current_state
@@ -98,19 +98,19 @@ WarpCharge.decrease_immediate = function (remove_percentage, warp_charge_compone
 	warp_charge_component.state = new_state or current_state
 end
 
-WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_component, charge_configuration, owner_unit, first_charge)
+WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_component, charge_template, owner_unit, first_charge)
 	local buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
 	local stat_buffs = buff_extension and buff_extension:stat_buffs()
-	local psyker_smite = charge_configuration.psyker_smite
+	local psyker_smite = charge_template.psyker_smite
 	local psyker_smite_multiplier = psyker_smite and stat_buffs and stat_buffs.psyker_smite_cost_multiplier or 1
 	local buff_multiplier = stat_buffs and stat_buffs.warp_charge_amount * stat_buffs.warp_charge_over_time_amount * psyker_smite_multiplier or 1
-	local base_add_percentage = charge_configuration.warp_charge_percent
+	local base_add_percentage = charge_template.warp_charge_percent
 	local add_percentage = buff_multiplier * base_add_percentage
-	local base_extra_add_percentage = charge_configuration.extra_warp_charge_percent
-	local extra_add_percentage = buff_multiplier * base_extra_add_percentage
-	local duration = charge_configuration.charge_duration
+	local base_full_charge_add_percentage = charge_template.full_charge_warp_charge_percent
+	local full_charge_add_percentage = buff_multiplier * base_full_charge_add_percentage
+	local duration = charge_template.charge_duration
 	local current_percentage = warp_charge_component.current_percentage
-	local additional_charge_on_start = charge_configuration.start_warp_charge_percent
+	local additional_charge_on_start = charge_template.start_warp_charge_percent
 
 	if first_charge and additional_charge_on_start then
 		local additional_add_percentage = buff_multiplier * additional_charge_on_start
@@ -118,9 +118,9 @@ WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_compo
 		current_percentage = SharedFunctions.add_immediate(charge_level, false, additional_add_percentage, current_percentage, true)
 	end
 
-	local new_charge = SharedFunctions.increase_over_time(dt, charge_level, add_percentage, extra_add_percentage, duration, current_percentage)
+	local new_warp_charge = SharedFunctions.increase_over_time(dt, charge_level, add_percentage, full_charge_add_percentage, duration, current_percentage)
 
-	_set_current_percentage(warp_charge_component, new_charge, buff_extension)
+	_set_current_percentage(warp_charge_component, new_warp_charge, buff_extension)
 
 	warp_charge_component.last_charge_at_t = t
 end
@@ -218,9 +218,9 @@ WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_
 	local base_auto_vent_duration = base_warp_charge_template.auto_vent_duration
 	local auto_vent_duration_modifier = weapon_warp_charge_template.auto_vent_duration_modifier or 0.75
 	local auto_vent_duration = base_auto_vent_duration * auto_vent_duration_modifier
-	local new_charge = SharedFunctions.update(dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate, high_threshold_decay_rate, critical_threshold_decay_rate, default_threshold_decay_rate_modifier)
+	local new_warp_charge = SharedFunctions.update(dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate, high_threshold_decay_rate, critical_threshold_decay_rate, default_threshold_decay_rate_modifier)
 
-	_set_current_percentage(warp_charge_component, new_charge, buff_extension)
+	_set_current_percentage(warp_charge_component, new_warp_charge, buff_extension)
 end
 
 WarpCharge.can_vent = function (warp_charge_component, action_settings)

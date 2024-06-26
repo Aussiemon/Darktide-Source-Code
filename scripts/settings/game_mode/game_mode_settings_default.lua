@@ -33,6 +33,13 @@ local settings = {
 			},
 		},
 	},
+	side_sub_faction_types = {
+		villains = {
+			"chaos",
+			"cultist",
+			"renegade",
+		},
+	},
 	spawn = {
 		ammo_percentage = 1,
 		grenade_percentage = 1,

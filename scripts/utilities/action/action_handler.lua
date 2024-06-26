@@ -8,6 +8,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local buff_stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local ActionHandler = class("ActionHandler")
 local MAX_COMBO_COUNT = NetworkConstants.action_combo_count.max
@@ -201,6 +202,22 @@ ActionHandler._finish_action = function (self, handler_data, reason, data, t, ne
 
 	running_action:finish(reason, data, t, time_in_action, action_settings, next_action_params)
 
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.action_name = component.current_action_name
+		param_table.action_settings = action_settings
+
+		if action_settings.charge_template then
+			local action_module_charge_component = self._unit_data_extension:read_component("action_module_charge")
+
+			param_table.charge_level = action_module_charge_component.charge_level
+		end
+
+		buff_extension:add_proc_event(proc_events.on_action_finish, param_table)
+	end
+
 	handler_data.running_action = nil
 	component.end_t = t
 	component.previous_action_name = component.current_action_name
@@ -283,6 +300,12 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 		param_table.action_name = action_name
 		param_table.action_settings = action_settings
 
+		if action_settings.charge_template then
+			local action_module_charge_component = self._unit_data_extension:read_component("action_module_charge")
+
+			param_table.charge_level = action_module_charge_component.charge_level
+		end
+
 		buff_extension:add_proc_event(proc_events.on_action_start, param_table)
 	end
 end
@@ -306,6 +329,14 @@ ActionHandler._create_action = function (self, action_context, action_params, ac
 	return actions[action_kind]:new(action_context, action_params, action_settings)
 end
 
+local wield_actions = {
+	ranged_wield = true,
+	unwield = true,
+	unwield_to_previous = true,
+	unwield_to_specific = true,
+	wield = true,
+}
+
 ActionHandler._calculate_time_scale = function (self, action_settings)
 	local player_unit = self._unit
 	local time_scale = 1
@@ -320,6 +351,13 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 
 	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension:stat_buffs()
+
+	if wield_actions[action_settings.kind] then
+		local stat_buff_value = stat_buffs[buff_stat_buffs.wield_speed]
+
+		time_scale = time_scale * stat_buff_value
+	end
+
 	local action_time_scale_stat_buffs = action_settings.time_scale_stat_buffs
 
 	if not action_time_scale_stat_buffs then

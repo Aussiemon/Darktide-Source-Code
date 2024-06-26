@@ -452,7 +452,7 @@ weapon_template.actions = {
 		charge_effects = {
 			charge_duration = 1.5,
 			charge_on_action_start = true,
-			extra_warp_charge_percent = 0.05,
+			full_charge_warp_charge_percent = 0.05,
 			vfx_source_name = "_muzzle",
 			warp_charge_percent = 0.2,
 		},
@@ -1064,7 +1064,7 @@ weapon_template.fx_sources = {
 	_overheat = "fx_overheat",
 }
 weapon_template.crosshair = {
-	crosshair_type = "assault",
+	crosshair_type = "dot",
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {

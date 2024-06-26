@@ -118,6 +118,7 @@ base_template_settings.actions = {
 		anim_time_scale = 1.25,
 		fire_time = 0.25,
 		kind = "spawn_projectile",
+		override_origin_slot = "slot_grenade_ability",
 		sprint_requires_press_to_interrupt = false,
 		start_input = "grenade_ability",
 		stop_alternate_fire = true,

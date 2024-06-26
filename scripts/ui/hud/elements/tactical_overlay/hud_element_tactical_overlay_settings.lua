@@ -183,6 +183,7 @@ end
 
 hud_element_tactical_overlay_settings.default_context = {
 	show_left_side_details = true,
+	show_right_side = true,
 }
 
 return settings("HudElementTacticalOverlaySettings", hud_element_tactical_overlay_settings)

@@ -449,8 +449,8 @@ local weapon_handling_templates = {
 		fire_rate = {
 			fire_time = 0,
 			auto_fire_time = {
-				lerp_basic = 0.06999999999999999,
-				lerp_perfect = 0.049999999999999996,
+				lerp_basic = 0.060000000000000005,
+				lerp_perfect = 0.04,
 			},
 		},
 		critical_strike = {
@@ -465,11 +465,14 @@ local weapon_handling_templates = {
 			max_shots = 3,
 		},
 	},
-	lasgun_elysian_triple_burst = {
+	lasgun_elysian_burst = {
 		fire_rate = {
-			auto_fire_time = 0.135,
 			fire_time = 0,
-			max_shots = 3,
+			max_shots = 4,
+			auto_fire_time = {
+				lerp_basic = 0.09999999999999999,
+				lerp_perfect = 0.08,
+			},
 		},
 	},
 	lasgun_krieg_full_auto = {
@@ -553,7 +556,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 4,
+			max_critical_shots = 3,
 		},
 	},
 	autogun_p2_m1 = {
@@ -566,7 +569,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3,
+			max_critical_shots = 2,
 		},
 	},
 	autogun_p2_m2 = {
@@ -579,7 +582,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3,
+			max_critical_shots = 2,
 		},
 	},
 	autogun_p2_m2_hip = {
@@ -592,7 +595,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3,
+			max_critical_shots = 2,
 		},
 	},
 	autogun_p2_m3 = {
@@ -605,7 +608,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3,
+			max_critical_shots = 2,
 		},
 	},
 	autogun_full_auto_assault = {
@@ -696,6 +699,13 @@ local weapon_handling_templates = {
 		critical_strike = {
 			chance_modifier = -0.02,
 			max_critical_shots = 6,
+		},
+	},
+	shotgun_double_shot = {
+		fire_rate = {
+			auto_fire_time = 0.0005,
+			fire_time = 0,
+			max_shots = 2,
 		},
 	},
 }

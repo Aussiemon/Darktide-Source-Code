@@ -118,27 +118,6 @@ local considerations = {
 		},
 	},
 	renegade_captain_throw_frag_grenade = {
-		is_available = {
-			blackboard_component = "available_attacks",
-			component_field = "frag_grenade",
-			is_condition = true,
-		},
-		last_weapon_switch = {
-			blackboard_component = "weapon_switch",
-			component_field = "last_weapon_switch_t",
-			max_value = 10,
-			time_diff = true,
-			spline = {
-				0,
-				0,
-				0.5,
-				0,
-				0.5001,
-				1,
-				1,
-				1,
-			},
-		},
 		distance_to_target = {
 			blackboard_component = "perception",
 			component_field = "target_distance",
@@ -161,7 +140,7 @@ local considerations = {
 		},
 		last_done_time = {
 			component_field = "last_done_time",
-			max_value = 30,
+			max_value = 10,
 			time_diff = true,
 			spline = {
 				0,

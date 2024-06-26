@@ -64,13 +64,6 @@ local material_overrides = {
 			},
 		},
 	},
-	pattern_tiling_09 = {
-		property_overrides = {
-			pattern_tiling = {
-				9,
-			},
-		},
-	},
 	pattern_tiling_10 = {
 		property_overrides = {
 			pattern_tiling = {
@@ -211,13 +204,6 @@ local material_overrides = {
 			},
 		},
 	},
-	pattern_01_tiling_09 = {
-		property_overrides = {
-			pattern_1_tiling = {
-				9,
-			},
-		},
-	},
 	pattern_01_tiling_10 = {
 		property_overrides = {
 			pattern_1_tiling = {
@@ -348,13 +334,6 @@ local material_overrides = {
 		property_overrides = {
 			pattern_2_tiling = {
 				8,
-			},
-		},
-	},
-	pattern_02_tiling_09 = {
-		property_overrides = {
-			pattern_2_tiling = {
-				9,
 			},
 		},
 	},
@@ -534,6 +513,13 @@ local material_overrides = {
 		},
 	},
 	pattern_01_rotation_07 = {
+		property_overrides = {
+			pattern_1_rotation = {
+				2.487,
+			},
+		},
+	},
+	pattern_01_rotation_08 = {
 		property_overrides = {
 			pattern_1_rotation = {
 				2.487,

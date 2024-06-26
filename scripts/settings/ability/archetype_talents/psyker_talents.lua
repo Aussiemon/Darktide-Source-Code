@@ -6,6 +6,7 @@ local PlayerAbilities = require("scripts/settings/ability/player_abilities/playe
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
+local talent_settings = TalentSettings.psyker
 local talent_settings_2 = TalentSettings.psyker_2
 local talent_settings_3 = TalentSettings.psyker_3
 local special_rules = SpecialRulesSetting.special_rules
@@ -421,6 +422,22 @@ local archetype_talents = {
 				identifier = "psyker_overcharge_reduced_warp_charge",
 			},
 		},
+		psyker_overcharge_stance_infinite_casting = {
+			description = "loc_talent_psyker_overcharge_infinite_casting_desc",
+			display_name = "loc_talent_psyker_overcharge_infinite_casting",
+			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_base_2",
+			name = "Infinite Casting during stance",
+			format_values = {
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_psyker_combat_ability_overcharge_stance",
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_overcharge_stance_infinite_casting",
+				identifier = "psyker_overcharge_stance_infinite_casting",
+			},
+		},
 		psyker_overcharge_reduced_toughness_damage_taken = {
 			description = "loc_ability_psyker_overcharge_reduced_toughness_damage_taken_description",
 			display_name = "loc_ability_psyker_overcharge_reduced_toughness_damage_taken",
@@ -712,6 +729,22 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "psyker_reduced_throwing_knife_cooldown",
 				identifier = "psyker_reduced_throwing_knife_cooldown",
+			},
+		},
+		psyker_throwing_knives_combat_ability_recharge = {
+			description = "loc_talent_psyker_throwing_knives_combat_ability_recharge_desc",
+			display_name = "loc_talent_psyker_throwing_knives_combat_ability_recharge",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_base_1",
+			name = "Passive - Kills have a chance to empower your next blitz ability",
+			format_values = {
+				charges = {
+					format_type = "number",
+					value = talent_settings.throwing_knives.charges_restored,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_throwing_knives_ability_recharge",
+				identifier = "psyker_throwing_knives_ability_recharge",
 			},
 		},
 		psyker_chain_lightning_improved_target_buff = {
@@ -2190,6 +2223,339 @@ local archetype_talents = {
 			special_rule = {
 				identifier = "psyker_mark_weakspot_kills",
 				special_rule_name = "psyker_mark_weakspot_kills",
+			},
+		},
+		psyker_melee_attack_speed = {
+			description = "loc_talent_psyker_melee_attack_speed_desc",
+			display_name = "loc_talent_psyker_melee_attack_speed",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Melee Attack Speed",
+			format_values = {
+				melee_attack_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "psyker_melee_attack_speed",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_attack_speed,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_melee_attack_speed",
+				identifier = "psyker_melee_attack_speed",
+			},
+		},
+		psyker_cleave_from_peril = {
+			description = "loc_talent_psyker_cleave_from_peril_desc",
+			display_name = "loc_talent_psyker_cleave_from_peril",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Increased Cleave per Peril",
+			format_values = {
+				max_cleave = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.cleave_from_peril.max,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_cleave_from_peril",
+				identifier = "psyker_cleave_from_peril",
+			},
+		},
+		psyker_blocking_soulblaze = {
+			description = "loc_talent_psyker_blocking_soulblaze_desc",
+			display_name = "loc_talent_psyker_blocking_soulblaze",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Blocking adds Soublaze to target",
+			format_values = {
+				stacks = {
+					format_type = "number",
+					value = talent_settings.blocking_soulbaze.stacks,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_blocking_soulblaze",
+				identifier = "psyker_blocking_soulblaze",
+			},
+		},
+		psyker_nearby_soulblaze_reduced_damage = {
+			description = "loc_talent_psyker_nearby_soulblaze_reduced_damage_desc",
+			display_name = "loc_talent_psyker_nearby_soulblaze_reduced_damage",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Killing enemies marked by passive refunds 1 knife",
+			format_values = {
+				max_dr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = (1 - talent_settings.nearby_soublaze_defense.max) / talent_settings.nearby_soublaze_defense.max_stacks,
+				},
+				max_stacks = {
+					format_type = "number",
+					value = talent_settings.nearby_soublaze_defense.max_stacks,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_nearby_soulblaze_reduced_damage",
+				identifier = "psyker_nearby_soulblaze_reduced_damage",
+			},
+		},
+		psyker_warp_attacks_rending = {
+			description = "loc_talent_psyker_warp_attacks_rending_desc",
+			display_name = "loc_talent_psyker_warp_attacks_rending",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Warp Attacks Have Rending",
+			format_values = {
+				rending = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "psyker_warp_attacks_rending",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_attacks_rending_multiplier,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_warp_attacks_rending",
+				identifier = "psyker_warp_attacks_rending",
+			},
+		},
+		psyker_warp_glass_cannon = {
+			description = "loc_talent_psyker_warp_glass_cannon_desc",
+			display_name = "loc_talent_psyker_warp_glass_cannon",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Reduced Peril Regen, Reduces Toughness regen",
+			format_values = {
+				toughness_reduction = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "psyker_warp_glass_cannon",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.toughness_replenish_multiplier,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - math.abs(value)) * 100
+					end,
+				},
+				peril_reduction = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "psyker_warp_glass_cannon",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_charge_amount,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_warp_glass_cannon",
+				identifier = "psyker_warp_glass_cannon",
+			},
+		},
+		psyker_soulblaze_reduces_damage_taken = {
+			description = "loc_talent_psyker_soulblaze_reduces_damage_taken_desc",
+			display_name = "loc_talent_psyker_soulblaze_reduces_damage_taken",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Soulblaze application reduces damage taken",
+			format_values = {
+				tdr = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "psyker_soulblaze_reduces_damage_taken",
+						find_value_type = "buff_template",
+						path = {
+							"proc_stat_buffs",
+							stat_buffs.toughness_damage_taken_multiplier,
+						},
+					},
+					value_manipulation = function (value)
+						return math_round((1 - value) * 100)
+					end,
+				},
+				time = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "psyker_soulblaze_reduces_damage_taken",
+						find_value_type = "buff_template",
+						path = {
+							"active_duration",
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_soulblaze_reduces_damage_taken",
+				identifier = "psyker_soulblaze_reduces_damage_taken",
+			},
+		},
+		psyker_ranged_shots_soulblaze = {
+			description = "loc_talent_psyker_ranged_shots_soulblaze_desc",
+			display_name = "loc_talent_psyker_ranged_shots_soulblaze",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Ranged crits apply soulblaze",
+			format_values = {
+				chance = {
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "psyker_ranged_shots_soulblaze",
+						find_value_type = "buff_template",
+						path = {
+							"proc_events",
+							proc_events.on_hit,
+						},
+					},
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.ranged_shots_soulblaze.stacks,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_ranged_shots_soulblaze",
+				identifier = "psyker_ranged_shots_soulblaze",
+			},
+		},
+		psyker_chain_lightning_heavy_attacks = {
+			description = "loc_talent_psyker_chain_lightning_heavy_attacks_desc",
+			display_name = "loc_talent_psyker_chain_lightning_heavy_attacks",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Heavy Attacks Electrocute enemies",
+			format_values = {},
+			passive = {
+				buff_template_name = "psyker_chain_lightning_heavy_attacks",
+				identifier = "psyker_chain_lightning_heavy_attacks",
+			},
+		},
+		psyker_force_staff_quick_attack_bonus = {
+			description = "loc_talent_psyker_force_staff_quick_attack_bonus_desc",
+			display_name = "loc_talent_psyker_force_staff_quick_attack_bonus",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Force Staff Left Clicks increase Warp Damage taken by target",
+			format_values = {
+				damage_taken = {
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "psyker_force_staff_quick_attack_debuff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_damage_taken_multiplier,
+						},
+					},
+					value_manipulation = function (value)
+						return (value - 1) * 100
+					end,
+				},
+				max_stacks = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "psyker_force_staff_quick_attack_debuff",
+						find_value_type = "buff_template",
+						path = {
+							"max_stacks",
+						},
+					},
+				},
+				duration = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "psyker_force_staff_quick_attack_debuff",
+						find_value_type = "buff_template",
+						path = {
+							"duration",
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_force_staff_quick_attack_bonus",
+				identifier = "psyker_force_staff_quick_attack_bonus",
+			},
+		},
+		psyker_force_staff_melee_attack_bonus = {
+			description = "loc_talent_psyker_force_staff_melee_attack_bonus_desc",
+			display_name = "loc_talent_psyker_force_staff_melee_attack_bonus",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Force Staff Melees Vent and deal more damage based on Peril",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					value = talent_settings.psyker_force_staff_melee_attack_bonus.max,
+				},
+				venting = {
+					format_type = "percentage",
+					value = talent_settings.psyker_force_staff_melee_attack_bonus.venting,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_force_staff_melee_attack_bonus",
+				identifier = "psyker_force_staff_melee_attack_bonus",
+			},
+		},
+		psyker_alternative_peril_explosion = {
+			description = "loc_talent_psyker_alternative_peril_explosion_desc",
+			display_name = "loc_talent_psyker_alternative_peril_explosion",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Peril Explosions no longer knock you down",
+			special_rule = {
+				identifier = "psyker_no_knock_down_overload",
+				special_rule_name = special_rules.psyker_no_knock_down_overload,
+			},
+			passive = {
+				buff_template_name = "psyker_alternative_peril_explosion",
+				identifier = "psyker_alternative_peril_explosion",
+			},
+		},
+		psyker_force_staff_bonus = {
+			description = "loc_talent_psyker_force_staff_bonus_desc",
+			display_name = "loc_talent_psyker_force_staff_bonus",
+			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
+			name = "Force Staff Secondaries increase damage of Primaries",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "psyker_force_staff_bonus_buff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.force_staff_single_target_damage,
+						},
+					},
+				},
+				time = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "psyker_force_staff_bonus_buff",
+						find_value_type = "buff_template",
+						path = {
+							"duration",
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_force_staff_bonus",
+				identifier = "psyker_force_staff_bonus",
 			},
 		},
 	},

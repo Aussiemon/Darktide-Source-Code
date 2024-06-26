@@ -9,6 +9,22 @@ local MissionTypes = require("scripts/settings/mission/mission_types")
 local SteamPlatformAchievements = require("scripts/settings/achievements/steam_platform_achievements")
 local XboxLivePlatformAchievements = require("scripts/settings/achievements/xbox_live_platform_achievements")
 local AchievementTypesLookup = table.enum(unpack(table.keys(AchievementTypes)))
+
+local function _sort_adventure_missions()
+	local sorted_list = {}
+
+	for _, mission_type in pairs(MissionTypes) do
+		local i = mission_type.index
+
+		if i then
+			sorted_list[i] = mission_type
+		end
+	end
+
+	return sorted_list
+end
+
+local adventure_mission_types = _sort_adventure_missions()
 local path = "content/ui/textures/icons/achievements/"
 local _achievement_count = 0
 local _achievement_data = {}
@@ -146,8 +162,9 @@ do
 			local difficulty = config.difficulty
 			local stats = {}
 
-			for _, mission_type in pairs(MissionTypes) do
-				local stat_name = string.format("mission_type_%s_max_difficulty_%s", mission_type.id, archetype_name)
+			for i = 1, #adventure_mission_types do
+				local mission_type = adventure_mission_types[i]
+				local stat_name = string.format("mission_type_%s_max_difficulty_%s", mission_type.index, archetype_name)
 
 				stats[stat_name] = {
 					increasing = true,
@@ -159,26 +176,13 @@ do
 		end
 	end
 
-	local function _mission_types_iterator(data)
-		local ii = 0
-
-		return function ()
-			ii = ii + 1
-
-			for _, mission_type in pairs(MissionTypes) do
-				if mission_type.id == ii then
-					return _, mission_type
-				end
-			end
-		end
-	end
-
 	local function _generate_mission_difficulties_sorting(archetype_name)
 		return function (index, config)
 			local stats_sorting = {}
 
-			for _, mission_type in _mission_types_iterator(MissionTypes) do
-				local stat_name = string.format("mission_type_%s_max_difficulty_%s", mission_type.id, archetype_name)
+			for i = 1, #adventure_mission_types do
+				local mission_type = adventure_mission_types[i]
+				local stat_name = string.format("mission_type_%s_max_difficulty_%s", mission_type.index, archetype_name)
 
 				stats_sorting[#stats_sorting + 1] = stat_name
 			end
@@ -212,7 +216,7 @@ do
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0033",
 			type = AchievementTypesLookup.multi_stat,
 			category = category_progression,
-			target = table.size(MissionTypes),
+			target = #adventure_mission_types,
 			flags = {},
 		}, {
 			description = "loc_achievement_missions_veteran_2_objective_{index:%d}_description",
@@ -529,7 +533,7 @@ do
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0033",
 			type = AchievementTypesLookup.multi_stat,
 			category = category_progression,
-			target = table.size(MissionTypes),
+			target = #adventure_mission_types,
 			flags = {},
 		}, {
 			description = "loc_achievement_missions_zealot_2_objective_{index:%d}_description",
@@ -840,7 +844,7 @@ do
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0023",
 			type = AchievementTypesLookup.multi_stat,
 			category = category_progression,
-			target = table.size(MissionTypes),
+			target = #adventure_mission_types,
 			flags = {},
 		}, {
 			description = "loc_achievement_missions_psyker_2_objective_{index:%d}_description",
@@ -1148,7 +1152,7 @@ do
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0003",
 			type = AchievementTypesLookup.multi_stat,
 			category = category_progression,
-			target = table.size(MissionTypes),
+			target = #adventure_mission_types,
 			flags = {},
 		}, {
 			description = "loc_achievement_missions_ogryn_2_objective_{index:%d}_description",
@@ -2705,14 +2709,12 @@ do
 		})
 
 		do
-			local mission_type_count = table.size(MissionTypes)
-
 			local function _generate_mission_completion_per_difficulty_stats(index, config)
 				local difficulty = config.difficulty
 				local stats = {}
 
-				for _, mission_type in pairs(MissionTypes) do
-					local stat_name = string.format("max_difficulty_%s_mission", mission_type.id)
+				for i = 1, #adventure_mission_types do
+					local stat_name = string.format("max_difficulty_%s_mission", i)
 
 					stats[stat_name] = {
 						increasing = true,
@@ -2727,7 +2729,7 @@ do
 				icon = "content/ui/textures/icons/achievements/achievement_icon_0073",
 				type = AchievementTypesLookup.multi_stat,
 				category = category_name,
-				target = mission_type_count,
+				target = #adventure_mission_types,
 				flags = {},
 			}, {
 				description = "loc_achievement_mission_difficulty_objectives_{index:%d}_description",
@@ -2964,52 +2966,62 @@ do
 		100,
 	})
 
-	for _, mission in ipairs(missions) do
-		AchievementDefinitions["mission_zone_" .. mission.name .. "_mission_collectible_1"] = {
-			description = "loc_achievement_level_collectible_description",
-			target = 1,
-			title = "loc_achievement_level_collectible_name",
-			type = AchievementTypesLookup.increasing_stat,
-			category = mission.category.puzzle,
-			icon = mission.icon.collectible,
-			flags = {
-				"hide_progress",
-			},
-			stat_name = string.format("mission_%s_collectible", mission.name),
-			loc_title_variables = {
-				mission_name = Localize(mission.local_variable),
-			},
-			loc_variables = {
-				mission_name = Localize(mission.local_variable),
-			},
+	do
+		local excluded_maps_for_puzzles = {
+			core_research = true,
 		}
-	end
 
-	for _, zone in ipairs(AchievementMissionGroups.zone_meta) do
-		family({
-			description = "loc_achievement_zone_wide_completion_description",
-			type = AchievementTypesLookup.meta,
-			icon = zone.icon,
-			category = zone.category,
-			flags = {},
-			loc_title_variables = {
-				zone_name = Localize(zone.local_variable),
-			},
-			loc_variables = {
-				zone_name = Localize(zone.local_variable),
-			},
-		}, {
-			title = "loc_achievement_zone_wide_completion_name",
-			id = "group_mission_zone_wide_" .. zone.name .. "_completion",
-			target = function (self, config)
-				return #config
-			end,
-			achievements = function (self, config)
-				return table.set(config)
-			end,
-		}, {
-			zone.achievements,
-		})
+		for _, mission in ipairs(missions) do
+			local mission_name = mission.name
+
+			if not excluded_maps_for_puzzles[mission_name] then
+				AchievementDefinitions["mission_zone_" .. mission.name .. "_mission_collectible_1"] = {
+					description = "loc_achievement_level_collectible_description",
+					target = 1,
+					title = "loc_achievement_level_collectible_name",
+					type = AchievementTypesLookup.increasing_stat,
+					category = mission.category.puzzle,
+					icon = mission.icon.collectible,
+					flags = {
+						"hide_progress",
+					},
+					stat_name = string.format("mission_%s_collectible", mission.name),
+					loc_title_variables = {
+						mission_name = Localize(mission.local_variable),
+					},
+					loc_variables = {
+						mission_name = Localize(mission.local_variable),
+					},
+				}
+			end
+		end
+
+		for _, zone in ipairs(AchievementMissionGroups.zone_meta) do
+			family({
+				description = "loc_achievement_zone_wide_completion_description",
+				type = AchievementTypesLookup.meta,
+				icon = zone.icon,
+				category = zone.category,
+				flags = {},
+				loc_title_variables = {
+					zone_name = Localize(zone.local_variable),
+				},
+				loc_variables = {
+					zone_name = Localize(zone.local_variable),
+				},
+			}, {
+				title = "loc_achievement_zone_wide_completion_name",
+				id = "group_mission_zone_wide_" .. zone.name .. "_completion",
+				target = function (self, config)
+					return #config
+				end,
+				achievements = function (self, config)
+					return table.set(config)
+				end,
+			}, {
+				zone.achievements,
+			})
+		end
 	end
 
 	local category_name = "exploration_twins_mission"

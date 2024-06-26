@@ -281,7 +281,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 	local account_level_up_promise = self:_check_level_up(account_stats, item_rewards)
 
 	table.insert(promise_list, account_level_up_promise)
-	Promise.all(unpack(promise_list)):next(function (data)
+	Promise.all(unpack(promise_list)):next(function ()
 		if self._session_report_is_dummy then
 			self._session_report_state = SESSION_REPORT_STATES.success
 

@@ -128,7 +128,7 @@ local function add_presentation_perks(item, layout, grid_size)
 		if perk_item then
 			layout[#layout + 1] = {
 				add_background = true,
-				show_rating = true,
+				show_rating = false,
 				widget_type = "weapon_perk",
 				perk_item = perk_item,
 				perk_value = perk_value,
@@ -187,7 +187,7 @@ local function add_presentation_traits(item, layout, grid_size)
 			local widget_type = item_type == "GADGET" and "gadget_trait" or "weapon_trait"
 
 			layout[#layout + 1] = {
-				show_rating = true,
+				show_rating = false,
 				widget_type = widget_type,
 				trait_item = trait_item,
 				trait_value = trait_value,
@@ -362,7 +362,7 @@ ViewElementWeaponInfo._draw_bar_breakdown_widgets = function (self, dt, t, input
 	UIRenderer.end_pass(ui_renderer)
 end
 
-ViewElementWeaponInfo._update_bar_breakdown_data = function (self, bar_data)
+ViewElementWeaponInfo.update_bar_breakdown_data = function (self, bar_data)
 	if not bar_data then
 		self:_destroy_bar_breakdown_widgets()
 
@@ -478,8 +478,9 @@ ViewElementWeaponInfo._create_bar_breakdown_widgets = function (self, bar_data)
 	local widget = UIWidget.init("bar_breakdown_slate", bar_breakdown_widgets_definitions.bar_breakdown_slate)
 	local content = widget.content
 	local style = widget.style
+	local display_name = bar_data.display_name
 
-	content.header = Localize(bar_data.display_name)
+	content.header = Localize(display_name)
 	bar_breakdown_widgets[#bar_breakdown_widgets + 1] = widget
 	bar_breakdown_widgets_by_name.bar_breakdown_slate = widget
 
@@ -488,7 +489,7 @@ ViewElementWeaponInfo._create_bar_breakdown_widgets = function (self, bar_data)
 	local stripped_bar_data = self:_strip_redundant_stats(bar_data)
 	local num_entries = #stripped_bar_data
 	local old_desc = content.description
-	local new_desc = Localize(bar_data.description or bar_data.display_name .. "_desc")
+	local new_desc = Localize(bar_data.description or display_name .. "_desc")
 	local ui_renderer = self._ui_grid_renderer
 	local text_style = style.description
 	local text_font_data = UIFonts.data_by_type(text_style.font_type)

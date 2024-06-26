@@ -7,7 +7,7 @@ local stop = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/surfaces/impact_generic",
+				"content/fx/particles/impacts/surfaces/impact_snow_01",
 			},
 		},
 	},
@@ -17,7 +17,7 @@ local entry = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/surfaces/impact_generic",
+				"content/fx/particles/impacts/surfaces/impact_snow_01",
 			},
 		},
 		{
@@ -38,7 +38,7 @@ local exit = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/surfaces/impact_generic",
+				"content/fx/particles/impacts/surfaces/impact_snow_01",
 			},
 		},
 		{

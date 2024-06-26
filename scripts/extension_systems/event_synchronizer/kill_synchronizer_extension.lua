@@ -6,7 +6,6 @@ KillSynchronizerExtension.init = function (self, extension_init_context, unit, e
 	KillSynchronizerExtension.super.init(self, extension_init_context, unit, extension_init_data, ...)
 
 	self._objective_name = "default"
-	self._automatic_start = false
 	self._progression = 0
 	self._registered_units = {}
 	self._num_registered_units = 0
@@ -16,7 +15,7 @@ end
 
 KillSynchronizerExtension.setup_from_component = function (self, objective_name, automatic_start)
 	self._objective_name = objective_name
-	self._automatic_start = automatic_start
+	self._auto_start = automatic_start
 
 	self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
 end
@@ -59,10 +58,6 @@ end
 
 KillSynchronizerExtension.progression = function (self)
 	return self._progression
-end
-
-KillSynchronizerExtension.auto_start = function (self)
-	return self._automatic_start
 end
 
 return KillSynchronizerExtension

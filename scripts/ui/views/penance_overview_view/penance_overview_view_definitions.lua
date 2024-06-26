@@ -108,17 +108,6 @@ local scenegraph_definition = {
 			1,
 		},
 	},
-	penance_grid_bottom_candles = {
-		horizontal_alignment = "center",
-		parent = "penance_grid_background",
-		vertical_alignment = "bottom",
-		size = penance_grid_background_size,
-		position = {
-			0,
-			17,
-			1,
-		},
-	},
 	penance_grid = {
 		horizontal_alignment = "left",
 		parent = "penance_grid_background",
@@ -519,7 +508,7 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "top",
 				size = {
-					776,
+					850,
 					88,
 				},
 				offset = {
@@ -579,50 +568,6 @@ local widget_definitions = {
 			},
 		},
 	}, "screen"),
-	bottom_panel_candles = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			style_id = "candles_3",
-			value = "content/ui/materials/effects/achievements/panel_main_lower_frame_candles_left",
-			value_id = "candles_3",
-			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
-				vertical_alignment = "bottom",
-				size = {
-					100,
-					100,
-				},
-				offset = {
-					-494,
-					-4,
-					100,
-				},
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "candles_4",
-			value = "content/ui/materials/effects/achievements/panel_main_lower_frame_candles_right",
-			value_id = "candles_4",
-			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
-				vertical_alignment = "bottom",
-				size = {
-					100,
-					100,
-				},
-				offset = {
-					490,
-					0,
-					100,
-				},
-			},
-		},
-	}, "penance_grid_bottom_candles", {
-		visible = false,
-	}),
 }
 local animations = {
 	on_enter = {
@@ -875,6 +820,48 @@ local legend_inputs = {
 		end,
 	},
 }
+local bottom_divider_passes = {
+	{
+		pass_type = "texture",
+		style_id = "candles_3",
+		value = "content/ui/materials/effects/achievements/panel_main_lower_frame_candles_left",
+		value_id = "candles_3",
+		style = {
+			horizontal_alignment = "left",
+			scale_to_material = true,
+			vertical_alignment = "bottom",
+			size = {
+				100,
+				100,
+			},
+			offset = {
+				-12,
+				-4,
+				1,
+			},
+		},
+	},
+	{
+		pass_type = "texture",
+		style_id = "candles_4",
+		value = "content/ui/materials/effects/achievements/panel_main_lower_frame_candles_right",
+		value_id = "candles_4",
+		style = {
+			horizontal_alignment = "right",
+			scale_to_material = true,
+			vertical_alignment = "bottom",
+			size = {
+				100,
+				100,
+			},
+			offset = {
+				8,
+				0,
+				1,
+			},
+		},
+	},
+}
 
 return {
 	animations = animations,
@@ -882,4 +869,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
 	grid_blueprints = PenanceBlueprints,
+	bottom_divider_passes = bottom_divider_passes,
 }

@@ -110,9 +110,9 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 	end
 
 	if state == "buildup" then
-		self:_update_charge_buildup(unit, scratchpad, action_data, t, dt)
+		self:_update_charge_buildup(unit, scratchpad, action_data, dt, t)
 	elseif state == "charging" then
-		self:_update_charging(unit, scratchpad, action_data, t, dt)
+		self:_update_charging(unit, scratchpad, action_data, dt, t)
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 	elseif state == "navigating" then
 		self:_update_navigating(unit, scratchpad, action_data, t)
@@ -122,7 +122,7 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 			return "done"
 		end
 	elseif state == "charged_past" then
-		local done = self:_update_charged_past(unit, scratchpad, action_data, t, dt)
+		local done = self:_update_charged_past(unit, scratchpad, action_data, dt, t)
 
 		if done then
 			return "done"
@@ -130,7 +130,7 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 	elseif state == "attacking" then
-		self:_update_attacking(unit, scratchpad, action_data, t, dt)
+		self:_update_attacking(unit, scratchpad, action_data, dt, t)
 	elseif state == "done" then
 		return "done"
 	end
@@ -178,7 +178,7 @@ BtChargeAction._start_navigating = function (self, scratchpad, action_data, t)
 	scratchpad.target_dodged_during_attack = nil
 end
 
-BtChargeAction._update_charging = function (self, unit, scratchpad, action_data, t, dt)
+BtChargeAction._update_charging = function (self, unit, scratchpad, action_data, dt, t)
 	if not scratchpad.navmesh_ray_can_go then
 		self:_start_navigating(scratchpad, action_data, t)
 
@@ -311,7 +311,7 @@ BtChargeAction._update_navigating = function (self, unit, scratchpad, action_dat
 	navigation_extension:set_max_speed(new_max_speed)
 end
 
-BtChargeAction._update_charged_past = function (self, unit, scratchpad, action_data, t, dt)
+BtChargeAction._update_charged_past = function (self, unit, scratchpad, action_data, dt, t)
 	if t > scratchpad.charged_past_exit_t then
 		local done = true
 
@@ -354,7 +354,7 @@ BtChargeAction._update_ray_can_go = function (self, unit, scratchpad)
 	end
 end
 
-BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data, t, dt)
+BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data, dt, t)
 	local attack_duration_t = scratchpad.attack_duration_t
 
 	if attack_duration_t < t then
@@ -506,7 +506,7 @@ BtChargeAction._get_turn_slowdown_percentage = function (self, unit, direction, 
 	return wanted_slowdown_percentage
 end
 
-BtChargeAction._update_charge_buildup = function (self, unit, scratchpad, action_data, t, dt)
+BtChargeAction._update_charge_buildup = function (self, unit, scratchpad, action_data, dt, t)
 	local charge_duration = scratchpad.charge_duration
 
 	if charge_duration and charge_duration < t then

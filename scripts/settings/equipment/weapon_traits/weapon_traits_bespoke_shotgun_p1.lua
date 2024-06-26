@@ -143,6 +143,21 @@ templates.weapon_trait_bespoke_shotgun_p1_bleed_on_crit = {
 	weapon_trait_bespoke_shotgun_p1_bleed_on_crit = {
 		{
 			target_buff_data = {
+				num_stacks_on_proc = 3,
+			},
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 4,
+			},
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 5,
+			},
+		},
+		{
+			target_buff_data = {
 				num_stacks_on_proc = 6,
 			},
 		},
@@ -198,7 +213,26 @@ templates.weapon_trait_bespoke_shotgun_p1_stagger_count_bonus_damage = {
 }
 templates.weapon_trait_bespoke_shotgun_p1_cleave_on_crit = {
 	weapon_trait_bespoke_shotgun_p1_cleave_on_crit = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_impact_modifier] = 0.1,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_impact_modifier] = 0.15,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_impact_modifier] = 0.2,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_impact_modifier] = 0.25,
+			},
+		},
 	},
 }
 

@@ -70,7 +70,7 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_crit_chance_bonus_on_melee_kill
 		[proc_events.on_kill] = 1,
 	},
 	proc_stat_buffs = {
-		[stat_buffs.ranged_critical_strike_chance] = 0.05,
+		[stat_buffs.critical_strike_chance] = 0.05,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_kill),

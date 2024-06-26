@@ -67,6 +67,11 @@ footstep_intervals_templates.ogryn_combat_blade = {
 	sprinting = 0.48,
 	walking = 0.62,
 }
+footstep_intervals_templates.ogryn_combat_pickaxe = {
+	crouch_walking = 0.75,
+	sprinting = 0.545,
+	walking = 0.595,
+}
 footstep_intervals_templates.ogryn_heavy_stubber = {
 	crouch_walking = 0.9,
 	crouch_walking_alternate_fire = 1.06,

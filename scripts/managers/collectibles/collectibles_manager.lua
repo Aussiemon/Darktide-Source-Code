@@ -296,11 +296,13 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 		player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
 	end
 
+	local delay = 0.4
+
 	if notification_type == NOTIFICATION_TYPES.collected then
 		Managers.event:trigger("event_add_notification_message", "collectible", {
 			player_name = player_name,
 			player = player,
-		})
+		}, nil, nil, nil, delay)
 	elseif notification_type == NOTIFICATION_TYPES.helped_collect then
 		local local_player_peer_id = Network.peer_id()
 		local helped_string = ""
@@ -321,7 +323,7 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 			player_name = player_name,
 			player = player,
 			helped_string = helped_string,
-		})
+		}, nil, nil, nil, delay)
 	end
 end
 

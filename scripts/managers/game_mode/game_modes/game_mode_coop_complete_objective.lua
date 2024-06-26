@@ -332,17 +332,17 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	local weapon_slot_data = {}
 
 	for slot_name, config in pairs(weapon_slot_configuration) do
-		local wieldable_component = unit_data_extension:read_component(slot_name)
-		local max_ammo_reserve = wieldable_component.max_ammunition_reserve
-		local max_ammo_clip = wieldable_component.max_ammunition_clip
+		local inventory_slot_component = unit_data_extension:read_component(slot_name)
+		local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
+		local max_ammo_clip = inventory_slot_component.max_ammunition_clip
 		local data = {}
 
 		if max_ammo_reserve > 0 then
-			data.ammo_reserve_percent = wieldable_component.current_ammunition_reserve / max_ammo_reserve
+			data.ammo_reserve_percent = inventory_slot_component.current_ammunition_reserve / max_ammo_reserve
 		end
 
 		if max_ammo_clip > 0 then
-			data.ammo_clip_percent = wieldable_component.current_ammunition_clip / max_ammo_clip
+			data.ammo_clip_percent = inventory_slot_component.current_ammunition_clip / max_ammo_clip
 		end
 
 		weapon_slot_data[slot_name] = data
@@ -422,16 +422,16 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 
 			for slot_name, data in pairs(selected_data.weapon_slot_data) do
-				local wieldable_component = unit_data_extension:write_component(slot_name)
-				local max_ammo_reserve = wieldable_component.max_ammunition_reserve
-				local max_ammo_clip = wieldable_component.max_ammunition_clip
+				local inventory_slot_component = unit_data_extension:write_component(slot_name)
+				local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
+				local max_ammo_clip = inventory_slot_component.max_ammunition_clip
 
 				if max_ammo_reserve > 0 and data.ammo_reserve_percent then
-					wieldable_component.current_ammunition_reserve = math.round(max_ammo_reserve * data.ammo_reserve_percent)
+					inventory_slot_component.current_ammunition_reserve = math.round(max_ammo_reserve * data.ammo_reserve_percent)
 				end
 
 				if max_ammo_clip > 0 and data.ammo_clip_percent then
-					wieldable_component.current_ammunition_clip = math.round(max_ammo_clip * data.ammo_clip_percent)
+					inventory_slot_component.current_ammunition_clip = math.round(max_ammo_clip * data.ammo_clip_percent)
 				end
 			end
 

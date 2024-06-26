@@ -41,19 +41,15 @@ BtChaosHoundSkulkAction.enter = function (self, unit, breed, blackboard, scratch
 end
 
 BtChaosHoundSkulkAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	local locomotion_extension = scratchpad.locomotion_extension
-
 	if scratchpad.stagger_duration then
-		scratchpad.animation_extension:anim_event("stagger_finished")
-		locomotion_extension:set_affected_by_gravity(false)
-		locomotion_extension:set_movement_type("snap_to_navmesh")
+		MinionMovement.stop_running_stagger(scratchpad)
 	end
 
 	if scratchpad.is_anim_driven then
 		MinionMovement.set_anim_driven(scratchpad, false)
 	end
 
-	locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
+	scratchpad.locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
 	scratchpad.navigation_extension:set_enabled(false)
 end
 

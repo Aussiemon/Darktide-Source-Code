@@ -2,14 +2,13 @@
 
 require("scripts/extension_systems/weapon/special_classes/weapon_special_self_disorientation")
 
+local Armor = require("scripts/utilities/attack/armor")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Explosion = require("scripts/utilities/attack/explosion")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local WeaponSpecialInterface = require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")
 local WeaponSpecial = require("scripts/utilities/weapon_special")
-local Armor = require("scripts/utilities/attack/armor")
-local Armor = require("scripts/utilities/attack/armor")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local WeaponSpecialInterface = require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")
 local attack_types = AttackSettings.attack_types
 local armor_types = ArmorSettings.types
 local WeaponSpecialExplodeOnImpact = class("WeaponSpecialExplodeOnImpact")

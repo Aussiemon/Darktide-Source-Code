@@ -34,6 +34,7 @@ if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	BUILD_IDENTIFIER = Application.build_identifier()
 	PLATFORM = Application.platform()
 	IS_XBS = PLATFORM == "xbs"
+	IS_PLAYSTATION = PLATFORM == "ps5"
 	IS_WINDOWS = PLATFORM == "win32"
 	IS_GDK = Backend.get_auth_method() == Backend.AUTH_METHOD_XBOXLIVE and IS_WINDOWS
 

@@ -1,14 +1,15 @@
 ﻿-- chunkname: @scripts/managers/account/account_manager_xbox_live.lua
 
-local InputDevice = require("scripts/managers/input/input_device")
-local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
+local AccountManagerBase = require("scripts/managers/account/account_manager_base")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
+local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
+local InputDevice = require("scripts/managers/input/input_device")
+local Promise = require("scripts/foundation/utilities/promise")
 local RenderSettings = require("scripts/settings/options/render_settings")
 local SoundSettings = require("scripts/settings/options/sound_settings")
-local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
-local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
-local Promise = require("scripts/foundation/utilities/promise")
-local AccountManagerXboxLive = class("AccountManagerXboxLive")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
+local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
+local AccountManagerXboxLive = class("AccountManagerXboxLive", "AccountManagerBase")
 local SIGNIN_STATES = {
 	acquiring_storage = "loc_signin_acquire_storage",
 	deleting_save = "loc_signin_delete_save",
@@ -97,12 +98,16 @@ AccountManagerXboxLive.user_id = function (self)
 	return not self._popup_id and not self._network_fatal_error and self._user_id
 end
 
-AccountManagerXboxLive.is_guest = function (self)
-	return self._is_guest
+AccountManagerXboxLive.platform_user_id = function (self)
+	return self._xuid
 end
 
-AccountManagerXboxLive.gamertag = function (self)
+AccountManagerXboxLive.user_display_name = function (self)
 	return self._gamertag
+end
+
+AccountManagerXboxLive.is_guest = function (self)
+	return self._is_guest
 end
 
 AccountManagerXboxLive.signin_state = function (self)

@@ -24,6 +24,7 @@ DialogueSettings.auto_load_files = {
 }
 DialogueSettings.menu_vo_files = {
 	"conversations_hub",
+	"mission_briefing",
 }
 DialogueSettings.level_specific_load_files = {
 	om_hub_01 = {
@@ -106,6 +107,9 @@ DialogueSettings.level_specific_load_files = {
 	},
 	tg_shooting_range = {
 		"meat_grinder_vo",
+	},
+	core_research = {
+		"mission_vo_core_research",
 	},
 }
 DialogueSettings.player_load_files = {
@@ -241,6 +245,7 @@ DialogueSettings.distance_culled_wwise_routes = {
 	[19] = 20,
 	[45] = 15,
 	[50] = 25,
+	[52] = 30,
 }
 DialogueSettings.dynamic_smart_tags = table.enum("aggroed", "renegade_netgunner", "seen_netgunner_flee")
 DialogueSettings.manual_subtitles = table.enum("loc_captain_twin_male_a__mission_twins_arrival_04_a_01")

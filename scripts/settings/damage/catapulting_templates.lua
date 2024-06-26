@@ -25,6 +25,7 @@ catapulting_templates.renegade_captain_void_shield_explosion_catapult = {
 catapulting_templates.renegade_captain_frag_grenade_close_catapult = {
 	direction_from_node = "j_spine",
 	force = 12,
+	use_hit_position = true,
 	z_force = 4,
 }
 catapulting_templates.renegade_captain_powermaul_ground_slam_catapult = {

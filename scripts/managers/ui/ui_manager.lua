@@ -1123,7 +1123,6 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 	local side_mission_name = "n/a"
 	local level_name = "n/a"
 	local game_mode_name = "n/a"
-	local main_objective_type = "n/a"
 	local mission_manager = Managers.state.mission
 	local mission = mission_manager and mission_manager:mission()
 	local chunk_name_string
@@ -1139,10 +1138,6 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 
 		if side_mission and side_mission.name then
 			side_mission_name = side_mission.name
-		end
-
-		if mission and mission.objectives then
-			main_objective_type = MissionObjectiveTemplates[mission.objectives].main_objective_type
 		end
 
 		mission_name = mission.name
@@ -1284,7 +1279,6 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		"show_mission_name",
 		"show_level_name",
 		"show_game_mode_name",
-		"show_main_objective_type",
 		"show_mechanism_name",
 		"show_chunk_name",
 		"show_camera_position_info",
@@ -1319,7 +1313,6 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		show_level_name = string.format("Level: %s", level_name),
 		show_chunk_name = chunk_name_string,
 		show_game_mode_name = string.format("Game Mode: %s", game_mode_name),
-		show_main_objective_type = string.format("Main Objective: %s", main_objective_type),
 		show_mechanism_name = mechanism_name,
 		show_camera_position_info = camera_position_string,
 		show_camera_rotation_info = camera_rotation_string,

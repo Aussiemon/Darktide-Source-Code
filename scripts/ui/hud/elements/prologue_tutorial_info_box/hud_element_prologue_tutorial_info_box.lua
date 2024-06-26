@@ -178,8 +178,7 @@ HudElementPrologueTutorialInfoBox._should_update_input = function (self, info_da
 			end
 
 			local alias_name = self._ui_manager:get_input_alias_key(input_action, service_type)
-			local alias_array_index = 1
-			local current_key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
+			local current_key_info = alias:get_keys_for_alias(alias_name, devices)
 
 			if current_key_info ~= self._previous_keys_info[index] then
 				return true
@@ -216,8 +215,7 @@ HudElementPrologueTutorialInfoBox._get_input_description_text = function (self, 
 
 		local alias = self._input_manager:alias_object(service_type)
 		local alias_name = self._ui_manager:get_input_alias_key(input_action, service_type)
-		local alias_array_index = 1
-		local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
+		local key_info = alias:get_keys_for_alias(alias_name, devices)
 
 		self._previous_keys_info[#self._previous_keys_info + 1] = key_info
 	end

@@ -99,10 +99,8 @@ local template = {
 			{
 				"set_specials_pacing_spawner_groups",
 				spawner_groups = {
-					"spawner_fortification_cargo_south_a",
-					"spawner_fortification_cargo_south_b",
-					"spawner_fortification_cargo_north_a",
-					"spawner_fortification_cargo_north_b",
+					"spawner_fortification_cargo_south",
+					"spawner_fortification_cargo_north",
 				},
 			},
 		},
@@ -131,7 +129,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 18,
+				points = 20,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_hacking_cargo_a",
 				breed_tags = {
@@ -144,7 +142,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
+				points = 10,
 				spawner_group = "spawner_hacking_cargo_a",
 				breed_tags = {
 					{
@@ -171,7 +169,7 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_hacking_cargo_a",
+				spawner_group = "spawner_hacking_cargo_e",
 				template_name = "standard_melee",
 			},
 			{
@@ -194,7 +192,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
+				limit_spawners = 4,
 				points = 25,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_hacking_cargo_b",
@@ -224,7 +222,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
+				limit_spawners = 4,
 				points = 25,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_hacking_cargo_b",
@@ -242,7 +240,7 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_hacking_cargo_b",
+				spawner_group = "spawner_hacking_cargo_e",
 				template_name = "standard_melee",
 			},
 			{
@@ -266,7 +264,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
+				limit_spawners = 4,
 				points = 18,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_hacking_cargo_d",
@@ -296,8 +294,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 18,
+				limit_spawners = 4,
+				points = 20,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_hacking_cargo_c",
 				breed_tags = {
@@ -309,8 +307,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 10,
+				limit_spawners = 4,
+				points = 12,
 				spawner_group = "spawner_hacking_cargo_c",
 				breed_tags = {
 					{
@@ -333,7 +331,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 6,
-				spawner_group = "spawner_hacking_cargo_special_1",
+				spawner_group = "spawner_hacking_cargo_special_3",
 				breed_tags = {
 					{
 						"special",
@@ -376,8 +374,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 18,
+				limit_spawners = 4,
+				points = 20,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_hacking_cargo_a",
 				breed_tags = {
@@ -389,8 +387,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 10,
+				limit_spawners = 4,
+				points = 12,
 				spawner_group = "spawner_hacking_cargo_a",
 				breed_tags = {
 					{
@@ -406,7 +404,7 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_hacking_cargo_d",
+				spawner_group = "spawner_hacking_cargo_e",
 				template_name = "standard_melee",
 			},
 			{
@@ -475,8 +473,8 @@ local template = {
 		event_fortification_guard_a = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				max_breed_amount = 3,
+				limit_spawners = 4,
+				max_breed_amount = 4,
 				passive = true,
 				points = 22,
 				spawner_group = "spawner_fortification_guard_elite_a",
@@ -494,8 +492,8 @@ local template = {
 		event_fortification_guard_b = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				max_breed_amount = 3,
+				limit_spawners = 4,
+				max_breed_amount = 4,
 				passive = true,
 				points = 22,
 				spawner_group = "spawner_fortification_guard_elite_b",
@@ -513,8 +511,8 @@ local template = {
 		event_fortification_guard_c = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				max_breed_amount = 3,
+				limit_spawners = 4,
+				max_breed_amount = 4,
 				passive = true,
 				points = 22,
 				spawner_group = "spawner_fortification_guard_elite_c",
@@ -532,8 +530,8 @@ local template = {
 		event_fortification_guard_d = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				max_breed_amount = 3,
+				limit_spawners = 4,
+				max_breed_amount = 4,
 				passive = true,
 				points = 22,
 				spawner_group = "spawner_fortification_guard_elite_d",
@@ -555,6 +553,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
+				limit_spawners = 6,
 				points = 30,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fortification_horde_a",
@@ -572,6 +571,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
+				limit_spawners = 6,
 				points = 30,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fortification_horde_b",
@@ -605,7 +605,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 4,
-				points = 16,
+				points = 18,
 				proximity_spawners = true,
 				spawner_group = "spawner_fortification_cargo_hatches",
 				breed_tags = {
@@ -620,7 +620,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				points = 10,
+				limit_spawners = 3,
+				points = 12,
 				spawner_group = "spawner_fortification_elite_a",
 				breed_tags = {
 					{
@@ -647,6 +648,14 @@ local template = {
 			{
 				"flow_event",
 				flow_event_name = "event_fortification_final_wave",
+			},
+		},
+		event_fortification_trickle = {
+			{
+				"start_terror_trickle",
+				delay = 4,
+				spawner_group = "spawner_fortification_cargo_north",
+				template_name = "standard_melee",
 			},
 		},
 		event_fortification_spawn_cs = {
@@ -718,26 +727,10 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 2,
-				points = 8,
+				limit_spawners = 4,
+				points = 12,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_fortification_cargo_south_a",
-				breed_tags = {
-					{
-						"melee",
-						"roamer",
-					},
-				},
-			},
-			{
-				"delay",
-				duration = 3,
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 2,
-				points = 8,
-				spawner_group = "spawner_fortification_cargo_south_a",
+				spawner_group = "spawner_fortification_cargo_south",
 				breed_tags = {
 					{
 						"melee",
@@ -752,7 +745,23 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 4,
-				points = 15,
+				points = 12,
+				spawner_group = "spawner_fortification_cargo_south",
+				breed_tags = {
+					{
+						"melee",
+						"roamer",
+					},
+				},
+			},
+			{
+				"delay",
+				duration = 3,
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 5,
+				points = 20,
 				proximity_spawners = true,
 				spawner_group = "spawner_fortification_cargo_hatches",
 				breed_tags = {
@@ -791,7 +800,7 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_fortification_cargo_south_a",
+				spawner_group = "spawner_fortification_cargo_south",
 				template_name = "standard_melee",
 			},
 			{
@@ -817,10 +826,10 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
+				limit_spawners = 4,
 				points = 18,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_fortification_cargo_north_a",
+				spawner_group = "spawner_fortification_cargo_north",
 				breed_tags = {
 					{
 						"far",
@@ -830,9 +839,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 10,
-				spawner_group = "spawner_fortification_cargo_north_b",
+				limit_spawners = 4,
+				points = 12,
+				spawner_group = "spawner_fortification_cargo_north",
 				breed_tags = {
 					{
 						"far",
@@ -857,8 +866,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 4,
-				points = 15,
+				limit_spawners = 5,
+				points = 20,
 				proximity_spawners = true,
 				spawner_group = "spawner_fortification_cargo_hatches",
 				breed_tags = {
@@ -882,7 +891,7 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_fortification_cargo_north_c",
+				spawner_group = "spawner_fortification_cargo_north",
 				template_name = "standard_melee",
 			},
 			{
@@ -908,10 +917,10 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
+				limit_spawners = 4,
 				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_fortification_cargo_north_a",
+				spawner_group = "spawner_fortification_cargo_north",
 				breed_tags = {
 					{
 						"close",
@@ -921,9 +930,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 14,
-				spawner_group = "spawner_fortification_cargo_north_b",
+				limit_spawners = 4,
+				points = 16,
+				spawner_group = "spawner_fortification_cargo_north",
 				breed_tags = {
 					{
 						"close",
@@ -948,8 +957,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 4,
-				points = 15,
+				limit_spawners = 5,
+				points = 20,
 				proximity_spawners = true,
 				spawner_group = "spawner_fortification_cargo_hatches",
 				breed_tags = {
@@ -961,18 +970,19 @@ local template = {
 			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
-				points = 8,
+				points = 12,
 				spawner_group = "spawner_fortification_cargo_sniper_2",
 				breed_tags = {
 					{
 						"special",
+						"scrambler",
 					},
 				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_fortification_cargo_north_a",
+				spawner_group = "spawner_fortification_cargo_north",
 				template_name = "standard_melee",
 			},
 			{
@@ -998,6 +1008,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
+				limit_spawners = 6,
 				points = 30,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fortification_horde_b",
@@ -1025,8 +1036,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 4,
-				points = 15,
+				limit_spawners = 5,
+				points = 20,
 				proximity_spawners = true,
 				spawner_group = "spawner_fortification_cargo_hatches",
 				breed_tags = {
@@ -1038,18 +1049,19 @@ local template = {
 			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
-				points = 8,
+				points = 12,
 				spawner_group = "spawner_fortification_cargo_special_1",
 				breed_tags = {
 					{
 						"special",
+						"scrambler",
 					},
 				},
 			},
 			{
 				"start_terror_trickle",
 				delay = 4,
-				spawner_group = "spawner_fortification_cargo_south_a",
+				spawner_group = "spawner_fortification_cargo_south",
 				template_name = "standard_melee",
 			},
 			{

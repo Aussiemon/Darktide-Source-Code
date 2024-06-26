@@ -123,8 +123,6 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 			self.global_context.circumstance_vo_id = dialogue_id
 		end
 	else
-		self:_load_dialogue_resources(auto_load_files)
-
 		local menu_vo_files = DialogueSettings.menu_vo_files
 
 		self:_load_dialogue_resources(menu_vo_files)
@@ -497,7 +495,7 @@ DialogueSystem._update_currently_playing_dialogues = function (self, dt, t)
 												break
 											end
 
-											local is_invisible = Unit.get_data(registered_unit, "invisible")
+											local is_invisible = Unit.get_data(registered_unit, "consider_invisible")
 
 											if is_invisible then
 												break

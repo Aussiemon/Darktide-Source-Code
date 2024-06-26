@@ -169,7 +169,7 @@ local widget_definitions = {
 					0,
 				},
 				offset = {
-					200,
+					100,
 					100,
 					5,
 				},

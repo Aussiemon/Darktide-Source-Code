@@ -179,6 +179,10 @@ title_text_font_style.offset = {
 }
 title_text_font_style.text_horizontal_alignment = "left"
 title_text_font_style.text_vertical_alignment = "top"
+title_text_font_style.size = {
+	700,
+	50,
+}
 
 local description_text_font_style = table.clone(UIFontSettings.body)
 

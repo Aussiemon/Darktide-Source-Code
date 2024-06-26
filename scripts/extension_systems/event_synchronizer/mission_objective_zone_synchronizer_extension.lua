@@ -10,7 +10,6 @@ MissionObjectiveZoneSynchronizerExtension.init = function (self, extension_init_
 	self._is_server = extension_init_context.is_server
 	self._num_zones_in_mission_objective = 0
 	self._objective_name = "default"
-	self._automatic_start = false
 	self._mission_objective_zone_system = nil
 	self._zone_type = ZONE_TYPES.none
 	self._servor_skull_activator_extension = nil
@@ -21,7 +20,7 @@ end
 MissionObjectiveZoneSynchronizerExtension.setup_from_component = function (self, num_zones_in_mission_objective, objective_name, automatic_start)
 	self._num_zones_in_mission_objective = num_zones_in_mission_objective
 	self._objective_name = objective_name
-	self._automatic_start = automatic_start
+	self._auto_start = automatic_start
 
 	self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
 end
@@ -87,10 +86,6 @@ end
 
 MissionObjectiveZoneSynchronizerExtension.zone_type = function (self)
 	return self._zone_type
-end
-
-MissionObjectiveZoneSynchronizerExtension.auto_start = function (self)
-	return self._automatic_start
 end
 
 MissionObjectiveZoneSynchronizerExtension.zone_progression = function (self)

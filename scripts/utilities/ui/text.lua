@@ -56,92 +56,88 @@ local SECONDS_IN_A_MINUTE = 60
 local SECONDS_IN_AN_HOUR = SECONDS_IN_A_MINUTE * 60
 local SECONDS_IN_A_DAY = SECONDS_IN_AN_HOUR * 24
 
-local function _get_days(seconds)
-	local days = math.floor(seconds / SECONDS_IN_A_DAY)
-	local formatted_days
+local function _get_time(seconds, length, multiple_format, single_format, short_format, use_short)
+	single_format = single_format or multiple_format
 
-	if days == 1 then
-		formatted_days = Localize("loc_text_util_time_left_1_day")
-	else
-		formatted_days = Localize("loc_text_util_time_left_days", true, {
-			number = days,
-		})
-	end
+	local value = math.floor(seconds / length)
+	local key = use_short == true and short_format or value == 1 and single_format or multiple_format
+	local text = Localize(key, true, {
+		number = value,
+	})
 
-	return days, formatted_days
+	return value, text, seconds - value * length
 end
 
-local function _get_hours(seconds)
-	local hours = math.floor(seconds % SECONDS_IN_A_DAY / SECONDS_IN_AN_HOUR)
-	local formatted_hours
-
-	if hours == 1 then
-		formatted_hours = Localize("loc_text_util_time_left_1_hour")
-	else
-		formatted_hours = Localize("loc_text_util_time_left_hours", true, {
-			number = hours,
-		})
-	end
-
-	return hours, formatted_hours
+local function _get_days(seconds, use_short)
+	return _get_time(seconds, SECONDS_IN_A_DAY, "loc_text_util_time_left_days", "loc_text_util_time_left_1_day", "loc_text_short_day", use_short)
 end
 
-local function _get_minutes(seconds)
-	local minutes = math.floor(seconds % SECONDS_IN_AN_HOUR / SECONDS_IN_A_MINUTE)
-	local formatted_minutes
-
-	if minutes == 1 then
-		formatted_minutes = Localize("loc_text_util_time_left_1_minute")
-	else
-		formatted_minutes = Localize("loc_text_util_time_left_minutes", true, {
-			number = minutes,
-		})
-	end
-
-	return minutes, formatted_minutes
+local function _get_hours(seconds, use_short)
+	return _get_time(seconds, SECONDS_IN_AN_HOUR, "loc_text_util_time_left_hours", "loc_text_util_time_left_1_hour", "loc_text_short_hour", use_short)
 end
 
-local function _get_seconds(seconds)
-	seconds = math.floor(seconds % SECONDS_IN_A_MINUTE)
-
-	local formatted_seconds
-
-	if seconds == 1 then
-		formatted_seconds = Localize("loc_text_util_time_left_1_second")
-	else
-		formatted_seconds = Localize("loc_text_util_time_left_seconds", true, {
-			number = seconds,
-		})
-	end
-
-	return seconds, formatted_seconds
+local function _get_minutes(seconds, use_short)
+	return _get_time(seconds, SECONDS_IN_A_MINUTE, "loc_text_util_time_left_minutes", "loc_text_util_time_left_1_minute", "loc_text_short_minute", use_short)
 end
 
-TextUtilities.format_time_span_long_form_localized = function (num_seconds)
-	local _, major_time_unit_formatted, minor_time_unit, minor_time_unit_formatted
+local function _get_seconds(seconds, use_short)
+	return _get_time(seconds, 1, "loc_text_util_time_left_seconds", "loc_text_util_time_left_1_second", "loc_text_short_second", use_short)
+end
 
-	if num_seconds >= SECONDS_IN_A_DAY then
-		_, major_time_unit_formatted = _get_days(num_seconds)
-		minor_time_unit, minor_time_unit_formatted = _get_hours(num_seconds)
-	elseif num_seconds >= SECONDS_IN_AN_HOUR then
-		_, major_time_unit_formatted = _get_hours(num_seconds)
-		minor_time_unit, minor_time_unit_formatted = _get_minutes(num_seconds)
-	elseif num_seconds >= SECONDS_IN_A_MINUTE then
-		_, major_time_unit_formatted = _get_minutes(num_seconds)
-		minor_time_unit = 0
-	else
-		_, major_time_unit_formatted = _get_seconds(num_seconds)
-		minor_time_unit = 0
+local _time_steps = {
+	{
+		value = SECONDS_IN_A_DAY,
+		get = _get_days,
+	},
+	{
+		value = SECONDS_IN_AN_HOUR,
+		get = _get_hours,
+	},
+	{
+		force_break = true,
+		value = SECONDS_IN_A_MINUTE,
+		get = _get_minutes,
+	},
+	{
+		value = 1,
+		get = _get_seconds,
+	},
+}
+
+TextUtilities.format_time_span_localized = function (seconds, use_short, allow_skip, max_detail)
+	allow_skip = allow_skip == true
+	use_short = use_short == true
+	max_detail = max_detail or 2
+
+	local step_count, steps = 0, {}
+
+	for i = 1, #_time_steps do
+		local time_step_config = _time_steps[i]
+		local units, text, seconds_left = time_step_config.get(seconds, use_short)
+		local should_add = units > 0 or i == #_time_steps
+
+		if should_add then
+			seconds, step_count = seconds_left, step_count + 1
+			steps[step_count] = text
+		end
+
+		local force_break = should_add and time_step_config.force_break
+		local break_on_skip = not allow_skip and step_count >= 1 and units == 0
+		local is_full = max_detail <= step_count
+		local should_break = force_break or break_on_skip or is_full
+
+		if should_break then
+			break
+		end
 	end
 
-	if minor_time_unit > 0 then
-		return Localize("loc_text_util_time_left_delimiter", true, {
-			major_time_unit = major_time_unit_formatted,
-			minor_time_unit = minor_time_unit_formatted,
-		})
-	end
+	local separator = use_short and " " or ", "
 
-	return major_time_unit_formatted
+	return table.concat(steps, separator)
+end
+
+TextUtilities.format_time_span_long_form_localized = function (seconds)
+	return TextUtilities.format_time_span_localized(seconds)
 end
 
 local _roman_number_array = {

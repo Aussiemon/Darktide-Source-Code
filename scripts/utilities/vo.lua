@@ -7,7 +7,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local Vo = {}
-local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event
+local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event, _get_player_level, _can_interact, _get_interaction_level_req
 local Interactions = {
 	health_station = function (dialogue_extension)
 		local event_data = dialogue_extension:get_event_data_payload()
@@ -653,6 +653,12 @@ Vo.generic_mission_vo_event = function (unit, trigger_id)
 end
 
 Vo.generic_mission_vo_event_all_players = function (trigger_id)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
 	local healthy_players = _get_healthy_players()
 	local num_healthy_players = #healthy_players
 
@@ -1206,7 +1212,7 @@ Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, ww
 	end
 end
 
-Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_opinion_vo)
+Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_opinion_vo, optional_use_radio_pre, optional_use_radio_post)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 
 	if dialogue_extension then
@@ -1231,7 +1237,17 @@ Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_op
 			rule_name = rule_name .. "_" .. opinion
 		end
 
-		dialogue_extension:play_local_vo_event(rule_name, wwise_route_key, nil, seed)
+		local pre_wwise_event, post_wwise_event
+
+		if optional_use_radio_pre then
+			pre_wwise_event = "play_radio_static_start"
+		end
+
+		if optional_use_radio_post then
+			post_wwise_event = "play_radio_static_end"
+		end
+
+		dialogue_extension:play_local_vo_event(rule_name, wwise_route_key, nil, seed, nil, pre_wwise_event, post_wwise_event)
 	end
 end
 
@@ -1338,6 +1354,16 @@ Vo.spawn_3d_unit = function (breed_name, voice_profile, position)
 
 		return vo_unit
 	end
+end
+
+Vo.is_mission_available = function (mission_name)
+	local available
+
+	if Managers.narrative then
+		available = Managers.narrative:is_mission_available(mission_name)
+	end
+
+	return available
 end
 
 Vo.cutscene_vo_event = function (unit, vo_line_id)

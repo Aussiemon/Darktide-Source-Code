@@ -37,6 +37,11 @@ ActionOverloadExplosion.start = function (self, action_settings, ...)
 
 		self._fx_extension:trigger_gear_wwise_event_with_source(on_start_sfx, external_properties, self._on_start_source_name, sync_to_clients)
 	end
+
+	local unit = self._player_unit
+	local talent_extension = ScriptUnit.has_extension(unit, "talent_system")
+
+	self._psyker_alternative_overload = talent_extension and talent_extension:has_special_rule("psyker_no_knock_down_overload")
 end
 
 ActionOverloadExplosion.fixed_update = function (self, dt, t, time_in_action)
@@ -126,7 +131,14 @@ ActionOverloadExplosion._explode = function (self, action_settings)
 		local is_alive = health_percentage > 0 and not is_knocked_down
 
 		if is_alive then
-			Attack.execute(unit, action_settings.death_damage_profile, "instakill", true, "damage_type", action_settings.death_damage_type, "item", nil)
+			local health_extension = ScriptUnit.extension(unit, "health_system")
+			local current_wounds = health_extension:num_wounds()
+
+			if not self._psyker_alternative_overload or current_wounds <= 1 then
+				Attack.execute(unit, action_settings.death_damage_profile, "instakill", true, "damage_type", action_settings.death_damage_type, "item", nil)
+			else
+				health_extension:remove_wounds(1)
+			end
 		end
 	end
 end

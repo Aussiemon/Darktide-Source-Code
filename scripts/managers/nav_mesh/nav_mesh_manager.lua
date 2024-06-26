@@ -480,6 +480,7 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	local slot_system = Managers.state.extension:system("slot_system")
 	local navigation_system = Managers.state.extension:system("navigation_system")
 	local unit_to_navigation_extension_map = navigation_system:unit_to_extension_map()
+	local GwNavQueries_triangle_from_position = GwNavQueries.triangle_from_position
 
 	for unit, extension in pairs(unit_to_navigation_extension_map) do
 		extension:allow_nav_tag_layer(layer_name, allowed)
@@ -493,9 +494,10 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 			if Navigation.inside_nav_tag_volume_layer(nav_world, unit_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, layer_id) then
 				Attack.execute(unit, damage_profile, "instakill", true)
 			else
-				local destination = extension:destination()
+				local destination, traverse_logic = extension:destination(), extension:traverse_logic()
+				local altitude = GwNavQueries_triangle_from_position(nav_world, destination, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic)
 
-				if Navigation.inside_nav_tag_volume_layer(nav_world, destination, NAV_MESH_ABOVE, NAV_MESH_BELOW, layer_id) then
+				if altitude == nil then
 					extension:stop()
 					slot_system:detach_user_unit(unit)
 				end
@@ -527,10 +529,6 @@ end
 
 NavMeshManager.is_nav_tag_volume_layer_allowed = function (self, layer_name)
 	return self._nav_tag_allowed_layers[layer_name]
-end
-
-NavMeshManager.allowed_nav_tag_layers = function (self)
-	return self._nav_tag_allowed_layers
 end
 
 NavMeshManager.rpc_set_allowed_nav_tag_layer = function (self, channel_id, layer_id, allowed)

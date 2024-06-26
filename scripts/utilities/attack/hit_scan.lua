@@ -211,7 +211,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				if should_deal_damage then
 					local previous_hit_weakspot = hit_weakspot
 
-					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, damage_config, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
+					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
 
 					if attack_result == attack_results.blocked then
 						hit_position = _block_position(hit_unit, hit_position, direction)

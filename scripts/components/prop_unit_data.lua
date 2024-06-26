@@ -82,6 +82,8 @@ PropUnitData.component_data = {
 			"filtration_tank",
 			"hazard_prop",
 			"hazard_sphere",
+			"ice_chunk",
+			"icicle",
 		},
 		options_values = {
 			"corruptor_body",
@@ -91,6 +93,8 @@ PropUnitData.component_data = {
 			"filtration_tank",
 			"hazard_prop",
 			"hazard_sphere",
+			"ice_chunk",
+			"icicle",
 		},
 	},
 	extensions = {

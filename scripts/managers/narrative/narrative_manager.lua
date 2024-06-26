@@ -90,6 +90,23 @@ NarrativeManager._is_narrative_mission_available = function (self, book, chapter
 	return available
 end
 
+NarrativeManager.is_mission_available = function (self, query_mission_name)
+	local missions = self._mission_data
+
+	if not table.is_empty(missions) then
+		for i = 1, #missions do
+			local mission_data = missions[i]
+			local mission_name = mission_data.map
+
+			if mission_name == query_mission_name then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 NarrativeManager.load_character_narrative = function (self, character_id)
 	if self._character_narrative_data[character_id] then
 		return Promise.resolved()

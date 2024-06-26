@@ -1,10 +1,9 @@
 ﻿-- chunkname: @scripts/extension_systems/moveable_platform/moveable_platform_system.lua
 
-local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
-local NetworkLookup = require("scripts/network_lookup/network_lookup")
-
 require("scripts/extension_systems/moveable_platform/moveable_platform_extension")
 
+local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
+local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local MoveablePlatformSystem = class("MoveablePlatformSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_moveable_platform_set_direction",

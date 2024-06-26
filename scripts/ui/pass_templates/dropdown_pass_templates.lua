@@ -26,6 +26,11 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 	}
 	value_font_style.offset[1] = -DROPDOWN_BUTTON_CLEARANCE
 	value_font_style.offset[3] = 8
+	value_font_style.default_offset = value_font_style.offset
+	value_font_style.icon_offset = {
+		value_font_style.offset[1] + DROPDOWN_BUTTON_SIZE[1] + 20,
+		value_font_style.offset[2],
+	}
 	value_font_style.horizontal_alignment = "right"
 
 	local scrollbar_area_width = DROPDOWN_BUTTON_MARGIN
@@ -225,6 +230,32 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			style = value_font_style,
 			change_function = highlight_color_change_function,
 		},
+		{
+			pass_type = "texture",
+			style_id = "icon",
+			value = "content/ui/materials/buttons/dropdown_fill",
+			value_id = "value_icon",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				visible = false,
+				size = {
+					32,
+					32,
+				},
+				offset = {
+					settings_area_width - scrollbar_area_width + DROPDOWN_BUTTON_SIZE[1] + 20,
+					0,
+					12,
+				},
+				default_color = Color.terminal_text_body(255, true),
+				color = Color.terminal_text_header(255, true),
+				hover_color = Color.terminal_text_header_selected(255, true),
+				selected_color = Color.terminal_text_header_selected(255, true),
+				disabled_color = Color.ui_grey_light(255, true),
+			},
+			change_function = highlight_color_change_function,
+		},
 	}
 
 	local function scrollbar_visibility_function(content)
@@ -394,7 +425,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local thumb_length = hotspot_style.size[axis]
 				local inverse_scale = renderer.inverse_scale
 				local base_cursor = input_service:get("cursor")
-				local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
+				local cursor = (IS_XBS or IS_PLAYSTATION) and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
 				local cursor_direction = cursor[axis]
 				local input_coordinate = math.clamp(cursor_direction - (position[axis] + track_axis_offset), 0, scrollbar_length)
 				local input_offset = content.input_offset
@@ -467,7 +498,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local scroll_amount = content.scroll_amount or 0.1
 				local inverse_scale = renderer.inverse_scale
 				local cursor = input_service:get("cursor")
-				local cursor_position = IS_XBS and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
+				local cursor_position = (IS_XBS or IS_PLAYSTATION) and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
 				local is_hover = math.point_is_inside_2d_box(cursor_position, position, size)
 
 				if axis_input ~= 0 and is_hover then
@@ -540,6 +571,11 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			height * i,
 			12,
 		}
+		option_font_style.default_offset = option_font_style.offset
+		option_font_style.icon_offset = {
+			option_font_style.offset[1] + DROPDOWN_BUTTON_SIZE[1] + 20,
+			option_font_style.offset[2],
+		}
 		option_font_style.size = {
 			settings_area_width,
 			height,
@@ -550,6 +586,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		}
 
 		local hotspot_id = "option_hotspot_" .. i
+		local icon_id = "option_icon_" .. i
 		local text_id = "option_text_" .. i
 
 		options_passes[#options_passes + 1] = {
@@ -614,6 +651,47 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				offset[1] = header_width - size_addition
 				offset[2] = offset_y - size_addition
 				style.hdr = focus_alpha == 255
+			end,
+			visibility_function = content_visibility_function,
+		}
+		options_passes[#options_passes + 1] = {
+			pass_type = "texture",
+			value = "content/ui/materials/buttons/dropdown_fill",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				visible = false,
+				size = {
+					32,
+					32,
+				},
+				offset = {
+					settings_area_width - scrollbar_area_width + DROPDOWN_BUTTON_SIZE[1] + 20,
+					height * i,
+					12,
+				},
+				default_color = Color.terminal_text_body(255, true),
+				color = Color.terminal_text_header(255, true),
+				hover_color = Color.terminal_text_header_selected(255, true),
+				selected_color = Color.terminal_text_header_selected(255, true),
+				disabled_color = Color.ui_grey_light(255, true),
+			},
+			style_id = icon_id,
+			value_id = "option_icon_" .. i,
+			change_function = function (content, style)
+				local default_color = style.default_color
+				local hover_color = style.hover_color
+				local color = style.color
+				local hotspot = content[hotspot_id]
+				local focus_progress = math.easeCubic(content.anim_exclusive_focus_progress)
+				local alpha_progress = math.clamp((focus_progress - current_fraction) / option_fraction, 0, 1)
+
+				color[1] = 255 * math.easeCubic(alpha_progress)
+
+				local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
+				local exclude_alpha = true
+
+				ColorUtilities.color_lerp(default_color, hover_color, highlight_progress, color, exclude_alpha)
 			end,
 			visibility_function = content_visibility_function,
 		}

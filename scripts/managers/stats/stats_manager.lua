@@ -92,6 +92,18 @@ StatsManager.destroy = function (self)
 	end
 end
 
+StatsManager._get_smallest_send_rpc = function (self, size)
+	local rpcs_calls = self._rpc_calls
+
+	for _, data_type in pairs(rpcs_calls) do
+		if size <= data_type.max then
+			return data_type
+		end
+	end
+
+	return rpcs_calls[#rpcs_calls]
+end
+
 StatsManager._update_rpcs = function (self, user)
 	local channel_id = user.rpc_channel
 
@@ -127,9 +139,10 @@ StatsManager._update_rpcs = function (self, user)
 
 		dirty[stat_key] = false
 
-		local data_type = stat.network_size
-		local rpc_data = self._rpc_calls[data_type]
-		local value_to_send = math.clamp(math.round(data[stat_key]), rpc_data.min, rpc_data.max)
+		local value_to_send = math.round(data[stat_key])
+		local rpc_data = self:_get_smallest_send_rpc(value_to_send)
+
+		value_to_send = math.clamp(value_to_send, rpc_data.min, rpc_data.max)
 
 		rpc_data.rpc(channel_id, user.local_player_id, stat.index, value_to_send)
 	end

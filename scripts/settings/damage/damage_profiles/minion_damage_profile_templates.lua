@@ -1573,9 +1573,7 @@ damage_templates.poxwalker_explosion_close.power_distribution = {
 }
 damage_templates.poxwalker_explosion_close.catapulting_template = CatapultingTemplates.poxwalker_bomber_close
 damage_templates.default_rifleman = {
-	disorientation_type = "light",
 	interrupt_alternate_fire = false,
-	ogryn_disorientation_type = "ogryn_light",
 	stagger_category = "ranged",
 	suppression_value = 1,
 	armor_damage_modifier = {
@@ -2168,9 +2166,11 @@ damage_templates.renegade_captain_shotgun = {
 }
 damage_templates.renegade_captain_frag_grenade_close = {
 	ignore_stagger_reduction = true,
+	override_allow_friendly_fire = true,
 	ragdoll_push_force = 1250,
 	stagger_category = "explosion",
 	suppression_value = 10,
+	toughness_multiplier = 3,
 	cleave_distribution = {
 		attack = 0.15,
 		impact = 0.15,
@@ -2222,8 +2222,8 @@ damage_templates.renegade_captain_frag_grenade_close = {
 		},
 	},
 	power_distribution = {
-		attack = 500,
-		impact = 100,
+		attack = 100,
+		impact = 20,
 	},
 	targets = {
 		default_target = {
@@ -2234,9 +2234,11 @@ damage_templates.renegade_captain_frag_grenade_close = {
 }
 damage_templates.renegade_captain_frag_grenade = {
 	ignore_stagger_reduction = true,
+	override_allow_friendly_fire = true,
 	ragdoll_push_force = 1000,
 	stagger_category = "explosion",
 	suppression_value = 10,
+	toughness_multiplier = 2,
 	cleave_distribution = {
 		attack = 0.15,
 		impact = 0.15,
@@ -2287,15 +2289,9 @@ damage_templates.renegade_captain_frag_grenade = {
 			},
 		},
 	},
-	power_distribution_ranged = {
-		attack = {
-			far = 10,
-			near = 100,
-		},
-		impact = {
-			far = 2,
-			near = 30,
-		},
+	power_distribution = {
+		attack = 20,
+		impact = 1,
 	},
 	targets = {
 		default_target = {
@@ -2308,12 +2304,14 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 	ignore_stagger_reduction = true,
 	interrupt_alternate_fire = true,
 	ogryn_disorientation_type = "shocktrooper_frag",
+	override_allow_friendly_fire = true,
 	ragdoll_push_force = 1250,
 	stagger_category = "explosion",
 	suppression_value = 10,
+	toughness_multiplier = 4,
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 1,
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -2328,7 +2326,7 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 				[armor_types.void_shield] = 0.75,
 			},
 			impact = {
-				[armor_types.unarmored] = 2,
+				[armor_types.unarmored] = 3,
 				[armor_types.armored] = 2,
 				[armor_types.resistant] = 10,
 				[armor_types.player] = 2,
@@ -2363,7 +2361,7 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 	},
 	power_distribution = {
 		attack = 20,
-		impact = 20,
+		impact = 8,
 	},
 	targets = {
 		default_target = {
@@ -2381,6 +2379,7 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 	ragdoll_push_force = 1000,
 	stagger_category = "explosion",
 	suppression_value = 10,
+	toughness_multiplier = 3,
 	cleave_distribution = {
 		attack = 0.15,
 		impact = 0.15,
@@ -2438,7 +2437,7 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 		},
 		impact = {
 			far = 2,
-			near = 5,
+			near = 2,
 		},
 	},
 	targets = {
@@ -2963,9 +2962,9 @@ damage_templates.chaos_ogryn_gunner_bullet = {
 		attack = 0.175,
 		impact = 0.25,
 	},
-	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.chaos_ogryn_gunner_bullet,
 	ogryn_push_template = push_templates.chaos_ogryn_gunner_bullet_ogryn,
+	force_look_function = ForcedLookSettings.look_functions.heavy,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
@@ -3977,6 +3976,115 @@ damage_templates.twin_captain_two_melee_default = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
+	},
+}
+damage_templates.forcesword_explosion = {
+	buff_to_add = "shock_effect",
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_only = true,
+	ragdoll_push_force = 1200,
+	stagger_category = "flamer",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 100,
+		impact = 25,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	stagger_duration_modifier = {
+		0.1,
+		1.5,
+	},
+	damage_type = damage_types.kinetic,
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.forcesword_explosion_outer = {
+	buff_to_add = "shock_effect",
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "flamer",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 75,
+		impact = 10,
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 0.2,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 0.2,
+			},
+		},
+	},
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	damage_type = damage_types.blunt_shock,
+	targets = {
+		default_target = {},
 	},
 }
 

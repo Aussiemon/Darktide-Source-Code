@@ -6,7 +6,6 @@ local Action = require("scripts/utilities/weapon/action")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local AimAssist = require("scripts/utilities/aim_assist")
 local Armor = require("scripts/utilities/attack/armor")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -27,7 +26,6 @@ local SweepSplineExported = require("scripts/extension_systems/weapon/actions/ut
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local attack_results = AttackSettings.attack_results
-local armor_types = ArmorSettings.types
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
@@ -449,18 +447,20 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	action_sweep_component.is_sticky = true
 	action_sweep_component.attack_direction = attack_direction
 
+	local stick_to_unit = action_sweep_component.sweep_aborted_unit
 	local buff_to_add = hit_stickyness_settings.buff_to_add
 
 	if buff_to_add and self._is_server then
-		local stick_to_unit = action_sweep_component.sweep_aborted_unit
 		local stick_to_buff_extension = ScriptUnit.has_extension(stick_to_unit, "buff_system")
 
 		if stick_to_buff_extension then
-			stick_to_buff_extension:add_internally_controlled_buff(buff_to_add, t)
+			local attacking_unit = self._player_unit
+
+			stick_to_buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", attacking_unit)
 		end
 	end
 
-	self:_add_weapon_blood("full")
+	self:_add_weapon_blood(stick_to_unit, "full")
 	self:_exit_damage_window(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
 
 	if not self:_is_currently_sticky() then
@@ -543,6 +543,7 @@ local stickyness_impact_fx_data = {
 }
 
 ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_component, hit_stickyness_settings)
+	local is_server = self._is_server
 	local stick_to_unit = action_sweep_component.sweep_aborted_unit
 	local sticky_target_unit_alive = ALIVE[stick_to_unit]
 	local stick_to_position = SweepStickyness.stick_to_position(action_sweep_component) or Unit.world_position(self._first_person_unit, 1)
@@ -623,11 +624,11 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 
 				local buff_to_add_tick = hit_stickyness_settings.buff_to_add_tick
 
-				if buff_to_add_tick and self._is_server then
+				if buff_to_add_tick and is_server then
 					local stick_to_buff_extension = ScriptUnit.has_extension(stick_to_unit, "buff_system")
 
 					if stick_to_buff_extension then
-						stick_to_buff_extension:add_internally_controlled_buff(buff_to_add_tick, t)
+						stick_to_buff_extension:add_internally_controlled_buff(buff_to_add_tick, t, "owner_unit", attacking_unit)
 					end
 				end
 			end
@@ -636,11 +637,13 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 		if is_last_damage_instance then
 			local buff_to_add_last = hit_stickyness_settings.buff_to_add_last
 
-			if buff_to_add_last and self._is_server then
+			if buff_to_add_last and is_server then
 				local stick_to_buff_extension = ScriptUnit.has_extension(stick_to_unit, "buff_system")
 
 				if stick_to_buff_extension then
-					stick_to_buff_extension:add_internally_controlled_buff(buff_to_add_last, t)
+					local attacking_unit = self._player_unit
+
+					stick_to_buff_extension:add_internally_controlled_buff(buff_to_add_last, t, "owner_unit", attacking_unit)
 				end
 			end
 		end
@@ -652,6 +655,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	local is_in_jump_state = state_name == "jumping"
 	local state_enter_time = character_state_component.entered_t
 	local exit_because_of_state = (is_in_dodge_state or is_in_jump_state) and start_t < state_enter_time
+	local player_unit = self._player.player_unit
 	local is_in_stealth = self._buff_extension:has_keyword(buff_keywords.invisible)
 	local sticky_t = t - start_t
 	local duration = hit_stickyness_settings.duration
@@ -664,8 +668,6 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 		local dodge_exit_damage_profile = damage.dodge_damage_profile
 
 		if dodge_exit_damage_profile and exit_because_of_state and is_in_dodge_state and stick_to_unit and stick_to_actor then
-			local attacking_unit = self._player.player_unit
-
 			if not is_resimulating then
 				local damage_type = damage.damage_type
 				local is_critical_strike = self._critical_strike_component.is_active
@@ -675,17 +677,17 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 				local attack_type = AttackSettings.attack_types.melee
 				local action_settings = self._action_settings
 				local wounds_shape = action_settings.wounds_shape_special_active
-				local velocity_current = self._locomotion_component.velocity_current
-				local attack_direction = Vector3.normalize(velocity_current)
-				local damage_dealt, attack_result, damage_efficiency, _, _ = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
+				local player_rotation = self._first_person_component.rotation
+				local attack_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(player_rotation)))
+				local damage_dealt, attack_result, damage_efficiency, _, _ = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
 				local hit_normal
 
-				ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)
+				ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)
 			end
 
-			local stammina_drain_percentage = hit_stickyness_settings.dodge_stammina_drain_percentage or 0.6
+			local stamina_drain_percentage = hit_stickyness_settings.dodge_stamina_drain_percentage or 0.6
 
-			Stamina.drain_pecentage_of_base_stamina(attacking_unit, stammina_drain_percentage, t)
+			Stamina.drain_pecentage_of_base_stamina(player_unit, stamina_drain_percentage, t)
 		end
 
 		self:_stop_hit_stickyness(hit_stickyness_settings, exit_because_of_state)
@@ -1171,7 +1173,8 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local target_armor = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name_or_nil, attack_type)
 	local action_armor_hit_mass_mod = action_settings.action_armor_hit_mass_mod and action_settings.action_armor_hit_mass_mod[target_armor]
 	local amount_of_mass_hit
-	local melee_infinite_cleave_on_headshot = buff_extension:has_keyword(buff_keywords.melee_infinite_cleave_on_headshot)
+	local is_ogryn = target_breed_or_nil and target_breed_or_nil.tags and target_breed_or_nil.tags.ogryn
+	local melee_infinite_cleave_on_headshot_non_ogryn = buff_extension:has_keyword(buff_keywords.melee_infinite_cleave_on_headshot) and not is_ogryn
 
 	amount_of_mass_hit = current_amount_of_mass_hit + target_hit_mass * (action_armor_hit_mass_mod or 1)
 
@@ -1221,7 +1224,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		end
 	end
 
-	if self._num_killed_enemies <= 2 and result == "died" and hit_weakspot and melee_infinite_cleave_on_headshot then
+	if self._num_killed_enemies <= 2 and result == "died" and hit_weakspot and melee_infinite_cleave_on_headshot_non_ogryn then
 		amount_of_mass_hit = current_amount_of_mass_hit
 		abort_attack = false
 	elseif target_is_character and target_is_alive then
@@ -1252,7 +1255,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		self:_increase_action_duration(weapon_special_extra_time)
 	end
 
-	self:_add_weapon_blood("default")
+	self:_add_weapon_blood(hit_unit, "default")
 
 	if target_is_character and target_is_alive and result == attack_results.died then
 		self._num_killed_enemies = self._num_killed_enemies + 1

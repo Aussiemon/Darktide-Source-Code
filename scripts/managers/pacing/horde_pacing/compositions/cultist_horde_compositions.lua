@@ -1845,6 +1845,84 @@ local horde_compositions = {
 			},
 		},
 	},
+	cultist_elite_poxwalkers_small = {
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						10,
+						12,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						12,
+						14,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						14,
+						16,
+					},
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						18,
+						20,
+					},
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						2,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						20,
+						22,
+					},
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						2,
+						3,
+					},
+				},
+			},
+		},
+	},
 }
 
 return horde_compositions

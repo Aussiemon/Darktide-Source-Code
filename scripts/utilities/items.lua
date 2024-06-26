@@ -10,8 +10,9 @@ local RankSettings = require("scripts/settings/item/rank_settings")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local Promise = require("scripts/foundation/utilities/promise")
 local unit_alive = Unit.alive
-local ItemUtils = {}
+local Items = {}
 
 local function _character_save_data()
 	local local_player_id = 1
@@ -24,25 +25,25 @@ local function _character_save_data()
 	return character_data
 end
 
-ItemUtils.calculate_stats_rating = function (item)
+Items.calculate_stats_rating = function (item)
 	if item.baseItemLevel then
 		return item.baseItemLevel
 	end
 
 	local rating_budget = item.itemLevel or 0
-	local rating_contribution = ItemUtils.item_perk_rating(item) + ItemUtils.item_trait_rating(item)
+	local rating_contribution = Items.item_perk_rating(item) + Items.item_trait_rating(item)
 
 	return math.max(0, rating_budget - rating_contribution)
 end
 
-ItemUtils.is_character_bound = function (item_type)
+Items.is_character_bound = function (item_type)
 	return item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET"
 end
 
-ItemUtils.mark_item_id_as_new = function (item, skip_notification)
+Items.mark_item_id_as_new = function (item, skip_notification)
 	local gear_id = item.gear_id
 	local item_type = item.item_type
-	local is_character_bound = ItemUtils.is_character_bound(item_type)
+	local is_character_bound = Items.is_character_bound(item_type)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -106,7 +107,7 @@ ItemUtils.mark_item_id_as_new = function (item, skip_notification)
 	Managers.event:trigger("event_resync_character_news_feed")
 end
 
-ItemUtils.unmark_item_id_as_new = function (gear_id)
+Items.unmark_item_id_as_new = function (gear_id)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -145,7 +146,7 @@ ItemUtils.unmark_item_id_as_new = function (gear_id)
 	Managers.save:queue_save()
 end
 
-ItemUtils.unmark_all_items_as_new = function ()
+Items.unmark_all_items_as_new = function ()
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -178,7 +179,7 @@ ItemUtils.unmark_all_items_as_new = function ()
 	Managers.save:queue_save()
 end
 
-ItemUtils.unmark_item_type_as_new = function (item_type)
+Items.unmark_item_type_as_new = function (item_type)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -205,7 +206,7 @@ ItemUtils.unmark_item_type_as_new = function (item_type)
 	end
 end
 
-ItemUtils.unmark_item_notification_id_as_new = function (gear_id)
+Items.unmark_item_notification_id_as_new = function (gear_id)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -221,7 +222,7 @@ ItemUtils.unmark_item_notification_id_as_new = function (gear_id)
 	end
 end
 
-ItemUtils.is_item_id_new = function (gear_id)
+Items.is_item_id_new = function (gear_id)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -233,7 +234,7 @@ ItemUtils.is_item_id_new = function (gear_id)
 	return new_items[gear_id] or false
 end
 
-ItemUtils.has_new_items_by_type = function (item_type)
+Items.has_new_items_by_type = function (item_type)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -253,7 +254,7 @@ ItemUtils.has_new_items_by_type = function (item_type)
 	return false
 end
 
-ItemUtils.new_item_ids = function ()
+Items.new_item_ids = function ()
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -265,7 +266,7 @@ ItemUtils.new_item_ids = function ()
 	return new_items
 end
 
-ItemUtils.new_item_notification_ids = function ()
+Items.new_item_notification_ids = function ()
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -279,7 +280,7 @@ end
 
 local temp_item_name_localization_context = {}
 
-ItemUtils.display_name = function (item)
+Items.display_name = function (item)
 	if not item then
 		return "n/a"
 	end
@@ -309,15 +310,15 @@ local temp_item_sub_display_name_localization_context = {
 	rarity_name = "n/a",
 }
 
-ItemUtils.sub_display_name = function (item, required_level, include_item_type)
-	local item_type_display_name_localized = ItemUtils.type_display_name(item)
+Items.sub_display_name = function (item, required_level, include_item_type)
+	local item_type_display_name_localized = Items.type_display_name(item)
 	local text
 
 	if item.rarity then
-		local rarity_display_name_localized = ItemUtils.rarity_display_name(item)
+		local rarity_display_name_localized = Items.rarity_display_name(item)
 
 		if include_item_type then
-			local rarity_color = ItemUtils.rarity_color(item)
+			local rarity_color = Items.rarity_color(item)
 
 			temp_item_sub_display_name_localization_context.rarity_color_r = rarity_color[2]
 			temp_item_sub_display_name_localization_context.rarity_color_g = rarity_color[3]
@@ -343,7 +344,7 @@ ItemUtils.sub_display_name = function (item, required_level, include_item_type)
 	return text
 end
 
-ItemUtils.trait_textures = function (trait_item, rarity)
+Items.trait_textures = function (trait_item, rarity)
 	local icon = trait_item.icon ~= "" and trait_item.icon
 	local texture_icon = icon or "content/ui/textures/icons/traits/weapon_trait_default"
 	local texture_frame = RankSettings[rarity or 0].trait_frame_texture
@@ -351,11 +352,11 @@ ItemUtils.trait_textures = function (trait_item, rarity)
 	return texture_icon, texture_frame
 end
 
-ItemUtils.perk_textures = function (perk_item, rarity)
+Items.perk_textures = function (perk_item, rarity)
 	return RankSettings[rarity or 0].perk_icon
 end
 
-ItemUtils.character_level = function (item)
+Items.character_level = function (item)
 	local character_level = item.characterLevel or 0
 
 	return character_level
@@ -403,7 +404,18 @@ local trinket_slot_order = {
 	"slot_trinket_2",
 }
 
-ItemUtils.weapon_trinket_preview_item = function (item, optional_preview_item)
+Items.get_current_equipped_trinket = function (item)
+	for i = 1, #trinket_slot_order do
+		local slot_id = trinket_slot_order[i]
+		local trinket_path, trinket_item = find_link_attachment_item_slot_path(item, slot_id, nil, false)
+
+		if type(trinket_item) == "table" then
+			return trinket_item, slot_id
+		end
+	end
+end
+
+Items.weapon_trinket_preview_item = function (item, optional_preview_item)
 	local preview_item_name = optional_preview_item or "content/items/weapons/player/trinkets/preview_trinket"
 	local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
 	local visual_item
@@ -427,17 +439,18 @@ ItemUtils.weapon_trinket_preview_item = function (item, optional_preview_item)
 	return visual_item
 end
 
-ItemUtils.add_weapon_trinket_on_preview_item = function (weapon_trinket_item, weapon_item)
+Items.add_weapon_trinket_on_preview_item = function (weapon_item, trinket_item)
 	for i = 1, #trinket_slot_order do
 		local slot_id = trinket_slot_order[i]
+		local alternative_path, path_item = find_link_attachment_item_slot_path(weapon_item.attachments, slot_id, trinket_item, true)
 
-		if find_link_attachment_item_slot_path(weapon_item, slot_id, weapon_trinket_item, true) then
+		if alternative_path then
 			break
 		end
 	end
 end
 
-ItemUtils.weapon_skin_preview_item = function (item, include_skin_item_info)
+Items.weapon_skin_preview_item = function (item, include_skin_item_info)
 	local preview_item_name = item.preview_item
 	local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
 	local visual_item
@@ -461,14 +474,17 @@ ItemUtils.weapon_skin_preview_item = function (item, include_skin_item_info)
 	return visual_item
 end
 
-ItemUtils.item_level = function (item)
+Items.item_level = function (item, no_symbol)
 	local item_level = item.itemLevel
-	local power = item_level or 0
 
-	return " " .. tostring(power), item_level ~= nil
+	if no_symbol then
+		return tostring(item_level or 0), item_level ~= nil
+	end
+
+	return string.format(" %s", item_level or 0), item_level ~= nil
 end
 
-ItemUtils.is_weapon_template_ranged = function (item)
+Items.is_weapon_template_ranged = function (item)
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local keywords = weapon_template and weapon_template.keywords
 	local search_result = keywords and table.find(keywords, "ranged")
@@ -476,7 +492,7 @@ ItemUtils.is_weapon_template_ranged = function (item)
 	return search_result and search_result > 0
 end
 
-ItemUtils.type_display_name = function (item)
+Items.type_display_name = function (item)
 	local item_type = item.item_type and Utf8.upper(item.item_type)
 	local item_type_localization_key = UISettings.item_type_localization_lookup[item_type]
 	local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or ""
@@ -484,8 +500,8 @@ ItemUtils.type_display_name = function (item)
 	return item_type_display_name_localized
 end
 
-ItemUtils.level_display_name = function (item)
-	local item_level = ItemUtils.item_level(item)
+Items.level_display_name = function (item)
+	local item_level = Items.item_level(item)
 	local item_level_display_name_localized = Localize("loc_item_display_level_format_key", true, {
 		level = item_level,
 	})
@@ -493,14 +509,14 @@ ItemUtils.level_display_name = function (item)
 	return item_level_display_name_localized
 end
 
-ItemUtils.type_texture = function (item)
+Items.type_texture = function (item)
 	local item_type = item.item_type
 	local item_type_texture_path = UISettings.item_type_texture_lookup[item_type] or "content/ui/textures/icons/item_types/weapons"
 
 	return item_type_texture_path
 end
 
-ItemUtils.variant_display_name = function (item)
+Items.variant_display_name = function (item)
 	local variant = item.variant
 	local variant_localization_key = UISettings.item_variant_localization_lookup[variant]
 	local variant_display_name_localized = variant_localization_key and Localize(variant_localization_key) or ""
@@ -508,7 +524,7 @@ ItemUtils.variant_display_name = function (item)
 	return variant_display_name_localized
 end
 
-ItemUtils.pattern_display_name = function (item)
+Items.pattern_display_name = function (item)
 	local weapon_template = item.weapon_template
 
 	if not weapon_template then
@@ -532,6 +548,16 @@ local _item_property_definitions = {
 			return item_voice_modulator and item_voice_modulator ~= "voice_fx_rtpc_none"
 		end,
 	},
+	{
+		icon = "",
+		loc_key = "loc_item_property_change_walk",
+		condition = function (item)
+			local left_value = table.nested_get(item, "profile_properties", "footstep_type_left")
+			local right_value = table.nested_get(item, "profile_properties", "footstep_type_right")
+
+			return left_value and left_value ~= "default" or right_value and right_value ~= "default"
+		end,
+	},
 }
 
 local function _item_property_list(item)
@@ -548,7 +574,7 @@ local function _item_property_list(item)
 	return properties
 end
 
-ItemUtils.item_property_icons = function (item, optional_separator)
+Items.item_property_icons = function (item, optional_separator)
 	local properties = _item_property_list(item)
 
 	if #properties == 0 then
@@ -566,7 +592,7 @@ ItemUtils.item_property_icons = function (item, optional_separator)
 	return table.concat(properties, separator)
 end
 
-ItemUtils.item_property_text = function (item, prefer_iconography)
+Items.item_property_text = function (item, prefer_iconography)
 	local properties = _item_property_list(item)
 
 	if #properties == 0 then
@@ -583,7 +609,7 @@ ItemUtils.item_property_text = function (item, prefer_iconography)
 	return table.concat(properties, "\n")
 end
 
-ItemUtils.obtained_display_name = function (item)
+Items.obtained_display_name = function (item)
 	local item_source = item.source
 	local source_settings = item_source and ItemSourceSettings[item_source]
 	local display_name_localization_key = source_settings and source_settings.display_name
@@ -633,7 +659,7 @@ ItemUtils.obtained_display_name = function (item)
 	return display_name, optional_description
 end
 
-ItemUtils.rarity_display_name = function (item)
+Items.rarity_display_name = function (item)
 	local rarity_settings = RaritySettings[item.rarity]
 	local loc_key = rarity_settings and rarity_settings.display_name
 	local rarity_display_name_localized = loc_key and Localize(loc_key) or ""
@@ -641,13 +667,13 @@ ItemUtils.rarity_display_name = function (item)
 	return rarity_display_name_localized
 end
 
-ItemUtils.rarity_color = function (item)
+Items.rarity_color = function (item)
 	local rarity_settings = RaritySettings[item and item.rarity] or RaritySettings[0]
 
 	return rarity_settings.color, rarity_settings.color_dark
 end
 
-ItemUtils.keywords_text = function (item)
+Items.keywords_text = function (item)
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local displayed_keywords = weapon_template.displayed_keywords
 	local text = ""
@@ -668,19 +694,19 @@ ItemUtils.keywords_text = function (item)
 	return text
 end
 
-ItemUtils.restriction_text = function (item, prefer_iconography)
+Items.restriction_text = function (item, prefer_iconography)
 	local item_type = item.item_type and Utf8.upper(item.item_type) or ""
 
 	if item_type == "WEAPON_SKIN" then
-		return ItemUtils.weapon_skin_requirement_text(item)
+		return Items.weapon_skin_requirement_text(item)
 	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "SET" then
-		return ItemUtils.class_requirement_text(item, prefer_iconography)
+		return Items.class_requirement_text(item, prefer_iconography)
 	end
 
 	return "", false
 end
 
-ItemUtils.weapon_skin_requirement_text = function (item)
+Items.weapon_skin_requirement_text = function (item)
 	local weapon_template_restriction = item.weapon_template_restriction
 	local text = ""
 
@@ -714,7 +740,7 @@ end
 
 local _temp_archetype_restriction_list = {}
 
-ItemUtils.set_item_class_requirement_text = function (item)
+Items.set_item_class_requirement_text = function (item)
 	table.clear(_temp_archetype_restriction_list)
 
 	local text = ""
@@ -782,7 +808,7 @@ local function _class_requirement_entries(item, available_archetypes)
 	return available_archetypes
 end
 
-ItemUtils.class_requirement_text = function (item, prefer_iconography)
+Items.class_requirement_text = function (item, prefer_iconography)
 	local entries = _class_requirement_entries(item, table.keys(Archetypes))
 
 	if #entries == 0 or #entries == #Archetypes then
@@ -804,7 +830,7 @@ ItemUtils.class_requirement_text = function (item, prefer_iconography)
 	return table.concat(entries, "\n"), true
 end
 
-ItemUtils.retrieve_items_for_archetype = function (archetype, filtered_slots, workflow_states)
+Items.retrieve_items_for_archetype = function (archetype, filtered_slots, workflow_states)
 	local WORKFLOW_STATES = {
 		"SHIPPABLE",
 		"RELEASABLE",
@@ -867,7 +893,7 @@ ItemUtils.retrieve_items_for_archetype = function (archetype, filtered_slots, wo
 	return items
 end
 
-ItemUtils.perk_item_by_id = function (perk_id)
+Items.perk_item_by_id = function (perk_id)
 	return MasterItems.get_item(perk_id)
 end
 
@@ -875,7 +901,7 @@ local temp_item_rank_localization_context = {
 	rank = 0,
 }
 
-ItemUtils.rank_display_text = function (item)
+Items.rank_display_text = function (item)
 	local weapon_rank = Managers.progression:get_item_rank(item)
 
 	temp_item_rank_localization_context.rank = weapon_rank
@@ -885,7 +911,7 @@ ItemUtils.rank_display_text = function (item)
 	return Localize("loc_item_display_rank_format_key", no_cache, temp_item_rank_localization_context)
 end
 
-ItemUtils.equip_weapon_skin = function (weapon_item, skin_item)
+Items.equip_weapon_skin = function (weapon_item, skin_item)
 	local weapon_gear_id = weapon_item.gear_id
 	local skin_gear_id = skin_item and skin_item.gear_id
 	local attach_point = "slot_weapon_skin"
@@ -893,7 +919,7 @@ ItemUtils.equip_weapon_skin = function (weapon_item, skin_item)
 	return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point, skin_gear_id)
 end
 
-ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
+Items.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
 	local weapon_gear_id = weapon_item.gear_id
 	local trinket_gear_id = trinket_item and trinket_item.gear_id
 	local attach_point = optional_path
@@ -940,7 +966,7 @@ ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item, optional_p
 	return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point .. ".item", trinket_gear_id)
 end
 
-ItemUtils.unequip_slots = function (unequip_sots)
+Items.unequip_slots = function (unequip_sots)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 	local player_manager = Managers.player
@@ -948,7 +974,7 @@ ItemUtils.unequip_slots = function (unequip_sots)
 	local character_id = player:character_id()
 
 	return Managers.data_service.profiles:unequip_slots(character_id, unequip_sots):next(function (v)
-		Log.debug("ItemUtils", "Unequipped loadout slots")
+		Log.debug("Items", "Unequipped loadout slots")
 
 		if Managers.connection:is_host() then
 			local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
@@ -966,13 +992,13 @@ ItemUtils.unequip_slots = function (unequip_sots)
 
 		return true
 	end):catch(function (errors)
-		Log.error("ItemUtils", "Failed uneequipping loadout slots", errors)
+		Log.error("Items", "Failed uneequipping loadout slots", errors)
 
 		return false
 	end)
 end
 
-ItemUtils.equip_slot_items = function (items)
+Items.equip_slot_items = function (items)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 	local player_manager = Managers.player
@@ -1004,7 +1030,7 @@ ItemUtils.equip_slot_items = function (items)
 		end
 
 		return Managers.data_service.profiles:equip_items_in_slots(character_id, item_gear_ids_by_slots, item_gear_names_by_slots):next(function (v)
-			Log.debug("ItemUtils", "Items equipped in loadout slots")
+			Log.debug("Items", "Items equipped in loadout slots")
 
 			if Managers.connection:is_host() then
 				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
@@ -1022,14 +1048,14 @@ ItemUtils.equip_slot_items = function (items)
 
 			return true
 		end):catch(function (errors)
-			Log.error("ItemUtils", "Failed equipping items in loadout slots: %s", errors)
+			Log.error("Items", "Failed equipping items in loadout slots: %s", errors)
 
 			return false
 		end)
 	end
 end
 
-ItemUtils.is_item_compatible_with_profile = function (item, profile)
+Items.is_item_compatible_with_profile = function (item, profile)
 	local item_gender, item_breed, item_archetype
 
 	if item.genders and not table.is_empty(item.genders) then
@@ -1081,7 +1107,7 @@ ItemUtils.is_item_compatible_with_profile = function (item, profile)
 	return not not item_gender and not not item_breed and not not item_archetype
 end
 
-ItemUtils.equip_slot_master_items = function (items)
+Items.equip_slot_master_items = function (items)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 	local player_manager = Managers.player
@@ -1111,7 +1137,7 @@ ItemUtils.equip_slot_master_items = function (items)
 		end
 
 		Managers.data_service.profiles:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
-			Log.debug("ItemUtils", "Master items equipped in loadout slots")
+			Log.debug("Items", "Master items equipped in loadout slots")
 
 			if Managers.connection:is_host() then
 				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
@@ -1129,14 +1155,14 @@ ItemUtils.equip_slot_master_items = function (items)
 
 			return true
 		end):catch(function (errors)
-			Log.error("ItemUtils", "Failed equipping master items in loadout slots", errors)
+			Log.error("Items", "Failed equipping master items in loadout slots", errors)
 
 			return false
 		end)
 	end
 end
 
-ItemUtils.equip_item_in_slot = function (slot_name, item)
+Items.equip_item_in_slot = function (slot_name, item)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 	local player_manager = Managers.player
@@ -1160,7 +1186,7 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 
 	if item then
 		Managers.backend.interfaces.characters:equip_item_slot(character_id, slot_name, item.gear_id or item.name):next(function (v)
-			Log.debug("ItemUtils", "Equipped!")
+			Log.debug("Items", "Equipped!")
 
 			if Managers.connection:is_host() then
 				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
@@ -1178,14 +1204,14 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 
 			return true
 		end):catch(function (errors)
-			Log.error("ItemUtils", "Equipping %s (ID: %s) to %s failed. User should be shown some error message! %s", item.name, item.gear_id, slot_name, errors)
+			Log.error("Items", "Equipping %s (ID: %s) to %s failed. User should be shown some error message! %s", item.name, item.gear_id, slot_name, errors)
 
 			return false
 		end)
 	end
 end
 
-ItemUtils.refresh_equipped_items = function ()
+Items.refresh_equipped_items = function ()
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 
@@ -1204,17 +1230,17 @@ ItemUtils.refresh_equipped_items = function ()
 	end
 end
 
-ItemUtils.slot_name = function (item)
+Items.slot_name = function (item)
 	return item.slots and item.slots[1]
 end
 
-ItemUtils.item_slot = function (item)
-	local slot_name = ItemUtils.slot_name(item)
+Items.item_slot = function (item)
+	local slot_name = Items.slot_name(item)
 
 	return slot_name and ItemSlotSettings[slot_name]
 end
 
-ItemUtils.sort_element_key_comparator = function (definitions)
+Items.sort_element_key_comparator = function (definitions)
 	return function (a, b)
 		for i = 1, #definitions, 3 do
 			local order, key, func = definitions[i], definitions[i + 1], definitions[i + 2]
@@ -1233,7 +1259,7 @@ ItemUtils.sort_element_key_comparator = function (definitions)
 	end
 end
 
-ItemUtils.sort_comparator = function (definitions)
+Items.sort_comparator = function (definitions)
 	return function (a, b)
 		local a_item, b_item = a.item, b.item
 
@@ -1256,7 +1282,7 @@ ItemUtils.sort_comparator = function (definitions)
 	end
 end
 
-ItemUtils.compare_offer_owned = function (a_offer, b_offer)
+Items.compare_offer_owned = function (a_offer, b_offer)
 	if a_offer and b_offer then
 		local owned_key = "owned"
 		local a_owned = a_offer.state and a_offer.state == owned_key
@@ -1272,7 +1298,7 @@ ItemUtils.compare_offer_owned = function (a_offer, b_offer)
 	return nil
 end
 
-ItemUtils.compare_credits_offer_owned = function (a_offer, b_offer)
+Items.compare_credits_offer_owned = function (a_offer, b_offer)
 	if a_offer and b_offer then
 		local owned_key = "completed"
 		local a_owned = a_offer.state and a_offer.state == owned_key
@@ -1288,7 +1314,7 @@ ItemUtils.compare_credits_offer_owned = function (a_offer, b_offer)
 	return nil
 end
 
-ItemUtils.compare_offer_price = function (a_offer, b_offer)
+Items.compare_offer_price = function (a_offer, b_offer)
 	if a_offer and b_offer then
 		local owned_key = "owned"
 		local a_owned = a_offer.state and a_offer.state == owned_key
@@ -1304,7 +1330,7 @@ ItemUtils.compare_offer_price = function (a_offer, b_offer)
 	end
 end
 
-ItemUtils.compare_set_item_parts_presentation_order = function (a, b)
+Items.compare_set_item_parts_presentation_order = function (a, b)
 	local a_item_type = a.item_type
 	local b_item_type = b.item_type
 	local a_sort_index = UISettings.set_item_parts_presentation_order[a_item_type] or 0
@@ -1313,7 +1339,7 @@ ItemUtils.compare_set_item_parts_presentation_order = function (a, b)
 	return a_sort_index < b_sort_index
 end
 
-ItemUtils.compare_item_type = function (a, b)
+Items.compare_item_type = function (a, b)
 	local a_item_type = a.item_type or ""
 	local a_item_type, b_type = a_item_type, b.item_type or ""
 
@@ -1326,7 +1352,7 @@ ItemUtils.compare_item_type = function (a, b)
 	return nil
 end
 
-ItemUtils.compare_item_name = function (a, b)
+Items.compare_item_name = function (a, b)
 	local a_display_name = a.display_name and Localize(a.display_name) or ""
 	local a_display_name, b_display_name = a_display_name, b.display_name and Localize(b.display_name) or ""
 
@@ -1342,7 +1368,7 @@ ItemUtils.compare_item_name = function (a, b)
 	return nil
 end
 
-ItemUtils.compare_item_rarity = function (a, b)
+Items.compare_item_rarity = function (a, b)
 	local a_rarity = a.rarity or 0
 	local a_rarity, b_rarity = a_rarity, b.rarity or 0
 
@@ -1355,7 +1381,7 @@ ItemUtils.compare_item_rarity = function (a, b)
 	return nil
 end
 
-ItemUtils.compare_item_level = function (a, b)
+Items.compare_item_level = function (a, b)
 	local a_itemLevel = a.itemLevel or 0
 	local a_itemLevel, b_itemLevel = a_itemLevel, b.itemLevel or 0
 
@@ -1380,7 +1406,7 @@ end
 
 local description_values = {}
 
-ItemUtils.perk_description = function (item, rarity, lerp_value)
+Items.perk_description = function (item, rarity, lerp_value)
 	table.clear(description_values)
 
 	local description = item.description
@@ -1463,28 +1489,28 @@ ItemUtils.perk_description = function (item, rarity, lerp_value)
 
 	local final_description = Localize(description, true, description_values)
 
-	Log.debug("ItemUtils", "perk_description %s", table.tostring(description_values))
+	Log.debug("Items", "perk_description %s", table.tostring(description_values))
 
 	return final_description
 end
 
-ItemUtils.trait_description = function (item, rarity, lerp_value)
-	return ItemUtils.perk_description(item, rarity, lerp_value)
+Items.trait_description = function (item, rarity, lerp_value)
+	return Items.perk_description(item, rarity, lerp_value)
 end
 
-ItemUtils.perk_rating = function (perk_item, perk_rarity, perk_value)
+Items.perk_rating = function (perk_item, perk_rarity, perk_value)
 	local rank_item_type_name = perk_item.item_type == "GADGET" and "gadget" or "weapon"
 
 	return RankSettings[perk_rarity or 0].perk_rating[rank_item_type_name]
 end
 
-ItemUtils.trait_rating = function (trait_item, trait_rarity, trait_value)
+Items.trait_rating = function (trait_item, trait_rarity, trait_value)
 	local rank_item_type_name = trait_item.item_type == "GADGET" and "gadget" or "weapon"
 
 	return RankSettings[trait_rarity or 0].trait_rating[rank_item_type_name]
 end
 
-ItemUtils.item_perk_rating = function (item)
+Items.item_perk_rating = function (item)
 	local rating = 0
 	local perks = item.perks
 	local num_perks = perks and #perks or 0
@@ -1499,7 +1525,7 @@ ItemUtils.item_perk_rating = function (item)
 	return rating
 end
 
-ItemUtils.item_trait_rating = function (item)
+Items.item_trait_rating = function (item)
 	local rating = 0
 	local traits = item.traits
 	local num_traits = traits and #traits or 0
@@ -1528,7 +1554,7 @@ ItemUtils.item_trait_rating = function (item)
 	return rating
 end
 
-ItemUtils.trait_category = function (item)
+Items.trait_category = function (item)
 	local trait_category
 
 	if item.item_type == "TRAIT" then
@@ -1538,7 +1564,7 @@ ItemUtils.trait_category = function (item)
 	elseif item.trait_category then
 		trait_category = item.trait_category
 	elseif item.weapon_template then
-		Log.error("ItemUtils", "no trait_category found for %s, using fallback", item.name)
+		Log.error("Items", "no trait_category found for %s, using fallback", item.name)
 
 		trait_category = "bespoke_" .. string.gsub(item.weapon_template, "_m%d$", "")
 	end
@@ -1546,7 +1572,7 @@ ItemUtils.trait_category = function (item)
 	return trait_category
 end
 
-ItemUtils.has_crafting_modification = function (item)
+Items.has_crafting_modification = function (item)
 	local perks = item.perks
 	local has_perk_modification = false
 
@@ -1576,7 +1602,7 @@ ItemUtils.has_crafting_modification = function (item)
 	return has_perk_modification, has_trait_modification
 end
 
-ItemUtils.count_crafting_modification = function (item)
+Items.count_crafting_modification = function (item)
 	local perks = item.perks
 	local count = 0
 
@@ -1601,10 +1627,10 @@ ItemUtils.count_crafting_modification = function (item)
 	return count
 end
 
-ItemUtils.modifications_by_rarity = function (item)
+Items.modifications_by_rarity = function (item)
 	if item and item.rarity then
 		local rarity_settings = RaritySettings[item.rarity]
-		local count_modifications = ItemUtils.count_crafting_modification(item)
+		local count_modifications = Items.count_crafting_modification(item)
 		local max_modifications = rarity_settings.max_modifications
 
 		return count_modifications, max_modifications
@@ -1613,7 +1639,7 @@ ItemUtils.modifications_by_rarity = function (item)
 	return 0, 0
 end
 
-ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)
+Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)
 	local item_gender, item_breed, item_archetype
 
 	if item.genders and not table.is_empty(item.genders) then
@@ -1671,4 +1697,4 @@ ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, pr
 	}
 end
 
-return ItemUtils
+return Items

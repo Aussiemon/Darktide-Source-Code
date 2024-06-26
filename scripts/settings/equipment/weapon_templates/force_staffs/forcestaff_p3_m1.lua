@@ -1126,7 +1126,7 @@ weapon_template.chain_settings = {
 	right_fx_source_name = "_right",
 }
 weapon_template.crosshair = {
-	crosshair_type = "assault",
+	crosshair_type = "dot",
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {

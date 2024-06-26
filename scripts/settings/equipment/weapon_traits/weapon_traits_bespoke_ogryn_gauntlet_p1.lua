@@ -11,17 +11,17 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_on_continuous_fire 
 	weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.05,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.06,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.07,
 			},
 		},
 		{
@@ -120,25 +120,25 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_crit_chance_bonus_on_melee_kill
 		{
 			active_duration = 3,
 			proc_stat_buffs = {
-				[stat_buffs.ranged_critical_strike_chance] = 0.1,
+				[stat_buffs.critical_strike_chance] = 0.1,
 			},
 		},
 		{
 			active_duration = 3,
 			proc_stat_buffs = {
-				[stat_buffs.ranged_critical_strike_chance] = 0.15,
+				[stat_buffs.critical_strike_chance] = 0.15,
 			},
 		},
 		{
 			active_duration = 3,
 			proc_stat_buffs = {
-				[stat_buffs.ranged_critical_strike_chance] = 0.2,
+				[stat_buffs.critical_strike_chance] = 0.2,
 			},
 		},
 		{
 			active_duration = 3,
 			proc_stat_buffs = {
-				[stat_buffs.ranged_critical_strike_chance] = 0.25,
+				[stat_buffs.critical_strike_chance] = 0.25,
 			},
 		},
 	},

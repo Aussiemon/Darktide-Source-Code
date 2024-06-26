@@ -8,7 +8,7 @@ OverheatDisplay.init = function (self, context, slot, weapon_template, fx_source
 		local owner_unit = context.owner_unit
 		local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
-		self._wieldable_component = unit_data_extension:read_component(slot.name)
+		self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 		self._overheat_configuration = weapon_template.overheat_configuration
 		self._ammo_displays = {}
 
@@ -29,8 +29,8 @@ OverheatDisplay.init = function (self, context, slot, weapon_template, fx_source
 end
 
 OverheatDisplay.fixed_update = function (self, unit, dt, t, frame)
-	local wieldable_component = self._wieldable_component
-	local current_overheat = wieldable_component.overheat_current_percentage
+	local inventory_slot_component = self._inventory_slot_component
+	local current_overheat = inventory_slot_component.overheat_current_percentage
 	local overheat_configuration = self._overheat_configuration
 	local warning_threshold = overheat_configuration.critical_threshold
 	local num_displays = #self._ammo_displays

@@ -532,10 +532,6 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 10,
@@ -546,10 +542,6 @@ local template = {
 						"far",
 					},
 				},
-			},
-			{
-				"delay",
-				duration = 3,
 			},
 			{
 				"spawn_by_points",
@@ -769,10 +761,6 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 10,
@@ -785,10 +773,6 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 5,
@@ -799,10 +783,6 @@ local template = {
 						"roamer",
 					},
 				},
-			},
-			{
-				"delay",
-				duration = 3,
 			},
 			{
 				"spawn_by_points",
@@ -911,10 +891,6 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 10,
@@ -927,10 +903,6 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 5,
@@ -941,10 +913,6 @@ local template = {
 						"roamer",
 					},
 				},
-			},
-			{
-				"delay",
-				duration = 3,
 			},
 			{
 				"spawn_by_points",

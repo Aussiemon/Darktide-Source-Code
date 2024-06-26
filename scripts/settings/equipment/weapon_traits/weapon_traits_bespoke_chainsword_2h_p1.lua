@@ -9,7 +9,26 @@ local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_chainsword_2h_p1_guaranteed_melee_crit_on_activated_kill = {
 	weapon_trait_bespoke_chainsword_2h_p1_guaranteed_melee_crit_on_activated_kill = {
-		{},
+		{
+			buff_data = {
+				num_stacks_on_proc = 4,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 6,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 8,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 10,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_chainsword_2h_p1_bleed_on_activated_hit = {
@@ -194,7 +213,26 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_crit_chan
 }
 templates.weapon_trait_bespoke_chainsword_2h_p1_pass_past_armor_on_crit = {
 	weapon_trait_bespoke_chainsword_2h_p1_pass_past_armor_on_crit = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.025,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.05,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.075,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.1,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_chainsword_2h_p1_rending_vs_staggered = {

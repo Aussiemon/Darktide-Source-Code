@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/cinematic_video/hub_location_introduction_settings.lua
 
-hub_location_introduction_settings = {
+local hub_location_introduction_settings = {
 	mission_board_view = {
 		narrative_event_name = "hli_mission_board_viewed",
 		video_template = "hli_mission_board",

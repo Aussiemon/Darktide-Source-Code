@@ -92,8 +92,8 @@ end
 
 local function _calculate_hang_ledge_spawn_position(nav_world, hang_ledge_position)
 	local target_position = hang_ledge_position
-	local above_limit = 5
-	local below_limit = 5
+	local above_limit = 3
+	local below_limit = 3
 	local horizontal_limit = 10
 	local distance_from_nav_border = 0.25
 	local new_position_on_nav = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, target_position, above_limit, below_limit, horizontal_limit, distance_from_nav_border)

@@ -17,20 +17,24 @@ local layouts = {
 		input_settings = {
 			Ingame = {
 				action_one = {
-					"xbox_controller_right_trigger",
 					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
 				},
 				action_two = {
-					"xbox_controller_left_trigger",
 					"ps4_controller_l2",
+					"xbox_controller_left_trigger",
 				},
 				weapon_extra = {
+					"ps4_controller_r3",
 					"xbox_controller_right_thumb",
-					"ps4_controller_right_thumb",
 				},
 				interact = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				wield_1 = StrictNil,
 				wield_2 = StrictNil,
@@ -38,56 +42,57 @@ local layouts = {
 					hide_in_controller_layout = true,
 				},
 				wield_3_gamepad = {
-					"xbox_controller_d_left",
 					"ps4_controller_d_left",
+					"xbox_controller_d_left",
 				},
 				wield_4 = {
 					hide_in_controller_layout = true,
 				},
 				wield_5 = {
-					"xbox_controller_d_right",
 					"ps4_controller_d_right",
+					"xbox_controller_d_right",
 				},
 				quick_wield = {
-					"xbox_controller_y",
 					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				wield_scroll_down = StrictNil,
 				wield_scroll_up = StrictNil,
 				weapon_reload = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
 				},
 				grenade_ability = {
-					"xbox_controller_d_down",
 					"ps4_controller_d_down",
+					"xbox_controller_d_down",
 				},
 				combat_ability = {
-					"xbox_controller_right_shoulder",
 					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				smart_tag = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				com_wheel = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				tactical_overlay = {
-					"xbox_controller_back",
 					"ps4_controller_touch",
+					"xbox_controller_back",
 				},
 				menu = {
-					"xbox_controller_start",
 					"ps4_controller_options",
+					"xbox_controller_start",
 				},
 				weapon_inspect = {
+					"ps4_controller_d_right",
 					"xbox_controller_d_right",
 				},
 				spectate_next = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				voip_push_to_talk = StrictNil,
 				keyboard_move_forward = StrictNil,
@@ -95,32 +100,33 @@ local layouts = {
 				keyboard_move_left = StrictNil,
 				keyboard_move_right = StrictNil,
 				dodge = {
-					"xbox_controller_left_shoulder",
 					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
 				},
 				jump = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				crouch = {
-					"xbox_controller_b",
 					"ps4_controller_circle",
+					"xbox_controller_b",
 				},
 				slide = {
+					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
 				sprint = {
-					"xbox_controller_left_thumb",
 					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
 				},
 				look_raw = StrictNil,
 				look_raw_controller = {
-					"xbox_controller_right",
 					"ps4_controller_right",
+					"xbox_controller_right",
 				},
 				move_controller = {
-					"xbox_controller_left",
 					"ps4_controller_left",
+					"xbox_controller_left",
 				},
 			},
 			View = table.add_missing({}, default_view_settings.aliases),
@@ -132,101 +138,107 @@ local layouts = {
 		input_settings = {
 			Ingame = {
 				action_one = {
-					"xbox_controller_right_trigger",
 					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
 				},
 				action_two = {
-					"xbox_controller_left_trigger",
 					"ps4_controller_l2",
+					"xbox_controller_left_trigger",
 				},
 				weapon_extra = {
+					"ps4_controller_r3",
 					"xbox_controller_right_thumb",
-					"ps4_controller_right_thumb",
 				},
 				interact = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				wield_3 = {
-					"xbox_controller_d_left",
 					"ps4_controller_d_left",
+					"xbox_controller_d_left",
 				},
 				wield_3_gamepad = {
 					hide_in_controller_layout = true,
 				},
 				wield_4 = {
-					"xbox_controller_d_down",
 					"ps4_controller_d_down",
+					"xbox_controller_d_down",
 				},
 				wield_5 = {
-					"xbox_controller_d_right",
 					"ps4_controller_d_right",
+					"xbox_controller_d_right",
 				},
 				quick_wield = {
-					"xbox_controller_y",
 					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				weapon_reload = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
 				},
 				grenade_ability = {
-					"xbox_controller_right_shoulder",
 					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				combat_ability = {
-					"xbox_controller_left_shoulder",
 					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
 				},
 				smart_tag = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				com_wheel = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				tactical_overlay = {
-					"xbox_controller_back",
 					"ps4_controller_touch",
+					"xbox_controller_back",
 				},
 				menu = {
-					"xbox_controller_start",
 					"ps4_controller_options",
+					"xbox_controller_start",
 				},
 				weapon_inspect = {
+					"ps4_controller_d_right",
 					"xbox_controller_d_right",
 				},
 				spectate_next = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				dodge = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				jump = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				crouch = {
-					"xbox_controller_b",
 					"ps4_controller_circle",
+					"xbox_controller_b",
 				},
 				slide = {
+					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
 				sprint = {
-					"xbox_controller_left_thumb",
 					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
 				},
 				look_raw_controller = {
-					"xbox_controller_right",
 					"ps4_controller_right",
+					"xbox_controller_right",
 				},
 				move_controller = {
-					"xbox_controller_left",
 					"ps4_controller_left",
+					"xbox_controller_left",
 				},
 			},
 			View = table.add_missing({}, default_view_settings.aliases),
@@ -238,101 +250,107 @@ local layouts = {
 		input_settings = {
 			Ingame = {
 				action_one = {
-					"xbox_controller_right_shoulder",
 					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				action_two = {
-					"xbox_controller_left_shoulder",
 					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
 				},
 				weapon_extra = {
+					"ps4_controller_r3",
 					"xbox_controller_right_thumb",
-					"ps4_controller_right_thumb",
 				},
 				interact = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				wield_3 = {
-					"xbox_controller_d_left",
 					"ps4_controller_d_left",
+					"xbox_controller_d_left",
 				},
 				wield_3_gamepad = {
 					hide_in_controller_layout = true,
 				},
 				wield_4 = {
-					"xbox_controller_d_down",
 					"ps4_controller_d_down",
+					"xbox_controller_d_down",
 				},
 				wield_5 = {
-					"xbox_controller_d_right",
 					"ps4_controller_d_right",
+					"xbox_controller_d_right",
 				},
 				quick_wield = {
-					"xbox_controller_y",
 					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				weapon_reload = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
 				},
 				grenade_ability = {
-					"xbox_controller_right_trigger",
 					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
 				},
 				combat_ability = {
-					"xbox_controller_left_trigger",
 					"ps4_controller_r1",
+					"xbox_controller_left_trigger",
 				},
 				smart_tag = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				com_wheel = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				tactical_overlay = {
-					"xbox_controller_back",
 					"ps4_controller_touch",
+					"xbox_controller_back",
 				},
 				menu = {
-					"xbox_controller_start",
 					"ps4_controller_options",
+					"xbox_controller_start",
 				},
 				weapon_inspect = {
+					"ps4_controller_d_right",
 					"xbox_controller_d_right",
 				},
 				spectate_next = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				dodge = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				jump = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				crouch = {
-					"xbox_controller_b",
 					"ps4_controller_circle",
+					"xbox_controller_b",
 				},
 				slide = {
+					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
 				sprint = {
-					"xbox_controller_left_thumb",
 					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
 				},
 				look_raw_controller = {
-					"xbox_controller_right",
 					"ps4_controller_right",
+					"xbox_controller_right",
 				},
 				move_controller = {
-					"xbox_controller_left",
 					"ps4_controller_left",
+					"xbox_controller_left",
 				},
 			},
 			View = table.add_missing({}, default_view_settings.aliases),
@@ -344,100 +362,106 @@ local layouts = {
 		input_settings = {
 			Ingame = {
 				action_one = {
-					"xbox_controller_right_shoulder",
 					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				action_two = {
-					"xbox_controller_left_shoulder",
 					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
 				},
 				weapon_extra = {
+					"ps4_controller_r3",
 					"xbox_controller_right_thumb",
-					"ps4_controller_right_thumb",
 				},
 				interact = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				wield_3 = {
 					hide_in_controller_layout = true,
 				},
 				wield_3_gamepad = {
-					"xbox_controller_d_left",
 					"ps4_controller_d_left",
+					"xbox_controller_d_left",
 				},
 				wield_4 = {
 					hide_in_controller_layout = true,
 				},
 				wield_5 = {
-					"xbox_controller_d_right",
 					"ps4_controller_d_right",
+					"xbox_controller_d_right",
 				},
 				quick_wield = {
-					"xbox_controller_y",
 					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				weapon_reload = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
 				},
 				grenade_ability = {
-					"xbox_controller_d_down",
 					"ps4_controller_d_down",
+					"xbox_controller_d_down",
 				},
 				combat_ability = {
-					"xbox_controller_right_trigger",
 					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
 				},
 				smart_tag = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				com_wheel = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				tactical_overlay = {
-					"xbox_controller_back",
 					"ps4_controller_touch",
+					"xbox_controller_back",
 				},
 				menu = {
-					"xbox_controller_start",
 					"ps4_controller_options",
+					"xbox_controller_start",
 				},
 				weapon_inspect = {
+					"ps4_controller_d_right",
 					"xbox_controller_d_right",
 				},
 				spectate_next = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				dodge = {
-					"xbox_controller_left_trigger",
 					"ps4_controller_l2",
+					"xbox_controller_left_trigger",
 				},
 				jump = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				crouch = {
-					"xbox_controller_b",
 					"ps4_controller_circle",
+					"xbox_controller_b",
 				},
 				slide = {
+					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
 				sprint = {
-					"xbox_controller_left_thumb",
 					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
 				},
 				look_raw_controller = {
-					"xbox_controller_right",
 					"ps4_controller_right",
+					"xbox_controller_right",
 				},
 				move_controller = {
-					"xbox_controller_left",
 					"ps4_controller_left",
+					"xbox_controller_left",
 				},
 			},
 			View = table.add_missing({}, default_view_settings.aliases),
@@ -449,101 +473,107 @@ local layouts = {
 		input_settings = {
 			Ingame = {
 				action_one = {
-					"xbox_controller_right_trigger",
 					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
 				},
 				action_two = {
-					"xbox_controller_left_trigger",
 					"ps4_controller_l2",
+					"xbox_controller_left_trigger",
 				},
 				weapon_extra = {
+					"ps4_controller_r3",
 					"xbox_controller_right_thumb",
-					"ps4_controller_right_thumb",
 				},
 				interact = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				wield_3 = {
-					"xbox_controller_d_left",
 					"ps4_controller_d_left",
+					"xbox_controller_d_left",
 				},
 				wield_3_gamepad = {
 					hide_in_controller_layout = true,
 				},
 				wield_4 = {
-					"xbox_controller_d_down",
 					"ps4_controller_d_down",
+					"xbox_controller_d_down",
 				},
 				wield_5 = {
-					"xbox_controller_d_right",
 					"ps4_controller_d_right",
+					"xbox_controller_d_right",
 				},
 				quick_wield = {
-					"xbox_controller_y",
 					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				weapon_reload = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
 				},
 				grenade_ability = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				combat_ability = {
-					"xbox_controller_left_shoulder",
 					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
 				},
 				smart_tag = {
-					"xbox_controller_right_shoulder",
 					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				com_wheel = {
-					"xbox_controller_right_shoulder",
 					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				tactical_overlay = {
-					"xbox_controller_back",
 					"ps4_controller_touch",
+					"xbox_controller_back",
 				},
 				menu = {
-					"xbox_controller_start",
 					"ps4_controller_options",
+					"xbox_controller_start",
 				},
 				weapon_inspect = {
+					"ps4_controller_d_right",
 					"xbox_controller_d_right",
 				},
 				spectate_next = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				dodge = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				jump = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				crouch = {
-					"xbox_controller_b",
 					"ps4_controller_circle",
+					"xbox_controller_b",
 				},
 				slide = {
+					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
 				sprint = {
-					"xbox_controller_left_thumb",
 					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
 				},
 				look_raw_controller = {
-					"xbox_controller_right",
 					"ps4_controller_right",
+					"xbox_controller_right",
 				},
 				move_controller = {
-					"xbox_controller_left",
 					"ps4_controller_left",
+					"xbox_controller_left",
 				},
 			},
 			View = table.add_missing({}, default_view_settings.aliases),
@@ -555,100 +585,106 @@ local layouts = {
 		input_settings = {
 			Ingame = {
 				action_one = {
-					"xbox_controller_right_trigger",
 					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
 				},
 				action_two = {
-					"xbox_controller_left_trigger",
 					"ps4_controller_l2",
+					"xbox_controller_left_trigger",
 				},
 				weapon_extra = {
-					"xbox_controller_left_shoulder",
 					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
 				},
 				interact = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				wield_3 = {
 					hide_in_controller_layout = true,
 				},
 				wield_3_gamepad = {
-					"xbox_controller_d_left",
 					"ps4_controller_d_left",
+					"xbox_controller_d_left",
 				},
 				wield_4 = {
 					hide_in_controller_layout = true,
 				},
 				wield_5 = {
-					"xbox_controller_d_right",
 					"ps4_controller_d_right",
+					"xbox_controller_d_right",
 				},
 				quick_wield = {
-					"xbox_controller_y",
 					"ps4_controller_triangle",
+					"xbox_controller_y",
 				},
 				weapon_reload = {
-					"xbox_controller_x",
 					"ps4_controller_square",
+					"xbox_controller_x",
 				},
 				grenade_ability = {
-					"xbox_controller_d_down",
 					"ps4_controller_d_down",
+					"xbox_controller_d_down",
 				},
 				combat_ability = {
-					"xbox_controller_right_shoulder",
 					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				smart_tag = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				com_wheel = {
-					"xbox_controller_d_up",
 					"ps4_controller_d_up",
+					"xbox_controller_d_up",
 				},
 				tactical_overlay = {
-					"xbox_controller_back",
 					"ps4_controller_touch",
+					"xbox_controller_back",
 				},
 				menu = {
-					"xbox_controller_start",
 					"ps4_controller_options",
+					"xbox_controller_start",
 				},
 				weapon_inspect = {
+					"ps4_controller_d_right",
 					"xbox_controller_d_right",
 				},
 				spectate_next = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				dodge = {
-					"xbox_controller_b",
 					"ps4_controller_circle",
+					"xbox_controller_b",
 				},
 				jump = {
-					"xbox_controller_a",
 					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				crouch = {
+					"ps4_controller_r3",
 					"xbox_controller_right_thumb",
-					"ps4_controller_right_thumb",
 				},
 				slide = {
+					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
 				sprint = {
-					"xbox_controller_left_thumb",
 					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
 				},
 				look_raw_controller = {
-					"xbox_controller_right",
 					"ps4_controller_right",
+					"xbox_controller_right",
 				},
 				move_controller = {
-					"xbox_controller_left",
 					"ps4_controller_left",
+					"xbox_controller_left",
 				},
 			},
 			View = table.add_missing({}, default_view_settings.aliases),

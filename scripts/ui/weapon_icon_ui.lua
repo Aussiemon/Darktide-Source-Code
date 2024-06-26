@@ -29,10 +29,14 @@ end
 
 WeaponIconUI.weapon_icon_updated = function (self, item, prioritized)
 	local id = item.gear_id or item.name
-	local request = self:_request_by_id(id)
+	local requests_by_size = self._requests_by_size
 
-	if request then
-		self:_update_request(request, item, prioritized)
+	for size_key, requests in pairs(requests_by_size) do
+		for _, request in pairs(requests) do
+			if string.find(request.id, id, nil, true) then
+				self:_update_request(request, item, prioritized)
+			end
+		end
 	end
 end
 

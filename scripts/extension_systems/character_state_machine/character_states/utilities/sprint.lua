@@ -8,7 +8,7 @@ local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_keywords = BuffSettings.keywords
 local Sprint = {}
-local SPRINT_DODGE_ANGLE_THRESHOLD_RAD = math.degrees_to_radians(50)
+local SPRINT_DODGE_ANGLE_THRESHOLD_RAD = math.degrees_to_radians(70)
 
 Sprint.SPRINT_DODGE_ANGLE_THRESHOLD_RAD = SPRINT_DODGE_ANGLE_THRESHOLD_RAD
 

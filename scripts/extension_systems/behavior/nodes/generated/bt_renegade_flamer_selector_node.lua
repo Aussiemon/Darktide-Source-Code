@@ -34,15 +34,19 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	local children = self._children
 
 	do
-		local node_death = children[1]
+		local node_death_sequence = children[1]
 		local death_component = blackboard.death
 		local is_dead = death_component.is_dead
 		local condition_result = is_dead
 
 		if condition_result then
-			new_running_child_nodes[node_identifier] = node_death
+			local leaf_node = node_death_sequence:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 
-			return node_death
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_death_sequence
+
+				return leaf_node
+			end
 		end
 	end
 

@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	hm_complex = {
-		main_objective_type = "decode_objective",
 		objectives = {
 			objective_hm_complex_cross = {
 				description = "loc_objective_hm_complex_cross_desc",
@@ -24,8 +23,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_hm_complex_elevator_event_survive_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "hacking_event",
 				progress_bar = true,
-				use_music_event = "hacking_event",
 			},
 			objective_hm_complex_elevator_up = {
 				description = "loc_objective_hm_complex_elevator_up_desc",
@@ -42,9 +41,9 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_hm_complex_final_event_running_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "hacking_event",
 				progress_bar = true,
 				turn_off_backfill = true,
-				use_music_event = "hacking_event",
 			},
 			objective_hm_complex_activate_transmission = {
 				description = "loc_objective_hm_complex_activate_transmission_desc",
@@ -55,7 +54,7 @@ local mission_objective_templates = {
 				description = "loc_objective_hm_complex_escape_desc",
 				header = "loc_objective_hm_complex_escape_header",
 				mission_objective_type = "goal",
-				use_music_event = "escape_event",
+				music_wwise_state = "escape_event",
 			},
 		},
 	},

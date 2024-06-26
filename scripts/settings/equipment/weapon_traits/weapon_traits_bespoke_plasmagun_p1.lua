@@ -51,17 +51,17 @@ templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.05,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.06,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.07,
 			},
 		},
 		{
@@ -173,6 +173,21 @@ templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike 
 }
 templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire = {
 	weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire = {
+		{
+			stat_buffs = {
+				[stat_buffs.overheat_amount] = 0.96,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.overheat_amount] = 0.94,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.overheat_amount] = 0.92,
+			},
+		},
 		{
 			stat_buffs = {
 				[stat_buffs.overheat_amount] = 0.9,

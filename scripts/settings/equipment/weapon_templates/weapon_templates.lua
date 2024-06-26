@@ -116,6 +116,18 @@ local template_groups = {
 		"ogryn_powermaul_slabshield_p1_m1",
 	},
 	{
+		"ogryn_axes_2h",
+		"ogryn_pickaxe_2h_p1_m1",
+		"ogryn_pickaxe_2h_p1_m2",
+		"ogryn_pickaxe_2h_p1_m3",
+	},
+	{
+		"power_mauls",
+		"powermaul_p1_m1",
+		"powermaul_p1_m2",
+		"powermaul_p1_m3",
+	},
+	{
 		"power_mauls_2h",
 		"powermaul_2h_p1_m1",
 	},
@@ -148,6 +160,10 @@ local template_groups = {
 	{
 		"bolters",
 		"bolter_p1_m1",
+	},
+	{
+		"bolt_pistols",
+		"boltpistol_p1_m1",
 	},
 	{
 		"flamers",
@@ -207,6 +223,7 @@ local template_groups = {
 		"shotgun_p1_m1",
 		"shotgun_p1_m2",
 		"shotgun_p1_m3",
+		"shotgun_p2_m1",
 	},
 	{
 		"stub_pistols",

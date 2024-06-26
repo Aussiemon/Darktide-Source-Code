@@ -19,8 +19,8 @@ local function weapon_template_tests(weapon_template)
 	_stat_and_perk_verification(weapon_template)
 end
 
-local inventory_component_data = PlayerCharacterConstants.inventory_component_data
-local weapon_component_data = inventory_component_data.weapon
+local inventory_slot_component_data = PlayerCharacterConstants.inventory_slot_component_data
+local weapon_component_data = inventory_slot_component_data.weapon
 
 function _template_settings_test(weapon_template)
 	local weapon_template_name = weapon_template.name

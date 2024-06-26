@@ -29,6 +29,7 @@ local double_cleave = DamageProfileSettings.double_cleave
 local big_cleave = DamageProfileSettings.big_cleave
 
 damage_templates.force_staff_ball = {
+	force_staff_primary = true,
 	force_weapon_damage = true,
 	ignore_stagger_reduction = true,
 	ragdoll_push_force = 600,
@@ -443,6 +444,7 @@ damage_templates.close_force_staff_demolition = {
 	gib_push_force = GibbingSettings.gib_push_force.force_demolition,
 }
 damage_templates.force_staff_bash = {
+	force_staff_melee = true,
 	ignore_stagger_reduction = true,
 	ragdoll_push_force = 100,
 	stagger_category = "melee",
@@ -503,6 +505,10 @@ overrides.heavy_force_staff_bash = {
 			"impact",
 			14,
 		},
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.heavy,
+		},
 	},
 }
 overrides.force_staff_bash_stab_heavy = {
@@ -521,6 +527,10 @@ overrides.force_staff_bash_stab_heavy = {
 		{
 			"weakspot_stagger_resistance_modifier",
 			0.01,
+		},
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.heavy,
 		},
 	},
 }
@@ -678,6 +688,7 @@ damage_templates.default_warpfire_assault = {
 }
 damage_templates.default_warpfire_assault_burst = {
 	duration_scale_bonus = 0.1,
+	force_staff_primary = true,
 	force_weapon_damage = true,
 	ignore_stagger_reduction = true,
 	ragdoll_push_force = 12,

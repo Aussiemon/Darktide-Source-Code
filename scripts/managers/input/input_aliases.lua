@@ -24,10 +24,10 @@ InputAliases.restore_default_by_devices = function (self, specific_alias, device
 	for alias, alias_row in pairs(default_aliases) do
 		if not specific_alias or alias == specific_alias then
 			for i = 1, #alias_row do
-				local key_info = self:_get_keys_for_row(alias_row, i, device_types)
+				local key_info = self:_get_keys_for_row(alias_row, device_types)
 
 				if key_info then
-					self:set_keys_for_alias(alias, i, device_types, key_info)
+					self:set_keys_for_alias(alias, device_types, key_info)
 				end
 			end
 		end
@@ -46,8 +46,6 @@ InputAliases.overrides = function (self)
 			if value ~= default[index] then
 				overrides[alias_name] = overrides[alias_name] or {}
 				overrides[alias_name][index] = value
-
-				break
 			end
 		end
 	end
@@ -96,35 +94,30 @@ InputAliases.load = function (self, service_name)
 	end
 end
 
-InputAliases.get_keys_for_alias = function (self, name, index, device_types)
-	return self:_get_keys_for_row(self._aliases[name], index, device_types)
+InputAliases.get_keys_for_alias = function (self, name, device_types)
+	return self:_get_keys_for_row(self._aliases[name], device_types)
 end
 
-InputAliases.get_default_keys_for_alias = function (self, name, index, device_types)
-	return self:_get_keys_for_row(self._default_aliases[name], index, device_types)
+InputAliases.get_default_keys_for_alias = function (self, name, device_types)
+	return self:_get_keys_for_row(self._default_aliases[name], device_types)
 end
 
-InputAliases.get_keys_for_alias_row = function (self, alias_row_array, index, device_types)
-	return self:_get_keys_for_row(alias_row_array, index, device_types)
+InputAliases.get_keys_for_alias_row = function (self, alias_row_array, device_types)
+	return self:_get_keys_for_row(alias_row_array, device_types)
 end
 
-InputAliases._get_keys_for_row = function (self, alias_row, index, device_types)
+InputAliases._get_keys_for_row = function (self, alias_row, device_types)
 	if not alias_row then
 		return
 	end
 
 	local key_info = {}
-	local found = 0
 
 	for _, element in ipairs(alias_row) do
 		key_info.main, key_info.enablers, key_info.disablers = InputUtils.split_key(element)
 
 		if table.contains(device_types, InputUtils.key_device_type(key_info.main)) then
-			found = found + 1
-
-			if found == index then
-				return key_info
-			end
+			return key_info
 		end
 	end
 end
@@ -148,7 +141,7 @@ InputAliases._get_key = function (self, element, index, device_types)
 	end
 end
 
-InputAliases.set_keys_for_alias = function (self, name, index, device_types, new_key_info)
+InputAliases.set_keys_for_alias = function (self, name, device_types, new_key_info, device_index)
 	local alias_row = self._aliases[name]
 
 	if not alias_row then
@@ -157,19 +150,14 @@ InputAliases.set_keys_for_alias = function (self, name, index, device_types, new
 
 	local col
 	local key_info = {}
-	local found = 0
 
 	for i, element in ipairs(alias_row) do
 		key_info.main, key_info.enablers, key_info.disablers = InputUtils.split_key(element)
 
 		if table.contains(device_types, InputUtils.key_device_type(key_info.main)) then
-			found = found + 1
+			col = i
 
-			if found == index then
-				col = i
-
-				break
-			end
+			break
 		end
 	end
 
@@ -181,8 +169,24 @@ InputAliases.set_keys_for_alias = function (self, name, index, device_types, new
 		end
 
 		table.insert(alias_row, col, value)
-	elseif value then
-		alias_row[#alias_row + 1] = value
+	elseif device_index then
+		local first_index = alias_row[1]
+		local pc_device_types = {
+			"mouse",
+			"keyboard",
+		}
+
+		if first_index then
+			key_info.main, key_info.enablers, key_info.disablers = InputUtils.split_key(first_index)
+
+			if table.contains(pc_device_types, InputUtils.key_device_type(key_info.main)) then
+				alias_row[device_index + 1] = value
+
+				return
+			end
+		end
+
+		alias_row[device_index] = value
 	end
 end
 

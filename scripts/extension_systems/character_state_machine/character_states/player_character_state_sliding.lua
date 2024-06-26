@@ -58,7 +58,7 @@ PlayerCharacterStateSliding.init = function (self, character_state_init_context,
 end
 
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
-local FX_SOURCE_NAME = "rightfoot"
+local FX_SOURCE_NAME = "right_foot"
 
 PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion_steering = self._locomotion_steering_component

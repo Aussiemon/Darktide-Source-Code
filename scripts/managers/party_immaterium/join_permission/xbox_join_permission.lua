@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/managers/party_immaterium/join_permission/xbox_join_permission.lua
 
 local Promise = require("scripts/foundation/utilities/promise")
-local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local XboxJoinPermission = {}
 local empty_array = {}
 local deny_reasons
@@ -40,10 +40,10 @@ XboxJoinPermission.test_play_mutliplayer_permission = function (account_id, plat
 	if platform == "xbox" then
 		local context_suffix = context and "_" .. context or ""
 		local permission_array = PERMISSION_ARRAY[context] or PERMISSION_ARRAY.default
-		local promise_check = XboxLiveUtilities.batch_check_permission(permission_array, {
+		local promise_check = XboxLiveUtils.batch_check_permission(permission_array, {
 			platform_user_id,
 		}, empty_array):catch(function (error)
-			Log.error("XboxJoinPermission", "XboxLiveUtilities.batch_check_permission failed with hresult %s", tostring(error[1]))
+			Log.error("XboxJoinPermission", "XboxLiveUtils.batch_check_permission failed with hresult %s", tostring(error[1]))
 
 			return Promise.resolved({
 				{
@@ -53,7 +53,7 @@ XboxJoinPermission.test_play_mutliplayer_permission = function (account_id, plat
 		end)
 
 		return promise_check:next(function (result_array)
-			Log.info("XboxJoinPermission", "XboxLiveUtilities.batch_check_permission result=%s", table.tostring(result_array, 5))
+			Log.info("XboxJoinPermission", "XboxLiveUtils.batch_check_permission result=%s", table.tostring(result_array, 5))
 
 			for _, result in ipairs(result_array) do
 				if not result.is_allowed then

@@ -39,6 +39,11 @@ CraftingView.show_wallets = function (self, show)
 	self:_update_wallets()
 end
 
+local story_level_order = {
+	camera_recipe_enter_anim = 1,
+	camera_weapon_selection_enter_anim = 2,
+}
+
 CraftingView.go_to_crafting_view = function (self, view_name, item)
 	local tab_data = CraftingViewDefinitions.crafting_tab_params[view_name]
 	local context = {
@@ -47,6 +52,38 @@ CraftingView.go_to_crafting_view = function (self, view_name, item)
 	}
 
 	self:_setup_tab_bar(tab_data, context)
+
+	local crafting_level_story_event = tab_data.crafting_level_story_event
+
+	if crafting_level_story_event then
+		local world_spawner = self._world_spawner
+		local previous_crafting_level_story_event = self._previous_crafting_level_story_event
+
+		if previous_crafting_level_story_event then
+			local reverse_privious = story_level_order[previous_crafting_level_story_event] >= story_level_order[crafting_level_story_event]
+			local start_time
+			local active_story_id = world_spawner:active_story_id()
+
+			if active_story_id and reverse_privious then
+				start_time = world_spawner:story_time(active_story_id)
+			end
+
+			local story_event = reverse_privious and previous_crafting_level_story_event or crafting_level_story_event
+
+			world_spawner:play_story(story_event, start_time, reverse_privious)
+		else
+			local start_time
+			local active_story_id = world_spawner:active_story_id()
+
+			if active_story_id then
+				start_time = world_spawner:story_time(active_story_id)
+			end
+
+			world_spawner:play_story(crafting_level_story_event, start_time)
+		end
+
+		self._previous_crafting_level_story_event = crafting_level_story_event
+	end
 end
 
 CraftingView.on_enter = function (self)
@@ -104,6 +141,25 @@ CraftingView.previously_active_view_name = function (self)
 end
 
 CraftingView._close_active_view = function (self, is_handling_new_view)
+	local world_spawner = self._world_spawner
+
+	if not is_handling_new_view then
+		local previous_crafting_level_story_event = self._previous_crafting_level_story_event
+
+		if previous_crafting_level_story_event then
+			local start_time
+			local active_story_id = world_spawner:active_story_id()
+
+			if active_story_id then
+				start_time = world_spawner:story_time(active_story_id)
+			end
+
+			world_spawner:play_story(previous_crafting_level_story_event, nil, true)
+
+			self._previous_crafting_level_story_event = nil
+		end
+	end
+
 	self._wanted_overlay_alpha = 0
 	self._previously_active_view_name = self._active_view
 
@@ -251,12 +307,12 @@ CraftingView.on_exit = function (self)
 	end
 end
 
-CraftingView.craft = function (self, recipe, ingredients, callback, done_callback)
+CraftingView.craft = function (self, recipe, ingredients, callback, done_callback, additional_context)
 	local recipe_name = recipe.name
 
 	Log.info("CraftingView", "Craft operation %q with ingredients:\n%s", recipe_name, table.minidump(ingredients, "ingredients"))
 
-	local promise = recipe.craft(ingredients)
+	local promise = recipe.craft(ingredients, additional_context)
 
 	return promise:next(function (result)
 		Log.info("CraftingView", "Craft operation %q succeeded", recipe_name)

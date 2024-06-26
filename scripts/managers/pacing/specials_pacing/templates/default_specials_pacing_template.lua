@@ -56,6 +56,11 @@ local DEFAULT_RUSH_PREVENTION_BREEDS = {
 	"chaos_hound",
 	"cultist_mutant",
 }
+local DEFAULT_LONER_PREVENTION_BREEDS = {
+	"chaos_hound",
+	"cultist_mutant",
+	"renegade_netgunner",
+}
 local DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS = {
 	"chaos_hound",
 	"cultist_mutant",
@@ -67,13 +72,10 @@ local FACTION_BOUND_BREEDS = {
 		renegade = "renegade_flamer",
 	},
 	grenadier = {
-		cultist = "renegade_grenadier",
+		cultist = "cultist_grenadier",
 		renegade = "renegade_grenadier",
 	},
 }
-
-FACTION_BOUND_BREEDS.grenadier.cultist = "cultist_grenadier"
-
 local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
 	chaos_beast_of_nurgle = 30,
 	chaos_hound = 25,
@@ -434,6 +436,19 @@ local specials_pacing_template = {
 				0,
 				3,
 			},
+			loner_prevention_breeds = DEFAULT_LONER_PREVENTION_BREEDS,
+			loner_prevention_cooldown = {
+				40,
+				60,
+			},
+			loner_prevention_failed_cooldown = {
+				3,
+				7,
+			},
+			loner_time = {
+				10,
+				14,
+			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				50,
@@ -512,6 +527,19 @@ local specials_pacing_template = {
 			num_coordinated_surges_range = {
 				3,
 				6,
+			},
+			loner_prevention_breeds = DEFAULT_LONER_PREVENTION_BREEDS,
+			loner_prevention_cooldown = {
+				20,
+				40,
+			},
+			loner_prevention_failed_cooldown = {
+				3,
+				7,
+			},
+			loner_time = {
+				6,
+				10,
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {

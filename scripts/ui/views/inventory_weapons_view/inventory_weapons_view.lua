@@ -183,7 +183,15 @@ InventoryWeaponsView.cb_on_discard_held = function (self, _, input_pressed)
 		self._hotkey_item_discard_pressed = true
 	end
 
-	local selected_grid_widget = self:selected_grid_widget()
+	local selected_grid_widget
+
+	if self._discarded_item_grid_index then
+		local grid_widgets = self:grid_widgets()
+
+		selected_grid_widget = grid_widgets[self._discarded_item_grid_index]
+	else
+		selected_grid_widget = self:selected_grid_widget()
+	end
 
 	if selected_grid_widget and not selected_grid_widget.content.equipped and (self._hotkey_item_discard_pressed or self._discard_item_timer) then
 		self._update_item_discard = true
@@ -747,9 +755,9 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 			local item = element.item
 
 			if item then
-				local is_selected = previewed_item and previewed_item.gear_id == item.gear_id
+				local is_discarding = self._discarded_item_grid_index and self._discarded_item_grid_index == i
 
-				style.salvage_circle.material_values.progress = is_selected and discard_item_hold_progress or 0
+				style.salvage_circle.material_values.progress = is_discarding and discard_item_hold_progress or 0
 			end
 
 			if discarded then
@@ -1032,6 +1040,7 @@ InventoryWeaponsView._update_item_discard_progress = function (self, dt)
 
 		if not self._discard_item_timer then
 			self._discard_item_timer = 0
+			self._discarded_item_grid_index = self:selected_grid_index()
 		end
 
 		local time = self._discard_item_timer + dt
@@ -1045,10 +1054,10 @@ InventoryWeaponsView._update_item_discard_progress = function (self, dt)
 			self._discard_item_timer = nil
 			self._discard_item_hold_progress = nil
 
-			local selected_grid_index = self:selected_grid_index()
+			if self._discarded_item_grid_index then
+				self:_mark_item_for_discard(self._discarded_item_grid_index)
 
-			if selected_grid_index then
-				self:_mark_item_for_discard(selected_grid_index)
+				self._discarded_item_grid_index = nil
 			end
 
 			self:_play_sound(UISoundEvents.weapons_discard_complete)
@@ -1056,6 +1065,7 @@ InventoryWeaponsView._update_item_discard_progress = function (self, dt)
 	elseif self._discard_item_timer then
 		self._discard_item_timer = nil
 		self._discard_item_hold_progress = nil
+		self._discarded_item_grid_index = nil
 
 		self:_play_sound(UISoundEvents.weapons_discard_release)
 	end

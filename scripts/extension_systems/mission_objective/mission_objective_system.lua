@@ -12,6 +12,8 @@ local MissionObjectiveSide = require("scripts/extension_systems/mission_objectiv
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionObjectiveTimed = require("scripts/extension_systems/mission_objective/utilities/mission_objective_timed")
 local MissionObjectiveZone = require("scripts/extension_systems/mission_objective/utilities/mission_objective_zone")
+local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
+local WWISE_MUSIC_STATE_NONE = WwiseGameSyncSettings.state_groups.music_game_state.none
 local proc_events = BuffSettings.proc_events
 local mission_objectives = {
 	collect = MissionObjectiveCollect,
@@ -105,10 +107,6 @@ MissionObjectiveSystem.objective_definition = function (self, objective_name)
 	return self._objective_definitions[objective_name]
 end
 
-MissionObjectiveSystem.active_objective = function (self, objective_name)
-	return self._active_objectives[objective_name]
-end
-
 MissionObjectiveSystem.has_active_objective = function (self, objective_name)
 	return self._active_objectives[objective_name] ~= nil
 end
@@ -147,7 +145,7 @@ MissionObjectiveSystem.start_mission_objective = function (self, objective_name,
 	increment = increment or 0
 	stage = stage or 1
 
-	local mission_objective_data = self:objective_definition(objective_name)
+	local mission_objective_data = self._objective_definitions[objective_name]
 
 	if not mission_objective_data then
 		return
@@ -185,7 +183,7 @@ MissionObjectiveSystem.start_mission_objective = function (self, objective_name,
 end
 
 MissionObjectiveSystem._setup_mission_objective = function (self, objective_name)
-	local mission_objective_data = self:objective_definition(objective_name)
+	local mission_objective_data = self._objective_definitions[objective_name]
 	local mission_objective_type = mission_objective_data.mission_objective_type
 	local objective = self._active_objectives[objective_name]
 
@@ -211,7 +209,7 @@ MissionObjectiveSystem.start_mission_objective_stage = function (self, objective
 		self:send_rpc_to_clients("rpc_start_mission_objective_stage", objective_name_id, stage)
 	end
 
-	local objective = self:active_objective(objective_name)
+	local objective = self._active_objectives[objective_name]
 
 	objective:start_stage(stage)
 end
@@ -283,7 +281,7 @@ end
 
 MissionObjectiveSystem.external_update_mission_objective = function (self, objective_name, dt, increment)
 	if self._is_server then
-		local objective = self:active_objective(objective_name)
+		local objective = self._active_objectives[objective_name]
 
 		if not objective then
 			return
@@ -350,18 +348,18 @@ MissionObjectiveSystem.propagate_objective_increment = function (self, objective
 end
 
 MissionObjectiveSystem.is_current_active_objective = function (self, objective_name)
-	return self:active_objective(objective_name) ~= nil
+	return self._active_objectives[objective_name] ~= nil
 end
 
-MissionObjectiveSystem.get_active_objective = function (self, objective_name)
-	return self:active_objective(objective_name)
+MissionObjectiveSystem.active_objective = function (self, objective_name)
+	return self._active_objectives[objective_name]
 end
 
-MissionObjectiveSystem.get_active_objectives = function (self)
+MissionObjectiveSystem.active_objectives = function (self)
 	return self._active_objectives
 end
 
-MissionObjectiveSystem.get_objective_progress = function (self, objective_name)
+MissionObjectiveSystem.objective_progress = function (self, objective_name)
 	local is_objective_complete = false
 	local progression = 0
 	local max_progression = 0
@@ -420,7 +418,7 @@ MissionObjectiveSystem._override_ui_string = function (self, objective_name, new
 end
 
 MissionObjectiveSystem._change_active_objective_ui_string = function (self, is_header, new_ui_string, objective_name)
-	local active_objective = self:get_active_objective(objective_name)
+	local active_objective = self._active_objectives[objective_name]
 
 	if active_objective then
 		local localized_new_ui_string
@@ -438,7 +436,7 @@ MissionObjectiveSystem._change_active_objective_ui_string = function (self, is_h
 end
 
 MissionObjectiveSystem.set_objective_show_ui = function (self, objective_name, show)
-	local active_objective = self:get_active_objective(objective_name)
+	local active_objective = self._active_objectives[objective_name]
 
 	if active_objective then
 		active_objective:set_use_ui(show)
@@ -452,7 +450,7 @@ MissionObjectiveSystem.set_objective_show_ui = function (self, objective_name, s
 end
 
 MissionObjectiveSystem.set_objective_show_counter = function (self, objective_name, show)
-	local active_objective = self:get_active_objective(objective_name)
+	local active_objective = self._active_objectives[objective_name]
 
 	if active_objective then
 		active_objective:set_use_counter(show)
@@ -466,20 +464,20 @@ MissionObjectiveSystem.set_objective_show_counter = function (self, objective_na
 end
 
 MissionObjectiveSystem.on_player_unit_spawn = function (self, player, unit, is_respawn)
-	local active_objective = self:get_active_objective("side_mission_grimoire")
+	local active_objective = self._active_objectives.side_mission_grimoire
 
 	if not active_objective then
 		return
 	end
 
-	local synchronizer_unit = self:get_objective_synchronizer_unit("side_mission_grimoire")
+	local synchronizer_unit = self:objective_synchronizer_unit("side_mission_grimoire")
 	local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
 	synchronizer_extension:grant_grimoire(unit)
 end
 
 MissionObjectiveSystem.store_grimoire = function (self)
-	local active_objective = self:get_active_objective("side_mission_grimoire")
+	local active_objective = self._active_objectives.side_mission_grimoire
 
 	if not active_objective then
 		Log.error("objective", "trying to store a grimore with no active grimoire objective")
@@ -487,27 +485,27 @@ MissionObjectiveSystem.store_grimoire = function (self)
 		return
 	end
 
-	local synchronizer_unit = self:get_objective_synchronizer_unit("side_mission_grimoire")
+	local synchronizer_unit = self:objective_synchronizer_unit("side_mission_grimoire")
 	local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
 	synchronizer_extension:store_grimoire()
 end
 
-MissionObjectiveSystem.get_objective_event_music = function (self)
+MissionObjectiveSystem.objective_music_wwise_state = function (self)
 	local active_objectives = self._active_objectives
 
 	for _, objective in pairs(active_objectives) do
-		local music_objective = objective:music_objective()
+		local music_wwise_state = objective:music_wwise_state()
 
-		if music_objective ~= "None" then
-			return music_objective
+		if music_wwise_state ~= WWISE_MUSIC_STATE_NONE then
+			return music_wwise_state
 		end
 	end
 
 	return nil
 end
 
-MissionObjectiveSystem.get_objective_event_type_music = function (self)
+MissionObjectiveSystem.objective_event_type = function (self)
 	local active_objectives = self._active_objectives
 
 	for _, objective in pairs(active_objectives) do
@@ -521,7 +519,7 @@ MissionObjectiveSystem.get_objective_event_type_music = function (self)
 	return nil
 end
 
-MissionObjectiveSystem.get_objective_event_music_progress = function (self)
+MissionObjectiveSystem.objective_event_music_progress = function (self)
 	local active_objectives = self._active_objectives
 
 	for _, objective in pairs(active_objectives) do
@@ -557,7 +555,7 @@ MissionObjectiveSystem.register_music_event_listener = function (self, listener)
 end
 
 MissionObjectiveSystem.register_objective_synchronizer = function (self, objective_name, objective_unit)
-	if not self:objective_definition(objective_name) then
+	if not self._objective_definitions[objective_name] then
 		return
 	end
 
@@ -566,14 +564,14 @@ MissionObjectiveSystem.register_objective_synchronizer = function (self, objecti
 	self._objective_registered_synchronizer[objective_name] = objective_unit
 end
 
-MissionObjectiveSystem.get_objective_synchronizer_unit = function (self, objective_name)
+MissionObjectiveSystem.objective_synchronizer_unit = function (self, objective_name)
 	return self._objective_registered_synchronizer[objective_name]
 end
 
 MissionObjectiveSystem.register_objective_unit = function (self, objective_name, objective_unit, objective_stage)
 	objective_stage = objective_stage or 1
 
-	if not self:objective_definition(objective_name) then
+	if not self._objective_definitions[objective_name] then
 		return
 	end
 
@@ -601,7 +599,7 @@ MissionObjectiveSystem.register_objective_unit = function (self, objective_name,
 end
 
 MissionObjectiveSystem.unregister_objective_unit = function (self, objective_name, objective_unit, objective_stage)
-	if not self:objective_definition(objective_name) then
+	if not self._objective_definitions[objective_name] then
 		return
 	end
 
@@ -627,7 +625,7 @@ MissionObjectiveSystem.unregister_objective_unit = function (self, objective_nam
 end
 
 MissionObjectiveSystem.add_marker = function (self, objective_name, unit)
-	local objective = self:active_objective(objective_name)
+	local objective = self._active_objectives[objective_name]
 
 	if objective then
 		objective:add_marker(unit)
@@ -642,7 +640,7 @@ MissionObjectiveSystem.add_marker = function (self, objective_name, unit)
 end
 
 MissionObjectiveSystem.remove_marker = function (self, objective_name, unit)
-	local objective = self:active_objective(objective_name)
+	local objective = self._active_objectives[objective_name]
 
 	if objective then
 		objective:remove_marker(unit)
@@ -659,12 +657,12 @@ end
 MissionObjectiveSystem.enable_unit = function (self, objective_name, unit, stage)
 	stage = stage or 1
 
-	local registered_units = self:active_objective(objective_name)
+	local registered_units = self._active_objectives[objective_name]
 	local stage_units = registered_units[stage]
 
 	if stage_units then
-		for i = 1, #stage_units do
-			local registered_unit = stage_units[i]
+		for ii = 1, #stage_units do
+			local registered_unit = stage_units[ii]
 
 			if unit == registered_unit then
 				local has_visibility_group = Unit.has_visibility_group(unit, "mission_objective")
@@ -690,8 +688,8 @@ MissionObjectiveSystem.disable_unit = function (self, objective_name, unit, stag
 	local stage_units = registered_units[stage]
 
 	if stage_units then
-		for i = 1, #stage_units do
-			local registered_unit = stage_units[i]
+		for ii = 1, #stage_units do
+			local registered_unit = stage_units[ii]
 
 			if unit == registered_unit then
 				local has_visibility_group = Unit.has_visibility_group(unit, "mission_objective")
@@ -748,10 +746,10 @@ MissionObjectiveSystem.hot_join_sync = function (self, sender, channel)
 			local header_id = 0
 			local description_id = 0
 
-			for i = 1, #ui_strings do
-				local ui_string = ui_strings[i]
+			for ii = 1, #ui_strings do
+				local ui_string = ui_strings[ii]
 
-				if i == 1 then
+				if ii == 1 then
 					header_id = NetworkLookup.mission_objective_ui_strings[ui_string]
 				else
 					description_id = NetworkLookup.mission_objective_ui_strings[ui_string]
@@ -786,7 +784,7 @@ MissionObjectiveSystem.flow_callback_register_objective_unit = function (self, o
 end
 
 MissionObjectiveSystem.flow_callback_start_mission_objective = function (self, objective_name)
-	local objective = self:active_objective(objective_name)
+	local objective = self._active_objectives[objective_name]
 
 	if objective then
 		return
@@ -803,7 +801,7 @@ MissionObjectiveSystem.flow_callback_update_mission_objective = function (self, 
 end
 
 MissionObjectiveSystem.flow_callback_end_mission_objective = function (self, objective_name)
-	local objective = self:active_objective(objective_name)
+	local objective = self._active_objectives[objective_name]
 
 	if objective and objective:is_updated_externally() then
 		self:end_mission_objective(objective_name)
@@ -850,14 +848,14 @@ end
 
 MissionObjectiveSystem.rpc_update_mission_objective_second_progression = function (self, channel_id, objective_name_id, progression)
 	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
-	local objective = self:active_objective(objective_name)
+	local objective = self._active_objectives[objective_name]
 
 	objective:set_second_progression(progression)
 end
 
 MissionObjectiveSystem.rpc_update_mission_objective_increment = function (self, channel_id, objective_name_id, increment, max_increment)
 	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
-	local objective = self:active_objective(objective_name)
+	local objective = self._active_objectives[objective_name]
 
 	objective:set_increment(increment)
 	objective:set_max_increment(max_increment)

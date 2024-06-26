@@ -4,7 +4,7 @@ local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events"
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local MissionObjectiveBase = class("MissionObjectiveBase")
 local last_activation_order = 1
-local MUSIC_OBJECTIVE_NONE = WwiseGameSyncSettings.state_groups.music_game_state.none
+local WWISE_MUSIC_STATE_NONE = WwiseGameSyncSettings.state_groups.music_game_state.none
 local OBJECTIVE_EVENT_TYPES = table.enum("None", "mid_event", "end_event")
 
 MissionObjectiveBase.init = function (self)
@@ -31,12 +31,14 @@ MissionObjectiveBase.init = function (self)
 	self._description = ""
 	self._override_header = nil
 	self._override_description = nil
-	self._music_objective = MUSIC_OBJECTIVE_NONE
+	self._music_wwise_state = WWISE_MUSIC_STATE_NONE
 	self._mission_giver_voice_profile = nil
 	self._use_hud = true
 	self._use_hud_changed = false
+	self._hide_widget = false
 	self._use_counter = true
 	self._progress_bar = false
+	self._popups_enabled = true
 	self._icon = nil
 	self._marker_type = nil
 	self._show_progression_popup_on_update = true
@@ -57,12 +59,14 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	last_activation_order = last_activation_order + 1
 	self._header = mission_objective_data.header and Localize(mission_objective_data.header) or ""
 	self._description = mission_objective_data.description and Localize(mission_objective_data.description) or ""
-	self._music_objective = mission_objective_data.use_music_event or MUSIC_OBJECTIVE_NONE
+	self._music_wwise_state = mission_objective_data.music_wwise_state or WWISE_MUSIC_STATE_NONE
 	self._music_ignore_start_event = mission_objective_data.music_ignore_start_event or false
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
 	self._use_hud = mission_objective_data.hidden ~= true
+	self._hide_widget = mission_objective_data.hide_widget or false
 	self._progress_bar = mission_objective_data.progress_bar or false
 	self._is_side_mission = mission_objective_data.is_side_mission or false
+	self._popups_enabled = mission_objective_data.popups_enabled ~= false
 	self._evaluate_at_level_end = mission_objective_data.evaluate_at_level_end or false
 	self._event_type = mission_objective_data.event_type or OBJECTIVE_EVENT_TYPES.None
 	self._icon = mission_objective_data.icon
@@ -98,7 +102,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 		self._synchronizer_extension = synchronizer_extension
 	end
 
-	if self._music_objective ~= MUSIC_OBJECTIVE_NONE then
+	if self._music_wwise_state ~= WWISE_MUSIC_STATE_NONE then
 		local event = "objective_start_" .. self._objective_type
 
 		if MissionSoundEvents[event] and not mission_objective_data.music_ignore_start_event then
@@ -130,7 +134,7 @@ MissionObjectiveBase.start_stage = function (self, stage)
 end
 
 MissionObjectiveBase.stage_done = function (self)
-	local synchronizer_extension = self:synchronizer_extension()
+	local synchronizer_extension = self._synchronizer_extension
 
 	if synchronizer_extension then
 		if self._stage < self._stage_count then
@@ -142,7 +146,7 @@ MissionObjectiveBase.stage_done = function (self)
 
 			mission_objective_system:start_mission_objective_stage(self._name, self._stage)
 		else
-			if self._music_objective ~= MUSIC_OBJECTIVE_NONE then
+			if self._music_wwise_state ~= WWISE_MUSIC_STATE_NONE then
 				self._mission_objective_system:sound_event(MissionSoundEvents.objective_finished)
 			end
 
@@ -456,16 +460,16 @@ MissionObjectiveBase.show_progression_popup_on_update = function (self)
 	return self._show_progression_popup_on_update
 end
 
-MissionObjectiveBase.music_objective = function (self)
-	return self._music_objective
+MissionObjectiveBase.music_wwise_state = function (self)
+	return self._music_wwise_state
 end
 
 MissionObjectiveBase.mission_giver_voice_profile = function (self)
 	return self._mission_giver_voice_profile
 end
 
-MissionObjectiveBase.set_updated_externally = function (self, val)
-	self._is_updated_externally = val
+MissionObjectiveBase.set_updated_externally = function (self, value)
+	self._is_updated_externally = value
 end
 
 MissionObjectiveBase.is_updated_externally = function (self)
@@ -492,9 +496,17 @@ MissionObjectiveBase.use_hud_changed_state = function (self)
 	return self._use_hud
 end
 
-MissionObjectiveBase.set_use_ui = function (self, use)
-	self._use_hud = use
+MissionObjectiveBase.set_use_ui = function (self, use_hud)
+	self._use_hud = use_hud
 	self._use_hud_changed = true
+end
+
+MissionObjectiveBase.hide_widget = function (self)
+	return self._hide_widget
+end
+
+MissionObjectiveBase.popups_enabled = function (self)
+	return self._popups_enabled
 end
 
 MissionObjectiveBase.locally_added = function (self)
@@ -513,8 +525,8 @@ MissionObjectiveBase.use_counter_changed_state = function (self)
 	return self._use_counter
 end
 
-MissionObjectiveBase.set_use_counter = function (self, use)
-	self._use_counter = use
+MissionObjectiveBase.set_use_counter = function (self, use_counter)
+	self._use_counter = use_counter
 end
 
 MissionObjectiveBase.progress_bar = function (self)

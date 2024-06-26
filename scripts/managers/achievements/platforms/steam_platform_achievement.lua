@@ -1,7 +1,8 @@
 ﻿-- chunkname: @scripts/managers/achievements/platforms/steam_platform_achievement.lua
 
+local BasePlatformAchievement = "scripts/managers/achievements/platforms/base_platform_achievement"
 local Promise = require("scripts/foundation/utilities/promise")
-local SteamPlatformAchievement = class("SteamPlatformAchievement")
+local SteamPlatformAchievement = class("SteamPlatformAchievement", "BasePlatformAchievement")
 
 SteamPlatformAchievement.init = function (self, definitions)
 	return Promise.resolved()

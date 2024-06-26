@@ -184,48 +184,84 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 		{
 			proc_events = {
-				[proc_events.on_block] = 0.1,
-				[proc_events.on_perfect_block] = 0.4,
-			},
-		},
-		{
-			proc_events = {
-				[proc_events.on_block] = 0.15,
-				[proc_events.on_perfect_block] = 0.6,
-			},
-		},
-		{
-			proc_events = {
-				[proc_events.on_block] = 0.2,
-				[proc_events.on_perfect_block] = 0.8,
-			},
-		},
-		{
-			proc_events = {
-				[proc_events.on_block] = 0.25,
 				[proc_events.on_perfect_block] = 1,
 			},
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.1,
+			},
+		},
+		{
+			proc_events = {
+				[proc_events.on_perfect_block] = 1,
+			},
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.15,
+			},
+		},
+		{
+			proc_events = {
+				[proc_events.on_perfect_block] = 1,
+			},
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.2,
+			},
+		},
+		{
+			proc_events = {
+				[proc_events.on_perfect_block] = 1,
+			},
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.25,
+			},
+		},
+	},
+}
+templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
+	weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
+		{
+			heavy_proc = 2,
+			light_proc = 1,
+			special_proc = 1,
+		},
+		{
+			heavy_proc = 2,
+			light_proc = 1,
+			special_proc = 2,
+		},
+		{
+			heavy_proc = 3,
+			light_proc = 1,
+			special_proc = 3,
+		},
+		{
+			heavy_proc = 3,
+			light_proc = 2,
+			special_proc = 4,
 		},
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
 	weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
 		{
+			cooldown_duration = 5,
 			proc_events = {
 				[proc_events.on_hit] = 0.1,
 			},
 		},
 		{
+			cooldown_duration = 4.5,
 			proc_events = {
 				[proc_events.on_hit] = 0.15,
 			},
 		},
 		{
+			cooldown_duration = 4,
 			proc_events = {
 				[proc_events.on_hit] = 0.2,
 			},
 		},
 		{
+			cooldown_duration = 3.5,
 			proc_events = {
 				[proc_events.on_hit] = 0.25,
 			},

@@ -139,8 +139,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
-				spawner_group = "lockdown_train",
+				points = 18,
+				spawner_group = "lockdown_trickle",
 				breed_tags = {
 					{
 						"melee",
@@ -179,7 +179,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 16,
 				spawner_group = "lockdown_side",
 				breed_tags = {
 					{
@@ -191,8 +191,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
-				spawner_group = "lockdown_train",
+				points = 12,
+				spawner_group = "lockdown_trickle",
 				breed_tags = {
 					{
 						"close",
@@ -224,8 +224,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
-				spawner_group = "lockdown_train",
+				points = 16,
+				spawner_group = "lockdown_trickle",
 				breed_tags = {
 					{
 						"melee",
@@ -264,8 +264,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 14,
-				spawner_group = "lockdown_train",
+				points = 16,
+				spawner_group = "lockdown_side",
 				breed_tags = {
 					{
 						"close",
@@ -276,7 +276,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
+				points = 12,
 				spawner_group = "lockdown_trickle",
 				breed_tags = {
 					{
@@ -324,8 +324,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 14,
-				spawner_group = "lockdown_train",
+				points = 16,
+				spawner_group = "lockdown_trickle",
 				breed_tags = {
 					{
 						"melee",
@@ -376,7 +376,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
+				points = 12,
 				spawner_group = "lockdown_train_two",
 				breed_tags = {
 					{
@@ -409,8 +409,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 14,
-				spawner_group = "lockdown_train",
+				points = 16,
+				spawner_group = "lockdown_trickle",
 				breed_tags = {
 					{
 						"melee",
@@ -450,7 +450,7 @@ local template = {
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 16,
-				spawner_group = "lockdown_train_two",
+				spawner_group = "lockdown_side",
 				breed_tags = {
 					{
 						"far",
@@ -490,7 +490,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 14,
+				points = 16,
 				spawner_group = "lockdown_side",
 				breed_tags = {
 					{
@@ -502,7 +502,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 12,
 				spawner_group = "lockdown_backside",
 				breed_tags = {
 					{
@@ -560,7 +560,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 12,
 				spawner_group = "lockdown_side",
 				breed_tags = {
 					{
@@ -655,7 +655,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 12,
 				spawner_group = "lockdown_backside",
 				breed_tags = {
 					{
@@ -690,7 +690,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 16,
+				points = 20,
 				spawner_group = "lockdown_backside",
 				breed_tags = {
 					{
@@ -725,7 +725,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
+				points = 16,
 				spawner_group = "lockdown_side",
 				breed_tags = {
 					{
@@ -796,7 +796,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 12,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "shaft_start_side_up",
 				breed_tags = {
@@ -809,7 +809,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 6,
 				spawner_group = "shaft_start_side_down",
 				breed_tags = {
 					{
@@ -838,7 +838,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 8,
+				points = 12,
 				spawner_group = "spawner_hatch_start_side",
 				breed_tags = {
 					{
@@ -850,7 +850,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 8,
+				points = 12,
 				spawner_group = "spawner_hatch_start_side",
 				breed_tags = {
 					{
@@ -887,7 +887,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
-				spawner_group = "shaft_start_side_up",
+				spawner_group = "shaft_survival_trickle",
 				breed_tags = {
 					{
 						"special",
@@ -898,7 +898,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "shaft_start_side_down",
 				breed_tags = {
@@ -957,7 +957,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
-				spawner_group = "shaft_start_side_up",
+				spawner_group = "shaft_survival_trickle",
 				breed_tags = {
 					{
 						"special",
@@ -975,7 +975,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 8,
+				points = 12,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_hatch_end_side",
 				breed_tags = {
@@ -1004,7 +1004,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 6,
+				points = 12,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "shaft_start_side_up",
 				breed_tags = {
@@ -1025,7 +1025,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 6,
-				spawner_group = "shaft_start_side_down",
+				spawner_group = "shaft_survival_trickle",
 				breed_tags = {
 					{
 						"special",
@@ -1036,7 +1036,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 14,
+				points = 16,
 				spawner_group = "shaft_start_side_up",
 				breed_tags = {
 					{
@@ -1072,7 +1072,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 6,
-				spawner_group = "shaft_start_side_up",
+				spawner_group = "shaft_survival_trickle",
 				breed_tags = {
 					{
 						"special",
@@ -1083,14 +1083,14 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 14,
+				points = 16,
 				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "demo_start_side_a",
 				breed_tags = {
 					{
-						"horde",
-						"melee",
+						"roamer",
+						"far",
 					},
 				},
 			},
@@ -1131,7 +1131,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 14,
+				points = 16,
 				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "demo_start_side_b",
@@ -1139,6 +1139,18 @@ local template = {
 					{
 						"horde",
 						"melee",
+					},
+				},
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "shaft_survival_trickle",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
 					},
 				},
 			},
@@ -1179,14 +1191,14 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 14,
+				points = 16,
 				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "demo_end_side_a",
 				breed_tags = {
 					{
-						"horde",
-						"melee",
+						"roamer",
+						"far",
 					},
 				},
 			},
@@ -1194,7 +1206,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
-				spawner_group = "shaft_start_side_down",
+				spawner_group = "shaft_survival_trickle",
 				breed_tags = {
 					{
 						"special",
@@ -1239,7 +1251,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 2,
-				points = 14,
+				points = 16,
 				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "demo_end_side_b",
@@ -1247,6 +1259,18 @@ local template = {
 					{
 						"horde",
 						"melee",
+					},
+				},
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "shaft_survival_trickle",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
 					},
 				},
 			},
@@ -1272,6 +1296,30 @@ local template = {
 				duration = 5,
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 16,
+				spawner_group = "shaft_survival_trickle",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 8,
+				spawner_group = "escape_shaft",
+				breed_tags = {
+					{
+						"melee",
+						"horde",
+					},
+				},
+			},
+			{
 				"start_terror_trickle",
 				delay = 0,
 				spawner_group = "escape_shaft",
@@ -1286,8 +1334,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
-				spawner_group = "escape_shaft",
+				points = 16,
+				spawner_group = "shaft_survival_trickle",
 				breed_tags = {
 					{
 						"far",
@@ -1298,7 +1346,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
+				points = 16,
 				spawner_group = "escape_shaft",
 				breed_tags = {
 					{

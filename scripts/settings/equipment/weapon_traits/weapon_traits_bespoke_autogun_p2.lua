@@ -163,7 +163,26 @@ templates.weapon_trait_bespoke_autogun_p2_increased_suppression_on_continuous_fi
 	weapon_trait_bespoke_autogun_p2_increased_suppression_on_continuous_fire = {
 		{
 			stat_buffs = {
+				[stat_buffs.suppression_dealt] = 0.08,
+				[stat_buffs.damage_vs_suppressed] = 0.03,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.suppression_dealt] = 0.12,
+				[stat_buffs.damage_vs_suppressed] = 0.04,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.suppression_dealt] = 0.16,
+				[stat_buffs.damage_vs_suppressed] = 0.05,
+			},
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.suppression_dealt] = 0.2,
+				[stat_buffs.damage_vs_suppressed] = 0.06,
 			},
 		},
 	},
@@ -199,13 +218,13 @@ templates.weapon_trait_bespoke_autogun_p2_movement_speed_on_continous_fire = {
 templates.weapon_trait_bespoke_autogun_p2_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_autogun_p2_toughness_on_continuous_fire = {
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.01,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.02,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.03,
 		},
 		{
 			toughness_fixed_percentage = 0.04,

@@ -353,7 +353,7 @@ MutatorToxicGasVolumes._setup_static_clouds = function (self)
 					local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, position_on_navmesh)
 
 					if spawn_point_group_index then
-						local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index or 1)
+						local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index)
 						local end_index = start_index + 1
 						local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
 						local boxed_position = Vector3Box(position)
@@ -443,7 +443,7 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 							alternating_timers[i][k].min_range = alternating_min_range
 							alternating_timers[i][k].max_range = alternating_max_range
 
-							local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index or 1)
+							local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index)
 							local end_index = start_index + 1
 							local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
 							local boxed_position = Vector3Box(position)

@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/managers/eac/eac_client_manager.lua
 
 local EACError = require("scripts/managers/error/errors/eac_error")
-local XboxLive = require("scripts/foundation/utilities/xbox_live")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 
 local function _info(...)
 	Log.info("EACClientManager", ...)
@@ -56,7 +56,7 @@ EACClientManager.authenticate = function (self)
 		self._timeout_at = Managers.time:time("main") + TIMEOUT
 		self._authenticated = false
 	elseif IS_GDK then
-		XboxLive.user_id():next(function (user_id)
+		XboxLiveUtils.user_id():next(function (user_id)
 			local auth_job_id = EOS.authenticate_with_xbox(user_id)
 
 			self._auth_job_id = auth_job_id

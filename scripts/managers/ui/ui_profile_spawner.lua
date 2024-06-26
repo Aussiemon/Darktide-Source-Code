@@ -364,11 +364,11 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 	end
 end
 
-UIProfileSpawner.spawned = function (self)
+UIProfileSpawner.spawned = function (self, bypass_check_streaming)
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data then
-		return character_spawn_data.streaming_complete
+		return bypass_check_streaming or character_spawn_data.streaming_complete
 	end
 
 	return false
@@ -472,11 +472,12 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 	local loading_items = spawn_data.loading_items
 	local breed_name = spawn_data.breed_name
 	local profile = spawn_data.profile
+	local slot_dependency_items
+	local force_highest_mip = spawn_data.force_highest_mip
 	local slots = spawn_data.slots
 	local slot = slots[slot_id]
 	local slot_config = PlayerCharacterConstants.slot_configuration[slot_id]
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
-	local slot_dependency_items
 
 	if slot.equipped then
 		slot_dependency_items = equipment_component:unequip_slot_dependencies(slot_config, slots, slot_equip_order)
@@ -545,7 +546,11 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 
 		local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete_equip_item", parent_item_unit)
 
-		Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
+		if force_highest_mip then
+			Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
+		else
+			complete_callback()
+		end
 	end
 end
 
@@ -676,9 +681,10 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		self:_assign_face_state_machine(loadout, slots, face_state_machine_key)
 	end
 
-	if face_animation_event then
-		local face_unit = slots.slot_body_face.unit_3p
+	local face_unit = table.nested_get(slots, "slot_body_face", "unit_3p")
+	local has_animation_state_machine = face_unit ~= nil and Unit.has_animation_state_machine(face_unit)
 
+	if face_animation_event and has_animation_state_machine then
 		if Unit.has_animation_event(face_unit, "no_anim") then
 			Unit.animation_event(face_unit, "no_anim")
 		end
@@ -702,6 +708,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		unit_3p = unit_3p,
 		disable_hair_state_machine = disable_hair_state_machine,
 		has_external_unit_3p = optional_unit_3p ~= nil,
+		force_highest_mip = force_highest_mip,
 	}
 
 	self._character_spawn_data = spawn_data
@@ -716,7 +723,11 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", unit_3p)
 
-	Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
+	if force_highest_mip then
+		Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
+	else
+		complete_callback()
+	end
 end
 
 UIProfileSpawner.cb_on_unit_3p_streaming_complete_equip_item = function (self, unit_3p, timeout)

@@ -23,7 +23,7 @@ local effect_template = {
 	start = function (template_data, template_context)
 		local unit = template_data.unit
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local inventory_item = visual_loadout_extension:slot_item("slot_power_sword")
+		local inventory_item = visual_loadout_extension:slot_item("slot_power_sword") or visual_loadout_extension:slot_item("slot_melee_weapon")
 		local attachment_unit, node_index = MinionVisualLoadout.attachment_unit_and_node_from_node_name(inventory_item, FX_SOURCE_NAME)
 		local position = Unit.world_position(attachment_unit, node_index)
 

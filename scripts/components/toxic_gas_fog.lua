@@ -156,10 +156,16 @@ ToxicGasFog._update_volume_percentage = function (self, unit, percentage)
 end
 
 ToxicGasFog.disable = function (self, unit)
-	if rawget(_G, "LevelEditor") then
-		Volumetrics.unregister_volume(unit, MESH_NAME)
-	elseif self._volume_enabled then
-		Volumetrics.unregister_volume(unit, MESH_NAME)
+	if self._volume_registered then
+		if rawget(_G, "LevelEditor") then
+			Volumetrics.unregister_volume(unit, MESH_NAME)
+
+			self._volume_registered = false
+		elseif self._volume_enabled then
+			Volumetrics.unregister_volume(unit, MESH_NAME)
+
+			self._volume_registered = false
+		end
 	end
 
 	if self._particle_created then
@@ -167,8 +173,6 @@ ToxicGasFog.disable = function (self, unit)
 
 		self._particle_created = nil
 	end
-
-	self._volume_registered = false
 end
 
 ToxicGasFog.events.visibility_enable = function (self, unit)
@@ -282,7 +286,11 @@ ToxicGasFog.editor_destroy = function (self, unit)
 		return
 	end
 
-	Volumetrics.unregister_volume(unit, MESH_NAME)
+	if self._volume_registered then
+		Volumetrics.unregister_volume(unit, MESH_NAME)
+
+		self._volume_registered = false
+	end
 
 	local line_object = self._line_object
 	local world = self._world

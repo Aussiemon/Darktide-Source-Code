@@ -99,8 +99,8 @@ local breed_data = {
 		max_distance_from_target = 30,
 		max_distance_from_target_z = 10,
 		max_distance_from_target_z_below = -10,
-		max_distance_modifier_duration = 30,
-		max_distance_modifier_percentage = 0.8,
+		max_distance_modifier_duration = 20,
+		max_distance_modifier_percentage = 0.5,
 		search_radius = 40,
 		suppressed_max_distance_from_combat_vector = 40,
 		suppressed_max_distance_from_target = 50,
@@ -137,6 +137,10 @@ local breed_data = {
 		moving_melee = {
 			0.2,
 			0.5,
+		},
+		grenade = {
+			2,
+			3,
 		},
 	},
 	line_of_sight_data = {

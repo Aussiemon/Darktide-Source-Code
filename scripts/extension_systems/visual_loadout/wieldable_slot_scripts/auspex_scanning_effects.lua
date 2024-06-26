@@ -304,7 +304,13 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 
 			if is_current_active then
 				local is_current_scannable_unit = current_scannable_unit == scannable_unit
-				local scannable_position = Unit.world_position(current_scannable_unit, 1)
+				local node_index = 1
+
+				if Unit.has_node(current_scannable_unit, "vfx_scan") then
+					node_index = Unit.node(current_scannable_unit, "vfx_scan")
+				end
+
+				local scannable_position = Unit.world_position(current_scannable_unit, node_index)
 				local to_scannable = scannable_position - scanner_world_position
 				local scan_angle = Vector3.angle(to_scannable, Vector3.flat(to_scannable), true) * math.sign(to_scannable.z)
 				local diff = scan_angle - player_horizotal_angle

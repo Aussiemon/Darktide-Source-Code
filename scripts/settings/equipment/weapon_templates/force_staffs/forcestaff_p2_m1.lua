@@ -1103,7 +1103,7 @@ weapon_template.charge_effects = {
 	sfx_source_name = "_overheat",
 }
 weapon_template.crosshair = {
-	crosshair_type = "spray_n_pray",
+	crosshair_type = "dot",
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {

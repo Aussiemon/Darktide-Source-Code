@@ -387,7 +387,6 @@ local legend_inputs = {
 	},
 	{
 		alignment = "right_alignment",
-		gear_toggle_option = true,
 		input_action = "hotkey_menu_special_1",
 		on_pressed_callback = "cb_on_preview_with_gear_toggled",
 		display_name = menu_preview_with_gear_off,
@@ -396,7 +395,7 @@ local legend_inputs = {
 
 			parent._input_legend_element:set_display_name(id, display_name)
 
-			return true
+			return parent:_can_preview()
 		end,
 	},
 	{
@@ -424,6 +423,15 @@ local legend_inputs = {
 			end
 
 			return false
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_preview_voice",
+		input_action = "hotkey_item_inspect",
+		on_pressed_callback = "cb_preview_voice",
+		visibility_function = function (parent, id)
+			return parent:_can_preview_voice()
 		end,
 	},
 }

@@ -61,7 +61,38 @@ templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 }
 templates.weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting = {
 	weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.06,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.09,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.12,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.15,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
@@ -147,7 +178,26 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 }
 templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = {
 	weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.charge_movement_reduction_multiplier] = 0.8,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.charge_movement_reduction_multiplier] = 0.7,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.charge_movement_reduction_multiplier] = 0.6,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.charge_movement_reduction_multiplier] = 0.5,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = {
@@ -176,7 +226,26 @@ templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_
 }
 templates.weapon_trait_bespoke_forcestaff_p1_double_shot_on_crit = {
 	weapon_trait_bespoke_forcestaff_p1_double_shot_on_crit = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_critical_strike_chance] = 0.02,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_critical_strike_chance] = 0.03,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_critical_strike_chance] = 0.04,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.ranged_critical_strike_chance] = 0.05,
+			},
+		},
 	},
 }
 

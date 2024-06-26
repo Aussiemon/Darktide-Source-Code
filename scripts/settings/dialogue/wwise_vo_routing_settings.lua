@@ -325,5 +325,17 @@ wwise_vo_routing_settings[52] = {
 	wwise_event_path = "wwise/events/vo/play_sfx_es_warp_echo_vo",
 	wwise_sound_source = "es_warp_echo",
 }
+wwise_vo_routing_settings[53] = {
+	display_name = "NPC Mission Giver VO",
+	is_default = false,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_npc_mission_giver_vo",
+	wwise_sound_source = "es_npc_mission_giver_vo",
+}
+wwise_vo_routing_settings[54] = {
+	display_name = "NPC PA VO",
+	is_default = false,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_npc_pa_vo",
+	wwise_sound_source = "es_npc_pa_vo",
+}
 
 return settings("wwise_vo_routing_settings", wwise_vo_routing_settings)

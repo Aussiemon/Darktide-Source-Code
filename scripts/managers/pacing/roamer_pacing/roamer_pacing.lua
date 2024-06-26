@@ -13,10 +13,24 @@ local RoamerSlotPlacementFunctions = require("scripts/settings/roamer/roamer_slo
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RoamerPacing = class("RoamerPacing")
 
-RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
+RoamerPacing.init = function (self, nav_world, seed, sub_faction_types)
 	self._nav_world = nav_world
 	self._original_seed = seed
 	self._seed = seed
+
+	local available_sub_faction_types = RoamerSettings.sub_faction_types
+	local roamer_sub_faction_types, num_roamer_sub_faction_types = {}, 0
+
+	for i = 1, #sub_faction_types do
+		local sub_faction_type = sub_faction_types[i]
+
+		if table.array_contains(available_sub_faction_types, sub_faction_type) then
+			num_roamer_sub_faction_types = num_roamer_sub_faction_types + 1
+			roamer_sub_faction_types[num_roamer_sub_faction_types] = sub_faction_type
+		end
+	end
+
+	self._sub_faction_types = roamer_sub_faction_types
 
 	local roamer_pack_probabilities = {}
 
@@ -42,8 +56,8 @@ RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
 	self._density_type_travel_distances = {}
 
 	if not self._override_faction then
-		local faction_index = self:_random(1, #RoamerSettings.faction_types)
-		local current_faction = RoamerSettings.faction_types[faction_index]
+		local faction_index = self:_random(1, num_roamer_sub_faction_types)
+		local current_faction = roamer_sub_faction_types[faction_index]
 
 		self._current_faction = current_faction
 	else
@@ -199,7 +213,8 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 	local density_zone_count = self:_random(density_zone_range[1], density_zone_range[2])
 	local faction_zone_length_table = Managers.state.difficulty:get_table_entry_by_challenge(RoamerSettings.faction_zone_length)
 	local faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
-	local faction_index = self:_random(1, #RoamerSettings.faction_types)
+	local faction_types = self._sub_faction_types
+	local faction_index = self:_random(1, #faction_types)
 	local current_faction = self._override_faction or self._current_faction
 
 	self._current_faction = current_faction
@@ -257,8 +272,8 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 			faction_zone_length = faction_zone_length - 1
 
 			if faction_zone_length <= 0 and density_type == "none" then
-				faction_index = faction_index % #RoamerSettings.faction_types + 1
-				current_faction = self._override_faction or RoamerSettings.faction_types[faction_index]
+				faction_index = faction_index % #faction_types + 1
+				current_faction = self._override_faction or faction_types[faction_index]
 				faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
 			end
 

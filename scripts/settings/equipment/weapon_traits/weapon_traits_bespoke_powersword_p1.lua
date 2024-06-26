@@ -133,7 +133,26 @@ templates.weapon_trait_bespoke_powersword_p1_targets_receive_rending_debuff_on_w
 }
 templates.weapon_trait_bespoke_powersword_p1_pass_past_armor_on_weapon_special = {
 	weapon_trait_bespoke_powersword_p1_pass_past_armor_on_weapon_special = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_heavy_damage] = 0.05,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_heavy_damage] = 0.1,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_heavy_damage] = 0.15,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_heavy_damage] = 0.2,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_powersword_p1_extended_activation_duration_on_chained_attacks = {

@@ -6,6 +6,8 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
+local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
 local shooting_difficulty_settings = MinionDifficultySettings.shooting.renegade_assault
@@ -125,6 +127,32 @@ local action_data = {
 		anim_events = {
 			"idle",
 			"idle_2",
+		},
+	},
+	throw_frag_grenade = {
+		utility_weight = 20,
+		considerations = UtilityConsiderations.frag_grenade,
+		aim_anim_events = {
+			"throw_grenade",
+		},
+		throw_timing = {
+			throw_grenade = 1.2083333333333333,
+		},
+		action_durations = {
+			throw_grenade = 2.5,
+		},
+		attack_intensities = {
+			grenade = 20,
+		},
+		effect_template = EffectTemplates.renegade_captain_grenade,
+		effect_template_timings = {
+			throw_grenade = 0.4375,
+		},
+		throw_config = {
+			acceptable_accuracy = 1,
+			item = "content/items/weapons/minions/ranged/renegade_grenade",
+			unit_node = "j_lefthand",
+			projectile_template = ProjectileTemplates.renegade_frag_grenade,
 		},
 	},
 	alerted = {

@@ -213,6 +213,7 @@ local function construct_interface_settings_dropdown(template)
 			id = value.name,
 			value = value.name,
 			display_name = value.display_name,
+			icon = value.icon,
 		}
 	end
 
@@ -272,6 +273,50 @@ local settings_definitions = {
 		widget_type = "group_header",
 	},
 	{
+		default_value = true,
+		display_name = "loc_setting_hit_indicator_enabled",
+		id = "hit_indicator_enabled",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_hit_indicator_enabled", value)
+		end,
+	},
+	{
+		default_value = 0.5,
+		display_name = "loc_setting_hit_indicator_duration",
+		id = "hit_indicator_duration",
+		max_value = 1.5,
+		min_value = 0.5,
+		num_decimals = 1,
+		save_location = "interface_settings",
+		step_size_value = 0.1,
+		widget_type = "value_slider",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_hit_indicator_duration", value)
+		end,
+	},
+	{
+		default_value = true,
+		display_name = "loc_setting_crosshair_enabled",
+		id = "crosshair_enabled",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_crosshair_enabled", value)
+		end,
+	},
+	{
+		default_value = true,
+		display_name = "loc_setting_aim_trajectory_enabled",
+		id = "aim_trajectory_enabled",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_aim_trajectory_enabled", value)
+		end,
+	},
+	{
 		default_value = false,
 		display_name = "loc_interface_setting_forced_dot_crosshair",
 		id = "forced_dot_crosshair_enabled",
@@ -280,6 +325,52 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_forced_dot_crosshair", value)
+		end,
+	},
+	{
+		display_name = "loc_setting_crosshair_type_override",
+		id = "crosshair_type_override",
+		save_location = "interface_settings",
+		tooltip_text = "loc_settings_crosshair_type_override_mouseover",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_crosshair_type_override_weapon",
+				name = "weapon",
+			},
+			{
+				display_name = "loc_setting_crosshair_type_override_killshot",
+				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_killshot",
+				name = "cross",
+			},
+			{
+				display_name = "loc_setting_crosshair_type_override_assault",
+				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_assault",
+				name = "assault",
+			},
+			{
+				display_name = "loc_setting_crosshair_type_override_bfg",
+				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_bfg",
+				name = "bfg",
+			},
+			{
+				display_name = "loc_setting_crosshair_type_override_shotgun",
+				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_shotgun",
+				name = "shotgun",
+			},
+			{
+				display_name = "loc_setting_crosshair_type_override_spray_n_pray",
+				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_spray_n_pray",
+				name = "spray_n_pray",
+			},
+			{
+				display_name = "loc_setting_crosshair_type_override_dot",
+				icon = "content/ui/materials/icons/system/settings/dropdown/icon_crosshair_dot",
+				name = "dot",
+			},
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_crosshair_type_override", value)
 		end,
 	},
 	{
@@ -651,7 +742,7 @@ local settings_definitions = {
 			return
 		end,
 		validation_function = function ()
-			return not IS_XBS
+			return not IS_XBS or not IS_PLAYSTATION
 		end,
 	},
 	{

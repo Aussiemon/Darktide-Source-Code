@@ -1,40 +1,48 @@
 ﻿-- chunkname: @scripts/settings/mission/mission_types.lua
 
 local MissionTypes = {
-	["01"] = {
+	raid = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_01",
-		id = 1,
+		index = 1,
 		name = "loc_mission_type_01_name",
 	},
-	["02"] = {
+	assassination = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_02",
-		id = 2,
+		index = 2,
 		name = "loc_mission_type_02_name",
 	},
-	["03"] = {
+	investigation = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_03",
-		id = 3,
+		index = 3,
 		name = "loc_mission_type_03_name",
 	},
-	["04"] = {
+	disruption = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_04",
-		id = 4,
+		index = 4,
 		name = "loc_mission_type_04_name",
 	},
-	["05"] = {
+	strike = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_05",
-		id = 5,
+		index = 5,
 		name = "loc_mission_type_05_name",
 	},
-	["06"] = {
+	espionage = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_06",
-		id = 6,
+		index = 6,
 		name = "loc_mission_type_06_name",
 	},
-	["07"] = {
+	repair = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_07",
-		id = 7,
+		index = 7,
 		name = "loc_mission_type_07_name",
+	},
+	undefined = {
+		icon = "content/ui/materials/icons/mission_types/mission_type_operations",
+		name = "loc_mission_type_undefined_name",
+	},
+	hub = {
+		icon = "content/ui/materials/icons/mission_types/mission_type_operations",
+		name = "loc_mission_type_undefined_name",
 	},
 }
 

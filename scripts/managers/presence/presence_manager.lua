@@ -6,7 +6,7 @@ local PresenceManagerInterface = require("scripts/managers/presence/presence_man
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local LoggedInFromAnotherLocationError = require("scripts/managers/error/errors/logged_in_from_another_location_error")
 local Promise = require("scripts/foundation/utilities/promise")
-local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local PresenceManager = class("PresenceManager")
 local PRESENCE_UPDATE_INTERVAL = 30
 local ACTIVITY_CHECK_INTERVAL = 0.5
@@ -461,7 +461,7 @@ PresenceManager.update = function (self, dt, t)
 			self._load_buffer_request_xbox_gamertag = {}
 
 			Log.info("PresenceManager", "Doing batched call to get_user_profiles with %s xuids", tostring(#buffer))
-			XboxLiveUtilities.get_user_profiles(buffer):next(function (profiles)
+			XboxLiveUtils.get_user_profiles(buffer):next(function (profiles)
 				self._load_buffer_in_flight = nil
 
 				for i, profile in ipairs(profiles) do
@@ -589,7 +589,7 @@ PresenceManager._update_platform_presence = function (self)
 			local num_other_members = (myself:activity_id() == "mission" and myself:num_mission_members() or myself:num_party_members()) - 1
 			local join_restrictions = Managers.party_immaterium and Managers.party_immaterium:is_in_private_session() and XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_FOLLOWED
 
-			XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_other_members, join_restrictions)
+			XboxLiveUtils.set_activity(party_id_with_invite_code, party_id, num_other_members, join_restrictions)
 		end)
 	end
 end
@@ -598,7 +598,7 @@ PresenceManager._delete_platform_presence = function (self)
 	if HAS_STEAM then
 		Presence.stop_advertise_playing()
 	elseif IS_XBS or IS_GDK then
-		XboxLiveUtilities.delete_activity()
+		XboxLiveUtils.delete_activity()
 	end
 end
 

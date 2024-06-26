@@ -124,6 +124,9 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 			mission = mission,
 			level_seed = level_seed,
 		},
+		component_system = {
+			level_seed = level_seed,
+		},
 	}
 
 	Managers.state.level_props_broadphase = LevelPropsBroadphaseManager:new()

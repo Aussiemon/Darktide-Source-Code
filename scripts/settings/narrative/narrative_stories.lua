@@ -405,6 +405,7 @@ local narrative = {
 		hli_gun_shop_viewed = {},
 		hli_penances_viewed = {},
 		s1_intro_viewed = {},
+		core_research_intro_viewed = {},
 	},
 }
 

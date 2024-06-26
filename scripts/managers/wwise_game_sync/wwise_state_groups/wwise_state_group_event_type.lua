@@ -31,9 +31,9 @@ WwiseStateGroupEventType.update = function (self, dt, t)
 	local wwise_state = WwiseGameSyncSettings.default_group_state
 
 	if self._mission_objective_system then
-		local event_music = self._mission_objective_system:get_objective_event_type_music()
+		local objective_event_type = self._mission_objective_system:objective_event_type()
 
-		wwise_state = event_music or wwise_state
+		wwise_state = objective_event_type or wwise_state
 	end
 
 	self:_set_wwise_state(wwise_state)

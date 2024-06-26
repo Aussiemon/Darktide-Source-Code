@@ -35,7 +35,7 @@ local default_ingame_input_settings = {
 		},
 		weapon_extra = {
 			"mouse_extra_1",
-			"ps4_controller_right_thumb",
+			"ps4_controller_r3",
 			"xbox_controller_right_thumb",
 			description = "loc_ingame_weapon_extra",
 			group = "input_group_combat",
@@ -43,7 +43,7 @@ local default_ingame_input_settings = {
 		},
 		interact = {
 			"keyboard_e",
-			"ps4_controller_circle",
+			"ps4_controller_square",
 			"xbox_controller_x",
 			description = "loc_ingame_interact",
 			group = "input_group_combat",
@@ -166,19 +166,28 @@ local default_ingame_input_settings = {
 			group = "input_group_combat",
 			sort_order = 18,
 		},
+		tactical_overlay_swap = {
+			"keyboard_e",
+			"ps4_controller_square",
+			"xbox_controller_x",
+			description = "loc_ingame_tactical_overlay_swap",
+			group = "input_group_combat",
+			sort_order = 19,
+		},
 		menu = {
-			"xbox_controller_start",
 			"ps4_controller_options",
+			"xbox_controller_start",
 			bindable = false,
 			description = "loc_alias_view_hotkey_system",
 			group = "input_group_hotkeys",
 		},
 		weapon_inspect = {
 			"keyboard_x",
+			"ps4_controller_d_right",
 			"xbox_controller_d_right",
 			description = "loc_ingame_weapon_inspect",
 			group = "input_group_combat",
-			sort_order = 19,
+			sort_order = 20,
 		},
 		spectate_next = {
 			"mouse_left",
@@ -187,13 +196,13 @@ local default_ingame_input_settings = {
 			description = "loc_ingame_spectate_next",
 			group = "input_group_combat",
 			hide_in_controller_layout = true,
-			sort_order = 20,
+			sort_order = 21,
 		},
 		voip_push_to_talk = {
 			"keyboard_v",
 			description = "loc_ingame_voip_push_to_talk",
 			group = "input_group_combat",
-			sort_order = 21,
+			sort_order = 22,
 		},
 		keyboard_move_forward = {
 			"keyboard_w",
@@ -244,6 +253,7 @@ local default_ingame_input_settings = {
 			sort_order = 7,
 		},
 		slide = {
+			"ps4_controller_circle",
 			"xbox_controller_b",
 			bindable = false,
 			description = "loc_ingame_slide",
@@ -266,16 +276,16 @@ local default_ingame_input_settings = {
 			sort_order = 10,
 		},
 		look_raw_controller = {
-			"xbox_controller_right",
 			"ps4_controller_right",
+			"xbox_controller_right",
 			bindable = false,
 			description = "loc_ingame_look_raw_controller",
 			group = "input_group_movement",
 			sort_order = 11,
 		},
 		move_controller = {
-			"xbox_controller_left",
 			"ps4_controller_left",
+			"xbox_controller_left",
 			bindable = false,
 			description = "loc_ingame_move_controller",
 			group = "input_group_movement",
@@ -354,6 +364,10 @@ local default_ingame_input_settings = {
 		tactical_overlay_hold = {
 			key_alias = "tactical_overlay",
 			type = "held",
+		},
+		tactical_overlay_swap = {
+			key_alias = "tactical_overlay_swap",
+			type = "pressed",
 		},
 		jump = {
 			key_alias = "jump",
@@ -490,7 +504,7 @@ local default_ingame_input_settings = {
 	},
 }
 
-if IS_XBS then
+if IS_XBS or IS_PLAYSTATION then
 	default_ingame_input_settings.aliases.voip_push_to_talk = nil
 	default_ingame_input_settings.settings.voip_push_to_talk = nil
 end

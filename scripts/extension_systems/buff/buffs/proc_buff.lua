@@ -190,6 +190,9 @@ ProcBuff.update = function (self, dt, t, portable_random)
 	template_context.active_percentage = self:_active_percentage(t)
 
 	local is_active = self:_is_proc_active(t)
+
+	template_context.active = not self:_is_cooling_down(t)
+
 	local has_activated = self._has_activated
 	local proc_update_func = template.proc_update_func
 

@@ -14,7 +14,7 @@ HitMass.target_hit_mass = function (attacker_unit, target_unit, hit_weakspot)
 	local breed = _target_breed(target_unit)
 
 	if breed then
-		hit_mass = _hit_mass_from_breed(target_unit, breed, use_reduced_hit_mass)
+		hit_mass = _hit_mass_from_breed(target_unit, breed, use_reduced_hit_mass, attacker_unit)
 	else
 		hit_mass = _hit_mass_from_object(target_unit)
 	end
@@ -95,7 +95,7 @@ end
 
 local REDUCED_HIT_MASS_MULTIPLIER = 0.25
 
-function _hit_mass_from_breed(unit, breed, use_reduced_hit_mass)
+function _hit_mass_from_breed(unit, breed, use_reduced_hit_mass, attacker_unit)
 	if not HEALTH_ALIVE[unit] then
 		return 0
 	end
@@ -105,6 +105,15 @@ function _hit_mass_from_breed(unit, breed, use_reduced_hit_mass)
 
 	if is_player_or_prop_character then
 		hit_mass = breed.hit_mass
+
+		if breed.friendly_hit_mass then
+			local side_system = Managers.state.extension:system("side_system")
+			local is_ally = side_system:is_ally(attacker_unit, unit)
+
+			if is_ally then
+				hit_mass = breed.friendly_hit_mass
+			end
+		end
 	else
 		local health_extension = ScriptUnit.extension(unit, "health_system")
 

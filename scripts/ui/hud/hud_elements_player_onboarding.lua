@@ -89,10 +89,25 @@ local elements = {
 		},
 	},
 	{
+		class_name = "HudElementTacticalOverlay",
+		filename = "scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay",
+		package = "packages/ui/hud/tactical_overlay/tactical_overlay",
+		use_hud_scale = false,
+		visibility_groups = {
+			"tactical_overlay",
+			"alive",
+			"communication_wheel",
+		},
+		context = {
+			show_left_side_details = false,
+			show_right_side = false,
+		},
+	},
+	{
 		class_name = "HudElementCrosshair",
 		filename = "scripts/ui/hud/elements/crosshair/hud_element_crosshair",
 		package = "packages/ui/hud/crosshair/crosshair",
-		use_hud_scale = true,
+		use_hud_scale = false,
 		visibility_groups = {
 			"alive",
 		},
@@ -204,7 +219,7 @@ local elements = {
 		class_name = "HudElementWorldMarkers",
 		filename = "scripts/ui/hud/elements/world_markers/hud_element_world_markers",
 		package = "packages/ui/hud/world_markers/world_markers",
-		use_hud_scale = false,
+		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
@@ -214,6 +229,7 @@ local elements = {
 		class_name = "HudElementInteraction",
 		filename = "scripts/ui/hud/elements/interaction/hud_element_interaction",
 		package = "packages/ui/hud/interaction/interaction",
+		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
 			"communication_wheel",

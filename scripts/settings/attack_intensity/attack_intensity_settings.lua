@@ -667,6 +667,56 @@ attack_intensity_settings.attack_intensities = {
 			},
 		},
 	},
+	grenade = {
+		{
+			attack_allowed_decay_multiplier = 0.25,
+			attack_intensity_clamp = 60,
+			decay = 1,
+			decay_grace = 1,
+			reset = 0.25,
+			threshold = 3,
+		},
+		{
+			attack_allowed_decay_multiplier = 0.25,
+			attack_intensity_clamp = 60,
+			decay = 2,
+			decay_grace = 1,
+			reset = 0.25,
+			threshold = 6,
+		},
+		{
+			attack_allowed_decay_multiplier = 0.25,
+			attack_intensity_clamp = 60,
+			decay = 2,
+			decay_grace = 1,
+			reset = 0.25,
+			threshold = 10,
+		},
+		{
+			attack_allowed_decay_multiplier = 0.25,
+			attack_intensity_clamp = 70,
+			decay = 2,
+			decay_grace = 1,
+			reset = 0.25,
+			threshold = 10,
+		},
+		{
+			attack_allowed_decay_multiplier = 0.25,
+			attack_intensity_clamp = 80,
+			decay = 2,
+			decay_grace = 1,
+			reset = 0.25,
+			threshold = 10,
+		},
+		{
+			attack_allowed_decay_multiplier = 0.25,
+			attack_intensity_clamp = 100,
+			decay = 3,
+			decay_grace = 1,
+			reset = 0.25,
+			threshold = 10,
+		},
+	},
 }
 
 return settings("AttackIntensitySettings", attack_intensity_settings)

@@ -297,6 +297,10 @@ local archetype_talents = {
 					format_type = "loc_string",
 					value = "loc_talent_veteran_2_combat_ability",
 				},
+				refresh_duration = {
+					format_type = "number",
+					value = talent_settings_2.combat_ability.duration,
+				},
 			},
 			special_rule = {
 				identifier = {
@@ -1799,6 +1803,33 @@ local archetype_talents = {
 				identifier = "reduce_sprinting_cost",
 			},
 		},
+		veteran_reduce_swap_time = {
+			description = "loc_talent_veteran_reduce_swap_time_desc",
+			display_name = "loc_talent_veteran_reduce_swap_time",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tactical",
+			name = "Wield Speed increased by 25%",
+			format_values = {
+				swap_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "veteran_reduce_swap_time",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.wield_speed,
+						},
+					},
+					value_manipulation = function (value)
+						return math_round(value * 100)
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "veteran_reduce_swap_time",
+				identifier = "veteran_reduce_swap_time",
+			},
+		},
 		veteran_increased_melee_crit_chance_and_melee_finesse = {
 			description = "loc_talent_veteran_increased_melee_crit_chance_and_melee_finesse_desc",
 			display_name = "loc_talent_veteran_increased_melee_crit_chance_and_melee_finesse",
@@ -2471,6 +2502,10 @@ local archetype_talents = {
 					format_type = "percentage",
 					prefix = "+",
 					value = 0.05,
+				},
+				stamina = {
+					format_type = "percentage",
+					value = 0.1,
 				},
 			},
 			special_rule = {

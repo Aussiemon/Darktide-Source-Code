@@ -96,6 +96,7 @@ local unlock_config = {
 			items = {
 				"content/items/weapons/player/melee/chainsword_p1_m1",
 				"content/items/weapons/player/ranged/lasgun_p3_m3",
+				"content/items/weapons/player/melee/powermaul_p1_m2",
 			},
 		},
 		{
@@ -121,11 +122,16 @@ local unlock_config = {
 		},
 		{
 			level = 18,
-			items = {},
+			items = {
+				"content/items/weapons/player/ranged/boltpistol_p1_m1",
+				"content/items/weapons/player/melee/powermaul_p1_m1",
+			},
 		},
 		{
 			level = 19,
-			items = {},
+			items = {
+				"content/items/weapons/player/ranged/shotgun_p2_m1",
+			},
 		},
 		{
 			level = 20,
@@ -295,6 +301,7 @@ local unlock_config = {
 			items = {
 				"content/items/weapons/player/melee/chainsword_p1_m2",
 				"content/items/weapons/player/ranged/stubrevolver_p1_m2",
+				"content/items/weapons/player/melee/powermaul_p1_m1",
 			},
 		},
 		{
@@ -306,11 +313,16 @@ local unlock_config = {
 		},
 		{
 			level = 20,
-			items = {},
+			items = {
+				"content/items/weapons/player/ranged/shotgun_p2_m1",
+				"content/items/weapons/player/ranged/boltpistol_p1_m1",
+			},
 		},
 		{
 			level = 21,
-			items = {},
+			items = {
+				"content/items/weapons/player/melee/powermaul_p1_m2",
+			},
 		},
 		{
 			level = 22,
@@ -408,6 +420,7 @@ local unlock_config = {
 			level = 10,
 			items = {
 				"content/items/weapons/player/melee/ogryn_powermaul_slabshield_p1_m1",
+				"content/items/weapons/player/melee/ogryn_pickaxe_2h_p1_m1",
 			},
 		},
 		{
@@ -421,6 +434,7 @@ local unlock_config = {
 			level = 12,
 			items = {
 				"content/items/weapons/player/melee/ogryn_club_p2_m3",
+				"content/items/weapons/player/melee/ogryn_pickaxe_2h_p1_m3",
 			},
 		},
 		{
@@ -437,7 +451,9 @@ local unlock_config = {
 		},
 		{
 			level = 15,
-			items = {},
+			items = {
+				"content/items/weapons/player/melee/ogryn_pickaxe_2h_p1_m2",
+			},
 		},
 		{
 			level = 16,
@@ -636,6 +652,7 @@ local unlock_config = {
 			items = {
 				"content/items/weapons/player/melee/combatknife_p1_m2",
 				"content/items/weapons/player/ranged/stubrevolver_p1_m2",
+				"content/items/weapons/player/melee/powermaul_p1_m1",
 			},
 		},
 		{
@@ -647,11 +664,16 @@ local unlock_config = {
 		},
 		{
 			level = 22,
-			items = {},
+			items = {
+				"content/items/weapons/player/ranged/shotgun_p2_m1",
+				"content/items/weapons/player/ranged/boltpistol_p1_m1",
+			},
 		},
 		{
 			level = 23,
-			items = {},
+			items = {
+				"content/items/weapons/player/melee/powermaul_p1_m2",
+			},
 		},
 		{
 			level = 24,

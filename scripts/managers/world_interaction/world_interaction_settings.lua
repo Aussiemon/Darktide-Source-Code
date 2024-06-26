@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/managers/world_interaction/world_interaction_settings.lua
 
-local WorldInteractionSettings = {
+local world_interaction_settings = {
 	foliage = {
 		default_foliage_material = "content/materials/default_foliage_deform",
 		duplicate_edge_cases = false,
@@ -51,4 +51,4 @@ local WorldInteractionSettings = {
 	},
 }
 
-return WorldInteractionSettings
+return settings("WorldInteractionSettings", world_interaction_settings)

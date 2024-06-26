@@ -31,10 +31,19 @@ local COMBAT = {
 local behavior_tree = {
 	"BtSelectorNode",
 	{
-		"BtDieAction",
+		"BtSequenceNode",
+		{
+			"BtFlamerCheckBackpackAction",
+			name = "explode",
+			action_data = action_data.explode,
+		},
+		{
+			"BtDieAction",
+			name = "death",
+			action_data = action_data.death,
+		},
 		condition = "is_dead",
-		name = "death",
-		action_data = action_data.death,
+		name = "death_sequence",
 	},
 	{
 		"BtExitSpawnerAction",

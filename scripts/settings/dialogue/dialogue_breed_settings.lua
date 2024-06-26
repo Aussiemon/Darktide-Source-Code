@@ -18,6 +18,8 @@ dialogue_breed_settings.voice_classes_2d = {
 	"enginseer",
 	"boon_vendor",
 	"tertium_noble",
+	"cargo_pilot",
+	"travelling_salesman",
 }
 dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
 dialogue_breed_settings.chaos_hound = {
@@ -181,6 +183,10 @@ dialogue_breed_settings.mission_giver = {
 		"boon_vendor_a",
 		"tertium_noble_a",
 		"tertium_noble_b",
+		"travelling_salesman_a",
+		"travelling_salesman_b",
+		"travelling_salesman_c",
+		"cargo_pilot_a",
 	},
 }
 dialogue_breed_settings.sergeant = {
@@ -434,6 +440,7 @@ dialogue_breed_settings.vocator = {
 		"mourningstar_confessor_a",
 		"mourningstar_wing_commander_a",
 		"shipmistress_a",
+		"sergeant_a",
 	},
 	random_talk_settings = {
 		enabled = true,
@@ -1038,6 +1045,34 @@ dialogue_breed_settings.warp_echo = {
 	wwise_voices = {
 		"warp_echo_moebian_a",
 		"warp_echo_moebian_b",
+	},
+}
+dialogue_breed_settings.cargo_pilot = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "cargo_pilot",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"cargo_pilot_a",
+	},
+}
+dialogue_breed_settings.travelling_salesman = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "travelling_salesman",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"travelling_salesman_a, travelling_salesman_b, travelling_salesman_c",
 	},
 }
 

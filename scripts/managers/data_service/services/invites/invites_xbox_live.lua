@@ -60,7 +60,7 @@ InvitesXboxLive.reset = function (self)
 	self._has_invite = false
 end
 
-InvitesXboxLive.xbox_profile_signed_in = function (self, xuid)
+InvitesXboxLive.on_profile_signed_in = function (self, xuid)
 	local my_xuid = xuid and XboxLive.xuid_hex_to_dec(xuid)
 	local invites = self._invites
 

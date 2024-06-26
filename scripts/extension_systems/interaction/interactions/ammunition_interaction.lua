@@ -54,23 +54,23 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
 
 	for slot_name, config in pairs(weapon_slot_configuration) do
-		local wieldable_component = unit_data_ext:write_component(slot_name)
+		local inventory_slot_component = unit_data_ext:write_component(slot_name)
 
-		if wieldable_component.max_ammunition_reserve > 0 then
-			local ammo_reserve = wieldable_component.current_ammunition_reserve
-			local max_ammo_reserve = wieldable_component.max_ammunition_reserve
-			local ammo_clip = wieldable_component.current_ammunition_clip
-			local max_ammo_clip = wieldable_component.max_ammunition_clip
+		if inventory_slot_component.max_ammunition_reserve > 0 then
+			local ammo_reserve = inventory_slot_component.current_ammunition_reserve
+			local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
+			local ammo_clip = inventory_slot_component.current_ammunition_clip
+			local max_ammo_clip = inventory_slot_component.max_ammunition_clip
 			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data)
 			local missing_clip = max_ammo_clip - ammo_clip
 			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)
 
-			wieldable_component.current_ammunition_reserve = new_ammo_amount
+			inventory_slot_component.current_ammunition_reserve = new_ammo_amount
 
 			local missing_player_ammo = max_ammo_reserve - ammo_reserve
 
 			if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share and not pickup_data.ammo_crate then
-				Vo.ammo_hog_event(interactor_unit, wieldable_component, pickup_data)
+				Vo.ammo_hog_event(interactor_unit, inventory_slot_component, pickup_data)
 			end
 
 			local buff_extension = ScriptUnit.has_extension(interactor_unit, "buff_system")

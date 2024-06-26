@@ -19,6 +19,45 @@ local talent_settings = {
 	mark_passive = {
 		weakspot_stacks = 3,
 	},
+	psyker = {
+		throwing_knives = {
+			charges_restored = 5,
+		},
+		nearby_soublaze_defense = {
+			max = 0.5,
+			max_stacks = 5,
+			min = 1,
+		},
+		cleave_from_peril = {
+			max = 1,
+			min = 0,
+		},
+		blocking_soulbaze = {
+			stacks = 1,
+		},
+		melee_attack_speed = {
+			attack_speed = 0.1,
+		},
+		glass_cannon = {
+			toughness_replenish_multiplier = 0.5,
+			warp_charge_amount = 0.75,
+		},
+		warp_attacks_rending = {
+			warp_rending = 0.1,
+		},
+		ranged_shots_soulblaze = {
+			proc_chance = 1,
+			stacks = 1,
+		},
+		soulblaze_reduces_damage_taken = {
+			toughness_damage_taken_multiplier = 0.67,
+		},
+		psyker_force_staff_melee_attack_bonus = {
+			max = 1,
+			min = 0,
+			venting = 0.1,
+		},
+	},
 	psyker_1 = {
 		combat_ability = {},
 		grenade = {},

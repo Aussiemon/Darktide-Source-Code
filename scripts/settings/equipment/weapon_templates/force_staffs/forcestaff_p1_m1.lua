@@ -293,8 +293,6 @@ weapon_template.actions = {
 		charge_template = "forcestaff_p1_m1_charge_aoe",
 		hold_combo = true,
 		kind = "overload_charge_position_finder",
-		max_scale = 5,
-		min_scale = 0,
 		minimum_hold_time = 0.3,
 		overload_module_class_name = "warp_charge",
 		position_finder_module_class_name = "ballistic_raycast_position_finder",
@@ -336,6 +334,7 @@ weapon_template.actions = {
 		position_finder_fx = {
 			decal_unit_name = "content/fx/units/weapons/decal_force_staff_explosion_marker",
 			decal_unit_name_3p = "content/fx/units/weapons/decal_force_staff_explosion_marker_3p",
+			explode_action_name = "action_trigger_explosion",
 			has_husk_events = true,
 			scale_variable_name = "radius",
 			scaling_effect_name = "content/fx/particles/weapons/force_staff/force_staff_explosion_indicator",
@@ -1059,7 +1058,7 @@ weapon_template.fx_sources = {
 	_overheat = "fx_overheat",
 }
 weapon_template.crosshair = {
-	crosshair_type = "assault",
+	crosshair_type = "dot",
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {

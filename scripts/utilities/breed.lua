@@ -5,6 +5,7 @@ local breed_types = BreedSettings.types
 local type_player = breed_types.player
 local type_minion = breed_types.minion
 local type_living_prop = breed_types.living_prop
+local type_objective_prop = breed_types.objective_prop
 local type_prop = breed_types.prop
 local Breed = {}
 
@@ -40,11 +41,17 @@ Breed.is_minion = function (breed_or_nil)
 end
 
 Breed.is_prop = function (breed_or_nil)
-	return breed_or_nil and breed_or_nil.breed_type == type_prop
+	local breed_type = breed_or_nil and breed_or_nil.breed_type
+
+	return breed_type == type_prop or breed_type == type_objective_prop
 end
 
 Breed.is_living_prop = function (breed_or_nil)
 	return breed_or_nil and breed_or_nil.breed_type == type_living_prop
+end
+
+Breed.is_objective_prop = function (breed_or_nil)
+	return breed_or_nil and breed_or_nil.breed_type == type_objective_prop
 end
 
 Breed.count_as_character = function (breed_or_nil)
@@ -52,7 +59,9 @@ Breed.count_as_character = function (breed_or_nil)
 		return true
 	end
 
-	return breed_or_nil and breed_or_nil.breed_type == type_living_prop
+	local breed_type = breed_or_nil and breed_or_nil.breed_type
+
+	return breed_type == type_living_prop or breed_type == type_objective_prop
 end
 
 Breed.enemy_type = function (breed_or_nil)

@@ -49,7 +49,7 @@ MinigameBase.hot_join_sync = function (self, sender, channel)
 	local current_decode_stage = self._current_stage
 
 	if current_decode_stage then
-		self:send_rpc_to_channel(channel, "rpc_minigame_sync_decode_set_stage", current_decode_stage)
+		self:send_rpc_to_channel(channel, "rpc_minigame_sync_set_stage", current_decode_stage)
 	end
 end
 

@@ -38,7 +38,7 @@ local breed_data = {
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.3,
 	power_level_type = "horde_default_melee",
-	run_speed = 4.3,
+	run_speed = 5.159999999999999,
 	slot_template = "chaos_poxwalker",
 	spawn_anim_state = "to_melee",
 	spawn_inventory_slot = "slot_melee_weapon",
@@ -100,6 +100,16 @@ local breed_data = {
 	behavior_tree_name = breed_name,
 	animation_variables = {
 		"moving_attack_fwd_speed",
+		"anim_move_speed",
+	},
+	animation_variable_bounds = {
+		anim_move_speed = {
+			1,
+			85,
+		},
+	},
+	animation_variable_init = {
+		anim_move_speed = 1,
 	},
 	combat_range_data = BreedCombatRanges.chaos_poxwalker,
 	suppress_config = MinionDifficultySettings.suppression.chaos_newly_infected,

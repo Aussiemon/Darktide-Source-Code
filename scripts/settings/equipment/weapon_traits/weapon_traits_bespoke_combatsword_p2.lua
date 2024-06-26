@@ -133,7 +133,26 @@ templates.weapon_trait_bespoke_combatsword_p2_infinite_melee_cleave_on_weakspot_
 }
 templates.weapon_trait_bespoke_combatsword_p2_pass_past_armor_on_crit = {
 	weapon_trait_bespoke_combatsword_p2_pass_past_armor_on_crit = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.025,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.05,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.075,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.1,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {

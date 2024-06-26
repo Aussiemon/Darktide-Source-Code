@@ -19,7 +19,7 @@ local pickup_data = {
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 		if mission_objective_system:is_current_active_objective(objective_name) then
-			local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(objective_name)
+			local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name)
 			local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
 			synchronizer_extension:add_progression(1)

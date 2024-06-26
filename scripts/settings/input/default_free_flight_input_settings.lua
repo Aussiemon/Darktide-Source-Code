@@ -7,11 +7,13 @@ local default_free_flight_input_settings = {
 		"keyboard",
 		"mouse",
 		"xbox_controller",
+		"ps4_controller",
 	},
 	default_devices = {
 		"keyboard",
 		"mouse",
 		"xbox_controller",
+		"ps4_controller",
 	},
 	filters = DefaultFreeFlightInputFilters,
 	settings = {
@@ -20,6 +22,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_f10",
 				"xbox_controller_x",
+				"ps4_controller_square",
 			},
 		},
 		global_toggle = {
@@ -28,6 +31,8 @@ local default_free_flight_input_settings = {
 				"keyboard_f9",
 				"xbox_controller_left_thumb+xbox_controller_right_thumb",
 				"xbox_controller_right_thumb+xbox_controller_left_thumb",
+				"ps4_controller_l3+ps4_controller_r3",
+				"ps4_controller_r3+ps4_controller_l3",
 			},
 		},
 		toggle_dof = {
@@ -51,6 +56,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"mouse_mouse",
 				"xbox_controller_right",
+				"ps4_controller_right",
 			},
 		},
 		toggle_look_input = {
@@ -90,6 +96,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_e",
 				"xbox_controller_right_trigger",
+				"ps4_controller_r2",
 			},
 		},
 		move_down = {
@@ -97,18 +104,21 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_q",
 				"xbox_controller_left_trigger",
+				"ps4_controller_l2",
 			},
 		},
 		roll_left = {
 			type = "button",
 			raw = {
 				"xbox_controller_right_shoulder",
+				"ps4_controller_r1",
 			},
 		},
 		roll_right = {
 			type = "button",
 			raw = {
 				"xbox_controller_left_shoulder",
+				"ps4_controller_l1",
 			},
 		},
 		increase_fov = {
@@ -116,6 +126,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_numpad plus",
 				"xbox_controller_d_left",
+				"ps4_controller_d_left",
 			},
 		},
 		decrease_fov = {
@@ -123,6 +134,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_num minus",
 				"xbox_controller_d_right",
+				"ps4_controller_d_right",
 			},
 		},
 		increase_fov_hold = {
@@ -130,6 +142,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_left ctrl+keyboard_numpad plus",
 				"xbox_controller_d_down",
+				"ps4_controller_d_down",
 			},
 		},
 		decrease_fov_hold = {
@@ -137,6 +150,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_left ctrl+keyboard_num minus",
 				"xbox_controller_d_up",
+				"ps4_controller_d_up",
 			},
 		},
 		pick = {
@@ -180,6 +194,7 @@ local default_free_flight_input_settings = {
 			raw = {
 				"keyboard_enter",
 				"xbox_controller_left_trigger+xbox_controller_right_trigger",
+				"ps4_controller_l2+ps4_controller_r2",
 			},
 		},
 	},

@@ -46,8 +46,8 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -56,8 +56,8 @@ local unarmored = {
 		},
 		died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 		},
 		weakspot_damage = {
@@ -613,8 +613,8 @@ local disgustingly_resilient = {
 				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
 			},
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -627,8 +627,8 @@ local disgustingly_resilient = {
 				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
 			},
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 		},
 		weakspot_damage = {
@@ -862,7 +862,47 @@ local player = {
 	linked_decal = {},
 	blood_ball = {},
 }
-local surface_fx = {}
+local surface_fx = {
+	snow = {
+		[hit_types.stop] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_lasgun",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+			vfx = {
+				{
+					normal_rotation = true,
+					effects = {
+						"content/fx/particles/impacts/surfaces/impact_snow_laser_01",
+					},
+				},
+			},
+		},
+		[hit_types.penetration_entry] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_lasgun",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+			vfx = {
+				{
+					normal_rotation = true,
+					effects = {
+						"content/fx/particles/impacts/surfaces/impact_snow_laser_01",
+					},
+				},
+			},
+		},
+		[hit_types.penetration_exit] = nil,
+	},
+}
 local default_surface_fx = {
 	[hit_types.stop] = {
 		sfx = {

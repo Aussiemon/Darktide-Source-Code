@@ -1,13 +1,13 @@
 ﻿-- chunkname: @scripts/settings/sound/player_character_sounds.lua
 
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local player_character_sounds = {}
+local PlayerCharacterSounds = {}
 
-player_character_sounds.events = require("scripts/settings/sound/player_character_sound_event_aliases")
+PlayerCharacterSounds.events = require("scripts/settings/sound/player_character_sound_event_aliases")
 
 local resource_events = {}
 
-player_character_sounds.resource_events = resource_events
+PlayerCharacterSounds.resource_events = resource_events
 
 local function _create_resource_events_lookup(root)
 	for switch, value in pairs(root) do
@@ -19,7 +19,7 @@ local function _create_resource_events_lookup(root)
 	end
 end
 
-for alias, value in pairs(player_character_sounds.events) do
+for alias, value in pairs(PlayerCharacterSounds.events) do
 	local events = value.events
 
 	_create_resource_events_lookup(events)
@@ -50,8 +50,8 @@ _add_sfx_names_from_explosion_templates(ExplosionTemplates)
 
 local DEFAULT_EXTERNAL_PROPERTIES = {}
 
-player_character_sounds.resolve_sound = function (sound_alias, properties, optional_external_properties)
-	local settings = player_character_sounds.events[sound_alias]
+PlayerCharacterSounds.resolve_sound = function (sound_alias, properties, optional_external_properties)
+	local settings = PlayerCharacterSounds.events[sound_alias]
 
 	if settings then
 		local events = settings.events
@@ -104,10 +104,10 @@ end
 local temp_relevant_events = {}
 local sound_alias_relevant_events_temp = {}
 
-player_character_sounds.find_relevant_events = function (profile_properties)
+PlayerCharacterSounds.find_relevant_events = function (profile_properties)
 	table.clear(temp_relevant_events)
 
-	for sound_alias, settings in pairs(player_character_sounds.events) do
+	for sound_alias, settings in pairs(PlayerCharacterSounds.events) do
 		table.clear(sound_alias_relevant_events_temp)
 
 		local events = settings.events
@@ -158,4 +158,4 @@ player_character_sounds.find_relevant_events = function (profile_properties)
 	return temp_relevant_events
 end
 
-return settings("PlayerCharacterSounds", player_character_sounds)
+return PlayerCharacterSounds

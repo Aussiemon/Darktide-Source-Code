@@ -9,7 +9,38 @@ local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_stubrevolver_p1_hipfire_while_sprinting = {
 	weapon_trait_bespoke_stubrevolver_p1_hipfire_while_sprinting = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.06,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.09,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.12,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.15,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide = {

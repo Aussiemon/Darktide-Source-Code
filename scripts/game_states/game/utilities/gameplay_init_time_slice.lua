@@ -12,16 +12,16 @@ GameplayInitTimeSlice.pre_loop = function ()
 	return performance_counter_handle, duration_ms
 end
 
-GameplayInitTimeSlice.pre_process = function (performance_counter_handle, duration_ms, max_dt_in_msec)
-	local max_dt_in_msec = max_dt_in_msec or GameplayInitTimeSlice.MAX_DT_IN_MSEC
+GameplayInitTimeSlice.pre_process = function (performance_counter_handle, duration_ms, optional_max_dt_in_msec)
+	local max_dt_in_msec = optional_max_dt_in_msec or GameplayInitTimeSlice.MAX_DT_IN_MSEC
 
 	if duration_ms < max_dt_in_msec then
 		local start_timer = Application.time_since_query(performance_counter_handle)
 
 		return start_timer
+	else
+		return nil
 	end
-
-	return nil
 end
 
 GameplayInitTimeSlice.post_process = function (performance_counter_handle, start_timer, duration_ms)

@@ -52,20 +52,69 @@ projectile_templates.renegade_captain_frag_grenade = {
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade,
 	damage = {
 		fuse = {
-			fuse_time = 2.2,
+			fuse_time = 1.2,
+			impact_triggered = true,
 			explosion_template = ExplosionTemplates.renegade_captain_frag_grenade,
 		},
 		impact = {
 			damage_profile = DamageProfileTemplates.frag_grenade_impact,
-			damage_type = damage_types.grenade_frag,
 		},
 	},
 	effects = {
 		spawn = {
 			vfx = {
 				link = true,
-				orphaned_policy = "destroy",
-				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/grenadier_trail",
+			},
+			sfx = {
+				event_name = "wwise/events/weapon/play_minion_grenadier_fire_grenade_throw_beep",
+			},
+		},
+		impact = {
+			sfx = {
+				event_name = "wwise/events/weapon/stop_enemy_combat_grenadier_throw_beep",
+			},
+		},
+		fuse = {
+			sfx = {
+				event_name = "wwise/events/weapon/play_minion_grenadier_fire_grenade_fuse",
+			},
+		},
+	},
+}
+projectile_templates.renegade_frag_grenade = {
+	spawn_flow_event = "grenade_thrown",
+	locomotion_template = ProjectileLocomotionTemplates.minion_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 1.2,
+			impact_triggered = true,
+			explosion_template = ExplosionTemplates.renegade_shocktrooper_frag_grenade,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.frag_grenade_impact,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/grenadier_trail",
+			},
+			sfx = {
+				event_name = "wwise/events/weapon/play_minion_grenadier_fire_grenade_throw_beep",
+			},
+		},
+		impact = {
+			sfx = {
+				event_name = "wwise/events/weapon/stop_enemy_combat_grenadier_throw_beep",
+			},
+		},
+		fuse = {
+			sfx = {
+				event_name = "wwise/events/weapon/play_minion_grenadier_fire_grenade_fuse",
 			},
 		},
 	},
@@ -213,7 +262,6 @@ projectile_templates.renegade_shocktrooper_frag_grenade = {
 		},
 		impact = {
 			damage_profile = DamageProfileTemplates.frag_grenade_impact,
-			damage_type = damage_types.grenade_frag,
 		},
 	},
 	effects = {

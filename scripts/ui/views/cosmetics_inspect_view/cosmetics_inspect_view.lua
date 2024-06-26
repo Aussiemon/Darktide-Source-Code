@@ -1,24 +1,23 @@
 ﻿-- chunkname: @scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view.lua
 
-local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
-local Definitions = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_definitions")
 local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings")
+local Definitions = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_definitions")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local Personalities = require("scripts/settings/character/personalities")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local ViewElementPlayerPanel = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel")
-local MasterItems = require("scripts/backend/master_items")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
-local UISettings = require("scripts/settings/ui/ui_settings")
+local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local CosmeticsInspectView = class("CosmeticsInspectView", "BaseView")
 
 CosmeticsInspectView.init = function (self, settings, context)
@@ -550,7 +549,6 @@ end
 
 CosmeticsInspectView._setup_input_legend = function (self)
 	local context = self._context
-	local preview_with_gear = context.preview_with_gear
 	local use_store_appearance = context.use_store_appearance
 
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 50)
@@ -560,10 +558,6 @@ CosmeticsInspectView._setup_input_legend = function (self)
 	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local valid = true
-
-		if legend_input.gear_toggle_option and not preview_with_gear then
-			valid = false
-		end
 
 		if legend_input.store_appearance_option and not use_store_appearance then
 			valid = false
@@ -575,6 +569,12 @@ CosmeticsInspectView._setup_input_legend = function (self)
 			self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
 		end
 	end
+end
+
+CosmeticsInspectView._can_preview = function (self)
+	local context = self._context
+
+	return context and context.preview_with_gear
 end
 
 CosmeticsInspectView._set_preview_widgets_visibility = function (self, visible)
@@ -1046,6 +1046,68 @@ CosmeticsInspectView.cb_on_camera_zoom_toggled = function (self, id, input_press
 	self:_trigger_zoom_logic(instant, self._camera_focus_slot_name)
 end
 
+CosmeticsInspectView._stop_current_voice = function (self)
+	local ui_world = Managers.ui:world()
+	local wwise_world = Managers.world:wwise_world(ui_world)
+
+	if not wwise_world then
+		return
+	end
+
+	local current_event = self._sound_event_id
+
+	if not current_event then
+		return
+	end
+
+	if not WwiseWorld.is_playing(wwise_world, current_event) then
+		return
+	end
+
+	WwiseWorld.stop_event(wwise_world, current_event)
+
+	self._sound_event_id = nil
+end
+
+CosmeticsInspectView.cb_preview_voice = function (self)
+	local voice_fx_preset_key = table.nested_get(self, "_preview_item", "voice_fx_preset")
+	local voice_fx_preset_rtcp = VoiceFxPresetSettings[voice_fx_preset_key]
+
+	if not voice_fx_preset_key then
+		return
+	end
+
+	local personality_key = table.nested_get(self, "_preview_profile", "lore", "backstory", "personality")
+	local personality_settings = Personalities[personality_key]
+	local sound_event = personality_settings and personality_settings.preview_sound_event
+
+	if not sound_event then
+		return
+	end
+
+	local ui_world = Managers.ui:world()
+	local wwise_world = Managers.world:wwise_world(ui_world)
+
+	if not wwise_world then
+		return
+	end
+
+	self:_stop_current_voice()
+
+	local source = WwiseWorld.make_auto_source(wwise_world, Vector3.zero())
+
+	WwiseWorld.set_source_parameter(wwise_world, source, "voice_fx_preset", voice_fx_preset_rtcp)
+
+	self._sound_event_id = WwiseWorld.trigger_resource_event(wwise_world, sound_event, source)
+end
+
+CosmeticsInspectView._can_preview_voice = function (self)
+	local has_profile = self._preview_profile and self._previewed_with_gear
+	local has_voice_fx = self._preview_item and self._preview_item.voice_fx_preset ~= nil
+
+	return has_profile and has_voice_fx
+end
+
 CosmeticsInspectView._can_zoom = function (self)
 	return not self._disable_zoom
 end
@@ -1070,6 +1132,8 @@ CosmeticsInspectView._trigger_zoom_logic = function (self, instant, optional_slo
 end
 
 CosmeticsInspectView.on_exit = function (self)
+	self:_stop_current_voice()
+
 	if self._world_spawner then
 		self._world_spawner:set_camera_blur(0, 0)
 	end

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_target_effects.lua
 
 local Action = require("scripts/utilities/weapon/action")
+local Breed = require("scripts/utilities/breed")
 local ChainLightningTargetEffects = class("ChainLightningTargetEffects")
 local Unit_world_position = Unit.world_position
 
@@ -107,6 +108,12 @@ ChainLightningTargetEffects._create_effect = function (self, unit, targeting_fx)
 		local apply_for_children = true
 
 		World.set_particles_surface_effect(world, effect_id, unit, mesh_name_or_nil, material_name_or_nil, apply_for_children)
+
+		local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
+
+		if Breed.is_minion(breed) and not ScriptUnit.extension(unit, "visual_loadout_system"):ailment_effect() then
+			Unit.set_vector3_for_materials(unit, "offset_time_duration", Vector3(0, 0, -10), true)
+		end
 	else
 		World.link_particles(world, effect_id, unit, attach_node, Matrix4x4.identity(), orphaned_policy)
 	end

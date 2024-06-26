@@ -911,6 +911,7 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 	local world = buff_context.world
 	local wwise_world = buff_context.wwise_world
 	local unit = buff_context.unit
+	local vfx_material_emission_applied = false
 	local num_effects = #node_effects
 
 	for i = 1, num_effects do
@@ -968,6 +969,8 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 						local apply_for_children = true
 
 						World.set_particles_surface_effect(world, effect_id, unit, mesh_name_or_nil, material_name_or_nil, apply_for_children)
+
+						vfx_material_emission_applied = true
 					else
 						local orphaned_policy = vfx.orphaned_policy or "destroy"
 
@@ -1002,6 +1005,12 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 				active_particle_node_effect.ref_count = new_ref_count
 			end
 		until true
+	end
+
+	local is_minion = not buff_context.player
+
+	if vfx_material_emission_applied and is_minion and not ScriptUnit.extension(unit, "visual_loadout_system"):ailment_effect() then
+		Unit.set_vector3_for_materials(unit, "offset_time_duration", Vector3(0, 0, -10), true)
 	end
 end
 

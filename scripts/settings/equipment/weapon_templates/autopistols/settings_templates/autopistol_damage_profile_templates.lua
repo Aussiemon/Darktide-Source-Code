@@ -125,10 +125,10 @@ damage_templates.default_autopistol_assault = {
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-		boost_curve_multiplier_finesse = {
-			0.3,
-			0.9,
+			boost_curve_multiplier_finesse = {
+				0.3,
+				0.9,
+			},
 		},
 	},
 }
@@ -234,10 +234,10 @@ damage_templates.default_autopistol_snp = {
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-		boost_curve_multiplier_finesse = {
-			0.3,
-			0.9,
+			boost_curve_multiplier_finesse = {
+				0.3,
+				0.9,
+			},
 		},
 	},
 }

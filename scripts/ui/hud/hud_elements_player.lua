@@ -111,7 +111,7 @@ local elements = {
 		class_name = "HudElementCrosshair",
 		filename = "scripts/ui/hud/elements/crosshair/hud_element_crosshair",
 		package = "packages/ui/hud/crosshair/crosshair",
-		use_hud_scale = true,
+		use_hud_scale = false,
 		visibility_groups = {
 			"alive",
 		},

@@ -193,7 +193,9 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 		end
 	end
 
-	if chosen_target and chosen_target ~= interaction_component.target_unit then
+	local current_target = interaction_component.target_unit
+
+	if chosen_target and chosen_target ~= current_target then
 		local interactee_extension = ScriptUnit.extension(chosen_target, "interactee_system")
 		local interaction_type = interactee_extension:interaction_type()
 		local interaction_duration = self:calculate_duration(interactee_extension)
@@ -206,9 +208,9 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 		interaction_component.duration = interaction_duration
 	elseif chosen_target and chosen_target_actor_node_index ~= interaction_component.target_actor_node_index then
 		interaction_component.target_actor_node_index = chosen_target_actor_node_index
-	elseif not chosen_target and chosen_target ~= interaction_component.target_unit and state == interaction_states.waiting_to_interact then
+	elseif not chosen_target and chosen_target ~= current_target and state == interaction_states.waiting_to_interact then
 		self:_reset_interaction()
-	elseif chosen_target and chosen_target == interaction_component.target_unit then
+	elseif chosen_target and chosen_target == current_target then
 		local interactee_extension = ScriptUnit.extension(chosen_target, "interactee_system")
 		local interaction_duration = self:calculate_duration(interactee_extension)
 
@@ -271,15 +273,13 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 		local interaction = self:interaction()
 		local interaction_input = interaction:interaction_input()
 		local interaction_button_pressed = input_extension:get(interaction_input)
+		local interaction_component = self._interaction_component
+		local action_happened = interaction_button_pressed and interaction:start(world, unit, interaction_component, t, is_server) ~= false
 
-		if interaction_button_pressed then
+		if action_happened then
 			self:_consume_conflicting_gamepad_inputs(t)
 
-			local interaction_component = self._interaction_component
 			local interaction_type = interaction_component.type
-
-			interaction:start(world, unit, interaction_component, t, is_server)
-
 			local target_unit = interaction_component.target_unit
 			local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 

@@ -124,6 +124,18 @@ local template = {
 				},
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 16,
+				spawner_group = "scavenge_port_elevator_1",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
+					},
+				},
+			},
+			{
 				"try_inject_special_minion",
 				points = 6,
 				breed_tags = {
@@ -132,11 +144,6 @@ local template = {
 						"scrambler",
 					},
 				},
-			},
-			{
-				"debug_print",
-				duration = 30,
-				text = "event_elevator_scavenge",
 			},
 		},
 		event_hacking_scavenge_a = {
@@ -154,13 +161,25 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 30,
+				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_west",
 				breed_tags = {
 					{
 						"melee",
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 8,
+				spawner_group = "spawner_security_office_trickle",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -213,6 +232,18 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
+				points = 8,
+				spawner_group = "spawner_security_office_trickle",
+				breed_tags = {
+					{
+						"melee",
+						"roamer",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
 				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_north",
@@ -257,7 +288,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
+				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_east",
 				breed_tags = {
@@ -268,17 +299,13 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
-				spawner_group = "spawner_security_office_east",
+				points = 12,
+				spawner_group = "spawner_security_office_trickle",
 				breed_tags = {
 					{
-						"melee",
+						"far",
 						"roamer",
 					},
 				},
@@ -326,10 +353,6 @@ local template = {
 				end,
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 14,
@@ -351,6 +374,18 @@ local template = {
 					{
 						"close",
 						"elite",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 8,
+				spawner_group = "spawner_security_office_trickle",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -403,13 +438,25 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 30,
+				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_south",
 				breed_tags = {
 					{
 						"melee",
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 8,
+				spawner_group = "spawner_security_office_trickle",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -455,10 +502,6 @@ local template = {
 				end,
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 8,
@@ -472,30 +515,22 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
-				spawner_group = "spawner_security_office_east",
+				points = 16,
+				spawner_group = "spawner_security_office_trickle",
 				breed_tags = {
 					{
-						"melee",
+						"far",
 						"roamer",
 					},
 				},
 			},
 			{
-				"delay",
-				duration = 3,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 10,
-				spawner_group = "spawner_security_office_east",
+				spawner_group = "spawner_security_office_north",
 				breed_tags = {
 					{
 						"melee",

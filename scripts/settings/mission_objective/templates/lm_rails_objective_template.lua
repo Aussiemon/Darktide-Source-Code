@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	lm_rails = {
-		main_objective_type = "luggable_objective",
 		objectives = {
 			objective_lm_rails_find_rail_tunnels = {
 				description = "loc_objective_lm_rails_find_rail_tunnels_desc",
@@ -19,8 +18,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_lm_rails_hack_door_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "hacking_event",
 				progress_bar = true,
-				use_music_event = "hacking_event",
 			},
 			objective_lm_rails_open_mid_airlock = {
 				description = "loc_objective_lm_rails_open_mid_airlock_desc",
@@ -57,14 +56,14 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_lm_rails_collect_cargo_header",
 				mission_objective_type = "luggable",
+				music_wwise_state = "collect_event",
 				turn_off_backfill = true,
-				use_music_event = "collect_event",
 			},
 			objective_lm_rails_escape_valkyrie = {
 				description = "loc_objective_lm_rails_escape_valkyrie_desc",
 				header = "loc_objective_lm_rails_escape_valkyrie_header",
 				mission_objective_type = "goal",
-				use_music_event = "escape_event",
+				music_wwise_state = "escape_event",
 			},
 		},
 	},

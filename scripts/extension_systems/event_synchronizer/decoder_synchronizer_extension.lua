@@ -20,6 +20,7 @@ DecoderSynchronizerExtension.init = function (self, extension_init_context, unit
 	self._event_active = false
 	self._setup_only = false
 	self._loaded_view = false
+	self._event_synchronizer_system = Managers.state.extension:system("event_synchronizer_system")
 end
 
 DecoderSynchronizerExtension.setup_from_component = function (self, min_time_until_stalling, max_time_until_stalling, num_active_units, stall_once_per_device, objective_name, auto_start, setup_only)
@@ -37,8 +38,8 @@ DecoderSynchronizerExtension.setup_from_component = function (self, min_time_unt
 end
 
 DecoderSynchronizerExtension.destroy = function (self)
-	if self._loaded_view and Managers.ui then
-		Managers.ui:unload_view("scanner_display_view", self.__class_name)
+	if self._loaded_view then
+		self._event_synchronizer_system:unload_scanner_view()
 
 		self._loaded_view = false
 	end
@@ -115,20 +116,17 @@ DecoderSynchronizerExtension._set_state = function (self, state)
 	self._current_state = state
 end
 
-DecoderSynchronizerExtension._get_next_random_stall_time = function (self)
-	local min = self._min_time_until_stalling
-	local max = self._max_time_until_stalling
+DecoderSynchronizerExtension._get_next_stall_time = function (self)
 	local stall_once_per_device = self._stall_once_per_device
-	local return_time = math.random(min, max)
 
 	if stall_once_per_device and #self._used_devices == #self._attached_devices - 1 then
-		local remaining_time = self._networked_timer_extension:get_remaining_time()
-
-		remaining_time = remaining_time - 0.1
-		return_time = remaining_time
+		return self._networked_timer_extension:get_remaining_time() - 0.1
 	end
 
-	return return_time
+	local min = self._min_time_until_stalling
+	local max = self._max_time_until_stalling
+
+	return math.random(min, max)
 end
 
 local remaining_devices = {}
@@ -178,9 +176,7 @@ DecoderSynchronizerExtension.unblock_decoding_progression = function (self)
 
 	if total_active == num_devices then
 		if not self._setup_only then
-			local rnd_time = self:_get_next_random_stall_time()
-
-			self._time_till_next_stall = rnd_time
+			self._time_till_next_stall = self:_get_next_stall_time()
 
 			for i = 1, num_devices do
 				local attached_device = attached_devices[i]
@@ -228,8 +224,8 @@ DecoderSynchronizerExtension.start_event = function (self)
 
 	Unit.flow_event(self._unit, "lua_event_started")
 
-	if not self._loaded_view and Managers.ui then
-		Managers.ui:load_view("scanner_display_view", self.__class_name)
+	if not self._loaded_view then
+		self._event_synchronizer_system:load_scanner_view()
 
 		self._loaded_view = true
 	end
@@ -281,8 +277,8 @@ DecoderSynchronizerExtension.finished_event = function (self)
 		end
 	end
 
-	if self._loaded_view and Managers.ui then
-		Managers.ui:unload_view("scanner_display_view", self.__class_name)
+	if self._loaded_view then
+		self._event_synchronizer_system:unload_scanner_view()
 
 		self._loaded_view = false
 	end

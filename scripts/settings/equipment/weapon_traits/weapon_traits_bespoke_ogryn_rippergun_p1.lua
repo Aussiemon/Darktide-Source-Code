@@ -137,13 +137,13 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continu
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = {
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.01,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.02,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.03,
 		},
 		{
 			toughness_fixed_percentage = 0.04,
@@ -154,17 +154,17 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire
 	weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.05,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.06,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.07,
 			},
 		},
 		{
@@ -178,7 +178,22 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
 	weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
 		{
 			target_buff_data = {
-				num_stacks_on_proc = 8,
+				num_stacks_on_proc = 3,
+			},
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 4,
+			},
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 5,
+			},
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 6,
 			},
 		},
 	},

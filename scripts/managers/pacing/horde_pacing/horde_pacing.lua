@@ -51,7 +51,14 @@ end
 local HORDE_FAILED_WAIT_TIME = 3
 local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MIN = 5
 local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MAX = 8
-local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = 30
+local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = {
+	60,
+	60,
+	60,
+	30,
+	30,
+}
+local CHALLENGE_RATING_FOR_NO_MOVE_TIMER_OVERRIDE = 0
 
 HordePacing._update_horde_allowance = function (self, t, dt, side_id, target_side_id)
 	local main_path_manager = Managers.state.main_path
@@ -85,7 +92,9 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 	local time_since_forward_travel_changed = self._time_since_forward_travel_changed
 	local ramp_up_timer_modifier = pacing_manager:get_ramp_up_frequency_modifier("hordes")
 	local has_monster_active = pacing_manager:num_aggroed_monsters() > 0
-	local move_timer_override = time_since_forward_travel_changed >= TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE
+	local total_challenge_rating = pacing_manager:total_challenge_rating()
+	local high_challenge_rating = total_challenge_rating > CHALLENGE_RATING_FOR_NO_MOVE_TIMER_OVERRIDE
+	local move_timer_override = not high_challenge_rating and time_since_forward_travel_changed >= Managers.state.difficulty:get_table_entry_by_resistance(TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE)
 	local has_travel_distance_spawn_mutator = not move_timer_override and not has_monster_active and (template.travel_distance_spawning or Managers.state.mutator:mutator("mutator_travel_distance_spawning_hordes"))
 	local horde_started = self._horde_started
 
@@ -281,6 +290,7 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 		local prefered_direction = setup.prefered_direction
 		local stinger = setup.stinger
 		local random_targets = setup.random_targets
+		local optional_skip_spawners = setup.skip_spawners
 		local two_waves_ahead_and_behind = setup.two_waves_ahead_and_behind
 
 		if two_waves_ahead_and_behind then
@@ -296,6 +306,7 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 				prefered_direction = prefered_direction,
 				stinger = stinger,
 				random_targets = random_targets,
+				optional_skip_spawners = optional_skip_spawners,
 				two_waves_ahead_and_behind = two_waves_ahead_and_behind,
 				two_waves_time_between_waves = time_between_waves,
 			}
@@ -311,6 +322,7 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 				prefered_direction = prefered_direction,
 				stinger = stinger,
 				random_targets = random_targets,
+				optional_skip_spawners = optional_skip_spawners,
 			}
 		end
 
@@ -367,7 +379,8 @@ HordePacing._update_coordinated_horde_strike = function (self, t, dt, side_id, t
 				optional_target_unit = target_units[math.random(1, num_target_units)]
 			end
 
-			local success, horde_position, target_unit, group_id = self:_spawn_horde_wave(template, side_id, target_side_id, current_wave, horde_type, horde_template, composition, nil, nil, nil, nil, prefered_direction, optional_target_unit)
+			local optional_skip_spawners = strike.optional_skip_spawners
+			local success, horde_position, target_unit, group_id = self:_spawn_horde_wave(template, side_id, target_side_id, current_wave, horde_type, horde_template, composition, nil, nil, nil, nil, prefered_direction, optional_target_unit, optional_skip_spawners)
 
 			if success then
 				strike.current_wave = strike.current_wave + 1
@@ -448,9 +461,9 @@ HordePacing._start_horde = function (self, t, dt, side_id, target_side_id, templ
 	end
 end
 
-HordePacing._spawn_horde_wave = function (self, template, side_id, target_side_id, current_wave, horde_type, horde_template, compositions, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+HordePacing._spawn_horde_wave = function (self, template, side_id, target_side_id, current_wave, horde_type, horde_template, compositions, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
 	local challenge_scaled_compositions = Managers.state.difficulty:get_table_entry_by_challenge(compositions)
-	local success, horde_position, target_unit, group_id, spawned_direction = self:_spawn_horde(horde_type, horde_template, challenge_scaled_compositions, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+	local success, horde_position, target_unit, group_id, spawned_direction = self:_spawn_horde(horde_type, horde_template, challenge_scaled_compositions, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
 
 	if success then
 		Managers.server_metrics:add_annotation("start_horde_wave", {
@@ -463,13 +476,13 @@ HordePacing._spawn_horde_wave = function (self, template, side_id, target_side_i
 	return success, horde_position, target_unit, group_id, spawned_direction
 end
 
-HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 
 	if horde_template.requires_main_path and main_path_available or not horde_template.requires_main_path then
 		local horde_manager = Managers.state.horde
 		local towards_combat_vector = true
-		local success, horde_position, target_unit, group_id, spawned_direction = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+		local success, horde_position, target_unit, group_id, spawned_direction = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
 
 		return success, horde_position, target_unit, group_id, spawned_direction
 	end

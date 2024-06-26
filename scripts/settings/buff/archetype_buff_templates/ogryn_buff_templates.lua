@@ -470,6 +470,23 @@ templates.ogryn_carapace_armor_parent = {
 				return false
 			end
 
+			if not params.attack_result or params.attack_result == "blocked" then
+				return
+			end
+
+			local attacking_unit = params.attacking_unit
+
+			if attacking_unit then
+				local unit_data_extension = ScriptUnit.extension(attacking_unit, "unit_data_system")
+				local breed_name = unit_data_extension:breed_name()
+				local breed = Breeds[breed_name]
+				local faction_name = breed and breed.faction_name
+
+				if faction_name and faction_name == "imperium" then
+					return
+				end
+			end
+
 			template_data.internal_cd_t = t + 1
 
 			return true
@@ -1292,7 +1309,7 @@ templates.ogryn_increased_toughness_at_low_health = {
 	hud_priority = 3,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_replenish_multiplier] = talent_settings_2.defensive_3.toughness_replenish_multiplier,
+		[stat_buffs.toughness_replenish_modifier] = talent_settings_2.defensive_3.toughness_replenish_modifier,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1890,6 +1907,8 @@ templates.ogryn_increased_reload_speed_on_multiple_hits = {
 }
 templates.ogryn_increased_reload_speed_on_multiple_hits_effect = {
 	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_multi_hits_grant_reload_speed",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	max_stacks = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
@@ -1940,10 +1959,14 @@ templates.ogryn_regen_toughness_on_braced = {
 	end,
 }
 templates.ogryn_ranged_stance_no_movement_penalty_buff = {
-	class_name = "buff",
+	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	duration = stance_duration,
+	proc_events = {
+		[proc_events.on_wield_ranged] = 1,
+		[proc_events.on_wield_melee] = 1,
+	},
 	conditional_stat_buffs = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = talent_settings_1.combat_ability_3.reduced_move_penalty,
 		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = talent_settings_1.combat_ability_3.reduced_move_penalty,
@@ -1970,10 +1993,14 @@ templates.ogryn_ranged_stance_toughness_regen = {
 	duration = stance_duration,
 	proc_events = {
 		[proc_events.on_shoot] = 1,
+		[proc_events.on_shoot_projectile] = 1,
 		[proc_events.on_reload] = 1,
 	},
 	specific_proc_func = {
 		on_shoot = function (params, template_data, template_context)
+			Toughness.replenish_percentage(template_context.unit, 0.02, false, "ogryn_ranged_stance_shoot")
+		end,
+		on_shoot_projectile = function (params, template_data, template_context)
 			Toughness.replenish_percentage(template_context.unit, 0.02, false, "ogryn_ranged_stance_shoot")
 		end,
 		on_reload = function (params, template_data, template_context)

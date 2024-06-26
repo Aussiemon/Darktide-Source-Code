@@ -421,7 +421,7 @@ ConstantElementChat._setup_input_labels = function (self)
 	end
 
 	local input_widget = self._input_field_widget
-	local has_virtual_keyboard = IS_XBS and InputDevice.gamepad_active
+	local has_virtual_keyboard = (IS_XBS or IS_PLAYSTATION) and InputDevice.gamepad_active
 	local is_writing = input_widget.content.is_writing
 	local active_placeholder_text = ""
 
@@ -459,12 +459,11 @@ end
 ConstantElementChat._get_localized_input_text = function (self, action)
 	local service_type = DefaultViewInputSettings.service_type
 	local alias = Managers.input:alias_object(service_type)
-	local alias_array_index = 1
 	local show_controller = InputDevice.gamepad_active
 	local device_types = {
 		show_controller and "xbox_controller" or "keyboard",
 	}
-	local key_info = alias:get_keys_for_alias(action, alias_array_index, device_types)
+	local key_info = alias:get_keys_for_alias(action, device_types)
 	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
 
 	return input_key
@@ -586,7 +585,7 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 end
 
 ConstantElementChat._handle_input = function (self, input_service, ui_renderer)
-	local uses_virtual_keyboard = IS_XBS and InputDevice.gamepad_active
+	local uses_virtual_keyboard = (IS_XBS or IS_PLAYSTATION) and InputDevice.gamepad_active
 
 	if uses_virtual_keyboard then
 		return self:_handle_console_input(input_service, ui_renderer)
@@ -860,7 +859,7 @@ ConstantElementChat._add_notification = function (self, message, channel_tag)
 		channel_tag = channel_tag,
 	}
 	local always_notify = channel_meta_data and channel_meta_data.always_notify
-	local uses_controller = IS_XBS and InputDevice.gamepad_active
+	local uses_controller = (IS_XBS or IS_PLAYSTATION) and InputDevice.gamepad_active
 
 	if always_notify or uses_controller then
 		self._time_since_last_update = 0

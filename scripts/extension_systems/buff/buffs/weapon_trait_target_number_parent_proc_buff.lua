@@ -2,15 +2,13 @@
 
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
-local BuffTemplates = require("scripts/settings/buff/buff_templates")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
-local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
 local WeaponTraitTargetNumberParentProcBuff = class("WeaponTraitTargetNumberParentProcBuff", "WeaponTraitParentProcBuff")
 
 WeaponTraitTargetNumberParentProcBuff.init = function (self, context, template, start_time, instance_id, ...)
 	WeaponTraitTargetNumberParentProcBuff.super.init(self, context, template, start_time, instance_id, ...)
 
 	self._active = false
+	self._last_proc_time = 0
 end
 
 WeaponTraitTargetNumberParentProcBuff.update = function (self, dt, t, ...)
@@ -69,12 +67,21 @@ WeaponTraitTargetNumberParentProcBuff.update_number_of_children = function (self
 		self:_add_child_buff_stack(t, num_stacks_to_add)
 
 		self._duration_progress = 0
+		self._last_proc_time = self._template_data.last_hit_time or 0
 	elseif target_number_of_child_buffs < current_num_child_stacks then
 		local num_stacks_to_remove = current_num_child_stacks - target_number_of_child_buffs
 
 		self:_remove_child_buff_stack(t, num_stacks_to_remove)
 
 		self._duration_progress = 0
+	elseif self._last_proc_time then
+		local last_proc_time = self._template_data.last_hit_time or 0
+
+		if last_proc_time > self._last_proc_time then
+			self._last_proc_time = last_proc_time
+
+			self:set_start_time(last_proc_time)
+		end
 	end
 end
 

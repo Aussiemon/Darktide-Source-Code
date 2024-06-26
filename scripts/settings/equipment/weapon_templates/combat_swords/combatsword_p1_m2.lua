@@ -1761,7 +1761,7 @@ weapon_template.displayed_attacks = {
 		attack_chain = {
 			"linesman",
 			"linesman",
-			"smiter",
+			"linesman",
 			"linesman",
 		},
 	},

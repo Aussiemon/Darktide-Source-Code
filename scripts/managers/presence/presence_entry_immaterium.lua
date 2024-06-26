@@ -161,6 +161,8 @@ PresenceEntryImmaterium.platform_icon = function (self)
 			return ""
 		elseif platform == "xbox" then
 			return ""
+		elseif platform == "psn" then
+			return ""
 		end
 	else
 		return ""

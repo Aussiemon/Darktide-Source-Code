@@ -88,7 +88,7 @@ local scrollbar_base = {
 			local thumb_length = hotspot_style.size[axis]
 			local inverse_scale = renderer.inverse_scale
 			local base_cursor = input_service:get("cursor")
-			local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
+			local cursor = (IS_XBS or IS_PLAYSTATION) and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
 			local cursor_direction = cursor[axis]
 			local input_coordinate = math.clamp(cursor_direction - position[axis], 0, scrollbar_length)
 			local input_offset = content.input_offset
@@ -136,7 +136,7 @@ local scrollbar_base = {
 			if using_cursor_navigation then
 				local inverse_scale = renderer.inverse_scale
 				local cursor = input_service:get("cursor")
-				local cursor_position = IS_XBS and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
+				local cursor_position = (IS_XBS or IS_PLAYSTATION) and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
 
 				is_hover = hotspot.is_hover or math.point_is_inside_2d_box(cursor_position, position, size)
 			else

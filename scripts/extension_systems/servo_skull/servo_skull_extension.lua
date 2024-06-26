@@ -246,7 +246,7 @@ end
 
 ServoSkullExtension._play_vo = function (self, scanning_vo_line)
 	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
-	local mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
+	local mission_objective = self._mission_objective_system:active_objective(current_objective_name)
 	local voice_profile = mission_objective:mission_giver_voice_profile()
 
 	if voice_profile then
@@ -284,7 +284,7 @@ end
 ServoSkullExtension._objective = function (self)
 	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
 
-	self._mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
+	self._mission_objective = self._mission_objective_system:active_objective(current_objective_name)
 
 	return self._mission_objective
 end

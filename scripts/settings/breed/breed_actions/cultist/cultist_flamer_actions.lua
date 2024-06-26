@@ -8,6 +8,8 @@ local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
+local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
 local shooting_difficulty_settings = MinionDifficultySettings.shooting.cultist_flamer
@@ -541,6 +543,7 @@ local action_data = {
 	exit_spawner = {
 		run_anim_event = "move_fwd",
 	},
+	explode = {},
 }
 
 return action_data

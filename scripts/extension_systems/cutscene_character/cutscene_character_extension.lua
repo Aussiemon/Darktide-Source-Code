@@ -74,19 +74,23 @@ end
 CutsceneCharacterExtension.update = function (self, unit, dt, t)
 	self._profile_spawner:update(dt, t)
 
-	if self._is_loading_profile and self._profile_spawner:spawned() then
-		self._is_loading_profile = false
+	if self._is_loading_profile then
+		local bypass_check_streaming = true
 
-		if self._activate_post_spawn_weapon_specific_walk_animation then
-			self:_start_weapon_specific_walk_animation()
+		if self._profile_spawner:spawned(bypass_check_streaming) then
+			self._is_loading_profile = false
 
-			self._activate_post_spawn_weapon_specific_walk_animation = false
-		end
+			if self._activate_post_spawn_weapon_specific_walk_animation then
+				self:_start_weapon_specific_walk_animation()
 
-		if self._activate_post_spawn_inventory_specific_walk_animation then
-			self:_start_inventory_specific_walk_animation()
+				self._activate_post_spawn_weapon_specific_walk_animation = false
+			end
 
-			self._activate_post_spawn_inventory_specific_walk_animation = false
+			if self._activate_post_spawn_inventory_specific_walk_animation then
+				self:_start_inventory_specific_walk_animation()
+
+				self._activate_post_spawn_inventory_specific_walk_animation = false
+			end
 		end
 	end
 end
@@ -249,7 +253,9 @@ end
 
 CutsceneCharacterExtension.start_weapon_specific_walk_animation = function (self)
 	if self._weapon_animation_event and self:has_player_assigned() then
-		if self._profile_spawner:spawned() then
+		local bypass_check_streaming = true
+
+		if self._profile_spawner:spawned(bypass_check_streaming) then
 			self:_start_weapon_specific_walk_animation()
 
 			self._activate_post_spawn_weapon_specific_walk_animation = false
@@ -282,7 +288,9 @@ end
 
 CutsceneCharacterExtension.start_inventory_specific_walk_animation = function (self)
 	if self._inventory_animation_event and self:has_player_assigned() then
-		if self._profile_spawner:spawned() then
+		local bypass_check_streaming = true
+
+		if self._profile_spawner:spawned(bypass_check_streaming) then
 			self:_start_inventory_specific_walk_animation()
 
 			self._activate_post_spawn_inventory_specific_walk_animation = false

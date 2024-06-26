@@ -39,6 +39,9 @@ state_machine_settings["content/characters/player/human/third_person/animations/
 state_machine_settings["content/characters/player/human/third_person/animations/bolt_gun"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/third_person/animations/bolt_pistol"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 state_machine_settings["content/characters/player/human/third_person/animations/flamer_rifle"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
@@ -49,6 +52,9 @@ state_machine_settings["content/characters/player/human/third_person/animations/
 	blend_time = DEFAULT_BLEND_TIME,
 }
 state_machine_settings["content/characters/player/ogryn/third_person/animations/heavy_stubber"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/ogryn/third_person/animations/heavy_stubber_twin_linked"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
 

@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	km_enforcer = {
-		main_objective_type = "kill_objective",
 		objectives = {
 			objective_km_enforcer_leave_start = {
 				description = "loc_objective_km_enforcer_leave_start_desc",
@@ -30,7 +29,7 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_km_enforcer_wait_for_mechanism_header",
 				mission_objective_type = "timed",
-				use_music_event = "fortification_event",
+				music_wwise_state = "fortification_event",
 			},
 			objective_km_enforcer_enter_acid_street = {
 				description = "loc_objective_km_enforcer_enter_acid_street_desc",
@@ -57,8 +56,8 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_km_enforcer_eliminate_target_header",
 				mission_objective_type = "kill",
+				music_wwise_state = "kill_event",
 				turn_off_backfill = true,
-				use_music_event = "kill_event",
 			},
 			objective_km_enforcer_twins_elevator = {
 				description = "loc_objective_km_enforcer_twins_elevator_desc",
@@ -70,7 +69,7 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_km_enforcer_twins_eliminate_twins_header",
 				mission_objective_type = "goal",
-				use_music_event = "kill_event_2",
+				music_wwise_state = "kill_event_2",
 			},
 			objective_km_enforcer_twins_ambush = {
 				description = "loc_objective_km_enforcer_eliminate_target_desc",
@@ -78,7 +77,7 @@ local mission_objective_templates = {
 				header = "loc_objective_km_enforcer_eliminate_target_header",
 				hidden = true,
 				mission_objective_type = "goal",
-				use_music_event = "twins_event",
+				music_wwise_state = "twins_event",
 			},
 		},
 	},

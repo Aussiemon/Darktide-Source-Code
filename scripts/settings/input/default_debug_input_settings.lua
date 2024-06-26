@@ -8,6 +8,7 @@ local default_debug_input_settings = {
 		"keyboard",
 		"mouse",
 		"xbox_controller",
+		"ps4_controller",
 	},
 	settings = {
 		left_key_pressed = {
@@ -84,6 +85,7 @@ local default_debug_input_settings = {
 			raw = {
 				"keyboard_left ctrl+keyboard_i",
 				"xbox_controller_back",
+				"ps4_controller_touch",
 			},
 		},
 		despawn_all_deselected_units = {
@@ -220,6 +222,7 @@ local default_debug_input_settings = {
 			raw = {
 				"keyboard_b",
 				"xbox_controller_d_right",
+				"ps4_controller_d_right",
 			},
 		},
 		heal_damage = {
@@ -227,6 +230,7 @@ local default_debug_input_settings = {
 			raw = {
 				"keyboard_left shift+keyboard_b",
 				"xbox_controller_d_left",
+				"ps4_controller_d_left",
 			},
 		},
 		permanent_damage_modifier = {
@@ -234,6 +238,7 @@ local default_debug_input_settings = {
 			raw = {
 				"keyboard_left ctrl",
 				"xbox_controller_d_down",
+				"ps4_controller_d_down",
 			},
 		},
 		kill_unit = {
@@ -352,6 +357,7 @@ local default_debug_input_settings = {
 			raw = {
 				"keyboard_c",
 				"xbox_controller_right_thumb+xbox_controller_d_down",
+				"ps4_controller_r3+ps4_controller_d_down",
 			},
 		},
 		catapult_self = {

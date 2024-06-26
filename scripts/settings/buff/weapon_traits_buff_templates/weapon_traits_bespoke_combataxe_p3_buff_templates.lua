@@ -41,9 +41,9 @@ templates.weapon_trait_bespoke_combataxe_p3_increased_weakspot_damage_on_push = 
 		[stat_buffs.weakspot_damage] = 0.01,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, function (params, template_data, template_context)
+	check_proc_func = function (params, template_data, template_context)
 		return params.num_hit_units and params.num_hit_units > 0
-	end),
+	end,
 }
 templates.weapon_trait_bespoke_combataxe_p3_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff)
 

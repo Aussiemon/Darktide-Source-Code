@@ -6,6 +6,8 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
+local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
 local shooting_difficulty_settings = MinionDifficultySettings.shooting.cultist_assault
@@ -1275,8 +1277,8 @@ local action_data = {
 			low = "to_low_cover",
 		},
 		enter_cover_durations = {
-			to_high_cover = 1.3333333333333333,
-			to_low_cover = 1.3333333333333333,
+			to_high_cover = 1.1111111111111112,
+			to_low_cover = 1.25,
 		},
 		peek_anim_events = {
 			left = "peek_left",
@@ -1288,6 +1290,7 @@ local action_data = {
 		},
 		num_shots = shooting_difficulty_settings.num_shots_cover,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
+		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		attack_intensities = {
 			ranged = 0.5,
 		},
@@ -1311,6 +1314,32 @@ local action_data = {
 		blocked_duration = 1,
 		blocked_anims = {
 			"blocked",
+		},
+	},
+	throw_frag_grenade = {
+		utility_weight = 10,
+		considerations = UtilityConsiderations.frag_grenade,
+		aim_anim_events = {
+			"throw_grenade",
+		},
+		throw_timing = {
+			throw_grenade = 1.2083333333333333,
+		},
+		action_durations = {
+			throw_grenade = 2.5,
+		},
+		attack_intensities = {
+			grenade = 20,
+		},
+		effect_template = EffectTemplates.renegade_captain_grenade,
+		effect_template_timings = {
+			throw_grenade = 0.4375,
+		},
+		throw_config = {
+			acceptable_accuracy = 1,
+			item = "content/items/weapons/minions/ranged/renegade_grenade",
+			unit_node = "j_lefthand",
+			projectile_template = ProjectileTemplates.renegade_frag_grenade,
 		},
 	},
 	stagger = {

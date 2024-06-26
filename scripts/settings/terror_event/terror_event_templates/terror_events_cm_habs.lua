@@ -181,7 +181,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 16,
+				points = 18,
+				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_close",
 				breed_tags = {
@@ -213,6 +214,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 6,
+				proximity_spawners = true,
 				breed_tags = {
 					{
 						"special",
@@ -248,7 +250,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 5,
+				points = 16,
+				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_close",
 				breed_tags = {
@@ -259,17 +262,14 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 5,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 5,
-				spawner_group = "spawner_habs_close",
+				points = 8,
+				proximity_spawners = true,
+				spawner_group = "spawner_habs_far",
 				breed_tags = {
 					{
-						"melee",
+						"far",
 						"roamer",
 					},
 				},
@@ -281,7 +281,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 5,
+				points = 8,
+				proximity_spawners = true,
 				spawner_group = "spawner_habs_close",
 				breed_tags = {
 					{
@@ -295,6 +296,7 @@ local template = {
 				limit_spawners = 3,
 				max_breed_amount = 1,
 				points = 8,
+				proximity_spawners = true,
 				spawner_group = "spawner_habs_close",
 				breed_tags = {
 					{
@@ -350,11 +352,12 @@ local template = {
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 8,
+				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_far",
 				breed_tags = {
 					{
-						"close",
+						"far",
 						"roamer",
 					},
 				},
@@ -366,7 +369,8 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 8,
+				points = 16,
+				proximity_spawners = true,
 				spawner_group = "spawner_habs_far",
 				breed_tags = {
 					{
@@ -379,6 +383,7 @@ local template = {
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 8,
+				proximity_spawners = true,
 				spawner_group = "spawner_habs_far",
 				breed_tags = {
 					{
@@ -398,6 +403,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
+				proximity_spawners = true,
 				breed_tags = {
 					{
 						"special",
@@ -449,6 +455,7 @@ local template = {
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
+				proximity_spawners = true,
 				breed_tags = {
 					{
 						"special",
@@ -477,7 +484,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 16,
+				points = 20,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_far",
 				breed_tags = {

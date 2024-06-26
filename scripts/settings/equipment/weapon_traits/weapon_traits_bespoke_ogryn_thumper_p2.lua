@@ -26,17 +26,17 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_power_bonus_on_continuous_fire =
 	weapon_trait_bespoke_ogryn_thumper_p2_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.05,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.06,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.07,
 			},
 		},
 		{
@@ -96,7 +96,26 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_weakspot_projectile_hit_increase
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p2_pass_trough_armor_on_weapon_special = {
 	weapon_trait_bespoke_ogryn_thumper_p2_pass_trough_armor_on_weapon_special = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.1,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.15,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.2,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.25,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p2_targets_receive_rending_debuff = {
@@ -149,7 +168,26 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_close_explosion_applies_bleed = 
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p2_grenades_stick_to_monsters = {
 	weapon_trait_bespoke_ogryn_thumper_p2_grenades_stick_to_monsters = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_ogryn_and_monsters] = 0.06,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_ogryn_and_monsters] = 0.09,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_ogryn_and_monsters] = 0.12,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_ogryn_and_monsters] = 0.15,
+			},
+		},
 	},
 }
 

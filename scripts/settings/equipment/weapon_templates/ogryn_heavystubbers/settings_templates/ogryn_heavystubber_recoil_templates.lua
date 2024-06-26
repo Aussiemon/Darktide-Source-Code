@@ -743,7 +743,6 @@ recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_brace = {
 		},
 	},
 }
-pitch_default = 0.03
 
 local firerate = 0.096
 local shot_decay = 3.5

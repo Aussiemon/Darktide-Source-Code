@@ -83,11 +83,11 @@ MissionManager.side_mission_is_luggable = function (self)
 	return self._side_mission_type == SIDE_MISSION_TYPES.luggable
 end
 
-MissionManager.main_objective_type = function (self)
+MissionManager.mission_type_index = function (self)
 	local mission = self._mission
 	local mission_type = MissionTypes[mission.mission_type]
 
-	return mission_type and mission_type.id or -1
+	return mission_type and mission_type.index or -1
 end
 
 return MissionManager

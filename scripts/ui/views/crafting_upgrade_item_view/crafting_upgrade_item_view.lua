@@ -143,29 +143,15 @@ CraftingUpgradeItemView._handle_input = function (self, input_service)
 	if not self._craft_promise then
 		if self:_is_result_presentation_active() then
 			local any_input_pressed = false
+			local input_device_list = InputUtils.platform_device_list()
 
-			if IS_XBS then
-				local input_device_list = InputUtils.input_device_list
-				local xbox_controllers = input_device_list.xbox_controller
+			for i = 1, #input_device_list do
+				local device = input_device_list[i]
 
-				for i = 1, #xbox_controllers do
-					local xbox_controller = xbox_controllers[i]
+				if device.active() and device.any_released() then
+					any_input_pressed = true
 
-					if xbox_controller.active() and xbox_controller.any_released() then
-						any_input_pressed = true
-
-						break
-					end
-				end
-			else
-				for i = 1, #_device_list do
-					local device = _device_list[i]
-
-					if device and device.active and device.any_released() then
-						any_input_pressed = true
-
-						break
-					end
+					break
 				end
 			end
 

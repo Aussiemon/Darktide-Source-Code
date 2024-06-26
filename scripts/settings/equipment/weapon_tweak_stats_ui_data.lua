@@ -74,7 +74,7 @@ local stat_descriptions = {
 			display_name = "loc_weapon_stats_display_heat_resistance",
 			display_type = "default",
 		},
-		extra_overheat_percent = {
+		full_charge_overheat_percent = {
 			display_name = "loc_weapon_stats_display_charged_heat_generation",
 			display_type = "default",
 		},

@@ -4,7 +4,6 @@ local interface = {
 	"delete",
 	"destroy",
 	"do_re_signin",
-	"gamertag",
 	"get_privilege",
 	"init",
 	"is_guest",
@@ -17,144 +16,22 @@ local interface = {
 	"update",
 	"user_detached",
 	"user_id",
+	"platform_user_id",
+	"user_display_name",
 	"wanted_transition",
 	"get_friends",
 	"friends_list_has_changes",
-	"xuid",
 	"refresh_communication_restrictions",
 	"is_muted",
 	"is_blocked",
 	"fetch_crossplay_restrictions",
 	"has_crossplay_restriction",
-	"verify_gdk_store_account",
 	"verify_user_restriction",
 	"user_has_restriction",
 	"user_restriction_verified",
 	"verify_connection",
 	"communication_restriction_iteration",
 }
-local NullAccountManager = class("NullAccountManager")
-
-NullAccountManager.init = function (self)
-	return
-end
-
-NullAccountManager.reset = function (self)
-	return
-end
-
-NullAccountManager.wanted_transition = function (self)
-	return
-end
-
-NullAccountManager.do_re_signin = function (self)
-	return false
-end
-
-NullAccountManager.signin_profile = function (self)
-	return
-end
-
-NullAccountManager.user_detached = function (self)
-	return false
-end
-
-NullAccountManager.leaving_game = function (self)
-	return false
-end
-
-NullAccountManager.user_id = function (self)
-	return nil
-end
-
-NullAccountManager.is_guest = function (self)
-	return false
-end
-
-NullAccountManager.gamertag = function (self)
-	return ""
-end
-
-NullAccountManager.signin_state = function (self)
-	return ""
-end
-
-NullAccountManager.update = function (self, dt, t)
-	return
-end
-
-NullAccountManager.destroy = function (self)
-	return
-end
-
-NullAccountManager.get_privilege = function (self)
-	return
-end
-
-NullAccountManager.show_profile_picker = function (self)
-	return
-end
-
-NullAccountManager.get_friends = function (self)
-	return
-end
-
-NullAccountManager.friends_list_has_changes = function (self)
-	return
-end
-
-NullAccountManager.xuid = function (self)
-	return
-end
-
-NullAccountManager.refresh_communication_restrictions = function (self)
-	return
-end
-
-NullAccountManager.is_muted = function (self)
-	return false
-end
-
-NullAccountManager.is_blocked = function (self)
-	return false
-end
-
-NullAccountManager.fetch_crossplay_restrictions = function (self)
-	return
-end
-
-NullAccountManager.has_crossplay_restriction = function (self)
-	return false
-end
-
-NullAccountManager.verify_gdk_store_account = function (self)
-	return true
-end
-
-NullAccountManager.verify_user_restriction = function (self)
-	return
-end
-
-NullAccountManager.verify_user_restriction_batched = function (self)
-	return
-end
-
-NullAccountManager.user_has_restriction = function (self)
-	return false
-end
-
-NullAccountManager.user_restriction_verified = function (self)
-	return true
-end
-
-NullAccountManager.verify_connection = function (self)
-	return true
-end
-
-NullAccountManager.communication_restriction_iteration = function (self)
-	return nil
-end
-
 local AccountManager = {}
 
 AccountManager.new = function (self)
@@ -168,8 +45,16 @@ AccountManager.new = function (self)
 		instance = require("scripts/managers/account/account_manager_win_gdk"):new()
 
 		Log.info("AccountManager", "Using Win GDK account manager")
+	elseif IS_PLAYSTATION then
+		instance = require("scripts/managers/account/account_manager_psn"):new()
+
+		Log.info("AccountManager", "Using PSN account manager")
+	elseif HAS_STEAM then
+		instance = require("scripts/managers/account/account_manager_steam"):new()
+
+		Log.info("AccountManager", "Using steam account manager")
 	else
-		instance = NullAccountManager:new()
+		instance = require("scripts/managers/account/account_manager_base"):new()
 
 		Log.info("AccountManager", "Using base account manager")
 	end

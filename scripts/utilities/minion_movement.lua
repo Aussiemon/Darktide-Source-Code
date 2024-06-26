@@ -346,8 +346,7 @@ MinionMovement.update_anim_driven_melee_attack_rotation = function (unit, scratc
 end
 
 MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, action_data, optional_reset_stagger_immune_time)
-	local stagger_component, locomotion_extension, animation_extension, behavior_component = scratchpad.stagger_component, scratchpad.locomotion_extension, scratchpad.animation_extension, scratchpad.behavior_component
-	local done = false
+	local stagger_component = scratchpad.stagger_component
 
 	if stagger_component.controlled_stagger and not scratchpad.stagger_duration then
 		if scratchpad.is_anim_driven then
@@ -360,12 +359,7 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 		local stagger_anims = is_left_stagger and action_data.running_stagger_anim_left or action_data.running_stagger_anim_right
 		local stagger_anim = Animation.random_event(stagger_anims)
 
-		animation_extension:anim_event(stagger_anim)
-		locomotion_extension:set_movement_type("constrained_by_mover")
-
-		local override_velocity_z = 0
-
-		locomotion_extension:set_affected_by_gravity(true, override_velocity_z)
+		scratchpad.animation_extension:anim_event(stagger_anim)
 
 		local durations = action_data.running_stagger_duration
 
@@ -375,13 +369,10 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 			scratchpad.stagger_duration = t + duration
 
 			local min_durations = action_data.running_stagger_min_duration
+			local min_duration = min_durations and min_durations[stagger_anim]
 
-			if min_durations then
-				local min_duration = min_durations[stagger_anim]
-
-				if min_duration then
-					scratchpad.stagger_min_duration = t + min_duration
-				end
+			if min_duration then
+				scratchpad.stagger_min_duration = t + min_duration
 			end
 		else
 			scratchpad.stagger_duration = t + durations
@@ -390,7 +381,7 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 		scratchpad.original_movement_speed = scratchpad.navigation_extension:max_speed()
 
 		if not action_data.ignore_running_stagger_combat_range_lock then
-			behavior_component.lock_combat_range_switch = true
+			scratchpad.behavior_component.lock_combat_range_switch = true
 		end
 
 		if optional_reset_stagger_immune_time then
@@ -402,6 +393,8 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 	local running_stagger_min_duration = scratchpad.stagger_min_duration
 
 	scratchpad.running_stagger_block_evaluate = running_stagger_min_duration and t < running_stagger_min_duration
+
+	local done = false
 
 	if scratchpad.stagger_duration and t > scratchpad.stagger_duration then
 		MinionMovement.stop_running_stagger(scratchpad)
@@ -415,7 +408,7 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 			local root_pose_translation = Matrix4x4.translation(wanted_animation_root_pose)
 			local root_pose_velocity = Vector3.normalize(root_pose_translation - POSITION_LOOKUP[unit])
 
-			locomotion_extension:set_external_velocity(root_pose_velocity)
+			scratchpad.locomotion_extension:set_external_velocity(root_pose_velocity)
 		end
 	end
 
@@ -423,14 +416,10 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 end
 
 MinionMovement.stop_running_stagger = function (scratchpad)
-	local locomotion_extension, animation_extension, behavior_component = scratchpad.locomotion_extension, scratchpad.animation_extension, scratchpad.behavior_component
-
-	animation_extension:anim_event("stagger_finished")
-	locomotion_extension:set_affected_by_gravity(false)
-	locomotion_extension:set_movement_type("snap_to_navmesh")
+	scratchpad.animation_extension:anim_event("stagger_finished")
 
 	scratchpad.stagger_duration = nil
-	behavior_component.lock_combat_range_switch = false
+	scratchpad.behavior_component.lock_combat_range_switch = false
 	scratchpad.stagger_component.controlled_stagger = false
 
 	scratchpad.navigation_extension:set_max_speed(scratchpad.original_movement_speed)

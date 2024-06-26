@@ -298,7 +298,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "attack_hit_stab",
 		kind = "sweep",
-		power_level = 350,
+		power_level = 500,
 		range_mod = 1.25,
 		total_time = 1.5,
 		weapon_handling_template = "time_scale_1",
@@ -864,7 +864,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.54,
+				chain_time = 0.375,
 			},
 			block = {
 				action_name = "action_block",

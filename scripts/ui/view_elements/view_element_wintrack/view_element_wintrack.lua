@@ -40,6 +40,7 @@ ViewElementWintrack.init = function (self, parent, draw_layer, start_scale, opti
 	self._visual_points = 0
 	self._loaded_icon_id_cache = {}
 	self._reward_offset_x = 0
+	self._handle_input = true
 	self._hint_upcoming_page = true
 	self._initialize = false
 	self._initial_reward_claim_status_update = true
@@ -324,6 +325,10 @@ ViewElementWintrack.on_resolution_modified = function (self, scale)
 end
 
 ViewElementWintrack.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
+	if not self._handle_input then
+		input_service = input_service:null_service()
+	end
+
 	local ui_resource_renderer = self._ui_resource_renderer
 	local ui_reward_renderer = self._ui_reward_renderer
 
@@ -403,7 +408,7 @@ ViewElementWintrack._update_reward_claim_status = function (self, dt, t, input_s
 	local is_initial_reward_claim_status_update = self._initial_reward_claim_status_update
 	local play_sounds = not is_initial_reward_claim_status_update
 	local claim_button_pressed = self._widgets_by_name.claim_button.content.hotspot.on_pressed
-	local visual_points = self._visual_points
+	local visual_points = self._points
 
 	for i = 1, #reward_widgets do
 		local reward_widget = reward_widgets[i]
@@ -458,9 +463,17 @@ ViewElementWintrack._update_reward_claim_status = function (self, dt, t, input_s
 	self._initial_reward_claim_status_update = false
 end
 
+ViewElementWintrack.set_handle_input = function (self, handle_input)
+	self._handle_input = handle_input
+end
+
 ViewElementWintrack.update = function (self, dt, t, input_service)
 	if not self._initialize then
 		return
+	end
+
+	if not self._handle_input then
+		input_service = input_service:null_service()
 	end
 
 	if not self._using_cursor_navigation then
@@ -630,13 +643,15 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 	self:_update_animations(dt, t)
 
 	local reward_item_widgets = self._reward_item_widgets
+	local widget
 
 	if reward_item_widgets then
 		local hovered_items
 		local num_widgets = #reward_item_widgets
 
 		for i = 1, num_widgets do
-			local widget = reward_item_widgets[i]
+			widget = reward_item_widgets[i]
+
 			local content = widget.content
 			local hotspot = content.hotspot
 			local is_hover = hotspot and hotspot.is_hover
@@ -653,8 +668,8 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 		end
 
 		if hovered_items then
-			if not self._currently_hovered_item or hovered_items ~= self._currently_hovered_hovered_items then
-				self:_on_reward_items_hover_start(hovered_items)
+			if not self._currently_hovered_item or hovered_items ~= self._currently_hovered_items then
+				self:_on_reward_items_hover_start(hovered_items, nil, widget)
 			end
 		elseif self._currently_hovered_item then
 			self:_on_reward_items_hover_stop()
@@ -662,7 +677,7 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 	end
 
 	if self._item_stats then
-		if self._currently_hovered_item then
+		if self._currently_hovered_item and (not self._currently_hovered_widget or not self._currently_hovered_widget.content.element.hide_tooltip) then
 			self:_update_item_stats_position("item_stats_pivot", self._item_stats)
 		end
 
@@ -743,21 +758,21 @@ ViewElementWintrack._update_reward_tooltip_hint = function (self)
 	local content = widget.content
 	local visible = false
 
-	if self._currently_hovered_hovered_items and #self._currently_hovered_hovered_items > 1 then
+	if self._currently_hovered_items and #self._currently_hovered_items > 1 then
 		local gamepad_input = "navigate_controller_right"
 		local pc_input = "scroll_axis"
 		local input = not self._using_cursor_navigation and gamepad_input or pc_input
 		local loc_string = "loc_account_profile_next_reward"
 		local input_service_name = "View"
 		local text = TextUtils.localize_with_button_hint(input, loc_string, nil, input_service_name, nil, nil, true)
-		local input_device_list = InputUtils.input_device_list
-		local xbox_controllers = input_device_list.xbox_controller
 
-		if not self._using_cursor_navigation and xbox_controllers then
-			for i = 1, #xbox_controllers do
-				local xbox_controller = xbox_controllers[i]
+		if not self._using_cursor_navigation then
+			local input_device_list = InputUtils.platform_device_list()
 
-				if xbox_controller.active() then
+			for i = 1, #input_device_list do
+				local device = input_device_list[i]
+
+				if device.active() then
 					local ui_input_color = Color.ui_input_color(255, true)
 					local input_text = InputUtils.apply_color_to_input_text("", ui_input_color)
 
@@ -804,19 +819,19 @@ ViewElementWintrack._handle_reward_scroll = function (self, input_service, dt)
 		self._accumulated_scroll_value = self._accumulated_scroll_value + navigation_value
 
 		if self._accumulated_scroll_value >= 1 or self._accumulated_scroll_value <= -1 then
-			local currently_hovered_hovered_items = self._currently_hovered_hovered_items
+			local currently_hovered_hovered_items = self._currently_hovered_items
 
 			if currently_hovered_hovered_items then
 				local num_rewards = #currently_hovered_hovered_items
 
 				if num_rewards > 1 then
-					local current_index = self._currently_hovered_hovered_items_index
+					local current_index = self._currently_hovered_items_index
 					local simplified_scroll_value = self._accumulated_scroll_value < 0 and math.ceil(self._accumulated_scroll_value) or math.floor(self._accumulated_scroll_value)
 					local wanted_index = math.index_wrapper(math.ceil(current_index - simplified_scroll_value), num_rewards)
 
 					if wanted_index ~= current_index then
 						self:_play_sound(UISoundEvents.penance_menu_reward_scroll)
-						self:_on_reward_items_hover_start(currently_hovered_hovered_items, wanted_index)
+						self:_on_reward_items_hover_start(currently_hovered_hovered_items, wanted_index, self._currently_hovered_widget)
 					end
 				end
 			end
@@ -1371,7 +1386,7 @@ ViewElementWintrack.currently_hovered_item = function (self)
 	return self._currently_hovered_item
 end
 
-ViewElementWintrack._on_reward_items_hover_start = function (self, items, index)
+ViewElementWintrack._on_reward_items_hover_start = function (self, items, index, widget)
 	index = index or 1
 
 	if self._currently_hovered_item then
@@ -1381,10 +1396,13 @@ ViewElementWintrack._on_reward_items_hover_start = function (self, items, index)
 	local item = items[index]
 
 	self._currently_hovered_item = item
-	self._currently_hovered_hovered_items = items
-	self._currently_hovered_hovered_items_index = index
+	self._currently_hovered_items = items
+	self._currently_hovered_items_index = index
+	self._currently_hovered_widget = widget
 
-	if self._item_stats and item then
+	local no_tooltip = widget and widget.content.element and widget.content.element.hide_tooltip
+
+	if self._item_stats and item and not no_tooltip then
 		local context = {
 			hide_source = true,
 			show_requirement = true,
@@ -1399,8 +1417,9 @@ end
 
 ViewElementWintrack._on_reward_items_hover_stop = function (self)
 	self._currently_hovered_item = nil
-	self._currently_hovered_hovered_items = nil
-	self._currently_hovered_hovered_items_index = nil
+	self._currently_hovered_items = nil
+	self._currently_hovered_items_index = nil
+	self._currently_hovered_widget = nil
 
 	self:_update_reward_tooltip_hint()
 
@@ -1439,7 +1458,7 @@ ViewElementWintrack.focus_on_reward = function (self, index)
 	local element = content.element
 	local items = element.items
 
-	self:_on_reward_items_hover_start(items, index)
+	self:_on_reward_items_hover_start(items, index, widget)
 
 	local rewards_per_page = self._hint_upcoming_page and self._num_rewards_per_bar - 1 or self._num_rewards_per_bar
 	local reward_page_index = math.ceil(index / rewards_per_page)

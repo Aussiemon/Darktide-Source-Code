@@ -163,7 +163,7 @@ MinigameDecodeSymbols.setup_game = function (self)
 	self._seed = seed
 	self._current_stage = 1
 
-	game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_set_stage", minigame_unit_id, is_level_unit, 1)
+	game_session_manager:send_rpc_clients("rpc_minigame_sync_set_stage", minigame_unit_id, is_level_unit, 1)
 end
 
 MinigameDecodeSymbols.on_action_pressed = function (self, t)
@@ -202,7 +202,7 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local is_level_unit, minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(self._minigame_unit)
 
-	game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_set_stage", minigame_unit_id, is_level_unit, self._current_stage)
+	game_session_manager:send_rpc_clients("rpc_minigame_sync_set_stage", minigame_unit_id, is_level_unit, self._current_stage)
 end
 
 MinigameDecodeSymbols.is_on_target = function (self, t)

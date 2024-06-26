@@ -23,6 +23,22 @@ RespawnBeaconExtension.init = function (self, extension_init_context, unit, exte
 	self._guards = {}
 end
 
+RespawnBeaconExtension.setup_from_component = function (self, side, debug_ignore_check_distances)
+	self._side = side
+
+	local max_player_radius, max_player_height = _player_max_radius_height()
+	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
+	local num_valid_spawn_positions = #valid_spawn_positions
+
+	self._valid_spawn_positions = {}
+
+	for i = 1, num_valid_spawn_positions do
+		self._valid_spawn_positions[#self._valid_spawn_positions + 1] = {
+			position = Vector3Box(valid_spawn_positions[i]),
+		}
+	end
+end
+
 local HOGTIED_PLAYERS = {}
 
 RespawnBeaconExtension.update = function (self, unit, dt, t, context)
@@ -67,22 +83,6 @@ RespawnBeaconExtension.update = function (self, unit, dt, t, context)
 	end
 end
 
-RespawnBeaconExtension.setup_from_component = function (self, side, debug_ignore_check_distances)
-	self._side = side
-
-	local max_player_radius, max_player_height = _player_max_radius_height()
-	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
-	local num_valid_spawn_positions = #valid_spawn_positions
-
-	self._valid_spawn_positions = {}
-
-	for i = 1, #valid_spawn_positions do
-		self._valid_spawn_positions[#self._valid_spawn_positions + 1] = {
-			position = Vector3Box(valid_spawn_positions[i]),
-		}
-	end
-end
-
 RespawnBeaconExtension.respawn_players = function (self)
 	local player_unit_spawn_manager = self._player_unit_spawn_manager
 	local players_to_spawn = player_unit_spawn_manager:players_to_spawn()
@@ -123,32 +123,41 @@ RespawnBeaconExtension.move_hogtied_players = function (self, players)
 	local valid_spawn_positions = self:best_respawn_positions()
 
 	for i = 1, #players do
-		local player = players[i]
+		repeat
+			local player = players[i]
+			local player_here = false
 
-		for j = 1, #self._valid_spawn_positions do
-			if player.player_unit == self._valid_spawn_positions[j].occupied_unit then
-				return
-			end
-		end
-
-		for j = 1, #valid_spawn_positions do
-			local valid_position = valid_spawn_positions[j]
-
-			if not valid_position.occupied_unit then
-				local move_position = valid_position.position:unbox()
-
-				if move_position then
-					local player_unit = player.player_unit
-					local rotation = Unit.world_rotation(player_unit, 1)
-
-					PlayerMovement.teleport_fixed_update(player_unit, move_position, rotation)
-
-					valid_position.occupied_unit = player_unit
+			for j = 1, #self._valid_spawn_positions do
+				if player.player_unit == self._valid_spawn_positions[j].occupied_unit then
+					player_here = true
 
 					break
 				end
 			end
-		end
+
+			if player_here then
+				break
+			end
+
+			for j = 1, #valid_spawn_positions do
+				local valid_position = valid_spawn_positions[j]
+
+				if not valid_position.occupied_unit then
+					local move_position = valid_position.position:unbox()
+
+					if move_position then
+						local player_unit = player.player_unit
+						local rotation = Unit.world_rotation(player_unit, 1)
+
+						PlayerMovement.teleport_fixed_update(player_unit, move_position, rotation)
+
+						valid_position.occupied_unit = player_unit
+
+						break
+					end
+				end
+			end
+		until true
 	end
 end
 
@@ -159,12 +168,7 @@ RespawnBeaconExtension.clear_occupied_units = function (self)
 end
 
 RespawnBeaconExtension.best_respawn_positions = function (self)
-	local max_player_radius, max_player_height = _player_max_radius_height()
-	local valid_spawn_positions, navmesh_positions, fitting_positions, spawn_volume_positions = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
-
-	valid_spawn_positions = self._valid_spawn_positions
-
-	return valid_spawn_positions, navmesh_positions, fitting_positions, spawn_volume_positions
+	return self._valid_spawn_positions
 end
 
 local NAV_ABOVE, NAV_BELOW = 1, 1

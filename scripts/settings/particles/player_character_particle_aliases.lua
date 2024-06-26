@@ -22,6 +22,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainsword_p1_m2 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -34,6 +35,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainsword_p1_m3 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -46,6 +48,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainsword_2h_p1_m1 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -58,6 +61,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainsword_2h_p1_m2 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -70,6 +74,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainsword_2h_p1_m3 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -82,6 +87,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainaxe_p1_m1 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -94,6 +100,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainaxe_p1_m2 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -106,6 +113,7 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 			},
 			chainaxe_p1_m3 = {
 				default = "content/fx/particles/impacts/flesh/blood_chainsword_loop_01",
@@ -118,6 +126,16 @@ local particles = {
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_void_shield_01",
 				[hit_effect_types.prop_druglab_tank] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+				[hit_effect_types.prop_ice_chunk] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
+			},
+			powermaul_p1_m1 = {
+				default = "content/fx/particles/enemies/buff_chainlightning",
+			},
+			powermaul_p1_m2 = {
+				default = "content/fx/particles/enemies/buff_chainlightning",
+			},
+			powermaul_p1_m3 = {
+				default = "content/fx/particles/enemies/buff_chainlightning",
 			},
 		},
 	},
@@ -207,6 +225,9 @@ local particles = {
 			"wielded_weapon_template",
 		},
 		particles = {
+			powermaul_p1_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
+			powermaul_p1_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
+			powermaul_p1_m3 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
 			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			powersword_p1_m2 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			powersword_p1_m3 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
@@ -218,7 +239,6 @@ local particles = {
 		no_default = true,
 		switch = {
 			"wielded_weapon_template",
-			"level",
 		},
 		particles = {
 			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
@@ -245,6 +265,9 @@ local particles = {
 			chainsword_p1_m3 = "content/fx/particles/weapons/swords/chainsword/chainsword_weapon_special_activate_smoke",
 			ogryn_powermaul_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated",
 			powermaul_2h_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated_2hand",
+			powermaul_p1_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
+			powermaul_p1_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
+			powermaul_p1_m3 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
 			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
 		},

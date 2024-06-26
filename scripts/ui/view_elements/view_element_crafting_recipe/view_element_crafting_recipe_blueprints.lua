@@ -256,7 +256,7 @@ weapon_perk_style.offset = {
 	10,
 }
 weapon_perk_style.size_addition = {
-	-55,
+	-105,
 	0,
 }
 weapon_perk_style.font_size = 18
@@ -460,9 +460,11 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 	},
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
+		local item = config.item
+		local rarity = config.rarity
 
-		content.description = ItemUtils.perk_description(config.item, config.rarity, config.value)
-		content.rank = ItemUtils.perk_textures(config.item, config.rarity)
+		content.description = ItemUtils.perk_description(item, rarity, config.value)
+		content.rank = ItemUtils.perk_textures(item, rarity)
 		content.hotspot.pressed_callback = callback(parent, secondary_callback_name, widget, config)
 	end,
 }
@@ -508,7 +510,7 @@ weapon_traits_description_style.offset = {
 	11,
 }
 weapon_traits_description_style.size = {
-	324,
+	274,
 	500,
 }
 weapon_traits_description_style.font_size = 18

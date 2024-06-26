@@ -432,11 +432,13 @@ InteracteeExtension.block_text = function (self, interactor_unit)
 		return "loc_action_interaction_already_in_use"
 	end
 
-	if not override_context.block_text then
+	local block_text, block_text_context = override_context.block_text, override_context.block_text_context
+
+	if not block_text then
 		return
 	end
 
-	return override_context.block_text, override_context.block_text_context
+	return block_text, block_text_context
 end
 
 InteracteeExtension.hold_required = function (self)

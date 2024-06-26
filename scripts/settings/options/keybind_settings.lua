@@ -31,12 +31,11 @@ if IS_XBS or IS_WINDOWS then
 			local alias_table = alias:alias_table()
 
 			for alias_name, _ in pairs(alias_table) do
-				local alias_array_index = 1
 				local is_bindable = alias:bindable(alias_name)
 				local hide_in_keybindings_menu = alias:hide_in_keybindings_menu(alias_name)
 
 				if is_bindable and not hide_in_keybindings_menu then
-					local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
+					local key_info = alias:get_keys_for_alias(alias_name, devices)
 					local display_name = alias:description(alias_name)
 					local group_name = alias:group(alias_name)
 					local sort_order = alias:sort_order(alias_name)
@@ -68,14 +67,14 @@ if IS_XBS or IS_WINDOWS then
 								end
 							end
 
-							alias:set_keys_for_alias(alias_name, alias_array_index, devices, new_value)
+							alias:set_keys_for_alias(alias_name, devices, new_value)
 							input_manager:apply_alias_changes(service_type)
 							input_manager:save_key_mappings(service_type)
 
 							return true
 						end,
 						get_function = function ()
-							local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
+							local key_info = alias:get_keys_for_alias(alias_name, devices)
 
 							return key_info
 						end,

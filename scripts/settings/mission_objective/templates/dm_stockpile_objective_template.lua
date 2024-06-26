@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	dm_stockpile = {
-		main_objective_type = "demolition_objective",
 		objectives = {
 			objective_dm_stockpile_enter_hq = {
 				description = "loc_objective_dm_stockpile_enter_hq_desc",
@@ -20,8 +19,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_dm_stockpile_wait_elevator_header",
 				mission_objective_type = "timed",
+				music_wwise_state = "fortification_event",
 				progress_bar = false,
-				use_music_event = "fortification_event",
 			},
 			objective_dm_stockpile_ride_elevator = {
 				description = "loc_objective_dm_stockpile_ride_elevator_desc",
@@ -43,15 +42,15 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_dm_stockpile_purge_system_header",
 				mission_objective_type = "goal",
-				use_music_event = "demolition_event",
+				music_wwise_state = "demolition_event",
 			},
 			objective_dm_stockpile_corruptor_event = {
 				description = "loc_objective_dm_stockpile_corruptor_event_desc",
 				event_type = "end_event",
 				header = "loc_objective_dm_stockpile_corruptor_event_header",
 				mission_objective_type = "demolition",
+				music_wwise_state = "demolition_event",
 				turn_off_backfill = true,
-				use_music_event = "demolition_event",
 			},
 			objective_dm_stockpile_wait_purge = {
 				description = "loc_objective_dm_stockpile_wait_purge_desc",
@@ -59,14 +58,14 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_dm_stockpile_wait_purge_header",
 				mission_objective_type = "timed",
+				music_wwise_state = "demolition_event",
 				progress_bar = false,
-				use_music_event = "demolition_event",
 			},
 			objective_dm_stockpile_escape = {
 				description = "loc_objective_dm_stockpile_escape_desc",
 				header = "loc_objective_dm_stockpile_escape_header",
 				mission_objective_type = "goal",
-				use_music_event = "escape_event",
+				music_wwise_state = "escape_event",
 			},
 		},
 	},

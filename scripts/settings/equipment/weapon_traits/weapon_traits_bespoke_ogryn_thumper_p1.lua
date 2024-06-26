@@ -8,7 +8,38 @@ table.make_unique(templates)
 
 templates.weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting = {
 	weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.06,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.09,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.12,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.15,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_suppression_on_close_kill = {
@@ -50,13 +81,13 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_suppression_on_close_kill = {
 templates.weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = {
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.01,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.02,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.03,
 		},
 		{
 			toughness_fixed_percentage = 0.04,
@@ -67,17 +98,17 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire =
 	weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.05,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.06,
 			},
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.08,
+				[stat_buffs.power_level_modifier] = 0.07,
 			},
 		},
 		{
@@ -205,7 +236,26 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_sp
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_pass_trough_armor_on_weapon_special = {
 	weapon_trait_bespoke_ogryn_thumper_p1_pass_trough_armor_on_weapon_special = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.1,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.15,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.2,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.25,
+			},
+		},
 	},
 }
 

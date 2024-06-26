@@ -39,6 +39,15 @@ local MELEE_COMBAT = {
 	{
 		"BtMeleeAttackAction",
 		condition = "attack_allowed",
+		name = "leap_attack",
+		condition_args = {
+			attack_type = "melee",
+		},
+		action_data = action_data.leap_attack,
+	},
+	{
+		"BtMeleeAttackAction",
+		condition = "attack_allowed",
 		name = "combo_attack",
 		condition_args = {
 			attack_type = "melee",

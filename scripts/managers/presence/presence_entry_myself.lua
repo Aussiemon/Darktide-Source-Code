@@ -48,11 +48,7 @@ PresenceEntryMyself.account_id = function (self)
 end
 
 PresenceEntryMyself.account_name = function (self)
-	if IS_XBS or IS_GDK then
-		return Managers.account:gamertag()
-	else
-		return Localize("loc_immaterium_placeholder_account_name")
-	end
+	return Managers.account:user_display_name()
 end
 
 PresenceEntryMyself.activity_id = function (self)
@@ -108,19 +104,15 @@ PresenceEntryMyself.platform_icon = function (self)
 		return ""
 	elseif platform == "xbox" then
 		return ""
+	elseif platform == "psn" then
+		return ""
 	end
 
 	return nil
 end
 
 PresenceEntryMyself.platform_user_id = function (self)
-	local platform = self._platform
-
-	if platform == "xbox" then
-		return Managers.account:xuid()
-	elseif platform == "steam" then
-		return Steam.user_id()
-	end
+	return Managers.account:platform_user_id()
 end
 
 PresenceEntryMyself.is_myself = function (self)
@@ -132,10 +124,6 @@ PresenceEntryMyself.is_online = function (self)
 end
 
 PresenceEntryMyself.platform_persona_name_or_account_name = function (self)
-	if HAS_STEAM and self:platform() == "steam" then
-		return Steam.user_name()
-	end
-
 	return self:account_name()
 end
 

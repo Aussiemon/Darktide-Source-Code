@@ -208,9 +208,12 @@ InventoryView._set_active_layout_by_index = function (self, index)
 end
 
 InventoryView._switch_active_layout = function (self, tab_context)
+	local context = self._context
+	local changeable_context = context and context.changeable_context
 	local layout = tab_context.layout
 	local is_grid_layout = tab_context.is_grid_layout
 	local camera_settings = tab_context.camera_settings
+	local force_instant_camera = changeable_context and changeable_context.force_instant_camera
 	local ui_animation = tab_context.ui_animation
 	local draw_wallet = tab_context.draw_wallet
 	local allow_item_hover_information = tab_context.allow_item_hover_information
@@ -230,7 +233,7 @@ InventoryView._switch_active_layout = function (self, tab_context)
 		self._current_selected_loadout_index = nil
 	end
 
-	self:_set_camera_focus_by_slot_name(nil, camera_settings)
+	self:_set_camera_focus_by_slot_name(nil, camera_settings, force_instant_camera)
 	self:_display_title_text(nil)
 
 	if self._entry_animation_id then
@@ -412,7 +415,7 @@ InventoryView.event_inventory_view_set_camera_focus = function (self, slot_name)
 	self:_set_camera_focus_by_slot_name(slot_name)
 end
 
-InventoryView._set_camera_focus_by_slot_name = function (self, slot_name, optional_camera_settings)
+InventoryView._set_camera_focus_by_slot_name = function (self, slot_name, optional_camera_settings, force_instant_camera)
 	local func_ptr = math.easeCubic
 
 	if slot_name then
@@ -421,7 +424,7 @@ InventoryView._set_camera_focus_by_slot_name = function (self, slot_name, option
 		for i = 1, #optional_camera_settings do
 			local camera_settings = optional_camera_settings[i]
 
-			Managers.event:trigger(camera_settings[1], camera_settings[2], camera_settings[3], camera_settings[4], camera_settings[5])
+			Managers.event:trigger(camera_settings[1], camera_settings[2], camera_settings[3], not force_instant_camera and camera_settings[4] or 0, camera_settings[5])
 		end
 	else
 		Managers.event:trigger("event_inventory_set_camera_position_axis_offset", "x", 0, 1, func_ptr)

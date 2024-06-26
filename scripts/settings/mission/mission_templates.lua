@@ -19,6 +19,7 @@ _extract_mission_templates("scripts/settings/mission/templates/prologue_mission_
 _extract_mission_templates("scripts/settings/mission/templates/tank_foundry_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/throneside_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/transit_mission_templates")
+_extract_mission_templates("scripts/settings/mission/templates/void_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/watertown_mission_templates")
 
 return settings("MissionTemplates", mission_templates)

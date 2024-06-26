@@ -1,8 +1,7 @@
 ﻿-- chunkname: @scripts/settings/roamer/roamer_settings.lua
 
-local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local RoamerLimits = require("scripts/settings/roamer/roamer_limits")
-local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
+local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local roamer_settings = {}
 
 roamer_settings.density_types = {
@@ -10,7 +9,7 @@ roamer_settings.density_types = {
 	"high",
 	"low",
 }
-roamer_settings.faction_types = {
+roamer_settings.sub_faction_types = {
 	"renegade",
 	"cultist",
 }

@@ -495,23 +495,9 @@ disorientation_settings.disorientation_templates = {
 		},
 	},
 	ranged_auto_light = {
-		hit_react_anim_1p = "shake_light",
 		hit_react_anim_3p = "hit_react",
-		movement_speed_buff = "light_stun_movement_slow",
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
 		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
-		stun = {
-			action_delay = 0.2,
-			end_anim = "hit_stun_finished",
-			end_anim_3p = "hit_stun_finished",
-			end_stun_early_time = 0,
-			interrupt_delay = 0.025,
-			intoxication_level = 0,
-			start_anim = "hit_stun",
-			start_anim_3p = "hit_stun",
-			stun_duration = 0.3,
-			stun_immunity_time_buff = "stun_immune_short",
-		},
 	},
 	berzerker_combo = {
 		hit_react_anim_1p = "shake_medium",

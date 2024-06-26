@@ -11,8 +11,8 @@ local weapon_ammo_templates = {
 			lerp_perfect = 20,
 		},
 		ammunition_reserve = {
-			lerp_basic = 40,
-			lerp_perfect = 120,
+			lerp_basic = 60,
+			lerp_perfect = 140,
 		},
 	},
 	autogun_p1_m1 = {
@@ -197,12 +197,22 @@ local weapon_ammo_templates = {
 	},
 	lasgun_p3_m2 = {
 		ammunition_clip = {
+			lerp_basic = 100,
+			lerp_perfect = 200,
+		},
+		ammunition_reserve = {
+			lerp_basic = 400,
+			lerp_perfect = 1000,
+		},
+	},
+	lasgun_p3_m3 = {
+		ammunition_clip = {
 			lerp_basic = 60,
 			lerp_perfect = 120,
 		},
 		ammunition_reserve = {
-			lerp_basic = 300,
-			lerp_perfect = 720,
+			lerp_basic = 420,
+			lerp_perfect = 960,
 		},
 	},
 	laspistol_p1_m1 = {
@@ -305,6 +315,16 @@ local weapon_ammo_templates = {
 			lerp_perfect = 65,
 		},
 	},
+	shotgun_p2_m1 = {
+		ammunition_clip = {
+			lerp_basic = 2,
+			lerp_perfect = 2,
+		},
+		ammunition_reserve = {
+			lerp_basic = 40,
+			lerp_perfect = 80,
+		},
+	},
 	stubrevolver_p1_m1 = {
 		ammunition_clip = {
 			lerp_basic = 5,
@@ -373,6 +393,16 @@ local weapon_ammo_templates = {
 		ammunition_reserve = {
 			lerp_basic = 285,
 			lerp_perfect = 600,
+		},
+	},
+	boltpistol_p1_m1 = {
+		ammunition_clip = {
+			lerp_basic = 6,
+			lerp_perfect = 10,
+		},
+		ammunition_reserve = {
+			lerp_basic = 80,
+			lerp_perfect = 80,
 		},
 	},
 }

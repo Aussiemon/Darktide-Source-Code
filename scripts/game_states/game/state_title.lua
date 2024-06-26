@@ -94,7 +94,7 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 
 			raw_input_device = (not IS_XBS or not GameParameters.testify) and raw_input_device
 
-			self:_signin_profile(raw_input_device)
+			self:_continue_cb(raw_input_device)
 		else
 			self:_signin()
 		end
@@ -123,26 +123,12 @@ end
 
 StateTitle._continue_cb = function (self, optional_input_device)
 	Managers.event:unregister(self, "event_state_title_continue")
-
-	if IS_XBS or IS_GDK then
-		self:_signin_profile(optional_input_device)
-	else
-		self:_signin()
-	end
-end
-
-StateTitle._signin_profile = function (self, optional_input_device)
 	self:_set_state(STATES.account_signin)
 	Managers.account:signin_profile(callback(self, "cb_profile_signed_in"), optional_input_device)
 end
 
 StateTitle.cb_profile_signed_in = function (self)
-	if IS_XBS then
-		local xuid = Managers.account:xuid()
-
-		Managers.data_service.social:xbox_profile_signed_in(xuid)
-	end
-
+	Managers.data_service.social:on_profile_signed_in()
 	self:_signin()
 end
 
@@ -214,7 +200,7 @@ StateTitle._legal_verification = function (self)
 		if not privacy_policy_status then
 			local options = {}
 
-			if IS_XBS then
+			if IS_XBS or IS_PLAYSTATION then
 				options[#options + 1] = {
 					margin_bottom = 20,
 					template_type = "text",
@@ -270,7 +256,7 @@ StateTitle._legal_verification = function (self)
 		elseif not eula_status and (not HAS_STEAM or not Steam.connected()) then
 			local options = {}
 
-			if IS_XBS then
+			if IS_XBS or IS_PLAYSTATION then
 				options[#options + 1] = {
 					margin_bottom = 20,
 					template_type = "text",
@@ -458,7 +444,7 @@ StateTitle.update = function (self, main_dt, main_t)
 		self:_on_error()
 
 		return
-	elseif IS_XBS or IS_GDK then
+	elseif IS_XBS or IS_GDK or IS_PLAYSTATION then
 		local error_state, error_state_params = Managers.account:wanted_transition()
 
 		if error_state then
@@ -521,6 +507,8 @@ StateTitle.update = function (self, main_dt, main_t)
 			self:_legal_verification()
 		end
 	elseif state == states.done then
+		Managers.telemetry_events:crashify_properties()
+
 		return self._next_state, self._next_state_params
 	end
 end

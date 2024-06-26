@@ -119,7 +119,9 @@ TalentBuilderView.on_enter = function (self)
 					local node_index = tonumber(node_index_s)
 					local node = nodes[node_index]
 
-					talents[node.widget_name] = points_spent_on_node
+					if node then
+						talents[node.widget_name] = points_spent_on_node
+					end
 				end
 			end
 		end

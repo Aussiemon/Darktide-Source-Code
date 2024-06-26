@@ -250,14 +250,14 @@ NetworkLookup.moods_types = _create_lookup({}, MoodSettings.mood_types)
 NetworkLookup.package_synchronization_template_names = _create_lookup({}, PackagePrioritizationTemplates)
 NetworkLookup.party_membership_denied_reasons = _create_lookup({}, PartyConstants.MembershipDeniedReasons)
 NetworkLookup.pickup_names = _create_lookup({}, Pickups.by_name)
-NetworkLookup.player_character_fx_sources = _create_lookup({
-	"n/a",
-}, PlayerCharacterFxSourceNames)
 NetworkLookup.player_character_genders = {
 	"female",
 	"male",
 	"ogryn",
 }
+NetworkLookup.player_character_fx_sources = _create_lookup({
+	"n/a",
+}, PlayerCharacterFxSourceNames)
 NetworkLookup.player_character_looping_particle_aliases = _create_lookup({}, PlayerCharacterLoopingParticleAliases)
 NetworkLookup.player_character_looping_sound_aliases = _create_lookup({}, PlayerCharacterLoopingSoundAliases)
 NetworkLookup.player_character_particle_variable_names = {

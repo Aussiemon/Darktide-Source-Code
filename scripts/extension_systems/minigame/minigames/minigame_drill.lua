@@ -29,7 +29,7 @@ MinigameDrill.hot_join_sync = function (self, sender, channel)
 	end
 
 	if self._current_stage then
-		self:send_rpc_to_channel(channel, "rpc_minigame_sync_decode_set_stage", self._current_stage)
+		self:send_rpc_to_channel(channel, "rpc_minigame_sync_set_stage", self._current_stage)
 	end
 
 	if self._cursor_position then
@@ -84,7 +84,7 @@ MinigameDrill.setup_game = function (self)
 
 	self._current_stage = 1
 
-	self:send_rpc("rpc_minigame_sync_decode_set_stage", self._current_stage)
+	self:send_rpc("rpc_minigame_sync_set_stage", self._current_stage)
 
 	self._cursor_position = {
 		x = 0,
@@ -99,7 +99,7 @@ MinigameDrill.setup_game = function (self)
 	self:send_rpc("rpc_minigame_sync_drill_set_search", false, 0)
 end
 
-function _target_overlap(x, y, targets)
+local function _target_overlap(x, y, targets)
 	for i = 1, #targets do
 		local target = targets[i]
 
@@ -216,7 +216,7 @@ MinigameDrill.on_action_pressed = function (self, t)
 
 		self._current_stage = math.min(self._current_stage + 1, self._stage_amount + 1)
 
-		self:send_rpc("rpc_minigame_sync_decode_set_stage", self._current_stage)
+		self:send_rpc("rpc_minigame_sync_set_stage", self._current_stage)
 		self:set_state(MinigameSettings.game_states.transition)
 
 		if self._current_stage > self._stage_amount then

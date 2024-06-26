@@ -13,6 +13,7 @@ local device_list = {
 	Mouse,
 	Pad1,
 }
+local DUMMY_VIDEO_TIME = 5
 local VideoView = class("VideoView", "BaseView")
 
 VideoView.init = function (self, settings, context)
@@ -80,6 +81,13 @@ VideoView.on_enter = function (self)
 	end
 
 	VideoView.super.on_enter(self)
+
+	if IS_PLAYSTATION then
+		self:_play_dummy_video()
+
+		return
+	end
+
 	self:_set_background_visibility(false)
 	table.clear(self._packages_loaded)
 
@@ -115,6 +123,36 @@ VideoView.on_enter = function (self)
 	self._pass_input = context.pass_input
 	self._pass_draw = context.pass_draw
 	self._can_exit = not context or context.can_exit
+end
+
+VideoView._play_dummy_video = function (self)
+	self._dummy_video_timer = DUMMY_VIDEO_TIME
+
+	local context = self._context
+	local template_name = context.template
+	local template = VideoViewSettings.templates[template_name]
+	local video_name = template.video_name
+
+	self._video_name = video_name
+
+	local post_video_action = template.post_video_action
+
+	self._post_video_action = post_video_action
+end
+
+VideoView._update_dummy_video = function (self, dt)
+	if self._player_skipped then
+		return
+	end
+
+	local timer = self._dummy_video_timer - dt
+
+	if timer > 0 then
+		self._widgets_by_name.playstation_dummy_text.content.text = string.format("Playstation Video Placeholder Now Playing\n[%s]\n%.1f", self._video_name, timer)
+		self._dummy_video_timer = timer
+	else
+		self:_on_skip_pressed()
+	end
 end
 
 VideoView._set_background_visibility = function (self, visible)
@@ -187,30 +225,23 @@ VideoView._update_package_loading = function (self)
 end
 
 VideoView._update_input = function (self)
-	if IS_XBS then
-		local input_device_list = InputUtils.input_device_list
-		local xbox_controllers = input_device_list.xbox_controller
+	local input_device_list = InputUtils.platform_device_list()
 
-		for i = 1, #xbox_controllers do
-			local xbox_controller = xbox_controllers[i]
+	for i = 1, #input_device_list do
+		local device = input_device_list[i]
 
-			if xbox_controller.active() and xbox_controller.any_pressed() and not self._show_skip then
-				self._show_skip = true
-			end
-		end
-	else
-		for i = 1, #device_list do
-			local device = device_list[i]
+		if device.active() and device.any_pressed() and not self._show_skip then
+			self._show_skip = true
 
-			if device and device.active and device.any_pressed() and not self._show_skip then
-				self._show_skip = true
-			end
+			break
 		end
 	end
 end
 
 VideoView.update = function (self, dt, t, input_service)
-	if self._loading_packages then
+	if self._dummy_video_timer then
+		self:_update_dummy_video(dt)
+	elseif self._loading_packages then
 		self:_update_package_loading()
 	elseif not self._sound_ready then
 		local playing_elapsed = self:_get_sound_playing_elapsed()

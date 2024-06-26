@@ -5,6 +5,7 @@ require("scripts/extension_systems/weapon/actions/action_base")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CriticalStrike = require("scripts/utilities/attack/critical_strike")
 local WarpCharge = require("scripts/utilities/warp_charge")
@@ -180,7 +181,17 @@ ActionWeaponBase._increase_action_duration = function (self, additional_time)
 	weapon_action_component.end_t = new_end_t
 end
 
-ActionWeaponBase._add_weapon_blood = function (self, amount)
+ActionWeaponBase._add_weapon_blood = function (self, target_unit, amount)
+	local breed_or_nil = Breed.unit_breed_or_nil(target_unit)
+
+	if not breed_or_nil then
+		return
+	end
+
+	if not Breed.is_character(breed_or_nil) and not Breed.is_living_prop(breed_or_nil) then
+		return
+	end
+
 	local wielded_slot = self._inventory_component.wielded_slot
 
 	Managers.state.blood:add_weapon_blood(self._player, wielded_slot, amount)
@@ -264,7 +275,6 @@ ActionWeaponBase._pay_warp_charge_cost_over_time = function (self, dt, t, charge
 
 	local warp_charge_component = self._warp_charge_component
 	local player_unit = self._player_unit
-	local prevent_explosion = self._prevent_explosion
 
 	WarpCharge.increase_over_time(dt, t, charge_level, warp_charge_component, charge_template, player_unit, first_charge)
 end

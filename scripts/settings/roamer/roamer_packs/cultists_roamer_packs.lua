@@ -5,7 +5,9 @@ local roamer_assault = "cultist_assault"
 local roamer_rifleman = "cultist_assault"
 local elite_berzerker = "cultist_berzerker"
 local elite_gunner = "cultist_gunner"
+local elite_gunner_two = "cultist_gunner"
 local elite_shocktrooper = "cultist_shocktrooper"
+local shocktrooper_two = "cultist_shocktrooper"
 local roamer_packs = {
 	cultist_infected_mix_none = {
 		{
@@ -212,7 +214,7 @@ local roamer_packs = {
 			breeds = {
 				"chaos_ogryn_executor",
 				elite_shocktrooper,
-				elite_shocktrooper,
+				shocktrooper_two,
 				roamer_assault,
 				roamer_assault,
 			},
@@ -271,7 +273,7 @@ local roamer_packs = {
 				roamer_assault,
 				roamer_assault,
 				elite_shocktrooper,
-				elite_shocktrooper,
+				shocktrooper_two,
 			},
 		},
 		{
@@ -308,7 +310,7 @@ local roamer_packs = {
 			weight = 0.5,
 			breeds = {
 				"chaos_ogryn_bulwark",
-				elite_shocktrooper,
+				shocktrooper_two,
 				roamer_assault,
 				roamer_assault,
 				roamer_assault,
@@ -368,7 +370,7 @@ local roamer_packs = {
 				"chaos_ogryn_gunner",
 				roamer_rifleman,
 				roamer_rifleman,
-				elite_gunner,
+				elite_gunner_two,
 			},
 		},
 		{
@@ -398,7 +400,7 @@ local roamer_packs = {
 				"chaos_ogryn_gunner",
 				roamer_rifleman,
 				roamer_rifleman,
-				elite_gunner,
+				elite_gunner_two,
 			},
 		},
 		{
@@ -459,7 +461,7 @@ local roamer_packs = {
 		{
 			weight = 0.5,
 			breeds = {
-				elite_shocktrooper,
+				shocktrooper_two,
 				roamer_assault,
 			},
 		},
@@ -496,7 +498,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				elite_shocktrooper,
+				shocktrooper_two,
 				roamer_assault,
 				roamer_assault,
 				roamer_assault,
@@ -571,7 +573,7 @@ local roamer_packs = {
 			breeds = {
 				roamer_rifleman,
 				roamer_rifleman,
-				elite_gunner,
+				elite_gunner_two,
 			},
 		},
 		{
@@ -606,7 +608,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				elite_gunner,
+				elite_gunner_two,
 				elite_gunner,
 				roamer_rifleman,
 				roamer_rifleman,

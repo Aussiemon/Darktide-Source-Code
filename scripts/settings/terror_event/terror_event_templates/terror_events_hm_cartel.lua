@@ -373,6 +373,18 @@ local template = {
 				},
 			},
 			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_cartel_scanning_east",
+				breed_tags = {
+					{
+						"special",
+						"scrambler",
+					},
+				},
+			},
+			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 16,
@@ -382,6 +394,22 @@ local template = {
 					{
 						"roamer",
 						"far",
+					},
+				},
+			},
+			{
+				"delay",
+				duration = 5,
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				points = 10,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_cartel_scanning_west",
+				breed_tags = {
+					{
+						"horde",
 					},
 				},
 			},
@@ -408,10 +436,10 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
+				limit_spawners = 6,
 				max_breed_amount = 3,
 				passive = true,
-				points = 16,
+				points = 18,
 				spawner_group = "spawner_data_center_guards",
 				breed_tags = {
 					{
@@ -441,7 +469,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 7,
+				points = 10,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_data_center_north",
 				breed_tags = {
@@ -458,7 +486,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 7,
+				points = 8,
 				spawner_group = "spawner_data_center_north",
 				breed_tags = {
 					{
@@ -474,12 +502,12 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 7,
+				points = 10,
 				spawner_group = "spawner_data_center_north",
 				breed_tags = {
 					{
-						"roamer",
-						"melee",
+						"far",
+						"elite",
 					},
 				},
 			},
@@ -514,7 +542,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 16,
+				points = 18,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_data_center_west",
 				breed_tags = {
@@ -544,7 +572,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 16,
+				points = 18,
 				spawner_group = "spawner_data_center_west",
 				breed_tags = {
 					{
@@ -579,7 +607,7 @@ local template = {
 				"continue_when",
 				duration = 80,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
+					return TerrorEventQueries.num_alive_minions() < 4
 				end,
 			},
 			{
@@ -615,7 +643,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_data_center_north",
 				breed_tags = {
@@ -632,12 +660,12 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 10,
 				spawner_group = "spawner_data_center_north",
 				breed_tags = {
 					{
 						"roamer",
-						"melee",
+						"far",
 					},
 				},
 			},
@@ -648,7 +676,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 7,
+				points = 10,
 				spawner_group = "spawner_data_center_north",
 				breed_tags = {
 					{
@@ -683,7 +711,7 @@ local template = {
 				"continue_when",
 				duration = 80,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
+					return TerrorEventQueries.num_alive_minions() < 4
 				end,
 			},
 			{
@@ -731,6 +759,17 @@ local template = {
 			{
 				"delay",
 				duration = 5,
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 6,
+				spawner_group = "spawner_data_center_escape",
+				breed_tags = {
+					{
+						"horde",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",
@@ -790,7 +829,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 25,
+				points = 20,
 				spawner_group = "spawner_data_center_right",
 				breed_tags = {
 					{
@@ -802,6 +841,30 @@ local template = {
 			{
 				"delay",
 				duration = 5,
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 6,
+				spawner_group = "spawner_data_center_north",
+				breed_tags = {
+					{
+						"roamer",
+						"far",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 6,
+				spawner_group = "spawner_data_center_escape",
+				breed_tags = {
+					{
+						"close",
+						"roamer",
+					},
+				},
 			},
 			{
 				"try_inject_special_minion",

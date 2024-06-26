@@ -1,15 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_blueprints.lua
 
 local ColorUtils = require("scripts/utilities/ui/colors")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local ViewAnimations = require("scripts/ui/views/end_player_view/end_player_view_animations")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local MasterItems = require("scripts/backend/master_items")
 local blueprint_styles = ViewStyles.blueprints
 local ITEM_TYPES = UISettings.ITEM_TYPES
 local folded_card_size = {
@@ -332,8 +331,8 @@ local function _item_pass_template_init(widget, config)
 	local item_level = config.item_level
 
 	content.reward_item = reward_item
-	content.item_display_name = ItemUtils.display_name(reward_item)
-	content.item_sub_display_name = ItemUtils.sub_display_name(reward_item)
+	content.item_display_name = Items.display_name(reward_item)
+	content.item_sub_display_name = Items.sub_display_name(reward_item)
 	content.item_group = item_group
 
 	local item_level_style = widget.style.item_level
@@ -393,7 +392,7 @@ local function _reward_load_icon_func(parent, widget, config, optional_icon_size
 	local reward_item = content.reward_item
 
 	if reward_item and not content.icon_load_id then
-		local slot_name = ItemUtils.slot_name(reward_item)
+		local slot_name = Items.slot_name(reward_item)
 		local item_state_machine = reward_item.state_machine
 		local item_animation_event = reward_item.animation_event
 		local render_context = {
@@ -411,7 +410,7 @@ local function _reward_load_icon_func(parent, widget, config, optional_icon_size
 		elseif item_group == "weapon_skin" then
 			cb = callback(_apply_live_item_icon_cb_func, widget)
 
-			local preview_item = ItemUtils.weapon_skin_preview_item(reward_item)
+			local preview_item = Items.weapon_skin_preview_item(reward_item)
 
 			content.icon_load_id = parent:load_weapon_pattern_icon(preview_item or reward_item, cb, render_context)
 		else

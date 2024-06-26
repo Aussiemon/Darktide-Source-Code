@@ -7,7 +7,7 @@ local BackendUtilities = require("scripts/foundation/managers/backend/utilities/
 local DefaultBackendSettings = require("scripts/settings/backend/default_backend_settings")
 local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
 local Promise = require("scripts/foundation/utilities/promise")
-local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local Interface = {
 	"authenticated",
 	"authenticate",
@@ -355,6 +355,7 @@ BackendManager._set_backend_env = function (self, title_service_url)
 	Managers.telemetry_events:refresh_settings()
 end
 
+BackendManager.AUTH_METHOD_PSN = Backend.AUTH_METHOD_PSN
 BackendManager.AUTH_METHOD_XBOXLIVE = Backend.AUTH_METHOD_XBOXLIVE
 BackendManager.AUTH_METHOD_STEAM = Backend.AUTH_METHOD_STEAM
 

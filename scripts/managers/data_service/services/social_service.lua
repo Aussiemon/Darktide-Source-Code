@@ -51,6 +51,14 @@ SocialService.init = function (self, backend_interfaces)
 			local InvitesXboxLive = require("scripts/managers/data_service/services/invites/invites_xbox_live")
 
 			self._invites = InvitesXboxLive:new()
+		elseif platform == Platforms.psn then
+			local SocialPSN = require("scripts/managers/data_service/services/social/social_psn")
+
+			self._platform_social = SocialPSN:new()
+
+			local InvitesPSN = require("scripts/managers/data_service/services/invites/invites_psn")
+
+			self._invites = InvitesPSN:new()
 		else
 			local SocialDummy = require("scripts/managers/data_service/services/social/social_dummy")
 
@@ -121,8 +129,10 @@ SocialService.update = function (self, dt, t)
 	self:_check_split_party()
 end
 
-SocialService.xbox_profile_signed_in = function (self, xuid)
-	self._invites:xbox_profile_signed_in(xuid)
+SocialService.on_profile_signed_in = function (self)
+	local platform_user_id = Managers.account:platform_user_id()
+
+	self._invites:on_profile_signed_in(platform_user_id)
 end
 
 SocialService.platform = function (self)
@@ -136,6 +146,8 @@ SocialService.platform_display_name = function (self)
 		return Localize("loc_platform_name_steam")
 	elseif platform == Platforms.xbox then
 		return Localize("loc_platform_name_xbox_live")
+	elseif platform == Platforms.psn then
+		return Localize("loc_platform_name_psn")
 	end
 
 	return ""

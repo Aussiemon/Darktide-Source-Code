@@ -12,6 +12,11 @@ local QUERY_MATERIAL_CONTEXTS = {
 MaterialQuery.query_material = function (physics_world, from, to, debug_name)
 	local ray_vector = to - from
 	local range = Vector3.length(ray_vector)
+
+	if range == 0 then
+		return false
+	end
+
 	local direction = ray_vector / range
 	local hit, position, _, normal, hit_actor = PhysicsWorld.raycast(physics_world, from, direction, range, "closest", "types", "both", "collision_filter", "filter_ground_material_check")
 	local hit_unit = hit and Actor.unit(hit_actor)

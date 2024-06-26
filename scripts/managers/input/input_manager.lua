@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/input/input_manager.lua
 
+local GamepadInputLayouts = require("scripts/settings/input/gamepad_input_layouts")
 local InputAliases = require("scripts/managers/input/input_aliases")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputManagerTestify = GameParameters.testify and require("scripts/managers/input/input_manager_testify")
@@ -71,6 +72,12 @@ InputManager.software_cursor_active = function (self)
 end
 
 InputManager.load_settings = function (self)
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data and save_data.input_settings
+	local saved_layout = input_settings and input_settings.controller_layout or "default"
+
+	self:load_input_layout(saved_layout)
+
 	for service_type, alias in pairs(self._aliases) do
 		alias:load(service_type)
 		self:apply_alias_changes(service_type)
@@ -601,19 +608,42 @@ InputManager.destroy = function (self)
 	event_manager:unregister(self, "event_player_authenticated")
 end
 
-InputManager.change_input_layout = function (self, layout_name)
-	local layout_settings = self._available_layouts[layout_name]
+InputManager.load_input_layout = function (self, layout_name)
+	local devices = {
+		{
+			"ps4_controller",
+		},
+		{
+			"xbox_controller",
+		},
+	}
+	local input_manager = Managers.input
+	local gamepad_input_layout = GamepadInputLayouts[layout_name]
+	local input_settings = gamepad_input_layout.input_settings
 
-	if not layout_settings then
-		return
-	end
+	for service_type, aliases in pairs(input_settings) do
+		local alias = input_manager:alias_object(service_type)
 
-	self._input_settings = {}
-	self._aliases = {}
+		if alias then
+			alias:restore_default_by_devices(nil, devices)
 
-	for _, settings in ipairs(layout_settings.settings) do
-		self:add_setting(settings.service_type, settings.aliases, settings.settings, settings.filters, settings.default_devices)
-		self:apply_alias_changes(settings.service_type)
+			for alias_name, new_values in pairs(aliases) do
+				if alias:bindable(alias_name) then
+					for i = 1, #devices do
+						local device_table = devices[i]
+						local key_info
+
+						if new_values ~= StrictNil then
+							key_info = alias:get_keys_for_alias_row(new_values, device_table)
+						end
+
+						alias:set_keys_for_alias(alias_name, device_table, key_info, i)
+					end
+				end
+			end
+
+			self:apply_alias_changes(service_type)
+		end
 	end
 end
 

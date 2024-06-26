@@ -16,7 +16,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementPlayerSocialPopup = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup")
 local ViewSettings = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_settings")
-local XboxLive = require("scripts/foundation/utilities/xbox_live")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local InputUtils = require("scripts/managers/input/input_utils")
 local OnlineStatus = SocialConstants.OnlineStatus
 local PartyStatus = SocialConstants.PartyStatus
@@ -656,7 +656,17 @@ SocialMenuRosterView.cb_show_xbox_profile = function (self, player_info)
 
 	local xuid = player_info:platform_user_id()
 
-	XboxLive.show_player_profile_card(xuid)
+	XboxLiveUtils.show_player_profile_card(xuid)
+end
+
+SocialMenuRosterView.cb_show_psn_profile = function (self, player_info)
+	self:_close_popup_menu()
+
+	local user_id = Managers.account:user_id()
+	local account_id = player_info:platform_user_id()
+	local account_id_hex = Application.dec64_to_hex(account_id)
+
+	NpProfileDialog.open_with_account_id(user_id, account_id_hex)
 end
 
 SocialMenuRosterView.cb_invite_player_to_guild = function (self, player_info)
@@ -757,10 +767,6 @@ end
 SocialMenuRosterView.cb_block_player = function (self, player_info)
 	self:_close_popup_menu()
 	self:_show_confirmation_popup(player_info, "block_account")
-end
-
-SocialMenuRosterView.cb_report_player = function (self, player_info)
-	self:_close_popup_menu()
 end
 
 SocialMenuRosterView.cb_update_roster = function (self, result)

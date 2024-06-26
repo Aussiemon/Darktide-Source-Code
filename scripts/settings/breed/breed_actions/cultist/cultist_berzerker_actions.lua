@@ -286,11 +286,11 @@ local action_data = {
 			},
 		},
 		attack_anim_durations = {
-			attack_01 = 1.1666666666666667,
-			attack_02 = 1.1666666666666667,
-			attack_03 = 1.1666666666666667,
-			attack_04 = 1.3333333333333333,
-			attack_combo_standing_06 = 1.5,
+			attack_01 = 0.9333333333333333,
+			attack_02 = 0.9333333333333333,
+			attack_03 = 0.9333333333333333,
+			attack_04 = 1,
+			attack_combo_standing_06 = 1.2666666666666666,
 			attack_down_01 = 2.1,
 			attack_reach_up = 1.6666666666666667,
 		},
@@ -317,66 +317,55 @@ local action_data = {
 		weapon_reach = 3.75,
 		considerations = UtilityConsiderations.cultist_berzerker_combo_attack,
 		attack_anim_events = {
-			"attack_combo_01",
-			"attack_combo_04",
-			"attack_combo_08",
+			"attack_move_combo_01_fast",
+			"attack_move_combo_08_fast",
 		},
 		attack_anim_damage_timings = {
-			attack_combo_01 = {
-				0.7466666666666667,
-				1.52,
-				1.6,
-				2.3733333333333335,
-				2.4266666666666667,
-				3.2266666666666666,
-				3.3066666666666666,
+			attack_move_combo_01_fast = {
+				0.5833333333333334,
+				1.1875,
+				1.25,
+				1.8541666666666667,
+				1.8958333333333333,
+				2.5208333333333335,
+				2.5833333333333335,
 			},
-			attack_combo_04 = {
-				0.5666666666666667,
-				0.9666666666666667,
-				1.5,
-				1.5333333333333334,
-				2.3666666666666667,
-				3.1,
-			},
-			attack_combo_08 = {
-				0.6,
-				1.4333333333333333,
-				1.5,
-				2.6,
-				3.466666666666667,
+			attack_move_combo_08_fast = {
+				0.5,
+				1.1944444444444444,
+				1.25,
+				2.1666666666666665,
+				2.888888888888889,
 			},
 		},
 		move_start_timings = {
-			attack_combo_01 = 0,
-			attack_combo_04 = 0,
-			attack_combo_08 = 0,
+			attack_move_combo_01_fast = 0,
+			attack_move_combo_08_fast = 0,
 		},
 		attack_anim_durations = {
-			attack_combo_01 = 3.7333333333333334,
-			attack_combo_04 = 3.2666666666666666,
-			attack_combo_08 = 3.6666666666666665,
+			attack_move_combo_01_fast = 2.9166666666666665,
+			attack_move_combo_08_fast = 3.0555555555555554,
 		},
 		attack_intensities = {
 			melee = 2,
 			ranged = 1,
 		},
 		animation_move_speed_configs = {
-			attack_combo_01 = {
+			attack_move_combo_01_fast = {
 				{
-					distance = 4.6,
+					distance = 2.6,
 					value = 4,
 				},
 				{
-					distance = 3.5,
+					distance = 2.5,
 					value = 3,
 				},
 				{
-					distance = 3.2,
+					distance = 2.2,
 					value = 2,
 				},
 				{
-					distance = 2.5,
+					distance = 1.5,
 					value = 1,
 				},
 				{
@@ -384,47 +373,86 @@ local action_data = {
 					value = 0,
 				},
 			},
-			attack_combo_04 = {
+			attack_move_combo_08_fast = {
 				{
-					distance = 6.5,
+					distance = 3.3,
 					value = 4,
 				},
 				{
-					distance = 5.68,
+					distance = 2.3,
 					value = 3,
 				},
 				{
-					distance = 3.2,
+					distance = 2.1,
 					value = 2,
 				},
 				{
-					distance = 2.5,
-					value = 1,
-				},
-				{
-					distance = 0.93,
-					value = 0,
-				},
-			},
-			attack_combo_08 = {
-				{
-					distance = 5.3,
-					value = 4,
-				},
-				{
-					distance = 4.3,
-					value = 3,
-				},
-				{
-					distance = 3.4,
-					value = 2,
-				},
-				{
-					distance = 2.2,
+					distance = 1.2,
 					value = 1,
 				},
 				{
 					distance = 0.86,
+					value = 0,
+				},
+			},
+		},
+		damage_profile = DamageProfileTemplates.melee_berzerker_combo,
+		damage_type = damage_types.minion_melee_sharp,
+	},
+	leap_attack = {
+		assault_vo_interval_t = 1,
+		ignore_blocked = true,
+		move_speed_variable_lerp_speed = 10,
+		move_speed_variable_name = "moving_attack_fwd_speed",
+		moving_attack = true,
+		stagger_reduction = 50,
+		utility_weight = 1,
+		vo_event = "assault",
+		weapon_reach = 3.75,
+		considerations = UtilityConsiderations.cultist_berzerker_leap_attack,
+		attack_anim_events = {
+			"attack_move_combo_04_fast",
+		},
+		attack_anim_damage_timings = {
+			attack_move_combo_04_fast = {
+				0.4722222222222222,
+				0.8055555555555556,
+				1.25,
+				1.2777777777777777,
+				1.9722222222222223,
+				2.5833333333333335,
+			},
+		},
+		move_start_timings = {
+			attack_move_combo_04_fast = 0,
+		},
+		attack_anim_durations = {
+			attack_move_combo_04_fast = 2.7222222222222223,
+		},
+		attack_intensities = {
+			melee = 2,
+			ranged = 1,
+		},
+		animation_move_speed_configs = {
+			attack_move_combo_04_fast = {
+				{
+					distance = 3.5,
+					value = 4,
+				},
+				{
+					distance = 2.68,
+					value = 3,
+				},
+				{
+					distance = 1.2,
+					value = 2,
+				},
+				{
+					distance = 0.5,
+					value = 1,
+				},
+				{
+					distance = 0.2,
 					value = 0,
 				},
 			},

@@ -14,13 +14,30 @@ Tracks.get_all_tracks_state = function (self, optional_account_id)
 	end)
 end
 
-Tracks.get_track_state = function (self, track_id, optional_account_id)
+Tracks.get_track_state = function (self, optional_track_id, optional_account_id)
 	return Managers.backend:authenticate():next(function (account)
 		local account_id = optional_account_id or account.sub
-		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/trackstate/"):path(track_id)
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/trackstate")
+
+		if optional_track_id then
+			builder:path("/"):path(optional_track_id)
+		end
 
 		return Managers.backend:title_request(builder:to_string()):next(function (response)
-			return response.body.track
+			if optional_track_id then
+				return response.body.track
+			else
+				local tracks_by_id = {}
+				local tracks = response.body.tracks or {}
+
+				for i = 1, #tracks do
+					local track = tracks[i]
+
+					tracks_by_id[track.id] = track
+				end
+
+				return tracks_by_id
+			end
 		end)
 	end)
 end

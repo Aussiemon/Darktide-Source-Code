@@ -7,7 +7,6 @@ local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DisorientationSettings = require("scripts/settings/damage/disorientation_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ForceLookRotation = require("scripts/extension_systems/first_person/utilities/force_look_rotation")
@@ -24,7 +23,6 @@ local attack_types = AttackSettings.attack_types
 local stagger_results = AttackSettings.stagger_results
 local disorientation_templates = DisorientationSettings.disorientation_templates
 local buff_keywords = BuffSettings.keywords
-local damage_types = DamageSettings.damage_types
 local _minion_hit_reaction, _player_hit_reaction, _toughness_broken_disorient, _toughness_absorbed_disorient, _interrupt_alternate_fire, _interrupt_interaction, _push_or_catapult, _push, _catapult, _force_look, _drop_luggable
 local HitReaction = {}
 

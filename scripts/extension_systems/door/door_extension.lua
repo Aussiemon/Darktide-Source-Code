@@ -417,7 +417,7 @@ DoorExtension._minion_proximity_check = function (self)
 
 		local offsetted_unit_position = unit_position + Vector3.up() * 0.25
 
-		if math.point_is_inside_oobb(offsetted_unit_position, bounding_box, half_extents) then
+		if math.point_in_box(offsetted_unit_position, bounding_box, half_extents) then
 			return true
 		end
 	end

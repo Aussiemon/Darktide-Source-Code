@@ -120,7 +120,26 @@ templates.weapon_trait_bespoke_ogryn_powermaul_p1_targets_receive_rending_debuff
 }
 templates.weapon_trait_bespoke_ogryn_powermaul_p1_pass_past_armor_on_crit = {
 	weapon_trait_bespoke_ogryn_powermaul_p1_pass_past_armor_on_crit = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.025,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.05,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.075,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_critical_strike_damage] = 0.1,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_ogryn_powermaul_p1_rending_vs_staggered = {
@@ -152,6 +171,25 @@ templates.weapon_trait_bespoke_ogryn_powermaul_p1_extra_explosion_on_activated_a
 		{
 			conditional_stat_buffs = {
 				[stat_buffs.weapon_special_max_activations] = 1,
+				[stat_buffs.explosion_radius_modifier] = 0.1,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.weapon_special_max_activations] = 1,
+				[stat_buffs.explosion_radius_modifier] = 0.15,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.weapon_special_max_activations] = 1,
+				[stat_buffs.explosion_radius_modifier] = 0.2,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.weapon_special_max_activations] = 1,
+				[stat_buffs.explosion_radius_modifier] = 0.25,
 			},
 		},
 	},

@@ -845,7 +845,6 @@ recoil_templates.default_autogun_assault = {
 		},
 	},
 }
-pitch_default = 0.03
 
 local firerate = 0.096
 local shot_decay = 3.5
@@ -1117,7 +1116,9 @@ recoil_templates.autogun_p1_m1_killshot = {
 		},
 	},
 }
-pitch_default = 0.15
+
+local pitch_default = 0.15
+
 recoil_templates.hip_autogun_killshot = {
 	still = {
 		camera_recoil_percentage = 0.85,

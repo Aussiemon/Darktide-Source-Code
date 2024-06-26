@@ -3,13 +3,13 @@
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local Luggable = require("scripts/utilities/luggable")
-local Pocketable = require("scripts/utilities/pocketable")
 local MispredictPackageHandler = require("scripts/extension_systems/visual_loadout/mispredict_package_handler")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerCharacterParticles = require("scripts/settings/particles/player_character_particles")
 local PlayerCharacterSounds = require("scripts/settings/sound/player_character_sounds")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local Pocketable = require("scripts/utilities/pocketable")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WieldableSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts")
 local MasterItems = require("scripts/backend/master_items")
@@ -131,18 +131,18 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit],
 	}
 
-	local inventory_component_data = PlayerCharacterConstants.inventory_component_data
+	local inventory_slot_component_data = PlayerCharacterConstants.inventory_slot_component_data
 
 	for slot_name, config in pairs(slot_configuration) do
 		if config.wieldable then
 			wieldable_slot_components[slot_name] = unit_data_extension:write_component(slot_name)
 
-			local wieldable_component = unit_data_extension:write_component(slot_name)
+			local inventory_slot_component = unit_data_extension:write_component(slot_name)
 			local slot_type = config.slot_type
-			local component_data = inventory_component_data[slot_type]
+			local slot_component_data = inventory_slot_component_data[slot_type]
 
-			for key, data in pairs(component_data) do
-				wieldable_component[key] = data.default_value
+			for key, data in pairs(slot_component_data) do
+				inventory_slot_component[key] = data.default_value
 			end
 
 			wieldable_slot_scripts[slot_name] = {}

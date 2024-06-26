@@ -81,15 +81,19 @@ WeaponSystem.on_remove_extension = function (self, unit, extension_name)
 	WeaponSystem.super.on_remove_extension(self, unit, extension_name)
 end
 
-WeaponSystem.update = function (self, context, dt, t)
-	WeaponSystem.super.update(self, context, dt, t)
-	self:_update_actor_proximity_shapes()
-	self:_update_units_to_destroy(t)
+WeaponSystem.pre_update = function (self, context, dt, t)
+	WeaponSystem.super.pre_update(self, context, dt, t)
 
 	if self._is_server then
 		self:_update_queued_explosions(dt, t)
 		self:_update_perils_of_the_warp_elite_kills_achievement()
 	end
+end
+
+WeaponSystem.update = function (self, context, dt, t)
+	WeaponSystem.super.update(self, context, dt, t)
+	self:_update_actor_proximity_shapes()
+	self:_update_units_to_destroy(t)
 end
 
 WeaponSystem.destroy_unit_after_time = function (self, unit, time_to_destroy)

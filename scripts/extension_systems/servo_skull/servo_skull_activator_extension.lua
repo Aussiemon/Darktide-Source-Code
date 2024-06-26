@@ -25,7 +25,7 @@ end
 
 ServoSkullActivatorExtension.on_gameplay_post_init = function (self, unit, level)
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-	local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(self._objective_name)
+	local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(self._objective_name)
 
 	if synchronizer_unit == nil then
 		Log.error("ServoSkullActivatorExtension", "[on_gameplay_post_init] Please setup ServoSkullActivator component for unit(%s, %s) else the scanning event is not functional.", tostring(self._unit), Unit.id_string(self._unit))

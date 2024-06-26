@@ -2,14 +2,13 @@
 
 local mission_objective_templates = {
 	fm_armoury = {
-		main_objective_type = "fortification_objective",
 		objectives = {
 			objective_fm_armoury_gauntlet_start = {
 				description = "loc_objective_fm_armoury_gauntlet_start_desc",
 				event_type = "mid_event",
 				header = "loc_objective_fm_armoury_gauntlet_start_header",
 				mission_objective_type = "goal",
-				use_music_event = "gauntlet_event",
+				music_wwise_state = "gauntlet_event",
 			},
 			objective_fm_armoury_gauntlet_secure_intel = {
 				description = "loc_objective_fm_armoury_secure_intel_desc",
@@ -17,8 +16,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_fm_armoury_secure_intel_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "gauntlet_event",
 				progress_bar = true,
-				use_music_event = "gauntlet_event",
 			},
 			objective_fm_armoury_confirm_intel = {
 				description = "loc_objective_fm_armoury_confirm_intel_desc",
@@ -26,7 +25,7 @@ local mission_objective_templates = {
 				header = "loc_objective_fm_armoury_confirm_intel_header",
 				mission_objective_type = "goal",
 				music_ignore_start_event = true,
-				use_music_event = "gauntlet_event",
+				music_wwise_state = "gauntlet_event",
 			},
 			objective_fm_armoury_proceed = {
 				description = "loc_objective_fm_armoury_proceed_desc",
@@ -55,8 +54,8 @@ local mission_objective_templates = {
 				header = "loc_objective_fm_armoury_open_roof_header",
 				mission_objective_type = "goal",
 				music_ignore_start_event = true,
+				music_wwise_state = "fortification_event",
 				turn_off_backfill = true,
-				use_music_event = "fortification_event",
 			},
 			objective_fm_armoury_wait_for_roof = {
 				description = "loc_objective_fm_armoury_wait_for_roof_desc",
@@ -64,15 +63,15 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_fm_armoury_wait_for_roof_header",
 				mission_objective_type = "timed",
+				music_wwise_state = "fortification_event",
 				progress_bar = true,
-				use_music_event = "fortification_event",
 			},
 			objective_fm_armoury_activate_beacon = {
 				description = "loc_objective_fm_armoury_activate_beacon_desc",
 				event_type = "end_event",
 				header = "loc_objective_fm_armoury_activate_beacon_header",
 				mission_objective_type = "goal",
-				use_music_event = "fortification_event",
+				music_wwise_state = "fortification_event",
 			},
 			objective_fm_armoury_survive_final = {
 				description = "loc_objective_fm_armoury_survive_final_desc",
@@ -80,21 +79,21 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_fm_armoury_survive_final_header",
 				mission_objective_type = "timed",
+				music_wwise_state = "fortification_event",
 				progress_bar = true,
-				use_music_event = "fortification_event",
 			},
 			objective_fm_armoury_clear_area = {
 				description = "loc_objective_fm_armoury_clear_area_desc",
 				event_type = "end_event",
 				header = "loc_objective_fm_armoury_clear_area_header",
 				mission_objective_type = "goal",
-				use_music_event = "fortification_event",
+				music_wwise_state = "fortification_event",
 			},
 			objective_fm_armoury_reach_valkyrie = {
 				description = "loc_objective_fm_armoury_reach_valkyrie_desc",
 				header = "loc_objective_fm_armoury_reach_valkyrie_header",
 				mission_objective_type = "goal",
-				use_music_event = "escape_event",
+				music_wwise_state = "escape_event",
 			},
 			objective_fm_armoury_luggable_secret = {
 				hidden = true,

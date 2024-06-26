@@ -71,6 +71,7 @@ MissionBoardView.init = function (self, settings, context)
 	self._mission_widgets = {}
 	self.can_start_mission = false
 	self._promises = {}
+	self._regions_latency = {}
 	self._backend_data_expiry_time = -1
 	self._has_queued_missions = false
 	self._queued_mission_show_time = math.huge
@@ -241,7 +242,7 @@ MissionBoardView._setup_widgets = function (self)
 
 	local quickplay_content = self._quickplay_widget.content
 
-	quickplay_content.objective_1_icon = "content/ui/materials/icons/mission_types/mission_type_09"
+	quickplay_content.objective_1_icon = "content/ui/materials/icons/mission_types/mission_type_quick"
 	quickplay_content.objective_2_icon = nil
 	quickplay_content.circumstance_icon = nil
 	quickplay_content.is_quickplay = true
@@ -1259,7 +1260,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 		local content = widget.content
 		local style = widget.style
 
-		content.header_icon = "content/ui/materials/icons/mission_types/mission_type_09"
+		content.header_icon = "content/ui/materials/icons/mission_types/mission_type_quick"
 		content.header_subtitle = Localize("loc_mission_board_quickplay_header")
 		content.body_text = Localize("loc_mission_board_quickplay_description")
 		content.speaker_icon = speaker_settings.material_small
@@ -1289,7 +1290,6 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 		widget.style.speaker_corner.offset[2] = widget.content.size[2]
 		widget.style.speaker_icon.offset[2] = widget.content.size[2]
 		widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
-		self._widgets_by_name.difficulty_stepper_window.offset[2] = widget.offset[2] + widget.content.size[2] + margin
 		self._widgets_by_name.difficulty_stepper.offset[2] = widget.offset[2] + widget.content.size[2] + margin
 	end
 
@@ -1452,7 +1452,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 
 		local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
 		local margin = 20
-		local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
+		local bottom_spacing = content.speaker_icon and 15 or 0
 		local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
 		local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
 			max_width,

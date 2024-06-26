@@ -35,6 +35,7 @@ MinionNavigationExtension.init = function (self, extension_init_context, unit, e
 	self._destination = Vector3Box(position)
 	self._debug_position_when_starting_search = Vector3Box()
 	self._enabled = false
+	self._waiting_on_getting_to_nav_mesh = false
 	self._has_path = false
 	self._is_following_path = false
 	self._is_computing_path = false
@@ -221,7 +222,11 @@ MinionNavigationExtension.extensions_ready = function (self, world, unit)
 	self._locomotion_extension = locomotion_extension
 end
 
-MinionNavigationExtension.destroy = function (self)
+local TEMP_SMART_OBJECT_FAILING_MINIONS = {}
+
+MinionNavigationExtension.destroy = function (self, unit)
+	TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = nil
+
 	self:set_enabled(false)
 	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
 	GwNavCostMapMultiplierTable.destroy(self._nav_cost_map_multiplier_table)
@@ -231,6 +236,20 @@ MinionNavigationExtension.destroy = function (self)
 end
 
 MinionNavigationExtension.update = function (self, unit, t)
+	if self._waiting_on_getting_to_nav_mesh then
+		if self._locomotion_extension:is_getting_back_to_nav_mesh() then
+			return
+		else
+			local wanted_destination, destination = self._wanted_destination:unbox(), self._destination:unbox()
+
+			if not self._has_path and Vector3.equal(wanted_destination, destination) then
+				self:stop()
+			end
+
+			self._waiting_on_getting_to_nav_mesh = false
+		end
+	end
+
 	local nav_bot = self._nav_bot
 
 	self:_update_destination(unit, nav_bot, t)
@@ -470,10 +489,12 @@ MinionNavigationExtension.set_enabled = function (self, enabled, max_speed)
 				self:stop()
 			end
 
+			self._waiting_on_getting_to_nav_mesh = self._locomotion_extension:is_getting_back_to_nav_mesh()
+
 			self:update_position(unit)
 		end
 	else
-		self._has_path, self._is_following_path = false, false
+		self._has_path, self._is_following_path, self._waiting_on_getting_to_nav_mesh = false, false, false
 	end
 
 	self._navigation_system:set_enabled_unit(unit, enabled)
@@ -564,11 +585,19 @@ MinionNavigationExtension.move_to = function (self, position)
 end
 
 MinionNavigationExtension.stop = function (self)
-	local unit = self._unit
-	local position = POSITION_LOOKUP[unit]
+	if self._is_using_smart_object then
+		local exit_position = self._nav_smart_object_component.exit_position:unbox()
 
-	self._wanted_destination:store(position)
-	self._destination:store(position)
+		self._wanted_destination:store(exit_position)
+		self._destination:store(exit_position)
+	else
+		local position = POSITION_LOOKUP[self._unit]
+
+		self._wanted_destination:store(position)
+		self._destination:store(position)
+
+		self._nav_smart_object_component.id = -1
+	end
 
 	self._failed_move_attempts = 0
 	self._has_started_pathfind = false
@@ -585,10 +614,6 @@ MinionNavigationExtension.stop = function (self)
 	GwNavBot.clear_followed_path(nav_bot)
 
 	self._has_path, self._is_following_path = false, false
-
-	local nav_smart_object_component = self._nav_smart_object_component
-
-	nav_smart_object_component.id = -1
 end
 
 MinionNavigationExtension.enabled = function (self)
@@ -645,12 +670,11 @@ MinionNavigationExtension.current_smart_object_data = function (self)
 	return self._smart_object_data
 end
 
-local TEMP_SMART_OBJECT_FAILING_MINIONS = {}
-local NUM_SMART_OBJECT_FAILS_FOR_DESPAWN = 10
-local TOTAL_NUM_SMARTOBJECT_DESPAWNS = 0
+local NUM_SMART_OBJECT_FAILS_FOR_DESPAWN = 5
+local TOTAL_NUM_SMART_OBJECT_DESPAWNS = 0
 
 MinionNavigationExtension.use_smart_object = function (self, do_use)
-	local nav_bot = self._nav_bot
+	local nav_bot, unit = self._nav_bot, self._unit
 	local nav_smart_object_component = self._nav_smart_object_component
 	local success
 
@@ -659,8 +683,10 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 
 		success = GwNavBot.enter_manual_control(nav_bot, self._next_smart_object_interval)
 
-		if not success then
-			local position = POSITION_LOOKUP[self._unit]
+		if success then
+			TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = 0
+		else
+			local position = POSITION_LOOKUP[unit]
 			local entrance_position, exit_position = nav_smart_object_component.entrance_position:unbox(), nav_smart_object_component.exit_position:unbox()
 			local smart_object_type = nav_smart_object_component.type
 			local breed_name = self._breed.name
@@ -670,55 +696,52 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 			self._has_path, self._is_following_path = false, false
 			nav_smart_object_component.id = -1
 
-			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] or 0) + 1
+			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[unit] or 0) + 1
+
+			TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = num_fails
 
 			if num_fails == 1 then
 				Log.info("MinionNavigationExtension", "%s can't get smart object control(smart object id=%d, %s). Unit: %s (green) Entrance: %s (blue) Exit:%s (yellow)", breed_name, smart_object_id, smart_object_type, position, entrance_position, exit_position)
 			end
 
-			TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] = num_fails + 1
-
 			if num_fails >= NUM_SMART_OBJECT_FAILS_FOR_DESPAWN then
-				TOTAL_NUM_SMARTOBJECT_DESPAWNS = TOTAL_NUM_SMARTOBJECT_DESPAWNS + 1
+				TOTAL_NUM_SMART_OBJECT_DESPAWNS = TOTAL_NUM_SMART_OBJECT_DESPAWNS + 1
 
-				Log.warning("MINION STUCK DESPAWN", "Minion %s is stuck when trying to get smartobject %s to %s, despawning it. %d has despawned this session", breed_name, entrance_position, exit_position, TOTAL_NUM_SMARTOBJECT_DESPAWNS)
-				Managers.state.minion_spawn:despawn(self._unit)
+				Log.warning("MINION STUCK DESPAWN", "Minion %s is stuck when trying to get smartobject %s to %s, despawning it. %d has despawned this session", breed_name, entrance_position, exit_position, TOTAL_NUM_SMART_OBJECT_DESPAWNS)
+				Managers.state.minion_spawn:despawn(unit)
 				Managers.server_metrics:add_annotation("minion_got_stuck_using_smartobject")
 			end
-		else
-			TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] = 0
 		end
 	else
 		success = GwNavBot.exit_manual_control(nav_bot)
 
-		if not success then
-			local position = POSITION_LOOKUP[self._unit]
+		if success then
+			TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = 0
+		else
+			local position = POSITION_LOOKUP[unit]
 			local entrance_position, exit_position = nav_smart_object_component.entrance_position:unbox(), nav_smart_object_component.exit_position:unbox()
 			local smart_object_type = nav_smart_object_component.type
 			local breed_name = self._breed.name
 
-			Log.info("MinionNavigationExtension", "%s can't release smart object control(%s). Unit: %s (green) Entrance: %s (blue) Exit:%s (yellow)", breed_name, smart_object_type, position, entrance_position, exit_position)
 			GwNavBot.clear_followed_path(nav_bot)
 
 			self._has_path, self._is_following_path = false, false
 
-			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] or 0) + 1
+			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[unit] or 0) + 1
+
+			TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = num_fails
 
 			if num_fails == 1 then
-				Log.info("MinionNavigationExtension", "%s can't get smart object control(%s). Unit: %s (green) Entrance: %s (blue) Exit:%s (yellow)", breed_name, smart_object_type, position, entrance_position, exit_position)
+				Log.info("MinionNavigationExtension", "%s can't release smart object control(%s). Unit: %s (green) Entrance: %s (blue) Exit:%s (yellow)", breed_name, smart_object_type, position, entrance_position, exit_position)
 			end
-
-			TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] = num_fails + 1
 
 			if num_fails >= NUM_SMART_OBJECT_FAILS_FOR_DESPAWN then
-				TOTAL_NUM_SMARTOBJECT_DESPAWNS = TOTAL_NUM_SMARTOBJECT_DESPAWNS + 1
+				TOTAL_NUM_SMART_OBJECT_DESPAWNS = TOTAL_NUM_SMART_OBJECT_DESPAWNS + 1
 
-				Log.warning("MINION STUCK DESPAWN", "Minion %s is stuck when trying to release smartobject %s to %s, despawning it. %d has despawned this session", breed_name, entrance_position, exit_position, TOTAL_NUM_SMARTOBJECT_DESPAWNS)
-				Managers.state.minion_spawn:despawn(self._unit)
+				Log.warning("MINION STUCK DESPAWN", "Minion %s is stuck when trying to release smartobject %s to %s, despawning it. %d has despawned this session", breed_name, entrance_position, exit_position, TOTAL_NUM_SMART_OBJECT_DESPAWNS)
+				Managers.state.minion_spawn:despawn(unit)
 				Managers.server_metrics:add_annotation("minion_got_stuck_using_smartobject")
 			end
-		else
-			TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] = 0
 		end
 
 		self:_update_next_smart_object(nav_bot)

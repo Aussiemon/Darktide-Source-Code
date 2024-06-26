@@ -582,7 +582,6 @@ local behavior_tree = {
 			KICK,
 			PUNCH,
 			FIRE_GRENADE,
-			FRAG_GRENADE,
 			CHARGE,
 			VOID_SHIELD_EXPLOSION,
 			condition = "captain_can_use_special_actions",

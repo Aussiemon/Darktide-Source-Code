@@ -128,24 +128,34 @@ VendorInteractionViewBase._set_intro_texts = function (self, intro_texts)
 		widgets_by_name.description_text.content.text = unlocalized_description_text
 	end
 
-	self:_update_description_height()
+	self:_update_text_height()
 end
 
-VendorInteractionViewBase._update_description_height = function (self)
+VendorInteractionViewBase._text_widget_size = function (self, widget_name, optional_id)
+	optional_id = optional_id or "text"
+
+	local widget = self._widgets_by_name[widget_name]
+	local content = widget.content[optional_id]
+	local style = widget.style[optional_id]
+	local text_options = UIFonts.get_font_options_by_style(style)
+
+	return self:_text_size(content, style.font_type, style.font_size, style.size, text_options)
+end
+
+VendorInteractionViewBase._update_text_height = function (self)
 	local description_text_widget = self._widgets_by_name.description_text
 	local scenegraph_id = description_text_widget.scenegraph_id
-	local text = description_text_widget.content.text
-	local style = description_text_widget.style
-	local text_style = style.text
-	local text_size = text_style.size
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local _, text_height = self:_text_size(text, text_style.font_type, text_style.font_size, text_size, text_options)
+	local _, description_height = self:_text_widget_size("description_text")
 
-	self:_set_scenegraph_size(scenegraph_id, nil, text_height + 30)
+	self:_set_scenegraph_size(scenegraph_id, nil, description_height + 30)
 
 	local info_box_scenegraph = self._ui_scenegraph.info_box
 
-	self:_set_scenegraph_position("info_box", nil, info_box_scenegraph.position[2] - text_height * 0.5)
+	self:_set_scenegraph_position("info_box", nil, info_box_scenegraph.position[2] - description_height * 0.5)
+
+	local _, title_height = self:_text_widget_size("title_text")
+
+	self:_set_scenegraph_position("title_text", nil, -(title_height + 30))
 end
 
 VendorInteractionViewBase._on_navigation_input_changed = function (self)

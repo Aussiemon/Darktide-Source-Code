@@ -1,6 +1,19 @@
 ﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/item_material_overrides_gear_colors.lua
 
 local material_overrides = {
+	color_2_colour_enforcer_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_prison_yellow_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/color_atoma_prime_02",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/color_atoma_prime_02",
+			},
+		},
+	},
 	color_1_colour_gray_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -1262,6 +1275,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_2_colour_mars_15 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_purple_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_mars_11",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_mars_09",
+			},
+		},
+	},
 	color_2_colour_mars_16 = {
 		texture_overrides = {
 			color_gradient = {
@@ -1834,6 +1860,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_3_colour_forest_13 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_forest_08",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_city_07",
+			},
+		},
+	},
 	color_3_colour_mars_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -1945,6 +1984,19 @@ local material_overrides = {
 			},
 			mat1_gradient = {
 				resource = "content/textures/colors/3_colour_purple_04",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_purple_04",
+			},
+		},
+	},
+	color_3_colour_purple_05 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_black_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_city_06",
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/3_colour_purple_04",
@@ -2390,6 +2442,32 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/2_color_yellow_black_01",
+			},
+		},
+	},
+	color_2_colour_enforcer_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_enforcer_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_enforcer_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_enforcer_01",
+			},
+		},
+	},
+	color_3_colour_enforcer_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_enforcer_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_enforcer_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_enforcer_01",
 			},
 		},
 	},

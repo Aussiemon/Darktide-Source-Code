@@ -10,7 +10,6 @@ local bot_gestalt_target_selection_weights = {
 		chaos_ogryn_bulwark = -5,
 		chaos_ogryn_executor = -5,
 		renegade_executor = -5,
-		renegade_gunner = -5,
 	},
 }
 

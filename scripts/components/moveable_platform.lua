@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/components/moveable_platform.lua
 
+local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local MoveablePlatform = component("MoveablePlatform")
 
 MoveablePlatform.init = function (self, unit, is_server)
@@ -27,18 +28,26 @@ MoveablePlatform.init = function (self, unit, is_server)
 end
 
 MoveablePlatform.editor_init = function (self, unit)
-	if rawget(_G, "LevelEditor") then
-		self._unit = unit
-		self._stop_units = {}
-
-		local world = Application.main_world()
-
-		self._world = world
-		self._debug_text_id = nil
-		self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
-
-		self:_spawn_stop_points()
+	if not rawget(_G, "LevelEditor") then
+		return
 	end
+
+	self._unit = unit
+	self._stop_units = {}
+
+	local world = Application.main_world()
+
+	self._world = world
+	self._debug_text_id = nil
+	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
+	self._line_object = World.create_line_object(world)
+	self._drawer = DebugDrawer(self._line_object, "immediate")
+	self._debug_draw_enabled = false
+	self._is_selected = false
+
+	self:_spawn_stop_points()
+
+	return true
 end
 
 MoveablePlatform.editor_validate = function (self, unit)
@@ -76,14 +85,14 @@ MoveablePlatform._spawn_stop_points = function (self)
 	local unit = self._unit
 	local nav_handling_enabled = self:get_data(unit, "nav_handling_enabled")
 	local unit_name = self:get_data(unit, "stop_unit")
-	local stop_position = self:get_data(unit, "stop_position")
-	local stop_rotation = Unit.world_rotation(unit, 1)
 
 	if not nav_handling_enabled or not unit_name then
 		return
 	end
 
 	local world = self._world
+	local stop_position = self:get_data(unit, "stop_position")
+	local stop_rotation = Unit.world_rotation(unit, 1)
 	local end_unit = World.spawn_unit_ex(world, unit_name, nil, stop_position:unbox(), stop_rotation)
 
 	table.insert(self._stop_units, end_unit)
@@ -116,11 +125,56 @@ MoveablePlatform.disable = function (self, unit)
 end
 
 MoveablePlatform.destroy = function (self, unit)
+	return
+end
+
+MoveablePlatform.editor_update = function (self, unit, dt, t)
+	if not rawget(_G, "LevelEditor") then
+		return false
+	end
+
+	local should_debug_draw = self._debug_draw_enabled and self._is_selected
+
+	if should_debug_draw and self:get_data(unit, "nav_handling_enabled") and Unit.has_volume(unit, "g_volume_block") then
+		self:_debug_draw_stop_volume(unit)
+	end
+
+	return true
+end
+
+local TEMP_POSITIONS = {}
+
+MoveablePlatform._debug_draw_stop_volume = function (self, unit)
+	local stop_position = self:get_data(unit, "stop_position")
+	local volume_points = Unit.volume_points(unit, "g_volume_block")
+	local offset_position = stop_position:unbox() - Unit.world_position(unit, 1)
+
+	table.clear(TEMP_POSITIONS)
+
+	for i = 1, #volume_points do
+		local volume_point = volume_points[i]
+
+		TEMP_POSITIONS[i] = volume_point + offset_position
+	end
+
+	local volume_height = Unit.volume_height(unit, "g_volume_block")
+	local line_object = self._line_object
+
+	Navigation.debug_draw_nav_tag_volume_segments(line_object, TEMP_POSITIONS, volume_height, Color.yellow(), true)
+	Navigation.debug_draw_nav_tag_volume_segments(line_object, TEMP_POSITIONS, 0, Color.yellow(), false)
+	self._drawer:update(self._world)
+end
+
+MoveablePlatform.editor_selection_changed = function (self, unit, selected)
 	if not rawget(_G, "LevelEditor") then
 		return
 	end
 
-	self:_unspawn_stop_points()
+	self._is_selected = selected
+
+	if not selected then
+		self._drawer:update(self._world)
+	end
 end
 
 MoveablePlatform.editor_property_changed = function (self, unit)
@@ -129,6 +183,18 @@ end
 
 MoveablePlatform.editor_world_transform_modified = function (self, unit)
 	self:_setup_change(unit)
+end
+
+MoveablePlatform.editor_toggle_debug_draw = function (self, enable)
+	if not rawget(_G, "LevelEditor") then
+		return
+	end
+
+	self._debug_draw_enabled = enable
+
+	if not enable then
+		self._drawer:update(self._world)
+	end
 end
 
 MoveablePlatform._setup_change = function (self, unit)
@@ -148,11 +214,12 @@ MoveablePlatform.editor_destroy = function (self, unit)
 
 	self:_unspawn_stop_points()
 
-	local world = self._world
-	local gui = self._gui
+	local line_object, world = self._line_object, self._world
 
-	self._line_object = nil
-	self._world = nil
+	LineObject.dispatch(world, line_object)
+	World.destroy_line_object(world, line_object)
+
+	local gui = self._gui
 
 	if self._debug_text_id then
 		Gui.destroy_text_3d(gui, self._debug_text_id)

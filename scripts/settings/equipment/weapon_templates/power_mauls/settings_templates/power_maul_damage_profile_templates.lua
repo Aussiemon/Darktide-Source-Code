@@ -24,15 +24,16 @@ local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local big_cleave = DamageProfileSettings.big_cleave
+local light_cleave = DamageProfileSettings.light_cleave
 local smiter_light_default_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_9,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
 		[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1_25,
 	},
 	impact = {
@@ -54,7 +55,7 @@ local linesman_light_default_am = {
 		[armor_types.player] = damage_lerp_values.lerp_1,
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1_25,
 	},
 	impact = {
@@ -93,7 +94,7 @@ local tank_heavy_default_am = {
 
 damage_templates.powermaul_light_smiter = {
 	ragdoll_only = true,
-	ragdoll_push_force = 600,
+	ragdoll_push_force = 500,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.spiked_blunt,
@@ -110,12 +111,12 @@ damage_templates.powermaul_light_smiter = {
 		{
 			power_distribution = {
 				attack = {
-					90,
-					185,
+					100,
+					200,
 				},
 				impact = {
 					5,
-					15,
+					20,
 				},
 			},
 			boost_curve_multiplier_finesse = {
@@ -146,6 +147,347 @@ damage_templates.powermaul_light_smiter = {
 					20,
 					40,
 				},
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_light_linesman = {
+	ragdoll_only = true,
+	ragdoll_push_force = 400,
+	stagger_category = "melee",
+	cleave_distribution = light_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = GibbingPower.light,
+	gibbing_type = GibbingTypes.crushing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.power_maul,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	armor_damage_modifier = linesman_light_default_am,
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					100,
+					150,
+				},
+				impact = {
+					5,
+					11,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					90,
+					135,
+				},
+				impact = {
+					4,
+					8,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					60,
+					100,
+				},
+				impact = {
+					3,
+					6,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					20,
+					40,
+				},
+				impact = {
+					3,
+					6,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_heavy_tank = {
+	ragdoll_only = true,
+	ragdoll_push_force = 300,
+	stagger_category = "melee",
+	cleave_distribution = big_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = GibbingPower.medium,
+	gibbing_type = GibbingTypes.crushing,
+	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.power_maul,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	armor_damage_modifier = tank_heavy_default_am,
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					110,
+					260,
+				},
+				impact = {
+					9,
+					22,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					90,
+					200,
+				},
+				impact = {
+					8,
+					20,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					60,
+					120,
+				},
+				impact = {
+					4,
+					15,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					30,
+					50,
+				},
+				impact = {
+					3,
+					12,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		default_target = {
+			armor_damage_modifier = tank_heavy_default_am,
+			power_distribution = {
+				attack = {
+					20,
+					40,
+				},
+				impact = {
+					3,
+					10,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+overrides.powermaul_heavy_smite = {
+	parent_template_name = "powermaul_heavy_tank",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				140,
+				350,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				10,
+				25,
+			},
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				60,
+				220,
+			},
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"attack",
+			{
+				30,
+				60,
+			},
+		},
+		{
+			"targets",
+			4,
+			"power_distribution",
+			"attack",
+			{
+				0,
+				0,
+			},
+		},
+	},
+}
+damage_templates.powermaul_light_tank = {
+	ragdoll_only = true,
+	ragdoll_push_force = 200,
+	stagger_category = "melee",
+	cleave_distribution = big_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = GibbingPower.light,
+	gibbing_type = GibbingTypes.crushing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.power_maul,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	armor_damage_modifier = tank_heavy_default_am,
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					80,
+					150,
+				},
+				impact = {
+					7,
+					15,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					60,
+					110,
+				},
+				impact = {
+					6,
+					12,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					40,
+					80,
+				},
+				impact = {
+					5,
+					11,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					25,
+					60,
+				},
+				impact = {
+					3,
+					10,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		default_target = {
+			armor_damage_modifier = tank_heavy_default_am,
+			power_distribution = {
+				attack = {
+					10,
+					30,
+				},
+				impact = {
+					3,
+					10,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
 			},
 		},
 	},
@@ -208,8 +550,8 @@ overrides.powermaul_weapon_special = {
 			"power_distribution",
 			"attack",
 			{
-				20,
-				50,
+				10,
+				70,
 			},
 		},
 		{
@@ -221,6 +563,18 @@ overrides.powermaul_weapon_special = {
 				4,
 				8,
 			},
+		},
+		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			0.05,
+		},
+		{
+			"targets",
+			2,
+			"boost_curve_multiplier_finesse",
+			0.05,
 		},
 		{
 			"weapon_special",
@@ -237,338 +591,53 @@ overrides.powermaul_weapon_special = {
 				5,
 			},
 		},
+		{
+			"ragdoll_push_force",
+			50,
+		},
 	},
 }
-damage_templates.powermaul_light_linesman = {
-	ragdoll_only = true,
-	ragdoll_push_force = 400,
-	stagger_category = "melee",
-	cleave_distribution = double_cleave,
-	damage_type = damage_types.spiked_blunt,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
-	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
-	stagger_duration_modifier = {
-		0.1,
-		0.5,
+damage_templates.shockmaul_stun_interval_damage = {
+	ignore_shield = true,
+	ragdoll_push_force = 50,
+	stagger_category = "sticky",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_0_75,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_8,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_2,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
 	},
-	armor_damage_modifier = linesman_light_default_am,
+	cleave_distribution = {
+		attack = 5,
+		impact = 20,
+	},
+	power_distribution = {
+		impact = 100,
+		attack = {
+			40,
+			50,
+		},
+	},
+	damage_type = damage_types.electrocution,
 	targets = {
-		{
-			power_distribution = {
-				attack = {
-					65,
-					140,
-				},
-				impact = {
-					5,
-					11,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					40,
-					90,
-				},
-				impact = {
-					4,
-					8,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					30,
-					60,
-				},
-				impact = {
-					3,
-					6,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		default_target = {
-			power_distribution = {
-				attack = {
-					20,
-					40,
-				},
-				impact = {
-					3,
-					6,
-				},
-			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
+		default_target = {},
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
-}
-damage_templates.powermaul_heavy_tank = {
-	ragdoll_only = true,
-	ragdoll_push_force = 300,
-	stagger_category = "melee",
-	cleave_distribution = big_cleave,
-	damage_type = damage_types.spiked_blunt,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.crushing,
-	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_maul,
-	stagger_duration_modifier = {
-		0.1,
-		0.5,
-	},
-	armor_damage_modifier = tank_heavy_default_am,
-	targets = {
-		{
-			power_distribution = {
-				attack = {
-					85,
-					180,
-				},
-				impact = {
-					9,
-					22,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					30,
-					60,
-				},
-				impact = {
-					8,
-					20,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					20,
-					30,
-				},
-				impact = {
-					4,
-					15,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					10,
-					25,
-				},
-				impact = {
-					3,
-					12,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		default_target = {
-			armor_damage_modifier = tank_heavy_default_am,
-			power_distribution = {
-				attack = {
-					0,
-					0,
-				},
-				impact = {
-					3,
-					10,
-				},
-			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
-}
-overrides.powermaul_heavy_smite = {
-	parent_template_name = "powermaul_heavy_tank",
-	overrides = {
-		{
-			"targets",
-			1,
-			"power_distribution",
-			"attack",
-			{
-				120,
-				300,
-			},
-		},
-		{
-			"targets",
-			2,
-			"power_distribution",
-			"attack",
-			{
-				50,
-				200,
-			},
-		},
-		{
-			"targets",
-			3,
-			"power_distribution",
-			"attack",
-			{
-				20,
-				50,
-			},
-		},
-		{
-			"targets",
-			4,
-			"power_distribution",
-			"attack",
-			{
-				0,
-				0,
-			},
-		},
-	},
-}
-damage_templates.powermaul_light_tank = {
-	ragdoll_only = true,
-	ragdoll_push_force = 200,
-	stagger_category = "melee",
-	cleave_distribution = big_cleave,
-	damage_type = damage_types.spiked_blunt,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
-	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
-	stagger_duration_modifier = {
-		0.1,
-		0.5,
-	},
-	armor_damage_modifier = tank_heavy_default_am,
-	targets = {
-		{
-			power_distribution = {
-				attack = {
-					60,
-					120,
-				},
-				impact = {
-					7,
-					15,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					30,
-					80,
-				},
-				impact = {
-					6,
-					12,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					20,
-					70,
-				},
-				impact = {
-					5,
-					11,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		{
-			power_distribution = {
-				attack = {
-					10,
-					50,
-				},
-				impact = {
-					3,
-					10,
-				},
-			},
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-		default_target = {
-			armor_damage_modifier = tank_heavy_default_am,
-			power_distribution = {
-				attack = {
-					0,
-					0,
-				},
-				impact = {
-					3,
-					10,
-				},
-			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
-			},
-		},
-	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
 }
 
 return {

@@ -686,7 +686,7 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 	text_params.experience_for_next_level = experience_for_next_level
 	character_progress_widget.content.text = Localize("loc_eor_xp_bar_progression_text", true, text_params)
 
-	local bar_progress = current_level == max_level and 1 or math.ilerp(experience_for_current_level, experience_for_next_level, current_experience)
+	local bar_progress = (current_level == max_level or experience_for_current_level == experience_for_next_level) and 1 or math.ilerp(experience_for_current_level, experience_for_next_level, current_experience)
 	local progress_bar_widget = widgets_by_name.progress_bar
 
 	progress_bar_widget.content.progress = bar_progress

@@ -843,9 +843,12 @@ animations.weapon_level_up = {
 			_color_utils_color_lerp(bar_start_color, bar_target_color, anim_progress, bar_style.color, true)
 
 			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
-			local slug_text = string.format("Mastery: {#size(%d);color(%d, %d, %d)}%d{#reset()}", current_font_size, text_style.highlight_text_color[2], text_style.highlight_text_color[3], text_style.highlight_text_color[4], current_mastery_level)
+			local slug_text = string.format("{#size(%d);color(%d, %d, %d)}%d{#reset()}", current_font_size, text_style.highlight_text_color[2], text_style.highlight_text_color[3], text_style.highlight_text_color[4], current_mastery_level)
+			local animated_mastery_level = Localize("loc_mastery_level_current", true, {
+				level = slug_text,
+			})
 
-			widget.content["weapon_level_" .. slot] = slug_text
+			widget.content["weapon_level_" .. slot] = animated_mastery_level
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			local slot = params.slot
@@ -859,7 +862,9 @@ animations.weapon_level_up = {
 
 			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
 
-			widget.content["weapon_level_" .. slot] = string.format("Mastery: %d", current_mastery_level)
+			widget.content["weapon_level_" .. slot] = Localize("loc_mastery_level_current", true, {
+				level = current_mastery_level,
+			})
 		end,
 	},
 }

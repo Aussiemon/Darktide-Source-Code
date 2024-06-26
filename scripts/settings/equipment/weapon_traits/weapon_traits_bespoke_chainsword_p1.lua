@@ -133,7 +133,26 @@ templates.weapon_trait_bespoke_chainsword_p1_chained_hits_increases_crit_chance 
 }
 templates.weapon_trait_bespoke_chainsword_p1_guaranteed_melee_crit_on_activated_kill = {
 	weapon_trait_bespoke_chainsword_p1_guaranteed_melee_crit_on_activated_kill = {
-		{},
+		{
+			buff_data = {
+				num_stacks_on_proc = 4,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 6,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 8,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 10,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_chainsword_p1_bleed_on_activated_hit = {

@@ -47,7 +47,7 @@ end
 
 templates.syringe_heal_corruption_buff = {
 	class_name = "buff",
-	duration = 3,
+	duration = 8,
 	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_corruption_buff_hud",
 	predicted = false,
 	heal_settings = {

@@ -78,13 +78,13 @@ HudElementMissionObjectivePopup._present_popup = function (self, popup_data)
 end
 
 HudElementMissionObjectivePopup._can_present_mission = function (self, mission_name)
-	local mission_objective = self._mission_objective_system:get_active_objective(mission_name)
+	local mission_objective = self._mission_objective_system:active_objective(mission_name)
 
 	if mission_objective and mission_objective:use_hud() then
 		return true
 	end
 
-	return false
+	return mission_objective:popups_enabled()
 end
 
 HudElementMissionObjectivePopup.event_mission_objective_start = function (self, mission_name)
@@ -92,7 +92,7 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 		return
 	end
 
-	local mission_objective = self._mission_objective_system:get_active_objective(mission_name)
+	local mission_objective = self._mission_objective_system:active_objective(mission_name)
 	local description_text = mission_objective:header()
 	local icon = mission_objective:icon()
 	local title_text = self:_localize("loc_hud_mission_objective_popup_title_start")
@@ -118,7 +118,7 @@ HudElementMissionObjectivePopup.event_mission_objective_update = function (self,
 		return
 	end
 
-	local mission_objective = self._mission_objective_system:get_active_objective(mission_name)
+	local mission_objective = self._mission_objective_system:active_objective(mission_name)
 	local show_progression_popup_on_update = mission_objective:show_progression_popup_on_update()
 
 	if not show_progression_popup_on_update then
@@ -164,7 +164,7 @@ HudElementMissionObjectivePopup.event_mission_objective_complete = function (sel
 		return
 	end
 
-	local mission_objective = self._mission_objective_system:get_active_objective(mission_name)
+	local mission_objective = self._mission_objective_system:active_objective(mission_name)
 	local description_text = mission_objective:header()
 	local icon = mission_objective:icon()
 	local title_text = self:_localize("loc_hud_mission_objective_popup_title_complete")

@@ -810,7 +810,6 @@ weapon_template.actions = {
 		anim_event = "inspect_start",
 		kind = "inspect",
 		lock_view = true,
-		skip_3p_anims = true,
 		start_input = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge,

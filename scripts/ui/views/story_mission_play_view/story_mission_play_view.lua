@@ -420,7 +420,7 @@ StoryMissionPlayView._set_selected_mission = function (self, mission)
 	local player_level = self._player_level
 	local required_level = mission.requiredLevel or 0
 	local is_locked = player_level < required_level
-	local mission_type = MissionTypes[mission_template.mission_type]
+	local mission_type = MissionTypes[mission_template.mission_type or "undefined"]
 
 	content.header_icon = mission_type.icon
 	content.header_subtitle = Localize(Zones[mission_template.zone_id].name)

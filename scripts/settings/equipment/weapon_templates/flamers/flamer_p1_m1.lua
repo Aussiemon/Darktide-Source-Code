@@ -596,7 +596,7 @@ weapon_template.fx_sources = {
 	_pilot = "fx_pilot",
 }
 weapon_template.crosshair = {
-	crosshair_type = "spray_n_pray",
+	crosshair_type = "flamer",
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
@@ -606,7 +606,7 @@ weapon_template.alternate_fire_settings = {
 	sway_template = "default_lasgun_killshot",
 	uninterruptible = false,
 	crosshair = {
-		crosshair_type = "spray_n_pray",
+		crosshair_type = "flamer",
 	},
 	movement_speed_modifier = {
 		{

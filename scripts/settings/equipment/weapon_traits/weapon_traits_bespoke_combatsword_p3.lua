@@ -193,7 +193,26 @@ templates.weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target
 }
 templates.weapon_trait_bespoke_combatsword_p3_weakspot_hit_resets_dodge_count = {
 	weapon_trait_bespoke_combatsword_p3_weakspot_hit_resets_dodge_count = {
-		{},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_weakspot_damage] = 0.025,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_weakspot_damage] = 0.05,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_weakspot_damage] = 0.075,
+			},
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.melee_weakspot_damage] = 0.1,
+			},
+		},
 	},
 }
 

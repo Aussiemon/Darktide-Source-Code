@@ -181,13 +181,6 @@ math.point_is_inside_aabb = function (pos, aabb_pos, aabb_half_extents)
 	return not (pos.x < aabb_pos.x - aabb_half_extents.x) and not (pos.x > aabb_pos.x + aabb_half_extents.x) and not (pos.y < aabb_pos.y - aabb_half_extents.y) and not (pos.y > aabb_pos.y + aabb_half_extents.y) and not (pos.z < aabb_pos.z - aabb_half_extents.z) and not (pos.z > aabb_pos.z + aabb_half_extents.z)
 end
 
-math.point_is_inside_oobb = function (pos, oobb_pose, oobb_radius)
-	local to_local_matrix = Matrix4x4.inverse(oobb_pose)
-	local local_pos = Matrix4x4.transform(to_local_matrix, pos)
-
-	return local_pos.x > -oobb_radius[1] and local_pos.x < oobb_radius[1] and local_pos.y > -oobb_radius[2] and local_pos.y < oobb_radius[2] and local_pos.z > -oobb_radius[3] and local_pos.z < oobb_radius[3]
-end
-
 math.point_is_inside_2d_triangle = function (pos, p1, p2, p3)
 	local pa = p1 - pos
 	local pb = p2 - pos

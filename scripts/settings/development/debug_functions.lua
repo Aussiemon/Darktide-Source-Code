@@ -740,8 +740,6 @@ local function _fetch_mission_board()
 	if not Managers.backend:authenticated() then
 		mission_board_options[1] = mission_board_error_text
 
-		Log.info("DebugFunctions", "Fetching mission board failed, not authenticated")
-
 		return
 	end
 
@@ -2827,12 +2825,30 @@ local function voice_fx_options()
 	local options = {
 		"voice_fx_rtpc_none",
 		"voice_fx_rtpc_common",
-		"voice_fx_rtpc_rare",
-		"voice_fx_rtpc_epic",
-		"voice_fx_rtpc_voice_box_a",
-		"voice_fx_rtpc_robo_a",
 		"voice_fx_rtpc_common_cloth_filter",
+		"voice_fx_rtpc_common_filter",
+		"voice_fx_rtpc_common_filter_metal",
+		"voice_fx_rtpc_common_krieg",
+		"voice_fx_rtpc_common_metal",
 		"voice_fx_rtpc_common_tubes",
+		"voice_fx_rtpc_rare",
+		"voice_fx_rtpc_rare_cloth_filter",
+		"voice_fx_rtpc_rare_ecclesiarchy_metal",
+		"voice_fx_rtpc_rare_filter",
+		"voice_fx_rtpc_rare_filter_metal",
+		"voice_fx_rtpc_rare_genstealer_metal",
+		"voice_fx_rtpc_rare_tubes",
+		"voice_fx_rtpc_epic",
+		"voice_fx_rtpc_epic_filter",
+		"voice_fx_rtpc_epic_enforcer",
+		"voice_fx_rtpc_epic_cloth_filter",
+		"voice_fx_rtpc_epic_metal",
+		"voice_fx_rtpc_epic_speaker_robo",
+		"voice_fx_rtpc_epic_tubes",
+		"voice_fx_rtpc_epic_voice_box_pitch",
+		"voice_fx_rtpc_voice_box_a",
+		"voice_fx_rtpc_epic_psyker_collar",
+		"voice_fx_rtpc_robo_a",
 	}
 
 	return options
@@ -3014,21 +3030,21 @@ functions.force_character_state = {
 	options_function = character_state_options,
 	on_activated = force_character_state,
 }
-functions.reset_mtx_store_custom_time = {
+functions.reset_premium_store_custom_time = {
 	button_text = "Reset",
 	category = "Micro Transaction (\"Premium\") Store",
 	name = "Reset Store Time",
 	on_activated = function (new_value, old_value)
-		ParameterResolver.set_dev_parameter("mtx_store_custom_time", 0)
+		ParameterResolver.set_dev_parameter("premium_store_custom_time", 0)
 	end,
 }
-functions.mtx_store_custom_time = {
+functions.premium_store_custom_time = {
 	button_text = "Set Time",
 	category = "Micro Transaction (\"Premium\") Store",
 	name = "Show Store Using Custom Time (in milliseconds)",
 	number_button = true,
 	on_activated = function (new_value, old_value)
-		ParameterResolver.set_dev_parameter("mtx_store_custom_time", new_value)
+		ParameterResolver.set_dev_parameter("premium_store_custom_time", new_value)
 	end,
 }
 

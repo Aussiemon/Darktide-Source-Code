@@ -191,6 +191,8 @@ MinionAttack.trigger_shoot_sfx_and_vfx = function (unit, scratchpad, action_data
 	end
 end
 
+local MAX_SUPPRESS_VALUE_SPREAD = 60
+
 local function _spread_direction(target_unit, minion_unit, shoot_direction, spread, optional_spread_multiplier)
 	local spread_multiplier = optional_spread_multiplier or 1
 	local spread_angle = math.random() * spread * spread_multiplier
@@ -211,6 +213,16 @@ local function _spread_direction(target_unit, minion_unit, shoot_direction, spre
 
 		if stat_buffs and stat_buffs.minion_accuracy_modifier then
 			spread_angle = spread_angle * stat_buffs.minion_accuracy_modifier
+		end
+	end
+
+	local suppression_extension = ScriptUnit.has_extension(minion_unit, "suppression_system")
+
+	if suppression_extension then
+		local suppress_value = suppression_extension:suppress_value()
+
+		if suppress_value > 1 then
+			spread_angle = spread_angle * math.min(suppress_value * 3, MAX_SUPPRESS_VALUE_SPREAD)
 		end
 	end
 
@@ -594,7 +606,8 @@ MinionAttack.shoot = function (unit, scratchpad, action_data)
 		return
 	end
 
-	local spread_multiplier = action_data.spread_multiplier or DEFAULT_SPREAD_MULTIPLIER
+	local extra_spread_multiplier = scratchpad.extra_spread_multiplier or 1
+	local spread_multiplier = (action_data.spread_multiplier or DEFAULT_SPREAD_MULTIPLIER) * extra_spread_multiplier
 
 	if not has_line_of_sight then
 		spread_multiplier = action_data.suppressive_fire_spread_multiplier

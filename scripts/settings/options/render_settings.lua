@@ -963,6 +963,7 @@ local RENDER_TEMPLATES = {
 					performance_settings = {
 						decal_lifetime = 10,
 						max_blood_decals = 15,
+						max_footstep_decals = 15,
 						max_impact_decals = 15,
 						max_ragdolls = 5,
 					},
@@ -996,6 +997,7 @@ local RENDER_TEMPLATES = {
 					performance_settings = {
 						decal_lifetime = 20,
 						max_blood_decals = 30,
+						max_footstep_decals = 30,
 						max_impact_decals = 30,
 						max_ragdolls = 8,
 					},
@@ -1029,6 +1031,7 @@ local RENDER_TEMPLATES = {
 					performance_settings = {
 						decal_lifetime = 40,
 						max_blood_decals = 50,
+						max_footstep_decals = 50,
 						max_impact_decals = 50,
 						max_ragdolls = 12,
 					},

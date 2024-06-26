@@ -21,6 +21,7 @@ end
 
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cs06")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/s1_intro")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/core_research_intro")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/voxshot_rise")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_mission_board")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_crafting_station_underground")

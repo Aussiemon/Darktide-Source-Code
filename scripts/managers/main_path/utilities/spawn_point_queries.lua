@@ -47,12 +47,12 @@ SpawnPointQueries.generate_nav_spawn_points = function (nav_world, nav_triangle_
 	local math_next_random = math.next_random
 
 	for i = 1, num_groups do
-		local group_positions = {}
+		local group_positions = Script.new_array(num_sub_groups)
 
 		for j = 1, num_sub_groups do
-			local sub_group_positions = {}
 			local num_triangles = GwNavSpawnPoints_get_triangle_count(nav_spawn_points, i, j)
 			local num_sub_group_spawn_points = math.min(num_triangles, num_spawn_points_per_subgroup)
+			local sub_group_positions = Script.new_array(num_sub_group_spawn_points)
 
 			for k = 1, num_sub_group_spawn_points do
 				local start_triangle_index
@@ -67,7 +67,7 @@ SpawnPointQueries.generate_nav_spawn_points = function (nav_world, nav_triangle_
 				end
 			end
 
-			group_positions[#group_positions + 1] = sub_group_positions
+			group_positions[j] = sub_group_positions
 		end
 
 		spawn_point_positions[i] = group_positions
@@ -79,17 +79,16 @@ end
 SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data, nav_spawn_points, spawn_point_positions)
 	local last_index = time_slice_data.last_index
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
-	local GwNavSpawnPoints_get_triangle_count = GwNavSpawnPoints.get_triangle_count
-	local GwNavSpawnPoints_get_spawn_point_position = GwNavSpawnPoints.get_spawn_point_position
+	local GwNavSpawnPoints_get_triangle_count, GwNavSpawnPoints_get_spawn_point_position = GwNavSpawnPoints.get_triangle_count, GwNavSpawnPoints.get_spawn_point_position
 	local math_next_random = math.next_random
-	local num_groups = time_slice_data.parameters.num_groups
-	local num_sub_groups = time_slice_data.parameters.num_sub_groups
-	local num_spawn_points_per_subgroup = time_slice_data.parameters.num_spawn_points_per_subgroup
-	local nav_world = time_slice_data.parameters.nav_world
-	local min_free_radius = time_slice_data.parameters.min_free_radius
-	local min_distance_to_others = time_slice_data.parameters.min_distance_to_others
-	local nav_tag_cost_table = time_slice_data.parameters.nav_tag_cost_table
-	local seed = time_slice_data.parameters.seed
+	local parameters = time_slice_data.parameters
+	local num_groups, num_sub_groups = parameters.num_groups, parameters.num_sub_groups
+	local num_spawn_points_per_subgroup = parameters.num_spawn_points_per_subgroup
+	local nav_world = parameters.nav_world
+	local min_free_radius = parameters.min_free_radius
+	local min_distance_to_others = parameters.min_distance_to_others
+	local nav_tag_cost_table = parameters.nav_tag_cost_table
+	local seed = parameters.seed
 
 	for index = last_index + 1, num_groups do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
@@ -98,12 +97,12 @@ SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data
 			break
 		end
 
-		local group_positions = {}
+		local group_positions = Script.new_array(num_sub_groups)
 
 		for j = 1, num_sub_groups do
-			local sub_group_positions = {}
 			local num_triangles = GwNavSpawnPoints_get_triangle_count(nav_spawn_points, index, j)
 			local num_sub_group_spawn_points = math.min(num_triangles, num_spawn_points_per_subgroup)
+			local sub_group_positions = Script.new_array(num_sub_group_spawn_points)
 
 			for k = 1, num_sub_group_spawn_points do
 				local start_triangle_index
@@ -117,7 +116,7 @@ SpawnPointQueries.update_time_slice_nav_spawn_points = function (time_slice_data
 				end
 			end
 
-			group_positions[#group_positions + 1] = sub_group_positions
+			group_positions[j] = sub_group_positions
 		end
 
 		spawn_point_positions[index] = group_positions
@@ -168,8 +167,8 @@ local DISALLOWED_DISTANCE = 8
 local ALLOWED_Z_DIFF = 12
 
 local function _remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, min_distance, max_distance, optional_disallowed_positions)
-	for k = 1, #valid_enemy_player_units_positions do
-		local player_position = valid_enemy_player_units_positions[k]
+	for i = 1, #valid_enemy_player_units_positions do
+		local player_position = valid_enemy_player_units_positions[i]
 
 		for j = num_occluded_positions, 1, -1 do
 			repeat
@@ -189,8 +188,8 @@ local function _remove_invalid_occluded_positions(valid_enemy_player_units_posit
 				end
 
 				if optional_disallowed_positions then
-					for h = 1, #optional_disallowed_positions do
-						local disallowed_position = optional_disallowed_positions[h]:unbox()
+					for k = 1, #optional_disallowed_positions do
+						local disallowed_position = optional_disallowed_positions[k]:unbox()
 
 						distance = Vector3.distance(disallowed_position, occluded_position)
 
@@ -198,25 +197,29 @@ local function _remove_invalid_occluded_positions(valid_enemy_player_units_posit
 							table.remove(occluded_positions, j)
 
 							num_occluded_positions = num_occluded_positions - 1
+
+							break
 						end
 					end
 				end
 			until true
 		end
 	end
+
+	return num_occluded_positions
 end
 
 local MIN_WANTED_OCCLUDED_POSITIONS = 3
 
 SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points, from_position, side, offset_range, num_groups, optional_min_distance, optional_max_distance, optional_initial_offset, optional_only_search_forward, optional_disallowed_positions)
-	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
-	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, from_position)
+	local group_index, _ = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, from_position)
 
 	if not group_index then
-		return
+		return nil, nil
 	end
 
 	local occluded_positions
+	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
 
 	if optional_initial_offset then
 		local half_range = math.floor(optional_initial_offset / 2)
@@ -236,11 +239,11 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 
 	local num_occluded_positions = #occluded_positions
 
-	if num_occluded_positions > 0 then
-		_remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, optional_min_distance, optional_max_distance, optional_disallowed_positions)
+	if num_occluded_positions > 0 and (optional_min_distance or optional_max_distance or optional_disallowed_positions) then
+		num_occluded_positions = _remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, optional_min_distance, optional_max_distance, optional_disallowed_positions)
 	end
 
-	if #occluded_positions == 0 then
+	if num_occluded_positions == 0 then
 		local start_index, end_index
 
 		if optional_only_search_forward then
@@ -254,40 +257,34 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 		end
 
 		for i = end_index, start_index, -1 do
-			if occluded_positions then
-				table.append(occluded_positions, SpawnPointQueries.occluded_positions_in_group(nav_world, nav_spawn_points, i, valid_enemy_player_units_positions))
-			else
-				occluded_positions = SpawnPointQueries.occluded_positions_in_group(nav_world, nav_spawn_points, i, valid_enemy_player_units_positions)
-			end
+			table.append(occluded_positions, SpawnPointQueries.occluded_positions_in_group(nav_world, nav_spawn_points, i, valid_enemy_player_units_positions))
 
 			num_occluded_positions = #occluded_positions
 
-			if occluded_positions and num_occluded_positions > 0 then
+			if num_occluded_positions > 0 then
 				if optional_min_distance or optional_max_distance then
-					_remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, optional_min_distance, optional_max_distance)
+					num_occluded_positions = _remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, optional_min_distance, optional_max_distance)
 				end
 
-				if #occluded_positions >= MIN_WANTED_OCCLUDED_POSITIONS then
+				if num_occluded_positions >= MIN_WANTED_OCCLUDED_POSITIONS then
 					break
 				end
-			elseif i == 1 or i == num_groups then
-				break
 			end
 		end
 	end
 
-	if not occluded_positions or #occluded_positions == 0 then
-		return
+	if num_occluded_positions == 0 then
+		return nil, nil
 	end
 
-	return occluded_positions
+	return occluded_positions, num_occluded_positions
 end
 
 SpawnPointQueries.get_random_occluded_position = function (nav_world, nav_spawn_points, from_position, side, offset_range, num_groups, optional_min_distance, optional_max_distance, optional_initial_offset, optional_only_search_forward, optional_disallowed_positions)
-	local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, from_position, side, offset_range, num_groups, optional_min_distance, optional_max_distance, optional_initial_offset, optional_only_search_forward, optional_disallowed_positions)
+	local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, from_position, side, offset_range, num_groups, optional_min_distance, optional_max_distance, optional_initial_offset, optional_only_search_forward, optional_disallowed_positions)
 
 	if occluded_positions then
-		local random_occluded_position = occluded_positions[math.random(1, #occluded_positions)]
+		local random_occluded_position = occluded_positions[math.random(1, num_occluded_positions)]
 
 		return random_occluded_position
 	end

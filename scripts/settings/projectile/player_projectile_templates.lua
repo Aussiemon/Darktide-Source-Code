@@ -594,8 +594,8 @@ projectile_templates.ogryn_grenade_box_cluster = {
 				number = 6,
 				start_fuse_time = 0.8,
 				fuse_time_steps = {
-					max = 0.5,
-					min = 0.3,
+					max = 0.8,
+					min = 0.4,
 				},
 				start_speed = {
 					max = 8,

@@ -838,29 +838,15 @@ ViewElementProfilePresets.update = function (self, dt, t, input_service)
 
 	if self._intro_active and not self._close_intro_popup then
 		local any_input_pressed = false
+		local input_device_list = InputUtils.platform_device_list()
 
-		if IS_XBS then
-			local input_device_list = InputUtils.input_device_list
-			local xbox_controllers = input_device_list.xbox_controller
+		for i = 1, #input_device_list do
+			local device = input_device_list[i]
 
-			for i = 1, #xbox_controllers do
-				local xbox_controller = xbox_controllers[i]
+			if device.active() and device.any_pressed() then
+				any_input_pressed = true
 
-				if xbox_controller.active() and xbox_controller.any_pressed() then
-					any_input_pressed = true
-
-					break
-				end
-			end
-		end
-
-		if not any_input_pressed then
-			for _, device in pairs(_device_list) do
-				if device and device.active and device.any_pressed() then
-					any_input_pressed = true
-
-					break
-				end
+				break
 			end
 		end
 

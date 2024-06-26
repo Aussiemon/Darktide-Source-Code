@@ -95,7 +95,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -107,7 +107,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -119,7 +119,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -131,7 +131,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -143,7 +143,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -155,7 +155,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -167,7 +167,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -179,21 +179,21 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
 		dead = {
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
 		shove = {
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -240,7 +240,7 @@ local armored = {
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 			},
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
 				only_1p = true,
 			},
 			{
@@ -340,7 +340,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -352,7 +352,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -364,7 +364,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -376,7 +376,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -388,7 +388,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -400,7 +400,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -412,7 +412,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -424,7 +424,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -436,7 +436,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -460,11 +460,35 @@ local super_armor = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 			},
+			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
+				only_1p = true,
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
+				only_1p = true,
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
+				only_1p = true,
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
 			},
 		},
 		weakspot_damage = {
@@ -473,7 +497,11 @@ local super_armor = {
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 			},
 			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
 				only_1p = true,
 			},
 		},
@@ -482,17 +510,29 @@ local super_armor = {
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 			},
+			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+			},
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 			},
+			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+			},
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+			},
+			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 			},
 			{
 				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
@@ -505,6 +545,10 @@ local super_armor = {
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 			},
 			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
+			},
+			{
 				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
 				only_1p = true,
 			},
@@ -513,6 +557,10 @@ local super_armor = {
 			{
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+			},
+			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 			},
 			{
 				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
@@ -535,7 +583,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -547,7 +595,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -559,7 +607,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -571,7 +619,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -583,7 +631,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -595,7 +643,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/rifles/boltpistol/boltpistol_impact_armor_nodamage_01",
 				},
 			},
 		},
@@ -607,7 +655,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -619,7 +667,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -631,7 +679,7 @@ local super_armor = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/bolter/bolter_impact",
+					"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 				},
 			},
 		},
@@ -946,6 +994,14 @@ local player = {
 local surface_fx = {}
 local default_surface_fx = {
 	[hit_types.stop] = {
+		sfx = {
+			{
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
+				group = "surface_material",
+				normal_rotation = true,
+			},
+		},
 		vfx = {
 			{
 				normal_rotation = true,

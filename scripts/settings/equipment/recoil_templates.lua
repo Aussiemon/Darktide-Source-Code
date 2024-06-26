@@ -11,6 +11,7 @@ local loaded_template_files = {}
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_recoil_templates", recoil_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_recoil_templates", recoil_templates, loaded_template_files)
@@ -328,7 +329,9 @@ recoil_templates.autogun = {
 		},
 	},
 }
-pitch_default = 0.02
+
+local pitch_default = 0.02
+
 recoil_templates.autogun_zoomed = {
 	still = {
 		camera_recoil_percentage = 0.5,
@@ -2256,6 +2259,142 @@ recoil_templates.shotgun_alternate_fire_medium = {
 	crouch_moving = {
 		inherits = {
 			"bolter_alternate_fire_medium",
+			"still",
+		},
+	},
+}
+recoil_templates.boltpistol_alternate_fire_medium = {
+	[weapon_movement_states.still] = {
+		camera_recoil_percentage = 0.4,
+		new_influence_percent = 0.65,
+		rise_duration = 0.05,
+		rise = {
+			0.5,
+		},
+		decay = {
+			idle = 1.8,
+			shooting = 0.25,
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.25,
+					0.3,
+				},
+				yaw = {
+					-0.02,
+					0.02,
+				},
+			},
+			{
+				pitch = {
+					0.125,
+					0.15,
+				},
+				yaw = {
+					-0.01,
+					0.03,
+				},
+			},
+			{
+				pitch = {
+					0.125,
+					0.15,
+				},
+				yaw = {
+					-0.02,
+					0.02,
+				},
+			},
+			{
+				pitch = {
+					0.1,
+					0.15,
+				},
+				yaw = {
+					-0.03,
+					0.03,
+				},
+			},
+		},
+		offset_limit = {
+			pitch = 50,
+			yaw = 50,
+		},
+		visual_recoil_settings = {
+			intensity = 10,
+			lerp_scalar = 1,
+		},
+	},
+	[weapon_movement_states.moving] = {
+		new_influence_percent = 1,
+		inherits = {
+			"boltpistol_alternate_fire_medium",
+			"still",
+		},
+	},
+	[weapon_movement_states.crouch_still] = {
+		inherits = {
+			"boltpistol_alternate_fire_medium",
+			"still",
+		},
+	},
+	[weapon_movement_states.crouch_moving] = {
+		inherits = {
+			"boltpistol_alternate_fire_medium",
+			"still",
+		},
+	},
+}
+recoil_templates.shotgun_alternate_fire_medium = {
+	still = {
+		camera_recoil_percentage = 0.25,
+		new_influence_percent = 0.65,
+		rise_duration = 0.05,
+		rise = {
+			0.01,
+		},
+		decay = {
+			idle = 4.25,
+			shooting = 1.25,
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.5,
+					0.75,
+				},
+				yaw = {
+					-0.02,
+					0.02,
+				},
+			},
+		},
+		offset_limit = {
+			pitch = 50,
+			yaw = 50,
+		},
+		visual_recoil_settings = {
+			intensity = 5,
+			lerp_scalar = 2,
+		},
+	},
+	moving = {
+		new_influence_percent = 1,
+		inherits = {
+			"boltpistol_alternate_fire_medium",
+			"still",
+		},
+	},
+	crouch_still = {
+		inherits = {
+			"boltpistol_alternate_fire_medium",
+			"still",
+		},
+	},
+	crouch_moving = {
+		inherits = {
+			"boltpistol_alternate_fire_medium",
 			"still",
 		},
 	},

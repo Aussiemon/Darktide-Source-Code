@@ -5,7 +5,7 @@ local templates = {}
 
 table.make_unique(templates)
 
-function _degrees_to_radians(degrees)
+local function _degrees_to_radians(degrees)
 	return degrees * 0.0174532925
 end
 
@@ -37,7 +37,38 @@ templates.weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damag
 }
 templates.weapon_trait_bespoke_autogun_p1_hipfire_while_sprinting = {
 	weapon_trait_bespoke_autogun_p1_hipfire_while_sprinting = {
-		{},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.06,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.09,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.12,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.spread_modifier] = -0.3,
+			},
+			conditional_stat_buffs = {
+				[stat_buffs.damage_near] = 0.15,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_autogun_p1_increase_power_on_close_kill = {

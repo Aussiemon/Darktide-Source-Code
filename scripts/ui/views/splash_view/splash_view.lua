@@ -390,32 +390,17 @@ SplashView.update = function (self, dt, t, input_service)
 		self._hold_timer = 0
 	end
 
-	if IS_XBS then
-		local input_device_list = InputUtils.input_device_list
-		local xbox_controllers = input_device_list.xbox_controller
+	local input_device_list = InputUtils.platform_device_list()
 
-		for i = 1, #xbox_controllers do
-			local xbox_controller = xbox_controllers[i]
+	for i = 1, #input_device_list do
+		local device = input_device_list[i]
 
-			if self._two_step_skip then
-				if xbox_controller.active() and xbox_controller.any_pressed() and not self._show_skip then
-					self._show_skip = true
-				end
-			elseif xbox_controller.active() and xbox_controller.any_pressed() then
-				self:_on_skip_pressed()
+		if self._two_step_skip then
+			if device and device.active() and device.any_pressed() and not self._show_skip then
+				self._show_skip = true
 			end
-		end
-	else
-		for i = 1, #device_list do
-			local device = device_list[i]
-
-			if self._two_step_skip then
-				if device and device.active and device.any_pressed() and not self._show_skip then
-					self._show_skip = true
-				end
-			elseif device and device.active and device.any_pressed() then
-				self:_on_skip_pressed()
-			end
+		elseif device and device.active() and device.any_pressed() then
+			self:_on_skip_pressed()
 		end
 	end
 

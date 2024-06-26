@@ -273,6 +273,11 @@ local database_rules_number = TagQueryDatabase.NUM_DATABASE_RULES
 NetworkConstants.ammunition_large = Network.type_info("ammunition_large")
 NetworkConstants.ammunition_small = Network.type_info("ammunition_small")
 
+local particle_index = Network.type_info("particle_index")
+
+NetworkConstants.particle_index_min = particle_index.min
+NetworkConstants.particle_index_max = particle_index.max
+
 local function _check_dialogue_breed_settings_voices()
 	local max_num_wwise_voices = 0
 

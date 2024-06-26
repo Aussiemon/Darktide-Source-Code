@@ -619,10 +619,10 @@ weapon_template.no_ammo_delay = 0.25
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.keep_weapon_special_active_on_unwield = true
-weapon_template.flashlight_template = FlashlightTemplates.default
+weapon_template.flashlight_template = FlashlightTemplates.lasgun_p3
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.ammo_template = "lasgun_p3_m1"
+weapon_template.ammo_template = "lasgun_p3_m3"
 weapon_template.fx_sources = {
 	_mag_well = "fx_reload",
 	_muzzle = "fx_muzzle_01",
@@ -687,11 +687,11 @@ weapon_template.keywords = {
 	"lasweapon",
 }
 weapon_template.can_use_while_vaulting = true
-weapon_template.dodge_template = "killshot"
-weapon_template.sprint_template = "killshot"
+weapon_template.dodge_template = "assault"
+weapon_template.sprint_template = "assault"
 weapon_template.stamina_template = "default"
-weapon_template.toughness_template = "default"
-weapon_template.movement_curve_modifier_template = "lasgun_p1_m1"
+weapon_template.toughness_template = "assault"
+weapon_template.movement_curve_modifier_template = "lasgun_p3"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 

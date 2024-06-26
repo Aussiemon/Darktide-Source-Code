@@ -214,6 +214,54 @@ overrides.heavy_force_sword_stab = {
 		},
 	},
 }
+overrides.heavy_force_sword_smiter = {
+	parent_template_name = "heavy_force_sword",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				150,
+				350,
+			},
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				60,
+				130,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				7,
+				15,
+			},
+		},
+		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			{
+				1.2,
+				3,
+			},
+		},
+		{
+			"cleave_distribution",
+			single_cleave,
+		},
+	},
+}
 damage_templates.heavy_force_sword_active = {
 	force_weapon_damage = true,
 	ignore_shield = true,

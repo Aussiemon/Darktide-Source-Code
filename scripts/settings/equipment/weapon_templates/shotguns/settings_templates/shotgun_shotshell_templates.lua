@@ -171,6 +171,58 @@ shotshell_templates.shotgun_burninating_special_killshot = {
 		},
 	},
 }
+shotshell_templates.default_shotgun_shotshell_p2 = {
+	bullseye = true,
+	num_pellets = 16,
+	num_spread_circles = 8,
+	pellets_per_frame = 4,
+	range = 75,
+	scatter_range = 0.5,
+	spread_pitch = 3,
+	spread_yaw = 7,
+	min_num_hits = {
+		[armor_types.unarmored] = 7,
+		[armor_types.armored] = 6,
+		[armor_types.resistant] = 8,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 7,
+		[armor_types.super_armor] = 4,
+		[armor_types.disgustingly_resilient] = 9,
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_assault_p2,
+		},
+	},
+}
+shotshell_templates.special_shotgun_shotshell_p2 = {
+	bullseye = true,
+	num_pellets = 32,
+	num_spread_circles = 8,
+	pellets_per_frame = 8,
+	range = 75,
+	scatter_range = 2,
+	spread_pitch = 5,
+	spread_yaw = 10,
+	min_num_hits = {
+		[armor_types.unarmored] = 5,
+		[armor_types.armored] = 3,
+		[armor_types.resistant] = 5,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 4,
+		[armor_types.super_armor] = 2,
+		[armor_types.disgustingly_resilient] = 10,
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.shotgun_assault_p2_special,
+			{
+				pellets_threshold = 0.5,
+				damage_profile = DamageProfileTemplates.shotgun_assault_p2_special_high_gibbing,
+			},
+		},
+	},
+}
 
 return {
 	base_templates = shotshell_templates,

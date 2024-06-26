@@ -26,7 +26,11 @@ MissionObjectiveTimed.update = function (self, dt)
 	self._time_elapsed = self._time_elapsed + dt
 	self._time_elapsed = math.min(self._time_elapsed, self._duration)
 	self._time_left = self._duration - self._time_elapsed
-	self._time_left = math.max(self._time_left, 0)
+end
+
+MissionObjectiveTimed.add_time = function (self, time)
+	self._time_elapsed = math.clamp(self._time_elapsed + time, 0, self._duration)
+	self._time_left = self._duration - self._time_elapsed
 end
 
 MissionObjectiveTimed.update_progression = function (self)

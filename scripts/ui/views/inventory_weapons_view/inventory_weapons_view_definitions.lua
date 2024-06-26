@@ -36,6 +36,8 @@ local grid_settings = {
 	title_height = title_height,
 	edge_padding = edge_padding,
 }
+local button_margin = 20
+local button_size = ButtonPassTemplates.terminal_button.size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	corner_top_left = {
@@ -304,7 +306,7 @@ local legend_inputs = {
 				return false
 			end
 
-			local is_item_equipped = parent:is_selected_item_equipped()
+			local is_item_equipped = parent:is_selected_item_equipped() and not parent._discarded_item_grid_index
 
 			return not is_item_equipped
 		end,

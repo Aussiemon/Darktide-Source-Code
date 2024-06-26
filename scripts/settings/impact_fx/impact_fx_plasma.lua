@@ -563,7 +563,47 @@ local player = {
 	linked_decal = {},
 	blood_ball = {},
 }
-local surface_fx = {}
+local surface_fx = {
+	snow = {
+		[hit_types.stop] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_lasgun",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+			vfx = {
+				{
+					normal_rotation = true,
+					effects = {
+						"content/fx/particles/impacts/surfaces/plasma_charged_explosion_small_snow",
+					},
+				},
+			},
+		},
+		[hit_types.penetration_entry] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_lasgun",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+			vfx = {
+				{
+					normal_rotation = true,
+					effects = {
+						"content/fx/particles/impacts/surfaces/plasma_charged_explosion_small_snow",
+					},
+				},
+			},
+		},
+		[hit_types.penetration_exit] = nil,
+	},
+}
 local default_surface_fx = {
 	[hit_types.stop] = {
 		sfx = {

@@ -23,6 +23,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	local is_server = context.is_server
 
 	self._soft_cap_out_of_bounds_units = context.soft_cap_out_of_bounds_units
+	self._mission_pool = PickupSettings[system_init_data.mission.pickup_pool or "distribution_pool"]
 	self._mission_pool_adjustments = system_init_data.mission.pickup_settings
 	self._backend_pool_adjustments = context.pickup_pool_adjustments
 	self._seed = system_init_data.level_seed
@@ -59,7 +60,7 @@ end
 
 PickupSystem._fetch_settings = function (self)
 	local difficulty = Managers.state.difficulty:get_difficulty()
-	local distribution_pool = PickupSettings.distribution_pool
+	local distribution_pool = self._mission_pool or PickupSettings.distribution_pool
 	local selected_pools = {}
 	local mission_pickup_settings = self._mission_pool_adjustments
 

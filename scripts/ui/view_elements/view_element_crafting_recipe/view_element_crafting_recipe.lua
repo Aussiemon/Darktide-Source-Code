@@ -138,17 +138,19 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 	}
 	local active_recipes = {}
 
-	layout[#layout + 1] = {
-		text = "loc_crafting_item_modifications_description",
-		widget_type = "description",
-	}
-	layout[#layout + 1] = {
-		widget_type = "modifications_counter",
-		item = item,
-	}
-	layout[#layout + 1] = {
-		widget_type = "spacing_vertical",
-	}
+	if item and (item.item_type == "WEAPON_RANGED" or item.item_type == "WEAPON_MELEE") then
+		layout[#layout + 1] = {
+			text = "loc_crafting_item_modifications_description",
+			widget_type = "description",
+		}
+		layout[#layout + 1] = {
+			widget_type = "modifications_counter",
+			item = item,
+		}
+		layout[#layout + 1] = {
+			widget_type = "spacing_vertical",
+		}
+	end
 
 	for i, recipe in ipairs(recipes) do
 		if not recipe.ui_hidden and not recipe.ui_show_in_vendor_view then
@@ -464,7 +466,7 @@ end
 
 ViewElementCraftingRecipe.refresh_can_craft = function (self, additional_data)
 	local content = self.content
-	local can_craft, fail_reason = content.recipe.can_craft(content.ingredients, additional_data)
+	local can_craft, fail_reason, localization_context = content.recipe.can_craft(content.ingredients, additional_data)
 	local costs = content.costs
 
 	if costs then
@@ -487,7 +489,7 @@ ViewElementCraftingRecipe.refresh_can_craft = function (self, additional_data)
 	end
 
 	content.can_craft = can_craft
-	content.fail_reason = fail_reason and Localize(fail_reason)
+	content.fail_reason = fail_reason and Localize(fail_reason, true, localization_context)
 end
 
 ViewElementCraftingRecipe.can_craft = function (self)

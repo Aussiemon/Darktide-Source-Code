@@ -243,7 +243,7 @@ BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 		end
 	end
 
-	scratchpad.behavior_component.move_state = "attacking"
+	scratchpad.behavior_component.move_state = "idle"
 
 	local aim_durations = action_data.aim_duration[scratchpad.current_aim_anim_event]
 	local diff_aim_durations = Managers.state.difficulty:get_table_entry_by_challenge(aim_durations)
@@ -421,21 +421,24 @@ BtShootAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, 
 	local combat_vector_component = scratchpad.combat_vector_component
 	local combat_vector_position = combat_vector_component.position:unbox()
 	local wanted_position = combat_vector_position
-	local perception_component = scratchpad.perception_component
-	local target_distance = perception_component.target_distance
-	local self_position = POSITION_LOOKUP[unit]
-	local distance = Vector3.distance(self_position, combat_vector_position)
-	local target_unit = perception_component.target_unit
-	local target_position = POSITION_LOOKUP[perception_component.target_unit]
-	local target_to_combat_vector_distance = Vector3.distance(combat_vector_position, target_position)
 
-	if distance < action_data.strafe_shoot_distance or target_distance < target_to_combat_vector_distance then
-		local ranged_position = action_data.strafe_shoot_ranged_position_fallback and MinionMovement.find_ranged_position(unit, t, scratchpad, action_data, target_unit)
+	if not action_data.strafe_shoot_combat_vector then
+		local perception_component = scratchpad.perception_component
+		local target_distance = perception_component.target_distance
+		local self_position = POSITION_LOOKUP[unit]
+		local distance = Vector3.distance(self_position, combat_vector_position)
+		local target_unit = perception_component.target_unit
+		local target_position = POSITION_LOOKUP[perception_component.target_unit]
+		local target_to_combat_vector_distance = Vector3.distance(combat_vector_position, target_position)
 
-		if ranged_position and Vector3.distance(ranged_position, self_position) > action_data.strafe_shoot_distance then
-			wanted_position = ranged_position
-		else
-			return
+		if distance < action_data.strafe_shoot_distance or target_distance < target_to_combat_vector_distance then
+			local ranged_position = action_data.strafe_shoot_ranged_position_fallback and MinionMovement.find_ranged_position(unit, t, scratchpad, action_data, target_unit)
+
+			if ranged_position and Vector3.distance(ranged_position, self_position) > action_data.strafe_shoot_distance then
+				wanted_position = ranged_position
+			else
+				return
+			end
 		end
 	end
 
@@ -500,6 +503,7 @@ BtShootAction._update_trying_to_strafe_shoot = function (self, unit, t, scratchp
 
 	scratchpad.moving_direction_name = nil
 	scratchpad.state = "strafe_shooting"
+	scratchpad.extra_spread_multiplier = action_data.strafe_extra_spread_multiplier
 
 	if scratchpad.is_anim_rotation_driven then
 		MinionMovement.set_anim_rotation_driven(scratchpad, false)
@@ -520,8 +524,13 @@ BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, act
 	end
 
 	local target_unit = scratchpad.perception_component.target_unit
+	local valid_angle = MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
 
-	MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+	if not valid_angle then
+		self:_stop_strafe_shooting(unit, t, scratchpad, action_data)
+
+		return true
+	end
 
 	if not scratchpad.shooting then
 		local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
@@ -578,6 +587,8 @@ BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, act
 
 	scratchpad.locomotion_extension:set_wanted_rotation(wanted_rotation)
 
+	scratchpad.behavior_component.move_state = "attacking"
+
 	local has_reached_destination = navigation_extension:has_reached_destination()
 
 	if has_reached_destination then
@@ -625,6 +636,9 @@ end
 BtShootAction._stop_strafe_shooting = function (self, unit, t, scratchpad, action_data)
 	scratchpad.navigation_extension:set_enabled(false)
 	scratchpad.animation_extension:anim_event(action_data.strafe_end_anim_event)
+
+	scratchpad.behavior_component.move_state = "idle"
+	scratchpad.extra_spread_multiplier = nil
 
 	if scratchpad.shooting then
 		scratchpad.state = "shooting"

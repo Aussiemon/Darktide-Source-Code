@@ -28,6 +28,10 @@ InputDevice.init = function (self, raw_device, device_type, slot)
 		InputDevice.last_pressed_device = self
 		InputDevice.last_pressed_of_type[device_type] = self
 		InputDevice.gamepad_active = self._is_gamepad
+	elseif IS_PLAYSTATION and device_type == "ps4_controller" and not InputDevice.gamepad_active and PS5.initial_user_id() == raw_device.user_id() then
+		InputDevice.last_pressed_device = self
+		InputDevice.last_pressed_of_type[device_type] = self
+		InputDevice.gamepad_active = self._is_gamepad
 	end
 end
 

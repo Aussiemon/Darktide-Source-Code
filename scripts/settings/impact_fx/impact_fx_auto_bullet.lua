@@ -17,8 +17,8 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -27,8 +27,8 @@ local unarmored = {
 		},
 		died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 		},
 		weakspot_damage = {
@@ -432,7 +432,7 @@ local super_armor = {
 				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
 			},
 			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
 				only_1p = true,
 			},
 		},
@@ -448,20 +448,20 @@ local super_armor = {
 				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
 			},
 			{
-				event = "wwise/events/weapon/play_indicator_weakspot",
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
 				only_1p = true,
 			},
 		},
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
 			},
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
 			},
 		},
 		damage_negated = {
@@ -639,8 +639,8 @@ local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -649,8 +649,8 @@ local disgustingly_resilient = {
 		},
 		died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 		},
 		weakspot_damage = {

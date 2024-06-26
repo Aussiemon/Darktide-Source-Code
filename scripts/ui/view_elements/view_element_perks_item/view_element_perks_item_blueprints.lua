@@ -51,7 +51,7 @@ weapon_perk_style.offset = {
 	10,
 }
 weapon_perk_style.size_addition = {
-	-55,
+	-105,
 	0,
 }
 weapon_perk_style.font_size = 18

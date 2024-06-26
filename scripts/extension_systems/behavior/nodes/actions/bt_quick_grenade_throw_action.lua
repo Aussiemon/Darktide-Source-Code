@@ -294,7 +294,7 @@ end
 BtQuickGrenadeThrowAction._aim_at_target = function (self, unit, scratchpad)
 	local perception_component = scratchpad.perception_component
 
-	if not perception_component.has_line_of_sight then
+	if not perception_component.has_line_of_sight and not perception_component.has_good_last_los_position then
 		return
 	end
 

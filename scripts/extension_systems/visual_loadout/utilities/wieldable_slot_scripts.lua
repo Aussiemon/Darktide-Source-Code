@@ -61,15 +61,15 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 	local item_wieldable_slot_scripts = item.wieldable_slot_scripts or EMPTY_TABLE
 	local num_scripts = #item_wieldable_slot_scripts
 
-	for i = 1, num_scripts do
-		all_wieldable_slot_scripts[i] = item_wieldable_slot_scripts[i]
+	for ii = 1, num_scripts do
+		all_wieldable_slot_scripts[ii] = item_wieldable_slot_scripts[ii]
 	end
 
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local weapon_template_wieldable_slot_scripts = weapon_template.wieldable_slot_scripts or EMPTY_TABLE
 
-	for i = 1, #weapon_template_wieldable_slot_scripts do
-		local script_name = weapon_template_wieldable_slot_scripts[i]
+	for ii = 1, #weapon_template_wieldable_slot_scripts do
+		local script_name = weapon_template_wieldable_slot_scripts[ii]
 		local already_defined = table.find(all_wieldable_slot_scripts, script_name)
 
 		if not already_defined then
@@ -80,8 +80,8 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 
 	local actual_num_scripts = 0
 
-	for i = num_scripts, 1, -1 do
-		local script_name = all_wieldable_slot_scripts[i]
+	for ii = num_scripts, 1, -1 do
+		local script_name = all_wieldable_slot_scripts[ii]
 		local script_class = CLASSES[script_name]
 
 		if script_class then

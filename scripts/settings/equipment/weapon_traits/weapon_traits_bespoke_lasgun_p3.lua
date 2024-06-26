@@ -199,14 +199,26 @@ templates.weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 		{
 			target_buff_data = {
-				max_stacks = 10,
+				max_stacks = 3,
+				num_stacks_on_proc = 1,
+			},
+		},
+		{
+			target_buff_data = {
+				max_stacks = 6,
 				num_stacks_on_proc = 2,
 			},
 		},
-		[4] = {
+		{
+			target_buff_data = {
+				max_stacks = 9,
+				num_stacks_on_proc = 3,
+			},
+		},
+		{
 			target_buff_data = {
 				max_stacks = 12,
-				num_stacks_on_proc = 3,
+				num_stacks_on_proc = 4,
 			},
 		},
 	},

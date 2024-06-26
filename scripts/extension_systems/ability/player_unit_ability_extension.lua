@@ -404,7 +404,7 @@ end
 
 local action_params = {}
 
-function _fill_action_params(params, data, component_name, unit_data_extension, ability_components)
+local function _fill_action_params(params, data, component_name, unit_data_extension, ability_components)
 	local ability = data.ability
 	local ability_type = ability.ability_type
 

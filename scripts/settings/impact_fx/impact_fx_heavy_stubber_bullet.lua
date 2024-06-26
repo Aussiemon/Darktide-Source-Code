@@ -17,24 +17,32 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
 				only_1p = true,
 			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
 				only_1p = true,
 			},
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_large",
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -44,37 +52,37 @@ local unarmored = {
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_large",
 			},
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_large",
 			},
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_large",
 			},
 		},
 	},
@@ -224,17 +232,25 @@ local armored = {
 				event = "wwise/events/weapon/play_indicator_weakspot_armored",
 				only_1p = true,
 			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
 			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot_armored",
@@ -244,37 +260,37 @@ local armored = {
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 		},
 	},
@@ -435,17 +451,25 @@ local super_armor = {
 				event = "wwise/events/weapon/play_indicator_weakspot",
 				only_1p = true,
 			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		died = {
 			{
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
 			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -455,37 +479,37 @@ local super_armor = {
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 		},
 	},
@@ -639,24 +663,32 @@ local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
 				only_1p = true,
 			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true,
+			},
 		},
 		died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
 				only_1p = true,
 			},
 		},
 		weakspot_damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored_large",
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -666,37 +698,37 @@ local disgustingly_resilient = {
 		damage = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_large",
 			},
 		},
 		damage_reduced = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_large",
 			},
 		},
 		damage_negated = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		shield_blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		blocked = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_large",
 			},
 		},
 		dead = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_large",
 			},
 		},
 	},
@@ -915,7 +947,7 @@ local default_surface_fx = {
 		sfx = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen",
+				event = "wwise/events/weapon/play_bullet_hits_gen_large",
 				group = "surface_material",
 				normal_rotation = true,
 			},
@@ -933,7 +965,7 @@ local default_surface_fx = {
 		sfx = {
 			{
 				append_husk_to_event_name = true,
-				event = "wwise/events/weapon/play_bullet_hits_gen",
+				event = "wwise/events/weapon/play_bullet_hits_gen_large",
 				group = "surface_material",
 				normal_rotation = true,
 			},

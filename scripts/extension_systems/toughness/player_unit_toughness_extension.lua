@@ -209,8 +209,12 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local is_melee_kill = recovery_type == toughness_replenish_types.melee_kill
 	local toughness_melee_replenish_stat_buff = is_melee_kill and stat_buffs.toughness_melee_replenish or 1
-	local total_toughness_replenish_stat_buff = stat_buffs.toughness_replenish_multiplier
+	local total_toughness_replenish_stat_buff = stat_buffs.toughness_replenish_modifier
+	local total_toughness_replenish_multiplier = stat_buffs.toughness_replenish_multiplier or 1
 	local stat_buff_multiplier = toughness_melee_replenish_stat_buff + total_toughness_replenish_stat_buff - 1
+
+	stat_buff_multiplier = stat_buff_multiplier * total_toughness_replenish_multiplier
+
 	local recovery_percentage = toughness_template.recovery_percentages[recovery_type] * stat_buff_multiplier * modifier
 	local wanted_amount = max_toughness * recovery_percentage
 	local new_toughness = math.max(0, toughness_damage - wanted_amount)
@@ -238,9 +242,10 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 
 	if not ignore_stat_buffs then
 		local stat_buffs = self._buff_extension:stat_buffs()
-		local stat_buff_multiplier = stat_buffs.toughness_replenish_multiplier
+		local stat_buff_multiplier = stat_buffs.toughness_replenish_modifier
+		local total_toughness_replenish_multiplier = stat_buffs.toughness_replenish_multiplier or 1
 
-		fixed_percentage = fixed_percentage * stat_buff_multiplier
+		fixed_percentage = fixed_percentage * stat_buff_multiplier * total_toughness_replenish_multiplier
 	end
 
 	local wanted_amount = max_toughness * fixed_percentage
@@ -281,9 +286,10 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 
 	if not ignore_stat_buffs then
 		local stat_buffs = self._buff_extension:stat_buffs()
-		local stat_buff_multiplier = stat_buffs.toughness_replenish_multiplier
+		local stat_buff_multiplier = stat_buffs.toughness_replenish_modifier
+		local total_toughness_replenish_multiplier = stat_buffs.toughness_replenish_multiplier or 1
 
-		amount = amount * stat_buff_multiplier
+		amount = amount * stat_buff_multiplier * total_toughness_replenish_multiplier
 	end
 
 	local new_toughness = math.max(0, toughness_damage - amount)

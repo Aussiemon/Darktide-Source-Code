@@ -330,11 +330,12 @@ FootIk._surface_sampling = function (self, unit_pose, left_ref_pose, right_ref_p
 	surface_sample.right.move = Vector3.lerp(Vector3Box.unbox(past_surface_sample.right.move), surface_sample.right.move, self.dt * self.feet_move_speed)
 	surface_sample.left.orient = Quaternion.lerp(QuaternionBox.unbox(past_surface_sample.left.orient), surface_sample.left.orient, self.dt * self.feet_orient_speed)
 	surface_sample.right.orient = Quaternion.lerp(QuaternionBox.unbox(past_surface_sample.right.orient), surface_sample.right.orient, self.dt * self.feet_orient_speed)
-	past_surface_sample.hips.move = Vector3Box(surface_sample.hips.move)
-	past_surface_sample.left.move = Vector3Box(surface_sample.left.move)
-	past_surface_sample.right.move = Vector3Box(surface_sample.right.move)
-	past_surface_sample.left.orient = QuaternionBox(surface_sample.left.orient)
-	past_surface_sample.right.orient = QuaternionBox(surface_sample.right.orient)
+
+	Vector3Box.store(past_surface_sample.hips.move, surface_sample.hips.move)
+	Vector3Box.store(past_surface_sample.left.move, surface_sample.left.move)
+	Vector3Box.store(past_surface_sample.right.move, surface_sample.right.move)
+	QuaternionBox.store(past_surface_sample.left.orient, surface_sample.left.orient)
+	QuaternionBox.store(past_surface_sample.right.orient, surface_sample.right.orient)
 end
 
 FootIk._lean_in_acceleration_sampling = function (self, leaning_sample, past_leaning_sample)

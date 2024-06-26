@@ -138,6 +138,12 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(StateGameplayTestify, self._gameplay_state, shared_state.nav_world)
 	end
+
+	if GameParameters.nvidia_ai_agent and not is_dedicated_server then
+		local nvidia_ai_agent = shared_state.nvidia_ai_agent
+
+		nvidia_ai_agent:update(dt, t)
+	end
 end
 
 GameplayStateRun.post_update = function (self, main_dt, main_t)

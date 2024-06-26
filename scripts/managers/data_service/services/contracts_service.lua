@@ -35,6 +35,10 @@ ContractsService.has_contract = function (self, character_id)
 	return self._backend_interface.contracts:get_current_contract(character_id, nil, false):next(function ()
 		return true
 	end, function (error)
+		if error.code ~= 404 then
+			Log.warning("ContractsService", "Failed to fetch contracts with error: %s", table.tostring(error, 5))
+		end
+
 		return false
 	end)
 end

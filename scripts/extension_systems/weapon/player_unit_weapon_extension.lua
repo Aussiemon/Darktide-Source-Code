@@ -20,7 +20,7 @@ local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_t
 local attack_types = AttackSettings.attack_types
 local buff_target_component_lookups = WeaponTweakTemplateSettings.buff_target_component_lookups
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
-local inventory_component_data = PlayerCharacterConstants.inventory_component_data
+local inventory_slot_component_data = PlayerCharacterConstants.inventory_slot_component_data
 local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local slot_configuration_by_type = PlayerCharacterConstants.slot_configuration_by_type
@@ -376,11 +376,11 @@ PlayerUnitWeaponExtension.on_player_unit_spawn = function (self, spawn_ammo_perc
 	local unit_data_extension = self._unit_data_extension
 
 	for slot_name, config in pairs(slot_configuration_by_type.weapon) do
-		local wieldable_component = unit_data_extension:write_component(slot_name)
-		local ammo_reserve = wieldable_component.current_ammunition_reserve
+		local inventory_slot_component = unit_data_extension:write_component(slot_name)
+		local ammo_reserve = inventory_slot_component.current_ammunition_reserve
 		local spawn_ammo_reserve = math.ceil(ammo_reserve * spawn_ammo_percentage)
 
-		wieldable_component.current_ammunition_reserve = spawn_ammo_reserve
+		inventory_slot_component.current_ammunition_reserve = spawn_ammo_reserve
 	end
 end
 
@@ -388,11 +388,11 @@ PlayerUnitWeaponExtension.on_player_unit_respawn = function (self, respawn_ammo_
 	local unit_data_extension = self._unit_data_extension
 
 	for slot_name, config in pairs(slot_configuration_by_type.weapon) do
-		local wieldable_component = unit_data_extension:write_component(slot_name)
-		local ammo_reserve = wieldable_component.current_ammunition_reserve
+		local inventory_slot_component = unit_data_extension:write_component(slot_name)
+		local ammo_reserve = inventory_slot_component.current_ammunition_reserve
 		local respawn_ammo_reserve = math.ceil(ammo_reserve * respawn_ammo_percentage)
 
-		wieldable_component.current_ammunition_reserve = respawn_ammo_reserve
+		inventory_slot_component.current_ammunition_reserve = respawn_ammo_reserve
 	end
 end
 
@@ -428,20 +428,25 @@ PlayerUnitWeaponExtension.damage_profile_lerp_values = function (self, damage_pr
 	return damage_profile_lerp_values or action_lerp_values or NO_LERP_VALUES
 end
 
-PlayerUnitWeaponExtension.explosion_template_lerp_values = function (self, explosion_template_name_or_nil)
+PlayerUnitWeaponExtension.explosion_template_lerp_values = function (self, explosion_template_name_or_nil, override_action_name_or_nil)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 
 	if not weapon then
 		return NO_LERP_VALUES
 	end
 
-	local running_action_name = self._action_handler:running_action_name("weapon_action")
+	local running_action_name = override_action_name_or_nil or self._action_handler:running_action_name("weapon_action")
 
 	if not running_action_name then
 		return NO_LERP_VALUES
 	end
 
 	local weapon_explosion_template_lerp_values = weapon.explosion_template_lerp_values
+
+	if not weapon_explosion_template_lerp_values then
+		return NO_LERP_VALUES
+	end
+
 	local action_lerp_values = weapon_explosion_template_lerp_values[running_action_name]
 	local explosion_template_lerp_values = explosion_template_name_or_nil and action_lerp_values and action_lerp_values[explosion_template_name_or_nil]
 
@@ -508,11 +513,11 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 	weapons[slot_name] = weapon
 
 	local config = slot_configuration[slot_name]
-	local component_data = inventory_component_data[config.slot_type]
+	local slot_component_data = inventory_slot_component_data[config.slot_type]
 	local base_ammo = {}
 	local base_clip = {}
 
-	for key, data in pairs(component_data) do
+	for key, data in pairs(slot_component_data) do
 		if key == "current_ammunition_clip" or key == "max_ammunition_clip" then
 			local clip_size = 0
 			local template_name = weapon_template.ammo_template or "none"
@@ -582,9 +587,9 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 	end
 
 	local config = slot_configuration[slot_name]
-	local component_data = inventory_component_data[config.slot_type]
+	local slot_component_data = inventory_slot_component_data[config.slot_type]
 
-	for key, data in pairs(component_data) do
+	for key, data in pairs(slot_component_data) do
 		if key == "unequip_slot" then
 			-- Nothing
 		else
@@ -1154,6 +1159,15 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 	end
 end
 
+local CHARGE_ACTIONS = {
+	chain_lightning = true,
+	charge = true,
+	charge_ammo = true,
+	overload_charge = true,
+	overload_charge_position_finder = true,
+	overload_charge_target_finder = true,
+}
+
 PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local weapon_template = weapon and weapon.weapon_template
@@ -1165,6 +1179,23 @@ PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 	end
 
 	local weapon_action_speed_mod = self._weapon_action_movement:move_speed_modifier(t)
+
+	if weapon_template then
+		local actions = weapon_template.actions
+		local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, actions)
+		local is_charge_action = action_settings and CHARGE_ACTIONS[action_settings.kind]
+
+		if is_charge_action then
+			local buff_extension = self._buff_extension
+			local stat_buffs = buff_extension:stat_buffs()
+			local charge_movement_reduction_multiplier = stat_buffs.charge_movement_reduction_multiplier
+			local diff = 1 - weapon_action_speed_mod
+
+			diff = diff * charge_movement_reduction_multiplier
+			weapon_action_speed_mod = 1 - diff
+		end
+	end
+
 	local modifier = alternate_fire_speed_mod * weapon_action_speed_mod
 	local static_speed_reduction_mod = weapon_template and weapon_template.static_speed_reduction_mod
 

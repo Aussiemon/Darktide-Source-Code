@@ -48,8 +48,8 @@ MainMenuView.on_enter = function (self)
 	self:_set_waiting_for_characters(false)
 	self:_setup_interactions()
 
-	if IS_XBS then
-		self._widgets_by_name.gamertag.content.gamertag = Managers.account:gamertag()
+	if IS_XBS or IS_PLAYSTATION then
+		self._widgets_by_name.gamertag.content.gamertag = Managers.account:user_display_name()
 	end
 
 	if GameParameters.reset_keybind_on_start and not self._keybind_is_reset_on_start then
@@ -296,8 +296,8 @@ MainMenuView._event_profiles_changed = function (self, profiles)
 
 	self:_sync_character_slots()
 
-	local profiles = self._character_profiles
-	local num_characters = #profiles or 0
+	local profile_list = self._character_profiles
+	local num_characters = #profile_list or 0
 	local max_num_characters = MainMenuViewSettings.max_num_characters
 	local slots_remaining = num_characters < max_num_characters and max_num_characters - num_characters or 0
 
@@ -594,7 +594,7 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 			self:_on_create_character_pressed()
 		elseif IS_XBS and input_service:get("cycle_list_secondary") then
 			Managers.account:show_profile_picker()
-		elseif IS_XBS and input_service:get("back") and InputDevice.gamepad_active then
+		elseif (IS_XBS or IS_PLAYSTATION) and input_service:get("back") and InputDevice.gamepad_active then
 			Managers.account:return_to_title_screen()
 		end
 	end

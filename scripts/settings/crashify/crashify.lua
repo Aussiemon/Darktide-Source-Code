@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/settings/crashify/crashify.lua
 
 local settings = {
-	branch = "rel_Patch1.3.0x_external",
-	project = "bishop",
+	branch = "rel_Patch1.4.0x_external",
+	project = "darktide",
 }
 
 return settings

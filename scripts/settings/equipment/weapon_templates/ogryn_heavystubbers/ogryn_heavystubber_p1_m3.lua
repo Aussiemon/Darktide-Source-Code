@@ -772,7 +772,7 @@ weapon_template.entry_actions = {
 	primary_action = "action_shoot_hip",
 	secondary_action = "action_zoom",
 }
-weapon_template.anim_state_machine_3p = "content/characters/player/ogryn/third_person/animations/heavy_stubber"
+weapon_template.anim_state_machine_3p = "content/characters/player/ogryn/third_person/animations/heavy_stubber_twin_linked"
 weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_person/animations/heavy_stubber_twin_linked"
 weapon_template.reload_template = ReloadTemplates.heavy_stubber_twin_linked
 weapon_template.sway_template = "ogyn_heavy_stubber_sway"

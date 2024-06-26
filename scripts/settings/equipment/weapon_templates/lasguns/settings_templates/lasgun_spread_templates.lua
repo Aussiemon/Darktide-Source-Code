@@ -2285,12 +2285,12 @@ spread_templates.hip_lasgun_p3_m1 = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 1.6,
-				lerp_perfect = 1.4,
+				lerp_basic = 1.8,
+				lerp_perfect = 1.5,
 			},
 			min_yaw = {
-				lerp_basic = 1.6,
-				lerp_perfect = 1.4,
+				lerp_basic = 1.8,
+				lerp_perfect = 1.5,
 			},
 		},
 		randomized_spread = {
@@ -2348,12 +2348,12 @@ spread_templates.hip_lasgun_p3_m1 = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 1.8,
-				lerp_perfect = 1.6,
+				lerp_basic = 1.9,
+				lerp_perfect = 1.7,
 			},
 			min_yaw = {
-				lerp_basic = 1.8,
-				lerp_perfect = 1.6,
+				lerp_basic = 1.9,
+				lerp_perfect = 1.7,
 			},
 		},
 	},
@@ -2364,12 +2364,12 @@ spread_templates.hip_lasgun_p3_m1 = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 1.6,
-				lerp_perfect = 1.4,
+				lerp_basic = 1.8,
+				lerp_perfect = 1.5,
 			},
 			min_yaw = {
-				lerp_basic = 1.6,
-				lerp_perfect = 1.4,
+				lerp_basic = 1.8,
+				lerp_perfect = 1.5,
 			},
 		},
 	},

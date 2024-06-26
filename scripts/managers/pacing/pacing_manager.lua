@@ -9,7 +9,7 @@ local RoamerPacing = require("scripts/managers/pacing/roamer_pacing/roamer_pacin
 local SpecialsPacing = require("scripts/managers/pacing/specials_pacing/specials_pacing")
 local PacingManager = class("PacingManager")
 
-PacingManager.init = function (self, world, nav_world, level_name, level_seed, pacing_control)
+PacingManager.init = function (self, world, nav_world, level_seed, pacing_control)
 	self._tension = 0
 	self._total_challenge_rating = 0
 	self._num_aggroed_minions = 0
@@ -24,11 +24,24 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed, p
 	local template = PacingTemplates.default
 
 	self._template = template
-	self._roamer_pacing = RoamerPacing:new(nav_world, level_name, level_seed, pacing_control)
+
+	local side_id, target_side_id = 2, 1
+	local side_system = Managers.state.extension:system("side_system")
+	local side_names = side_system:side_names()
+	local side_name = side_names[side_id]
+
+	self._side_id, self._side_name, self._target_side_id = side_id, side_name, target_side_id
+
+	local game_mode_settings = Managers.state.game_mode:settings()
+	local side_sub_faction_types = game_mode_settings.side_sub_faction_types
+	local sub_faction_types = side_sub_faction_types[side_name]
+
+	self._roamer_pacing = RoamerPacing:new(nav_world, level_seed, sub_faction_types)
 	self._horde_pacing = HordePacing:new(nav_world)
 	self._specials_pacing = SpecialsPacing:new(nav_world)
 	self._monster_pacing = MonsterPacing:new(nav_world)
-	self._side_system = Managers.state.extension:system("side_system")
+	self._side_sub_faction_types = side_sub_faction_types
+	self._side_system = side_system
 	self._paused_spawn_types = {}
 	self._pause_durations = {}
 	self._player_tension = {}
@@ -115,7 +128,7 @@ PacingManager.destroy = function (self)
 end
 
 PacingManager.update = function (self, dt, t)
-	local side_id, target_side_id = 2, 1
+	local side_id, target_side_id = self._side_id, self._target_side_id
 
 	self:_update_player_combat_state(dt, target_side_id)
 
@@ -370,7 +383,7 @@ PacingManager.add_damage_tension = function (self, tension_type, damage, attacke
 	local diff_table = MinionDifficultySettings.damage_tension_to_add[tension_type]
 	local value = Managers.state.difficulty:get_table_entry_by_challenge(diff_table)
 	local tension = damage * value
-	local side_id = 1
+	local side_id = self._target_side_id
 	local side = self._side_system:get_side(side_id)
 	local valid_player_units = side.valid_player_units
 	local num_valid_player_units = #valid_player_units
@@ -425,8 +438,8 @@ local MAX_OUT_TENSION_BY_CHALLENGE = {
 		false,
 	},
 	{
-		true,
-		true,
+		false,
+		false,
 		false,
 		false,
 	},
@@ -625,6 +638,13 @@ end
 
 PacingManager.get_ramp_up_frequency_modifier = function (self, spawn_type)
 	return self._ramp_up_frequency_modifiers[spawn_type] or 1
+end
+
+PacingManager.get_max_ramp_up_frequency_modifier = function (self, spawn_type)
+	local ramp_up_frequency_settings = self._ramp_up_frequency_settings
+	local max_ramp_modifier = ramp_up_frequency_settings.ramp_modifiers and ramp_up_frequency_settings.ramp_modifiers[spawn_type]
+
+	return max_ramp_modifier
 end
 
 PacingManager.player_unit_combat_state = function (self, player_unit)
@@ -987,8 +1007,14 @@ PacingManager.is_decaying_tension = function (self)
 	return self._is_decaying_tension
 end
 
-PacingManager.current_faction = function (self)
-	return self._roamer_pacing:current_faction()
+PacingManager.current_faction = function (self, optional_side_name)
+	local side_name = optional_side_name or self._side_name
+
+	if side_name == self._side_name then
+		return self._roamer_pacing:current_faction()
+	else
+		return self._side_sub_faction_types[side_name][1]
+	end
 end
 
 PacingManager.current_density_type = function (self)

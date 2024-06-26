@@ -854,7 +854,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 			if id then
 				local item = MasterItems.get_item(id)
 
-				if item and self:_item_valid_by_current_profile(item) and selected_slot_name == item.slots[1] then
+				if item and self:_item_valid_by_current_profile(item) and table.find(item.slots, selected_slot_name) then
 					local valid = true
 
 					if valid then
@@ -868,24 +868,28 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 	end)
 	promises[#promises + 1] = Managers.data_service.penance_track:get_track(PENANCE_TRACK_ID):next(function (data)
 		local penance_track_items = {}
-		local tiers = data.tiers
+		local tiers = data and data.tiers
 
-		for i = 1, #tiers do
-			local tier = tiers[i]
-			local tier_rewards = tier.rewards
+		if tiers then
+			for i = 1, #tiers do
+				local tier = tiers[i]
+				local tier_rewards = tier.rewards
 
-			for reward_name, reward in pairs(tier_rewards) do
-				if reward.type == "item" then
-					local reward_item = MasterItems.get_item(reward.id)
+				if tier_rewards then
+					for reward_name, reward in pairs(tier_rewards) do
+						if reward.type == "item" then
+							local reward_item = MasterItems.get_item(reward.id)
 
-					if reward_item and self:_item_valid_by_current_profile(reward_item) and selected_slot_name == reward_item.slots[1] then
-						local valid = true
+							if reward_item and self:_item_valid_by_current_profile(reward_item) and table.find(reward_item.slots, selected_slot_name) then
+								local valid = true
 
-						if valid then
-							penance_track_items[#penance_track_items + 1] = {
-								item = reward_item,
-								label = Localize("loc_item_source_penance_track"),
-							}
+								if valid then
+									penance_track_items[#penance_track_items + 1] = {
+										item = reward_item,
+										label = Localize("loc_item_source_penance_track"),
+									}
+								end
+							end
 						end
 					end
 				end
@@ -909,7 +913,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 	for _, achievement in pairs(achievements) do
 		local reward_item = AchievementUIHelper.get_reward_item(achievement)
 
-		if reward_item and self:_item_valid_by_current_profile(reward_item) and selected_slot_name == reward_item.slots[1] then
+		if reward_item and self:_item_valid_by_current_profile(reward_item) and table.find(reward_item.slots, selected_slot_name) then
 			local description_text
 
 			if achievement.type == "meta" then

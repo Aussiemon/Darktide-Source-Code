@@ -3,8 +3,7 @@
 local Action = require("scripts/utilities/weapon/action")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local InputDevice = require("scripts/managers/input/input_device")
-local Item = require("scripts/utilities/items")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local TextUtilities = require("scripts/utilities/ui/text")
 local TextUtils = require("scripts/utilities/ui/text")
@@ -17,6 +16,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local WeaponStats = require("scripts/utilities/weapon_stats")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponUIStatsTemplates = require("scripts/settings/equipment/weapon_ui_stats_templates")
+local Promise = require("scripts/foundation/utilities/promise")
 
 local function _generated_icon_visibility(content, style)
 	local use_placeholder_texture = content.use_placeholder_texture
@@ -743,6 +743,22 @@ local function generate_blueprints_function(grid_size, optional_item)
 	damage_legend_style.text_vertical_alignment = "top"
 	damage_legend_style.text_color = Color.white(255, true)
 
+	local function _generate_background_pass()
+		return {
+			pass_type = "rect",
+			style_id = "background",
+			style = {
+				visible = false,
+				offset = {
+					0,
+					0,
+					0,
+				},
+				color = Color.terminal_frame(50, true),
+			},
+		}
+	end
+
 	local function _generate_damage_grid_pass_templates(pass_grid_size, item)
 		local pass_templates = {}
 
@@ -775,30 +791,33 @@ local function generate_blueprints_function(grid_size, optional_item)
 		local impact_damage = attack_data.impact
 		local attack_data_def = attack_type_data.attack
 
-		for i = 1, #attack_data_def, 3 do
+		for ii = 1, #attack_data_def, 3 do
 			y_axis_headers[#y_axis_headers + 1] = {
-				name = attack_data_def[i],
-				display_name = UISettings.weapon_stats_armor_types[attack_data_def[i]],
+				name = attack_data_def[ii],
+				display_name = UISettings.weapon_stats_armor_types[attack_data_def[ii]],
 			}
 		end
 
-		for j = 1, #y_axis_headers do
-			for i = #x_axis_headers, 1, -1 do
-				local index = (j - 1) * #x_axis_headers + (#x_axis_headers - (i - 1))
+		local num_x_axis_headers = #x_axis_headers
+		local num_y_axis_headers = #y_axis_headers
+
+		for jj = 1, num_y_axis_headers do
+			for ii = #x_axis_headers, 1, -1 do
+				local index = (jj - 1) * num_x_axis_headers + (num_x_axis_headers - (ii - 1))
 				local damage = math.floor(attack_damage[index] + 0.5)
 				local impact = math.floor(impact_damage[index] + 0.5)
 
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
 					value = "content/ui/materials/frames/frame_tile_1px",
-					style_id = "hover_frame_border_" .. i .. "_" .. j,
+					style_id = "hover_frame_border_" .. ii .. "_" .. jj,
 					style = {
 						horizontal_alignment = "right",
 						scale_to_material = true,
 						vertical_alignment = "top",
 						offset = {
-							-20 - pass_grid_size[1] * (i - 1),
-							25 + pass_grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (ii - 1),
+							25 + pass_grid_size[2] * (jj - 1),
 							1,
 						},
 						size = pass_grid_size,
@@ -810,14 +829,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
 					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "hover_frame_corner_" .. i .. "_" .. j,
+					style_id = "hover_frame_corner_" .. ii .. "_" .. jj,
 					style = {
 						horizontal_alignment = "right",
 						scale_to_material = true,
 						vertical_alignment = "top",
 						offset = {
-							-20 - pass_grid_size[1] * (i - 1),
-							25 + pass_grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (ii - 1),
+							25 + pass_grid_size[2] * (jj - 1),
 							2,
 						},
 						size = pass_grid_size,
@@ -829,14 +848,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
 					value = "content/ui/materials/gradients/gradient_vertical",
-					style_id = "hover_bg_" .. i .. "_" .. j,
+					style_id = "hover_bg_" .. ii .. "_" .. jj,
 					style = {
 						horizontal_alignment = "right",
 						scale_to_material = true,
 						vertical_alignment = "top",
 						offset = {
-							-20 - pass_grid_size[1] * (i - 1),
-							25 + pass_grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (ii - 1),
+							25 + pass_grid_size[2] * (jj - 1),
 							2,
 						},
 						size = pass_grid_size,
@@ -845,17 +864,17 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "hotspot",
-					content_id = "hotspot_" .. (i - 1) * #y_axis_headers + j,
+					content_id = "hotspot_" .. (ii - 1) * num_y_axis_headers + jj,
 					content = table.merge(table.clone(default_button_content), {
-						x = i,
-						y = j,
+						x = ii,
+						y = jj,
 					}),
 					style = {
 						horizontal_alignment = "right",
 						vertical_alignment = "top",
 						offset = {
-							-20 - pass_grid_size[1] * (i - 1),
-							25 + pass_grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (ii - 1),
+							25 + pass_grid_size[2] * (jj - 1),
 							2,
 						},
 						size = pass_grid_size,
@@ -869,13 +888,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "text",
-					style_id = "damage_stat_" .. i .. "_" .. j,
-					value_id = "damage_stat_" .. i .. "_" .. j,
+					style_id = "damage_stat_" .. ii .. "_" .. jj,
+					value_id = "damage_stat_" .. ii .. "_" .. jj,
 					value = "{#color(171,91,81)}" .. damage .. "  {#color(95,152,180)}" .. impact,
 					style = table.merge_recursive(table.clone(damage_stat_style), {
 						offset = {
-							-15 - pass_grid_size[1] * (i - 1),
-							damage_stat_style.font_size * 0.5 + pass_grid_size[2] * 0.5 + pass_grid_size[2] * (j - 1),
+							-15 - pass_grid_size[1] * (ii - 1),
+							damage_stat_style.font_size * 0.5 + pass_grid_size[2] * 0.5 + pass_grid_size[2] * (jj - 1),
 							2,
 						},
 					}),
@@ -883,17 +902,17 @@ local function generate_blueprints_function(grid_size, optional_item)
 			end
 		end
 
-		for i = 1, #x_axis_headers do
-			local header = x_axis_headers[#x_axis_headers - (i - 1)]
+		for ii = 1, num_x_axis_headers do
+			local header = x_axis_headers[num_x_axis_headers - (ii - 1)]
 
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
-				style_id = "x_axis_header_" .. i,
-				value_id = "x_axis_header_" .. i,
+				style_id = "x_axis_header_" .. ii,
+				value_id = "x_axis_header_" .. ii,
 				value = Localize(header.display_name),
 				style = table.merge_recursive(table.clone(damage_grid_x_header_style), {
 					offset = {
-						-15 - pass_grid_size[1] * (i - 1),
+						-15 - pass_grid_size[1] * (ii - 1),
 						-5,
 						3,
 					},
@@ -901,18 +920,18 @@ local function generate_blueprints_function(grid_size, optional_item)
 			}
 		end
 
-		for i = #y_axis_headers, 1, -1 do
-			local header = y_axis_headers[i]
+		for ii = num_y_axis_headers, 1, -1 do
+			local header = y_axis_headers[ii]
 
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
-				style_id = "y_axis_header_" .. i,
-				value_id = "y_axis_header_" .. i,
+				style_id = "y_axis_header_" .. ii,
+				value_id = "y_axis_header_" .. ii,
 				value = Localize(header.display_name),
 				style = table.merge_recursive(table.clone(damage_grid_y_header_style), {
 					offset = {
-						-pass_grid_size[1] * #x_axis_headers - 30,
-						45 + pass_grid_size[2] * (i - 1),
+						-pass_grid_size[1] * num_x_axis_headers - 30,
+						45 + pass_grid_size[2] * (ii - 1),
 						3,
 					},
 				}),
@@ -927,7 +946,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			style = table.merge_recursive(table.clone(damage_legend_style), {
 				offset = {
 					-20,
-					pass_grid_size[2] * #y_axis_headers + 35,
+					pass_grid_size[2] * num_y_axis_headers + 35,
 					2,
 				},
 			}),
@@ -946,8 +965,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					2,
 				},
 				size = {
-					pass_grid_size[1] * #x_axis_headers + 10,
-					pass_grid_size[2] * #y_axis_headers + 10,
+					pass_grid_size[1] * num_x_axis_headers + 10,
+					pass_grid_size[2] * num_y_axis_headers + 10,
 				},
 				color = Color.terminal_text_body(60, true),
 			},
@@ -1351,7 +1370,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 		local displayed_attacks = weapon_template.displayed_attacks
 
 		if displayed_attacks then
-			local is_ranged_weapon = Item.is_weapon_template_ranged(item)
+			local is_ranged_weapon = Items.is_weapon_template_ranged(item)
 			local weapon_action_title_display_names = is_ranged_weapon and UISettings.weapon_action_title_display_names or UISettings.weapon_action_title_display_names_melee
 			local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
 			local num_elements = 0
@@ -1366,24 +1385,29 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 			local width = num_elements < 4 and grid_width - 100 or grid_width
 			local step = width / num_elements
+			local offset_index = 1
 
 			for index, key in ipairs(weapon_action_display_order_array) do
 				local data = displayed_attacks[key]
-				local base_offset = -step * (num_elements - 1) * 0.5 + (index - 1) * step
 
 				if data then
-					if data.attack_chain then
-						for i = 1, #data.attack_chain do
-							local pattern_width = 50 * #data.attack_chain
-							local icon_step = pattern_width / #data.attack_chain
-							local offset_x = base_offset + -icon_step * (#data.attack_chain - 1) * 0.5 + (i - 1) * icon_step
-							local attack_type = data.attack_chain[i]
+					local base_offset = -step * (num_elements - 1) * 0.5 + (offset_index - 1) * step
+					local attack_chain = data.attack_chain
+
+					if attack_chain then
+						local num_attack_chains = #attack_chain
+
+						for ii = 1, num_attack_chains do
+							local pattern_width = 50 * num_attack_chains
+							local icon_step = pattern_width / num_attack_chains
+							local offset_x = base_offset + -icon_step * (num_attack_chains - 1) * 0.5 + (ii - 1) * icon_step
+							local attack_type = attack_chain[ii]
 							local icon = UISettings.weapon_action_type_icons[attack_type] or "content/ui/materials/icons/traits/empty"
 
 							pass_templates[#pass_templates + 1] = {
 								pass_type = "texture",
-								value_id = "icon_" .. index .. "_" .. i,
-								style_id = "icon_" .. index .. "_" .. i,
+								value_id = "icon_" .. index .. "_" .. ii,
+								style_id = "icon_" .. index .. "_" .. ii,
 								value = icon,
 								style = {
 									horizontal_alignment = "center",
@@ -1402,15 +1426,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 									base_color = Color.terminal_text_body(255, true),
 								},
 								change_function = function (content, style, animations, dt)
-									local hotspot = content["icon_hotspot_" .. index .. "_" .. i]
+									local hotspot = content["icon_hotspot_" .. index .. "_" .. ii]
 
 									style.color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.base_color
 								end,
 							}
 							pass_templates[#pass_templates + 1] = {
 								pass_type = "hotspot",
-								style_id = "icon_hotspot_" .. index .. "_" .. i,
-								content_id = "icon_hotspot_" .. index .. "_" .. i,
+								style_id = "icon_hotspot_" .. index .. "_" .. ii,
+								content_id = "icon_hotspot_" .. index .. "_" .. ii,
 								content = default_button_content,
 								style = {
 									horizontal_alignment = "center",
@@ -1478,6 +1502,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							},
 						}
 					end
+
+					offset_index = offset_index + 1
 				end
 			end
 		end
@@ -1513,7 +1539,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 			content.extra_information = explosion_template and Localize("loc_weapon_stats_display_explosions_vary") or ""
 
-			local is_ranged_weapon = Item.is_weapon_template_ranged(item)
+			local is_ranged_weapon = Items.is_weapon_template_ranged(item)
 			local weapon_action_title_display_names = is_ranged_weapon and UISettings.weapon_action_title_display_names or UISettings.weapon_action_title_display_names_melee
 			local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
 			local key = weapon_action_display_order_array[attack_index]
@@ -1707,22 +1733,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	local function _generate_weapon_stats_passes(action_pass_optional_item)
 		local pass_templates = {
-			{
-				pass_type = "rect",
-				style_id = "background",
-				style = {
-					visible = false,
-					offset = {
-						0,
-						0,
-						0,
-					},
-					color = Color.terminal_frame(50, true),
-				},
-			},
+			_generate_background_pass(),
 		}
 
 		for ii = 1, 5 do
+			local base_offset_x = 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3)
+			local base_offset_y = 50 * ((ii - 1) % 2)
+
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
 				value = "n/a",
@@ -1731,8 +1748,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style = table.merge_recursive(table.clone(weapon_stat_text_style), {
 					horizontal_alignment = "left",
 					offset = {
-						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
-						10 + 50 * ((ii - 1) % 2),
+						20 + base_offset_x,
+						10 + base_offset_y,
 						3,
 					},
 				}),
@@ -1745,8 +1762,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style = table.merge_recursive(table.clone(stamina_value_style), {
 					text_horizontal_alignment = "left",
 					offset = {
-						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
-						10 + 50 * ((ii - 1) % 2) + 20,
+						20 + base_offset_x,
+						10 + base_offset_y + 20,
 						3,
 					},
 					text_color = {
@@ -1763,8 +1780,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style = {
 					horizontal_alignment = "left",
 					offset = {
-						22 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3) + bar_offset,
-						10 + 50 * ((ii - 1) % 2) + 28,
+						22 + base_offset_x + bar_offset,
+						10 + base_offset_y + 28,
 						3,
 					},
 					size = {
@@ -1780,8 +1797,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style = {
 					horizontal_alignment = "left",
 					offset = {
-						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3) + bar_offset,
-						10 + 50 * ((ii - 1) % 2) + 28 - 2,
+						20 + base_offset_x + bar_offset,
+						10 + base_offset_y + 28 - 2,
 						2,
 					},
 					size = {
@@ -1798,8 +1815,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style = {
 					horizontal_alignment = "left",
 					offset = {
-						22 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3) + bar_offset,
-						10 + 50 * ((ii - 1) % 2) + 28,
+						22 + base_offset_x + bar_offset,
+						10 + base_offset_y + 28,
 						5,
 					},
 					size = {
@@ -1815,7 +1832,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content = default_button_content,
 				style = {
 					offset = {
-						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
+						20 + base_offset_x,
 						60 * ((ii - 1) % 2),
 						0,
 					},
@@ -1834,8 +1851,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					horizontal_alignment = "left",
 					vertical_alignment = "top",
 					offset = {
-						15 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
-						50 * ((ii - 1) % 2) + 8,
+						15 + base_offset_x,
+						base_offset_y + 8,
 						0,
 					},
 					size = {
@@ -1858,8 +1875,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					scale_to_material = true,
 					vertical_alignment = "top",
 					offset = {
-						15 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
-						50 * ((ii - 1) % 2) + 8,
+						15 + base_offset_x,
+						base_offset_y + 8,
 						1,
 					},
 					size = {
@@ -1878,8 +1895,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					scale_to_material = true,
 					vertical_alignment = "top",
 					offset = {
-						15 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
-						50 * ((ii - 1) % 2) + 8,
+						15 + base_offset_x,
+						base_offset_y + 8,
 						2,
 					},
 					size = {
@@ -2056,17 +2073,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				50,
 			},
 			pass_template = {
-				{
-					pass_type = "rect",
-					style = {
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.terminal_frame(50, true),
-					},
-				},
+				_generate_background_pass(),
 				{
 					pass_type = "text",
 					style_id = "display_name",
@@ -2259,8 +2266,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 
 				local item = element.item
-				local display_name = ItemUtils.display_name(item)
-				local sub_display_name = ItemUtils.sub_display_name(item, nil, true)
+				local display_name = Items.display_name(item)
+				local sub_display_name = Items.sub_display_name(item, nil, true)
 
 				content.display_name = display_name
 				content.sub_display_name = sub_display_name
@@ -2270,11 +2277,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
 
-				local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+				local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
 				style.gradient_background.color = table.clone(rarity_color)
 
-				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
+				local item_level = item.override_item_rating_string or Items.item_level(item)
 
 				content.rating_value = item_level
 
@@ -2285,7 +2292,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				local weapon_stats = WeaponStats:new(item)
 				local main_stats = weapon_stats:get_main_stats()
-				local is_ranged_weapon = ItemUtils.is_weapon_template_ranged(item)
+				local is_ranged_weapon = Items.is_weapon_template_ranged(item)
 
 				if is_ranged_weapon and main_stats.magazine then
 					local magazine = main_stats.magazine
@@ -2341,7 +2348,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
-				local text = ItemUtils.display_name(item) .. "\n" .. ItemUtils.sub_display_name(item, nil, true)
+				local text = Items.display_name(item) .. "\n" .. Items.sub_display_name(item, nil, true)
 				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 25)
 
@@ -2364,9 +2371,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 				},
 				{
 					pass_type = "texture",
-					style_id = "background",
+					style_id = "gradient_background",
 					value = "content/ui/materials/gradients/gradient_vertical",
-					value_id = "background",
+					value_id = "gradient_background",
 					style = {
 						horizontal_alignment = "center",
 						vertical_alignment = "bottom",
@@ -2413,19 +2420,19 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 
 				local item = element.item
-				local display_name = ItemUtils.display_name(item)
-				local sub_display_name = ItemUtils.sub_display_name(item, nil, true)
+				local display_name = Items.display_name(item)
+				local sub_display_name = Items.sub_display_name(item, nil, true)
 
 				content.display_name = display_name
 				content.sub_display_name = sub_display_name
 
-				local sub_display_name_style = style.sub_display_name
 				local display_name_style = style.display_name
+				local sub_display_name_style = style.sub_display_name
 
 				if item.rarity then
-					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+					local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
-					style.background.color = table.clone(rarity_color_dark)
+					style.gradient_background.color = table.clone(rarity_color_dark)
 				end
 
 				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
@@ -2442,7 +2449,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local profile = element.profile
 				local display_name = ProfileUtils.title_item_name_no_color(item, profile)
-				local text = display_name .. "\n" .. ItemUtils.sub_display_name(item)
+				local text = display_name .. "\n" .. Items.sub_display_name(item)
 				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 25)
 
@@ -2465,9 +2472,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 				},
 				{
 					pass_type = "texture",
-					style_id = "background",
+					style_id = "gradient_background",
 					value = "content/ui/materials/gradients/gradient_vertical",
-					value_id = "background",
+					value_id = "gradient_background",
 					style = {
 						horizontal_alignment = "center",
 						vertical_alignment = "bottom",
@@ -2516,19 +2523,19 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local profile = element.profile
 				local display_name = ProfileUtils.title_item_name_no_color(item, profile)
-				local sub_display_name = ItemUtils.type_display_name(item)
+				local sub_display_name = Items.type_display_name(item)
 
 				content.display_name = display_name
 				content.sub_display_name = sub_display_name
 
-				local sub_display_name_style = style.sub_display_name
 				local display_name_style = style.display_name
+				local sub_display_name_style = style.sub_display_name
 
 				if item.rarity then
-					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+					local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
-					style.background.color = table.clone(rarity_color_dark)
-					display_name_style.text_color = table.clone(rarity_color)
+					style.gradient_background.color = table.clone(rarity_color_dark)
+					style.display_name.text_color = table.clone(rarity_color)
 				end
 
 				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
@@ -2689,40 +2696,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 					visibility_function = _loading_icon_visibility,
 					change_function = _loading_icon_change,
 				},
-				{
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "center",
-						vertical_alignment = "top",
-						size = {
-							grid_width,
-							1,
-						},
-						offset = {
-							0,
-							0,
-							10,
-						},
-						color = Color.terminal_grid_background(255, true),
-					},
-				},
-				{
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "center",
-						vertical_alignment = "bottom",
-						size = {
-							grid_width,
-							1,
-						},
-						offset = {
-							0,
-							0,
-							10,
-						},
-						color = Color.terminal_grid_background(255, true),
-					},
-				},
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
@@ -2732,8 +2705,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				local item = element.item
 
-				content.display_name = ItemUtils.display_name(item)
-				content.sub_display_name = ItemUtils.sub_display_name(item)
+				content.display_name = Items.display_name(item)
+				content.sub_display_name = Items.sub_display_name(item)
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -2911,25 +2884,25 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 
 				local item = element.item
-				local display_name = ItemUtils.display_name(item)
-				local sub_display_name = ItemUtils.sub_display_name(item)
+				local display_name = Items.display_name(item)
+				local sub_display_name = Items.sub_display_name(item)
+				local sub_display_name_style = style.sub_display_name
 
 				content.display_name = display_name
 				content.sub_display_name = sub_display_name
-
-				local sub_display_name_style = style.sub_display_name
-				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
-
-				content.rating_value = item_level
 
 				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
 
 				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
 
+				local rating_value = item.override_item_rating_string or Items.item_level(item)
+
+				content.rating_value = rating_value
+
 				local item_rarity = item.rarity
 
 				if item_rarity then
-					local rarity_color = ItemUtils.rarity_color(item)
+					local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
 					style.background.color = table.clone(rarity_color)
 					style.display_name.text_color = table.clone(rarity_color)
@@ -3377,7 +3350,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				local item = element.item
 
-				content.text = ItemUtils.keywords_text(item)
+				content.text = Items.keywords_text(item)
 
 				local text_width = _style_text_width(content.text, style.text, ui_renderer)
 				local frame_style = style.frame
@@ -3404,39 +3377,19 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				local item = element.item
 				local weapon_stats = WeaponStats:new(item)
-				local compairing_stats = weapon_stats:get_compairing_stats()
-				local num_stats = table.size(compairing_stats)
-				local compairing_stats_array = {}
+				local comparing_stats = weapon_stats:get_comparing_stats()
+				local num_stats = table.size(comparing_stats)
+				local comparing_stats_array = {}
 
-				for key, stat in pairs(compairing_stats) do
-					compairing_stats_array[#compairing_stats_array + 1] = stat
+				for key, stat in pairs(comparing_stats) do
+					comparing_stats_array[#comparing_stats_array + 1] = stat
 				end
-
-				local weapon_stats_sort_order = {
-					attack_speed = 2,
-					damage = 1,
-					rate_of_fire = 2,
-					reload_speed = 4,
-					stagger = 3,
-					stamina_block_cost = 4,
-				}
-
-				local function sort_function(a, b)
-					local a_sort_order = weapon_stats_sort_order[a.type] or math.huge
-					local b_sort_order = weapon_stats_sort_order[b.type] or math.huge
-
-					return a_sort_order < b_sort_order
-				end
-
-				table.sort(compairing_stats_array, sort_function)
 
 				local advanced_weapon_stats = weapon_stats._weapon_statistics
 				local bar_breakdown = table.clone(advanced_weapon_stats.bar_breakdown)
 
-				table.sort(bar_breakdown, sort_function)
-
 				for i = 1, num_stats do
-					local stat_data = compairing_stats_array[i]
+					local stat_data = comparing_stats_array[i]
 					local text_id = "text_" .. i
 					local bar_id = "bar_" .. i
 					local percentage_id = "percentage_" .. i
@@ -3476,7 +3429,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				parent._weapon_advanced_stats = weapon_stats._weapon_statistics
 
 				if content.element.interactive then
-					local base_stats_rating = ItemUtils.calculate_stats_rating(item)
+					local base_stats_rating = Items.calculate_stats_rating(item)
 
 					content.text_extra_value = " " .. base_stats_rating
 					style.text_extra_value.text_color = Color.white(255, true)
@@ -3498,6 +3451,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					parent_active = parent:is_active()
 				end
 
+				local total_stats = 6
 				local stat_data
 
 				if InputDevice.gamepad_active then
@@ -3522,7 +3476,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 					local selected_index = gamepad_bar_matrix[index_y][index_x]
 
-					for ii = 1, 6 do
+					for ii = 1, total_stats do
 						local is_hover = parent_active and ii == selected_index
 
 						style["hover_frame_" .. ii].color[1] = is_hover and 128 or 0
@@ -3531,7 +3485,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						stat_data = is_hover and content["bar_breakdown_" .. ii] or stat_data
 					end
 				else
-					for ii = 1, 6 do
+					for ii = 1, total_stats do
 						local hotspot = content["hotspot_" .. ii]
 						local is_hover = parent_active and hotspot.is_hover
 
@@ -3542,8 +3496,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end
 				end
 
-				if parent._update_bar_breakdown_data then
-					parent:_update_bar_breakdown_data(stat_data)
+				if parent.update_bar_breakdown_data then
+					parent:update_bar_breakdown_data(stat_data)
 				end
 			end,
 		},
@@ -3607,17 +3561,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				0,
 			},
 			pass_template = {
-				{
-					pass_type = "rect",
-					style = {
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.terminal_frame(50, true),
-					},
-				},
+				_generate_background_pass(),
 			},
 			size_function = function (parent, config)
 				return config.size
@@ -3668,7 +3612,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_item = element.perk_item
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
-				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
+				local description = Items.perk_description(perk_item, perk_rarity, perk_value)
 				local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
 				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height + 14)
 
@@ -3678,19 +3622,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 			end,
 			pass_template = {
-				{
-					pass_type = "rect",
-					style_id = "background",
-					style = {
-						visible = false,
-						offset = {
-							0,
-							0,
-							5,
-						},
-						color = Color.terminal_frame(50, true),
-					},
-				},
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					value = "content/ui/materials/icons/perks/perk_level_01",
@@ -3802,17 +3734,17 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_item = element.perk_item
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
-				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
+				local description = Items.perk_description(perk_item, perk_rarity, perk_value)
 
 				content.text = description
-				content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
+				content.rank = Items.perk_textures(perk_item, perk_rarity)
 				style.locked.visible = not not element.is_locked
 				style.modified.visible = not not element.is_modified
 				style.glow.visible = not not element.show_glow
 				style.glow_background.visible = not not element.show_glow
 
 				if element.show_rating then
-					content.rating = " " .. ItemUtils.perk_rating(perk_item, perk_rarity)
+					content.rating = " " .. Items.perk_rating(perk_item, perk_rarity)
 
 					local description_size = element.description_size or {}
 
@@ -3835,7 +3767,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local trait_item = element.trait_item
 				local trait_value = element.trait_value
 				local trait_rarity = element.trait_rarity
-				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
+				local description = Items.trait_description(trait_item, trait_rarity, trait_value)
 				local description_height = _style_text_height(description, weapon_traits_description_style, ui_renderer)
 				local entry_height = math.max(68, description_height + 25)
 
@@ -3845,19 +3777,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 			end,
 			pass_template = {
-				{
-					pass_type = "rect",
-					style_id = "background",
-					style = {
-						visible = false,
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.terminal_frame(50, true),
-					},
-				},
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					style_id = "icon",
@@ -3979,7 +3899,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				content.display_name = Localize(display_name)
 
-				local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_rarity)
+				local texture_icon, texture_frame = Items.trait_textures(trait_item, trait_rarity)
 				local icon_material_values = style.icon.material_values
 
 				if texture_icon then
@@ -3990,7 +3910,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					icon_material_values.frame = texture_frame
 				end
 
-				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
+				local description = Items.trait_description(trait_item, trait_rarity, trait_value)
 
 				content.description = description
 				style.locked.visible = not not element.is_locked
@@ -3999,7 +3919,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style.glow_background.visible = not not element.show_glow
 
 				if element.show_rating then
-					local rating_value = ItemUtils.trait_rating(trait_item, trait_rarity, trait_value)
+					local rating_value = Items.trait_rating(trait_item, trait_rarity, trait_value)
 
 					content.rating = " " .. rating_value
 
@@ -4012,7 +3932,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style.icon.material_values.overlay = 0
 
 				if element.trait_category then
-					Managers.data_service.crafting:trait_sticker_book(element.trait_category):next(function (seen_traits)
+					local promises = {}
+
+					promises[#promises + 1] = Managers.data_service.crafting:trait_sticker_book(element.trait_category)
+
+					Promise.all(unpack(promises)):next(function (results)
+						local seen_traits = results[1]
+
 						if seen_traits then
 							for seen_trait_name, status in pairs(seen_traits) do
 								if seen_trait_name == trait_item.name and status ~= nil then
@@ -4039,21 +3965,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 				54,
 			},
 			pass_template = {
-				{
-					pass_type = "rect",
-					style_id = "background",
-					style = {
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.terminal_frame(50, true),
-					},
-				},
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					value = "content/ui/materials/icons/perks/perk_level_05",
+					value_id = "rank",
 					style = {
 						vertical_alignment = "center",
 						size = {
@@ -4063,7 +3979,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							42,
 							0,
-							0,
+							8,
 						},
 						color = Color.terminal_icon(255, true),
 					},
@@ -4085,7 +4001,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local trait_item = element.trait_item
 				local trait_value = element.trait_value or 0
 				local trait_rarity = element.trait_rarity
-				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
+				local description = Items.trait_description(trait_item, trait_rarity, trait_value)
 
 				content.text = description
 			end,
@@ -4218,22 +4134,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 			end,
 			pass_template = {
+				_generate_background_pass(),
 				{
 					pass_type = "text",
 					value = "n/a",
 					value_id = "description",
 					style = achievement_description_style,
-				},
-				{
-					pass_type = "rect",
-					style = {
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.terminal_frame(50, true),
-					},
 				},
 			},
 			init = function (parent, widget, element, callback_name)
@@ -4256,7 +4162,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
-				local text = ItemUtils.weapon_skin_requirement_text(item)
+				local text = Items.weapon_skin_requirement_text(item)
 				local text_height = _style_text_height(text, weapon_skin_requirement_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 10)
 
@@ -4279,7 +4185,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 
 				local item = element.item
-				local text = ItemUtils.weapon_skin_requirement_text(item)
+				local text = Items.weapon_skin_requirement_text(item)
 
 				content.description = text
 			end,
@@ -4294,7 +4200,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
-				local text = ItemUtils.class_requirement_text(item)
+				local text = Items.class_requirement_text(item)
 				local text_height = _style_text_height(text, weapon_skin_requirement_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 10)
 
@@ -4317,7 +4223,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 
 				local item = element.item
-				local text = ItemUtils.class_requirement_text(item)
+				local text = Items.class_requirement_text(item)
 
 				content.description = text
 			end,
@@ -4855,9 +4761,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 				local style = widget.style
 				local item = element.item
-				local display_name = ItemUtils.display_name(item)
-				local sub_display_name = ItemUtils.sub_display_name(item)
-				local rarity_color = ItemUtils.rarity_color(item)
+				local display_name = Items.display_name(item)
+				local sub_display_name = Items.sub_display_name(item)
+				local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
 				content.element = element
 				content.display_name = display_name
@@ -5172,17 +5078,16 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 				local style = widget.style
 				local item = element.item
-				local is_ranged_weapon = Item.is_weapon_template_ranged(item)
+				local is_ranged_weapon = Items.is_weapon_template_ranged(item)
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-				local item_level = item.itemLevel
-				local power = item_level or 0
+				local rating_value = Items.item_level(item, true)
 				local weapon_stats = WeaponStats:new(item)
 				local advanced_weapon_stats = weapon_stats._weapon_statistics
 				local power_stats = advanced_weapon_stats.power_stats
 				local stats = advanced_weapon_stats.stats
 
 				content.element = element
-				content.text_rating_value = power
+				content.text_rating_value = rating_value
 
 				if power_stats then
 					for i = 1, #power_stats do
@@ -5379,7 +5284,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local displayed_attacks = weapon_template.displayed_attacks
 
 				if displayed_attacks then
-					local is_ranged_weapon = Item.is_weapon_template_ranged(item)
+					local is_ranged_weapon = Items.is_weapon_template_ranged(item)
 					local weapon_action_title_display_names = is_ranged_weapon and UISettings.weapon_action_title_display_names or UISettings.weapon_action_title_display_names_melee
 					local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
 					local num_elements = 0
@@ -5394,6 +5299,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 					local width = num_elements < 4 and grid_width - 100 or grid_width
 					local step = width / num_elements
+					local offset_index = 1
 
 					for index, key in ipairs(weapon_action_display_order_array) do
 						local data = displayed_attacks[key]
@@ -5411,14 +5317,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 							local header_style = style[id]
 
 							header_style.text_color[1] = 255
-							header_style.offset[1] = -step * (num_elements - 1) * 0.5 + (index - 1) * step
+							header_style.offset[1] = -step * (num_elements - 1) * 0.5 + (offset_index - 1) * step
 
 							local divider_id = "divider_" .. index
 							local divider_style = style[divider_id]
 
 							divider_style.color[1] = 128
-							divider_style.offset[1] = -step * (num_elements - 1) * 0.5 + (index - 1) * step - 10
+							divider_style.offset[1] = -step * (num_elements - 1) * 0.5 + (offset_index - 1) * step - 10
 							divider_style.size[1] = 200
+							offset_index = offset_index + 1
 						end
 					end
 
@@ -5432,9 +5339,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 					local content_hotspot = content["icon_hotspot_" .. attack_index .. "_" .. chain_index]
 
-					content_hotspot.is_selected = true
+					if content_hotspot then
+						content_hotspot.is_selected = true
 
-					_update_connection_line(attack_index, chain_index, attack_index, chain_index, content, style)
+						_update_connection_line(attack_index, chain_index, attack_index, chain_index, content, style)
+					end
 				end
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -5442,7 +5351,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local style = widget.style
 				local item = content.item
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-				local is_ranged_weapon = Item.is_weapon_template_ranged(item)
+				local is_ranged_weapon = Items.is_weapon_template_ranged(item)
 				local displayed_attacks = weapon_template.displayed_attacks
 				local gamepad_active = InputDevice.gamepad_active
 				local gamepad_selected_attack = content.gamepad_selected_attack
@@ -6330,19 +6239,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				0,
 			},
 			pass_template = {
-				{
-					pass_type = "rect",
-					style_id = "background",
-					style = {
-						visible = false,
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.terminal_frame(50, true),
-					},
-				},
+				_generate_background_pass(),
 			},
 			init = function (parent, widget, element)
 				local style = widget.style

@@ -54,7 +54,7 @@ templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.12,
+		[stat_buffs.power_level_modifier] = 0.125,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }

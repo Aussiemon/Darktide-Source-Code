@@ -523,7 +523,7 @@ local constants = {
 		},
 		first_person = {},
 	},
-	inventory_component_data = {
+	inventory_slot_component_data = {
 		weapon = {
 			current_ammunition_clip = {
 				default_value = 0,
@@ -640,8 +640,8 @@ constants.slide_move_speed_threshold_sq = constants.slide_move_speed_threshold^2
 constants.sprint_jump_speed_threshold_sq = constants.sprint_jump_speed_threshold^2
 constants.sprint_move_speed_threshold_sq = constants.sprint_move_speed_threshold^2
 
-local inventory_component_data = constants.inventory_component_data
-local weapon_component_data = inventory_component_data.weapon
+local inventory_slot_component_data = constants.inventory_slot_component_data
+local weapon_component_data = inventory_slot_component_data.weapon
 
 for _, lookups in pairs(buff_target_component_lookups) do
 	for i = 1, #lookups do

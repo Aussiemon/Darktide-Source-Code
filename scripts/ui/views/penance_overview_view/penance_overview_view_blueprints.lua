@@ -1463,7 +1463,6 @@ local grid_blueprints = {
 			{
 				pass_type = "text",
 				style_id = "title",
-				value = "Completed ",
 				value_id = "title",
 				style = {
 					font_size = 30,
@@ -1485,6 +1484,7 @@ local grid_blueprints = {
 						0,
 					},
 				},
+				value = Localize("loc_penance_menu_completed_title"),
 			},
 			{
 				pass_type = "text",

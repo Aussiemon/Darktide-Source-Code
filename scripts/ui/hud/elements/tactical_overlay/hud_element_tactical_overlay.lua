@@ -12,7 +12,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local HudElementTacticalOverlay = class("HudElementTacticalOverlay", "HudElementBase")
-local default_mission_type_icon = "content/ui/materials/icons/mission_types/mission_type_08"
+local default_mission_type_icon = "content/ui/materials/icons/mission_types/mission_type_side"
 local _text_extra_options = {}
 
 local function _text_width(ui_renderer, text, style)
@@ -29,6 +29,7 @@ end
 HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale, optional_context)
 	HudElementTacticalOverlay.super.init(self, parent, draw_layer, start_scale, Definitions)
 
+	self._context = table.add_missing(optional_context or {}, ElementSettings.default_context)
 	self._difficulty_manager = Managers.state.difficulty
 	self._mission_manager = Managers.state.mission
 	self._circumstance_manager = Managers.state.circumstance
@@ -37,16 +38,14 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 
 	self:_fetch_task_list()
 
-	self._context = table.add_missing(optional_context or {}, ElementSettings.default_context)
+	self._preferred_page = Managers.save:account_data().right_panel_category
+	self._right_panel_entries = {}
+	self._tracked_achievements = 0
 	self._grid_overrides = {}
 
 	self:_setup_left_panel_widgets()
 	self:_setup_right_panel_widgets()
 	self:on_resolution_modified()
-
-	self._preferred_page = Managers.save:account_data().right_panel_category
-	self._right_panel_entries = {}
-	self._tracked_achievements = 0
 end
 
 HudElementTacticalOverlay.destroy = function (self, ui_renderer)
@@ -83,7 +82,7 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 		active = true
 	end
 
-	if active and input_service:get("interact_pressed") then
+	if active and input_service:get("tactical_overlay_swap") then
 		self:_switch_right_grid(ui_renderer)
 	end
 
@@ -186,31 +185,43 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 	self:_set_scenegraph_size("left_panel", nil, total_size)
 end
 
+HudElementTacticalOverlay._set_contracts = function (self, optional_data)
+	self._contract_data = optional_data
+	self._contracts_fetched = optional_data ~= nil
+	self._contracts_promise = nil
+end
+
 HudElementTacticalOverlay._fetch_task_list = function (self)
 	local player_manager = Managers.player
 	local player = player_manager:local_player(1)
 	local character_id = player:character_id()
 
 	if not math.is_uuid(character_id) then
-		self._contracts_fetched = false
-		self._contracts_promise = nil
+		self:_set_contracts()
 
 		return
 	end
 
-	local should_request = Managers.narrative:is_chapter_complete("path_of_trust", "pot_contracts")
+	local is_event_complete = Managers.narrative:is_event_complete("level_unlock_contract_store_visited")
+	local show_right_side = self._context.show_right_side
+	local should_request = is_event_complete and show_right_side
+
+	if not should_request then
+		self:_set_contracts()
+
+		return
+	end
 
 	self._contracts_promise = self._backend_interfaces.contracts:get_current_contract(character_id, nil, should_request)
 
 	self._contracts_promise:next(function (data)
-		self._contract_data = data
-		self._contracts_fetched = true
-		self._contracts_promise = nil
+		self:_set_contracts(data)
 	end):catch(function (error)
-		Log.warning("HudElementTacticalOverlay", "Failed to fetch contracts with error: %s", table.tostring(error, 5))
+		if error.code ~= 404 then
+			Log.warning("HudElementTacticalOverlay", "Failed to fetch contracts with error: %s", table.tostring(error, 5))
+		end
 
-		self._contracts_fetched = false
-		self._contracts_promise = nil
+		self:_set_contracts()
 	end)
 end
 
@@ -231,7 +242,7 @@ HudElementTacticalOverlay._update_right_hint = function (self)
 	local content = self._widgets_by_name.right_input_hint.content
 
 	if table.size(entries) > 1 then
-		content.hint = TextUtils.localize_with_button_hint("interact_pressed", "loc_hud_tactical_overlay_cycle_tab", nil, "Ingame", nil, nil, true)
+		content.hint = TextUtils.localize_with_button_hint("tactical_overlay_swap", "loc_hud_tactical_overlay_cycle_tab", nil, "Ingame", nil, nil, true)
 	else
 		content.hint = ""
 	end
@@ -251,7 +262,7 @@ HudElementTacticalOverlay._update_right_timer_text = function (self, dt, t, ui_r
 		self._last_seen_time = timer_value
 
 		local timer_widget = self._widgets_by_name.right_timer
-		local timer_text = TextUtils.format_time_span_long_form_localized(timer_value)
+		local timer_text = TextUtils.format_time_span_localized(timer_value, true)
 
 		timer_widget.content.time_left = timer_text
 		timer_widget.style.time_name.offset[1] = -(2 * ElementSettings.buffer + _text_width(ui_renderer, timer_text, timer_widget.style.time_name))
@@ -265,12 +276,13 @@ HudElementTacticalOverlay._update_right_timer = function (self)
 		return
 	end
 
+	self._last_seen_time = nil
+
 	local page_settings = self:_get_page(current_key)
 	local timer_widget = self._widgets_by_name.right_timer
 	local timer_data = page_settings.timer
 
 	if timer_data == nil then
-		self._last_seen_time = nil
 		self._right_timer_function = nil
 		timer_widget.visible = false
 
@@ -404,6 +416,12 @@ HudElementTacticalOverlay._override_right_panel_category = function (self, key, 
 end
 
 HudElementTacticalOverlay._swap_right_grid = function (self, page_key, ui_renderer)
+	local current_key = self._right_panel_key
+
+	if page_key == current_key then
+		return
+	end
+
 	self._right_panel_key = page_key
 
 	if self._preferred_page == page_key then
@@ -577,7 +595,9 @@ end
 HudElementTacticalOverlay._update_live_event = function (self, dt, ui_renderer)
 	local current_live_event_id = self._live_event_id
 	local backend_live_event_id = Managers.live_event:active_event_id()
-	local should_create = current_live_event_id ~= backend_live_event_id and backend_live_event_id ~= nil
+	local show_right_side = self._context.show_right_side
+	local wrong_event_id = current_live_event_id ~= backend_live_event_id and backend_live_event_id ~= nil
+	local should_create = show_right_side and wrong_event_id
 
 	if should_create then
 		self:_setup_live_event(ui_renderer)
@@ -629,7 +649,8 @@ HudElementTacticalOverlay._update_achievements = function (self, dt, ui_renderer
 	local current_achievements = self._current_achievements
 	local has_achievements = current_achievements ~= nil
 	local updated_achievements = has_achievements and not table.array_equals(current_achievements, favorite_achievements)
-	local should_update = not has_achievements or updated_achievements
+	local show_right_side = self._context.show_right_side
+	local should_update = show_right_side and (not has_achievements or updated_achievements)
 
 	if should_update then
 		self:_setup_achievements(ui_renderer)
@@ -649,13 +670,19 @@ HudElementTacticalOverlay._switch_right_grid = function (self, ui_renderer)
 		end
 
 		local key = ordered_names[index]
+		local has_entry = self._right_panel_entries[key] ~= nil
 
-		if self._right_panel_entries[key] then
+		if has_entry then
 			self:_swap_right_grid(key, ui_renderer)
 
 			return
 		end
 	end
+
+	self._right_panel_key = nil
+
+	self:_update_right_grid_size()
+	self:_update_right_tab_bar(ui_renderer)
 end
 
 HudElementTacticalOverlay._set_difficulty_icons = function (self, difficulty_value)
@@ -765,6 +792,7 @@ HudElementTacticalOverlay._setup_right_panel_widgets = function (self)
 	self._right_panel_widgets = {}
 
 	self:_create_widgets(definitions, self._right_panel_widgets, self._widgets_by_name)
+	self:_update_right_tab_bar()
 end
 
 HudElementTacticalOverlay._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)

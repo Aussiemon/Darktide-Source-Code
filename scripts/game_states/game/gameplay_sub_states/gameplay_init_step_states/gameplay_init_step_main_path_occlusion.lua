@@ -21,8 +21,7 @@ GameplayInitStepMainPathOcclusion.update = function (self, main_dt, main_t)
 		return nil, nil
 	end
 
-	local main_path_manager = Managers.state.main_path
-	local main_path_initialized = main_path_manager:update_time_slice_generate_occluded_points()
+	local main_path_initialized = Managers.state.main_path:update_time_slice_generate_occluded_points()
 
 	if not main_path_initialized then
 		return nil, nil

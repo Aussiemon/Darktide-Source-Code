@@ -6,10 +6,12 @@ local default_imgui_input_settings = {
 		"keyboard",
 		"mouse",
 		"xbox_controller",
+		"ps4_controller",
 	},
 	default_devices = {
 		"keyboard",
 		"xbox_controller",
+		"ps4_controller",
 	},
 	settings = {
 		hotkey_dev_parameters_gui = {
@@ -17,6 +19,7 @@ local default_imgui_input_settings = {
 			raw = {
 				"keyboard_end",
 				"xbox_controller_right_thumb+xbox_controller_d_left",
+				"ps4_controller_l3+ps4_controller_d_left",
 			},
 		},
 		hotkey_debug_functions_gui = {
@@ -24,6 +27,7 @@ local default_imgui_input_settings = {
 			raw = {
 				"keyboard_delete",
 				"xbox_controller_right_thumb+xbox_controller_d_right",
+				"ps4_controller_l3+ps4_controller_d_right",
 			},
 		},
 		hotkey_input_gui = {

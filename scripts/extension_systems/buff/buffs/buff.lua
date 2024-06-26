@@ -503,6 +503,10 @@ Buff.additional_arguments = function (self)
 	return self._additional_arguments
 end
 
+Buff.owner_unit = function (self)
+	return self._template_context.owner_unit
+end
+
 Buff.parent_buff_template = function (self)
 	return self._template_context.parent_buff_template
 end

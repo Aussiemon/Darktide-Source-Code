@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	km_station = {
-		main_objective_type = "kill_objective",
 		objectives = {
 			objective_km_station_leave_start = {
 				description = "loc_objective_km_station_leave_start_desc",
@@ -19,8 +18,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_km_station_decoder_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "hacking_event",
 				progress_bar = true,
-				use_music_event = "hacking_event",
 			},
 			objective_km_station_vox_exit = {
 				description = "loc_objective_km_station_vox_exit_desc",
@@ -47,8 +46,8 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_km_station_eliminate_target_header",
 				mission_objective_type = "kill",
+				music_wwise_state = "kill_event",
 				turn_off_backfill = true,
-				use_music_event = "kill_event",
 			},
 		},
 	},

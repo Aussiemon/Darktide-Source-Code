@@ -558,7 +558,7 @@ InventoryBackgroundView._equip_local_changes = function (self)
 			local item = preview_loadout[slot_name]
 			local item_gear_id = type(item) == "table" and item.gear_id or type(item) == "string" and item
 			local previous_item_gear_id = type(previous_item) == "table" and previous_item.gear_id or type(previous_item) == "string" and previous_item
-			local valid_item_change = item_gear_id and previous_item_gear_id and item_gear_id ~= previous_item_gear_id or type(item) == "table" and item.always_owned and type(previous_item) == "table" and item.name ~= previous_item.name or (item_gear_id or type(item) == "table" and item.always_owned) and not previous_item_gear_id or type(previous_item) == "table" and not not not item
+			local valid_item_change = item_gear_id and previous_item_gear_id and item_gear_id ~= previous_item_gear_id or type(item) == "table" and item.always_owned and type(previous_item) == "table" and item.name ~= previous_item.name or (item_gear_id or type(item) == "table" and item.always_owned) and not previous_item_gear_id or type(previous_item) == "table" and not not not item or item_gear_id and previous_item_gear_id and item_gear_id == previous_item_gear_id and previous_item.name ~= item.name
 
 			if valid_item_change then
 				if item then
@@ -674,7 +674,7 @@ end
 
 InventoryBackgroundView._setup_top_panel = function (self)
 	local reference_name = "top_panel"
-	local layer = 90
+	local layer = 100
 
 	self._top_panel = self:_add_element(ViewElementMenuPanel, reference_name, layer)
 
@@ -1312,6 +1312,24 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			can_exit = true,
 			player_mode = true,
 		},
+		enter = function ()
+			if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
+				self.transition_animation_id = self:_stop_animation(self._transition_animation_id)
+			end
+
+			self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
+		end,
+		leave = function ()
+			if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
+				self.transition_animation_id = self:_stop_animation(self._transition_animation_id)
+			end
+
+			self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
+
+			return {
+				force_instant_camera = true,
+			}
+		end,
 		view_context = {
 			can_exit = true,
 			player_mode = true,
@@ -1404,9 +1422,10 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 
 	local views_settings = self._views_settings
 	local old_settings = old_top_panel_selection_index and views_settings[old_top_panel_selection_index]
+	local previous_panel_context_changes
 
 	if old_settings and old_settings.leave then
-		old_settings.leave()
+		previous_panel_context_changes = old_settings.leave()
 	end
 
 	local settings = views_settings[index]
@@ -1414,7 +1433,8 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 
 	view_name = settings.resolve_function and settings.resolve_function() or view_name
 
-	local view_context = settings.view_context
+	local new_view_context = table.clone(settings.view_context)
+	local view_context = table.merge_recursive(new_view_context, previous_panel_context_changes or {})
 
 	self:_switch_active_view(view_name, view_context)
 
@@ -1640,7 +1660,7 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 
 		for i = 1, #presets do
 			local preset = presets[i]
-			local loadout = presets and preset.loadout
+			local loadout = preset and preset.loadout
 
 			if loadout then
 				local active_preset = preset.id == active_profile_preset_id

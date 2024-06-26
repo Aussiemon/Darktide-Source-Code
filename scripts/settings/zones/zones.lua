@@ -23,12 +23,15 @@ local zones = {
 	},
 	hub = {
 		name = "loc_zone_hub",
+		not_needed_for_penance = true,
 	},
 	placeholder = {
 		name = "loc_zone_placeholder",
+		not_needed_for_penance = true,
 	},
 	prologue = {
 		name = "loc_zone_prologue",
+		not_needed_for_penance = true,
 	},
 	tank_foundry = {
 		map_node = "tank_foundry_01",
@@ -42,6 +45,7 @@ local zones = {
 	},
 	training_grounds = {
 		name = "loc_zone_training_grounds",
+		not_needed_for_penance = true,
 	},
 	throneside = {
 		map_node = "throneside_01",
@@ -61,6 +65,16 @@ local zones = {
 			default = "content/ui/materials/icons/missions/zone_transit_standard",
 			mission_board_details = "content/ui/materials/icons/zones/transit",
 			mission_vote = "content/ui/materials/icons/missions/zone_transit_standard",
+		},
+	},
+	void = {
+		map_node = "void_01",
+		name = "loc_zone_void",
+		name_short = "loc_zone_name_void_short",
+		images = {
+			default = "content/ui/materials/icons/missions/zone_void_standard",
+			mission_board_details = "content/ui/materials/icons/zones/void",
+			mission_vote = "content/ui/materials/icons/missions/zone_void_standard",
 		},
 	},
 	watertown = {

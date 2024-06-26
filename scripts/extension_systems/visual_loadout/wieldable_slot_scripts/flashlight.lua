@@ -6,7 +6,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local PerlinNoise = require("scripts/utilities/perlin_noise")
 local Flashlight = class("Flashlight")
-local _get_components, _disable_light, _enable_light, _set_template, _set_intensity, _falloff_position_rotation, _trigger_wwise_event, _trigger_aggro
+local _components, _disable_light, _enable_light, _set_template, _set_intensity, _falloff_position_rotation, _trigger_aggro
 local AGGRO_CHECK_INTERVAL = 0.5
 local DEFAULT_TEST_AGAINST = "both"
 local DEFAULT_COLLISION_FILTER = "filter_player_character_shooting_raycast"
@@ -18,10 +18,15 @@ local INDEX_ACTOR = 4
 local HANDLED_UNITS = {}
 local ALERT_PERCENTAGE = 0.4
 local AGGRO_PERCENTAGE = 0.3
+local SOUND_ALIAS_ON = "flashlight_on"
+local SOUND_ALIAS_OFF = "flashlight_off"
+local SOUND_ALIAS_FLICKER = "flashlight_flicker"
+local sfx_external_properties = {}
 
 Flashlight.init = function (self, context, slot, weapon_template, fx_sources)
 	self._world = context.world
 	self._physics_world = context.physics_world
+	self._wwise_world = context.wwise_world
 	self._is_server = context.is_server
 	self._is_local_unit = context.is_local_unit
 	self._is_husk = context.is_husk
@@ -31,6 +36,7 @@ Flashlight.init = function (self, context, slot, weapon_template, fx_sources)
 
 	self._owner_unit = owner_unit
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+	self._visual_loadout_extension = context.visual_loadout_extension
 
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	local slot_name = slot.name
@@ -49,8 +55,8 @@ Flashlight.init = function (self, context, slot, weapon_template, fx_sources)
 	self._flashlights_3p = {}
 	self._last_aggro_time = 0
 
-	_get_components(self._flashlights_1p, slot.attachments_1p)
-	_get_components(self._flashlights_3p, slot.attachments_3p)
+	_components(self._flashlights_1p, slot.attachments_1p)
+	_components(self._flashlights_3p, slot.attachments_3p)
 	_disable_light(self._flashlights_1p)
 	_disable_light(self._flashlights_3p)
 	_set_template(self._flashlights_1p, flashlight_template.light.first_person)
@@ -76,33 +82,31 @@ end
 
 Flashlight.update = function (self, unit, dt, t)
 	local is_special_active = self._inventory_slot_component.special_active
+	local flashlights_1p = self._flashlights_1p
+	local flashlights_3p = self._flashlights_3p
 
 	if is_special_active and not self._enabled then
 		if self._first_person_mode then
-			_enable_light(self._flashlights_1p)
-			_disable_light(self._flashlights_3p)
+			_enable_light(flashlights_1p)
+			_disable_light(flashlights_3p)
 		else
-			_disable_light(self._flashlights_1p)
-			_enable_light(self._flashlights_3p)
+			_disable_light(flashlights_1p)
+			_enable_light(flashlights_3p)
 		end
 
-		if self._is_local_unit then
-			_trigger_wwise_event("wwise/events/player/play_foley_gear_flashlight_on", self._flashlights_1p, self._fx_extension)
-		end
+		self:_play_sound(SOUND_ALIAS_ON)
 
 		self._enabled = true
 	elseif not is_special_active and self._enabled then
 		if self._first_person_mode then
-			_disable_light(self._flashlights_1p)
-			_disable_light(self._flashlights_3p)
+			_disable_light(flashlights_1p)
+			_disable_light(flashlights_3p)
 		else
-			_disable_light(self._flashlights_1p)
-			_disable_light(self._flashlights_3p)
+			_disable_light(flashlights_1p)
+			_disable_light(flashlights_3p)
 		end
 
-		if self._is_local_unit then
-			_trigger_wwise_event("wwise/events/player/play_foley_gear_flashlight_off", self._flashlights_1p, self._fx_extension)
-		end
+		self:_play_sound(SOUND_ALIAS_OFF)
 
 		self._enabled = false
 	end
@@ -115,7 +119,7 @@ Flashlight.update = function (self, unit, dt, t)
 	local owner_unit = self._owner_unit
 
 	if self._is_server and HEALTH_ALIVE[owner_unit] and self._enabled and time_since_aggro > AGGRO_CHECK_INTERVAL then
-		_trigger_aggro(self._light_settings.first_person, self._flashlights_1p, self._physics_world, owner_unit)
+		_trigger_aggro(self._light_settings.first_person, flashlights_1p, self._physics_world, owner_unit)
 
 		self._last_aggro_time = t
 	end
@@ -132,9 +136,7 @@ Flashlight._update_flicker = function (self, t)
 			self._flickering = true
 			self._flicker_start_t = t
 
-			if self._is_local_unit then
-				_trigger_wwise_event("wwise/events/player/play_foley_gear_flashlight_flicker", self._flashlights_1p, self._fx_extension)
-			end
+			self:_play_sound(SOUND_ALIAS_FLICKER)
 
 			local duration = settings.duration
 			local min = duration.min
@@ -201,11 +203,32 @@ Flashlight.flashlight_enabled = function (self)
 	return self._enabled
 end
 
-function _get_components(components, attachments)
+Flashlight._play_sound = function (self, sound_alias)
+	local resolved, event_name, has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias, sfx_external_properties)
+
+	if resolved then
+		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+
+		if has_husk_events and should_play_husk_effect then
+			event_name = event_name .. "_husk"
+		end
+
+		local wwise_world = self._wwise_world
+		local flashlights = self._flashlights_3p or self._flashlights_1p
+
+		for ii = 1, #flashlights do
+			local flashlight = flashlights[ii]
+
+			WwiseWorld.trigger_resource_event(wwise_world, event_name, flashlight.unit, 1)
+		end
+	end
+end
+
+function _components(components, attachments)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments do
-		local attachment_unit = attachments[i]
+	for ii = 1, num_attachments do
+		local attachment_unit = attachments[ii]
 		local flash_light_components = Component.get_components_by_name(attachment_unit, "WeaponFlashlight")
 
 		for _, flash_light_component in ipairs(flash_light_components) do
@@ -218,42 +241,34 @@ function _get_components(components, attachments)
 end
 
 function _disable_light(flashlights)
-	for i = 1, #flashlights do
-		local flashlight = flashlights[i]
+	for ii = 1, #flashlights do
+		local flashlight = flashlights[ii]
 
 		flashlight.component:disable(flashlight.unit)
 	end
 end
 
 function _enable_light(flashlights)
-	for i = 1, #flashlights do
-		local flashlight = flashlights[i]
+	for ii = 1, #flashlights do
+		local flashlight = flashlights[ii]
 
 		flashlight.component:enable(flashlight.unit)
 	end
 end
 
 function _set_template(flashlights, template)
-	for i = 1, #flashlights do
-		local flashlight = flashlights[i]
+	for ii = 1, #flashlights do
+		local flashlight = flashlights[ii]
 
 		flashlight.component:set_template(flashlight.unit, template)
 	end
 end
 
 function _set_intensity(flashlights, template, scale)
-	for i = 1, #flashlights do
-		local flashlight = flashlights[i]
+	for ii = 1, #flashlights do
+		local flashlight = flashlights[ii]
 
 		flashlight.component:set_intensity(flashlight.unit, template, scale)
-	end
-end
-
-function _trigger_wwise_event(wwise_resource, flashlights, fx_extension)
-	for i = 1, #flashlights do
-		local flashlight = flashlights[i]
-
-		fx_extension:trigger_wwise_event(wwise_resource, false, flashlight.unit, 1)
 	end
 end
 

@@ -2918,6 +2918,32 @@ local Credits = {
 			},
 			{
 				localized = true,
+				text = "loc_credits_view_noble_a_title",
+				type = "title",
+			},
+			{
+				text = "Polly Frame",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_noble_b_title",
+				type = "title",
+			},
+			{
+				text = "Andrew Wincott",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
 				text = "loc_credits_view_vocators_title",
 				type = "title",
 			},

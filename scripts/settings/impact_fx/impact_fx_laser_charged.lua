@@ -46,8 +46,8 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -56,8 +56,8 @@ local unarmored = {
 		},
 		died = {
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 		},
 		weakspot_damage = {
@@ -607,8 +607,8 @@ local disgustingly_resilient = {
 				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
 			},
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 			{
 				event = "wwise/events/weapon/play_indicator_weakspot",
@@ -621,8 +621,8 @@ local disgustingly_resilient = {
 				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
 			},
 			{
+				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true,
 			},
 		},
 		weakspot_damage = {

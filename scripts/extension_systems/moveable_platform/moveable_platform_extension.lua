@@ -10,8 +10,6 @@ local MOVEABLE_PLATFORM_DIRECTION = table.enum("none", "forward", "backward")
 local OPEN_WALL_FILTER = "filter_platform_wall"
 
 MoveablePlatformExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	self._world = extension_init_context.world
-	self._physics_world = extension_init_context.physics_world
 	self._is_server = extension_init_context.is_server
 	self._unit = unit
 	self._network_story_manager = Managers.state.network_story
@@ -43,13 +41,10 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	self._unit_spawner = Managers.state.unit_spawner
 
 	local extension_manager = Managers.state.extension
-	local side_system = extension_manager:system("side_system")
-
-	self._side_system = side_system
-
 	local broadphase_system = extension_manager:system("broadphase_system")
 
 	self._broadphase = broadphase_system.broadphase
+	self._side_system = extension_manager:system("side_system")
 	self._chunk_lod_manager = Managers.state.chunk_lod
 	self._locked_chunk_lod = false
 
@@ -100,12 +95,12 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 end
 
 MoveablePlatformExtension.setup_from_component = function (self, story_name, player_side, wall_collision_enabled, wall_collision_filter, require_all_players_onboard, interactable_story_actions, interactable_hud_descriptions, story_speed_forward, story_speed_backward, end_sound_time, nav_handling_enabled, stop_position)
-	local unit = self._unit
+	local unit, level, network_story_manager = self._unit, self._level, self._network_story_manager
 
 	self._story_name = story_name
 
-	self._network_story_manager:register_story(story_name, self._level)
-	self._network_story_manager:play_story(story_name, self._level, 0)
+	network_story_manager:register_story(story_name, level)
+	network_story_manager:play_story(story_name, level, 0)
 
 	self._player_side = player_side
 	self._wall_collision_enabled = wall_collision_enabled
@@ -122,19 +117,20 @@ MoveablePlatformExtension.setup_from_component = function (self, story_name, pla
 	end
 
 	self._story_length = self._network_story_manager:get_story_length(story_name, self._level)
-	self._interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
-	for i, interactable in ipairs(self._interactables) do
-		local interactable_info = interactable
+	local interactables = self._interactables
+
+	for i = 1, #interactables do
+		local interactable = interactables[i]
 
 		if interactable_story_actions[i] then
-			interactable_info.action = interactable_story_actions[i]
+			interactable.action = interactable_story_actions[i]
 		else
-			interactable_info.action = "none"
+			interactable.action = "none"
 		end
 
 		if interactable_hud_descriptions[i] then
-			interactable_info.hud_description = interactable_hud_descriptions[i]
+			interactable.hud_description = interactable_hud_descriptions[i]
 		end
 	end
 end
@@ -348,9 +344,7 @@ MoveablePlatformExtension._handle_friendly_bots_on_set_direction = function (sel
 	table.clear(TEMP_BOT_PLAYER_UNITS)
 
 	local has_valid_bots_that_should_be_passengers = false
-	local side_name = self._player_side
-	local side_system = self._side_system
-	local side = side_system:get_side_from_name(side_name)
+	local side = self._side_system:get_side_from_name(self._player_side)
 
 	if side then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -460,10 +454,11 @@ MoveablePlatformExtension._update_passengers = function (self)
 
 	table.clear(self._passenger_units)
 
-	local passenger_units = self._passenger_units
 	local overlapping_units = self._overlap_result[self._box]
 
 	if overlapping_units then
+		local passenger_units = self._passenger_units
+
 		for passenger_unit, _ in pairs(overlapping_units) do
 			passenger_units[passenger_unit] = true
 		end
@@ -554,7 +549,7 @@ MoveablePlatformExtension._check_hostile_onboard = function (self)
 		local unit_position = Unit.world_position(unit, 1)
 		local offsetted_unit_position = unit_position + Vector3.up() * 0.25
 
-		if math.point_is_inside_oobb(offsetted_unit_position, bounding_box, half_extents) then
+		if math.point_in_box(offsetted_unit_position, bounding_box, half_extents) then
 			return true
 		end
 	end
@@ -582,7 +577,7 @@ MoveablePlatformExtension._check_passengers_outside = function (self)
 		if ALIVE[passenger_unit] then
 			local unit_position = Unit.world_position(passenger_unit, 1)
 
-			if not math.point_is_inside_oobb(unit_position, bounding_box, half_size * 1.1) then
+			if not math.point_in_box(unit_position, bounding_box, half_size * 1.1) then
 				if self._wall_collision_enabled then
 					self:_teleport_player_onboard(passenger_unit)
 					Log.warning("MoveablePlatformExtension", "Player considered outside of elevator, teleported back")
@@ -615,15 +610,17 @@ MoveablePlatformExtension.add_passenger = function (self, unit, place_on_platfor
 end
 
 MoveablePlatformExtension._set_platform_as_parent = function (self, passenger_unit)
-	if ALIVE[passenger_unit] then
-		local is_husk_unit = self._unit_spawner:is_husk(passenger_unit)
+	if not ALIVE[passenger_unit] then
+		return
+	end
 
-		if not is_husk_unit then
-			local locomotion_extension = ScriptUnit.has_extension(passenger_unit, "locomotion_system")
+	local is_husk_unit = self._unit_spawner:is_husk(passenger_unit)
 
-			if locomotion_extension then
-				locomotion_extension:set_parent_unit(self._unit)
-			end
+	if not is_husk_unit then
+		local locomotion_extension = ScriptUnit.has_extension(passenger_unit, "locomotion_system")
+
+		if locomotion_extension then
+			locomotion_extension:set_parent_unit(self._unit)
 		end
 	end
 end
@@ -796,7 +793,10 @@ MoveablePlatformExtension._get_passengers_onboard_info = function (self)
 			local is_human = player:is_human_controlled()
 
 			if is_human and self:_valid_passenger_player_unit(player_unit) then
-				if not passenger_units[player_unit] then
+				local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+				local character_state_component = unit_data_extension:read_component("character_state")
+
+				if not passenger_units[player_unit] or PlayerUnitStatus.is_disabled(character_state_component) then
 					all_valid_players_inside = false
 
 					break
@@ -848,7 +848,9 @@ MoveablePlatformExtension._setup_nav_gates = function (self, unit)
 
 	local offset_position = self._stop_position:unbox() - Unit.world_position(unit, 1)
 
-	for i, volume_point in ipairs(volume_points) do
+	for i = 1, #volume_points do
+		local volume_point = volume_points[i]
+
 		volume_points[i] = volume_point + offset_position
 	end
 

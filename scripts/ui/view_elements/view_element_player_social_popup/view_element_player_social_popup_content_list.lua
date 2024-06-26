@@ -234,6 +234,17 @@ view_element_player_social_popup_content_list.from_player_info = function (paren
 		xbox_profile_item.on_pressed_sound = UISoundEvents.social_menu_see_player_profile
 	end
 
+	local psn_platform = Platforms.psn
+
+	if social_service:platform() == psn_platform and player_info:platform() == psn_platform then
+		local psn_profile_item = _get_next_list_item()
+
+		psn_profile_item.blueprint = "button"
+		psn_profile_item.label = Localize("loc_social_menu_psn_profile")
+		psn_profile_item.callback = callback(parent, "cb_show_psn_profile", player_info)
+		psn_profile_item.on_pressed_sound = UISoundEvents.social_menu_see_player_profile
+	end
+
 	if not is_own_player then
 		if not is_blocked then
 			_add_friend_management_items(parent, player_info)

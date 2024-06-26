@@ -1064,7 +1064,7 @@ local valid_help_interactions = {
 	revive = true,
 }
 
-function _passive_revive_conditional(template_data, template_context)
+local function _passive_revive_conditional(template_data, template_context)
 	local is_interacting = template_data.interactor_extension:is_interacting()
 
 	if is_interacting then

@@ -14,16 +14,16 @@ end
 
 local BreedQueries = {}
 
-BreedQueries.match_minions_by_tags = function (template_breed_tags, optional_excluded_breed_tags, optional_prefered_sub_faction)
+BreedQueries.match_minions_by_tags = function (template_breed_tags, optional_excluded_breed_tags, wanted_sub_faction)
 	local best_breeds = {}
 	local num_template_breed_tags = #template_breed_tags
 
 	for i = 1, #minion_list do
 		repeat
 			local breed = minion_list[i]
-			local faction = breed.sub_faction_name
+			local sub_faction = breed.sub_faction_name
 
-			if not breed.can_be_used_for_all_factions and optional_prefered_sub_faction and faction ~= optional_prefered_sub_faction then
+			if not breed.can_be_used_for_all_factions and sub_faction ~= wanted_sub_faction then
 				break
 			end
 

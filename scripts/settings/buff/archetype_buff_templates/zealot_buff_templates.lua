@@ -12,8 +12,8 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PushAttack = require("scripts/utilities/attack/push_attack")
-local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
@@ -279,11 +279,11 @@ templates.zealot_improved_weapon_swapping_no_ammo = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-		template_data.wieldable_component = unit_data_extension:read_component("slot_secondary")
+		template_data.inventory_slot_component = unit_data_extension:read_component("slot_secondary")
 		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
 	end,
 	proc_func = function (params, template_data, template_context, t)
-		local current_ammo = template_data.wieldable_component.current_ammunition_clip
+		local current_ammo = template_data.inventory_slot_component.current_ammunition_clip
 
 		if current_ammo == 0 then
 			template_data.buff_extension:add_internally_controlled_buff("zealot_improved_weapon_swapping_impact", t)
@@ -1025,9 +1025,7 @@ templates.zealot_dash_buff = {
 	stat_buffs = {
 		[stat_buffs.melee_damage] = talent_settings_2.combat_ability.melee_damage,
 		[stat_buffs.melee_critical_strike_chance] = talent_settings_2.combat_ability.melee_critical_strike_chance,
-	},
-	keywords = {
-		keywords.armor_penetrating,
+		[stat_buffs.melee_rending_multiplier] = talent_settings_2.combat_ability.melee_rending_multiplier,
 	},
 	proc_events = {
 		[proc_events.on_hit] = talent_settings_2.combat_ability.on_hit_proc_chance,
@@ -1491,6 +1489,10 @@ templates.zealot_toughness_on_aura_tracking_buff = {
 		template_data.toughness_damage_reduced_percentage = (template_data.damage_reduction - 1) * -1
 	end,
 	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
 		local unit = template_context.unit
 		local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 		local toughness_damage = toughness_extension:toughness_damage()
@@ -1542,6 +1544,10 @@ templates.zealot_improved_toughness_on_aura_tracking_buff = {
 		template_data.toughness_damage_reduced_percentage = (template_data.damage_reduction - 1) * -1
 	end,
 	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
 		local unit = template_context.unit
 		local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 		local toughness_damage = toughness_extension:toughness_damage()
@@ -1990,35 +1996,50 @@ templates.zealot_combat_ability_crits_reduce_cooldown = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
+		[proc_events.on_sweep_start] = 1,
 	},
-	check_proc_func = CheckProcFunctions.on_melee_crit_hit,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 
 		template_data.ability_extension = ability_extension
 	end,
-	proc_func = function (params, template_data, template_context)
-		if not template_data.ability_extension then
-			local unit = template_context.unit
-			local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
-
-			if not ability_extension then
+	specific_proc_func = {
+		on_hit = function (params, template_data, template_context)
+			if not template_data.active then
 				return
 			end
 
-			template_data.ability_extension = ability_extension
-		end
+			if not CheckProcFunctions.on_melee_crit_hit(params, template_data, template_context) then
+				return
+			end
 
-		local ability_extension = template_data.ability_extension
-		local ability_type = "combat_ability"
+			if not template_data.ability_extension then
+				local unit = template_context.unit
+				local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 
-		if not ability_extension or not ability_extension:has_ability_type(ability_type) then
-			return
-		end
+				if not ability_extension then
+					return
+				end
 
-		ability_extension:reduce_ability_cooldown_time(ability_type, talent_settings_2.combat_ability_1.time)
-	end,
+				template_data.ability_extension = ability_extension
+			end
+
+			local ability_extension = template_data.ability_extension
+			local ability_type = "combat_ability"
+
+			if not ability_extension or not ability_extension:has_ability_type(ability_type) then
+				return
+			end
+
+			template_data.active = false
+
+			ability_extension:reduce_ability_cooldown_time(ability_type, talent_settings_2.combat_ability_1.time)
+		end,
+		on_sweep_start = function (params, template_data, template_context)
+			template_data.active = true
+		end,
+	},
 }
 templates.zealot_combat_ability_attack_speed_increase = {
 	allow_proc_while_active = true,

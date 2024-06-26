@@ -9,7 +9,26 @@ local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_chainaxe_p1_guaranteed_melee_crit_on_activated_kill = {
 	weapon_trait_bespoke_chainaxe_p1_guaranteed_melee_crit_on_activated_kill = {
-		{},
+		{
+			buff_data = {
+				num_stacks_on_proc = 4,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 6,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 8,
+			},
+		},
+		{
+			buff_data = {
+				num_stacks_on_proc = 10,
+			},
+		},
 	},
 }
 templates.weapon_trait_bespoke_chainaxe_p1_bleed_on_activated_hit = {

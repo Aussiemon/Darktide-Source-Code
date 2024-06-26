@@ -1063,4 +1063,4 @@ local ui_settings = {
 	},
 }
 
-return settings("UISettings", ui_settings)
+return settings("UiSettings", ui_settings)

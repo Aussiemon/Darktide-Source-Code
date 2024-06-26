@@ -16,9 +16,7 @@ Crashify.print_property = function (key, value, print_func)
 	local property = string.format("%s = %s", key, value)
 	local output = string.format("<<crashify-property>>%s<</crashify-property>>", property)
 
-	if PLATFORM ~= "win32" then
-		Application.add_crash_property(tostring(key), tostring(value))
-	end
+	Application.add_crash_property(tostring(key), tostring(value))
 
 	print_func = print_func or __raw_print
 

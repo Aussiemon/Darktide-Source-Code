@@ -169,7 +169,7 @@ local talent_settings = {
 		defensive_3 = {
 			increased_toughness_health_threshold = 0.25,
 			sprinting_cost_multiplier = 0.8,
-			toughness_replenish_multiplier = 1,
+			toughness_replenish_modifier = 1,
 		},
 		offensive_2_1 = {
 			damage = 0.2,

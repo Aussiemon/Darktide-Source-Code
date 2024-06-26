@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/horde/templates/ambush_horde_template.lua
 
+local Breeds = require("scripts/settings/breed/breeds")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
@@ -43,7 +44,7 @@ local MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS = 12, 25
 local INITIAL_GROUP_OFFSET = 2
 local nearby_spawners, nearby_occluded_positions = {}, {}
 
-horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
 	local target_side_id = target_side.side_id
 	local side_id = side.side_id
 	local main_path_manager = Managers.state.main_path
@@ -103,20 +104,23 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	table.clear(nearby_occluded_positions)
 
 	local num_spawn_locations = 0
-	local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 
-	for i = 1, #minion_spawner_radius_checks do
-		local radius = minion_spawner_radius_checks[i]
-		local spawners = minion_spawn_system:spawners_in_range(navmesh_position, radius)
+	if not optional_skip_spawners then
+		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 
-		if spawners then
-			for j = 1, #spawners do
-				nearby_spawners[#nearby_spawners + 1] = spawners[j]
-				num_spawn_locations = num_spawn_locations + 1
-			end
+		for i = 1, #minion_spawner_radius_checks do
+			local radius = minion_spawner_radius_checks[i]
+			local spawners = minion_spawn_system:spawners_in_range(navmesh_position, radius)
 
-			if max_spawn_locations <= num_spawn_locations then
-				break
+			if spawners then
+				for j = 1, #spawners do
+					nearby_spawners[#nearby_spawners + 1] = spawners[j]
+					num_spawn_locations = num_spawn_locations + 1
+				end
+
+				if max_spawn_locations <= num_spawn_locations then
+					break
+				end
 			end
 		end
 	end
@@ -126,10 +130,10 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 		for i = 1, #minion_spawner_radius_checks do
 			local radius = minion_spawner_radius_checks[i]
-			local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, navmesh_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET)
+			local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, navmesh_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET)
 
 			if occluded_positions then
-				for j = 1, #occluded_positions do
+				for j = 1, num_occluded_positions do
 					local occluded_position = occluded_positions[j]
 
 					nearby_occluded_positions[#nearby_occluded_positions + 1] = occluded_position

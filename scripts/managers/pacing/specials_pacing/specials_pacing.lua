@@ -19,6 +19,7 @@ SpecialsPacing.init = function (self, nav_world)
 	self._max_alive_specials_multiplier = 1
 	self._max_alive_specials_bonus = 0
 	self._rush_prevention_cooldown = 0
+	self._loner_prevention_cooldown = 0
 	self._frozen = false
 	self._speed_running_prevention_cooldown = 0
 	self._next_speed_running_check_t = 0
@@ -76,6 +77,7 @@ SpecialsPacing._setup_specials_slot = function (self, specials_slots, specials_s
 	table.clear(USED_BREEDS)
 
 	specials_slot.breed_name = nil
+	specials_slot.monster_breed_override = nil
 
 	for i = 1, #specials_slots do
 		local other_special_slot = specials_slots[i]
@@ -107,6 +109,7 @@ SpecialsPacing._setup_specials_slot = function (self, specials_slots, specials_s
 
 		optional_health_modifier = monster_health_modifier
 		breed_name = monster_breed_override or breeds[math.random(1, #breeds)]
+		specials_slot.monster_breed_override = monster_breed_override ~= nil
 
 		local optional_max_of_same_override = self._optional_max_of_same_override
 		local max_of_same = optional_max_of_same_override and optional_max_of_same_override[breed_name] or template.max_of_same[breed_name]
@@ -196,6 +199,12 @@ SpecialsPacing._setup = function (self, template, optional_first_spawn_modifier)
 	end
 
 	self._specials_slots = specials_slots
+
+	if template.default_monster_spawn_config and not self._monster_spawn_config then
+		self._monster_spawn_config = template.default_monster_spawn_config
+		self._total_num_event_monsters_allowed = self._monster_spawn_config.total_num_allowed_during_event
+		self._total_num_monsters_allowed = self._monster_spawn_config.total_num_allowed
+	end
 
 	local num_coordinated_surges_range = template.num_coordinated_surges_range
 
@@ -381,7 +390,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 			local coordinated_strike_update_override = specials_slot.coordinated_strike and (not coordinated_strike_challenge_rating or coordinated_strike_challenge_rating < total_challenge_rating)
 			local should_update_by_travel_distance = not coordinated_strike_update_override and not move_timer_override and travel_distance_spawning
 			local pause_spawn, pause_spawn_timer = false, false
-			local required_challenge_rating = self._required_challenge_rating
+			local required_challenge_rating = not specials_slot.injected and (self._required_challenge_rating or template.required_challenge_rating)
 
 			if required_challenge_rating and total_challenge_rating <= required_challenge_rating then
 				pause_spawn = true
@@ -463,6 +472,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 
 	if specials_allowed then
 		self:_update_rush_prevention(target_side_id, template, t)
+		self:_update_loner_prevention(target_side_id, template, t)
 
 		if self._disabler_override_duration then
 			self._disabler_override_duration = math.max(self._disabler_override_duration - dt, 0)
@@ -551,6 +561,20 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 					return false
 				end
 			end
+		end
+	end
+
+	if Breeds[breed_name].tags.monster and self._total_num_monsters_allowed and self._total_num_event_monsters_allowed then
+		local terror_event_active = false
+
+		if Managers.state.terror_event:num_active_events() > 0 then
+			terror_event_active = true
+		end
+
+		if not terror_event_active then
+			self._total_num_monsters_allowed = self._total_num_monsters_allowed - 1
+		else
+			self._total_num_event_monsters_allowed = self._total_num_event_monsters_allowed - 1
 		end
 	end
 
@@ -979,7 +1003,17 @@ SpecialsPacing._check_monster_override = function (self, template)
 		return
 	end
 
+	local terror_event_active = false
+
+	if Managers.state.terror_event:num_active_events() > 0 then
+		terror_event_active = true
+	end
+
 	local chance_to_spawn_monster = monster_spawn_config.chance_to_spawn_monster
+
+	if monster_spawn_config.chance_to_spawn_monster_event and terror_event_active then
+		chance_to_spawn_monster = monster_spawn_config.chance_to_spawn_monster_event
+	end
 
 	if chance_to_spawn_monster < math.random() then
 		return
@@ -1011,7 +1045,23 @@ SpecialsPacing._check_monster_override = function (self, template)
 		return
 	end
 
-	local optional_health_modifier = monster_spawn_config.health_modifiers[monster_breed_name]
+	if monster_spawn_config.total_num_allowed then
+		local pacing_manager = Managers.state.pacing
+
+		if pacing_manager:num_aggroed_monsters() > 0 then
+			return
+		end
+
+		if terror_event_active then
+			if self._total_num_event_monsters_allowed <= 0 then
+				return
+			end
+		elseif self._total_num_monsters_allowed <= 0 then
+			return
+		end
+	end
+
+	local optional_health_modifier = monster_spawn_config.health_modifiers and monster_spawn_config.health_modifiers[monster_breed_name]
 
 	return monster_breed_name, optional_health_modifier
 end
@@ -1111,11 +1161,14 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 
 	for i = 1, num_breeds do
 		local specials_slot = specials_slots[i]
-		local optional_coordinated_strike = true
 
-		self:_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
+		if not specials_slot.monster_breed_override then
+			local optional_coordinated_strike = true
 
-		coordinated_strike_timer = coordinated_strike_timer + math.random_range(COORDINATED_STRIKE_TIMER_OFFSET_RANGE[1], COORDINATED_STRIKE_TIMER_OFFSET_RANGE[2])
+			self:_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
+
+			coordinated_strike_timer = coordinated_strike_timer + math.random_range(COORDINATED_STRIKE_TIMER_OFFSET_RANGE[1], COORDINATED_STRIKE_TIMER_OFFSET_RANGE[2])
+		end
 	end
 
 	return true
@@ -1156,7 +1209,7 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 				local is_pounced = PlayerUnitStatus.is_pounced(disabled_character_state_component)
 
 				if is_pounced then
-					if math.random() < 0.4 then
+					if math.random() < 0.8 then
 						self:try_inject_special("chaos_poxwalker_bomber", "behind", player_unit)
 					end
 
@@ -1221,6 +1274,92 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 		local cooldown = success and template.rush_prevention_cooldown or template.rush_prevention_failed_cooldown
 
 		self._rush_prevention_cooldown = t + math.random_range(cooldown[1], cooldown[2])
+	end
+end
+
+SpecialsPacing._update_loner_prevention = function (self, target_side_id, template, t)
+	local loner_prevention_breeds = template.loner_prevention_breeds
+
+	if not loner_prevention_breeds or t < self._loner_prevention_cooldown then
+		return
+	end
+
+	if self._num_spawned_specials >= self._max_alive_specials then
+		return
+	end
+
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side(target_side_id)
+	local target_units = side.valid_player_units
+	local num_target_units = #target_units
+	local num_non_disabled_players = 0
+
+	table.clear(ALONE_TARGETS)
+
+	for i = 1, num_target_units do
+		local player_unit = target_units[i]
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
+		local requires_help = PlayerUnitStatus.requires_help(character_state_component)
+
+		if not requires_help then
+			num_non_disabled_players = num_non_disabled_players + 1
+		end
+
+		local coherency_extension = ScriptUnit.has_extension(player_unit, "coherency_system")
+		local num_units_in_coherency = coherency_extension and coherency_extension:num_units_in_coherency()
+
+		if num_units_in_coherency == 1 then
+			ALONE_TARGETS[#ALONE_TARGETS + 1] = player_unit
+		end
+	end
+
+	if num_non_disabled_players <= 2 then
+		local cooldown = template.loner_prevention_failed_cooldown
+
+		self._loner_prevention_cooldown = t + math.random_range(cooldown[1], cooldown[2])
+		self._loner_timer = nil
+
+		return
+	end
+
+	local target_unit
+
+	if #ALONE_TARGETS > 0 then
+		target_unit = ALONE_TARGETS[math.random(1, #ALONE_TARGETS)]
+	end
+
+	if not target_unit then
+		local cooldown = template.loner_prevention_failed_cooldown
+
+		self._loner_prevention_cooldown = t + math.random_range(cooldown[1], cooldown[2])
+		self._loner_timer = nil
+
+		return
+	end
+
+	if not self._loner_timer then
+		self._loner_timer = t + math.random_range(template.loner_time[1], template.loner_time[2])
+
+		return
+	elseif t < self._loner_timer then
+		return
+	end
+
+	local loner_prevention_breed_name = loner_prevention_breeds[math.random(1, #loner_prevention_breeds)]
+
+	Log.info("SpecialsPacing", "Trying to inject loner prevention breed %s.", loner_prevention_breed_name)
+
+	local success = self:try_inject_special(loner_prevention_breed_name, nil, target_unit)
+	local cooldown = success and template.loner_prevention_cooldown or template.loner_prevention_failed_cooldown
+
+	self._loner_prevention_cooldown = t + math.random_range(cooldown[1], cooldown[2])
+	self._loner_timer = nil
+
+	local rush_cooldown = success and template.rush_prevention_cooldown or template.rush_prevention_failed_cooldown
+
+	if rush_cooldown then
+		self._rush_prevention_cooldown = t + math.random_range(rush_cooldown[1], rush_cooldown[2])
 	end
 end
 

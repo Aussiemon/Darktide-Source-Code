@@ -2,10 +2,10 @@
 
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
 local FirstPersonRunSpeedAnimationControl = require("scripts/extension_systems/first_person/first_person_run_speed_animation_control")
-local Footstep = require("scripts/utilities/footstep")
+local MaterialFx = require("scripts/utilities/material_fx")
 local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local PlayerHuskFirstPersonExtension = class("PlayerHuskFirstPersonExtension")
-local FOOTSTEP_SOUND_ALIAS = "footstep"
+local FOOTSTEP_SOUND_ALIAS = "footstep_right"
 local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
 local WEAPON_FOLEY = "sfx_weapon_locomotion"
 local EXTRA_FOLEY = "sfx_player_extra_slot"
@@ -58,24 +58,26 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	self._is_camera_follow_target = false
 	self._is_first_person_spectated = false
 	self._footstep_time = 0
+	self._right_foot_next = true
 
 	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
 
 	self._footstep_context = {
+		unit = unit,
+		breed = breed,
+		alternate_fire_component = alternate_fire_component,
 		character_state_component = character_state_component,
+		movement_state_component = movement_state_component,
 		sprint_character_state_component = sprint_character_state_component,
 		weapon_action_component = weapon_action_component,
-		alternate_fire_component = alternate_fire_component,
-		breed = breed,
-		movement_state_component = movement_state_component,
-		wwise_world = wwise_world,
-		unit = unit,
-		physics_world = physics_world,
 		feet_source_id = feet_source_id,
+		world = self._world,
+		physics_world = physics_world,
+		wwise_world = wwise_world,
 	}
 	self._previous_frame_character_state_name = character_state_component.state_name
-	self._3p_peeking_animation_data = {}
 	self._1p_peeking_animation_data = {}
+	self._3p_peeking_animation_data = {}
 end
 
 PlayerHuskFirstPersonExtension.extensions_ready = function (self, world, unit)
@@ -132,9 +134,9 @@ PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 		local previous_frame_character_state_name = self._previous_frame_character_state_name
 		local footstep_context = self._footstep_context
 
-		self._footstep_time = Footstep.update_1p_footsteps(t, self._footstep_time, previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
+		self._footstep_time, self._right_foot_next = MaterialFx.update_1p_footsteps(t, self._footstep_time, self._right_foot_next, previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 
-		Footstep.update_3p_footsteps(previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
+		MaterialFx.update_3p_footsteps(previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 	end
 
 	self._previous_frame_character_state_name = self._character_state_component.state_name

@@ -130,13 +130,13 @@ templates.weapon_trait_bespoke_bolter_p1_stacking_crit_bonus_on_continuous_fire 
 templates.weapon_trait_bespoke_bolter_p1_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_bolter_p1_toughness_on_continuous_fire = {
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.01,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.02,
 		},
 		{
-			toughness_fixed_percentage = 0.04,
+			toughness_fixed_percentage = 0.03,
 		},
 		{
 			toughness_fixed_percentage = 0.04,

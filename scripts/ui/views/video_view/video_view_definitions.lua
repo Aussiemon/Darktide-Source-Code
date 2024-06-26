@@ -41,6 +41,34 @@ local widget_definitions = {
 		},
 	}, "screen"),
 }
+
+if IS_PLAYSTATION then
+	widget_definitions.playstation_dummy_text = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			value = "placeholder_name",
+			value_id = "text",
+			style = {
+				font_size = 48,
+				font_type = "machine_medium",
+				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
+				text_color = {
+					255,
+					255,
+					0,
+					0,
+				},
+				offset = {
+					0,
+					0,
+					10,
+				},
+			},
+		},
+	}, "screen")
+end
+
 local legend_inputs = {
 	{
 		alignment = "left_alignment",

@@ -2,7 +2,6 @@
 
 local mission_objective_templates = {
 	lm_scavenge = {
-		main_objective_type = "luggable_objective",
 		objectives = {
 			objective_lm_scavenge_leave_start = {
 				description = "loc_objective_lm_scavenge_leave_start_desc",
@@ -24,8 +23,8 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_lm_scavenge_decrypt_header",
 				mission_objective_type = "decode",
+				music_wwise_state = "hacking_event",
 				progress_bar = true,
-				use_music_event = "hacking_event",
 			},
 			objective_lm_scavenge_proceed_hangars = {
 				description = "loc_objective_lm_scavenge_proceed_hangars_desc",
@@ -49,19 +48,19 @@ local mission_objective_templates = {
 				event_type = "end_event",
 				header = "loc_objective_lm_scavenge_deposit_assets_header",
 				mission_objective_type = "luggable",
-				use_music_event = "collect_event",
+				music_wwise_state = "collect_event",
 			},
 			objective_lm_scavenge_send_assets = {
 				description = "loc_objective_lm_scavenge_send_assets_desc",
 				header = "loc_objective_lm_scavenge_send_assets_header",
 				mission_objective_type = "goal",
-				use_music_event = "end_event",
+				music_wwise_state = "end_event",
 			},
 			objective_lm_scavenge_escape = {
 				description = "loc_objective_lm_scavenge_escape_desc",
 				header = "loc_objective_lm_scavenge_escape_header",
 				mission_objective_type = "goal",
-				use_music_event = "escape_event",
+				music_wwise_state = "escape_event",
 			},
 			objective_lm_scavenge_luggable_secret = {
 				hidden = true,

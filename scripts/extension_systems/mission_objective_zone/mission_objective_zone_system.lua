@@ -135,7 +135,7 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 	local mission_objective_system = self._mission_objective_system
 
 	for objective_name, units in pairs(zone_units) do
-		local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(objective_name)
+		local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name)
 		local synchronizer_unit_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 		local num_active_zones = synchronizer_unit_extension:num_zones_in_mission_objective()
 		local selected_units = {}
@@ -362,7 +362,7 @@ end
 MissionObjectiveZoneSystem._current_synchronizer = function (self)
 	local mission_objective_system = self._mission_objective_system
 	local objective_name = self._current_objective_name
-	local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(objective_name)
+	local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name)
 
 	return synchronizer_unit
 end

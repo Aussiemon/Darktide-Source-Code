@@ -33,7 +33,7 @@ forcesword_p1_m1_melee_action_input_setup.action_inputs = {
 		input_sequence = {
 			{
 				input = "action_one_hold",
-				time_window = 0.25,
+				time_window = 0.2,
 				value = false,
 			},
 		},
@@ -56,8 +56,7 @@ forcesword_p1_m1_melee_action_input_setup.action_inputs = {
 		},
 	},
 	block = {
-		buffer_time = 0,
-		clear_input_queue = true,
+		buffer_time = 0.1,
 		input_sequence = {
 			{
 				input = "action_two_hold",
@@ -66,7 +65,7 @@ forcesword_p1_m1_melee_action_input_setup.action_inputs = {
 		},
 	},
 	block_release = {
-		buffer_time = 0.6,
+		buffer_time = 0.35,
 		max_queue = 1,
 		input_sequence = {
 			{
@@ -190,10 +189,14 @@ forcesword_p1_m1_melee_action_input_setup.action_inputs = {
 table.add_missing(forcesword_p1_m1_melee_action_input_setup.action_inputs, BaseTemplateSettings.action_inputs)
 
 forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy = {
+	combat_ability = "base",
+	grenade_ability = "base",
 	special_action = "base",
 	wield = "base",
 	start_attack = {
 		attack_cancel = "base",
+		block = "base",
+		combat_ability = "base",
 		grenade_ability = "base",
 		heavy_attack = "base",
 		light_attack = "base",
@@ -208,6 +211,7 @@ forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy = {
 		wield = "base",
 		push = {
 			push_follow_up_early_release = "base",
+			special_action = "base",
 			push_follow_up = {
 				combat_ability = "base",
 				find_target_release = "base",

@@ -1,8 +1,25 @@
 ﻿-- chunkname: @scripts/managers/save/utilities/save.lua
 
-local ScriptSaveToken = require("scripts/managers/save/script_save_token")
+local ScriptSaveToken
+
+if IS_PLAYSTATION then
+	ScriptSaveToken = require("scripts/managers/save/script_save_token_ps5")
+else
+	ScriptSaveToken = require("scripts/managers/save/script_save_token")
+end
+
 local Save = {}
 local SaveDummy = {
+	COMPLETED = true,
+	save = function ()
+		return {}
+	end,
+	load = function ()
+		return {}
+	end,
+	status = function ()
+		return true
+	end,
 	auto_save = function ()
 		return {}
 	end,
@@ -21,7 +38,7 @@ local SaveDummy = {
 }
 
 Save.implementation = function (use_cloud)
-	if PLATFORM == "xbs" or PLATFORM == "linux" or PLATFORM == "ps5" then
+	if PLATFORM == "xbs" or PLATFORM == "linux" then
 		return SaveDummy
 	elseif use_cloud and HAS_STEAM and Cloud.enabled() then
 		return Cloud
@@ -32,6 +49,28 @@ end
 
 Save.abort = function (save_token)
 	Managers.token:abort(save_token)
+end
+
+Save.save = function (save_info, callback)
+	local system = Save.implementation(false)
+	local token = system.save(save_info)
+	local is_loading = false
+	local save_token = ScriptSaveToken:new(system, token, is_loading)
+
+	Managers.token:register_token(save_token, callback)
+
+	return save_token
+end
+
+Save.load = function (load_info, optional_callback)
+	local system = Save.implementation(false)
+	local token = system.load(load_info)
+	local is_loading = true
+	local save_token = ScriptSaveToken:new(system, token, is_loading)
+
+	Managers.token:register_token(save_token, optional_callback)
+
+	return save_token
 end
 
 Save.auto_save = function (file_name, data, callback, use_cloud)
