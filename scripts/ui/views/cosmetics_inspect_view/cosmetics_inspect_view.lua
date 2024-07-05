@@ -965,20 +965,27 @@ CosmeticsInspectView._generate_mannequin_loadout = function (self, profile, item
 	local new_loadout = {}
 	local slots = item and item.slots
 	local first_slot_name = slots and slots[1]
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
+
+	for i = 1, #slots do
+		local required_item_slot_name = slots[i]
+
+		loadout[required_item_slot_name] = item
+	end
+
+	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
 	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
 
 	if required_gender_item_names_per_slot then
-		local required_items = required_gender_item_names_per_slot
+		local required_items = required_gender_item_names_per_slot[first_slot_name]
 
 		if required_items then
-			for slot_name, slot_item_name in pairs(required_items) do
+			for required_item_slot_name, slot_item_name in pairs(required_items) do
 				local item_definition = MasterItems.get_item(slot_item_name)
 
 				if item_definition then
 					local slot_item = table.clone(item_definition)
 
-					new_loadout[slot_name] = slot_item
+					self._mannequin_loadout[required_item_slot_name] = slot_item
 				end
 			end
 		end

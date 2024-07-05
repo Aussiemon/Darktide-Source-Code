@@ -780,7 +780,6 @@ local action_data = {
 		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		num_shots = shooting_difficulty_settings.num_shots_cover,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
-		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		shoot_template = BreedShootTemplates.renegade_rifleman_default,
 		clear_shot_offset_from_peeking = {
 			high = {

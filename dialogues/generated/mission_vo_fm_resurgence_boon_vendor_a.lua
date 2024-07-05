@@ -1,6 +1,26 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_fm_resurgence_boon_vendor_a.lua
 
 local mission_vo_fm_resurgence_boon_vendor_a = {
+	event_fortification_disable_the_skyfire_resurgence = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_boon_vendor_a__mission_complex_skyfire_cutout_a_01",
+			"loc_boon_vendor_a__mission_complex_skyfire_cutout_a_02",
+			"loc_boon_vendor_a__mission_complex_skyfire_cutout_a_03",
+		},
+		sound_events_duration = {
+			4.368406,
+			4.008417,
+			4.257813,
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333,
+		},
+		randomize_indexes = {},
+	},
 	mission_resurgence_aegis_sighted_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

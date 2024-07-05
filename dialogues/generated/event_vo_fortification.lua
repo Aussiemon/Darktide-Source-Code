@@ -124,6 +124,7 @@ return function ()
 					"sergeant",
 					"pilot",
 					"tech_priest",
+					"boon_vendor",
 				},
 			},
 		},
@@ -203,6 +204,7 @@ return function ()
 					"explicator",
 					"sergeant",
 					"tech_priest",
+					"boon_vendor",
 				},
 			},
 			{
@@ -309,6 +311,7 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"explicator",
+					"boon_vendor",
 				},
 			},
 		},

@@ -31,6 +31,15 @@ local ATTACK_RESULT_PRIORITY = {
 	[attack_results.knock_down] = 7,
 	[attack_results.friendly_fire] = 7,
 }
+local OVERRIDABLE_CROSSHAIRS = {
+	assault = true,
+	bfg = true,
+	cross = true,
+	flamer = true,
+	projectile_drop = true,
+	shotgun = true,
+	spray_n_pray = true,
+}
 
 HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, definitions)
 	local definitions = require(definition_path)
@@ -329,7 +338,7 @@ HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_sett
 			end
 
 			crosshair_type = is_special_active and crosshair_settings.crosshair_type_special_active or crosshair_settings.crosshair_type
-			can_override = wielded_slot == "slot_secondary"
+			can_override = OVERRIDABLE_CROSSHAIRS[crosshair_type]
 		end
 	end
 

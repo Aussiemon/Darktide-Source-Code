@@ -579,9 +579,9 @@ local considerations = {
 			invert = true,
 			is_condition = true,
 		},
-		last_time = {
-			component_field = "last_time",
-			max_value = 20,
+		last_done_time = {
+			component_field = "last_done_time",
+			max_value = 5,
 			time_diff = true,
 			spline = {
 				0,

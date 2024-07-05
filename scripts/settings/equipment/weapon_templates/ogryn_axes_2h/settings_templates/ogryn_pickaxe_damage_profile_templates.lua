@@ -772,6 +772,7 @@ damage_templates.ogryn_pickaxe_blunt = {
 	ragdoll_only = true,
 	ragdoll_push_force = 400,
 	stagger_category = "melee",
+	weapon_special = true,
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.ogryn_pipe_club_heavy,
 	gibbing_power = GibbingPower.always,

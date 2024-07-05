@@ -17,6 +17,14 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_torso_keep_collar_02 = {
+		property_overrides = {
+			mask_top_bottom = {
+				0,
+				0.75,
+			},
+		},
+	},
 	mask_torso_keep_pecs = {
 		property_overrides = {
 			mask_top_bottom = {

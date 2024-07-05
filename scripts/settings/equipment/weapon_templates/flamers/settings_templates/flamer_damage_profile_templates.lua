@@ -393,8 +393,8 @@ damage_templates.default_flamer_assault = {
 		{
 			power_distribution = {
 				attack = {
-					8,
-					12,
+					16,
+					24,
 				},
 				impact = {
 					1,
@@ -405,8 +405,8 @@ damage_templates.default_flamer_assault = {
 		{
 			power_distribution = {
 				attack = {
-					10,
-					16,
+					20,
+					32,
 				},
 				impact = {
 					2,
@@ -417,8 +417,8 @@ damage_templates.default_flamer_assault = {
 		{
 			power_distribution = {
 				attack = {
-					12,
-					20,
+					24,
+					40,
 				},
 				impact = {
 					3,
@@ -429,8 +429,8 @@ damage_templates.default_flamer_assault = {
 		{
 			power_distribution = {
 				attack = {
-					15,
 					30,
+					60,
 				},
 				impact = {
 					4,
@@ -441,8 +441,8 @@ damage_templates.default_flamer_assault = {
 		{
 			power_distribution = {
 				attack = {
-					17.5,
 					35,
+					70,
 				},
 				impact = {
 					6,
@@ -453,8 +453,8 @@ damage_templates.default_flamer_assault = {
 		{
 			power_distribution = {
 				attack = {
-					20,
 					40,
+					80,
 				},
 				impact = {
 					10,
@@ -465,8 +465,8 @@ damage_templates.default_flamer_assault = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					30,
-					50,
+					60,
+					100,
 				},
 				impact = {
 					10,
@@ -509,8 +509,8 @@ damage_templates.default_flamer_assault_burst = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			power_distribution = {
 				attack = {
-					10,
-					20,
+					15,
+					30,
 				},
 				impact = {
 					10,

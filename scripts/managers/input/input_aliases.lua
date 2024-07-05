@@ -40,7 +40,10 @@ InputAliases.overrides = function (self)
 	local aliases = self._aliases
 
 	for alias_name, alias_info in pairs(aliases) do
+		local max_index = 3
 		local default = default_aliases[alias_name]
+
+		alias_info[max_index + 1] = nil
 
 		for index, value in ipairs(alias_info) do
 			if value ~= default[index] then
@@ -162,6 +165,10 @@ InputAliases.set_keys_for_alias = function (self, name, device_types, new_key_in
 	end
 
 	local value = new_key_info and InputUtils.make_string(new_key_info)
+	local pc_device_types = {
+		"mouse",
+		"keyboard",
+	}
 
 	if col then
 		if alias_row[col] then
@@ -171,10 +178,6 @@ InputAliases.set_keys_for_alias = function (self, name, device_types, new_key_in
 		table.insert(alias_row, col, value)
 	elseif device_index then
 		local first_index = alias_row[1]
-		local pc_device_types = {
-			"mouse",
-			"keyboard",
-		}
 
 		if first_index then
 			key_info.main, key_info.enablers, key_info.disablers = InputUtils.split_key(first_index)
@@ -187,6 +190,8 @@ InputAliases.set_keys_for_alias = function (self, name, device_types, new_key_in
 		end
 
 		alias_row[device_index] = value
+	elseif value and table.contains(pc_device_types, InputUtils.key_device_type(new_key_info.main)) then
+		table.insert(alias_row, 1, value)
 	end
 end
 

@@ -13,7 +13,7 @@ damage_settings.permanent_heal_types = {
 	[heal_types.blessing_grim] = true,
 	[heal_types.blessing_syringe] = true,
 }
-damage_settings.ranged_close = 8
+damage_settings.ranged_close = 12.5
 damage_settings.ranged_far = 30
 damage_settings.in_melee_range = 8
 

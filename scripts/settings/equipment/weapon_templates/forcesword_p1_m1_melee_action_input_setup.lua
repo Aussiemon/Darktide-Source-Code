@@ -196,7 +196,6 @@ forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy = {
 	start_attack = {
 		attack_cancel = "base",
 		block = "base",
-		combat_ability = "base",
 		grenade_ability = "base",
 		heavy_attack = "base",
 		light_attack = "base",

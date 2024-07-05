@@ -1640,7 +1640,7 @@ Items.modifications_by_rarity = function (item)
 end
 
 Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)
-	local item_gender, item_breed, item_archetype
+	local item_gender, item_breed, item_archetype, item_slot_name
 
 	if item.genders and not table.is_empty(item.genders) then
 		if prefered_gender and table.find(item.genders, prefered_gender) then
@@ -1666,15 +1666,21 @@ Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefer
 		item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
 	end
 
+	if item.slots and not table.is_empty(item.slots) then
+		item_slot_name = item.slots[1]
+	else
+		local item_slot_name
+	end
+
 	local breed = item_breed or item.breeds and item.breeds[1] or "human"
 	local archetype = breed == "ogryn" and Archetypes.ogryn or item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
 	local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
 	local loadout = {}
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed]
+	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
 	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
 
 	if required_gender_item_names_per_slot then
-		local required_items = required_gender_item_names_per_slot
+		local required_items = required_gender_item_names_per_slot[item_slot_name]
 
 		if required_items then
 			for slot_name, slot_item_name in pairs(required_items) do

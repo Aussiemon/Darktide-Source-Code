@@ -37,11 +37,14 @@ end
 local function _sort_adventure_missions()
 	local sorted_list = {}
 
-	for _, mission_type in pairs(MissionTypes) do
+	for type, mission_type in pairs(MissionTypes) do
 		local i = mission_type.index
 
 		if i then
-			sorted_list[i] = mission_type
+			local clone_type = table.clone(mission_type)
+
+			clone_type.type = type
+			sorted_list[i] = clone_type
 		end
 	end
 
@@ -1776,7 +1779,7 @@ do
 				StatFlags.backend,
 			},
 			data = {
-				mission_type = mission_type,
+				mission_type = mission_type.type,
 			},
 			triggers = {
 				{
@@ -1799,7 +1802,7 @@ do
 				StatFlags.backend,
 			},
 			data = {
-				mission_type = mission_type,
+				mission_type = mission_type.type,
 			},
 			stat_name = mission_type.name,
 			triggers = {
@@ -1968,7 +1971,7 @@ do
 				},
 				stat_name = mission_type.name,
 				data = {
-					mission_type = mission_type,
+					mission_type = mission_type.type,
 					archetype_name = archetype_name,
 				},
 				triggers = {

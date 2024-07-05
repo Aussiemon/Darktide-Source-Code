@@ -688,7 +688,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_heavy_2",
-				chain_time = 0.85,
+				chain_time = 0.65,
 			},
 			block = {
 				action_name = "action_block",
@@ -1016,7 +1016,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_heavy_1",
-				chain_time = 0.76,
+				chain_time = 0.65,
 			},
 			block = {
 				action_name = "action_block",
@@ -1245,7 +1245,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_heavy_2",
-				chain_time = 0.6,
+				chain_time = 0.4,
 			},
 			block = {
 				action_name = "action_block",

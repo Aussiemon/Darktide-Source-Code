@@ -481,23 +481,6 @@ local RENDER_TEMPLATES = {
 					},
 				},
 			},
-			{
-				display_name = "loc_setting_fsr2_native_quality",
-				id = 5,
-				require_apply = true,
-				require_restart = false,
-				values = {
-					render_settings = {
-						fsr2_enabled = true,
-						upscaling_quality = "native",
-					},
-					master_render_settings = {
-						dlss = 0,
-						fsr = 0,
-						xess = 0,
-					},
-				},
-			},
 		},
 		disable_rules = {
 			{
@@ -709,6 +692,20 @@ local RENDER_TEMPLATES = {
 		},
 	},
 	{
+		display_name = "loc_setting_sharpen_enabled",
+		id = "sharpen_enabled",
+		require_apply = false,
+		require_restart = false,
+		save_location = "render_settings",
+		tooltip_text = "loc_setting_sharpen_enabled_mouseover",
+		value_type = "boolean",
+		validation_function = function ()
+			local upscaling_mode = Application.render_config("settings", "upscaling_mode")
+
+			return upscaling_mode ~= "fsr2" and upscaling_mode ~= "dlss"
+		end,
+	},
+	{
 		display_name = "loc_sharpness_slider",
 		id = "sharpness",
 		max = 1,
@@ -720,6 +717,11 @@ local RENDER_TEMPLATES = {
 		step_size = 0.01,
 		tooltip_text = "loc_sharpness_slider_mouseover",
 		value_type = "number",
+		validation_function = function ()
+			local upscaling_mode = Application.render_config("settings", "upscaling_mode")
+
+			return upscaling_mode == "fsr2" or upscaling_mode == "dlss"
+		end,
 	},
 	{
 		default_value = 0,

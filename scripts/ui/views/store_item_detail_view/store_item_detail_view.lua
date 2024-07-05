@@ -996,6 +996,8 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 
 		self._spawn_player = true
 		set_initial_viewport = true
+	else
+		self:_reset_mannequin(item)
 	end
 
 	if set_initial_viewport then
@@ -1356,7 +1358,7 @@ StoreItemDetailView._generate_spawn_profile = function (self, item)
 	end
 
 	self._preview_profile = profile
-	self._mannequin_loadout = self:_generate_mannequin_loadout(profile)
+	self._mannequin_loadout = self:_generate_mannequin_loadout(profile, item)
 	self._default_mannequin_loadout = table.clone_instance(self._mannequin_loadout)
 	self._mannequin_profile = table.clone_instance(profile)
 	self._mannequin_profile.loadout = self._mannequin_loadout
@@ -1398,17 +1400,40 @@ StoreItemDetailView._is_spawn_profile_by_item_valid = function (self, item)
 	return same_breed and same_gender and same_archetype
 end
 
-StoreItemDetailView._generate_mannequin_loadout = function (self, profile)
+StoreItemDetailView._generate_mannequin_loadout = function (self, profile, optional_item)
 	local presentation_profile = profile
 	local gender_name = presentation_profile.gender
 	local archetype = presentation_profile.archetype
 	local breed_name = archetype.breed
 	local new_loadout = {}
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+	local item_slot = optional_item and optional_item.slots[1]
+	local is_setup_done = false
 
-	if required_gender_item_names_per_slot then
-		for slot_name, slot_item_name in pairs(required_gender_item_names_per_slot) do
+	if item_slot then
+		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
+		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+		local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot[item_slot]
+
+		if required_items then
+			for slot_name, slot_item_name in pairs(required_items) do
+				local item_definition = MasterItems.get_item(slot_item_name)
+
+				if item_definition then
+					local slot_item = table.clone(item_definition)
+
+					new_loadout[slot_name] = slot_item
+				end
+			end
+
+			is_setup_done = true
+		end
+	end
+
+	if not is_setup_done then
+		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
+		local required_gender_item_names_per_breed_and_gender = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+
+		for slot_name, slot_item_name in pairs(required_gender_item_names_per_breed_and_gender) do
 			local item_definition = MasterItems.get_item(slot_item_name)
 
 			if item_definition then
@@ -1593,7 +1618,7 @@ StoreItemDetailView._stop_previewing = function (self)
 	end
 end
 
-StoreItemDetailView._reset_mannequin = function (self)
+StoreItemDetailView._reset_mannequin = function (self, optional_item)
 	local mannequin_loadout = self._mannequin_loadout
 
 	if not mannequin_loadout then
@@ -1610,17 +1635,37 @@ StoreItemDetailView._reset_mannequin = function (self)
 	local archetype = profile and profile.archetype
 	local breed_name = profile and archetype.breed or ""
 	local gender_name = profile and profile.gender or ""
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+	local item_slot = optional_item and optional_item.slots[1]
 
-	if required_gender_item_names_per_slot then
-		for required_item_slot_name, slot_item_name in pairs(required_gender_item_names_per_slot) do
-			local item_definition = MasterItems.get_item(slot_item_name)
+	if item_slot then
+		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
+		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+		local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot[item_slot]
 
-			if item_definition then
-				local slot_item = table.clone(item_definition)
+		if required_items then
+			for slot_name, slot_item_name in pairs(required_items) do
+				local item_definition = MasterItems.get_item(slot_item_name)
 
-				mannequin_loadout[required_item_slot_name] = slot_item
+				if item_definition then
+					local slot_item = table.clone(item_definition)
+
+					mannequin_loadout[slot_name] = slot_item
+				end
+			end
+		end
+	else
+		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
+		local required_gender_item_names_per_breed_and_gender = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+
+		if required_gender_item_names_per_breed_and_gender then
+			for required_item_slot_name, slot_item_name in pairs(required_gender_item_names_per_breed_and_gender) do
+				local item_definition = MasterItems.get_item(slot_item_name)
+
+				if item_definition then
+					local slot_item = table.clone(item_definition)
+
+					mannequin_loadout[required_item_slot_name] = slot_item
+				end
 			end
 		end
 	end

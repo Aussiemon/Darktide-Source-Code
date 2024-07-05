@@ -328,6 +328,7 @@ local settings_definitions = {
 		end,
 	},
 	{
+		default_value = "weapon",
 		display_name = "loc_setting_crosshair_type_override",
 		id = "crosshair_type_override",
 		save_location = "interface_settings",

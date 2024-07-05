@@ -499,7 +499,6 @@ local action_data = {
 		},
 		num_shots = shooting_difficulty_settings.num_shots_cover,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
-		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		attack_intensities = {
 			elite_ranged = 3,
 			ranged = 3,

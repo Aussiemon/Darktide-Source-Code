@@ -1573,7 +1573,9 @@ damage_templates.poxwalker_explosion_close.power_distribution = {
 }
 damage_templates.poxwalker_explosion_close.catapulting_template = CatapultingTemplates.poxwalker_bomber_close
 damage_templates.default_rifleman = {
+	disorientation_type = "light",
 	interrupt_alternate_fire = false,
+	ogryn_disorientation_type = "ogryn_light",
 	stagger_category = "ranged",
 	suppression_value = 1,
 	armor_damage_modifier = {

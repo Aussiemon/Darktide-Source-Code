@@ -97,20 +97,49 @@ CosmeticsVendorView._reset_mannequin = function (self)
 		local archetype = profile and profile.archetype
 		local breed_name = profile and archetype.breed or ""
 		local gender_name = profile and profile.gender or ""
-		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
-		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+		local previewed_item = self._previewed_item
+		local item_type = previewed_item and previewed_item.item_type
 
-		if required_gender_item_names_per_slot then
-			local required_items = required_gender_item_names_per_slot
+		if item_type == "GEAR_LOWERBODY" then
+			local slots = previewed_item.slots
+			local slot_name = slots and slots[1]
 
-			if required_items then
-				for required_item_slot_name, slot_item_name in pairs(required_items) do
-					local item_definition = MasterItems.get_item(slot_item_name)
+			if slot_name then
+				local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
+				local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
 
-					if item_definition then
-						local slot_item = table.clone(item_definition)
+				if required_gender_item_names_per_slot then
+					local required_items = required_gender_item_names_per_slot[slot_name]
 
-						self._mannequin_loadout[required_item_slot_name] = slot_item
+					if required_items then
+						for required_item_slot_name, slot_item_name in pairs(required_items) do
+							local item_definition = MasterItems.get_item(slot_item_name)
+
+							if item_definition then
+								local slot_item = table.clone(item_definition)
+
+								self._mannequin_loadout[required_item_slot_name] = slot_item
+							end
+						end
+					end
+				end
+			end
+		else
+			local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
+			local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+
+			if required_gender_item_names_per_slot then
+				local required_items = required_gender_item_names_per_slot
+
+				if required_items then
+					for required_item_slot_name, slot_item_name in pairs(required_items) do
+						local item_definition = MasterItems.get_item(slot_item_name)
+
+						if item_definition then
+							local slot_item = table.clone(item_definition)
+
+							self._mannequin_loadout[required_item_slot_name] = slot_item
+						end
 					end
 				end
 			end
@@ -188,6 +217,7 @@ end
 
 CosmeticsVendorView._preview_item = function (self, element)
 	CosmeticsVendorView.super._preview_item(self, element)
+	self:_reset_mannequin()
 
 	local previewed_item = self._previewed_item
 	local item_type = previewed_item and previewed_item.item_type

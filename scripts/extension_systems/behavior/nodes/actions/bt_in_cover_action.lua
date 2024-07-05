@@ -82,7 +82,7 @@ BtInCoverAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 
 	if state == "aiming" then
 		MinionPerception.set_target_lock(unit, scratchpad.perception_component, false)
-	elseif state == "shooting" and not scratchpad.cooldown then
+	elseif state == "shooting" then
 		MinionAttack.stop_shooting(unit, scratchpad)
 	end
 
@@ -421,8 +421,6 @@ BtInCoverAction._update_aiming = function (self, unit, breed, scratchpad, blackb
 	end
 end
 
-local AIM_DOT_THRESHOLD = 0
-
 BtInCoverAction._aim_at_target = function (self, unit, t, action_data, scratchpad, blackboard)
 	local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
 	local to_node = scratchpad.clear_shot_line_of_sight_data.to_node
@@ -454,17 +452,7 @@ BtInCoverAction._aim_at_target = function (self, unit, t, action_data, scratchpa
 
 	aim_component.lean_dot = lean_dot
 
-	local unit_forward = Quaternion.forward(unit_rotation)
-	local dot = Vector3.dot(unit_forward, to_target_direction)
-	local valid_angle = true
-
-	if dot < AIM_DOT_THRESHOLD then
-		valid_angle = false
-	end
-
 	MinionAttack.update_scope_reflection(unit, scratchpad, t, action_data)
-
-	return valid_angle
 end
 
 BtInCoverAction._start_shooting = function (self, unit, scratchpad, action_data, t)
@@ -481,58 +469,21 @@ BtInCoverAction._update_shooting = function (self, unit, breed, scratchpad, blac
 	end
 
 	if is_suppressed then
-		if not scratchpad.cooldown then
-			MinionAttack.stop_shooting(unit, scratchpad)
-		end
+		MinionAttack.stop_shooting(unit, scratchpad)
 
 		local delayed_suppresed_anim = true
 
 		self:_start_suppressed(unit, scratchpad, action_data, t, delayed_suppresed_anim)
 
-		scratchpad.cooldown = nil
-
 		return
 	end
 
-	local valid_angle = self:_aim_at_target(unit, t, action_data, scratchpad, blackboard)
-
-	if not valid_angle then
-		if not scratchpad.cooldown then
-			MinionAttack.stop_shooting(unit, scratchpad)
-		end
-
-		self:_enter_cover(unit, breed, scratchpad, action_data, cover_component, t)
-		Vo.enemy_shooting_from_covers_event()
-
-		scratchpad.cooldown = nil
-
-		return
-	end
-
-	if scratchpad.cooldown then
-		if t >= scratchpad.cooldown then
-			self:_start_shooting(unit, scratchpad, action_data, t)
-
-			scratchpad.cooldown = nil
-		else
-			return
-		end
-	end
+	self:_aim_at_target(unit, t, action_data, scratchpad, blackboard)
 
 	local _, fired_last_shot = MinionAttack.update_shooting(unit, scratchpad, t, action_data)
 
 	if fired_last_shot then
-		local shoot_cooldown = action_data.shoot_cooldown
-
-		if shoot_cooldown then
-			local diff_cooldown = Managers.state.difficulty:get_table_entry_by_challenge(shoot_cooldown)
-			local cooldown = math.random_range(diff_cooldown[1], diff_cooldown[2])
-
-			scratchpad.cooldown = t + cooldown
-		else
-			self:_enter_cover(unit, breed, scratchpad, action_data, cover_component, t)
-		end
-
+		self:_enter_cover(unit, breed, scratchpad, action_data, cover_component, t)
 		Vo.enemy_shooting_from_covers_event()
 	end
 end

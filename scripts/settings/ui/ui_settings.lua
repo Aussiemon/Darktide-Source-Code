@@ -438,6 +438,7 @@ local ui_settings = {
 			"slot_body_skin_color",
 			"slot_body_eye_color",
 			"slot_body_hair",
+			"slot_gear_upperbody",
 		},
 		slot_gear_upperbody = {
 			"slot_body_torso",
@@ -465,6 +466,7 @@ local ui_settings = {
 			"slot_body_skin_color",
 			"slot_body_eye_color",
 			"slot_body_hair",
+			"slot_gear_upperbody",
 		},
 		slot_gear_upperbody = {
 			"slot_body_hair",
@@ -509,6 +511,7 @@ local ui_settings = {
 					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 				slot_gear_upperbody = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
@@ -521,18 +524,21 @@ local ui_settings = {
 					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/preview_belt_mannequin",
 				},
 				slot_gear_extra_cosmetic = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 				slot_animation_end_of_round = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 			},
 			female = {
@@ -541,6 +547,7 @@ local ui_settings = {
 					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 				slot_gear_upperbody = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
@@ -553,18 +560,21 @@ local ui_settings = {
 					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/preview_belt_mannequin",
 				},
 				slot_gear_extra_cosmetic = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 				slot_animation_end_of_round = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 			},
 		},
@@ -575,6 +585,7 @@ local ui_settings = {
 					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
 					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
 					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 				slot_gear_upperbody = {
 					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
@@ -587,18 +598,21 @@ local ui_settings = {
 					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
 					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
 					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_preview_belt_mannequin",
 				},
 				slot_gear_extra_cosmetic = {
 					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
 					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
 					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
 					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 				slot_animation_end_of_round = {
 					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
 					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
 					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
 					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
+					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 			},
 		},
@@ -846,6 +860,18 @@ local ui_settings = {
 			display_name = "loc_ogryn_combatblade_p1_m3",
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
 		},
+		ogryn_pickaxe_2h_p1_m1 = {
+			display_name = "loc_ogryn_pickaxe_2h_p1_m1",
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_pickaxe_2h_p1",
+		},
+		ogryn_pickaxe_2h_p1_m2 = {
+			display_name = "loc_ogryn_pickaxe_2h_p1_m2",
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_pickaxe_2h_p1",
+		},
+		ogryn_pickaxe_2h_p1_m3 = {
+			display_name = "loc_ogryn_pickaxe_2h_p1_m3",
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_pickaxe_2h_p1",
+		},
 		ogryn_powermaul_p1_m1 = {
 			display_name = "loc_ogryn_powermaul_p1_m1",
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_powermaul_p1",
@@ -857,6 +883,14 @@ local ui_settings = {
 		powermaul_2h_p1_m1 = {
 			display_name = "loc_powermaul_2h_p1_m1",
 			display_name_pattern = "loc_weapon_pattern_name_powermaul_2h_p1",
+		},
+		powermaul_p1_m1 = {
+			display_name = "loc_powermaul_p1_m1",
+			display_name_pattern = "loc_weapon_pattern_name_powermaul_p1",
+		},
+		powermaul_p1_m2 = {
+			display_name = "loc_powermaul_p1_m2",
+			display_name_pattern = "loc_weapon_pattern_name_powermaul_p1",
 		},
 		powersword_p1_m1 = {
 			display_name = "loc_powersword_p1_m1",
@@ -917,6 +951,10 @@ local ui_settings = {
 		bolter_p1_m1 = {
 			display_name = "loc_bolter_p1_m1",
 			display_name_pattern = "loc_weapon_pattern_name_bolter_p1",
+		},
+		boltpistol_p1_m1 = {
+			display_name = "loc_boltpistol_p1_m1",
+			display_name_pattern = "loc_weapon_pattern_name_boltpistol_p1",
 		},
 		flamer_p1_m1 = {
 			display_name = "loc_flamer_p1_m1",
@@ -1033,6 +1071,10 @@ local ui_settings = {
 		shotgun_p1_m3 = {
 			display_name = "loc_shotgun_p1_m3",
 			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
+		},
+		shotgun_p2_m1 = {
+			display_name = "loc_shotgun_p2_m1",
+			display_name_pattern = "loc_weapon_pattern_name_shotgun_p2",
 		},
 		stubrevolver_p1_m1 = {
 			display_name = "loc_stubrevolver_p1_m1",
