@@ -176,6 +176,7 @@ dialogue_breed_settings.mission_giver = {
 		"enemy_wolfer_adjutant_b",
 		"enemy_wolfer_adjutant_c",
 		"enemy_wolfer_adjutant_d",
+		"dreg_lector_a",
 		"interrogator_a",
 		"training_ground_psyker_a",
 		"enginseer_a",
@@ -411,6 +412,20 @@ dialogue_breed_settings.enemy_wolfer_adjutant = {
 		"enemy_wolfer_adjutant_d",
 	},
 }
+dialogue_breed_settings.dreg_lector = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "dreg_lector",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"dreg_lector_a",
+	},
+}
 dialogue_breed_settings.confessional = {
 	dialogue_memory_faction_name = "npc",
 	has_dialogue_extension = true,
@@ -642,7 +657,8 @@ dialogue_breed_settings.renegade_twin_captain = {
 dialogue_breed_settings.renegade_twin_captain_two = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
-	is_network_synced = false,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
 	randomize_voice = true,
 	spawn_vo_event = "taunt",
 	trigger_heard_vo = false,

@@ -200,6 +200,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 			local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
 			local num_wounds = health_extension:num_wounds()
 			local should_die = ignores_knockdown or is_knocked_down or num_wounds <= 1
+			local vo_event
 
 			if should_die then
 				local reason = "damage"
@@ -211,8 +212,18 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 				if should_add_died_tension then
 					Managers.state.pacing:add_tension_type("died", unit)
 				end
+
+				vo_event = "killed_player"
 			else
 				PlayerDeath.knock_down(unit)
+
+				vo_event = "downed_player"
+			end
+
+			local breed_name = attacking_unit and ScriptUnit.extension(attacking_unit, "unit_data_system"):breed().name
+
+			if breed_name then
+				Vo.enemy_generic_vo_event(attacking_unit, vo_event, breed_name)
 			end
 		end
 	end

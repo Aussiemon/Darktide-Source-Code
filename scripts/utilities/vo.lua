@@ -873,6 +873,24 @@ Vo.enemy_generic_vo_event = function (unit, trigger_id, breed_name_or_nil, targe
 	end
 end
 
+Vo.enemy_generic_vo_event_2d = function (voice_profile, trigger_id, breed_name_or_nil)
+	local unit = _get_mission_giver_unit(voice_profile)
+	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+
+	if dialogue_extension then
+		local event_name = "generic_enemy_vo_event"
+		local event_data = dialogue_extension:get_event_data_payload()
+
+		event_data.trigger_id = trigger_id
+
+		if breed_name_or_nil then
+			event_data.enemy_tag = breed_name_or_nil
+		end
+
+		dialogue_extension:trigger_dialogue_event(event_name, event_data)
+	end
+end
+
 Vo.enemy_vo_special_attack_event = function (unit, event_type)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 

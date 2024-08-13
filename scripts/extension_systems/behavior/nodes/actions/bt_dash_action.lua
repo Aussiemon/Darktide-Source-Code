@@ -16,6 +16,7 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Stagger = require("scripts/utilities/attack/stagger")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
+local Vo = require("scripts/utilities/vo")
 local attack_types = AttackSettings.attack_types
 local BtDashAction = class("BtDashAction", "BtNode")
 
@@ -81,6 +82,14 @@ BtDashAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 
 	if breed.combat_range_data then
 		behavior_component.lock_combat_range_switch = true
+	end
+
+	local vo_event = action_data.vo_event
+
+	if vo_event and perception_component.target_changed then
+		local breed_name = breed.name
+
+		Vo.enemy_generic_vo_event(unit, vo_event, breed_name)
 	end
 end
 

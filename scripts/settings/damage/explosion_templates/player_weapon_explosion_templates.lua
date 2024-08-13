@@ -116,6 +116,7 @@ local explosion_templates = {
 		collision_filter = "filter_player_character_explosion",
 		min_close_radius = 1,
 		min_radius = 2,
+		override_friendly_fire = false,
 		static_power_level = 500,
 		radius = {
 			4,
@@ -155,6 +156,7 @@ local explosion_templates = {
 		collision_filter = "filter_player_character_explosion",
 		min_close_radius = 1,
 		min_radius = 2,
+		override_friendly_fire = false,
 		static_power_level = 500,
 		radius = {
 			1,
@@ -194,6 +196,7 @@ local explosion_templates = {
 		collision_filter = "filter_player_character_explosion",
 		min_close_radius = 1,
 		min_radius = 2,
+		override_friendly_fire = false,
 		static_power_level = 500,
 		radius = {
 			2.5,

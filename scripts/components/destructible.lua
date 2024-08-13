@@ -94,6 +94,10 @@ Destructible.extensions_ready = function (self, world, unit)
 	end
 
 	self._health_extension = ScriptUnit.has_extension(unit, "health_system")
+
+	if self._health_extension and destructible_extension and self._health_extension:create_health_game_object() then
+		local should_despawn_with_health_game_object = destructible_extension:despawn_when_destroyed()
+	end
 end
 
 Destructible.update = function (self, unit, dt, t)

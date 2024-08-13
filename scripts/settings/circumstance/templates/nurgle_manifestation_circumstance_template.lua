@@ -14,7 +14,6 @@ local circumstance_templates = {
 		mutators = {
 			"mutator_minion_nurgle_blessing",
 		},
-		mission_overrides = {},
 	},
 	heretical_disruption_01 = {
 		dialogue_id = "circumstance_vo_nurgle_rot",
@@ -29,7 +28,6 @@ local circumstance_templates = {
 		mutators = {
 			"mutator_corruption_over_time",
 		},
-		mission_overrides = {},
 	},
 	bolstering_minions_01 = {
 		ui = {

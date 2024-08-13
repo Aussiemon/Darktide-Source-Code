@@ -44,6 +44,8 @@ LiveEventManager.remove_player = function (self, id)
 	local is_host = self._is_host
 
 	if is_host and event_id and account_id then
+		self:_update_player_xp(id, event_id)
+
 		local active_event_xp = table.nested_get(player_data, "progress", event_id, "xp")
 
 		if active_event_xp then
@@ -197,6 +199,19 @@ LiveEventManager._on_track_state_fail = function (self, id, event_id, error)
 	return Promise.rejected(error)
 end
 
+LiveEventManager._update_player_xp = function (self, id, event_id)
+	local is_host = self._is_host
+
+	if not is_host then
+		return
+	end
+
+	local player_data = self._players[id]
+	local event_data = player_data.progress[event_id]
+
+	event_data.xp = math.max(self:_get_current_xp(id, event_id), event_data.xp or 0)
+end
+
 LiveEventManager._update_player = function (self, dt, id)
 	local player_data = self._players[id]
 	local account_id = player_data.account_id
@@ -223,9 +238,7 @@ LiveEventManager._update_player = function (self, dt, id)
 			event_data.promise = Managers.backend.interfaces.tracks:get_track_state(event_id, account_id):next(callback(self, "_on_track_state_success", id, event_id), callback(self, "_on_track_state_fail", id, event_id))
 		end
 
-		if is_host then
-			event_data.xp = math.max(self:_get_current_xp(id, event_id), event_data.xp or 0)
-		end
+		self:_update_player_xp(id, event_id)
 	end
 end
 

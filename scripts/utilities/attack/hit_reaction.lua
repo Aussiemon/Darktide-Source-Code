@@ -124,7 +124,7 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 	local push_template = damage_profile[hit_reaction_keys.push_template]
 	local side_system = Managers.state.extension:system("side_system")
 	local is_ally = side_system:is_ally(attacking_unit, attacked_unit)
-	local stun_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit, attacked_unit)
+	local stun_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit, attacked_unit, attack_type)
 	local stagger_result = breed.default_stagger_result or stagger_results.stagger
 	local uninterruptible = target_buff_extension and target_buff_extension:has_keyword(buff_keywords.uninterruptible)
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)

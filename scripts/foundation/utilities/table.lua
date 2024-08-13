@@ -240,6 +240,29 @@ table.merge_recursive = function (dest, source)
 	return dest
 end
 
+table.merge_recursive_advanced = function (dest, source, allow_overwrites)
+	local is_overwrite = false
+
+	for key, value in pairs(source) do
+		local is_table = type(value) == "table"
+
+		if value == source then
+			dest[key] = dest
+		elseif is_table and type(dest[key]) == "table" then
+			local _, recursive_overwrite = table.merge_recursive_advanced(dest[key], value, allow_overwrites)
+
+			is_overwrite = is_overwrite or recursive_overwrite
+		elseif is_table then
+			dest[key] = table.clone(value)
+		elseif dest[key] == nil or allow_overwrites then
+			is_overwrite = is_overwrite or dest[key] ~= nil
+			dest[key] = value
+		end
+	end
+
+	return dest, is_overwrite
+end
+
 table.append = function (dest, source)
 	local dest_size = #dest
 

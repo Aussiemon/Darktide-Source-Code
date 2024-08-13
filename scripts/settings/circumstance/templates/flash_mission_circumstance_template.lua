@@ -1,211 +1,7 @@
 ﻿-- chunkname: @scripts/settings/circumstance/templates/flash_mission_circumstance_template.lua
 
-local only_melee_mission_overrides = {
-	pickup_settings = {
-		rubberband_pool = {
-			ammo = {
-				small_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				large_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				ammo_cache_pocketable = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-			},
-			grenade = {
-				small_grenade = {
-					3,
-					3,
-					3,
-					3,
-					3,
-				},
-			},
-		},
-		mid_event = {
-			ammo = {
-				small_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				large_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				ammo_cache_pocketable = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-			},
-		},
-		end_event = {
-			ammo = {
-				small_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				large_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				ammo_cache_pocketable = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-			},
-		},
-		primary = {
-			ammo = {
-				small_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				large_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				ammo_cache_pocketable = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-			},
-			grenade = {
-				small_grenade = {
-					4,
-					4,
-					4,
-					4,
-					4,
-				},
-			},
-		},
-		secondary = {
-			ammo = {
-				small_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				large_clip = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-				ammo_cache_pocketable = {
-					-99,
-					-99,
-					-99,
-					-99,
-					-99,
-				},
-			},
-		},
-	},
-}
-local toxic_gas_mission_overrides = {
-	pickup_settings = {
-		rubberband_pool = {
-			wounds = {
-				syringe_corruption_pocketable = {
-					10,
-					10,
-					10,
-					10,
-					10,
-				},
-			},
-		},
-		mid_event = {
-			wounds = {
-				syringe_corruption_pocketable = {
-					1,
-					1,
-					1,
-					1,
-					1,
-				},
-			},
-		},
-		end_event = {
-			wounds = {
-				syringe_corruption_pocketable = {
-					1,
-					1,
-					1,
-					1,
-					1,
-				},
-			},
-		},
-		primary = {
-			wounds = {
-				syringe_corruption_pocketable = {
-					10,
-					10,
-					10,
-					10,
-					10,
-				},
-			},
-		},
-		secondary = {
-			wounds = {
-				syringe_corruption_pocketable = {
-					10,
-					10,
-					10,
-					10,
-					10,
-				},
-			},
-		},
-	},
-}
+local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
+local only_melee_mission_overrides = MissionOverrides.merge("no_ammo_pickups", "more_grenade_pickups")
 local circumstance_templates = {
 	flash_mission_01 = {
 		theme_tag = "default",
@@ -367,13 +163,7 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_enchanced_grenade_ability",
 		},
-		mission_overrides = {
-			hazard_prop_settings = {
-				explosion = 1,
-				fire = 1,
-				none = 0,
-			},
-		},
+		mission_overrides = MissionOverrides.no_empty_hazards,
 	},
 	flash_mission_12 = {
 		theme_tag = "default",
@@ -388,13 +178,7 @@ local circumstance_templates = {
 			"mutator_chaos_hounds",
 			"mutator_enchanced_grenade_ability",
 		},
-		mission_overrides = {
-			hazard_prop_settings = {
-				explosion = 1,
-				fire = 1,
-				none = 0,
-			},
-		},
+		mission_overrides = MissionOverrides.no_empty_hazards,
 	},
 	flash_mission_13 = {
 		theme_tag = "default",
@@ -409,13 +193,7 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_ability_cooldown_reduction",
 		},
-		mission_overrides = {
-			hazard_prop_settings = {
-				explosion = 1,
-				fire = 1,
-				none = 0,
-			},
-		},
+		mission_overrides = MissionOverrides.no_empty_hazards,
 	},
 	flash_mission_14 = {
 		theme_tag = "default",
@@ -445,7 +223,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_15_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	flash_mission_16 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -462,7 +240,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_16_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	flash_mission_17 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -480,7 +258,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_17_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	flash_mission_18 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -497,7 +275,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_18_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	flash_mission_19 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -517,7 +295,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_19_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	high_flash_mission_01 = {
 		theme_tag = "default",
@@ -723,13 +501,7 @@ local circumstance_templates = {
 			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier",
 		},
-		mission_overrides = {
-			hazard_prop_settings = {
-				explosion = 1,
-				fire = 1,
-				none = 0,
-			},
-		},
+		mission_overrides = MissionOverrides.no_empty_hazards,
 	},
 	high_flash_mission_12 = {
 		theme_tag = "default",
@@ -748,13 +520,7 @@ local circumstance_templates = {
 			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier",
 		},
-		mission_overrides = {
-			hazard_prop_settings = {
-				explosion = 1,
-				fire = 1,
-				none = 0,
-			},
-		},
+		mission_overrides = MissionOverrides.no_empty_hazards,
 	},
 	high_flash_mission_13 = {
 		theme_tag = "default",
@@ -773,13 +539,7 @@ local circumstance_templates = {
 			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier",
 		},
-		mission_overrides = {
-			hazard_prop_settings = {
-				explosion = 1,
-				fire = 1,
-				none = 0,
-			},
-		},
+		mission_overrides = MissionOverrides.no_empty_hazards,
 	},
 	high_flash_mission_14 = {
 		theme_tag = "default",
@@ -817,7 +577,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_15_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	high_flash_mission_16 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -838,7 +598,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_16_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	high_flash_mission_17 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -860,7 +620,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_17_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	high_flash_mission_18 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -881,7 +641,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_18_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	high_flash_mission_19 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
@@ -905,7 +665,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_flash_mission_19_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 		},
-		mission_overrides = toxic_gas_mission_overrides,
+		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
 	six_one_flash_mission_01 = {
 		theme_tag = "default",

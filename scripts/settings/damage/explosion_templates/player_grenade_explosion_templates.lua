@@ -127,6 +127,7 @@ local explosion_templates = {
 		damage_falloff = true,
 		min_close_radius = 2,
 		min_radius = 5,
+		override_friendly_fire = false,
 		radius = 10,
 		scalable_radius = true,
 		static_power_level = 100,

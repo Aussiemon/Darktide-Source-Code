@@ -2484,6 +2484,26 @@ FlowCallbacks.hook_stat_team = function (params)
 	Managers.stats:record_team(params.hook_id)
 end
 
+FlowCallbacks.live_event_check = function (params)
+	flow_return_table.event_active = false
+	flow_return_table.event_progress = 0
+
+	local template = Managers.live_event:active_template()
+
+	if template then
+		local id = template.id
+
+		if params.event_name == id then
+			local progress = Managers.live_event:active_progress()
+
+			flow_return_table.event_active = true
+			flow_return_table.event_progress = progress
+		end
+	end
+
+	return flow_return_table
+end
+
 FlowCallbacks.unlock_achievement_everyone = function (params)
 	local is_server = Managers.state.game_session:is_server()
 

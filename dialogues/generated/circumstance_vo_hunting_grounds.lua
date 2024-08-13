@@ -2084,7 +2084,7 @@ return function ()
 					"mission_propaganda_short_elevator_conversation_one_b",
 					"mission_propaganda_short_elevator_conversation_two_b",
 					"mission_propaganda_short_elevator_conversation_three_b",
-					"level_hab_block_first_objective_response",
+					"mission_habs_redux_start_zone_response",
 					"mission_archives_start_banter_c",
 					"mission_complex_start_banter_c",
 					"mission_enforcer_start_banter_c",
@@ -2094,6 +2094,8 @@ return function ()
 					"mission_strain_start_banter_c",
 					"mission_armoury_rooftops_c",
 					"mission_raid_safe_zone_e",
+					"mission_rise_first_objective_response",
+					"mission_core_safe_zone_e",
 				},
 			},
 			{

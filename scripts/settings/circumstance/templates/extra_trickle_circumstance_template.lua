@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/circumstance/templates/extra_trickle_circumstance_template.lua
 
+local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local circumstance_templates = {
 	snipers_01 = {
 		theme_tag = "default",
@@ -30,13 +31,7 @@ local circumstance_templates = {
 			happening_display_name = "loc_happening_hunting_grounds",
 			icon = "content/ui/materials/icons/circumstances/hunting_grounds_01",
 		},
-		mission_overrides = {
-			hazard_prop_settings = {
-				explosion = 1,
-				fire = 1,
-				none = 0,
-			},
-		},
+		mission_overrides = MissionOverrides.no_empty_hazards,
 	},
 	mutants_01 = {
 		theme_tag = "default",

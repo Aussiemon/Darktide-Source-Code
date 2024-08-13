@@ -17,10 +17,10 @@ local buff_keywords = BuffSettings.keywords
 local _calculate_shield_damage, _calculate_toughness_damage, _calculate_toughness_damage_player, _calculate_toughness_damage_minion, _calculate_health_damage, _calculate_health_damage_player, _calculate_health_damage_minion
 local DamageTakenCalculation = {}
 
-DamageTakenCalculation.calculation_parameters = function (attacked_unit, attacked_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension)
+DamageTakenCalculation.calculation_parameters = function (attacked_unit, attacked_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, attack_type)
 	local side_system = Managers.state.extension:system("side_system")
 	local is_ally = side_system:is_ally(attacked_unit, attacking_unit_owner_unit)
-	local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit) or damage_profile.override_allow_friendly_fire
+	local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit, attack_type) or damage_profile.override_allow_friendly_fire
 	local is_player = Breed.is_player(attacked_breed_or_nil)
 	local is_minion = Breed.is_minion(attacked_breed_or_nil)
 	local is_living_prop = Breed.is_living_prop(attacked_breed_or_nil)

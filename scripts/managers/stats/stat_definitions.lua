@@ -5623,6 +5623,24 @@ do
 	}
 end
 
+StatDefinitions.live_event_darkness_twins_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+		StatFlags.never_log,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return circumstance_name == "darkness_twins_solo_01"
+	end,
+}
 StatDefinitions = _stat_data
 
 for _, stat in pairs(StatDefinitions) do

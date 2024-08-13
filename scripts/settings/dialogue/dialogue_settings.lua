@@ -208,6 +208,7 @@ DialogueSettings.friends_distant_distance = 40
 DialogueSettings.enemies_close_distance = 10
 DialogueSettings.enemies_distant_distance = 40
 DialogueSettings.dialogue_level_start_delay = 120
+DialogueSettings.story_tickers_intensity_cooldown = 6
 DialogueSettings.story_ticker_enabled = true
 DialogueSettings.story_start_delay = 173
 DialogueSettings.story_tick_time = 5.1

@@ -6,6 +6,8 @@ local _add_force_on_parts, _calculate_total_health, _set_lights_enabled, _set_me
 local FORCE_DIRECTION = table.enum("random_direction", "attack_direction", "provided_direction_relative", "provided_direction_world")
 local DestructibleExtension = class("DestructibleExtension")
 
+DestructibleExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
 DestructibleExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
 	self._nav_world = extension_init_context.nav_world
@@ -22,6 +24,7 @@ DestructibleExtension.init = function (self, extension_init_context, unit, exten
 		lights_enabled = true,
 		visible = true,
 	}
+	self._owner_system = extension_init_context.owner_system
 end
 
 DestructibleExtension.destroy = function (self)
@@ -129,26 +132,12 @@ DestructibleExtension.hot_join_sync = function (self, unit, peer_id, channel_id)
 end
 
 DestructibleExtension.update = function (self, unit, dt, t)
-	if self._destruction_info then
-		local current_stage_index = self._destruction_info.current_stage_index
-		local should_despawn = self._despawn_when_destroyed and current_stage_index == 0 and self._timer_to_despawn ~= 0
+	self._timer_to_despawn = self._timer_to_despawn - dt
+	self._timer_to_despawn = math.max(self._timer_to_despawn, 0)
 
-		if current_stage_index == 0 then
-			self:_disable_nav_volume()
-		end
-
-		if should_despawn then
-			if self._timer_to_despawn == nil then
-				self._timer_to_despawn = self._despawn_timer_duration
-			end
-
-			self._timer_to_despawn = self._timer_to_despawn - dt
-			self._timer_to_despawn = math.max(self._timer_to_despawn, 0)
-
-			if self._timer_to_despawn == 0 then
-				Managers.state.unit_spawner:mark_for_deletion(unit)
-			end
-		end
+	if self._timer_to_despawn == 0 then
+		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		Managers.state.unit_spawner:mark_for_deletion(unit)
 	end
 end
 
@@ -196,6 +185,8 @@ DestructibleExtension.add_damage = function (self, damage_amount, hit_actor, att
 		local unit_id = unit_object_id or unit_level_id or NetworkConstants.invalid_level_unit_id
 		local visible = true
 		local from_hot_join_sync = false
+
+		self:_handle_stage_zero(new_stage_index)
 
 		if unit_id ~= nil then
 			Managers.state.game_session:send_rpc_clients("rpc_sync_destructible", unit_id, is_level_unit, new_stage_index, visible, from_hot_join_sync)
@@ -277,6 +268,7 @@ DestructibleExtension.rpc_sync_destructible = function (self, current_stage_inde
 	end
 
 	self:_set_stage(current_stage_index, from_hot_join_sync)
+	self:_handle_stage_zero(current_stage_index)
 end
 
 DestructibleExtension.broadphase_radius = function (self)
@@ -389,6 +381,24 @@ end
 
 DestructibleExtension.set_collectible_data = function (self, data)
 	self._collectible_data = data
+end
+
+DestructibleExtension.despawn_when_destroyed = function (self)
+	return self._despawn_when_destroyed
+end
+
+DestructibleExtension._handle_stage_zero = function (self, current_stage_index)
+	if current_stage_index == 0 then
+		self:_disable_nav_volume()
+
+		if self._despawn_when_destroyed then
+			if self._timer_to_despawn == nil then
+				self._timer_to_despawn = self._despawn_timer_duration
+			end
+
+			self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+		end
+	end
 end
 
 function _set_meshes_visiblity(unit, meshes, visible)

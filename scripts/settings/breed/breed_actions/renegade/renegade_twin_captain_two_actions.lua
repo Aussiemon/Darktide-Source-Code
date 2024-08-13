@@ -40,6 +40,10 @@ local action_data = {
 			foff = 0.9333333333333333,
 		},
 		explosion_template = ExplosionTemplates.twin_disappear_explosion,
+		vo_event = {
+			trigger_id = "cult_retreat_a",
+			voice_profile = "captain_twin_female_a",
+		},
 	},
 	disappear_instant = {
 		anim_events = "foff",
@@ -546,6 +550,7 @@ local action_data = {
 		push_minions_radius = 3,
 		push_minions_side_relation = "allied",
 		utility_weight = 10,
+		vo_event = "cult_switch_focus_a",
 		considerations = UtilityConsiderations.twin_captain_dash,
 		dash_anim_events = {
 			"twin_dash_start",
@@ -579,6 +584,7 @@ local action_data = {
 		push_minions_radius = 3,
 		push_minions_side_relation = "allied",
 		utility_weight = 10,
+		vo_event = "cult_switch_focus_a",
 		considerations = UtilityConsiderations.twin_captain_dash,
 		dash_anim_events = {
 			"twin_dash_start",

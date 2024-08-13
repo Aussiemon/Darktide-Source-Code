@@ -6,6 +6,7 @@ local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Explosion = require("scripts/utilities/attack/explosion")
 local BtRenegadeTwinCaptainDisappearAction = class("BtRenegadeTwinCaptainDisappearAction", "BtNode")
+local Vo = require("scripts/utilities/vo")
 
 BtRenegadeTwinCaptainDisappearAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local anim_events = action_data.anim_events
@@ -17,6 +18,12 @@ BtRenegadeTwinCaptainDisappearAction.enter = function (self, unit, breed, blackb
 	local disappear_timing = action_data.disappear_timings[anim_event]
 
 	scratchpad.disappear_timing = t + disappear_timing
+
+	local vo_event = action_data.vo_event
+
+	if vo_event then
+		Vo.enemy_generic_vo_event_2d(vo_event.voice_profile, vo_event.trigger_id, breed.name)
+	end
 end
 
 BtRenegadeTwinCaptainDisappearAction.init_values = function (self, blackboard)

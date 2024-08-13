@@ -27,6 +27,9 @@ StatConfigs.session = {
 	is_hub = {
 		default = false,
 	},
+	live_event = {
+		default = "none",
+	},
 }
 StatConfigs.user = {
 	archetype_name = {

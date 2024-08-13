@@ -56,7 +56,14 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	local hit_actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "position", source_position, "size", radius, "shape", "sphere", "types", "both", "collision_filter", collision_filter)
 	local weapon_system = Managers.state.extension:system("weapon_system")
 	local queue_index, data = weapon_system:prepare_queued_explosion()
-	local override_friendly_fire = explosion_template.override_friendly_fire
+	local template_friendly_fire_override = explosion_template.override_friendly_fire
+	local mutator_friendly_fire_override = not not Managers.state.mutator:mutator("mutator_explosive_friendly_fire")
+	local friendly_fire_override = template_friendly_fire_override
+
+	if template_friendly_fire_override == nil then
+		friendly_fire_override = mutator_friendly_fire_override
+	end
+
 	local side_system = Managers.state.extension:system("side_system")
 
 	table.clear(hit_units)
@@ -97,8 +104,8 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 			if is_valid_target then
 				hit_units[hit_unit] = true
 
-				if hit_unit ~= attacking_unit_owner_unit or override_friendly_fire then
-					local damage_allowed = side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit) or override_friendly_fire
+				if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
+					local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
 					local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
 
 					if damage_allowed and has_health then

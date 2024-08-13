@@ -31,6 +31,17 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 		end
 	end
 
+	local circumstance_info = Managers.state.circumstance:template()
+	local additional_vo_units = circumstance_info.vo_units
+
+	if additional_vo_units then
+		for _, vo_class in pairs(additional_vo_units) do
+			local num_vo_classes_2d = #vo_classes_2d
+
+			vo_classes_2d[num_vo_classes_2d + 1] = vo_class
+		end
+	end
+
 	for i = 1, #vo_classes_2d do
 		local vo_class = vo_classes_2d[i]
 		local breed_dialogue_settings = DialogueBreedSettings[vo_class]

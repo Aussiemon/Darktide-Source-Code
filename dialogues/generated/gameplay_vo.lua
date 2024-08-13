@@ -15360,7 +15360,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"twin_spawn_laugh_a",
+					"cult_pre_ambush_a",
 				},
 			},
 		},

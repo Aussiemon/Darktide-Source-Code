@@ -11,5 +11,6 @@ end
 
 _add_live_event("skulls")
 _add_live_event("mechanicus")
+_add_live_event("darkness")
 
 return settings("LiveEvents", live_events)

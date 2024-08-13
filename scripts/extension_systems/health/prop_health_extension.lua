@@ -385,6 +385,10 @@ PropHealthExtension.max_wounds = function (self)
 	return 1
 end
 
+PropHealthExtension.create_health_game_object = function (self)
+	return self._create_health_game_object
+end
+
 PropHealthExtension._can_receive_damage = function (self, attacking_unit, attack_type)
 	if attacking_unit == self._unit then
 		return true

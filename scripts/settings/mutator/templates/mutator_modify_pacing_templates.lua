@@ -586,6 +586,12 @@ local mutator_templates = {
 	mutator_ventilation_purge_los = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 	},
+	mutator_single_twin = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
+	},
+	mutator_explosive_friendly_fire = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
+	},
 }
 
 return mutator_templates

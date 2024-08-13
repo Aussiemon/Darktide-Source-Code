@@ -72,6 +72,29 @@ local circumstance_templates = {
 			"mutator_darkness_los",
 		},
 	},
+	darkness_twins_solo_01 = {
+		dialogue_id = "circumstance_vo_darkness_twin",
+		theme_tag = "darkness",
+		wwise_state = "darkness_01",
+		dialogue_load_files = {
+			"circumstance_vo_darkness",
+		},
+		vo_units = {
+			"renegade_twin_captain_two",
+			"dreg_lector",
+		},
+		ui = {
+			description = "loc_circumstance_darkness_twins_solo_description",
+			display_name = "loc_circumstance_darkness_twins_solo_title",
+			happening_display_name = "loc_happening_darkness",
+			icon = "content/ui/materials/icons/circumstances/darkness_01",
+		},
+		mutators = {
+			"mutator_single_twin",
+			"mutator_more_encampments",
+			"mutator_darkness_los",
+		},
+	},
 }
 
 return circumstance_templates

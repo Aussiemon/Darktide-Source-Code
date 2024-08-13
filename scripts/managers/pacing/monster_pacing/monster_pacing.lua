@@ -6,6 +6,7 @@ local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_te
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MinionPatrols = require("scripts/utilities/minion_patrols")
 local MonsterSettings = require("scripts/settings/monster/monster_settings")
+local MonsterInjectionTemplates = require("scripts/managers/pacing/monster_pacing/templates/monster_injection_templates")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -56,27 +57,6 @@ end
 local TEMP_SECTIONS_MONSTERS = {}
 local TEMP_SECTIONS_WITCHES = {}
 local NUM_SECTIONS = {}
-local TWIN_BREED_NAMES = {
-	"renegade_twin_captain",
-	"renegade_twin_captain_two",
-}
-local SHOULD_INJECT_TWIN = {
-	false,
-	false,
-	true,
-	true,
-	true,
-}
-local MAINPATH_SOUND_EVENTS = {
-	renegade_twin_captain = {
-		distance = 30,
-		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-	},
-	renegade_twin_captain_two = {
-		distance = 30,
-		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-	},
-}
 
 MonsterPacing._generate_spawns = function (self, template)
 	table.clear(self._main_path_sound_events)
@@ -129,20 +109,14 @@ MonsterPacing._generate_spawns = function (self, template)
 	NUM_SECTIONS.witches = num_sections
 
 	local monsters, breed_names = {}, table.clone(template.breed_names)
-	local inject_twin = false
-	local can_inject_twin = false
+	local boss_injections = {}
 
-	can_inject_twin = Managers.state.difficulty:get_table_entry_by_challenge(SHOULD_INJECT_TWIN)
+	for injection_name, injection_data in pairs(MonsterInjectionTemplates) do
+		local correct_difficulty = Managers.state.difficulty:get_table_entry_by_challenge(injection_data.difficulties)
+		local inject_requested = injection_data.should_inject()
 
-	if can_inject_twin then
-		local flag = "activate_twins"
-
-		inject_twin = Managers.state.pacing:get_backend_pacing_control_flag(flag)
-
-		if inject_twin then
-			Log.info("MonsterPacing", "Injected twin")
-		else
-			Log.info("MonsterPacing", "Got twins flag but didn't roll true")
+		if correct_difficulty and inject_requested then
+			boss_injections[#boss_injections + 1] = injection_name
 		end
 	end
 
@@ -150,87 +124,98 @@ MonsterPacing._generate_spawns = function (self, template)
 	local boss_patrols
 
 	for i = 1, num_valid_spawn_types do
-		repeat
-			local spawn_type = valid_spawn_types[i]
-			local num_spawns = template.num_spawns[spawn_type] or 0
-			local current_num_sections = allow_witches_spawned_with_monsters and NUM_SECTIONS[spawn_type] or num_sections
-			local num_to_spawn = math.min(current_num_sections, type(num_spawns) == "table" and math.random(num_spawns[1], num_spawns[2]) or num_spawns)
-			local is_monster = spawn_type == "monsters"
+		local spawn_type = valid_spawn_types[i]
+		local num_spawns = template.num_spawns[spawn_type] or 0
+		local current_num_sections = allow_witches_spawned_with_monsters and NUM_SECTIONS[spawn_type] or num_sections
+		local num_to_spawn = type(num_spawns) == "table" and math.random(num_spawns[1], num_spawns[2]) or num_spawns
+		local is_monster = spawn_type == "monsters"
 
-			if is_monster and self._num_monsters_override then
-				num_to_spawn = self._num_monsters_override
-			elseif spawn_type == "witches" and self._num_witches_override then
-				num_to_spawn = self._num_witches_override
-			end
+		if is_monster and self._num_monsters_override then
+			num_to_spawn = self._num_monsters_override
+		elseif spawn_type == "witches" and self._num_witches_override then
+			num_to_spawn = self._num_witches_override
+		end
 
-			local temp_sections_table = is_monster and TEMP_SECTIONS_MONSTERS or TEMP_SECTIONS_WITCHES
+		num_to_spawn = math.max(num_to_spawn, #boss_injections)
 
-			for j = 1, num_to_spawn do
-				local spawn_point_sections = spawn_type_point_sections[spawn_type]
-				local temp_section_index = math.random(#temp_sections_table)
-				local section_index = temp_sections_table[temp_section_index]
-				local section = spawn_point_sections[section_index]
-				local spawn_point = section[math.random(#section)]
-				local travel_distance = spawn_point.spawn_travel_distance
-				local spawn_type_breed_names = breed_names[spawn_type]
+		if current_num_sections < num_to_spawn then
+			Log.warning("MonsterPacing", "Requested %s spawns for type %s but only had %s sections. Clamped.", num_to_spawn, spawn_type, current_num_sections)
 
-				if #spawn_type_breed_names > 0 then
-					local breed_name = spawn_type_breed_names[math.random(#spawn_type_breed_names)]
-					local position = spawn_point.position
+			num_to_spawn = current_num_sections
+		end
 
-					if inject_twin then
-						breed_name = TWIN_BREED_NAMES[math.random(1, #TWIN_BREED_NAMES)]
-					end
+		local temp_sections_table = is_monster and TEMP_SECTIONS_MONSTERS or TEMP_SECTIONS_WITCHES
 
-					local despawn_distance_when_passive = template.despawn_distance_when_passive and template.despawn_distance_when_passive[breed_name]
-					local monster = {
-						travel_distance = travel_distance,
-						breed_name = breed_name,
-						position = position,
-						section = section_index,
-						despawn_distance_when_passive = despawn_distance_when_passive,
-						spawn_type = spawn_type,
-					}
+		for _ = 1, num_to_spawn do
+			local sound_data
+			local spawn_point_sections = spawn_type_point_sections[spawn_type]
+			local temp_section_index = math.random(#temp_sections_table)
+			local section_index = temp_sections_table[temp_section_index]
+			local section = spawn_point_sections[section_index]
+			local spawn_point = section[math.random(#section)]
+			local travel_distance = spawn_point.spawn_travel_distance
+			local spawn_type_breed_names = breed_names[spawn_type]
 
-					monsters[#monsters + 1] = monster
+			if #spawn_type_breed_names > 0 then
+				local breed_name = spawn_type_breed_names[math.random(#spawn_type_breed_names)]
+				local position = spawn_point.position
+				local injection_index = #boss_injections
+				local injection_name = boss_injections[injection_index]
+				local injection_template = MonsterInjectionTemplates[injection_name]
 
-					if inject_twin then
-						monster.is_twin = true
-						monster.objective = "objective_twins_ambush"
-						inject_twin = false
+				if injection_template then
+					boss_injections[injection_index] = nil
+					sound_data = injection_template.sound_data
 
-						local mutator_manager = Managers.state.mutator
+					local injection_breed_names = injection_template.breed_names
+					local injection_breed_index = math.random(#injection_breed_names)
 
-						if mutator_manager:mutator("mutator_auric_tension_modifier") then
-							monster.set_enraged = true
-						end
+					breed_name = injection_breed_names[injection_breed_index]
+				end
 
-						local main_path_sound_event_data = MAINPATH_SOUND_EVENTS[breed_name]
+				local despawn_distance_when_passive = template.despawn_distance_when_passive and template.despawn_distance_when_passive[breed_name]
+				local monster = {
+					travel_distance = travel_distance,
+					breed_name = breed_name,
+					position = position,
+					section = section_index,
+					despawn_distance_when_passive = despawn_distance_when_passive,
+					spawn_type = spawn_type,
+				}
 
-						if main_path_sound_event_data then
-							self._main_path_sound_events[#self._main_path_sound_events + 1] = {
-								event = main_path_sound_event_data.event,
-								distance = travel_distance - main_path_sound_event_data.distance,
-							}
-						end
-					end
+				monsters[#monsters + 1] = monster
 
-					local stinger = self._template.spawn_stingers and self._template.spawn_stingers[breed_name]
+				if injection_template and injection_template.add_overrides then
+					injection_template.add_overrides(monster)
+				end
 
-					if stinger then
-						monster.stinger = stinger
-					end
+				local stinger = self._template.spawn_stingers and self._template.spawn_stingers[breed_name]
 
-					table.swap_delete(temp_sections_table, temp_section_index)
+				if stinger then
+					monster.stinger = stinger
+				end
 
-					if allow_witches_spawned_with_monsters then
-						NUM_SECTIONS[spawn_type] = NUM_SECTIONS[spawn_type] - 1
-					else
-						num_sections = num_sections - 1
-					end
+				table.swap_delete(temp_sections_table, temp_section_index)
+
+				if allow_witches_spawned_with_monsters then
+					NUM_SECTIONS[spawn_type] = NUM_SECTIONS[spawn_type] - 1
+				else
+					num_sections = num_sections - 1
 				end
 			end
-		until true
+
+			if sound_data then
+				local sound_events = self._main_path_sound_events
+
+				sound_events[#sound_events + 1] = {
+					event = sound_data.event,
+					distance = travel_distance - sound_data.distance,
+					vo_event = sound_data.vo_event,
+					voice_profile = sound_data.voice_profile,
+					breed_name = sound_data.breed_name,
+				}
+			end
+		end
 	end
 
 	local boss_patrol_settings = template.boss_patrols
@@ -530,9 +515,16 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 			local next_mainpath_event = self._main_path_sound_events[1]
 
 			if ahead_travel_distance >= next_mainpath_event.distance then
-				local optional_ambisonics = true
+				local switch = math.random()
 
-				self._fx_system:trigger_wwise_event(next_mainpath_event.event, nil, nil, nil, nil, nil, optional_ambisonics)
+				if switch > 0.5 then
+					local optional_ambisonics = true
+
+					self._fx_system:trigger_wwise_event(next_mainpath_event.event, nil, nil, nil, nil, nil, optional_ambisonics)
+				else
+					Vo.enemy_generic_vo_event_2d(next_mainpath_event.voice_profile, next_mainpath_event.vo_event, next_mainpath_event.breed_name)
+				end
+
 				table.remove(self._main_path_sound_events, 1)
 			end
 		end

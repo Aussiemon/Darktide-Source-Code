@@ -363,7 +363,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 	if not instakill and Block.is_blocking(attacked_unit, attacking_unit, attack_type, target_weapon_template, is_server) then
 		local side_system = Managers.state.extension:system("side_system")
 		local is_ally = side_system:is_ally(attacked_unit, attacking_unit_owner_unit)
-		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit)
+		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit, attack_type)
 		local target_is_player = Breed.is_player(target_breed_or_nil)
 		local is_blockable = Block.attack_is_blockable(damage_profile, attacked_unit, target_weapon_template)
 
@@ -407,7 +407,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 			damage_absorbed = 0
 			result = attack_results.dodged
 		else
-			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, hit_zone_name)
+			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, attack_type)
 			local tougness_damage
 
 			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs)

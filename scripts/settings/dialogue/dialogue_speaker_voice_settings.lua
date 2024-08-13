@@ -684,6 +684,13 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_travelling_salesman_a",
 		subtitles_enabled = true,
 	},
+	dreg_lector_a = {
+		full_name = "loc_npc_full_name_dreg_lector_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
+		player_voice = false,
+		short_name = "loc_npc_short_name_dreg_lector_a",
+		subtitles_enabled = true,
+	},
 }
 
 return settings("DialogueSpeakerVoiceSettings", dialogue_speaker_voice_settings)
