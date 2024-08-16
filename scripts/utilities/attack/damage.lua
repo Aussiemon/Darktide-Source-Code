@@ -220,10 +220,11 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 				vo_event = "downed_player"
 			end
 
-			local breed_name = attacking_unit and ScriptUnit.extension(attacking_unit, "unit_data_system"):breed().name
+			local attacking_breed = Breed.unit_breed_or_nil(attacking_unit_owner_unit)
+			local attacking_breed_name = attacking_breed and attacking_breed.name
 
-			if breed_name then
-				Vo.enemy_generic_vo_event(attacking_unit, vo_event, breed_name)
+			if attacking_breed_name then
+				Vo.enemy_generic_vo_event(attacking_unit_owner_unit, vo_event, attacking_breed_name)
 			end
 		end
 	end

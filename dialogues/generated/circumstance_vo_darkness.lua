@@ -647,7 +647,7 @@ return function ()
 			{
 				"global_context",
 				"current_mission",
-				OP.EQ,
+				OP.NEQ,
 				"km_enforcer_twins",
 			},
 		},
@@ -730,7 +730,7 @@ return function ()
 			{
 				"global_context",
 				"current_mission",
-				OP.EQ,
+				OP.NEQ,
 				"km_enforcer_twins",
 			},
 			{
@@ -774,7 +774,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"cult_taunt_twin_a",
+				"taunt",
 			},
 			{
 				"query_context",
@@ -787,7 +787,7 @@ return function ()
 			{
 				"global_context",
 				"current_mission",
-				OP.EQ,
+				OP.NEQ,
 				"km_enforcer_twins",
 			},
 		},

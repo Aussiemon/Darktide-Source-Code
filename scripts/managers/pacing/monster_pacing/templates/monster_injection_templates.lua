@@ -17,8 +17,10 @@ MonsterInjectionTemplates.backend_twins = {
 	should_inject = function ()
 		local pacing_manager = Managers.state.pacing
 		local backend_activated = pacing_manager and pacing_manager:get_backend_pacing_control_flag("activate_twins")
+		local circumstance_name = Managers.state.circumstance:circumstance_name()
+		local non_twin_circumstance = circumstance_name ~= "toxic_gas_twins_01"
 
-		return backend_activated
+		return backend_activated and non_twin_circumstance
 	end,
 	add_overrides = function (monster)
 		monster.is_twin = true
