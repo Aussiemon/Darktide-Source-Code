@@ -257,7 +257,7 @@ BaseView.on_enter = function (self)
 		end
 	end
 
-	Managers.telemetry_events:open_view(self.view_name, self._hub_interaction)
+	Managers.telemetry_events:open_view(self.view_name, self._hub_interaction, self._telemetry_id)
 end
 
 BaseView.character_level = function (self)

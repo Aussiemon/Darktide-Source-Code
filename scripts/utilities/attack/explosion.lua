@@ -57,13 +57,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	local weapon_system = Managers.state.extension:system("weapon_system")
 	local queue_index, data = weapon_system:prepare_queued_explosion()
 	local template_friendly_fire_override = explosion_template.override_friendly_fire
-	local mutator_friendly_fire_override = not not Managers.state.mutator:mutator("mutator_explosive_friendly_fire")
 	local friendly_fire_override = template_friendly_fire_override
-
-	if template_friendly_fire_override == nil then
-		friendly_fire_override = mutator_friendly_fire_override
-	end
-
 	local side_system = Managers.state.extension:system("side_system")
 
 	table.clear(hit_units)

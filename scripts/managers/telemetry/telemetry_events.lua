@@ -775,7 +775,17 @@ TelemetryEvents.perf_memory_tree = function (self, map, memory_tree)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.open_view = function (self, view_name, hub_interaction)
+TelemetryEvents.update_news_widget = function (self, index, identifier)
+	local event = self:_create_event("update_news_widget")
+
+	event:set_data({
+		index = index,
+		identifier = identifier,
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.open_view = function (self, view_name, hub_interaction, optional_identifier)
 	if table.array_contains(BLACKLISTED_VIEWS, view_name) then
 		return
 	end
@@ -787,6 +797,7 @@ TelemetryEvents.open_view = function (self, view_name, hub_interaction)
 		name = view_name,
 		active_views = active_views,
 		hub_interaction = hub_interaction,
+		identifier = optional_identifier,
 	})
 	self._manager:register_event(event)
 end

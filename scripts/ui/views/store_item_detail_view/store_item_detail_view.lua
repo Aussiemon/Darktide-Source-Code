@@ -38,6 +38,7 @@ StoreItemDetailView.init = function (self, settings, context)
 	local class_name = self.__class_name
 
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
+	self._telemetry_id = table.nested_get(context, "store_item", "offer", "sku", "id")
 
 	StoreItemDetailView.super.init(self, Definitions, settings)
 

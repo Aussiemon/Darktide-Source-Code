@@ -24,6 +24,8 @@ MissionOverrides.merge = function (...)
 		local mission_override = MissionOverrides[mission_override_name]
 		local _, overwritten = table.merge_recursive_advanced(t, mission_override, true)
 	end
+
+	return t
 end
 
 return settings("MissionOverrides", MissionOverrides)

@@ -33,6 +33,7 @@ local settings = {
 		interval = 300,
 	},
 	blacklisted_views = {
+		"news_view",
 		"blank_view",
 		"contracts_background_view",
 		"credits_vendor_background_view",
