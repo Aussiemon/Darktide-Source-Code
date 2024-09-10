@@ -288,11 +288,16 @@ ViewElementNewsSlide._update_slide_image = function (self)
 	local texture_data = self._textures[url]
 
 	if not material_values.texture and texture_data then
-		local uvs = style.uvs
-		local target_size = Settings.image_size
+		local texture = texture_data.texture
 
-		uvs[1][1], uvs[1][2], uvs[2][1], uvs[2][2] = _top_center_aspect_uvs(target_size[1], target_size[2], texture_data.width, texture_data.height)
-		material_values.texture = texture_data.texture
+		material_values.texture = texture
+
+		if texture then
+			local uvs = style.uvs
+			local target_size = Settings.image_size
+
+			uvs[1][1], uvs[1][2], uvs[2][1], uvs[2][2] = _top_center_aspect_uvs(target_size[1], target_size[2], texture_data.width, texture_data.height)
+		end
 	end
 end
 

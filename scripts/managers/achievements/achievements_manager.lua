@@ -677,18 +677,36 @@ local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
 AchievementsManager._fetch_penance_track_account_state = function (self)
 	local backend_interface = Managers.backend.interfaces
 	local penance_track = backend_interface.tracks
-	local promise = penance_track:get_track_state(PENANCE_TRACK_ID):next(function (response)
-		local state = response.state
+	local promises = {
+		penance_track:get_track_state(PENANCE_TRACK_ID),
+		penance_track:get_track(PENANCE_TRACK_ID),
+	}
 
-		if not state then
+	return Promise.all(unpack(promises)):next(function (responses)
+		local track_state, track_data = unpack(responses)
+		local state = track_state.state
+		local total_tiers = #track_data.tiers
+
+		if not state or not total_tiers then
 			return false
 		end
 
-		local total_penance_points = state.xpTracked
-		local total_tiers = math.floor(total_penance_points / 100)
+		local total_penance_points = state.xpTracked or 0
+		local current_rewardable_tier = 1
+
+		for i = total_tiers, 1, -1 do
+			local needed_xp = track_data.tiers[i].xpLimit
+
+			if needed_xp <= total_penance_points then
+				current_rewardable_tier = i
+
+				break
+			end
+		end
+
 		local rewarded_tiers = state.rewarded + 1
 
-		if total_tiers ~= rewarded_tiers then
+		if rewarded_tiers < current_rewardable_tier then
 			return true
 		end
 
@@ -698,11 +716,7 @@ AchievementsManager._fetch_penance_track_account_state = function (self)
 
 		Log.error("AchievementsManager", "Error fetching penance track for account: %s", error_string)
 
-		return {}
-	end)
-
-	return promise:next(function (response)
-		return response
+		return false
 	end)
 end
 
