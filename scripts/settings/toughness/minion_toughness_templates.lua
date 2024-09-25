@@ -61,6 +61,7 @@ toughness_templates.renegade_captain = {
 		vfx = "content/fx/particles/enemies/renegade_captain/renegade_captain_shield_regen",
 	},
 }
+toughness_templates.cultist_captain = table.clone(toughness_templates.renegade_captain)
 toughness_templates.twin_captain_one = {
 	clamp_toughness_until_condition = "remove_toughness_clamp",
 	ignore_flickering_on_depleted = true,

@@ -178,21 +178,6 @@ local circumstance_templates = {
 			"mutator_only_melee_terror_events",
 		},
 	},
-	only_ranged_01 = {
-		theme_tag = "default",
-		wwise_state = "None",
-		ui = {
-			description = "loc_circumstance_dummy_only_ranged_description",
-			display_name = "loc_circumstance_dummy_only_ranged_title",
-			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
-		},
-		mutators = {
-			"mutator_no_encampments",
-			"mutator_only_ranged_roamers",
-			"mutator_only_ranged_trickle_hordes",
-			"mutator_only_ranged_terror_events",
-		},
-	},
 	monster_specials_01 = {
 		theme_tag = "default",
 		wwise_state = "None",

@@ -134,4 +134,17 @@ OutOfBoundsManager.soft_cap_extents = function (self)
 	return self._soft_cap_extents:unbox()
 end
 
+OutOfBoundsManager.limit_line_end_position_to_soft_cap_extents = function (self, start_position, end_position)
+	local soft_cap_extents = self:soft_cap_extents()
+	local distance_along_ray = Intersect.ray_box(end_position, start_position - end_position, Matrix4x4.identity(), soft_cap_extents)
+
+	if distance_along_ray and distance_along_ray > 0 then
+		local new_end_position = start_position + (end_position - start_position) * (1 - distance_along_ray)
+
+		return new_end_position
+	end
+
+	return end_position
+end
+
 return OutOfBoundsManager

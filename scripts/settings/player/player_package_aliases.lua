@@ -12,13 +12,27 @@ for index, alias in ipairs(PlayerCharacterConstants.player_package_aliases) do
 	player_package_aliases[#player_package_aliases + 1] = alias
 end
 
-for slot_name, config in pairs(PlayerCharacterConstants.slot_configuration) do
+local sorted_slot_names = table.keys(PlayerCharacterConstants.slot_configuration)
+
+table.sort(sorted_slot_names)
+
+for sorted_slot_name_key = 1, #sorted_slot_names do
+	local slot_name = sorted_slot_names[sorted_slot_name_key]
+
 	if not table.find(player_package_aliases, slot_name) then
 		player_package_aliases[#player_package_aliases + 1] = slot_name
 	end
 end
 
-for slot_name, config in pairs(ItemSlotSettings) do
+table.clear(sorted_slot_names)
+
+sorted_slot_names = table.keys(ItemSlotSettings)
+
+table.sort(sorted_slot_names)
+
+for sorted_slot_name_key = 1, #sorted_slot_names do
+	local slot_name = sorted_slot_names[sorted_slot_name_key]
+
 	if not table.find(player_package_aliases, slot_name) then
 		player_package_aliases[#player_package_aliases + 1] = slot_name
 	end

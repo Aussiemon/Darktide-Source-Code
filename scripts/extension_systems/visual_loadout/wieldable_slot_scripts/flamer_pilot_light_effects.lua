@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flamer_pilot_light_effects.lua
 
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local FlamerPilotLightEffects = class("FlamerPilotLightEffects")
 local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
 local FX_SOURCE_NAME = "_pilot"
@@ -65,5 +66,7 @@ FlamerPilotLightEffects._destroy_effects = function (self)
 		self._looping_effect_id = nil
 	end
 end
+
+implements(FlamerPilotLightEffects, WieldableSlotScriptInterface)
 
 return FlamerPilotLightEffects

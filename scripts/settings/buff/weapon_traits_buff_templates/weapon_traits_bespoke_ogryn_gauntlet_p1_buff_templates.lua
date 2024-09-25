@@ -93,5 +93,57 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_chained_melee_hits_increases_po
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_first_target_melee_hit),
 }
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_chained_melee_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_child)
+templates.weapon_trait_bespoke_ogryn_gauntlet_p1_melee_power_after_ranged_explosion = {
+	active_duration = 4,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = false,
+	proc_events = {
+		[proc_events.on_explosion_hit] = 1,
+	},
+	proc_stat_buffs = {
+		[stat_buffs.melee_power_level_modifier] = 0.05,
+	},
+	check_proc_func = function (params, template_data, template_context)
+		if not CheckProcFunctions.check_item_slot(params, template_data, template_context) then
+			return false
+		end
+
+		if not CheckProcFunctions.on_explosion_hit_multiple(params, template_data, template_context) then
+			return false
+		end
+
+		if params.weapon_special then
+			return false
+		end
+
+		return true
+	end,
+}
+templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_after_weapon_special_multiple = {
+	active_duration = 6,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_explosion_hit] = 1,
+	},
+	proc_stat_buffs = {
+		[stat_buffs.power_level_modifier] = 0.06,
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = function (params, template_data, template_context)
+		if not CheckProcFunctions.check_item_slot(params, template_data, template_context) then
+			return false
+		end
+
+		if not CheckProcFunctions.on_explosion_hit_multiple(params, template_data, template_context) then
+			return false
+		end
+
+		return params.weapon_special
+	end,
+}
 
 return templates

@@ -266,7 +266,7 @@ local archetype_talents = {
 			},
 		},
 		veteran_combat_ability_elite_and_special_outlines = {
-			description = "loc_talent_veteran_combat_ability_elite_and_special_outlines_description",
+			description = "loc_talent_veteran_combat_ability_elite_and_special_outlines_refresh_description",
 			display_name = "loc_talent_veteran_combat_ability_elite_and_special_outlines",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_base_4",
 			name = "Ability outlines elites + specials",
@@ -307,11 +307,13 @@ local archetype_talents = {
 					"veteran_combat_ability_stance",
 					"veteran_combat_ability_outlines",
 					"veteran_combat_ability_elite_and_special_outlines",
+					"veteran_combat_ability_outlined_kills_extends_duration",
 				},
 				special_rule_name = {
 					special_rules.veteran_combat_ability_stance,
 					special_rules.veteran_combat_ability_outlines,
 					special_rules.veteran_combat_ability_elite_and_special_outlines,
+					special_rules.veteran_combat_ability_outlined_kills_extends_duration,
 				},
 			},
 			passive = {
@@ -2493,7 +2495,7 @@ local archetype_talents = {
 			},
 		},
 		veteran_snipers_focus_toughness_bonus = {
-			description = "loc_talent_veteran_snipers_focus_toughness_bonus_description",
+			description = "loc_talent_veteran_snipers_focus_stamina_bonus_desc",
 			display_name = "loc_talent_veteran_snipers_focus_toughness_bonus",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
 			name = "-",

@@ -81,13 +81,6 @@ VideoView.on_enter = function (self)
 	end
 
 	VideoView.super.on_enter(self)
-
-	if IS_PLAYSTATION then
-		self:_play_dummy_video()
-
-		return
-	end
-
 	self:_set_background_visibility(false)
 	table.clear(self._packages_loaded)
 

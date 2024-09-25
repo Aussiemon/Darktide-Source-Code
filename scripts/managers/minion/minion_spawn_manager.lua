@@ -29,6 +29,10 @@ MinionSpawnManager.init = function (self, level_seed, soft_cap_out_of_bounds_uni
 	self._spawn_queue_size = 0
 end
 
+MinionSpawnManager.mutator_breed_init = function (self, mutator_context)
+	self._mutator_breed_data = mutator_context
+end
+
 MinionSpawnManager.delete_units = function (self)
 	local spawned_minions = self._spawned_minions
 	local num_spawned = self._num_spawned_minions
@@ -62,6 +66,16 @@ end
 local TEMP_INIT_DATA = {}
 
 MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name, optional_health_modifier, optional_spawner_spawn_index)
+	if self._mutator_breed_data then
+		local breedlookup = self._mutator_breed_data.breed_replacement
+
+		if breedlookup[breed_name] then
+			local replacement_breed = breedlookup[breed_name]
+
+			breed_name = replacement_breed
+		end
+	end
+
 	local breed = Breeds[breed_name]
 	local seed = math.random_seed(self._seed)
 	local spawn_aggro_state = optional_aggro_state or breed.spawn_aggro_state

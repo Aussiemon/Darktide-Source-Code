@@ -610,7 +610,6 @@ weapon_template.entry_actions = {
 	primary_action = "action_shoot_hip",
 	secondary_action = "action_zoom",
 }
-weapon_template.allow_sprinting_with_special = true
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/lasgun_rifle_elysian"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/lasgun_rifle_elysian"
 weapon_template.reload_template = ReloadTemplates.lasgun_elysian
@@ -630,9 +629,13 @@ weapon_template.conditional_state_to_action_input = {
 	},
 }
 weapon_template.no_ammo_delay = 0.25
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
-weapon_template.keep_weapon_special_active_on_unwield = true
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
+weapon_template.weapon_special_tweak_data = {
+	manual_toggle_only = true,
+}
 weapon_template.flashlight_template = FlashlightTemplates.lasgun_p3
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -839,6 +842,30 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_flashlight_desc",
 		display_name = "loc_weapon_special_flashlight",
 		type = "flashlight",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "hipfire",
+			icon = "hipfire",
+			sub_icon = "full_auto",
+			value_func = "primary_attack",
+		},
+		{
+			header = "ads",
+			icon = "ads",
+			sub_icon = "full_auto",
+			value_func = "secondary_attack",
+		},
+		{
+			header = "ammo",
+			value_func = "ammo",
+		},
+	},
+	weapon_special = {
+		header = "flashlight",
+		icon = "flashlight",
 	},
 }
 weapon_template.explicit_combo = {

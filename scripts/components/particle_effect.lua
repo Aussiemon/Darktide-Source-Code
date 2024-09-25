@@ -244,6 +244,14 @@ ParticleEffect.destroy_particle = function (self)
 	end
 end
 
+ParticleEffect.stop_particle = function (self)
+	if self._particle_id ~= nil then
+		World.stop_spawning_particles(self._world, self._particle_id)
+
+		self._particle_id = nil
+	end
+end
+
 ParticleEffect.component_data = {
 	particle = {
 		filter = "particles",
@@ -374,6 +382,10 @@ ParticleEffect.component_data = {
 			type = "event",
 		},
 		destroy_particle = {
+			accessibility = "public",
+			type = "event",
+		},
+		stop_particle = {
 			accessibility = "public",
 			type = "event",
 		},

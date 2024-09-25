@@ -16,6 +16,8 @@ local SteamJoinPermission = require("scripts/managers/party_immaterium/join_perm
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local XboxJoinPermission = require("scripts/managers/party_immaterium/join_permission/xbox_join_permission")
 local PartyImmateriumManager = class("PartyImmateriumManager")
+local ADVERTISEMENT_STATE = table.enum("SEARCHING", "CANCELED")
+local JOIN_REQUESTS_STATE = table.enum("PENDING", "ACCEPTED", "DECLINED")
 
 local function _info(...)
 	Log.info("PartyImmateriumManager", ...)
@@ -33,6 +35,9 @@ PartyImmateriumManager.init = function (self)
 	self._myself = PartyImmateriumMemberMyself:new()
 	self._cached_debug_get_parties = {}
 	self._cached_debug_get_parties_time = 0
+	self._advertisement_join_requests_event_version = -1
+	self._advertisement_join_requests_by_account_id = {}
+	self._advertisement_join_requests_presence_version = -1
 	self._last_party_connection_retry = 0
 	self._last_party_connection_wait_done = false
 	self._party_error_count = 0
@@ -45,6 +50,7 @@ PartyImmateriumManager.init = function (self)
 	self._invite_popups = {}
 	self._invite_notification_handler = PartyImmateriumInviteNotificationHandler:new()
 	self._request_to_join_popups = {}
+	self._party_join_request_parties_by_id = {}
 	self._other_members = {}
 	self._resolved_join_permissions = {}
 	self._matchmaking_notification_handler = MatchmakingNotificationHandler:new()
@@ -292,6 +298,8 @@ PartyImmateriumManager._reset_party_data = function (self)
 
 	self._standing_invite_code = nil
 	self._matched_hub_session_id = nil
+	self._advertising_state = nil
+	self._advertisement_request_to_join_list = nil
 end
 
 PartyImmateriumManager.other_members = function (self)
@@ -354,6 +362,34 @@ PartyImmateriumManager.other_member_from_unique_id = function (self, unique_id)
 	end
 
 	return false
+end
+
+PartyImmateriumManager.other_members_by_platform = function (self, platform)
+	local other_members = Managers.party_immaterium:other_members()
+	local platform_members = {}
+
+	for i = 1, #other_members do
+		local member = other_members[i]
+
+		if platform == member:platform() then
+			platform_members[#platform_members + 1] = member
+		end
+	end
+
+	return platform_members
+end
+
+PartyImmateriumManager.other_members_account_ids = function (self)
+	local other_members = Managers.party_immaterium:other_members()
+	local account_ids = {}
+
+	for i = 1, #other_members do
+		local member = other_members[i]
+
+		account_ids[i] = member:account_id()
+	end
+
+	return account_ids
 end
 
 PartyImmateriumManager._generate_compabillity_string = function (self)
@@ -463,7 +499,6 @@ local PRESENCE_TO_JOIN_ERROR = {
 
 PartyImmateriumManager._can_join_new_party_check = function (self, join_parameter, is_reconnect)
 	local is_new_empty_party = join_parameter.party_id == ""
-	local is_reconnect = is_reconnect
 
 	if join_parameter.malformed then
 		return Promise.rejected({
@@ -603,7 +638,117 @@ PartyImmateriumManager._handle_party_event = function (self, event)
 		self:_handle_party_game_state_update_event(event)
 	elseif event.event_type == "party_client_event_trigger" then
 		self:_handle_party_client_event_trigger(event)
+	elseif event.event_type == "advertisement_state_update" then
+		self:_handle_advertisement_state_update_event_trigger(event)
+	elseif event.event_type == "advertisement_request_to_join_list_update" then
+		self:_handle_advertisement_request_to_join_list_update_event_trigger(event)
 	end
+end
+
+PartyImmateriumManager._handle_advertisement_state_update_event_trigger = function (self, event)
+	if not self._advertising_state or event.version >= self._advertising_state.version then
+		event.party_id = self:party_id()
+		self._advertising_state = event
+	end
+end
+
+PartyImmateriumManager._handle_advertisement_request_to_join_list_update_event_trigger = function (self, event)
+	if event and event.version >= self._advertisement_join_requests_event_version then
+		self._advertisement_join_requests_event_version = event.version
+
+		local advertisement_join_requests_by_account_id = self._advertisement_join_requests_by_account_id
+		local entries = event.entries
+
+		for account_id, join_request in pairs(advertisement_join_requests_by_account_id) do
+			local keep_existing_request = false
+
+			for i = 1, #entries do
+				local participant = entries[i]
+
+				if participant.account_id == account_id then
+					if participant.status == JOIN_REQUESTS_STATE.PENDING then
+						keep_existing_request = true
+					end
+
+					break
+				end
+			end
+
+			if not keep_existing_request then
+				self:_remove_advertisement_request(account_id)
+			end
+		end
+
+		for i = 1, #entries do
+			local participant = entries[i]
+
+			if participant.status == JOIN_REQUESTS_STATE.PENDING then
+				local account_id = participant.account_id
+				local join_request = advertisement_join_requests_by_account_id[account_id]
+
+				if not join_request then
+					join_request = join_request or {
+						presence_synced = false,
+						account_id = account_id,
+					}
+					advertisement_join_requests_by_account_id[account_id] = join_request
+
+					local _, promise = Managers.presence:get_presence(account_id)
+
+					promise:next(function (data)
+						if self.__deleted then
+							return
+						end
+
+						if data and data:is_online() then
+							join_request.presence = data
+							join_request.presence_synced = true
+							self._advertisement_join_requests_presence_version = self._advertisement_join_requests_presence_version + 1
+						else
+							self:_remove_advertisement_request(account_id)
+						end
+					end):catch(function (error)
+						Log.error("PartyImmateriumManager", "Fetching presence for join request failed")
+						self:_remove_advertisement_request(account_id)
+					end)
+				end
+			end
+		end
+	end
+end
+
+PartyImmateriumManager._update_advertisement_request_to_join_list = function (self)
+	if self._advertisement_join_requests_event_version == -1 then
+		return
+	end
+
+	local advertisement_join_requests_by_account_id = self._advertisement_join_requests_by_account_id
+
+	for account_id, join_request in pairs(advertisement_join_requests_by_account_id) do
+		if join_request.presence_synced then
+			local presence = join_request.presence
+			local is_alive = presence:is_alive()
+			local is_online = is_alive and presence:is_online()
+
+			if not is_online then
+				self:_remove_advertisement_request(account_id)
+			end
+		end
+	end
+end
+
+PartyImmateriumManager.party_finder_respond_to_join_request = function (self, party_id, account_id, accept)
+	local promise, id = Managers.grpc:party_finder_respond_to_join_request(party_id, account_id, accept)
+
+	promise:next(function ()
+		self:_remove_advertisement_request(account_id)
+		_info("Invited player from finder.")
+	end):catch(function (error)
+		self:_remove_advertisement_request(account_id)
+		_error("Could not accept join request: %s", table.tostring(error, 10))
+	end)
+
+	return promise, id
 end
 
 PartyImmateriumManager._handle_party_update_event = function (self, event)
@@ -650,6 +795,10 @@ PartyImmateriumManager._handle_party_update_event = function (self, event)
 
 	Managers.event:trigger("party_immaterium_other_members_updated", self._other_members)
 	PlayerCompositions.trigger_change_event("party")
+
+	if #members >= 4 then
+		self:cancel_party_finder_advertise()
+	end
 end
 
 PartyImmateriumManager._handle_party_game_state_update_event = function (self, event)
@@ -820,6 +969,8 @@ PartyImmateriumManager.update = function (self, dt, t)
 			party_connection:reset_event_buffer()
 		end
 	end
+
+	self:_update_advertisement_request_to_join_list()
 
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(PartyImmateriumManagerTestify, self)
@@ -1472,69 +1623,209 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 
 	promise:next(function (inviter_presence)
 		return self:_resolve_join_permission(inviter_presence, "INVITE"):next(function ()
-			local character_name = inviter_presence:character_name()
-			local character_profile = inviter_presence:character_profile()
-			local character_level = character_profile and character_profile.current_level
-			local player_name_and_level
+			local account_id = inviter_presence:account_id()
+			local party_data = self._party_join_request_parties_by_id[party_id]
 
-			if character_level then
-				player_name_and_level = Localize("loc_social_menu_character_name_format", true, {
-					character_level = character_level,
-					character_name = character_name,
-				})
+			self._party_join_request_parties_by_id[party_id] = nil
+
+			local context
+			local is_group_finder_invite = account_id == "00000000-0000-0000-0000-000000000000"
+
+			if is_group_finder_invite then
+				local GroupFinderBlueprintsGenerateFunction = require("scripts/ui/views/group_finder_view/group_finder_blueprints")
+				local ConstantElementPopupHandlerSettings = require("scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler_settings")
+				local grid_width = ConstantElementPopupHandlerSettings.text_max_width
+				local grid_size = {
+					grid_width,
+					500,
+				}
+				local group_size = {
+					480,
+					120,
+				}
+				local grid_blueprints = GroupFinderBlueprintsGenerateFunction(grid_size)
+				local grid_layout = {}
+
+				grid_layout[#grid_layout + 1] = {
+					horizontal_alignment = "center",
+					texture = "content/ui/materials/dividers/skull_center_01",
+					vertical_alignment = "center",
+					widget_type = "texture",
+					texture_size = {
+						380,
+						30,
+					},
+					color = Color.terminal_text_body_sub_header(nil, true),
+					size = {
+						grid_width,
+						30,
+					},
+				}
+				grid_layout[#grid_layout + 1] = {
+					widget_type = "dynamic_spacing",
+					size = {
+						grid_width,
+						10,
+					},
+				}
+				grid_layout[#grid_layout + 1] = {
+					widget_type = "body_centered",
+					text = Localize("loc_group_finder_group_invite_popup_desc"),
+					size = {
+						grid_width,
+						20,
+					},
+				}
+				grid_layout[#grid_layout + 1] = {
+					widget_type = "dynamic_spacing",
+					size = {
+						grid_width,
+						30,
+					},
+				}
+				grid_layout[#grid_layout + 1] = {
+					widget_type = "dynamic_spacing",
+					size = {
+						(grid_width - group_size[1]) * 0.5,
+						10,
+					},
+				}
+
+				if party_data then
+					grid_layout[#grid_layout + 1] = {
+						disabled = true,
+						widget_type = "group",
+						size = group_size,
+						description = party_data.description,
+						id = party_data.id,
+						level_requirement_met = party_data.level_requirement_met,
+						group = party_data,
+						required_level = party_data.required_level,
+						restrictions = party_data.restrictions,
+						tags = party_data.tags,
+						version = party_data.version,
+					}
+				end
+
+				grid_layout[#grid_layout + 1] = {
+					widget_type = "dynamic_spacing",
+					size = {
+						grid_width,
+						30,
+					},
+				}
+				grid_layout[#grid_layout + 1] = {
+					horizontal_alignment = "center",
+					texture = "content/ui/materials/dividers/skull_center_03",
+					vertical_alignment = "center",
+					widget_type = "texture",
+					texture_size = {
+						468,
+						16,
+					},
+					color = Color.terminal_text_body_sub_header(nil, true),
+					size = {
+						grid_width,
+						30,
+					},
+				}
+				context = {
+					title_text = "loc_group_finder_group_invite_popup_title",
+					type = "grid",
+					grid_layout = grid_layout,
+					grid_blueprints = grid_blueprints,
+					description_text_params = {},
+					enter_popup_sound = UISoundEvents.social_menu_receive_invite,
+					options = {
+						{
+							close_on_pressed = true,
+							text = "loc_social_party_invite_received_accept_button",
+							callback = function ()
+								self:join_party({
+									party_id = party_id,
+									invite_token = invite_token,
+								})
+
+								self._invite_popups[party_id] = nil
+							end,
+						},
+						{
+							close_on_pressed = true,
+							hotkey = "back",
+							text = "loc_social_party_invite_received_decline_button",
+							callback = function ()
+								self:_decline_party_invite(party_id, invite_token)
+
+								self._invite_popups[party_id] = nil
+							end,
+						},
+					},
+				}
+			else
+				local character_name = inviter_presence:character_name()
+				local character_profile = inviter_presence:character_profile()
+				local character_level = character_profile and character_profile.current_level
+				local player_name_and_level
+
+				if character_level then
+					player_name_and_level = Localize("loc_social_menu_character_name_format", true, {
+						character_level = character_level,
+						character_name = character_name,
+					})
+				end
+
+				if self:current_state() == PartyConstants.State.in_mission then
+					local inviter_name = player_name_and_level or character_name
+
+					self._invite_notification_handler:add_invite(party_id, invite_token, inviter_name)
+
+					return
+				end
+
+				context = {
+					description_text = "loc_social_party_invite_received_description",
+					title_text = "loc_social_party_invite_received_header",
+					description_text_params = {
+						player_name = player_name_and_level or character_name,
+					},
+					enter_popup_sound = UISoundEvents.social_menu_receive_invite,
+					options = {
+						{
+							close_on_pressed = true,
+							text = "loc_social_party_invite_received_accept_button",
+							callback = function ()
+								self:join_party({
+									party_id = party_id,
+									invite_token = invite_token,
+								})
+
+								self._invite_popups[party_id] = nil
+							end,
+						},
+						{
+							close_on_pressed = true,
+							hotkey = "back",
+							text = "loc_social_party_invite_received_decline_button",
+							callback = function ()
+								self:_decline_party_invite(party_id, invite_token)
+
+								self._invite_popups[party_id] = nil
+							end,
+						},
+						{
+							close_on_pressed = true,
+							text = "loc_social_party_invite_received_decline_and_block_button",
+							on_pressed_sound = UISoundEvents.social_menu_block_player,
+							callback = function ()
+								self:_decline_party_invite(party_id, invite_token)
+								Managers.data_service.social:block_account(inviter_account_id)
+
+								self._invite_popups[party_id] = nil
+							end,
+						},
+					},
+				}
 			end
-
-			if self:current_state() == PartyConstants.State.in_mission then
-				local inviter_name = player_name_and_level or character_name
-
-				self._invite_notification_handler:add_invite(party_id, invite_token, inviter_name)
-
-				return
-			end
-
-			local context = {
-				description_text = "loc_social_party_invite_received_description",
-				title_text = "loc_social_party_invite_received_header",
-				description_text_params = {
-					player_name = player_name_and_level or character_name,
-				},
-				enter_popup_sound = UISoundEvents.social_menu_receive_invite,
-				options = {
-					{
-						close_on_pressed = true,
-						text = "loc_social_party_invite_received_accept_button",
-						callback = function ()
-							self:join_party({
-								party_id = party_id,
-								invite_token = invite_token,
-							})
-
-							self._invite_popups[party_id] = nil
-						end,
-					},
-					{
-						close_on_pressed = true,
-						hotkey = "back",
-						text = "loc_social_party_invite_received_decline_button",
-						callback = function ()
-							self:_decline_party_invite(party_id, invite_token)
-
-							self._invite_popups[party_id] = nil
-						end,
-					},
-					{
-						close_on_pressed = true,
-						text = "loc_social_party_invite_received_decline_and_block_button",
-						on_pressed_sound = UISoundEvents.social_menu_block_player,
-						callback = function ()
-							self:_decline_party_invite(party_id, invite_token)
-							Managers.data_service.social:block_account(inviter_account_id)
-
-							self._invite_popups[party_id] = nil
-						end,
-					},
-				},
-			}
 
 			Managers.event:trigger("event_show_ui_popup", context, function (id)
 				self._invite_popups[party_id] = id
@@ -1671,6 +1962,72 @@ PartyImmateriumManager._handle_game_session_aborted = function (self, payload)
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
+end
+
+PartyImmateriumManager.start_party_finder_advertise = function (self, config, tags, category)
+	self._advertisement_join_requests_by_account_id = {}
+	self._advertisement_join_requests_event_version = -1
+	self._advertisement_join_requests_presence_version = -1
+
+	return Managers.grpc:party_finder_start_advertisement(self:party_id(), config, tags, category)
+end
+
+PartyImmateriumManager.cancel_party_finder_advertise = function (self)
+	local promise = Managers.grpc:party_finder_cancel_advertisement(self:party_id())
+
+	promise:next(function (response)
+		self._advertisement_join_requests_by_account_id = {}
+		self._advertisement_join_requests_event_version = -1
+		self._advertisement_join_requests_presence_version = -1
+		self._advertising_state = nil
+	end):catch(function (error)
+		self._advertisement_join_requests_by_account_id = {}
+		self._advertisement_join_requests_event_version = -1
+		self._advertisement_join_requests_presence_version = -1
+		self._advertising_state = nil
+	end)
+
+	return promise
+end
+
+PartyImmateriumManager.advertise_state = function (self)
+	return self._advertising_state
+end
+
+PartyImmateriumManager.is_party_advertisement_active = function (self)
+	local advertising_state = self._advertising_state
+
+	return advertising_state and advertising_state.status == ADVERTISEMENT_STATE.SEARCHING
+end
+
+PartyImmateriumManager.advertisement_request_to_join_list = function (self)
+	return self._advertisement_join_requests_by_account_id, self._advertisement_join_requests_presence_version
+end
+
+PartyImmateriumManager._remove_advertisement_request = function (self, account_id)
+	local advertisement_join_requests_by_account_id = self._advertisement_join_requests_by_account_id
+
+	if advertisement_join_requests_by_account_id[account_id] then
+		local request = advertisement_join_requests_by_account_id[account_id]
+
+		if request.presence_synced then
+			self._advertisement_join_requests_presence_version = self._advertisement_join_requests_presence_version + 1
+		end
+
+		advertisement_join_requests_by_account_id[account_id] = nil
+	end
+end
+
+PartyImmateriumManager.send_request_to_join_party = function (self, data, account_id)
+	local id = data.id
+
+	if not self._party_join_request_parties_by_id then
+		self._party_join_request_parties_by_id = {}
+	end
+
+	self._party_join_request_parties_by_id[id] = data
+
+	return Managers.grpc:party_finder_request_to_join(id, account_id)
 end
 
 return PartyImmateriumManager

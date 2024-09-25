@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shovel_fold_corrector.lua
 
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ShovelFoldCorrector = class("ShovelFoldCorrector")
 
 ShovelFoldCorrector.init = function (self, context, slot, weapon_template, fx_sources)
@@ -55,5 +56,7 @@ end
 ShovelFoldCorrector.destroy = function (self)
 	return
 end
+
+implements(ShovelFoldCorrector, WieldableSlotScriptInterface)
 
 return ShovelFoldCorrector

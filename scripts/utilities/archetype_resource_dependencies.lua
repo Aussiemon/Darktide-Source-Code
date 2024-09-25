@@ -31,7 +31,7 @@ function _is_valid_wwise_resource_name(value)
 	return string.starts_with(value, WWISE_START_STRING_PLAYER)
 end
 
-local CONTENT_FX = "content/fx/particles/screenspace"
+local CONTENT_FX = "content/fx/particles/screenspace/"
 
 function _is_valid_fx_resource_name(value)
 	return string.starts_with(value, CONTENT_FX)

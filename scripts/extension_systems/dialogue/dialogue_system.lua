@@ -1092,8 +1092,9 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 	dialogue.speaker_name = speaker_name
 
 	local wwise_route_key = dialogue.wwise_route
+	local class_name = extension:get_context().class_name
 
-	if speaker_name == "tech_priest_a" and wwise_route_key == 1 then
+	if class_name == "tech_priest" and wwise_route_key == 1 then
 		wwise_route_key = 21
 	end
 

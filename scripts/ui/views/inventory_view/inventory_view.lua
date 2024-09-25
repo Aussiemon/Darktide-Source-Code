@@ -64,6 +64,7 @@ InventoryView.init = function (self, settings, context)
 
 	self._allow_close_hotkey = false
 	self._pass_input = true
+	self._telemetry_name = nil
 end
 
 InventoryView.on_enter = function (self)
@@ -210,6 +211,21 @@ end
 InventoryView._switch_active_layout = function (self, tab_context)
 	local context = self._context
 	local changeable_context = context and context.changeable_context
+	local telemetry_name = tab_context and (tab_context.telemetry_name or self.view_name)
+	local old_telemetry_name = self._telemetry_name
+
+	if old_telemetry_name ~= telemetry_name then
+		self._telemetry_name = telemetry_name
+
+		if old_telemetry_name then
+			Managers.telemetry_events:close_view(old_telemetry_name)
+		end
+
+		if telemetry_name then
+			Managers.telemetry_events:open_view(telemetry_name, self._hub_interaction)
+		end
+	end
+
 	local layout = tab_context.layout
 	local is_grid_layout = tab_context.is_grid_layout
 	local camera_settings = tab_context.camera_settings
@@ -275,6 +291,10 @@ InventoryView._switch_active_layout = function (self, tab_context)
 	self._draw_wallet = draw_wallet
 end
 
+InventoryView.supports_changeable_context = function (self)
+	return true
+end
+
 InventoryView.on_back_pressed = function (self)
 	local active_category_tab_context = self._active_category_tab_context
 	local active_category_layout = active_category_tab_context and active_category_tab_context.layout
@@ -296,6 +316,10 @@ InventoryView.on_exit = function (self)
 		self:_remove_element("item_stats")
 
 		self._item_stats = nil
+	end
+
+	if Managers.telemetry_events and self._telemetry_name then
+		Managers.telemetry_events:close_view(self._telemetry_name)
 	end
 
 	self:_destroy_loadout_widgets(self._ui_renderer)
@@ -433,6 +457,7 @@ InventoryView._set_camera_focus_by_slot_name = function (self, slot_name, option
 		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "x", 0, 1, func_ptr)
 		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "y", 0, 1, func_ptr)
 		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "z", 0, 1, func_ptr)
+		Managers.event:trigger("event_inventory_set_camera_default_focus")
 	end
 end
 

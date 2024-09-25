@@ -962,7 +962,10 @@ local unit_templates = {
 				player_unit_spawn_manager:assign_unit_ownership(unit, player, true)
 			end
 		end,
-		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
+		local_unit_spawned = function (unit, template_context, game_object_data, player, breed, side_id, optional_starting_state, input_handler, random_seed, optional_damage, optional_permanent_damage, ...)
+			return
+		end,
+		husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
 			local player = player_unit_spawn_manager:owner(unit)
 		end,
@@ -1634,7 +1637,10 @@ local unit_templates = {
 				player_unit_spawn_manager:assign_unit_ownership(unit, player, true)
 			end
 		end,
-		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
+		local_unit_spawned = function (unit, template_context, game_object_data, player, breed, side_id, optional_starting_state, input_handler, random_seed, optional_damage, optional_permanent_damage, ...)
+			return
+		end,
+		husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
 			local player = player_unit_spawn_manager:owner(unit)
 		end,
@@ -2355,7 +2361,12 @@ local unit_templates = {
 				Unit.flow_event(unit, spawn_flow_event)
 			end
 		end,
-		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
+		local_unit_spawned = function (unit, template_context, game_object_data, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
+			if pickup_settings and pickup_settings.spawn_unit_component_event then
+				Component.event(unit, pickup_settings.spawn_unit_component_event, pickup_settings)
+			end
+		end,
+		husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
 			local pickup_name = Unit.get_data(unit, "pickup_type")
 			local pickup_settings = Pickups.by_name[pickup_name]
 
@@ -2530,7 +2541,10 @@ local unit_templates = {
 				Unit.flow_event(unit, spawn_flow_event)
 			end
 		end,
-		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
+		local_unit_spawned = function (unit, template_context, game_object_data, item, projectile_template, starting_state, direction, speed, momentum_or_angular_velocity, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side_or_nil)
+			Unit.flow_event(unit, "lua_extensions_ready")
+		end,
+		husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
 			Unit.flow_event(unit, "lua_extensions_ready")
 		end,
 		pre_unit_destroyed = function (unit)
@@ -2636,12 +2650,10 @@ local unit_templates = {
 			config:add("DeployableHuskLocomotionExtension", {})
 			Unit.flow_event(unit, "lua_deploy")
 		end,
-		unit_spawned = function (unit, template_context, game_object_data_or_session, is_husk, ...)
-			if not is_husk then
-				local job_class = ScriptUnit.extension(unit, "proximity_system")
+		local_unit_spawned = function (unit, template_context, game_object_data, side_id, deployable, placed_on_unit, owner_unit_or_nil)
+			local job_class = ScriptUnit.extension(unit, "proximity_system")
 
-				Managers.state.unit_job:register(unit, job_class)
-			end
+			Managers.state.unit_job:register(unit, job_class)
 		end,
 	},
 	smoke_fog = {

@@ -11,5 +11,6 @@ local function _extract_phase_templates(path)
 end
 
 _extract_phase_templates("scripts/settings/phases/templates/renegade_captain_phase_templates")
+_extract_phase_templates("scripts/settings/phases/templates/cultist_captain_phase_templates")
 
 return settings("PhaseTemplates", phase_templates)

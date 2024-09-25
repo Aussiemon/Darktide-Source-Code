@@ -17,10 +17,10 @@ MissionObjectiveZoneSynchronizerExtension.init = function (self, extension_init_
 	Unit.flow_event(unit, "lua_unit_visibility_disable")
 end
 
-MissionObjectiveZoneSynchronizerExtension.setup_from_component = function (self, num_zones_in_mission_objective, objective_name, automatic_start)
+MissionObjectiveZoneSynchronizerExtension.setup_from_component = function (self, num_zones_in_mission_objective, objective_name, auto_start)
 	self._num_zones_in_mission_objective = num_zones_in_mission_objective
 	self._objective_name = objective_name
-	self._auto_start = automatic_start
+	self._auto_start = auto_start
 
 	self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
 end

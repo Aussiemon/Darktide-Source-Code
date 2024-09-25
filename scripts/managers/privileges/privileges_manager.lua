@@ -15,6 +15,10 @@ PrivilegesManager.new = function (self)
 		instance = require("scripts/managers/privileges/privileges_manager_xbox_live"):new()
 
 		Log.info("PrivilegesManager", "Using Xbox Live privileges manager")
+	elseif IS_PLAYSTATION then
+		instance = require("scripts/managers/privileges/privileges_manager_psn"):new()
+
+		Log.info("PrivilegesManager", "Using PSN privileges manager")
 	else
 		instance = require("scripts/managers/privileges/privileges_manager_permissive"):new()
 

@@ -2,7 +2,6 @@
 
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local MechanismSettings = require("scripts/settings/mechanism/mechanism_settings")
-local StateTitle = require("scripts/game_states/game/state_title")
 local Teams = require("scripts/managers/mechanism/teams")
 
 for name, settings in pairs(MechanismSettings) do
@@ -73,8 +72,13 @@ MechanismManager.SERVER_RPCS = {}
 do
 	local i = 1
 	local lookup = MechanismManager.LOOKUP
+	local mechanism_keys = table.keys(MechanismSettings)
 
-	for name, mechanism_settings in pairs(MechanismSettings) do
+	table.sort(mechanism_keys)
+
+	for mechanism_key_index = 1, #mechanism_keys do
+		local name = mechanism_keys[mechanism_key_index]
+		local mechanism_settings = MechanismSettings[name]
 		local mechanism_class = CLASSES[mechanism_settings.class_name]
 
 		assert_interface(mechanism_class, MechanismBase.INTERFACE)
@@ -86,8 +90,13 @@ do
 
 	local j = 1
 	local client_rpcs, server_rpcs = {}, {}
+	local event_keys = table.keys(MechanismManager.EVENTS)
 
-	for event_name, event_config in pairs(MechanismManager.EVENTS) do
+	table.sort(event_keys)
+
+	for event_key_index = 1, #event_keys do
+		local event_name = event_keys[event_key_index]
+		local event_config = MechanismManager.EVENTS[event_name]
 		local rpc_name = event_config.rpc_name
 		local event_type = event_config.type
 		local local_side = event_type == EVENT_TYPES.locally

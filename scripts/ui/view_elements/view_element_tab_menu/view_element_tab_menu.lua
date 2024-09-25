@@ -148,6 +148,10 @@ ViewElementTabMenu.remove_all_entries = function (self)
 end
 
 ViewElementTabMenu.update = function (self, dt, t, input_service)
+	if self._input_disabled then
+		input_service = input_service:null_service()
+	end
+
 	local entries = self._entries
 
 	if entries then
@@ -190,6 +194,14 @@ ViewElementTabMenu.update = function (self, dt, t, input_service)
 	end
 
 	return ViewElementTabMenu.super.update(self, dt, t, input_service)
+end
+
+ViewElementTabMenu.disable_input = function (self, disabled)
+	self._input_disabled = disabled
+end
+
+ViewElementTabMenu.input_disabled = function (self)
+	return self._input_disabled
 end
 
 ViewElementTabMenu.entries = function (self)

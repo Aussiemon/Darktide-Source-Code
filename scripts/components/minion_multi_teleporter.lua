@@ -5,8 +5,6 @@ local SharedNav = require("scripts/components/utilities/shared_nav")
 local MinionMultiTeleporter = component("MinionMultiTeleporter")
 
 MinionMultiTeleporter.init = function (self, unit, is_server, nav_world)
-	self._is_server = is_server
-
 	if not is_server then
 		return false
 	end
@@ -22,17 +20,15 @@ MinionMultiTeleporter.init = function (self, unit, is_server, nav_world)
 
 	local unit_id, smart_object_id_lookup = Unit.id_string(unit), {}
 
-	self._unit = unit
 	self._unit_id = unit_id
 	self._nav_world = nav_world
 	self._smart_object_id_lookup = smart_object_id_lookup
 
 	local nav_graph_extension = ScriptUnit.fetch_component_extension(unit, "nav_graph_system")
 
-	self._nav_graph_extension = nav_graph_extension
-
 	if nav_graph_extension then
 		self.is_valid = self:_setup_smart_objects(unit, unit_id, nav_world, nav_graph_extension, smart_object_id_lookup, teleporter_units)
+		self._nav_graph_extension = nav_graph_extension
 	else
 		self.is_valid = false
 	end
@@ -62,7 +58,7 @@ MinionMultiTeleporter._setup_smart_objects = function (self, unit, unit_id, nav_
 end
 
 MinionMultiTeleporter.destroy = function (self, unit)
-	if not self._is_server then
+	if not self.is_server then
 		return
 	end
 
@@ -95,7 +91,7 @@ MinionMultiTeleporter.add_smart_object = function (self, destination_unit, desti
 	local unit_id = self._unit_id
 	local smart_object_id_lookup = self._smart_object_id_lookup
 	local existing_smart_object_id = smart_object_id_lookup[destination_unit]
-	local smart_object, smart_object_id = MinionMultiTeleporterQueries.generate_smart_object(self._unit, self._nav_world, destination_unit)
+	local smart_object, smart_object_id = MinionMultiTeleporterQueries.generate_smart_object(self.unit, self._nav_world, destination_unit)
 
 	self._nav_graph_extension:add_smart_object(smart_object, smart_object_id)
 
@@ -149,8 +145,7 @@ MinionMultiTeleporter.editor_init = function (self, unit)
 
 	self._my_nav_gen_guid = nil
 	self._is_selected = false
-	self._should_debug_draw = false
-	self._unit = unit
+	self._debug_draw_enabled = false
 
 	local update_enabled = true
 
@@ -203,9 +198,10 @@ MinionMultiTeleporter._editor_debug_draw = function (self, unit)
 
 	drawer:reset()
 
-	local nav_world = MinionMultiTeleporter._nav_info.nav_world
+	local active_mission_level_id = LevelEditor:get_active_mission_level()
+	local nav_world = MinionMultiTeleporter._nav_info.nav_world_from_level_id[active_mission_level_id]
 
-	if nav_world and self._should_debug_draw then
+	if nav_world and self._debug_draw_enabled then
 		table.clear(AVAILABLE_DESTINATION_TELEPORTERS)
 
 		local teleporter_units = MinionMultiTeleporter._teleporter_units
@@ -248,6 +244,16 @@ MinionMultiTeleporter._editor_debug_draw = function (self, unit)
 	drawer:update(self._world)
 end
 
+MinionMultiTeleporter.editor_on_mission_changed = function (self, unit)
+	if not rawget(_G, "LevelEditor") then
+		return
+	end
+
+	if self._is_selected then
+		self:_editor_debug_draw(unit)
+	end
+end
+
 MinionMultiTeleporter.editor_selection_changed = function (self, unit, selected)
 	if not rawget(_G, "LevelEditor") then
 		return
@@ -280,17 +286,19 @@ MinionMultiTeleporter.editor_toggle_debug_draw = function (self, enable)
 		return
 	end
 
-	self._should_debug_draw = enable
+	self._debug_draw_enabled = enable
 
-	self:_editor_debug_draw(self._unit)
+	if self._is_selected then
+		self:_editor_debug_draw(self.unit)
+	end
 end
 
 MinionMultiTeleporter.flow_enable = function (self)
-	if not self._is_server then
+	if not self.is_server then
 		return
 	end
 
-	local unit = self._unit
+	local unit = self.unit
 	local toggleable = self:get_data(unit, "toggleable")
 
 	self._nav_graph_extension:add_nav_graphs_to_database()
@@ -305,11 +313,11 @@ MinionMultiTeleporter.flow_enable = function (self)
 end
 
 MinionMultiTeleporter.flow_disable = function (self)
-	if not self._is_server then
+	if not self.is_server then
 		return
 	end
 
-	local unit = self._unit
+	local unit = self.unit
 	local toggleable = self:get_data(unit, "toggleable")
 
 	self._nav_graph_extension:remove_nav_graphs_from_database()

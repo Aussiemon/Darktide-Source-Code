@@ -604,6 +604,12 @@ MiscTestCases.spawn_all_units = function (case_settings)
 	end)
 end
 
+MiscTestCases.validate_critter_spawner = function (case_settings)
+	Testify:run_case(function (dt, t)
+		return
+	end)
+end
+
 MiscTestCases.smoke = function ()
 	Testify:run_case(function (dt, t)
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then

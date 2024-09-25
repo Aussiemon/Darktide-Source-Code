@@ -12,5 +12,6 @@ local function _extract_templates(path)
 end
 
 _extract_templates("scripts/settings/minion_attack_selection/templates/renegade_captain_attack_selection_templates")
+_extract_templates("scripts/settings/minion_attack_selection/templates/cultist_captain_attack_selection_templates")
 
 return settings("MinionAttackSelectionTemplates", minion_attack_selection_templates)

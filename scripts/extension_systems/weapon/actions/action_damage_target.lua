@@ -39,12 +39,12 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 	if last_action_warp_charge_percent then
 		local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(self._player)
 		local extreme_warp_charge_threshold = base_warp_charge_template.extreme_threshold
-		local dif = 1 - extreme_warp_charge_threshold
+		local diff = 1 - extreme_warp_charge_threshold
 		local stat_buffs = self._buff_extension:stat_buffs()
 		local warp_charge_reduction = stat_buffs.warp_charge_amount or 1
-		local new_dif = dif * warp_charge_reduction
+		local new_diff = diff * warp_charge_reduction
 
-		extreme_warp_charge_threshold = 1 - new_dif
+		extreme_warp_charge_threshold = 1 - new_diff
 
 		local empowered_grenade = self._buff_extension:has_keyword(buff_keywords.psyker_empowered_grenade)
 

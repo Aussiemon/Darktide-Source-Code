@@ -34,7 +34,7 @@ local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WorldInteractionSettings = require("scripts/managers/world_interaction/world_interaction_settings")
-local debug = false
+local DEG_TO_RAD = math.pi / 180
 local CameraManager = class("CameraManager")
 
 CameraManager.NODE_PROPERTY_MAP = {
@@ -572,23 +572,9 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 		return cast_to
 	end
 
-	local drawer
-
-	if debug and Managers.state.debug then
-		drawer = Managers.state.debug:drawer({
-			name = "Intersection",
-		})
-
-		drawer:reset()
-	end
-
 	local _, num_hits = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", cast_from, "size", smooth_radius, "types", "statics", "collision_filter", "filter_camera_sweep")
 
 	if num_hits > 0 then
-		if debug then
-			Application.warning("[CameraManager] Safe spot is intersecting with geometry")
-		end
-
 		return cast_from
 	end
 
@@ -603,17 +589,6 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 		local hit
 
 		if hits and #hits > 0 then
-			if debug then
-				local last_pos = cast_from
-
-				for _, k in ipairs(hits) do
-					drawer:vector(last_pos, k.position - last_pos, Color(0, 255, 0))
-					drawer:sphere(k.position, 0.1, Color(0, 255, 0))
-
-					last_pos = k.position
-				end
-			end
-
 			hit = hits[1]
 
 			local x = Vector3.dot(dir, hit.position - cast_from)
@@ -644,10 +619,6 @@ CameraManager._smooth_camera_collision = function (self, camera_position, safe_p
 				cast_radius = math.max(y, near_radius)
 			end
 		else
-			if debug then
-				drawer:sphere(cast_to, 0.2, Color(0, 0, 255))
-			end
-
 			return cast_to
 		end
 
@@ -673,7 +644,7 @@ CameraManager._current_transition = function (self, camera_nodes)
 	return camera_nodes[#camera_nodes].transition
 end
 
-CameraManager.camera_effect_sequence_event = function (self, event, start_time)
+CameraManager.add_camera_effect_sequence_event = function (self, event, start_time)
 	if not self._camera_shake_enabled then
 		return
 	end
@@ -711,12 +682,12 @@ CameraManager.camera_effect_sequence_event = function (self, event, start_time)
 	end
 end
 
-CameraManager.camera_effect_shake_event = function (self, event_name, source_unit_data)
+CameraManager.add_camera_effect_shake_event = function (self, event_name, optional_source_unit_data)
 	if not self._camera_shake_enabled then
 		return
 	end
 
-	self._active_events[#self._active_events + 1] = CameraShakeEvent:new(event_name, source_unit_data)
+	self._active_events[#self._active_events + 1] = CameraShakeEvent:new(event_name, optional_source_unit_data)
 end
 
 CameraManager.set_offset = function (self, x, y, z)
@@ -877,10 +848,9 @@ end
 
 CameraManager._calculate_sequence_event_rotation = function (self, camera_data, new_values)
 	local current_rot = camera_data.rotation
-	local deg_to_rad = math.pi / 180
-	local yaw_offset = new_values.yaw * deg_to_rad
-	local pitch_offset = new_values.pitch * deg_to_rad
-	local roll_offset = new_values.roll * deg_to_rad
+	local yaw_offset = new_values.yaw * DEG_TO_RAD
+	local pitch_offset = new_values.pitch * DEG_TO_RAD
+	local roll_offset = new_values.roll * DEG_TO_RAD
 	local total_offset = Quaternion.from_yaw_pitch_roll(yaw_offset, pitch_offset, roll_offset)
 
 	return Quaternion.multiply(current_rot, total_offset)

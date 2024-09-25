@@ -2,6 +2,7 @@
 
 local Action = require("scripts/utilities/weapon/action")
 local Explosion = require("scripts/utilities/attack/explosion")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ForceStaffAoeTargetingEffects = class("ForceStaffAoeTargetingEffects")
 local SPAWN_POS = Vector3Box(400, 400, 400)
 
@@ -239,5 +240,7 @@ ForceStaffAoeTargetingEffects._destroy_effects = function (self)
 		self._targeting_playing_id = nil
 	end
 end
+
+implements(ForceStaffAoeTargetingEffects, WieldableSlotScriptInterface)
 
 return ForceStaffAoeTargetingEffects

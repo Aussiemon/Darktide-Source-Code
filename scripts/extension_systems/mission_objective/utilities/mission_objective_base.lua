@@ -12,6 +12,7 @@ MissionObjectiveBase.init = function (self)
 	self._objective_type = nil
 	self._is_updated_externally = false
 	self._order_of_activation = 0
+	self._objective_category = "default"
 	self._is_side_mission = false
 	self._registered_units = {}
 	self._objective_units = {}
@@ -26,6 +27,7 @@ MissionObjectiveBase.init = function (self)
 	self._second_progression = 0
 	self._incremented_progression = 0
 	self._max_incremented_progression = 0
+	self._progression_sync_granularity = 0.01
 	self._ui_state = "default"
 	self._header = ""
 	self._description = ""
@@ -38,6 +40,8 @@ MissionObjectiveBase.init = function (self)
 	self._hide_widget = false
 	self._use_counter = true
 	self._progress_bar = false
+	self._progress_bar_icon = nil
+	self._progress_timer = false
 	self._popups_enabled = true
 	self._icon = nil
 	self._marker_type = nil
@@ -57,15 +61,21 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	self._objective_type = mission_objective_data.mission_objective_type
 	self._order_of_activation = last_activation_order
 	last_activation_order = last_activation_order + 1
+	self._ui_state = mission_objective_data.ui_state or "default"
 	self._header = mission_objective_data.header and Localize(mission_objective_data.header) or ""
 	self._description = mission_objective_data.description and Localize(mission_objective_data.description) or ""
 	self._music_wwise_state = mission_objective_data.music_wwise_state or WWISE_MUSIC_STATE_NONE
 	self._music_ignore_start_event = mission_objective_data.music_ignore_start_event or false
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
 	self._use_hud = mission_objective_data.hidden ~= true
+	self._use_counter = mission_objective_data.progress_bar ~= true or mission_objective_data.progress_timer ~= true
 	self._hide_widget = mission_objective_data.hide_widget or false
 	self._progress_bar = mission_objective_data.progress_bar or false
-	self._is_side_mission = mission_objective_data.is_side_mission or false
+	self._progress_bar_icon = mission_objective_data.progress_bar_icon
+	self._progress_timer = mission_objective_data.progress_timer or false
+	self._large_progress_bar = mission_objective_data.large_progress_bar or false
+	self._objective_category = mission_objective_data.objective_category
+	self._is_side_mission = mission_objective_data.objective_category == "side_mission"
 	self._popups_enabled = mission_objective_data.popups_enabled ~= false
 	self._evaluate_at_level_end = mission_objective_data.evaluate_at_level_end or false
 	self._event_type = mission_objective_data.event_type or OBJECTIVE_EVENT_TYPES.None
@@ -87,6 +97,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 		self._show_progression_popup_on_update = mission_objective_data.show_progression_popup_on_update
 	end
 
+	self._progression_sync_granularity = mission_objective_data.progression_sync_granularity or 0.01
 	self._registered_units = registered_units
 	self._objective_units = {}
 	self._marked_units = {}
@@ -95,9 +106,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	if synchronizer_unit then
 		local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
-		if synchronizer_extension:auto_start() then
-			synchronizer_extension:start_event()
-		end
+		synchronizer_extension:objective_started()
 
 		self._synchronizer_extension = synchronizer_extension
 	end
@@ -108,6 +117,10 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 		if MissionSoundEvents[event] and not mission_objective_data.music_ignore_start_event then
 			self._mission_objective_system:sound_event(MissionSoundEvents[event])
 		end
+	end
+
+	if self._large_progress_bar then
+		Managers.event:trigger("objective_progress_bar_open", self)
 	end
 end
 
@@ -206,6 +219,10 @@ MissionObjectiveBase.end_objective = function (self)
 
 	if synchronizer_unit and ALIVE[synchronizer_unit] then
 		Unit.flow_event(synchronizer_unit, "lua_objective_end")
+	end
+
+	if self._large_progress_bar then
+		Managers.event:trigger("objective_progress_bar_close", self)
 	end
 end
 
@@ -369,7 +386,7 @@ MissionObjectiveBase.ui_state = function (self)
 end
 
 MissionObjectiveBase.set_ui_state = function (self, ui_state)
-	return self._ui_state
+	self._ui_state = ui_state
 end
 
 MissionObjectiveBase.order_of_activation = function (self)
@@ -422,6 +439,10 @@ end
 
 MissionObjectiveBase.progression = function (self)
 	return self._progression
+end
+
+MissionObjectiveBase.progression_sync_granularity = function (self)
+	return self._progression_sync_granularity
 end
 
 MissionObjectiveBase.total_progression = function (self)
@@ -533,6 +554,26 @@ MissionObjectiveBase.progress_bar = function (self)
 	return self._progress_bar
 end
 
+MissionObjectiveBase.set_progress_bar = function (self, use_bar)
+	self._progress_bar = use_bar
+end
+
+MissionObjectiveBase.progress_bar_icon = function (self)
+	return self._progress_bar_icon
+end
+
+MissionObjectiveBase.progress_timer = function (self)
+	return self._progress_timer
+end
+
+MissionObjectiveBase.set_progress_timer = function (self, use_timer)
+	self._progress_timer = use_timer
+end
+
+MissionObjectiveBase.large_progress_bar = function (self)
+	return self._large_progress_bar
+end
+
 MissionObjectiveBase.header = function (self)
 	if self._override_header then
 		return self._override_header
@@ -559,6 +600,10 @@ end
 
 MissionObjectiveBase.icon = function (self)
 	return self._icon
+end
+
+MissionObjectiveBase.objective_category = function (self)
+	return self._objective_category
 end
 
 MissionObjectiveBase.is_side_mission = function (self)

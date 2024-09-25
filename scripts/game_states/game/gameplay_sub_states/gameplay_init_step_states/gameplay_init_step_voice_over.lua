@@ -17,6 +17,8 @@ GameplayInitStepVoiceOver.on_enter = function (self, parent, params)
 end
 
 GameplayInitStepVoiceOver.update = function (self, main_dt, main_t)
+	self._shared_state.initialized_steps.GameplayInitStepVoiceOver = true
+
 	local next_step_params = {
 		shared_state = self._shared_state,
 	}

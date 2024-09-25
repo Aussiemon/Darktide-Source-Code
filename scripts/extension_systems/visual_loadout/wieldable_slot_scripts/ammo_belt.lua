@@ -2,6 +2,7 @@
 
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AmmoBelt = class("AmmoBelt")
 
 AmmoBelt.init = function (self, context, slot, weapon_template, fx_sources)
@@ -85,5 +86,7 @@ end
 AmmoBelt.destroy = function (self)
 	return
 end
+
+implements(AmmoBelt, WieldableSlotScriptInterface)
 
 return AmmoBelt

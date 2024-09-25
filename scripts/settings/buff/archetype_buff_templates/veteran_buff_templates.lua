@@ -197,11 +197,8 @@ templates.veteran_combat_ability_stance_master = {
 	conditional_exit_func = function (template_data, template_context)
 		local disabled_character_state_component = template_data.disabled_character_state_component
 		local is_disabled = disabled_character_state_component.is_disabled
-		local inventory_component = template_data.inventory_component
-		local wielded_slot_name = inventory_component.wielded_slot
-		local correct_slot = wielded_slot_name == template_data.starting_slot_name
 
-		return is_disabled or not correct_slot
+		return is_disabled
 	end,
 	player_effects = {
 		looping_wwise_start_event = "wwise/events/player/play_player_ability_veteran_killshot_stance_on",
@@ -520,7 +517,7 @@ templates.veteran_increased_explosion_radius = {
 	},
 }
 templates.veteran_bonus_crit_chance_on_ammo = {
-	ammunition_percentage = 0.9,
+	ammunition_percentage = 0.8,
 	class_name = "buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_bonus_crit_chance_on_ammo",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
@@ -559,6 +556,7 @@ templates.veteran_no_ammo_consumption_on_lasweapon_crit = {
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
 		template_data.inventory_component = unit_data_extension:read_component("inventory")
+		template_data.inventory_slot_component = unit_data_extension:read_component("slot_secondary")
 		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context, t)
@@ -566,6 +564,12 @@ templates.veteran_no_ammo_consumption_on_lasweapon_crit = {
 		local wielded_slot = inventory_component.wielded_slot
 
 		if wielded_slot ~= "slot_secondary" then
+			return false
+		end
+
+		local inventory_slot_component = template_data.inventory_slot_component
+
+		if inventory_slot_component and inventory_slot_component.current_ammunition_clip < 1 then
 			return false
 		end
 
@@ -635,7 +639,7 @@ templates.veteran_ranged_power_out_of_melee = {
 	hud_priority = 4,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.ranged_damage] = 0.15,
+		[stat_buffs.ranged_damage] = 0.2,
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -740,7 +744,7 @@ templates.veteran_damage_after_sprinting = {
 }
 templates.veteran_damage_after_sprinting_buff = {
 	class_name = "buff",
-	duration = 5,
+	duration = 8,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_increase_damage_after_sprinting",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
@@ -2583,7 +2587,7 @@ templates.veteran_snipers_focus = {
 				template_data.talent_resource_component.current_resource = template_data.stacks
 
 				if template_data.toughness_bonus then
-					-- Nothing
+					Stamina.add_stamina_percent(template_context.unit, 0.1)
 				end
 			end
 

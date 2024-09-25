@@ -24,14 +24,6 @@ HealthStation.init = function (self, unit, is_server)
 	end
 end
 
-HealthStation.editor_init = function (self, unit)
-	return
-end
-
-HealthStation.editor_validate = function (self, unit)
-	return true, ""
-end
-
 HealthStation.enable = function (self, unit)
 	return
 end

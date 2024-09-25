@@ -115,6 +115,7 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	self._dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
 	self._movement_state_component = unit_data_extension:write_component("movement_state")
 	self._character_state_component = unit_data_extension:read_component("character_state")
+	self._block_component = unit_data_extension:write_component("block")
 
 	local damage_profile = action_settings.damage_profile
 
@@ -319,6 +320,8 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 		weapon_special_implementation:on_sweep_action_finish(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
 	end
 
+	self._block_component.is_blocking = false
+
 	ActionSweep.super.finish(self, reason, data, t, time_in_action)
 end
 
@@ -360,6 +363,14 @@ end
 
 ActionSweep.fixed_update = function (self, dt, t, time_in_action)
 	local action_settings = self._action_settings
+
+	if self._block_component.is_blocking then
+		local is_block_ended = not action_settings.block_duration or time_in_action >= action_settings.block_duration
+
+		if is_block_ended then
+			self._block_component.is_blocking = false
+		end
+	end
 
 	self:_update_sweep(dt, t, time_in_action, action_settings, self._action_sweep_component)
 end
@@ -1204,7 +1215,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		damage_type = damage_type[target_index] or damage_type.default
 	end
 
-	local damage, result, damage_efficiency, _
+	local damage, result, damage_efficiency, stagger_result
 
 	if not self._unit_data_extension.is_resimulating then
 		local is_damagable = Health.is_damagable(hit_unit)
@@ -1212,7 +1223,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		local deal_damage = is_damagable and (not target_is_hazard_prop or target_is_hazard_prop and hazard_prop_is_active)
 
 		if deal_damage then
-			damage, result, damage_efficiency, _, hit_weakspot = self:_do_damage_to_unit(damage_profile, hit_unit, hit_actor, hit_position, hit_normal, attack_direction, target_index, num_hit_enemies, hit_zone_name_or_nil, abort_attack, amount_of_mass_hit, damage_type, is_special_active)
+			damage, result, damage_efficiency, stagger_result, hit_weakspot = self:_do_damage_to_unit(damage_profile, hit_unit, hit_actor, hit_position, hit_normal, attack_direction, target_index, num_hit_enemies, hit_zone_name_or_nil, abort_attack, amount_of_mass_hit, damage_type, is_special_active)
 		elseif hit_ragdoll then
 			local herding_template = action_settings.herding_template
 
@@ -1220,7 +1231,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		end
 
 		if not target_is_environment then
-			self:_play_hit_effects(damage_profile, hit_position, attack_direction, damage, result, damage_efficiency)
+			self:_play_hit_effects(hit_unit, damage_profile, hit_position, attack_direction, damage, result, damage_efficiency)
 		end
 	end
 
@@ -1244,7 +1255,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	end
 
 	if weapon_special_implementation then
-		weapon_special_implementation:process_hit(t, weapon, action_settings, num_hit_enemies, target_is_alive, hit_unit, hit_position, attack_direction, abort_attack, wielded_slot, damage_profile)
+		weapon_special_implementation:process_hit(t, weapon, action_settings, num_hit_enemies, target_is_alive, hit_unit, damage, result, damage_efficiency, stagger_result, hit_position, attack_direction, abort_attack, wielded_slot, damage_profile)
 	end
 
 	local weapon_template = self._weapon_template
@@ -1479,7 +1490,7 @@ end
 
 local external_properties = {}
 
-ActionSweep._play_hit_effects = function (self, damage_profile, hit_position, attack_direction, damage, result, damage_efficiency)
+ActionSweep._play_hit_effects = function (self, hit_unit, damage_profile, hit_position, attack_direction, damage, result, damage_efficiency)
 	local is_heavy = damage_profile.melee_attack_strength == melee_attack_strengths.heavy
 	local sweep_hit_alias = is_heavy and "melee_heavy_sweep_hit" or "melee_sweep_hit"
 	local crit_hit_alias = is_heavy and "melee_heavy_sweep_hit_crit" or "melee_sweep_hit_crit"
@@ -1496,7 +1507,7 @@ ActionSweep._play_hit_effects = function (self, damage_profile, hit_position, at
 		self._fx_extension:trigger_gear_wwise_event_with_source(crit_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients)
 	end
 
-	if damage and damage > 0 then
+	if damage and damage > 0 and not Breed.is_objective_prop(Breed.unit_breed_or_nil(hit_unit)) then
 		Managers.state.blood:play_screen_space_blood(self._fx_extension)
 	end
 end

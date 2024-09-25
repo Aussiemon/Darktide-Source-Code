@@ -4,7 +4,6 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {

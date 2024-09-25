@@ -147,6 +147,14 @@ MinigameExtension.action = function (self, held, t)
 	return false
 end
 
+MinigameExtension.uses_action = function (self)
+	if self._current_state == STATES.active then
+		return self._minigame:uses_action()
+	end
+
+	return false
+end
+
 MinigameExtension.uses_joystick = function (self)
 	if self._current_state == STATES.active then
 		return self._minigame:uses_joystick()

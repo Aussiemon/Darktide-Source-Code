@@ -47,7 +47,7 @@ function _template_settings_test(weapon_template)
 	local keywords = weapon_template.keywords
 	local overheat_configuration = weapon_template.overheat_configuration
 
-	if overheat_configuration then
+	if overheat_configuration and not weapon_template.use_special_charge_template_for_overheat_decay then
 		local auto_vent_delay = overheat_configuration.auto_vent_delay
 		local network_type = weapon_component_data.overheat_last_charge_at_t.network_type
 		local network_type_info = Network.type_info(network_type)

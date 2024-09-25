@@ -401,8 +401,10 @@ local function generate_base_template()
 	base_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/grenade_equipable"
 	base_template.spread_template = "lasgun"
 	base_template.ammo_template = "no_ammo"
-	base_template.uses_ammunition = true
-	base_template.uses_overheat = false
+	base_template.hud_configuration = {
+		uses_ammunition = true,
+		uses_overheat = false,
+	}
 	base_template.sprint_ready_up_time = 0.1
 	base_template.max_first_person_anim_movement_speed = 5.8
 	base_template.fx_sources = {}

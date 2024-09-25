@@ -4,6 +4,7 @@ local Action = require("scripts/utilities/weapon/action")
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ChainLightningTarget = require("scripts/utilities/action/chain_lightning_target")
 local Spread = require("scripts/utilities/spread")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ChainLightningLinkEffects = class("ChainLightningLinkEffects")
 local Quaternion_look = Quaternion.look
 local Unit_node = Unit.node
@@ -16,6 +17,13 @@ local World_find_particles_variable = World.find_particles_variable
 local World_move_particles = World.move_particles
 local World_set_particles_variable = World.set_particles_variable
 local World_stop_spawning_particles = World.stop_spawning_particles
+local PI = math.pi
+local USE_SOURCE_POS = false
+local USE_TARGET_POS = true
+local USE_TO_TARGET_ROTATION = false
+local USE_IMPACT_NORMAL_ROTATION = true
+local SET_LENGTH_VARIABLE = false
+local SKIP_LENGTH_VARIABLE = true
 local BREADTH_FIRST_VALIDATION = ChainLightning.breadth_first_validation_functions
 local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
 local JUMP_VALIDATION = ChainLightning.jump_validation_functions
@@ -29,17 +37,19 @@ local ROOT_CHAIN_SETTINGS = {
 		num_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS,
 	},
 }
+local LOOPING_TO_TARGET_VFX_ALIAS = "chain_lightning_to_target"
 local LOOPING_LINK_VFX_ALIAS = "chain_lightning_link"
+local LOOPING_IMPACT_VFX_ALIAS = "chain_lightning_impact"
 local PARTICLE_VARIABLE_NAME = "length"
 local TARGET_NODE_NAME = "enemy_aim_target_02"
 local DEFAULT_HAND = "both"
 local VISUAL_JUMP_TIME = 0.05
 local NO_TARGET_JUMP_TIME = 0.2
-local vfx_external_properties = {}
+local _vfx_external_properties = {}
 local _on_add_func, _root_on_add_func, _on_remove_func, _link_effect_name
 local MAX_NUM_FX_DATA_TABLES = 128
-local MAX_NUM_EFFECTS_PER_TABLE = 4
-local FxData = class("FxDataChainLightning")
+local MAX_NUM_EFFECTS_PER_TABLE = 6
+local FxData = class("FxData")
 
 FxData.init = function (self, index)
 	self.index = index
@@ -47,8 +57,8 @@ FxData.init = function (self, index)
 
 	local effects = Script.new_array(MAX_NUM_EFFECTS_PER_TABLE)
 
-	for jj = 1, MAX_NUM_EFFECTS_PER_TABLE do
-		effects[jj] = {}
+	for ii = 1, MAX_NUM_EFFECTS_PER_TABLE do
+		effects[ii] = {}
 	end
 
 	self._num_effects = 0
@@ -57,6 +67,11 @@ end
 
 FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_node, target_unit, target_node)
 	local num_effects = self._num_effects + 1
+
+	if num_effects > MAX_NUM_EFFECTS_PER_TABLE then
+		return
+	end
+
 	local entry = self._effects[num_effects]
 
 	self._num_effects = num_effects
@@ -76,12 +91,20 @@ FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_
 	entry.target_unit = target_unit
 	entry.source_node_index = source_node
 	entry.target_node_index = target_node
+	entry.effect_name = link_effect_name
 	entry.effect_id = effect_id
-	entry.link_effect_name = link_effect_name
+	entry.use_target_pos = USE_SOURCE_POS
+	entry.use_impact_normal_rotation = USE_TO_TARGET_ROTATION
+	entry.skip_length_variable = SET_LENGTH_VARIABLE
 end
 
-FxData.spawn_vfx_world_position = function (self, world, link_effect_name, source_unit, source_node, target_pos)
+FxData.spawn_vfx_world_position = function (self, world, source_unit, source_node, target_pos, target_normal, effect_name, use_target_pos, use_impact_normal_rotation, skip_length_variable)
 	local num_effects = self._num_effects + 1
+
+	if num_effects > MAX_NUM_EFFECTS_PER_TABLE then
+		return
+	end
+
 	local entry = self._effects[num_effects]
 
 	self._num_effects = num_effects
@@ -91,25 +114,37 @@ FxData.spawn_vfx_world_position = function (self, world, link_effect_name, sourc
 	local direction, length = Vector3_direction_length(line)
 	local rotation = Quaternion_look(direction)
 	local particle_length = Vector3(length, 1, 1)
-	local effect_id = World_create_particles(world, link_effect_name, source_pos, rotation)
-	local length_variable_index = World_find_particles_variable(world, link_effect_name, PARTICLE_VARIABLE_NAME)
+	local rotation_to_use = use_impact_normal_rotation and target_normal and Quaternion_look(target_normal) or rotation
+	local effect_id = World_create_particles(world, effect_name, source_pos, rotation_to_use)
 
-	World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
+	if not skip_length_variable then
+		local length_variable_index = World_find_particles_variable(world, effect_name, PARTICLE_VARIABLE_NAME)
+
+		World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
+	end
 
 	entry.source_unit = source_unit
 	entry.target_pos = Vector3Box(target_pos)
+	entry.target_normal = target_normal and Vector3Box(target_normal)
 	entry.source_node_index = source_node
+	entry.effect_name = effect_name
 	entry.effect_id = effect_id
-	entry.link_effect_name = link_effect_name
+	entry.use_target_pos = use_target_pos
+	entry.use_impact_normal_rotation = use_impact_normal_rotation
+	entry.skip_length_variable = skip_length_variable
 end
 
-FxData.update_world_position = function (self, world_pos)
+FxData.update_target_pos = function (self, target_pos, target_normal)
 	local effects = self._effects
 
 	for ii = 1, self._num_effects do
 		local entry = effects[ii]
 
-		entry.target_pos:store(world_pos)
+		entry.target_pos:store(target_pos)
+
+		if target_normal and entry.target_normal then
+			entry.target_normal:store(target_normal)
+		end
 	end
 end
 
@@ -136,18 +171,28 @@ FxData.update_vfx = function (self, t, world)
 		local source_node_index = entry.source_node_index
 		local target_unit = entry.target_unit
 		local target_node_index = entry.target_node_index
-		local effect_id = entry.effect_id
-		local link_effect_name = entry.link_effect_name
 		local source_pos = Unit_world_position(source_unit, source_node_index)
-		local target_pos = entry.target_pos and entry.target_pos:unbox() or Unit_world_position(target_unit, target_node_index)
+		local target_pos = entry.target_pos and entry.target_pos:unbox() or target_unit and Unit_world_position(target_unit, target_node_index)
 		local line = target_pos - source_pos
 		local direction, length = Vector3_direction_length(line)
 		local rotation = Quaternion_look(direction)
 		local particle_length = Vector3(length, 1, 1)
-		local length_variable_index = World_find_particles_variable(world, link_effect_name, PARTICLE_VARIABLE_NAME)
+		local effect_name = entry.effect_name
+		local effect_id = entry.effect_id
+		local use_impact_normal_rotation = entry.use_impact_normal_rotation
+		local use_target_pos = entry.use_target_pos
+		local set_length_variable = entry.set_length_variable
+		local target_normal = entry.target_normal and entry.target_normal:unbox()
+		local rotation_to_use = use_impact_normal_rotation and target_normal and Quaternion_look(target_normal) or rotation
+		local position_to_use = use_target_pos and target_pos or source_pos
 
-		World_move_particles(world, effect_id, source_pos, rotation)
-		World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
+		World_move_particles(world, effect_id, position_to_use, rotation_to_use)
+
+		if set_length_variable then
+			local length_variable_index = World_find_particles_variable(world, effect_name, PARTICLE_VARIABLE_NAME)
+
+			World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
+		end
 	end
 end
 
@@ -156,12 +201,12 @@ FxData.clear = function (self)
 
 	local effects = self._effects
 
-	for jj = 1, MAX_NUM_EFFECTS_PER_TABLE do
-		table.clear(effects[jj])
+	for ii = 1, MAX_NUM_EFFECTS_PER_TABLE do
+		table.clear(effects[ii])
 	end
 end
 
-local FxDataTables = class("FxDataTablesChainLightning")
+local FxDataTables = class("FxDataTables")
 
 FxDataTables.init = function (self)
 	local fx_data_tables = Script.new_array(MAX_NUM_FX_DATA_TABLES)
@@ -199,13 +244,12 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 	self._owner_unit = owner_unit
-	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
 	self._buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
 	self._fx_extension = context.fx_extension
 	self._visual_loadout_extension = context.visual_loadout_extension
 
-	local unit_data_extension = context.unit_data_extension
+	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
 	self._targeting_module_component = unit_data_extension:read_component("action_module_targeting")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -218,23 +262,23 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 	self._next_jump_time = 0
 	self._next_no_target_jump_time = 0
 	self._no_target_position = Vector3Box(0, 0, 0)
+	self._no_target_normal = Vector3Box(0, 0, 0)
 	self._charge_level = false
 
 	local weapon_chain_settings = weapon_template.chain_settings
 	local right_fx_source_name = fx_sources[weapon_chain_settings.right_fx_source_name]
 	local left_fx_source_name = fx_sources[weapon_chain_settings.left_fx_source_name]
 
-	if weapon_chain_settings.left_fx_source_name_base_unit then
-		left_fx_source_name = weapon_chain_settings.left_fx_source_name_base_unit
-	end
-
 	if weapon_chain_settings.right_fx_source_name_base_unit then
 		right_fx_source_name = weapon_chain_settings.right_fx_source_name_base_unit
 	end
 
+	if weapon_chain_settings.left_fx_source_name_base_unit then
+		left_fx_source_name = weapon_chain_settings.left_fx_source_name_base_unit
+	end
+
 	self._fx_data_tables = FxDataTables:new()
 	self._func_context = {
-		fx_hand = "none",
 		charge_level = self._charge_level,
 		fx_data_tables = self._fx_data_tables,
 		hit_units = self._hit_units,
@@ -356,7 +400,9 @@ ChainLightningLinkEffects._find_root_targets = function (self, t)
 
 		self:_find_no_target(t)
 	elseif self._attacking and not attacking then
-		ChainLightningTarget.remove_all_child_nodes(self._chain_root_node, _on_remove_func, self._func_context)
+		local chain_root_node = self._chain_root_node
+
+		ChainLightningTarget.remove_all_child_nodes(chain_root_node, _on_remove_func, self._func_context)
 		self:_clear_initial_targets()
 		self:_clear_no_target()
 	end
@@ -365,16 +411,15 @@ ChainLightningLinkEffects._find_root_targets = function (self, t)
 end
 
 ChainLightningLinkEffects._find_no_target = function (self, t)
-	local owner_unit = self._owner_unit
 	local chain_root_node = self._chain_root_node
 	local context = self._func_context
 
-	if chain_root_node:num_children() == 0 then
-		local target_pos = self:_find_no_target_pos(t)
+	if chain_root_node:num_children() <= 0 then
+		local target_pos, target_normal = self:_find_no_target_pos(t)
 
 		if not chain_root_node:value("fx_data") then
 			local fx_data_table = context.fx_data_tables:next_table()
-			local link_effect_name = _link_effect_name(context, "no_target")
+			local link_effect_name, impact_effect_name, to_target_effect_name = _link_effect_name(context, "no_target")
 			local fx_hand = context.fx_hand
 			local spawn_left = fx_hand == "both" or fx_hand == "left"
 			local spawn_right = fx_hand == "both" or fx_hand == "right"
@@ -382,20 +427,24 @@ ChainLightningLinkEffects._find_no_target = function (self, t)
 			if spawn_left then
 				local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.left_fx_source_name)
 
-				fx_data_table:spawn_vfx_world_position(context.world, link_effect_name, parent_unit, source_node_index, target_pos)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, link_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, impact_effect_name, USE_TARGET_POS, USE_IMPACT_NORMAL_ROTATION, SKIP_LENGTH_VARIABLE)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, to_target_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
 			end
 
 			if spawn_right then
 				local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.right_fx_source_name)
 
-				fx_data_table:spawn_vfx_world_position(context.world, link_effect_name, parent_unit, source_node_index, target_pos)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, link_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, impact_effect_name, USE_TARGET_POS, USE_IMPACT_NORMAL_ROTATION, SKIP_LENGTH_VARIABLE)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, to_target_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
 			end
 
 			chain_root_node:set_value("fx_data", fx_data_table)
 		else
 			local fx_data_table = chain_root_node:value("fx_data")
 
-			fx_data_table:update_world_position(target_pos)
+			fx_data_table:update_target_pos(target_pos, target_normal)
 		end
 	else
 		self:_clear_no_target()
@@ -414,6 +463,7 @@ ChainLightningLinkEffects._no_target_raycast = function (self, position, rotatio
 	if not hit then
 		hit_position = position + direction * max_length
 		distance = max_length
+		hit_normal = direction
 	end
 
 	return hit, hit_position, distance, hit_normal
@@ -421,18 +471,18 @@ end
 
 ChainLightningLinkEffects._find_no_target_pos = function (self, t)
 	if t < self._next_no_target_jump_time then
-		return self._no_target_position:unbox()
+		return self._no_target_position:unbox(), self._no_target_normal:unbox()
 	end
 
 	local position = self._first_person_component.position
 	local rotation = self._first_person_component.rotation
-	local hit, hit_position = self:_no_target_raycast(position, rotation, 10)
+	local hit, hit_position, _, hit_normal = self:_no_target_raycast(position, rotation, 10)
 
 	if not hit then
 		local right = Quaternion.right(rotation)
-		local downwards_rotation = Quaternion.multiply(Quaternion.axis_angle(right, -math.pi * 0.1), rotation)
+		local downwards_rotation = Quaternion.multiply(Quaternion.axis_angle(right, -PI * 0.1), rotation)
 
-		hit, hit_position = self:_no_target_raycast(position, downwards_rotation, 10)
+		_, hit_position, _, hit_normal = self:_no_target_raycast(position, downwards_rotation, 10)
 	end
 
 	local jump_time = NO_TARGET_JUMP_TIME
@@ -440,8 +490,9 @@ ChainLightningLinkEffects._find_no_target_pos = function (self, t)
 	self._next_no_target_jump_time = t + jump_time
 
 	self._no_target_position:store(hit_position)
+	self._no_target_normal:store(hit_normal)
 
-	return hit_position
+	return hit_position, hit_normal
 end
 
 ChainLightningLinkEffects._clear_no_target = function (self)
@@ -547,6 +598,7 @@ end
 
 ChainLightningLinkEffects._reset = function (self)
 	self._next_jump_time = 0
+	self._next_no_target_jump_time = 0
 
 	ChainLightningTarget.remove_all_child_nodes(self._chain_root_node, _on_remove_func, self._func_context)
 	self:_clear_initial_targets()
@@ -583,18 +635,20 @@ function _root_on_add_func(node, context)
 		local spawn_right = fx_hand == "both" or fx_hand == "right"
 		local target_node_index = Unit_node(child_unit, TARGET_NODE_NAME)
 		local fx_data_table = context.fx_data_tables:next_table()
-		local link_effect_name = _link_effect_name(context)
+		local link_effect_name, _, to_target_effect_name = _link_effect_name(context)
 
 		if spawn_left then
 			local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.left_fx_source_name)
 
 			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+			fx_data_table:spawn_vfx(context.world, to_target_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
 		end
 
 		if spawn_right then
 			local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.right_fx_source_name)
 
 			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+			fx_data_table:spawn_vfx(context.world, to_target_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
 		end
 
 		node:set_value("fx_data", fx_data_table)
@@ -620,7 +674,8 @@ end
 
 function _link_effect_name(context, power_override)
 	local action_settings = Action.current_action_settings_from_component(context.weapon_action_component, context.weapon_actions)
-	local chain_lightning_link_effects = action_settings and action_settings.chain_lightning_link_effects or context.weapon_template.chain_lightning_link_effects
+	local weapon_template = context.weapon_template
+	local chain_lightning_link_effects = action_settings and action_settings.chain_lightning_link_effects or weapon_template and weapon_template.chain_lightning_link_effects
 	local power = power_override
 
 	if not power and chain_lightning_link_effects then
@@ -647,14 +702,16 @@ function _link_effect_name(context, power_override)
 		end
 	end
 
-	vfx_external_properties.power = power or "high"
+	_vfx_external_properties.power = power or "high"
 
 	local visual_loadout_extension = context.visual_loadout_extension
-	local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_LINK_VFX_ALIAS, vfx_external_properties)
+	local resolved_link_effect, link_effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_LINK_VFX_ALIAS, _vfx_external_properties)
+	local resolved_impact_effect, impact_effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_IMPACT_VFX_ALIAS, _vfx_external_properties)
+	local resolved_to_target_effect, to_target_effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_TO_TARGET_VFX_ALIAS, _vfx_external_properties)
 
-	if resolved then
-		return effect_name
-	end
+	return resolved_link_effect and link_effect_name, resolved_impact_effect and impact_effect_name, resolved_to_target_effect and to_target_effect_name
 end
+
+implements(ChainLightningLinkEffects, WieldableSlotScriptInterface)
 
 return ChainLightningLinkEffects

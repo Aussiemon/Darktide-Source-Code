@@ -3,6 +3,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local HoloSightTemplates = require("scripts/settings/equipment/holo_sight_templates")
@@ -10,15 +11,14 @@ local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
 local WeaponTraitsBespokeLaspistolP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_laspistol_p1")
-local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
+local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
 local buff_keywords = BuffSettings.keywords
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
@@ -256,6 +256,10 @@ weapon_template.actions = {
 		buff_keywords = {
 			buff_keywords.allow_hipfire_during_sprint,
 		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.ranged_attack_speed,
+		},
 	},
 	action_shoot_zoomed = {
 		allow_shots_with_less_than_required_ammo = true,
@@ -337,6 +341,10 @@ weapon_template.actions = {
 				action_name = "action_normal_push",
 				chain_time = 0.2,
 			},
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.ranged_attack_speed,
 		},
 	},
 	action_zoom = {
@@ -679,8 +687,10 @@ weapon_template.conditional_state_to_action_input = {
 	},
 }
 weapon_template.no_ammo_delay = 0.25
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {

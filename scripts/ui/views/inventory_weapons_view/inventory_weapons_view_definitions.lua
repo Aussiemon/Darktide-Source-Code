@@ -194,6 +194,34 @@ local scenegraph_definition = {
 			1,
 		},
 	},
+	button_options = {
+		horizontal_alignment = "top",
+		parent = "canvas",
+		vertical_alignment = "left",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
+			1,
+		},
+	},
+	weapon_discard_pivot = {
+		horizontal_alignment = "left",
+		parent = "canvas",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			1320,
+			60,
+			1,
+		},
+	},
 }
 local widget_definitions = {
 	corner_bottom_left = UIWidget.create_definition({
@@ -232,6 +260,12 @@ local widget_definitions = {
 			},
 		},
 	}, "screen"),
+	discard_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
+		gamepad_action = "gamepad_secondary_action_pressed",
+		visible = false,
+		original_text = Utf8.upper(Localize("loc_discard_items_button")),
+		hotspot = {},
+	}),
 }
 local legend_inputs = {
 	{
@@ -242,73 +276,67 @@ local legend_inputs = {
 	},
 	{
 		alignment = "right_alignment",
-		display_name = "loc_weapon_inventory_customize_button",
-		input_action = "hotkey_item_customize",
-		on_pressed_callback = "cb_on_customize_pressed",
-		visibility_function = function (parent)
-			local is_previewing_item = parent:is_previewing_item()
-
-			if is_previewing_item then
-				local is_previewing_item = parent:is_previewing_item()
-				local previewed_item = parent:previewed_item()
-				local item_type = previewed_item.item_type
-				local ITEM_TYPES = UISettings.ITEM_TYPES
-
-				if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED then
-					return true
-				end
-			end
-
-			return false
-		end,
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_weapon_inventory_inspect_button",
-		input_action = "hotkey_item_inspect",
-		on_pressed_callback = "cb_on_inspect_pressed",
-		visibility_function = function (parent)
-			local is_previewing_item = parent:is_previewing_item()
-
-			if is_previewing_item then
-				local is_previewing_item = parent:is_previewing_item()
-				local previewed_item = parent:previewed_item()
-				local item_type = previewed_item.item_type
-				local ITEM_TYPES = UISettings.ITEM_TYPES
-
-				if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED then
-					return true
-				end
-			end
-
-			return false
-		end,
-	},
-	{
-		alignment = "right_alignment",
 		display_name = "loc_item_toggle_equipped_compare",
 		input_action = "hotkey_item_compare",
 		on_pressed_callback = "cb_on_toggle_item_compare",
 		visibility_function = function (parent)
 			local is_previewing_item = parent:is_previewing_item()
 
-			return is_previewing_item
+			return is_previewing_item and not parent:is_selected_item_equipped() and not parent._discard_items_element and not parent._selected_options
 		end,
 	},
 	{
 		alignment = "right_alignment",
-		display_name = "loc_inventory_item_discard",
-		input_action = "hotkey_item_discard",
-		on_pressed_callback = "cb_on_discard_held",
-		use_mouse_hold = true,
+		display_name = "loc_discard_items_button",
+		input_action = "hotkey_item_discard_pressed",
+		on_pressed_callback = "cb_on_discard_pressed",
 		visibility_function = function (parent)
-			if not parent:selected_grid_widget() then
+			return not parent._discard_items_element
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_inventory_add_favorite",
+		input_action = "hotkey_item_favorite",
+		on_pressed_callback = "cb_on_favorite_pressed",
+		visibility_function = function (parent, id)
+			local widget
+
+			if parent._discard_items_element and not parent._discard_items_element:visible() then
 				return false
 			end
 
-			local is_item_equipped = parent:is_selected_item_equipped() and not parent._discarded_item_grid_index
+			if parent._discard_items_element and parent._using_cursor_navigation then
+				widget = parent._item_grid and parent._item_grid:hovered_widget()
+			else
+				widget = parent._item_grid and parent._item_grid:selected_grid_widget()
+			end
 
-			return not is_item_equipped
+			local gear_id = widget and widget.content.element and widget.content.element.item and widget.content.element.item.gear_id
+
+			if gear_id then
+				local is_favorite = ItemUtils.is_item_id_favorited(gear_id)
+				local display_name = is_favorite and "loc_inventory_remove_favorite" or "loc_inventory_add_favorite"
+
+				parent._input_legend_element:set_display_name(id, display_name)
+
+				return true
+			end
+
+			return false
+		end,
+	},
+}
+local blueprints = {
+	button = {
+		size = ButtonPassTemplates.terminal_button.size,
+		pass_template = table.clone(ButtonPassTemplates.terminal_list_button_with_background_and_text_icon),
+		init = function (parent, widget, entry, callback_name)
+			local content = widget.content
+
+			content.text = entry.display_name or ""
+			content.icon = entry.display_icon or ""
+			content.hotspot.pressed_callback = entry.callback
 		end,
 	},
 }
@@ -318,4 +346,5 @@ return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
+	blueprints = blueprints,
 }

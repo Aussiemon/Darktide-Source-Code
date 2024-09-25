@@ -64,6 +64,7 @@ MainMenuView.on_enter = function (self)
 	self:_register_event("event_main_menu_selected_profile_changed", "_event_selected_profile_changed")
 	self:_register_event("update_character_sync_state", "_event_profile_sync_changed")
 	Managers.event:trigger("event_main_menu_entered")
+	Managers.event:trigger("event_update_reward_claim_state")
 
 	local save_manager = Managers.save
 	local save_data = save_manager:account_data()

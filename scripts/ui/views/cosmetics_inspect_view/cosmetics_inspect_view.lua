@@ -68,17 +68,12 @@ CosmeticsInspectView.init = function (self, settings, context)
 			self._animation_event_variable_data = context.animation_event_variable_data
 			self._disable_zoom = context.disable_zoom
 
-			local player = self:_player()
 			local profile = context.profile
-			local prefered_profile = profile or player and player:profile()
-			local prefered_gender = prefered_profile and prefered_profile.gender
-			local prefered_archetype = prefered_profile and prefered_profile.archetype.name
+			local gender_name = profile.gender
+			local archetype = profile.archetype
+			local real_item = item.items and item.items[1] or item
 
-			self._mannequin_profile = ItemUtils.create_mannequin_profile_by_item(item, prefered_gender, prefered_archetype)
-
-			local mannequin_profile_loadout = table.clone(self._mannequin_profile.loadout)
-
-			self._mannequin_profile.loadout = mannequin_profile_loadout
+			self._mannequin_profile = ItemUtils.create_mannequin_profile_by_item(real_item, gender_name, archetype)
 
 			local slots = self._preview_item and self._preview_item.slots
 			local slot_name = context.slot_name or slots and slots[1]
@@ -89,32 +84,39 @@ CosmeticsInspectView.init = function (self, settings, context)
 				self._initial_rotation = math.pi
 			end
 
-			local items = item.items
-
-			if items then
-				for i = 1, #items do
-					self._mannequin_profile.loadout[items[i].slots[1]] = items[i]
-				end
-			else
-				self._mannequin_profile.loadout[slot_name] = item
-			end
-
 			local preview_with_gear = context.preview_with_gear
+			local allow_preview = preview_with_gear and profile
 
-			if preview_with_gear and profile then
+			if allow_preview then
 				self._preview_profile = profile
 
 				local gear_profile = table.clone_instance(profile)
 
 				gear_profile.character_id = "cosmetics_view_preview_character"
 				self._gear_profile = gear_profile
+			end
 
-				if items then
-					for i = 1, #items do
-						gear_profile.loadout[items[i].slots[1]] = items[i]
+			local items = item.items
+			local sub_item_count = items and #items or 0
+
+			for i = 1, sub_item_count do
+				local sub_item = items[i]
+				local sub_slot_name = sub_item.slots[1]
+
+				if sub_slot_name then
+					self._mannequin_profile.loadout[sub_slot_name] = sub_item
+
+					if allow_preview then
+						self._gear_profile.loadout[sub_slot_name] = sub_item
 					end
-				else
-					gear_profile.loadout[slot_name] = item
+				end
+			end
+
+			if slot_name then
+				self._mannequin_profile.loadout[slot_name] = item
+
+				if allow_preview then
+					self._gear_profile.loadout[slot_name] = item
 				end
 			end
 
@@ -577,10 +579,6 @@ CosmeticsInspectView._can_preview = function (self)
 	return context and context.preview_with_gear
 end
 
-CosmeticsInspectView._set_preview_widgets_visibility = function (self, visible)
-	local widgets_by_name = self._widgets_by_name
-end
-
 CosmeticsInspectView._stop_previewing = function (self)
 	if self._weapon_preview then
 		self._weapon_preview:stop_presenting()
@@ -747,6 +745,10 @@ CosmeticsInspectView._setup_item_description = function (self, description_text,
 		desired_spacing = 50
 	end
 
+	if #widgets > 0 then
+		_add_spacing(10)
+	end
+
 	self._description_grid_widgets = widgets
 	self._description_grid_alignment_widgets = alignment_widgets
 
@@ -869,8 +871,8 @@ CosmeticsInspectView._start_preview_item = function (self)
 
 		local description = item.description and Localize(item.description)
 
-		self:_setup_item_description(description, restriction_text, property_text)
 		self:_setup_title(item)
+		self:_setup_item_description(description, restriction_text, property_text)
 	elseif self._bundle_data then
 		local description = self._bundle_data.description or ""
 
@@ -896,6 +898,10 @@ CosmeticsInspectView._start_preview_item = function (self)
 		self:_setup_title(title_item_data, true)
 		self:_set_preview_widgets_visibility(true)
 	end
+end
+
+CosmeticsInspectView._set_preview_widgets_visibility = function (self, visible)
+	return
 end
 
 CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
@@ -954,44 +960,6 @@ CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
 	self:_set_scenegraph_size("description_grid", nil, grid_height)
 	self:_set_scenegraph_size("description_mask", nil, grid_height + mask_oversize)
 	self:_set_scenegraph_size("description_scrollbar", nil, grid_height)
-end
-
-CosmeticsInspectView._generate_mannequin_loadout = function (self, profile, item)
-	local presentation_profile = profile
-	local loadout = profile.loadout
-	local gender_name = presentation_profile.gender
-	local archetype = presentation_profile.archetype
-	local breed_name = archetype.breed
-	local new_loadout = {}
-	local slots = item and item.slots
-	local first_slot_name = slots and slots[1]
-
-	for i = 1, #slots do
-		local required_item_slot_name = slots[i]
-
-		loadout[required_item_slot_name] = item
-	end
-
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-
-	if required_gender_item_names_per_slot then
-		local required_items = required_gender_item_names_per_slot[first_slot_name]
-
-		if required_items then
-			for required_item_slot_name, slot_item_name in pairs(required_items) do
-				local item_definition = MasterItems.get_item(slot_item_name)
-
-				if item_definition then
-					local slot_item = table.clone(item_definition)
-
-					self._mannequin_loadout[required_item_slot_name] = slot_item
-				end
-			end
-		end
-	end
-
-	return new_loadout
 end
 
 CosmeticsInspectView.cb_on_weapon_swap_pressed = function (self)

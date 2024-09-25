@@ -16,8 +16,8 @@ templates.weapon_trait_bespoke_forcestaff_p4_followup_shots_ranged_damage = tabl
 templates.weapon_trait_bespoke_forcestaff_p4_followup_shots_ranged_damage.conditional_stat_buffs = {
 	[stat_buffs.charge_level_modifier] = 0.05,
 }
-templates.weapon_trait_bespoke_forcestaff_p4_warpfire_on_crits = table.clone(BaseWeaponTraitBuffTemplates.warpfire_on_crits_ranged)
-templates.weapon_trait_bespoke_forcestaff_p4_warpfire_on_crits.check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.any(CheckProcFunctions.on_ranged_hit, CheckProcFunctions.on_explosion_hit), CheckProcFunctions.on_crit)
+templates.weapon_trait_bespoke_forcestaff_p4_warp_burninating_on_crits = table.clone(BaseWeaponTraitBuffTemplates.warp_burninating_on_crits_ranged)
+templates.weapon_trait_bespoke_forcestaff_p4_warp_burninating_on_crits.check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.any(CheckProcFunctions.on_ranged_hit, CheckProcFunctions.on_explosion_hit), CheckProcFunctions.on_crit)
 templates.weapon_trait_bespoke_forcestaff_p4_warp_charge_critical_strike_chance_bonus = table.merge({
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.02,

@@ -17,11 +17,13 @@ ActionToggleWeaponSpecial.start = function (self, action_settings, t, ...)
 		local special_active = inventory_slot_component.special_active
 		local activate_anim_event = action_settings.activate_anim_event
 		local deactivate_anim_event = action_settings.deactivate_anim_event
+		local activate_anim_event_3p = action_settings.activate_anim_event_3p or activate_anim_event
+		local deactivate_anim_event_3p = action_settings.deactivate_anim_event_3p or deactivate_anim_event
 
 		if special_active and deactivate_anim_event then
-			self:trigger_anim_event(deactivate_anim_event, deactivate_anim_event)
+			self:trigger_anim_event(deactivate_anim_event, deactivate_anim_event_3p)
 		elseif not special_active and activate_anim_event then
-			self:trigger_anim_event(activate_anim_event, activate_anim_event)
+			self:trigger_anim_event(activate_anim_event, activate_anim_event_3p)
 		end
 	end
 end
@@ -34,14 +36,10 @@ ActionToggleWeaponSpecial.fixed_update = function (self, dt, t, time_in_action)
 	local should_toggle = ActionUtility.is_within_trigger_time(time_in_action, dt, trigger_time)
 
 	if should_deactivate and should_toggle then
-		self:_set_weapon_special(false, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "manual_toggle")
 	elseif not should_deactivate and should_toggle then
-		self:_set_weapon_special(true, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
 	end
-end
-
-ActionToggleWeaponSpecial.finish = function (self, reason, data, t, time_in_action)
-	ActionToggleWeaponSpecial.super.finish(self, reason, data, t, time_in_action)
 end
 
 return ActionToggleWeaponSpecial

@@ -2944,6 +2944,45 @@ local Credits = {
 			},
 			{
 				localized = true,
+				text = "loc_credits_view_swagger_title",
+				type = "title",
+			},
+			{
+				text = "Michael Maloney",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_mysterious_cultist_title",
+				type = "title",
+			},
+			{
+				text = "Ian Reddington",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_commissar_dukane_title",
+				type = "title",
+			},
+			{
+				text = "Rebecca Hanssen",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
 				text = "loc_credits_view_vocators_title",
 				type = "title",
 			},

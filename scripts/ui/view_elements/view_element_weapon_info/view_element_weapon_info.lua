@@ -54,6 +54,10 @@ ViewElementWeaponInfo.activate = function (self, activate)
 	content.disabled = not activate
 end
 
+ViewElementWeaponInfo.set_alpha_multiplier = function (self, alpha_multiplier)
+	self._alpha_multiplier = alpha_multiplier
+end
+
 ViewElementWeaponInfo.is_active = function (self)
 	return self._active
 end
@@ -223,42 +227,54 @@ local function add_presentation_traits(item, layout, grid_size)
 	return add_end_margin
 end
 
-ViewElementWeaponInfo.present_item = function (self, item)
+ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, ignore_list)
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
-	local layout = {
-		{
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10,
-			},
-		},
-	}
-	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+
+	ignore_list = ignore_list or {}
+
+	local layout = {}
 
 	layout[#layout + 1] = {
-		widget_type = "extended_weapon_stats_header",
-		item = item,
+		widget_type = "dynamic_spacing",
+		size = {
+			grid_size[1],
+			10,
+		},
 	}
-	layout[#layout + 1] = {
-		widget_type = "divider",
-	}
-	layout[#layout + 1] = {
-		widget_type = "extended_weapon_keywords",
-		item = item,
-	}
-	layout[#layout + 1] = {
-		widget_type = "divider",
-	}
-	layout[#layout + 1] = {
-		widget_type = "extended_weapon_stats",
-		item = item,
-	}
+
+	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+
+	if not ignore_list.ignore_header then
+		layout[#layout + 1] = {
+			widget_type = "extended_weapon_stats_header",
+			item = item,
+		}
+		layout[#layout + 1] = {
+			widget_type = "divider",
+		}
+	end
+
+	if not ignore_list.ignore_keywords then
+		layout[#layout + 1] = {
+			widget_type = "extended_weapon_keywords",
+			item = item,
+		}
+		layout[#layout + 1] = {
+			widget_type = "divider",
+		}
+	end
+
+	if not ignore_list.ignore_extended_stats then
+		layout[#layout + 1] = {
+			widget_type = "extended_weapon_stats",
+			item = item,
+		}
+	end
 
 	local add_end_margin = false
 
-	if add_presentation_perks(item, layout, grid_size) then
+	if not ignore_list.ignore_perks and add_presentation_perks(item, layout, grid_size) then
 		add_end_margin = true
 		layout[#layout + 1] = {
 			add_background = true,
@@ -273,18 +289,21 @@ ViewElementWeaponInfo.present_item = function (self, item)
 		}
 	end
 
-	if add_presentation_traits(item, layout, grid_size) then
+	if not ignore_list.ignore_traits and add_presentation_traits(item, layout, grid_size) then
 		add_end_margin = true
 		layout[#layout + 1] = {
 			widget_type = "divider",
 		}
 	end
 
-	layout[#layout + 1] = {
-		interactive = true,
-		widget_type = "weapon_stats",
-		item = item,
-	}
+	if not ignore_list.ignore_stats then
+		layout[#layout + 1] = {
+			interactive = true,
+			widget_type = "weapon_stats",
+			item = item,
+		}
+	end
+
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
@@ -293,7 +312,7 @@ ViewElementWeaponInfo.present_item = function (self, item)
 		},
 	}
 
-	self:present_grid_layout(layout)
+	self:present_grid_layout(layout, on_present_callback)
 end
 
 ViewElementWeaponInfo.stop_presenting = function (self)
@@ -301,7 +320,7 @@ ViewElementWeaponInfo.stop_presenting = function (self)
 	self:_destroy_grid()
 end
 
-ViewElementWeaponInfo.present_grid_layout = function (self, layout)
+ViewElementWeaponInfo.present_grid_layout = function (self, layout, on_present_callback)
 	local grid_display_name = self._grid_display_name
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
 	local right_click_callback = callback(self, "cb_on_grid_entry_right_pressed")
@@ -311,7 +330,7 @@ ViewElementWeaponInfo.present_grid_layout = function (self, layout)
 	local ContentBlueprints = generate_blueprints_function(grid_size)
 	local grow_direction = self._grow_direction or "down"
 
-	ViewElementWeaponInfo.super.present_grid_layout(self, layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction)
+	ViewElementWeaponInfo.super.present_grid_layout(self, layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction, on_present_callback)
 
 	local length = self:grid_length()
 

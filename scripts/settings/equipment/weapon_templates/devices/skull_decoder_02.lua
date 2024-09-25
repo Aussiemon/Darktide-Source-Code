@@ -59,6 +59,10 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
 weapon_template.hide_slot = true
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.not_player_wieldable = true
 
 return weapon_template

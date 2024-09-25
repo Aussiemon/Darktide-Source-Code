@@ -37,35 +37,6 @@ local terminal_button_small_text_style = table.clone(terminal_button_text_style)
 
 terminal_button_small_text_style.font_size = terminal_button_text_style.font_size - 2
 
-local terminal_button_hold_small_text_style = table.clone(terminal_button_text_style)
-
-terminal_button_hold_small_text_style.font_size = terminal_button_text_style.font_size - 2
-terminal_button_hold_small_text_style.text_color = {
-	255,
-	216,
-	229,
-	207,
-}
-terminal_button_hold_small_text_style.default_color = {
-	255,
-	216,
-	229,
-	207,
-}
-terminal_button_hold_small_text_style.hover_color = {
-	0,
-	216,
-	229,
-	207,
-}
-terminal_button_hold_small_text_style.text_vertical_alignment = "bottom"
-terminal_button_hold_small_text_style.vertical_alignment = "bottom"
-terminal_button_hold_small_text_style.offset = {
-	0,
-	-10,
-	6,
-}
-
 local function terminal_button_change_function(content, style, optional_hotspot_id)
 	local hotspot = optional_hotspot_id and content[optional_hotspot_id] or content.hotspot
 	local is_selected = hotspot.is_selected
@@ -1654,6 +1625,7 @@ ButtonPassTemplates.terminal_button_hold_small.init = function (parent, widget, 
 	widget.content.complete_function = options.complete_function
 	widget.content.hotspot.pressed_callback = nil
 	widget.content.input_action = options.input_action or "confirm_hold"
+	widget.content.start_input_action = options.start_input_action
 	widget.content.original_text = options.text
 	widget.content.ignore_gamepad_on_text = options.ignore_gamepad_on_text
 
@@ -1667,6 +1639,12 @@ ButtonPassTemplates.terminal_button_hold_small.init = function (parent, widget, 
 
 	if options.hold_sound then
 		widget.content.hotspot.hold_sound = options.hold_sound
+	end
+
+	if options.keep_hold_active then
+		widget.content.keep_hold_active = true
+	else
+		widget.content.keep_hold_active = false
 	end
 
 	local width = widget.content.size[1]
@@ -1703,9 +1681,9 @@ end
 ButtonPassTemplates.terminal_button_hold_small.update = function (parent, widget, renderer, dt)
 	local content = widget.content
 	local hotspot = content.hotspot
-	local hold_active = hotspot.on_pressed
 	local input_service = renderer.input_service
-	local input_action = content.input_action and input_service:get(content.input_action)
+	local hold_active = content.start_input_action and input_service and input_service:get(content.start_input_action) or hotspot.on_pressed
+	local input_action = content.input_action and input_service and input_service:get(content.input_action)
 	local left_hold = input_service and (input_action or input_service:get("left_hold"))
 
 	if not left_hold and content.hold_active then
@@ -1714,7 +1692,7 @@ ButtonPassTemplates.terminal_button_hold_small.update = function (parent, widget
 		content.hold_active = hold_active
 	end
 
-	if content.hold_active then
+	if content.hold_active and not hotspot.disabled then
 		local total_time = content.timer
 		local current_time = content.current_timer + dt
 		local progress = math.min(current_time / total_time, 1)
@@ -1731,7 +1709,10 @@ ButtonPassTemplates.terminal_button_hold_small.update = function (parent, widget
 		else
 			content.current_timer = 0
 			content.hold_progress = 0
-			content.hold_active = false
+
+			if not content.keep_hold_active then
+				content.hold_active = false
+			end
 
 			if hotspot.on_complete_sound then
 				Managers.ui:play_2d_sound(hotspot.on_complete_sound)
@@ -1743,7 +1724,7 @@ ButtonPassTemplates.terminal_button_hold_small.update = function (parent, widget
 
 			return
 		end
-	elseif not content.hold_active and content.current_timer > 0 then
+	elseif not content.hold_active and content.current_timer and content.current_timer > 0 or hotspot.disabled then
 		content.current_timer = 0
 		content.hold_progress = 0
 
@@ -2130,6 +2111,214 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 			},
 		},
 		change_function = ButtonPassTemplates.list_button_label_change_function,
+		visibility_function = function (content, style)
+			return not not content.icon
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "notification",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "center",
+			size = {
+				90,
+				90,
+			},
+			offset = {
+				8,
+				-12,
+				7,
+			},
+			color = Color.terminal_corner_selected(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.has_notification
+		end,
+	},
+}
+ButtonPassTemplates.terminal_list_button_with_background_and_text_icon = {
+	{
+		content_id = "hotspot",
+		pass_type = "hotspot",
+		style_id = "hotspot",
+		content = {},
+		style = list_button_hotspot_default_style,
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true),
+		},
+		change_function = terminal_button_change_function,
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			offset = {
+				0,
+				0,
+				1,
+			},
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "outer_shadow",
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style = {
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			vertical_alignment = "center",
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20,
+			},
+			offset = {
+				0,
+				0,
+				3,
+			},
+		},
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			offset = {
+				0,
+				0,
+				2,
+			},
+		},
+		change_function = terminal_button_change_function,
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			disabled_color = Color.ui_grey_light(255, true),
+			offset = {
+				0,
+				0,
+				3,
+			},
+		},
+		change_function = terminal_button_change_function,
+	},
+	{
+		pass_type = "texture",
+		style_id = "arrow_highlight",
+		value = "content/ui/materials/buttons/arrow_01",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "center",
+			size = {
+				12,
+				18,
+			},
+			default_color = Color.terminal_icon(255, true),
+			offset = {
+				-30,
+				0,
+				5,
+			},
+			default_offset = {
+				-40,
+				0,
+				5,
+			},
+			size_addition = {
+				0,
+				0,
+			},
+			disabled_color = UIFontSettings.list_button.disabled_color,
+			hover_color = UIFontSettings.list_button.hover_color,
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+			local size_addition = 2 * math.easeInCubic(progress)
+			local style_size_addition = style.size_addition
+
+			style_size_addition[1] = size_addition * 2
+			style_size_addition[2] = size_addition * 2
+
+			local offset = style.offset
+			local default_offset = style.default_offset
+
+			ButtonPassTemplates.list_button_label_change_function(content, style)
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "text",
+		value_id = "text",
+		style = list_icon_button_text_style,
+		change_function = ButtonPassTemplates.list_button_label_change_function,
+	},
+	{
+		pass_type = "text",
+		style_id = "icon",
+		value_id = "icon",
+		style = table.merge(table.clone(list_icon_button_text_style), {
+			font_size = 40,
+			offset = {
+				15,
+				list_icon_button_text_style.offset[2],
+				list_icon_button_text_style.offset[3],
+			},
+		}),
+		change_function = ButtonPassTemplates.list_button_label_change_function,
+	},
+	{
+		pass_type = "texture",
+		style_id = "notification",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "center",
+			size = {
+				90,
+				90,
+			},
+			offset = {
+				8,
+				-12,
+				7,
+			},
+			color = Color.terminal_corner_selected(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.has_notification
+		end,
 	},
 }
 

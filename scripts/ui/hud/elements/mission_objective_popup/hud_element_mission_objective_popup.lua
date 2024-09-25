@@ -6,6 +6,7 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local HudElementMissionObjectivePopup = class("HudElementMissionObjectivePopup", "HudElementBase")
 
 HudElementMissionObjectivePopup.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -63,6 +64,22 @@ HudElementMissionObjectivePopup._present_popup = function (self, popup_data)
 		widget.content.icon = icon
 	end
 
+	local alert = popup_data.alert
+
+	widget.style.frame.color = alert and {
+		255,
+		255,
+		151,
+		29,
+	} or UIHudSettings.get_hud_color("color_tint_main_3", 255)
+	widget.style.effect.color = alert and UIHudSettings.get_hud_color("color_tint_alert_3", 255) or {
+		100,
+		101,
+		133,
+		96,
+	}
+	widget.style.background.color = UIHudSettings.get_hud_color(alert and "color_tint_alert_3" or "color_tint_main_3", 255)
+
 	local sound_event = popup_data.sound_event
 
 	if sound_event then
@@ -93,13 +110,15 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 	end
 
 	local mission_objective = self._mission_objective_system:active_objective(mission_name)
+	local alert = mission_objective:ui_state() == "alert"
 	local description_text = mission_objective:header()
 	local icon = mission_objective:icon()
-	local title_text = self:_localize("loc_hud_mission_objective_popup_title_start")
+	local title_text = self:_localize(alert and "loc_objective_op_train_alert_header" or "loc_hud_mission_objective_popup_title_start")
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
 		animation_event = "popup_start",
 		widget = widget,
+		alert = alert,
 		title_text = title_text,
 		description_text = description_text,
 		icon = icon,
@@ -138,6 +157,7 @@ HudElementMissionObjectivePopup.event_mission_objective_update = function (self,
 		update_text = tostring(current_counter_amount) .. "/" .. tostring(max_counter_amount)
 	end
 
+	local alert = mission_objective:ui_state() == "alert"
 	local description_text = mission_objective:header()
 	local icon = mission_objective:icon()
 	local title_text = self:_localize("loc_hud_mission_objective_popup_title_update")
@@ -146,6 +166,7 @@ HudElementMissionObjectivePopup.event_mission_objective_update = function (self,
 		animation_event = "popup_start",
 		widget = widget,
 		title_text = title_text,
+		alert = alert,
 		description_text = description_text,
 		update_text = update_text,
 		icon = icon,
@@ -165,6 +186,7 @@ HudElementMissionObjectivePopup.event_mission_objective_complete = function (sel
 	end
 
 	local mission_objective = self._mission_objective_system:active_objective(mission_name)
+	local alert = mission_objective:ui_state() == "alert"
 	local description_text = mission_objective:header()
 	local icon = mission_objective:icon()
 	local title_text = self:_localize("loc_hud_mission_objective_popup_title_complete")
@@ -173,6 +195,7 @@ HudElementMissionObjectivePopup.event_mission_objective_complete = function (sel
 		animation_event = "popup_start",
 		widget = widget,
 		title_text = title_text,
+		alert = alert,
 		description_text = description_text,
 		icon = icon,
 		sound_event = UISoundEvents.mission_objective_popup_complete,

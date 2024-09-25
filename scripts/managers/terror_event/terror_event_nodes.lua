@@ -241,14 +241,6 @@ TerrorEventNodes.set_pacing_enabled = {
 
 local TEMP_SPAWN_SIDE_NAME = "villains"
 local GROUP_SOUNDS_BY_BREED_NAME = {
-	cultist_melee = {
-		start = "wwise/events/minions/play_minion_terror_event_group_sfx_cultists",
-		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_cultists",
-	},
-	renegade_melee = {
-		start = "wwise/events/minions/play_minion_terror_event_group_sfx_traitor_guards",
-		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_traitor_guards",
-	},
 	chaos_newly_infected = {
 		start = "wwise/events/minions/play_minion_terror_event_group_sfx_newly_infected",
 		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_newly_infected",
@@ -256,6 +248,14 @@ local GROUP_SOUNDS_BY_BREED_NAME = {
 	chaos_poxwalker = {
 		start = "wwise/events/minions/play_minion_terror_event_group_sfx_poxwalkers",
 		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_poxwalkers",
+	},
+	cultist_melee = {
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_cultists",
+		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_cultists",
+	},
+	renegade_melee = {
+		start = "wwise/events/minions/play_minion_terror_event_group_sfx_traitor_guards",
+		stop = "wwise/events/minions/stop_minion_terror_event_group_sfx_traitor_guards",
 	},
 }
 local MAX_TERROR_EVENT_THRESHOLD = 100
@@ -285,7 +285,8 @@ TerrorEventNodes.spawn_by_points = {
 
 			local breed_tags = node.breed_tags
 			local excluded_breed_tags = node.excluded_breed_tags
-			local tags_replacement = Managers.state.terror_event:get_tags_replacement()
+			local spawn_side_name = node.side_name or TEMP_SPAWN_SIDE_NAME
+			local tags_replacement = Managers.state.terror_event:get_tags_replacement(spawn_side_name)
 
 			if tags_replacement then
 				breed_tags = table.clone(breed_tags)
@@ -319,7 +320,6 @@ TerrorEventNodes.spawn_by_points = {
 
 			local delay_until_all_spawned = node.delay_until_all_spawned
 			local mission_objective_id = node.mission_objective_id
-			local spawn_side_name = node.side_name or TEMP_SPAWN_SIDE_NAME
 			local wanted_sub_faction = Managers.state.pacing:current_faction(spawn_side_name)
 			local breed_pool = BreedQueries.match_minions_by_tags(breed_tags, excluded_breed_tags, wanted_sub_faction)
 			local breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)

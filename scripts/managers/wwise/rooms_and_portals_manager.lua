@@ -19,7 +19,7 @@ RoomsAndPortalsManager.update = function (self, dt, t)
 		local any_room_added = false
 
 		for room, _ in pairs(self._rooms) do
-			local unit = room:get_unit()
+			local unit = room.unit
 			local priority = room:get_data(unit, "priority")
 			local wall_occlusion = room:get_data(unit, "wall_occlusion")
 			local aux_send_to_self = 0

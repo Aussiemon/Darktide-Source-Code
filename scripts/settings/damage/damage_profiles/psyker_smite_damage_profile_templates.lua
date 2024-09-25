@@ -399,6 +399,59 @@ damage_templates.psyker_protectorate_channel_chain_lightning_activated = {
 		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
 	},
 }
+damage_templates.psyker_heavy_swings_shock = {
+	chain_lightning = true,
+	ignore_hitzone_multiplier = true,
+	random_gib_hitzone = true,
+	stagger_category = "electrocuted",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
+			[armor_types.armored] = damage_lerp_values.lerp_0_75,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_0_75,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
+			[armor_types.armored] = damage_lerp_values.lerp_2_5,
+			[armor_types.resistant] = damage_lerp_values.lerp_1_5,
+			[armor_types.player] = damage_lerp_values.lerp_1_5,
+			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_5,
+		},
+	},
+	cleave_distribution = {
+		attack = 5,
+		impact = 0,
+	},
+	power_distribution = {
+		attack = 16,
+		impact = 0,
+	},
+	charge_level_scaler = {
+		{
+			modifier = 1,
+			t = 1,
+		},
+		start_modifier = 0.4,
+	},
+	damage_type = DAMAGE_TYPES.electrocution,
+	gibbing_power = GIBBING_POWER.infinite,
+	gibbing_type = GIBBING_TYPES.warp_lightning,
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
+	},
+}
 damage_templates.psyker_protectorate_chain_lighting = {
 	chain_lightning = true,
 	ragdoll_only = true,

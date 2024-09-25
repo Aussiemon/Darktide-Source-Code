@@ -10,6 +10,7 @@ local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/pl
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local ActionChainLightning = class("ActionChainLightning", "ActionWeaponBase")
+local keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSetting.special_rules
 local Vector3_flat = Vector3.flat
 local Vector3_normalize = Vector3.normalize
@@ -42,6 +43,7 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 		self._next_jump_time = 0
 
 		local talent_extension = ScriptUnit.has_extension(self._player_unit, "talent_system")
+		local weapon = self._weapon
 
 		self._func_context = {
 			action_settings = self._action_settings,
@@ -49,6 +51,7 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 			hit_units = self._hit_units,
 			player_unit = self._player_unit,
 			talent_extension = talent_extension,
+			source_item = weapon and weapon.item,
 		}
 
 		self._jump_on_add_func = function (node, func_context)
@@ -216,7 +219,10 @@ ActionChainLightning.finish = function (self, reason, data, t, time_in_action, a
 		self:_clear_initial_targets()
 
 		if not skip_last_damage then
-			self:_deal_damage(t, time_in_action)
+			local weapon = self._weapon
+			local source_item = weapon and weapon.item
+
+			self:_deal_damage(t, time_in_action, source_item)
 		end
 
 		ChainLightningTarget.remove_all_child_nodes(self._chain_root_node, _on_remove_func, self._func_context)
@@ -253,9 +259,13 @@ ActionChainLightning.running_action_state = function (self, t, time_in_action)
 	local current_warp_charge = warp_charge_component.current_percentage
 
 	if current_warp_charge >= 1 then
-		warp_charge_component.state = "idle"
+		local prevent_overload = self._buff_extension:has_keyword(keywords.psychic_fortress)
 
-		return "force_vent"
+		if not prevent_overload then
+			warp_charge_component.state = "idle"
+
+			return "force_vent"
+		end
 	end
 end
 
@@ -497,7 +507,7 @@ ActionChainLightning._find_new_chain_targets = function (self, t, broadphase, en
 	end
 end
 
-ActionChainLightning._deal_damage = function (self, t, time_in_action)
+ActionChainLightning._deal_damage = function (self, t, time_in_action, source_item)
 	local action_settings = self._action_settings
 
 	if not action_settings then
@@ -538,7 +548,7 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 			power_level = power_level * random_mod
 		end
 
-		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, player_unit, power_level, attack_charge, depth, ii, attack_direction, damage_profile, damage_type, is_critical_strike)
+		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, player_unit, power_level, attack_charge, depth, ii, attack_direction, damage_profile, damage_type, is_critical_strike, source_item)
 	end
 end
 
@@ -554,7 +564,7 @@ function _on_add_func(node, context)
 		local action_settings = context.action_settings
 		local improved_target_buff = context.talent_extension:has_special_rule(special_rules.psyker_chain_lightning_improved_target_buff)
 		local target_buff = improved_target_buff and action_settings.improved_target_buff or action_settings.target_buff
-		local _, buff_id = target_buff_extension:add_externally_controlled_buff(target_buff, start_t, "owner_unit", context.player_unit)
+		local _, buff_id = target_buff_extension:add_externally_controlled_buff(target_buff, start_t, "owner_unit", context.player_unit, "source_item", context.source_item)
 
 		node:set_value("buff_id", buff_id)
 

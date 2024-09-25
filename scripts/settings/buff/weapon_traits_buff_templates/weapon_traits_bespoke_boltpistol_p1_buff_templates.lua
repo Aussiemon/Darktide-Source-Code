@@ -1,17 +1,9 @@
 ﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_boltpistol_p1_buff_templates.lua
 
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
-local Explosion = require("scripts/utilities/attack/explosion")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local attack_results = AttackSettings.attack_results
 local stat_buffs = BuffSettings.stat_buffs
-local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
-local proc_events = BuffSettings.proc_events
 local templates = {}
 
 table.make_unique(templates)

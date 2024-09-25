@@ -44,6 +44,7 @@ templates.weapon_trait_bespoke_shotgun_p2_crit_chance_on_reload = {
 }
 templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill = {
 	class_name = "proc_buff",
+	force_predicted_proc = true,
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
@@ -67,14 +68,14 @@ templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_
 		local weapon_action_component = template_data.weapon_action_component
 
 		if weapon_action_component.special_active_at_start then
-			local owner_unit = template_context.owner_unit
+			local unit = template_context.unit
 			local source_item = template_context.source_item
 
-			template_data.buff_extension:add_internally_controlled_buff("weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill_effect", t, "owner_unit", owner_unit, "source_item", source_item)
+			template_data.buff_extension:add_internally_controlled_buff("weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill_effect", t, "owner_unit", unit, "source_item", source_item)
 		end
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
-		local owner_unit = template_context.owner_unit
+		local owner_unit = template_context.unit
 		local buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
 
 		return not not buff_extension and not not buff_extension:has_buff_using_buff_template("weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill_effect")

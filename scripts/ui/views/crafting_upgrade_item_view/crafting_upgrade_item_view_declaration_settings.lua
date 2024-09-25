@@ -10,7 +10,7 @@ local CraftingUpgradeItemViewDeclarationSettings = {
 	path = "scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view",
 	state_bound = true,
 	levels = {
-		"content/levels/ui/crafting_view/crafting_view",
+		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",
 	},
 	enter_sound_events = {
 		UISoundEvents.default_menu_enter,

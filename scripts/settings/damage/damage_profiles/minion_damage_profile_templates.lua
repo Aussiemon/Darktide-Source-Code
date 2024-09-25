@@ -20,8 +20,6 @@ table.make_unique(overrides)
 
 local flat_one_armor_mod = DamageProfileSettings.flat_one_armor_mod
 local default_armor_mod = DamageProfileSettings.default_armor_mod
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_types = DamageSettings.damage_types
 local double_cleave = DamageProfileSettings.double_cleave
 
@@ -34,10 +32,6 @@ damage_templates.poxwalker = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 35,
@@ -173,10 +167,6 @@ damage_templates.renegade_captain_melee_default = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 60,
 		impact = 0.5,
@@ -205,10 +195,6 @@ damage_templates.renegade_captain_power_sword_melee_sweep = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 100,
 		impact = 0.5,
@@ -236,10 +222,6 @@ damage_templates.renegade_captain_powermaul_ground_slam = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 60,
@@ -270,10 +252,6 @@ damage_templates.renegade_captain_powermaul_melee_cleave = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.75,
 		impact = 0.5,
@@ -300,10 +278,6 @@ damage_templates.renegade_captain_charge = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 15,
@@ -332,10 +306,6 @@ damage_templates.twin_dash = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 15,
 		impact = 0.5,
@@ -363,10 +333,6 @@ damage_templates.twin_dash_light = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 15,
 		impact = 0.5,
@@ -393,10 +359,6 @@ damage_templates.renegade_captain_minion_charge_push = {
 	toughness_multiplier = 2,
 	unblockable = true,
 	armor_damage_modifier = {
-		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
-	},
-	crit_mods = {
 		attack = flat_one_armor_mod,
 		impact = flat_one_armor_mod,
 	},
@@ -432,10 +394,6 @@ damage_templates.melee_roamer_default = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.075,
 		impact = 0.5,
@@ -463,10 +421,6 @@ damage_templates.chaos_spawn_combo = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 30,
 		impact = 50,
@@ -493,10 +447,6 @@ damage_templates.chaos_spawn_combo_heavy = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 35,
@@ -527,10 +477,6 @@ damage_templates.monster_slam = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 80,
 		impact = 50,
@@ -558,10 +504,6 @@ damage_templates.chaos_spawn_claw = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 60,
@@ -592,10 +534,6 @@ damage_templates.chaos_plague_ogryn_scythe = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 50,
 		impact = 50,
@@ -623,10 +561,6 @@ damage_templates.chaos_plague_ogryn_catapult = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 10,
@@ -656,10 +590,6 @@ damage_templates.chaos_spawn_grab_smash = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 15,
 		impact = 50,
@@ -688,10 +618,6 @@ damage_templates.chaos_plague_ogryn_charge = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 40,
 		impact = 50,
@@ -719,10 +645,6 @@ damage_templates.chaos_plague_ogryn_minion_charge_push = {
 	toughness_multiplier = 2,
 	unblockable = true,
 	armor_damage_modifier = {
-		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
-	},
-	crit_mods = {
 		attack = flat_one_armor_mod,
 		impact = flat_one_armor_mod,
 	},
@@ -813,10 +735,6 @@ damage_templates.renegade_captain_kick = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 10,
@@ -1144,10 +1062,6 @@ damage_templates.renegade_captain_void_shield_explosion = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 0.2,
@@ -1600,28 +1514,6 @@ damage_templates.default_rifleman = {
 			[armor_types.void_shield] = 0.5,
 		},
 	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 0.5,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 1,
-			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
-	},
 	power_distribution = {
 		attack = 24,
 		impact = 10,
@@ -1670,28 +1562,6 @@ damage_templates.assaulter_auto_burst = {
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
 			[armor_types.void_shield] = 0.5,
-		},
-	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 0.5,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
 		},
 	},
 	power_distribution = {
@@ -1743,28 +1613,6 @@ damage_templates.shocktrooper_shotgun = {
 			[armor_types.void_shield] = 0.5,
 		},
 	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 0.5,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-	},
 	power_distribution = {
 		attack = 7,
 		impact = 0.25,
@@ -1812,28 +1660,6 @@ damage_templates.sniper_bullet = {
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
 			[armor_types.void_shield] = 0.5,
-		},
-	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 0.5,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
 		},
 	},
 	power_distribution = {
@@ -1884,28 +1710,6 @@ damage_templates.gunner_aimed = {
 			[armor_types.void_shield] = 0.5,
 		},
 	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 1,
-			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
-	},
 	power_distribution = {
 		attack = 15,
 		impact = 0.25,
@@ -1948,28 +1752,6 @@ damage_templates.gunner_spray_n_pray = {
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
 			[armor_types.void_shield] = 0.5,
-		},
-	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 1,
-			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
 		},
 	},
 	power_distribution = {
@@ -2015,28 +1797,6 @@ damage_templates.gunner_sweep = {
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
 			[armor_types.void_shield] = 0.5,
-		},
-	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 1,
-			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
 		},
 	},
 	power_distribution = {
@@ -2125,28 +1885,6 @@ damage_templates.renegade_captain_shotgun = {
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
 			[armor_types.void_shield] = 0.5,
-		},
-	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 0.5,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
 		},
 	},
 	power_distribution = {
@@ -2450,72 +2188,6 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 	push_template = push_templates.shocktrooper_frag,
 	ogryn_push_template = push_templates.medium,
 }
-damage_templates.default_rusher = {
-	disorientation_type = "medium",
-	interrupt_alternate_fire = true,
-	ogryn_disorientation_type = "ogryn_medium",
-	stagger_category = "ranged",
-	suppression_value = 0,
-	armor_damage_modifier = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 0.5,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0.5,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-		},
-	},
-	crit_mods = {
-		attack = {
-			[armor_types.unarmored] = 0,
-			[armor_types.armored] = 0,
-			[armor_types.resistant] = 0,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-		},
-		impact = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
-			[armor_types.super_armor] = 1,
-			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
-	},
-	power_distribution = {
-		attack = 20,
-		impact = 5,
-	},
-	cleave_distribution = {
-		attack = 0.5,
-		impact = 0.5,
-	},
-	force_look_function = ForcedLookSettings.look_functions.medium,
-	push_template = push_templates.medium,
-	targets = {
-		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
-}
 
 local chaos_hound_pounce = table.clone(damage_templates.melee_fighter_default)
 
@@ -2550,10 +2222,6 @@ damage_templates.melee_executor_cleave = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 125,
 		impact = 50,
@@ -2581,10 +2249,6 @@ damage_templates.melee_executor_default = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 50,
@@ -2614,10 +2278,6 @@ damage_templates.chaos_ogryn_executor_default = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 75,
 		impact = 20,
@@ -2635,7 +2295,8 @@ damage_templates.chaos_ogryn_executor_default = {
 		},
 	},
 }
-damage_templates.chaos_ogryn_executor_push = {
+
+local chaos_ogryn_executor_push = {
 	block_cost_multiplier = 5,
 	disorientation_type = "heavy",
 	interrupt_alternate_fire = true,
@@ -2644,10 +2305,6 @@ damage_templates.chaos_ogryn_executor_push = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 25,
@@ -2666,16 +2323,15 @@ damage_templates.chaos_ogryn_executor_push = {
 		},
 	},
 }
-
-local chaos_ogryn_executor_pommel = table.clone(damage_templates.chaos_ogryn_executor_push)
+local chaos_ogryn_executor_pommel = table.clone(chaos_ogryn_executor_push)
 
 damage_templates.chaos_ogryn_executor_pommel = chaos_ogryn_executor_pommel
 
-local chaos_ogryn_executor_punch = table.clone(damage_templates.chaos_ogryn_executor_push)
+local chaos_ogryn_executor_punch = table.clone(chaos_ogryn_executor_push)
 
 damage_templates.chaos_ogryn_executor_punch = chaos_ogryn_executor_punch
 
-local chaos_ogryn_executor_kick = table.clone(damage_templates.chaos_ogryn_executor_push)
+local chaos_ogryn_executor_kick = table.clone(chaos_ogryn_executor_push)
 
 damage_templates.chaos_ogryn_executor_kick = chaos_ogryn_executor_kick
 damage_templates.chaos_ogryn_executor_cleave = {
@@ -2692,10 +2348,6 @@ damage_templates.chaos_ogryn_executor_cleave = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 130,
@@ -2725,10 +2377,6 @@ damage_templates.daemonhost_melee = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 0.2,
@@ -2765,10 +2413,6 @@ damage_templates.daemonhost_offtarget_melee = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.001,
 		impact = 40,
@@ -2803,10 +2447,6 @@ damage_templates.daemonhost_melee_combo = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 0.075,
@@ -2843,10 +2483,6 @@ damage_templates.daemonhost_warp_sweep = {
 		attack = flat_one_armor_mod,
 		impact = flat_one_armor_mod,
 	},
-	crit_mods = {
-		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.15,
 		impact = 40,
@@ -2880,10 +2516,6 @@ damage_templates.bulwark_shield_push = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0,
 		impact = 0.5,
@@ -2910,10 +2542,6 @@ damage_templates.bulwark_melee = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 40,
@@ -2952,10 +2580,6 @@ damage_templates.chaos_ogryn_gunner_bullet = {
 			[armor_types.void_shield] = 0.5,
 		},
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.1,
 		impact = 0.5,
@@ -2984,10 +2608,6 @@ damage_templates.cultist_flamer_impact = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 0.5,
@@ -3018,10 +2638,6 @@ damage_templates.renegade_flamer_impact = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.5,
 		impact = 2,
@@ -3047,10 +2663,6 @@ damage_templates.cultist_mutant_minion_charge_push = {
 	toughness_multiplier = 2,
 	unblockable = true,
 	armor_damage_modifier = {
-		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
-	},
-	crit_mods = {
 		attack = flat_one_armor_mod,
 		impact = flat_one_armor_mod,
 	},
@@ -3084,10 +2696,6 @@ damage_templates.chaos_hound_push = {
 	toughness_multiplier = 2,
 	unblockable = true,
 	armor_damage_modifier = {
-		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
-	},
-	crit_mods = {
 		attack = flat_one_armor_mod,
 		impact = flat_one_armor_mod,
 	},
@@ -3131,10 +2739,6 @@ damage_templates.chaos_ogryn_gunner_melee = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.125,
 		impact = 0.5,
@@ -3161,10 +2765,6 @@ damage_templates.cultist_mutant_smash = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 0.1,
@@ -3324,10 +2924,6 @@ damage_templates.renegade_captain_offtarget_melee = {
 			[armor_types.void_shield] = 0.1,
 		},
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 20,
@@ -3504,10 +3100,6 @@ damage_templates.beast_of_nurgle_tail_whip = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.2,
 		impact = 0.5,
@@ -3537,10 +3129,6 @@ damage_templates.beast_of_nurgle_melee_friendly_fire = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 0.001,
 		impact = 40,
@@ -3568,10 +3156,6 @@ damage_templates.beast_of_nurgle_self_gib = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 1,
 		impact = 1,
@@ -3585,6 +3169,32 @@ damage_templates.beast_of_nurgle_self_gib = {
 		800,
 	},
 	gibbing_power = gibbing_power.impossible,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.flamer_implosion = {
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 1,
+		impact = 1,
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 1,
+	},
+	ragdoll_push_force = {
+		500,
+		800,
+	},
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.implosion,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
@@ -3728,71 +3338,6 @@ damage_templates.toxic_gas = {
 		},
 	},
 }
-damage_templates.mutator_yellow_stimmed_melee = {
-	disorientation_type = "heavy",
-	interrupt_alternate_fire = true,
-	ogryn_disorientation_type = "ogryn_heavy",
-	stagger_category = "melee",
-	toughness_multiplier = 2,
-	unblockable = true,
-	armor_damage_modifier = {
-		attack = default_armor_mod,
-		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
-	power_distribution = {
-		attack = 60,
-		impact = 0.5,
-	},
-	cleave_distribution = {
-		attack = 0.25,
-		impact = 0.25,
-	},
-	force_look_function = ForcedLookSettings.look_functions.heavy,
-	push_template = push_templates.renegade_captain_heavy,
-	ogryn_push_template = push_templates.renegade_captain_heavy,
-	targets = {
-		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
-}
-damage_templates.mutator_yellow_stimmed_melee_heavy = {
-	disorientation_type = "heavy",
-	interrupt_alternate_fire = true,
-	ogryn_disorientation_type = "ogryn_heavy",
-	stagger_category = "melee",
-	toughness_multiplier = 2,
-	unblockable = true,
-	armor_damage_modifier = {
-		attack = default_armor_mod,
-		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
-	power_distribution = {
-		attack = 60,
-		impact = 0.5,
-	},
-	cleave_distribution = {
-		attack = 0.25,
-		impact = 0.25,
-	},
-	force_look_function = ForcedLookSettings.look_functions.heavy,
-	push_template = push_templates.renegade_captain_heavy,
-	ogryn_push_template = push_templates.renegade_captain_heavy,
-	catapulting_template = CatapultingTemplates.renegade_captain_powermaul_ground_slam_catapult,
-	targets = {
-		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
-}
 damage_templates.twin_grenade_explosion = {
 	disorientation_type = "twin_grenade",
 	ignore_stagger_reduction = true,
@@ -3928,10 +3473,6 @@ damage_templates.twin_captain_two_aoe_sweep = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
 	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
-	},
 	power_distribution = {
 		attack = 200,
 		impact = 0.5,
@@ -3958,10 +3499,6 @@ damage_templates.twin_captain_two_melee_default = {
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod,
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod,
 	},
 	power_distribution = {
 		attack = 60,

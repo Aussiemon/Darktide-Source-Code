@@ -44,14 +44,20 @@ table.clone = function (t)
 	return clone
 end
 
-table.clone_instance = function (t)
-	local clone = {}
+table.clone_instance = function (t, lookup)
+	lookup = lookup or {}
+
+	if lookup[t] then
+		return lookup[t]
+	end
+
+	lookup[t] = {}
+
+	local clone = lookup[t]
 
 	for key, value in pairs(t) do
-		if value == t then
-			clone[key] = clone
-		elseif type(value) == "table" then
-			clone[key] = table.clone_instance(value)
+		if type(value) == "table" then
+			clone[key] = table.clone_instance(value, lookup)
 		else
 			clone[key] = value
 		end

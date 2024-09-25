@@ -95,11 +95,11 @@ MoveablePlatformSystem.update_level_props_broadphase = function (self)
 	end
 end
 
-MoveablePlatformSystem.units_are_locked = function (self)
+MoveablePlatformSystem.block_bot_movement = function (self)
 	local unit_to_extension_map = self._unit_to_extension_map
 
 	for _, extension in pairs(unit_to_extension_map) do
-		if extension:units_locked() then
+		if extension:block_bot_movement() then
 			return true
 		end
 	end

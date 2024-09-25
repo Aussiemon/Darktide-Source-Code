@@ -12,7 +12,7 @@ buff_settings.buff_category_order = {
 	buff_settings.buff_categories.talents,
 	buff_settings.buff_categories.weapon_traits,
 }
-buff_settings.keywords = table.enum("allow_backstabbing", "allow_flanking", "allow_hipfire_during_sprint", "armor_penetrating", "beast_of_nurgle_liquid_immunity", "beast_of_nurgle_vomit", "bleeding", "block_gives_warp_charge", "bolstered", "bolter_proficiency", "burning", "can_block_ranged", "cluster_explode_on_super_armored", "coherency_with_all_no_chain", "concealed", "count_as_dodge_vs_all", "count_as_dodge_vs_melee", "count_as_dodge_vs_ranged", "critical_hit_infinite_cleave", "critical_strike_second_projectile", "cultist_flamer_liquid_immunity", "damage_immune", "despawn_on_death", "deterministic_recoil", "electrocuted", "empowered", "fully_charged_attacks_infinite_cleave", "guaranteed_critical_strike", "guaranteed_melee_critical_strike", "guaranteed_ranged_critical_strike", "guaranteed_smite_critical_strike", "health_segment_breaking_reduce_damage_taken", "hit_mass_reduction_on_weakspot_hit", "hud_nameplates_disabled", "ignore_armor_aborts_attack_critical_strike", "ignore_armor_aborts_attack", "improved_ammo_pickups", "improved_medical_crate", "in_toxic_gas", "invisible", "knock_down_on_slide", "melee_alternate_fire_interrupt_immune", "melee_infinite_cleave_critical_strike", "melee_infinite_cleave_on_headshot", "melee_infinite_cleave", "melee_push_immune", "no_ammo_consumption_on_crits", "no_ammo_consumption", "no_coherency_stickiness_limit", "no_parry_block_cost", "ogryn_combat_ability_stance", "ogryn_improved_lunge", "plasma_proficiency", "power_weapon_proficiency", "prevent_toughness_replenish", "prevent_toughness_replenish_except_abilities", "psychic_fortress", "psyker_empowered_grenade", "psyker_overcharge", "ranged_alternate_fire_interrupt_immune", "ranged_push_immune", "reduced_ammo_consumption", "renegade_flamer_liquid_immunity", "renegade_grenadier_liquid_immunity", "resist_death", "shock_grenade_shock", "slowdown_immune", "special_ammo", "sprint_dodge_in_overtime", "sticky_projectiles", "stimmed", "stun_immune", "stun_immune_toughness_broken", "super_armor_override", "suppression_immune", "syringe_ability", "syringe_power", "syringe_speed", "taunted", "uninterruptible", "unperceivable", "use_reduced_hit_mass", "uses_nearby_broadphase", "veteran_combat_ability_stance", "veteran_tag", "warpfire_burning", "weakspot_hit_gains_armor_penetration", "zealot_maniac_empowered_martyrdom", "zealot_toughness", "zero_slide_friction")
+buff_settings.keywords = table.enum("allow_backstabbing", "allow_flanking", "allow_hipfire_during_sprint", "armor_penetrating", "beast_of_nurgle_liquid_immunity", "beast_of_nurgle_vomit", "bleeding", "block_gives_warp_charge", "bolstered", "bolter_proficiency", "burning", "can_block_ranged", "cluster_explode_on_super_armored", "coherency_with_all_no_chain", "concealed", "count_as_dodge_vs_all", "count_as_dodge_vs_melee", "count_as_dodge_vs_ranged", "critical_hit_infinite_cleave", "critical_strike_second_projectile", "cultist_flamer_liquid_immunity", "damage_immune", "despawn_on_death", "deterministic_recoil", "electrocuted", "empowered", "fully_charged_attacks_infinite_cleave", "guaranteed_critical_strike", "guaranteed_melee_critical_strike", "guaranteed_ranged_critical_strike", "guaranteed_smite_critical_strike", "health_segment_breaking_reduce_damage_taken", "hit_mass_reduction_on_weakspot_hit", "hud_nameplates_disabled", "ignore_armor_aborts_attack_critical_strike", "ignore_armor_aborts_attack", "improved_ammo_pickups", "improved_medical_crate", "in_toxic_gas", "invisible", "knock_down_on_slide", "melee_alternate_fire_interrupt_immune", "melee_infinite_cleave_critical_strike", "melee_infinite_cleave_on_headshot", "melee_infinite_cleave", "melee_push_immune", "no_ammo_consumption_on_crits", "no_ammo_consumption", "no_coherency_stickiness_limit", "no_parry_block_cost", "ogryn_combat_ability_stance", "ogryn_improved_lunge", "plasma_proficiency", "power_weapon_proficiency", "prevent_toughness_replenish_except_abilities", "prevent_toughness_replenish", "psychic_fortress", "psyker_empowered_grenade", "psyker_overcharge", "ranged_alternate_fire_interrupt_immune", "ranged_push_immune", "reduced_ammo_consumption", "renegade_flamer_liquid_immunity", "renegade_grenadier_liquid_immunity", "resist_death", "shock_grenade_shock", "slowdown_immune", "special_ammo", "sprint_dodge_in_overtime", "sticky_projectiles", "stimmed", "stun_immune_toughness_broken", "stun_immune", "super_armor_override", "suppression_immune", "syringe_ability", "syringe_power", "syringe_speed", "taunted", "uninterruptible", "unperceivable", "use_reduced_hit_mass", "uses_nearby_broadphase", "veteran_combat_ability_stance", "veteran_tag", "warpfire_burning", "weakspot_hit_gains_armor_penetration", "zealot_maniac_empowered_martyrdom", "zealot_toughness", "zero_slide_friction")
 buff_settings.network_synced_keywords = {
 	[buff_settings.keywords.improved_ammo_pickups] = true,
 	[buff_settings.keywords.invisible] = true,
@@ -79,6 +79,15 @@ buff_settings.proc_event_validation = {
 		attacking_unit = "unit",
 	},
 	on_damage_taken = {
+		attack_type = "string",
+		attacked_unit = "unit",
+		attacking_unit = "unit",
+		attacking_unit_owner_unit = "unit",
+		damage_amount = "number",
+		damage_profile_name = "string",
+		permanent_damage = "number",
+	},
+	on_minion_damage_taken = {
 		attack_type = "string",
 		attacked_unit = "unit",
 		attacking_unit = "unit",
@@ -292,7 +301,11 @@ buff_settings.proc_event_validation = {
 		attacking_unit = "unit",
 		dodging_unit = "unit",
 	},
-	on_weapon_special = {
+	on_weapon_special_activate = {
+		num_special_charges = "number",
+		t = "number",
+	},
+	on_weapon_special_deactivate = {
 		t = "number",
 	},
 	on_wield = {
@@ -536,6 +549,7 @@ buff_settings.stat_buff_types = {
 	psyker_throwing_knife_speed_modifier = "additive_multiplier",
 	psyker_throwing_knives_damage_multiplier = "additive_multiplier",
 	push_cost_multiplier = "multiplicative_multiplier",
+	push_impact_modifier = "additive_multiplier",
 	push_speed_modifier = "additive_multiplier",
 	ranged_attack_speed = "additive_multiplier",
 	ranged_critical_strike_chance = "value",

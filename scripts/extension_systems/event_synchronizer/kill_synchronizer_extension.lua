@@ -13,9 +13,9 @@ KillSynchronizerExtension.init = function (self, extension_init_context, unit, e
 	self._check_unit_condition_interval = 0.2
 end
 
-KillSynchronizerExtension.setup_from_component = function (self, objective_name, automatic_start)
+KillSynchronizerExtension.setup_from_component = function (self, objective_name, auto_start)
 	self._objective_name = objective_name
-	self._auto_start = automatic_start
+	self._auto_start = auto_start
 
 	self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
 end

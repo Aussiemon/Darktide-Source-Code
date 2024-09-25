@@ -10,18 +10,20 @@ MoveablePlatform.init = function (self, unit, is_server)
 
 	if moveable_platform_extension then
 		local story = self:get_data(unit, "story")
+		local story_start_immediately = self:get_data(unit, "story_start_immediately")
+		local story_loop_mode = self:get_data(unit, "story_loop_mode")
+		local story_speed_forward, story_speed_backward = self:_calculate_story_speed(unit)
 		local player_side = self:get_data(unit, "player_side")
 		local walls_collision = self:get_data(unit, "walls_collision")
 		local walls_collision_filter = self:get_data(unit, "walls_collision_filter")
 		local require_all_players_onboard = self:get_data(unit, "require_all_players_onboard")
+		local end_sound_time = self:get_data(unit, "end_sound_time")
 		local interactable_story_actions = self:get_data(unit, "interactable_story_actions")
 		local interactable_hud_descriptions = self:get_data(unit, "interactable_hud_descriptions")
-		local story_speed_forward, story_speed_backward = self:_calculate_story_speed(unit)
-		local end_sound_time = self:get_data(unit, "end_sound_time")
 		local nav_handling_enabled = self:get_data(unit, "nav_handling_enabled")
 		local stop_position = self:get_data(unit, "stop_position")
 
-		moveable_platform_extension:setup_from_component(story, player_side, walls_collision, walls_collision_filter, require_all_players_onboard, interactable_story_actions, interactable_hud_descriptions, story_speed_forward, story_speed_backward, end_sound_time, nav_handling_enabled, stop_position)
+		moveable_platform_extension:setup_from_component(story, story_loop_mode, story_start_immediately, story_speed_forward, story_speed_backward, player_side, walls_collision, walls_collision_filter, require_all_players_onboard, end_sound_time, interactable_story_actions, interactable_hud_descriptions, nav_handling_enabled, stop_position)
 
 		self._moveable_platform_extension = moveable_platform_extension
 	end
@@ -392,6 +394,14 @@ MoveablePlatform.move_backward = function (self)
 	end
 end
 
+MoveablePlatform.platform_toggle_loop = function (self)
+	local moveable_platform_extension = self._moveable_platform_extension
+
+	if moveable_platform_extension then
+		moveable_platform_extension:platform_toggle_loop()
+	end
+end
+
 MoveablePlatform.toggle_require_all_players_onboard = function (self)
 	local moveable_platform_extension = self._moveable_platform_extension
 
@@ -406,6 +416,28 @@ MoveablePlatform.component_data = {
 		ui_name = "Story",
 		ui_type = "text_box",
 		value = "story_name",
+	},
+	story_start_immediately = {
+		category = "Story",
+		ui_name = "Start Immediately",
+		ui_type = "check_box",
+		value = false,
+	},
+	story_loop_mode = {
+		category = "Story",
+		ui_name = "Loop Mode",
+		ui_type = "combo_box",
+		value = 0,
+		options_keys = {
+			"None",
+			"Loop",
+			"Ping Pong",
+		},
+		options_values = {
+			0,
+			1,
+			2,
+		},
 	},
 	story_override_forward = {
 		category = "Story",
@@ -455,6 +487,11 @@ MoveablePlatform.component_data = {
 		ui_type = "check_box",
 		value = false,
 	},
+	end_sound_time = {
+		ui_name = "End Sound Time",
+		ui_type = "number",
+		value = 0,
+	},
 	interactable_story_actions = {
 		category = "Interactables",
 		size = 0,
@@ -466,11 +503,6 @@ MoveablePlatform.component_data = {
 		size = 0,
 		ui_name = "HUD Descriptions",
 		ui_type = "text_box_array",
-	},
-	end_sound_time = {
-		ui_name = "End Sound Time",
-		ui_type = "number",
-		value = 0,
 	},
 	nav_handling_enabled = {
 		category = "Nav",
@@ -499,6 +531,10 @@ MoveablePlatform.component_data = {
 			type = "event",
 		},
 		move_backward = {
+			accessibility = "public",
+			type = "event",
+		},
+		platform_toggle_loop = {
 			accessibility = "public",
 			type = "event",
 		},

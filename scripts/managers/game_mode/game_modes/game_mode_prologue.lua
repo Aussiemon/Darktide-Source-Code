@@ -55,7 +55,7 @@ GameModePrologue.evaluate_end_conditions = function (self)
 	return false
 end
 
-GameModePrologue.complete = function (self, triggered_from_flow)
+GameModePrologue.complete = function (self, reason, triggered_from_flow)
 	self._completed = true
 end
 

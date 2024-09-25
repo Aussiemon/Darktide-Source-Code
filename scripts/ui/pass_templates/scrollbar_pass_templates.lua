@@ -140,7 +140,7 @@ local scrollbar_base = {
 
 				is_hover = hotspot.is_hover or math.point_is_inside_2d_box(cursor_position, position, size)
 			else
-				is_hover = not content.using_custom_gamepad_navigation and (content.enable_gamepad_scrolling or hotspot.is_selected or hotspot.is_focused or content.focused or content.selected)
+				is_hover = not content.using_custom_gamepad_navigation and content.enable_gamepad_scrolling and (hotspot.is_selected or hotspot.is_focused or content.focused or content.selected)
 			end
 
 			local scroll_axis = input_service:get("scroll_axis")

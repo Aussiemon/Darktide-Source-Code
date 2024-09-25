@@ -2517,6 +2517,12 @@ local color_definitions = {
 		242,
 		230,
 	},
+	terminal_stat_bar_background = {
+		255,
+		125,
+		108,
+		56,
+	},
 	terminal_stat_bar_foreground = {
 		255,
 		250,
@@ -2588,6 +2594,12 @@ local color_definitions = {
 		255,
 		242,
 		230,
+	},
+	terminal_completed = {
+		255,
+		246,
+		223,
+		182,
 	},
 }
 local color_list = {}

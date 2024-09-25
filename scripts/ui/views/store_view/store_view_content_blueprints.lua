@@ -1,16 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/store_view/store_view_content_blueprints.lua
 
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
+local Text = require("scripts/utilities/ui/text")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local grid_size = InventoryViewSettings.grid_size
 local grid_width = grid_size[1]
 local group_header_font_style = table.clone(UIFontSettings.header_3)
@@ -346,7 +344,7 @@ local blueprints = {
 					local hover_color = style.hover_color
 					local color = style.color
 
-					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+					Colors.color_lerp(default_color, hover_color, progress, color)
 				end,
 			},
 			{
@@ -733,7 +731,7 @@ local blueprints = {
 			}
 			style.title_background.offset[2] = style.title.offset[2]
 			style.title_background.offset[2] = style.title_background.offset[2] - title_background_margin * 0.25
-			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or TextUtils.format_currency(element.price)
+			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
 
 			local wallet_settings = WalletSettings.aquilas
 			local font_gradient_material = wallet_settings.font_gradient_material
@@ -778,8 +776,8 @@ local blueprints = {
 				local display_name = item and item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.display_name = Items.display_name(item)
+					content.sub_display_name = Items.sub_display_name(item)
 				end
 			end
 
@@ -790,7 +788,7 @@ local blueprints = {
 				local discount_margin = 20
 				local price_style = style.price
 
-				content.discount_price = string.format("{#strike(true)}%s{#strike(false)}", TextUtils.format_currency(element.discount))
+				content.discount_price = string.format("{#strike(true)}%s{#strike(false)}", Text.format_currency(element.discount))
 				style.discount_price.text_color = Color.terminal_text_body(255, true)
 
 				local discount_style = style.discount_price
@@ -840,7 +838,7 @@ local blueprints = {
 					animation_event = item_animation_event,
 				}
 
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)
@@ -934,7 +932,7 @@ local blueprints = {
 					local hover_color = style.hover_color
 					local color = style.color
 
-					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+					Colors.color_lerp(default_color, hover_color, progress, color)
 				end,
 			},
 			{
@@ -1240,7 +1238,7 @@ local blueprints = {
 				200,
 			}, title_options)
 			local icon_margin = 10
-			local price_text = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or TextUtils.format_currency(element.price)
+			local price_text = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
 
 			price_text = string.gsub(price_text, "￥", "¥")
 			content.price = price_text
@@ -1344,7 +1342,7 @@ local blueprints = {
 					local hover_color = style.hover_color
 					local color = style.color
 
-					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+					Colors.color_lerp(default_color, hover_color, progress, color)
 				end,
 			},
 			{
@@ -1710,7 +1708,7 @@ local blueprints = {
 				math.huge,
 			}, title_options)
 
-			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or TextUtils.format_currency(element.price)
+			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
 
 			local wallet_settings = WalletSettings.aquilas
 			local font_gradient_material = wallet_settings.font_gradient_material
@@ -1755,8 +1753,8 @@ local blueprints = {
 				local display_name = item and item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.display_name = Items.display_name(item)
+					content.sub_display_name = Items.sub_display_name(item)
 				end
 			end
 
@@ -1767,7 +1765,7 @@ local blueprints = {
 				local discount_margin = 20
 				local price_style = style.price
 
-				content.discount_price = string.format("{#strike(true)}%s{#strike(false)}", TextUtils.format_currency(element.discount))
+				content.discount_price = string.format("{#strike(true)}%s{#strike(false)}", Text.format_currency(element.discount))
 				style.discount_price.text_color = Color.terminal_text_body(255, true)
 
 				local discount_style = style.discount_price
@@ -1825,7 +1823,7 @@ local blueprints = {
 					animation_event = item_animation_event,
 				}
 
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)

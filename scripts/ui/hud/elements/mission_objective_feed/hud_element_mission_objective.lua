@@ -14,11 +14,14 @@ HudElementMissionObjective.init = function (self, objective)
 	self._max_counter_amount = 0
 	self._icon = nil
 	self._progress_bar = false
+	self._progress_bar_icon = nil
+	self._progress_timer = false
+	self._time_left = nil
 	self._marked_units = {}
 	self._marker_ids = {}
 	self._distance = 0
 	self._marker_distances = {}
-	self._is_side_mission = objective:is_side_mission()
+	self._objective_category = objective:objective_category()
 	self._locally_added = objective:locally_added()
 
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
@@ -59,6 +62,14 @@ HudElementMissionObjective.is_synchronized_with_objective = function (self, obje
 		return false
 	end
 
+	if self._progress_bar ~= objective:progress_bar() then
+		return false
+	end
+
+	if self._progress_timer ~= objective:progress_timer() then
+		return false
+	end
+
 	if self._description ~= objective:description() then
 		return false
 	end
@@ -91,6 +102,13 @@ HudElementMissionObjective.synchronize_objective = function (self, objective)
 	self._icon = objective:icon()
 	self._use_counter = objective:use_counter()
 	self._progress_bar = objective:progress_bar()
+	self._progress_bar_icon = objective:progress_bar_icon()
+	self._progress_timer = objective:progress_timer()
+
+	if self._progress_timer then
+		self._time_left = self._max_counter_amount * (1 - self._progression)
+	end
+
 	self._marked_units = objective:marked_units()
 	self._marker_type = objective:marker_type()
 end
@@ -199,6 +217,22 @@ HudElementMissionObjective.progress_bar = function (self)
 	return self._progress_bar
 end
 
+HudElementMissionObjective.progress_bar_icon = function (self)
+	return self._progress_bar_icon
+end
+
+HudElementMissionObjective.progress_timer = function (self)
+	return self._progress_timer
+end
+
+HudElementMissionObjective.time_left = function (self, dt)
+	if dt then
+		self._time_left = self._time_left - dt
+	end
+
+	return self._time_left
+end
+
 HudElementMissionObjective.progression = function (self)
 	return self._progression
 end
@@ -215,8 +249,8 @@ HudElementMissionObjective.icon = function (self)
 	return self._icon
 end
 
-HudElementMissionObjective.is_side_mission = function (self)
-	return self._is_side_mission
+HudElementMissionObjective.objective_category = function (self)
+	return self._objective_category
 end
 
 HudElementMissionObjective.locally_added = function (self)

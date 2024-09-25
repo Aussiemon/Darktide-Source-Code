@@ -8,15 +8,17 @@ DecoderSynchronizer.init = function (self, unit, is_server)
 	local decoder_synchronizer_extension = ScriptUnit.fetch_component_extension(unit, "event_synchronizer_system")
 
 	if decoder_synchronizer_extension then
+		local objective_name = self:get_data(unit, "objective_name")
+		local auto_start = self:get_data(unit, "automatic_start")
 		local min_time_until_stalling = self:get_data(unit, "min_time_until_stalling")
 		local max_time_until_stalling = self:get_data(unit, "max_time_until_stalling")
 		local num_active_units = self:get_data(unit, "num_active_units")
 		local stall_once_per_device = self:get_data(unit, "stall_once_per_device")
-		local objective_name = self:get_data(unit, "objective_name")
-		local auto_start = self:get_data(unit, "automatic_start")
 		local setup_only = self:get_data(unit, "setup_only")
+		local progress_in_minigame = self:get_data(unit, "progress_in_minigame")
+		local auto_open_auspex = self:get_data(unit, "auto_open_auspex")
 
-		decoder_synchronizer_extension:setup_from_component(min_time_until_stalling, max_time_until_stalling, num_active_units, stall_once_per_device, objective_name, auto_start, setup_only)
+		decoder_synchronizer_extension:setup_from_component(objective_name, auto_start, min_time_until_stalling, max_time_until_stalling, num_active_units, stall_once_per_device, setup_only, progress_in_minigame, auto_open_auspex)
 
 		self._decoder_synchronizer_extension = decoder_synchronizer_extension
 	end
@@ -53,6 +55,16 @@ DecoderSynchronizer.start_decoding_event = function (self)
 end
 
 DecoderSynchronizer.component_data = {
+	objective_name = {
+		ui_name = "Objective Name",
+		ui_type = "text_box",
+		value = "default",
+	},
+	automatic_start = {
+		ui_name = "Auto Start On Mission Start",
+		ui_type = "check_box",
+		value = false,
+	},
 	min_time_until_stalling = {
 		ui_name = "Min time until stalling (in sec.)",
 		ui_type = "number",
@@ -73,18 +85,18 @@ DecoderSynchronizer.component_data = {
 		ui_type = "check_box",
 		value = false,
 	},
-	objective_name = {
-		ui_name = "Objective Name",
-		ui_type = "text_box",
-		value = "default",
-	},
-	automatic_start = {
-		ui_name = "Auto Start On Mission Start",
+	setup_only = {
+		ui_name = "Setup Only",
 		ui_type = "check_box",
 		value = false,
 	},
-	setup_only = {
-		ui_name = "Setup Only",
+	progress_in_minigame = {
+		ui_name = "Progress In Minigame",
+		ui_type = "check_box",
+		value = false,
+	},
+	auto_open_auspex = {
+		ui_name = "Open Auspex On Placement",
 		ui_type = "check_box",
 		value = false,
 	},

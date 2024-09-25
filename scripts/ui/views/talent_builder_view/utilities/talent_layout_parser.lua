@@ -130,7 +130,7 @@ local function _num_decimals(value)
 	return num_decimals
 end
 
-local FORMATING_FUNCTIONS = {
+local FORMATTING_FUNCTIONS = {
 	percentage = function (value, config)
 		local value_manipulation = config.value_manipulation
 
@@ -354,7 +354,7 @@ local DEV_INFO_FUNCTIONS = {
 			local value_config = values_to_show[i]
 			local path = value_config.path
 			local value, key = _value_from_path(buff_template, path)
-			local format_function = FORMATING_FUNCTIONS[value_config.format_type] or FORMATING_FUNCTIONS.default
+			local format_function = FORMATTING_FUNCTIONS[value_config.format_type] or FORMATTING_FUNCTIONS.default
 			local value_s = TextUtilities.apply_color_to_text(format_function(value, value_config), Color.ui_terminal(255, true))
 
 			values_string = values_string .. string.format("%s: %s ", key, value_s)
@@ -388,7 +388,7 @@ TalentLayoutParser.talent_description = function (talent_definition, points_spen
 				end
 
 				local format_type = config.format_type
-				local format_function = FORMATING_FUNCTIONS[format_type] or FORMATING_FUNCTIONS.default
+				local format_function = FORMATTING_FUNCTIONS[format_type] or FORMATTING_FUNCTIONS.default
 				local string_value = format_function(value, config)
 
 				if config.prefix then

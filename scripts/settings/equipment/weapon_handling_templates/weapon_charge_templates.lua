@@ -94,6 +94,9 @@ local weapon_charge_templates = {
 		use_charge = true,
 		warp_charge_percent = 0.00075,
 	},
+	psyker_reload_speed_warp = {
+		warp_charge_percent = 0.25,
+	},
 	handgun_push_charge = {
 		warp_charge_percent = 0.1,
 	},

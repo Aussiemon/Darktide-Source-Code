@@ -70,6 +70,8 @@ GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 		local lost_connection = not Managers.connection:host_channel()
 
 		if lost_connection then
+			self._shared_state.initialized_steps.GameplayInitStepStateWaitForGroup = true
+
 			local next_step_params = {
 				shared_state = self._shared_state,
 			}
@@ -79,6 +81,8 @@ GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 	end
 
 	if self._ready_to_spawn then
+		self._shared_state.initialized_steps.GameplayInitStepStateWaitForGroup = true
+
 		local next_step_params = {
 			shared_state = self._shared_state,
 		}

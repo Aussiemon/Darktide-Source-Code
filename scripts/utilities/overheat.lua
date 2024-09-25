@@ -1,10 +1,13 @@
 ﻿-- chunkname: @scripts/utilities/overheat.lua
 
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local SharedOverheatAndWarpChargeFunctions = require("scripts/utilities/shared_overheat_and_warp_charge_functions")
+local buff_keywords = BuffSettings.keywords
 local SharedFunctions = SharedOverheatAndWarpChargeFunctions
 local Overheat = {}
 
 Overheat.increase_immediate = function (t, charge_level, inventory_slot_component, charge_template, unit, is_critical_strike)
+	local current_state = inventory_slot_component.overheat_state
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local buff_multiplier = stat_buffs and stat_buffs.overheat_amount * stat_buffs.overheat_immediate_amount or 1
@@ -14,7 +17,6 @@ Overheat.increase_immediate = function (t, charge_level, inventory_slot_componen
 	end
 
 	local current_percentage = inventory_slot_component.overheat_current_percentage
-	local current_state = inventory_slot_component.overheat_state
 	local use_charge = charge_template.use_charge
 	local base_add_percentage = charge_template.overheat_percent or 0
 	local add_percentage = buff_multiplier * base_add_percentage
@@ -48,17 +50,25 @@ Overheat.increase_over_time = function (dt, t, charge_level, inventory_slot_comp
 	inventory_slot_component.overheat_last_charge_at_t = t
 end
 
-Overheat.update = function (dt, t, inventory_slot_component, overheat_configuration, unit, first_person_unit)
-	if not overheat_configuration then
+Overheat.update = function (dt, t, inventory_slot_component, weapon_template, unit, first_person_unit, charge_weapon_tweak_templates)
+	local overheat_decay
+
+	if weapon_template.use_special_charge_template_for_overheat_decay then
+		overheat_decay = charge_weapon_tweak_templates[weapon_template.special_charge_template].overheat_decay
+	else
+		overheat_decay = weapon_template.overheat_configuration
+	end
+
+	if not overheat_decay then
 		return
 	end
 
 	local current_percentage = inventory_slot_component.overheat_current_percentage
 	local current_state = inventory_slot_component.overheat_state
 	local last_charge_at_t = inventory_slot_component.overheat_last_charge_at_t
-	local auto_vent_delay = overheat_configuration.auto_vent_delay
+	local auto_vent_delay = overheat_decay.auto_vent_delay
 	local reload_state = inventory_slot_component.reload_state
-	local reload_state_overrides = overheat_configuration.reload_state_overrides
+	local reload_state_overrides = overheat_decay.reload_state_overrides
 	local reload_state_override = reload_state_overrides[reload_state]
 
 	if reload_state_override then
@@ -88,13 +98,16 @@ Overheat.update = function (dt, t, inventory_slot_component, overheat_configurat
 		return
 	end
 
-	local low_threshold = overheat_configuration.thresholds.low
-	local high_threshold = overheat_configuration.thresholds.high
-	local critical_threshold = overheat_configuration.thresholds.critical
-	local low_threshold_decay_rate_modifier = overheat_configuration.low_threshold_decay_rate_modifier
-	local high_threshold_decay_rate_modifier = overheat_configuration.high_threshold_decay_rate_modifier
-	local critical_threshold_decay_rate_modifier = overheat_configuration.critical_threshold_decay_rate_modifier
-	local auto_vent_duration = overheat_configuration.auto_vent_duration
+	local low_threshold = overheat_decay.thresholds.low
+	local high_threshold = overheat_decay.thresholds.high
+	local critical_threshold = overheat_decay.thresholds.critical
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local overheat_dissipation_multiplier = stat_buffs.overheat_dissipation_multiplier or 1
+	local low_threshold_decay_rate_modifier = overheat_decay.low_threshold_decay_rate_modifier * overheat_dissipation_multiplier
+	local high_threshold_decay_rate_modifier = overheat_decay.high_threshold_decay_rate_modifier * overheat_dissipation_multiplier
+	local critical_threshold_decay_rate_modifier = overheat_decay.critical_threshold_decay_rate_modifier * overheat_dissipation_multiplier
+	local auto_vent_duration = overheat_decay.auto_vent_duration
 	local new_heat = SharedFunctions.update(dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate_modifier, high_threshold_decay_rate_modifier, critical_threshold_decay_rate_modifier)
 
 	inventory_slot_component.overheat_current_percentage = new_heat

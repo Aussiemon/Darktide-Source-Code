@@ -337,5 +337,11 @@ wwise_vo_routing_settings[54] = {
 	wwise_event_path = "wwise/events/vo/play_sfx_es_npc_pa_vo",
 	wwise_sound_source = "es_npc_pa_vo",
 }
+wwise_vo_routing_settings[55] = {
+	display_name = "Named Cultist Captain Important",
+	is_default = false,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_cultist_captain_vo_important",
+	wwise_sound_source = "es_cultist_captain_vo_important",
+}
 
 return settings("wwise_vo_routing_settings", wwise_vo_routing_settings)

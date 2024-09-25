@@ -5,6 +5,7 @@ local FlashlightTemplates = require("scripts/settings/equipment/flashlight_templ
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local PerlinNoise = require("scripts/utilities/perlin_noise")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local Flashlight = class("Flashlight")
 local _components, _disable_light, _enable_light, _set_template, _set_intensity, _falloff_position_rotation, _trigger_aggro
 local AGGRO_CHECK_INTERVAL = 0.5
@@ -382,5 +383,7 @@ function _trigger_aggro(template_1p, flashlights_1p, physics_world, owner_unit)
 		until true
 	end
 end
+
+implements(Flashlight, WieldableSlotScriptInterface)
 
 return Flashlight

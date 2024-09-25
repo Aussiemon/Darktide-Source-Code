@@ -8,11 +8,15 @@ Broadphase.init = function (self, unit)
 	local broadphase_extension = ScriptUnit.fetch_component_extension(unit, "broadphase_system")
 
 	if broadphase_extension then
-		local broadphase_categories = self:get_data(unit, "broadphase_categories")
+		local broadphase_category = self:get_data(unit, "broadphase_category")
 		local broadphase_radius = self:get_data(unit, "broadphase_radius")
 		local broadphase_node_name = self:get_data(unit, "broadphase_node_name")
 
-		broadphase_extension:setup_from_component(broadphase_categories, broadphase_radius, broadphase_node_name)
+		if broadphase_node_name == "" then
+			broadphase_node_name = nil
+		end
+
+		broadphase_extension:setup_from_component(broadphase_category, broadphase_radius, broadphase_node_name)
 	end
 end
 
@@ -23,15 +27,6 @@ end
 Broadphase.editor_validate = function (self, unit)
 	local success = true
 	local error_message = ""
-	local broadphase_node_name = self:get_data(unit, "broadphase_node_name")
-
-	if broadphase_node_name == "" then
-		error_message = error_message .. "\nBroadphase Node Name can't be empty"
-		success = false
-	elseif not Unit.has_node(unit, broadphase_node_name) then
-		error_message = error_message .. "\nmissing unit node '" .. broadphase_node_name .. "'"
-		success = false
-	end
 
 	return success, error_message
 end
@@ -49,8 +44,8 @@ Broadphase.destroy = function (self, unit)
 end
 
 Broadphase.component_data = {
-	broadphase_categories = {
-		ui_name = "Broadphase Categories",
+	broadphase_category = {
+		ui_name = "Broadphase Category",
 		ui_type = "combo_box",
 		value = "doors",
 		options_keys = {

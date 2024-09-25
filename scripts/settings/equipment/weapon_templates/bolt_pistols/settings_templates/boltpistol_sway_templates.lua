@@ -26,7 +26,7 @@ end
 sway_templates.default_boltpistol_killshot = {
 	still = {
 		horizontal_speed = 0.2,
-		intensity = 1,
+		intensity = 0.3,
 		rotation_speed = 0.125,
 		visual_pitch_impact_mod = 3.8,
 		visual_yaw_impact_mod = 2.3,

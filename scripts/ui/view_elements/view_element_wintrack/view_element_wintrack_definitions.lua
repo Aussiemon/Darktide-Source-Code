@@ -53,11 +53,13 @@ basic_text_style.offset = {
 }
 
 local bar_size = {
-	1150,
+	1300,
 	17,
 }
-local reward_field_width = bar_size[1] + 480
-local reward_field_height = 198
+local reward_field_size = {
+	bar_size[1] + 300,
+	198,
+}
 local item_size = ViewElementWintrackSettings.item_size
 local reward_size = {
 	164,
@@ -83,10 +85,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		parent = "pivot",
 		vertical_alignment = "bottom",
-		size = {
-			reward_field_width,
-			reward_field_height,
-		},
+		size = reward_field_size,
 		position = {
 			0,
 			-95,
@@ -134,7 +133,7 @@ local scenegraph_definition = {
 		parent = "reward_progress_bar",
 		vertical_alignment = "bottom",
 		size = {
-			bar_size[1] + 130,
+			bar_size[1] + 50,
 			reward_size[2] + 150,
 		},
 		position = {
@@ -379,7 +378,7 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
 				size = {
-					bar_size[1] + 180,
+					bar_size[1] + 100,
 					16,
 				},
 				offset = {
@@ -415,7 +414,7 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
 				size = {
-					bar_size[1] + 180,
+					bar_size[1] + 100,
 					16,
 				},
 				offset = {
@@ -949,6 +948,9 @@ local front_widget_definitions = {
 					30,
 				},
 			},
+			visibility_function = function (content, style)
+				return not content.read_only
+			end,
 		},
 		{
 			pass_type = "texture",
@@ -967,6 +969,9 @@ local front_widget_definitions = {
 					30,
 				},
 			},
+			visibility_function = function (content, style)
+				return not content.read_only
+			end,
 		},
 		{
 			pass_type = "texture",
@@ -985,6 +990,27 @@ local front_widget_definitions = {
 					30,
 				},
 			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "corner_left_read_only",
+			value = "content/ui/materials/frames/achievements/wintrack_frame_corner_right",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				size = {
+					192,
+					224,
+				},
+				offset = {
+					0,
+					17,
+					30,
+				},
+			},
+			visibility_function = function (content, style)
+				return content.read_only
+			end,
 		},
 	}, "reward_field"),
 	claim_button = UIWidget.create_definition(claim_button_pass_template, "claim_button", {

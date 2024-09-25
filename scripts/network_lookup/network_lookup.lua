@@ -67,11 +67,23 @@ local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 
 local function _create_lookup(lookup, hashtable)
-	local i = #lookup
+	local existing_keys = {}
+	local new_keys = {}
 
-	for key, _ in pairs(hashtable) do
-		i = i + 1
-		lookup[i] = key
+	for i = 1, #lookup do
+		existing_keys[lookup[i]] = true
+	end
+
+	for key in pairs(hashtable) do
+		if not existing_keys[key] then
+			table.insert(new_keys, key)
+		end
+	end
+
+	table.sort(new_keys)
+
+	for _, key in ipairs(new_keys) do
+		table.insert(lookup, key)
 	end
 
 	return lookup
@@ -199,11 +211,11 @@ NetworkLookup.assist_type_lookup = {
 	"gifted",
 	"stimmed",
 }
+NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
+NetworkLookup.minigame_game_states = _create_lookup({}, MinigameSettings.game_states)
 
 local minion_attack_selection_template_names = {}
 
-NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
-NetworkLookup.minigame_game_states = _create_lookup({}, MinigameSettings.game_states)
 NetworkLookup.minion_attack_selection_template_names = _create_lookup(minion_attack_selection_template_names, MinionAttackSelectionTemplates)
 NetworkLookup.minion_fx_source_names = {
 	"muzzle",
@@ -218,17 +230,13 @@ for breed_name, all_templates in pairs(MinionVisualLoadoutTemplates) do
 			local inventory_slots = inventory.slots
 
 			for slot_name, _ in pairs(inventory_slots) do
-				if not table.contains(minion_inventory_slot_names, slot_name) then
-					local j = #minion_inventory_slot_names + 1
-
-					minion_inventory_slot_names[j] = slot_name
-				end
+				minion_inventory_slot_names[slot_name] = true
 			end
 		end
 	end
 end
 
-NetworkLookup.minion_inventory_slot_names = minion_inventory_slot_names
+NetworkLookup.minion_inventory_slot_names = _create_lookup({}, minion_inventory_slot_names)
 
 local mission_objective_names = {}
 
@@ -243,6 +251,10 @@ end
 NetworkLookup.mission_objective_names = _create_lookup({}, mission_objective_names)
 NetworkLookup.mission_objective_ui_strings = MissionsObjectiveUiStrings
 NetworkLookup.mission_objective_target_ui_types = MissionsObjectiveTargetUiTypeStrings
+NetworkLookup.mission_objective_ui_states = {
+	"default",
+	"alert",
+}
 NetworkLookup.mission_giver_vo_overrides = _create_lookup({}, MissionGiverVoSettings.overrides)
 NetworkLookup.missions = _create_lookup({}, Missions)
 NetworkLookup.mission_sound_events = _create_lookup({}, MissionSoundEvents)
@@ -300,6 +312,7 @@ local player_character_sounds = {
 	["wwise/events/ui/play_hud_health_station_2d"] = true,
 	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
 	["wwise/events/weapon/play_enemy_netgunner_net_trapped"] = true,
+	["wwise/events/weapon/play_explosion_flamer_tank"] = true,
 	["wwise/events/weapon/play_explosion_force_med"] = true,
 	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,

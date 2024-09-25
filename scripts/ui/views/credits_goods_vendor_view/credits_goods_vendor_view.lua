@@ -9,7 +9,7 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local VendorViewBase = require("scripts/ui/views/vendor_view_base/vendor_view_base")
 local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
 local CreditsGoodsVendorView = class("CreditsGoodsVendorView", "VendorViewBase")
 
 CreditsGoodsVendorView.init = function (self, settings, context)
@@ -211,7 +211,8 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 
 				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
 
-				local display_name = master_item.display_name and Localize(master_item.display_name) or "n/a"
+				local display_name = ItemUtils.weapon_card_display_name(master_item) or "n/a"
+				local sub_display_name = ItemUtils.weapon_card_sub_display_name(master_item) or "n/a"
 				local weapon_level_requirement
 
 				for weapon_level, weapon_list in ipairs(archetype_weapon_unlocks) do
@@ -230,19 +231,18 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 					end
 				end
 
-				if weapon_level_requirement == nil then
-					weapon_level_requirement = 1
+				if weapon_level_requirement ~= nil then
+					table.insert(layout, 1, {
+						widget_type = "credits_goods_item",
+						offer = offer,
+						offer_id = offer_id,
+						icon = hud_icon,
+						display_name = display_name,
+						sub_display_name = sub_display_name,
+						item = master_item,
+						weapon_level_requirement = weapon_level_requirement,
+					})
 				end
-
-				table.insert(layout, 1, {
-					widget_type = "credits_goods_item",
-					offer = offer,
-					offer_id = offer_id,
-					icon = hud_icon,
-					display_name = display_name,
-					item = master_item,
-					weapon_level_requirement = weapon_level_requirement,
-				})
 			end
 		end
 	end

@@ -90,6 +90,10 @@ AccountManagerBase.fetch_crossplay_restrictions = function (self)
 	return
 end
 
+AccountManagerBase.set_crossplay_restriction = function (self)
+	return
+end
+
 AccountManagerBase.has_crossplay_restriction = function (self)
 	return false
 end

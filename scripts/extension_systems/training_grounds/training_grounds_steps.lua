@@ -542,9 +542,7 @@ steps.trigger_training_complete = {
 			Managers.telemetry_reporters:stop_reporter("training_grounds")
 		end
 
-		local triggered_from_flow = false
-
-		Managers.state.game_mode:complete_game_mode(triggered_from_flow)
+		Managers.state.game_mode:complete_game_mode()
 	end,
 }
 

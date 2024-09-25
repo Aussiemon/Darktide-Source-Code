@@ -28,6 +28,8 @@ GameplayInitStepBreedTester.update = function (self, main_dt, main_t)
 		return nil, nil
 	end
 
+	self._shared_state.initialized_steps.GameplayInitStepBreedTester = true
+
 	local next_step_params = {
 		shared_state = shared_state,
 	}

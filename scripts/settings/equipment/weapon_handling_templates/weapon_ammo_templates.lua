@@ -355,16 +355,6 @@ local weapon_ammo_templates = {
 			lerp_perfect = 70,
 		},
 	},
-	stubrifle_p1_m1 = {
-		ammunition_clip = {
-			lerp_basic = 8,
-			lerp_perfect = 12,
-		},
-		ammunition_reserve = {
-			lerp_basic = 80,
-			lerp_perfect = 144,
-		},
-	},
 	ogryn_heavystubber_p1_m1 = {
 		ammunition_clip = {
 			lerp_basic = 80,

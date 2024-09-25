@@ -6,6 +6,7 @@ local Luggable = require("scripts/utilities/luggable")
 local MispredictPackageHandler = require("scripts/extension_systems/visual_loadout/mispredict_package_handler")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerCharacterParticles = require("scripts/settings/particles/player_character_particles")
 local PlayerCharacterSounds = require("scripts/settings/sound/player_character_sounds")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -624,7 +625,7 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 	local mission = self._mission
 	local equipment_component = self._equipment_component
 
-	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, breed_name, mission)
+	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, breed_name, mission, equipment)
 
 	if slot_config.slot_type == "luggable" then
 		local luggable_extension = ScriptUnit.extension(optional_existing_unit_3p, "luggable_system")
@@ -939,13 +940,7 @@ PlayerUnitVisualLoadoutExtension._update_item_visibility = function (self, first
 	local slot_scripts = self._wieldable_slot_scripts[slot_name]
 
 	if slot_scripts then
-		local num_scripts = #slot_scripts
-
-		for i = 1, num_scripts do
-			local wieldable_slot_script = slot_scripts[i]
-
-			wieldable_slot_script:update_first_person_mode(first_person_mode)
-		end
+		WieldableSlotScripts.update_first_person_mode(slot_scripts, first_person_mode)
 	end
 end
 
@@ -953,6 +948,31 @@ PlayerUnitVisualLoadoutExtension.resolve_gear_sound = function (self, sound_alia
 	local properties = self._profile_properties
 
 	return PlayerCharacterSounds.resolve_sound(sound_alias, properties, optional_external_properties)
+end
+
+PlayerUnitVisualLoadoutExtension.resolve_looping_gear_sound = function (self, looping_sound_alias, use_husk_event, optional_external_properties)
+	local LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases[looping_sound_alias]
+	local start_config = LOOPING_SFX_CONFIG.start
+	local stop_config = LOOPING_SFX_CONFIG.stop
+	local start_event_alias = start_config.event_alias
+	local stop_event_alias = stop_config.event_alias
+	local resolved, event_name, has_husk_events = self:resolve_gear_sound(start_event_alias, optional_external_properties)
+
+	if resolved then
+		event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
+
+		local stop_resolved, stop_event_name, stop_has_husk_events = self:resolve_gear_sound(stop_event_alias, optional_external_properties)
+
+		if stop_resolved then
+			stop_event_name = use_husk_event and stop_has_husk_events and stop_event_name .. "_husk" or stop_event_name
+
+			return true, event_name, true, stop_event_name
+		else
+			return true, event_name, false, nil
+		end
+	end
+
+	return false, nil, false, nil
 end
 
 PlayerUnitVisualLoadoutExtension.resolve_gear_particle = function (self, particle_alias, optional_external_properties)

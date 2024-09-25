@@ -238,7 +238,7 @@ function run(promise)
 				err.__locals = extract_locals(4)
 
 				if err.fatal then
-					err.__fatal_message = "<<Promise Error>>" .. tostring(err.message) .. "<</Promise Error>>\n" .. err.__traceback .. "<<Promise Locals>>" .. err.__locals .. "<</Promise Locals>>"
+					err.__fatal_message = "<<Promise Error>>" .. tostring(err.message) .. "<</Promise Error>>\n" .. err.__traceback .. "<<Promise Locals>>" .. err.__locals .. "<</Promise Locals>>" .. "[Log end]"
 
 					if BUILD ~= "release" then
 						Log.error("Promise", "%s", err.__fatal_message)

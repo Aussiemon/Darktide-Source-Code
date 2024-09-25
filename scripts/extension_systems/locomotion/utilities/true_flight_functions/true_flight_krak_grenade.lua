@@ -4,16 +4,16 @@ local Armor = require("scripts/utilities/attack/armor")
 local ProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/projectile_integration")
 local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
 local _check_target_armor, _broadphase_query, _play_fx_target_found_fx
-local true_flight_krak_grenade = {}
+local TrueFlightKrakGrenade = {}
 
-true_flight_krak_grenade.krak_projectile_locomotion = function (physics_world, integration_data, dt, t)
+TrueFlightKrakGrenade.krak_projectile_locomotion = function (physics_world, integration_data, dt, t)
 	local position = ProjectileIntegration.integrate_position(physics_world, integration_data, dt, t)
 	local rotation = ProjectileIntegration.integrate_rotation(physics_world, integration_data, dt, t)
 
 	return position, rotation
 end
 
-true_flight_krak_grenade.krak_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
+TrueFlightKrakGrenade.krak_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 	local true_flight_template = integration_data.true_flight_template
 	local trigger_time = true_flight_template.trigger_time
 	local on_target_time = integration_data.on_target_time
@@ -66,7 +66,7 @@ end
 
 local broadphase_results = {}
 
-true_flight_krak_grenade.krak_find_armored_target = function (integration_data, position, is_valid_and_legitimate_targe_func)
+TrueFlightKrakGrenade.krak_find_armored_target = function (integration_data, position, is_valid_and_legitimate_targe_func)
 	local true_flight_template = integration_data.true_flight_template
 	local skip_search_time = true_flight_template.skip_search_time
 	local time_since_start = integration_data.time_since_start
@@ -76,7 +76,6 @@ true_flight_krak_grenade.krak_find_armored_target = function (integration_data, 
 	end
 
 	local projectile_unit = integration_data.projectile_unit
-	local owner_unit = integration_data.owner_unit
 	local broadphase_radius = true_flight_template.broadphase_radius
 	local forward_search_distance_to_find_target = true_flight_template.forward_search_distance_to_find_target
 	local target_armor_types = true_flight_template.target_armor_types
@@ -87,16 +86,16 @@ true_flight_krak_grenade.krak_find_armored_target = function (integration_data, 
 	local veclocity = integration_data.velocity
 	local current_direction = Vector3.normalize(veclocity)
 	local offset = current_direction * forward_search_distance_to_find_target
-	local seach_position = position + offset
-	local number_of_results = _broadphase_query(owner_unit, seach_position, broadphase_radius, broadphase_results)
+	local search_position = position + offset
+	local number_of_results = _broadphase_query(projectile_unit, search_position, broadphase_radius, broadphase_results)
 	local check_all_hit_zones = true_flight_template.check_all_hit_zones
 	local closest_unit
 	local closest_distance = math.huge
 	local target_hit_zone
 
 	if number_of_results > 0 then
-		for i = 1, number_of_results do
-			local unit = broadphase_results[i]
+		for ii = 1, number_of_results do
+			local unit = broadphase_results[ii]
 
 			if is_valid_and_legitimate_targe_func(integration_data, unit, position) then
 				local can_stick, hit_zone, target_pos = _check_target_armor(unit, target_armor_types, default_hit_zone, position, check_all_hit_zones)
@@ -169,11 +168,11 @@ function _check_target_armor(unit, target_armor_types, default_hit_zone, current
 	return can_stick, default_hit_zone, position
 end
 
-function _broadphase_query(owner_unit, position, radius, query_results)
+function _broadphase_query(projectile_unit, position, radius, query_results)
 	local extension_manager = Managers.state.extension
 	local broadphase_system = extension_manager:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local side = ScriptUnit.extension(owner_unit, "side_system").side
+	local side = ScriptUnit.extension(projectile_unit, "side_system").side
 	local relation_side_names = side:relation_side_names("enemy")
 	local num_hits = Broadphase.query(broadphase, position, radius, query_results, relation_side_names)
 
@@ -189,4 +188,4 @@ function _play_fx_target_found_fx(integration_data)
 	end
 end
 
-return true_flight_krak_grenade
+return TrueFlightKrakGrenade

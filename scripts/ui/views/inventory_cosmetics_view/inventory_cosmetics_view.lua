@@ -913,7 +913,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 	for _, achievement in pairs(achievements) do
 		local reward_item = AchievementUIHelper.get_reward_item(achievement)
 
-		if reward_item and self:_item_valid_by_current_profile(reward_item) and table.find(reward_item.slots, selected_slot_name) then
+		if reward_item and reward_item.slots and self:_item_valid_by_current_profile(reward_item) and table.find(reward_item.slots, selected_slot_name) then
 			local description_text
 
 			if achievement.type == "meta" then
@@ -1235,7 +1235,7 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 
 		button_content.hotspot.disabled = disable_button or cannot_equip
 		button_content.visible = not cannot_equip
-		button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
+		button_content.original_text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 	end
 end
 

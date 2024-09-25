@@ -1,12 +1,11 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_temperature_effects.lua
 
 local Action = require("scripts/utilities/weapon/action")
-local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local WeaponTemperatureEffects = class("WeaponTemperatureEffects")
 local FX_SOURCE_NAME = "_muzzle"
 local PARAMETER_NAME = "weapon_temperature"
 local LOOPING_SFX_ALIAS = "weapon_temperature"
-local LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases[LOOPING_SFX_ALIAS]
 local INCREASE_RATE = 0.05
 local DECAY_RATE = 0.1
 local GRACE_TIME = 1.8
@@ -27,7 +26,7 @@ local CHARGE_ACTIONS = {
 	overload_charge_position_finder = true,
 	overload_charge_target_finder = true,
 }
-local sfx_external_properties = {}
+local _external_properties = {}
 
 WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_husk = context.is_husk
@@ -163,31 +162,19 @@ WeaponTemperatureEffects.update_first_person_mode = function (self, first_person
 end
 
 WeaponTemperatureEffects._start_sfx_loop = function (self)
-	local is_husk = self._is_husk
-	local is_local_unit = self._is_local_unit
 	local wwise_world = self._wwise_world
 	local sfx_source_id = self._fx_extension:sound_source(self._fx_source_name)
 	local visual_loadout_extension = self._visual_loadout_extension
-	local use_husk_event = is_husk or not is_local_unit
-	local start_config = LOOPING_SFX_CONFIG.start
-	local stop_config = LOOPING_SFX_CONFIG.stop
-	local start_event_alias = start_config.event_alias
-	local stop_event_alias = stop_config.event_alias
-	local resolved, has_husk_events, event_name
-
-	resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, sfx_external_properties)
+	local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+	local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(LOOPING_SFX_ALIAS, should_play_husk_effect, _external_properties)
 
 	if resolved then
-		event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
-
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
 
 		self._looping_playing_id = new_playing_id
-		resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, sfx_external_properties)
 
-		if resolved then
-			event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
-			self._looping_stop_event_name = event_name
+		if resolved_stop then
+			self._looping_stop_event_name = stop_event_name
 		end
 	end
 end
@@ -213,5 +200,7 @@ WeaponTemperatureEffects._update_wwise_source_parameter = function (self, parame
 
 	WwiseWorld.set_source_parameter(self._wwise_world, sound_source, PARAMETER_NAME, parameter_value)
 end
+
+implements(WeaponTemperatureEffects, WieldableSlotScriptInterface)
 
 return WeaponTemperatureEffects

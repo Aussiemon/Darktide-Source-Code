@@ -22,6 +22,9 @@ breed_terror_event_settings.chaos_hound = {
 breed_terror_event_settings.chaos_newly_infected = {
 	point_cost = 1,
 }
+breed_terror_event_settings.chaos_armored_infected = {
+	point_cost = 1000,
+}
 breed_terror_event_settings.chaos_ogryn_bulwark = {
 	point_cost = 10,
 }
@@ -96,6 +99,9 @@ breed_terror_event_settings.cultist_assault = {
 }
 breed_terror_event_settings.cultist_berzerker = {
 	point_cost = 6,
+}
+breed_terror_event_settings.cultist_captain = {
+	point_cost = 10,
 }
 
 return breed_terror_event_settings

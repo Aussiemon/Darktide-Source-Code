@@ -548,262 +548,6 @@ terminal_button_text_style.default_color = {
 }
 StepperPassTemplates.terminal_stepper = {
 	{
-		pass_type = "logic",
-		value = function (pass, ui_renderer, logic_style, content, position, size)
-			if not content.disabled then
-				local gamepad_active = InputDevice.gamepad_active
-
-				if content.was_gamepad_active ~= gamepad_active then
-					content.was_gamepad_active = gamepad_active
-					content.stepper_left = gamepad_active and "" or "<"
-					content.stepper_right = gamepad_active and "" or ">"
-				end
-			end
-		end,
-	},
-	{
-		pass_type = "texture_uv",
-		style_id = "stepper_left",
-		value = "content/ui/materials/buttons/arrow_01",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "center",
-			size = {
-				16,
-				16,
-			},
-			color = color_terminal_text_header,
-			offset = {
-				17,
-				0,
-				4,
-			},
-			uvs = {
-				{
-					1,
-					0,
-				},
-				{
-					0,
-					1,
-				},
-			},
-		},
-		visibility_function = function (parent, content)
-			return Managers.ui:using_cursor_navigation()
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "stepper_right",
-		value = "content/ui/materials/buttons/arrow_01",
-		style = {
-			horizontal_alignment = "right",
-			vertical_alignment = "center",
-			size = {
-				16,
-				16,
-			},
-			color = color_terminal_text_header,
-			offset = {
-				-17,
-				0,
-				4,
-			},
-		},
-		visibility_function = function (parent, content)
-			return Managers.ui:using_cursor_navigation()
-		end,
-	},
-	{
-		pass_type = "rect",
-		style_id = "stepper_left_background",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "center",
-			color = {
-				180,
-				28,
-				31,
-				28,
-			},
-			size = {
-				50,
-			},
-			offset = {
-				0,
-				0,
-				2,
-			},
-		},
-	},
-	{
-		pass_type = "texture",
-		style_id = "stepper_left_background_shadow",
-		value = "content/ui/materials/frames/dropshadow_medium",
-		style = {
-			horizontal_alignment = "left",
-			scale_to_material = true,
-			vertical_alignment = "center",
-			color = Color.black(200, true),
-			size = {
-				50,
-			},
-			size_addition = {
-				20,
-				20,
-			},
-			offset = {
-				-10,
-				0,
-				3,
-			},
-		},
-	},
-	{
-		pass_type = "texture",
-		style_id = "stepper_left_gradient",
-		value = "content/ui/materials/gradients/gradient_vertical",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "center",
-			default_color = Color.terminal_background_gradient(nil, true),
-			selected_color = Color.terminal_frame_selected(nil, true),
-			disabled_color = Color.ui_grey_medium(255, true),
-			size = {
-				50,
-			},
-			offset = {
-				0,
-				0,
-				3,
-			},
-		},
-		change_function = function (content, style)
-			terminal_button_change_function(content, style, "hotspot_left")
-			terminal_button_hover_change_function(content, style, "hotspot_left")
-		end,
-	},
-	{
-		pass_type = "rect",
-		style_id = "stepper_right_background",
-		style = {
-			horizontal_alignment = "right",
-			vertical_alignment = "center",
-			color = {
-				180,
-				28,
-				31,
-				28,
-			},
-			size = {
-				50,
-			},
-			offset = {
-				0,
-				0,
-				2,
-			},
-		},
-	},
-	{
-		pass_type = "texture",
-		style_id = "stepper_right_background_shadow",
-		value = "content/ui/materials/frames/dropshadow_medium",
-		style = {
-			horizontal_alignment = "right",
-			scale_to_material = true,
-			vertical_alignment = "center",
-			color = Color.black(200, true),
-			size = {
-				50,
-			},
-			size_addition = {
-				20,
-				20,
-			},
-			offset = {
-				10,
-				0,
-				3,
-			},
-		},
-	},
-	{
-		pass_type = "texture",
-		style_id = "stepper_right_gradient",
-		value = "content/ui/materials/gradients/gradient_vertical",
-		style = {
-			horizontal_alignment = "right",
-			vertical_alignment = "center",
-			default_color = Color.terminal_background_gradient(nil, true),
-			selected_color = Color.terminal_frame_selected(nil, true),
-			disabled_color = Color.ui_grey_medium(255, true),
-			size = {
-				50,
-			},
-			offset = {
-				0,
-				0,
-				3,
-			},
-		},
-		change_function = function (content, style)
-			terminal_button_change_function(content, style, "hotspot_right")
-			terminal_button_hover_change_function(content, style, "hotspot_right")
-		end,
-	},
-	{
-		pass_type = "text",
-		value = "",
-		value_id = "stepper_left_text",
-		style = {
-			font_size = 32,
-			horizontal_alignment = "center",
-			text_horizontal_alignment = "center",
-			text_vertical_alignment = "center",
-			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
-			size = {
-				75,
-				75,
-			},
-			offset = {
-				-120,
-				15,
-				1,
-			},
-		},
-		visibility_function = function (parent, content)
-			return not Managers.ui:using_cursor_navigation()
-		end,
-	},
-	{
-		pass_type = "text",
-		value = "",
-		value_id = "stepper_right_text",
-		style = {
-			font_size = 32,
-			horizontal_alignment = "center",
-			text_horizontal_alignment = "center",
-			text_vertical_alignment = "center",
-			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
-			size = {
-				75,
-				75,
-			},
-			offset = {
-				115,
-				15,
-				1,
-			},
-		},
-		visibility_function = function (parent, content)
-			return not Managers.ui:using_cursor_navigation()
-		end,
-	},
-	{
 		content_id = "hotspot_left",
 		pass_type = "hotspot",
 		content = difficulty_picker_stepper_hotspot_content,
@@ -844,6 +588,280 @@ StepperPassTemplates.terminal_stepper = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
 			on_pressed_sound = UISoundEvents.default_select,
 		},
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "stepper_left",
+		value = "content/ui/materials/buttons/arrow_01",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "center",
+			size = {
+				16,
+				16,
+			},
+			color = color_terminal_text_header,
+			offset = {
+				17,
+				0,
+				4,
+			},
+			uvs = {
+				{
+					1,
+					0,
+				},
+				{
+					0,
+					1,
+				},
+			},
+		},
+		visibility_function = function (content, style)
+			return Managers.ui:using_cursor_navigation()
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_right",
+		value = "content/ui/materials/buttons/arrow_01",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "center",
+			size = {
+				16,
+				16,
+			},
+			color = color_terminal_text_header,
+			offset = {
+				-17,
+				0,
+				4,
+			},
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return Managers.ui:using_cursor_navigation()
+		end,
+	},
+	{
+		pass_type = "text",
+		value = "",
+		value_id = "stepper_left_text",
+		style = {
+			font_size = 32,
+			horizontal_alignment = "center",
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			vertical_alignment = "center",
+			text_color = color_terminal_text_header,
+			size = {
+				75,
+				75,
+			},
+			offset = {
+				-195,
+				2,
+				5,
+			},
+		},
+		visibility_function = function (content, style)
+			return not Managers.ui:using_cursor_navigation() and content.hotspot and content.hotspot.is_selected
+		end,
+	},
+	{
+		pass_type = "text",
+		value = "",
+		value_id = "stepper_right_text",
+		style = {
+			font_size = 32,
+			horizontal_alignment = "center",
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			vertical_alignment = "center",
+			text_color = color_terminal_text_header,
+			size = {
+				75,
+				75,
+			},
+			offset = {
+				195,
+				2,
+				5,
+			},
+		},
+		visibility_function = function (content, style)
+			return not Managers.ui:using_cursor_navigation() and content.hotspot and content.hotspot.is_selected
+		end,
+	},
+	{
+		pass_type = "rect",
+		style_id = "stepper_left_background",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "center",
+			color = {
+				180,
+				28,
+				31,
+				28,
+			},
+			size = {
+				50,
+			},
+			offset = {
+				0,
+				0,
+				2,
+			},
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return Managers.ui:using_cursor_navigation()
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_left_background_shadow",
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style = {
+			horizontal_alignment = "left",
+			scale_to_material = true,
+			vertical_alignment = "center",
+			color = Color.black(200, true),
+			size = {
+				50,
+			},
+			size_addition = {
+				20,
+				20,
+			},
+			offset = {
+				-10,
+				0,
+				3,
+			},
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return Managers.ui:using_cursor_navigation()
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_left_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			size = {
+				50,
+			},
+			offset = {
+				0,
+				0,
+				3,
+			},
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style, "hotspot_left")
+			terminal_button_hover_change_function(content, style, "hotspot_left")
+		end,
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return Managers.ui:using_cursor_navigation()
+		end,
+	},
+	{
+		pass_type = "rect",
+		style_id = "stepper_right_background",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "center",
+			color = {
+				180,
+				28,
+				31,
+				28,
+			},
+			size = {
+				50,
+			},
+			offset = {
+				0,
+				0,
+				2,
+			},
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return Managers.ui:using_cursor_navigation()
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_right_background_shadow",
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style = {
+			horizontal_alignment = "right",
+			scale_to_material = true,
+			vertical_alignment = "center",
+			color = Color.black(200, true),
+			size = {
+				50,
+			},
+			size_addition = {
+				20,
+				20,
+			},
+			offset = {
+				10,
+				0,
+				3,
+			},
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return Managers.ui:using_cursor_navigation()
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_right_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			size = {
+				50,
+			},
+			offset = {
+				0,
+				0,
+				3,
+			},
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style, "hotspot_right")
+			terminal_button_hover_change_function(content, style, "hotspot_right")
+		end,
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return Managers.ui:using_cursor_navigation()
+		end,
 	},
 	{
 		pass_type = "texture",
@@ -934,31 +952,13 @@ StepperPassTemplates.terminal_stepper = {
 			local is_disabled = hotspot.disabled
 			local gamepad_active = hotspot.gamepad_active
 			local button_text = content.original_text or ""
-			local gamepad_action = content.gamepad_action
 
-			if gamepad_active and gamepad_action and not is_disabled then
-				local service_type = "View"
-				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
-				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
-
-				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
-			else
-				content.text = button_text
-			end
-
-			local default_color = is_disabled and style.disabled_color or style.default_color
-			local hover_color = style.hover_color
-			local color = style.text_color
-			local progress = math.max(math.max(hotspot.anim_checked_progress or 0, math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-			if color and default_color and hover_color then
-				color_lerp(default_color, hover_color, progress, color)
-			end
+			content.text = button_text
 		end,
 	},
 }
 
-StepperPassTemplates.terminal_stepper.update = function (widget, renderer, dt)
+StepperPassTemplates.terminal_stepper.update = function (widget, renderer, dt, t, input_service)
 	local content = widget.content
 	local pressed_delay = content.pressed_delay or 0.1
 	local pressed_delay_time = content.pressed_delay_time
@@ -980,13 +980,13 @@ StepperPassTemplates.terminal_stepper.update = function (widget, renderer, dt)
 
 			if InputDevice.gamepad_active then
 				if hotspot.is_selected then
-					local input_service = renderer.input_service
+					local input_service = input_service or renderer.input_service
 
-					if input_service:get("navigate_left_continuous") then
+					if input_service:get("navigate_primary_left_held") then
 						left_pressed_callback()
 
 						content.pressed_delay_time = pressed_delay
-					elseif input_service:get("navigate_right_continuous") then
+					elseif input_service:get("navigate_primary_right_held") then
 						right_pressed_callback()
 
 						content.pressed_delay_time = pressed_delay

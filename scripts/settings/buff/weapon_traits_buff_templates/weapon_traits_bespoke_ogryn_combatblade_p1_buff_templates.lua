@@ -76,6 +76,9 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 	keywords = {
 		keywords.fully_charged_attacks_infinite_cleave,
 	},
+	stat_buffs = {
+		[stat_buffs.melee_fully_charged_damage] = 0.025,
+	},
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
 		[proc_events.on_sweep_finish] = 1,

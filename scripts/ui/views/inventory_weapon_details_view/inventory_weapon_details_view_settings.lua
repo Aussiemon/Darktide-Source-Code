@@ -17,9 +17,10 @@ local mask_size = {
 }
 local inventory_weapon_details_view_settings = {
 	scrollbar_width = 7,
-	shading_environment = "content/shading_environments/ui/ui_item_preview",
 	stats_anim_duration = 2,
 	trait_spacing = -10,
+	viewport_layer = 1,
+	viewport_type = "default",
 	weapon_spawn_depth = 1.2,
 	grid_spacing = {
 		0,

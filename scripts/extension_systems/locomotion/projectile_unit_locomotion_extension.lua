@@ -132,7 +132,7 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 	self._gameplay_safe_extents = gameplay_safe_extents
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 
-	self:_hide_pin()
+	self:_hide_grenade_pin()
 end
 
 ProjectileUnitLocomotionExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -579,7 +579,7 @@ ProjectileUnitLocomotionExtension._apply_changes = function (self, state, positi
 	self._target_position = target_position
 end
 
-ProjectileUnitLocomotionExtension._hide_pin = function (self)
+ProjectileUnitLocomotionExtension._hide_grenade_pin = function (self)
 	local projectile_unit = self._projectile_unit
 	local has_visibility_group = Unit.has_visibility_group(projectile_unit, "pin")
 

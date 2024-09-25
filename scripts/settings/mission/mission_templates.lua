@@ -13,6 +13,7 @@ end
 
 _extract_mission_templates("scripts/settings/mission/templates/dust_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/entertainment_mission_templates")
+_extract_mission_templates("scripts/settings/mission/templates/operations_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/hub_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/onboarding_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/prologue_mission_templates")

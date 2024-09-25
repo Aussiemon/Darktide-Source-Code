@@ -50,13 +50,14 @@ ActionActivateSpecial.fixed_update = function (self, dt, t, time_in_action)
 			self._pre_activation_particle_id = nil
 		end
 
-		self:_set_weapon_special(true, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
 
 		local weapon_special_tweak_data = self._weapon_special_tweak_data
 		local allow_reactivation_while_active = weapon_special_tweak_data and weapon_special_tweak_data.allow_reactivation_while_active
+		local clear_charges_on_activation = weapon_special_tweak_data and weapon_special_tweak_data.clear_charges_on_activation
 
-		if allow_reactivation_while_active then
-			self._inventory_slot_component.num_special_activations = 0
+		if allow_reactivation_while_active or clear_charges_on_activation then
+			self._inventory_slot_component.num_special_charges = 0
 		end
 	end
 end

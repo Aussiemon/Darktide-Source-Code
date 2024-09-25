@@ -2,6 +2,7 @@
 
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local HoloSightTemplates = require("scripts/settings/equipment/holo_sight_templates")
 local HoloSight = class("HoloSight")
 local _slot_components, _update_glass_visibility
@@ -149,5 +150,7 @@ function _update_glass_visibility(components, is_visible)
 		holo_sight.component:set_glass_visibility(is_visible)
 	end
 end
+
+implements(HoloSight, WieldableSlotScriptInterface)
 
 return HoloSight

@@ -2549,7 +2549,7 @@ functions.reset_narrative_event = {
 	options_function = _list_narrative_event_names,
 }
 
-local function _unlock_tracked_achivements()
+local function _unlock_tracked_achievements()
 	local favorite_achievements = Managers.save:account_data().favorite_achievements
 
 	for i = 1, #favorite_achievements do
@@ -2566,7 +2566,7 @@ end
 functions.unlock_tracked_achievements = {
 	category = "Progression",
 	name = "Unlock tracked achievements",
-	on_activated = _unlock_tracked_achivements,
+	on_activated = _unlock_tracked_achievements,
 }
 
 local function _delete_all_achievements()
@@ -2602,12 +2602,15 @@ local function _get_all_view_names()
 
 	for view_name, view in pairs(Views) do
 		local testify_flags = view.testify_flags
+		local should_include = testify_flags and testify_flags.ui_views
 
-		if testify_flags == nil or testify_flags.ui_views == nil or testify_flags.ui_views then
+		if should_include == true or type(should_include) == "function" and should_include() then
 			filtered_views[i] = view_name
 			i = i + 1
 		end
 	end
+
+	table.sort(filtered_views)
 
 	return filtered_views
 end

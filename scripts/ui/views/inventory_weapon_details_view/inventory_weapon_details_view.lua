@@ -11,6 +11,7 @@ local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view
 local WeaponStats = require("scripts/utilities/weapon_stats")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local InputDevice = require("scripts/managers/input/input_device")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementWeaponInfo = require("scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info")
 local ViewElementWeaponActionsExtended = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions_extended")
 local ViewElementWeaponPatterns = require("scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns")
@@ -320,9 +321,6 @@ InventoryWeaponDetailsView._preview_item = function (self, item)
 			self:_update_attack_patterns_position()
 		end
 	end
-
-	self._widgets_by_name.background.style.rarity_background.color = table.clone(ItemUtils.rarity_color(item))
-	self._widgets_by_name.background.style.rarity_background.color[1] = 70
 end
 
 InventoryWeaponDetailsView._destroy_weapon_preview = function (self)
@@ -339,10 +337,12 @@ InventoryWeaponDetailsView._setup_weapon_preview = function (self)
 	if not self._weapon_preview then
 		local reference_name = "weapon_preview"
 		local layer = 1
+		local context = {
+			draw_background = false,
+			ignore_blur = true,
+		}
 
-		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, {
-			draw_background = true,
-		})
+		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
 		self._weapon_zoom_fraction = 0.95
 
 		self:_update_weapon_preview_viewport()

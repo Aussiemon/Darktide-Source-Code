@@ -100,12 +100,29 @@ ProfileSynchronizerHost.completed_initial_syncs = function (self)
 	table.clear(completed_initial_syncs)
 
 	local initial_syncs = self._initial_syncs
+	local channel_ids = table.keys(initial_syncs)
 
-	for channel_id, initial_peer_syncs in pairs(initial_syncs) do
-		for peer_id, initial_player_syncs in pairs(initial_peer_syncs) do
+	table.sort(channel_ids)
+
+	for channel_id_keys = 1, #channel_ids do
+		local channel_id = channel_ids[channel_id_keys]
+		local initial_peer_syncs = initial_syncs[channel_id]
+		local peer_ids = table.keys(initial_peer_syncs)
+
+		table.sort(peer_ids)
+
+		for peer_id_keys = 1, #peer_ids do
+			local peer_id = peer_ids[peer_id_keys]
+			local initial_player_syncs = initial_peer_syncs[peer_id]
 			local initial_sync_complete = true
+			local player_ids = table.keys(initial_player_syncs)
 
-			for local_player_id, synced in pairs(initial_player_syncs) do
+			table.sort(player_ids)
+
+			for player_id_key = 1, #player_ids do
+				local local_player_id = player_ids[player_id_key]
+				local synced = initial_player_syncs[local_player_id]
+
 				if not synced then
 					initial_sync_complete = false
 				end

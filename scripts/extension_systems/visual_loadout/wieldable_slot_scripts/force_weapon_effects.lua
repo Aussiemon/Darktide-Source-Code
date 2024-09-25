@@ -1,13 +1,12 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_weapon_effects.lua
 
 local Component = require("scripts/utilities/component")
-local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ForceWeaponEffects = class("ForceWeaponEffects")
 local _set_start_time, _set_stop_time, _unit_components
-local sfx_external_properties = {}
+local _sfx_external_properties = {}
 local SPECIAL_ACTIVE_LOOPING_SFX_ALIAS = "weapon_special_loop"
-local SPECIAL_ACTIVE_LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases[SPECIAL_ACTIVE_LOOPING_SFX_ALIAS]
 local SPECIAL_OFF_SOUND_ALIAS = "weapon_special_end"
 local INVENTORY_EVENT_POWER_OFF = "special_disabled"
 local INVENTORY_EVENT_POWER_ON = "special_enabled"
@@ -46,10 +45,6 @@ end
 ForceWeaponEffects.destroy = function (self)
 	PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_POWER_OFF)
 	self:_stop_sfx_loop()
-
-	if self._is_playing and not self._is_husk then
-		self._fx_extension:trigger_gear_wwise_event_with_source(SPECIAL_OFF_SOUND_ALIAS, nil, self._special_active_fx_source_name, true)
-	end
 end
 
 ForceWeaponEffects.wield = function (self)
@@ -58,6 +53,10 @@ end
 
 ForceWeaponEffects.unwield = function (self)
 	self:_stop_sfx_loop()
+
+	if self._is_playing then
+		self:_play_single_sfx(SPECIAL_OFF_SOUND_ALIAS, self._special_active_fx_source_name)
+	end
 
 	local t = World.time(self._world)
 
@@ -77,6 +76,21 @@ ForceWeaponEffects.update_first_person_mode = function (self, first_person_mode)
 	return
 end
 
+ForceWeaponEffects._play_single_sfx = function (self, sound_alias, fx_source_name)
+	local sfx_source_id = self._fx_extension:sound_source(self._special_active_fx_source_name)
+	local resolved, event_name, has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias, _sfx_external_properties)
+
+	if resolved then
+		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+
+		if has_husk_events and should_play_husk_effect then
+			event_name = event_name .. "_husk"
+		end
+
+		WwiseWorld.trigger_resource_event(self._wwise_world, event_name, sfx_source_id)
+	end
+end
+
 ForceWeaponEffects._update_active = function (self)
 	local is_active = self._is_active
 	local special_active = self._inventory_slot_component.special_active
@@ -93,11 +107,7 @@ ForceWeaponEffects._update_active = function (self)
 		_set_start_time(t, self._weapon_material_variables_3p)
 	elseif should_stop then
 		self:_stop_sfx_loop()
-
-		if not self._is_husk then
-			fx_extension:trigger_gear_wwise_event_with_source(SPECIAL_OFF_SOUND_ALIAS, nil, self._special_active_fx_source_name, true)
-		end
-
+		self:_play_single_sfx(SPECIAL_OFF_SOUND_ALIAS, self._special_active_fx_source_name)
 		PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_POWER_OFF)
 		_set_stop_time(t, self._weapon_material_variables_1p)
 		_set_stop_time(t, self._weapon_material_variables_3p)
@@ -119,31 +129,19 @@ ForceWeaponEffects._start_sfx_loop = function (self)
 		return
 	end
 
-	local is_husk = self._is_husk
-	local is_local_unit = self._is_local_unit
 	local wwise_world = self._wwise_world
 	local sfx_source_id = self._fx_extension:sound_source(self._special_active_fx_source_name)
 	local visual_loadout_extension = self._visual_loadout_extension
-	local use_husk_event = is_husk or not is_local_unit
-	local start_config = SPECIAL_ACTIVE_LOOPING_SFX_CONFIG.start
-	local stop_config = SPECIAL_ACTIVE_LOOPING_SFX_CONFIG.stop
-	local start_event_alias = start_config.event_alias
-	local stop_event_alias = stop_config.event_alias
-	local resolved, has_husk_events, event_name
-
-	resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, sfx_external_properties)
+	local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+	local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(SPECIAL_ACTIVE_LOOPING_SFX_ALIAS, should_play_husk_effect, _sfx_external_properties)
 
 	if resolved then
-		event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
-
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
 
 		self._looping_playing_id = new_playing_id
-		resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, sfx_external_properties)
 
-		if resolved then
-			event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
-			self._looping_stop_event_name = event_name
+		if resolved_stop then
+			self._looping_stop_event_name = stop_event_name
 		end
 	end
 end
@@ -200,5 +198,7 @@ function _unit_components(components, attachments)
 		end
 	end
 end
+
+implements(ForceWeaponEffects, WieldableSlotScriptInterface)
 
 return ForceWeaponEffects

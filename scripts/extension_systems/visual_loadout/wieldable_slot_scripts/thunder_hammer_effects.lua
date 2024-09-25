@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/thunder_hammer_effects.lua
 
-local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
-local sfx_external_properties = {}
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
+local _external_properties = {}
 local vfx_external_properties = {}
 local ThunderHammerEffects = class("ThunderHammerEffects")
 local FX_SOURCE_NAME = "_special_active"
-local SPECIAL_ACTIVE_LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases.weapon_special_loop
+local SPECIAL_ACTIVE_LOOPING_SFX_ALIAS = "weapon_special_loop"
 local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
 
 ThunderHammerEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -81,31 +81,19 @@ ThunderHammerEffects._update_active = function (self)
 end
 
 ThunderHammerEffects._start_sfx_loop = function (self)
-	local is_husk = self._is_husk
-	local is_local_unit = self._is_local_unit
 	local wwise_world = self._wwise_world
 	local sfx_source_id = self._fx_extension:sound_source(self._special_active_fx_source_name)
 	local visual_loadout_extension = self._visual_loadout_extension
-	local use_husk_event = is_husk or not is_local_unit
-	local start_config = SPECIAL_ACTIVE_LOOPING_SFX_CONFIG.start
-	local stop_config = SPECIAL_ACTIVE_LOOPING_SFX_CONFIG.stop
-	local start_event_alias = start_config.event_alias
-	local stop_event_alias = stop_config.event_alias
-	local resolved, has_husk_events, event_name
-
-	resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, sfx_external_properties)
+	local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+	local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(SPECIAL_ACTIVE_LOOPING_SFX_ALIAS, should_play_husk_effect, _external_properties)
 
 	if resolved then
-		event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
-
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
 
 		self._looping_playing_id = new_playing_id
-		resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, sfx_external_properties)
 
-		if resolved then
-			event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
-			self._looping_stop_event_name = event_name
+		if resolved_stop then
+			self._looping_stop_event_name = stop_event_name
 		end
 	end
 end
@@ -153,5 +141,7 @@ ThunderHammerEffects._stop_vfx_loop = function (self, destroy)
 
 	self._looping_effect_id = nil
 end
+
+implements(ThunderHammerEffects, WieldableSlotScriptInterface)
 
 return ThunderHammerEffects

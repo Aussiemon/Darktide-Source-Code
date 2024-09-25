@@ -1332,6 +1332,30 @@ local CameraEffectSettings = {
 			octaves = 6,
 			persistance = 1,
 		},
+		train_onboard = {
+			amplitude = 0.68,
+			duration = 5000,
+			fade_in = 2,
+			fade_out = 2,
+			octaves = 12,
+			persistance = 0.5,
+		},
+		train_onboard_bump = {
+			amplitude = 0.4,
+			duration = 0.3,
+			fade_in = 1,
+			fade_out = 1,
+			octaves = 6,
+			persistance = 0.8,
+		},
+		train_brakes = {
+			amplitude = 0.5,
+			duration = 4,
+			fade_in = 0.2,
+			fade_out = 0.7,
+			octaves = 6,
+			persistance = 1,
+		},
 	},
 }
 local swing_impact_shake = {

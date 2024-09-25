@@ -24,7 +24,9 @@ local view_settings = {
 		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
 	},
 	testify_flags = {
-		ui_views = true,
+		ui_views = function ()
+			return table.nested_get(Managers, "achievements", "_initialized")
+		end,
 	},
 }
 

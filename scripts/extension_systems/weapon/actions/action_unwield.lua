@@ -61,13 +61,7 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 	end
 
 	AimAssist.reset_ramp_multiplier(self._aim_assist_ramp_component)
-
-	local weapon_template = self._weapon_template
-	local keep_weapon_special_active_on_unwield = weapon_template.keep_weapon_special_active_on_unwield
-
-	if not keep_weapon_special_active_on_unwield then
-		WeaponSpecial.disable(self._player_unit)
-	end
+	self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "unwield")
 end
 
 ActionUnwield.fixed_update = function (self, dt, t, time_in_action)

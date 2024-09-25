@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/ui/pass_templates/dropdown_pass_templates.lua
 
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local ColorUtilities = require("scripts/utilities/ui/colors")
+local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_templates")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local highlight_size_addition = ListHeaderPassTemplates.highlight_size_addition
 local highlight_color_change_function = ListHeaderPassTemplates.list_highlight_color_change_function
 local list_item_focused_visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function

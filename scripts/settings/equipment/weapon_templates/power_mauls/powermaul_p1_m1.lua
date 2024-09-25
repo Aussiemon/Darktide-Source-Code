@@ -30,6 +30,7 @@ local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_ty
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
+weapon_template.action_inputs.start_attack.buffer_time = 0.4
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 
 local melee_sticky_disallowed_hit_zones = {}
@@ -621,7 +622,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_special_action",
-				chain_time = 0.7,
+				chain_time = 0.6,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1050,6 +1051,7 @@ weapon_template.actions = {
 		},
 	},
 	action_right_light_pushfollow = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_left_up",
 		anim_event_3p = "attack_swing_up_left",
@@ -1057,13 +1059,12 @@ weapon_template.actions = {
 		damage_window_end = 0.3,
 		damage_window_start = 0.2,
 		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "attack_hit",
+		first_person_hit_stop_anim = "hit_stop",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		num_frames_before_process = 0,
 		range_mod = 1.25,
-		sprint_requires_press_to_interrupt = "true",
 		total_time = 1.5,
 		weapon_handling_template = "time_scale_0_8",
 		action_movement_curve = {
@@ -1106,7 +1107,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.3,
+				chain_time = 0.34,
 			},
 			block = {
 				action_name = "action_block",
@@ -1265,15 +1266,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 1.3,
+				chain_time = 1,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1.5,
+				chain_time = 0.8,
 			},
 			special_action = {
 				action_name = "action_special_action",
-				chain_time = 1.6,
+				chain_time = 0.8,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1296,6 +1297,10 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.axe_uppercut,
 		damage_type = damage_types.blunt_shock,
 		stat_buff_keywords = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
+		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
 		},
@@ -1324,8 +1329,10 @@ weapon_template.weapon_box = {
 	0.65,
 	0.15,
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
@@ -1699,6 +1706,24 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_special_attack_powermaul_p1m1_desc",
 		display_name = "loc_weapon_special_special_attack",
 		type = "special_attack",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "smiter",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "tank",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "special_attack",
+		icon = "special_attack",
 	},
 }
 weapon_template.special_actions = {

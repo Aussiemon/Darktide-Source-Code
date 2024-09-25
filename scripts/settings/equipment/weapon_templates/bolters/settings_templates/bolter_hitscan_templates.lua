@@ -25,6 +25,19 @@ hitscan_templates.default_bolter_boltshell = {
 			stop_explosion_template = ExplosionTemplates.bolt_shell_stop,
 		},
 	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.1,
+			test = "sphere",
+		},
+	},
 }
 
 return {

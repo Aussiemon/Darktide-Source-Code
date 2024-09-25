@@ -1181,7 +1181,6 @@ weapon_template.actions = {
 	action_block = {
 		anim_end_event = "parry_finished",
 		anim_event = "parry_pose",
-		block_vfx_name = "content/fx/particles/weapons/swords/forcesword/psyker_block",
 		kind = "block",
 		minimum_hold_time = 0.3,
 		start_input = "block",
@@ -1312,7 +1311,7 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.warp,
 		fx = {
-			fx_source = "fx_left_hand",
+			fx_source = "fx_left_hand_offset_fwd",
 			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_parry",
 		},
 	},
@@ -1433,7 +1432,7 @@ weapon_template.actions = {
 		damage_type = damage_types.physical,
 		herding_template = HerdingTemplates.force_push,
 		fx = {
-			fx_source = "fx_left_hand",
+			fx_source = "fx_left_hand_offset_fwd",
 			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push",
 		},
 	},
@@ -1528,14 +1527,16 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/force_sword"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/force_sword"
 weapon_template.weapon_box = base_sweep_box
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpecialWarpChargedAttacks"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 3,
+	keep_active_on_sprint = true,
 }
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
 weapon_template.damage_window_end_sweep_trail_offset = 0.45
@@ -1847,6 +1848,24 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_forcesword_p1_m1_attack_special",
 		type = "activate",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "ninja_fencer",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "smiter",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "activate_warp",
+		icon = "activate",
 	},
 }
 

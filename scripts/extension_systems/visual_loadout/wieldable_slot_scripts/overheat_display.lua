@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display.lua
 
 local Component = require("scripts/utilities/component")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local OverheatDisplay = class("OverheatDisplay")
 
 OverheatDisplay.init = function (self, context, slot, weapon_template, fx_sources)
@@ -61,5 +62,7 @@ end
 OverheatDisplay.destroy = function (self)
 	return
 end
+
+implements(OverheatDisplay, WieldableSlotScriptInterface)
 
 return OverheatDisplay

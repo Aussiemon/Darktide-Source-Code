@@ -4,11 +4,13 @@ local PlayerAbilities = require("scripts/settings/ability/player_abilities/playe
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local talent_settings = TalentSettings.zealot
 local talent_settings_1 = TalentSettings.zealot_1
 local talent_settings_2 = TalentSettings.zealot_2
 local talent_settings_3 = TalentSettings.zealot_3
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
+local proc_events = BuffSettings.proc_events
 local math_round = math.round
 
 math_round = math_round or function (value)
@@ -300,8 +302,31 @@ local archetype_talents = {
 				ability = PlayerAbilities.zealot_invisibility,
 			},
 		},
+		zealot_bleed_generates_throwing_knife = {
+			description = "loc_talent_zealot_bleed_generates_throwing_knife_desc",
+			display_name = "loc_talent_zealot_bleed_generates_throwing_knife",
+			icon = "",
+			name = "Bleed Generates Knives",
+			format_values = {
+				chance = {
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "zealot_throwing_knife_on_bleed_kill",
+						find_value_type = "buff_template",
+						path = {
+							"proc_events",
+							proc_events.on_minion_death,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_throwing_knife_on_bleed_kill",
+				identifier = "zealot_throwing_knife_on_bleed_kill",
+			},
+		},
 		zealot_crits_grant_cd = {
-			description = "loc_talent_zealot_cooldown_on_melee_crits_desc",
+			description = "loc_talent_maniac_cooldown_on_melee_crits_buff_desc",
 			display_name = "loc_talent_maniac_cooldown_on_melee_crits",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_5_2",
 			name = "Melee Crits grants Cooldown",
@@ -309,6 +334,15 @@ local archetype_talents = {
 				time = {
 					format_type = "value",
 					value = talent_settings_2.combat_ability_1.time,
+				},
+				duration = {
+					format_type = "number",
+					value = 4,
+				},
+				cooldown_regen = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.crits_grants_cd.cooldown_regen,
 				},
 			},
 			passive = {
@@ -755,6 +789,7 @@ local archetype_talents = {
 				special_rule_name = special_rules.zealot_always_at_least_one_coherency,
 			},
 			coherency = {
+				buff_template_name = "zealot_always_in_coherency_buff",
 				identifier = "zealot_aura",
 				priority = 2,
 			},
@@ -771,6 +806,11 @@ local archetype_talents = {
 			special_rule = {
 				identifier = "zealot_always_at_least_two_coherency",
 				special_rule_name = special_rules.zealot_always_at_least_two_coherency,
+			},
+			coherency = {
+				buff_template_name = "zealot_always_in_coherency_buff",
+				identifier = "zealot_aura",
+				priority = 2,
 			},
 		},
 		zealot_martyrdom = {
@@ -965,7 +1005,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_fanatic_rage_toughness_on_max = {
-			description = "loc_talent_zealot_fanatic_rage_toughness_desc",
+			description = "loc_talent_zealot_fanatic_rage_toughness_reduction_desc",
 			display_name = "loc_talent_zealot_fanatic_rage_toughness",
 			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_5_3",
 			name = "Fanatic Rage restores toughness on full stacks",
@@ -977,6 +1017,21 @@ local archetype_talents = {
 				toughness = {
 					format_type = "percentage",
 					value = talent_settings_3.passive_1.toughness_on_max_stacks,
+				},
+				toughness_damage_reduction = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "zealot_fanatic_rage",
+						find_value_type = "buff_template",
+						path = {
+							"conditional_stat_buffs",
+							stat_buffs.toughness_damage_taken_multiplier,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
 				},
 			},
 			special_rule = {

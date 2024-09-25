@@ -96,6 +96,7 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	self.combined_hash = Application.make_hash(self.network_hash, trunk_revision, project_hash, argument_hash, stripping_hash)
 
 	Log.info("ConnectionManager", "Combined hash: %s", tostring(self.combined_hash))
+	Log.info("ConnectionManager", "network hash: %s, svn revision: %s, project hash: %s, argument hash: %s, stripping hash: %s", tostring(self.network_hash), tostring(trunk_revision), tostring(project_hash), tostring(argument_hash), tostring(stripping_hash))
 
 	self._event_delegate = event_delegate
 	self._approve_channel_delegate = approve_channel_delegate

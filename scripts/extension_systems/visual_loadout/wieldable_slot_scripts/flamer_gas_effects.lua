@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flamer_gas_effects.lua
 
 local Action = require("scripts/utilities/weapon/action")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local FlamerGasEffects = class("FlamerGasEffects")
 
 FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -288,5 +289,7 @@ FlamerGasEffects._destroy_effects = function (self, allow_move, rotation)
 		self._source_position = nil
 	end
 end
+
+implements(FlamerGasEffects, WieldableSlotScriptInterface)
 
 return FlamerGasEffects

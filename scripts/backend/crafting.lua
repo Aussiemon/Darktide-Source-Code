@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/backend/crafting.lua
 
-local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local TRAIT_STICKER_BOOK_ENUM = CraftingSettings.trait_sticker_book_enum
@@ -29,6 +29,10 @@ local function _send_crafting_operation(request_body)
 
 		return data.body
 	end)
+end
+
+Crafting.refresh_all_costs = function (self)
+	return Promise.all(self:refresh_crafting_costs(), self:refresh_traits_mastery_costs(), self:refresh_sacrifice_mastery_costs())
 end
 
 Crafting.refresh_crafting_costs = function (self)
@@ -154,6 +158,46 @@ Crafting.fuse_traits = function (self, character_id, trait_ids)
 		traitIds = trait_ids,
 		characterId = character_id,
 	})
+end
+
+Crafting.add_weapon_expertise = function (self, gear_id, added_expertise)
+	return _send_crafting_operation({
+		op = "addExpertise",
+		gearId = gear_id,
+		newLevel = added_expertise,
+	})
+end
+
+Crafting.extract_weapon_mastery = function (self, track_id, gear_ids)
+	return _send_crafting_operation({
+		op = "extractMastery",
+		gearIds = gear_ids,
+		trackId = track_id,
+	})
+end
+
+Crafting.refresh_traits_mastery_costs = function (self)
+	return Managers.backend:title_request(BackendUtilities.url_builder("/data/crafting/costs/traits/purchase"):to_string()):next(function (data)
+		self._traits_mastery_costs = data.body or {}
+
+		return self._traits_mastery_costs
+	end)
+end
+
+Crafting.traits_mastery_costs = function (self)
+	return self._traits_mastery_costs
+end
+
+Crafting.refresh_sacrifice_mastery_costs = function (self)
+	return Managers.backend:title_request(BackendUtilities.url_builder("/data/crafting/settings/mastery"):to_string()):next(function (data)
+		self._sacrifice_mastery_costs = data.body and data.body.extractMastery or {}
+
+		return self._sacrifice_mastery_costs
+	end)
+end
+
+Crafting.sacrifice_mastery_costs = function (self)
+	return self._sacrifice_mastery_costs
 end
 
 return Crafting

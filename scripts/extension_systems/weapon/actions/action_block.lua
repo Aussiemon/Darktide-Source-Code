@@ -2,9 +2,8 @@
 
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
-local ForceLookRotation = require("scripts/extension_systems/first_person/utilities/force_look_rotation")
+local Block = require("scripts/utilities/attack/block")
 local ActionBlock = class("ActionBlock", "ActionWeaponBase")
-local PI = math.pi
 
 ActionBlock.init = function (self, action_context, ...)
 	ActionBlock.super.init(self, action_context, ...)
@@ -19,10 +18,7 @@ end
 ActionBlock.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionBlock.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	self._block_component.is_blocking = true
-	self._block_component.has_blocked = false
-	self._block_component.is_perfect_blocking = true
-	self._perfect_block_duration = 0.3
+	self._perfect_block_ends_at_t = Block.start_block_action(t, self._block_component)
 
 	if action_settings.can_jump ~= nil then
 		self._movement_state_component.can_jump = action_settings.can_jump
@@ -44,7 +40,7 @@ ActionBlock.start = function (self, action_settings, t, time_scale, action_start
 	end
 
 	if action_settings.weapon_special then
-		self:_set_weapon_special(true, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
 	end
 end
 
@@ -61,20 +57,11 @@ ActionBlock.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
-	local action_settings = self._action_settings
-
 	if action_settings.disallow_dodging then
 		self._dodge_character_state_component.cooldown = t + 0.1
 	end
 
-	if self._perfect_block_duration then
-		self._perfect_block_duration = self._perfect_block_duration - dt
-
-		if self._perfect_block_duration <= 0 then
-			self._block_component.is_perfect_blocking = false
-			self._perfect_block_duration = nil
-		end
-	end
+	Block.update_perfect_blocking(t, self._perfect_block_ends_at_t, self._block_component)
 end
 
 ActionBlock.running_action_state = function (self, t, time_in_action)
@@ -89,8 +76,9 @@ ActionBlock.finish = function (self, reason, data, t, time_in_action)
 	ActionBlock.super.finish(self, reason, data, t)
 
 	local will_do_push = reason == "new_interrupting_action" and data.new_action_kind == "push"
+	local will_do_sweep = reason == "new_interrupting_action" and data.new_action_kind == "sweep"
 
-	if not will_do_push then
+	if not will_do_push and not will_do_sweep then
 		self._block_component.is_blocking = false
 		self._block_component.has_blocked = false
 	end
@@ -112,7 +100,7 @@ ActionBlock.finish = function (self, reason, data, t, time_in_action)
 	end
 
 	if action_settings.weapon_special then
-		self:_set_weapon_special(false, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "manual_toggle")
 	end
 
 	if action_settings.disallow_dodging then

@@ -1,37 +1,30 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_weapon_block_effects.lua
 
 local Action = require("scripts/utilities/weapon/action")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ForceWeaponBlockEffects = class("ForceWeaponBlockEffects")
-local BLOCK_FX_SOURCE_NAME = "_block"
-local BLOCK_LOOP_SOUND_ALIAS = "block_loop"
+local FX_SOURCE_NAME = "fx_left_hand_offset_fwd"
+local LOOPING_SFX_ALIAS = "force_weapon_block_loop"
+local LOOPING_VFX_ALIAS = "force_weapon_block"
+local _sfx_external_properties = {}
+local _vfx_external_properties = {}
 
 ForceWeaponBlockEffects.init = function (self, context, slot, weapon_template, fx_sources)
-	local is_husk = context.is_husk
-
 	self._world = context.world
+	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions
-	self._is_husk = is_husk
+	self._is_husk = context.is_husk
+	self._is_local_unit = context.is_local_unit
 
 	local owner_unit = context.owner_unit
-	local first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
-
-	self._first_person_unit = first_person_extension:first_person_unit()
-
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
-	self._block_component = unit_data_extension:read_component("block")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
-
-	if not is_husk then
-		local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(BLOCK_LOOP_SOUND_ALIAS)
-
-		self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
-	end
-
-	self._block_fx_source_name = fx_sources[BLOCK_FX_SOURCE_NAME]
-	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
-	self._block_effect_id = nil
+	self._fx_extension = context.fx_extension
+	self._visual_loadout_extension = context.visual_loadout_extension
+	self._looping_playing_id = nil
+	self._looping_stop_event_name = nil
+	self._looping_effect_id = nil
 end
 
 ForceWeaponBlockEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -39,11 +32,8 @@ ForceWeaponBlockEffects.fixed_update = function (self, unit, dt, t, frame)
 end
 
 ForceWeaponBlockEffects.update = function (self, unit, dt, t)
-	if not self._is_husk then
-		self:_update_sound_effects()
-	end
-
-	self:_update_block_effects(dt)
+	self:_update_sfx()
+	self:_update_vfx()
 end
 
 ForceWeaponBlockEffects.update_first_person_mode = function (self, first_person_mode)
@@ -55,67 +45,90 @@ ForceWeaponBlockEffects.wield = function (self)
 end
 
 ForceWeaponBlockEffects.unwield = function (self)
-	if not self._is_husk then
-		local looping_sound_component = self._looping_sound_component
-		local fx_extension = self._fx_extension
-
-		if looping_sound_component and looping_sound_component.is_playing then
-			fx_extension:stop_looping_wwise_event(BLOCK_LOOP_SOUND_ALIAS)
-		end
-	end
-
-	self:_destroy_effects()
+	self:_stop_sfx()
+	self:_destroy_vfx()
 end
 
 ForceWeaponBlockEffects.destroy = function (self)
-	self:_destroy_effects()
+	self:_stop_sfx()
+	self:_destroy_vfx()
 end
 
-ForceWeaponBlockEffects._update_sound_effects = function (self)
-	local block_component = self._block_component
-	local looping_sound_component = self._looping_sound_component
-	local fx_extension = self._fx_extension
+ForceWeaponBlockEffects._update_sfx = function (self)
+	local visual_loadout_extension = self._visual_loadout_extension
+	local wwise_world = self._wwise_world
+	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
+	local action_kind = action_settings and action_settings.kind
+	local blocking = action_kind == "block"
 
-	if not looping_sound_component.is_playing and block_component.is_blocking then
-		fx_extension:trigger_looping_wwise_event(BLOCK_LOOP_SOUND_ALIAS, self._block_fx_source_name)
-	elseif looping_sound_component.is_playing and not block_component.is_blocking then
-		fx_extension:stop_looping_wwise_event(BLOCK_LOOP_SOUND_ALIAS)
+	if blocking and not self._looping_playing_id then
+		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+		local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(LOOPING_SFX_ALIAS, should_play_husk_effect, _sfx_external_properties)
+
+		if resolved then
+			local sfx_source_id = self._fx_extension:sound_source(FX_SOURCE_NAME)
+			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
+
+			self._looping_playing_id = playing_id
+
+			if resolved_stop then
+				self._looping_stop_event_name = stop_event_name
+			end
+		end
+	elseif not blocking and self._looping_playing_id then
+		self:_stop_sfx()
 	end
 end
 
-ForceWeaponBlockEffects._update_block_effects = function (self, dt)
+ForceWeaponBlockEffects._update_vfx = function (self)
 	local world = self._world
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
-	local block_vfx_name = action_settings and action_settings.block_vfx_name
+	local action_kind = action_settings and action_settings.kind
+	local blocking = action_kind == "block"
 
-	if not block_vfx_name then
-		self:_destroy_effects()
+	if blocking and not self._looping_effect_id then
+		local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(LOOPING_VFX_ALIAS, _vfx_external_properties)
 
-		return
-	end
+		if resolved then
+			local effect_id = World.create_particles(world, effect_name, Vector3.zero())
+			local vfx_unit, vfx_node = self._fx_extension:vfx_spawner_unit_and_node(FX_SOURCE_NAME)
 
-	if block_vfx_name and not self._block_effect_id then
-		local effect_id = World.create_particles(world, block_vfx_name, Vector3.zero())
-		local vfx_unit, vfx_node = self._fx_extension:vfx_spawner_unit_and_node("fx_left_hand")
+			World.link_particles(world, effect_id, vfx_unit, vfx_node, Matrix4x4.identity(), "stop")
 
-		World.link_particles(world, effect_id, vfx_unit, vfx_node, Matrix4x4.identity(), "stop")
-
-		self._block_effect_id = effect_id
-	elseif not block_vfx_name and self._block_effect_id then
-		self:_destroy_effects()
+			self._looping_effect_id = effect_id
+		end
+	elseif not blocking and self._looping_effect_id then
+		self:_destroy_vfx()
 	end
 end
 
-ForceWeaponBlockEffects._destroy_effects = function (self)
-	local block_effect_id = self._block_effect_id
+ForceWeaponBlockEffects._destroy_vfx = function (self)
+	local block_effect_id = self._looping_effect_id
 
 	if block_effect_id then
 		local world = self._world
 
 		World.destroy_particles(world, block_effect_id)
 
-		self._block_effect_id = nil
+		self._looping_effect_id = nil
 	end
 end
+
+ForceWeaponBlockEffects._stop_sfx = function (self)
+	local looping_playing_id = self._looping_playing_id
+	local looping_stop_event_name = self._looping_stop_event_name
+	local sfx_source_id = self._fx_extension:sound_source(FX_SOURCE_NAME)
+
+	if looping_stop_event_name and sfx_source_id then
+		WwiseWorld.trigger_resource_event(self._wwise_world, looping_stop_event_name, sfx_source_id)
+	else
+		WwiseWorld.stop_event(self._wwise_world, looping_playing_id)
+	end
+
+	self._looping_playing_id = nil
+	self._looping_stop_event_name = nil
+end
+
+implements(ForceWeaponBlockEffects, WieldableSlotScriptInterface)
 
 return ForceWeaponBlockEffects

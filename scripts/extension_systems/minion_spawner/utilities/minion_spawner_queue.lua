@@ -76,31 +76,4 @@ MinionSpawnerQueue.is_empty = function (self)
 	return #self._queue == 0
 end
 
-local debug_info = {}
-
-MinionSpawnerQueue.get_debug_info = function (self)
-	table.clear(debug_info)
-
-	local queue = self._queue
-
-	for i = 1, #queue do
-		local item = queue[i]
-		local queue_id = item.queue_id
-		local breed_list = item.breed_list
-		local spawn_data = item.spawn_data
-
-		for j = item.breed_list_index, item.breed_list_size do
-			local breed = breed_list[j]
-
-			debug_info[#debug_info + 1] = {
-				queue_id = queue_id,
-				breed = breed,
-				spawn_data = spawn_data,
-			}
-		end
-	end
-
-	return debug_info
-end
-
 return MinionSpawnerQueue

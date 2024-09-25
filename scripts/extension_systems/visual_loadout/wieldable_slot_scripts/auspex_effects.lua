@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_effects.lua
 
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AuspexEffects = class("AuspexEffects")
 local LOOPING_SOUND_ALIAS = "sfx_minigame_loop"
 local FX_SOURCE_NAME = "_speaker"
@@ -71,5 +72,7 @@ end
 AuspexEffects.update_first_person_mode = function (self, first_person_mode)
 	return
 end
+
+implements(AuspexEffects, WieldableSlotScriptInterface)
 
 return AuspexEffects

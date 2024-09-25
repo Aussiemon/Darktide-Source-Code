@@ -131,6 +131,7 @@ NetworkStoryManager._create_story = function (self, story_name, story_level)
 		story_definition.id = story_id
 		story_definition.length = length
 		story_definition.debug_description = story_name
+		story_definition.loop_mode = Storyteller.NONE
 
 		self:_change_state(story_definition, self.NETWORK_STORY_STATES.pause_at_start, story_id)
 
@@ -148,7 +149,7 @@ NetworkStoryManager.unregister_story = function (self, story_name, story_level)
 	self._storyteller:stop(story.id)
 end
 
-NetworkStoryManager.play_story = function (self, story_name, story_level, speed)
+NetworkStoryManager.play_story = function (self, story_name, story_level, speed, loop_mode)
 	speed = speed or 1
 
 	if self._is_server then
@@ -169,15 +170,45 @@ NetworkStoryManager.play_story = function (self, story_name, story_level, speed)
 				self:_change_state(story, self.NETWORK_STORY_STATES.playing)
 			end
 
+			if loop_mode then
+				self._storyteller:set_loop_mode(story_id, loop_mode)
+
+				story.loop_mode = loop_mode
+			end
+
 			local time = self._storyteller:time(story_id)
 
-			Managers.state.game_session:send_rpc_clients("rpc_network_story_sync", story.level_id, story_name, speed, time)
+			Managers.state.game_session:send_rpc_clients("rpc_network_story_sync", story.level_id, story_name, story.loop_mode, speed, time)
 
 			return story_id
 		end
 	end
 
 	return -1
+end
+
+NetworkStoryManager.set_story_loop_mode = function (self, story_name, story_level, loop_mode)
+	if self._is_server then
+		local story = self._levels[story_level][story_name]
+
+		if self._storyteller and story then
+			local story_id = story.id
+
+			if loop_mode ~= story.loop_mode then
+				return story_id
+			end
+
+			self._storyteller:set_loop_mode(story_id, loop_mode)
+
+			story.loop_mode = loop_mode
+
+			local time = self._storyteller:time(story_id)
+
+			Managers.state.game_session:send_rpc_clients("rpc_network_story_sync", story.level_id, story_name, loop_mode, story.speed, time)
+
+			return story_id
+		end
+	end
 end
 
 NetworkStoryManager.reset_story = function (self, story_name, story_level)
@@ -241,7 +272,7 @@ NetworkStoryManager.get_story_id = function (self, story_name, story_level)
 	return -1
 end
 
-NetworkStoryManager.rpc_network_story_sync = function (self, channel_id, level_id, story_name, story_speed, story_time)
+NetworkStoryManager.rpc_network_story_sync = function (self, channel_id, level_id, story_name, loop_mode, story_speed, story_time)
 	local story_level = ScriptWorld.level_from_id(self._world, level_id)
 	local story = self._levels[story_level][story_name]
 
@@ -251,12 +282,14 @@ NetworkStoryManager.rpc_network_story_sync = function (self, channel_id, level_i
 
 	self._storyteller:set_time(story.id, story_time)
 	self._storyteller:set_speed(story.id, story_speed)
+	self._storyteller:set_loop_mode(story.id, loop_mode)
 
 	if story_speed ~= 0 then
 		self:_change_state(story, self.NETWORK_STORY_STATES.playing)
 	end
 
 	story.speed = story_speed
+	story.loop_mode = loop_mode
 end
 
 NetworkStoryManager.rpc_network_story_set_position_level = function (self, channel_id, level_id, unit_id, is_level_unit)
@@ -280,7 +313,7 @@ NetworkStoryManager._sync_stories = function (self, peer, channel_id)
 
 				story_time = math.clamp(story_time, min_story_time, max_story_time)
 
-				RPC.rpc_network_story_sync(channel_id, story.level_id, story_name, story.speed, story_time)
+				RPC.rpc_network_story_sync(channel_id, story.level_id, story_name, story.loop_mode, story.speed, story_time)
 			end
 		end
 	end

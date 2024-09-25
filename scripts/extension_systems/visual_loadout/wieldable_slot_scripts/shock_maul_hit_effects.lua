@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shock_maul_hit_effects.lua
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ShockMaulHitEffects = class("ShockMaulHitEffects")
 local external_properties = {}
 local BURST_PARTICLE_ALIAS = "vfx_weapon_special_start"
@@ -192,5 +193,7 @@ ShockMaulHitEffects._stop_sound = function (self)
 
 	self._sound_id = nil
 end
+
+implements(ShockMaulHitEffects, WieldableSlotScriptInterface)
 
 return ShockMaulHitEffects

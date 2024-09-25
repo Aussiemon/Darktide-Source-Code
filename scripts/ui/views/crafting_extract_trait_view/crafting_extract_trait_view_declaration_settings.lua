@@ -9,7 +9,7 @@ local view_settings = {
 	path = "scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view",
 	state_bound = true,
 	levels = {
-		"content/levels/ui/crafting_view/crafting_view",
+		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",
 	},
 	testify_flags = {
 		ui_views = false,

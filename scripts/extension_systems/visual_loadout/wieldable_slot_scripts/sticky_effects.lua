@@ -3,8 +3,8 @@
 local Action = require("scripts/utilities/weapon/action")
 local Armor = require("scripts/utilities/attack/armor")
 local HitZone = require("scripts/utilities/attack/hit_zone")
-local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local StickyEffects = class("StickyEffects")
 local STICKYNESS_SFX_LOOP_ALIAS = "melee_sticky_loop"
 local STICKYNESS_VFX_LOOP_ALIAS = "melee_sticky_loop"
@@ -74,7 +74,7 @@ StickyEffects.update_first_person_mode = function (self, first_person_mode)
 	return
 end
 
-local external_properties = {
+local _external_properties = {
 	armor_type = "n/a",
 }
 
@@ -93,60 +93,38 @@ StickyEffects._start_stickyness = function (self, t)
 
 	if sticky_armor_type and self._sticky_armor_type ~= sticky_armor_type then
 		local visual_loadout_extension = self._visual_loadout_extension
-		local sfx_loop_alias = STICKYNESS_SFX_LOOP_ALIAS
+		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+		local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(STICKYNESS_SFX_LOOP_ALIAS, should_play_husk_effect, _external_properties)
 
-		if sfx_loop_alias then
-			local is_husk = self._is_husk
-			local is_local_unit = self._is_local_unit
-			local sound_config = PlayerCharacterLoopingSoundAliases[sfx_loop_alias]
-			local start_config = sound_config.start
-			local start_event_alias = start_config.event_alias
-			local resolved, has_husk_events, start_event_name, stop_event_name
+		if resolved then
+			local wwise_world = self._wwise_world
+			local sticky_fx_source_name = self._sticky_fx_source_name
+			local source_id = self._fx_extension:sound_source(sticky_fx_source_name)
 
-			resolved, start_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, external_properties)
+			WwiseWorld.set_switch(self._wwise_world, "armor_types", sticky_armor_type, source_id)
 
-			if resolved then
-				local wwise_world = self._wwise_world
-				local sticky_fx_source_name = self._sticky_fx_source_name
-				local source_id = self._fx_extension:sound_source(sticky_fx_source_name)
+			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
 
-				WwiseWorld.set_switch(self._wwise_world, "armor_types", sticky_armor_type, source_id)
+			self._looping_playing_id = playing_id
 
-				start_event_name = (is_husk or not is_local_unit) and has_husk_events and start_event_name .. "_husk" or start_event_name
-
-				local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, source_id)
-
-				self._looping_playing_id = playing_id
-
-				local stop_config = sound_config.stop
-				local stop_event_alias = stop_config.event_alias
-
-				resolved, stop_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, external_properties)
-
-				if resolved then
-					stop_event_name = (is_husk or not is_local_unit) and has_husk_events and stop_event_name .. "_husk" or stop_event_name
-					self._stop_event_name = stop_event_name
-				end
+			if resolved_stop then
+				self._stop_event_name = stop_event_name
 			end
 		end
 
-		local vfx_loop_alias = STICKYNESS_VFX_LOOP_ALIAS
+		local world = self._world
+		local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
 
-		if vfx_loop_alias then
-			local world = self._world
-			local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
+		_external_properties.armor_type = _sticky_armor_type(action_sweep_component)
 
-			external_properties.armor_type = _sticky_armor_type(action_sweep_component)
+		local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(STICKYNESS_VFX_LOOP_ALIAS, _external_properties)
 
-			local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(vfx_loop_alias, external_properties)
+		if resolved then
+			local effect_id = World.create_particles(world, effect_name, Vector3.zero())
 
-			if resolved then
-				local effect_id = World.create_particles(world, effect_name, Vector3.zero())
+			World.link_particles(world, effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 
-				World.link_particles(world, effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
-
-				self._looping_effect_id = effect_id
-			end
+			self._looping_effect_id = effect_id
 		end
 	end
 
@@ -206,5 +184,7 @@ function _sticky_armor_type(action_sweep_component)
 		return sticky_armor_type
 	end
 end
+
+implements(StickyEffects, WieldableSlotScriptInterface)
 
 return StickyEffects

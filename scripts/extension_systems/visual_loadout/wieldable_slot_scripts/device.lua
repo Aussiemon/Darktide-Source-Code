@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/device.lua
 
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local Device = class("Device")
 local HOLO_SCREEN_VISIBILITY_GROUP = "display_solid"
 
@@ -84,5 +85,7 @@ end
 Device.destroy = function (self)
 	return
 end
+
+implements(Device, WieldableSlotScriptInterface)
 
 return Device

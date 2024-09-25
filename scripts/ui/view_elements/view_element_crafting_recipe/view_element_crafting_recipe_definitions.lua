@@ -104,6 +104,7 @@ local scenegraph_definition = {
 		},
 	},
 }
+local continue_hold_button_pass_template = table.clone(ButtonPassTemplates.terminal_button_hold_small)
 local continue_button_pass_template = table.clone(ButtonPassTemplates.terminal_button)
 
 continue_button_pass_template[#continue_button_pass_template + 1] = {
@@ -288,6 +289,13 @@ local widget_definitions = {
 			},
 		},
 	}, "continue_button_background"),
+	continue_button_hold = UIWidget.create_definition(continue_hold_button_pass_template, "continue_button", {
+		gamepad_action = "hotkey_menu_special_2",
+		visible = false,
+		hotspot = {
+			on_pressed_sound = UISoundEvents.default_click,
+		},
+	}),
 }
 local cost_text_font_style = table.clone(UIFontSettings.currency_title)
 

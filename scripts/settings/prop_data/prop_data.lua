@@ -18,5 +18,6 @@ _create_prop_data_entry("scripts/settings/prop_data/props/hazard_prop_prop_data"
 _create_prop_data_entry("scripts/settings/prop_data/props/hazard_sphere_prop_data")
 _create_prop_data_entry("scripts/settings/prop_data/props/ice_chunk_prop_data")
 _create_prop_data_entry("scripts/settings/prop_data/props/icicle_prop_data")
+_create_prop_data_entry("scripts/settings/prop_data/props/train_cogitator_prop_data")
 
 return settings("PropData", prop_data)

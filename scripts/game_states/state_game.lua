@@ -134,6 +134,19 @@ StateGame.on_enter = function (self, parent, params)
 		Managers.wwise_game_sync:set_game_state_machine(self._sm)
 	end
 
+	local app_type = "host"
+
+	if Managers.connection:is_dedicated_mission_server() then
+		app_type = "mission_server"
+	elseif Managers.connection:is_dedicated_hub_server() then
+		app_type = "hub_server"
+	elseif Managers.connection:is_client() then
+		app_type = "client"
+	end
+
+	local program_name = string.format("darktide-%s-%s", app_type, tostring(APPLICATION_SETTINGS.content_revision))
+
+	Profiler.set_program_name(program_name)
 	Managers.event:register(self, "on_suspend", "_on_suspend")
 end
 

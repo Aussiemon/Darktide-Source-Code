@@ -46,6 +46,8 @@ AchievementsManager.init = function (self, is_client, event_delegate, use_batche
 		self._track_claim_status = RewardClaimStates.idle
 
 		Managers.event:register(self, "event_update_reward_claim_state", "update_reward_claim_state")
+		Managers.event:register(self, "backend_achievement_complete", "_backend_achievement_complete")
+		Managers.event:register(self, "backend_statistic_update", "_backend_achievement_progress")
 	end
 end
 
@@ -67,6 +69,8 @@ AchievementsManager.destroy = function (self)
 	if self._is_client then
 		self._event_delegate:unregister_events(unpack(CLIENT_RPCS))
 		Managers.event:unregister(self, "event_update_reward_claim_state")
+		Managers.event:unregister(self, "backend_achievement_complete")
+		Managers.event:unregister(self, "backend_statistic_update")
 	end
 end
 
@@ -684,7 +688,7 @@ AchievementsManager._fetch_penance_track_account_state = function (self)
 
 	return Promise.all(unpack(promises)):next(function (responses)
 		local track_state, track_data = unpack(responses)
-		local state = track_state.state
+		local state = track_state and track_state.state
 		local total_tiers = #track_data.tiers
 
 		if not state or not total_tiers then
@@ -745,6 +749,16 @@ end
 AchievementsManager.deactive_reward_claim_state = function (self)
 	self._penance_claim_status = RewardClaimStates.deactive
 	self._track_claim_status = RewardClaimStates.deactive
+end
+
+AchievementsManager._backend_achievement_complete = function (self, achievement_id)
+	self:_unlock_achievement(1, achievement_id, nil, true)
+
+	self._penance_claim_status = RewardClaimStates.active
+end
+
+AchievementsManager._backend_achievement_progress = function (self, stat_name, value)
+	Managers.stats:set_user_stat(stat_name, value)
 end
 
 local item_rewards = {}

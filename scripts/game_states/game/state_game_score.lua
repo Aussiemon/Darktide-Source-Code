@@ -1,12 +1,11 @@
 ﻿-- chunkname: @scripts/game_states/game/state_game_score.lua
 
-local StateGameScore = class("StateGameScore")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
-local EndPartyViewSettings = require("scripts/ui/views/end_party_view/end_party_view_settings")
 local MAX_EOR_DURATION = EndViewSettings.max_duration
 local events = {
 	event_state_game_score_continue = "_continue",
 }
+local StateGameScore = class("StateGameScore")
 
 StateGameScore.on_enter = function (self, parent, params, creation_context)
 	self._creation_context = creation_context
@@ -63,9 +62,7 @@ StateGameScore._present_end_of_round_view = function (self)
 end
 
 StateGameScore._get_total_presentation_time = function (self)
-	local duration = 0
-
-	duration = MAX_EOR_DURATION
+	local duration = MAX_EOR_DURATION
 
 	return duration
 end

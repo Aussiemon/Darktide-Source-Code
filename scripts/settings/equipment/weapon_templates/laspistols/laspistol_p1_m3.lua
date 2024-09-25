@@ -724,7 +724,7 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.push_psyker_outer,
 		outer_damage_type = damage_types.physical,
 		fx = {
-			fx_source = "fx_left_hand",
+			fx_source = "fx_left_hand_offset_fwd",
 			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push",
 		},
 		action_condition_func = function (action_settings, condition_func_params, used_input)
@@ -876,8 +876,10 @@ weapon_template.conditional_state_to_action_input = {
 	},
 }
 weapon_template.no_ammo_delay = 0.25
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
@@ -983,6 +985,30 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_push_desc",
 		display_name = "loc_pushing",
 		type = "melee_hand",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "hipfire",
+			icon = "hipfire",
+			sub_icon = "semi_auto",
+			value_func = "primary_attack",
+		},
+		{
+			header = "ads",
+			icon = "ads",
+			sub_icon = "semi_auto",
+			value_func = "secondary_attack",
+		},
+		{
+			header = "ammo",
+			value_func = "ammo",
+		},
+	},
+	weapon_special = {
+		header = "weapon_bash",
+		icon = "melee_hand",
 	},
 }
 weapon_template.explicit_combo = {

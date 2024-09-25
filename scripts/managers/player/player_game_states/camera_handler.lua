@@ -30,8 +30,6 @@ CameraHandler.init = function (self, player, world)
 	self._camera_spawned = false
 	self._mode = CameraModes.first_person
 	self._world = world
-	self._wwise_player_state = "none"
-	self._wwise_suppression_state = "none"
 	self._mood_handler = MoodHandler:new(world, player)
 	self._is_hogtied = nil
 	self._is_being_rescued = nil
@@ -129,7 +127,6 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 		end
 
 		self:_update_follow(switched_target or force_switch)
-		self:_update_wwise_state(new_unit)
 		self:_update_player_mood(switched_target, new_unit)
 	else
 		self:remove_all_moods(old_unit)
@@ -212,7 +209,6 @@ CameraHandler.post_update = function (self, dt, t, player_orientation)
 		if new_unit ~= old_unit then
 			self:_switch_follow_target(new_unit)
 			self:_update_follow(true)
-			self:_update_wwise_state(new_unit)
 		end
 	end
 
@@ -401,39 +397,6 @@ CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 	self._current_camera_tree = wanted_tree
 end
 
-local DEFAULT_WWISE_PLAYER_STATE = "none"
-local DEFAULT_WWISE_SUPPRESSION_STATE = "none"
-
-CameraHandler._update_wwise_state = function (self, unit)
-	local player_state = DEFAULT_WWISE_PLAYER_STATE
-	local suppression_state = DEFAULT_WWISE_SUPPRESSION_STATE
-
-	if unit then
-		local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
-		local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
-
-		if fx_extension then
-			player_state = fx_extension:wwise_player_state()
-		end
-
-		if suppression_extension then
-			suppression_state = suppression_extension:wwise_suppression_state()
-		end
-	end
-
-	if player_state ~= self._wwise_player_state then
-		Wwise.set_state("player_state", player_state)
-
-		self._wwise_player_state = player_state
-	end
-
-	if suppression_state ~= self._wwise_suppression_state then
-		Wwise.set_state("suppression_state", suppression_state)
-
-		self._wwise_suppression_state = suppression_state
-	end
-end
-
 CameraHandler._follow_owner = function (self)
 	local player = self._player
 	local side_system = self._side_system
@@ -577,7 +540,6 @@ CameraHandler.destroy = function (self)
 
 	self._mood_handler = nil
 
-	self:_update_wwise_state(nil)
 	Managers.wwise_game_sync:set_followed_player_unit(nil)
 end
 

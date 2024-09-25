@@ -75,21 +75,18 @@ local function get_generic_profile(breed, gender, archetype)
 		breed = archetype.name == "ogryn" and "ogryn" or breed,
 		gender = gender,
 	}
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed]
+	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
 	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
+	local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot.default
 
-	if required_gender_item_names_per_slot then
-		local required_items = required_gender_item_names_per_slot
+	if required_items then
+		for slot_name, slot_item_name in pairs(required_items) do
+			local item_definition = MasterItems.get_item(slot_item_name)
 
-		if required_items then
-			for slot_name, slot_item_name in pairs(required_items) do
-				local item_definition = MasterItems.get_item(slot_item_name)
+			if item_definition then
+				local slot_item = table.clone(item_definition)
 
-				if item_definition then
-					local slot_item = table.clone(item_definition)
-
-					dummy_profile.loadout[slot_name] = slot_item
-				end
+				dummy_profile.loadout[slot_name] = slot_item
 			end
 		end
 	end
@@ -352,6 +349,19 @@ local function generate_blueprints_function(grid_size)
 				local slot = element.slot
 				local slot_name = slot.name
 				local item = element.real_item or element.item
+				local hotspot = content.hotspot
+
+				if hotspot and item then
+					local gear_id = item.gear_id or item.name
+					local favorite_state = ItemUtils.is_item_id_favorited(gear_id)
+
+					if not hotspot.is_hover and hotspot.is_selected then
+						-- Nothing
+					end
+
+					content.favorite = favorite_state
+				end
+
 				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
 
 				content.equipped = is_equipped
@@ -470,6 +480,15 @@ local function generate_blueprints_function(grid_size)
 				local slot = element.slot
 				local slot_name = slot.name
 				local item = element.real_item or element.item
+				local hotspot = content.hotspot
+
+				if hotspot and item then
+					local gear_id = item.gear_id or item.name
+					local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+
+					content.favorite = previous_state
+				end
+
 				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
 
 				content.equipped = is_equipped
@@ -595,6 +614,15 @@ local function generate_blueprints_function(grid_size)
 				local slot = element.slot
 				local slot_name = slot.name
 				local item = element.real_item or element.item
+				local hotspot = content.hotspot
+
+				if hotspot and item then
+					local gear_id = item.gear_id
+					local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+
+					content.favorite = previous_state
+				end
+
 				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
 
 				content.equipped = not element.disable_equipped_status and is_equipped
@@ -765,6 +793,18 @@ local function generate_blueprints_function(grid_size)
 					local is_equipped = slot_name and is_item_equipped_in_slot(view_instance, item, slot_name)
 
 					content.equipped = is_equipped
+
+					local hotspot = content.hotspot
+
+					if hotspot and item and not item.empty_item then
+						local gear_id = item.gear_id
+
+						if gear_id then
+							local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+
+							content.favorite = previous_state
+						end
+					end
 				end
 			end,
 			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
@@ -840,15 +880,8 @@ local function generate_blueprints_function(grid_size)
 					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 				end
 
-				local display_name = item.display_name
-
-				if display_name then
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
-				end
-
 				if style.item_level then
-					local item_level, has_level = ItemUtils.item_level(item)
+					local item_level, has_level = ItemUtils.expertise_level(item)
 
 					content.item_level = has_level and item_level or ""
 				end
@@ -856,67 +889,6 @@ local function generate_blueprints_function(grid_size)
 				local item_type = item.item_type
 				local ITEM_TYPES = UISettings.ITEM_TYPES
 				local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
-				local traits = item.traits
-
-				if is_weapon and traits then
-					local trait_index = 1
-
-					for i = 1, #traits do
-						local trait = traits[i]
-						local trait_id = trait.id
-						local rarity = trait.rarity
-						local trait_item = MasterItems.get_item(trait_id)
-
-						if trait_item then
-							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-							local pass_id = "trait_" .. trait_index
-							local trait_style = style[pass_id]
-
-							if trait_style then
-								local material_values = trait_style.material_values
-
-								material_values.icon = texture_icon
-								material_values.frame = texture_frame
-								material_values.overlay = 0
-							end
-
-							content[pass_id] = trait_id
-							trait_index = trait_index + 1
-						end
-					end
-
-					local trait_category = ItemUtils.trait_category(item)
-
-					Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
-						if seen_traits then
-							for i = 1, #traits do
-								local pass_id = "trait_" .. i
-								local trait = traits[i]
-								local trait_id = trait.id
-								local trait_rarity = trait.rarity
-
-								if trait then
-									for seen_trait_name, status in pairs(seen_traits) do
-										if seen_trait_name == trait_id and status ~= nil then
-											local trait_status = status[trait_rarity]
-
-											if trait_status == "unseen" then
-												local trait_style = style[pass_id]
-
-												if trait_style then
-													trait_style.material_values.overlay = 1
-												end
-
-												break
-											end
-										end
-									end
-								end
-							end
-						end
-					end)
-				end
-
 				local required_level = ItemUtils.character_level(item)
 				local view_instance = parent._parent or parent
 				local character_level = view_instance and view_instance.character_level and view_instance:character_level()
@@ -940,7 +912,18 @@ local function generate_blueprints_function(grid_size)
 
 				local rarity_color = ItemUtils.rarity_color(item)
 
-				style.sub_display_name.text_color = table.clone(rarity_color)
+				if is_weapon then
+					content.display_name = ItemUtils.weapon_card_display_name(item)
+					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(item)
+					content.rarity_name = ItemUtils.rarity_display_name(item)
+					style.rarity_name.text_color = table.clone(rarity_color)
+				else
+					content.display_name = ItemUtils.display_name(item)
+					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.rarity_name = ""
+					style.sub_display_name.text_color = table.clone(rarity_color)
+				end
+
 				style.background_gradient.color = table.clone(rarity_color)
 				style.rarity_tag.color = table.clone(rarity_color)
 			end,
@@ -951,6 +934,14 @@ local function generate_blueprints_function(grid_size)
 				local element = content.element
 				local slot = element.slot
 				local item = element.real_item or element.item
+				local hotspot = content.hotspot
+
+				if hotspot and item then
+					local gear_id = item.gear_id
+					local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+
+					content.favorite = previous_state
+				end
 
 				if slot then
 					local slot_name = slot.name
@@ -1017,6 +1008,9 @@ local function generate_blueprints_function(grid_size)
 				if content.icon_load_id then
 					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
+			end,
+			style_function = function (parent, config, size)
+				return config and config.style_override
 			end,
 		},
 		gear_set = {
@@ -1229,7 +1223,7 @@ local function generate_blueprints_function(grid_size)
 				local item_rating, has_item_rating
 
 				if presentation_item then
-					item_rating, has_item_rating = ItemUtils.item_level(presentation_item)
+					item_rating, has_item_rating = ItemUtils.expertise_level(presentation_item)
 				end
 
 				if content.item_level then
@@ -1249,84 +1243,23 @@ local function generate_blueprints_function(grid_size)
 					})
 				end
 
-				local display_name = presentation_item and presentation_item.display_name
-
-				if display_name then
-					content.display_name = ItemUtils.display_name(presentation_item)
-
-					local no_color = true
-
-					content.sub_display_name = ItemUtils.sub_display_name(presentation_item, not level_requirement_met and required_level)
-				end
-
-				if rarity then
-					style.sub_display_name.text_color = table.clone(rarity_color)
-					style.background_gradient.color = table.clone(rarity_color)
-					style.rarity_tag.color = table.clone(rarity_color)
-				end
-
 				local ITEM_TYPES = UISettings.ITEM_TYPES
 				local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
-				local traits = presentation_item and presentation_item.traits
 
-				if is_weapon and traits then
-					local trait_index = 1
-
-					for i = 1, #traits do
-						local trait = traits[i]
-						local trait_id = trait.id
-						local trait_rarity = trait.rarity
-						local trait_item = MasterItems.get_item(trait_id)
-
-						if trait_item then
-							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_rarity)
-							local pass_id = "trait_" .. trait_index
-							local trait_style = style[pass_id]
-
-							if trait_style then
-								local material_values = trait_style.material_values
-
-								material_values.icon = texture_icon
-								material_values.frame = texture_frame
-								material_values.overlay = 0
-							end
-
-							content[pass_id] = trait_id
-							trait_index = trait_index + 1
-						end
-
-						local trait_category = ItemUtils.trait_category(item)
-
-						Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
-							if seen_traits then
-								for i = 1, #traits do
-									local pass_id = "trait_" .. i
-									local trait = traits[i]
-									local trait_id = trait.id
-									local trait_rarity = trait.rarity
-
-									if trait then
-										for seen_trait_name, status in pairs(seen_traits) do
-											if seen_trait_name == trait_id and status ~= nil then
-												local trait_status = status[trait_rarity]
-
-												if trait_status == "unseen" then
-													local trait_style = style[pass_id]
-
-													if trait_style then
-														trait_style.material_values.overlay = 1
-													end
-
-													break
-												end
-											end
-										end
-									end
-								end
-							end
-						end)
-					end
+				if is_weapon then
+					content.display_name = ItemUtils.weapon_card_display_name(item)
+					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(item)
+					content.rarity_name = ItemUtils.rarity_display_name(item)
+				else
+					content.display_name = ItemUtils.display_name(item)
+					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.rarity_name = ""
+					style.sub_display_name.text_color = table.clone(rarity_color)
 				end
+
+				style.background_gradient.color = table.clone(rarity_color)
+				style.rarity_tag.color = table.clone(rarity_color)
+				style.rarity_name.text_color = table.clone(rarity_color)
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				local view_instance = parent._parent or parent
@@ -1506,12 +1439,18 @@ local function generate_blueprints_function(grid_size)
 				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
 				content.element = element
 
-				local display_name = element.display_name
 				local icon = element.icon
 				local item = element.item
+				local display_name = element.display_name
 
 				if display_name then
 					content.display_name = display_name
+				end
+
+				local sub_display_name = element.sub_display_name
+
+				if sub_display_name then
+					content.sub_display_name = sub_display_name
 				end
 
 				if icon then

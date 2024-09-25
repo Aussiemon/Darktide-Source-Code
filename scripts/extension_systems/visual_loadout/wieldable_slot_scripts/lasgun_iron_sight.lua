@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_iron_sight.lua
 
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local LasgunIronSight = class("LasgunIronSight")
 local SHOW_DELAY = 0.04
 local HIDE_DELAY = 0.1
@@ -75,5 +76,7 @@ end
 LasgunIronSight.destroy = function (self)
 	return
 end
+
+implements(LasgunIronSight, WieldableSlotScriptInterface)
 
 return LasgunIronSight

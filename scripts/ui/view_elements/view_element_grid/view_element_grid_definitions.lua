@@ -15,7 +15,7 @@ local function create_definitions(settings)
 	local scrollbar_vertical_margin = settings.scrollbar_vertical_margin or 0
 	local grid_size = settings.grid_size
 	local mask_size = settings.mask_size
-	local title_height = settings.title_height
+	local title_height = settings.title_height or 0
 	local edge_padding = settings.edge_padding or 0
 	local using_custom_gamepad_navigation = settings.using_custom_gamepad_navigation
 	local background_size = {
@@ -315,7 +315,7 @@ local function create_definitions(settings)
 				},
 			},
 		}, "grid_title_background"),
-		grid_background = UIWidget.create_definition(use_terminal_background and {
+		grid_background = UIWidget.create_definition(settings.background_passes or use_terminal_background and {
 			{
 				pass_type = "texture",
 				value = "content/ui/materials/backgrounds/terminal_basic",

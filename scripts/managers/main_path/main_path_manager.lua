@@ -4,22 +4,9 @@ local Crossroad = require("scripts/managers/main_path/utilities/crossroad")
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
 local MainPathManagerTestify = GameParameters.testify and require("scripts/managers/main_path/main_path_manager_testify")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
+local MainPathSettings = require("scripts/settings/main_path/main_path_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local MainPathManager = class("MainPathManager")
-local WANTED_MAIN_PATH_VERSION = "1.00"
-local TRIANGLE_GROUP_DISTANCE = 10
-local TRIANGLE_GROUP_CUTOFF_VALUES = {
-	25,
-	50,
-	75,
-}
-local SPAWN_POINT_MIN_FREE_RADIUS = 0.5
-local SPAWN_POINT_MIN_DISTANCE_TO_OTHERS = 1.5
-local SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
-	"content/volume_types/nav_tag_volumes/no_spawn",
-}
-local NUM_SPAWNPOINTS_PER_SUBGROUP = 20
-local OCCLUDED_POINTS_COLLISION_FILTER = "filter_ray_aim_assist_line_of_sight"
 
 MainPathManager.init = function (self, world, nav_world, level_name, level_seed, num_sides, is_server, use_nav_point_time_slice)
 	self._is_server = is_server
@@ -282,19 +269,20 @@ MainPathManager.on_gameplay_post_init = function (self)
 end
 
 MainPathManager._generate_spawn_points = function (self)
-	local nav_world = self._nav_world
-	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, TRIANGLE_GROUP_DISTANCE, TRIANGLE_GROUP_CUTOFF_VALUES)
+	local nav_world, triangle_group_distance, triangle_group_cutoff_values = self._nav_world, MainPathSettings.triangle_group_distance, MainPathSettings.triangle_group_cutoff_values
+	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, triangle_group_distance, triangle_group_cutoff_values)
 
-	self._nav_triangle_group = nav_triangle_group
-	self._group_to_main_path_index = group_to_main_path_index
+	self._nav_triangle_group, self._group_to_main_path_index = nav_triangle_group, group_to_main_path_index
 
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local spawn_point_cost_table = GwNavTagLayerCostTable.create()
 
 	nav_mesh_manager:initialize_nav_tag_cost_table(spawn_point_cost_table, {})
 
-	for i = 1, #SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES do
-		local volume_type = SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES[i]
+	local spawn_point_forbidden_nav_tag_volume_types = MainPathSettings.spawn_point_forbidden_nav_tag_volume_types
+
+	for i = 1, #spawn_point_forbidden_nav_tag_volume_types do
+		local volume_type = spawn_point_forbidden_nav_tag_volume_types[i]
 		local layer_ids = nav_mesh_manager:nav_tag_volume_layer_ids_by_volume_type(volume_type)
 
 		for j = 1, #layer_ids do
@@ -304,10 +292,13 @@ MainPathManager._generate_spawn_points = function (self)
 
 	self._spawn_point_cost_table = spawn_point_cost_table
 
+	local spawn_point_min_free_radius, spawn_point_min_distance_to_others = MainPathSettings.spawn_point_min_free_radius, MainPathSettings.spawn_point_min_distance_to_others
+	local num_spawn_points_per_subgroup = MainPathSettings.num_spawn_points_per_subgroup
+
 	if self._spawn_points_time_slice_data then
-		self:_init_time_slice_nav_points(nav_world, nav_triangle_group, SPAWN_POINT_MIN_FREE_RADIUS, SPAWN_POINT_MIN_DISTANCE_TO_OTHERS, NUM_SPAWNPOINTS_PER_SUBGROUP, spawn_point_cost_table, self._level_seed)
+		self:_init_time_slice_nav_points(nav_world, nav_triangle_group, spawn_point_min_free_radius, spawn_point_min_distance_to_others, num_spawn_points_per_subgroup, spawn_point_cost_table, self._level_seed)
 	else
-		self._nav_spawn_points, self._spawn_point_positions = SpawnPointQueries.generate_nav_spawn_points(nav_world, nav_triangle_group, SPAWN_POINT_MIN_FREE_RADIUS, SPAWN_POINT_MIN_DISTANCE_TO_OTHERS, NUM_SPAWNPOINTS_PER_SUBGROUP, spawn_point_cost_table, self._level_seed)
+		self._nav_spawn_points, self._spawn_point_positions = SpawnPointQueries.generate_nav_spawn_points(nav_world, nav_triangle_group, spawn_point_min_free_radius, spawn_point_min_distance_to_others, num_spawn_points_per_subgroup, spawn_point_cost_table, self._level_seed)
 	end
 end
 
@@ -351,7 +342,8 @@ MainPathManager.update_time_slice_generate_occluded_points = function (self)
 	end
 
 	local nav_spawn_points = self._nav_spawn_points
-	local done = GwNavSpawnPoints.generate_occluded_points(nav_spawn_points, self._nav_world, self._world, OCCLUDED_POINTS_COLLISION_FILTER, GameplayInitTimeSlice.MAX_DT_IN_SEC)
+	local occluded_points_collision_filter = MainPathSettings.occluded_points_collision_filter
+	local done = GwNavSpawnPoints.generate_occluded_points(nav_spawn_points, self._nav_world, self._world, occluded_points_collision_filter, GameplayInitTimeSlice.MAX_DT_IN_SEC)
 
 	if done then
 		Managers.state.pacing:on_spawn_points_generated()

@@ -39,6 +39,9 @@ local main_menu_list = {
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		end,
+		has_highlight = function ()
+			return Managers.achievements:is_reward_to_claim()
+		end,
 	},
 	{
 		icon = "content/ui/materials/icons/system/escape/social",
@@ -60,6 +63,9 @@ local main_menu_list = {
 			local view_name = "store_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end,
+		has_highlight = function ()
+			return Managers.data_service.store:has_new_feature_store()
 		end,
 	},
 	{
@@ -225,6 +231,9 @@ local default_list = {
 
 			return is_in_hub
 		end,
+		has_highlight = function ()
+			return Managers.achievements:is_reward_to_claim()
+		end,
 	},
 	{
 		icon = "content/ui/materials/icons/system/escape/social",
@@ -237,6 +246,64 @@ local default_list = {
 			local view_name = "social_menu_view"
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end,
+	},
+	{
+		icon = "content/ui/materials/icons/system/escape/party_finder",
+		text = "loc_group_finder_menu_title",
+		type = "large_button",
+		trigger_function = function ()
+			local context = {
+				can_exit = true,
+			}
+			local view_name = "group_finder_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end,
+		validation_function = function ()
+			local game_mode_manager = Managers.state.game_mode
+
+			if not game_mode_manager then
+				return false
+			end
+
+			local game_mode_name = game_mode_manager:game_mode_name()
+			local is_hub = game_mode_name == "hub"
+			local is_training_grounds = game_mode_name == "training_grounds" or game_mode_name == "shooting_range"
+			local can_show = is_hub or is_training_grounds
+			local is_leaving_game = game_mode_manager:game_mode_state() == "leaving_game"
+			local is_in_matchmaking = Managers.data_service.social:is_in_matchmaking()
+			local is_disabled = is_leaving_game or is_in_matchmaking
+
+			return can_show, is_disabled
+		end,
+	},
+	{
+		icon = "content/ui/materials/icons/system/escape/premium_store",
+		text = "loc_store_view_display_name",
+		type = "large_button",
+		trigger_function = function ()
+			local context = {
+				can_exit = true,
+			}
+			local view_name = "store_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end,
+		validation_function = function ()
+			local game_mode_manager = Managers.state.game_mode
+
+			if not game_mode_manager then
+				return false
+			end
+
+			local game_mode_name = game_mode_manager:game_mode_name()
+			local is_in_hub = game_mode_name == "hub" or game_mode_name == "shooting_range"
+
+			return is_in_hub
+		end,
+		has_highlight = function ()
+			return Managers.data_service.store:has_new_feature_store()
 		end,
 	},
 	{

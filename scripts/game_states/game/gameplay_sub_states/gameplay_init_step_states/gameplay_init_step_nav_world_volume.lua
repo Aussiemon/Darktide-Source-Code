@@ -28,6 +28,8 @@ GameplayInitStepNavWorldVolume.update = function (self, main_dt, main_t)
 		nav_mesh_manager:on_gameplay_post_init()
 	end
 
+	self._shared_state.initialized_steps.GameplayInitStepNavWorldVolume = true
+
 	local next_step_params = {
 		shared_state = self._shared_state,
 	}

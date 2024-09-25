@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/luggable.lua
 
-local Vo = require("scripts/utilities/vo")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local locomotion_states = ProjectileLocomotionSettings.states
 local Luggable = class("Luggable")
 
@@ -113,5 +113,7 @@ Luggable.destroy = function (self)
 		self._item_unit_3p = nil
 	end
 end
+
+implements(Luggable, WieldableSlotScriptInterface)
 
 return Luggable

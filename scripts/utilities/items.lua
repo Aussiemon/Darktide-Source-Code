@@ -9,9 +9,11 @@ local MasterItems = require("scripts/backend/master_items")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local Promise = require("scripts/foundation/utilities/promise")
 local unit_alive = Unit.alive
+local expertise_multiplier = 10
+local max_weapon_preview = 0.8
 local Items = {}
 
 local function _character_save_data()
@@ -25,6 +27,18 @@ local function _character_save_data()
 	return character_data
 end
 
+Items.get_expertise_multiplier = function ()
+	return expertise_multiplier
+end
+
+Items.get_max_weapon_preview = function ()
+	return max_weapon_preview
+end
+
+Items.get_weapon_modification_cap = function (expertise_value)
+	return expertise_value * 2 / expertise_multiplier
+end
+
 Items.calculate_stats_rating = function (item)
 	if item.baseItemLevel then
 		return item.baseItemLevel
@@ -34,6 +48,10 @@ Items.calculate_stats_rating = function (item)
 	local rating_contribution = Items.item_perk_rating(item) + Items.item_trait_rating(item)
 
 	return math.max(0, rating_budget - rating_contribution)
+end
+
+Items.is_weapon = function (item_type)
+	return item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
 end
 
 Items.is_character_bound = function (item_type)
@@ -278,37 +296,26 @@ Items.new_item_notification_ids = function ()
 	return new_item_notifications
 end
 
-local temp_item_name_localization_context = {}
-
 Items.display_name = function (item)
 	if not item then
 		return "n/a"
 	end
 
-	local pattern = item.pattern
-	local variant = item.variant
 	local display_name = item.display_name
-	local localization_function = Localize
-	local pattern_localization_key = UISettings.item_pattern_localization_lookup[pattern]
-	local pattern_display_name_localized = pattern_localization_key and localization_function(pattern_localization_key) or "-"
-	local variant_localization_key = UISettings.item_variant_localization_lookup[variant]
-	local variant_display_name_localized = variant_localization_key and localization_function(variant_localization_key) or "-"
-	local display_name_localized = display_name and localization_function(display_name) or "-"
 
-	temp_item_name_localization_context.pattern = pattern_display_name_localized
-	temp_item_name_localization_context.variant = variant_display_name_localized
-	temp_item_name_localization_context.item_display_name = display_name_localized
+	if Items.is_weapon(item.item_type) then
+		local lore_family_name = Items.weapon_lore_family_name(item)
+		local lore_pattern_name = Items.weapon_lore_pattern_name(item)
+		local lore_mark_name = Items.weapon_lore_mark_name(item)
+
+		return string.format("%s %s %s", lore_pattern_name, lore_mark_name, lore_family_name)
+	end
+
+	local localization_function = Localize
+	local display_name_localized = display_name and localization_function(display_name) or "-"
 
 	return display_name_localized
 end
-
-local temp_item_sub_display_name_localization_context = {
-	item_type = "n/a",
-	rarity_color_b = 0,
-	rarity_color_g = 0,
-	rarity_color_r = 0,
-	rarity_name = "n/a",
-}
 
 Items.sub_display_name = function (item, required_level, include_item_type)
 	local item_type_display_name_localized = Items.type_display_name(item)
@@ -317,18 +324,7 @@ Items.sub_display_name = function (item, required_level, include_item_type)
 	if item.rarity then
 		local rarity_display_name_localized = Items.rarity_display_name(item)
 
-		if include_item_type then
-			local rarity_color = Items.rarity_color(item)
-
-			temp_item_sub_display_name_localization_context.rarity_color_r = rarity_color[2]
-			temp_item_sub_display_name_localization_context.rarity_color_g = rarity_color[3]
-			temp_item_sub_display_name_localization_context.rarity_color_b = rarity_color[4]
-			temp_item_sub_display_name_localization_context.rarity_name = rarity_display_name_localized
-			temp_item_sub_display_name_localization_context.item_type = item_type_display_name_localized
-			text = Localize("loc_item_display_rarity_type_format_key", true, temp_item_sub_display_name_localization_context)
-		else
-			text = rarity_display_name_localized
-		end
+		text = rarity_display_name_localized
 	else
 		return item_type_display_name_localized
 	end
@@ -344,8 +340,78 @@ Items.sub_display_name = function (item, required_level, include_item_type)
 	return text
 end
 
+Items.weapon_card_display_name = function (item)
+	return Items.weapon_lore_family_name(item)
+end
+
+Items.weapon_card_sub_display_name = function (item)
+	local lore_pattern_name = Items.weapon_lore_pattern_name(item)
+	local lore_mark_name = Items.weapon_lore_mark_name(item)
+	local has_pattern = lore_pattern_name ~= "n/a"
+	local has_mark = lore_mark_name ~= "n/a"
+
+	if has_pattern and has_mark then
+		local sub_display_name = string.format("%s • %s", lore_pattern_name, lore_mark_name)
+
+		return sub_display_name
+	end
+
+	return has_pattern and lore_pattern_name or has_mark and lore_mark_name or "n/a"
+end
+
+Items.weapon_lore_family_name = function (item)
+	if not item then
+		return "n/a"
+	end
+
+	local weapon_family_display_name = item.weapon_family_display_name
+
+	if not weapon_family_display_name then
+		return "n/a"
+	end
+
+	local loc_id = weapon_family_display_name.loc_id
+	local weapon_family_display_name_localized = loc_id and Localize(loc_id) or "n/a"
+
+	return weapon_family_display_name_localized
+end
+
+Items.weapon_lore_pattern_name = function (item)
+	if not item then
+		return "n/a"
+	end
+
+	local weapon_pattern_display_name = item.weapon_pattern_display_name
+
+	if not weapon_pattern_display_name then
+		return "n/a"
+	end
+
+	local loc_id = weapon_pattern_display_name.loc_id
+	local weapon_pattern_display_name_localized = loc_id and Localize(loc_id) or "n/a"
+
+	return weapon_pattern_display_name_localized
+end
+
+Items.weapon_lore_mark_name = function (item)
+	if not item then
+		return "n/a"
+	end
+
+	local weapon_mark_display_name = item.weapon_mark_display_name
+
+	if not weapon_mark_display_name then
+		return "n/a"
+	end
+
+	local loc_id = weapon_mark_display_name.loc_id
+	local weapon_mark_display_name_localized = loc_id and Localize(loc_id) or "n/a"
+
+	return weapon_mark_display_name_localized
+end
+
 Items.trait_textures = function (trait_item, rarity)
-	local icon = trait_item.icon ~= "" and trait_item.icon
+	local icon = trait_item and trait_item.icon ~= "" and trait_item.icon
 	local texture_icon = icon or "content/ui/textures/icons/traits/weapon_trait_default"
 	local texture_frame = RankSettings[rarity or 0].trait_frame_texture
 
@@ -474,14 +540,33 @@ Items.weapon_skin_preview_item = function (item, include_skin_item_info)
 	return visual_item
 end
 
-Items.item_level = function (item, no_symbol)
-	local item_level = item.itemLevel
+Items.expertise_level = function (item, no_symbol)
+	if item.item_type ~= "GADGET" then
+		local base_item_level = item.baseItemLevel
+		local expertise_level = math.max(0, math.floor((base_item_level and base_item_level - 80 or 0) / 6) * expertise_multiplier)
 
-	if no_symbol then
-		return tostring(item_level or 0), item_level ~= nil
+		if no_symbol then
+			return tostring(expertise_level), base_item_level ~= nil
+		end
+
+		return string.format(" %s", expertise_level), base_item_level ~= nil
+	else
+		local max_gadget_level = 92
+		local max_weapon_level = 300
+		local base_item_level = item.baseItemLevel or 0
+		local item_level_normalized = math.ilerp(0, max_gadget_level, base_item_level)
+		local item_level = math.floor(item_level_normalized * max_weapon_level / 6) * expertise_multiplier
+
+		if no_symbol then
+			return tostring(item_level or 0), item_level ~= nil
+		end
+
+		return string.format(" %s", item_level or 0), item_level ~= nil
 	end
+end
 
-	return string.format(" %s", item_level or 0), item_level ~= nil
+Items.max_expertise_level = function ()
+	return 50 * expertise_multiplier
 end
 
 Items.is_weapon_template_ranged = function (item)
@@ -501,7 +586,7 @@ Items.type_display_name = function (item)
 end
 
 Items.level_display_name = function (item)
-	local item_level = Items.item_level(item)
+	local item_level = Items.expertise_level(item)
 	local item_level_display_name_localized = Localize("loc_item_display_level_format_key", true, {
 		level = item_level,
 	})
@@ -522,20 +607,6 @@ Items.variant_display_name = function (item)
 	local variant_display_name_localized = variant_localization_key and Localize(variant_localization_key) or ""
 
 	return variant_display_name_localized
-end
-
-Items.pattern_display_name = function (item)
-	local weapon_template = item.weapon_template
-
-	if not weapon_template then
-		return ""
-	end
-
-	local display_settings = UISettings.weapon_template_display_settings[weapon_template]
-	local localization_key = display_settings and display_settings.display_name_pattern
-	local display_name_localized = localization_key and Localize(localization_key) or ""
-
-	return display_name_localized
 end
 
 local _item_property_definitions = {
@@ -625,7 +696,7 @@ Items.obtained_display_name = function (item)
 			local player_manager = Managers.player
 			local player = player_manager:local_player(1)
 			local achievement = AchievementUIHelper.get_acheivement_by_reward_item(item)
-			local is_complete = Managers.achievements:achievement_completed(player, achievement.id)
+			local is_complete = achievement and Managers.achievements:achievement_completed(player, achievement.id)
 
 			if achievement then
 				if not is_complete then
@@ -714,19 +785,28 @@ Items.weapon_skin_requirement_text = function (item)
 		return text, false
 	end
 
-	local weapon_template_display_settings = UISettings.weapon_template_display_settings
-
-	if not weapon_template_display_settings then
-		return text, false
-	end
+	local potential_weapon_paths = {}
 
 	for i = 1, #weapon_template_restriction do
 		local weapon_template_name = weapon_template_restriction[i]
-		local template_display_settings = weapon_template_name and weapon_template_display_settings[weapon_template_name]
-		local template_display_name = template_display_settings and template_display_settings.display_name
-		local template_display_name_localized = template_display_name and Localize(template_display_name)
+		local base_item_location = "content/items/weapons/player"
 
-		if template_display_name_localized then
+		potential_weapon_paths[1] = string.format("%s/melee/%s", base_item_location, weapon_template_name)
+		potential_weapon_paths[2] = string.format("%s/ranged/%s", base_item_location, weapon_template_name)
+
+		local item_or_nil
+
+		for j = 1, #potential_weapon_paths do
+			item_or_nil = MasterItems.get_item(potential_weapon_paths[j])
+
+			if item_or_nil then
+				break
+			end
+		end
+
+		local template_display_name_localized = item_or_nil and Items.weapon_card_display_name(item_or_nil)
+
+		if template_display_name_localized and not string.find(text, template_display_name_localized) then
 			text = text .. "• " .. template_display_name_localized
 
 			if i < #weapon_template_restriction then
@@ -1382,12 +1462,16 @@ Items.compare_item_rarity = function (a, b)
 end
 
 Items.compare_item_level = function (a, b)
-	local a_itemLevel = a.itemLevel or 0
-	local a_itemLevel, b_itemLevel = a_itemLevel, b.itemLevel or 0
+	local a_item_type = a.item_type
+	local b_item_type = b.item_type
+	local a_expertiseLevel_text = Items.expertise_level(a, true)
+	local a_expertiseLevel = tonumber(a_expertiseLevel_text)
+	local b_expertiseLevel_text = Items.expertise_level(b, true)
+	local b_expertiseLevel = tonumber(b_expertiseLevel_text)
 
-	if a_itemLevel < b_itemLevel then
+	if a_expertiseLevel < b_expertiseLevel then
 		return true
-	elseif b_itemLevel < a_itemLevel then
+	elseif b_expertiseLevel < a_expertiseLevel then
 		return false
 	end
 
@@ -1639,6 +1723,145 @@ Items.modifications_by_rarity = function (item)
 	return 0, 0
 end
 
+Items.preview_stats_change = function (item, expertise_increase, stats, max_stat_value)
+	local filled_stats = {}
+	local trait_indices = {}
+
+	for i = 1, #stats do
+		local stat = stats[i]
+		local fraction = stat.fraction
+
+		filled_stats[#filled_stats + 1] = {
+			display_name = stat.display_name,
+			name = stat.name,
+			value = fraction and fraction * 100 or 0,
+		}
+	end
+
+	local item_current_level = item.baseItemLevel
+	local item_max_level = 380
+
+	if not item_current_level then
+		local result = {}
+
+		for i = 1, #filled_stats do
+			local filled_stat = filled_stats[i]
+			local value = math.floor(filled_stat.value + 0.5)
+
+			result[filled_stat.display_name] = {
+				fraction = math.min(value / 100, 1),
+				value = math.min(value, 100),
+			}
+		end
+
+		return result
+	end
+
+	max_stat_value = (max_stat_value or Items.get_max_weapon_preview()) * 100
+
+	local remaining_budget = expertise_increase / Items.get_expertise_multiplier() * 6
+
+	if item_max_level < remaining_budget + item_current_level then
+		remaining_budget = item_max_level - item_current_level
+	end
+
+	remaining_budget = math.max(remaining_budget, 0)
+
+	local current_expertise_text = Items.expertise_level(item, true)
+	local current_expertise = tonumber(current_expertise_text) / Items.get_expertise_multiplier()
+	local this_round_indices = {}
+	local min_value
+	local stored_expertise_stats_increase = item.gear and item.gear.masterDataInstance and item.gear.masterDataInstance.overrides and item.gear.masterDataInstance.overrides.expertise_stat_increases
+
+	if stored_expertise_stats_increase then
+		min_value = math.huge
+
+		for i = 1, #filled_stats do
+			local stat = filled_stats[i]
+			local added_expertise_fraction
+
+			for ii = 1, #stored_expertise_stats_increase do
+				local stored_expertise_stat_increase = stored_expertise_stats_increase[ii]
+
+				if stored_expertise_stat_increase.name == stat.name then
+					added_expertise_fraction = stored_expertise_stat_increase.value
+
+					break
+				end
+			end
+
+			if added_expertise_fraction then
+				min_value = math.min(min_value, added_expertise_fraction)
+			end
+		end
+	end
+
+	for i = 1, #filled_stats do
+		local stat = filled_stats[i]
+		local initial_round_stat = true
+
+		if stored_expertise_stats_increase then
+			local added_expertise_fraction
+
+			for ii = 1, #stored_expertise_stats_increase do
+				local stored_expertise_stat_increase = stored_expertise_stats_increase[ii]
+
+				if stored_expertise_stat_increase.name == stat.name then
+					added_expertise_fraction = stored_expertise_stat_increase.value
+
+					break
+				end
+			end
+
+			initial_round_stat = added_expertise_fraction == min_value and max_stat_value > math.floor(stat.value + 0.5)
+		end
+
+		if max_stat_value > math.floor(stat.value + 0.5) then
+			trait_indices[#trait_indices + 1] = i
+		end
+
+		if initial_round_stat then
+			this_round_indices[#this_round_indices + 1] = i
+		end
+	end
+
+	while remaining_budget > 0 and #trait_indices > 0 do
+		for i = 1, #this_round_indices do
+			local current_index = this_round_indices[i]
+
+			if max_stat_value > math.floor(filled_stats[current_index].value + 0.5) then
+				local stat_increase = 1
+				local previous_value = filled_stats[current_index].value
+
+				filled_stats[current_index].value = filled_stats[current_index].value + stat_increase
+				remaining_budget = remaining_budget - (filled_stats[current_index].value - previous_value)
+			else
+				table.remove(trait_indices, i)
+			end
+
+			if remaining_budget <= 0 then
+				break
+			end
+		end
+
+		this_round_indices = table.clone(trait_indices)
+	end
+
+	local result = {}
+
+	for i = 1, #filled_stats do
+		local filled_stat = filled_stats[i]
+		local value = math.floor(filled_stat.value + 0.5)
+
+		result[filled_stat.display_name] = {
+			fraction = math.min(value / 100, 1),
+			value = math.min(value, 100),
+		}
+	end
+
+	return result
+end
+
 Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)
 	local item_gender, item_breed, item_archetype, item_slot_name
 
@@ -1669,7 +1892,7 @@ Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefer
 	if item.slots and not table.is_empty(item.slots) then
 		item_slot_name = item.slots[1]
 	else
-		local item_slot_name
+		item_slot_name = nil
 	end
 
 	local breed = item_breed or item.breeds and item.breeds[1] or "human"
@@ -1678,19 +1901,16 @@ Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefer
 	local loadout = {}
 	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
 	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
+	local required_items = required_gender_item_names_per_slot and (required_gender_item_names_per_slot[item_slot_name] or required_gender_item_names_per_slot.default)
 
-	if required_gender_item_names_per_slot then
-		local required_items = required_gender_item_names_per_slot[item_slot_name]
+	if required_items then
+		for slot_name, slot_item_name in pairs(required_items) do
+			local item_definition = MasterItems.get_item(slot_item_name)
 
-		if required_items then
-			for slot_name, slot_item_name in pairs(required_items) do
-				local item_definition = MasterItems.get_item(slot_item_name)
+			if item_definition then
+				local slot_item = table.clone(item_definition)
 
-				if item_definition then
-					local slot_item = table.clone(item_definition)
-
-					loadout[slot_name] = slot_item
-				end
+				loadout[slot_name] = slot_item
 			end
 		end
 	end
@@ -1701,6 +1921,44 @@ Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefer
 		breed = breed,
 		gender = gender,
 	}
+end
+
+Items.set_item_id_as_favorite = function (item_gear_id, state)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	if not character_data.favorite_items then
+		character_data.favorite_items = {}
+	end
+
+	local ui_manager = Managers.ui
+
+	if state then
+		ui_manager:play_2d_sound(UISoundEvents.weapons_favorite)
+	else
+		ui_manager:play_2d_sound(UISoundEvents.weapons_select_weapon)
+	end
+
+	local favorite_items = character_data.favorite_items
+
+	favorite_items[item_gear_id] = state
+
+	Managers.save:queue_save()
+end
+
+Items.is_item_id_favorited = function (item_gear_id)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	local favorite_items = character_data.favorite_items
+
+	return favorite_items and favorite_items[item_gear_id]
 end
 
 return Items

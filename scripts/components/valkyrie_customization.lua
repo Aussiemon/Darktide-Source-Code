@@ -93,7 +93,24 @@ ValkyrieCustomization._build_valkyrie = function (self, index, unit, world, node
 	local socket_node = Unit.node(unit, node_name)
 	local socket_pos = Unit.world_position(unit, socket_node)
 	local socket_rot = Unit.world_rotation(unit, socket_node)
-	local spawned = World.spawn_unit_ex(world, unit_name, nil, socket_pos, socket_rot)
+	local scale = Unit.local_scale(unit, 1)
+
+	if Unit.has_node(unit, "op_scale") then
+		local valk_scale = self:get_data(unit, "valkyrie_scale")
+
+		scale = Vector3(valk_scale, valk_scale, valk_scale)
+
+		local node_index = Unit.node(unit, "op_scale")
+
+		Unit.set_local_scale(unit, node_index, scale)
+
+		node_index = Unit.node(unit, "anim_global")
+
+		Unit.set_local_scale(unit, node_index, scale)
+	end
+
+	local pose = Matrix4x4.from_quaternion_position_scale(socket_rot, socket_pos, scale)
+	local spawned = World.spawn_unit_ex(world, unit_name, nil, pose)
 
 	if string.find(node_name, "backhatch") then
 		self._backhatch = spawned
@@ -502,6 +519,13 @@ ValkyrieCustomization.component_data = {
 		ui_name = "Side Arm Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_sidearm_01",
+	},
+	valkyrie_scale = {
+		decimals = 2,
+		step = 0.01,
+		ui_name = "Valkyrie Scale (Only use on op_base_platform)",
+		ui_type = "number",
+		value = 1,
 	},
 	inputs = {
 		VFX_off = {

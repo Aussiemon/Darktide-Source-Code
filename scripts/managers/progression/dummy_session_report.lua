@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/progression/dummy_session_report.lua
 
+local MasteryUtils = require("scripts/utilities/mastery")
 local DummySessionReport = {}
 
 DummySessionReport.fetch_session_report = function (account_id)
@@ -83,6 +84,29 @@ DummySessionReport.fetch_session_report = function (account_id)
 										fromSideMissionBonus = 250,
 										fromTotalBonus = 0,
 										total = 1337,
+									},
+								},
+							},
+						},
+						{
+							kind = "track",
+							target = "account",
+							rewards = {
+								{
+									rewardType = "track",
+									source = "skill",
+									trackId = "a6117884-cbd1-42ed-bd55-fd6bad9f7361",
+									trackType = "mastery",
+									reward = {
+										xp = 2500,
+									},
+									current = {
+										tier = 1,
+										xp = 5375,
+									},
+									trackDetails = {
+										mastery = "bespoke_powermaul_p1",
+										slot = "slot_primary",
 									},
 								},
 							},
@@ -246,6 +270,7 @@ local xp_tables = {
 		64500,
 		89000,
 	},
+	weapon = MasteryUtils.get_dummy_weapon_xp_per_level(),
 }
 
 DummySessionReport.fetch_xp_table = function (entity_type)

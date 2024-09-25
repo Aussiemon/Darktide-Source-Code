@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_throwing_knives_effects.lua
 
 local Component = require("scripts/utilities/component")
-local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local Vo = require("scripts/utilities/vo")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local _components
 local RECOVER_SOUND_ALIAS = "grenade_recover_indicator"
 local LOOPING_SOUND_ALIAS = "equipped_item_passive_loop"
@@ -14,7 +14,7 @@ local ATTACHMENT_NAMES = {
 	"shard_03",
 	"shard_04",
 }
-local external_properties = {}
+local _external_properties = {}
 local PsykerThrowingKnivesEffects = class("PsykerThrowingKnivesEffects")
 
 PsykerThrowingKnivesEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -113,11 +113,11 @@ PsykerThrowingKnivesEffects._update_ammo_count = function (self, t)
 			components_lookup[attachment_name].component:hide()
 		elseif not is_visible and should_be_visible then
 			if not event_name and not effect_name then
-				table.clear(external_properties)
+				table.clear(_external_properties)
 
-				external_properties.indicator_type = "psyker_throwing_knives_single"
-				_, effect_name = self._visual_loadout_extension:resolve_gear_particle(LOOPING_PARTICLE_ALIAS, external_properties)
-				_, event_name = self._visual_loadout_extension:resolve_gear_sound(RECOVER_SOUND_ALIAS, external_properties)
+				_external_properties.indicator_type = "psyker_throwing_knives_single"
+				_, effect_name = self._visual_loadout_extension:resolve_gear_particle(LOOPING_PARTICLE_ALIAS, _external_properties)
+				_, event_name = self._visual_loadout_extension:resolve_gear_sound(RECOVER_SOUND_ALIAS, _external_properties)
 			end
 
 			local scale = ii == 1 and 0.95 or 0.7
@@ -156,36 +156,21 @@ end
 
 PsykerThrowingKnivesEffects._create_passive_sfx = function (self)
 	local visual_loadout_extension = self._visual_loadout_extension
-	local is_husk = self._is_husk
-	local is_local_unit = self._is_local_unit
 	local fx_extension = self._fx_extension
 	local sfx_source_name = self._sfx_source_name
+	local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
 
 	if not self._looping_passive_playing_id then
-		local sound_config = PlayerCharacterLoopingSoundAliases[LOOPING_SOUND_ALIAS]
-		local start_config = sound_config.start
-		local start_event_alias = start_config.event_alias
-		local resolved, has_husk_events, start_event_name, stop_event_name
-
-		resolved, start_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, external_properties)
+		local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(LOOPING_SOUND_ALIAS, should_play_husk_effect, _external_properties)
 
 		if resolved then
 			local wwise_world = self._wwise_world
 			local source_id = fx_extension:sound_source(sfx_source_name)
-
-			start_event_name = (is_husk or not is_local_unit) and has_husk_events and start_event_name .. "_husk" or start_event_name
-
-			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, source_id)
+			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
 
 			self._looping_passive_playing_id = playing_id
 
-			local stop_config = sound_config.stop
-			local stop_event_alias = stop_config.event_alias
-
-			resolved, stop_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, external_properties)
-
-			if resolved then
-				stop_event_name = (is_husk or not is_local_unit) and has_husk_events and stop_event_name .. "_husk" or stop_event_name
+			if resolved_stop then
 				self._stop_event_name = stop_event_name
 			end
 		end
@@ -231,5 +216,7 @@ function _components(destination, destination_lookup, attachments, attachments_n
 		end
 	end
 end
+
+implements(PsykerThrowingKnivesEffects, WieldableSlotScriptInterface)
 
 return PsykerThrowingKnivesEffects

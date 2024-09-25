@@ -88,10 +88,13 @@ MonsterSpawner.editor_init = function (self, unit)
 	end
 
 	self._my_nav_gen_guid = nil
-	self._show_main_path_connection = false
-	self._should_debug_draw = false
-	self._unit = unit
+	self._debug_draw_enabled = false
 	self._selected = false
+
+	local object_id = Unit.get_data(unit, "LevelEditor", "object_id")
+
+	self._object_id = object_id
+	self._in_active_mission_table = LevelEditor:is_level_object_in_active_mission_table(object_id)
 
 	return true
 end
@@ -113,13 +116,13 @@ MonsterSpawner.editor_destroy = function (self, unit)
 		return
 	end
 
-	local line_object = self._line_object
-	local world = self._world
-	local gui = self._gui
+	local world, line_object = self._world, self._line_object
 
 	LineObject.reset(line_object)
 	LineObject.dispatch(world, line_object)
 	World.destroy_line_object(world, line_object)
+
+	local gui = self._gui
 
 	if self._debug_text_id then
 		Gui.destroy_text_3d(gui, self._debug_text_id)
@@ -130,9 +133,6 @@ MonsterSpawner.editor_destroy = function (self, unit)
 	end
 
 	World.destroy_gui(world, gui)
-
-	self._line_object = nil
-	self._world = nil
 end
 
 MonsterSpawner.editor_update = function (self, unit)
@@ -152,6 +152,16 @@ MonsterSpawner.editor_update = function (self, unit)
 	return true
 end
 
+MonsterSpawner.editor_on_mission_changed = function (self, unit)
+	if not rawget(_G, "LevelEditor") then
+		return
+	end
+
+	self._in_active_mission_table = LevelEditor:is_level_object_in_active_mission_table(self._object_id)
+
+	self:_refresh_debug_draw(unit)
+end
+
 MonsterSpawner.editor_world_transform_modified = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return
@@ -168,9 +178,13 @@ MonsterSpawner.editor_property_changed = function (self, unit)
 	self:_refresh_debug_draw(unit)
 end
 
+MonsterSpawner.editor_selection_changed = function (self, unit, selected)
+	self._selected = selected
+
+	self:_refresh_debug_draw(unit)
+end
+
 MonsterSpawner._refresh_debug_draw = function (self, unit)
-	local drawer = self._drawer
-	local show_main_path_connection = self:get_data(unit, "show_main_path_connection")
 	local gui = self._gui
 	local debug_text_id = self._debug_text_id
 
@@ -188,21 +202,17 @@ MonsterSpawner._refresh_debug_draw = function (self, unit)
 		self._section_debug_text_id = nil
 	end
 
+	local drawer = self._drawer
+
 	drawer:reset()
 
-	if self._should_debug_draw then
+	if self._debug_draw_enabled and self._in_active_mission_table then
+		local show_main_path_connection = self:get_data(unit, "show_main_path_connection")
+
 		self:_editor_debug_draw(unit, show_main_path_connection)
 	end
 
 	drawer:update(self._world)
-
-	self._show_main_path_connection = show_main_path_connection
-end
-
-MonsterSpawner.editor_selection_changed = function (self, unit, selected)
-	self._selected = selected
-
-	self:_refresh_debug_draw(unit)
 end
 
 local FONT = "core/editor_slave/gui/arial"
@@ -265,7 +275,8 @@ MonsterSpawner._debug_draw_main_path_connection = function (self, unit, drawer)
 	local failed_color = Color.red()
 
 	if is_main_path_registered then
-		local nav_world = MonsterSpawner._nav_info.nav_world
+		local active_mission_level_id = LevelEditor:get_active_mission_level()
+		local nav_world = MonsterSpawner._nav_info.nav_world_from_level_id[active_mission_level_id]
 		local position, main_path_connection_position, path_position, travel_distance = _calculate_positions(unit)
 
 		if nav_world then
@@ -366,9 +377,9 @@ MonsterSpawner.editor_toggle_debug_draw = function (self, enable)
 		return
 	end
 
-	self._should_debug_draw = enable
+	self._debug_draw_enabled = enable
 
-	self:_refresh_debug_draw(self._unit)
+	self:_refresh_debug_draw(self.unit)
 end
 
 MonsterSpawner.component_data = {

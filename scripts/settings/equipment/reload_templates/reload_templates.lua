@@ -27,7 +27,12 @@ _create_reload_template_entry("scripts/settings/equipment/reload_templates/plasm
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/rippergun_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/heavy_stubber_twin_linked_reload_template")
 
-for reload_template_name, reload_template in pairs(reload_templates) do
+local sorted_reload_template_names = table.keys(reload_templates)
+
+table.sort(sorted_reload_template_names)
+
+for _, reload_template_name in ipairs(sorted_reload_template_names) do
+	local reload_template = reload_templates[reload_template_name]
 	local states = reload_template.states
 
 	for i = 1, #states do

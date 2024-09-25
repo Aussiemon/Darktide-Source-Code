@@ -174,6 +174,28 @@ right_trigger_style.text_color = {
 	126,
 }
 
+local item_lock_symbol_text_style = table.clone(UIFontSettings.header_3)
+
+item_lock_symbol_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+item_lock_symbol_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
+item_lock_symbol_text_style.hover_color = Color.terminal_icon_selected(255, true)
+item_lock_symbol_text_style.selected_color = Color.terminal_corner_selected(255, true)
+item_lock_symbol_text_style.font_size = 24
+item_lock_symbol_text_style.drop_shadow = false
+item_lock_symbol_text_style.text_horizontal_alignment = "center"
+item_lock_symbol_text_style.text_vertical_alignment = "center"
+item_lock_symbol_text_style.vertical_alignment = "center"
+item_lock_symbol_text_style.horizontal_alignment = "center"
+item_lock_symbol_text_style.size = {
+	20,
+	20,
+}
+item_lock_symbol_text_style.offset = {
+	-10,
+	-55,
+	1,
+}
+
 local widget_definitions = {
 	header = UIWidget.create_definition({
 		{
@@ -285,6 +307,10 @@ local function create_tab_widgets(tab_settings)
 	for i = 1, tab_settings.num_tabs do
 		local current_max_blessings = max_blessings[i] or "?"
 		local current_num_blessings = num_blessings[i] or "?"
+		local locked_style = table.clone_instance(item_lock_symbol_text_style)
+
+		locked_style.offset[1] = offset_x
+
 		local widget_definition = UIWidget.create_definition({
 			{
 				content_id = "hotspot",
@@ -356,6 +382,9 @@ local function create_tab_widgets(tab_settings)
 					},
 					color = Color.terminal_icon(255, true),
 				},
+				visibility_function = function (content, style)
+					return not content.locked
+				end,
 			},
 			{
 				pass_type = "texture",
@@ -467,6 +496,14 @@ local function create_tab_widgets(tab_settings)
 				},
 				visibility_function = function (content, style)
 					return content.selected
+				end,
+			},
+			{
+				pass_type = "text",
+				value = "",
+				style = locked_style,
+				visibility_function = function (content, style)
+					return content.locked
 				end,
 			},
 		}, "tab_pivot")

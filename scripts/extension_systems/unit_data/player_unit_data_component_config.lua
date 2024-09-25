@@ -37,15 +37,25 @@ for i = 1, NUM_LAYERS_1P do
 	animation_state_component[STATES_1P[i]] = "player_anim_state"
 end
 
+local fx_source_names = table.keys(PlayerCharacterFxSourceNames)
+
+table.sort(fx_source_names)
+
 local FX_SOURCES = {
 	"n/a",
 }
 
-for name, _ in pairs(PlayerCharacterFxSourceNames) do
+for fx_source_name_index = 1, #fx_source_names do
+	local name = fx_source_names[fx_source_name_index]
+
 	FX_SOURCES[#FX_SOURCES + 1] = name
 end
 
 local slot_configuration = PlayerCharacterConstants.slot_configuration
+local slot_names = table.keys(slot_configuration)
+
+table.sort(slot_names)
+
 local INVENTORY_SLOTS = {
 	"none",
 }
@@ -53,7 +63,10 @@ local WEAPON_INVENTORY_SLOTS = {
 	"none",
 }
 
-for slot_name, config in pairs(slot_configuration) do
+for slot_names_index = 1, #slot_names do
+	local slot_name = slot_names[slot_names_index]
+	local config = slot_configuration[slot_name]
+
 	INVENTORY_SLOTS[#INVENTORY_SLOTS + 1] = slot_name
 
 	if config.slot_type == "weapon" then
@@ -63,11 +76,17 @@ end
 
 INVENTORY_SLOTS.network_type = "player_inventory_slot_name"
 
+local character_state_names = table.keys(PlayerCharacterStates)
+
+table.sort(character_state_names)
+
 local CHARACTER_STATES = {
 	"dummy",
 }
 
-for name, _ in pairs(PlayerCharacterStates) do
+for character_state_name_index = 1, #character_state_names do
+	local name = character_state_names[character_state_name_index]
+
 	CHARACTER_STATES[#CHARACTER_STATES + 1] = name
 end
 
@@ -84,11 +103,23 @@ local WEAPON_TEMPLATES = {
 local WEAPON_ACTIONS = {
 	"none",
 }
+local WEAPON_TEMPLATE_NAMES = table.keys(WeaponTemplates)
 
-for weapon_template_name, weapon_template in pairs(WeaponTemplates) do
+table.sort(WEAPON_TEMPLATE_NAMES)
+
+for weapon_template_name_index = 1, #WEAPON_TEMPLATE_NAMES do
+	local weapon_template_name = WEAPON_TEMPLATE_NAMES[weapon_template_name_index]
+	local weapon_template = WeaponTemplates[weapon_template_name]
+
 	WEAPON_TEMPLATES[#WEAPON_TEMPLATES + 1] = weapon_template_name
 
-	for name, _ in pairs(weapon_template.actions) do
+	local action_names = table.keys(weapon_template.actions)
+
+	table.sort(action_names)
+
+	for action_name_index = 1, #action_names do
+		local name = action_names[action_name_index]
+
 		if not table.find(WEAPON_ACTIONS, name) then
 			WEAPON_ACTIONS[#WEAPON_ACTIONS + 1] = name
 		end
@@ -101,11 +132,23 @@ local ABILITY_TEMPLATES = {
 local ABILITY_ACTIONS = {
 	"none",
 }
+local ability_template_names = table.keys(AbilityTemplates)
 
-for ability_template_name, ability_template in pairs(AbilityTemplates) do
+table.sort(ability_template_names)
+
+for ability_template_name_index = 1, #ability_template_names do
+	local ability_template_name = ability_template_names[ability_template_name_index]
+	local ability_template = AbilityTemplates[ability_template_name]
+
 	ABILITY_TEMPLATES[#ABILITY_TEMPLATES + 1] = ability_template_name
 
-	for name, _ in pairs(ability_template.actions) do
+	local action_names = table.keys(ability_template.actions)
+
+	table.sort(action_names)
+
+	for action_name_index = 1, #action_names do
+		local name = action_names[action_name_index]
+
 		if not table.find(ABILITY_ACTIONS, name) then
 			ABILITY_ACTIONS[#ABILITY_ACTIONS + 1] = name
 		end
@@ -113,13 +156,20 @@ for ability_template_name, ability_template in pairs(AbilityTemplates) do
 end
 
 local function _extract_weapon_tweak_template_names(target_table, tweak_type)
-	local base_template_lookup_iterator = pairs
-
-	for _, weapon_template in pairs(WeaponTemplates) do
+	for weapon_template_name_index = 1, #WEAPON_TEMPLATE_NAMES do
+		local weapon_template_name = WEAPON_TEMPLATE_NAMES[weapon_template_name_index]
+		local weapon_template = WeaponTemplates[weapon_template_name]
 		local base_template_lookup = weapon_template.__base_template_lookup
 		local tweak_templates = base_template_lookup[tweak_type]
+		local tweak_template_keys
 
-		for lookup_type, lookup_entry in base_template_lookup_iterator(tweak_templates) do
+		tweak_template_keys = table.keys(tweak_templates)
+
+		table.sort(tweak_template_keys)
+
+		for tweak_template_key_index = 1, #tweak_template_keys do
+			local lookup_type = tweak_template_keys[tweak_template_key_index]
+			local lookup_entry = tweak_templates[lookup_type]
 			local new_identifier = lookup_entry.new_identifier
 
 			if not table.find(target_table, new_identifier) then
@@ -222,55 +272,93 @@ _extract_weapon_tweak_template_names(SIZE_OF_FLAME_TEMPLATES, tweak_template_typ
 local PLAYER_ABILITIES = {
 	"none",
 }
+local player_ability_names = table.keys(PlayerAbilities)
 
-for name, _ in pairs(PlayerAbilities) do
-	PLAYER_ABILITIES[#PLAYER_ABILITIES + 1] = name
+table.sort(player_ability_names)
+
+for player_ability_name_index = 1, #player_ability_names do
+	local player_ability_name = player_ability_names[player_ability_name_index]
+
+	PLAYER_ABILITIES[#PLAYER_ABILITIES + 1] = player_ability_name
 end
 
 local DISORIENTATION_TYPES = {
 	"none",
 }
+local disorientation_type_names = table.keys(DisorientationSettings.disorientation_types)
 
-for name, _ in pairs(DisorientationSettings.disorientation_types) do
-	DISORIENTATION_TYPES[#DISORIENTATION_TYPES + 1] = name
+table.sort(disorientation_type_names)
+
+for disorientation_type_name_index = 1, #disorientation_type_names do
+	local disorientation_type_name = disorientation_type_names[disorientation_type_name_index]
+
+	DISORIENTATION_TYPES[#DISORIENTATION_TYPES + 1] = disorientation_type_name
 end
 
 local INTERACTION_TEMPLATES = {
 	"none",
 }
+local interaction_template_names = table.keys(InteractionTemplates)
 
-for name, _ in pairs(InteractionTemplates) do
-	if not table.find(INTERACTION_TEMPLATES, name) then
-		INTERACTION_TEMPLATES[#INTERACTION_TEMPLATES + 1] = name
+table.sort(interaction_template_names)
+
+for interaction_template_name_index = 1, #interaction_template_names do
+	local interaction_template_name = interaction_template_names[interaction_template_name_index]
+
+	if not table.find(INTERACTION_TEMPLATES, interaction_template_name) then
+		INTERACTION_TEMPLATES[#INTERACTION_TEMPLATES + 1] = interaction_template_name
 	end
 end
 
 local INTERACTION_STATES = {
 	"none",
 }
+local interaction_state_names = table.keys(InteractionSettings.states)
 
-for state, _ in pairs(InteractionSettings.states) do
-	if not table.find(INTERACTION_STATES, state) then
-		INTERACTION_STATES[#INTERACTION_STATES + 1] = state
+table.sort(interaction_state_names)
+
+for interaction_state_name_index = 1, #interaction_state_names do
+	local interaction_state_name = interaction_state_names[interaction_state_name_index]
+
+	if not table.find(INTERACTION_STATES, interaction_state_name) then
+		INTERACTION_STATES[#INTERACTION_STATES + 1] = interaction_state_name
 	end
 end
 
 local BUFF_TEMPLATES = {
 	"none",
 }
+local buff_template_names = {}
 
 for name, _ in pairs(BuffTemplates) do
 	if not table.find(BUFF_TEMPLATES, name) then
-		BUFF_TEMPLATES[#BUFF_TEMPLATES + 1] = name
+		table.insert(buff_template_names, name)
 	end
+end
+
+table.sort(buff_template_names)
+
+local BUFF_TEMPLATES = {
+	"none",
+}
+
+for buff_template_name_index = 1, #buff_template_names do
+	local buff_template_name = buff_template_names[buff_template_name_index]
+
+	BUFF_TEMPLATES[#BUFF_TEMPLATES + 1] = buff_template_name
 end
 
 local LUNGE_TEMPLATES = {
 	"none",
 }
+local lunge_template_names = table.keys(LungeTemplates)
 
-for name, _ in pairs(LungeTemplates) do
-	LUNGE_TEMPLATES[#LUNGE_TEMPLATES + 1] = name
+table.sort(lunge_template_names)
+
+for lunge_template_name_index = 1, #lunge_template_names do
+	local lunge_template_name = lunge_template_names[lunge_template_name_index]
+
+	LUNGE_TEMPLATES[#LUNGE_TEMPLATES + 1] = lunge_template_name
 end
 
 local inventory_component = {

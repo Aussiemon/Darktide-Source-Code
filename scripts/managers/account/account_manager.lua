@@ -25,6 +25,7 @@ local interface = {
 	"is_muted",
 	"is_blocked",
 	"fetch_crossplay_restrictions",
+	"set_crossplay_restriction",
 	"has_crossplay_restriction",
 	"verify_user_restriction",
 	"user_has_restriction",

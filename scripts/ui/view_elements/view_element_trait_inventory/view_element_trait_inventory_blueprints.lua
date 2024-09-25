@@ -223,8 +223,27 @@ ViewElementTraitInventoryBlueprints.trait = {
 				color = Color.terminal_icon(255, true),
 			},
 			change_function = function (content, style)
-				style.color[1] = content.is_wasteful and 60 or 255
+				style.color[1] = (content.is_wasteful or content.is_unseen) and 60 or 255
 			end,
+		},
+		{
+			pass_type = "text",
+			style_id = "expertise_cost",
+			value = "",
+			value_id = "expertise_cost",
+			style = {
+				font_size = 18,
+				horizontal_alignment = "right",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
+				vertical_alignment = "bottom",
+				offset = {
+					-5,
+					-5,
+					6,
+				},
+				text_color = Color.terminal_corner(255, true),
+			},
 		},
 	},
 	init = function (parent, widget, config, callback_name)
@@ -242,6 +261,7 @@ ViewElementTraitInventoryBlueprints.trait = {
 		icon_material_values.icon = texture_icon
 		icon_material_values.frame = texture_frame
 		content.hotspot.pressed_callback = callback(parent, callback_name, widget, config)
+		content.is_unseen = config.status == "unseen"
 	end,
 	update = function (parent, widget, input_service, dt, t, ui_renderer)
 		local content = widget.content
@@ -288,6 +308,7 @@ ViewElementTraitInventoryBlueprints.trait = {
 			parent:_on_trait_hover(content.config)
 		end
 
+		content.is_unseen = config.status == "unseen"
 		content.is_wasteful = false
 
 		local item_traits = ingredients.item.traits

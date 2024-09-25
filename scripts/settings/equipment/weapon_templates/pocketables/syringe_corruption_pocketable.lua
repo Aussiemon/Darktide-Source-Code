@@ -28,7 +28,6 @@ local hud_icon = "content/ui/materials/icons/pocketables/hud/syringe"
 local hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_syringe_corruption"
 local pickup_name = "syringe_corruption_pocketable"
 local assist_notification_type = "cleansed"
-local vo_event
-local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon, hud_icon_small, pickup_name, assist_notification_type, vo_event)
+local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon, hud_icon_small, pickup_name, assist_notification_type)
 
 return weapon_template

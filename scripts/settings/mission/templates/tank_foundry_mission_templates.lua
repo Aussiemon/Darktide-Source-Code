@@ -97,8 +97,27 @@ local mission_templates = {
 		},
 		health_station = {},
 		mission_brief_vo = {
-			vo_profile = "sergeant_a",
+			vo_profile = "tech_priest_b",
 			wwise_route_key = 1,
+			mission_giver_packs = {
+				explicator_a = {
+					"explicator",
+					"tech_priest",
+				},
+				sergeant_a = {
+					"sergeant",
+					"tech_priest",
+				},
+				tech_priest_a = {
+					"tech_priest",
+				},
+				tech_priest_b = {
+					"tech_priest",
+					"enginseer",
+					"enemy_nemesis_wolfer",
+					"enemy_wolfer_adjutant",
+				},
+			},
 			vo_events = {
 				"mission_forge_briefing_a",
 				"mission_forge_briefing_b",

@@ -127,6 +127,14 @@ item_sub_display_name_text_style.text_color = Color.terminal_text_body_sub_heade
 item_sub_display_name_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
 item_sub_display_name_text_style.hover_color = Color.terminal_text_body(255, true)
 
+local item_rarity_text_style = table.clone(item_sub_display_name_text_style)
+
+item_rarity_text_style.offset = {
+	-20,
+	62,
+	5,
+}
+
 local item_level_text_style = table.clone(UIFontSettings.body_small)
 
 item_level_text_style.text_horizontal_alignment = "right"
@@ -720,6 +728,28 @@ ItemPassTemplates.gear_item = {
 		value_id = "properties",
 		style = item_properties_symbol_text_style,
 		change_function = _symbol_text_change_function,
+	},
+	{
+		pass_type = "texture",
+		style_id = "favorite_icon",
+		value = "content/ui/materials/symbols/character_level",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "bottom",
+			size = {
+				40,
+				40,
+			},
+			offset = {
+				0,
+				0,
+				16,
+			},
+			color = Color.ui_veteran(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.favorite
+		end,
 	},
 	{
 		pass_type = "texture",
@@ -1823,6 +1853,28 @@ ItemPassTemplates.ui_item = {
 	},
 	{
 		pass_type = "texture",
+		style_id = "favorite_icon",
+		value = "content/ui/materials/symbols/character_level",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "bottom",
+			size = {
+				40,
+				40,
+			},
+			offset = {
+				0,
+				0,
+				16,
+			},
+			color = Color.ui_veteran(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.favorite
+		end,
+	},
+	{
+		pass_type = "texture",
 		value = "content/ui/materials/symbols/new_item_indicator",
 		style = {
 			horizontal_alignment = "right",
@@ -2864,6 +2916,13 @@ ItemPassTemplates.item_slot = {
 	},
 	{
 		pass_type = "text",
+		style_id = "rarity_name",
+		value = "n/a",
+		value_id = "rarity_name",
+		style = item_rarity_text_style,
+	},
+	{
+		pass_type = "text",
 		style_id = "item_level",
 		value = "",
 		value_id = "item_level",
@@ -2876,75 +2935,6 @@ ItemPassTemplates.item_slot = {
 			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
 
 			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "trait_1",
-		value = "content/ui/materials/icons/traits/traits_container",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "bottom",
-			material_values = {},
-			color = Color.terminal_icon(nil, true),
-			size = {
-				32,
-				32,
-			},
-			offset = {
-				20,
-				-10,
-				5,
-			},
-		},
-		visibility_function = function (content, style)
-			return content.trait_1
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "trait_2",
-		value = "content/ui/materials/icons/traits/traits_container",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "bottom",
-			material_values = {},
-			color = Color.terminal_icon(nil, true),
-			size = {
-				32,
-				32,
-			},
-			offset = {
-				62,
-				-10,
-				5,
-			},
-		},
-		visibility_function = function (content, style)
-			return content.trait_2
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "trait_3",
-		value = "content/ui/materials/icons/traits/traits_container",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "bottom",
-			material_values = {},
-			color = Color.terminal_icon(nil, true),
-			size = {
-				32,
-				32,
-			},
-			offset = {
-				104,
-				-10,
-				5,
-			},
-		},
-		visibility_function = function (content, style)
-			return content.trait_3
 		end,
 	},
 	{
@@ -3020,6 +3010,7 @@ ItemPassTemplates.item = {
 	{
 		content_id = "hotspot",
 		pass_type = "hotspot",
+		style_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
 			on_pressed_sound = UISoundEvents.default_click,
@@ -3301,6 +3292,13 @@ ItemPassTemplates.item = {
 	},
 	{
 		pass_type = "text",
+		style_id = "rarity_name",
+		value = "n/a",
+		value_id = "rarity_name",
+		style = item_rarity_text_style,
+	},
+	{
+		pass_type = "text",
 		style_id = "item_level",
 		value = "n/a",
 		value_id = "item_level",
@@ -3313,75 +3311,6 @@ ItemPassTemplates.item = {
 			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
 
 			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "trait_1",
-		value = "content/ui/materials/icons/traits/traits_container",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "top",
-			material_values = {},
-			color = Color.terminal_icon(nil, true),
-			size = {
-				32,
-				32,
-			},
-			offset = {
-				20,
-				weapon_item_size[2] - 32 - 10,
-				5,
-			},
-		},
-		visibility_function = function (content, style)
-			return content.trait_1
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "trait_2",
-		value = "content/ui/materials/icons/traits/traits_container",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "top",
-			material_values = {},
-			color = Color.terminal_icon(nil, true),
-			size = {
-				32,
-				32,
-			},
-			offset = {
-				62,
-				weapon_item_size[2] - 32 - 10,
-				5,
-			},
-		},
-		visibility_function = function (content, style)
-			return content.trait_2
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "trait_3",
-		value = "content/ui/materials/icons/traits/traits_container",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "top",
-			material_values = {},
-			color = Color.terminal_icon(nil, true),
-			size = {
-				32,
-				32,
-			},
-			offset = {
-				104,
-				weapon_item_size[2] - 32 - 10,
-				5,
-			},
-		},
-		visibility_function = function (content, style)
-			return content.trait_3
 		end,
 	},
 	{
@@ -3527,6 +3456,43 @@ ItemPassTemplates.item = {
 	},
 	{
 		pass_type = "texture",
+		style_id = "deleted_icon",
+		value = "content/ui/materials/icons/items/equipped_label",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size = {
+				64,
+				64,
+			},
+			offset = {
+				0,
+				0,
+				16,
+			},
+		},
+		visibility_function = function (content, style)
+			return content.multi_selected
+		end,
+	},
+	{
+		pass_type = "rect",
+		style_id = "deleted_icon_background",
+		value = "content/ui/materials/icons/items/equipped_label",
+		style = {
+			color = Color.black(127.5, true),
+			offset = {
+				0,
+				0,
+				15,
+			},
+		},
+		visibility_function = function (content, style)
+			return content.multi_selected
+		end,
+	},
+	{
+		pass_type = "texture",
 		style_id = "equipped_icon",
 		value = "content/ui/materials/icons/items/equipped_label",
 		style = {
@@ -3543,7 +3509,27 @@ ItemPassTemplates.item = {
 			},
 		},
 		visibility_function = function (content, style)
-			return content.equipped or content.multi_selected
+			return content.equipped
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "favorite_icon",
+		value = string.format("%s %s", "", Localize("loc_inventory_menu_favorite_item")),
+		style = {
+			font_size = 18,
+			horizontal_alignment = "left",
+			text_vertical_alignment = "bottom",
+			vertical_alignment = "bottom",
+			offset = {
+				15,
+				-5,
+				16,
+			},
+			text_color = Color.terminal_text_header(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.favorite
 		end,
 	},
 	{
@@ -3675,6 +3661,39 @@ ItemPassTemplates.item = {
 			},
 		},
 		change_function = item_change_function,
+	},
+	{
+		pass_type = "rect",
+		style_id = "warning_message_background",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "top",
+			size = {
+				nil,
+				38,
+			},
+			offset = {
+				0,
+				ItemPassTemplates.weapon_item_size[2] * 0.5 - 19,
+				7,
+			},
+			color = {
+				150,
+				35,
+				0,
+				0,
+			},
+		},
+		visibility_function = function (content, style)
+			return content.warning_message and content.warning_message ~= ""
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "warning_message",
+		value = "",
+		value_id = "warning_message",
+		style = required_level_text_style,
 	},
 }
 ItemPassTemplates.general_goods_item = {
@@ -4024,7 +4043,45 @@ ItemPassTemplates.credits_goods_item = {
 		style_id = "display_name",
 		value = "n/a",
 		value_id = "display_name",
-		style = credits_item_display_name_text_style,
+		style = table.merge(table.clone(credits_item_display_name_text_style), {
+			text_vertical_alignment = "top",
+			vertical_alignment = "top",
+			offset = {
+				10,
+				8,
+				6,
+			},
+		}),
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
+
+			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
+		end,
+		visibility_function = function (content, style)
+			return content.level_requirement_met
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "sub_display_name",
+		value = "n/a",
+		value_id = "sub_display_name",
+		style = table.merge(table.clone(credits_item_display_name_text_style), {
+			text_vertical_alignment = "bottom",
+			vertical_alignment = "top",
+			offset = {
+				10,
+				-8,
+				6,
+			},
+			text_color = Color.terminal_text_body(255, true),
+			default_color = Color.terminal_text_body(255, true),
+			hover_color = Color.terminal_text_header(255, true),
+		}),
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local default_text_color = style.default_color
@@ -4478,6 +4535,28 @@ ItemPassTemplates.item_icon = {
 					content.element.remove_new_marker_callback(item)
 				end
 			end
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "favorite_icon",
+		value = "content/ui/materials/symbols/character_level",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "bottom",
+			size = {
+				40,
+				40,
+			},
+			offset = {
+				0,
+				0,
+				9,
+			},
+			color = Color.ui_veteran(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.favorite
 		end,
 	},
 }

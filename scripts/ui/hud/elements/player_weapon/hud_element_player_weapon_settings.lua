@@ -3,8 +3,6 @@
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local get_hud_color = UIHudSettings.get_hud_color
 local hud_element_player_weapon_settings = {
-	ammo_clip_max_row_rounds = 15,
-	ammo_clip_round_spacing = -2,
 	ammo_clip_urgent_threshold = 0.2,
 	ammo_font_size_default = 30,
 	ammo_font_size_default_small = 20,

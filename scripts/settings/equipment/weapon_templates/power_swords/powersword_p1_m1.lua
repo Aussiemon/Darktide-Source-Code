@@ -851,6 +851,7 @@ weapon_template.actions = {
 		},
 	},
 	action_right_light_pushfollow = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_down_right",
 		anim_event_3p = "attack_swing_down",
@@ -861,7 +862,6 @@ weapon_template.actions = {
 		hit_stop_anim = "hit_stop",
 		kind = "sweep",
 		range_mod = 1.25,
-		sprint_requires_press_to_interrupt = "true",
 		total_time = 2,
 		weapon_handling_template = "time_scale_1_4",
 		action_movement_curve = {
@@ -1162,8 +1162,10 @@ weapon_template.weapon_box = {
 	0.7,
 	0.02,
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.15
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
@@ -1171,9 +1173,9 @@ weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivatio
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 3,
 	allow_reactivation_while_active = true,
+	keep_active_on_sprint = true,
 	num_activations = 1,
 }
-weapon_template.allow_sprinting_with_special = true
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
 weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
@@ -1602,6 +1604,24 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "linesman",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "linesman",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "activate",
+		icon = "activate",
 	},
 }
 

@@ -44,6 +44,7 @@ local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset_end_t_4bit = true,
 	fixed_frame_offset_end_t_6bit = true,
 	fixed_frame_offset_end_t_7bit = true,
+	fixed_frame_offset_end_t_9bit = true,
 	fixed_frame_offset_small = true,
 	fixed_frame_offset_start_t_5bit = true,
 	fixed_frame_offset_start_t_6bit = true,
@@ -263,6 +264,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._in_panic = false
 	self._in_panic_at_t = 0
 	self._panic_is_behind = false
+	self._time_since_last_mispredict = 0
 end
 
 PlayerUnitDataExtension.game_object_initialized = function (self, session, object_id)
@@ -346,11 +348,23 @@ local USERDATA_REPLACEMENT = {}
 PlayerUnitDataExtension.extensions_ready = function (self, world, unit)
 	local game_object_return_table_or_nil = self._game_object_return_table
 	local n_fields = 0
+	local component_configs = self._component_config
+	local components = self._components
+	local component_names = table.keys(component_configs)
 
-	for component_name, component_config in pairs(self._component_config) do
-		local component = self._components[component_name][self._component_index]
+	table.sort(component_names)
 
-		for field_name, data in pairs(component_config) do
+	for component_name_index = 1, #component_names do
+		local component_name = component_names[component_name_index]
+		local component_config = component_configs[component_name]
+		local component = components[component_name][self._component_index]
+		local field_names = table.keys(component_config)
+
+		table.sort(field_names)
+
+		for field_name_index = 1, #field_names do
+			local field_name = field_names[field_name_index]
+			local data = component_config[field_name]
 			local value = component[field_name]
 			local field_type = data.type
 			local go_return_init_value
@@ -766,6 +780,14 @@ PlayerUnitDataExtension._copy_components = function (self, components, from, to)
 	end
 end
 
+PlayerUnitDataExtension.update = function (self, unit, dt, t)
+	local is_client = not self._is_server
+
+	if is_client then
+		self._time_since_last_mispredict = self._time_since_last_mispredict + dt
+	end
+end
+
 PlayerUnitDataExtension.post_update = function (self, unit, dt, t)
 	if not self._is_server then
 		return
@@ -945,6 +967,8 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 	local components = self._components
 	local game_object_return_table = self._game_object_return_table
 	local modified_table_size = GameSession.game_object_fields_array(game_session, server_data_state_game_object_id, game_object_return_table)
+	local telemetry_reporter = Managers.telemetry_reporters:reporter("mispredict")
+	local time_since_last_mispredict = self._time_since_last_mispredict
 
 	for i = 1, modified_table_size, 2 do
 		local field_id = NETWORK_NAME_ID_TO_FIELD_ID[game_object_return_table[i]]
@@ -1033,6 +1057,8 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 
 		if not correct then
 			mispredict = true
+
+			telemetry_reporter:register_event(time_since_last_mispredict, component_name, field_name)
 		end
 	end
 
@@ -1052,6 +1078,10 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 		Managers.state.extension:fixed_update_resimulate_unit(self._unit, resimulate_from, rollback_components)
 
 		self.is_resimulating = false
+
+		telemetry_reporter:register_frame()
+
+		self._time_since_last_mispredict = 0
 	end
 
 	self._last_received_frame = frame_index

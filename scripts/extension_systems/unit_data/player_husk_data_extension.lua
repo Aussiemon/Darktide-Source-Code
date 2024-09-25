@@ -12,11 +12,21 @@ local HUSK_GAME_OBJECT_FIELD_DATA = Script.new_array(64)
 local HUSK_HUD_GAME_OBJECT_FIELD_DATA = Script.new_array(32)
 local NETWORK_NAME_ID_TO_FIELD_ID = Script.new_map(128)
 
-local function create_network_field_lookup(formatted_config, network_field_lookup)
+local function _create_network_field_lookup(formatted_config, network_field_lookup)
 	local data_n = 0
+	local component_names = table.keys(formatted_config)
 
-	for component_name, component_config in pairs(formatted_config) do
-		for field_name, field_config in pairs(component_config) do
+	table.sort(component_names)
+
+	for component_name_index = 1, #component_names do
+		local component_name = component_names[component_name_index]
+		local component_config = formatted_config[component_name]
+		local field_names = table.keys(component_config)
+
+		table.sort(field_names)
+
+		for field_name_index = 1, #field_names do
+			local field_name = field_names[field_name_index]
 			local field_id = FORMATTED_CONFIG[component_name][field_name].lookup_index
 			local field = FIELD_NETWORK_LOOKUP[field_id]
 			local network_name = field[4]
@@ -36,8 +46,8 @@ local function create_network_field_lookup(formatted_config, network_field_looku
 	end
 end
 
-create_network_field_lookup(FORMATTED_HUSK_CONFIG, HUSK_GAME_OBJECT_FIELD_DATA)
-create_network_field_lookup(FORMATTED_HUSK_HUD_CONFIG, HUSK_HUD_GAME_OBJECT_FIELD_DATA)
+_create_network_field_lookup(FORMATTED_HUSK_CONFIG, HUSK_GAME_OBJECT_FIELD_DATA)
+_create_network_field_lookup(FORMATTED_HUSK_HUD_CONFIG, HUSK_HUD_GAME_OBJECT_FIELD_DATA)
 
 local PlayerHuskDataExtension = class("PlayerHuskDataExtension")
 local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
@@ -45,6 +55,7 @@ local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset_end_t_4bit = true,
 	fixed_frame_offset_end_t_6bit = true,
 	fixed_frame_offset_end_t_7bit = true,
+	fixed_frame_offset_end_t_9bit = true,
 	fixed_frame_offset_small = true,
 	fixed_frame_offset_start_t_6bit = true,
 	fixed_frame_offset_start_t_7bit = true,

@@ -297,6 +297,46 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_small",
 		},
 	},
+	explosion_settings_renegade_flamer = {
+		close_radius = 3,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = false,
+		min_close_radius = 0.5,
+		min_radius = 3,
+		override_friendly_fire = true,
+		radius = 6,
+		scalable_radius = true,
+		static_power_level = 500,
+		close_damage_profile = DamageProfileTemplates.flamer_backpack_explosion_close,
+		damage_profile = DamageProfileTemplates.flamer_backpack_explosion,
+		vfx = {
+			"content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuel_detonation",
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_flamer_tank",
+			"wwise/events/weapon/play_explosion_refl_gen",
+		},
+	},
+	explosion_settings_cultist_flamer = {
+		close_radius = 3,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = false,
+		min_close_radius = 0.5,
+		min_radius = 3,
+		override_friendly_fire = true,
+		radius = 6,
+		scalable_radius = true,
+		static_power_level = 500,
+		close_damage_profile = DamageProfileTemplates.flamer_backpack_explosion_close,
+		damage_profile = DamageProfileTemplates.flamer_backpack_explosion,
+		vfx = {
+			"content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuel_detonation",
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_flamer_tank",
+			"wwise/events/weapon/play_explosion_refl_gen",
+		},
+	},
 }
 
 return explosion_templates

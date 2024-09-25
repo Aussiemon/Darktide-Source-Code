@@ -63,6 +63,13 @@ local material_overrides = {
 			},
 		},
 	},
+	cultist_lowerbody_b_captain_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_lowerbody_b_04",
+			},
+		},
+	},
 	cultist_elite_color_var_01 = {
 		texture_overrides = {
 			mat1_gradient = {

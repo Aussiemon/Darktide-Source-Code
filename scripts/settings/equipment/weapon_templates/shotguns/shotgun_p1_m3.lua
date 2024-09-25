@@ -852,10 +852,13 @@ weapon_template.conditional_state_to_action_input = {
 }
 weapon_template.no_ammo_delay = 0.3
 weapon_template.ammo_template = "shotgun_p1_m3"
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
-weapon_template.keep_weapon_special_active_on_unwield = true
-weapon_template.allow_sprinting_with_special = true
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
+weapon_template.weapon_special_tweak_data = {
+	keep_active_until_shot_complete = true,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
@@ -1164,6 +1167,30 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_special_bullet_shotgun_p1m3_desc",
 		display_name = "loc_weapon_special_special_ammo",
 		type = "special_bullet",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "hipfire",
+			icon = "hipfire",
+			sub_icon = "shotgun",
+			value_func = "primary_attack",
+		},
+		{
+			header = "ads",
+			icon = "ads",
+			sub_icon = "shotgun",
+			value_func = "secondary_attack",
+		},
+		{
+			header = "ammo",
+			value_func = "ammo",
+		},
+	},
+	weapon_special = {
+		header = "special_ammo",
+		icon = "special_ammo",
 	},
 }
 weapon_template.explicit_combo = {

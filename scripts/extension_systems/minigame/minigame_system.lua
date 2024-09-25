@@ -12,9 +12,12 @@ local CLIENT_RPCS = {
 	"rpc_minigame_sync_completed",
 	"rpc_minigame_sync_game_state",
 	"rpc_minigame_sync_set_stage",
+	"rpc_minigame_sync_generate_board",
+	"rpc_minigame_sync_balance_set_position",
 	"rpc_minigame_sync_decode_symbols_set_start_time",
 	"rpc_minigame_sync_decode_symbols_set_symbols",
 	"rpc_minigame_sync_decode_symbols_set_target",
+	"rpc_minigame_sync_defuse_set_selection",
 	"rpc_minigame_sync_drill_generate_targets",
 	"rpc_minigame_sync_drill_set_cursor",
 	"rpc_minigame_sync_drill_set_search",
@@ -97,6 +100,22 @@ MinigameSystem.rpc_minigame_sync_game_state = function (self, channel_id, unit_i
 	minigame:set_state(state)
 end
 
+MinigameSystem.rpc_minigame_sync_generate_board = function (self, channel_id, unit_id, is_level_unit, seed)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame()
+
+	minigame:generate_board(seed)
+end
+
+MinigameSystem.rpc_minigame_sync_balance_set_position = function (self, channel_id, unit_id, is_level_unit, position_x, position_y)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame(MinigameSettings.types.balance)
+
+	minigame:set_position(position_x, position_y)
+end
+
 MinigameSystem.rpc_minigame_sync_set_stage = function (self, channel_id, unit_id, is_level_unit, stage)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
@@ -128,6 +147,14 @@ MinigameSystem.rpc_minigame_sync_decode_symbols_set_target = function (self, cha
 	local minigame = extension:minigame(MinigameSettings.types.decode_symbols)
 
 	minigame:set_target(stage, target)
+end
+
+MinigameSystem.rpc_minigame_sync_defuse_set_selection = function (self, channel_id, unit_id, is_level_unit, selection)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame(MinigameSettings.types.defuse)
+
+	minigame:set_selection(selection)
 end
 
 MinigameSystem.rpc_minigame_sync_drill_generate_targets = function (self, channel_id, unit_id, is_level_unit, seed)

@@ -2,6 +2,7 @@
 
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local SweepTrail = class("SweepTrail")
 local WINDUP_START_SOUND_ALIAS = "windup_start"
 local WINDUP_STOP_SOUND_ALIAS = "windup_stop"
@@ -150,5 +151,7 @@ function _update_status(components, is_critical, is_powered, is_visible, visibil
 		end
 	end
 end
+
+implements(SweepTrail, WieldableSlotScriptInterface)
 
 return SweepTrail

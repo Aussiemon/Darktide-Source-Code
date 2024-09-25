@@ -145,7 +145,7 @@ ShootingRangeSteps.portal_loop = {
 			local local_player = Managers.player:local_player(1)
 
 			Managers.event:trigger("event_cutscene_fade_in", local_player, 1, math.easeCubic)
-			Managers.state.game_mode:complete_game_mode(false)
+			Managers.state.game_mode:complete_game_mode()
 
 			return true
 		end

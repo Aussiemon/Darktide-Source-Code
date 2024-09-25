@@ -3,8 +3,9 @@
 local CameraEffectSettings = require("scripts/settings/camera/camera_effect_settings")
 local CameraShakeEvent = class("CameraShakeEvent")
 local PI = math.pi
+local DEG_TO_RAD = PI / 180
 
-CameraShakeEvent.init = function (self, event_name, source_unit_data)
+CameraShakeEvent.init = function (self, event_name, optional_source_unit_data)
 	local event = CameraEffectSettings.shake[event_name]
 	local fade_in = event.fade_in
 	local fade_out = event.fade_out
@@ -17,7 +18,7 @@ CameraShakeEvent.init = function (self, event_name, source_unit_data)
 	self._fade_in_time = fade_in
 	self._fade_out_time = fade_out
 	self._seed = event.seed or math.random(1, 100)
-	self._source_unit_data = source_unit_data
+	self._source_unit_data = optional_source_unit_data
 	self._is_done = false
 	self._engine_math = rawget(_G, "EditorApi") and Math or math
 	self._math_utils_or_math = rawget(_G, "EditorApi") and MathUtils or math
@@ -51,41 +52,42 @@ CameraShakeEvent._apply_shake_event = function (self, dt, camera_data, camera_po
 	local end_time = self._end_time
 	local fade_in_time = self._fade_in_time
 	local fade_out_time = self._fade_out_time
-	local _math_utils_or_math = self._math_utils_or_math
+	local math_utils_or_math = self._math_utils_or_math
 	local fade_progress
 
 	if fade_in_time and current_time <= fade_in_time then
-		fade_progress = _math_utils_or_math.clamp(current_time / fade_in_time, 0, 1) or 0
+		fade_progress = math_utils_or_math.clamp(current_time / fade_in_time, 0, 1)
 	elseif fade_out_time and fade_out_time <= current_time then
-		fade_progress = _math_utils_or_math.clamp((end_time - current_time) / (end_time - fade_out_time), 0, 1) or 0
+		fade_progress = math_utils_or_math.clamp((end_time - current_time) / (end_time - fade_out_time), 0, 1)
+	else
+		fade_progress = 0
 	end
 
 	local scale = 1
+	local source_unit_data = self._source_unit_data
 
-	if self._source_unit_data then
-		local unit_data = self._source_unit_data
-		local source_position = unit_data.source_position:unbox()
-		local near_dist = unit_data.near_dist
-		local far_dist = unit_data.far_dist
-		local near_value = unit_data.near_value
-		local far_value = unit_data.far_value
-		local d = Vector3.distance(source_position, camera_position)
+	if source_unit_data then
+		local source_position = source_unit_data.source_position:unbox()
+		local near_distance = source_unit_data.near_distance
+		local far_distance = source_unit_data.far_distance
+		local near_value = source_unit_data.near_value
+		local far_value = source_unit_data.far_value
+		local distance = Vector3.distance(source_position, camera_position)
 
-		scale = 1 - _math_utils_or_math.clamp((d - near_dist) / (far_dist - near_dist), 0, 1)
+		scale = 1 - math_utils_or_math.clamp((distance - near_distance) / (far_distance - near_distance), 0, 1)
 		scale = far_value + scale * (near_value - far_value)
 	end
 
 	scale = scale * self._sway_intensity
 
-	local pitch_noise_value = self:_calculate_perlin_value(current_time, fade_progress) * scale
-	local yaw_noise_value = self:_calculate_perlin_value(current_time + 10, fade_progress) * scale
-	local current_rot = camera_data.rotation
-	local deg_to_rad = PI / 180
-	local yaw_offset = yaw_noise_value * deg_to_rad
-	local pitch_offset = pitch_noise_value * deg_to_rad
+	local yaw_noise_value = self:_calculate_perlin_value(current_time + 10, fade_progress)
+	local pitch_noise_value = self:_calculate_perlin_value(current_time, fade_progress)
+	local yaw_offset = yaw_noise_value * DEG_TO_RAD * scale
+	local pitch_offset = pitch_noise_value * DEG_TO_RAD * scale
 	local total_offset = Quaternion.from_yaw_pitch_roll(yaw_offset, pitch_offset, 0)
+	local current_rotation = camera_data.rotation
 
-	camera_data.rotation = Quaternion.multiply(current_rot, total_offset)
+	camera_data.rotation = Quaternion.multiply(current_rotation, total_offset)
 
 	if end_time <= current_time then
 		self._is_done = true
@@ -98,9 +100,9 @@ CameraShakeEvent._calculate_perlin_value = function (self, x, fade_progress)
 	local persistance = event_settings.persistance
 	local number_of_octaves = event_settings.octaves
 
-	for i = 0, number_of_octaves do
-		local frequency = 2^i
-		local amplitude = persistance^i
+	for ii = 0, number_of_octaves do
+		local frequency = 2^ii
+		local amplitude = persistance^ii
 
 		total = total + self:_interpolated_noise(x * frequency) * amplitude
 	end

@@ -55,6 +55,7 @@ SaveData.default_account_data = {
 		crafting_pickup_notification_type = "notification",
 		crosshair_enabled = true,
 		crosshair_type_override = "weapon",
+		crossplay_enabled = true,
 		forced_dot_crosshair_enabled = false,
 		group_buff_icon_in_categories = true,
 		hit_indicator_duration = 0.5,
@@ -74,6 +75,7 @@ SaveData.default_account_data = {
 		subtitle_font_size = 32,
 		subtitle_speaker_enabled = true,
 		subtitle_text_opacity = 100,
+		telemetry_enabled = true,
 		warp_charge_effects_intensity = 100,
 		flash_taskbar_enabled = IS_WINDOWS,
 	},
@@ -94,6 +96,8 @@ SaveData.default_character_data = {
 	profile_presets = {
 		profile_presets_version = 1,
 	},
+	favorite_items = {},
+	group_finder_search_tags = {},
 }
 
 SaveData.init = function (self)
@@ -128,6 +132,10 @@ SaveData.populate = function (self, save_data)
 						for character_id, character_id_data in pairs(character_data) do
 							if not character_id_data.view_settings then
 								character_id_data.view_settings = table.clone_instance(default_character_data.view_settings)
+							end
+
+							if not character_id_data.group_finder_search_tags then
+								character_id_data.group_finder_search_tags = table.clone_instance(default_character_data.group_finder_search_tags)
 							end
 
 							local profile_presets = character_id_data.profile_presets
@@ -169,7 +177,7 @@ SaveData.populate = function (self, save_data)
 		end
 	end
 
-	if IS_XBS then
+	if IS_XBS or IS_PLAYSTATION then
 		if self.data.user_settings then
 			UserSettings = self.data.user_settings
 		else

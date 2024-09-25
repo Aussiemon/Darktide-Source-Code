@@ -41,11 +41,7 @@ Interrupt.action = function (t, unit, reason, reason_data_or_nil, ignore_immunit
 		weapon_extension:stop_action(reason, reason_data_or_nil, t, allow_chain_input_from_stop_reason)
 	end
 
-	local weapon_template = weapon_extension:weapon_template()
-
-	if weapon_template and not weapon_template.allow_sprinting_with_special then
-		WeaponSpecial.disable(unit)
-	end
+	weapon_extension:set_wielded_weapon_weapon_special_active(t, false, reason)
 end
 
 Interrupt.ability_and_action = function (t, unit, reason, reason_data_or_nil, ignore_immunity)

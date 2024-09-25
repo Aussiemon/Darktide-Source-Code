@@ -39,6 +39,12 @@ catapulting_templates.barrel_explosion = {
 	use_hit_position = true,
 	z_force = 6,
 }
+catapulting_templates.flamer_explosion = {
+	direction_from_node = "j_spine",
+	force = 7,
+	use_hit_position = true,
+	z_force = 5,
+}
 catapulting_templates.twin_gas_grenade_explosion = {
 	direction_from_node = "j_spine",
 	force = 7,

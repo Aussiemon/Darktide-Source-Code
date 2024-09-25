@@ -1,17 +1,10 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel.lua
 
-local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local Definitions = require("scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel_definitions")
 local HudElementEmoteWheelSettings = require("scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel_settings")
 local InputDevice = require("scripts/managers/input/input_device")
-local InputUtils = require("scripts/managers/input/input_utils")
-local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
-local Vo = require("scripts/utilities/vo")
-local ChannelTags = ChatManagerConstants.ChannelTag
-local unit_alive = Unit.alive
 local INSTANT_WHEEL_THRESHOLD = 8
 local HOVER_GRACE_PERIOD = 0.4
 local default_slot_data = {

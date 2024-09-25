@@ -76,6 +76,26 @@ local views = {
 			UISoundEvents.default_menu_exit,
 		},
 	},
+	discard_items_view = {
+		class = "DiscardItemsView",
+		close_on_hotkey_pressed = true,
+		disable_game_world = false,
+		display_name = "loc_discard_items_view_display_name",
+		game_world_blur = 1.1,
+		load_in_hub = true,
+		package = "packages/ui/views/discard_items_view/discard_items_view",
+		path = "scripts/ui/views/discard_items_view/discard_items_view",
+		state_bound = true,
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter,
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit,
+		},
+	},
 	options_view = {
 		class = "OptionsView",
 		disable_game_world = false,
@@ -302,20 +322,6 @@ local views = {
 		},
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-		},
-	},
-	achievements_view = {
-		class = "AchievementsView",
-		close_on_hotkey_pressed = false,
-		disable_game_world = true,
-		display_name = "loc_achievements_view_display_name",
-		game_world_blur = 1.1,
-		load_in_hub = true,
-		package = "packages/ui/views/achievements_view/achievements_view",
-		path = "scripts/ui/views/achievements_view/achievements_view",
-		use_transition_ui = true,
-		testify_flags = {
-			ui_views = false,
 		},
 	},
 	class_selection_view = {
@@ -941,10 +947,21 @@ _declare_view("crafting_extract_trait_view", require("scripts/ui/views/crafting_
 _declare_view("crafting_replace_trait_view", require("scripts/ui/views/crafting_replace_trait_view/crafting_replace_trait_view_declaration_settings"))
 _declare_view("crafting_modify_options_view", require("scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_declaration_settings"))
 _declare_view("crafting_replace_perk_view", require("scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view_declaration_settings"))
+_declare_view("crafting_mechanicus_modify_view", require("scripts/ui/views/crafting_mechanicus_modify_view/crafting_mechanicus_modify_view_declaration_settings"))
+_declare_view("crafting_mechanicus_barter_items_view", require("scripts/ui/views/crafting_mechanicus_barter_items_view/crafting_mechanicus_barter_items_view_declaration_settings"))
+_declare_view("crafting_mechanicus_upgrade_item_view", require("scripts/ui/views/crafting_mechanicus_upgrade_item_view/crafting_mechanicus_upgrade_item_view_declaration_settings"))
+_declare_view("crafting_mechanicus_replace_trait_view", require("scripts/ui/views/crafting_mechanicus_replace_trait_view/crafting_mechanicus_replace_trait_view_declaration_settings"))
+_declare_view("crafting_mechanicus_replace_perk_view", require("scripts/ui/views/crafting_mechanicus_replace_perk_view/crafting_mechanicus_replace_perk_view_declaration_settings"))
+_declare_view("crafting_mechanicus_modify_options_view", require("scripts/ui/views/crafting_mechanicus_modify_options_view/crafting_mechanicus_modify_options_view_declaration_settings"))
+_declare_view("crafting_mechanicus_upgrade_expertise_view", require("scripts/ui/views/crafting_mechanicus_upgrade_expertise_view/crafting_mechanicus_upgrade_expertise_view_declaration_settings"))
+_declare_view("masteries_overview_view", require("scripts/ui/views/masteries_overview_view/masteries_overview_view_declaration_settings"))
+_declare_view("mastery_view", require("scripts/ui/views/mastery_view/mastery_view_declaration_settings"))
+_declare_view("inventory_weapon_marks_view", require("scripts/ui/views/inventory_weapon_marks_view/inventory_weapon_marks_view_declaration_settings"))
 _declare_view("cosmetics_vendor_view", require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_declaration_settings"))
 _declare_view("cosmetics_vendor_background_view", require("scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_declaration_settings"))
 _declare_view("story_mission_lore_view", require("scripts/ui/views/story_mission_lore_view/story_mission_lore_view_declaration_settings"))
 _declare_view("story_mission_play_view", require("scripts/ui/views/story_mission_play_view/story_mission_play_view_declaration_settings"))
+_declare_view("group_finder_view", require("scripts/ui/views/group_finder_view/group_finder_view_declaration_settings"))
 _declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do

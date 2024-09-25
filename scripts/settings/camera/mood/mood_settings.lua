@@ -382,11 +382,6 @@ mood_settings.moods = {
 		looping_sound_stop_events = {
 			"wwise/events/player/play_psyker_shield_dome_exit",
 		},
-		wwise_state = {
-			group = "player_state",
-			off_state = "none",
-			on_state = "psyker_shield",
-		},
 	},
 	[types.syringe_ability] = {
 		blend_in_time = 0.1,

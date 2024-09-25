@@ -76,6 +76,7 @@ DialogueContextExtension._update_player_unit_status = function (self)
 			target_context.is_warp_grabbed = tostring(PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component))
 			target_context.is_mutant_charged = tostring(PlayerUnitStatus.is_mutant_charged(disabled_character_state_component))
 			target_context.is_consumed = tostring(PlayerUnitStatus.is_consumed(disabled_character_state_component))
+			target_context.is_grabbed = tostring(PlayerUnitStatus.is_grabbed(disabled_character_state_component))
 		end
 	end
 end

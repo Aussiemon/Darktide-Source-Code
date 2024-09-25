@@ -165,7 +165,8 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local ammunition_usage = action_settings.ammunition_usage
 
 	if action_settings.activate_special_on_required_ammo and ammunition_usage and ammunition_usage <= inventory_slot_component.current_ammunition_clip then
-		inventory_slot_component.special_active = true
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true)
+
 		self._weapon_action_component.special_active_at_start = true
 	end
 
@@ -963,15 +964,9 @@ ActionShoot._play_line_fx = function (self, line_effect, position, end_position)
 		return
 	end
 
-	local min_position, max_position = NetworkConstants.min_position, NetworkConstants.max_position
-	local network_position_extent = math.min((max_position - min_position) * 0.5, math.abs(min_position), max_position)
-	local hard_cap_extents = Vector3(network_position_extent, network_position_extent, network_position_extent)
-	local soft_cap_extents = hard_cap_extents * 0.9
-	local distance_along_ray = Intersect.ray_box(end_position, position - end_position, Matrix4x4.identity(), soft_cap_extents)
+	local out_of_bounds_manager = Managers.state.out_of_bounds
 
-	if distance_along_ray and distance_along_ray > 0 then
-		end_position = position + (end_position - position) * (1 - distance_along_ray)
-	end
+	end_position = out_of_bounds_manager:limit_line_end_position_to_soft_cap_extents(position, end_position)
 
 	local is_critical_strike = self._critical_strike_component.is_active
 	local source_name = self:_muzzle_fx_source()

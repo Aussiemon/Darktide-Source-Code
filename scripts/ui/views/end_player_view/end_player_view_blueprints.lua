@@ -331,8 +331,17 @@ local function _item_pass_template_init(widget, config)
 	local item_level = config.item_level
 
 	content.reward_item = reward_item
-	content.item_display_name = Items.display_name(reward_item)
-	content.item_sub_display_name = Items.sub_display_name(reward_item)
+
+	local item_type = reward_item.item_type
+
+	if item_type == "WEAPON_RANGED" or item_type == "WEAPON_MELEE" then
+		content.item_display_name = string.format("%s\n%s", Items.weapon_card_display_name(reward_item), Items.weapon_card_sub_display_name(reward_item))
+		content.item_sub_display_name = Items.sub_display_name(reward_item)
+	else
+		content.item_display_name = Items.display_name(reward_item)
+		content.item_sub_display_name = Items.sub_display_name(reward_item)
+	end
+
 	content.item_group = item_group
 
 	local item_level_style = widget.style.item_level
@@ -834,6 +843,417 @@ end_player_view_blueprints.empty_test_card = {
 		content.label = config.label or "Test"
 		content.content_animation = "test"
 		content.dim_out_animation = "test"
+	end,
+}
+
+local weapon_size = folded_card_size
+
+end_player_view_blueprints.weapon = {
+	size = folded_card_size,
+	pass_template_function = function (parent, config)
+		local card_size = folded_card_size
+		local area_size = {
+			folded_card_size[1],
+			folded_card_size[2] * 0.5,
+		}
+		local icon_size = {
+			150,
+			50,
+		}
+		local bar_width = area_size[1] * 0.7
+		local weapon_pass_template = {
+			{
+				pass_type = "text",
+				style_id = "title",
+				value = "",
+				value_id = "title",
+				style = {
+					text_horizontal_alignment = "center",
+					text_color = Color.terminal_text_body(0, true),
+					in_focus_color = Color.terminal_text_body(255, true),
+					offset = {
+						0,
+						30,
+						0,
+					},
+				},
+			},
+			{
+				pass_type = "text",
+				style_id = "level",
+				value = "",
+				value_id = "level",
+				style = {
+					default_font_size = 18,
+					font_size = 18,
+					text_horizontal_alignment = "center",
+					default_text_color = Color.white(255, true),
+					highlight_text_color = Color.white(255, true),
+					text_color = Color.white(0, true),
+					in_focus_color = Color.white(255, true),
+					offset = {
+						0,
+						55,
+						0,
+					},
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "icon",
+				value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+				value_id = "icon",
+				style = {
+					horizontal_alignment = "center",
+					color = Color.terminal_text_body(0, true),
+					default_color = Color.terminal_text_body(nil, true),
+					in_focus_color = Color.terminal_text_body(nil, true),
+					offset = {
+						0,
+						95,
+						5,
+					},
+					size = {
+						icon_size[1] * 0.8,
+						icon_size[2] * 0.8,
+					},
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
+				style = {
+					horizontal_alignment = "center",
+					in_focus_color = Color.terminal_background_dark(nil, true),
+					color = Color.terminal_background_dark(0, true),
+					offset = {
+						0,
+						90,
+						0,
+					},
+					size = icon_size,
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "background_gradient",
+				value = "content/ui/materials/gradients/gradient_vertical",
+				style = {
+					horizontal_alignment = "center",
+					default_color = {
+						100,
+						33,
+						35,
+						37,
+					},
+					in_focus_color = {
+						100,
+						33,
+						35,
+						37,
+					},
+					color = {
+						0,
+						33,
+						35,
+						37,
+					},
+					offset = {
+						0,
+						90,
+						1,
+					},
+					size = icon_size,
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "button_gradient",
+				value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+				style = {
+					horizontal_alignment = "center",
+					color = Color.terminal_background_gradient(0, true),
+					in_focus_color = Color.terminal_background_gradient(nil, true),
+					offset = {
+						0,
+						90,
+						1,
+					},
+					size = icon_size,
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
+				style = {
+					horizontal_alignment = "center",
+					color = Color.terminal_frame(0, true),
+					default_color = Color.terminal_frame(nil, true),
+					in_focus_color = Color.terminal_frame(nil, true),
+					offset = {
+						0,
+						90,
+						6,
+					},
+					size = icon_size,
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "corner",
+				value = "content/ui/materials/frames/frame_corner_2px",
+				style = {
+					horizontal_alignment = "center",
+					color = Color.terminal_corner(0, true),
+					default_color = Color.terminal_corner(nil, true),
+					in_focus_color = Color.terminal_corner(nil, true),
+					offset = {
+						0,
+						90,
+						7,
+					},
+					size = icon_size,
+				},
+			},
+			{
+				pass_type = "text",
+				style_id = "total_exp",
+				value = "",
+				value_id = "total_exp",
+				style = {
+					horizontal_alignment = "center",
+					text_horizontal_alignment = "right",
+					in_focus_color = Color.terminal_text_body(255, true),
+					text_color = Color.terminal_text_body(0, true),
+					size = {
+						bar_width,
+					},
+					offset = {
+						0,
+						140,
+						0,
+					},
+				},
+			},
+			{
+				pass_type = "rect",
+				style_id = "experience_bar",
+				style = {
+					horizontal_alignment = "left",
+					color = Color.terminal_icon(0, true),
+					in_focus_color = Color.terminal_icon(255, true),
+					default_color = Color.terminal_icon(255, true),
+					size = {
+						0,
+						10,
+					},
+					offset = {
+						(area_size[1] - bar_width) * 0.5,
+						170,
+						4,
+					},
+				},
+			},
+			{
+				pass_type = "rect",
+				style_id = "experience_bar_background",
+				style = {
+					horizontal_alignment = "left",
+					color = Color.black(0, true),
+					in_focus_color = Color.black(255, true),
+					size = {
+						bar_width,
+						10,
+					},
+					offset = {
+						(area_size[1] - bar_width) * 0.5,
+						170,
+						3,
+					},
+				},
+			},
+			{
+				pass_type = "rect",
+				style_id = "experience_bar_line",
+				style = {
+					horizontal_alignment = "left",
+					in_focus_color = Color.terminal_text_body(255, true),
+					color = Color.terminal_text_body(0, true),
+					size = {
+						bar_width,
+						10,
+					},
+					offset = {
+						(area_size[1] - bar_width) * 0.5 - 2,
+						168,
+						2,
+					},
+					size_addition = {
+						4,
+						4,
+					},
+				},
+			},
+			{
+				pass_type = "text",
+				style_id = "added_exp_text",
+				value = "",
+				value_id = "added_exp_text",
+				style = {
+					horizontal_alignment = "center",
+					text_horizontal_alignment = "center",
+					text_color = Color.terminal_text_body(0, true),
+					in_focus_color = Color.terminal_text_body(255, true),
+					size = {
+						bar_width,
+					},
+					offset = {
+						0,
+						185,
+						0,
+					},
+				},
+			},
+		}
+		local full_pass = _get_card_default_frame_pass_template()
+		local slots = {
+			"slot_primary",
+			"slot_secondary",
+		}
+
+		for i = 1, #slots do
+			local slot_type = slots[i]
+			local pass_template = table.clone(weapon_pass_template)
+			local offset = ViewStyles.card_fully_expanded_height * 0.5
+
+			for f = 1, #pass_template do
+				local pass = pass_template[f]
+
+				if pass.style_id then
+					pass.style_id = string.format("%s_%s_%s", "weapon", pass.style_id, slot_type)
+				end
+
+				if pass.value_id then
+					pass.value_id = string.format("%s_%s_%s", "weapon", pass.value_id, slot_type)
+				end
+
+				pass.style = pass.style or {}
+				pass.style.offset = pass.style.offset or {
+					0,
+					0,
+					0,
+				}
+				pass.style.offset[2] = pass.style.offset[2] + offset * (i - 1)
+				pass.style.offset[3] = pass.style.offset[3] + 7
+				pass.style.start_offset = table.clone(pass.style.offset)
+			end
+
+			table.append(full_pass, pass_template)
+		end
+
+		return full_pass
+	end,
+	style = blueprint_styles.empty_test_card,
+	init = function (parent, widget, index, config, content_animation)
+		widget.alpha_multiplier = 0
+
+		local content = widget.content
+
+		_card_default_frame_pass_template_init(widget, index)
+
+		local loadout = config.loadout
+
+		content.label = Localize("loc_eor_card_title_mastery")
+		content.content_animation = "weapon_card_show_content"
+		content.dim_out_animation = "weapon_card_dim_out_content"
+
+		local slots = {
+			"slot_primary",
+			"slot_secondary",
+		}
+
+		for f = 1, #slots do
+			local slot = slots[f]
+			local item = MasterItems.get_item(config.loadout[slot].name)
+			local exp_per_level = config["exp_per_level_" .. slot]
+
+			content["exp_per_level_" .. slot] = exp_per_level
+
+			local start_exp = config["start_exp_" .. slot] or 0
+			local added_exp = config["added_exp_" .. slot] or 0
+
+			widget.content["weapon_icon_" .. slot] = item.hud_icon or widget.content["weapon_icon_" .. slot]
+			widget.content["weapon_title_" .. slot] = Items.weapon_lore_family_name(config.loadout[slot])
+			widget.content["weapon_added_exp_" .. slot] = added_exp
+			widget.content["weapon_start_exp_" .. slot] = start_exp
+
+			local current_mastery_level = 1
+
+			widget.content["weapon_current_mastery_level_" .. slot] = 0
+			widget.content["weapon_start_mastery_level_" .. slot] = 0
+
+			for i = 1, #exp_per_level do
+				local level_exp = exp_per_level[i]
+
+				if start_exp < level_exp then
+					widget.content["weapon_current_mastery_level_" .. slot] = i - 1
+					widget.content["weapon_start_mastery_level_" .. slot] = i - 1
+					current_mastery_level = i
+
+					break
+				end
+			end
+
+			local max_level = #exp_per_level or 0
+			local max_exp = exp_per_level[max_level] or 0
+			local previous_level_max_exp = exp_per_level[max_level - 1] or 0
+			local start_mastery_level = widget.content["weapon_start_mastery_level_" .. slot] or 1
+			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot] or 1
+			local is_max_level = max_level <= current_mastery_level
+
+			if is_max_level then
+				local diff_exp_level = max_exp - previous_level_max_exp
+
+				widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
+					current = diff_exp_level,
+					next = diff_exp_level,
+				})
+
+				local style = widget.style["weapon_experience_bar_" .. slot]
+				local background_style = widget.style["weapon_experience_bar_background_" .. slot]
+
+				widget.content["weapon_level_" .. slot] = Localize("loc_mastery_level_current", true, {
+					level = max_level,
+				})
+				style.size[1] = background_style.size[1]
+			else
+				local next_exp_level = exp_per_level[current_mastery_level + 1] or 0
+				local current_exp_level = exp_per_level[current_mastery_level] or 0
+				local diff_exp_level = next_exp_level - current_exp_level
+				local start_exp_count = current_exp_level - start_exp
+				local new_exp = start_exp
+
+				widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
+					current = new_exp,
+					next = diff_exp_level,
+				})
+				widget.content["weapon_current_exp_level_" .. slot] = new_exp or 0
+				widget.content["weapon_current_mastery_level_" .. slot] = current_mastery_level or 0
+				widget.content["weapon_level_" .. slot] = Localize("loc_mastery_level_current", true, {
+					level = current_mastery_level,
+				})
+
+				local bar_style = widget.style["weapon_experience_bar_" .. slot]
+				local bar_background_style = widget.style["weapon_experience_bar_background_" .. slot]
+				local clamped_new_exp = math.clamp(new_exp, current_exp_level, next_exp_level)
+				local exp_progress = current_exp_level == next_exp_level and 1 or math.ilerp(current_exp_level, next_exp_level, clamped_new_exp)
+				local bar_progress = math.clamp(exp_progress, 0, 1)
+
+				bar_style.size[1] = bar_background_style.size[1] * bar_progress
+			end
+		end
 	end,
 }
 

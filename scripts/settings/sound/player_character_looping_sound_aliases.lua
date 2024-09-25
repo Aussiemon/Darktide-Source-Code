@@ -41,15 +41,6 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_netted",
 		},
 	},
-	melee_idling = {
-		has_husk_events = true,
-		start = {
-			event_alias = "play_melee_idling",
-		},
-		stop = {
-			event_alias = "stop_melee_idling",
-		},
-	},
 	ranged_charging = {
 		has_husk_events = true,
 		start = {
@@ -161,13 +152,14 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_weapon_overload_loop",
 		},
 	},
-	block_loop = {
+	force_weapon_block_loop = {
+		exclude_from_unit_data_components = true,
 		has_husk_events = true,
 		start = {
-			event_alias = "play_block_loop",
+			event_alias = "play_force_weapon_block_loop",
 		},
 		stop = {
-			event_alias = "stop_block_loop",
+			event_alias = "stop_force_weapon_block_loop",
 		},
 	},
 	interact_loop = {

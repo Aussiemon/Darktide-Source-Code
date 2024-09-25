@@ -348,6 +348,7 @@ local events = {
 		events = {
 			default = {
 				default = "wwise/events/player/play_footstep_boots_medium",
+				mech = "wwise/events/player/play_footstep_prosthetic_mech",
 				pegleg = "wwise/events/player/play_footstep_prosthetic",
 			},
 			ogryn = {
@@ -1191,7 +1192,6 @@ local events = {
 			powermaul_2h_p1_m1 = "wwise/events/weapon/play_powermaul_2h_equip",
 			powermaul_p1_m1 = "wwise/events/weapon/play_pipe_club_equip",
 			powermaul_p1_m2 = "wwise/events/weapon/play_pipe_club_equip",
-			powermaul_p1_m3 = "wwise/events/weapon/play_pipe_club_equip",
 			powersword_p1_m1 = "wwise/events/weapon/play_weapon_equip_medium_sword",
 			powersword_p1_m2 = "wwise/events/weapon/play_weapon_equip_medium_sword",
 			powersword_p1_m3 = "wwise/events/weapon/play_weapon_equip_medium_sword",
@@ -1229,7 +1229,6 @@ local events = {
 			ogryn_pickaxe_2h_p1_m3 = "wwise/events/weapon/play_pickaxe_2h_foley_start_run_01",
 			powermaul_p1_m1 = "wwise/events/weapon/play_shockmaul_1h_special_attack",
 			powermaul_p1_m2 = "wwise/events/weapon/play_shockmaul_1h_special_attack",
-			powermaul_p1_m3 = "wwise/events/weapon/play_shockmaul_1h_special_attack",
 		},
 	},
 	sfx_weapon_foley_02_right_hand = {
@@ -2213,7 +2212,6 @@ local events = {
 			powermaul_2h_p1_m1 = "wwise/events/weapon/play_thunder_hammer_swing",
 			powermaul_p1_m1 = "wwise/events/weapon/play_powermaul_1h_swing",
 			powermaul_p1_m2 = "wwise/events/weapon/play_powermaul_1h_swing",
-			powermaul_p1_m3 = "wwise/events/weapon/play_powermaul_1h_swing",
 			powersword_p1_m1 = "wwise/events/weapon/play_power_sword_swing",
 			powersword_p1_m2 = "wwise/events/weapon/play_power_sword_swing",
 			powersword_p1_m3 = "wwise/events/weapon/play_power_sword_swing",
@@ -2270,7 +2268,6 @@ local events = {
 			powermaul_2h_p1_m1 = "wwise/events/weapon/play_thunder_hammer_swing",
 			powermaul_p1_m1 = "wwise/events/weapon/play_powermaul_1h_swing",
 			powermaul_p1_m2 = "wwise/events/weapon/play_powermaul_1h_swing",
-			powermaul_p1_m3 = "wwise/events/weapon/play_powermaul_1h_swing",
 			powersword_p1_m1 = "wwise/events/weapon/play_power_sword_swing",
 			powersword_p1_m2 = "wwise/events/weapon/play_power_sword_swing",
 			powersword_p1_m3 = "wwise/events/weapon/play_power_sword_swing",
@@ -2410,7 +2407,6 @@ local events = {
 			powermaul_2h_p1_m1 = "wwise/events/weapon/play_metal_pipe_block_gen",
 			powermaul_p1_m1 = "wwise/events/weapon/play_metal_pipe_block_gen",
 			powermaul_p1_m2 = "wwise/events/weapon/play_metal_pipe_block_gen",
-			powermaul_p1_m3 = "wwise/events/weapon/play_metal_pipe_block_gen",
 			powersword_p1_m1 = "wwise/events/weapon/play_combat_block_sword_on_sword",
 			powersword_p1_m2 = "wwise/events/weapon/play_combat_block_sword_on_sword",
 			powersword_p1_m3 = "wwise/events/weapon/play_combat_block_sword_on_sword",
@@ -2656,7 +2652,6 @@ local events = {
 			powermaul_2h_p1_m1 = "wwise/events/weapon/play_ogryn_powermaul_1h_powered_button",
 			powermaul_p1_m1 = "wwise/events/weapon/play_shockmaul_1h_electric_sparks",
 			powermaul_p1_m2 = "wwise/events/weapon/play_shockmaul_1h_electric_sparks",
-			powermaul_p1_m3 = "wwise/events/weapon/play_shockmaul_1h_electric_sparks",
 			powersword_p1_m1 = "wwise/events/weapon/play_power_sword_on",
 			powersword_p1_m2 = "wwise/events/weapon/play_power_sword_on",
 			powersword_p1_m3 = "wwise/events/weapon/play_power_sword_on",
@@ -3461,25 +3456,6 @@ local looping_events = {
 			default = "wwise/events/weapon/%s_weapon_silence",
 		},
 	},
-	melee_idling = {
-		has_husk_events = true,
-		has_stop_event = true,
-		switch = {
-			"wielded_weapon_template",
-		},
-		events = {
-			chainaxe_p1_m1 = "wwise/events/weapon/%s_chainaxe",
-			chainaxe_p1_m2 = "wwise/events/weapon/%s_chainaxe",
-			chainsword_2h_p1_m1 = "wwise/events/weapon/%s_2h_chainsword",
-			chainsword_2h_p1_m2 = "wwise/events/weapon/%s_2h_chainsword",
-			chainsword_p1_m1 = "wwise/events/weapon/%s_combat_weapon_chainsword",
-			chainsword_p1_m2 = "wwise/events/weapon/%s_combat_weapon_chainsword",
-			default = "wwise/events/weapon/%s_weapon_silence",
-			powermaul_p1_m1 = "wwise/events/weapon/%s_powermaul_1h_idle",
-			powermaul_p1_m2 = "wwise/events/weapon/%s_powermaul_1h_idle",
-			powermaul_p1_m3 = "wwise/events/weapon/%s_powermaul_1h_idle",
-		},
-	},
 	ranged_charging = {
 		has_husk_events = true,
 		has_stop_event = true,
@@ -3622,7 +3598,6 @@ local looping_events = {
 			forcesword_p1_m3 = "wwise/events/weapon/%s_force_sword_stuck",
 			powermaul_p1_m1 = "wwise/events/weapon/%s_powermaul_1h_stuck_loop",
 			powermaul_p1_m2 = "wwise/events/weapon/%s_powermaul_1h_stuck_loop",
-			powermaul_p1_m3 = "wwise/events/weapon/%s_powermaul_1h_stuck_loop",
 		},
 	},
 	ranged_plasma_venting = {
@@ -3680,8 +3655,8 @@ local looping_events = {
 			},
 		},
 	},
-	block_loop = {
-		has_husk_events = false,
+	force_weapon_block_loop = {
+		has_husk_events = true,
 		has_stop_event = true,
 		no_default = true,
 		switch = {
@@ -3712,8 +3687,16 @@ local looping_events = {
 			"wielded_weapon_template",
 		},
 		events = {
+			chainaxe_p1_m1 = "wwise/events/weapon/%s_chainaxe",
+			chainaxe_p1_m2 = "wwise/events/weapon/%s_chainaxe",
+			chainsword_2h_p1_m1 = "wwise/events/weapon/%s_2h_chainsword",
+			chainsword_2h_p1_m2 = "wwise/events/weapon/%s_2h_chainsword",
+			chainsword_p1_m1 = "wwise/events/weapon/%s_combat_weapon_chainsword",
+			chainsword_p1_m2 = "wwise/events/weapon/%s_combat_weapon_chainsword",
 			default = "wwise/events/weapon/%s_weapon_silence",
 			grimoire_pocketable = "wwise/events/player/%s_grimoire_loop",
+			powermaul_p1_m1 = "wwise/events/weapon/%s_powermaul_1h_idle",
+			powermaul_p1_m2 = "wwise/events/weapon/%s_powermaul_1h_idle",
 			psyker_throwing_knives = "wwise/events/weapon/%s_psyker_throwing_knife_idle",
 			zealot_relic = "wwise/events/player/%s_ability_zealot_bolstering_prayer_idle",
 		},

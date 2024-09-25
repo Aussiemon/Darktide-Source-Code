@@ -111,6 +111,9 @@ DialogueSettings.level_specific_load_files = {
 	core_research = {
 		"mission_vo_core_research",
 	},
+	op_train = {
+		"mission_vo_op_train",
+	},
 }
 DialogueSettings.player_load_files = {
 	ogryn_a = {

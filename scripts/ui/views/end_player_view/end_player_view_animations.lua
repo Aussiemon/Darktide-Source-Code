@@ -477,6 +477,166 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 	passes_to_dim[#passes_to_dim + 1] = style_name
 end
 
+local function _create_init_weapon_animation(animation_table, start_time)
+	local slots = {
+		"slot_primary",
+		"slot_secondary",
+	}
+
+	start_time = start_time or 0
+
+	local function added_time(time_added)
+		start_time = start_time + time_added
+
+		return start_time
+	end
+
+	local dafault_added_time = 0.03
+
+	for f = 1, #slots do
+		local slot = slots[f]
+
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_title_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_level_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_icon_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_background_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_background_gradient_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_button_gradient_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_frame_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_corner_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_total_exp_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_experience_bar_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_experience_bar_background_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_experience_bar_line_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_added_exp_text_" .. slot, added_time(dafault_added_time))
+	end
+end
+
+local function _create_progress_weapon_animation(animation_table, start_time, end_time)
+	animation_table[#animation_table + 1] = {
+		name = "update_weapon_bar",
+		start_time = start_time + _text_fade_in_time,
+		end_time = end_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			parent:play_sound(UISoundEvents.end_screen_summary_mastery_bar_start)
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local content = widget.content
+			local eased_progress = progress < 0.5 and _math_ease_sine(progress) or _math_ease_cubic(progress)
+			local slots = {
+				"slot_primary",
+				"slot_secondary",
+			}
+
+			for f = 1, #slots do
+				local slot = slots[f]
+				local current_mastery_level_content = widget.content["weapon_current_mastery_level_" .. slot]
+				local new_exp = widget.content["weapon_current_exp_level_" .. slot]
+				local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
+				local added_exp = widget.content["weapon_added_exp_" .. slot]
+				local added_exp_progress = tonumber(added_exp) * eased_progress
+
+				parent:update_weapon_values(added_exp_progress, slot, widget)
+			end
+
+			parent:set_sound_parameter(UISoundEvents.end_screen_summary_xp_bar_progress, eased_progress)
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			params._value_text_name = nil
+
+			local slots = {
+				"slot_primary",
+				"slot_secondary",
+			}
+
+			for f = 1, #slots do
+				local slot = slots[f]
+				local added_exp = widget.content["weapon_added_exp_" .. slot]
+				local added_exp_progress = tonumber(added_exp)
+
+				parent:update_weapon_values(added_exp_progress, slot, widget)
+			end
+
+			parent:play_sound(UISoundEvents.end_screen_summary_mastery_bar_stop)
+		end,
+	}
+end
+
+local function _create_dim_weapon_animation(animation_table)
+	animation_table[#animation_table + 1] = {
+		name = "compress_weapon_mastery",
+		start_time = 0,
+		end_time = ViewSettings.animation_times.card_compress_content_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			if parent._levelup_mastery_animation_id then
+				parent:_complete_animation(parent._levelup_mastery_animation_id)
+
+				parent._levelup_mastery_animation_id = nil
+			end
+
+			local slots = {
+				"slot_primary",
+				"slot_secondary",
+			}
+
+			for f = 1, #slots do
+				local slot = slots[f]
+
+				widget.style["weapon_total_exp_" .. slot].text_color[1] = 0
+				widget.style["weapon_added_exp_text_" .. slot].text_color[1] = 0
+				widget.style["weapon_experience_bar_" .. slot].color[1] = 0
+				widget.style["weapon_experience_bar_background_" .. slot].color[1] = 0
+				widget.style["weapon_experience_bar_line_" .. slot].color[1] = 0
+			end
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local slots = {
+				"slot_primary",
+				"slot_secondary",
+			}
+			local current_alpha = 255 - 255 * progress
+			local current_alpha_icon = 255 - 128 * progress
+
+			for f = 1, #slots do
+				local slot = slots[f]
+
+				widget.style["weapon_title_" .. slot].text_color[1] = current_alpha_icon
+				widget.style["weapon_level_" .. slot].text_color[1] = current_alpha_icon
+				widget.style["weapon_frame_" .. slot].color[1] = current_alpha_icon
+				widget.style["weapon_corner_" .. slot].color[1] = current_alpha_icon
+				widget.style["weapon_icon_" .. slot].color[1] = current_alpha_icon
+				widget.style["weapon_background_" .. slot].color[1] = current_alpha_icon
+				widget.style["weapon_background_gradient_" .. slot].color[1] = current_alpha_icon
+				widget.style["weapon_button_gradient_" .. slot].color[1] = current_alpha_icon
+				widget.style["weapon_background_" .. slot].color[1] = current_alpha_icon
+			end
+
+			local added_offset = ViewStyles.card_fully_expanded_height * 0.5
+			local start_offset = 0
+			local target_offset = -80
+			local current_offset = math.lerp(start_offset, target_offset, progress)
+			local pass_names = {
+				"title",
+				"level",
+				"frame",
+				"corner",
+				"icon",
+				"background",
+				"background_gradient",
+				"button_gradient",
+				"background",
+			}
+
+			for f = 1, #pass_names do
+				local pass_name = pass_names[f]
+				local name = "weapon_" .. pass_name .. "_slot_secondary"
+
+				widget.style[name].offset[2] = widget.style[name].start_offset[2] + current_offset
+			end
+		end,
+	}
+end
+
 local function _create_fade_in_level_up_label_animation(animation_table, start_time)
 	_create_fade_in_pass_animation(animation_table, "level_up_label", start_time)
 	_create_fade_in_pass_animation(animation_table, "level_up_label_divider", start_time + 0.05)
@@ -785,6 +945,12 @@ animations.test = {
 		end,
 	},
 }
+animations.weapon_card_show_content = {}
+animations.weapon_card_dim_out_content = {}
+
+_create_init_weapon_animation(animations.weapon_card_show_content, 0.1)
+_create_progress_weapon_animation(animations.weapon_card_show_content, 0.25, 7)
+_create_dim_weapon_animation(animations.weapon_card_dim_out_content)
 
 animations.wallet_change_function = function (content, style, animation, dt)
 	local anim_progress = content._anim_progress

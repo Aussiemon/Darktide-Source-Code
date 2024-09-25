@@ -48,6 +48,7 @@ _add_category("exploration_dust", "loc_achievement_subcategory_missions_dust_lab
 _add_category("exploration_throneside", "loc_achievement_subcategory_missions_throneside_label", "exploration")
 _add_category("exploration_entertainment", "loc_achievement_subcategory_missions_entertainment_label", "exploration")
 _add_category("exploration_void", "loc_achievement_subcategory_missions_void_label", "exploration")
+_add_category("exploration_operations", "loc_achievement_subcategory_missions_operations_label", "exploration")
 _add_category("exploration_twins_mission", "loc_achievement_subcategory_twins_mission_label", "exploration")
 _add_category("endeavours", "loc_achievement_category_endeavours_label")
 _add_category("endeavours_transit", "loc_achievement_subcategory_missions_transit_label", "endeavours")
@@ -58,6 +59,9 @@ _add_category("endeavours_throneside", "loc_achievement_subcategory_missions_thr
 _add_category("endeavours_entertainment", "loc_achievement_subcategory_missions_entertainment_label", "endeavours")
 _add_category("endeavours_twins_mission", "loc_achievement_subcategory_twins_mission_label", "endeavours")
 _add_category("endeavours_void", "loc_achievement_subcategory_missions_void_label", "endeavours")
+_add_category("endeavours_operations", "loc_achievement_subcategory_missions_operations_label", "endeavours")
+_add_category("weapons", "loc_achievement_category_weapons_label")
+_add_category("mastery", "loc_weapon_progression_mastery", "weapons")
 table.make_strict_with_interface(AchievementCategories, "AchievementCategories", AchievementCategoriesInterface)
 
 return settings("AchievementCategories", AchievementCategories)

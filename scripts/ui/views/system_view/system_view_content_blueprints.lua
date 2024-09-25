@@ -72,6 +72,13 @@ local blueprints = {
 			hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			hotspot.disabled = disabled or nil
 		end,
+		update = function (parent, widget)
+			local entry = widget.entry
+			local content = widget.content
+			local has_highlight = entry and entry.has_highlight
+
+			content.has_notification = has_highlight and has_highlight()
+		end,
 	},
 }
 

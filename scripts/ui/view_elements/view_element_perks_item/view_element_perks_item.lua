@@ -7,6 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local InputDevice = require("scripts/managers/input/input_device")
 local Promise = require("scripts/foundation/utilities/promise")
+local MasteryUtils = require("scripts/utilities/mastery")
 
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
@@ -73,6 +74,10 @@ ViewElementPerksItem.clear_marks = function (self)
 
 	self._marked_widget = nil
 	self._marked_perk_item = nil
+
+	local index = self._parent._ingredients.existing_perk_index
+
+	self._parent._weapon_stats:preview_perk(index)
 end
 
 ViewElementPerksItem.cb_on_grid_entry_left_pressed = function (self, widget, config)
@@ -112,6 +117,10 @@ end
 
 ViewElementPerksItem.marked_perk_item = function (self)
 	return self._marked_perk_item
+end
+
+ViewElementPerksItem.marked_perk_cost = function (self)
+	return self._marked_widget and self._marked_widget.content.cost
 end
 
 ViewElementPerksItem._on_perk_hover = function (self, config)
@@ -242,13 +251,17 @@ ViewElementPerksItem._update_animations = function (self, dt, t)
 	end
 end
 
-ViewElementPerksItem.present_perks = function (self, item_masterid, ingredients, external_left_click_callback, do_animation)
-	if not item_masterid then
+ViewElementPerksItem.present_perks = function (self, item, ingredients, external_left_click_callback, do_animation)
+	if not item then
 		self._active = true
 		self._disabled = false
+		self._max_unlocked = nil
 
 		return Promise:resolved()
 	end
+
+	local item_masterid = item.name
+	local item_pattern = item.parent_pattern
 
 	self._ingredients = ingredients
 	self._external_left_click_callback = external_left_click_callback
@@ -256,8 +269,29 @@ ViewElementPerksItem.present_perks = function (self, item_masterid, ingredients,
 
 	return self._backend_promise:next(function (data)
 		self._perks_by_rank = data.perks
+		self._backend_promise = Managers.data_service.mastery:get_mastery_by_pattern(item_pattern)
 
-		self:_switch_to_rank_tab(RankSettings.max_perk_rank, true)
+		return self._backend_promise
+	end):next(function (mastery_data)
+		local max_unlocked
+
+		if not table.is_empty(mastery_data) then
+			max_unlocked = MasteryUtils.get_max_perk_rarity_unlocked_level(mastery_data)
+		else
+			max_unlocked = RankSettings.max_perk_rank
+		end
+
+		self._max_unlocked = max_unlocked
+
+		local widgets_by_name = self._widgets_by_name
+
+		for i = 1, RankSettings.max_perk_rank do
+			local name = "rank_" .. i
+
+			widgets_by_name[name].content.locked = max_unlocked < i
+		end
+
+		self:_switch_to_rank_tab(max_unlocked, true)
 
 		if self._do_animations then
 			self:start_animation()
@@ -266,6 +300,8 @@ ViewElementPerksItem.present_perks = function (self, item_masterid, ingredients,
 		self._active = true
 		self._disabled = false
 		self._backend_promise = nil
+
+		return max_unlocked
 	end)
 end
 

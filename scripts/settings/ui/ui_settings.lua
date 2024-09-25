@@ -286,6 +286,97 @@ local ui_settings = {
 		secondary = "loc_weapon_action_title_heavy",
 		special = "loc_weapon_action_title_special",
 	},
+	weapon_card_headers = {
+		activate = "loc_weapon_special_activate",
+		activate_warp = "loc_forcesword_p1_m1_attack_special",
+		ads = "loc_ranged_attack_secondary_ads",
+		ammo = "loc_glossary_term_ammunition",
+		bayonet = "loc_weapon_special_bayonet",
+		brace = "loc_ranged_attack_secondary_braced",
+		charge = "loc_stats_fire_mode_chargeup_desc",
+		defence_stance = "loc_weapon_special_defensive_stance",
+		explosive_punch = "loc_weapon_special_fist_attack_gauntlet",
+		fire = "loc_stats_fire_mode_hip_fire_desc",
+		flashlight = "loc_weapon_special_flashlight",
+		heavy = "loc_weapon_action_title_heavy",
+		hipfire = "loc_ranged_attack_primary",
+		light = "loc_weapon_action_title_light",
+		parry = "loc_weapon_special_parry_desc",
+		primary_attack = "loc_weapon_action_title_primary",
+		push = "loc_stats_special_action_melee_push_desc",
+		secondary_attack = "loc_weapon_action_title_secondary",
+		special_ammo = "loc_weapon_special_special_ammo",
+		special_attack = "loc_weapon_special_special_attack",
+		strike = "loc_forcestaff_p1_m1_attack_special",
+		switch_mode = "loc_weapon_special_mode_switch",
+		vent = "loc_stats_special_action_venting_desc",
+		weapon_bash = "loc_weapon_special_fist_attack",
+	},
+	weapon_card_icons = {
+		activate = "content/ui/materials/icons/weapons/actions/activate",
+		ads = "content/ui/materials/icons/weapons/actions/ads",
+		brace = "content/ui/materials/icons/weapons/actions/brace",
+		burst = "content/ui/materials/icons/weapons/actions/burst",
+		charge = "content/ui/materials/icons/weapons/actions/charge",
+		defence = "content/ui/materials/icons/weapons/actions/defence",
+		flashlight = "content/ui/materials/icons/weapons/actions/flashlight",
+		full_auto = "content/ui/materials/icons/weapons/actions/full_auto",
+		hipfire = "content/ui/materials/icons/weapons/actions/hipfire",
+		linesman = "content/ui/materials/icons/weapons/actions/linesman",
+		melee = "content/ui/materials/icons/weapons/actions/melee",
+		melee_hand = "content/ui/materials/icons/weapons/actions/melee_hand",
+		ninja_fencer = "content/ui/materials/icons/weapons/actions/ninjafencer",
+		projectile = "content/ui/materials/icons/weapons/actions/projectile",
+		quick_grenade = "content/ui/materials/icons/weapons/actions/quick_grenade",
+		semi_auto = "content/ui/materials/icons/weapons/actions/semi_auto",
+		shotgun = "content/ui/materials/icons/weapons/actions/shotgun",
+		smiter = "content/ui/materials/icons/weapons/actions/smiter",
+		special_ammo = "content/ui/materials/icons/weapons/actions/special_bullet",
+		special_attack = "content/ui/materials/icons/weapons/actions/special_attack",
+		tank = "content/ui/materials/icons/weapons/actions/tank",
+		vent = "content/ui/materials/icons/weapons/actions/vent",
+	},
+	weapon_card_value_funcs = {
+		primary_attack = function (weapon_stats)
+			local advanced_weapon_stats = weapon_stats._weapon_statistics
+			local power_stats = advanced_weapon_stats.power_stats
+			local power_stat = power_stats[1]
+			local value = power_stat and math.round(power_stat.attack) or ""
+
+			return value
+		end,
+		secondary_attack = function (weapon_stats)
+			local advanced_weapon_stats = weapon_stats._weapon_statistics
+			local power_stats = advanced_weapon_stats.power_stats
+			local power_stat = power_stats[2]
+			local value = power_stat and math.round(power_stat.attack) or ""
+
+			return value
+		end,
+		secondary_attack_double_barrel = function (weapon_stats)
+			local advanced_weapon_stats = weapon_stats._weapon_statistics
+			local power_stats = advanced_weapon_stats.power_stats
+			local power_stat = power_stats[2]
+			local value = power_stat and math.round(power_stat.attack) or ""
+
+			return value * 2
+		end,
+		extra_attack = function (weapon_stats)
+			local advanced_weapon_stats = weapon_stats._weapon_statistics
+			local power_stats = advanced_weapon_stats.power_stats
+			local power_stat = power_stats[3]
+			local value = power_stat and math.round(power_stat.attack) or ""
+
+			return value
+		end,
+		ammo = function (weapon_stats)
+			local main_stats = weapon_stats:get_main_stats()
+			local magazine = main_stats.magazine
+			local value = magazine and string.format("%i/%i", magazine.ammo, magazine.reserve)
+
+			return value
+		end,
+	},
 	weapon_action_display_order = {
 		extra = 4,
 		primary = 1,
@@ -400,6 +491,12 @@ local ui_settings = {
 		veteran = "",
 		zealot = "",
 	},
+	archetype_font_icon_simple = {
+		ogryn = "",
+		psyker = "",
+		veteran = "",
+		zealot = "",
+	},
 	inventory_frames_by_archetype = {
 		psyker = {
 			left_lower = "content/ui/materials/frames/screen/class_psyker_01_lower_left",
@@ -479,39 +576,15 @@ local ui_settings = {
 			"slot_body_hair",
 		},
 	},
-	item_preview_required_slot_items_set_per_slot_by_breed_and_gender = {
-		human = {
-			male = {
-				slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
-				slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
-				slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
-				slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
-			},
-			female = {
-				slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
-				slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
-				slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
-				slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
-			},
-		},
-		ogryn = {
-			male = {
-				slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
-				slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
-				slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
-				slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
-			},
-		},
-	},
 	item_preview_required_slot_items_per_slot_by_breed_and_gender = {
 		human = {
 			male = {
-				slot_gear_head = {
+				default = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
+					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/empty_upperbody",
 				},
 				slot_gear_upperbody = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
@@ -525,29 +598,15 @@ local ui_settings = {
 					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
 					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/preview_belt_mannequin",
-				},
-				slot_gear_extra_cosmetic = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
-				},
-				slot_animation_end_of_round = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/male_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/male_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/male_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/male_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 			},
 			female = {
-				slot_gear_head = {
+				default = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
 					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
 					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
+					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/empty_upperbody",
 				},
 				slot_gear_upperbody = {
 					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
@@ -561,26 +620,12 @@ local ui_settings = {
 					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
 					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
 					slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/preview_belt_mannequin",
-				},
-				slot_gear_extra_cosmetic = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
-				},
-				slot_animation_end_of_round = {
-					slot_body_arms = "content/items/characters/player/human/attachment_base/female_mannequin_arms",
-					slot_body_face = "content/items/characters/player/human/attachment_base/female_mannequin_face",
-					slot_body_legs = "content/items/characters/player/human/attachment_base/female_mannequin_legs",
-					slot_body_torso = "content/items/characters/player/human/attachment_base/female_mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
 				},
 			},
 		},
 		ogryn = {
 			male = {
-				slot_gear_head = {
+				default = {
 					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
 					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
 					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
@@ -600,489 +645,761 @@ local ui_settings = {
 					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
 					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_preview_belt_mannequin",
 				},
-				slot_gear_extra_cosmetic = {
-					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
-					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
-					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
-					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
-				},
-				slot_animation_end_of_round = {
-					slot_body_arms = "content/items/characters/player/ogryn/attachment_base/mannequin_arms",
-					slot_body_face = "content/items/characters/player/ogryn/attachment_base/mannequin_face",
-					slot_body_legs = "content/items/characters/player/ogryn/attachment_base/mannequin_legs",
-					slot_body_torso = "content/items/characters/player/ogryn/attachment_base/mannequin_torso",
-					slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/empty_upperbody",
-				},
 			},
 		},
 	},
-	item_preview_required_slot_items_per_slot_by_specializations = {
-		ogryn_1 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_lowerbody_career_01_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_upperbody_career_01_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_lowerbody_career_01_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_upperbody_career_01_lvl_01_set_01",
-			},
-		},
-		ogryn_2 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_upperbody_career_02_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/ogryn/gear_lowerbody/ogryn_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/ogryn/gear_upperbody/ogryn_upperbody_career_02_lvl_01_set_01",
+	weapon_patterns = {
+		stubrevolver_p1 = {
+			display_name = "loc_weapon_family_stubrevolver_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/stubrevolver_p1_m1",
+					name = "stubrevolver_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/stubrevolver_p1_m2",
+					name = "stubrevolver_p1_m2",
+				},
 			},
 		},
-		zealot_2 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/zealot_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/zealot_upperbody_career_02_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/zealot_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/zealot_upperbody_career_02_lvl_01_set_01",
-			},
-		},
-		zealot_3 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/zealot_lowerbody_career_03_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/zealot_upperbody_career_03_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/zealot_lowerbody_career_03_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/zealot_upperbody_career_03_lvl_01_set_01",
-			},
-		},
-		veteran_2 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_01_set_01",
-			},
-			slot_animation_end_of_round = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_02_lvl_01_set_01",
+		shotgun_p1 = {
+			display_name = "loc_weapon_family_shotgun_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p1_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/shotgun_p1_m1",
+					name = "shotgun_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/shotgun_p1_m2",
+					name = "shotgun_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/shotgun_p1_m3",
+					name = "shotgun_p1_m3",
+				},
 			},
 		},
-		veteran_3 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_03_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_03_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_03_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_03_lvl_01_set_01",
-			},
-			slot_animation_end_of_round = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/veteran_lowerbody_career_03_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/veteran_upperbody_career_03_lvl_01_set_01",
+		shotgun_p2 = {
+			display_name = "loc_weapon_family_shotgun_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p2_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p2_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p2_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/shotgun_p2_m1",
+					name = "shotgun_p2_m1",
+				},
 			},
 		},
-		psyker_2 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/psyker_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/psyker_upperbody_career_02_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/psyker_lowerbody_career_02_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/psyker_upperbody_career_02_lvl_01_set_01",
-			},
-		},
-		psyker_3 = {
-			slot_gear_head = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/psyker_lowerbody_career_03_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/psyker_upperbody_career_03_lvl_01_set_01",
-			},
-			slot_gear_extra_cosmetic = {
-				slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/psyker_lowerbody_career_03_lvl_01_set_01",
-				slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/psyker_upperbody_career_03_lvl_01_set_01",
+		plasmagun_p1 = {
+			display_name = "loc_weapon_family_plasmagun_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/plasmagun_p1_m1",
+					name = "plasmagun_p1_m1",
+				},
 			},
 		},
-	},
-	weapon_template_display_settings = {
-		chainaxe_p1_m1 = {
-			display_name = "loc_chainaxe_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_chainaxe_p1",
-		},
-		chainaxe_p1_m2 = {
-			display_name = "loc_chainaxe_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_chainaxe_p1",
-		},
-		chainsword_2h_p1_m1 = {
-			display_name = "loc_chainsword_2h_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_chainsword_2h_p1",
-		},
-		chainsword_2h_p1_m2 = {
-			display_name = "loc_chainsword_2h_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_chainsword_2h_p1",
-		},
-		chainsword_p1_m1 = {
-			display_name = "loc_chainsword_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_chainsword_p1",
-		},
-		chainsword_p1_m2 = {
-			display_name = "loc_chainsword_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_chainsword_p1",
-		},
-		combataxe_p1_m1 = {
-			display_name = "loc_combataxe_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p1",
-		},
-		combataxe_p1_m2 = {
-			display_name = "loc_combataxe_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p1",
-		},
-		combataxe_p1_m3 = {
-			display_name = "loc_combataxe_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p1",
-		},
-		combataxe_p2_m1 = {
-			display_name = "loc_combataxe_p2_m1",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p2",
-		},
-		combataxe_p2_m2 = {
-			display_name = "loc_combataxe_p2_m2",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p2",
-		},
-		combataxe_p2_m3 = {
-			display_name = "loc_combataxe_p2_m3",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p2",
-		},
-		combataxe_p3_m1 = {
-			display_name = "loc_combataxe_p3_m1",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p3",
-		},
-		combataxe_p3_m2 = {
-			display_name = "loc_combataxe_p3_m2",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p3",
-		},
-		combataxe_p3_m3 = {
-			display_name = "loc_combataxe_p3_m3",
-			display_name_pattern = "loc_weapon_pattern_name_combataxe_p3",
-		},
-		combatknife_p1_m1 = {
-			display_name = "loc_combatknife_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_combatknife_p1",
-		},
-		combatknife_p1_m2 = {
-			display_name = "loc_combatknife_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_combatknife_p1",
-		},
-		combatsword_p1_m1 = {
-			display_name = "loc_combatsword_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p1",
-		},
-		combatsword_p1_m2 = {
-			display_name = "loc_combatsword_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p1",
-		},
-		combatsword_p1_m3 = {
-			display_name = "loc_combatsword_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p1",
-		},
-		combatsword_p2_m1 = {
-			display_name = "loc_combatsword_p2_m1",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p2",
-		},
-		combatsword_p2_m2 = {
-			display_name = "loc_combatsword_p2_m2",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p2",
-		},
-		combatsword_p2_m3 = {
-			display_name = "loc_combatsword_p2_m3",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p2",
-		},
-		combatsword_p3_m1 = {
-			display_name = "loc_combatsword_p3_m1",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p3",
-		},
-		combatsword_p3_m2 = {
-			display_name = "loc_combatsword_p3_m2",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p3",
-		},
-		combatsword_p3_m3 = {
-			display_name = "loc_combatsword_p3_m3",
-			display_name_pattern = "loc_weapon_pattern_name_combatsword_p3",
-		},
-		forcesword_p1_m1 = {
-			display_name = "loc_forcesword_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_forcesword_p1",
-		},
-		forcesword_p1_m2 = {
-			display_name = "loc_forcesword_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_forcesword_p1",
-		},
-		forcesword_p1_m3 = {
-			display_name = "loc_forcesword_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_forcesword_p1",
-		},
-		ogryn_club_p1_m1 = {
-			display_name = "loc_ogryn_club_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
-		},
-		ogryn_club_p1_m2 = {
-			display_name = "loc_ogryn_club_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
-		},
-		ogryn_club_p1_m3 = {
-			display_name = "loc_ogryn_club_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
-		},
-		ogryn_club_p2_m1 = {
-			display_name = "loc_ogryn_club_p2_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
-		},
-		ogryn_club_p2_m2 = {
-			display_name = "loc_ogryn_club_p2_m2",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
-		},
-		ogryn_club_p2_m3 = {
-			display_name = "loc_ogryn_club_p2_m3",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
-		},
-		ogryn_combatblade_p1_m1 = {
-			display_name = "loc_ogryn_combatblade_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
-		},
-		ogryn_combatblade_p1_m2 = {
-			display_name = "loc_ogryn_combatblade_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
-		},
-		ogryn_combatblade_p1_m3 = {
-			display_name = "loc_ogryn_combatblade_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
-		},
-		ogryn_pickaxe_2h_p1_m1 = {
-			display_name = "loc_ogryn_pickaxe_2h_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_pickaxe_2h_p1",
-		},
-		ogryn_pickaxe_2h_p1_m2 = {
-			display_name = "loc_ogryn_pickaxe_2h_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_pickaxe_2h_p1",
-		},
-		ogryn_pickaxe_2h_p1_m3 = {
-			display_name = "loc_ogryn_pickaxe_2h_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_pickaxe_2h_p1",
-		},
-		ogryn_powermaul_p1_m1 = {
-			display_name = "loc_ogryn_powermaul_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_powermaul_p1",
-		},
-		ogryn_powermaul_slabshield_p1_m1 = {
-			display_name = "loc_ogryn_powermaul_slabshield_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_powermaul_slabshield_p1",
-		},
-		powermaul_2h_p1_m1 = {
-			display_name = "loc_powermaul_2h_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_powermaul_2h_p1",
-		},
-		powermaul_p1_m1 = {
-			display_name = "loc_powermaul_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_powermaul_p1",
-		},
-		powermaul_p1_m2 = {
-			display_name = "loc_powermaul_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_powermaul_p1",
-		},
-		powersword_p1_m1 = {
-			display_name = "loc_powersword_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_powersword_p1",
-		},
-		powersword_p1_m2 = {
-			display_name = "loc_powersword_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_powersword_p1",
-		},
-		thunderhammer_2h_p1_m1 = {
-			display_name = "loc_thunderhammer_2h_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_thunderhammer_2h_p1",
-		},
-		thunderhammer_2h_p1_m2 = {
-			display_name = "loc_thunderhammer_2h_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_thunderhammer_2h_p1",
-		},
-		autogun_p1_m1 = {
-			display_name = "loc_autogun_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p1",
-		},
-		autogun_p1_m2 = {
-			display_name = "loc_autogun_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p1",
-		},
-		autogun_p1_m3 = {
-			display_name = "loc_autogun_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p1",
-		},
-		autogun_p2_m1 = {
-			display_name = "loc_autogun_p2_m1",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p2",
-		},
-		autogun_p2_m2 = {
-			display_name = "loc_autogun_p2_m2",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p2",
-		},
-		autogun_p2_m3 = {
-			display_name = "loc_autogun_p2_m3",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p2",
-		},
-		autogun_p3_m1 = {
-			display_name = "loc_autogun_p3_m1",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p3",
-		},
-		autogun_p3_m2 = {
-			display_name = "loc_autogun_p3_m2",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p3",
-		},
-		autogun_p3_m3 = {
-			display_name = "loc_autogun_p3_m3",
-			display_name_pattern = "loc_weapon_pattern_name_autogun_p3",
-		},
-		autopistol_p1_m1 = {
-			display_name = "loc_autopistol_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_autopistol_p1",
-		},
-		bolter_p1_m1 = {
-			display_name = "loc_bolter_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_bolter_p1",
-		},
-		boltpistol_p1_m1 = {
-			display_name = "loc_boltpistol_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_boltpistol_p1",
-		},
-		flamer_p1_m1 = {
-			display_name = "loc_flamer_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_flamer_p1",
-		},
-		forcestaff_p1_m1 = {
-			display_name = "loc_forcestaff_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p1",
-		},
-		forcestaff_p2_m1 = {
-			display_name = "loc_forcestaff_p2_m1",
-			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p2",
-		},
-		forcestaff_p3_m1 = {
-			display_name = "loc_forcestaff_p3_m1",
-			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p3",
-		},
-		forcestaff_p4_m1 = {
-			display_name = "loc_forcestaff_p4_m1",
-			display_name_pattern = "loc_weapon_pattern_name_forcestaff_p4",
-		},
-		lasgun_p1_m1 = {
-			display_name = "loc_lasgun_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p1",
-		},
-		lasgun_p1_m2 = {
-			display_name = "loc_lasgun_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p1",
-		},
-		lasgun_p1_m3 = {
-			display_name = "loc_lasgun_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p1",
-		},
-		lasgun_p2_m1 = {
-			display_name = "loc_lasgun_p2_m1",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p2",
-		},
-		lasgun_p2_m2 = {
-			display_name = "loc_lasgun_p2_m2",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p2",
-		},
-		lasgun_p2_m3 = {
-			display_name = "loc_lasgun_p2_m3",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p2",
-		},
-		lasgun_p3_m1 = {
-			display_name = "loc_lasgun_p3_m1",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p3",
-		},
-		lasgun_p3_m2 = {
-			display_name = "loc_lasgun_p3_m2",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p3",
-		},
-		lasgun_p3_m3 = {
-			display_name = "loc_lasgun_p3_m3",
-			display_name_pattern = "loc_weapon_pattern_name_lasgun_p3",
-		},
-		laspistol_p1_m1 = {
-			display_name = "loc_laspistol_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_laspistol_p1",
-		},
-		laspistol_p1_m3 = {
-			display_name = "loc_laspistol_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_laspistol_p1",
-		},
-		ogryn_gauntlet_p1_m1 = {
-			display_name = "loc_ogryn_gauntlet_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_gauntlet_p1",
-		},
-		ogryn_heavystubber_p1_m1 = {
-			display_name = "loc_ogryn_heavystubber_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_heavystubber_p1",
-		},
-		ogryn_heavystubber_p1_m2 = {
-			display_name = "loc_ogryn_heavystubber_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_heavystubber_p1",
-		},
-		ogryn_heavystubber_p1_m3 = {
-			display_name = "loc_ogryn_heavystubber_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_heavystubber_p1",
-		},
-		ogryn_rippergun_p1_m1 = {
-			display_name = "loc_ogryn_rippergun_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_rippergun_p1",
-		},
-		ogryn_rippergun_p1_m2 = {
-			display_name = "loc_ogryn_rippergun_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_rippergun_p1",
-		},
-		ogryn_rippergun_p1_m3 = {
-			display_name = "loc_ogryn_rippergun_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_rippergun_p1",
-		},
-		ogryn_thumper_p1_m1 = {
-			display_name = "loc_ogryn_thumper_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_thumper_p1_m1",
-		},
-		ogryn_thumper_p1_m2 = {
-			display_name = "loc_ogryn_thumper_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_ogryn_thumper_p1_m2",
-		},
-		plasmagun_p1_m1 = {
-			display_name = "loc_plasmagun_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_plasmagun_p1",
-		},
-		shotgun_p1_m1 = {
-			display_name = "loc_shotgun_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
-		},
-		shotgun_p1_m2 = {
-			display_name = "loc_shotgun_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
-		},
-		shotgun_p1_m3 = {
-			display_name = "loc_shotgun_p1_m3",
-			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
-		},
-		shotgun_p2_m1 = {
-			display_name = "loc_shotgun_p2_m1",
-			display_name_pattern = "loc_weapon_pattern_name_shotgun_p2",
-		},
-		stubrevolver_p1_m1 = {
-			display_name = "loc_stubrevolver_p1_m1",
-			display_name_pattern = "loc_weapon_pattern_name_stubrevolver_p1",
-		},
-		stubrevolver_p1_m2 = {
-			display_name = "loc_stubrevolver_p1_m2",
-			display_name_pattern = "loc_weapon_pattern_name_stubrevolver_p1",
+		ogryn_thumper_p1 = {
+			display_name = "loc_weapon_family_ogryn_thumper_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/ogryn_thumper_p1_m1",
+					name = "ogryn_thumper_p1_m1",
+				},
+			},
+		},
+		ogryn_thumper_p2 = {
+			display_name = "loc_weapon_family_ogryn_thumper_p1_m2",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/ogryn_thumper_p1_m2",
+					name = "ogryn_thumper_p1_m2",
+				},
+			},
+		},
+		ogryn_rippergun_p1 = {
+			display_name = "loc_weapon_family_ogryn_rippergun_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/rippergun_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/rippergun_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/rippergun_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/ogryn_rippergun_p1_m1",
+					name = "ogryn_rippergun_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/ogryn_rippergun_p1_m2",
+					name = "ogryn_rippergun_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/ogryn_rippergun_p1_m3",
+					name = "ogryn_rippergun_p1_m3",
+				},
+			},
+		},
+		ogryn_heavystubber_p1 = {
+			display_name = "loc_weapon_family_ogryn_heavystubber_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/ogryn_heavystubber_p1_m1",
+					name = "ogryn_heavystubber_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/ogryn_heavystubber_p1_m2",
+					name = "ogryn_heavystubber_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/ogryn_heavystubber_p1_m3",
+					name = "ogryn_heavystubber_p1_m3",
+				},
+			},
+		},
+		ogryn_gauntlet_p1 = {
+			display_name = "loc_weapon_family_ogryn_gauntlet_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/ogryn_gauntlet_p1_m1",
+					name = "ogryn_gauntlet_p1_m1",
+				},
+			},
+		},
+		laspistol_p1 = {
+			display_name = "loc_weapon_family_laspistol_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/laspistol_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/laspistol_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/laspistol_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/laspistol_p1_m1",
+					name = "laspistol_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/laspistol_p1_m2",
+					name = "laspistol_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/laspistol_p1_m3",
+					name = "laspistol_p1_m3",
+				},
+			},
+		},
+		lasgun_p3 = {
+			display_name = "loc_weapon_family_lasgun_p3_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p3_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p3_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p3_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p3_m1",
+					name = "lasgun_p3_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p3_m2",
+					name = "lasgun_p3_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p3_m3",
+					name = "lasgun_p3_m3",
+				},
+			},
+		},
+		lasgun_p2 = {
+			display_name = "loc_weapon_family_lasgun_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p2_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p2_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p2_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p2_m1",
+					name = "lasgun_p2_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p2_m2",
+					name = "lasgun_p2_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p2_m3",
+					name = "lasgun_p2_m3",
+				},
+			},
+		},
+		lasgun_p1 = {
+			display_name = "loc_weapon_family_lasgun_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p1_m1",
+					name = "lasgun_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p1_m2",
+					name = "lasgun_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/lasgun_p1_m3",
+					name = "lasgun_p1_m3",
+				},
+			},
+		},
+		forcestaff_p4 = {
+			display_name = "loc_weapon_family_forcestaff_p4_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/forcestaff_p4_m1",
+					name = "forcestaff_p4_m1",
+				},
+			},
+		},
+		forcestaff_p3 = {
+			display_name = "loc_weapon_family_forcestaff_p3_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/forcestaff_p3_m1",
+					name = "forcestaff_p3_m1",
+				},
+			},
+		},
+		forcestaff_p2 = {
+			display_name = "loc_weapon_family_forcestaff_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/forcestaff_p2_m1",
+					name = "forcestaff_p2_m1",
+				},
+			},
+		},
+		forcestaff_p1 = {
+			display_name = "loc_weapon_family_forcestaff_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/forcestaff_p1_m1",
+					name = "forcestaff_p1_m1",
+				},
+			},
+		},
+		flamer_p1 = {
+			display_name = "loc_weapon_family_flamer_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/flamer_p1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/flamer_p1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/flamer_p1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/flamer_p1_m1",
+					name = "flamer_p1_m1",
+				},
+			},
+		},
+		bolter_p1 = {
+			display_name = "loc_weapon_family_bolter_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/bolter_p1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/bolter_p1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/bolter_p1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/bolter_p1_m1",
+					name = "bolter_p1_m1",
+				},
+			},
+		},
+		boltpistol_p1 = {
+			display_name = "loc_weapon_family_boltpistol_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/boltpistol_p1_m1",
+					name = "boltpistol_p1_m1",
+				},
+			},
+		},
+		autopistol_p1 = {
+			display_name = "loc_weapon_family_autopistol_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autopistol_p1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autopistol_p1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autopistol_p1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/autopistol_p1_m1",
+					name = "autopistol_p1_m1",
+				},
+			},
+		},
+		autogun_p3 = {
+			display_name = "loc_weapon_family_autogun_p3_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p3_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p3_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p3_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/autogun_p3_m1",
+					name = "autogun_p3_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/autogun_p3_m2",
+					name = "autogun_p3_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/autogun_p3_m3",
+					name = "autogun_p3_m3",
+				},
+			},
+		},
+		autogun_p2 = {
+			display_name = "loc_weapon_family_autogun_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p2_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p2_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p2_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/autogun_p2_m1",
+					name = "autogun_p2_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/autogun_p2_m2",
+					name = "autogun_p2_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/autogun_p2_m3",
+					name = "autogun_p2_m3",
+				},
+			},
+		},
+		autogun_p1 = {
+			display_name = "loc_weapon_family_autogun_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/autogun_p1_m1",
+					name = "autogun_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/autogun_p1_m2",
+					name = "autogun_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/autogun_p1_m3",
+					name = "autogun_p1_m3",
+				},
+			},
+		},
+		thunderhammer_2h_p1 = {
+			display_name = "loc_weapon_family_thunderhammer_2h_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/thunderhammer_2h_p1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/thunderhammer_2h_p1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/thunderhammer_2h_p1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/thunderhammer_2h_p1_m1",
+					name = "thunderhammer_2h_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/thunderhammer_2h_p1_m2",
+					name = "thunderhammer_2h_p1_m2",
+				},
+			},
+		},
+		powersword_p1 = {
+			display_name = "loc_weapon_family_powersword_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/powersword_p1_m1",
+					name = "powersword_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/powersword_p1_m2",
+					name = "powersword_p1_m2",
+				},
+			},
+		},
+		powermaul_p1 = {
+			display_name = "loc_weapon_family_powermaul_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_p1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_p1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_p1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/powermaul_p1_m1",
+					name = "powermaul_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/powermaul_p1_m2",
+					name = "powermaul_p1_m2",
+				},
+			},
+		},
+		powermaul_2h_p1 = {
+			display_name = "loc_weapon_family_powermaul_2h_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/powermaul_2h_p1_m1",
+					name = "powermaul_2h_p1_m1",
+				},
+			},
+		},
+		ogryn_powermaul_slabshield_p1 = {
+			display_name = "loc_weapon_family_ogryn_powermaul_slabshield_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/ogryn_powermaul_slabshield_p1_m1",
+					name = "ogryn_powermaul_slabshield_p1_m1",
+				},
+			},
+		},
+		ogryn_powermaul_p1 = {
+			display_name = "loc_weapon_family_ogryn_powermaul_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/ogryn_powermaul_p1_m1",
+					name = "ogryn_powermaul_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_powermaul_p1_m2",
+					name = "ogryn_powermaul_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_powermaul_p1_m3",
+					name = "ogryn_powermaul_p1_m3",
+				},
+			},
+		},
+		ogryn_combatblade_p1 = {
+			display_name = "loc_weapon_family_ogryn_combatblade_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/ogryn_combatblade_p1_m1",
+					name = "ogryn_combatblade_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_combatblade_p1_m2",
+					name = "ogryn_combatblade_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_combatblade_p1_m3",
+					name = "ogryn_combatblade_p1_m3",
+				},
+			},
+		},
+		ogryn_club_p2 = {
+			display_name = "loc_weapon_family_ogryn_club_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_m3",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_m3_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_m3_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/ogryn_club_p2_m1",
+					name = "ogryn_club_p2_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_club_p2_m2",
+					name = "ogryn_club_p2_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_club_p2_m3",
+					name = "ogryn_club_p2_m3",
+				},
+			},
+		},
+		ogryn_club_p1 = {
+			display_name = "loc_weapon_family_ogryn_club_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_m2_complete_mask",
+			marks = {
+				{
+					comparison_text = "",
+					item = "content/items/weapons/player/melee/ogryn_club_p1_m1",
+					name = "ogryn_club_p1_m1",
+				},
+				{
+					comparison_text = "",
+					item = "content/items/weapons/player/melee/ogryn_club_p1_m2",
+					name = "ogryn_club_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_club_p1_m3",
+					name = "ogryn_club_p1_m3",
+				},
+			},
+		},
+		ogryn_pickaxe_2h_p1 = {
+			display_name = "loc_weapon_family_ogryn_pickaxe_2h_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/ogryn_pickaxe_2h_p1_m1",
+					name = "ogryn_pickaxe_2h_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_pickaxe_2h_p1_m2",
+					name = "ogryn_pickaxe_2h_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/ogryn_pickaxe_2h_p1_m3",
+					name = "ogryn_pickaxe_2h_p1_m3",
+				},
+			},
+		},
+		forcesword_p1 = {
+			display_name = "loc_weapon_family_forcesword_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcesword_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcesword_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcesword_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/forcesword_p1_m1",
+					name = "forcesword_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/forcesword_p1_m2",
+					name = "forcesword_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/forcesword_p1_m3",
+					name = "forcesword_p1_m3",
+				},
+			},
+		},
+		combatsword_p3 = {
+			display_name = "loc_weapon_family_combatsword_p3_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatsword_p3_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatsword_p3_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatsword_p3_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/combatsword_p3_m1",
+					name = "combatsword_p3_m1",
+				},
+				{
+					comparison_text = "",
+					item = "content/items/weapons/player/melee/combatsword_p3_m2",
+					name = "combatsword_p3_m2",
+				},
+				{
+					comparison_text = "",
+					item = "content/items/weapons/player/melee/combatsword_p3_m3",
+					name = "combatsword_p3_m3",
+				},
+			},
+		},
+		combatsword_p2 = {
+			display_name = "loc_weapon_family_combatsword_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatsword_p2_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatsword_p2_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatsword_p2_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/combatsword_p2_m1",
+					name = "combatsword_p2_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/combatsword_p2_m2",
+					name = "combatsword_p2_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/combatsword_p2_m3",
+					name = "combatsword_p2_m3",
+				},
+			},
+		},
+		combatsword_p1 = {
+			display_name = "loc_weapon_family_combatsword_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatsword_p1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatsword_p1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatsword_p1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/combatsword_p1_m1",
+					name = "combatsword_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/combatsword_p1_m2",
+					name = "combatsword_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/combatsword_p1_m3",
+					name = "combatsword_p1_m3",
+				},
+			},
+		},
+		combatknife_p1 = {
+			display_name = "loc_weapon_family_combatknife_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatknife_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatknife_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatknife_p1_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/combatknife_p1_m1",
+					name = "combatknife_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/combatknife_p1_m2",
+					name = "combatknife_p1_m2",
+				},
+			},
+		},
+		combataxe_p3 = {
+			display_name = "loc_weapon_family_combataxe_p3_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p3_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p3_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p3_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/combataxe_p3_m1",
+					name = "combataxe_p3_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/combataxe_p3_m2",
+					name = "combataxe_p3_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/combataxe_p3_m3",
+					name = "combataxe_p3_m3",
+				},
+			},
+		},
+		combataxe_p2 = {
+			display_name = "loc_weapon_family_combataxe_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p2_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p2_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p2_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/combataxe_p2_m1",
+					name = "combataxe_p2_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/combataxe_p2_m2",
+					name = "combataxe_p2_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/combataxe_p2_m3",
+					name = "combataxe_p2_m3",
+				},
+			},
+		},
+		combataxe_p1 = {
+			display_name = "loc_weapon_family_combataxe_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/combataxe_p1_m1",
+					name = "combataxe_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/combataxe_p1_m2",
+					name = "combataxe_p1_m2",
+				},
+				{
+					item = "content/items/weapons/player/melee/combataxe_p1_m3",
+					name = "combataxe_p1_m3",
+				},
+			},
+		},
+		chainsword_p1 = {
+			display_name = "loc_weapon_family_chainsword_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/chainsword_p1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/chainsword_p1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/chainsword_p1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/chainsword_p1_m1",
+					name = "chainsword_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/chainsword_p1_m2",
+					name = "chainsword_p1_m2",
+				},
+			},
+		},
+		chainsword_2h_p1 = {
+			display_name = "loc_weapon_family_chainsword_2h_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/chainsword_2h_p1_m1",
+					name = "chainsword_2h_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/chainsword_2h_p1_m2",
+					name = "chainsword_2h_p1_m2",
+				},
+			},
+		},
+		chainaxe_p1 = {
+			display_name = "loc_weapon_family_chainaxe_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_m2",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_m2_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_m2_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/chainaxe_p1_m1",
+					name = "chainaxe_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/chainaxe_p1_m2",
+					name = "chainaxe_p1_m2",
+				},
+			},
 		},
 	},
 	assist_type_localization_lookup = {

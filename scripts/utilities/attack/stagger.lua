@@ -93,26 +93,26 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 end
 
 Stagger.can_stagger = function (unit)
-	local unit_data_ext = ScriptUnit.has_extension(unit, "unit_data_system")
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 
-	if not unit_data_ext then
+	if not unit_data_extension then
 		return false
 	end
 
-	local breed = unit_data_ext:breed()
+	local breed = unit_data_extension:breed()
 
 	if not Breed.is_minion(breed) then
 		return false
 	end
 
-	local owned_by_death_manager = unit_data_ext:is_owned_by_death_manager()
+	local owned_by_death_manager = unit_data_extension:is_owned_by_death_manager()
 
 	if owned_by_death_manager then
 		return false
 	end
 
-	local behavior_ext = ScriptUnit.extension(unit, "behavior_system")
-	local _, action_data_or_nil = behavior_ext:running_action()
+	local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+	local _, action_data_or_nil = behavior_extension:running_action()
 
 	if action_data_or_nil and action_data_or_nil.stagger_immune then
 		return false
@@ -261,20 +261,18 @@ end
 function _should_trigger_stagger(t, stagger_component, new_stagger_type)
 	local should_trigger_stagger = true
 	local immune_time = stagger_component.immune_time
+	local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
+	local current_stagger_type = stagger_component.type
+	local current_stagger_impact = stagger_impact_comparison[current_stagger_type]
 
-	if immune_time then
-		local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
-		local current_stagger_type = stagger_component.type
-		local current_stagger_impact = stagger_impact_comparison[current_stagger_type]
+	if current_stagger_impact then
 		local new_stagger_impact = stagger_impact_comparison[new_stagger_type]
 
-		if current_stagger_impact then
-			if new_stagger_impact <= current_stagger_impact then
-				should_trigger_stagger = immune_time < t
-			end
-		else
+		if new_stagger_impact <= current_stagger_impact then
 			should_trigger_stagger = immune_time < t
 		end
+	else
+		should_trigger_stagger = immune_time < t
 	end
 
 	return should_trigger_stagger

@@ -108,8 +108,10 @@ weapon_template.breed_anim_state_machine_1p = {
 weapon_template.keywords = {
 	"unarmed",
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee

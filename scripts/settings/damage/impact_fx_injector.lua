@@ -198,19 +198,11 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 						append_husk_to_event_name = true,
 						event = "wwise/events/weapon/play_material_hit_ice",
 					},
-					{
-						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
-					},
 				},
 				damage_reduced = {
 					{
 						append_husk_to_event_name = true,
 						event = "wwise/events/weapon/play_material_hit_ice",
-					},
-					{
-						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
 					},
 				},
 				damage_negated = {
@@ -271,6 +263,83 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"prop_ice_chunk\" impact fx on damage_type: %s", damage_type)
+	end
+
+	local has_prop_train_cogitator_overrides = armor_config[hit_effect_armor_type.prop_train_cogitator] ~= nil
+
+	if not has_prop_train_cogitator_overrides then
+		armor_config[hit_effect_armor_type.prop_train_cogitator] = {
+			sfx = {
+				damage = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_cogitator_impact",
+					},
+				},
+				damage_reduced = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_cogitator_impact",
+					},
+				},
+				damage_negated = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_cogitator_impact",
+					},
+				},
+			},
+			vfx = {
+				damage = {
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_penetrate",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/surfaces/impact_metal",
+						},
+					},
+				},
+				damage_reduced = {
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_penetrate",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/surfaces/impact_metal",
+						},
+					},
+				},
+				damage_negated = {
+					{
+						effects = {
+							"content/fx/particles/impacts/damage_blocked",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_ricochet",
+						},
+					},
+				},
+			},
+		}
+	else
+		Log.info("ImpactFxInjector", "Found override for \"prop_train_cogitator\" impact fx on damage_type: %s", damage_type)
 	end
 
 	local has_void_shield_overrides = armor_config[armor_types.void_shield] ~= nil

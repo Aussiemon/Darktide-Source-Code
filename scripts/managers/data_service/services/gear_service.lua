@@ -191,6 +191,61 @@ GearService.delete_gear = function (self, gear_id)
 	end)
 end
 
+GearService.delete_gear_batch = function (self, items)
+	local max_operations = 25
+	local num_batches = items and math.floor(#items / max_operations + 1) or 0
+	local item_batches = {}
+
+	if num_batches > 0 then
+		for i = 1, num_batches do
+			item_batches[i] = {}
+
+			local start_batch = (i - 1) * max_operations + 1
+			local end_batch = i < num_batches and start_batch + max_operations or #items
+
+			for ii = start_batch, end_batch do
+				item_batches[i][#item_batches[i] + 1] = items[ii]
+			end
+		end
+	end
+
+	return self:_delete_item_batches(item_batches, {})
+end
+
+GearService._delete_item_batches = function (self, item_batches, result)
+	if item_batches[1] then
+		local items = item_batches[1]
+
+		return self._backend_interface.gear:delete_gear_batch(items):next(function (data)
+			if data and data.operations then
+				for i = 1, #data.operations do
+					local operation = data.operations[i]
+					local gear_id = operation.gearId
+
+					result[#result + 1] = operation
+
+					if gear_id then
+						self:on_gear_deleted(gear_id)
+					end
+				end
+			end
+
+			table.remove(item_batches, 1)
+
+			return self:_delete_item_batches(item_batches, result)
+		end):catch(function (data)
+			table.remove(item_batches, 1)
+
+			return self:_delete_item_batches(item_batches, result)
+		end)
+	else
+		self:invalidate_gear_cache()
+		Managers.data_service.store:invalidate_wallets_cache()
+
+		return result
+	end
+end
+
 GearService.fetch_inventory = function (self, character_id, slot_filter_list, item_type_filter_list)
 	local gear_promise = self:fetch_gear()
 

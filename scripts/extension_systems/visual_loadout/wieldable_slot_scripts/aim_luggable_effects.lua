@@ -5,6 +5,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_pro
 local Action = require("scripts/utilities/weapon/action")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
 local ProjectileTrajectory = require("scripts/utilities/projectile_trajectory")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AimLuggableEffects = class("AimLuggableEffects", "AimProjectileEffects")
 
 AimLuggableEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -49,5 +50,7 @@ AimLuggableEffects._trajectory_settings = function (self)
 
 	return true, _trajectory_settings
 end
+
+implements(AimLuggableEffects, WieldableSlotScriptInterface)
 
 return AimLuggableEffects

@@ -2,7 +2,7 @@
 
 local BotGameplay = require("scripts/managers/player/player_game_states/bot_gameplay")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
-local GameplayInitStepMusic = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_music")
+local GameplayInitStepWwiseGameSync = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_wwise_game_sync")
 local HumanGameplay = require("scripts/managers/player/player_game_states/human_gameplay")
 local RemotePlayerGameplay = require("scripts/managers/player/player_game_states/remote_player_gameplay")
 local GameplayInitStepPlayerEnterGame = class("GameplayInitStepPlayerEnterGame")
@@ -41,11 +41,13 @@ GameplayInitStepPlayerEnterGame.update = function (self, main_dt, main_t)
 		return nil, nil
 	end
 
+	self._shared_state.initialized_steps.GameplayInitStepPlayerEnterGame = true
+
 	local next_step_params = {
 		shared_state = self._shared_state,
 	}
 
-	return GameplayInitStepMusic, next_step_params
+	return GameplayInitStepWwiseGameSync, next_step_params
 end
 
 GameplayInitStepPlayerEnterGame._player_state_enter = function (self, world, physics_world, level, themes, mission_name, is_server, gameplay_state, clock_handler_client)

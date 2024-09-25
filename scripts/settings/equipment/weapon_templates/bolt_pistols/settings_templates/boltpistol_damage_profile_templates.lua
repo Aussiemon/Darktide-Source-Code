@@ -22,14 +22,16 @@ local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local no_cleave = DamageProfileSettings.no_cleave
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
+local single_plus_cleave = DamageProfileSettings.single_plus_cleave
 
 damage_templates.default_boltpistol_damage = {
+	ignore_roamer_hitzone_multipliers = true,
 	ragdoll_only = true,
 	ragdoll_push_force = 600,
 	shield_multiplier = 10,
 	stagger_category = "ranged",
 	suppression_value = 3,
-	cleave_distribution = no_cleave,
+	cleave_distribution = single_plus_cleave,
 	ranges = {
 		max = 30,
 		min = 7.5,
@@ -42,8 +44,8 @@ damage_templates.default_boltpistol_damage = {
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 			},
 			impact = {
@@ -64,8 +66,8 @@ damage_templates.default_boltpistol_damage = {
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 			},
 			impact = {
@@ -144,6 +146,7 @@ damage_templates.boltpistol_weapon_special = {
 	},
 }
 damage_templates.boltpistol_stop_explosion = {
+	ignore_roamer_hitzone_multipliers = true,
 	ragdoll_push_force = 200,
 	stagger_category = "flamer",
 	suppression_value = 0.5,
@@ -221,6 +224,7 @@ damage_templates.boltpistol_stop_explosion = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 }
 damage_templates.boltpistol_kill_explosion = {
+	ignore_roamer_hitzone_multipliers = true,
 	ragdoll_push_force = 200,
 	stagger_category = "flamer",
 	suppression_value = 0.5,

@@ -144,8 +144,8 @@ ViewElementBase.scenegraph_world_position = function (self, id, scale)
 	return UIScenegraph.world_position(ui_scenegraph, id, scale)
 end
 
-ViewElementBase._set_scenegraph_position = function (self, id, x, y, z)
-	local ui_scenegraph = self._ui_scenegraph
+ViewElementBase._set_scenegraph_position = function (self, id, x, y, z, horizontal_alignment, vertical_alignment, optional_ui_scenegraph)
+	local ui_scenegraph = optional_ui_scenegraph or self._ui_scenegraph
 	local scenegraph = ui_scenegraph[id]
 	local position = scenegraph.position
 
@@ -161,6 +161,8 @@ ViewElementBase._set_scenegraph_position = function (self, id, x, y, z)
 		position[3] = z
 	end
 
+	scenegraph.horizontal_alignment = horizontal_alignment or scenegraph.horizontal_alignment
+	scenegraph.vertical_alignment = vertical_alignment or scenegraph.vertical_alignment
 	self._update_scenegraph = true
 end
 

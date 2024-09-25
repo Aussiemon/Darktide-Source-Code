@@ -9,11 +9,9 @@ local StatNetworkTypes = require("scripts/settings/stats/stat_network_types")
 local StatsManager = class("StatsManager")
 local CLIENT_RPCS = {}
 
-for _, string in pairs(StatNetworkTypes) do
-	local i = #CLIENT_RPCS + 1
-
-	CLIENT_RPCS[i] = "rpc_stat_update_" .. string
-end
+table.append(CLIENT_RPCS, table.map(table.keys(StatNetworkTypes), function (s)
+	return "rpc_stat_update_" .. s
+end))
 
 local UserStates = table.enum("pulling", "pushing", "idle", "tracking")
 
@@ -39,7 +37,17 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 	self._rpc_settings = rpc_settings
 	self._stat_lookup = {}
 
-	for key, stat in pairs(self._definitions) do
+	local sorted_stat_keys = {}
+
+	for key in pairs(self._definitions) do
+		table.insert(sorted_stat_keys, key)
+	end
+
+	table.sort(sorted_stat_keys)
+
+	for _, key in ipairs(sorted_stat_keys) do
+		local stat = self._definitions[key]
+
 		self._stat_lookup[stat.index] = key
 	end
 
@@ -49,12 +57,6 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 	self._is_client = is_client
 
 	if is_client then
-		for _, string in pairs(StatNetworkTypes) do
-			StatsManager["rpc_stat_update_" .. string] = function (_, ...)
-				self:rpc_stat_update(...)
-			end
-		end
-
 		self._event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 	end
 
@@ -94,14 +96,18 @@ end
 
 StatsManager._get_smallest_send_rpc = function (self, size)
 	local rpcs_calls = self._rpc_calls
+	local rpc_call_count = #rpcs_calls
 
-	for _, data_type in pairs(rpcs_calls) do
-		if size <= data_type.max then
-			return data_type
+	for i = 1, rpc_call_count - 1 do
+		local call_data = rpcs_calls[i]
+		local in_range = size >= call_data.min and size <= call_data.max
+
+		if in_range then
+			return call_data
 		end
 	end
 
-	return rpcs_calls[StatNetworkTypes.u24bit]
+	return rpcs_calls[rpc_call_count]
 end
 
 StatsManager._update_rpcs = function (self, user)
@@ -267,6 +273,32 @@ StatsManager._download_stats = function (self, key)
 	end)
 end
 
+StatsManager._initialize_rpcs = function (self)
+	if self._rpc_calls then
+		return
+	end
+
+	local rpc_calls = {}
+
+	self._rpc_calls = rpc_calls
+
+	for _, name in pairs(StatNetworkTypes) do
+		local rpc_value_name = "stat_value_" .. name
+		local rpc_value_info = Network.type_info(rpc_value_name)
+		local min_value, max_value = rpc_value_info.min, rpc_value_info.max
+
+		rpc_calls[#rpc_calls + 1] = {
+			rpc = RPC["rpc_stat_update_" .. name],
+			min = min_value,
+			max = max_value,
+		}
+	end
+
+	table.sort(rpc_calls, function (a, b)
+		return a.max < b.max
+	end)
+end
+
 StatsManager.add_user = function (self, key, account_id, rpc_channel, local_player_id)
 	local users = self._users
 
@@ -274,24 +306,7 @@ StatsManager.add_user = function (self, key, account_id, rpc_channel, local_play
 		account_id = nil
 	end
 
-	if self._min_stat_value == nil then
-		self._min_stat_value = Network.type_info("stat_value_backend").min
-		self._max_stat_value = Network.type_info("stat_value_backend").max
-	end
-
-	if not self._rpc_calls then
-		self._rpc_calls = {}
-
-		for _, string in pairs(StatNetworkTypes) do
-			local stat_value = "stat_value_" .. string
-
-			self._rpc_calls[string] = {
-				rpc = RPC["rpc_stat_update_" .. string],
-				min = Network.type_info(stat_value).min,
-				max = Network.type_info(stat_value).max,
-			}
-		end
-	end
+	self:_initialize_rpcs()
 
 	users[key] = self:_empty_user(key, account_id, rpc_channel, local_player_id)
 
@@ -588,8 +603,10 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 end
 
 StatsManager._parse_backend_value = function (self, x)
-	local min = self._min_stat_value
-	local max = self._max_stat_value
+	local rpc_calls = self._rpc_calls
+	local last_call_data = rpc_calls[#rpc_calls]
+	local min = last_call_data.min
+	local max = last_call_data.max
 
 	return math.round(math.clamp(x, min, max))
 end
@@ -692,6 +709,12 @@ StatsManager.stop_tracking_user = function (self, key)
 	end)
 
 	return user.save_done_promise
+end
+
+StatsManager.set_user_stat = function (self, stat_name, value)
+	local user = self._users[1]
+
+	user.data[stat_name] = value
 end
 
 StatsManager.read_team_stat = function (self, stat_name, ...)
@@ -855,6 +878,10 @@ StatsManager.rpc_stat_update = function (self, _, local_player_id, stat_index, s
 			callback_fn(listener_id, stat_name, stat_value)
 		end
 	end
+end
+
+for key in pairs(StatNetworkTypes) do
+	StatsManager["rpc_stat_update_" .. key] = StatsManager.rpc_stat_update
 end
 
 StatsManager.record_private = function (self, stat_name, player, ...)

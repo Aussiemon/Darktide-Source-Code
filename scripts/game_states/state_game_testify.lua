@@ -11,8 +11,10 @@ local ParameterResolver = require("scripts/foundation/utilities/parameters/param
 local RenderSettings = require("scripts/settings/options/render_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local application_console_command = Application.console_command
+local flow_event = Unit.flow_event
 local unit_actor = Unit.actor
 local unit_animation_event = Unit.animation_event
+local unit_by_name = World.unit_by_name
 local world_create_particles = World.create_particles
 local world_set_particles_life_time = World.set_particles_life_time
 
@@ -390,6 +392,14 @@ local StateGameTestify = {
 		local actor = unit_actor(unit, actor_name)
 
 		return actor
+	end,
+	unit_by_name = function (_, world, unit_name)
+		local unit = unit_by_name(world, unit_name)
+
+		return unit
+	end,
+	unit_flow_event = function (_, unit, flow_event_name)
+		flow_event(unit, flow_event_name)
 	end,
 	unregister_timer = function (_, name)
 		Managers.time:unregister_timer(name)

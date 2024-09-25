@@ -64,14 +64,17 @@ UnitSpawnerManager.is_unit_template = function (self, game_object_type)
 end
 
 UnitSpawnerManager._build_network_lookup = function (self, templates)
-	local lookup = {}
-	local i = 1
+	local template_keys = table.keys(templates)
 
-	for template_name, _ in pairs(templates) do
-		lookup[i] = template_name
-		lookup[template_name] = i
-		i = i + 1
+	table.sort(template_keys)
+
+	local lookup = {}
+
+	for i = 1, #template_keys do
+		lookup[i] = template_keys[i]
 	end
+
+	table.mirror_array_inplace(lookup)
 
 	return lookup
 end
@@ -198,8 +201,8 @@ UnitSpawnerManager.spawn_unit = function (self, unit_name, ...)
 	return unit
 end
 
-UnitSpawnerManager._create_unit_extensions = function (self, world, unit, extension_init_function, extension_unit_spawned_function_or_nil, game_object_data_or_session, is_husk, ...)
-	local any_extensions_added = self._extension_manager:add_unit_extensions_from_template(world, unit, extension_init_function, extension_unit_spawned_function_or_nil, self._unit_template_context, game_object_data_or_session, is_husk, ...)
+UnitSpawnerManager._create_unit_extensions = function (self, world, unit, extension_init_function, extension_unit_spawned_function_or_nil, game_object_data_or_session, ...)
+	local any_extensions_added = self._extension_manager:add_unit_extensions_from_template(world, unit, extension_init_function, extension_unit_spawned_function_or_nil, self._unit_template_context, game_object_data_or_session, ...)
 
 	if any_extensions_added then
 		self._addition_queue:push_back(unit)
@@ -319,7 +322,7 @@ UnitSpawnerManager._spawn_unit_with_extensions = function (self, unit_name, unit
 
 	local unit = self:spawn_unit(template.local_unit(unit_name, position, rotation, material, ...))
 
-	self:_create_unit_extensions(self._world, unit, template.local_init, template.unit_spawned, game_object_data, false, ...)
+	self:_create_unit_extensions(self._world, unit, template.local_init, template.local_unit_spawned, game_object_data, ...)
 
 	self._unit_template_by_unit[unit] = template
 
@@ -376,7 +379,7 @@ UnitSpawnerManager.spawn_husk_unit = function (self, game_object_id, owner_id)
 	self._unit_template_by_unit[unit] = unit_template
 
 	self:_add_network_unit(unit, game_object_id, true)
-	self:_create_unit_extensions(self._world, unit, unit_template.husk_init, unit_template.unit_spawned, session, true, game_object_id, owner_id)
+	self:_create_unit_extensions(self._world, unit, unit_template.husk_init, unit_template.husk_unit_spawned, session, game_object_id, owner_id)
 end
 
 UnitSpawnerManager.register_runtime_loaded_level = function (self, level)

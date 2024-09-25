@@ -1430,6 +1430,7 @@ weapon_template.actions = {
 		},
 	},
 	action_right_light_pushfollow = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_stab_01",
 		attack_direction_override = "push",
@@ -1442,7 +1443,6 @@ weapon_template.actions = {
 		max_num_saved_entries = 20,
 		num_frames_before_process = 0,
 		range_mod = 1.35,
-		sprint_requires_press_to_interrupt = "true",
 		total_time = 1.8,
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_2",
@@ -1633,20 +1633,22 @@ weapon_template.anim_state_machine_3p = "content/characters/player/human/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/2h_chain_sword"
 weapon_template.weapon_box = chain_sword_sweep_box
 weapon_template.chain_speed_template = ChainSpeedTemplates.chainsword_2h
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.ammo_template = "no_ammo"
-weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivations"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 4,
+	keep_active_on_sprint = true,
 	num_activations = 1,
 }
 weapon_template.fx_sources = {
 	_block = "fx_block",
-	_engine = "fx_engine",
+	_melee_idling = "fx_engine",
 	_special_active = "fx_weapon_special",
 	_sticky = "fx_sawing",
 	_sweep = "fx_sweep",
@@ -2038,6 +2040,24 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "tank",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "smiter",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "activate",
+		icon = "activate",
 	},
 }
 

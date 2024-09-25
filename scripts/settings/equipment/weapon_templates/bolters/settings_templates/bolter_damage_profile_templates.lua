@@ -24,6 +24,8 @@ local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 
 damage_templates.default_bolter_killshot = {
+	accumulative_stagger_strength_multiplier = 0.55,
+	ignore_roamer_hitzone_multipliers = true,
 	ragdoll_only = true,
 	ragdoll_push_force = 600,
 	shield_multiplier = 10,
@@ -42,8 +44,8 @@ damage_templates.default_bolter_killshot = {
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 			},
 			impact = {
@@ -64,8 +66,8 @@ damage_templates.default_bolter_killshot = {
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 			},
 			impact = {
@@ -107,6 +109,7 @@ damage_templates.default_bolter_killshot = {
 	},
 }
 damage_templates.bolter_stop_explosion = {
+	ignore_roamer_hitzone_multipliers = true,
 	ragdoll_push_force = 200,
 	stagger_category = "flamer",
 	suppression_value = 0.5,
@@ -184,6 +187,7 @@ damage_templates.bolter_stop_explosion = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 }
 damage_templates.bolter_kill_explosion = {
+	ignore_roamer_hitzone_multipliers = true,
 	ragdoll_push_force = 200,
 	stagger_category = "flamer",
 	suppression_value = 0.5,

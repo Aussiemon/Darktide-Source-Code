@@ -10,8 +10,12 @@ local damage_types = DamageSettings.damage_types
 local RELOAD_STATES = {
 	"none",
 }
+local sorted_reload_template_names = table.keys(ReloadTemplates)
 
-for _, reload_template in pairs(ReloadTemplates) do
+table.sort(sorted_reload_template_names)
+
+for _, reload_template_name in ipairs(sorted_reload_template_names) do
+	local reload_template = ReloadTemplates[reload_template_name]
 	local states = reload_template.states
 
 	for i = 1, #states do
@@ -582,13 +586,17 @@ local constants = {
 				default_value = false,
 				network_type = "bool",
 			},
-			num_special_activations = {
+			num_special_charges = {
 				default_value = 0,
-				network_type = "num_special_activations",
+				network_type = "num_special_charges",
 			},
 			special_active_start_t = {
 				default_value = 0,
 				network_type = "fixed_frame_offset_start_t_6bit",
+			},
+			special_charge_remove_at_t = {
+				default_value = 0,
+				network_type = "fixed_frame_offset_end_t_9bit",
 			},
 		},
 		luggable = {

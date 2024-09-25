@@ -114,6 +114,14 @@ Social.suggested_names_by_archetype = function (self, archetype_name, gender, bi
 	end)
 end
 
+Social.fetch_group_finder_tags = function (self)
+	local builder = BackendUtilities.url_builder():path("/social"):path("/groupfinder"):path("/tags")
+
+	return Managers.backend:title_request(builder:to_string()):next(function (data)
+		return data.body
+	end)
+end
+
 implements(Social, Interface)
 
 return Social

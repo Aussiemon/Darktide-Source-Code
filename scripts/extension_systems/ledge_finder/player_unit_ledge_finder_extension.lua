@@ -10,13 +10,9 @@ local NUM_ENTRIES_PER_RAY = 3
 local HIT = 1
 local POSITION = 2
 local DISTANCE = 3
-local RAY_RESULTS_LIMIT = NUM_RAYS * NUM_ENTRIES_PER_RAY
-local RAY_RESULTS = Script.new_array(RAY_RESULTS_LIMIT)
 local RAY_LENGTH = 2
 local OBB_LENGTH = 1
 local HEIGHT_STEP = HEIGHT_LIMIT / NUM_RAYS
-local ENOUGH_SPACE_TO_STAND = 0.5
-local ENOUGH_SPACE_TO_FIT_PLAYER = 1.21
 local PLAYER_RADIUS = 0.1
 local _ring_buffer_index, _significant_obstacles_ring_buffer_index
 
@@ -46,11 +42,11 @@ PlayerUnitLedgeFinderExtension.init = function (self, extension_init_context, un
 
 	self._ledge_ring_buffer = ledge_ring_buffer
 
-	for i = 1, RING_BUFFER_SIZE do
+	for ii = 1, RING_BUFFER_SIZE do
 		local ledge_data = Script.new_array(MAX_NUM_LEDGE_TRACKING)
 
-		for j = 1, MAX_NUM_LEDGE_TRACKING do
-			ledge_data[j] = self:_new_ledge_data()
+		for jj = 1, MAX_NUM_LEDGE_TRACKING do
+			ledge_data[jj] = self:_new_ledge_data()
 		end
 
 		local ledges = {
@@ -58,7 +54,7 @@ PlayerUnitLedgeFinderExtension.init = function (self, extension_init_context, un
 			ledge_data = ledge_data,
 		}
 
-		ledge_ring_buffer[i] = ledges
+		ledge_ring_buffer[ii] = ledges
 	end
 
 	local significant_obstacles_size = RING_BUFFER_SIZE * 2
@@ -66,9 +62,9 @@ PlayerUnitLedgeFinderExtension.init = function (self, extension_init_context, un
 
 	self._significant_obstacles_ring_buffer = significant_obstacles_ring_buffer
 
-	for i = 1, significant_obstacles_size, 2 do
-		significant_obstacles_ring_buffer[i] = false
-		significant_obstacles_ring_buffer[i + 1] = false
+	for ii = 1, significant_obstacles_size, 2 do
+		significant_obstacles_ring_buffer[ii] = false
+		significant_obstacles_ring_buffer[ii + 1] = false
 	end
 end
 

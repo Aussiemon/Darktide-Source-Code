@@ -151,6 +151,17 @@ local elements = {
 		},
 	},
 	{
+		class_name = "HudElementObjectiveProgressBar",
+		filename = "scripts/ui/hud/elements/objective_progress_bar/hud_element_objective_progress_bar",
+		package = "packages/ui/hud/objective_progress_bar/objective_progress_bar",
+		use_hud_scale = true,
+		visibility_groups = {
+			"dead",
+			"alive",
+			"communication_wheel",
+		},
+	},
+	{
 		class_name = "HudElementCombatFeed",
 		filename = "scripts/ui/hud/elements/combat_feed/hud_element_combat_feed",
 		use_hud_scale = true,

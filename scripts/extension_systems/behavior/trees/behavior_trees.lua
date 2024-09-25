@@ -13,6 +13,7 @@ local function _create_behavior_tree_entry(path)
 end
 
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/bot/bot_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_armored_infected_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_beast_of_nurgle_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_daemonhost_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_hound_behavior_tree")
@@ -26,6 +27,7 @@ _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chao
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_spawn_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_assault_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_berzerker_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_captain_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_flamer_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_grenadier_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_gunner_behavior_tree")

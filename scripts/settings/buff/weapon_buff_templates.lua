@@ -30,6 +30,7 @@ local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local special_rules = SpecialRulesSetting.special_rules
 local stagger_results = AttackSettings.stagger_results
+local attack_types = AttackSettings.attack_types
 local CHAIN_LIGHTNING_POWER_LEVEL = 500
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local PI = math.pi
@@ -63,7 +64,7 @@ templates.flamer_assault = {
 			local owner_unit = template_context.is_server and template_context.owner_unit
 			local source_item = template_context.is_server and template_context.source_item
 
-			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item, "attack_type", attack_types.buff)
 		end
 	end,
 	minion_effects = minion_burning_buff_effects.fire,
@@ -88,7 +89,7 @@ local function warpfire_added_proc_func(template_data, template_context)
 	end
 end
 
-local warpfire_broadphase_results = {}
+local _warpfire_broadphase_results = {}
 
 templates.warp_fire = {
 	buff_id = "warp_fire",
@@ -160,24 +161,24 @@ templates.warp_fire = {
 					local victim_unit = template_context.unit
 					local position = POSITION_LOOKUP[victim_unit]
 					local distance = 5
-					local num_results = broadphase.query(broadphase, position, distance, warpfire_broadphase_results, enemy_side_names)
+					local num_results = broadphase.query(broadphase, position, distance, _warpfire_broadphase_results, enemy_side_names)
 
 					if num_results > 0 then
 						local i = 1
 						local num_invalid_targets = 0
 
 						while stacks_to_share > 0 do
-							local unit = warpfire_broadphase_results[i]
+							local target_unit = _warpfire_broadphase_results[i]
 							local valid_target = false
 
-							if HEALTH_ALIVE[unit] then
-								local enemy_unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+							if HEALTH_ALIVE[target_unit] then
+								local enemy_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 								local enemy_breed = enemy_unit_data_extension:breed()
 
 								if not enemy_breed.tags.witch then
 									valid_target = true
 								else
-									local blackboard = BLACKBOARDS[unit]
+									local blackboard = BLACKBOARDS[target_unit]
 									local perception_component = blackboard.perception
 
 									if perception_component.aggro_state == "aggroed" then
@@ -186,7 +187,7 @@ templates.warp_fire = {
 								end
 
 								if valid_target then
-									local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+									local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 									if buff_extension then
 										if buff_extension:current_stacks("warp_fire") < template_data.stacks_on_death then
@@ -637,7 +638,7 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 			charge_level = math.clamp01(time_since_start_attack / max_charge_at_time)
 		end
 
-		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, owner_unit, CHAIN_LIGHTNING_POWER_LEVEL, charge_level, 1, 1, attack_direction, damage_template, damage_types.electrocution, false)
+		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, owner_unit, CHAIN_LIGHTNING_POWER_LEVEL, charge_level, 1, 1, attack_direction, damage_template, damage_types.electrocution, false, template_context.source_item)
 
 		if template_data.is_poxwalker_bomber and template.trigger_poxwalker_bomber and stagger_result == "stagger" then
 			local target_blackboard = BLACKBOARDS[unit]
@@ -721,6 +722,10 @@ templates.psyker_protectorate_spread_chain_lightning_interval_temporary = table.
 templates.psyker_protectorate_spread_chain_lightning_interval_temporary.duration = 2
 templates.psyker_protectorate_spread_chain_lightning_interval_temporary_improved = table.clone(templates.psyker_protectorate_spread_charged_chain_lightning_interval_improved)
 templates.psyker_protectorate_spread_chain_lightning_interval_temporary_improved.duration = 2
+templates.psyker_heavy_swings_shock = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval_temporary)
+templates.psyker_heavy_swings_shock.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
+templates.psyker_heavy_swings_shock_improved = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval_temporary_improved)
+templates.psyker_heavy_swings_shock_improved.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
 templates.shock_effect = {
 	class_name = "buff",
 	duration = 2,
@@ -856,7 +861,6 @@ templates.in_smoke_fog = {
 		buff_keywords.concealed,
 		buff_keywords.hud_nameplates_disabled,
 	},
-	player_effects = {},
 }
 templates.left_smoke_fog = {
 	class_name = "buff",

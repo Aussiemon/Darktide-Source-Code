@@ -6,6 +6,7 @@ local path = "content/ui/textures/icons/achievements/"
 local AchievementBreedGroups = {}
 
 AchievementBreedGroups.all = {
+	"chaos_armored_infected",
 	"chaos_beast_of_nurgle",
 	"chaos_daemonhost",
 	"chaos_hound",
@@ -20,6 +21,7 @@ AchievementBreedGroups.all = {
 	"chaos_spawn",
 	"cultist_assault",
 	"cultist_berzerker",
+	"cultist_captain",
 	"cultist_flamer",
 	"cultist_grenadier",
 	"cultist_gunner",
@@ -36,11 +38,11 @@ AchievementBreedGroups.all = {
 	"renegade_gunner",
 	"renegade_melee",
 	"renegade_netgunner",
-	"renegade_twin_captain",
-	"renegade_twin_captain_two",
 	"renegade_rifleman",
 	"renegade_shocktrooper",
 	"renegade_sniper",
+	"renegade_twin_captain",
+	"renegade_twin_captain_two",
 }
 AchievementBreedGroups.chaos = {
 	"chaos_hound",

@@ -6,12 +6,17 @@ local GameplayInitStepStateLast = class("GameplayInitStepStateLast")
 
 GameplayInitStepStateLast.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
+	self._shared_state = shared_state
+
 	local is_server = shared_state.is_server
 
 	self:_finalize_network_init(is_server, shared_state)
 end
 
 GameplayInitStepStateLast.update = function (self, main_dt, main_t)
+	self._shared_state.initialized_steps.GameplayInitStepStateLast = true
+
 	return nil, nil
 end
 

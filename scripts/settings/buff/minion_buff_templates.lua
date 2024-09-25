@@ -4,6 +4,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -14,6 +15,7 @@ local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local PLAYER_BREED_TYPE = BreedSettings.types.player
+local proc_events = BuffSettings.proc_events
 local templates = {}
 
 table.make_unique(templates)
@@ -236,5 +238,261 @@ templates.chaos_beast_of_nurgle_being_eaten = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_hit",
 	},
 }
+
+local RENEAGDE_FLAMER_VFX_STAGES = {
+	first_stage = {
+		{
+			node_name = "ap_5h",
+			vfx = {
+				orphaned_policy = "destroy",
+				particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuse_loop",
+				stop_type = "stop",
+			},
+		},
+	},
+	second_stage = {
+		{
+			node_name = "ap_4h",
+			vfx = {
+				orphaned_policy = "destroy",
+				particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuse_loop",
+				stop_type = "stop",
+			},
+		},
+	},
+	third_stage = {
+		{
+			node_name = "ap_5h",
+			vfx = {
+				orphaned_policy = "destroy",
+				particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_backpack_ignited",
+				stop_type = "stop",
+			},
+		},
+		{
+			node_name = "ap_5h",
+			sfx = {
+				looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse_flame",
+				looping_wwise_stop_event = "wwise/events/weapon/stop_flamer_explosion_fuse_flame",
+			},
+		},
+	},
+}
+local CULTIST_FLAMER_VFX_STAGES = {
+	first_stage = {
+		{
+			node_name = "ap_5h",
+			vfx = {
+				orphaned_policy = "destroy",
+				particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuse_loop",
+				stop_type = "stop",
+			},
+		},
+	},
+	second_stage = {
+		{
+			node_name = "ap_4h",
+			vfx = {
+				orphaned_policy = "destroy",
+				particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuse_loop",
+				stop_type = "stop",
+			},
+		},
+	},
+	third_stage = {
+		{
+			node_name = "ap_5h",
+			vfx = {
+				orphaned_policy = "destroy",
+				particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_backpack_ignited",
+				stop_type = "stop",
+			},
+		},
+		{
+			node_name = "ap_5h",
+			sfx = {
+				looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse_flame",
+				looping_wwise_stop_event = "wwise/events/weapon/stop_flamer_explosion_fuse_flame",
+			},
+		},
+	},
+}
+local FLINCH_ANIMS = {
+	{
+		duration = 0.8,
+		name = "suppressed_loop_01",
+	},
+	{
+		duration = 0.8,
+		name = "suppressed_loop_02",
+	},
+	{
+		duration = 0.8,
+		name = "suppressed_loop_03",
+	},
+}
+local HEALTH_STEPS = {
+	{
+		health_step = 1,
+		health_threshold = 0.95,
+	},
+	{
+		health_step = 2,
+		health_threshold = 0.9,
+	},
+	{
+		health_step = 3,
+		health_threshold = 0.75,
+	},
+	{
+		health_step = 4,
+		health_threshold = 0.5,
+	},
+}
+
+local function _flamer_explode(unit, template_context)
+	local damage_template = DamageProfileTemplates.flamer_implosion
+	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+	Attack.execute(unit, damage_template, "power_level", 400, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+end
+
+local function _play_flinch_anim(data, context)
+	local unit = context.unit
+	local flinch_anim
+	local random_anim_event = math.random(1, #FLINCH_ANIMS)
+
+	flinch_anim = FLINCH_ANIMS[random_anim_event].name
+
+	if Unit.has_animation_event(unit, flinch_anim) then
+		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+		animation_extension:anim_event(flinch_anim)
+	end
+
+	return FLINCH_ANIMS[random_anim_event].duration
+end
+
+templates.flamer_backpack_counter = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_minion_damage_taken] = 1,
+	},
+	start_func = function (template_data, template_context)
+		template_data.blackboard = BLACKBOARDS[template_context.unit]
+		template_data.current_step = 1
+
+		local breed_name = template_context.breed.name
+
+		template_data.buff_name = breed_name .. "_backpack_damaged"
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		if params.hit_zone_name_or_nil == "backpack" and params.attack_type ~= "melee" then
+			local statistics_component = Blackboard.write_component(template_data.blackboard, "statistics")
+			local gib_override_component = Blackboard.write_component(template_data.blackboard, "gib_override")
+
+			gib_override_component.should_override = true
+			statistics_component.flamer_backpack_impacts = statistics_component.flamer_backpack_impacts + 1
+
+			local unit = template_context.unit
+			local t = FixedFrame.get_latest_fixed_time()
+			local buff_extension = ScriptUnit.extension(unit, "buff_system")
+			local health_extension = ScriptUnit.extension(template_context.unit, "health_system")
+			local buff_name = template_data.buff_name
+			local current_health_percent = health_extension:current_health_percent()
+			local health_step_value = 0
+
+			for i = 1, #HEALTH_STEPS do
+				local health_step_data = HEALTH_STEPS[i]
+
+				if current_health_percent <= health_step_data.health_threshold then
+					health_step_value = health_step_data.health_step
+				else
+					break
+				end
+			end
+
+			local current_stacks_or_nil = buff_extension:current_stacks(buff_name)
+			local times_to_apply_stack = health_step_value - current_stacks_or_nil
+
+			for i = 1, times_to_apply_stack do
+				buff_extension:add_internally_controlled_buff(buff_name, t)
+				buff_extension:_update_stat_buffs_and_keywords(t)
+			end
+		end
+	end,
+}
+templates.renegade_flamer_backpack_damaged = {
+	class_name = "buff",
+	max_stacks = 4,
+	start_func = function (template_data, template_context)
+		template_data.is_triggered = false
+		template_data.fuse_timer = nil
+		template_data.duration = 1
+	end,
+	update_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local t = FixedFrame.get_latest_fixed_time()
+		local unit = template_context.unit
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		local buff_name = template_context.template.name
+		local current_stacks = buff_extension:current_stacks(buff_name)
+
+		if current_stacks >= 4 then
+			if not template_data.is_triggered then
+				template_data.fuse_timer = t + 5
+				template_data.is_triggered = true
+			end
+
+			if t >= template_data.fuse_timer and HEALTH_ALIVE[unit] then
+				_flamer_explode(unit, template_context)
+			end
+
+			if t >= template_data.duration then
+				template_data.duration = _play_flinch_anim(template_data, template_context)
+				template_data.duration = template_data.duration + t
+			end
+		end
+	end,
+	minion_effects = {
+		stack_node_effects = {
+			[2] = RENEAGDE_FLAMER_VFX_STAGES.first_stage,
+			[3] = RENEAGDE_FLAMER_VFX_STAGES.second_stage,
+			[4] = RENEAGDE_FLAMER_VFX_STAGES.third_stage,
+		},
+		node_effects = {
+			{
+				node_name = "ap_3h",
+				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse",
+					looping_wwise_stop_event = "wwise/events/weapon/stop_flamer_explosion_fuse",
+				},
+			},
+			{
+				node_name = "ap_3h",
+				vfx = {
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuse_loop",
+					stop_type = "stop",
+				},
+			},
+		},
+	},
+}
+templates.cultist_flamer_backpack_damaged = table.clone(templates.renegade_flamer_backpack_damaged)
+templates.cultist_flamer_backpack_damaged.minion_effects.stack_node_effects = {
+	[2] = CULTIST_FLAMER_VFX_STAGES.first_stage,
+	[3] = CULTIST_FLAMER_VFX_STAGES.second_stage,
+	[4] = CULTIST_FLAMER_VFX_STAGES.third_stage,
+}
+templates.cultist_flamer_backpack_damaged.minion_effects.node_effects[2].vfx.particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuse_loop"
 
 return templates

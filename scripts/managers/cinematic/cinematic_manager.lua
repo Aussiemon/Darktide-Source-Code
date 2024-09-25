@@ -194,14 +194,14 @@ CinematicManager.update = function (self, dt, t)
 					skip_all = true
 					story_done = true
 				end
-			elseif IS_XBS then
+			elseif IS_XBS or IS_PLAYSTATION then
 				local input_device_list = InputUtils.input_device_list
-				local xbox_controllers = input_device_list.xbox_controller
+				local console_controllers = IS_XBS and input_device_list.xbox_controller or IS_PLAYSTATION and input_device_list.ps4_controller
 
-				for i = 1, #xbox_controllers do
-					local xbox_controller = xbox_controllers[i]
+				for i = 1, #console_controllers do
+					local console_controller = console_controllers[i]
 
-					if xbox_controller.active() and xbox_controller.any_released() then
+					if console_controller.active() and console_controller.any_released() then
 						if story.popup_info and self._count_released < 1 then
 							self._count_released = self._count_released + 1
 						else

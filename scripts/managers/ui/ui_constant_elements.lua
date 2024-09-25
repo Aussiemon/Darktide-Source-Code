@@ -195,8 +195,14 @@ UIConstantElements.update = function (self, dt, t, input_service)
 			self:_apply_hud_scale()
 		end
 
-		if resolution_modified and element.on_resolution_modified then
-			element:on_resolution_modified()
+		if resolution_modified then
+			if element.set_render_scale then
+				element:set_render_scale(render_settings.scale)
+			end
+
+			if element.on_resolution_modified then
+				element:on_resolution_modified(render_settings.scale)
+			end
 		end
 
 		if element:should_update() then

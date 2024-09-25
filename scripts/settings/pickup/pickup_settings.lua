@@ -51,11 +51,11 @@ pickup_settings.distribution_pool = {
 		},
 		health = {
 			medical_crate_pocketable = {
-				1,
-				1,
-				1,
-				1,
-				1,
+				2,
+				2,
+				2,
+				2,
+				2,
 			},
 		},
 		wounds = {
@@ -142,15 +142,6 @@ pickup_settings.distribution_pool = {
 				2,
 				2,
 				2,
-				1,
-				1,
-			},
-		},
-		health = {
-			medical_crate_pocketable = {
-				1,
-				1,
-				1,
 				1,
 				1,
 			},
@@ -262,6 +253,106 @@ pickup_settings.distribution_pool = {
 				3,
 				5,
 				8,
+			},
+		},
+	},
+}
+pickup_settings.operations_distribution_pool = {
+	rubberband_pool = {
+		ammo = {
+			small_clip = {
+				2,
+			},
+			large_clip = {
+				2,
+			},
+			ammo_cache_pocketable = {
+				0,
+			},
+		},
+		grenade = {
+			small_grenade = {
+				1,
+			},
+		},
+		health = {
+			medical_crate_pocketable = {
+				1,
+			},
+		},
+		wounds = {
+			syringe_corruption_pocketable = {
+				1,
+			},
+		},
+		stimms = {
+			syringe_generic_pocketable = {
+				2,
+			},
+		},
+	},
+	mid_event = {},
+	end_event = {},
+	primary = {
+		ammo = {
+			small_clip = {
+				3,
+				3,
+				2,
+				2,
+				2,
+			},
+			large_clip = {
+				1,
+			},
+		},
+	},
+	secondary = {
+		ammo = {
+			small_clip = {
+				4,
+				4,
+				4,
+				3,
+				3,
+			},
+			large_clip = {
+				2,
+			},
+		},
+		grenade = {
+			small_grenade = {
+				1,
+			},
+		},
+		forge_material = {
+			small_metal = {
+				5,
+				4,
+				6,
+				7,
+				9,
+			},
+			large_metal = {
+				0,
+				1,
+				1,
+				3,
+				7,
+			},
+			small_platinum = {
+				0,
+				1,
+				4,
+				4,
+				5,
+			},
+			large_platinum = {
+				0,
+				0,
+				0,
+				1,
+				2,
 			},
 		},
 	},

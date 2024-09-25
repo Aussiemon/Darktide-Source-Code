@@ -2,13 +2,13 @@
 
 local Action = require("scripts/utilities/weapon/action")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local talent_settings_3 = TalentSettings.zealot_3
 local EQUIPPED_LOOPING_SOUND_ALIAS = "equipped_item_passive_loop"
 local EQUIPPED_LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
 local FX_SOURCE_NAME = "_emit"
-local external_properties = {}
+local _external_properties = {}
 local ZealotRelicEffects = class("ZealotRelicEffects")
 
 ZealotRelicEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -114,11 +114,11 @@ ZealotRelicEffects._trigger_pulse_sfx = function (self, t, action_settings)
 	local sync_to_clients = action_settings.has_husk_sound
 	local include_client = false
 
-	table.clear(external_properties)
+	table.clear(_external_properties)
 
-	external_properties.ability_template = "zealot_relic"
+	_external_properties.ability_template = "zealot_relic"
 
-	self._fx_extension:trigger_gear_wwise_event_with_source("ability_shout", external_properties, source_name, sync_to_clients, include_client)
+	self._fx_extension:trigger_gear_wwise_event_with_source("ability_shout", _external_properties, source_name, sync_to_clients, include_client)
 end
 
 ZealotRelicEffects._destroy_pulse_vfx = function (self)
@@ -159,7 +159,7 @@ ZealotRelicEffects.destroy = function (self)
 end
 
 ZealotRelicEffects._create_passive_vfx = function (self)
-	local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(EQUIPPED_LOOPING_PARTICLE_ALIAS, external_properties)
+	local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(EQUIPPED_LOOPING_PARTICLE_ALIAS, _external_properties)
 
 	if resolved then
 		local world = self._world
@@ -182,36 +182,21 @@ end
 
 ZealotRelicEffects._create_passive_sfx = function (self)
 	local visual_loadout_extension = self._visual_loadout_extension
-	local is_husk = self._is_husk
-	local is_local_unit = self._is_local_unit
 	local fx_extension = self._fx_extension
 	local fx_source_name = self._fx_source_name
+	local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
 
 	if not self._looping_passive_playing_id then
-		local sound_config = PlayerCharacterLoopingSoundAliases[EQUIPPED_LOOPING_SOUND_ALIAS]
-		local start_config = sound_config.start
-		local start_event_alias = start_config.event_alias
-		local resolved, has_husk_events, start_event_name, stop_event_name
-
-		resolved, start_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, external_properties)
+		local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(EQUIPPED_LOOPING_SOUND_ALIAS, should_play_husk_effect, _external_properties)
 
 		if resolved then
 			local wwise_world = self._wwise_world
 			local source_id = fx_extension:sound_source(fx_source_name)
-
-			start_event_name = (is_husk or not is_local_unit) and has_husk_events and start_event_name .. "_husk" or start_event_name
-
-			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, source_id)
+			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
 
 			self._looping_passive_playing_id = playing_id
 
-			local stop_config = sound_config.stop
-			local stop_event_alias = stop_config.event_alias
-
-			resolved, stop_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, external_properties)
-
-			if resolved then
-				stop_event_name = (is_husk or not is_local_unit) and has_husk_events and stop_event_name .. "_husk" or stop_event_name
+			if resolved_stop then
 				self._stop_event_name = stop_event_name
 			end
 		end
@@ -236,5 +221,7 @@ ZealotRelicEffects._destroy_passive_sfx = function (self)
 		self._stop_event_name = nil
 	end
 end
+
+implements(ZealotRelicEffects, WieldableSlotScriptInterface)
 
 return ZealotRelicEffects

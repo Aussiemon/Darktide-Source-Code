@@ -69,12 +69,12 @@ ScriptWebApiPsn._handle_request_response = function (self, request_index, succes
 	table.remove(self._requests, request_index)
 end
 
-ScriptWebApiPsn.send_request = function (self, user_id, api_group, path, method, content, response_format)
+ScriptWebApiPsn.send_request = function (self, user_id, api_group, path, method, content, headers, response_format)
 	if user_id == nil then
 		return
 	end
 
-	local id = web_api.send_request(user_id, api_group, path, method, content)
+	local id = web_api.send_request(user_id, api_group, path, method, content, headers)
 	local response_promise = Promise.new()
 
 	self._requests[#self._requests + 1] = {
@@ -85,28 +85,6 @@ ScriptWebApiPsn.send_request = function (self, user_id, api_group, path, method,
 	}
 
 	return response_promise
-end
-
-ScriptWebApiPsn.send_request_create_session = function (self, user_id, session_parameters, session_image, session_data, changable_session_data)
-	local id = web_api.send_request_create_session(user_id, session_parameters, session_image, session_data, changable_session_data)
-	local response_promise = Promise.new()
-
-	self._requests[#self._requests + 1] = {
-		debug_text = "POST /v1/sessions",
-		id = id,
-		response_promise = response_promise,
-	}
-
-	return response_promise
-end
-
-ScriptWebApiPsn.send_request_session_invitation = function (self, user_id, params, session_id)
-	local id = web_api.send_request_session_invitation(user_id, params, session_id)
-
-	self._requests[#self._requests + 1] = {
-		id = id,
-		debug_text = string.format("POST /v1/sessions/%s/invitations", session_id),
-	}
 end
 
 return ScriptWebApiPsn

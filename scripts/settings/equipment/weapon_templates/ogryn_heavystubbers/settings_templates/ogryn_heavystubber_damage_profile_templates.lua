@@ -21,6 +21,8 @@ table.make_unique(overrides)
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local light_cleave = DamageProfileSettings.light_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
+local large_cleave = DamageProfileSettings.large_cleave
 local big_cleave = DamageProfileSettings.big_cleave
 local default_shield_override_stagger_strength = 4
 

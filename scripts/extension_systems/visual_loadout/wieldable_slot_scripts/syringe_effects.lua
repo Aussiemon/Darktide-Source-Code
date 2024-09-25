@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/syringe_effects.lua
 
 local Component = require("scripts/utilities/component")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local SyringeEffects = class("SyringeEffects")
 local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
 local FX_SOURCE_NAME = "_passive"
@@ -136,5 +137,7 @@ SyringeEffects._set_color = function (self)
 		syringe_color.component:set_decal(syringe_color.unit, decal_index)
 	end
 end
+
+implements(SyringeEffects, WieldableSlotScriptInterface)
 
 return SyringeEffects

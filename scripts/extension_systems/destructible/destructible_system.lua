@@ -2,7 +2,6 @@
 
 require("scripts/extension_systems/destructible/destructible_extension")
 
-local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
 local DestructibleSystem = class("DestructibleSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_destructible_damage_taken",
@@ -62,7 +61,9 @@ DestructibleSystem.hot_join_sync = function (self, sender, channel)
 end
 
 DestructibleSystem.rpc_destructible_damage_taken = function (self, channel_id, unit_id, is_level_unit)
-	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+	local invalid_id = is_level_unit and unit_id == NetworkConstants.invalid_level_unit_id or unit_id == NetworkConstants.invalid_game_object_id
+
+	if not invalid_id then
 		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 		local extension = self._unit_to_extension_map[unit]
 
@@ -71,7 +72,9 @@ DestructibleSystem.rpc_destructible_damage_taken = function (self, channel_id, u
 end
 
 DestructibleSystem.rpc_destructible_last_destruction = function (self, channel_id, unit_id, is_level_unit)
-	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+	local invalid_id = is_level_unit and unit_id == NetworkConstants.invalid_level_unit_id or unit_id == NetworkConstants.invalid_game_object_id
+
+	if not invalid_id then
 		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 		local extension = self._unit_to_extension_map[unit]
 
@@ -80,7 +83,9 @@ DestructibleSystem.rpc_destructible_last_destruction = function (self, channel_i
 end
 
 DestructibleSystem.rpc_sync_destructible = function (self, channel_id, unit_id, is_level_unit, current_stage, visible, from_hot_join_sync)
-	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+	local invalid_id = is_level_unit and unit_id == NetworkConstants.invalid_level_unit_id or unit_id == NetworkConstants.invalid_game_object_id
+
+	if not invalid_id then
 		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 		local extension = self._unit_to_extension_map[unit]
 

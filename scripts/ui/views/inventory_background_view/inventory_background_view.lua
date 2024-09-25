@@ -22,6 +22,7 @@ local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_in
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
 local ViewElementProfilePresets = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets")
 local Views = require("scripts/ui/views/views")
+local MasteryUtils = require("scripts/utilities/mastery")
 local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
 
 InventoryBackgroundView.init = function (self, settings, context)
@@ -71,9 +72,11 @@ InventoryBackgroundView.on_enter = function (self)
 	self:_register_event("event_equip_local_changes", "event_equip_local_changes")
 	self:_register_event("event_change_wield_slot", "event_change_wield_slot")
 	self:_register_event("event_discard_item", "event_discard_item")
+	self:_register_event("event_discard_items", "event_discard_items")
 	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
 	self:_register_event("event_player_talent_node_updated", "event_player_talent_node_updated")
 	self:_register_event("event_item_icon_updated", "event_item_icon_updated")
+	self:_register_event("event_switch_mark", "event_switch_mark")
 	self:_setup_input_legend()
 	self:_setup_background_world()
 
@@ -87,6 +90,68 @@ InventoryBackgroundView.on_enter = function (self)
 	self._active_talent_loadout = talent_layout_file_path and require(talent_layout_file_path)
 	self._talent_icons_package_id = Managers.data_service.talents:load_icons_for_profile(profile, "InventoryBackgroundView")
 	self._widgets_by_name.character_insigna.content.visible = false
+end
+
+InventoryBackgroundView.event_switch_mark = function (self, gear_id, mark_id, item)
+	Managers.data_service.mastery:switch_mark(gear_id, mark_id):next(function (data)
+		if self._destroyed then
+			return
+		end
+
+		Managers.data_service.gear:invalidate_gear_cache()
+
+		local player = self._preview_player
+		local character_id = player:character_id()
+
+		return Managers.data_service.gear:fetch_inventory(character_id)
+	end):next(function (items)
+		self._inventory_items = items
+
+		local item
+		local inventory_items = self._inventory_items
+
+		for _, inventory_item in pairs(inventory_items) do
+			if inventory_item.gear_id == gear_id then
+				item = inventory_item
+
+				break
+			end
+		end
+
+		if item then
+			local slot = item.slots[1]
+			local presets = ProfileUtils.get_profile_presets()
+
+			if presets then
+				for i = 1, #presets do
+					local preset = presets[i]
+					local loadout = preset and preset.loadout
+					local preset_gear_id = loadout and loadout[slot]
+
+					if preset_gear_id and preset_gear_id == gear_id then
+						loadout[slot] = item.gear_id
+					end
+				end
+			end
+
+			if self._current_profile_equipped_items[slot].gear_id == gear_id then
+				self._current_profile_equipped_items[slot] = item
+			end
+
+			if self._preview_profile_equipped_items[slot].gear_id == gear_id then
+				self._preview_profile_equipped_items[slot] = item
+			end
+
+			local profile = self._presentation_profile
+			local loadout = profile and profile.loadout
+
+			if loadout and loadout[slot] and loadout[slot].gear_id == gear_id then
+				loadout[slot] = item
+			end
+
+			Managers.event:trigger("event_switch_mark_complete", item)
+		end
+	end)
 end
 
 InventoryBackgroundView._setup_background_frames_by_archetype = function (self, archetype_name)
@@ -493,6 +558,56 @@ InventoryBackgroundView.event_discard_item = function (self, item)
 	end)
 end
 
+InventoryBackgroundView.event_discard_items = function (self, items)
+	local local_changes_promise = self:_equip_local_changes()
+	local delete_promise
+
+	if local_changes_promise then
+		delete_promise = local_changes_promise:next(function ()
+			return Managers.data_service.gear:delete_gear_batch(items)
+		end)
+	else
+		delete_promise = Managers.data_service.gear:delete_gear_batch(items)
+	end
+
+	delete_promise:next(function (result)
+		local total_rewards = {}
+
+		if result then
+			for i = 1, #result do
+				local operation = result[i]
+				local rewards = operation.rewards
+
+				for i = 1, #rewards do
+					local reward = rewards[i]
+					local reward_type = reward.type
+
+					total_rewards[reward_type] = (total_rewards[reward_type] or 0) + reward.amount
+				end
+
+				local gear_id = operation.gearId
+
+				if gear_id then
+					self._inventory_items[gear_id] = nil
+				end
+			end
+		end
+
+		if not table.is_empty(total_rewards) then
+			Managers.event:trigger("event_force_wallet_update")
+
+			for reward_type, reward_amount in pairs(total_rewards) do
+				Managers.event:trigger("event_add_notification_message", "currency", {
+					currency = reward_type,
+					amount = reward_amount,
+				})
+			end
+		end
+
+		self:_update_loadout_validation()
+	end)
+end
+
 InventoryBackgroundView.event_player_talent_node_updated = function (self, equipped_talents)
 	self:_update_has_empty_talent_nodes(equipped_talents)
 
@@ -713,6 +828,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					{
 						allow_item_hover_information = true,
 						is_grid_layout = false,
+						telemetry_name = "inventory_view_loadout",
 						ui_animation = "loadout_on_enter",
 						draw_wallet = self._is_own_player and not self._is_readonly,
 						camera_settings = {
@@ -757,6 +873,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								0,
 								0.5,
 								math.easeCubic,
+							},
+							{
+								"event_inventory_set_camera_default_focus",
 							},
 						},
 						layout = {
@@ -964,6 +1083,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						draw_wallet = false,
 						icon = "content/ui/materials/icons/item_types/outfits",
 						is_grid_layout = false,
+						telemetry_name = "inventory_view_cosmetics",
 						ui_animation = "cosmetics_on_enter",
 						camera_settings = {
 							{
@@ -1007,6 +1127,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								0,
 								0.5,
 								math.easeCubic,
+							},
+							{
+								"event_inventory_set_camera_default_focus",
 							},
 						},
 						item_hover_information_offset = {
@@ -1294,6 +1417,48 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		},
 	}
 
+	if self._is_own_player and not self._is_readonly then
+		self._views_settings[#self._views_settings + 1] = {
+			display_name = "loc_masteries_view_display_name",
+			view_name = "masteries_overview_view",
+			update = function (content, style, dt)
+				content.show_alert = self._has_mastery_points_available
+			end,
+			context = {
+				can_exit = true,
+				player_mode = true,
+			},
+			enter = function ()
+				if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
+					self.transition_animation_id = self:_stop_animation(self._transition_animation_id)
+				end
+
+				self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
+
+				self:_remove_profile_presets()
+			end,
+			leave = function ()
+				if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
+					self.transition_animation_id = self:_stop_animation(self._transition_animation_id)
+				end
+
+				self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
+
+				self:_setup_profile_presets()
+
+				return {
+					force_instant_camera = true,
+				}
+			end,
+			view_context = {
+				can_exit = true,
+				draw_wallet = false,
+				player_mode = true,
+				mastery_traits = self._mastery_traits,
+			},
+		}
+	end
+
 	self:_update_has_empty_talent_nodes()
 
 	self._views_settings[#self._views_settings + 1] = {
@@ -1376,6 +1541,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					0.5,
 					math.easeCubic,
 				},
+				{
+					"event_inventory_set_camera_default_focus",
+				},
 			},
 		},
 	}
@@ -1439,8 +1607,10 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 	self:_switch_active_view(view_name, view_context)
 
 	if index ~= old_top_panel_selection_index and not index then
-		if self._active_view and Managers.ui:view_active(self._active_view) then
-			Managers.ui:close_view(self._active_view)
+		local actieve_view = self._active_view
+
+		if actieve_view and Managers.ui:view_active(actieve_view) then
+			Managers.ui:close_view(actieve_view)
 		end
 
 		self._active_view = nil
@@ -1457,7 +1627,7 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 end
 
 InventoryBackgroundView._can_swap_weapon = function (self)
-	return self._active_view ~= "talent_builder_view"
+	return self._active_view ~= "talent_builder_view" and self._active_view ~= "masteries_overview_view"
 end
 
 InventoryBackgroundView._force_select_panel_index = function (self, index)
@@ -1466,36 +1636,38 @@ InventoryBackgroundView._force_select_panel_index = function (self, index)
 end
 
 InventoryBackgroundView._switch_active_view = function (self, view_name, additional_context_data)
-	if view_name then
-		local active_view = self._active_view
+	if not view_name then
+		return
+	end
 
-		if active_view == view_name then
-			if additional_context_data then
-				self._active_view_context.changeable_context = additional_context_data
-			end
-		elseif view_name ~= active_view then
-			if active_view and Managers.ui:view_active(active_view) then
-				Managers.ui:close_view(active_view)
-			end
+	local active_view = self._active_view
 
-			local context = {
-				parent = self,
-				player = self._preview_player,
-				player_level = self._player_level,
-				preview_profile_equipped_items = self._preview_profile_equipped_items,
-				current_profile_equipped_items = self._current_profile_equipped_items,
-				current_profile_equipped_talents = self._current_profile_equipped_talents,
-				changeable_context = additional_context_data,
-				is_readonly = self._is_readonly,
-			}
+	if active_view == view_name and additional_context_data and Managers.ui:view_active(active_view) and Managers.ui:view_instance(active_view):supports_changeable_context() then
+		self._active_view_context.changeable_context = additional_context_data
 
-			self._active_view = view_name
-			self._active_view_context = context
+		return
+	end
 
-			if not Managers.ui:view_active(view_name) then
-				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-			end
-		end
+	if active_view and Managers.ui:view_active(active_view) then
+		Managers.ui:close_view(active_view)
+	end
+
+	local context = {
+		parent = self,
+		player = self._preview_player,
+		player_level = self._player_level,
+		preview_profile_equipped_items = self._preview_profile_equipped_items,
+		current_profile_equipped_items = self._current_profile_equipped_items,
+		current_profile_equipped_talents = self._current_profile_equipped_talents,
+		changeable_context = additional_context_data,
+		is_readonly = self._is_readonly,
+	}
+
+	self._active_view = view_name
+	self._active_view_context = context
+
+	if not Managers.ui:view_active(view_name) then
+		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 	end
 end
 
@@ -1764,6 +1936,16 @@ InventoryBackgroundView._setup_background_world = function (self)
 
 	self:_register_event(default_camera_event_id)
 
+	local mastery_camera_event_id = "event_register_inventory_mastery_camera"
+
+	self[mastery_camera_event_id] = function (self, camera_unit)
+		self._mastery_camera = camera_unit
+
+		self:_unregister_event(mastery_camera_event_id)
+	end
+
+	self:_register_event(mastery_camera_event_id)
+
 	self._item_camera_by_slot_id = {}
 
 	for slot_name, slot in pairs(ItemSlotSettings) do
@@ -1795,6 +1977,8 @@ InventoryBackgroundView._setup_background_world = function (self)
 	self:_register_event("event_inventory_set_camera_rotation_axis_offset")
 	self:_register_event("event_inventory_set_camera_item_slot_focus")
 	self:_register_event("event_inventory_set_camera_node_focus")
+	self:_register_event("event_inventory_set_camera_default_focus")
+	self:_register_event("event_mastery_set_camera")
 	self:_update_viewport_resolution()
 end
 
@@ -1869,6 +2053,44 @@ InventoryBackgroundView.event_inventory_set_camera_node_focus = function (self, 
 		world_spawner:set_camera_position_axis_offset("x", target_position.x, time, func_ptr)
 		world_spawner:set_camera_position_axis_offset("y", target_position.y, time, func_ptr)
 		world_spawner:set_camera_position_axis_offset("z", target_position.z, time, func_ptr)
+	end
+end
+
+InventoryBackgroundView.event_mastery_set_camera = function (self)
+	local world_spawner = self._world_spawner
+	local camera = self._mastery_camera
+	local camera_world_position = Unit.world_position(camera, 1)
+	local camera_world_rotation = Unit.world_rotation(camera, 1)
+	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
+	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
+
+	world_spawner:set_camera_position_axis_offset("x", camera_world_position.x - default_camera_world_position.x, 0)
+	world_spawner:set_camera_position_axis_offset("y", camera_world_position.y - default_camera_world_position.y, 0)
+	world_spawner:set_camera_position_axis_offset("z", camera_world_position.z - default_camera_world_position.z, 0)
+
+	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
+	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
+	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
+	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
+
+	world_spawner:set_camera_rotation_axis_offset("x", camera_world_rotation_x - default_camera_world_rotation_x, 0)
+	world_spawner:set_camera_rotation_axis_offset("y", camera_world_rotation_y - default_camera_world_rotation_y, 0)
+	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, 0)
+
+	self._default_fov = self._default_fov or math.radians_to_degrees(Camera.vertical_fov(world_spawner:camera()))
+
+	local mastery_fov = math.radians_to_degrees(Camera.vertical_fov(Unit.camera(camera, "camera")))
+
+	world_spawner:_set_fov(mastery_fov)
+end
+
+InventoryBackgroundView.event_inventory_set_camera_default_focus = function (self)
+	local world_spawner = self._world_spawner
+
+	if self._default_fov then
+		world_spawner:_set_fov(self._default_fov)
+
+		self._default_fov = nil
 	end
 end
 
@@ -2178,6 +2400,10 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 		end
 	end
 
+	if self._mastery_previous_state then
+		self:_check_mastery_sync_status()
+	end
+
 	local pass_input, pass_draw = InventoryBackgroundView.super.update(self, dt, t, input_service)
 
 	return pass_input, pass_draw
@@ -2333,13 +2559,52 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 		end
 
 		self._inventory_items = items
+
+		return Managers.data_service.mastery:get_all_masteries()
+	end):next(function (masteries_data)
+		self.masteries_data = masteries_data
+
+		Managers.data_service.mastery:check_and_claim_all_masteries_levels(masteries_data):next(function (data)
+			for id, mastery_data in pairs(data) do
+				self.masteries_data[id] = mastery_data
+			end
+		end)
+
+		local traits_data = Managers.data_service.mastery:get_all_traits_data(masteries_data)
+
+		self._has_mastery_points_available = MasteryUtils.has_available_points(self.masteries_data, traits_data)
+		self._mastery_traits = traits_data
 		self._inventory_synced = true
+
+		self:_check_mastery_sync_status()
 	end):catch(function ()
 		Managers.event:trigger("event_add_notification_message", "alert", {
 			text = Localize("loc_popup_description_backend_error"),
 		})
 		self:cb_on_close_pressed()
 	end)
+end
+
+InventoryBackgroundView._check_mastery_sync_status = function (self)
+	self._mastery_previous_state = self._mastery_previous_state or {}
+
+	for id, mastery_data in pairs(self.masteries_data) do
+		mastery_data.syncing = Managers.data_service.mastery:is_mastery_claim_in_progress(id)
+
+		if self._mastery_previous_state[id] ~= mastery_data.syncing then
+			if not mastery_data.syncing then
+				Managers.event:trigger("event_mastery_updated", id)
+			end
+
+			self._mastery_previous_state[id] = mastery_data.syncing
+		end
+	end
+
+	local all_claimed = Managers.data_service.mastery:are_all_masteries_claimed()
+
+	if all_claimed then
+		self._mastery_previous_state = nil
+	end
 end
 
 InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)

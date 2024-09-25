@@ -94,6 +94,7 @@ local husk_data_component_config = {
 		"overheat_current_percentage",
 		"special_active",
 		"reload_state",
+		"num_special_charges",
 	},
 	slot_secondary = {
 		"current_ammunition_clip",
@@ -104,6 +105,7 @@ local husk_data_component_config = {
 		"overheat_current_percentage",
 		"special_active",
 		"reload_state",
+		"num_special_charges",
 	},
 	minigame_character_state = {
 		"interface_unit_id",

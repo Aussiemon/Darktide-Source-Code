@@ -814,7 +814,7 @@ ActionShootPellets._next_fire_state = function (self, dt, t)
 	if num_pellets_fired < num_pellets_total then
 		return "shooting"
 	elseif max_num_shots <= action_component.num_shots_fired then
-		self:_set_weapon_special(false, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "shot_complete")
 
 		return "shot"
 	elseif auto_fire_time then
@@ -823,7 +823,7 @@ ActionShootPellets._next_fire_state = function (self, dt, t)
 
 		return "waiting_to_shoot"
 	else
-		self:_set_weapon_special(false, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "shot_complete")
 
 		return "shot"
 	end

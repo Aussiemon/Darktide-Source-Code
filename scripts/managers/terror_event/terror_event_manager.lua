@@ -207,7 +207,7 @@ TerrorEventManager.update = function (self, dt, t)
 
 	for i = #active_events, 1, -1 do
 		local event = active_events[i]
-		local event_completed = event.stopped or self:_update_event(event, t, dt)
+		local event_completed = event.stopped or self:_update_event(event, dt, t)
 
 		if event_completed then
 			local event_name = event.name
@@ -233,7 +233,6 @@ TerrorEventManager.update = function (self, dt, t)
 end
 
 local TEMP_SPAWN_SIDE_NAME = "villains"
-local TEMP_TARGET_SIDE_NAME = "heroes"
 local DEFAULT_WAVE_TIMER = 0
 
 TerrorEventManager.start_terror_trickle = function (self, template_name, spawner_group, delay, use_occluded_positions, limit_spawners, proximity_spawners)
@@ -247,7 +246,8 @@ TerrorEventManager.start_terror_trickle = function (self, template_name, spawner
 	local side_system = Managers.state.extension:system("side_system")
 	local spawn_side = side_system:get_side_from_name(TEMP_SPAWN_SIDE_NAME)
 	local spawn_side_id = spawn_side.side_id
-	local target_side = side_system:get_side_from_name(TEMP_TARGET_SIDE_NAME)
+	local enemy_sides = spawn_side:relation_sides("enemy")
+	local target_side = enemy_sides[math.random(1, #enemy_sides)]
 	local target_side_id = target_side.side_id
 
 	data.spawn_side_id = spawn_side_id
@@ -286,8 +286,10 @@ TerrorEventManager.replace_terror_event_tags = function (self, tags_to_replace)
 	self._tags_replacement = tags_to_replace
 end
 
-TerrorEventManager.get_tags_replacement = function (self)
-	return self._tags_replacement
+TerrorEventManager.get_tags_replacement = function (self, side_name)
+	local tags_replacement = self._tags_replacement
+
+	return tags_replacement and tags_replacement[side_name]
 end
 
 TerrorEventManager.get_terror_trickle_data = function (self)
@@ -462,36 +464,63 @@ TerrorEventManager.current_event = function (self)
 	return self._current_event
 end
 
-TerrorEventManager._update_event = function (self, event, t, dt)
+TerrorEventManager._update_event = function (self, event, dt, t)
 	self._current_event = event
 
-	local nodes = event.nodes
-	local node_index = event.node_index
-	local node = nodes[node_index]
+	local nodes, node_index = event.nodes, event.node_index
+	local node, scratchpad = nodes[node_index], event.scratchpad
 	local node_type = node[1]
-	local node_completed = node.disabled or TerrorEventNodes[node_type].update(node, event.scratchpad, t, dt)
+	local node_completed = node.disabled or TerrorEventNodes[node_type].update(node, scratchpad, t, dt)
 
-	if node_completed then
-		local scratchpad = event.scratchpad
+	if not node_completed then
+		return false
+	end
 
-		table.clear(scratchpad)
+	table.clear(scratchpad)
 
-		node_index = node_index + 1
+	local spawner_queue_id = event.spawned_minion_data.spawner_queue_id
 
-		if node_index > #nodes then
-			return true
-		end
+	if spawner_queue_id then
+		for spawner_extension, queue_ids in pairs(spawner_queue_id) do
+			if not spawner_extension:is_spawning() then
+				for i = #queue_ids, 1, -1 do
+					local queue_id = queue_ids[i]
+					local spawned_minions = spawner_extension:spawned_minions_by_queue_id(queue_id)
+					local has_alive_minion = false
 
-		event.node_index = node_index
+					for j = 1, #spawned_minions do
+						if HEALTH_ALIVE[spawned_minions[j]] then
+							has_alive_minion = true
 
-		local next_node = nodes[node_index]
+							break
+						end
+					end
 
-		if not next_node.disabled then
-			local next_node_type = next_node[1]
-
-			TerrorEventNodes[next_node_type].init(next_node, event, t)
+					if not has_alive_minion then
+						table.swap_delete(queue_ids, i)
+					end
+				end
+			end
 		end
 	end
+
+	node_index = node_index + 1
+
+	if node_index > #nodes then
+		return true
+	end
+
+	event.node_index = node_index
+
+	local next_node = nodes[node_index]
+
+	if not next_node.disabled then
+		local next_node_type = next_node[1]
+
+		TerrorEventNodes[next_node_type].init(next_node, event, t)
+	end
+
+	return false
 end
 
 TerrorEventManager.trigger_network_synced_level_flow = function (self, flow_event_name)

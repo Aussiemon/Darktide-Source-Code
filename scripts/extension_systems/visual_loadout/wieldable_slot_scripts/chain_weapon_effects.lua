@@ -1,11 +1,10 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects.lua
 
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
-local sfx_external_properties = {}
-local vfx_external_properties = {}
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
+local _vfx_external_properties = {}
+local _sfx_external_properties = {}
 local ChainWeaponEffects = class("ChainWeaponEffects")
 local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
-local LOOPING_SOUND_ALIAS = "melee_idling"
 local SPECIAL_OFF_SOUND_ALIAS = "weapon_special_end"
 local INTENSITY_DECAY_SPEED = 1
 
@@ -25,19 +24,12 @@ ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 
 	local owner_unit = context.owner_unit
 	local fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
-	local engine_fx_source_name = fx_sources._engine
+	local melee_idling_fx_source_name = fx_sources._melee_idling
 	local special_active_fx_source_name = fx_sources._special_active
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
-
-	if not is_husk then
-		local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
-
-		self._melee_idling_looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
-	end
-
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._visual_loadout_extension = context.visual_loadout_extension
 
@@ -45,7 +37,7 @@ ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 
 	self._chain_speed_template = chain_speed_template
 	self._fx_extension = fx_extension
-	self._engine_fx_source_name = engine_fx_source_name
+	self._melee_idling_fx_source_name = melee_idling_fx_source_name
 	self._special_active_fx_source_name = special_active_fx_source_name
 	self._intensity = 0
 	self._base_intensity = 0
@@ -55,30 +47,16 @@ ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 end
 
 ChainWeaponEffects.destroy = function (self)
-	if not self._is_husk and self._melee_idling_looping_sound_component.is_playing then
-		self._fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
-	end
-
-	if self._inventory_slot_component.special_active then
-		self._fx_extension:trigger_gear_wwise_event_with_source(SPECIAL_OFF_SOUND_ALIAS, nil, self._special_active_fx_source_name, true)
-	end
-
 	self:_stop_vfx_loop(true)
 end
 
 ChainWeaponEffects.wield = function (self)
-	if not self._is_husk and not self._melee_idling_looping_sound_component.is_playing then
-		self._fx_extension:trigger_looping_wwise_event(LOOPING_SOUND_ALIAS, self._engine_fx_source_name)
-	end
+	return
 end
 
 ChainWeaponEffects.unwield = function (self)
-	if not self._is_husk and self._melee_idling_looping_sound_component.is_playing then
-		self._fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
-	end
-
 	if self._inventory_slot_component.special_active then
-		self._fx_extension:trigger_gear_wwise_event_with_source(SPECIAL_OFF_SOUND_ALIAS, nil, self._special_active_fx_source_name, true)
+		self:_play_single_sfx(SPECIAL_OFF_SOUND_ALIAS, self._special_active_fx_source_name)
 	end
 
 	self:_stop_vfx_loop(true)
@@ -98,6 +76,21 @@ ChainWeaponEffects.update_first_person_mode = function (self, first_person_mode)
 	return
 end
 
+ChainWeaponEffects._play_single_sfx = function (self, sound_alias, fx_source_name)
+	local sfx_source_id = self._fx_extension:sound_source(self._special_active_fx_source_name)
+	local resolved, event_name, has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias, _sfx_external_properties)
+
+	if resolved then
+		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
+
+		if has_husk_events and should_play_husk_effect then
+			event_name = event_name .. "_husk"
+		end
+
+		WwiseWorld.trigger_resource_event(self._wwise_world, event_name, sfx_source_id)
+	end
+end
+
 ChainWeaponEffects._update_active = function (self)
 	local special_active = self._inventory_slot_component.special_active
 	local current_effect_id = self._looping_effect_id
@@ -108,7 +101,7 @@ ChainWeaponEffects._update_active = function (self)
 		self:_start_vfx_loop()
 	elseif should_stop_vfx then
 		self:_stop_vfx_loop(false)
-		self._fx_extension:trigger_gear_wwise_event_with_source(SPECIAL_OFF_SOUND_ALIAS, nil, self._special_active_fx_source_name, true)
+		self:_play_single_sfx(SPECIAL_OFF_SOUND_ALIAS, self._special_active_fx_source_name)
 	end
 end
 
@@ -154,7 +147,7 @@ ChainWeaponEffects._update_base_intensity = function (self, dt, t)
 end
 
 ChainWeaponEffects._update_intensity = function (self, dt, t)
-	local engine_source, wwise_world = self._fx_extension:sound_source(self._engine_fx_source_name), self._wwise_world
+	local melee_idling_source, wwise_world = self._fx_extension:sound_source(self._melee_idling_fx_source_name), self._wwise_world
 	local inventory_slot_component = self._inventory_slot_component
 	local first_person_unit = self._first_person_unit
 	local action_sweep_component = self._action_sweep_component
@@ -226,7 +219,7 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 	if intensity_epsilon < intensity_delta or self._force_update then
 		self._intensity = intensity
 
-		WwiseWorld.set_source_parameter(wwise_world, engine_source, "combat_chainsword_throttle", intensity)
+		WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", intensity)
 
 		local anim_variable = Unit.animation_find_variable(first_person_unit, "throttle")
 
@@ -245,16 +238,16 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 
 	local resistance = is_sawing and 1 - math.random() * 0.1 or 0
 
-	WwiseWorld.set_source_parameter(wwise_world, engine_source, "combat_chainsword_cut", resistance)
+	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", resistance)
 end
 
 ChainWeaponEffects._start_vfx_loop = function (self)
-	local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(SPECIAL_ACTIVE_LOOPING_VFX_ALIAS, vfx_external_properties)
+	local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(SPECIAL_ACTIVE_LOOPING_VFX_ALIAS, _vfx_external_properties)
 
 	if resolved then
 		local world = self._world
 		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
-		local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(self._engine_fx_source_name)
+		local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(self._melee_idling_fx_source_name)
 
 		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 
@@ -275,5 +268,7 @@ ChainWeaponEffects._stop_vfx_loop = function (self, destroy)
 
 	self._looping_effect_id = nil
 end
+
+implements(ChainWeaponEffects, WieldableSlotScriptInterface)
 
 return ChainWeaponEffects

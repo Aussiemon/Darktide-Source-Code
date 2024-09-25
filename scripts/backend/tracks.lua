@@ -20,12 +20,12 @@ Tracks.get_track_state = function (self, optional_track_id, optional_account_id)
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/trackstate")
 
 		if optional_track_id then
-			builder:path("/"):path(optional_track_id)
+			builder:path("/"):path(optional_track_id):query("errorOnEmpty", false)
 		end
 
 		return Managers.backend:title_request(builder:to_string()):next(function (response)
 			if optional_track_id then
-				return response.body.track
+				return table.nested_get(response, "body", "track")
 			else
 				local tracks_by_id = {}
 				local tracks = response.body.tracks or {}
@@ -88,6 +88,14 @@ end
 
 Tracks.get_event_tracks = function (self)
 	local builder = BackendUtilities.url_builder():path("/tracks"):path("/category"):path("/event")
+
+	return Managers.backend:title_request(builder:to_string()):next(function (data)
+		return data.body.tracks
+	end)
+end
+
+Tracks.get_masteries_tracks = function (self)
+	local builder = BackendUtilities.url_builder():path("/tracks"):path("/category"):path("/mastery")
 
 	return Managers.backend:title_request(builder:to_string()):next(function (data)
 		return data.body.tracks

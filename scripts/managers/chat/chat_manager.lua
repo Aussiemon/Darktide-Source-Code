@@ -781,6 +781,21 @@ ChatManager._validate_participants = function (self)
 								Managers.account:verify_user_restriction_batched(platform_user_id, XblPermission.CommunicateUsingVoice, batch_type)
 							end
 						end
+					elseif IS_PLAYSTATION then
+						local platform = player_info:platform()
+						local platform_user_id = player_info:platform_user_id()
+
+						if platform ~= my_platform then
+							local crossplay_restricted = Managers.account:has_crossplay_restriction()
+
+							text_mute = text_mute or crossplay_restricted
+							voice_mute = voice_mute or crossplay_restricted
+						end
+
+						local communication_restricted = Managers.account:user_has_restriction()
+
+						text_mute = text_mute or communication_restricted
+						voice_mute = voice_mute or communication_restricted
 					end
 
 					if text_mute ~= participant.is_text_muted_for_me then

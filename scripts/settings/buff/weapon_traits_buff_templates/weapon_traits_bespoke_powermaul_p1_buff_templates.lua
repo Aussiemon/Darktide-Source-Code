@@ -27,7 +27,7 @@ templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent = tabl
 templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent.child_buff_template = "weapon_trait_bespoke_powermaul_p1_windup_increases_power_child"
 templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_child)
 templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
-	allow_proc_while_active = true,
+	allow_proc_while_active = false,
 	child_buff_template = "block_has_chance_to_stun_child",
 	child_duration = 3,
 	class_name = "weapon_trait_parent_proc_buff",
@@ -38,7 +38,15 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	add_child_proc_events = {
 		[proc_events.on_perfect_block] = 1,
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = function (template_data, template_context, t)
+		local stacks = template_context.buff_extension:current_stacks("block_has_chance_to_stun_child")
+
+		if stacks > 1 then
+			return false
+		end
+
+		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context, t)
+	end,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context, t)
 		local attacking_unit = params.attacking_unit

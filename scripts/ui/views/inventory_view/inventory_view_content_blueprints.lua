@@ -1171,8 +1171,9 @@ local blueprints = {
 				local display_name = equipped_item and equipped_item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(equipped_item)
-					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+					content.display_name = ItemUtils.weapon_card_display_name(equipped_item)
+					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(equipped_item)
+					content.rarity_name = ItemUtils.rarity_display_name(equipped_item)
 				end
 
 				if content.item_power then
@@ -1194,72 +1195,14 @@ local blueprints = {
 
 					local rarity_color = ItemUtils.rarity_color(equipped_item)
 
-					style.sub_display_name.text_color = table.clone(rarity_color)
+					style.rarity_name.text_color = table.clone(rarity_color)
 					style.background_gradient.color = table.clone(rarity_color)
 					style.rarity_tag.color = table.clone(rarity_color)
 
 					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
-					end
+						local item_level, has_level = ItemUtils.expertise_level(equipped_item)
 
-					local traits = equipped_item.traits
-
-					if traits then
-						for i = 1, #traits do
-							local pass_id = "trait_" .. i
-							local trait = traits[i]
-
-							if trait then
-								local trait_id = trait.id
-								local rarity = trait.rarity
-								local trait_item = MasterItems.get_item(trait_id)
-								local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-								local trait_style = style[pass_id]
-
-								if trait_style then
-									local material_values = trait_style.material_values
-
-									material_values.icon = texture_icon
-									material_values.frame = texture_frame
-									trait_style.material_values.overlay = 0
-								end
-
-								content[pass_id] = trait_id
-							else
-								content[pass_id] = nil
-							end
-						end
-
-						local trait_category = ItemUtils.trait_category(content.item)
-
-						Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
-							if seen_traits then
-								for i = 1, #traits do
-									local pass_id = "trait_" .. i
-									local trait = traits[i]
-									local trait_id = trait.id
-									local trait_rarity = trait.rarity
-
-									if trait then
-										for seen_trait_name, status in pairs(seen_traits) do
-											if seen_trait_name == trait_id and status ~= nil then
-												local trait_status = status[trait_rarity]
-
-												if trait_status == "unseen" then
-													local trait_style = style[pass_id]
-
-													if trait_style then
-														trait_style.material_values.overlay = 1
-													end
-
-													break
-												end
-											end
-										end
-									end
-								end
-							end
-						end)
+						content.item_level = has_level and item_level or ""
 					end
 				end
 			end
@@ -1282,8 +1225,9 @@ local blueprints = {
 					local display_name = equipped_item and equipped_item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+						content.display_name = ItemUtils.weapon_card_display_name(equipped_item)
+						content.sub_display_name = ItemUtils.weapon_card_sub_display_name(equipped_item)
+						content.rarity_name = ItemUtils.rarity_display_name(equipped_item)
 					end
 
 					if content.item_power then
@@ -1292,73 +1236,14 @@ local blueprints = {
 
 					local rarity_color = ItemUtils.rarity_color(equipped_item)
 
-					style.sub_display_name.text_color = table.clone(rarity_color)
+					style.rarity_name.text_color = table.clone(rarity_color)
 					style.background_gradient.color = table.clone(rarity_color)
 					style.rarity_tag.color = table.clone(rarity_color)
 
 					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
-					end
+						local item_level, has_level = ItemUtils.expertise_level(equipped_item)
 
-					local traits = equipped_item.traits
-					local max_traits = 3
-
-					for i = 1, max_traits do
-						local pass_id = "trait_" .. i
-						local trait = traits and traits[i]
-
-						if trait then
-							local trait_id = trait.id
-							local rarity = trait.rarity
-							local trait_item = MasterItems.get_item(trait_id)
-							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-							local trait_style = style[pass_id]
-
-							if trait_style then
-								local material_values = trait_style.material_values
-
-								material_values.icon = texture_icon
-								material_values.frame = texture_frame
-								trait_style.material_values.overlay = 0
-							end
-
-							content[pass_id] = trait_id
-						else
-							content[pass_id] = nil
-						end
-					end
-
-					if traits then
-						local trait_category = ItemUtils.trait_category(content.item)
-
-						Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
-							if seen_traits then
-								for i = 1, #traits do
-									local pass_id = "trait_" .. i
-									local trait = traits[i]
-									local trait_id = trait.id
-									local trait_rarity = trait.rarity
-
-									if trait then
-										for seen_trait_name, status in pairs(seen_traits) do
-											if seen_trait_name == trait_id and status ~= nil then
-												local trait_status = status[trait_rarity]
-
-												if trait_status == "unseen" then
-													local trait_style = style[pass_id]
-
-													if trait_style then
-														trait_style.material_values.overlay = 1
-													end
-
-													break
-												end
-											end
-										end
-									end
-								end
-							end
-						end)
+						content.item_level = has_level and item_level or ""
 					end
 
 					if content.icon_load_id then
@@ -1457,7 +1342,9 @@ local blueprints = {
 					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
 					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
+						local item_level, has_level = ItemUtils.expertise_level(equipped_item)
+
+						content.item_level = has_level and item_level or ""
 					end
 				end
 			end
@@ -1493,7 +1380,9 @@ local blueprints = {
 						style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
 						if style.item_level then
-							content.item_level = ItemUtils.item_level(equipped_item)
+							local item_level, has_level = ItemUtils.expertise_level(equipped_item)
+
+							content.item_level = has_level and item_level or ""
 						end
 
 						local display_name = equipped_item and equipped_item.display_name

@@ -543,7 +543,15 @@ local action_data = {
 	exit_spawner = {
 		run_anim_event = "move_fwd",
 	},
-	explode = {},
+	explode = {
+		explode_position_node = "j_spine1",
+		gib_override_damage_profile = "flamer_backpack_explosion",
+		liquid_area = "cultist_flamer_backpack",
+		override_hit_zone_name = "center_mass",
+		utility_weight = 1,
+		considerations = UtilityConsiderations.chaos_poxwalker_bomber_explode,
+		explosion_template = ExplosionTemplates.explosion_settings_cultist_flamer,
+	},
 }
 
 return action_data

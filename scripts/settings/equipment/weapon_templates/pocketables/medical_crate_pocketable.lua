@@ -38,6 +38,10 @@ weapon_template.keywords = {
 	"pocketable",
 }
 weapon_template.ammo_template = "no_ammo"
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.breed_anim_state_machine_3p = {
 	human = "content/characters/player/human/third_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",

@@ -1053,6 +1053,7 @@ weapon_template.actions = {
 		anim_event = "attack_swing_charge_left",
 		chain_anim_event = "attack_swing_charge_left_pose",
 		chain_anim_event_3p = "attack_swing_charge_left",
+		invalid_start_action_for_stat_calculation = true,
 		kind = "windup",
 		proc_time_interval = 0.2,
 		start_input = "start_attack",
@@ -1343,6 +1344,7 @@ weapon_template.actions = {
 		outer_damage_type = damage_types.physical,
 	},
 	action_right_light_pushfollow = {
+		allowed_during_sprint = true,
 		anim_event = "push_follow_up",
 		anim_event_3p = "attack_swing_right_slow",
 		attack_direction_override = "right",
@@ -1353,7 +1355,6 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		range_mod = 1.25,
-		sprint_requires_press_to_interrupt = "true",
 		total_time = 2,
 		weapon_handling_template = "time_scale_1_2",
 		action_movement_curve = {
@@ -2025,6 +2026,24 @@ weapon_template.displayed_attacks = {
 		type = "activate",
 	},
 }
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "smiter",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "tank",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "activate",
+		icon = "activate",
+	},
+}
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
@@ -2035,14 +2054,16 @@ weapon_template.weapon_box = {
 	0.7,
 	0.02,
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
-weapon_template.allow_sprinting_with_special = true
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.weapon_special_class = "WeaponSpecialExplodeOnImpact"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 4,
 	active_on_abort = true,
 	disorientation_type = "ogryn_powermaul_disorientation",
+	keep_active_on_sprint = true,
 	explosion_template = ExplosionTemplates.powermaul_activated_impact,
 }
 weapon_template.sprint_ready_up_time = 0.2

@@ -48,6 +48,29 @@ weapon_dodge_templates.smiter = {
 		lerp_perfect = 1,
 	},
 }
+weapon_dodge_templates.smiter_plus = {
+	consecutive_dodges_reset = 0,
+	distance_scale = {
+		lerp_basic = 0.85,
+		lerp_perfect = 1.05,
+	},
+	diminishing_return_distance_modifier = {
+		lerp_basic = 0.6,
+		lerp_perfect = 0.3,
+	},
+	diminishing_return_start = {
+		lerp_basic = 2,
+		lerp_perfect = 4,
+	},
+	diminishing_return_limit = {
+		lerp_basic = 2,
+		lerp_perfect = 2,
+	},
+	speed_modifier = {
+		lerp_basic = 1,
+		lerp_perfect = 1,
+	},
+}
 weapon_dodge_templates.psyker = {
 	distance_scale = {
 		lerp_basic = 0.8,
@@ -90,6 +113,28 @@ weapon_dodge_templates.psyker_ninja = {
 	speed_modifier = {
 		lerp_basic = 1,
 		lerp_perfect = 1.1,
+	},
+}
+weapon_dodge_templates.psyker_heavy = {
+	distance_scale = {
+		lerp_basic = 0.8,
+		lerp_perfect = 1,
+	},
+	diminishing_return_distance_modifier = {
+		lerp_basic = 0.6,
+		lerp_perfect = 0.3,
+	},
+	diminishing_return_start = {
+		lerp_basic = 2,
+		lerp_perfect = 4,
+	},
+	diminishing_return_limit = {
+		lerp_basic = 2,
+		lerp_perfect = 3,
+	},
+	speed_modifier = {
+		lerp_basic = 1,
+		lerp_perfect = 1,
 	},
 }
 weapon_dodge_templates.default_ranged = {

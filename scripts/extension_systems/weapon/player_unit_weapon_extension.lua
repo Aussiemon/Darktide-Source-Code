@@ -8,6 +8,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local Stamina = require("scripts/utilities/attack/stamina")
 local SwayWeaponModule = require("scripts/extension_systems/weapon/sway_weapon_module")
@@ -653,7 +654,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 		AlternateFire.stop(alternate_fire, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit, true)
 	end
 
-	self._weapon_recoil_system:snap_camera_and_reset_recoil()
+	self._weapon_recoil_system:reset_recoil()
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 
@@ -892,8 +893,8 @@ PlayerUnitWeaponExtension.get_shield_block_position = function (self, hit_world_
 		shield_forward = first_person_forward
 	end
 
-	local slab_shield_to_hit_position = hit_world_position - shield_pivot
-	local shield_plane_offset = Vector3.project_on_plane(slab_shield_to_hit_position, shield_forward)
+	local shield_to_hit_position = hit_world_position - shield_pivot
+	local shield_plane_offset = Vector3.project_on_plane(shield_to_hit_position, shield_forward)
 	local new_hit_position = shield_pivot + shield_plane_offset
 	local locomotion_component = self._locomotion_component
 	local flat_velocity = Vector3.flat(locomotion_component.velocity_current)
@@ -961,30 +962,135 @@ PlayerUnitWeaponExtension.update_weapon_actions = function (self, fixed_frame)
 	end
 
 	local condition_func_params = self:condition_func_params(wielded_slot)
-	local weapon = self:_wielded_weapon(inventory_component, self._weapons)
-	local actions = weapon.weapon_template.actions
-	local action_objects = weapon.actions
+	local wielded_weapon = self:_wielded_weapon(inventory_component, self._weapons)
+	local actions = wielded_weapon.weapon_template.actions
+	local action_objects = wielded_weapon.actions
 
 	table.clear(action_params)
 
-	action_params.weapon = weapon
+	action_params.weapon = wielded_weapon
 	action_params.player_unit = self._unit
 
-	local fixed_time_step = self._fixed_time_step
-	local dt, t = fixed_time_step, fixed_frame * fixed_time_step
-
-	self:_update_weapon_special(weapon, dt, t)
+	self:update_weapon_special_implementation(fixed_frame)
 	self._action_handler:update_actions(fixed_frame, "weapon_action", condition_func_params, actions, action_objects, action_params)
 end
 
-PlayerUnitWeaponExtension._update_weapon_special = function (self, weapon, dt, t)
-	local weapon_special_implementation = weapon.weapon_special_implementation
+PlayerUnitWeaponExtension.update_weapon_special_implementation = function (self, fixed_frame)
+	local wielded_weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
+	local fixed_time_step = self._fixed_time_step
+	local dt, t = fixed_time_step, fixed_frame * fixed_time_step
+	local weapons = self._weapons
+	local primary_weapon = weapons.slot_primary
+	local secondary_weapon = weapons.slot_secondary
+	local primary_weapon_special_implementation = primary_weapon and primary_weapon.weapon_special_implementation
+	local secondary_weapon_special_implementation = secondary_weapon and secondary_weapon.weapon_special_implementation
+	local update_primary = primary_weapon_special_implementation and (wielded_weapon == primary_weapon or primary_weapon_special_implementation.UPDATE_WHEN_UNWIELDED)
+	local update_secondary = secondary_weapon_special_implementation and (wielded_weapon == secondary_weapon or secondary_weapon_special_implementation.UPDATE_WHEN_UNWIELDED)
 
-	if not weapon_special_implementation then
+	if update_primary then
+		primary_weapon_special_implementation:fixed_update(dt, t)
+	end
+
+	if update_secondary then
+		secondary_weapon_special_implementation:fixed_update(dt, t)
+	end
+end
+
+PlayerUnitWeaponExtension.set_wielded_weapon_weapon_special_active = function (self, t, want_active, optional_reason)
+	local inventory_component = self._inventory_component
+	local buff_extension = self._buff_extension
+	local wielded_slot = inventory_component.wielded_slot
+	local is_weapon = PlayerUnitVisualLoadout.is_slot_of_type(wielded_slot, "weapon")
+
+	if not is_weapon then
 		return
 	end
 
-	weapon_special_implementation:update(dt, t)
+	local wielded_weapon = self:_wielded_weapon(inventory_component, self._weapons)
+	local weapon_special_implementation = wielded_weapon.weapon_special_implementation
+	local inventory_slot_component = wielded_weapon.inventory_slot_component
+	local was_special_active = inventory_slot_component.special_active
+
+	if want_active and not was_special_active then
+		local last_start_time = inventory_slot_component.special_active_start_t
+
+		inventory_slot_component.special_active_start_t = t
+		inventory_slot_component.special_active = true
+
+		if weapon_special_implementation then
+			weapon_special_implementation:on_special_activation(t)
+		end
+
+		local proc_cooldown_time = 0.5
+
+		if t > last_start_time + proc_cooldown_time then
+			local param_table = buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.t = t
+				param_table.num_special_charges = inventory_slot_component.num_special_charges
+
+				buff_extension:add_proc_event(proc_events.on_weapon_special_activate, param_table)
+			end
+		end
+	elseif not want_active and was_special_active then
+		local did_deactivate = false
+		local weapon_template = wielded_weapon.weapon_template
+		local tweak_data_or_nil = weapon_template.weapon_special_tweak_data
+		local set_inactive_func = tweak_data_or_nil and tweak_data_or_nil.set_inactive_func
+
+		if set_inactive_func then
+			did_deactivate = set_inactive_func(inventory_slot_component, optional_reason, tweak_data_or_nil)
+		end
+
+		if did_deactivate or tweak_data_or_nil and tweak_data_or_nil.manual_toggle_only and optional_reason ~= "manual_toggle" then
+			-- Nothing
+		elseif tweak_data_or_nil and tweak_data_or_nil.keep_active_until_shot_complete and optional_reason ~= "shot_complete" then
+			-- Nothing
+		elseif optional_reason == "unwield" then
+			if not tweak_data_or_nil or not tweak_data_or_nil.keep_active_on_unwield then
+				inventory_slot_component.special_active = false
+				inventory_slot_component.num_special_charges = 0
+				did_deactivate = true
+			end
+		elseif optional_reason == "ledge_vaulting" then
+			if not tweak_data_or_nil or not tweak_data_or_nil.keep_active_on_vault then
+				inventory_slot_component.special_active = false
+				inventory_slot_component.num_special_charges = 0
+				did_deactivate = true
+			end
+		elseif optional_reason == "started_sprint" then
+			if not tweak_data_or_nil or not tweak_data_or_nil.keep_active_on_sprint then
+				inventory_slot_component.special_active = false
+				inventory_slot_component.num_special_charges = 0
+				did_deactivate = true
+			end
+		elseif optional_reason == "stunned" then
+			if not tweak_data_or_nil or not tweak_data_or_nil.keep_active_on_stun then
+				inventory_slot_component.special_active = false
+				inventory_slot_component.num_special_charges = 0
+				did_deactivate = true
+			end
+		else
+			inventory_slot_component.special_active = false
+			inventory_slot_component.num_special_charges = 0
+			did_deactivate = true
+		end
+
+		if weapon_special_implementation and did_deactivate then
+			weapon_special_implementation:on_special_deactivation(t)
+		end
+
+		if did_deactivate then
+			local param_table = buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.t = t
+
+				buff_extension:add_proc_event(proc_events.on_weapon_special_deactivate, param_table)
+			end
+		end
+	end
 end
 
 PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slot_name, inventory_slot_component, t, weapon_item)
@@ -1090,8 +1196,8 @@ end
 PlayerUnitWeaponExtension._update_overheat = function (self, dt, t)
 	local unit, first_person_unit = self._unit, self._first_person_unit
 
-	for _, slot in pairs(self._weapons) do
-		Overheat.update(dt, t, slot.inventory_slot_component, slot.weapon_template.overheat_configuration, unit, first_person_unit)
+	for _, weapon in pairs(self._weapons) do
+		Overheat.update(dt, t, weapon.inventory_slot_component, weapon.weapon_template, unit, first_person_unit, weapon.weapon_tweak_templates.charge)
 	end
 end
 

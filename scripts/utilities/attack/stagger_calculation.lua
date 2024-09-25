@@ -185,11 +185,12 @@ function _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_
 	local impact_modifier = attacker_stat_buffs.impact_modifier or 1
 	local target_impact_modifier = target_stat_buffs.impact_modifier or 1
 	local melee_impact_modifier = attack_type == attack_types.melee and attacker_stat_buffs.melee_impact_modifier or 1
+	local push_impact_modifier = attack_type == attack_types.push and attacker_stat_buffs.push_impact_modifier or 1
 	local ranged_impact_modifier = attack_type == attack_types.ranged and attacker_stat_buffs.ranged_impact_modifier or 1
 	local explosion_impact_modifier = attack_type == attack_types.explosion and attacker_stat_buffs.explosion_impact_modifier or 1
 	local shout_impact_modifier = attack_type == attack_types.shout and attacker_stat_buffs.shout_impact_modifier or 1
 	local melee_weakspot_modifier = attack_type == attack_types.melee and hit_weakspot and attacker_stat_buffs.melee_weakspot_impact_modifier or 1
-	local modifier = impact_modifier + target_impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier - 6
+	local modifier = impact_modifier + target_impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier + push_impact_modifier - 7
 
 	return modifier
 end

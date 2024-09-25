@@ -94,7 +94,32 @@ local disgustingly_resilient = table.clone(unarmored)
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
 local player = table.clone(unarmored)
-local surface_fx = {}
+local surface_fx = {
+	snow = {
+		[hit_types.stop] = {
+			vfx = {
+				{
+					normal_rotation = true,
+					effects = {
+						"content/fx/particles/impacts/surfaces/impact_snow_grenade",
+					},
+				},
+			},
+		},
+	},
+	snow_frosty = {
+		[hit_types.stop] = {
+			vfx = {
+				{
+					normal_rotation = true,
+					effects = {
+						"content/fx/particles/impacts/surfaces/impact_snow_grenade",
+					},
+				},
+			},
+		},
+	},
+}
 local default_surface_fx = {
 	[hit_types.stop] = {
 		sfx = {

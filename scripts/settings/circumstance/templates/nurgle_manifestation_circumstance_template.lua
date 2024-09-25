@@ -29,18 +29,6 @@ local circumstance_templates = {
 			"mutator_corruption_over_time",
 		},
 	},
-	bolstering_minions_01 = {
-		ui = {
-			description = "loc_circumstance_nurgle_manifestation_description",
-			display_name = "loc_circumstance_nurgle_manifestation_title",
-			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
-		},
-		mutators = {
-			"mutator_bolstering_minions",
-		},
-		mission_overrides = {},
-	},
 }
 
 return circumstance_templates

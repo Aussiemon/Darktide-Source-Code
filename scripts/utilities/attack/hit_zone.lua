@@ -2,7 +2,7 @@
 
 local Unit_actor = Unit.actor
 local HitZone = {}
-local hit_zone_names = table.enum("head", "torso", "lower_tail", "upper_tail", "tongue", "upper_left_arm", "lower_left_arm", "upper_right_arm", "lower_right_arm", "upper_left_leg", "lower_left_leg", "upper_right_leg", "lower_right_leg", "afro", "center_mass", "captain_void_shield", "corruptor_armor", "shield", "weakspot", "right_shoulderguard", "delayed_gib")
+local hit_zone_names = table.enum("head", "torso", "lower_tail", "upper_tail", "tongue", "upper_left_arm", "lower_left_arm", "upper_right_arm", "lower_right_arm", "upper_left_leg", "lower_left_leg", "upper_right_leg", "lower_right_leg", "afro", "center_mass", "backpack", "captain_void_shield", "corruptor_armor", "shield", "weakspot", "right_shoulderguard", "delayed_gib")
 
 HitZone.hit_zone_names = hit_zone_names
 

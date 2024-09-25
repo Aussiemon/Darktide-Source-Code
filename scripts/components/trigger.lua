@@ -110,6 +110,7 @@ Trigger.component_data = {
 			"all_players_inside",
 			"all_players_inside_no_enemies",
 			"all_required_players_in_end_zone",
+			"at_least_one_boss_inside",
 			"at_least_one_player_inside",
 			"only_enter",
 			"luggable_inside",
@@ -119,6 +120,7 @@ Trigger.component_data = {
 			"all_players_inside",
 			"all_players_inside_no_enemies",
 			"all_required_players_in_end_zone",
+			"at_least_one_boss_inside",
 			"at_least_one_player_inside",
 			"only_enter",
 			"luggable_inside",
@@ -231,6 +233,7 @@ Trigger.component_data = {
 		ui_type = "combo_box",
 		value = "content/volume_types/player_trigger",
 		options_keys = {
+			"content/volume_types/minion_trigger",
 			"content/volume_types/minion_instakill_no_cost",
 			"content/volume_types/nav_tag_volumes/minion_instakill_high_cost",
 			"content/volume_types/nav_tag_volumes/bot_impassable",
@@ -241,6 +244,7 @@ Trigger.component_data = {
 			"content/volume_types/safe_volume",
 		},
 		options_values = {
+			"content/volume_types/minion_trigger",
 			"content/volume_types/minion_instakill_no_cost",
 			"content/volume_types/nav_tag_volumes/minion_instakill_high_cost",
 			"content/volume_types/nav_tag_volumes/bot_impassable",

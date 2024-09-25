@@ -147,6 +147,23 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 				end
 			end
 		end
+
+		if is_minion and not is_player and buff_extension then
+			local param_table = buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.attacking_unit = attacking_unit
+				param_table.attacking_unit_owner_unit = attacking_unit_owner_unit
+				param_table.attacked_unit = unit
+				param_table.hit_zone_name_or_nil = hit_zone_name
+				param_table.damage_amount = damage
+				param_table.damage_profile_name = damage_profile and damage_profile.name or "none"
+				param_table.permanent_damage = permanent_damage
+				param_table.attack_type = attack_type
+
+				buff_extension:add_proc_event(proc_events.on_minion_damage_taken, param_table)
+			end
+		end
 	elseif health_extension.tried_adding_damage then
 		health_extension:tried_adding_damage(damage, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit_owner_unit)
 	end

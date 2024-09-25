@@ -141,8 +141,10 @@ Buff._calculate_template_override_data = function (self, template_context)
 	return override_data
 end
 
-local function _add_overrides(overrides, trait_item, rarity, template_name, override_data, parent_buff_template_or_nil)
-	for buff_name, rarity_data in pairs(overrides) do
+local function _add_overrides(trait, trait_item, rarity, template_name, override_data, parent_buff_template_or_nil)
+	local trait_buffs = trait.buffs
+
+	for buff_name, rarity_data in pairs(trait_buffs) do
 		local should_merge_overrides = buff_name == template_name or parent_buff_template_or_nil and parent_buff_template_or_nil == buff_name or false
 		local current_rarity_data
 

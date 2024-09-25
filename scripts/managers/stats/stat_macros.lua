@@ -22,6 +22,22 @@ StatMacros.decrement = function (self, stat_data)
 	return id, stat_data[id]
 end
 
+StatMacros.increment_by = function (self, stat_data, value)
+	local id = self.id
+
+	stat_data[id] = (stat_data[id] or self.default) + value
+
+	return id, stat_data[id]
+end
+
+StatMacros.decrement_by = function (self, stat_data, value)
+	local id = self.id
+
+	stat_data[id] = (stat_data[id] or self.default) - value
+
+	return id, stat_data[id]
+end
+
 StatMacros.set_to_max = function (self, stat_data, value)
 	local id = self.id
 	local current_value = stat_data[id] or self.default

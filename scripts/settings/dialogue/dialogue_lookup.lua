@@ -56,6 +56,7 @@ _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_km_sta
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_lm_cooling")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_lm_rails")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_lm_scavenge")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_op_train")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_om_hub_01")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_om_hub_02")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_prologue")

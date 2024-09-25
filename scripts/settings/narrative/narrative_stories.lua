@@ -289,6 +289,18 @@ local narrative = {
 				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_2"),
 			},
 		},
+		s1_q3 = {
+			{
+				backend_id = 1,
+				name = "itemization_intro",
+				requirement = event_done("onboarding_step_mission_board_introduction"),
+			},
+			{
+				backend_id = 2,
+				name = "commissar_intro",
+				requirement = beyond_story_chapter("s1_q3", "itemization_intro"),
+			},
+		},
 		level_unlock_popups = {
 			{
 				backend_id = 1,

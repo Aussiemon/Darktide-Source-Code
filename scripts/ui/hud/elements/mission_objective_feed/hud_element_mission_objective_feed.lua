@@ -41,6 +41,8 @@ HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, rend
 	end
 
 	if self._objective_widgets_counter > 0 then
+		self:_update_widgets(dt, t)
+
 		if not self._background_visible then
 			self:_set_background_visibility(true)
 		end
@@ -49,6 +51,46 @@ HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, rend
 	end
 
 	return HudElementMissionObjectiveFeed.super.update(self, dt, t, ui_renderer, render_settings, input_service)
+end
+
+local ALERT_COLOR = {
+	255,
+	0,
+	0,
+	0,
+}
+
+HudElementMissionObjectiveFeed._update_widgets = function (self, dt, t)
+	for objective_name, hud_objective in pairs(self._hud_objectives) do
+		if self:has_widget(objective_name) then
+			local widget = self._widgets_by_name[objective_name]
+			local content = widget.content
+			local ui_state = hud_objective:state()
+
+			if ui_state == "alert" then
+				local neutral_color = HudElementMissionObjectiveFeedSettings.colors_by_category.default.bar
+				local lerp = math.sin(t * 10) / 2 + 0.5
+
+				ALERT_COLOR[2] = math.lerp(neutral_color[2], 255, lerp)
+				ALERT_COLOR[3] = math.lerp(neutral_color[3], 151, lerp)
+				ALERT_COLOR[4] = math.lerp(neutral_color[4], 29, lerp)
+
+				local style = widget.style
+
+				if content.show_bar then
+					style.bar.color = ALERT_COLOR
+				end
+
+				if content.show_timer then
+					style.timer_text.text_color = ALERT_COLOR
+				end
+			end
+
+			if content.show_timer then
+				self:_update_timer_progress(hud_objective, dt)
+			end
+		end
+	end
 end
 
 HudElementMissionObjectiveFeed._register_events = function (self)
@@ -152,8 +194,6 @@ HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_re
 	local header_text_style = style.header_text
 
 	if header_text_style then
-		local text_font_data = UIFonts.data_by_type(header_text_style.font_type)
-		local text_font = text_font_data.path
 		local text_size = {
 			header_text_style.size[1],
 			1000,
@@ -212,10 +252,12 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 	local hud_objective = self._hud_objectives[objective_name]
 	local content = widget.content
 	local style = widget.style
+	local state = hud_objective:state()
+	local objective_category = hud_objective:objective_category()
 
 	content.header_text = hud_objective:header()
 	content.description_text = hud_objective:description()
-	content.state = hud_objective:state()
+	content.category = objective_category
 
 	local icon = hud_objective:icon()
 
@@ -227,35 +269,53 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 		local current_amount = hud_objective:current_counter_amount()
 		local max_amount = hud_objective:max_counter_amount()
 
-		content.distance_text = tostring(current_amount) .. "/" .. tostring(max_amount)
+		content.counter_text = tostring(current_amount) .. "/" .. tostring(max_amount)
 	else
-		content.distance_text = ""
+		content.counter_text = ""
 	end
 
 	if hud_objective:progress_bar() then
 		content.show_bar = true
+		content.bar_icon = hud_objective:progress_bar_icon()
 
 		self:_update_bar_progress(hud_objective)
 	else
 		content.show_bar = false
 	end
 
-	local colors_by_mission_type = HudElementMissionObjectiveFeedSettings.colors_by_mission_type
-	local size_by_mission_type = HudElementMissionObjectiveFeedSettings.size_by_mission_type
-	local offsets_by_mission_type = HudElementMissionObjectiveFeedSettings.offsets_by_mission_type
-	local mission_colors, mission_sizes, mission_offsets
+	if hud_objective:progress_timer() then
+		content.show_timer = true
 
-	if hud_objective:is_side_mission() then
-		mission_colors = colors_by_mission_type.side_mission
-		mission_sizes = size_by_mission_type.side_mission
-		mission_offsets = offsets_by_mission_type.side_mission
+		self:_update_timer_progress(hud_objective)
 	else
-		mission_colors = colors_by_mission_type.default
-		mission_sizes = size_by_mission_type.default
-		mission_offsets = offsets_by_mission_type.default
+		content.show_timer = false
+		content.timer_text = ""
 	end
 
-	for style_id, color in pairs(mission_colors) do
+	if objective_category == "overarching" then
+		local alert = state == "alert"
+
+		content.show_alert = alert
+
+		if alert then
+			style.hazard_above.color = HudElementMissionObjectiveFeedSettings.alert_color
+			style.overarching_background.size[2] = 15 + HudElementMissionObjectiveFeedSettings.header_size[2] + 10
+		else
+			style.hazard_above.color = style.hazard_above.base_color
+			style.overarching_background.size[2] = 15 + HudElementMissionObjectiveFeedSettings.header_size[2] + 10 + 20
+		end
+	else
+		content.show_alert = false
+	end
+
+	local colors_by_category = HudElementMissionObjectiveFeedSettings.colors_by_category
+	local size_by_category = HudElementMissionObjectiveFeedSettings.size_by_category
+	local offsets_by_category = HudElementMissionObjectiveFeedSettings.offsets_by_category
+	local category_colors = colors_by_category[objective_category]
+	local category_sizes = size_by_category[objective_category]
+	local category_offsets = offsets_by_category[objective_category]
+
+	for style_id, color in pairs(category_colors) do
 		local pass_style = style[style_id]
 
 		if pass_style and (pass_style.text_color or pass_style.color) then
@@ -263,7 +323,7 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 		end
 	end
 
-	for style_id, size in pairs(mission_sizes) do
+	for style_id, size in pairs(category_sizes) do
 		local pass_style = style[style_id]
 
 		if pass_style and (pass_style.font_size or pass_style.size) then
@@ -275,7 +335,7 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 		end
 	end
 
-	for style_id, offset in pairs(mission_offsets) do
+	for style_id, offset in pairs(category_offsets) do
 		local pass_style = style[style_id]
 
 		if pass_style and pass_style.offset then
@@ -289,10 +349,23 @@ HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_object
 	local widget = self._widgets_by_name[objective_name]
 	local style = widget.style
 	local bar_style = style.bar
+	local icon_style = style.bar_icon
 	local progression = hud_objective:has_second_progression() and hud_objective:second_progression() or hud_objective:progression()
 	local default_length = bar_style.default_length
 
 	bar_style.size[1] = default_length * progression
+	icon_style.offset[1] = 40 + default_length * progression
+end
+
+HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_objective, dt)
+	local objective_name = hud_objective:objective_name()
+	local widget = self._widgets_by_name[objective_name]
+	local content = widget.content
+	local time_left = math.max(hud_objective:time_left(dt), 0)
+	local text = string.format("%.2f", time_left)
+
+	text = text:gsub("%.", ":")
+	content.timer_text = text
 end
 
 HudElementMissionObjectiveFeed._get_objectives_height = function (self, widget, ui_renderer)
@@ -301,13 +374,16 @@ HudElementMissionObjectiveFeed._get_objectives_height = function (self, widget, 
 	local widget_height = widget.content.size[2]
 	local show_bar = content.show_bar
 	local bar_height = show_bar and style.bar.size[2] or 0
+	local show_alert = content.show_alert
+	local alert_height = show_alert and style.alert_background.size[2] or 0
 
-	return widget_height + bar_height * 2
+	return widget_height + bar_height * 2 + alert_height
 end
 
 HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 	local ui_renderer = self._parent:ui_renderer()
-	local entry_spacing_by_mission_type = HudElementMissionObjectiveFeedSettings.entry_spacing_by_mission_type
+	local entry_spacing_by_category = HudElementMissionObjectiveFeedSettings.entry_spacing_by_category
+	local entry_order_by_objective_category = HudElementMissionObjectiveFeedSettings.entry_order_by_objective_category
 	local offset_y = 0
 	local objective_widgets_by_name = self._objective_widgets_by_name
 	local total_background_height = 0
@@ -318,12 +394,12 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 	local function mission_objective_sort_function(a, b)
 		local a_objective = hud_objectives[a]
 		local b_objective = hud_objectives[b]
-		local a_is_side_mission = a_objective and a_objective:is_side_mission() or false
-		local b_is_side_mission = b_objective and b_objective:is_side_mission() or false
+		local a_priority = entry_order_by_objective_category[a_objective:objective_category()]
+		local b_priority = entry_order_by_objective_category[b_objective:objective_category()]
 
-		if a_is_side_mission == b_is_side_mission then
+		if a_priority == b_priority then
 			return false
-		elseif a_is_side_mission then
+		elseif b_priority < a_priority then
 			return false
 		end
 
@@ -342,14 +418,8 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 
 		if widget then
 			local hud_objective = hud_objectives[objective_name]
-			local is_side_mission = hud_objective:is_side_mission()
-			local entry_spacing
-
-			if is_side_mission then
-				entry_spacing = entry_spacing_by_mission_type.side_mission
-			else
-				entry_spacing = entry_spacing_by_mission_type.default
-			end
+			local objective_category = hud_objective:objective_category()
+			local entry_spacing = entry_spacing_by_category[objective_category] or entry_spacing_by_category.default
 
 			index_counter = index_counter + 1
 

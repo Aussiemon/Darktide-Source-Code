@@ -16,6 +16,7 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Trajectory = require("scripts/utilities/trajectory")
+local Vo = require("scripts/utilities/vo")
 local attack_types = AttackSettings.attack_types
 local BtBeastOfNurgleConsumeAction = class("BtBeastOfNurgleConsumeAction", "BtNode")
 
@@ -446,6 +447,12 @@ BtBeastOfNurgleConsumeAction._consume_target = function (self, unit, target_unit
 	local drag_in_anim = action_data.drag_in_anims[scratchpad.consumed_unit_breed_name]
 
 	scratchpad.animation_extension:anim_event(drag_in_anim)
+
+	local vo_event = action_data.vo_event
+
+	if vo_event then
+		Vo.generic_mission_vo_event_closest_friend(target_unit, vo_event)
+	end
 end
 
 local DEGREE_RANGE = 360

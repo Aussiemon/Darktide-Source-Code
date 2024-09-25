@@ -52,10 +52,7 @@ local hammer_smiter_light_active_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
 		[armor_types.armored] = damage_lerp_values.lerp_1,
-		[armor_types.resistant] = {
-			2,
-			3,
-		},
+		[armor_types.resistant] = damage_lerp_values.lerp_2,
 		[armor_types.player] = damage_lerp_values.no_damage,
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
@@ -121,13 +118,10 @@ local hammer_tank_heavy_first_active_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
 		[armor_types.armored] = damage_lerp_values.lerp_1_5,
-		[armor_types.resistant] = {
-			3,
-			5,
-		},
+		[armor_types.resistant] = damage_lerp_values.lerp_3,
 		[armor_types.player] = damage_lerp_values.no_damage,
 		[armor_types.berserker] = damage_lerp_values.lerp_1_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 	},
@@ -207,8 +201,8 @@ damage_templates.thunderhammer_light = {
 			},
 			power_distribution = {
 				attack = {
-					150,
-					300,
+					180,
+					350,
 				},
 				impact = {
 					8,
@@ -216,18 +210,127 @@ damage_templates.thunderhammer_light = {
 				},
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.3,
+				[armor_types.unarmored] = 0.5,
 				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.3,
+				[armor_types.resistant] = 0.5,
 				[armor_types.player] = 0.3,
-				[armor_types.berserker] = 0.3,
+				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
-				[armor_types.disgustingly_resilient] = 0.3,
+				[armor_types.disgustingly_resilient] = 0.5,
 				[armor_types.void_shield] = 0.3,
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
 				1.5,
+			},
+			power_level_multiplier = {
+				0.75,
+				1.25,
+			},
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					15,
+					25,
+				},
+				impact = {
+					9,
+					11,
+				},
+			},
+		},
+		default_target = {
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					8,
+					12,
+				},
+				impact = {
+					5,
+					5,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			finesse_boost = {
+				[armor_types.unarmored] = 0.1,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 0.1,
+				[armor_types.player] = 0.1,
+				[armor_types.berserker] = 0.1,
+				[armor_types.super_armor] = 0.1,
+				[armor_types.disgustingly_resilient] = 0.5,
+				[armor_types.void_shield] = 0.5,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light,
+}
+damage_templates.thunderhammer_light_plus = {
+	finesse_ability_damage_multiplier = 1.5,
+	ragdoll_only = true,
+	ragdoll_push_force = 500,
+	stagger_category = "melee",
+	cleave_distribution = single_cleave,
+	damage_type = damage_types.blunt_thunder,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.crushing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.thunder_hammer,
+	armor_damage_modifier = hammer_smiter_light_default_am,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	targets = {
+		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.no_damage,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.no_damage,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+			},
+			power_distribution = {
+				attack = {
+					200,
+					380,
+				},
+				impact = {
+					8,
+					22,
+				},
+			},
+			finesse_boost = {
+				[armor_types.unarmored] = 0.75,
+				[armor_types.armored] = 0.6,
+				[armor_types.resistant] = 0.5,
+				[armor_types.player] = 0.3,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.5,
+				[armor_types.disgustingly_resilient] = 0.5,
+				[armor_types.void_shield] = 0.3,
+			},
+			boost_curve_multiplier_finesse = {
+				1,
+				2,
 			},
 			power_level_multiplier = {
 				0.75,
@@ -325,13 +428,13 @@ damage_templates.thunderhammer_light_linesman = {
 				},
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.3,
+				[armor_types.unarmored] = 0.5,
 				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.3,
+				[armor_types.resistant] = 0.5,
 				[armor_types.player] = 0.3,
-				[armor_types.berserker] = 0.3,
+				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
-				[armor_types.disgustingly_resilient] = 0.3,
+				[armor_types.disgustingly_resilient] = 0.5,
 				[armor_types.void_shield] = 0.3,
 			},
 			boost_curve_multiplier_finesse = {
@@ -495,13 +598,13 @@ damage_templates.thunderhammer_light_tank = {
 				},
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.3,
+				[armor_types.unarmored] = 0.5,
 				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.3,
+				[armor_types.resistant] = 0.5,
 				[armor_types.player] = 0.3,
-				[armor_types.berserker] = 0.3,
+				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
-				[armor_types.disgustingly_resilient] = 0.3,
+				[armor_types.disgustingly_resilient] = 0.5,
 				[armor_types.void_shield] = 0.3,
 			},
 			boost_curve_multiplier_finesse = {
@@ -602,8 +705,8 @@ damage_templates.thunderhammer_light_active = {
 			armor_damage_modifier = hammer_smiter_light_active_am,
 			power_distribution = {
 				attack = {
-					300,
-					600,
+					400,
+					750,
 				},
 				impact = {
 					25,
@@ -611,18 +714,18 @@ damage_templates.thunderhammer_light_active = {
 				},
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.3,
-				[armor_types.armored] = 0.5,
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
 				[armor_types.resistant] = 0.3,
 				[armor_types.player] = 0.3,
-				[armor_types.berserker] = 0.3,
+				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.3,
 				[armor_types.void_shield] = 0.3,
 			},
 			boost_curve_multiplier_finesse = {
-				0.25,
-				0.75,
+				0.65,
+				1.15,
 			},
 			power_level_multiplier = {
 				0.75,
@@ -723,8 +826,8 @@ damage_templates.thunderhammer_heavy = {
 			armor_damage_modifier = hammer_tank_heavy_first_am,
 			power_distribution = {
 				attack = {
-					150,
-					300,
+					180,
+					350,
 				},
 				impact = {
 					25,
@@ -744,8 +847,8 @@ damage_templates.thunderhammer_heavy = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					80,
-					160,
+					100,
+					200,
 				},
 				impact = {
 					20,
@@ -757,8 +860,8 @@ damage_templates.thunderhammer_heavy = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					50,
-					100,
+					75,
+					150,
 				},
 				impact = {
 					14,
@@ -837,6 +940,151 @@ overrides.thunderhammer_heavy_active_sweep = {
 			{
 				250,
 				500,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				35,
+				45,
+			},
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				200,
+				400,
+			},
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"impact",
+			{
+				30,
+				40,
+			},
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"attack",
+			{
+				150,
+				300,
+			},
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"impact",
+			{
+				25,
+				35,
+			},
+		},
+		{
+			"targets",
+			4,
+			"power_distribution",
+			"attack",
+			{
+				120,
+				240,
+			},
+		},
+		{
+			"targets",
+			4,
+			"power_distribution",
+			"impact",
+			{
+				20,
+				30,
+			},
+		},
+		{
+			"targets",
+			5,
+			"power_distribution",
+			"attack",
+			{
+				80,
+				160,
+			},
+		},
+		{
+			"targets",
+			5,
+			"power_distribution",
+			"impact",
+			{
+				15,
+				25,
+			},
+		},
+		{
+			"targets",
+			"default_target",
+			"power_distribution",
+			"attack",
+			{
+				50,
+				100,
+			},
+		},
+		{
+			"targets",
+			"default_target",
+			"power_distribution",
+			"impact",
+			{
+				10,
+				20,
+			},
+		},
+		{
+			"ragdoll_push_force",
+			1250,
+		},
+	},
+}
+overrides.thunderhammer_heavy_active_sweep_m1 = {
+	parent_template_name = "thunderhammer_heavy",
+	overrides = {
+		{
+			"cleave_distribution",
+			"attack",
+			{
+				1,
+				3,
+			},
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			{
+				1,
+				3,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				400,
+				800,
 			},
 		},
 		{
@@ -1220,6 +1468,46 @@ damage_templates.thunderhammer_heavy_active = {
 	},
 	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
 }
+damage_templates.thunderhammer_m1_heavy_active = {
+	finesse_ability_damage_multiplier = 2,
+	gibbing_power = 0,
+	ignore_stagger_reduction = true,
+	ragdoll_only = true,
+	ragdoll_push_force = 1000,
+	shield_override_stagger_strength = 500,
+	stagger_category = "melee",
+	weapon_special = true,
+	armor_damage_modifier = hammer_tank_heavy_am,
+	cleave_distribution = {
+		attack = 0.01,
+		impact = 0.01,
+	},
+	damage_type = damage_types.blunt_thunder,
+	gibbing_type = GibbingTypes.explosion,
+	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.thunder_hammer_active,
+	targets = {
+		default_target = {
+			boost_curve_multiplier_finesse = 0.5,
+			armor_damage_modifier = hammer_tank_heavy_first_active_am,
+			power_distribution = {
+				attack = {
+					500,
+					1000,
+				},
+				impact = {
+					45,
+					55,
+				},
+			},
+			power_level_multiplier = {
+				0.75,
+				1.25,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
 damage_templates.thunderhammer_m2_heavy_active = {
 	finesse_ability_damage_multiplier = 2,
 	gibbing_power = 0,
@@ -1280,12 +1568,12 @@ damage_templates.thunderhammer_m2_light_active = {
 	armor_damage_modifier = hammer_smiter_light_default_am,
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.65,
 			armor_damage_modifier = hammer_smiter_light_active_am,
 			power_distribution = {
 				attack = {
-					250,
-					500,
+					300,
+					600,
 				},
 				impact = {
 					25,
@@ -1293,8 +1581,8 @@ damage_templates.thunderhammer_m2_light_active = {
 				},
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.75,
-				[armor_types.armored] = 0.75,
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
 				[armor_types.resistant] = 0.75,
 				[armor_types.player] = 0.1,
 				[armor_types.berserker] = 0.75,

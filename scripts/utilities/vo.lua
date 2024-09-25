@@ -5,7 +5,7 @@ local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
-local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
+local VoQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local Vo = {}
 local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event, _get_player_level, _can_interact, _get_interaction_level_req
 local Interactions = {
@@ -159,7 +159,7 @@ end
 Vo.player_interaction_vo_event = function (interactor_unit, interactee_unit, interaction_vo_event)
 	local interactor_ext = ScriptUnit.has_extension(interactor_unit, "dialogue_system")
 	local interactee_ext = ScriptUnit.has_extension(interactee_unit, "dialogue_system")
-	local query_concept = VOQueryConstants.concepts.interaction_vo
+	local query_concept = VoQueryConstants.concepts.interaction_vo
 
 	if interactor_ext == nil or interactee_ext == nil or interaction_vo_event == nil then
 		return
@@ -639,8 +639,24 @@ Vo.heard_enemy_event = function (unit, enemy_tag, enemy_unit, distance)
 	end
 end
 
-Vo.generic_mission_vo_event = function (unit, trigger_id)
+Vo.generic_mission_vo_event = function (unit, trigger_id, skip_disabled_check)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+	local event_name = "generic_mission_vo"
+	local result = skip_disabled_check or _can_player_trigger_vo(dialogue_extension, event_name)
+
+	if result and dialogue_extension then
+		local event_data = dialogue_extension:get_event_data_payload()
+
+		event_data.trigger_id = trigger_id
+
+		dialogue_extension:trigger_dialogue_event(event_name, event_data)
+	end
+end
+
+Vo.generic_mission_vo_event_closest_friend = function (unit, trigger_id)
+	local unit_position = Unit.local_position(unit, 1)
+	local closest_unit = _get_closest_player_except(unit_position, unit)
+	local dialogue_extension = ScriptUnit.has_extension(closest_unit, "dialogue_system")
 	local event_name = "generic_mission_vo"
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
@@ -1148,9 +1164,9 @@ Vo.on_demand_vo_event = function (unit, concept, trigger_id, target_unit)
 		local event_data = dialogue_extension:get_event_data_payload()
 		local event_name = concept
 
-		if concept == VOQueryConstants.concepts.on_demand_com_wheel then
+		if concept == VoQueryConstants.concepts.on_demand_com_wheel then
 			event_data.trigger_id = trigger_id
-		elseif concept == VOQueryConstants.concepts.on_demand_vo_tag_enemy then
+		elseif concept == VoQueryConstants.concepts.on_demand_vo_tag_enemy then
 			local target_extension = ScriptUnit.has_extension(target_unit, "dialogue_system")
 
 			if target_extension then
@@ -1164,7 +1180,7 @@ Vo.on_demand_vo_event = function (unit, concept, trigger_id, target_unit)
 			else
 				event_data.enemy_tag = trigger_id
 			end
-		elseif concept == VOQueryConstants.concepts.on_demand_vo_tag_item then
+		elseif concept == VoQueryConstants.concepts.on_demand_vo_tag_item then
 			event_data.item_tag = trigger_id
 		end
 
@@ -1241,7 +1257,7 @@ Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_op
 		if player_ext then
 			local can_interact = _can_interact(dialogue_extension, local_player_unit)
 
-			if not can_interact then
+			if not can_interact and wwise_route_key == 19 then
 				return
 			end
 		end
@@ -1613,6 +1629,8 @@ function _can_player_trigger_vo(dialogue_extension, concept_name)
 	elseif concept_name == "pounced_by_special_attack" and context_data.is_pounced_down == "true" then
 		return true
 	elseif concept_name == "pounced_by_special_attack" and context_data.is_netted == "true" then
+		return true
+	elseif concept_name == "pounced_by_special_attack" and context_data.is_grabbed == "true" then
 		return true
 	elseif concept_name == "friends_close" and context_data.is_hogtied == "true" then
 		return false

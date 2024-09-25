@@ -12,6 +12,7 @@ local CLOSE_RANGE_RANGED = DamageSettings.ranged_close
 local CLOSE_RANGE_RANGED_SQUARED = CLOSE_RANGE_RANGED * CLOSE_RANGE_RANGED
 local ON_SHOOT_HIT_MULTIPLE_THRESHOLD = 2
 local CheckProcFunctions = {}
+local _is_within_close_distance
 
 CheckProcFunctions.all = function (...)
 	local conditions = {
@@ -123,6 +124,18 @@ CheckProcFunctions.on_elite_or_special_kill = function (params, template_data, t
 	end
 
 	if not params.tags.elite and not params.tags.special then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_elite_or_special_or_monster_hit = function (params, template_data, template_context, t)
+	if not params.tags then
+		return false
+	end
+
+	if not params.tags.elite and not params.tags.special and not params.tags.monster then
 		return false
 	end
 
@@ -281,20 +294,19 @@ CheckProcFunctions.on_ranged_close_kill = function (params, template_data, templ
 		return false
 	end
 
-	local hit_world_position_box = params.hit_world_position
-	local hit_world_position = hit_world_position_box and hit_world_position_box:unbox()
+	return _is_within_close_distance(params, template_data, template_context, t)
+end
 
-	if not hit_world_position then
+CheckProcFunctions.on_explosion_close_kill = function (params, template_data, template_context, t)
+	if params.attack_result ~= attack_results.died then
 		return false
 	end
 
-	local attacking_unit = params.attacking_unit
-	local close_range_squared = CLOSE_RANGE_RANGED_SQUARED
-	local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
-	local distance_squared = Vector3.distance_squared(hit_world_position, attacking_pos)
-	local is_within_distance = distance_squared <= close_range_squared
+	if params.attack_type ~= attack_types.explosion then
+		return false
+	end
 
-	return is_within_distance
+	return _is_within_close_distance(params, template_data, template_context, t)
 end
 
 CheckProcFunctions.on_block_broken = function (params, template_data, template_context, t)
@@ -323,6 +335,14 @@ end
 
 CheckProcFunctions.on_push_hit = function (params, template_data, template_context, t)
 	return params.attack_type == attack_types.push
+end
+
+CheckProcFunctions.on_buff_hit = function (params, template_data, template_context, t)
+	return params.attack_type == attack_types.buff
+end
+
+CheckProcFunctions.on_non_buff_hit = function (params, template_data, template_context, t)
+	return not CheckProcFunctions.on_buff_hit(params, template_data, template_context, t)
 end
 
 CheckProcFunctions.on_melee_weapon_special_hit = function (params, template_data, template_context, t)
@@ -403,6 +423,10 @@ CheckProcFunctions.on_ranged_weakspot_kills = function (params, template_data, t
 	return CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) and CheckProcFunctions.on_ranged_kill(params, template_data, template_context, t)
 end
 
+CheckProcFunctions.on_melee_weakspot_kills = function (params, template_data, template_context, t)
+	return CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) and CheckProcFunctions.on_melee_kill(params, template_data, template_context, t)
+end
+
 CheckProcFunctions.on_alternative_fire_hit = function (params, template_data, template_context, t)
 	return params.alternative_fire
 end
@@ -469,6 +493,10 @@ CheckProcFunctions.on_elite_hit = function (params, template_data, template_cont
 	end
 
 	return true
+end
+
+CheckProcFunctions.hit_has_charge_level = function (params, template_data, template_context, t)
+	return params.charge_level ~= nil
 end
 
 CheckProcFunctions.would_die = function (params, template_data, template_context, t)
@@ -545,6 +573,23 @@ CheckProcFunctions.on_item_match = function (params, template_data, template_con
 	local is_match = attacking_item_name == buff_item_name
 
 	return is_match
+end
+
+function _is_within_close_distance(params, template_data, template_context, t)
+	local hit_world_position_box = params.hit_world_position
+	local hit_world_position = hit_world_position_box and hit_world_position_box:unbox()
+
+	if not hit_world_position then
+		return false
+	end
+
+	local attacking_unit = params.attacking_unit
+	local close_range_squared = CLOSE_RANGE_RANGED_SQUARED
+	local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
+	local distance_squared = Vector3.distance_squared(hit_world_position, attacking_pos)
+	local is_within_distance = distance_squared <= close_range_squared
+
+	return is_within_distance
 end
 
 return CheckProcFunctions

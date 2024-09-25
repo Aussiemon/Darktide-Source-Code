@@ -100,6 +100,15 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 			local skip_wield_action = true
 
 			PlayerUnitVisualLoadout.wield_slot(slot_to_wield, player_unit, t, skip_wield_action)
+
+			local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+			local param_table = buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.previously_wielded_slot = wielded_slot
+
+				buff_extension:add_proc_event(proc_events.on_wield_ranged, param_table)
+			end
 		end
 	end
 

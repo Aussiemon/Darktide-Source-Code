@@ -35,8 +35,8 @@ local talent_settings = {
 			damage_vs_suppressed = 0.2,
 		},
 		mixed_1 = {
-			damage_after_reload = 0.12,
-			duration = 6,
+			damage_after_reload = 0.15,
+			duration = 8,
 		},
 		mixed_2 = {
 			percent_toughness_ranged_kill = 0.02,
@@ -46,7 +46,7 @@ local talent_settings = {
 		},
 		offensive_1 = {
 			crit_chance_on_kill = 0.01,
-			duration = 6,
+			duration = 10,
 			max_stacks = 8,
 		},
 		offensive_2 = {
@@ -64,7 +64,7 @@ local talent_settings = {
 			move_speed_on_ranged_kill = 0.2,
 		},
 		defensive_3 = {
-			braced_toughness_regen = 0.03,
+			braced_toughness_regen = 0.05,
 		},
 		coop_1 = {
 			team_max_ammo_increase = 0.15,
@@ -152,11 +152,11 @@ local talent_settings = {
 			on_lunge_start_proc_chance = 1,
 		},
 		coop_3 = {
-			cooldown = 0.05,
+			cooldown = 0.04,
 			damage_taken_multiplier = 0.5,
 		},
 		defensive_1 = {
-			max = 0.4,
+			max = 0.52,
 			max_stacks = 6,
 			min = 1,
 			time = 1,
@@ -167,7 +167,7 @@ local talent_settings = {
 			min = 1,
 		},
 		defensive_3 = {
-			increased_toughness_health_threshold = 0.25,
+			increased_toughness_health_threshold = 0.33,
 			sprinting_cost_multiplier = 0.8,
 			toughness_replenish_modifier = 1,
 		},

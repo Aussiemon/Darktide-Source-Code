@@ -665,7 +665,7 @@ local widget_definitions = {
 					2,
 				},
 			},
-			visiblity_function = function (content, style)
+			visibility_function = function (content, style)
 				return not not content.top_frame_extra
 			end,
 		},

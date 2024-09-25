@@ -1,5 +1,13 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_background_view/inventory_background_view_settings.lua
 
+local discard_items_popup_window_size = {
+	800,
+	800,
+}
+local discard_items_popup_grid_size = {
+	discard_items_popup_window_size[1] - 40,
+	discard_items_popup_window_size[2] - 100,
+}
 local inventory_background_view = {
 	default_slot = "slot_primary",
 	level_name = "content/levels/ui/inventory/inventory",
@@ -12,6 +20,8 @@ local inventory_background_view = {
 	viewport_type = "default",
 	world_layer = 2,
 	world_name = "ui_inventory",
+	discard_items_popup_window_size = discard_items_popup_window_size,
+	discard_items_popup_grid_size = discard_items_popup_grid_size,
 	allowed_slots = {
 		"slot_primary",
 		"slot_secondary",

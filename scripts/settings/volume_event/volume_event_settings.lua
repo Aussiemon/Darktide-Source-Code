@@ -16,6 +16,12 @@ local updates_per_frame = {
 	[LEVEL_PROP] = 10,
 }
 local volume_type_events = {
+	["content/volume_types/minion_trigger"] = {
+		[MINION] = {
+			invert_volume = false,
+			func = VolumeEventFunctions.trigger,
+		},
+	},
 	["content/volume_types/minion_instakill_no_cost"] = {
 		[MINION] = {
 			invert_volume = false,

@@ -140,12 +140,6 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 
 				fx_extension:trigger_exclusive_wwise_event(hit_reaction_sound_event)
 			end
-
-			local vo_event = action_settings.vo_event
-
-			if vo_event then
-				Vo.on_demand_vo_event(target_unit, "on_demand_com_wheel", vo_event)
-			end
 		end
 	end
 

@@ -286,63 +286,85 @@ local text_input_base = {
 	{
 		pass_type = "logic",
 		value = function (pass, ui_renderer, ui_style, content, position, size)
-			if PLATFORM ~= "xbs" then
-				return
-			end
+			if PLATFORM == "xbs" then
+				local hotspot = content.hotspot
 
-			local hotspot = content.hotspot
+				if hotspot.on_pressed then
+					local is_writing = not content.is_writing
 
-			if hotspot.on_pressed then
-				local is_writing = not content.is_writing
+					if is_writing then
+						local title = content.virtual_keyboard_title or content.placeholder_text
+						local description = content.virtual_keyboard_description or ""
+						local input_text = content.input_text or ""
 
-				if is_writing then
-					local title = content.virtual_keyboard_title or content.placeholder_text
-					local description = content.virtual_keyboard_description or ""
-					local input_text = content.input_text or ""
+						content.input_text = ""
+						content.selected_text = input_text
 
-					content.input_text = ""
-					content.selected_text = input_text
+						local max_length = content.max_length
+						local x_game_ui = XGameUI.new_block()
 
-					local max_length = content.max_length
-					local x_game_ui = XGameUI.new_block()
+						content.x_async_block = x_game_ui
 
-					content.x_async_block = x_game_ui
+						XGameUI.show_text_entry_async(x_game_ui, title, description, input_text, "default", max_length)
 
-					XGameUI.show_text_entry_async(x_game_ui, title, description, input_text, "default", max_length)
+						local virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui)
 
-					local virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui)
+						virtual_keyboard_promise:next(function (async_block)
+							local new_input_text = XGameUI.resolve_text_entry(async_block)
+							local last_char = string.sub(new_input_text, #new_input_text)
 
-					virtual_keyboard_promise:next(function (async_block)
-						local new_input_text = XGameUI.resolve_text_entry(async_block)
-						local last_char = string.sub(new_input_text, #new_input_text)
+							if last_char == "\x00" then
+								new_input_text = string.sub(new_input_text, 1, #new_input_text - 1)
+							end
 
-						if last_char == "\x00" then
-							new_input_text = string.sub(new_input_text, 1, #new_input_text - 1)
-						end
+							content.input_text = new_input_text
+							content.caret_position = _utf8_string_length(new_input_text)
+							content.selected_text = nil
+							content._selection_start = nil
+							content._selection_end = nil
+							content.is_writing = false
+							content.x_async_block = nil
+						end, function (hr_table)
+							local hr = hr_table[1]
 
-						content.input_text = new_input_text
-						content.caret_position = _utf8_string_length(new_input_text)
-						content.selected_text = nil
-						content._selection_start = nil
-						content._selection_end = nil
-						content.is_writing = false
-						content.x_async_block = nil
-					end, function (hr_table)
-						local hr = hr_table[1]
+							if hr ~= HRESULT.E_ABORT then
+								Log.warning("TextInputPassTemplates", "XBox virtual keyboard closed with 0x%x", hr)
+							end
 
-						if hr ~= HRESULT.E_ABORT then
-							Log.warning("TextInputPassTemplates", "XBox virtual keyboard closed with 0x%x", hr)
-						end
+							content.selected_text = nil
+							content._selection_start = nil
+							content._selection_end = nil
+							content.is_writing = false
+							content.x_async_block = nil
+						end)
+					end
 
-						content.selected_text = nil
-						content._selection_start = nil
-						content._selection_end = nil
-						content.is_writing = false
-						content.x_async_block = nil
-					end)
+					content.is_writing = is_writing
 				end
+			elseif PLATFORM == "ps5" then
+				local hotspot = content.hotspot
 
-				content.is_writing = is_writing
+				if PS5ImeDialog.is_finished() then
+					local result, text = PS5ImeDialog.close()
+
+					content.input_text = result == PS5ImeDialog.END_STATUS_OK and text or content.input_text
+				elseif hotspot.on_pressed then
+					local is_writing = not content.is_writing
+
+					if is_writing and not PS5ImeDialog.is_showing() then
+						local title = content.virtual_keyboard_title or content.placeholder_text
+						local description = content.virtual_keyboard_description or ""
+						local input_text = content.input_text or ""
+						local max_length = content.max_length
+						local keyboard_options = {
+							title = title,
+							placeholder = input_text,
+							max_length = max_length,
+						}
+
+						PS5ImeDialog.show(keyboard_options)
+					end
+				end
 			end
 		end,
 	},

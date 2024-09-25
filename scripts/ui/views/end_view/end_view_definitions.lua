@@ -1,8 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/end_view/end_view_definitions.lua
 
 local ColorUtilities = require("scripts/utilities/ui/colors")
-local DefaultPassTemplates = require("scripts/ui/pass_templates/default_pass_templates")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewStyles = require("scripts/ui/views/end_view/end_view_styles")
 local _color_lerp = ColorUtilities.color_lerp

@@ -158,6 +158,20 @@ SocialLocal.suggested_names_by_archetype = function (self, archetype)
 	return promise
 end
 
+SocialLocal.fetch_group_finder_tags = function (self)
+	local promise = Promise.delay(2)
+
+	if emulate_backend_failure then
+		promise:reject({})
+	else
+		local response_data = {
+			tags = {},
+		}
+
+		promise:resolve(response_data)
+	end
+end
+
 implements(SocialLocal, Interface)
 
 return SocialLocal

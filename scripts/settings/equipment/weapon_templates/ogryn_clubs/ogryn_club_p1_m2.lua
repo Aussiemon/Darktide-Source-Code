@@ -34,6 +34,7 @@ local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
+weapon_template.action_inputs.grenade_ability.buffer_time = 0.4
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
 
 local hit_zone_priority = {
@@ -225,13 +226,16 @@ weapon_template.actions = {
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability",
+				chain_time = 0.4,
 			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
+					chain_time = 0.8,
 				},
 				{
 					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8,
 				},
 			},
 			wield = {
@@ -274,10 +278,6 @@ weapon_template.actions = {
 				0,
 			},
 		},
-		time_scale_stat_buffs = {
-			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
-		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_special,
 		damage_type = damage_types.ogryn_shovel_fold_special,
 		herding_template = HerdingTemplates.smiter_down,
@@ -285,6 +285,10 @@ weapon_template.actions = {
 		action_condition_func = function (action_settings, condition_func_params, used_input)
 			return condition_func_params.inventory_slot_component.special_active
 		end,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_left_heavy_special = {
 		action_priority = 2,
@@ -329,13 +333,16 @@ weapon_template.actions = {
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability",
+				chain_time = 0.4,
 			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
+					chain_time = 0.8,
 				},
 				{
 					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8,
 				},
 			},
 			wield = {
@@ -385,6 +392,10 @@ weapon_template.actions = {
 		action_condition_func = function (action_settings, condition_func_params, used_input)
 			return condition_func_params.inventory_slot_component.special_active
 		end,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_left = {
 		action_priority = 1,
@@ -549,6 +560,10 @@ weapon_template.actions = {
 		damage_type = damage_types.shovel_heavy,
 		herding_template = HerdingTemplates.linesman_left_heavy,
 		wounds_shape = wounds_shapes.vertical_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_left_heavy = {
 		allowed_during_sprint = true,
@@ -633,6 +648,10 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.ogryn_shovel_heavy_smiter,
 		damage_type = damage_types.shovel_heavy,
 		wounds_shape = wounds_shapes.vertical_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_right = {
 		action_priority = 2,
@@ -797,6 +816,10 @@ weapon_template.actions = {
 		damage_type = damage_types.shovel_heavy,
 		herding_template = HerdingTemplates.linesman_right_heavy,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_right_heavy = {
 		allowed_during_sprint = true,
@@ -882,6 +905,10 @@ weapon_template.actions = {
 		damage_type = damage_types.shovel_heavy,
 		herding_template = HerdingTemplates.linesman_right_heavy,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_left_2 = {
 		anim_end_event = "attack_finished",
@@ -1039,6 +1066,10 @@ weapon_template.actions = {
 		damage_type = damage_types.shovel_heavy,
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_right_2 = {
 		action_priority = 2,
@@ -1204,6 +1235,10 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 		damage_type = damage_types.shovel_heavy,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_special_activate = {
 		activate_anim_event = "fold",
@@ -1301,6 +1336,7 @@ weapon_template.actions = {
 	},
 	action_light_pushfollow = {
 		action_priority = 1,
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_down_right",
 		anim_event_3p = "attack_swing_down_slow",
@@ -1312,7 +1348,6 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		range_mod = 1.25,
-		sprint_requires_press_to_interrupt = "true",
 		total_time = 2,
 		weapon_handling_template = "time_scale_1_2",
 		action_movement_curve = {
@@ -1386,6 +1421,10 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_smiter,
 		damage_type = damage_types.shovel_heavy,
 		wounds_shape = wounds_shapes.vertical_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_push = {
 		anim_event = "attack_push",
@@ -1482,19 +1521,30 @@ weapon_template.weapon_box = {
 	0.7,
 	0.02,
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.2
 weapon_template.max_first_person_anim_movement_speed = 4.8
 weapon_template.has_first_person_dodge_events = true
 weapon_template.damage_window_start_sweep_trail_offset = -0.3
 weapon_template.damage_window_end_sweep_trail_offset = 0.1
 weapon_template.ammo_template = "no_ammo"
-weapon_template.allow_sprinting_with_special = true
-weapon_template.weapon_special_class = "WeaponSpeciaShovels"
+weapon_template.weapon_special_class = "WeaponSpecialShovels"
 weapon_template.weapon_special_tweak_data = {
 	deactivation_animation = "deactivate_automatic",
 	deactivation_animation_delay = 0.3,
+	set_inactive_func = function (inventory_slot_component, reason, tweak_data)
+		local disable_special_active = reason == "max_activations" or reason == "manual_toggle"
+
+		if disable_special_active then
+			inventory_slot_component.special_active = false
+			inventory_slot_component.num_special_charges = 0
+		end
+
+		return true
+	end,
 }
 weapon_template.fx_sources = {
 	_block = "fx_block",
@@ -1819,6 +1869,24 @@ weapon_template.displayed_attacks = {
 		desc = "loc_weapon_special_mode_switch_foldable_desc",
 		display_name = "loc_weapon_special_mode_switch",
 		type = "activate",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "tank",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "smiter",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "switch_mode",
+		icon = "activate",
 	},
 }
 weapon_template.special_action_name = "action_special_activate"

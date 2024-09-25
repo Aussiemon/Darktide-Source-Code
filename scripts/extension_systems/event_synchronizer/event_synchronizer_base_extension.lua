@@ -27,6 +27,12 @@ EventSynchronizerBaseExtension.register_connected_units = function (self, stage_
 	return stage_units
 end
 
+EventSynchronizerBaseExtension.objective_started = function (self)
+	if self._auto_start then
+		self:start_event()
+	end
+end
+
 EventSynchronizerBaseExtension.start_event = function (self)
 	if not self._mission_active then
 		self._mission_active = true
@@ -54,10 +60,6 @@ EventSynchronizerBaseExtension.finished_event = function (self)
 	self._finished = true
 
 	Unit.flow_event(self._unit, "lua_event_finished")
-end
-
-EventSynchronizerBaseExtension.auto_start = function (self)
-	return self._auto_start
 end
 
 EventSynchronizerBaseExtension.seeds = function (self)

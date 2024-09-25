@@ -258,6 +258,11 @@ BaseView.on_enter = function (self)
 	end
 
 	Managers.telemetry_events:open_view(self.view_name, self._hub_interaction, self._telemetry_id)
+	Profiler.send_message(string.format("[UIView] on_enter '%s'", self.view_name))
+end
+
+BaseView.supports_changeable_context = function (self)
+	return false
 end
 
 BaseView.character_level = function (self)
@@ -270,6 +275,7 @@ end
 
 BaseView.on_exit = function (self)
 	self:_unregister_events()
+	Profiler.send_message(string.format("[UIView] on_exit '%s'", self.view_name))
 
 	if Managers.telemetry_events then
 		Managers.telemetry_events:close_view(self.view_name)
@@ -587,13 +593,30 @@ BaseView._text_size = function (self, text, font_type, font_size, optional_size,
 	return UIRenderer.text_size(ui_renderer, text, font_type, font_size, optional_size, options)
 end
 
+local _temp_optional_size = {
+	0,
+	0,
+}
+
 BaseView._text_size_for_style = function (self, text, text_style, optional_size)
 	optional_size = optional_size or text_style.size
+
+	if optional_size then
+		_temp_optional_size[1] = optional_size[1]
+		_temp_optional_size[2] = optional_size[2]
+
+		local size_addition = text_style.size_addition
+
+		if size_addition then
+			_temp_optional_size[1] = _temp_optional_size[1] + size_addition[1]
+			_temp_optional_size[2] = _temp_optional_size[2] + size_addition[2]
+		end
+	end
 
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local ui_renderer = self._ui_renderer
 
-	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, optional_size, text_options)
+	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, optional_size and _temp_optional_size, text_options)
 end
 
 BaseView._play_sound = function (self, event_name)

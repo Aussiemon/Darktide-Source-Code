@@ -495,8 +495,10 @@ weapon_template.conditional_state_to_action_input = {
 		input_name = "reload",
 	},
 }
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {

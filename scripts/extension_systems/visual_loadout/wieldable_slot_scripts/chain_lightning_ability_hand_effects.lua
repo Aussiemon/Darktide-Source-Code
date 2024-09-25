@@ -3,29 +3,31 @@
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
 
 local Action = require("scripts/utilities/weapon/action")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ChainLightningAbilityHandEffects = class("ChainLightningAbilityHandEffects", "ChargeEffects")
-local ARM_CAGE_VFX = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_hands_charge"
-local FINGER_CHARGE_VFX = "content/fx/particles/abilities/chainlightning/chainlightning_fingertips"
+local PARTICLE_ALIAS_ARM_CAGE = "psyker_hand_effects_arm_cage"
+local PARTICLE_ALIAS_FINGERS = "psyker_hand_effects_fingers"
 local PARTICLE_VARIABLE_NAME = "length"
 local DEFAULT_HAND = "both"
 local CAGE_FX_SOURCE_LOOKUP = {
 	right = {
-		elbow = "_right_elbow",
-		hand = "_right_hand",
+		elbow = "fx_right_elbow",
+		hand = "fx_right_hand",
 	},
 	left = {
-		elbow = "_left_elbow",
-		hand = "_left_hand",
+		elbow = "fx_left_elbow",
+		hand = "fx_left_hand",
 	},
 }
 local CHARGE_FX_TARGET_LOOKUP = "_charge"
 local CHARGE_FX_SOURCE_LOOKUP = {
-	index = "_right_finger_tip_index",
-	middle = "_right_finger_tip_middle",
-	pinky = "_right_finger_tip_pinky",
-	ring = "_right_finger_tip_ring",
-	thumb = "_right_finger_tip_thumb",
+	index = "fx_right_finger_tip_index",
+	middle = "fx_right_finger_tip_middle",
+	pinky = "fx_right_finger_tip_pinky",
+	ring = "fx_right_finger_tip_ring",
+	thumb = "fx_right_finger_tip_thumb",
 }
+local _vfx_external_properties = {}
 
 ChainLightningAbilityHandEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	ChainLightningAbilityHandEffects.super.init(self, context, slot, weapon_template, fx_sources)
@@ -48,7 +50,8 @@ ChainLightningAbilityHandEffects.init = function (self, context, slot, weapon_te
 
 	local owner_unit = context.owner_unit
 
-	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+	self._fx_extension = context.fx_extension
+	self._visual_loadout_extension = context.visual_loadout_extension
 
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
@@ -141,21 +144,24 @@ end
 ChainLightningAbilityHandEffects._update_cage_vfx = function (self, t, fx_hand)
 	local world = self._world
 	local fx_extension = self._fx_extension
-	local fx_sources = self._fx_sources
 	local particle_id = self._cage_particle_ids[fx_hand]
 
 	if not particle_id then
-		particle_id = World.create_particles(world, ARM_CAGE_VFX, Vector3.zero())
+		local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(PARTICLE_ALIAS_ARM_CAGE, _vfx_external_properties)
 
-		local in_first_person = self._is_in_first_person
+		if resolved then
+			particle_id = World.create_particles(world, effect_name, Vector3.zero())
 
-		if in_first_person then
-			World.set_particles_use_custom_fov(world, particle_id, true)
+			local in_first_person = self._is_in_first_person
+
+			if in_first_person then
+				World.set_particles_use_custom_fov(world, particle_id, true)
+			end
 		end
 	end
 
-	local source_unit, source_node = fx_extension:vfx_spawner_unit_and_node(fx_sources[CAGE_FX_SOURCE_LOOKUP[fx_hand].hand])
-	local target_unit, target_node = fx_extension:vfx_spawner_unit_and_node(fx_sources[CAGE_FX_SOURCE_LOOKUP[fx_hand].elbow])
+	local source_unit, source_node = fx_extension:vfx_spawner_unit_and_node(CAGE_FX_SOURCE_LOOKUP[fx_hand].hand)
+	local target_unit, target_node = fx_extension:vfx_spawner_unit_and_node(CAGE_FX_SOURCE_LOOKUP[fx_hand].elbow)
 	local source_pos = Unit.world_position(source_unit, source_node)
 	local target_pos = Unit.world_position(target_unit, target_node)
 	local direction = target_pos - source_pos
@@ -178,12 +184,14 @@ ChainLightningAbilityHandEffects._update_charge_vfx = function (self, t)
 	local fx_extension = self._fx_extension
 	local fx_sources = self._fx_sources
 	local target_unit, target_node = fx_extension:vfx_spawner_unit_and_node(fx_sources[CHARGE_FX_TARGET_LOOKUP])
+	local visual_loadout_extension = self._visual_loadout_extension
 
 	for name, fx_source_name in pairs(CHARGE_FX_SOURCE_LOOKUP) do
 		local particle_id = self._charge_particle_ids[name]
+		local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(PARTICLE_ALIAS_FINGERS, _vfx_external_properties)
 
-		if not particle_id then
-			particle_id = World.create_particles(world, FINGER_CHARGE_VFX, Vector3.zero())
+		if not particle_id and resolved then
+			particle_id = World.create_particles(world, effect_name, Vector3.zero())
 
 			local in_first_person = self._is_in_first_person
 
@@ -192,14 +200,14 @@ ChainLightningAbilityHandEffects._update_charge_vfx = function (self, t)
 			end
 		end
 
-		local source_unit, source_node = fx_extension:vfx_spawner_unit_and_node(fx_sources[fx_source_name])
+		local source_unit, source_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
 		local source_pos = Unit.world_position(source_unit, source_node)
 		local target_pos = Unit.world_position(target_unit, target_node)
 		local line = target_pos - source_pos
 		local direction, length = Vector3.direction_length(line)
 		local rotation = Quaternion.look(direction)
 		local particle_length = Vector3(length, length, length)
-		local length_variable_index = World.find_particles_variable(world, FINGER_CHARGE_VFX, PARTICLE_VARIABLE_NAME)
+		local length_variable_index = World.find_particles_variable(world, effect_name, PARTICLE_VARIABLE_NAME)
 
 		World.set_particles_variable(world, particle_id, length_variable_index, particle_length)
 		World.move_particles(world, particle_id, source_pos, rotation)
@@ -246,5 +254,7 @@ ChainLightningAbilityHandEffects._charge_level = function (self, t)
 
 	return jump_charge
 end
+
+implements(ChainLightningAbilityHandEffects, WieldableSlotScriptInterface)
 
 return ChainLightningAbilityHandEffects

@@ -1,17 +1,17 @@
 ﻿-- chunkname: @scripts/managers/progression/progression_manager.lua
 
 local BackendInterface = require("scripts/backend/backend_interface")
+local DummySessionReport = require("scripts/managers/progression/dummy_session_report")
 local EndPlayerViewAnimations = require("scripts/ui/views/end_player_view/end_player_view_animations")
 local EndPlayerViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
-local DummySessionReport = require("scripts/managers/progression/dummy_session_report")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Mastery = require("scripts/utilities/mastery")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
-local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local Progression = require("scripts/backend/progression")
 local Promise = require("scripts/foundation/utilities/promise")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
 
 local function _info(...)
 	Log.info("ProgressionManager", ...)
@@ -265,7 +265,16 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 
 	local credits_reward = self:_get_credits_reward(account_data.missionRewards)
 
+	self._session_report.character.mastery_rewards = self:_get_mastery_rewards(account_data)
 	self._session_report.credits_reward = credits_reward
+
+	if not self._session_report.character.mastery_rewards and not self._session_report_is_dummy then
+		local dummy_session_report = DummySessionReport.fetch_session_report(player:account_id())
+		local dummy_account_data = dummy_session_report.team.participants[1]
+		local dummy_mastery_rewards = self:_get_mastery_rewards(account_data)
+
+		self._session_report.character.mastery_rewards = dummy_mastery_rewards
+	end
 
 	if account_wallets then
 		self._session_report.character.wallets = account_wallets
@@ -282,6 +291,42 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 
 	table.insert(promise_list, account_level_up_promise)
 	Promise.all(unpack(promise_list)):next(function ()
+		if GameParameters.testify or self._session_report_is_dummy then
+			return Promise.resolved()
+		end
+
+		local promises = {}
+
+		for i = 1, #self._session_report.character.mastery_rewards do
+			local mastery_reward = self._session_report.character.mastery_rewards[i]
+			local mastery_data = Managers.data_service.mastery:get_mastery(mastery_reward.trackId)
+
+			table.insert(promises, mastery_data)
+		end
+
+		return Promise.all(unpack(promises)):next(function (masteries_data)
+			local claim_promises = {}
+
+			for i = 1, #masteries_data do
+				local mastery_data = masteries_data[i]
+
+				if mastery_data then
+					local exp_per_level = Mastery.get_weapon_xp_per_level(mastery_data)
+					local mastery_reward = self._session_report.character.mastery_rewards[i]
+
+					mastery_reward.exp_per_level = exp_per_level
+
+					local gained_xp = mastery_reward.gainedXp
+					local start_xp = mastery_reward.startXp
+					local end_xp = start_xp + gained_xp
+
+					claim_promises[#claim_promises + 1] = Managers.data_service.mastery:claim_levels_by_new_exp(mastery_data, end_xp)
+				end
+			end
+
+			return Promise.all(unpack(claim_promises))
+		end)
+	end):next(function ()
 		if self._session_report_is_dummy then
 			self._session_report_state = SESSION_REPORT_STATES.success
 
@@ -318,7 +363,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			for i = 1, #item_rewards do
 				local reward = item_rewards[i]
 
-				ItemUtils.mark_item_id_as_new(reward)
+				Items.mark_item_id_as_new(reward)
 			end
 		end
 	end):catch(function (errors)
@@ -340,10 +385,47 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			for i = 1, #item_rewards do
 				local reward = item_rewards[i]
 
-				ItemUtils.mark_item_id_as_new(reward)
+				Items.mark_item_id_as_new(reward)
 			end
 		end
 	end)
+end
+
+ProgressionManager._get_mastery_rewards = function (self, account_data)
+	local reward_cards = account_data.rewardCards
+	local weapons = {}
+
+	if not reward_cards then
+		return weapons
+	end
+
+	for i = 1, #reward_cards do
+		local reward_card = reward_cards[i]
+
+		if reward_card.kind == "track" then
+			local rewards = reward_card.rewards
+
+			for f = 1, #rewards do
+				local reward = rewards[f]
+
+				if reward.trackType == "mastery" then
+					local trackId = reward.trackId
+					local masteryId = reward.trackDetails and reward.trackDetails.mastery
+					local slot = reward.trackDetails and reward.trackDetails.slot
+
+					weapons[#weapons + 1] = {
+						weapon_slot = slot,
+						gainedXp = reward.reward.xp or 0,
+						startXp = reward.current.xp or 0,
+						trackId = trackId,
+						masteryId = masteryId,
+					}
+				end
+			end
+		end
+	end
+
+	return weapons
 end
 
 ProgressionManager._parse_wallets = function (self, wallets)

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_charge_venting_effects.lua
 
 local Action = require("scripts/utilities/weapon/action")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local WarpChargeVentingEffects = class("WarpChargeVentingEffects")
 local _start_vfx, _stop_vfx
 
@@ -170,5 +171,7 @@ function _stop_vfx(world, existing_particle_id)
 		World.destroy_particles(world, existing_particle_id)
 	end
 end
+
+implements(WarpChargeVentingEffects, WieldableSlotScriptInterface)
 
 return WarpChargeVentingEffects

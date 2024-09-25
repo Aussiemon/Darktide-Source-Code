@@ -316,10 +316,6 @@ local function _current_grenade_percentage(player_unit)
 	return remaining_grenade_charges / max_grenade_charges
 end
 
-local function lerp(a, b, t)
-	return a + (b - a) * t
-end
-
 local weights = {}
 local SLOT_POCKETABLE = "slot_pocketable"
 local SLOT_POCKETABLE_SMALL = "slot_pocketable_small"
@@ -376,8 +372,8 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		end
 	end
 
-	local pocketable_weight = lerp(RubberbandSettings.pocketable_weight.min, RubberbandSettings.pocketable_weight.max, pocketables_space / 4)
-	local pocketable_small_weight = lerp(RubberbandSettings.pocketable_small_weight.min, RubberbandSettings.pocketable_small_weight.max, pocketables_small_space / 4)
+	local pocketable_weight = math.lerp(RubberbandSettings.pocketable_weight.min, RubberbandSettings.pocketable_weight.max, pocketables_space / 4)
+	local pocketable_small_weight = math.lerp(RubberbandSettings.pocketable_small_weight.min, RubberbandSettings.pocketable_small_weight.max, pocketables_small_space / 4)
 	local min, max = unpack(RubberbandSettings.status_weight[distribution_type])
 	local block_distance = RubberbandSettings.special_block_distance
 	local block_distance_short = RubberbandSettings.special_block_distance_short
@@ -388,7 +384,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 	if remaining_ammo > 0 then
 		pool_size = remaining_ammo
-		weights[AMMO] = remaining_ammo / start_count.ammo * (RubberbandSettings.distribution_type_weight.ammo[distribution_type] or 1) * lerp(min, max, total_ammo / player_count)
+		weights[AMMO] = remaining_ammo / start_count.ammo * (RubberbandSettings.distribution_type_weight.ammo[distribution_type] or 1) * math.lerp(min, max, total_ammo / player_count)
 	else
 		weights[AMMO] = 0
 	end
@@ -396,9 +392,9 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 	local remaining_grenade = remaining.grenade or 0
 	local grenade_special_spawned = special_spawned.small_grenade
 
-	if remaining_grenade > 0 and (not grenade_special_spawned or percentage_through_level >= grenade_special_spawned + block_distance) then
+	if remaining_grenade > 0 and (not grenade_special_spawned or percentage_through_level >= grenade_special_spawned + block_distance_short) then
 		pool_size = pool_size + remaining_grenade
-		weights[GRENADE] = remaining_grenade / start_count.grenade * (RubberbandSettings.distribution_type_weight.grenade[distribution_type] or 1) * lerp(min, max, total_grenades / player_count)
+		weights[GRENADE] = remaining_grenade / start_count.grenade * (RubberbandSettings.distribution_type_weight.grenade[distribution_type] or 1) * math.lerp(min, max, total_grenades / player_count)
 	else
 		weights[GRENADE] = 0
 	end
@@ -410,7 +406,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 	if remaining_health > 0 and not medcrate_blocked_by_distance then
 		pool_size = pool_size + remaining_health
-		weights[HEALTH] = remaining_health / start_count.health * (RubberbandSettings.distribution_type_weight.health[distribution_type] or 1) * lerp(min, max, total_health / player_count) * pocketable_weight
+		weights[HEALTH] = remaining_health / start_count.health * (RubberbandSettings.distribution_type_weight.health[distribution_type] or 1) * math.lerp(min, max, total_health / player_count) * pocketable_weight
 	else
 		weights[HEALTH] = 0
 	end
@@ -423,7 +419,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 		local syringe_wounds_lerp = total_permanent_health / player_count
 
-		weights[WOUNDS] = remaining_wounds / start_count.wounds * (RubberbandSettings.distribution_type_weight.wounds[distribution_type] or 1) * lerp(min, max, syringe_wounds_lerp) * pocketable_small_weight
+		weights[WOUNDS] = remaining_wounds / start_count.wounds * (RubberbandSettings.distribution_type_weight.wounds[distribution_type] or 1) * math.lerp(min, max, syringe_wounds_lerp) * pocketable_small_weight
 	else
 		weights[WOUNDS] = 0
 	end
@@ -431,12 +427,12 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 	local remaining_stimms = remaining.stimms or 0
 	local syringe_stimm_special_spawned = special_spawned.syringe_stimm_pocketable
 
-	if remaining_stimms > 0 and (not syringe_stimm_special_spawned or percentage_through_level >= syringe_stimm_special_spawned + block_distance * 0.5) then
+	if remaining_stimms > 0 and (not syringe_stimm_special_spawned or percentage_through_level >= syringe_stimm_special_spawned + block_distance_short) then
 		pool_size = pool_size + remaining_stimms
 
 		local syring_stimms_lerp_value = 0.5
 
-		weights[STIMM] = remaining_stimms / start_count.stimms * (RubberbandSettings.distribution_type_weight.stimms[distribution_type] or 1) * lerp(min, max, syring_stimms_lerp_value) * pocketable_small_weight
+		weights[STIMM] = remaining_stimms / start_count.stimms * (RubberbandSettings.distribution_type_weight.stimms[distribution_type] or 1) * math.lerp(min, max, syring_stimms_lerp_value) * pocketable_small_weight
 	else
 		weights[STIMM] = 0
 	end

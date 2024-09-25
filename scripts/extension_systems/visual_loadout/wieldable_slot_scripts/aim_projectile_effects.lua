@@ -9,6 +9,7 @@ local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locom
 local ProjectileTrajectory = require("scripts/utilities/projectile_trajectory")
 local Recoil = require("scripts/utilities/recoil")
 local Sway = require("scripts/utilities/sway")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AimProjectileEffects = class("AimProjectileEffects")
 local MAX_NUMBER_OF_SPLINE = 2
 local MAX_INTEGRATION_STEPS = 100
@@ -475,5 +476,7 @@ function _calculate_arc_position(position, distance, total_distance, arc_offset,
 
 	return arc_position, final_offset
 end
+
+implements(AimProjectileEffects, WieldableSlotScriptInterface)
 
 return AimProjectileEffects

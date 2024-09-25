@@ -24,8 +24,10 @@ weapon_template.breed_anim_state_machine_1p = {
 weapon_template.keywords = {
 	"unarmed",
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.crosshair = {
 	crosshair_type = "ironsight",
 }

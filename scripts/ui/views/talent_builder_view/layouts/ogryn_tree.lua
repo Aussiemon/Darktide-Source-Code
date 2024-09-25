@@ -6,7 +6,7 @@ return {
 	name = "ogryn_tree",
 	node_points = 30,
 	talent_points = 30,
-	version = 14,
+	version = 15,
 	nodes = {
 		{
 			max_points = 1,
@@ -269,7 +269,7 @@ return {
 			y = 1640,
 			y_normalized = 0,
 			children = {
-				"node_a99253af-4828-4f63-94ab-80b17442865b",
+				"node_387adcbf-5a43-4004-b575-862acfb59183",
 			},
 			parents = {
 				"node_e0e49074-00b9-436a-869d-6fa7cf18e92c",
@@ -667,7 +667,7 @@ return {
 				"node_a48230be-6330-4e03-871c-0a3881828604",
 			},
 			parents = {
-				"node_a99253af-4828-4f63-94ab-80b17442865b",
+				"node_387adcbf-5a43-4004-b575-862acfb59183",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -689,7 +689,7 @@ return {
 				"node_239bc3d0-b8b9-4d46-bb25-92e73e7ee495",
 			},
 			parents = {
-				"node_387adcbf-5a43-4004-b575-862acfb59183",
+				"node_a99253af-4828-4f63-94ab-80b17442865b",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1062,18 +1062,16 @@ return {
 			talent = "base_toughness_damage_reduction_node_buff_medium_2",
 			type = "stat",
 			widget_name = "node_a99253af-4828-4f63-94ab-80b17442865b",
-			x = 1414,
+			x = 1415,
 			x_normalized = 0,
-			y = 1774,
+			y = 2074,
 			y_normalized = 0,
 			children = {
-				"node_083e96ae-e6c6-4eb1-9225-d28ee308abff",
-				"node_65087f4f-47f2-428b-8c72-a5120e1116ac",
-				"node_1af9b61a-cb71-4510-9513-f46c0d73a4b0",
+				"node_87ca6136-03a7-45da-96b2-7ebd9e04f36a",
 			},
 			parents = {
-				"node_eb153946-19bd-4e03-8dcd-7feb7be78e56",
-				"node_083e96ae-e6c6-4eb1-9225-d28ee308abff",
+				"node_a48230be-6330-4e03-871c-0a3881828604",
+				"node_3f0606c3-a70e-461e-a487-031ef17650ba",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1092,16 +1090,16 @@ return {
 			y = 1774,
 			y_normalized = 0,
 			children = {
-				"node_a99253af-4828-4f63-94ab-80b17442865b",
 				"node_da691fd8-8833-4a20-a249-1289c8c8ced0",
 				"node_60907136-b068-4b78-9e88-200e0abbf64f",
 				"node_439226f9-4126-4a4c-9a7e-58850b64f4c1",
+				"node_387adcbf-5a43-4004-b575-862acfb59183",
 			},
 			parents = {
 				"node_295a529f-6640-4b4e-aa0c-19f6cd527397",
 				"node_8d3ffc06-6e43-4888-bddb-adae115908fa",
 				"node_da691fd8-8833-4a20-a249-1289c8c8ced0",
-				"node_a99253af-4828-4f63-94ab-80b17442865b",
+				"node_387adcbf-5a43-4004-b575-862acfb59183",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1228,16 +1226,18 @@ return {
 			talent = "base_suppression_node_buff_low_1",
 			type = "stat",
 			widget_name = "node_387adcbf-5a43-4004-b575-862acfb59183",
-			x = 1414,
+			x = 1415,
 			x_normalized = 0,
-			y = 2074,
+			y = 1774,
 			y_normalized = 0,
 			children = {
-				"node_87ca6136-03a7-45da-96b2-7ebd9e04f36a",
+				"node_65087f4f-47f2-428b-8c72-a5120e1116ac",
+				"node_1af9b61a-cb71-4510-9513-f46c0d73a4b0",
+				"node_083e96ae-e6c6-4eb1-9225-d28ee308abff",
 			},
 			parents = {
-				"node_3f0606c3-a70e-461e-a487-031ef17650ba",
-				"node_a48230be-6330-4e03-871c-0a3881828604",
+				"node_eb153946-19bd-4e03-8dcd-7feb7be78e56",
+				"node_083e96ae-e6c6-4eb1-9225-d28ee308abff",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1256,7 +1256,7 @@ return {
 			y = 1985,
 			y_normalized = 0,
 			children = {
-				"node_387adcbf-5a43-4004-b575-862acfb59183",
+				"node_a99253af-4828-4f63-94ab-80b17442865b",
 			},
 			parents = {
 				"node_1af9b61a-cb71-4510-9513-f46c0d73a4b0",
@@ -1323,7 +1323,7 @@ return {
 			y = 1985,
 			y_normalized = 0,
 			children = {
-				"node_387adcbf-5a43-4004-b575-862acfb59183",
+				"node_a99253af-4828-4f63-94ab-80b17442865b",
 			},
 			parents = {
 				"node_65087f4f-47f2-428b-8c72-a5120e1116ac",
@@ -1348,7 +1348,7 @@ return {
 				"node_3f0606c3-a70e-461e-a487-031ef17650ba",
 			},
 			parents = {
-				"node_a99253af-4828-4f63-94ab-80b17442865b",
+				"node_387adcbf-5a43-4004-b575-862acfb59183",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1533,27 +1533,6 @@ return {
 			x = 1445,
 			x_normalized = 0,
 			y = 1295,
-			y_normalized = 0,
-			children = {},
-			parents = {
-				"node_3c6f836b-d499-4457-959c-8c519347d3c3",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				exclusive_group = "speshul_modifiers",
-				min_points_spent = 0,
-			},
-		},
-		{
-			icon = "content/ui/textures/icons/talents/ogryn/ogryn_special_ammo_movement",
-			max_points = 1,
-			talent = "ogryn_special_ammo_movement",
-			type = "ability_modifier",
-			widget_name = "node_0b0cb1c9-2a29-4b58-90f3-a7986ca8a672",
-			x = 1535,
-			x_normalized = 0,
-			y = 1115,
 			y_normalized = 0,
 			children = {},
 			parents = {

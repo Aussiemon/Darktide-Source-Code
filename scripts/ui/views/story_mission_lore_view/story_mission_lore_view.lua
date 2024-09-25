@@ -83,7 +83,7 @@ end
 StoryMissionLoreView._setup_lore_grid = function (self)
 	local definitions = self._definitions
 
-	if not self._summary_grid then
+	if not self._lore_grid then
 		local grid_scenegraph_id = "lore_grid"
 		local scenegraph_definition = definitions.scenegraph_definition
 		local grid_scenegraph = scenegraph_definition[grid_scenegraph_id]

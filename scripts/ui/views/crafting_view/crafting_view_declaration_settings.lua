@@ -15,7 +15,7 @@ local view_settings = {
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
-		"content/levels/ui/crafting_view/crafting_view",
+		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",
 	},
 	enter_sound_events = {
 		UISoundEvents.crafting_view_on_enter,

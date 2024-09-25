@@ -279,6 +279,16 @@ damage_profile_settings.single_cleave = {
 		2,
 	},
 }
+damage_profile_settings.single_plus_cleave = {
+	attack = {
+		1,
+		3,
+	},
+	impact = {
+		1,
+		3,
+	},
+}
 damage_profile_settings.double_cleave = {
 	attack = {
 		2,

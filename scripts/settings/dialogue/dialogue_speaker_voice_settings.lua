@@ -175,6 +175,14 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_tech_priest_a",
 		subtitles_enabled = true,
 	},
+	tech_priest_b = {
+		full_name = "loc_npc_full_name_tech_priest_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/tech_priest_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/tech_priest_a_small",
+		player_voice = false,
+		short_name = "loc_npc_short_name_tech_priest_a",
+		subtitles_enabled = true,
+	},
 	training_ground_psyker_a = {
 		full_name = "loc_npc_full_name_training_ground_psyker_a",
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/sefoni_a",
@@ -336,6 +344,13 @@ local dialogue_speaker_voice_settings = {
 		icon = "content/ui/textures/icons/npc_portraits/enemies/officer_02",
 		player_voice = false,
 		short_name = "loc_npc_short_name_enemy_wolfer_adjutant_b",
+		subtitles_enabled = true,
+	},
+	enemy_wolfer_adjutant_e = {
+		full_name = "loc_npc_full_name_enemy_wolfer_adjutant_a",
+		icon = "content/ui/textures/icons/npc_portraits/enemies/officer_02",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_wolfer_adjutant_a",
 		subtitles_enabled = true,
 	},
 	enemy_cultist_flamer_a = {
@@ -570,6 +585,7 @@ local dialogue_speaker_voice_settings = {
 	enginseer_a = {
 		full_name = "loc_npc_full_name_enginseer_a",
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/enginseer_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/enginseer_a_small",
 		player_voice = false,
 		short_name = "loc_npc_short_name_enginseer_a",
 		subtitles_enabled = true,
@@ -689,6 +705,56 @@ local dialogue_speaker_voice_settings = {
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
 		player_voice = false,
 		short_name = "loc_npc_short_name_dreg_lector_a",
+		subtitles_enabled = true,
+	},
+	commissar_a = {
+		full_name = "loc_npc_full_name_commissar_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/darinda_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/darinda_a_small",
+		player_voice = false,
+		short_name = "loc_npc_short_name_commissar_a",
+		subtitles_enabled = true,
+	},
+	enemy_champion_preacher_a = {
+		full_name = "loc_npc_full_name_enemy_champion_preacher_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_champion_preacher_a",
+		subtitles_enabled = true,
+	},
+	enemy_champion_brute_a = {
+		full_name = "loc_npc_full_name_enemy_champion_brute_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_champion_brute_a",
+		subtitles_enabled = true,
+	},
+	enemy_champion_infested_a = {
+		full_name = "loc_npc_full_name_enemy_champion_infested_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_champion_infested_a",
+		subtitles_enabled = true,
+	},
+	enemy_chaos_armored_infected_male_a = {
+		full_name = "loc_npc_full_name_enemy_chaos_armored_infected_male_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_chaos_armored_infected_male_a",
+		subtitles_enabled = false,
+	},
+	enemy_chaos_armored_infected_male_b = {
+		full_name = "loc_npc_full_name_enemy_chaos_armored_infected_male_b",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_chaos_armored_infected_male_b",
+		subtitles_enabled = false,
+	},
+	enemy_chaos_armored_infected_male_c = {
+		full_name = "loc_npc_full_name_enemy_chaos_armored_infected_male_c",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_chaos_armored_infected_male_c",
+		subtitles_enabled = false,
+	},
+	mourningstar_hadron_servitor_a = {
+		full_name = "loc_credits_view_hadron_servitor_title",
+		player_voice = false,
+		short_name = "loc_credits_view_hadron_servitor_title",
 		subtitles_enabled = true,
 	},
 }

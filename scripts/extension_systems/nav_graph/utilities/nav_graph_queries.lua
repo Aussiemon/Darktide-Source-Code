@@ -130,7 +130,7 @@ end
 local function _is_ledge_unobstructed(physics_world, ledge_position, ledge_normal, out_debug_draw_list)
 	local check_position = ledge_position + ledge_normal + Vector3.up()
 	local distance = 2
-	local hit = _extract_hit(PhysicsWorld.raycast(physics_world, check_position, -ledge_normal, distance, "all", "collision_filter", "filter_ledge_test"))
+	local hit, hit_position, _, _, _ = _extract_hit(PhysicsWorld.raycast(physics_world, check_position, -ledge_normal, distance, "all", "collision_filter", "filter_ledge_test"))
 
 	if hit then
 		return false
@@ -592,8 +592,8 @@ local function _calculate_smart_objects_from_node_list(nav_world, physics_world,
 			if num_splits > 0 then
 				calculation_params.ledge_normal = ledge_normal
 
-				for i = 0, num_splits do
-					local ledge_t = ledge_t_start + i * ledge_t_stride
+				for j = 0, num_splits do
+					local ledge_t = ledge_t_start + j * ledge_t_stride
 					local ledge_position = Vector3.lerp(position_a, position_b, ledge_t)
 
 					calculation_params.ledge_position = ledge_position

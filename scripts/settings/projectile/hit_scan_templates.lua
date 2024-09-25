@@ -140,22 +140,6 @@ hit_scan_templates.renegade_twin_captain_las_pistol_shot = {
 		},
 	},
 }
-hit_scan_templates.prototype_gun_bullet = {
-	range = 150,
-	damage = {
-		impact = {
-			damage_profile = DamageProfileTemplates.default_rifleman,
-		},
-	},
-}
-hit_scan_templates.renegade_gun_bullet = {
-	range = 150,
-	damage = {
-		impact = {
-			damage_profile = DamageProfileTemplates.renegade_rifleman,
-		},
-	},
-}
 hit_scan_templates.gunner_bullet = {
 	range = 150,
 	damage = {

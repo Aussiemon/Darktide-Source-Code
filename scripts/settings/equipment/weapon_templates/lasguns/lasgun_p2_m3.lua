@@ -39,7 +39,7 @@ local weapon_template = {}
 
 weapon_template.action_inputs = {
 	shoot_pressed = {
-		buffer_time = 0.53,
+		buffer_time = 0.1,
 		max_queue = 1,
 		input_sequence = {
 			{
@@ -49,7 +49,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	shoot_release_charged = {
-		buffer_time = 0.52,
+		buffer_time = 0.5,
 		clear_input_queue = true,
 		input_sequence = {
 			{
@@ -60,7 +60,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	zoom_shoot_hold = {
-		buffer_time = 0.52,
+		buffer_time = 0.5,
 		max_queue = 2,
 		input_sequence = {
 			{
@@ -70,7 +70,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	zoom_shoot_release_charged = {
-		buffer_time = 0.52,
+		buffer_time = 0.5,
 		clear_input_queue = true,
 		input_sequence = {
 			{
@@ -388,7 +388,7 @@ weapon_template.actions = {
 		allowed_during_sprint = false,
 		ammunition_usage = 4,
 		ammunition_usage_max = 9,
-		ammunition_usage_min = 4,
+		ammunition_usage_min = 2,
 		dont_clear_num_shots = true,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.25,
@@ -605,7 +605,7 @@ weapon_template.actions = {
 		allow_shots_with_less_than_required_ammo = true,
 		ammunition_usage = 4,
 		ammunition_usage_max = 9,
-		ammunition_usage_min = 4,
+		ammunition_usage_min = 2,
 		charge_template = "lasgun_p2_m3_charge_up",
 		dont_clear_num_shots = true,
 		kind = "shoot_hit_scan",
@@ -1091,7 +1091,6 @@ weapon_template.entry_actions = {
 	primary_action = "action_shoot_hip_charged",
 	secondary_action = "action_zoom",
 }
-weapon_template.allow_sprinting_with_special = true
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/lasgun_rifle_krieg"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/lasgun_rifle_krieg"
 weapon_template.reload_template = ReloadTemplates.lasgun
@@ -1119,9 +1118,13 @@ weapon_template.conditional_state_to_action_input = {
 	},
 }
 weapon_template.no_ammo_delay = 0.5
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
-weapon_template.keep_weapon_special_active_on_unwield = true
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
+weapon_template.weapon_special_tweak_data = {
+	keep_active_on_sprint = true,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
@@ -1336,6 +1339,30 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_bayonette_desc",
 		display_name = "loc_weapon_special_bayonet",
 		type = "melee",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "hipfire",
+			icon = "charge",
+			sub_icon = "semi_auto",
+			value_func = "primary_attack",
+		},
+		{
+			header = "ads",
+			icon = "charge",
+			sub_icon = "semi_auto",
+			value_func = "secondary_attack",
+		},
+		{
+			header = "ammo",
+			value_func = "ammo",
+		},
+	},
+	weapon_special = {
+		header = "bayonet",
+		icon = "melee",
 	},
 }
 weapon_template.displayed_weapon_stats = "lasgun_p2_m3"

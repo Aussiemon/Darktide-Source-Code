@@ -346,7 +346,6 @@ damage_templates.ogryn_powermaul_light_linesman = {
 	armor_damage_modifier = linesman_light_default_am,
 	targets = {
 		{
-			crit_boost = 0.5,
 			power_distribution = {
 				attack = {
 					80,
@@ -369,7 +368,6 @@ damage_templates.ogryn_powermaul_light_linesman = {
 			},
 		},
 		{
-			crit_boost = 0.5,
 			power_distribution = {
 				attack = {
 					60,
@@ -392,7 +390,6 @@ damage_templates.ogryn_powermaul_light_linesman = {
 			},
 		},
 		{
-			crit_boost = 0.5,
 			power_distribution = {
 				attack = {
 					40,
@@ -415,7 +412,6 @@ damage_templates.ogryn_powermaul_light_linesman = {
 			},
 		},
 		{
-			crit_boost = 0.5,
 			power_distribution = {
 				attack = {
 					25,
@@ -438,7 +434,6 @@ damage_templates.ogryn_powermaul_light_linesman = {
 			},
 		},
 		default_target = {
-			crit_boost = 0.5,
 			power_distribution = {
 				attack = {
 					10,

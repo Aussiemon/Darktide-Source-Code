@@ -25,6 +25,7 @@ local Wintracks = require("scripts/backend/wintracks")
 local Crafting = require("scripts/backend/crafting")
 local PlayerRewards = require("scripts/backend/player_rewards")
 local Tracks = require("scripts/backend/tracks")
+local Mastery = require("scripts/backend/mastery")
 local BackendInterface = class("BackendInterface")
 
 BackendInterface.init = function (self)
@@ -53,6 +54,7 @@ BackendInterface.init = function (self)
 	self.crafting = Crafting:new()
 	self.player_rewards = PlayerRewards:new()
 	self.tracks = Tracks:new()
+	self.mastery = Mastery:new()
 end
 
 return BackendInterface

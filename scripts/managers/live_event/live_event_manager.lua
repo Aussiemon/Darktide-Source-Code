@@ -150,6 +150,15 @@ LiveEventManager._claim_next_tier = function (self, id, event_id)
 end
 
 LiveEventManager._on_track_state_success = function (self, id, event_id, backend_data)
+	if backend_data == nil then
+		backend_data = {
+			state = {
+				rewarded = -1,
+				xpTracked = 0,
+			},
+		}
+	end
+
 	local player_data = self._players[id]
 
 	if not player_data then
@@ -178,14 +187,7 @@ LiveEventManager._on_track_state_fail = function (self, id, event_id, error)
 	if error.code == 404 then
 		Log.info("LiveEventManager", "Backend failed with error 404 for user '%s' and event '%s'. Using dummy data.", id, event_id)
 
-		local dummy_data = {
-			state = {
-				rewarded = -1,
-				xpTracked = 0,
-			},
-		}
-
-		return self:_on_track_state_success(id, event_id, dummy_data)
+		return self:_on_track_state_success(id, event_id)
 	end
 
 	local player_data = self._players[id]
@@ -302,7 +304,7 @@ local function get_template_name(str)
 		return
 	end
 
-	return parts[2]
+	return table.concat(table.slice(parts, 2, #parts - 2), "-")
 end
 
 LiveEventManager._clear_events = function (self)

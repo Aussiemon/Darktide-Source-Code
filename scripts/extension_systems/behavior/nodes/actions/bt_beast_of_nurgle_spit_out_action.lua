@@ -11,6 +11,7 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Trajectory = require("scripts/utilities/trajectory")
+local Vo = require("scripts/utilities/vo")
 local BtBeastOfNurgleSpitOutAction = class("BtBeastOfNurgleSpitOutAction", "BtNode")
 
 BtBeastOfNurgleSpitOutAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -237,6 +238,13 @@ BtBeastOfNurgleSpitOutAction._update_throwing = function (self, unit, scratchpad
 			Catapulted.apply(catapulted_state_input, velocity)
 
 			scratchpad.wants_catapult = nil
+
+			local vo_event = action_data.vo_event
+
+			if vo_event then
+				Vo.generic_mission_vo_event(target_unit, vo_event, true)
+				Vo.set_unit_vo_memory(target_unit, "faction_memory", "beast_spit", t + 900)
+			end
 		end
 
 		if scratchpad.throw_duration and t > scratchpad.throw_duration then

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/randomized_friend_rock_unit.lua
 
 local Component = require("scripts/utilities/component")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local RandomizedFriendRockUnit = class("RandomizedFriendRockUnit")
 
 RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, fx_sources)
@@ -86,5 +87,7 @@ RandomizedFriendRockUnit._update_next_visibility_group_index = function (self)
 		self._next_visibility_group_index = next_visibility_group_index
 	end
 end
+
+implements(RandomizedFriendRockUnit, WieldableSlotScriptInterface)
 
 return RandomizedFriendRockUnit

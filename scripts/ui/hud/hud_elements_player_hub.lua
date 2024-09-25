@@ -68,6 +68,17 @@ local elements = {
 		},
 	},
 	{
+		class_name = "HudElementObjectiveProgressBar",
+		filename = "scripts/ui/hud/elements/objective_progress_bar/hud_element_objective_progress_bar",
+		package = "packages/ui/hud/objective_progress_bar/objective_progress_bar",
+		use_hud_scale = true,
+		visibility_groups = {
+			"dead",
+			"alive",
+			"communication_wheel",
+		},
+	},
+	{
 		class_name = "HudElementOnboardingPopup",
 		filename = "scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup",
 		package = "packages/ui/hud/onboarding_popup/onboarding_popup",

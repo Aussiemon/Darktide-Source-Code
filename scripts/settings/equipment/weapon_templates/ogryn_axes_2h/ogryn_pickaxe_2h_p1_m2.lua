@@ -174,6 +174,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_charge_left_diagonal",
 		anim_event_3p = "attack_swing_charge_down",
+		invalid_start_action_for_stat_calculation = true,
 		kind = "windup",
 		proc_time_interval = 0.2,
 		start_input = "start_attack",
@@ -751,15 +752,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.63,
+				chain_time = 0.6,
 			},
 			special_action = {
 				action_name = "action_special",
-				chain_time = 0.9,
+				chain_time = 0.7,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.63,
+				chain_time = 0.6,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -845,7 +846,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_heavy_1",
-				chain_time = 0.8,
+				chain_time = 0.72,
 			},
 			block = {
 				action_name = "action_block",
@@ -1192,7 +1193,6 @@ weapon_template.actions = {
 		kind = "sweep",
 		power_level = 500,
 		range_mod = 2,
-		sprint_requires_press_to_interrupt = true,
 		total_time = 1.42,
 		weapon_handling_template = "time_scale_1_4",
 		action_movement_curve = {
@@ -1460,8 +1460,10 @@ weapon_template.weapon_box = {
 	0.7,
 	0.02,
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.2
 weapon_template.max_first_person_anim_movement_speed = 4.8
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
@@ -1778,6 +1780,24 @@ weapon_template.displayed_attacks = {
 		desc = "loc_weapon_special_hook_pull_desc",
 		display_name = "loc_weapon_special_hook_pull",
 		type = "special_attack",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "smiter",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "smiter",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "special_attack",
+		icon = "special_attack",
 	},
 }
 

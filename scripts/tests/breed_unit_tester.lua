@@ -5,7 +5,7 @@ local BreedUnitTester = class("BreedUnitTester")
 local REFERENCE_NAME = "BreedUnitTester"
 
 BreedUnitTester.init = function (self, package_manager, use_time_slice)
-	Log.info("BreedUnitTester", "INITIALIZATING UNIT BREED TESTER!")
+	Log.info("BreedUnitTester", "Initializing unit breed tester")
 
 	local breed_units_test = require("scripts/settings/breed/breed_units_test")
 	local resource_dependencies = breed_units_test.resource_dependencies()

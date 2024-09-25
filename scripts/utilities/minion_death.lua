@@ -1,15 +1,23 @@
 ﻿-- chunkname: @scripts/utilities/minion_death.lua
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local attack_results = AttackSettings.attack_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local MinionDeath = {}
-local _gib, _push_ragdoll
+local _gib, _push_ragdoll, _check_damage_profile_override
 
 MinionDeath.die = function (unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, is_critical_strike_or_nil, damage_type_or_nil)
 	Managers.state.minion_death:die(unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, damage_type_or_nil)
+
+	local override_damage_profile, override_hit_zone_name = _check_damage_profile_override(unit)
+
+	damage_profile = override_damage_profile or damage_profile
+	hit_zone_name_or_nil = override_hit_zone_name or hit_zone_name_or_nil
+
 	_gib(unit, hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)
 end
 
@@ -112,6 +120,24 @@ function _gib(ragdoll_unit, hit_zone_name_or_nil, attack_direction, damage_profi
 
 	if visual_loadout_extension:can_gib(hit_zone_name_or_nil) then
 		visual_loadout_extension:gib(hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)
+	end
+end
+
+function _check_damage_profile_override(unit)
+	local blackboard = BLACKBOARDS[unit]
+	local minion_have_gib_override = Blackboard.has_component(blackboard, "gib_override")
+
+	if minion_have_gib_override then
+		local gib_override_component = blackboard.gib_override
+		local should_override = gib_override_component.should_override
+
+		if should_override then
+			local override_damage_profile = gib_override_component.target_template
+			local damage_profile = DamageProfileTemplates[override_damage_profile]
+			local override_hit_zone_name = gib_override_component.override_hit_zone_name
+
+			return damage_profile, override_hit_zone_name
+		end
 	end
 end
 

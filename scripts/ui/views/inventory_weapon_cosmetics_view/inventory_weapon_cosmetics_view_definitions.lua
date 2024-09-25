@@ -435,14 +435,26 @@ local widget_definitions = {
 }
 local background_widget = UIWidget.create_definition({
 	{
+		pass_type = "texture",
+		value = "content/ui/materials/backgrounds/weapon_views_background",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			offset = {
+				0,
+				0,
+				1,
+			},
+			size = {
+				1920,
+				1080,
+			},
+		},
+	},
+	{
 		pass_type = "rect",
 		style = {
-			color = {
-				255,
-				13,
-				26,
-				30,
-			},
+			color = Color.black(255, true),
 		},
 	},
 }, "screen")

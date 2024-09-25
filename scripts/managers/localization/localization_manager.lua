@@ -59,6 +59,28 @@ local function xbox_format_locale(language_id)
 	return supported_languages[string.lower(language_id)] or "en"
 end
 
+local function ps5_format_locale(language_id)
+	local supported_languages = {
+		["de-de"] = "de",
+		["en-gb"] = "en",
+		["en-us"] = "en",
+		["es-419"] = "es",
+		["es-es"] = "es",
+		["fr-ca"] = "fr",
+		["fr-fr"] = "fr",
+		["it-it"] = "it",
+		["ja-jp"] = "ja",
+		["ko-kr"] = "ko",
+		["pl-pl"] = "pl",
+		["pt-br"] = "pt-br",
+		["ru-ru"] = "ru",
+		["zh-hans"] = "zh-cn",
+		["zh-hant"] = "zh-tw",
+	}
+
+	return supported_languages[string.lower(language_id)] or "en"
+end
+
 local LOCALIZATION_MANAGER_STATUS = table.enum("empty", "loading", "ready")
 
 local function _select_language()
@@ -67,7 +89,9 @@ local function _select_language()
 	if PLATFORM == "win32" then
 		language = Application.user_setting("language_id") or HAS_STEAM and Steam:language() or DEFAULT_LANGUAGE
 	elseif PLATFORM == "ps5" then
-		language = PS5.locale() or DEFAULT_LANGUAGE
+		local locale = PS5.locale() or "error"
+
+		language = ps5_format_locale(locale)
 	elseif PLATFORM == "xb1" then
 		local locale = XboxLive.locale() or "error"
 

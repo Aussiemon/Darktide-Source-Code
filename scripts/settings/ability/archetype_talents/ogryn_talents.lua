@@ -334,10 +334,23 @@ local archetype_talents = {
 					format_type = "number",
 					value = PlayerAbilities.ogryn_ranged_stance.cooldown,
 				},
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings_1.combat_ability_3.increased_damage_vs_close,
+				},
+				reduced_move_penalty = {
+					format_type = "percentage",
+					value = talent_settings_1.combat_ability_3.reduced_move_penalty,
+				},
 			},
 			player_ability = {
 				ability_type = "combat_ability",
 				ability = PlayerAbilities.ogryn_ranged_stance,
+			},
+			special_rule = {
+				identifier = "ogryn_combat_no_movement_penalty",
+				special_rule_name = special_rules.ogryn_combat_no_movement_penalty,
 			},
 		},
 		ogryn_leadbelcher_no_ammo_chance = {
@@ -1758,38 +1771,36 @@ local archetype_talents = {
 			},
 		},
 		ogryn_blocking_reduces_push_cost = {
-			description = "loc_talent_ogryn_blocking_reduces_push_cost_desc",
+			description = "loc_talent_ogryn_empowered_pushes_desc",
 			display_name = "loc_talent_ogryn_blocking_reduces_push_cost",
 			icon = "content/ui/textures/icons/talents/ogryn_1/ogryn_1_base_3",
 			name = "Blocking reduces push cost for X s",
 			format_values = {
-				push_cost_multiplier = {
+				push_impact_modifier = {
 					format_type = "percentage",
+					prefix = "+",
 					find_value = {
-						buff_template_name = "ogryn_blocking_reduces_push_cost",
+						buff_template_name = "ogryn_empowered_push",
 						find_value_type = "buff_template",
 						path = {
-							"proc_stat_buffs",
-							stat_buffs.push_cost_multiplier,
+							"conditional_stat_buffs",
+							stat_buffs.push_impact_modifier,
 						},
 					},
-					value_manipulation = function (value)
-						return math_round((1 - value) * 100)
-					end,
 				},
-				duration = {
+				cooldown = {
 					format_type = "number",
 					find_value = {
-						buff_template_name = "ogryn_blocking_reduces_push_cost",
+						buff_template_name = "ogryn_empowered_push",
 						find_value_type = "buff_template",
 						path = {
-							"active_duration",
+							"cooldown_duration",
 						},
 					},
 				},
 			},
 			passive = {
-				buff_template_name = "ogryn_blocking_reduces_push_cost",
+				buff_template_name = "ogryn_empowered_push",
 				identifier = "blocking_reduces_push_cost",
 			},
 		},

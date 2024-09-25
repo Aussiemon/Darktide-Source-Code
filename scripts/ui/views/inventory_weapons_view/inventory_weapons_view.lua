@@ -18,7 +18,8 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementWeaponActions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions")
-local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
+local ViewElementDiscardItems = require("scripts/ui/view_elements/view_element_discard_items/view_element_discard_items")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local InventoryWeaponsView = class("InventoryWeaponsView", "ItemGridViewBase")
 
 InventoryWeaponsView.init = function (self, settings, context)
@@ -45,6 +46,8 @@ InventoryWeaponsView.on_enter = function (self)
 	end
 
 	self:_register_event("event_replace_list_item", "event_replace_list_item")
+	self:_register_event("event_switch_mark_complete", "event_switch_mark_complete")
+	self:_register_event("event_discard_items", "event_discard_items")
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
 	self:_setup_background_world()
@@ -55,6 +58,110 @@ InventoryWeaponsView.on_enter = function (self)
 	local archetype_name = profile_archetype.name
 
 	self:_setup_background_frames_by_archetype(archetype_name)
+
+	local ITEM_TYPES = UISettings.ITEM_TYPES
+
+	if self.item_type == ITEM_TYPES.WEAPON_MELEE or self.item_type == ITEM_TYPES.WEAPON_RANGED then
+		local button_size = self._definitions.blueprints.button.size
+		local top_padding = 30
+		local grid_size = {
+			button_size[1],
+			(button_size[2] + 20) * 3 + top_padding,
+		}
+		local grid_options = {
+			edge_padding = 40,
+			scrollbar_width = 7,
+			title_height = 0,
+			use_is_focused_for_navigation = false,
+			use_select_on_focused = true,
+			use_terminal_background = true,
+			grid_spacing = {
+				10,
+				10,
+			},
+			grid_size = grid_size,
+			mask_size = {
+				grid_size[1] + 40,
+				grid_size[2] + 40,
+			},
+			top_padding = top_padding,
+		}
+
+		self._weapon_options_element = self:_add_element(ViewElementGrid, "weapon_options", 10, grid_options)
+
+		local layout = {
+			{
+				display_icon = "",
+				widget_type = "button",
+				display_name = Localize("loc_inventory_weapon_button_marks"),
+				callback = callback(self, "cb_on_marks_pressed"),
+			},
+			{
+				display_icon = "",
+				widget_type = "button",
+				display_name = Localize("loc_inventory_weapon_button_cosmetics"),
+				callback = callback(self, "cb_on_customize_pressed"),
+			},
+			{
+				display_icon = "",
+				widget_type = "button",
+				display_name = Localize("loc_inventory_weapon_button_inspect"),
+				callback = callback(self, "cb_on_inspect_pressed"),
+			},
+		}
+
+		self._weapon_options_element:update_dividers("content/ui/materials/frames/marks_top", {
+			413.28,
+			58.8,
+		}, {
+			0,
+			-20,
+			20,
+		})
+		self._weapon_options_element:present_grid_layout(layout, self._definitions.blueprints)
+
+		local position = self:_scenegraph_world_position("button_options")
+
+		self._weapon_options_element:set_pivot_offset(position[1], position[2])
+		self._weapon_options_element:disable_input(true)
+	end
+end
+
+InventoryWeaponsView.event_switch_mark_complete = function (self, item)
+	local selected_slot = self._selected_slot
+
+	if item.slots[1] == selected_slot.name then
+		local gear_id = item.gear_id
+
+		for i = 1, #self._inventory_items do
+			local inventory_item = self._inventory_items[i]
+
+			if inventory_item.gear_id == gear_id then
+				self._inventory_items[i] = item
+
+				break
+			end
+		end
+
+		for i = 1, #self._offer_items_layout do
+			local layout = self._offer_items_layout[i]
+			local layout_item = layout.item
+
+			if layout_item.gear_id == gear_id then
+				layout.item = item
+
+				break
+			end
+		end
+
+		local slot_display_name = selected_slot and selected_slot.display_name
+		local grid = self._item_grid
+		local scroll_progress = grid:scrollbar_progress() or 0
+
+		self:_present_layout_by_slot_filter(nil, nil, slot_display_name)
+
+		local scroll_progress = grid:set_scrollbar_progress(scroll_progress, true)
+	end
 end
 
 InventoryWeaponsView._setup_background_frames_by_archetype = function (self, archetype_name)
@@ -135,6 +242,12 @@ end
 InventoryWeaponsView.on_resolution_modified = function (self, scale)
 	InventoryWeaponsView.super.on_resolution_modified(self, scale)
 	self:_update_weapon_actions_position()
+
+	if self._discard_items_element then
+		local discard_items_position = self:_scenegraph_world_position("weapon_discard_pivot")
+
+		self._discard_items_element:set_pivot_offset(discard_items_position[1], discard_items_position[2])
+	end
 end
 
 InventoryWeaponsView._update_weapon_actions_position = function (self)
@@ -165,6 +278,7 @@ InventoryWeaponsView._register_button_callbacks = function (self)
 	local equip_button = widgets_by_name.equip_button
 
 	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
+	self._widgets_by_name.discard_button.content.hotspot.pressed_callback = callback(self, "cb_on_discard_button_pressed")
 end
 
 InventoryWeaponsView.cb_switch_tab = function (self, index)
@@ -178,27 +292,335 @@ InventoryWeaponsView.cb_switch_tab = function (self, index)
 	self:_present_layout_by_slot_filter(slot_types, nil, display_name)
 end
 
-InventoryWeaponsView.cb_on_discard_held = function (self, _, input_pressed)
-	if input_pressed then
-		self._hotkey_item_discard_pressed = true
-	end
+InventoryWeaponsView.cb_on_discard_pressed = function (self)
+	self._selected_items = {}
 
-	local selected_grid_widget
+	if self._discard_items_element then
+		self:_remove_element("discard_items")
 
-	if self._discarded_item_grid_index then
-		local grid_widgets = self:grid_widgets()
+		self._discard_items_element = nil
+		self._discard_layout = nil
+		self._widgets_by_name.discard_button.content.visible = false
+		self._widgets_by_name.equip_button.content.visible = true
 
-		selected_grid_widget = grid_widgets[self._discarded_item_grid_index]
-	else
-		selected_grid_widget = self:selected_grid_widget()
-	end
+		local filtered_items_layout = {}
 
-	if selected_grid_widget and not selected_grid_widget.content.equipped and (self._hotkey_item_discard_pressed or self._discard_item_timer) then
-		self._update_item_discard = true
+		for i = 1, #self._filtered_offer_items_layout do
+			local item = self._filtered_offer_items_layout[i].item
 
-		if not self._discard_item_timer then
-			self:_play_sound(UISoundEvents.weapons_discard_hold)
+			if item then
+				filtered_items_layout[#filtered_items_layout + 1] = self._filtered_offer_items_layout[i]
+			end
 		end
+
+		local sort_options = self._sort_options
+
+		if sort_options then
+			local sort_index = self._selected_sort_option_index or 1
+			local selected_sort_option = sort_options[sort_index]
+			local selected_sort_function = selected_sort_option.sort_function
+
+			table.sort(filtered_items_layout, selected_sort_function)
+		end
+
+		self:present_grid_layout(filtered_items_layout, function ()
+			if self._selected_widget_before_discard then
+				local widget = self._selected_widget_before_discard
+				local element = widget.content.element
+
+				self:cb_on_grid_entry_left_pressed(widget, element)
+
+				self._selected_widget_before_discard = nil
+			end
+		end)
+
+		self._current_layout = filtered_items_layout
+
+		local widget_index = self:selected_grid_index()
+		local widget = self:selected_grid_widget()
+		local scrollbar_animation_progress = widget_index and self._item_grid:get_scrollbar_percentage_by_index(widget_index) or 0
+
+		self._item_grid:set_scrollbar_progress(scrollbar_animation_progress, true)
+
+		local item = widget and widget.element and widget.element.item
+
+		if item then
+			self:_preview_item(item)
+		end
+
+		self:_play_sound(UISoundEvents.weapons_discard_exit)
+	else
+		self._selected_widget_before_discard = self._item_grid:selected_grid_widget()
+
+		local selected_slot = self._selected_slot
+		local selected_slot_name = selected_slot.name
+		local filtered_items_layout = {}
+		local filtered_items = {}
+
+		for i = 1, #self._filtered_offer_items_layout do
+			local item = self._filtered_offer_items_layout[i].item
+			local is_equipped = item and self:is_item_equipped_in_any_slot(item, item.slots)
+
+			if item and not is_equipped then
+				filtered_items_layout[#filtered_items_layout + 1] = self._filtered_offer_items_layout[i]
+				filtered_items[item.gear_id] = item
+			end
+		end
+
+		self._discard_items_element = self:_add_element(ViewElementDiscardItems, "discard_items", 1, {
+			items = filtered_items,
+			selection_callback = callback(self, "_mark_items_to_sell"),
+			unselection_callback = callback(self, "_unmark_items_to_sell"),
+		})
+
+		local discard_items_position = self:_scenegraph_world_position("weapon_discard_pivot")
+
+		self._discard_items_element:set_pivot_offset(discard_items_position[1], discard_items_position[2])
+
+		local sort_options = self._sort_options
+
+		if sort_options then
+			local sort_index = self._selected_sort_option_index or 1
+			local selected_sort_option = sort_options[sort_index]
+			local selected_sort_function = selected_sort_option.sort_function
+
+			table.sort(filtered_items_layout, selected_sort_function)
+		end
+
+		self._discard_layout = table.clone_instance(filtered_items_layout)
+
+		self:present_grid_layout(filtered_items_layout)
+
+		self._current_layout = filtered_items_layout
+		self._widgets_by_name.discard_button.content.visible = true
+		self._widgets_by_name.equip_button.content.visible = false
+
+		self._item_grid:select_grid_widget()
+
+		if self._selected_options then
+			self:cb_on_options_pressed()
+		end
+
+		if not self._using_cursor_navigation then
+			self._discard_items_element:disable_input(true)
+		end
+
+		self:_play_sound(UISoundEvents.weapons_discard_enter)
+	end
+
+	self._update_callback_remove_next_frame = callback(self, "_stop_previewing")
+
+	if self._weapon_options_element then
+		self._weapon_options_element:set_visibility(not self._discard_items_element)
+	end
+end
+
+InventoryWeaponsView.cb_on_discard_button_pressed = function (self)
+	if not self._selected_items or table.is_empty(self._selected_items) then
+		return
+	end
+
+	if self._discard_items_element:visible() then
+		local selected_layout = {}
+
+		for i = 1, #self._discard_layout do
+			local item = self._discard_layout[i].item
+
+			if item and self._selected_items[item.gear_id] then
+				selected_layout[#selected_layout + 1] = self._discard_layout[i]
+			end
+		end
+
+		local sort_options = self._sort_options
+
+		if sort_options then
+			local sort_index = self._selected_sort_option_index or 1
+			local selected_sort_option = sort_options[sort_index]
+			local selected_sort_function = selected_sort_option.sort_function
+
+			table.sort(selected_layout, selected_sort_function)
+		end
+
+		self:present_grid_layout(selected_layout)
+
+		self._current_layout = selected_layout
+		self._widgets_by_name.discard_button.content.original_text = Utf8.upper(Localize("loc_confirm"))
+
+		self._discard_items_element:set_visibility(false)
+		self:_play_sound(UISoundEvents.weapons_discard_continue)
+	else
+		local items = {}
+
+		for gear_id, item in pairs(self._selected_items) do
+			items[#items + 1] = item
+		end
+
+		Managers.event:trigger("event_discard_items", items)
+
+		local sort_options = self._sort_options
+
+		if sort_options then
+			local sort_index = self._selected_sort_option_index or 1
+			local selected_sort_option = sort_options[sort_index]
+			local selected_sort_function = selected_sort_option.sort_function
+
+			table.sort(self._discard_layout, selected_sort_function)
+		end
+
+		local selected_layout = {}
+		local filtered_items = {}
+
+		for i = 1, #self._discard_layout do
+			local item = self._discard_layout[i].item
+
+			if item then
+				selected_layout[#selected_layout + 1] = self._discard_layout[i]
+				filtered_items[#filtered_items + 1] = item
+			end
+		end
+
+		self:present_grid_layout(selected_layout, function ()
+			self._discard_items_element:refresh(filtered_items)
+			self._discard_items_element:set_visibility(true)
+		end)
+
+		self._current_layout = self._discard_layout
+		self._widgets_by_name.discard_button.content.original_text = Utf8.upper(Localize("loc_discard_items_button"))
+
+		self:_play_sound(UISoundEvents.weapons_discard_complete)
+	end
+end
+
+InventoryWeaponsView._mark_items_to_sell = function (self, items)
+	if items and #items > 0 then
+		local widgets = self._item_grid:widgets()
+
+		for i = 1, #items do
+			local item = items[i]
+			local gear_id = item.gear_id
+
+			for ii = 1, #widgets do
+				local widget = widgets[ii]
+				local element = widget.content.element
+
+				if element and element.item and element.item.gear_id == gear_id and not widget.content.multi_selected then
+					self:cb_on_grid_entry_left_pressed(widget, element)
+
+					break
+				end
+			end
+		end
+	end
+end
+
+InventoryWeaponsView._unmark_items_to_sell = function (self, items)
+	if items and #items > 0 then
+		local widgets = self._item_grid:widgets()
+
+		for i = 1, #items do
+			local item = items[i]
+			local gear_id = item.gear_id
+
+			for ii = 1, #widgets do
+				local widget = widgets[ii]
+				local element = widget.content.element
+
+				if element and element.item and element.item.gear_id == gear_id and widget.content.multi_selected then
+					self:cb_on_grid_entry_left_pressed(widget, element)
+
+					break
+				end
+			end
+		end
+	end
+end
+
+InventoryWeaponsView._item_hover_update = function (self)
+	local widget = self._item_grid:hovered_widget()
+	local item = widget and widget.content.element and widget.content.element.item
+
+	if self._currently_hovered_item ~= item then
+		if self._weapon_stats then
+			self._weapon_stats:stop_presenting()
+		end
+
+		self._currently_hovered_item = item
+
+		if self._weapon_stats and item then
+			self._weapon_stats:present_item(item)
+		end
+	end
+end
+
+InventoryWeaponsView.cb_on_favorite_pressed = function (self)
+	local widget
+
+	if self._discard_items_element and self._using_cursor_navigation then
+		widget = self._item_grid and self._item_grid:hovered_widget()
+	else
+		widget = self._item_grid and self._item_grid:selected_grid_widget()
+	end
+
+	local gear_id = widget and widget.content.element and widget.content.element.item and widget.content.element.item.gear_id
+	local is_favorite = ItemUtils.is_item_id_favorited(gear_id)
+
+	if self._discard_items_element and not is_favorite and widget.content.multi_selected then
+		local element = widget.content.element
+
+		self:cb_on_grid_entry_left_pressed(widget, element)
+	end
+
+	ItemUtils.set_item_id_as_favorite(gear_id, not is_favorite)
+
+	if self._discard_items_element then
+		self._discard_items_element:refresh()
+	end
+end
+
+InventoryWeaponsView.cb_on_grid_entry_left_pressed = function (self, widget, element)
+	if self._discard_items_element then
+		if self._destroyed or not self._discard_items_element:visible() then
+			return
+		end
+
+		local item = element.item
+		local is_favorite = ItemUtils.is_item_id_favorited(element.item.gear_id)
+
+		if is_favorite then
+			return
+		end
+
+		if not self._selected_items[item.gear_id] then
+			self._selected_items[item.gear_id] = item
+			widget.content.multi_selected = true
+
+			self:_play_sound(UISoundEvents.mastery_select_weapon)
+		else
+			self._selected_items[item.gear_id] = nil
+			widget.content.multi_selected = false
+
+			self:_play_sound(UISoundEvents.weapons_select_weapon)
+		end
+	else
+		local function cb_func()
+			if self._destroyed then
+				return
+			end
+
+			local item = element.item
+
+			if Managers.ui:using_cursor_navigation() then
+				if item and item ~= self._previewed_item then
+					local widget_index = self._item_grid:widget_index(widget) or 1
+
+					self._item_grid:focus_grid_index(widget_index)
+				end
+			else
+				self:cb_on_equip_pressed()
+			end
+		end
+
+		self._update_callback_on_grid_entry_left_pressed = callback(cb_func)
 	end
 end
 
@@ -210,16 +632,21 @@ InventoryWeaponsView.is_selected_item_equipped = function (self)
 	end
 end
 
-InventoryWeaponsView.cb_on_close_pressed = function (self)
-	self:_handle_back_pressed()
+InventoryWeaponsView.is_selected_item_favorited = function (self)
+	local selected_grid_widget = self:selected_grid_widget()
+
+	if selected_grid_widget then
+		local content = selected_grid_widget.content
+		local element = content.element
+		local item = element and element.item
+		local gear_id = item and item.gear_id
+
+		return gear_id and ItemUtils.is_item_id_favorited(gear_id)
+	end
 end
 
-InventoryWeaponsView._set_preview_widgets_visibility = function (self, visible)
-	InventoryWeaponsView.super._set_preview_widgets_visibility(self, visible)
-
-	local widgets_by_name = self._widgets_by_name
-
-	widgets_by_name.equip_button.content.visible = visible
+InventoryWeaponsView.cb_on_close_pressed = function (self)
+	self:_handle_back_pressed()
 end
 
 InventoryWeaponsView._preview_element = function (self, element)
@@ -238,19 +665,13 @@ InventoryWeaponsView.sort_items = function (self)
 	end
 end
 
-InventoryWeaponsView.cb_on_sort_button_pressed = function (self, option)
-	InventoryWeaponsView.super.cb_on_sort_button_pressed(self, option)
-	self._item_grid:set_expire_time(self._current_rotation_end)
-end
-
 InventoryWeaponsView.update = function (self, dt, t, input_service)
 	if self._on_discard_anim_complete_cb then
 		input_service = input_service:null_service()
 	end
 
 	self:_update_equip_button_status(dt)
-	self:_update_item_discard_progress(dt)
-	self:_update_grid_widgets(dt, t, input_service)
+	self:_update_discard_button_status(dt)
 
 	local world_spawner = self._world_spawner
 
@@ -258,23 +679,109 @@ InventoryWeaponsView.update = function (self, dt, t, input_service)
 		world_spawner:update(dt, t)
 	end
 
+	if self._item_grid and self._discard_items_element then
+		self:_item_hover_update()
+	end
+
+	if self._update_callback_remove_next_frame then
+		self._update_callback_remove_next_frame()
+
+		self._update_callback_remove_next_frame = nil
+	end
+
 	return InventoryWeaponsView.super.update(self, dt, t, input_service)
 end
 
 InventoryWeaponsView._handle_input = function (self, input_service)
-	if not self._discard_item_timer then
-		self._hotkey_item_discard_pressed = input_service:get("hotkey_item_discard_pressed")
-	end
+	if not self._using_cursor_navigation then
+		if self._weapon_options_element and self._weapon_options_element:visible() then
+			if input_service:get("navigate_left_continuous") and not self._weapon_options_element:input_disabled() then
+				self:cb_on_options_pressed()
+			elseif input_service:get("navigate_right_continuous") and self._weapon_options_element:input_disabled() then
+				self:cb_on_options_pressed()
+			end
+		elseif self._discard_items_element and self._discard_items_element:visible() then
+			if input_service:get("navigate_left_continuous") and not self._discard_items_element:input_disabled() then
+				self._discard_items_element:disable_input(true)
+				self._item_grid:disable_input(false)
+				self._item_grid:select_grid_index(self._selected_item_index or 1)
 
-	if input_service:get("confirm_pressed") then
-		self:cb_on_equip_pressed()
+				self._selected_item_index = nil
+
+				local item = self:previewed_item()
+
+				if item then
+					self:_preview_item(item)
+				end
+			elseif input_service:get("navigate_right_continuous") and self._discard_items_element:input_disabled() then
+				local item = self:previewed_item()
+
+				self._discard_items_element:disable_input(false)
+				self._discard_items_element:select_first_index()
+				self._item_grid:disable_input(true)
+
+				self._selected_item_index = self._item_grid:selected_grid_index()
+
+				self._item_grid:select_grid_index()
+				self:_stop_previewing()
+			elseif input_service:get("gamepad_secondary_action_pressed") then
+				self:cb_on_discard_button_pressed()
+			end
+		elseif self._discard_items_element and input_service:get("gamepad_secondary_action_pressed") then
+			self:cb_on_discard_button_pressed()
+		end
 	end
 end
 
 InventoryWeaponsView._handle_back_pressed = function (self)
-	local view_name = "inventory_weapons_view"
+	if not self._discard_items_element then
+		local view_name = "inventory_weapons_view"
 
-	Managers.ui:close_view(view_name)
+		Managers.ui:close_view(view_name)
+	elseif self._discard_items_element:visible() then
+		self:cb_on_discard_pressed()
+	else
+		local sort_options = self._sort_options
+
+		if sort_options then
+			local sort_index = self._selected_sort_option_index or 1
+			local selected_sort_option = sort_options[sort_index]
+			local selected_sort_function = selected_sort_option.sort_function
+
+			table.sort(self._discard_layout, selected_sort_function)
+		end
+
+		local selected_layout = {}
+
+		for i = 1, #self._discard_layout do
+			local item = self._discard_layout[i].item
+
+			if item then
+				selected_layout[#selected_layout + 1] = self._discard_layout[i]
+			end
+		end
+
+		self:present_grid_layout(selected_layout, function ()
+			local widgets = self._item_grid:widgets()
+
+			for i = 1, #widgets do
+				local widget = widgets[i]
+				local gear_id = widget.content.element.item.gear_id
+
+				if self._selected_items[gear_id] then
+					widget.content.multi_selected = true
+				end
+			end
+		end)
+
+		self._widgets_by_name.discard_button.content.original_text = Utf8.upper(Localize("loc_alias_view_hotkey_item_discard"))
+
+		self._discard_items_element:set_visibility(true)
+
+		self._current_layout = self._discard_layout
+
+		self:_play_sound(UISoundEvents.weapons_discard_back)
+	end
 end
 
 InventoryWeaponsView.cb_on_customize_pressed = function (self)
@@ -290,6 +797,56 @@ InventoryWeaponsView.cb_on_customize_pressed = function (self)
 	end
 end
 
+InventoryWeaponsView.cb_on_options_pressed = function (self)
+	self._selected_options = not self._selected_options
+
+	self._weapon_options_element:disable_input(not self._selected_options)
+	self._item_grid:disable_input(self._selected_options)
+
+	if self._selected_options then
+		self._weapon_options_element:select_first_index()
+	else
+		self._weapon_options_element:select_grid_index()
+	end
+end
+
+InventoryWeaponsView._on_navigation_input_changed = function (self)
+	if self._using_cursor_navigation then
+		if self._weapon_options_element then
+			self._weapon_options_element:disable_input(false)
+			self._weapon_options_element:select_grid_index()
+		end
+
+		if self._discard_items_element then
+			self._discard_items_element:disable_input(false)
+
+			self._selected_item_index = nil
+
+			self._item_grid:select_grid_index()
+		end
+
+		self._item_grid:disable_input(false)
+	elseif self._weapon_options_element and self._weapon_options_element:visible() then
+		local selected_options = self._selected_options
+
+		self._weapon_options_element:disable_input(not selected_options)
+		self._item_grid:disable_input(selected_options)
+
+		if selected_options then
+			self._weapon_options_element:select_first_index()
+		end
+	elseif self._discard_items_element and self._discard_items_element:visible() then
+		if self._discard_items_element:visible() and self._item_grid:input_disabled() then
+			self._item_grid:select_grid_index(self._selected_item_index or 1)
+
+			self._selected_item_index = nil
+		end
+
+		self._discard_items_element:disable_input(true)
+		self._item_grid:disable_input(false)
+	end
+end
+
 InventoryWeaponsView.cb_on_inspect_pressed = function (self)
 	if not Managers.ui:view_active("inventory_weapon_details_view") then
 		self._inpect_view_opened = true
@@ -297,6 +854,19 @@ InventoryWeaponsView.cb_on_inspect_pressed = function (self)
 		Managers.ui:open_view("inventory_weapon_details_view", nil, nil, nil, nil, {
 			player = self._preview_player,
 			preview_item = self._previewed_item,
+		})
+	end
+end
+
+InventoryWeaponsView.cb_on_marks_pressed = function (self)
+	if not Managers.ui:view_active("inventory_weapon_marks_view") then
+		self._marks_view_opened = true
+
+		Managers.ui:open_view("inventory_weapon_marks_view", nil, nil, nil, nil, {
+			player = self._preview_player,
+			preview_item = self._previewed_item,
+			parent = self._parent,
+			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids,
 		})
 	end
 end
@@ -722,150 +1292,6 @@ InventoryWeaponsView.equipped_item_in_slot = function (self, slot_name)
 	return item
 end
 
-InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service)
-	local discard_anim_progress = 0
-	local discard_anim_duration = self._discard_anim_duration
-
-	if discard_anim_duration then
-		discard_anim_progress = 1 - discard_anim_duration / InventoryWeaponsViewSettings.item_discard_anim_duration
-
-		if discard_anim_progress >= 1 then
-			self._discard_anim_duration = nil
-		else
-			self._discard_anim_duration = math.max(discard_anim_duration - dt, 0)
-		end
-	end
-
-	local widgets = self:grid_widgets()
-
-	if widgets then
-		local previewed_item = self._previewed_item
-		local discard_item_hold_progress = self._discard_item_hold_progress
-		local previous_widget_offset, first_discarded_item_index
-		local num_widgets = #widgets
-
-		for i = 1, num_widgets do
-			local widget = widgets[i]
-			local offset = widget.offset
-			local default_offset = widget.default_offset
-			local style = widget.style
-			local content = widget.content
-			local element = content.element
-			local discarded = content.discarded
-			local item = element.item
-
-			if item then
-				local is_discarding = self._discarded_item_grid_index and self._discarded_item_grid_index == i
-
-				style.salvage_circle.material_values.progress = is_discarding and discard_item_hold_progress or 0
-			end
-
-			if discarded then
-				widget.alpha_multiplier = math.easeInCubic(1 - discard_anim_progress)
-			end
-
-			if first_discarded_item_index and first_discarded_item_index < i then
-				local move_progress = math.easeInCubic(discard_anim_progress or 1)
-				local offset_difference_height = previous_widget_offset[2] - default_offset[2]
-
-				offset[2] = default_offset[2] + offset_difference_height * move_progress
-			end
-
-			if not first_discarded_item_index and discarded then
-				first_discarded_item_index = i
-			end
-
-			previous_widget_offset = default_offset
-		end
-
-		if discard_anim_progress and discard_anim_progress == 1 and self._on_discard_anim_complete_cb then
-			self._on_discard_anim_complete_cb()
-
-			self._on_discard_anim_complete_cb = nil
-		end
-	end
-end
-
-InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
-	local grid_widgets = self:grid_widgets()
-	local widget = grid_widgets[grid_index]
-	local content = widget.content
-	local element = content.element
-	local item = element.item
-	local gear_id = item.gear_id
-	local inventory_items = self._inventory_items
-
-	for i = 1, #inventory_items do
-		if inventory_items[i].gear_id == gear_id then
-			table.remove(self._inventory_items, i)
-
-			break
-		end
-	end
-
-	local offer_items_layout = self._offer_items_layout
-
-	if offer_items_layout then
-		for i = 1, #offer_items_layout do
-			if offer_items_layout[i].item.gear_id == gear_id then
-				table.remove(self._offer_items_layout, i)
-
-				break
-			end
-		end
-	end
-
-	local filtered_offer_items_layout = self._filtered_offer_items_layout
-
-	if filtered_offer_items_layout then
-		for i = 1, #filtered_offer_items_layout do
-			if filtered_offer_items_layout[i].item.gear_id == gear_id then
-				table.remove(self._filtered_offer_items_layout, i)
-
-				break
-			end
-		end
-	end
-
-	content.discarded = true
-
-	local item_grid = self._item_grid
-	local grid = item_grid:grid()
-	local new_grid_index
-	local last_interactable_grid_index = grid:last_interactable_grid_index() - 1
-
-	if last_interactable_grid_index > 0 then
-		if grid_index <= last_interactable_grid_index then
-			new_grid_index = grid_index
-		else
-			new_grid_index = grid_index - 1
-		end
-	end
-
-	self._discard_anim_duration = InventoryWeaponsViewSettings.item_discard_anim_duration
-
-	self._on_discard_anim_complete_cb = function ()
-		local widget_to_remove = self:grid_widgets()[grid_index]
-
-		item_grid:remove_widget(widget_to_remove)
-		grid:clear_scroll_progress()
-
-		local new_element = new_grid_index and self:element_by_index(new_grid_index)
-
-		if new_element then
-			local new_selection_item = new_element.item
-
-			self:focus_on_item(new_selection_item)
-		else
-			self:_stop_previewing()
-		end
-
-		self:update_grid_widgets_visibility()
-	end
-
-	Managers.event:trigger("event_discard_item", item)
-end
-
 InventoryWeaponsView.event_discard_items = function (self, items)
 	local gear_ids = {}
 
@@ -889,8 +1315,6 @@ InventoryWeaponsView.event_discard_items = function (self, items)
 			item_grid:remove_widget(widget)
 		end
 	end
-
-	grid:clear_scroll_progress()
 
 	for i = 1, #items do
 		local item = items[i]
@@ -923,6 +1347,18 @@ InventoryWeaponsView.event_discard_items = function (self, items)
 			for j = 1, #filtered_offer_items_layout do
 				if filtered_offer_items_layout[j].item.gear_id == gear_id then
 					table.remove(self._filtered_offer_items_layout, j)
+
+					break
+				end
+			end
+		end
+
+		local discard_layout = self._discard_layout
+
+		if discard_layout then
+			for j = 1, #discard_layout do
+				if discard_layout[j].item.gear_id == gear_id then
+					table.remove(self._discard_layout, j)
 
 					break
 				end
@@ -980,11 +1416,14 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 		local grid_index = self:selected_grid_index()
 		local grid_widgets = self:grid_widgets()
 		local widget = grid_widgets[grid_index]
-		local content = widget.content
 
-		if content.discarded then
-			disable_button = true
-			discard_item = true
+		if widget then
+			local content = widget.content
+
+			if content.discarded then
+				disable_button = true
+				discard_item = true
+			end
 		end
 	end
 
@@ -1034,40 +1473,76 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 	end
 end
 
-InventoryWeaponsView._update_item_discard_progress = function (self, dt)
-	if self._update_item_discard and self:selected_grid_index() then
-		self._update_item_discard = nil
+InventoryWeaponsView._update_discard_button_status = function (self, dt)
+	self._widgets_by_name.discard_button.content.hotspot.disabled = not self._selected_items or table.is_empty(self._selected_items)
+end
 
-		if not self._discard_item_timer then
-			self._discard_item_timer = 0
-			self._discarded_item_grid_index = self:selected_grid_index()
-		end
+InventoryWeaponsView._sort_grid_layout = function (self, sort_function)
+	local original_layout = self._current_layout or self._discard_layout or self._filtered_offer_items_layout
+	local layout = {}
 
-		local time = self._discard_item_timer + dt
-		local progress = math.min(time / InventoryWeaponsViewSettings.item_discard_hold_duration, 1)
+	if original_layout then
+		for i = 1, #original_layout do
+			local item = original_layout[i].item
 
-		self._discard_item_hold_progress = progress
-
-		if progress < 1 then
-			self._discard_item_timer = time
-		else
-			self._discard_item_timer = nil
-			self._discard_item_hold_progress = nil
-
-			if self._discarded_item_grid_index then
-				self:_mark_item_for_discard(self._discarded_item_grid_index)
-
-				self._discarded_item_grid_index = nil
+			if item then
+				layout[#layout + 1] = original_layout[i]
 			end
-
-			self:_play_sound(UISoundEvents.weapons_discard_complete)
 		end
-	elseif self._discard_item_timer then
-		self._discard_item_timer = nil
-		self._discard_item_hold_progress = nil
-		self._discarded_item_grid_index = nil
+	end
 
-		self:_play_sound(UISoundEvents.weapons_discard_release)
+	if table.is_empty(layout) then
+		return
+	end
+
+	if sort_function and #layout > 1 then
+		table.sort(layout, sort_function)
+	end
+
+	local item_grid = self._item_grid
+	local widget_index = item_grid:selected_grid_index()
+	local selected_element = widget_index and item_grid:element_by_index(widget_index)
+	local selected_item = selected_element and selected_element.item
+
+	self._selected_gear_id = self._selected_gear_id or selected_item and selected_item.gear_id
+
+	local on_present_callback = callback(self, "_cb_on_present")
+
+	self:present_grid_layout(layout, on_present_callback)
+end
+
+InventoryWeaponsView._cb_on_present = function (self)
+	InventoryWeaponsView.super._cb_on_present(self)
+
+	if self._selected_items and not table.is_empty(self._selected_items) and self._discard_items_element and self._discard_items_element:visible() then
+		local widgets = self._item_grid:widgets()
+
+		for i = 1, #widgets do
+			local widget = widgets[i]
+			local gear_id = widget.content.element.item.gear_id
+
+			if self._selected_items[gear_id] then
+				widget.content.multi_selected = true
+			end
+		end
+	end
+end
+
+InventoryWeaponsView.cb_on_toggle_item_compare = function (self)
+	InventoryWeaponsView.super.cb_on_toggle_item_compare(self)
+
+	if self._weapon_options_element then
+		self._weapon_options_element:set_visibility(not self._item_compare_toggled)
+	end
+end
+
+InventoryWeaponsView._update_weapon_stats_position = function (self, scenegraph_id, weapon_stats)
+	InventoryWeaponsView.super._update_weapon_stats_position(self, scenegraph_id, weapon_stats)
+
+	if self._weapon_options_element then
+		local position = self:_scenegraph_world_position(scenegraph_id)
+
+		self._weapon_options_element:set_pivot_offset(position[1] + 20, position[2])
 	end
 end
 

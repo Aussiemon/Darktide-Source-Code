@@ -6,7 +6,6 @@ local player_character_particle_names_lookup = {
 	["content/fx/particles/abilities/ogryn_ability_shout_activate"] = true,
 	["content/fx/particles/abilities/ogryn_aoe_push"] = true,
 	["content/fx/particles/abilities/preacher/preacher_bubble_shield_explode_3p"] = true,
-	["content/fx/particles/abilities/protectorate_chainlightning_attacking_hands"] = true,
 	["content/fx/particles/abilities/psyker_magic_missile_01"] = true,
 	["content/fx/particles/abilities/psyker_magic_missile_impact_01"] = true,
 	["content/fx/particles/abilities/psyker_smite_chargeup_hands_01"] = true,
@@ -82,7 +81,6 @@ local player_character_particle_names_lookup = {
 	["content/fx/particles/weapon_traits/flamer_minion_explosion"] = true,
 	["content/fx/particles/weapons/bfg_staff/psyker_bfg_projectile_01"] = true,
 	["content/fx/particles/weapons/flame_staff/psyker_flame_staff_charge"] = true,
-	["content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_hands"] = true,
 	["content/fx/particles/weapons/force_staff/force_staff_explosion"] = true,
 	["content/fx/particles/weapons/force_staff/force_staff_projectile_cast_01"] = true,
 	["content/fx/particles/weapons/force_staff/force_staff_projectile_cast_02"] = true,
@@ -188,5 +186,7 @@ local player_character_particle_names = {}
 for particle_name, _ in pairs(player_character_particle_names_lookup) do
 	player_character_particle_names[#player_character_particle_names + 1] = particle_name
 end
+
+table.sort(player_character_particle_names)
 
 return player_character_particle_names

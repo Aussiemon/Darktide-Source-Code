@@ -314,7 +314,11 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 
 	if damage_dealt <= 0 and not is_player_character then
 		if damage_efficiency == damage_efficiencies.negated then
-			Vo.armor_hit_event(attacking_unit)
+			local armor_type = Armor.armor_type(attacked_unit, target_breed_or_nil, hit_zone_name, attack_type)
+
+			if armor_type ~= "void_shield" then
+				Vo.armor_hit_event(attacking_unit)
+			end
 		end
 
 		if target_breed_or_nil then

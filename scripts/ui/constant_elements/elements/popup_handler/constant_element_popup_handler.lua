@@ -15,6 +15,7 @@ local InputDevice = require("scripts/managers/input/input_device")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local TextUtils = require("scripts/utilities/ui/text")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local BLUR_TIME = 0.3
 local ConstantElementPopupHandler = class("ConstantElementPopupHandler", "ConstantElementBase")
 
@@ -76,7 +77,18 @@ ConstantElementPopupHandler._destroy_background = function (self)
 	end
 end
 
+ConstantElementPopupHandler._destroy_description_grid = function (self)
+	if self._description_grid then
+		self._grid_initialized = false
+
+		self._description_grid:destroy()
+
+		self._description_grid = nil
+	end
+end
+
 ConstantElementPopupHandler.destroy = function (self)
+	self:_destroy_description_grid()
 	self:_destroy_background()
 
 	if self._cursor_pushed then
@@ -108,6 +120,7 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 	local params = {
 		popup_height = height,
 		additional_widgets = self._offer_price_widgets,
+		description_grid = self._description_grid,
 	}
 
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
@@ -228,6 +241,17 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 
 		self._offer_price_widgets = price_widgets
 		self._offer_price_widgets[#self._offer_price_widgets + 1] = item_title_widget
+	elseif data.type == "grid" then
+		self._widgets_by_name.description_text.content.text = ""
+
+		if not self._grid_initialized then
+			self:_setup_description_grid()
+		end
+
+		local grid_layout = data.grid_layout
+		local grid_blueprints = data.grid_blueprints
+
+		self:_description_grid_layout(grid_layout, grid_blueprints)
 	else
 		local description_text
 
@@ -254,6 +278,7 @@ ConstantElementPopupHandler._cleanup_presentation = function (self, active_popup
 	local params = {
 		popup_height = height,
 		additional_widgets = self._offer_price_widgets,
+		description_grid = self._description_grid,
 	}
 
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
@@ -553,10 +578,15 @@ ConstantElementPopupHandler._set_description_text = function (self, text)
 	widgets_by_name.description_text.content.text = text
 end
 
-ConstantElementPopupHandler._update_popup_text_height = function (self, ui_renderer)
+ConstantElementPopupHandler._update_popup_text_height = function (self, ui_renderer, optional_starting_height)
 	local widgets_by_name = self._widgets_by_name
 	local window_edge_margin_height = ConstantElementPopupHandlerSettings.window_edge_margin_height
 	local total_text_height = window_edge_margin_height * 2
+
+	if optional_starting_height then
+		total_text_height = total_text_height + optional_starting_height
+	end
+
 	local top_icon_widget = widgets_by_name.top_icon
 	local popup_type_styles = Definitions.popup_type_style
 	local popup_type = "default"
@@ -593,9 +623,20 @@ ConstantElementPopupHandler._update_popup_text_height = function (self, ui_rende
 	local description_text = description_text_widget.content.text
 	local description_text_style = description_text_widget.style.text
 	local description_height = self:_get_text_height(description_text, description_text_style, ui_renderer)
-	local description_text_block_height = description_height + ConstantElementPopupHandlerSettings.description_bottom_height_spacing
+	local description_text_block_height = description_height
+
+	if description_text_block_height > 0 then
+		description_text_block_height = description_text_block_height + ConstantElementPopupHandlerSettings.description_bottom_height_spacing
+	end
 
 	total_text_height = total_text_height + description_text_block_height
+
+	local description_grid_height
+
+	if self._description_grid then
+		description_grid_height = self._description_grid:grid_length() + ConstantElementPopupHandlerSettings.description_bottom_height_spacing
+		total_text_height = total_text_height + description_grid_height
+	end
 
 	local offer_height = self._ui_scenegraph.offer_text.size[2]
 
@@ -619,6 +660,14 @@ ConstantElementPopupHandler._update_popup_text_height = function (self, ui_rende
 
 	current_offset = current_offset + description_text_block_height
 
+	if self._description_grid then
+		self:set_scenegraph_position("description_grid", nil, current_offset)
+
+		current_offset = current_offset + description_grid_height
+
+		self:_update_description_grid_position()
+	end
+
 	self:set_scenegraph_position("offer_text", nil, current_offset - description_text_block_height)
 
 	current_offset = current_offset + self._ui_scenegraph.offer_text.size[2]
@@ -626,6 +675,102 @@ ConstantElementPopupHandler._update_popup_text_height = function (self, ui_rende
 	self:set_scenegraph_position("button_pivot", nil, current_offset)
 
 	return total_text_height
+end
+
+ConstantElementPopupHandler._setup_description_grid = function (self)
+	self:_destroy_description_grid()
+
+	self._grid_initialized = true
+
+	local grid_scenegraph_id = "description_grid"
+	local definitions = self._definitions
+	local scenegraph_definition = definitions.scenegraph_definition
+	local grid_scenegraph = scenegraph_definition[grid_scenegraph_id]
+	local grid_size = grid_scenegraph.size
+	local grid_settings = {
+		edge_padding = 0,
+		hide_background = true,
+		hide_dividers = true,
+		no_resource_rendering = true,
+		scrollbar_width = 7,
+		title_height = 0,
+		use_is_focused_for_navigation = false,
+		use_select_on_focused = false,
+		use_terminal_background = false,
+		widget_icon_load_margin = 0,
+		grid_spacing = {
+			0,
+			0,
+		},
+		grid_size = grid_size,
+		mask_size = {
+			grid_size[1],
+			grid_size[2],
+		},
+	}
+
+	self._grid_settings = grid_settings
+
+	local layer = self._draw_layer + 10
+	local scale = self._render_scale or RESOLUTION_LOOKUP.scale
+	local grid = ViewElementGrid:new(self, layer, scale, grid_settings)
+
+	self._description_grid = grid
+
+	self:_update_description_grid_position()
+end
+
+ConstantElementPopupHandler._update_description_grid_position = function (self)
+	if not self._description_grid then
+		return
+	end
+
+	self:_force_update_scenegraph()
+
+	local position = self:scenegraph_world_position("description_grid", 1)
+
+	self._description_grid:set_pivot_offset(position[1], position[2] - 10)
+end
+
+ConstantElementPopupHandler.ui_renderer = function (self)
+	return self._parent:ui_renderer()
+end
+
+ConstantElementPopupHandler._description_grid_layout = function (self, layout, grid_blueprints)
+	if not grid_blueprints then
+		local definitions = self._definitions
+
+		grid_blueprints = definitions.grid_blueprints
+	end
+
+	local grid = self._description_grid
+
+	grid:present_grid_layout(layout, grid_blueprints, nil, nil, nil, nil, callback(self, "cb_on_grid_layout_changed"), nil)
+end
+
+ConstantElementPopupHandler.cb_on_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
+	local grid = self._description_grid
+	local grid_length = grid:grid_length()
+	local menu_settings = grid:menu_settings()
+	local grid_size = menu_settings.grid_size
+	local mask_size = menu_settings.mask_size
+	local new_grid_height = math.clamp(grid_length + 10, 0, 1900)
+
+	grid_size[2] = new_grid_height
+	mask_size[2] = new_grid_height
+
+	self:_set_scenegraph_size("description_grid", nil, new_grid_height)
+	grid:force_update_list_size()
+	self:_update_description_grid_position()
+end
+
+ConstantElementPopupHandler.on_resolution_modified = function (self, scale)
+	ConstantElementPopupHandler.super.on_resolution_modified(self, scale)
+
+	if self._description_grid then
+		self:_update_description_grid_position()
+		self._description_grid:set_render_scale(scale)
+	end
 end
 
 local dummy_text_size = {
@@ -840,6 +985,8 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 	if self._on_exit_anim_id and self:_is_animation_completed(self._on_exit_anim_id) then
 		self._on_exit_anim_id = nil
 
+		self:_destroy_description_grid()
+
 		local content_widgets = self._content_widgets
 
 		for i = 1, #content_widgets do
@@ -910,6 +1057,10 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 			Managers.world:set_world_layer(self._background_world_name, background_world_draw_layer)
 
 			self._background_world_draw_layer = background_world_draw_layer
+
+			if self._description_grid then
+				self._description_grid:set_draw_layer(background_world_draw_layer + 10)
+			end
 		end
 	end
 
@@ -939,6 +1090,12 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 		self:_update_button_input(input_service)
 	else
 		input_service = input_service:null_service()
+	end
+
+	local grid = self._description_grid
+
+	if grid then
+		grid:update(dt, t, input_service)
 	end
 
 	ConstantElementPopupHandler.super.update(self, dt, t, ui_renderer, render_settings, input_service)
@@ -971,6 +1128,12 @@ ConstantElementPopupHandler.draw = function (self, dt, t, ui_renderer, render_se
 
 	if disable_input then
 		input_service = input_service:null_service()
+	end
+
+	local grid = self._description_grid
+
+	if grid then
+		grid:draw(dt, t, ui_renderer, render_settings, input_service)
 	end
 
 	ConstantElementPopupHandler.super.draw(self, dt, t, ui_renderer, render_settings, input_service)

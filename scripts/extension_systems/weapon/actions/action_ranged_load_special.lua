@@ -73,7 +73,7 @@ ActionReloadShotgunSpecial._reload = function (self, t, time_in_action)
 
 		action_reload_component.has_refilled_ammunition = true
 
-		self:_set_weapon_special(true, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
 
 		local weapon_template = self._weapon_template
 		local param_table_on_reload_start = self._buff_extension:request_proc_event_param_table()

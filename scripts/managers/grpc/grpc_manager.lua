@@ -350,4 +350,55 @@ GRPCManager.start_stay_in_party_vote = function (self)
 	end)
 end
 
+GRPCManager.party_finder_start_advertisement = function (self, party_id, config, tags, category)
+	local promise = Promise:new()
+	local id = gRPC.party_finder_start_advertisement(party_id, config, tags, {}, category)
+
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
+GRPCManager.party_finder_cancel_advertisement = function (self, party_id)
+	local promise = Promise:new()
+	local id = gRPC.party_finder_cancel_advertisement(party_id)
+
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
+GRPCManager.party_finder_list_advertisements_stream = function (self, category, tags)
+	local promise = Promise:new()
+	local id = gRPC.party_finder_list_advertisements_stream(category, tags)
+
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
+GRPCManager.get_party_finder_list_advertisements_events = function (self, id)
+	local events = gRPC.get_party_finder_list_advertisements_events(id)
+
+	return events
+end
+
+GRPCManager.party_finder_respond_to_join_request = function (self, party_id, account_id, accept)
+	local promise = Promise:new()
+	local id = gRPC.party_finder_respond_to_join_request(party_id, account_id, accept)
+
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
+GRPCManager.party_finder_request_to_join = function (self, party_id, account_id)
+	local promise = Promise:new()
+	local id = gRPC.party_finder_request_to_join(party_id, account_id)
+
+	self._async_promises[id] = promise
+
+	return promise, id
+end
+
 return GRPCManager

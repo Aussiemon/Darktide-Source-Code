@@ -122,6 +122,7 @@ base_template_settings.actions = {
 		sprint_requires_press_to_interrupt = false,
 		start_input = "grenade_ability",
 		stop_alternate_fire = true,
+		time_scale_stat_buffs = false,
 		total_time = 0.55,
 		uninterruptible = true,
 		use_ability_charge = true,

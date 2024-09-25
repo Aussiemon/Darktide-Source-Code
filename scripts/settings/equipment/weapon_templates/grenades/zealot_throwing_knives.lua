@@ -86,6 +86,7 @@ weapon_template.actions = {
 		kind = "spawn_projectile",
 		override_origin_slot = "slot_grenade_ability",
 		sprint_requires_press_to_interrupt = false,
+		time_scale_stat_buffs = false,
 		total_time = 0.5,
 		uninterruptible = true,
 		use_ability_charge = true,
@@ -183,8 +184,10 @@ weapon_template.alternate_fire_settings = {
 }
 weapon_template.spread_template = "no_spread"
 weapon_template.ammo_template = "no_ammo"
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee

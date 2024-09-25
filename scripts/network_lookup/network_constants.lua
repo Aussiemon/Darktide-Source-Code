@@ -249,6 +249,7 @@ NetworkConstants.fixed_frame_offset_start_t_9bit = Network.type_info("fixed_fram
 NetworkConstants.fixed_frame_offset_end_t_4bit = Network.type_info("fixed_frame_offset_end_t_4bit")
 NetworkConstants.fixed_frame_offset_end_t_6bit = Network.type_info("fixed_frame_offset_end_t_6bit")
 NetworkConstants.fixed_frame_offset_end_t_7bit = Network.type_info("fixed_frame_offset_end_t_7bit")
+NetworkConstants.fixed_frame_offset_end_t_9bit = Network.type_info("fixed_frame_offset_end_t_9bit")
 
 local prd_state = Network.type_info("prd_state")
 

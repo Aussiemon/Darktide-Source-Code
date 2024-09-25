@@ -62,11 +62,11 @@ CraftingReplacePerkView.on_exit = function (self)
 end
 
 CraftingReplacePerkView._cb_fetch_perks_data = function (self)
-	local item_master_id = self._item and self._item.name
-
-	self._perks_item:present_perks(item_master_id, self._ingredients, callback(self, "cb_on_new_perk_selected")):next(function ()
+	self._perks_item:present_perks(self._item, self._ingredients, callback(self, "cb_on_new_perk_selected")):next(function (max_rank)
 		self._perks_item:set_color_intensity_multiplier(0.5)
 		self._perks_item:disable()
+
+		self._can_craft_context.max_rank = max_rank
 	end)
 end
 

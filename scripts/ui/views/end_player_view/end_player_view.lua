@@ -7,8 +7,9 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
+local MasteryUtils = require("scripts/utilities/mastery")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
-local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock")
+local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "weapon")
 local item_type_group_lookup = UISettings.item_type_group_lookup
 local EndPlayerView = class("EndPlayerView", "BaseView")
 local animation_speed = 1
@@ -146,6 +147,19 @@ EndPlayerView.update = function (self, dt, t, input_service)
 
 	if on_enter_animation_done and not self._continue_called then
 		self:_update_carousel(dt, t * animation_speed, input_service)
+	end
+
+	local slots = {
+		"slot_primary",
+		"slot_secondary",
+	}
+
+	for i = 1, #slots do
+		local slot = slots[i]
+
+		if self["_levelup_mastery_animation_id_" .. slot] and self:is_animation_done(self["_levelup_mastery_animation_id_" .. slot]) then
+			self["_levelup_mastery_animation_id_" .. slot] = nil
+		end
 	end
 
 	self:_update_timed_visibility_widgets(dt)
@@ -380,6 +394,57 @@ EndPlayerView._create_cards = function (self)
 		end
 	end
 
+	if session_report.mastery_rewards then
+		local rewards = session_report.mastery_rewards
+		local player = self:_player()
+		local profile = player:profile()
+		local card_data = {}
+
+		if #rewards > 0 then
+			card_data.rewards = rewards
+			card_data.loadout = profile.loadout
+
+			local slots = {
+				"slot_primary",
+				"slot_secondary",
+			}
+			local filtered_rewards = {}
+
+			for i = 1, #slots do
+				local slot = slots[i]
+				local item = profile.loadout[slot]
+
+				for f = 1, #rewards do
+					local reward = rewards[f]
+					local slot = reward.weapon_slot
+					local trait_category_id = reward.masteryId
+
+					if slot and trait_category_id then
+						local pattern_name = MasteryUtils.get_category_id_to_pattern_id(trait_category_id)
+
+						if pattern_name == item.parent_pattern then
+							filtered_rewards[slot] = reward
+
+							break
+						end
+					end
+				end
+			end
+
+			for i = 1, #slots do
+				local slot = slots[i]
+				local reward = filtered_rewards[slot]
+
+				card_data["added_exp_" .. slot] = reward and reward.gainedXp or 0
+				card_data["start_exp_" .. slot] = reward and reward.startXp or 0
+				card_data["exp_per_level_" .. slot] = reward and reward.exp_per_level or {}
+			end
+
+			card_index = card_index + 1
+			card_widgets[card_index] = self:_create_card_widget(card_index, "weapon", card_data)
+		end
+	end
+
 	self._current_card = 1
 end
 
@@ -404,6 +469,8 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 			math.floor(UISettings.weapon_icon_size[1] * 2),
 			math.floor(UISettings.weapon_icon_size[2] * 2),
 		}
+	elseif card_type == CARD_TYPES.weapon then
+		blueprint_name = "weapon"
 	else
 		return
 	end
@@ -699,6 +766,74 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 	experience_gain_widget_content.progress = bar_progress
 	experience_gain_widget_content.visibility_timer = ViewSettings.animation_times.xp_gain_visibility_time
 	self._timed_visibility_widgets[gain_widget_name] = experience_gain_widget
+end
+
+EndPlayerView.update_weapon_values = function (self, added_exp, slot, widget)
+	local exp_per_level = widget.content["exp_per_level_" .. slot]
+	local max_level = #exp_per_level or 0
+	local start_mastery_level = widget.content["weapon_start_mastery_level_" .. slot]
+	local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
+	local is_max_level = max_level <= current_mastery_level
+	local start_exp_content = widget.content["weapon_start_exp_" .. slot]
+	local start_exp = tonumber(start_exp_content)
+
+	if is_max_level then
+		local max_exp = exp_per_level[max_level] or 0
+		local previous_level_max_exp = exp_per_level[max_level - 1] or 0
+		local diff_exp_level = max_exp - previous_level_max_exp
+
+		widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
+			current = diff_exp_level,
+			next = diff_exp_level,
+		})
+
+		local style = widget.style["weapon_experience_bar_" .. slot]
+		local background_style = widget.style["weapon_experience_bar_background_" .. slot]
+
+		style.size[1] = background_style.size[1]
+	else
+		local next_exp_level = exp_per_level[current_mastery_level + 1] or 0
+		local current_exp_level = exp_per_level[current_mastery_level] or 0
+		local diff_exp_level = next_exp_level - current_exp_level
+		local start_exp_count = current_exp_level - start_exp
+		local new_exp = start_exp + added_exp
+		local current_exp = math.floor(new_exp - current_exp_level)
+
+		widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
+			current = current_exp,
+			next = diff_exp_level,
+		})
+
+		if next_exp_level <= new_exp then
+			current_mastery_level = current_mastery_level + 1
+
+			if self["_levelup_mastery_animation_id_" .. slot] then
+				self:_complete_animation(self["_levelup_mastery_animation_id_" .. slot])
+
+				self["_levelup_mastery_animation_id_" .. slot] = nil
+			end
+
+			self:_play_sound(UISoundEvents.end_screen_summary_mastery_level_up)
+
+			self["_levelup_mastery_animation_id_" .. slot] = self:_start_animation("weapon_level_up", widget, {
+				slot = slot,
+			}, nil)
+		end
+
+		widget.content["weapon_current_exp_level_" .. slot] = current_exp
+		widget.content["weapon_current_mastery_level_" .. slot] = current_mastery_level
+		widget.content["weapon_added_exp_text_" .. slot] = Localize("loc_eor_card_mastery_added_exp", true, {
+			exp = added_exp,
+		})
+
+		local bar_style = widget.style["weapon_experience_bar_" .. slot]
+		local bar_background_style = widget.style["weapon_experience_bar_background_" .. slot]
+		local clamped_new_exp = math.clamp(new_exp, current_exp_level, next_exp_level)
+		local exp_progress = current_exp_level == next_exp_level and 1 or math.ilerp(current_exp_level, next_exp_level, clamped_new_exp)
+		local bar_progress = math.clamp(exp_progress, 0, 1)
+
+		bar_style.size[1] = bar_background_style.size[1] * bar_progress
+	end
 end
 
 EndPlayerView._update_wallet = function (self, new_value, wallet_type)

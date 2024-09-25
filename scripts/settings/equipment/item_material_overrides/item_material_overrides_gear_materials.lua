@@ -1673,6 +1673,43 @@ local material_overrides = {
 			},
 		},
 	},
+	oxidized_metal_iron_gold_02_wear_02 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_01",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_black_01",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_02_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.5,
+			},
+			oxid_level = {
+				0.2,
+				0.5,
+			},
+		},
+	},
 	fabric_leather_02_plastic_hard_01_wear_01 = {
 		texture_overrides = {
 			mat1_bc = {
@@ -2984,6 +3021,33 @@ local material_overrides = {
 		property_overrides = {
 			dirt = {
 				0.6,
+			},
+		},
+	},
+	fabric_wool_03_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_bca",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_bca",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.1,
 			},
 		},
 	},

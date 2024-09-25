@@ -191,25 +191,25 @@ PlayerUnitTalentExtension._remove_gameplay_features = function (self, fixed_t)
 	local coherency_system = self._coherency_system
 	local coherency_external_buff_indices = self._coherency_external_buff_indices
 
-	for i = #coherency_external_buff_indices, 1, -1 do
-		local index = coherency_external_buff_indices[i]
+	for ii = #coherency_external_buff_indices, 1, -1 do
+		local index = coherency_external_buff_indices[ii]
 
 		coherency_system:remove_external_buff(unit, index)
 
-		coherency_external_buff_indices[i] = nil
+		coherency_external_buff_indices[ii] = nil
 	end
 
 	local buff_extension = self._buff_extension
 	local passive_buff_indices = self._passive_buff_indices
 
-	for i = #passive_buff_indices, 1, -1 do
-		local indices = passive_buff_indices[i]
+	for ii = #passive_buff_indices, 1, -1 do
+		local indices = passive_buff_indices[ii]
 		local local_index = indices.local_index
 		local component_index = indices.component_index
 
 		buff_extension:remove_externally_controlled_buff(local_index, component_index)
 
-		passive_buff_indices[i] = nil
+		passive_buff_indices[ii] = nil
 	end
 
 	local ability_extension = self._ability_extension

@@ -2,12 +2,12 @@
 
 local ViewElementTraitInventoryBlueprints = require("scripts/ui/view_elements/view_element_trait_inventory/view_element_trait_inventory_blueprints")
 local ViewElementTraitInventoryDefinitions = require("scripts/ui/view_elements/view_element_trait_inventory/view_element_trait_inventory_definitions")
-local ItemUtils = require("scripts/utilities/items")
-local RankSettings = require("scripts/settings/item/rank_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIAnimation = require("scripts/managers/ui/ui_animation")
 local InputDevice = require("scripts/managers/input/input_device")
+local Items = require("scripts/utilities/items")
+local RankSettings = require("scripts/settings/item/rank_settings")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local UIAnimation = require("scripts/managers/ui/ui_animation")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
@@ -66,6 +66,10 @@ ViewElementTraitInventory.clear_marks = function (self)
 
 	self._marked_widget = nil
 	self._marked_trait_item = nil
+
+	local index = self._parent._ingredients.existing_trait_index
+
+	self._parent._weapon_stats:preview_trait(index)
 end
 
 ViewElementTraitInventory.cb_on_grid_entry_left_pressed = function (self, widget, config)
@@ -105,6 +109,10 @@ end
 
 ViewElementTraitInventory.marked_trait_item = function (self)
 	return self._marked_trait_item
+end
+
+ViewElementTraitInventory.marked_trait_cost = function (self)
+	return self._marked_widget and self._marked_widget.content.cost
 end
 
 ViewElementTraitInventory._on_trait_hover = function (self, config)
@@ -249,9 +257,9 @@ ViewElementTraitInventory._update_info_box = function (self)
 		local trait_item = self._hovered_trait_item
 
 		content.display_name = Localize(trait_item.display_name)
-		content.description = ItemUtils.trait_description(trait_item, trait_item.rarity, trait_item.value)
+		content.description = Items.trait_description(trait_item, trait_item.rarity, trait_item.value)
 
-		local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_item.rarity)
+		local texture_icon, texture_frame = Items.trait_textures(trait_item, trait_item.rarity)
 		local icon_material_values = style.icon.material_values
 
 		icon_material_values.icon = texture_icon
@@ -310,7 +318,7 @@ ViewElementTraitInventory._update_tab_counts = function (self)
 		local widget = widgets_by_name["rank_" .. i]
 		local content = widget.content
 
-		content.blessings = NUM_BLESSINGS[i] .. "/" .. MAX_BLESSINGS[i]
+		content.blessings = (NUM_BLESSINGS[i] or 0) .. "/" .. (MAX_BLESSINGS[i] or 0)
 	end
 end
 
@@ -423,7 +431,7 @@ ViewElementTraitInventory._present = function (self, first_presentation)
 	for trait_name, seen_status in pairs(self._sticker_book) do
 		local status = seen_status[rank]
 
-		if status == "seen" then
+		if status ~= "invalid" then
 			local fake_trait = {
 				count = 1,
 				characterId = character_id,
@@ -440,16 +448,15 @@ ViewElementTraitInventory._present = function (self, first_presentation)
 			local MasterItems = require("scripts/backend/master_items")
 			local trait_stack_item = MasterItems.get_item_instance(fake_trait, fake_trait.uuid)
 
-			layout[#layout + 1] = {
-				trait_amount = 1,
-				widget_type = "trait",
-				trait_item = trait_stack_item,
-				trait_rarity = rank,
-			}
-		elseif status == "unseen" then
-			layout[#layout + 1] = {
-				widget_type = "unknown_trait",
-			}
+			if trait_stack_item then
+				layout[#layout + 1] = {
+					trait_amount = 1,
+					widget_type = "trait",
+					trait_item = trait_stack_item,
+					trait_rarity = rank,
+					status = status,
+				}
+			end
 		end
 	end
 

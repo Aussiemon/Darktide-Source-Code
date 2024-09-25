@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover.lua
 
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ServoSkullHover = class("ServoSkullHover")
 local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
 local FX_SOURCE_NAME = "_antigrav"
@@ -73,5 +74,7 @@ ServoSkullHover._destroy_effects = function (self)
 		self._looping_effect_id = nil
 	end
 end
+
+implements(ServoSkullHover, WieldableSlotScriptInterface)
 
 return ServoSkullHover

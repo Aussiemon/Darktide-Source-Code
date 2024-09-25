@@ -105,11 +105,7 @@ local widget_definitions = {
 local tab_bar_params = {
 	hide_tabs = true,
 	layer = 10,
-	tabs_params = {
-		{
-			view = "achievements_view",
-		},
-	},
+	tabs_params = {},
 }
 local input_legend_params = {
 	layer = 10,

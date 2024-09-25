@@ -1302,6 +1302,7 @@ weapon_template.actions = {
 		wounds_shape = wounds_shapes.horizontal_slash_clean,
 	},
 	action_right_light_pushfollow = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_stab",
 		anim_event_3p = "attack_swing_stab",
@@ -1312,7 +1313,6 @@ weapon_template.actions = {
 		hit_stop_anim = "hit_stop",
 		kind = "sweep",
 		range_mod = 1.25,
-		sprint_requires_press_to_interrupt = "true",
 		total_time = 2,
 		weapon_handling_template = "time_scale_1",
 		action_movement_curve = {
@@ -1458,8 +1458,10 @@ weapon_template.weapon_box = {
 	0.7,
 	0.02,
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
@@ -1765,6 +1767,24 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_special_attack_combatsword_p2m1_desc",
 		display_name = "loc_weapon_special_special_attack",
 		type = "special_attack",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "linesman",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "smiter",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "special_attack",
+		icon = "special_attack",
 	},
 }
 weapon_template.special_action_name = "action_attack_special"

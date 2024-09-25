@@ -82,7 +82,7 @@ if IS_XBS or IS_PLAYSTATION then
 	end
 end
 
-if IS_WINDOWS and BUILD ~= "dev" and BUILD ~= "debug" then
+if BUILD ~= "dev" and BUILD ~= "debug" then
 	local function scrub_library(lib)
 		rawset(_G, lib, nil)
 

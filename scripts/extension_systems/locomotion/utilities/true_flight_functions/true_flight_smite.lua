@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_smite.lua
 
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
-local true_flight_smite = {}
+local TrueFlightSmite = {}
 
 local function _lerp_modifier_func_default(integration_data, distance)
 	return distance < 2 and 1 or 2 / distance
@@ -13,7 +13,7 @@ local function _lerp_modifier_func(true_flight_template)
 	return template_func or _lerp_modifier_func_default
 end
 
-true_flight_smite.smite_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
+TrueFlightSmite.smite_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 	local true_flight_template = integration_data.true_flight_template
 	local on_target_time = integration_data.on_target_time
 	local time_without_bounce = integration_data.time_without_bounce
@@ -85,4 +85,4 @@ true_flight_smite.smite_update_towards_position = function (target_position, phy
 	return new_position, new_rotation
 end
 
-return true_flight_smite
+return TrueFlightSmite

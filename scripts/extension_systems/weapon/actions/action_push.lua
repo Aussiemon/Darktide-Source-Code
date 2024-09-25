@@ -98,7 +98,7 @@ ActionPush._push = function (self, t)
 	self:_pay_warp_charge_cost_immediate(t, 1)
 
 	if action_settings.activate_special then
-		self:_set_weapon_special(true, t)
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
 	end
 
 	self:_play_push_particles(t)

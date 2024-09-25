@@ -69,6 +69,7 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 		is_consumed = "false",
 		is_disabled = false,
 		is_disabled_override = false,
+		is_grabbed = "false",
 		is_hogtied = "false",
 		is_knocked_down = "false",
 		is_ledge_hanging = "false",

@@ -11,6 +11,7 @@ DecoderDeviceExtension.init = function (self, extension_init_context, unit, exte
 	self._is_server = extension_init_context.is_server
 	self._unit_is_enabled = false
 	self._is_placed = false
+	self._placing_unit = nil
 	self._decoding_interrupted = false
 	self._is_finished = false
 	self._started_decode = false
@@ -79,13 +80,7 @@ DecoderDeviceExtension.update = function (self, unit, dt, t)
 		if minigame_extension then
 			local current_minigame_state = minigame_extension:current_state()
 
-			if current_minigame_state == minigame_states.none then
-				self._interruption_ignored_timer = self._interruption_ignored_timer + dt
-
-				if self._interruption_ignored_timer > 1 then
-					self._interruption_ignored_timer = self._interruption_ignored_timer - 1
-				end
-			elseif current_minigame_state == minigame_states.completed then
+			if current_minigame_state == minigame_states.completed then
 				minigame_extension:stop()
 				self._decoder_synchronizer_extension:unblock_decoding_progression()
 			end
@@ -166,14 +161,16 @@ DecoderDeviceExtension._set_visible_state = function (self, visible_state)
 	end
 end
 
-DecoderDeviceExtension.decoder_setup_success = function (self)
+DecoderDeviceExtension.decoder_setup_success = function (self, placing_unit)
 	if not self._is_placed then
+		self._placing_unit = placing_unit
+
 		self:place_unit()
 		self._decoder_synchronizer_extension:unblock_decoding_progression()
 	end
 end
 
-DecoderDeviceExtension.place_unit = function (self)
+DecoderDeviceExtension.place_unit = function (self, placing_unit)
 	if self._is_server and self._install_anim_event ~= "" then
 		local unit_id = Managers.state.unit_spawner:level_index(self._unit)
 
@@ -217,7 +214,6 @@ DecoderDeviceExtension.decode_interrupt = function (self)
 	end
 
 	self._decoding_interrupted = true
-	self._interruption_ignored_timer = 0
 
 	Unit.flow_event(self._unit, "lua_decode_on_hold")
 end
@@ -227,6 +223,16 @@ DecoderDeviceExtension.finished = function (self)
 		local unit_id = Managers.state.unit_spawner:level_index(self._unit)
 
 		Managers.state.game_session:send_rpc_clients("rpc_decoder_device_finished", unit_id)
+
+		local minigame_extension = self._minigame_extension
+
+		if minigame_extension then
+			local current_minigame_state = minigame_extension:current_state()
+
+			if current_minigame_state ~= minigame_states.none then
+				minigame_extension:stop()
+			end
+		end
 	end
 
 	self._is_finished = true
@@ -252,6 +258,34 @@ end
 
 DecoderDeviceExtension.is_finished = function (self)
 	return self._is_finished
+end
+
+DecoderDeviceExtension.placing_unit = function (self)
+	return self._placing_unit
+end
+
+DecoderDeviceExtension.is_minigame_active = function (self)
+	local minigame_extension = self._minigame_extension
+
+	if not minigame_extension then
+		return false
+	end
+
+	local current_minigame_state = minigame_extension:current_state()
+
+	return current_minigame_state == minigame_states.active
+end
+
+DecoderDeviceExtension.is_minigame_progressing = function (self)
+	local minigame_extension = self._minigame_extension
+
+	if not minigame_extension then
+		return false
+	end
+
+	local minigame = minigame_extension:minigame()
+
+	return minigame:progressing()
 end
 
 DecoderDeviceExtension.wait_for_setup = function (self)

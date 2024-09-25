@@ -42,5 +42,11 @@ templates.weapon_trait_bespoke_forcestaff_p3_increased_max_jumps = {
 		[stat_buffs.chain_lightning_staff_max_jumps] = 1,
 	},
 }
+templates.weapon_trait_bespoke_forcestaff_p3_double_shot_on_crit = table.clone(BaseWeaponTraitBuffTemplates.double_shot_on_crit)
+templates.weapon_trait_bespoke_forcestaff_p3_followup_shots_ranged_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_damage)
+templates.weapon_trait_bespoke_forcestaff_p3_followup_shots_ranged_damage.conditional_stat_buffs = {
+	[stat_buffs.charge_level_modifier] = 0.05,
+}
+templates.weapon_trait_bespoke_forcestaff_p3_vents_warpcharge_on_weakspot_hits = table.clone(BaseWeaponTraitBuffTemplates.vents_warpcharge_on_weakspot_hits)
 
 return templates

@@ -1,16 +1,16 @@
 ﻿-- chunkname: @scripts/ui/views/system_view/system_view.lua
 
 local Definitions = require("scripts/ui/views/system_view/system_view_definitions")
+local Settings = require("scripts/ui/views/system_view/system_view_settings")
 local ContentList = require("scripts/ui/views/system_view/system_view_content_list")
 local ContentBlueprints = require("scripts/ui/views/system_view/system_view_content_blueprints")
-local SystemViewSettings = require("scripts/ui/views/system_view/system_view_settings")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local InputDevice = require("scripts/managers/input/input_device")
 local SystemView = class("SystemView", "BaseView")
 
@@ -29,17 +29,16 @@ end
 SystemView._setup_widgets = function (self)
 	local scenegraph_id = "grid_content_pivot"
 	local callback_name = "_on_entry_pressed_cb"
+	local content_widgets = self._content_widgets
+	local content_widget_count = content_widgets and #content_widgets or 0
 
-	if self._content_widgets then
-		for i = 1, #self._content_widgets do
-			local widget = self._content_widgets[i]
+	for i = 1, content_widget_count do
+		local widget = content_widgets[i]
 
-			self:_unregister_widget_name(widget.name)
-		end
-
-		self._content_widgets = nil
+		self:_unregister_widget_name(widget.name)
 	end
 
+	self._content_widgets = nil
 	self._content_widgets, self._alignment_list, self._list_verification = self:_setup_content_widgets(ContentList, scenegraph_id, callback_name)
 	self._content_grid = self:_setup_grid(self._content_widgets, self._alignment_list)
 
@@ -69,7 +68,7 @@ SystemView._setup_content_grid_scrollbar = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local scrollbar_widget = widgets_by_name.scrollbar
 	local pivot_scenegraph_id = "grid_content_pivot"
-	local interaction_scenegraph_id = "background"
+	local interaction_scenegraph_id = "grid"
 
 	self._content_grid:assign_scrollbar(scrollbar_widget, pivot_scenegraph_id, interaction_scenegraph_id)
 end
@@ -83,22 +82,12 @@ SystemView._on_entry_pressed_cb = function (self, widget, entry)
 end
 
 SystemView._setup_content_widgets = function (self, content, scenegraph_id, callback_name)
-	local definitions = self._definitions
 	local widget_definitions = {}
 	local widgets = {}
 	local alignment_list = {}
 	local list_verification = {}
 	local current_state_name = Managers.ui:get_current_state_name()
-	local list = content.default
-
-	for name, value in pairs(content) do
-		if name == current_state_name then
-			list = value
-
-			break
-		end
-	end
-
+	local list = content[current_state_name] or content.default
 	local amount = #list
 
 	for i = 1, amount do
@@ -107,7 +96,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 		local disabled = false
 		local validation_function = entry.validation_function
 
-		if validation_function and verified then
+		if verified and validation_function then
 			verified, disabled = validation_function()
 			list_verification[#list_verification + 1] = {
 				verified = verified,
@@ -124,8 +113,6 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 			local pass_template = template.pass_template
 
 			if pass_template and not widget_definitions[type] then
-				local scenegraph_definition = definitions.scenegraph_definition
-
 				widget_definitions[type] = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 			end
 
@@ -135,6 +122,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 				local name = scenegraph_id .. "_widget_" .. i
 
 				widget = self:_create_widget(name, widget_definition)
+				widget.entry = entry
 
 				local init = template.init
 
@@ -148,6 +136,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 					widget.content.focus_group = focus_group
 				end
 
+				widget.update = template.update
 				widgets[#widgets + 1] = widget
 			end
 
@@ -186,7 +175,7 @@ SystemView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	SystemView.super._draw_widgets(self, dt, t, input_service, ui_renderer)
 
 	local content_widgets = self._content_widgets
-	local num_content_widgets = #content_widgets
+	local num_content_widgets = content_widgets and #content_widgets or 0
 
 	for i = 1, num_content_widgets do
 		local widget = content_widgets[i]
@@ -197,10 +186,11 @@ end
 
 SystemView._setup_grid = function (self, widgets, alignment_list)
 	local ui_scenegraph = self._ui_scenegraph
-	local grid_scenegraph_id = "background"
+	local grid_scenegraph_id = "grid"
 	local direction = "down"
 	local spacing = ContentBlueprints.vertical_spacing
-	local grid = UIWidgetGrid:new(widgets, alignment_list, ui_scenegraph, grid_scenegraph_id, direction, spacing)
+	local center_content = true
+	local grid = UIWidgetGrid:new(widgets, alignment_list, ui_scenegraph, grid_scenegraph_id, direction, spacing, nil, nil, nil, nil, nil, nil, center_content)
 
 	if self._using_cursor_navigation == false and InputDevice.gamepad_active then
 		grid:select_first_index()
@@ -215,22 +205,31 @@ SystemView.set_render_scale = function (self, scale)
 end
 
 SystemView.update = function (self, dt, t, input_service)
-	local grid_length = self._content_grid:length()
+	local content_grid = self._content_grid
 
-	if grid_length ~= self._grid_length then
-		self._grid_length = grid_length
+	content_grid:update(dt, t, input_service)
+
+	local content_widgets = self._content_widgets
+	local content_widget_count = content_widgets and #content_widgets or 0
+
+	for i = 1, content_widget_count do
+		local widget = content_widgets[i]
+		local update_function = widget.update
+
+		if update_function then
+			update_function(self, widget)
+		end
 	end
 
-	self._content_grid:update(dt, t, input_service)
+	local list_verification = self._list_verification
+	local list_verification_size = list_verification and #list_verification or 0
 
-	if self._list_verification then
-		for i = 1, #self._list_verification do
-			local verification = self._list_verification[i]
-			local verified, disabled = verification.validation_function()
+	for i = 1, list_verification_size do
+		local verification = list_verification[i]
+		local verified, disabled = verification.validation_function()
 
-			if verified ~= verification.verified or disabled ~= verification.disabled then
-				self:_setup_widgets()
-			end
+		if verified ~= verification.verified or disabled ~= verification.disabled then
+			self:_setup_widgets()
 		end
 	end
 
@@ -336,37 +335,45 @@ SystemView.cb_shading_callback = function (self, world, shading_env, viewport, d
 end
 
 SystemView._destroy_background = function (self)
-	if self._ui_background_renderer then
-		self._ui_background_renderer = nil
+	local ui_background_renderer = self._ui_background_renderer
 
-		Managers.ui:destroy_renderer(self.__class_name .. "_ui_background_renderer")
-
-		local world = self._background_world
-		local viewport_name = self._background_viewport_name
-
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
-
-		self._background_viewport_name = nil
-		self._background_world = nil
+	if not ui_background_renderer then
+		return
 	end
+
+	self._ui_background_renderer = nil
+
+	Managers.ui:destroy_renderer(self.__class_name .. "_ui_background_renderer")
+
+	local world = self._background_world
+	local viewport_name = self._background_viewport_name
+
+	ScriptWorld.destroy_viewport(world, viewport_name)
+	Managers.ui:destroy_world(world)
+
+	self._background_viewport_name = nil
+	self._background_world = nil
 end
 
 SystemView._destroy_default_gui = function (self)
-	if self._ui_default_renderer then
-		self._ui_default_renderer = nil
+	local ui_default_renderer = self._ui_default_renderer
 
-		Managers.ui:destroy_renderer(self.__class_name .. "_ui_default_renderer")
-
-		local world = self._world
-		local viewport_name = self._viewport_name
-
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
-
-		self._viewport_name = nil
-		self._world = nil
+	if not ui_default_renderer then
+		return
 	end
+
+	self._ui_default_renderer = nil
+
+	Managers.ui:destroy_renderer(self.__class_name .. "_ui_default_renderer")
+
+	local world = self._world
+	local viewport_name = self._viewport_name
+
+	ScriptWorld.destroy_viewport(world, viewport_name)
+	Managers.ui:destroy_world(world)
+
+	self._viewport_name = nil
+	self._world = nil
 end
 
 SystemView.on_exit = function (self)

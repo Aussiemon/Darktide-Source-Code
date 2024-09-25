@@ -1,6 +1,12 @@
 ﻿-- chunkname: @scripts/settings/talent/talent_settings_zealot.lua
 
 local talent_settings = {
+	zealot = {
+		crits_grants_cd = {
+			cooldown_regen = 2,
+			duration = 4.25,
+		},
+	},
 	zealot_1 = {
 		combat_ability = {},
 		grenade = {},
@@ -58,7 +64,7 @@ local talent_settings = {
 			health_step = 0.15,
 			martyrdom_max_stacks = 7,
 			max_stacks = 3,
-			toughness_reduction_per_stack = -0.05,
+			toughness_reduction_per_stack = -0.065,
 		},
 		passive_2 = {
 			active_duration = 5,
@@ -127,9 +133,9 @@ local talent_settings = {
 			on_damage_taken_proc_chance = 1,
 		},
 		defensive_3 = {
-			duration = 5,
+			duration = 4,
 			on_damage_taken_proc_chance = 1,
-			recuperate_percentage = 0.25,
+			recuperate_percentage = 0.2,
 		},
 		offensive_2_1 = {
 			damage = 0.25,

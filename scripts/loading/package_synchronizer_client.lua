@@ -624,8 +624,16 @@ end
 
 PackageSynchronizerClient._get_loaded_packages_from_package_data = function (self, package_data, input_array)
 	if package_data.state ~= LOADING_STATES.ready_to_load then
-		for package_name, id in pairs(package_data.dependencies) do
-			input_array[#input_array + 1] = id
+		local keys = table.keys(package_data.dependencies)
+
+		table.sort(keys)
+
+		local dependencies = package_data.dependencies
+
+		for key_index = 1, #keys do
+			local key = keys[key_index]
+
+			input_array[#input_array + 1] = dependencies[key]
 		end
 	end
 end
@@ -634,11 +642,16 @@ PackageSynchronizerClient._handle_dependency_differences = function (self, new_p
 	local current_state = package_data.state
 	local dependencies = package_data.dependencies
 	local new_dependencies = new_package_data.dependencies
+	local sorted_dependencies = table.keys(dependencies)
 
-	for package_name, id in pairs(dependencies) do
+	table.sort(sorted_dependencies)
+
+	for sorted_dependencie_index = 1, #sorted_dependencies do
+		local package_name = sorted_dependencies[sorted_dependencie_index]
+
 		if new_dependencies[package_name] == nil then
 			if current_state ~= LOADING_STATES.ready_to_load then
-				package_ids[#package_ids + 1] = id
+				package_ids[#package_ids + 1] = dependencies[package_name]
 			end
 
 			dependencies[package_name] = nil

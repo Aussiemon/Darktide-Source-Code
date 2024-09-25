@@ -217,6 +217,33 @@ boss_name_templates.renegade_captain = {
 	"loc_renegade_captain_male_name_212",
 	"loc_renegade_captain_male_name_213",
 }
+boss_name_templates.cultist_captain = {
+	"loc_cultist_captain_male_name_001",
+	"loc_cultist_captain_male_name_002",
+	"loc_cultist_captain_male_name_003",
+	"loc_cultist_captain_male_name_004",
+	"loc_cultist_captain_male_name_005",
+	"loc_cultist_captain_male_name_006",
+	"loc_cultist_captain_male_name_007",
+	"loc_cultist_captain_male_name_008",
+	"loc_cultist_captain_male_name_009",
+	"loc_cultist_captain_male_name_010",
+	"loc_cultist_captain_male_name_011",
+	"loc_cultist_captain_male_name_012",
+	"loc_cultist_captain_male_name_013",
+	"loc_cultist_captain_male_name_014",
+	"loc_cultist_captain_male_name_015",
+	"loc_cultist_captain_male_name_016",
+	"loc_cultist_captain_male_name_017",
+	"loc_cultist_captain_male_name_018",
+	"loc_cultist_captain_male_name_019",
+	"loc_cultist_captain_male_name_020",
+	"loc_cultist_captain_male_name_021",
+	"loc_cultist_captain_male_name_022",
+	"loc_cultist_captain_male_name_023",
+	"loc_cultist_captain_male_name_024",
+	"loc_cultist_captain_male_name_025",
+}
 boss_name_templates.plague_ogryn = "loc_plague_ogryn_name"
 boss_name_templates.daemonhost = "loc_daemonhost_name"
 boss_name_templates.beast_of_nurgle = "loc_breed_display_name_chaos_beast_of_nurgle"

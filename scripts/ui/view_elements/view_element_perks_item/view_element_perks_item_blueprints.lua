@@ -1,12 +1,12 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_blueprints.lua
 
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local InputDevice = require("scripts/managers/input/input_device")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputDevice = require("scripts/managers/input/input_device")
 local TextUtilities = require("scripts/utilities/ui/text")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local amount_style = table.clone(UIFontSettings.body_small)
 
 amount_style.text_color = Color.terminal_icon(nil, true)
@@ -290,13 +290,32 @@ ViewElementPerksItemBlueprints.perk = {
 			style = weapon_perk_style,
 			change_function = function (content, style)
 				local hotspot = content.hotspot
-				local default_color = (hotspot.disabled or content.is_wasteful) and style.disabled_color or style.default_color
+				local default_color = (hotspot.disabled or content.is_wasteful or content.is_locked) and style.disabled_color or style.default_color
 				local hover_color = style.hover_color
 				local text_color = style.text_color
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
 			end,
+		},
+		{
+			pass_type = "text",
+			style_id = "expertise_cost",
+			value = "",
+			value_id = "expertise_cost",
+			style = {
+				font_size = 18,
+				horizontal_alignment = "right",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "center",
+				vertical_alignment = "center",
+				offset = {
+					-20,
+					0,
+					6,
+				},
+				text_color = Color.terminal_corner(255, true),
+			},
 		},
 	},
 	init = function (parent, widget, config, callback_name)
@@ -310,8 +329,8 @@ ViewElementPerksItemBlueprints.perk = {
 		local perk_rarity = config.perk_rarity
 		local content = widget.content
 
-		content.description = ItemUtils.perk_description(perk_item, perk_rarity, 1)
-		content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
+		content.description = Items.perk_description(perk_item, perk_rarity, 1)
+		content.rank = Items.perk_textures(perk_item, perk_rarity)
 		content.hotspot.pressed_callback = callback(parent, callback_name, widget, config)
 	end,
 	update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -357,6 +376,8 @@ ViewElementPerksItemBlueprints.perk = {
 				content.is_wasteful = true
 			end
 		end
+
+		content.is_locked = parent._max_unlocked and perk_item.rarity > parent._max_unlocked
 	end,
 }
 

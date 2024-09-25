@@ -5,12 +5,13 @@ local PlayerSpawner = component("PlayerSpawner")
 PlayerSpawner.init = function (self, unit)
 	local player_spawner_extension = ScriptUnit.fetch_component_extension(unit, "player_spawner_system")
 
-	if player_spawner_extension then
+	if player_spawner_extension and self:get_data(unit, "active") then
 		local player_side = self:get_data(unit, "player_side")
 		local spawn_identifier = self:get_data(unit, "spawn_identifier")
 		local spawn_priority = self:get_data(unit, "spawn_priority")
+		local parent_spawned = self:get_data(unit, "parent_spawned")
 
-		player_spawner_extension:setup_from_component(unit, player_side, spawn_identifier, spawn_priority)
+		player_spawner_extension:setup_from_component(unit, player_side, spawn_identifier, spawn_priority, parent_spawned)
 	end
 end
 
@@ -35,6 +36,11 @@ PlayerSpawner.destroy = function (self, unit)
 end
 
 PlayerSpawner.component_data = {
+	active = {
+		ui_name = "Active",
+		ui_type = "check_box",
+		value = true,
+	},
 	player_side = {
 		ui_name = "Player Side",
 		ui_type = "combo_box",
@@ -70,6 +76,11 @@ PlayerSpawner.component_data = {
 		ui_name = "Spawn Priority",
 		ui_type = "number",
 		value = 1,
+	},
+	parent_spawned = {
+		ui_name = "Parent Spawned",
+		ui_type = "check_box",
+		value = false,
 	},
 	extensions = {
 		"PlayerSpawnerExtension",

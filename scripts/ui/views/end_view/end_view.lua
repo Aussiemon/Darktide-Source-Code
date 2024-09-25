@@ -1,18 +1,15 @@
 ﻿-- chunkname: @scripts/ui/views/end_view/end_view.lua
 
 local Definitions = require("scripts/ui/views/end_view/end_view_definitions")
-local Breeds = require("scripts/settings/breed/breeds")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local EndViewTestify = GameParameters.testify and require("scripts/ui/views/end_view/end_view_testify")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -735,7 +732,6 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 end
 
 EndView._create_player_widget = function (self, player_info, slot, more_than_one_party)
-	local session_report = self._session_report
 	local widget_definition = self._player_widget_definition
 	local widget_name = string.format("player_panel_%d", slot.index)
 	local widget = self:_create_widget(widget_name, widget_definition)

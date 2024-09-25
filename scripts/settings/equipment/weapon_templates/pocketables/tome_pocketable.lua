@@ -170,6 +170,10 @@ weapon_template.actions = {
 		total_time = 0.7,
 		smart_targeting_template = SmartTargetingTemplates.target_ally_close,
 		validate_target_func = PocketableUtils.validate_give_pocketable_target_func,
+		voice_event_data = {
+			voice_tag_concept = "on_demand_com_wheel",
+			voice_tag_id = "com_take_this",
+		},
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -192,6 +196,10 @@ weapon_template.keywords = {
 	"pocketable",
 }
 weapon_template.ammo_template = "no_ammo"
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.breed_anim_state_machine_3p = {
 	human = "content/characters/player/human/third_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",

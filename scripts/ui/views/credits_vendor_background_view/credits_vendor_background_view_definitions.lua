@@ -108,6 +108,9 @@ local button_options_definitions = {
 						blur_background = false,
 						display_name = "loc_credits_vendor_view_title",
 						view = "credits_vendor_view",
+						context = {
+							use_item_categories = true,
+						},
 						input_legend_buttons = {
 							{
 								alignment = "right_alignment",

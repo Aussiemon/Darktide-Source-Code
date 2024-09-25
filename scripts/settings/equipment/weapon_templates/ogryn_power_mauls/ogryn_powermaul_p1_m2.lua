@@ -223,6 +223,10 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_pipe_club,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active,
 		herding_template = HerdingTemplates.ogryn_punch,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_left_heavy = {
 		allowed_during_sprint = true,
@@ -302,6 +306,10 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_pipe_club,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_heavy_tank_active,
 		herding_template = HerdingTemplates.linesman_left_heavy,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_right = {
 		allowed_during_sprint = true,
@@ -459,6 +467,10 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
 		damage_type = damage_types.ogryn_pipe_club,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_right_heavy = {
 		anim_event = "attack_swing_heavy_right",
@@ -538,6 +550,10 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_pipe_club,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_heavy_tank_active,
 		herding_template = HerdingTemplates.linesman_right_heavy,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_left_2 = {
 		anim_end_event = "attack_finished",
@@ -694,6 +710,10 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_pipe_club,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
 		herding_template = HerdingTemplates.linesman_left_heavy,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_right_2 = {
 		anim_end_event = "attack_finished",
@@ -851,6 +871,10 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_pipe_club,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
 		herding_template = HerdingTemplates.linesman_right_heavy,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_melee_start_heavy_follow_up_part_1 = {
 		anim_end_event = "attack_finished",
@@ -1008,6 +1032,10 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_pipe_club,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
 		herding_template = HerdingTemplates.linesman_right_heavy,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_weapon_special = {
 		activation_time = 1.3,
@@ -1191,6 +1219,7 @@ weapon_template.actions = {
 		},
 	},
 	action_right_light_pushfollow = {
+		allowed_during_sprint = true,
 		anim_event = "push_follow_up",
 		attack_direction_override = "right",
 		damage_window_end = 0.5333333333333333,
@@ -1200,7 +1229,6 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		range_mod = 1.25,
-		sprint_requires_press_to_interrupt = "true",
 		total_time = 2,
 		weapon_handling_template = "time_scale_1_2",
 		action_movement_curve = {
@@ -1266,6 +1294,10 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
 		damage_type = damage_types.ogryn_pipe_club,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 	},
 	action_push = {
 		anim_event = "attack_push",
@@ -1584,6 +1616,24 @@ weapon_template.displayed_attacks = {
 		type = "activate",
 	},
 }
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "light",
+			icon = "smiter",
+			value_func = "primary_attack",
+		},
+		{
+			header = "heavy",
+			icon = "tank",
+			value_func = "secondary_attack",
+		},
+	},
+	weapon_special = {
+		header = "activate",
+		icon = "activate",
+	},
+}
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
@@ -1594,13 +1644,15 @@ weapon_template.weapon_box = {
 	0.7,
 	0.02,
 }
-weapon_template.uses_ammunition = false
-weapon_template.uses_overheat = false
-weapon_template.allow_sprinting_with_special = true
+weapon_template.hud_configuration = {
+	uses_ammunition = false,
+	uses_overheat = false,
+}
 weapon_template.weapon_special_class = "WeaponSpecialExplodeOnImpact"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 4,
 	disorientation_type = "ogryn_powermaul_disorientation",
+	keep_active_on_sprint = true,
 	explosion_template = ExplosionTemplates.powermaul_activated_impact,
 }
 weapon_template.sprint_ready_up_time = 0.2

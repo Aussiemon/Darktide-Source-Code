@@ -305,8 +305,10 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 	base_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 	base_template.spread_template = "no_spread"
 	base_template.ammo_template = "no_ammo"
-	base_template.uses_ammunition = false
-	base_template.uses_overheat = false
+	base_template.hud_configuration = {
+		uses_ammunition = false,
+		uses_overheat = false,
+	}
 	base_template.sprint_ready_up_time = 0.1
 	base_template.max_first_person_anim_movement_speed = 5.8
 	base_template.crosshair = {

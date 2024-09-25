@@ -2094,7 +2094,7 @@ MissionBoardView._update_happening = function (self, t)
 	local happening = self._backend_data and self._backend_data.happening
 	local widget = self._widgets_by_name.happening
 
-	if happening and not happening.dynamic then
+	if happening and false then
 		local circumstances = happening.circumstances
 
 		for i = 1, #circumstances do

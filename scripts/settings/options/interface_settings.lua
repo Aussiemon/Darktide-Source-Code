@@ -743,7 +743,7 @@ local settings_definitions = {
 			return
 		end,
 		validation_function = function ()
-			return not IS_XBS or not IS_PLAYSTATION
+			return not IS_XBS and not IS_PLAYSTATION
 		end,
 	},
 	{
@@ -766,6 +766,34 @@ local settings_definitions = {
 		widget_type = "boolean",
 		validation_function = function ()
 			return IS_WINDOWS
+		end,
+	},
+	{
+		default_value = true,
+		display_name = "loc_interface_setting_crossplay_enabled",
+		id = "crossplay_enabled",
+		save_location = "interface_settings",
+		tooltip_text = "loc_settings_crossplay",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_crossplay_change", value)
+		end,
+		validation_function = function ()
+			return IS_PLAYSTATION
+		end,
+	},
+	{
+		default_value = true,
+		display_name = "loc_interface_setting_telemetry_enabled",
+		id = "telemetry_enabled",
+		save_location = "interface_settings",
+		tooltip_text = "loc_settings_telemetry",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_telemetry_change", value)
+		end,
+		validation_function = function ()
+			return IS_PLAYSTATION
 		end,
 	},
 }

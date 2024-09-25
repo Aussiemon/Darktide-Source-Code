@@ -6,6 +6,7 @@ local function _create_entry(path)
 	local entry_templates = require(path)
 
 	for name, template in upairs(entry_templates) do
+		template.name = name
 		templates[name] = template
 	end
 end

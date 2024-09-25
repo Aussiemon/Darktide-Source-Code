@@ -1140,6 +1140,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			local is_even = i % 2 == 0
 			local slot = spawn_slots[i]
 			local occupied = slot.occupied
+			local still_alive = not not Managers.player:player_from_unique_id(slot.unique_id)
 			local boxed_initial_position = slot.boxed_initial_position
 			local boxed_position = slot.boxed_position
 			local position = occupied and Vector3.from_array(boxed_position) or Vector3.from_array(boxed_initial_position)
@@ -1190,7 +1191,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 						local is_hover = not hovered_slot and talent_widget.content.hotspot and (talent_widget.content.hotspot.is_hover or talent_widget.content.hotspot.is_selected)
 
-						if is_hover then
+						if is_hover and still_alive then
 							hovered_slot = slot
 
 							local profile = slot.player:profile()

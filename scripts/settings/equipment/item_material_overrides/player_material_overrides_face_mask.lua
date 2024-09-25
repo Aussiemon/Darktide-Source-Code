@@ -33,6 +33,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_face_left_half = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0,
+				0,
+			},
+			negative_mask = {
+				0.5,
+				0,
+				0,
+				0,
+			},
+		},
+	},
 	mask_face_cowl = {
 		property_overrides = {
 			positive_mask = {
@@ -590,6 +606,22 @@ local material_overrides = {
 				0,
 				0,
 				0,
+			},
+		},
+	},
+	mask_face_keep_left_eye = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0,
+				0.726,
+			},
+			negative_mask = {
+				0.509,
+				0,
+				0.198,
+				0.503,
 			},
 		},
 	},

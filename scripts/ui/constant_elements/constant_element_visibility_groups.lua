@@ -1,6 +1,15 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/constant_element_visibility_groups.lua
 
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
+
+local function _is_in_hub()
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode_name = game_mode_manager and game_mode_manager:game_mode_name()
+	local is_in_hub = game_mode_name == "hub"
+
+	return is_in_hub
+end
+
 local visibility_groups = {
 	{
 		name = "disabled",
@@ -72,9 +81,25 @@ local visibility_groups = {
 		end,
 	},
 	{
+		name = "in_hub_view",
+		validation_function = function (hud)
+			if _is_in_hub() then
+				return not Managers.ui:allow_hud()
+			end
+
+			return false
+		end,
+	},
+	{
 		name = "in_view",
 		validation_function = function (element)
 			return Managers.ui:has_active_view()
+		end,
+	},
+	{
+		name = "in_hub",
+		validation_function = function (element)
+			return _is_in_hub()
 		end,
 	},
 	{

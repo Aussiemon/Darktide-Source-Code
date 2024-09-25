@@ -417,6 +417,10 @@ weapon_template.actions = {
 			"braced",
 			"braced_shooting",
 		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.ranged_attack_speed,
+		},
 	},
 	action_reload = {
 		hide_arc = true,
@@ -817,8 +821,10 @@ weapon_template.no_ammo_delay = 0.1
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
-weapon_template.uses_ammunition = true
-weapon_template.uses_overheat = false
+weapon_template.hud_configuration = {
+	uses_ammunition = true,
+	uses_overheat = false,
+}
 weapon_template.ammo_template = "ogryn_thumper_p1_m2"
 weapon_template.fx_sources = {
 	_mag_well = "fx_reload",
@@ -945,7 +951,31 @@ weapon_template.displayed_attacks = {
 	special = {
 		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
-		type = "melee",
+		type = "melee_hand",
+	},
+}
+weapon_template.weapon_card_data = {
+	main = {
+		{
+			header = "hipfire",
+			icon = "hipfire",
+			sub_icon = "projectile",
+			value_func = "primary_attack",
+		},
+		{
+			header = "brace",
+			icon = "brace",
+			sub_icon = "projectile",
+			value_func = "secondary_attack",
+		},
+		{
+			header = "ammo",
+			value_func = "ammo",
+		},
+	},
+	weapon_special = {
+		header = "weapon_bash",
+		icon = "melee_hand",
 	},
 }
 weapon_template.explicit_combo = {

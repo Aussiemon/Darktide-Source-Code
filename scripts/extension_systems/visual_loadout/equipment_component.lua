@@ -112,7 +112,7 @@ EquipmentComponent._fill_attach_settings_1p = function (self, attach_settings, b
 	attach_settings.breed_name = breed_name_or_nil
 end
 
-EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, optional_breed_name, optional_mission_template)
+EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, optional_breed_name, optional_mission_template, optional_equipment)
 	slot.equipped = true
 	slot.item = item
 	slot.deform_overrides = deform_overrides
@@ -128,7 +128,7 @@ EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, op
 		slot.item_loaded = true
 	end
 
-	self:_spawn_item_units(slot, unit_3p, unit_1p, attach_settings, optional_mission_template)
+	self:_spawn_item_units(slot, unit_3p, unit_1p, attach_settings, optional_mission_template, optional_equipment)
 
 	if slot.use_existing_unit_3p then
 		slot.unit_3p, slot.attachments_3p = optional_existing_unit_3p
@@ -149,7 +149,7 @@ EquipmentComponent._slot_is_loaded = function (self, slot)
 	return slot_is_loaded
 end
 
-EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, attach_settings, optional_mission_template)
+EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, attach_settings, optional_mission_template, optional_equipment)
 	local item = slot.item
 	local skip_attachments
 
@@ -170,7 +170,7 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 		if skip_attachments then
 			item_unit_3p = VisualLoadoutCustomization.spawn_base_unit(item_data, attach_settings, unit_3p, optional_mission_template)
 		else
-			item_unit_3p, attachment_units_3p, _, attachment_name_to_unit_3p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_3p, true, nil, optional_mission_template)
+			item_unit_3p, attachment_units_3p, _, attachment_name_to_unit_3p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_3p, true, nil, optional_mission_template, optional_equipment)
 		end
 
 		slot.unit_3p = item_unit_3p
@@ -394,7 +394,7 @@ EquipmentComponent.unequip_item = function (self, slot)
 	slot.deform_overrides = nil
 	slot.breed_name = nil
 
-	local unit_3p, unit_spawner = slot.unit_3p, self._unit_spawner
+	local unit_3p, attachments_3p, unit_spawner = slot.unit_3p, slot.attachments_3p, self._unit_spawner
 
 	if slot.use_existing_unit_3p then
 		if unit_alive(unit_3p) then
@@ -407,7 +407,7 @@ EquipmentComponent.unequip_item = function (self, slot)
 			end
 		end
 	else
-		_despawn_item_units(unit_spawner, unit_3p, slot.attachments_3p)
+		_despawn_item_units(unit_spawner, unit_3p, attachments_3p)
 	end
 
 	slot.unit_3p = nil

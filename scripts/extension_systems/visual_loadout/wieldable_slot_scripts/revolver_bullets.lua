@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_bullets.lua
 
 local Component = require("scripts/utilities/component")
+local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local _components
 local RevolverBullets = class("RevolverBullets")
 
@@ -136,5 +137,7 @@ function _components(destination, destination_lookup, attachments, attachments_n
 		end
 	end
 end
+
+implements(RevolverBullets, WieldableSlotScriptInterface)
 
 return RevolverBullets

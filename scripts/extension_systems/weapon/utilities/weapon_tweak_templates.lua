@@ -167,8 +167,9 @@ local function _add_trait(trait_name, rarity, buffs, weapon_name)
 	if trait_definition then
 		local buff_target = buff_targets.on_equip
 		local weapon_buff_list = buffs[buff_target]
+		local trait_buffs = trait_definition.buffs
 
-		for buff_template_name, data in pairs(trait_definition) do
+		for buff_template_name, data in pairs(trait_buffs) do
 			for i = rarity, 1, -1 do
 				local override_data = data[i]
 

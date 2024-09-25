@@ -197,39 +197,12 @@ ActionWeaponBase._add_weapon_blood = function (self, target_unit, amount)
 	Managers.state.blood:add_weapon_blood(self._player, wielded_slot, amount)
 end
 
-ActionWeaponBase._set_weapon_special = function (self, active, t)
-	local last_start_time = self._inventory_slot_component.special_active_start_t
-
-	self._inventory_slot_component.special_active = active
-
-	if active then
-		self._inventory_slot_component.special_active_start_t = t
-
-		local weapon_special_implementation = self._weapon.weapon_special_implementation
-
-		if weapon_special_implementation then
-			weapon_special_implementation:on_special_activation(t)
-		end
-
-		local proc_cooldown_time = 0.5
-
-		if t > last_start_time + proc_cooldown_time then
-			local param_table = self._buff_extension:request_proc_event_param_table()
-
-			if param_table then
-				param_table.t = t
-
-				self._buff_extension:add_proc_event(proc_events.on_weapon_special, param_table)
-			end
-		end
-	end
-end
-
 ActionWeaponBase._setup_charge_template = function (self, action_settings)
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
+	local charge_template = action_settings.charge_template or weapon_template.charge_template or "none"
 
-	weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or weapon_template.charge_template or "none"
+	weapon_tweak_templates_component.charge_template_name = charge_template
 end
 
 ActionWeaponBase._start_warp_charge_action = function (self, t)

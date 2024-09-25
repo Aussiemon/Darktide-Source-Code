@@ -1885,12 +1885,12 @@ PenanceOverviewView._update_animations = function (self, dt, t)
 		return
 	end
 
-	local currently_hovered_item = wintrack_element:currently_hovered_item()
+	local tooltip_visible = wintrack_element:tooltip_visible()
 	local anim_speed = 3
 	local previous_anim_wintrack_reward_hover_progress = self._anim_wintrack_reward_hover_progress or 0
 	local anim_wintrack_reward_hover_progress
 
-	if currently_hovered_item then
+	if tooltip_visible then
 		anim_wintrack_reward_hover_progress = math.min(previous_anim_wintrack_reward_hover_progress + dt * anim_speed, 1)
 	else
 		anim_wintrack_reward_hover_progress = math.max(previous_anim_wintrack_reward_hover_progress - dt * anim_speed, 0)
@@ -2235,7 +2235,9 @@ PenanceOverviewView.on_exit = function (self)
 		Managers.achievements:deactive_reward_claim_state()
 	end
 
-	Managers.telemetry_reporters:stop_reporter("penance_view")
+	if self._entered then
+		Managers.telemetry_reporters:stop_reporter("penance_view")
+	end
 end
 
 PenanceOverviewView._get_scenegraph_size = function (self, scenegraph_id)
@@ -3001,6 +3003,7 @@ PenanceOverviewView._on_carousel_card_secondary_pressed = function (self, index,
 end
 
 PenanceOverviewView._setup_penance_category_buttons = function (self, options)
+	local category_count = #options
 	local button_size = {
 		70,
 		60,
@@ -3199,8 +3202,8 @@ PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 					90,
 				},
 				offset = {
-					28,
-					-10,
+					23,
+					-5,
 					4,
 				},
 				color = Color.terminal_corner_selected(255, true),
@@ -3216,7 +3219,7 @@ PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}
 
-	for i = 1, #options do
+	for i = 1, category_count do
 		local option = options[i]
 		local score_progress
 		local category_id = option.category_id
@@ -3259,6 +3262,7 @@ PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 	self:_update_categories_tab_bar_position()
 
 	self._penance_category_options = options
+	self._widgets_by_name.page_header.style.top_bar.size[1] = 36 + category_count * (button_size[1] + button_spacing) + button_spacing
 end
 
 PenanceOverviewView._get_category_option_penance_amount = function (self, option)

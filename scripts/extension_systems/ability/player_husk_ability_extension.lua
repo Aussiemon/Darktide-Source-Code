@@ -223,10 +223,6 @@ PlayerHuskAbilityExtension.set_ability_charges = function (self)
 	error("not allowed to call on husk.")
 end
 
-PlayerHuskAbilityExtension.debug_equip_abilities = function (self)
-	error("not allowed to call on husk.")
-end
-
 PlayerHuskAbilityExtension.can_use_ability = function (self)
 	error("not allowed to call on husk")
 end

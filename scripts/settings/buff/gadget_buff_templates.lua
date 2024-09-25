@@ -7,14 +7,6 @@ local stat_buffs = BuffSettings.stat_buffs
 local meta_stat_buffs = BuffSettings.meta_stat_buffs
 local proc_events = BuffSettings.proc_events
 
-local function value_lerp_0dp(min, max, lerp_t)
-	local value = math.lerp(min, max, lerp_t)
-
-	value = math.round_with_precision(value, 0)
-
-	return value
-end
-
 local function value_lerp_2dp(min, max, lerp_t)
 	local value = math.lerp(min, max, lerp_t)
 
@@ -77,7 +69,6 @@ templates.gadget_side_mission_double_reward = {
 templates.gadget_stamina_regeneration_in_coherency = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	conditional_lerped_stat_buffs = {
 		[stat_buffs.stamina_regeneration_modifier] = {
 			max = 0.15,
@@ -105,7 +96,6 @@ templates.gadget_stamina_regeneration_in_coherency = {
 templates.gadget_coherency_toughness_regeneration = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.2,
 	},
@@ -116,7 +106,6 @@ templates.gadget_coherency_toughness_regeneration = {
 templates.gadget_toughness_regen_delay = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.toughness_regen_delay_multiplier] = 0.7,
 		[stat_buffs.toughness_regen_rate_modifier] = 0.3,
@@ -125,10 +114,9 @@ templates.gadget_toughness_regen_delay = {
 		[stat_buffs.toughness_regen_delay_multiplier] = DISPLAY.percentage,
 	},
 }
-templates.gadget_inate_toughness_increase = {
+templates.gadget_innate_toughness_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	lerped_stat_buffs = {
 		[stat_buffs.toughness_bonus] = {
 			max = 0.2,
@@ -140,10 +128,9 @@ templates.gadget_inate_toughness_increase = {
 		[stat_buffs.toughness_bonus] = DISPLAY.percentage,
 	},
 }
-templates.gadget_inate_ammo_increase = {
+templates.gadget_innate_ammo_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	lerped_stat_buffs = {
 		[stat_buffs.ammo_reserve_capacity] = {
 			max = 0.2,
@@ -158,7 +145,6 @@ templates.gadget_inate_ammo_increase = {
 templates.gadget_toughness_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.toughness_bonus] = 0.05,
 	},
@@ -166,10 +152,9 @@ templates.gadget_toughness_increase = {
 		[stat_buffs.toughness_bonus] = DISPLAY.percentage,
 	},
 }
-templates.gadget_inate_health_increase = {
+templates.gadget_innate_health_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	lerped_stat_buffs = {
 		[stat_buffs.max_health_modifier] = {
 			max = 0.25,
@@ -184,7 +169,6 @@ templates.gadget_inate_health_increase = {
 templates.gadget_health_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.05,
 	},
@@ -195,7 +179,6 @@ templates.gadget_health_increase = {
 templates.gadget_toughness_damage_reduction = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = 0.7,
 	},
@@ -203,10 +186,9 @@ templates.gadget_toughness_damage_reduction = {
 		[stat_buffs.toughness_damage_taken_multiplier] = DISPLAY.percentage,
 	},
 }
-templates.gadget_inate_max_wounds_increase = {
+templates.gadget_innate_max_wounds_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.extra_max_amount_of_wounds] = 1,
 	},
@@ -231,7 +213,6 @@ templates.gadget_stamina_increase = {
 templates.gadget_corruption_resistance = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.corruption_taken_multiplier] = 0.8,
 	},
@@ -269,7 +250,6 @@ templates.gadget_mission_reward_gear_instead_of_weapon_increase = {
 templates.gadget_permanent_damage_resistance = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.corruption_taken_grimoire_multiplier] = 0.8,
 	},
@@ -280,7 +260,6 @@ templates.gadget_permanent_damage_resistance = {
 templates.gadget_revive_speed_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.revive_speed_modifier] = 0.2,
 	},
@@ -291,7 +270,6 @@ templates.gadget_revive_speed_increase = {
 templates.gadget_cooldown_reduction = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.ability_cooldown_modifier] = -0.05,
 	},
@@ -302,7 +280,6 @@ templates.gadget_cooldown_reduction = {
 templates.gadget_sprint_cost_reduction = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.sprinting_cost_multiplier] = 0.8,
 	},
@@ -313,7 +290,6 @@ templates.gadget_sprint_cost_reduction = {
 templates.gadget_block_cost_reduction = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.block_cost_multiplier] = 0.8,
 	},
@@ -324,7 +300,6 @@ templates.gadget_block_cost_reduction = {
 templates.gadget_stamina_regeneration = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.stamina_regeneration_modifier] = 0.2,
 	},
@@ -335,7 +310,6 @@ templates.gadget_stamina_regeneration = {
 templates.gadget_damage_reduction_vs_flamers = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_cultist_flamer_multiplier] = 0.8,
 		[stat_buffs.damage_taken_by_renegade_flamer_multiplier] = 0.8,
@@ -347,7 +321,6 @@ templates.gadget_damage_reduction_vs_flamers = {
 templates.gadget_damage_reduction_vs_snipers = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_renegade_sniper_multiplier] = 0.8,
 	},
@@ -358,7 +331,6 @@ templates.gadget_damage_reduction_vs_snipers = {
 templates.gadget_damage_reduction_vs_grenadiers = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.8,
 		[stat_buffs.damage_taken_by_cultist_grenadier_multiplier] = 0.8,
@@ -370,7 +342,6 @@ templates.gadget_damage_reduction_vs_grenadiers = {
 templates.gadget_damage_reduction_vs_hounds = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_chaos_hound_multiplier] = 0.8,
 	},
@@ -381,7 +352,6 @@ templates.gadget_damage_reduction_vs_hounds = {
 templates.gadget_damage_reduction_vs_mutants = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_cultist_mutant_multiplier] = 0.8,
 	},
@@ -392,7 +362,6 @@ templates.gadget_damage_reduction_vs_mutants = {
 templates.gadget_damage_reduction_vs_gunners = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_cultist_gunner_multiplier] = 0.8,
 		[stat_buffs.damage_taken_by_renegade_gunner_multiplier] = 0.8,
@@ -405,7 +374,6 @@ templates.gadget_damage_reduction_vs_gunners = {
 templates.gadget_damage_reduction_vs_bombers = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_chaos_poxwalker_bomber_multiplier] = 0.8,
 	},
@@ -439,7 +407,6 @@ templates.gadget_stamina_while_reviving = {
 templates.gadget_push_block_angle_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	lerped_stat_buffs = {
 		[stat_buffs.inner_push_angle_modifier] = {
 			max = 0.15,
@@ -466,7 +433,6 @@ templates.gadget_push_block_angle_increase = {
 templates.gadget_mission_objective_complete_buff = {
 	class_name = "proc_buff",
 	predicted = false,
-	keywords = {},
 	proc_events = {
 		[proc_events.on_side_mission_objective_complete] = 1,
 	},
@@ -484,7 +450,6 @@ templates.gadget_mission_objective_complete_buff = {
 templates.gadget_all_grimoires_buff = {
 	class_name = "proc_buff",
 	predicted = false,
-	keywords = {},
 	proc_events = {
 		[proc_events.on_all_grimoires_picked_up] = 1,
 	},
@@ -519,7 +484,6 @@ templates.gadget_play_with_only_bots_buff = {
 templates.gadget_medical_healing_increase = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	lerped_stat_buffs = {
 		[stat_buffs.medical_crate_healing_modifier] = {
 			max = 0.25,
@@ -534,7 +498,6 @@ templates.gadget_medical_healing_increase = {
 templates.gadget_toughness_increase_on_revive = {
 	class_name = "proc_buff",
 	predicted = false,
-	keywords = {},
 	proc_events = {
 		[proc_events.on_revive] = 1,
 	},
@@ -557,7 +520,6 @@ templates.gadget_toughness_increase_on_revive = {
 templates.gadget_health_buff = {
 	class_name = "buff",
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.25,
 	},
@@ -569,7 +531,6 @@ templates.gadget_toughness_buff = {
 	class_name = "buff",
 	duration = 5,
 	predicted = false,
-	keywords = {},
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_modifier] = 0.5,
 	},

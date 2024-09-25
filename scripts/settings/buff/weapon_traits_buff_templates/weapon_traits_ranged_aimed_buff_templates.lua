@@ -5,8 +5,8 @@ local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Toughness = require("scripts/utilities/toughness/toughness")
-local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_proc_events = BuffSettings.proc_events
+local stat_buffs = BuffSettings.stat_buffs
+local proc_events = BuffSettings.proc_events
 local templates = {}
 
 table.make_unique(templates)
@@ -17,10 +17,10 @@ templates.weapon_trait_ranged_aimed_wield_on_weakspot_hit_increase_damage_buff =
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 0.05,
+		[proc_events.on_hit] = 0.05,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.damage] = 0.1,
+		[stat_buffs.damage] = 0.1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -33,10 +33,10 @@ templates.weapon_trait_ranged_aimed_wield_on_weakspot_hit_increase_impact_buff =
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 0.05,
+		[proc_events.on_hit] = 0.05,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.ranged_impact_modifier] = 0.1,
+		[stat_buffs.ranged_impact_modifier] = 0.1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -48,7 +48,7 @@ templates.weapon_trait_ranged_aimed_wield_on_weakspot_hit_apply_bleeding_buff = 
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -69,7 +69,7 @@ templates.weapon_trait_ranged_aimed_wield_on_weakspot_hit_apply_bleeding_tempora
 	duration = 3,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1,
 	},
 	check_proc_func = CheckProcFunctions.on_alternative_fire_hit,
 	proc_func = function (params, template_data, template_context)
@@ -88,7 +88,7 @@ templates.weapon_trait_ranged_aimed_wield_on_weakspot_kill_restore_toughness_buf
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -105,7 +105,7 @@ templates.weapon_trait_ranged_aimed_wield_on_weakspot_kill_heal_corruption_buff 
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -128,7 +128,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_attack_buff = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.damage] = 0.1,
+		[stat_buffs.damage] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -146,7 +146,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_impact_buff = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.ranged_impact_modifier] = 0.1,
+		[stat_buffs.ranged_impact_modifier] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -164,7 +164,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_finesse_bonus_buff = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.finesse_modifier_bonus] = 0.1,
+		[stat_buffs.finesse_modifier_bonus] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -182,7 +182,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_crit_chance_buf
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.critical_strike_chance] = 0.1,
+		[stat_buffs.critical_strike_chance] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -200,7 +200,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_unarmored_damag
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.unarmored_damage] = 0.1,
+		[stat_buffs.unarmored_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -218,7 +218,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_armored_damage_
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.armored_damage] = 0.1,
+		[stat_buffs.armored_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -236,7 +236,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_resistant_damag
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.resistant_damage] = 0.1,
+		[stat_buffs.resistant_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -254,7 +254,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_berserker_damag
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.berserker_damage] = 0.1,
+		[stat_buffs.berserker_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -272,7 +272,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_super_armor_dam
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.super_armor_damage] = 0.1,
+		[stat_buffs.super_armor_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -290,7 +290,7 @@ templates.weapon_trait_ranged_aimed_wield_while_aiming_increased_disgustingly_re
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[buff_stat_buffs.disgustingly_resilient_damage] = 0.1,
+		[stat_buffs.disgustingly_resilient_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -310,10 +310,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increase_damage_buff = {
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.damage] = 0.1,
+		[stat_buffs.damage] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -324,10 +324,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increase_impact_buff = {
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.ranged_impact_modifier] = 0.1,
+		[stat_buffs.ranged_impact_modifier] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -337,7 +337,7 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_apply_bleeding_buff = {
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 0.05,
+		[proc_events.on_alternative_fire_start] = 0.05,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context)
@@ -355,7 +355,7 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_apply_bleeding_temporary_
 	duration = 3,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1,
 	},
 	check_proc_func = CheckProcFunctions.on_alternative_fire_hit,
 	proc_func = function (params, template_data, template_context)
@@ -376,10 +376,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_finesse_bonus_buff = {
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.finesse_modifier_bonus] = 0.1,
+		[stat_buffs.finesse_modifier_bonus] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -390,10 +390,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increased_unarmored_damag
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.unarmored_damage] = 0.1,
+		[stat_buffs.unarmored_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -404,10 +404,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increased_armored_damage_
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.armored_damage] = 0.1,
+		[stat_buffs.armored_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -418,10 +418,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increased_resistant_damag
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.resistant_damage] = 0.1,
+		[stat_buffs.resistant_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -432,10 +432,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increased_berserker_damag
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.berserker_damage] = 0.1,
+		[stat_buffs.berserker_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -446,10 +446,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increased_super_armor_dam
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.super_armor_damage] = 0.1,
+		[stat_buffs.super_armor_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -460,10 +460,10 @@ templates.weapon_trait_ranged_aimed_wield_on_enter_ads_increased_disgustingly_re
 	cooldown_duration = 5,
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_alternative_fire_start] = 1,
+		[proc_events.on_alternative_fire_start] = 1,
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.disgustingly_resilient_damage] = 0.1,
+		[stat_buffs.disgustingly_resilient_damage] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,

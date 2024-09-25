@@ -50,5 +50,11 @@ templates.weapon_trait_bespoke_forcestaff_p2_chance_to_explode_elites_on_kill = 
 		},
 	},
 })
+templates.weapon_trait_bespoke_forcestaff_p2_power_bonus_on_continuous_fire = table.merge({
+	conditional_stat_buffs = {
+		[stat_buffs.power_level_modifier] = 0.02,
+	},
+	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func,
+}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 
 return templates

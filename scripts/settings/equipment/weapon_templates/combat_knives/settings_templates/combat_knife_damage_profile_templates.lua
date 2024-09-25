@@ -279,10 +279,6 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					8,
 				},
 			},
-			power_level_multiplier = {
-				0.2,
-				1,
-			},
 			finesse_boost = PowerLevelSettings.ninjafencer_finesse_boost_amount,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			boost_curve_multiplier_finesse = {

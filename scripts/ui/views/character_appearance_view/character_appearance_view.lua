@@ -297,6 +297,8 @@ CharacterAppearanceView.on_enter = function (self)
 		local profile = player:profile()
 
 		self._original_name = player:name()
+		self._original_loadout = table.clone_instance(profile.loadout)
+		self._original_height = profile.personal and profile.personal.character_height
 		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles():next(function (data)
 			self._character_create = CharacterCreate:new(item_definitions, data.gear, profile)
 
@@ -491,6 +493,25 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit, optio
 	end
 end
 
+CharacterAppearanceView._filter_changed_items = function (self, items)
+	local original_loadout = self._original_loadout
+	local filtered_items = {}
+	local identical = true
+
+	for slot, item in pairs(items) do
+		local original_item = original_loadout[slot]
+
+		if item.name ~= original_item.name then
+			filtered_items[slot] = item
+			identical = false
+		end
+	end
+
+	if not identical then
+		return filtered_items
+	end
+end
+
 CharacterAppearanceView._on_continue_pressed = function (self)
 	if not self._using_cursor_navigation then
 		self:_play_sound(UISoundEvents.character_appearence_confirm)
@@ -531,16 +552,21 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 										slot_body_skin_color = loadout.slot_body_skin_color,
 										slot_body_eye_color = loadout.slot_body_eye_color,
 									}
+									local changed_items = self:_filter_changed_items(items)
 
-									ItemUtils.equip_slot_master_items(items)
+									if changed_items then
+										ItemUtils.equip_slot_master_items(changed_items)
+									end
 
 									local player = Managers.player:local_player(1)
 									local real_profile = player:profile()
 									local real_unit = player.player_unit
 									local character_id = real_profile.character_id
 
-									Managers.backend.interfaces.characters:set_character_height(character_id, height)
-									Unit.set_local_scale(real_unit, 1, Vector3.one() * height)
+									if height ~= self._original_height then
+										Managers.backend.interfaces.characters:set_character_height(character_id, height)
+										Unit.set_local_scale(real_unit, 1, Vector3.one() * height)
+									end
 								end
 
 								local parent = self._parent

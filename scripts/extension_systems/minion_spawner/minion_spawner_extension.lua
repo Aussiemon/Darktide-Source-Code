@@ -17,7 +17,6 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
 	self._nav_world = extension_init_context.nav_world
-	self._nav_tag_cost_table = extension_init_context.nav_tag_cost_table
 	self._traverse_logic = extension_init_context.traverse_logic
 	self._owner_system = extension_init_context.owner_system
 	self._spawn_queue = MinionSpawnerQueue:new()
@@ -205,15 +204,17 @@ MinionSpawnerExtension.update = function (self, unit, dt, t)
 
 		if breed_name then
 			local spawned_minion = self:_spawn(breed_name, spawn_data)
-			local spawnd_minions = self._spawned_minions_by_queue_id
-			local spawned_minion_table = spawnd_minions[queue_id]
+			local spawned_minions_by_queue_id = self._spawned_minions_by_queue_id
+			local spawned_minions = spawned_minions_by_queue_id[queue_id]
 
-			if not spawned_minion_table then
-				spawned_minion_table = {}
-				spawnd_minions[queue_id] = spawned_minion_table
+			if spawned_minions then
+				spawned_minions[#spawned_minions + 1] = spawned_minion
+			else
+				spawned_minions_by_queue_id[queue_id] = {
+					spawned_minion,
+				}
 			end
 
-			spawned_minion_table[#spawned_minion_table + 1] = spawned_minion
 			self._last_spawned_minion = spawned_minion
 			self._next_spawn_time = t + spawn_data.spawn_delay
 		else
@@ -250,7 +251,7 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	if not exit_position_valid then
 		Log.warning("[MinionSpawnerExtension]", "Spawning aborted for %q, couldn't find any traversable nav mesh at exit position %s, on unit: %s", breed_name, exit_position, Unit.id_string(unit))
 
-		return
+		return nil
 	end
 
 	local spawn_position, spawn_rotation
@@ -289,7 +290,6 @@ end
 MinionSpawnerExtension.destroy = function (self)
 	self._unit = nil
 	self._nav_world = nil
-	self._nav_tag_cost_table = nil
 	self._traverse_logic = nil
 	self._spawn_queue = nil
 	self._next_spawn_time = nil

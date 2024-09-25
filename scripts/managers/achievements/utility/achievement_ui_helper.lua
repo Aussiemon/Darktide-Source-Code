@@ -21,7 +21,7 @@ end
 
 AchievementUIHelper.get_reward_item = function (achievement_definition)
 	local reward_item, item_group
-	local rewards = achievement_definition.rewards
+	local rewards = achievement_definition and achievement_definition.rewards
 
 	if rewards and #rewards > 0 then
 		local reward_id = rewards[1].masterId
