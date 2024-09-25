@@ -1261,6 +1261,105 @@ return function ()
 		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
 		database = "mission_giver_vo",
+		name = "mission_agnostic_dropship_deploy_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_agnostic_dropship_deploy_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_agnostic_dropship_deploy_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+					"enginseer",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_agnostic_dropship_deploy_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_agnostic_dropship_deploy_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "level_event",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "mission_agnostic_dropship_withdraw_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_agnostic_dropship_withdraw_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_agnostic_dropship_withdraw_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"cargo_pilot",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_agnostic_dropship_withdraw_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_agnostic_dropship_withdraw_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
 		name = "mission_scan_new_target",
 		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",

@@ -1812,58 +1812,13 @@ return function ()
 				args = {
 					"tertium_noble",
 					"shipmistress",
-				},
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "mission_givers",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "vox_prio_0",
-		concurrent_wwise_event = "play_vox_static_loop",
-		database = "mission_vo_cm_habs_remake",
-		name = "mission_habs_redux_post_airlock_b_sergeant_b",
-		post_wwise_event = "play_radio_static_end",
-		pre_wwise_event = "play_radio_static_start",
-		response = "mission_habs_redux_post_airlock_b_sergeant_b",
-		wwise_route = 1,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"sound_event",
-				OP.SET_INCLUDES,
-				args = {
-					"loc_enemy_nemesis_wolfer_a__mission_habs_redux_post_airlock_a_01",
-					"loc_enemy_nemesis_wolfer_a__mission_habs_redux_post_airlock_a_02",
-					"loc_enemy_nemesis_wolfer_a__mission_habs_redux_post_airlock_a_03",
-				},
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant",
 					"enemy_wolfer_adjutant",
 				},
 			},
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "mission_givers",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1907,6 +1862,52 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_cm_habs_remake",
+		name = "mission_habs_redux_post_airlock_c_sergeant_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_habs_redux_post_airlock_c_sergeant_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_enemy_wolfer_adjutant_c__mission_habs_redux_roof_airlock_b_01",
+					"loc_enemy_wolfer_adjutant_c__mission_habs_redux_roof_airlock_b_02",
+					"loc_enemy_wolfer_adjutant_d__mission_habs_redux_roof_airlock_b_01",
+					"loc_enemy_wolfer_adjutant_d__mission_habs_redux_roof_airlock_b_02",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -2044,7 +2045,6 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"sergeant",
 					"enginseer",
 				},
 			},

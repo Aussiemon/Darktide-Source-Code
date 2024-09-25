@@ -102,6 +102,76 @@ local conversations_hub_mourningstar_soldier_male_f = {
 		},
 		randomize_indexes = {},
 	},
+	oval_hub_conversation_21_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_soldier_male_f__oval_hub_conversation_21_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.674375,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_conversation_22_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_soldier_male_f__oval_hub_conversation_23_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.337958,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_conversation_24_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_soldier_male_f__oval_hub_conversation_24_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.124208,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_soldier_exchange_07_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_soldier_male_f__oval_hub_soldier_exchange_07_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.873833,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_soldier_exchange_09_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_soldier_male_f__oval_hub_soldier_exchange_09_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.272479,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_soldier_exchange_male_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_mourningstar_soldier_male_f__oval_hub_soldier_exchange_06_a_01",
+			"loc_mourningstar_soldier_male_f__oval_hub_soldier_exchange_08_a_01",
+			"loc_mourningstar_soldier_male_f__oval_hub_soldier_exchange_10_a_01",
+		},
+		sound_events_duration = {
+			3.298604,
+			3.404833,
+			2.997896,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_mourningstar_soldier_male_f", conversations_hub_mourningstar_soldier_male_f)

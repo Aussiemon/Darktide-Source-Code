@@ -1107,7 +1107,7 @@ return function ()
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				10,
 			},
 			{
 				"faction_memory",
@@ -1168,7 +1168,7 @@ return function ()
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				10,
 			},
 			{
 				"faction_memory",
@@ -1229,7 +1229,7 @@ return function ()
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				10,
 			},
 			{
 				"faction_memory",
@@ -1290,7 +1290,7 @@ return function ()
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				5,
+				10,
 			},
 			{
 				"faction_memory",

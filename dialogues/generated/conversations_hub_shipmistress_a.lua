@@ -1,6 +1,50 @@
 ﻿-- chunkname: @dialogues/generated/conversations_hub_shipmistress_a.lua
 
 local conversations_hub_shipmistress_a = {
+	hub_announcement_waterloo_01_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_shipmistress_a__hub_announcement_waterloo_01_a_01",
+		},
+		sound_events_duration = {
+			[1] = 6.296677,
+		},
+		randomize_indexes = {},
+	},
+	hub_announcement_waterloo_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_shipmistress_a__hub_announcement_waterloo_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.036271,
+		},
+		randomize_indexes = {},
+	},
+	hub_announcement_waterloo_02_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_shipmistress_a__hub_announcement_waterloo_02_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.530896,
+		},
+		randomize_indexes = {},
+	},
+	hub_announcement_waterloo_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_shipmistress_a__hub_announcement_waterloo_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.051104,
+		},
+		randomize_indexes = {},
+	},
 	hub_idle = {
 		randomize_indexes_n = 0,
 		sound_events_n = 20,

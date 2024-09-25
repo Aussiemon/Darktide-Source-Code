@@ -477,6 +477,9 @@ return function ()
 				0,
 			},
 		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",

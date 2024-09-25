@@ -416,6 +416,27 @@ local mission_giver_vo_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_agnostic_dropship_deploy_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_sergeant_a__mission_agnostic_dropship_deploy_a_01",
+			"loc_sergeant_a__mission_agnostic_dropship_deploy_a_02",
+			"loc_sergeant_a__mission_agnostic_dropship_deploy_a_03",
+			"loc_sergeant_a__mission_agnostic_dropship_deploy_a_04",
+			"loc_sergeant_a__mission_agnostic_dropship_deploy_a_05",
+			"loc_sergeant_a__mission_agnostic_dropship_deploy_a_06",
+		},
+		sound_events_duration = {
+			3.256958,
+			2.031854,
+			3.072125,
+			2.281417,
+			2.928083,
+			3.133521,
+		},
+		randomize_indexes = {},
+	},
 	mission_scan_new_target = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

@@ -52,6 +52,23 @@ local mission_vo_dm_forge_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_forge_hurry_up_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__mission_forge_hurry_up_a_01",
+			"loc_sergeant_a__mission_forge_hurry_up_a_02",
+			"loc_sergeant_a__mission_forge_hurry_up_a_03",
+			"loc_sergeant_a__mission_forge_hurry_up_a_04",
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678,
+		},
+		randomize_indexes = {},
+	},
 	mission_forge_job_done = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -231,6 +248,23 @@ local mission_vo_dm_forge_sergeant_a = {
 			3.230792,
 			3.567271,
 			3.530917,
+		},
+		randomize_indexes = {},
+	},
+	mission_forge_valves_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__mission_forge_valves_a_01",
+			"loc_sergeant_a__mission_forge_valves_a_02",
+			"loc_sergeant_a__mission_forge_valves_a_03",
+			"loc_sergeant_a__mission_forge_valves_a_04",
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678,
 		},
 		randomize_indexes = {},
 	},

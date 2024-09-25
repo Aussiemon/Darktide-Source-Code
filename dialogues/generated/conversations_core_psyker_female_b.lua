@@ -165,6 +165,123 @@ local conversations_core_psyker_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	conversation_combat_beast_of_nurgle_swallow_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_beast_of_nurgle_swallow_a_01",
+			[2] = "loc_psyker_female_b__conversation_combat_beast_of_nurgle_swallow_a_02",
+		},
+		sound_events_duration = {
+			[1] = 2.711896,
+			[2] = 1.928938,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_beast_of_nurgle_swallow_b_01",
+			[2] = "loc_psyker_female_b__conversation_combat_beast_of_nurgle_swallow_b_02",
+		},
+		sound_events_duration = {
+			[1] = 3.367229,
+			[2] = 3.533625,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_beast_of_nurgle_swallow_c_01",
+			[2] = "loc_psyker_female_b__conversation_combat_beast_of_nurgle_swallow_c_02",
+		},
+		sound_events_duration = {
+			[1] = 2.907979,
+			[2] = 4.884813,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_chaos_spawn_a_01",
+			[2] = "loc_psyker_female_b__conversation_combat_chaos_spawn_a_02",
+		},
+		sound_events_duration = {
+			[1] = 3.616396,
+			[2] = 1.569458,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_chaos_spawn_b_01",
+			[2] = "loc_psyker_female_b__conversation_combat_chaos_spawn_b_02",
+		},
+		sound_events_duration = {
+			[1] = 3.310688,
+			[2] = 2.791583,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_chaos_spawn_c_01",
+			[2] = "loc_psyker_female_b__conversation_combat_chaos_spawn_c_02",
+		},
+		sound_events_duration = {
+			[1] = 3.621604,
+			[2] = 1.954667,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_chaos_spawn_chew_a_01",
+			[2] = "loc_psyker_female_b__conversation_combat_chaos_spawn_chew_a_02",
+		},
+		sound_events_duration = {
+			[1] = 3.147167,
+			[2] = 2.301938,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_chaos_spawn_chew_b_01",
+			[2] = "loc_psyker_female_b__conversation_combat_chaos_spawn_chew_b_02",
+		},
+		sound_events_duration = {
+			[1] = 1.703625,
+			[2] = 2.881354,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__conversation_combat_chaos_spawn_chew_c_01",
+			[2] = "loc_psyker_female_b__conversation_combat_chaos_spawn_chew_c_02",
+		},
+		sound_events_duration = {
+			[1] = 3.146479,
+			[2] = 2.433021,
+		},
+		randomize_indexes = {},
+	},
 	conversation_explicator_one_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

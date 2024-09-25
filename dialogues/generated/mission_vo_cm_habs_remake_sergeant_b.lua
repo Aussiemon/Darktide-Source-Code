@@ -121,7 +121,7 @@ local mission_vo_cm_habs_remake_sergeant_b = {
 		},
 		randomize_indexes = {},
 	},
-	mission_habs_redux_post_airlock_b_sergeant_b = {
+	mission_habs_redux_post_airlock_c_sergeant_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
 		sound_events = {

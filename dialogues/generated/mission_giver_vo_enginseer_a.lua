@@ -18,6 +18,21 @@ local mission_giver_vo_enginseer_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_agnostic_dropship_deploy_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_enginseer_a__mission_agnostic_dropship_deploy_a_01",
+			"loc_enginseer_a__mission_agnostic_dropship_deploy_a_02",
+			"loc_enginseer_a__mission_agnostic_dropship_deploy_a_03",
+		},
+		sound_events_duration = {
+			5.348521,
+			5.124448,
+			5.690332,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_giver_vo_enginseer_a", mission_giver_vo_enginseer_a)

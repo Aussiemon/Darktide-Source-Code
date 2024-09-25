@@ -1,6 +1,29 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_zealot_male_c.lua
 
 local mission_vo_dm_forge_zealot_male_c = {
+	event_demolition_first_corruptor_destroyed_a_enginseer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_male_c__event_demolition_first_corruptor_destroyed_a_01",
+			"loc_zealot_male_c__event_demolition_first_corruptor_destroyed_a_02",
+			"loc_zealot_male_c__event_demolition_first_corruptor_destroyed_a_03",
+			"loc_zealot_male_c__event_demolition_first_corruptor_destroyed_a_04",
+		},
+		sound_events_duration = {
+			0.635052,
+			1.38325,
+			2.418354,
+			1.738979,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	mission_forge_alive = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

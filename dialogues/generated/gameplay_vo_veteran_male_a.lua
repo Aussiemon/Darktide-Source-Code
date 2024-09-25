@@ -316,6 +316,21 @@ local gameplay_vo_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	combat_monster_release_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_veteran_male_a__combat_monster_release_a_01",
+			"loc_veteran_male_a__combat_monster_release_a_02",
+			"loc_veteran_male_a__combat_monster_release_a_03",
+		},
+		sound_events_duration = {
+			2.166938,
+			1.996938,
+			3.13325,
+		},
+		randomize_indexes = {},
+	},
 	come_back_to_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,

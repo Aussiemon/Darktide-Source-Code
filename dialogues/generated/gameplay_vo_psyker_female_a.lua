@@ -355,6 +355,21 @@ local gameplay_vo_psyker_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	combat_monster_release_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_psyker_female_a__combat_monster_release_a_01",
+			"loc_psyker_female_a__combat_monster_release_a_02",
+			"loc_psyker_female_a__combat_monster_release_a_03",
+		},
+		sound_events_duration = {
+			4.192333,
+			3.178542,
+			3.584438,
+		},
+		randomize_indexes = {},
+	},
 	come_back_to_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,

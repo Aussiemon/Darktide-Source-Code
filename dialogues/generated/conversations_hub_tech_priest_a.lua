@@ -59,6 +59,25 @@ local conversations_hub_tech_priest_a = {
 		},
 		randomize_indexes = {},
 	},
+	hub_hadron_servitor_idle_mutter_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_tech_priest_a__hub_hadron_servitor_idle_mutter_b_01",
+			"loc_tech_priest_a__hub_hadron_servitor_idle_mutter_b_02",
+			"loc_tech_priest_a__hub_hadron_servitor_idle_mutter_b_03",
+			"loc_tech_priest_a__hub_hadron_servitor_idle_mutter_b_04",
+			"loc_tech_priest_a__hub_hadron_servitor_idle_mutter_b_05",
+		},
+		sound_events_duration = {
+			4.332813,
+			3.570229,
+			3.523958,
+			5.197458,
+			3.595667,
+		},
+		randomize_indexes = {},
+	},
 	hub_idle = {
 		randomize_indexes_n = 0,
 		sound_events_n = 15,
@@ -95,17 +114,6 @@ local conversations_hub_tech_priest_a = {
 			5.888646,
 			7.160229,
 			4.209042,
-		},
-		randomize_indexes = {},
-	},
-	hub_idle_2nd_phase_conversation_forty_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1] = "loc_tech_priest_a__hub_idle_2nd_phase_conversation_forty_a_01",
-		},
-		sound_events_duration = {
-			[1] = 6.063354,
 		},
 		randomize_indexes = {},
 	},
@@ -383,6 +391,76 @@ local conversations_hub_tech_priest_a = {
 		},
 		randomize_indexes = {},
 	},
+	may_hub_conversation_04_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__may_hub_conversation_04_a_01",
+		},
+		sound_events_duration = {
+			[1] = 10.04244,
+		},
+		randomize_indexes = {},
+	},
+	may_hub_conversation_05_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__may_hub_conversation_05_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.381,
+		},
+		randomize_indexes = {},
+	},
+	may_hub_conversation_18_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__may_hub_conversation_18_a_01",
+		},
+		sound_events_duration = {
+			[1] = 6.600333,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_conversation_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__oval_hub_conversation_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.550146,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_conversation_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__oval_hub_conversation_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.179875,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_conversation_hadron = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__oval_hub_conversation_01_a_01",
+			"loc_tech_priest_a__oval_hub_conversation_04_a_01",
+			"loc_tech_priest_a__oval_hub_conversation_05_a_01",
+		},
+		sound_events_duration = {
+			3.999229,
+			2.267938,
+			1.973292,
+		},
+		randomize_indexes = {},
+	},
 	shipmistress_hub_announcement_a_55_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -393,6 +471,28 @@ local conversations_hub_tech_priest_a = {
 		sound_events_duration = {
 			[1] = 6.001875,
 			[2] = 7.173792,
+		},
+		randomize_indexes = {},
+	},
+	southwark_hub_first_greeting_launch_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__southwark_hub_first_greeting_launch_f_01",
+		},
+		sound_events_duration = {
+			[1] = 10.04823,
+		},
+		randomize_indexes = {},
+	},
+	southwark_hub_first_greeting_launch_g = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__southwark_hub_first_greeting_launch_g_01",
+		},
+		sound_events_duration = {
+			[1] = 9.204688,
 		},
 		randomize_indexes = {},
 	},

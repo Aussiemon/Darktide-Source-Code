@@ -1224,6 +1224,386 @@ return function ()
 		},
 	})
 	define_rule({
+		category = "player_prio_1",
+		database = "conversations_core",
+		name = "conversation_combat_beast_of_nurgle_swallow_a",
+		response = "conversation_combat_beast_of_nurgle_swallow_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"beast_of_nurgle_swallow",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.LTEQ,
+				4,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"conversation_combat_beast_of_nurgle_swallow_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"conversation_combat_beast_of_nurgle_swallow_a",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_beast_of_nurgle_swallow_b",
+		response = "conversation_combat_beast_of_nurgle_swallow_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_beast_of_nurgle_swallow_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_beast_of_nurgle_swallow_c",
+		response = "conversation_combat_beast_of_nurgle_swallow_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_beast_of_nurgle_swallow_b",
+				},
+			},
+			{
+				"faction_memory",
+				"beast_spit",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_chaos_spawn_a",
+		response = "conversation_combat_chaos_spawn_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"combat_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				20,
+			},
+			{
+				"query_context",
+				"story_type",
+				OP.EQ,
+				"chaos_spawn",
+			},
+			{
+				"user_context",
+				"health",
+				OP.LTEQ,
+				1,
+			},
+			{
+				"faction_memory",
+				"chaos_spawn",
+				OP.LT,
+				3,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMEDIFF,
+				OP.GT,
+				180,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"chaos_spawn",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_chaos_spawn_b",
+		response = "conversation_combat_chaos_spawn_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_chaos_spawn_c",
+		response = "conversation_combat_chaos_spawn_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "player_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_chaos_spawn_chew_a",
+		response = "conversation_combat_chaos_spawn_chew_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"pounced_by_special_attack",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_spawn",
+			},
+			{
+				"faction_memory",
+				"conversation_combat_chaos_spawn_chew_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"conversation_combat_chaos_spawn_chew_a",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_chaos_spawn_chew_b",
+		response = "conversation_combat_chaos_spawn_chew_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_chew_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "conversations_core",
+		name = "conversation_combat_chaos_spawn_chew_c",
+		response = "conversation_combat_chaos_spawn_chew_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_chew_b",
+				},
+			},
+			{
+				"user_memory",
+				"conversation_combat_chaos_spawn_chew_a_user",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+			{
+				"faction_memory",
+				"chaos_spawn_throw",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
 		category = "conversations_prio_1",
 		database = "conversations_core",
 		name = "conversation_explicator_one_a",

@@ -102,6 +102,43 @@ local conversations_hub_mourningstar_soldier_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_hub_soldier_exchange_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_soldier_male_b__oval_hub_soldier_exchange_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.063896,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_soldier_exchange_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_soldier_male_b__oval_hub_soldier_exchange_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.374583,
+		},
+		randomize_indexes = {},
+	},
+	oval_hub_soldier_exchange_male_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_mourningstar_soldier_male_b__oval_hub_soldier_exchange_01_a_01",
+			"loc_mourningstar_soldier_male_b__oval_hub_soldier_exchange_04_a_01",
+			"loc_mourningstar_soldier_male_b__oval_hub_soldier_exchange_05_a_01",
+		},
+		sound_events_duration = {
+			4.488833,
+			2.247958,
+			1.777708,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_mourningstar_soldier_male_b", conversations_hub_mourningstar_soldier_male_b)

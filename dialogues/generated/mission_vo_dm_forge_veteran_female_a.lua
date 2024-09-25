@@ -1,6 +1,29 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_veteran_female_a.lua
 
 local mission_vo_dm_forge_veteran_female_a = {
+	event_demolition_first_corruptor_destroyed_a_enginseer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_a__event_demolition_first_corruptor_destroyed_a_01",
+			"loc_veteran_female_a__event_demolition_first_corruptor_destroyed_a_02",
+			"loc_veteran_female_a__event_demolition_first_corruptor_destroyed_a_03",
+			"loc_veteran_female_a__event_demolition_first_corruptor_destroyed_a_04",
+		},
+		sound_events_duration = {
+			2.210167,
+			2.644938,
+			1.107438,
+			2.053354,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	mission_forge_alive = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

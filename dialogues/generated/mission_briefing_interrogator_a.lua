@@ -46,6 +46,51 @@ local mission_briefing_interrogator_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_armoury_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_interrogator_a__mission_armoury_briefing_a_01",
+			"loc_interrogator_a__mission_armoury_briefing_a_02",
+			"loc_interrogator_a__mission_armoury_briefing_a_03",
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+		},
+		randomize_indexes = {},
+	},
+	mission_armoury_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_interrogator_a__mission_armoury_briefing_b_01",
+			"loc_interrogator_a__mission_armoury_briefing_b_02",
+			"loc_interrogator_a__mission_armoury_briefing_b_03",
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+		},
+		randomize_indexes = {},
+	},
+	mission_armoury_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_interrogator_a__mission_armoury_briefing_c_01",
+			"loc_interrogator_a__mission_armoury_briefing_c_02",
+			"loc_interrogator_a__mission_armoury_briefing_c_03",
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+		},
+		randomize_indexes = {},
+	},
 	mission_complex_brief_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

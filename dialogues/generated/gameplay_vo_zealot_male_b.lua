@@ -287,6 +287,21 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_monster_release_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_male_b__combat_monster_release_a_01",
+			"loc_zealot_male_b__combat_monster_release_a_02",
+			"loc_zealot_male_b__combat_monster_release_a_03",
+		},
+		sound_events_duration = {
+			3.263688,
+			4.075271,
+			3.746,
+		},
+		randomize_indexes = {},
+	},
 	come_back_to_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,

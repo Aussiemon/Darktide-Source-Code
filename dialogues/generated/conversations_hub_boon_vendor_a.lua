@@ -345,6 +345,39 @@ local conversations_hub_boon_vendor_a = {
 		},
 		randomize_indexes = {},
 	},
+	hammersmith_hub_announcement_a_07_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_boon_vendor_a__hammersmith_hub_announcement_a_07_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.560865,
+		},
+		randomize_indexes = {},
+	},
+	hammersmith_hub_announcement_a_09_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_boon_vendor_a__hammersmith_hub_announcement_a_09_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.599844,
+		},
+		randomize_indexes = {},
+	},
+	hammersmith_hub_announcement_a_19_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_boon_vendor_a__hammersmith_hub_announcement_a_19_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.708438,
+		},
+		randomize_indexes = {},
+	},
 	hub_idle = {
 		randomize_indexes_n = 0,
 		sound_events_n = 20,

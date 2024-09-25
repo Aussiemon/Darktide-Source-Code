@@ -40,6 +40,19 @@ local mission_vo_cm_habs_remake_enemy_wolfer_adjutant_c = {
 		},
 		randomize_indexes = {},
 	},
+	mission_habs_redux_post_airlock_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_enemy_wolfer_adjutant_c__mission_habs_redux_roof_airlock_b_01",
+			[2] = "loc_enemy_wolfer_adjutant_c__mission_habs_redux_roof_airlock_b_02",
+		},
+		sound_events_duration = {
+			[1] = 2.318938,
+			[2] = 2.123281,
+		},
+		randomize_indexes = {},
+	},
 	mission_habs_redux_roof_airlock_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -50,19 +63,6 @@ local mission_vo_cm_habs_remake_enemy_wolfer_adjutant_c = {
 		sound_events_duration = {
 			[1] = 4.473052,
 			[2] = 6.623927,
-		},
-		randomize_indexes = {},
-	},
-	mission_habs_redux_roof_airlock_b_sergeant_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_enemy_wolfer_adjutant_c__mission_habs_redux_roof_airlock_b_01",
-			[2] = "loc_enemy_wolfer_adjutant_c__mission_habs_redux_roof_airlock_b_02",
-		},
-		sound_events_duration = {
-			[1] = 2.318938,
-			[2] = 2.123281,
 		},
 		randomize_indexes = {},
 	},

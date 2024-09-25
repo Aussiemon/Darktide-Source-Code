@@ -476,6 +476,27 @@ local mission_giver_vo_tech_priest_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_agnostic_dropship_deploy_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_tech_priest_a__mission_agnostic_dropship_deploy_a_01",
+			"loc_tech_priest_a__mission_agnostic_dropship_deploy_a_02",
+			"loc_tech_priest_a__mission_agnostic_dropship_deploy_a_03",
+			"loc_tech_priest_a__mission_agnostic_dropship_deploy_a_04",
+			"loc_tech_priest_a__mission_agnostic_dropship_deploy_a_05",
+			"loc_tech_priest_a__mission_agnostic_dropship_deploy_a_06",
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678,
+		},
+		randomize_indexes = {},
+	},
 	mission_scan_new_target = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

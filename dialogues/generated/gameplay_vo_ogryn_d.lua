@@ -290,6 +290,21 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {},
 	},
+	combat_monster_release_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_ogryn_d__combat_monster_release_a_01",
+			"loc_ogryn_d__combat_monster_release_a_02",
+			"loc_ogryn_d__combat_monster_release_a_03",
+		},
+		sound_events_duration = {
+			4.775125,
+			3.509625,
+			4.706594,
+		},
+		randomize_indexes = {},
+	},
 	come_back_to_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,

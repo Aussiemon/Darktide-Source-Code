@@ -131,6 +131,7 @@ return function ()
 					"tech_priest",
 					"contract_vendor",
 					"purser",
+					"enginseer",
 				},
 			},
 			{

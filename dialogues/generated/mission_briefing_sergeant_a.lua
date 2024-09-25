@@ -880,6 +880,51 @@ local mission_briefing_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_train_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_train_briefing_a_01",
+			"loc_sergeant_a__mission_train_briefing_a_02",
+			"loc_sergeant_a__mission_train_briefing_a_03",
+		},
+		sound_events_duration = {
+			10.14217,
+			8.778167,
+			9.106395,
+		},
+		randomize_indexes = {},
+	},
+	mission_train_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_train_briefing_b_01",
+			"loc_sergeant_a__mission_train_briefing_b_02",
+			"loc_sergeant_a__mission_train_briefing_b_03",
+		},
+		sound_events_duration = {
+			6.688333,
+			6.630271,
+			6.159917,
+		},
+		randomize_indexes = {},
+	},
+	mission_train_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_train_briefing_c_01",
+			"loc_sergeant_a__mission_train_briefing_c_02",
+			"loc_sergeant_a__mission_train_briefing_c_03",
+		},
+		sound_events_duration = {
+			9.346395,
+			8.582895,
+			8.682103,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_briefing_sergeant_a", mission_briefing_sergeant_a)

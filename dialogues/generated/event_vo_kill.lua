@@ -36,6 +36,12 @@ return function ()
 					"tech_priest",
 				},
 			},
+			{
+				"global_context",
+				"current_mission",
+				OP.NEQ,
+				"op_train",
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {

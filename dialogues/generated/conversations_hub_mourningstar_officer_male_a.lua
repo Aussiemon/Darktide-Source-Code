@@ -102,6 +102,105 @@ local conversations_hub_mourningstar_officer_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	hub_map_table_conversation_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.119979,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_01_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_01_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.948354,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.569979,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.847708,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_03_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_03_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.114083,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.133854,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_05_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_05_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.304771,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_06_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_06_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.340417,
+		},
+		randomize_indexes = {},
+	},
+	hub_map_table_conversation_officer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_mourningstar_officer_male_a__hub_map_table_conversation_06_a_01",
+		},
+		sound_events_duration = {
+			[1] = 7.352458,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("conversations_hub_mourningstar_officer_male_a", conversations_hub_mourningstar_officer_male_a)

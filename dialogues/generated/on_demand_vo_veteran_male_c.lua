@@ -93,6 +93,23 @@ local on_demand_vo_veteran_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	com_wheel_vo_my_pleasure_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__com_wheel_vo_my_pleasure_a_01",
+			"loc_veteran_male_c__com_wheel_vo_my_pleasure_a_02",
+			"loc_veteran_male_c__com_wheel_vo_my_pleasure_a_03",
+			"loc_veteran_male_c__com_wheel_vo_my_pleasure_a_04",
+		},
+		sound_events_duration = {
+			0.562104,
+			0.568479,
+			1.027854,
+			0.907208,
+		},
+		randomize_indexes = {},
+	},
 	com_wheel_vo_need_ammo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 6,
@@ -206,6 +223,23 @@ local on_demand_vo_veteran_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	com_wheel_vo_take_this_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__com_wheel_vo_take_this_a_01",
+			"loc_veteran_male_c__com_wheel_vo_take_this_a_02",
+			"loc_veteran_male_c__com_wheel_vo_take_this_a_03",
+			"loc_veteran_male_c__com_wheel_vo_take_this_a_04",
+		},
+		sound_events_duration = {
+			0.639396,
+			0.639396,
+			0.640417,
+			1.421917,
+		},
+		randomize_indexes = {},
+	},
 	com_wheel_vo_thank_you = {
 		randomize_indexes_n = 0,
 		sound_events_n = 6,
@@ -291,6 +325,74 @@ local on_demand_vo_veteran_male_c = {
 		sound_event_weights = {
 			[1] = 0.5,
 			[2] = 0.5,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_stimm_concentration_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__smart_tag_stimm_concentration_a_01",
+			"loc_veteran_male_c__smart_tag_stimm_concentration_a_02",
+			"loc_veteran_male_c__smart_tag_stimm_concentration_a_03",
+			"loc_veteran_male_c__smart_tag_stimm_concentration_a_04",
+		},
+		sound_events_duration = {
+			1.651823,
+			1.442469,
+			1.454656,
+			1.303969,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_stimm_health_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__smart_tag_stimm_health_a_01",
+			"loc_veteran_male_c__smart_tag_stimm_health_a_02",
+			"loc_veteran_male_c__smart_tag_stimm_health_a_03",
+			"loc_veteran_male_c__smart_tag_stimm_health_a_04",
+		},
+		sound_events_duration = {
+			0.96874,
+			0.950802,
+			0.980604,
+			0.784146,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_stimm_power_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__smart_tag_stimm_power_a_01",
+			"loc_veteran_male_c__smart_tag_stimm_power_a_02",
+			"loc_veteran_male_c__smart_tag_stimm_power_a_03",
+			"loc_veteran_male_c__smart_tag_stimm_power_a_04",
+		},
+		sound_events_duration = {
+			1.154083,
+			1.176385,
+			1.167542,
+			1.084,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_stimm_speed_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__smart_tag_stimm_speed_a_01",
+			"loc_veteran_male_c__smart_tag_stimm_speed_a_02",
+			"loc_veteran_male_c__smart_tag_stimm_speed_a_03",
+			"loc_veteran_male_c__smart_tag_stimm_speed_a_04",
+		},
+		sound_events_duration = {
+			1.252,
+			1.229531,
+			1.059542,
+			1.002688,
 		},
 		randomize_indexes = {},
 	},

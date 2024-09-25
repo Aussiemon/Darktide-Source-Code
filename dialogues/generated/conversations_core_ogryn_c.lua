@@ -154,6 +154,123 @@ local conversations_core_ogryn_c = {
 		},
 		randomize_indexes = {},
 	},
+	conversation_combat_beast_of_nurgle_swallow_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_beast_of_nurgle_swallow_a_01",
+			[2] = "loc_ogryn_c__conversation_combat_beast_of_nurgle_swallow_a_02",
+		},
+		sound_events_duration = {
+			[1] = 3.211813,
+			[2] = 2.658792,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_beast_of_nurgle_swallow_b_01",
+			[2] = "loc_ogryn_c__conversation_combat_beast_of_nurgle_swallow_b_02",
+		},
+		sound_events_duration = {
+			[1] = 2.742521,
+			[2] = 2.122844,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_beast_of_nurgle_swallow_c_01",
+			[2] = "loc_ogryn_c__conversation_combat_beast_of_nurgle_swallow_c_02",
+		},
+		sound_events_duration = {
+			[1] = 4.038823,
+			[2] = 2.275427,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_chaos_spawn_a_01",
+			[2] = "loc_ogryn_c__conversation_combat_chaos_spawn_a_02",
+		},
+		sound_events_duration = {
+			[1] = 2.387844,
+			[2] = 2.354365,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_chaos_spawn_b_01",
+			[2] = "loc_ogryn_c__conversation_combat_chaos_spawn_b_02",
+		},
+		sound_events_duration = {
+			[1] = 4.144042,
+			[2] = 2.076354,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_chaos_spawn_c_01",
+			[2] = "loc_ogryn_c__conversation_combat_chaos_spawn_c_02",
+		},
+		sound_events_duration = {
+			[1] = 1.846646,
+			[2] = 1.971365,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_chaos_spawn_chew_a_01",
+			[2] = "loc_ogryn_c__conversation_combat_chaos_spawn_chew_a_02",
+		},
+		sound_events_duration = {
+			[1] = 4.357594,
+			[2] = 3.856823,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_chaos_spawn_chew_b_01",
+			[2] = "loc_ogryn_c__conversation_combat_chaos_spawn_chew_b_02",
+		},
+		sound_events_duration = {
+			[1] = 2.653844,
+			[2] = 1.12149,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_ogryn_c__conversation_combat_chaos_spawn_chew_c_01",
+			[2] = "loc_ogryn_c__conversation_combat_chaos_spawn_chew_c_02",
+		},
+		sound_events_duration = {
+			[1] = 3.892698,
+			[2] = 2.35199,
+		},
+		randomize_indexes = {},
+	},
 	conversation_explicator_one_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

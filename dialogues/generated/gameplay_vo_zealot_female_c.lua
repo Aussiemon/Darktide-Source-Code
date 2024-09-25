@@ -287,6 +287,21 @@ local gameplay_vo_zealot_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	combat_monster_release_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_female_c__combat_monster_release_a_01",
+			"loc_zealot_female_c__combat_monster_release_a_02",
+			"loc_zealot_female_c__combat_monster_release_a_03",
+		},
+		sound_events_duration = {
+			2.941354,
+			4.284823,
+			5.562771,
+		},
+		randomize_indexes = {},
+	},
 	come_back_to_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,

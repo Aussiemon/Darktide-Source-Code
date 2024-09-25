@@ -355,6 +355,21 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_monster_release_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_psyker_male_b__combat_monster_release_a_01",
+			"loc_psyker_male_b__combat_monster_release_a_02",
+			"loc_psyker_male_b__combat_monster_release_a_03",
+		},
+		sound_events_duration = {
+			2.798563,
+			2.153875,
+			2.17775,
+		},
+		randomize_indexes = {},
+	},
 	come_back_to_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
