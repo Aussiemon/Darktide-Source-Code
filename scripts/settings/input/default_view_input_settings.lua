@@ -496,6 +496,18 @@ local default_view_input_settings = {
 			bindable = false,
 			description = "",
 		},
+		group_finder_start_group = {
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+			bindable = false,
+			description = "",
+		},
+		group_finder_cancel_group = {
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+			bindable = false,
+			description = "",
+		},
 	},
 	settings = {
 		close_view = {
@@ -997,6 +1009,22 @@ local default_view_input_settings = {
 		group_finder_refresh_groups = {
 			key_alias = "group_finder_refresh_groups",
 			type = "pressed",
+		},
+		group_finder_start_group = {
+			key_alias = "group_finder_start_group",
+			type = "pressed",
+		},
+		group_finder_start_group_hold = {
+			key_alias = "group_finder_start_group",
+			type = "held",
+		},
+		group_finder_cancel_group = {
+			key_alias = "group_finder_cancel_group",
+			type = "pressed",
+		},
+		group_finder_cancel_group_hold = {
+			key_alias = "group_finder_cancel_group",
+			type = "held",
 		},
 	},
 }

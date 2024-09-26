@@ -1826,6 +1826,8 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 	end
 
 	while remaining_budget > 0 and #trait_indices > 0 do
+		local indices_to_remove = {}
+
 		for i = 1, #this_round_indices do
 			local current_index = this_round_indices[i]
 
@@ -1836,11 +1838,20 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 				filled_stats[current_index].value = filled_stats[current_index].value + stat_increase
 				remaining_budget = remaining_budget - (filled_stats[current_index].value - previous_value)
 			else
-				table.remove(trait_indices, i)
+				indices_to_remove[#indices_to_remove + 1] = current_index
 			end
 
 			if remaining_budget <= 0 then
 				break
+			end
+		end
+
+		for i = 1, #indices_to_remove do
+			local index_to_remove = indices_to_remove[i]
+			local found_index = table.find(trait_indices, index_to_remove)
+
+			if found_index then
+				table.remove(trait_indices, found_index)
 			end
 		end
 

@@ -189,11 +189,6 @@ CraftingSettings.recipes.upgrade_item = {
 			item.override_perk_rating_string = string.format("%d - %d", min_new_item_level, max_new_item_level)
 		end
 
-		local min_new_item_level = item.itemLevel + (new_num_traits - num_traits) * RankSettings[1].trait_rating[rank_item_type_name] + (new_num_perks - num_perks) * RankSettings[1].perk_rating[rank_item_type_name]
-
-		item.override_item_rating_string = string.format(" %d+", min_new_item_level)
-		item.itemLevel = min_new_item_level
-
 		return item
 	end,
 }

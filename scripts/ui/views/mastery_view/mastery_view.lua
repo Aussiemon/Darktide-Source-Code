@@ -381,6 +381,7 @@ MasteryView.draw = function (self, dt, t, input_service, layer)
 
 	UIWidget.draw(self._widgets_by_name.mastery_level, ui_forward_renderer)
 	UIRenderer.end_pass(ui_forward_renderer)
+	MasteryView.super.draw(self, dt, t, input_service, layer)
 
 	if tutorial_overlay then
 		tutorial_overlay:draw_end(self._ui_renderer)
@@ -391,8 +392,6 @@ MasteryView.draw = function (self, dt, t, input_service, layer)
 			tutorial_overlay:draw_end(self._wintrack_element:ui_resource_renderer())
 		end
 	end
-
-	MasteryView.super.draw(self, dt, t, input_service, layer)
 end
 
 MasteryView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)

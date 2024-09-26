@@ -71,6 +71,7 @@ GroupFinderView.init = function (self, settings, context)
 	self._visited_tag_pages = {
 		{},
 	}
+	self._initial_party_id = self:party_id()
 	self._promises = {}
 	self._regions_latency = {}
 	self._show_group_loading = false
@@ -78,8 +79,8 @@ GroupFinderView.init = function (self, settings, context)
 	self._player_request_button_decline_input_action = "hotkey_menu_special_1"
 	self._refresh_button_input_action = "group_finder_refresh_groups"
 	self._preview_button_input_action = "group_finder_group_inspect"
-	self._start_group_button_input_action = "hotkey_menu_special_2"
-	self._cancel_group_button_input_action = "hotkey_menu_special_2"
+	self._start_group_button_input_action = "group_finder_start_group"
+	self._cancel_group_button_input_action = "group_finder_cancel_group"
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
 	GroupFinderView.super.init(self, GroupFinderViewDefinitions, settings, context)
@@ -2059,10 +2060,16 @@ GroupFinderView._update_incoming_join_requests = function (self, t)
 end
 
 GroupFinderView.update = function (self, dt, t, input_service)
+	local party_id = self:party_id()
+	local has_joined_new_party = party_id ~= self._initial_party_id
 	local is_in_matchmaking = Managers.data_service.social:is_in_matchmaking()
 
-	if is_in_matchmaking and not Managers.ui:is_view_closing(self.view_name) then
-		Managers.ui:close_view(self.view_name)
+	if (is_in_matchmaking or has_joined_new_party) and not Managers.ui:is_view_closing(self.view_name) then
+		if has_joined_new_party then
+			Managers.ui:close_all_views()
+		else
+			Managers.ui:close_view(self.view_name)
+		end
 
 		return
 	end
@@ -3128,26 +3135,29 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests_by
 
 	for account_id, join_request in pairs(join_requests_by_account_id) do
 		local presence = join_request.presence
-		local name = presence:character_name()
-		local profile = presence:character_profile()
-		local current_level = profile.current_level
-		local archetype = profile.archetype
-		local archetype_name = archetype.name
-		local presence_info = {
-			name = name,
-			level = current_level,
-			archetype = archetype_name,
-			profile = profile,
-		}
-		local entry = {
-			widget_type = "player_request_entry",
-			presence_info = presence_info,
-			join_request = join_request,
-		}
 
-		entry.accept_callback = callback(self, "_cb_on_player_request_accept_pressed", entry)
-		entry.decline_callback = callback(self, "_cb_on_player_request_decline_pressed", entry)
-		layout[#layout + 1] = entry
+		if presence then
+			local name = presence:character_name()
+			local profile = presence:character_profile()
+			local current_level = profile.current_level
+			local archetype = profile.archetype
+			local archetype_name = archetype.name
+			local presence_info = {
+				name = name,
+				level = current_level,
+				archetype = archetype_name,
+				profile = profile,
+			}
+			local entry = {
+				widget_type = "player_request_entry",
+				presence_info = presence_info,
+				join_request = join_request,
+			}
+
+			entry.accept_callback = callback(self, "_cb_on_player_request_accept_pressed", entry)
+			entry.decline_callback = callback(self, "_cb_on_player_request_decline_pressed", entry)
+			layout[#layout + 1] = entry
+		end
 	end
 
 	layout[#layout + 1] = {

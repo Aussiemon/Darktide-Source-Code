@@ -357,7 +357,7 @@ ViewElementDiscardItems._set_selected_gamepad_navigation_index = function (self,
 	elseif self._selected_gamepad_navigation_index == index then
 		return
 	elseif index > self._selected_gamepad_navigation_index then
-		for i = index, #self._button_gamepad_navigation_list do
+		for i = index, #button_gamepad_navigation_list do
 			local widget = button_gamepad_navigation_list[i]
 
 			if not widget.content.hotspot.disabled then
@@ -429,7 +429,19 @@ ViewElementDiscardItems.set_pivot_offset = function (self, x, y)
 end
 
 ViewElementDiscardItems.select_first_index = function (self)
-	self:_set_selected_gamepad_navigation_index(1)
+	local first_index = 1
+
+	for i = 1, #self._button_gamepad_navigation_list do
+		local widget = self._button_gamepad_navigation_list[i]
+
+		if not widget.content.hotspot.disabled then
+			first_index = i
+
+			break
+		end
+	end
+
+	self:_set_selected_gamepad_navigation_index(first_index)
 end
 
 ViewElementDiscardItems.disable_input = function (self, disabled)
