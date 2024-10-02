@@ -27,9 +27,11 @@ TimedSynchronizerExtension.objective_started = function (self)
 end
 
 TimedSynchronizerExtension.add_time = function (self, time)
-	local mission_objective = self._mission_objective_system:active_objective(self._objective_name)
+	if self._is_server then
+		local mission_objective = self._mission_objective_system:active_objective(self._objective_name)
 
-	mission_objective:add_time(time)
+		mission_objective:add_time(time)
+	end
 end
 
 TimedSynchronizerExtension.rubberband_time = function (self, dt)

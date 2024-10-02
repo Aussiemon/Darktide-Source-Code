@@ -2437,6 +2437,15 @@ MissionBoardView._cancel_promise_on_exit = function (self, promise)
 	return promise
 end
 
+MissionBoardView._on_group_finder_pressed = function (self)
+	local view_name = "group_finder_view"
+	local ui_manager = Managers.ui
+
+	if ui_manager and not Managers.ui:view_active(view_name) then
+		Managers.ui:open_view(view_name)
+	end
+end
+
 MissionBoardView._telemetry_open = function (self)
 	local telemetry_manager = Managers.telemetry_events
 

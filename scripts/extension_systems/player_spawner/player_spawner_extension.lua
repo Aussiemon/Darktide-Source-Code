@@ -3,20 +3,24 @@
 local PlayerSpawnerExtension = class("PlayerSpawnerExtension")
 
 PlayerSpawnerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	self._player_side = "heroes"
-	self._spawn_identifier = "default"
-	self._spawn_priority = 1
-	self._parent_spawned = false
+	self._active = false
 	self._player_spawner_system = extension_init_context.owner_system
 end
 
-PlayerSpawnerExtension.setup_from_component = function (self, unit, player_side, spawn_identifier, spawn_priority, parent_spawned)
-	self._player_side = player_side
-	self._spawn_identifier = spawn_identifier
-	self._spawn_priority = spawn_priority
-	self._parent_spawned = parent_spawned
+PlayerSpawnerExtension.activate_spawner = function (self, ...)
+	if not self._active then
+		self._player_spawner_system:add_spawn_point(...)
 
-	self._player_spawner_system:add_spawn_point(unit, player_side, spawn_identifier, spawn_priority, parent_spawned)
+		self._active = true
+	end
+end
+
+PlayerSpawnerExtension.deactivate_spawner = function (self, ...)
+	if self._active then
+		self._player_spawner_system:remove_spawn_point(...)
+
+		self._active = false
+	end
 end
 
 return PlayerSpawnerExtension

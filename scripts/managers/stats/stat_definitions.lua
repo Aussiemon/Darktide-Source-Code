@@ -1502,34 +1502,6 @@ do
 			return eligible_circumstance_name
 		end,
 	}
-	StatDefinitions.mission_flash = {
-		flags = {
-			StatFlags.backend,
-		},
-		triggers = {
-			{
-				id = "mission_won",
-				trigger = StatMacros.increment,
-			},
-		},
-		include_condition = function (self, config)
-			return config.is_flash_mission
-		end,
-	}
-	StatDefinitions.max_difficulty_flash = {
-		flags = {
-			StatFlags.backend,
-		},
-		triggers = {
-			{
-				id = "mission_won",
-				trigger = _max_difficulty,
-			},
-		},
-		include_condition = function (self, config)
-			return config.is_flash_mission
-		end,
-	}
 	StatDefinitions.mission_twins = {
 		flags = {
 			StatFlags.backend,

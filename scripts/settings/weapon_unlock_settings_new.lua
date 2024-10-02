@@ -537,7 +537,6 @@ local unlock_config = {
 		{
 			level = 10,
 			items = {
-				"content/items/weapons/player/melee/chainsword_p1_m1",
 				"content/items/weapons/player/melee/combatsword_p3_m2",
 			},
 		},

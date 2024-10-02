@@ -329,9 +329,7 @@ InventoryWeaponsView.cb_on_discard_pressed = function (self)
 		self._discard_layout = table.clone_instance(filtered_items_layout)
 
 		self:present_grid_layout(filtered_items_layout, function ()
-			if self._using_cursor_navigation then
-				self:_stop_previewing()
-			end
+			self:_stop_previewing()
 		end)
 
 		self._current_layout = filtered_items_layout
@@ -378,11 +376,18 @@ InventoryWeaponsView.cb_on_discard_button_pressed = function (self)
 			table.sort(selected_layout, selected_sort_function)
 		end
 
-		self:present_grid_layout(selected_layout)
+		self:present_grid_layout(selected_layout, function ()
+			self._item_grid:disable_input(false)
+			self._item_grid:select_first_index()
+
+			local selected_widget = self:selected_grid_widget()
+			local item = selected_widget and selected_widget.content.element
+		end)
 
 		self._current_layout = selected_layout
 		self._widgets_by_name.discard_button.content.original_text = Utf8.upper(Localize("loc_confirm"))
 
+		self._discard_items_element:disable_input(true)
 		self._discard_items_element:set_visibility(false)
 		self:_play_sound(UISoundEvents.weapons_discard_continue)
 	else
@@ -421,6 +426,10 @@ InventoryWeaponsView.cb_on_discard_button_pressed = function (self)
 		self:present_grid_layout(selected_layout, function ()
 			self._discard_items_element:refresh(filtered_items)
 			self._discard_items_element:set_visibility(true)
+
+			if not self._using_cursor_navigation then
+				self._discard_items_element:disable_input(true)
+			end
 		end)
 
 		self._current_layout = self._discard_layout
@@ -641,7 +650,8 @@ InventoryWeaponsView._handle_input = function (self, input_service)
 
 				self._selected_item_index = nil
 
-				local item = self:previewed_item()
+				local selected_widget = self:selected_grid_widget()
+				local item = selected_widget and selected_widget.content.element
 
 				if item then
 					self:_preview_item(item)
@@ -756,6 +766,7 @@ InventoryWeaponsView._on_navigation_input_changed = function (self)
 			self._selected_item_index = nil
 
 			self._item_grid:select_grid_index()
+			self:_stop_previewing()
 		end
 
 		self._item_grid:disable_input(false)
@@ -768,11 +779,15 @@ InventoryWeaponsView._on_navigation_input_changed = function (self)
 		if selected_options then
 			self._weapon_options_element:select_first_index()
 		end
-	elseif self._discard_items_element and self._discard_items_element:visible() then
+	elseif self._discard_items_element then
 		if self._discard_items_element:visible() and self._item_grid:input_disabled() then
-			self._item_grid:select_grid_index(self._selected_item_index or 1)
+			if self._selected_item_index then
+				self._item_grid:select_grid_index(self._selected_item_index)
 
-			self._selected_item_index = nil
+				self._selected_item_index = nil
+			else
+				self._item_grid:select_first_index()
+			end
 		end
 
 		self._discard_items_element:disable_input(true)

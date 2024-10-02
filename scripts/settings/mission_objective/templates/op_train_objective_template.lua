@@ -44,6 +44,7 @@ local mission_objective_templates = {
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_2",
 				progress_bar = true,
+				turn_off_backfill = true,
 			},
 			objective_op_train_luggable_one = {
 				description = "loc_objective_op_train_luggable_one_desc",
@@ -63,7 +64,6 @@ local mission_objective_templates = {
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_2",
 				progress_bar = true,
-				turn_off_backfill = true,
 			},
 			objective_flash_train_defuse_bomb_four = {
 				description = "loc_objective_op_train_defuse_final_desc",

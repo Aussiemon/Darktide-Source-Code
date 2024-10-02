@@ -686,12 +686,17 @@ end
 
 Mastery.has_available_points = function (masteries_data, masteries_traits)
 	local available_points = 0
+	local filtered_masteries_data = Mastery.get_masteries_by_archetype(masteries_data)
 
-	for id, mastery_data in pairs(masteries_data) do
-		available_points = available_points + (Mastery.get_available_points(mastery_data, masteries_traits[id]) or 0)
+	for id, mastery_data in pairs(filtered_masteries_data) do
+		local is_unlocked = Mastery.is_mastery_unlocked(mastery_data)
 
-		if available_points > 0 then
-			return true
+		if is_unlocked then
+			available_points = available_points + (Mastery.get_available_points(mastery_data, masteries_traits[id]) or 0)
+
+			if available_points > 0 then
+				return true
+			end
 		end
 	end
 
@@ -733,7 +738,7 @@ Mastery.get_masteries_by_archetype = function (masteries_data)
 		local allowed_archetypes = master_item.archetypes
 
 		if table.contains(allowed_archetypes, archetype_name) then
-			filtered_masteries[#filtered_masteries + 1] = mastery_data
+			filtered_masteries[id] = mastery_data
 		end
 	end
 

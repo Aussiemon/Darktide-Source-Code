@@ -51,7 +51,9 @@ local StateMainMenuTestify = {
 		end
 	end,
 	wait_for_narrative_loaded = function (state_main_menu)
-		if not Managers.narrative:is_narrative_loaded_for_player_character() then
+		local player_profile = Managers.player:local_player_backend_profile()
+
+		if player_profile and not Managers.narrative:is_narrative_loaded_for_player_character() then
 			return Testify.RETRY
 		end
 	end,

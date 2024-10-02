@@ -2618,6 +2618,12 @@ MissionBoardViewDefinitions.legend_inputs = {
 			return not parent._mission_board_options and not parent._is_in_matchmaking
 		end,
 	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_group_finder_menu_title",
+		input_action = "mission_board_group_finder_open",
+		on_pressed_callback = "_on_group_finder_pressed",
+	},
 }
 
 MissionBoardViewDefinitions.widget_definitions_functions.screen_decorations_pass_function = function (mission_type)

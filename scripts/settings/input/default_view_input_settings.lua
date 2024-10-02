@@ -508,6 +508,13 @@ local default_view_input_settings = {
 			bindable = false,
 			description = "",
 		},
+		mission_board_group_finder_open = {
+			"keyboard_p",
+			"xbox_controller_right_thumb",
+			"ps4_controller_r3",
+			bindable = false,
+			description = "",
+		},
 	},
 	settings = {
 		close_view = {
@@ -1025,6 +1032,10 @@ local default_view_input_settings = {
 		group_finder_cancel_group_hold = {
 			key_alias = "group_finder_cancel_group",
 			type = "held",
+		},
+		mission_board_group_finder_open = {
+			key_alias = "mission_board_group_finder_open",
+			type = "pressed",
 		},
 	},
 }

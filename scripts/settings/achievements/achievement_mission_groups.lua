@@ -295,7 +295,10 @@ AchievementMissionGroups.missions = {
 			default = "endeavours_operations",
 			puzzle = "exploration_operations",
 		},
-		icon = {},
+		icon = {
+			mission_default = path .. "mission_achievements/missions_achievement_0040",
+			auric = path .. "mission_achievements/missions_achievement_0039",
+		},
 	},
 }
 AchievementMissionGroups.level_overview_meta = {
@@ -566,7 +569,9 @@ AchievementMissionGroups.zones = {
 		category = "exploration_operations",
 		local_variable = "loc_zone_name_operations_short",
 		name = "operations",
-		icon = {},
+		icon = {
+			zone_default = path .. "mission_achievements/missions_achievement_0038",
+		},
 	},
 }
 AchievementMissionGroups.zone_meta = {

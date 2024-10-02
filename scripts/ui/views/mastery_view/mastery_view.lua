@@ -1154,6 +1154,10 @@ MasteryView._can_trait_be_acquired = function (self, trait_item_element)
 end
 
 MasteryView._cb_trait_left_pressed = function (self, trait_widget, config)
+	if self._wintracks_focused then
+		return
+	end
+
 	if self._using_cursor_navigation and self._trait_widgets then
 		for i = 1, #self._trait_widgets do
 			local widget = self._trait_widgets[i]
@@ -1232,6 +1236,10 @@ MasteryView._cb_trait_left_pressed = function (self, trait_widget, config)
 	end
 
 	self:_update_traits(trait_widget)
+	Managers.event:trigger("event_mastery_traits_update", self._mastery_id, {
+		trait_name = trait_name,
+		rarity = rarity,
+	})
 end
 
 MasteryView._set_button_callbacks = function (self)

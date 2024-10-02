@@ -334,7 +334,7 @@ local function _item_pass_template_init(widget, config)
 
 	local item_type = reward_item.item_type
 
-	if item_type == "WEAPON_RANGED" or item_type == "WEAPON_MELEE" then
+	if Items.is_weapon(item_type) then
 		content.item_display_name = string.format("%s\n%s", Items.weapon_card_display_name(reward_item), Items.weapon_card_sub_display_name(reward_item))
 		content.item_sub_display_name = Items.sub_display_name(reward_item)
 	else

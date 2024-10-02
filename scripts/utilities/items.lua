@@ -308,7 +308,7 @@ Items.display_name = function (item)
 		local lore_pattern_name = Items.weapon_lore_pattern_name(item)
 		local lore_mark_name = Items.weapon_lore_mark_name(item)
 
-		return string.format("%s %s %s", lore_pattern_name, lore_mark_name, lore_family_name)
+		return string.format("%s %s %s", lore_family_name, lore_pattern_name, lore_mark_name)
 	end
 
 	local localization_function = Localize
@@ -1433,8 +1433,8 @@ Items.compare_item_type = function (a, b)
 end
 
 Items.compare_item_name = function (a, b)
-	local a_display_name = a.display_name and Localize(a.display_name) or ""
-	local a_display_name, b_display_name = a_display_name, b.display_name and Localize(b.display_name) or ""
+	local a_display_name = Items.display_name(a) or ""
+	local a_display_name, b_display_name = a_display_name, Items.display_name(b) or ""
 
 	a_display_name = a_display_name:gsub("[\n\r]", "")
 	b_display_name = b_display_name:gsub("[\n\r]", "")
