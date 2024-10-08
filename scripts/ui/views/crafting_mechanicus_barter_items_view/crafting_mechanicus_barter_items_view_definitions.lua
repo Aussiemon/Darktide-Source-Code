@@ -229,15 +229,15 @@ local scenegraph_definition = {
 	},
 	mastery_info_details = {
 		horizontal_alignment = "left",
-		parent = "mastery_info",
-		vertical_alignment = "top",
+		parent = "canvas",
+		vertical_alignment = "bottom",
 		size = {
 			650,
 			250,
 		},
 		position = {
-			0,
-			320,
+			790,
+			-200,
 			1,
 		},
 	},
@@ -573,10 +573,11 @@ local widget_definitions = {
 			value_id = "description",
 			style = table.merge(table.clone(mastery_pattern_mastery_experience_text_style), {
 				text_horizontal_alignment = "left",
-				vertical_alignment = "top",
+				text_vertical_alignment = "bottom",
+				vertical_alignment = "bottom",
 				offset = {
 					0,
-					80,
+					-20,
 					mastery_pattern_mastery_experience_text_style.offset[3],
 				},
 			}),

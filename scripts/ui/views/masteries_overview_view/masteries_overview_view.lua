@@ -694,7 +694,7 @@ MasteriesOverviewView._present_mastery = function (self, mastery_id)
 		local mastery_current_xp = mastery_data.current_xp
 		local is_max_level = mastery_max_level <= mastery_level
 		local mastery_end_exp_text = mastery_end_exp - mastery_start_exp
-		local mastery_current_xp_text = mastery_current_xp - mastery_start_exp
+		local mastery_current_xp_text = is_max_level and mastery_end_exp_text or mastery_current_xp - mastery_start_exp
 		local mastery_next_level = math.min(mastery_level + 1, mastery_max_level)
 
 		mastery_info_widget.content.weapon_panel = nil

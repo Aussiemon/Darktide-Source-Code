@@ -1800,7 +1800,6 @@ templates.psyker_smite_on_hit = {
 	proc_events = {
 		[proc_events.on_hit] = talent_settings_2.offensive_2_3.smite_chance,
 	},
-	check_proc_func = CheckProcFunctions.on_elite_or_special_or_monster_hit,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
@@ -1897,6 +1896,10 @@ templates.psyker_smite_on_hit = {
 		local breed = unit_data_extension:breed()
 
 		if not breed then
+			return false
+		end
+
+		if not params.tags.elite and not params.tags.special and not params.tags.monster then
 			return false
 		end
 

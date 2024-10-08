@@ -134,7 +134,7 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 		self._ability_extension:update_ability_actions(fixed_frame)
 	else
 		local current_weapon_template = self._weapon_extension:weapon_template()
-		local current_weapon_special_tweak_data = current_weapon_template.weapon_special_tweak_data
+		local current_weapon_special_tweak_data = current_weapon_template and current_weapon_template.weapon_special_tweak_data
 
 		if current_weapon_special_tweak_data and current_weapon_special_tweak_data.keep_active_on_stun then
 			self._weapon_extension:update_weapon_special_implementation(fixed_frame)

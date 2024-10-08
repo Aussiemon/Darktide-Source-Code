@@ -106,8 +106,9 @@ ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
 
 	if action_settings.delay_explosion_to_finish then
 		local warp_charge_component = self._warp_charge_component
+		local buff_extension = self._buff_extension
 
-		WarpCharge.check_and_set_state(t, warp_charge_component)
+		WarpCharge.check_and_set_state(t, warp_charge_component, buff_extension)
 	end
 end
 

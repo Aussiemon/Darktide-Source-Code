@@ -344,6 +344,8 @@ InventoryWeaponsView.cb_on_discard_pressed = function (self)
 
 		if not self._using_cursor_navigation then
 			self._discard_items_element:disable_input(true)
+		else
+			self._discard_items_element:disable_input(false)
 		end
 
 		self:_play_sound(UISoundEvents.weapons_discard_enter)
@@ -387,7 +389,12 @@ InventoryWeaponsView.cb_on_discard_button_pressed = function (self)
 		self._current_layout = selected_layout
 		self._widgets_by_name.discard_button.content.original_text = Utf8.upper(Localize("loc_confirm"))
 
-		self._discard_items_element:disable_input(true)
+		if not self._using_cursor_navigation then
+			self._discard_items_element:disable_input(true)
+		else
+			self._discard_items_element:disable_input(false)
+		end
+
 		self._discard_items_element:set_visibility(false)
 		self:_play_sound(UISoundEvents.weapons_discard_continue)
 	else
@@ -429,6 +436,8 @@ InventoryWeaponsView.cb_on_discard_button_pressed = function (self)
 
 			if not self._using_cursor_navigation then
 				self._discard_items_element:disable_input(true)
+			else
+				self._discard_items_element:disable_input(false)
 			end
 		end)
 
@@ -646,12 +655,17 @@ InventoryWeaponsView._handle_input = function (self, input_service)
 			if input_service:get("navigate_left_continuous") and not self._discard_items_element:input_disabled() then
 				self._discard_items_element:disable_input(true)
 				self._item_grid:disable_input(false)
-				self._item_grid:select_grid_index(self._selected_item_index or 1)
+
+				if self._selected_item_index then
+					self._item_grid:select_grid_index(self._selected_item_index)
+				else
+					self._item_grid:select_first_index()
+				end
 
 				self._selected_item_index = nil
 
 				local selected_widget = self:selected_grid_widget()
-				local item = selected_widget and selected_widget.content.element
+				local item = selected_widget and selected_widget.content.element and selected_widget.content.element.item
 
 				if item then
 					self:_preview_item(item)

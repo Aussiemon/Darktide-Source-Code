@@ -21,6 +21,8 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local CraftingMechanicusBarterItemsView = class("CraftingMechanicusBarterItemsView", "BaseView")
 
 CraftingMechanicusBarterItemsView.init = function (self, settings, context)
@@ -1305,6 +1307,8 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 		self._selected_items = {}
 	end
 
+	self._ui_scenegraph.mastery_info.vertical_alignment = "top"
+
 	if state_name == "select_pattern" then
 		self._widgets_by_name.patterns_grid_panels.content.visible = true
 		self._widgets_by_name.sacrifice_intro.content.visible = true
@@ -1312,7 +1316,34 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 		local mastery_id = self._selected_pattern
 
 		self:_present_mastery(mastery_id)
-		self:_set_scenegraph_position("mastery_info", 760, 315)
+
+		local sacrifice_title_text = self._widgets_by_name.sacrifice_intro.content.display_name
+		local sacrifice_title_style = self._widgets_by_name.sacrifice_intro.style.display_name
+		local sacrifice_title_font_data = UIFonts.data_by_type(sacrifice_title_style.font_type)
+		local sacrifice_title_text_options = UIFonts.get_font_options_by_style(sacrifice_title_style)
+		local sacrifice_description_text = self._widgets_by_name.sacrifice_intro.content.description
+		local sacrifice_description_style = self._widgets_by_name.sacrifice_intro.style.description
+		local sacrifice_description_font_data = UIFonts.data_by_type(sacrifice_description_style.font_type)
+		local sacrifice_description_text_options = UIFonts.get_font_options_by_style(sacrifice_description_style)
+		local _, sacrifice_intro_title_height = UIRenderer.text_size(self._ui_renderer, sacrifice_title_text, sacrifice_title_style.font_type, sacrifice_title_style.font_size, {
+			650,
+			2000,
+		}, sacrifice_title_text_options)
+		local _, sacrifice_description_text_height = UIRenderer.text_size(self._ui_renderer, sacrifice_description_text, sacrifice_description_style.font_type, sacrifice_description_style.font_size, {
+			650,
+			2000,
+		}, sacrifice_description_text_options)
+		local text_margin = 60
+		local mastery_info_height = sacrifice_intro_title_height + sacrifice_description_text_height + text_margin
+
+		self:_set_scenegraph_size("mastery_info_details", 650, mastery_info_height)
+		self:_set_scenegraph_position("mastery_info_details", 760, nil)
+
+		self._ui_scenegraph.mastery_info.vertical_alignment = "bottom"
+
+		local mastery_info_start_position = self._ui_scenegraph.mastery_info_details.position[2] - mastery_info_height - 20
+
+		self:_set_scenegraph_position("mastery_info", 760, mastery_info_start_position)
 		self:_set_scenegraph_size("mastery_info", 650, 240)
 		self:_set_scenegraph_position("confirm_button", 900, 920)
 

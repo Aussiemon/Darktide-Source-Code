@@ -353,6 +353,10 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 	local carousel_achievement_layouts = {}
 
 	local function can_add_achievement(achievement_id)
+		if Managers.achievements:achievement_definition(achievement_id) == nil then
+			return false
+		end
+
 		for i = 1, #carousel_achievement_layouts do
 			if carousel_achievement_layouts[i].achievement_id == achievement_id then
 				return false
@@ -2094,10 +2098,11 @@ PenanceOverviewView._verify_favorite_achievements = function (self, index)
 
 	for i = 1, #favorite_achievements do
 		local achievement_id = favorite_achievements[i]
+		local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
 		local can_claim = self:_can_claim_achievement_by_id(achievement_id)
 		local is_complete = not can_claim and Managers.achievements:achievement_completed(player, achievement_id)
 
-		if is_complete then
+		if not achievement_definition or is_complete then
 			local removed = AchievementUIHelper.remove_favorite_achievement(achievement_id)
 
 			if removed then

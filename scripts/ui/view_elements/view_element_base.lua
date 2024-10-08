@@ -19,6 +19,9 @@ ViewElementBase.init = function (self, parent, draw_layer, start_scale, definiti
 
 	self._ui_sequence_animator = self:_create_sequence_animator(definitions)
 	self._visible = true
+
+	self:set_render_scale(start_scale or RESOLUTION_LOOKUP.scale)
+
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 end
 

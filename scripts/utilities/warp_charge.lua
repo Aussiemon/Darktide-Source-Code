@@ -37,7 +37,13 @@ WarpCharge.check_new_state = function (warp_charge_component, prevent_explosion)
 	return state
 end
 
-WarpCharge.check_and_set_state = function (t, warp_charge_component, prevent_explosion)
+WarpCharge.check_and_set_state = function (t, warp_charge_component, buff_extension, prevent_explosion)
+	if not prevent_explosion and buff_extension then
+		local prevent_overload = buff_extension:has_keyword(buff_keywords.psychic_fortress)
+
+		prevent_explosion = prevent_overload
+	end
+
 	local new_state = WarpCharge.check_new_state(warp_charge_component, prevent_explosion)
 
 	warp_charge_component.state = new_state
@@ -62,7 +68,12 @@ WarpCharge.increase_immediate = function (t, charge_level, warp_charge_component
 
 	buff_multiplier = buff_multiplier * (warp_charge_modifier or 1)
 
-	local prevent_overload = buff_extension:has_keyword(buff_keywords.psychic_fortress)
+	if not prevent_explosion then
+		local prevent_overload = buff_extension:has_keyword(buff_keywords.psychic_fortress)
+
+		prevent_explosion = prevent_overload
+	end
+
 	local current_percentage = warp_charge_component.current_percentage
 	local current_state = warp_charge_component.state
 	local use_charge = charge_template.use_charge
@@ -70,7 +81,7 @@ WarpCharge.increase_immediate = function (t, charge_level, warp_charge_component
 	local add_percentage = buff_multiplier * base_add_percentage
 	local new_warp_charge, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage, prevent_explosion)
 
-	if prevent_overload then
+	if prevent_explosion then
 		new_state = nil
 	end
 
