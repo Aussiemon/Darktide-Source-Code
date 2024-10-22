@@ -536,7 +536,7 @@ end
 
 settings[#settings + 1] = chat_volume_template
 
-if not IS_XBS and rawget(_G, "Managers") and Managers.chat and Managers.chat.get_capture_devices then
+if IS_WINDOWS and rawget(_G, "Managers") and Managers.chat and Managers.chat.get_capture_devices then
 	local capture_device
 
 	capture_device = {
@@ -616,9 +616,9 @@ local voice_chat_settings = {
 	end,
 }
 
-if IS_XBS then
+if not IS_WINDOWS then
 	voice_chat_settings.options[3] = nil
-	voice_chat_settings.default_value = 1
+	voice_chat_settings.default_value = 2
 end
 
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)

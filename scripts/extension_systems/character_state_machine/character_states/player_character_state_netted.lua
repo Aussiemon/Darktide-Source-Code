@@ -67,6 +67,8 @@ PlayerCharacterStateNetted.game_object_initialized = function (self, game_sessio
 end
 
 PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateNetted.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local disabling_unit = self._disabled_state_input.disabling_unit
 	local disabling_unit_data_extension = ScriptUnit.extension(disabling_unit, "unit_data_system")
 
@@ -128,6 +130,8 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 end
 
 PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateNetted.super.on_exit(self, unit, t, next_state)
+
 	local is_server = self._is_server
 	local disabled_character_state_component = self._disabled_character_state_component
 	local fx_extension = self._fx_extension

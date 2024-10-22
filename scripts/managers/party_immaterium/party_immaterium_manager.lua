@@ -15,6 +15,7 @@ local Promise = require("scripts/foundation/utilities/promise")
 local SteamJoinPermission = require("scripts/managers/party_immaterium/join_permission/steam_join_permission")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local XboxJoinPermission = require("scripts/managers/party_immaterium/join_permission/xbox_join_permission")
+local PlaystationJoinPermission = require("scripts/managers/party_immaterium/join_permission/playstation_join_permission")
 local PartyImmateriumManager = class("PartyImmateriumManager")
 local ADVERTISEMENT_STATE = table.enum("SEARCHING", "CANCELED")
 local JOIN_REQUESTS_STATE = table.enum("PENDING", "ACCEPTED", "DECLINED")
@@ -139,6 +140,8 @@ PartyImmateriumManager._resolve_join_permission = function (self, presence_entry
 		table.insert(promises, XboxJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context))
 	elseif authenticate_method == Managers.backend.AUTH_METHOD_STEAM then
 		table.insert(promises, SteamJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context))
+	elseif authenticate_method == Managers.backend.AUTH_METHOD_PSN then
+		table.insert(promises, PlaystationJoinPermission.test_play_mutliplayer_permission(presence_entry:account_id(), presence_entry:platform(), presence_entry:platform_user_id(), context))
 	end
 
 	if #promises == 0 then

@@ -25,6 +25,8 @@ PlayerCharacterStateExploding.init = function (self, ...)
 end
 
 PlayerCharacterStateExploding.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateExploding.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local slot_name = params.slot_name
 	local reason = params.reason
 	local wield_slot = params.wield_slot
@@ -54,6 +56,8 @@ PlayerCharacterStateExploding.on_enter = function (self, unit, dt, t, previous_s
 end
 
 PlayerCharacterStateExploding.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateExploding.super.on_exit(self, unit, t, next_state)
+
 	local state_component = self._exploding_character_state_component
 
 	state_component.is_exploding = false

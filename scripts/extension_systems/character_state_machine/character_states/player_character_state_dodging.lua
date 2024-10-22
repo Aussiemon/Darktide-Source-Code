@@ -172,6 +172,8 @@ local tg_on_dodge_data = {}
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateDodging.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local base_dodge_template = self._archetype_dodge_template
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
@@ -228,6 +230,8 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateDodging.super.on_exit(self, unit, t, next_state)
+
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 	local base_dodge_template = self._archetype_dodge_template

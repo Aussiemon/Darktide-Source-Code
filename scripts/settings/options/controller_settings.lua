@@ -277,6 +277,10 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "group_header",
 }
 
+if IS_PLAYSTATION then
+	settings_definitions[#settings_definitions].display_name = "loc_settings_menu_group_controller_settings_sony"
+end
+
 function get_gamepad_input_layout_names(layouts)
 	local layout_names = {}
 
@@ -347,6 +351,11 @@ settings_definitions[#settings_definitions + 1] = {
 		end
 	end,
 }
+
+if IS_PLAYSTATION then
+	settings_definitions[#settings_definitions].display_name = "loc_setting_controller_layout_sony"
+end
+
 settings_definitions[#settings_definitions + 1] = {
 	display_name = "setting_controller_image_layout",
 	id = "controller_layout_image",
@@ -395,6 +404,11 @@ settings_definitions[#settings_definitions + 1] = {
 		Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
 	end,
 }
+
+if IS_PLAYSTATION then
+	settings_definitions[#settings_definitions].tooltip_text = "loc_settings_menu_rumble_intensity_mouseover_sony"
+end
+
 settings_definitions[#settings_definitions + 1] = {
 	default_value = 100,
 	display_name = "loc_settings_menu_rumble_gameplay",
@@ -609,10 +623,16 @@ end
 
 SettingsUtilities = SettingsUtilitiesFunction(settings)
 
-return {
+local ControllerSettings = {
 	display_name = "loc_settings_menu_group_controller_settings",
 	icon = "content/ui/materials/icons/system/settings/category_controls",
 	settings_utilities = SettingsUtilities,
 	settings_by_id = SettingsUtilities.settings_by_id,
 	settings = settings,
 }
+
+if IS_PLAYSTATION then
+	ControllerSettings.display_name = "loc_settings_menu_group_controller_settings_sony"
+end
+
+return ControllerSettings

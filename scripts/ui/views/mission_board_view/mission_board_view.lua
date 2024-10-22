@@ -2,31 +2,32 @@
 
 local MissionBoardViewDefinitions = require("scripts/ui/views/mission_board_view/mission_board_view_definitions")
 local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
-local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
-local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
-local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
-local MissionTemplates = require("scripts/settings/mission/mission_templates")
-local MissionTypes = require("scripts/settings/mission/mission_types")
 local PlayerVOStoryStage = require("scripts/utilities/player_vo_story_stage")
+local MissionTypes = require("scripts/settings/mission/mission_types")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
+local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
+local DangerSettings = require("scripts/settings/difficulty/danger_settings")
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Zones = require("scripts/settings/zones/zones")
+local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputDevice = require("scripts/managers/input/input_device")
+local InputUtils = require("scripts/managers/input/input_utils")
+local MissionUtilities = require("scripts/utilities/ui/mission")
+local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
+local Promise = require("scripts/foundation/utilities/promise")
+local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
+local TextUtils = require("scripts/utilities/ui/text")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local Promise = require("scripts/foundation/utilities/promise")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtils = require("scripts/utilities/ui/text")
 local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local MissionUtilities = require("scripts/utilities/ui/mission")
-local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local MissionBoardView = class("MissionBoardView", "BaseView")
 local mission_types = {
 	"normal",
@@ -63,6 +64,13 @@ local mission_type_data = {
 		display_style = mission_type_auric_font,
 	},
 }
+local service_type = "View"
+local gamepad_action_navigate_secondary_left = "navigate_secondary_left_pressed"
+local alias_key_navigate_secondary_left = Managers.ui:get_input_alias_key(gamepad_action_navigate_secondary_left, service_type)
+local input_text_navigate_secondary_left = InputUtils.input_text_for_current_input_device(service_type, alias_key_navigate_secondary_left)
+local gamepad_action_navigate_secondary_right = "navigate_secondary_right_pressed"
+local alias_key_navigate_secondary_right = Managers.ui:get_input_alias_key(gamepad_action_navigate_secondary_right, service_type)
+local input_text_navigate_secondary_right = InputUtils.input_text_for_current_input_device(service_type, alias_key_navigate_secondary_right)
 
 MissionBoardView.init = function (self, settings, context)
 	MissionBoardView.super.init(self, MissionBoardViewDefinitions, settings, context)
@@ -456,8 +464,8 @@ MissionBoardView._generate_mission_type_selection = function (self)
 		{
 			pass_type = "text",
 			style_id = "arrow_left_text",
-			value = "",
 			value_id = "arrow_left_text",
+			value = input_text_navigate_secondary_left,
 			style = {
 				font_size = 24,
 				text_horizontal_alignment = "left",
@@ -484,8 +492,8 @@ MissionBoardView._generate_mission_type_selection = function (self)
 		{
 			pass_type = "text",
 			style_id = "arrow_right_text",
-			value = "",
 			value_id = "arrow_right_text",
+			value = input_text_navigate_secondary_right,
 			style = {
 				font_size = 24,
 				text_horizontal_alignment = "right",

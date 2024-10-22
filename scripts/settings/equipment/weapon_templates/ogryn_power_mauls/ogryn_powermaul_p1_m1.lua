@@ -2062,6 +2062,7 @@ weapon_template.weapon_special_class = "WeaponSpecialExplodeOnImpact"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 4,
 	active_on_abort = true,
+	allow_reactivation_while_active = true,
 	disorientation_type = "ogryn_powermaul_disorientation",
 	keep_active_on_sprint = true,
 	explosion_template = ExplosionTemplates.powermaul_activated_impact,

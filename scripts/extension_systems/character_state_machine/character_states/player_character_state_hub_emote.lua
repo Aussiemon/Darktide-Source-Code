@@ -12,6 +12,8 @@ PlayerCharacterStateHubEmote.init = function (self, character_state_init_context
 end
 
 PlayerCharacterStateHubEmote.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateHubEmote.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	self._unit_id = Managers.state.unit_spawner:game_object_id(unit)
 
 	local emote_slot_id = params.emote_slot_id
@@ -20,7 +22,7 @@ PlayerCharacterStateHubEmote.on_enter = function (self, unit, dt, t, previous_st
 end
 
 PlayerCharacterStateHubEmote.on_exit = function (self, unit, t, next_state)
-	return
+	PlayerCharacterStateHubEmote.super.on_exit(self, unit, t, next_state)
 end
 
 PlayerCharacterStateHubEmote.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)

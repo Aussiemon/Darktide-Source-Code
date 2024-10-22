@@ -36,6 +36,8 @@ PlayerCharacterStateStunned.init = function (self, character_state_init_context,
 end
 
 PlayerCharacterStateStunned.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateStunned.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local animation_extension = self._animation_extension
 	local locomotion_component = self._locomotion_component
 	local locomotion_steering_component = self._locomotion_steering_component
@@ -83,6 +85,8 @@ PlayerCharacterStateStunned.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateStunned.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateStunned.super.on_exit(self, unit, t, next_state)
+
 	local stunned_character_state_component = self._stunned_character_state_component
 
 	stunned_character_state_component.stunned = false

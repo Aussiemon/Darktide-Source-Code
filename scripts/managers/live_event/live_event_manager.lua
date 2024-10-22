@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/managers/live_event/live_event_manager.lua
 
+local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local LiveEventManager = class("LiveEventManager")
 local REFRESH_TIMER_SUCCESS = 300
@@ -93,7 +95,8 @@ LiveEventManager._on_tier_claimed_success = function (self, id, event_id, comple
 
 	for i = 1, reward_count do
 		local reward = rewards[i]
-		local is_currency = reward and reward.type == "currency"
+		local reward_type = reward and reward.type
+		local is_currency = reward_type == "currency"
 
 		if is_currency then
 			local reason = Localize("loc_event_tier_completed")
@@ -103,6 +106,24 @@ LiveEventManager._on_tier_claimed_success = function (self, id, event_id, comple
 				currency = reward.currency,
 				amount = reward.amount,
 			})
+		end
+
+		local is_item = reward_type == "item"
+
+		if is_item then
+			local master_item_id = reward.id
+
+			if MasterItems.item_exists(master_item_id) then
+				local rewarded_master_item = MasterItems.get_item(master_item_id)
+				local sound_event = UISoundEvents.character_news_feed_new_item
+
+				Managers.event:trigger("event_add_notification_message", "item_granted", {
+					reason = Localize("loc_item_rewarded_from_live_event"),
+					item = rewarded_master_item,
+				}, nil, sound_event)
+			else
+				Log.warning("LiveEventsManager", "Received invalid item %s as reward from backend.", master_item_id)
+			end
 		end
 	end
 

@@ -38,6 +38,13 @@ local default_view_input_settings = {
 			bindable = false,
 			description = "loc_alias_view_next",
 		},
+		validate = {
+			"keyboard_enter",
+			"xbox_controller_a",
+			"ps4_controller_cross",
+			bindable = false,
+			description = "loc_alias_view_validate",
+		},
 		hotkey_system = {
 			"keyboard_esc",
 			"xbox_controller_start",
@@ -49,7 +56,7 @@ local default_view_input_settings = {
 		hotkey_inventory = {
 			"keyboard_i",
 			"xbox_controller_d_left",
-			"ps4_controller_touch",
+			"ps4_controller_d_left",
 			description = "loc_alias_view_hotkey_inventory",
 			group = "input_group_hotkeys",
 		},
@@ -243,6 +250,7 @@ local default_view_input_settings = {
 		send_chat_message = {
 			"keyboard_enter",
 			"keyboard_numpad enter",
+			"ps4_controller_r2",
 			bindable = false,
 			description = "loc_alias_view_open_chat",
 			group = "input_group_interface",
@@ -539,6 +547,10 @@ local default_view_input_settings = {
 		},
 		next_hint = {
 			key_alias = "next_hint",
+			type = "pressed",
+		},
+		validate = {
+			key_alias = "validate",
 			type = "pressed",
 		},
 		hotkey_system = {

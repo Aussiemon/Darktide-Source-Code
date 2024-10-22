@@ -821,6 +821,10 @@ ViewElementWintrack._update_reward_tooltip_hint = function (self)
 					local ui_input_color = Color.ui_input_color(255, true)
 					local input_text = InputUtils.apply_color_to_input_text("", ui_input_color)
 
+					if IS_PLAYSTATION then
+						input_text = InputUtils.apply_color_to_input_text("", ui_input_color)
+					end
+
 					text = string.format("%s%s%s", input_text, "     ", Localize(loc_string))
 
 					break

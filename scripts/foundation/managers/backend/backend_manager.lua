@@ -328,6 +328,14 @@ BackendManager.authenticate = function (self)
 		end
 
 		return auth_promise:catch(function (error)
+			if error and error.code == 1006 then
+				local envs = Backend.get_sd_choices()
+
+				Backend.set_sd_index_choice(1)
+
+				return Promise.resolved()
+			end
+
 			return Promise.rejected(error)
 		end)
 	end)

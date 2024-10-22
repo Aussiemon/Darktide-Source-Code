@@ -1,16 +1,23 @@
 ﻿-- chunkname: @scripts/ui/pass_templates/stepper_pass_templates.lua
 
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local InputDevice = require("scripts/managers/input/input_device")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputUtils = require("scripts/managers/input/input_utils")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local color_terminal_icon = Color.terminal_text_header(255, true)
 local color_terminal_text_header = Color.terminal_text_header(255, true)
 local StepperPassTemplates = {}
 local color_lerp = ColorUtilities.color_lerp
 local color_copy = ColorUtilities.color_copy
+local service_type = "View"
+local gamepad_action_navigate_primary_left = "navigate_primary_left_pressed"
+local alias_key_navigate_primary_left = Managers.ui:get_input_alias_key(gamepad_action_navigate_primary_left, service_type)
+local input_text_navigate_primary_left = InputUtils.input_text_for_current_input_device(service_type, alias_key_navigate_primary_left)
+local gamepad_action_navigate_primary_right = "navigate_primary_right_pressed"
+local alias_key_navigate_primary_right = Managers.ui:get_input_alias_key(gamepad_action_navigate_primary_right, service_type)
+local input_text_navigate_primary_right = InputUtils.input_text_for_current_input_device(service_type, alias_key_navigate_primary_right)
 
 local function terminal_button_change_function(content, style, hotspot_id)
 	local hotspot = hotspot_id and content[hotspot_id] or content.hotspot
@@ -156,8 +163,8 @@ StepperPassTemplates.difficulty_stepper = {
 
 				if content.was_gamepad_active ~= gamepad_active then
 					content.was_gamepad_active = gamepad_active
-					content.stepper_left = gamepad_active and "" or "<"
-					content.stepper_right = gamepad_active and "" or ">"
+					content.stepper_left = gamepad_active and input_text_navigate_primary_left or "<"
+					content.stepper_right = gamepad_active and input_text_navigate_primary_right or ">"
 				end
 			end
 		end,
@@ -218,8 +225,8 @@ StepperPassTemplates.difficulty_stepper = {
 	},
 	{
 		pass_type = "text",
-		value = "",
 		value_id = "stepper_left_text",
+		value = input_text_navigate_primary_left,
 		style = {
 			font_size = 32,
 			horizontal_alignment = "center",
@@ -243,8 +250,8 @@ StepperPassTemplates.difficulty_stepper = {
 	},
 	{
 		pass_type = "text",
-		value = "",
 		value_id = "stepper_right_text",
+		value = input_text_navigate_primary_right,
 		style = {
 			font_size = 32,
 			horizontal_alignment = "center",
@@ -647,8 +654,8 @@ StepperPassTemplates.terminal_stepper = {
 	},
 	{
 		pass_type = "text",
-		value = "",
 		value_id = "stepper_left_text",
+		value = input_text_navigate_primary_left,
 		style = {
 			font_size = 32,
 			horizontal_alignment = "center",
@@ -672,8 +679,8 @@ StepperPassTemplates.terminal_stepper = {
 	},
 	{
 		pass_type = "text",
-		value = "",
 		value_id = "stepper_right_text",
+		value = input_text_navigate_primary_right,
 		style = {
 			font_size = 32,
 			horizontal_alignment = "center",

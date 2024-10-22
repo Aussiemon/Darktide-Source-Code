@@ -87,7 +87,7 @@ InputDevice._any_analog_input = function (self)
 end
 
 InputDevice._verify_device = function (self)
-	if not IS_XBS then
+	if not IS_XBS and not IS_PLAYSTATION then
 		return true
 	end
 

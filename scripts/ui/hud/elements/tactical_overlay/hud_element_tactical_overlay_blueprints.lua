@@ -9,6 +9,8 @@ local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local MasterItems = require("scripts/backend/master_items")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local Blueprints = {}
 local internal_buffer = ElementSettings.internal_buffer
 local buffer = ElementSettings.buffer
@@ -89,6 +91,19 @@ local base_bar_style = {
 		text_width,
 		line_width,
 		1,
+	},
+}
+local reward_texture_icon = {
+	horizontal_alignment = "right",
+	visible = false,
+	size = {
+		24,
+		24,
+	},
+	color = Color.terminal_text_body(255, true),
+	offset = {
+		-buffer,
+		buffer,
 	},
 }
 local right_content_progress_border = table.add_missing({
@@ -501,6 +516,13 @@ Blueprints.event_tier = {
 			style = right_full_progress_bar,
 		},
 		{
+			pass_type = "texture",
+			style_id = "reward_icon",
+			value = "content/ui/materials/backgrounds/default_square",
+			value_id = "reward_icon",
+			style = reward_texture_icon,
+		},
+		{
 			pass_type = "text",
 			style_id = "reward",
 			value = "<UNDEFINED>",
@@ -541,6 +563,7 @@ Blueprints.event_tier = {
 		style.title.text_color = _disabled_color
 		style.progress.text_color = _disabled_color
 		style.reward.visible = false
+		style.reward_icon.visible = false
 	end,
 	init = function (parent, widget, config, ui_renderer)
 		local target = config.target
@@ -569,15 +592,26 @@ Blueprints.event_tier = {
 
 		for i = 1, #rewards do
 			local reward = rewards[i]
+			local reward_type = reward.type
+			local reward_id = reward.id
 
-			if reward.type == "currency" and WalletSettings[reward.currency] then
-				reward_strings[#reward_strings + 1] = string.format("%d %s", reward.amount or 0, WalletSettings[reward.currency].string_symbol)
+			if reward_type == "currency" and WalletSettings[reward.currency] then
+				reward_strings[#reward_strings + 1] = string.format("%s %s", TextUtils.format_currency(reward.amount or 0), WalletSettings[reward.currency].string_symbol)
+			end
+
+			if reward_type == "item" and MasterItems.item_exists(reward_id) then
+				local rewarded_master_item = MasterItems.get_item(reward_id)
+
+				content.reward_icon = UISettings.item_type_material_lookup[rewarded_master_item and rewarded_master_item.item_type]
+				style.reward_icon.visible = true
+				style.reward.offset[1] = style.reward.offset[1] - (style.reward_icon.size[1] + internal_buffer)
 			end
 		end
 
 		content.reward = table.concat(reward_strings, " ")
 		content.progress = _format_progress(at, target, true)
 		style.reward.offset[2] = size
+		style.reward_icon.offset[2] = size
 		style.progress.offset[2] = size
 		size = size + _text_height(ui_renderer, content.progress, style.progress) + internal_buffer
 		widget.target = target
@@ -603,6 +637,52 @@ Blueprints.event_tier = {
 		if is_complete and not widget.is_complete then
 			Blueprints.event_tier.complete(widget)
 		end
+	end,
+}
+Blueprints.divider = {
+	size = {
+		ElementSettings.right_grid_width,
+		buffer,
+	},
+	pass_template = {
+		{
+			pass_type = "texture",
+			style_id = "divider",
+			value = "content/ui/materials/dividers/faded_line_01",
+			style = {
+				color = Color.terminal_text_body_sub_header(255, true),
+				size = {
+					content_width,
+					2,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "text",
+			value_id = "text",
+			style = table.add_missing({
+				text_horizontal_alignment = "center",
+			}, right_content_description_style),
+		},
+	},
+	init = function (parent, widget, config, ui_renderer)
+		local text = config.text
+		local size = widget.content.size[2]
+		local content = widget.content
+		local style = widget.style
+
+		style.divider.offset[2] = size
+		size = size + style.divider.size[2]
+
+		if text then
+			content.text = text
+			style.text.offset[2] = size + internal_buffer
+			style.text.size[1] = ElementSettings.right_grid_width - 2 * buffer
+			size = size + internal_buffer + _text_height(ui_renderer, content.text, style.text)
+		end
+
+		content.size[2] = size
 	end,
 }
 

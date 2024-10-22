@@ -1337,6 +1337,7 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 
 			for _, member in ipairs(group_members) do
 				local presence_info = member.presence_info
+				local member_account_id = member.account_id
 
 				if presence_info and presence_info.synced then
 					layout[#layout + 1] = {
@@ -1351,6 +1352,7 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 						is_preview = true,
 						widget_type = "player_request_entry",
 						presence_info = presence_info,
+						account_id = member_account_id,
 					}
 
 					layout[#layout + 1] = entry
@@ -2383,7 +2385,7 @@ GroupFinderView._update_listed_group = function (self)
 			local character_level = tostring(profile.current_level) .. " "
 
 			content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
-			content.character_name = ProfileUtils.character_name(profile)
+			content.character_name = player:name()
 
 			local archetype = profile.archetype
 
@@ -3152,6 +3154,7 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests_by
 				widget_type = "player_request_entry",
 				presence_info = presence_info,
 				join_request = join_request,
+				account_id = account_id,
 			}
 
 			entry.accept_callback = callback(self, "_cb_on_player_request_accept_pressed", entry)

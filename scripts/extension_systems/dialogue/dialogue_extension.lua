@@ -762,7 +762,9 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 
 	local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
 
-	dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
+	if not pre_wwise_event then
+		dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
+	end
 
 	if on_play_callback then
 		local id = dialogue.currently_playing_event_id

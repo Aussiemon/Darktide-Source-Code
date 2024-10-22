@@ -17,6 +17,8 @@ local function _add_category(name, loc_key, optional_parent_name)
 		parent_name = optional_parent_name,
 		sort_index = sort_index,
 	}
+
+	table.make_strict_with_interface(AchievementCategories[name], "AchievementCategories[" .. name .. "]", AchievementCategoriesInterface)
 end
 
 _add_category("account", "loc_achievement_category_account_label")
@@ -62,6 +64,5 @@ _add_category("endeavours_void", "loc_achievement_subcategory_missions_void_labe
 _add_category("endeavours_operations", "loc_zone_name_operations_short", "endeavours")
 _add_category("weapons", "loc_achievement_category_weapons_label")
 _add_category("mastery", "loc_weapon_progression_mastery", "weapons")
-table.make_strict_with_interface(AchievementCategories, "AchievementCategories", AchievementCategoriesInterface)
 
 return settings("AchievementCategories", AchievementCategories)

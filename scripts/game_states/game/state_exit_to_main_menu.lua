@@ -38,8 +38,17 @@ StateExitToMainMenu._update_loading = function (self)
 	local main_menu_loader = self._main_menu_loader
 	local backend_answered = self._backend_answered
 	local profiles_data = self._profiles_data
+	local main_menu_loader_done = main_menu_loader:is_loading_done()
 
-	if not main_menu_loader:is_loading_done() or not backend_answered then
+	if not main_menu_loader_done then
+		-- Nothing
+	end
+
+	if not backend_answered then
+		-- Nothing
+	end
+
+	if not main_menu_loader_done or not backend_answered then
 		return false
 	end
 

@@ -297,7 +297,7 @@ local layouts = {
 					"xbox_controller_right_trigger",
 				},
 				combat_ability = {
-					"ps4_controller_r1",
+					"ps4_controller_l2",
 					"xbox_controller_left_trigger",
 				},
 				smart_tag = {

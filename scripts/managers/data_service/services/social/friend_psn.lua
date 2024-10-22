@@ -30,7 +30,7 @@ FriendPSN.platform = function (self)
 end
 
 FriendPSN.platform_icon = function (self)
-	return ""
+	return "{#color(255,255,255)}{#reset()}", true
 end
 
 FriendPSN.name = function (self)
@@ -43,6 +43,10 @@ end
 
 FriendPSN.is_blocked = function (self)
 	return self._is_blocked or Managers.account:is_blocked(self._account_id)
+end
+
+FriendPSN.set_is_blocked = function (self, value)
+	self._is_blocked = value
 end
 
 FriendPSN.online_status = function (self)

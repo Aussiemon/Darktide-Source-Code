@@ -40,16 +40,19 @@ dialogue_lookup_context_names.voice_template = table.enum("psyker_female_a", "ps
 dialogue_lookup_context_names.weapon_type = table.enum("chainsword_p1_m1, chainsword_2h_p1_m1, chainaxe_p1_m1, chainsword_p1_m2, chainsword_2h_p1_m2, chainaxe_p1_m2", "chainsword_p1_m1, combataxe_p1_m1, combataxe_p1_m2, combataxe_p1_m3, combataxe_p2_m1, combataxe_p2_m2, combataxe_p2_m3, combatsword_p1_m1, combatsword_p1_m2, combatsword_p1_m3, combatsword_p3_m1, combatsword_p3_m2, combatsword_p3_m3, combatknife_p1_m1, forcesword_p1_m1, forcesword_p1_m2, forcesword_p1_m3", "flamer_p1_m1", "plasmagun_p1_m1", "psyker_chain_lightning", "psyker_throwing_knives", "thunderhammer_2h_p1_m1, thunderhammer_2h_p1_m2")
 
 local function _create_lookup(hashtable)
-	local i = 0
-	local new_table = {}
+	local hashtable_keys = table.keys(hashtable)
 
-	for key, _ in pairs(hashtable) do
-		i = i + 1
-		new_table[i] = key
-		new_table[key] = i
+	table.sort(hashtable_keys)
+
+	local lookup = {}
+
+	for i = 1, #hashtable_keys do
+		lookup[i] = hashtable_keys[i]
 	end
 
-	return new_table
+	table.mirror_array_inplace(lookup)
+
+	return lookup
 end
 
 dialogue_lookup_context_names.ability_name = _create_lookup(dialogue_lookup_context_names.ability_name)

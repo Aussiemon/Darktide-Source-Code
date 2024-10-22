@@ -41,6 +41,8 @@ PlayerCharacterStateJumping._play_jump_animation = function (self, animation_ext
 end
 
 PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateJumping.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local locomotion_steering = self._locomotion_steering_component
 
 	locomotion_steering.move_method = "script_driven"
@@ -91,6 +93,8 @@ PlayerCharacterStateJumping.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateJumping.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateJumping.super.on_exit(self, unit, t, next_state)
+
 	if not next_state then
 		return
 	end

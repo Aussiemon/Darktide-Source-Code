@@ -3,6 +3,7 @@
 local AccountManagerBase = require("scripts/managers/account/account_manager_base")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local Promise = require("scripts/foundation/utilities/promise")
+local RegionRestrictionsXboxLive = require("scripts/settings/region/region_restrictions_xbox_live")
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local AccountManagerWinGDK = class("AccountManagerWinGDK", "AccountManagerBase")
 local SIGNIN_STATES = {
@@ -16,6 +17,8 @@ AccountManagerWinGDK.init = function (self)
 	self._xbox_privileges = XboxPrivileges:new()
 	self._signin_state = SIGNIN_STATES.idle
 	self._friends = {}
+
+	self:_setup_region()
 end
 
 AccountManagerWinGDK.reset = function (self)
@@ -295,6 +298,10 @@ AccountManagerWinGDK.user_detached = function (self)
 	return self._popup_id or self._network_fatal_error or self._leave_game
 end
 
+AccountManagerWinGDK.region_has_restriction = function (self, restriction)
+	return not not self._region_restrictions[restriction]
+end
+
 AccountManagerWinGDK.do_re_signin = function (self)
 	return false
 end
@@ -450,6 +457,20 @@ AccountManagerWinGDK._return_to_title_screen = function (self)
 	self._leave_game = true
 	self._wanted_state = CLASSES.StateError
 	self._wanted_state_params = {}
+end
+
+AccountManagerWinGDK._setup_region = function (self)
+	local country_code = XboxLive.user_default_geo_name()
+
+	if country_code then
+		country_code = string.lower(country_code)
+	else
+		country_code = "unknown"
+	end
+
+	self._region_restrictions = RegionRestrictionsXboxLive[country_code] or {}
+
+	Log.info("AccountManagerWinGDK", "Geo location: %q, regional restrictions: %s", country_code, table.tostring(self._region_restrictions))
 end
 
 return AccountManagerWinGDK

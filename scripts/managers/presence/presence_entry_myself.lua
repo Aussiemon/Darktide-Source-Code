@@ -106,7 +106,7 @@ PresenceEntryMyself.platform_icon = function (self)
 	elseif platform == "xbox" then
 		return ""
 	elseif platform == "psn" then
-		return ""
+		return "{#color(255,255,255)}{#reset()}", true
 	end
 
 	return nil

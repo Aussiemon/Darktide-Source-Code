@@ -460,9 +460,18 @@ ConstantElementChat._get_localized_input_text = function (self, action)
 	local service_type = DefaultViewInputSettings.service_type
 	local alias = Managers.input:alias_object(service_type)
 	local show_controller = InputDevice.gamepad_active
-	local device_types = {
-		show_controller and "xbox_controller" or "keyboard",
-	}
+	local device_types
+
+	if IS_PLAYSTATION then
+		device_types = {
+			show_controller and "ps4_controller" or "keyboard",
+		}
+	else
+		device_types = {
+			show_controller and "xbox_controller" or "keyboard",
+		}
+	end
+
 	local key_info = alias:get_keys_for_alias(action, device_types)
 	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
 
@@ -530,57 +539,85 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 		return
 	end
 
-	if input_service:get("confirm_pressed") and not self._virtual_keyboard_promise then
-		if not self._selected_channel_handle then
-			return
-		end
-
-		local channel = Managers.chat:sessions()[self._selected_channel_handle]
-
-		if not channel or not channel.tag or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
-			return
-		end
-
-		local virtual_keyboard_title = ""
-		local virtual_keyboard_description = ""
-		local x_game_ui = XGameUI.new_block()
-
-		XGameUI.show_text_entry_async(x_game_ui, virtual_keyboard_title, virtual_keyboard_description, "", "default", ChatSettings.max_message_length)
-
-		self._virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui)
-
-		self._virtual_keyboard_promise:next(function (async_block)
-			local new_input_text = XGameUI.resolve_text_entry(async_block)
-			local last_char = new_input_text:sub(#new_input_text)
-
-			if last_char == "\x00" then
-				new_input_text = new_input_text:sub(1, #new_input_text - 1)
+	if IS_XBS then
+		if input_service:get("confirm_pressed") and not self._virtual_keyboard_promise then
+			if not self._selected_channel_handle then
+				return
 			end
 
-			Managers.chat:send_channel_message(self._selected_channel_handle, new_input_text)
+			local channel = Managers.chat:sessions()[self._selected_channel_handle]
 
-			input_widget.content.input_text = ""
-			input_widget.content.is_writing = false
-
-			self:_update_input_field(ui_renderer, input_widget)
-
-			self._virtual_keyboard_promise = nil
-		end, function (hr_table)
-			local hr = hr_table[1]
-
-			if hr ~= HRESULT.E_ABORT then
-				Log.warning("ConstantElementChat", "XBox virtual keyboard closed with 0x%x", hr)
+			if not channel or not channel.tag or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
+				return
 			end
 
-			input_widget.content.input_text = ""
-			input_widget.content.is_writing = false
+			local virtual_keyboard_title = ""
+			local virtual_keyboard_description = ""
+			local x_game_ui = XGameUI.new_block()
 
-			self:_update_input_field(ui_renderer, input_widget)
+			XGameUI.show_text_entry_async(x_game_ui, virtual_keyboard_title, virtual_keyboard_description, "", "default", ChatSettings.max_message_length)
 
-			self._virtual_keyboard_promise = nil
-		end)
+			self._virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui)
 
-		return
+			self._virtual_keyboard_promise:next(function (async_block)
+				local new_input_text = XGameUI.resolve_text_entry(async_block)
+				local last_char = new_input_text:sub(#new_input_text)
+
+				if last_char == "\x00" then
+					new_input_text = new_input_text:sub(1, #new_input_text - 1)
+				end
+
+				Managers.chat:send_channel_message(self._selected_channel_handle, new_input_text)
+
+				input_widget.content.input_text = ""
+				input_widget.content.is_writing = false
+
+				self:_update_input_field(ui_renderer, input_widget)
+
+				self._virtual_keyboard_promise = nil
+			end, function (hr_table)
+				local hr = hr_table[1]
+
+				if hr ~= HRESULT.E_ABORT then
+					Log.warning("ConstantElementChat", "XBox virtual keyboard closed with 0x%x", hr)
+				end
+
+				input_widget.content.input_text = ""
+				input_widget.content.is_writing = false
+
+				self:_update_input_field(ui_renderer, input_widget)
+
+				self._virtual_keyboard_promise = nil
+			end)
+
+			return
+		end
+	elseif IS_PLAYSTATION then
+		local content = input_widget.content
+
+		Log.info("ConstantElementChat", "send_chat_message(%s), confirm_pressed(%s), is_finished(%s), is_showing(%s), ", input_service:get("send_chat_message"), input_service:get("confirm_pressed"), PS5ImeDialog.is_finished(), PS5ImeDialog.is_showing())
+
+		if input_service:get("confirm_pressed") and not PS5ImeDialog.is_showing() then
+			local title = content.virtual_keyboard_title or content.placeholder_text
+			local description = content.virtual_keyboard_description or ""
+			local input_text = content.input_text or ""
+			local max_length = content.max_length
+			local keyboard_options = {
+				title = title,
+				placeholder = input_text,
+				max_length = max_length,
+			}
+
+			PS5ImeDialog.show(keyboard_options)
+		elseif PS5ImeDialog.is_finished() then
+			local result, text = PS5ImeDialog.close()
+
+			content.input_text = result == PS5ImeDialog.END_STATUS_OK and text or content.input_text
+		elseif input_service:get("send_chat_message") and content.input_text ~= "" and self._selected_channel_handle then
+			Managers.chat:send_channel_message(self._selected_channel_handle, content.input_text)
+
+			content.input_text = ""
+		end
 	end
 end
 

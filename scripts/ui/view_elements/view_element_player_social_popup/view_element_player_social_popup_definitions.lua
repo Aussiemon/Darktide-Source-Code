@@ -157,6 +157,18 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "text",
+			style_id = "player_platform_icon",
+			value_id = "player_platform_icon",
+			change_function = function (content, style)
+				if content.platform_icon_color_override then
+					style.material = nil
+				else
+					style.material = style.default_material
+				end
+			end,
+		},
+		{
+			pass_type = "text",
 			style_id = "player_display_name",
 			value_id = "player_display_name",
 		},

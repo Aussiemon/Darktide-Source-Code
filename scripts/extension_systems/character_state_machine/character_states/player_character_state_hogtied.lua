@@ -43,6 +43,7 @@ PlayerCharacterStateHogtied.game_object_initialized = function (self, game_sessi
 end
 
 PlayerCharacterStateHogtied.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateHogtied.super.on_enter(self, unit, dt, t, previous_state, params)
 	FirstPersonView.exit(t, self._first_person_mode_component)
 	PlayerUnitVisualLoadout.wield_slot(INVENTORY_SLOT_TO_WIELD_ON_ENTER, unit, t)
 
@@ -62,6 +63,8 @@ PlayerCharacterStateHogtied.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateHogtied.super.on_exit(self, unit, t, next_state)
+
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
 
 	FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)

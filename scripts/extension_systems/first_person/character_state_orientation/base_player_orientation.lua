@@ -81,8 +81,7 @@ end
 local _aim_assist_context = {}
 
 BasePlayerOrientation._aim_assist_context = function (self)
-	local last_pressed_device = InputDevice.last_pressed_device
-	local gamepad_active = last_pressed_device and last_pressed_device:type() == "xbox_controller"
+	local gamepad_active = Managers.input:is_using_gamepad()
 
 	_aim_assist_context.input_device_wants_aim_assist = gamepad_active
 	_aim_assist_context.targeting_data = self._smart_targeting_extension:targeting_data()

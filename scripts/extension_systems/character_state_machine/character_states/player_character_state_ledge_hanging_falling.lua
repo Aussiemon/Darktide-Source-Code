@@ -13,6 +13,8 @@ PlayerCharacterStateLedgeHangingFalling.init = function (self, character_state_i
 end
 
 PlayerCharacterStateLedgeHangingFalling.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateLedgeHangingFalling.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	if self._is_server then
 		local reason = "ledge_hanging"
 
@@ -21,6 +23,8 @@ PlayerCharacterStateLedgeHangingFalling.on_enter = function (self, unit, dt, t, 
 end
 
 PlayerCharacterStateLedgeHangingFalling.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateLedgeHangingFalling.super.on_exit(self, unit, t, next_state)
+
 	local first_person_mode_component = self._first_person_mode_component
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
 

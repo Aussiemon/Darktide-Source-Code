@@ -8,6 +8,7 @@ local settings = {
 	default_wielded_slot_name = "slot_unarmed",
 	disable_hologram = true,
 	host_singleplay = false,
+	is_premium_feature = true,
 	is_social_hub = true,
 	name = "hub",
 	player_unit_template_name_override = "player_character_social_hub",

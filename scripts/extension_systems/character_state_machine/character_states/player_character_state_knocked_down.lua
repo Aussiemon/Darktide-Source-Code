@@ -64,6 +64,8 @@ PlayerCharacterStateKnockedDown.game_object_initialized = function (self, game_s
 end
 
 PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateKnockedDown.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local is_server = self._is_server
 	local animation_extension = self._animation_extension
 	local fx_extension = self._fx_extension
@@ -120,6 +122,8 @@ PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous
 end
 
 PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateKnockedDown.super.on_exit(self, unit, t, next_state)
+
 	local is_server = self._is_server
 	local fx_extension = self._fx_extension
 	local health_extension = self._health_extension

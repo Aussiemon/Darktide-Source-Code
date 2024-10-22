@@ -70,6 +70,8 @@ end
 local stop_action_data = {}
 
 PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateLunging.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local locomotion_steering = self._locomotion_steering_component
 
 	locomotion_steering.move_method = "script_driven"
@@ -219,6 +221,8 @@ end
 local temp_hit_units = {}
 
 PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateLunging.super.on_exit(self, unit, t, next_state)
+
 	local movement_state_component = self._movement_state_component
 
 	movement_state_component.is_dodging = false

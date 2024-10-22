@@ -74,8 +74,8 @@ local function ps5_format_locale(language_id)
 		["pl-pl"] = "pl",
 		["pt-br"] = "pt-br",
 		["ru-ru"] = "ru",
-		["zh-hans"] = "zh-cn",
-		["zh-hant"] = "zh-tw",
+		["zh-cn"] = "zh-cn",
+		["zh-tw"] = "zh-tw",
 	}
 
 	return supported_languages[string.lower(language_id)] or "en"

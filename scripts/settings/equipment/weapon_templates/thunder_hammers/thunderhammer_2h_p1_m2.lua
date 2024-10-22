@@ -1370,6 +1370,7 @@ weapon_template.max_first_person_anim_movement_speed = 4.8
 weapon_template.weapon_special_class = "WeaponSpecialSelfDisorientation"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 5,
+	allow_reactivation_while_active = true,
 	disorientation_type = "thunder_hammer_m2_light",
 	keep_active_on_sprint = true,
 	only_deactive_on_abort = true,

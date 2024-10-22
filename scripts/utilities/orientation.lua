@@ -54,9 +54,9 @@ function _mouse_input(input, look_delta_context)
 end
 
 function _gamepad_input(input, look_delta_context)
-	local last_pressed_device = InputDevice.last_pressed_device
+	local using_gamepad = Managers.input:is_using_gamepad()
 
-	if last_pressed_device and last_pressed_device:type() ~= "xbox_controller" and last_pressed_device:type() ~= "ps4_controller" then
+	if not using_gamepad then
 		return Vector3.zero()
 	end
 

@@ -2401,15 +2401,17 @@ local grid_blueprints = {
 
 			content.element = element
 
+			local social_service_manager = Managers.data_service.social
 			local presence_info = element.presence_info
 			local profile = presence_info.profile
+			local player_info = social_service_manager and social_service_manager:get_player_info_by_account_id(element.account_id)
 
-			if profile then
+			if profile and player_info then
 				local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 				local character_level = tostring(profile.current_level) .. " "
 
 				content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
-				content.character_name = ProfileUtils.character_name(profile)
+				content.character_name = player_info:character_name()
 
 				local archetype = profile.archetype
 

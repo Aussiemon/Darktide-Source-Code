@@ -73,6 +73,14 @@ PlayerCharacterStateBase.game_object_initialized = function (self, game_session,
 	self._game_object_id = game_object_id
 end
 
+PlayerCharacterStateBase.on_enter = function (self, unit, dt, t, previous_state, params)
+	return
+end
+
+PlayerCharacterStateBase.on_exit = function (self, unit, t, next_state)
+	return
+end
+
 PlayerCharacterStateBase._air_movement = function (self, velocity_current, x, y, rotation, move_speed, player_speed_scale, dt)
 	local local_move_direction = Vector3.normalize(Vector3(x, y, 0))
 	local flat_rotation = Quaternion.look(Vector3.flat(Quaternion.forward(rotation)), Vector3.up())

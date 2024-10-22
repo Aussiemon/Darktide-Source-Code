@@ -27,6 +27,16 @@ WeaponIconUI.init = function (self, render_settings)
 	self._breed_camera_settings = {}
 end
 
+WeaponIconUI._check_weapon_icon_enabled_status = function (self)
+	local force_disable = false
+
+	if force_disable then
+		return false
+	end
+
+	return true
+end
+
 WeaponIconUI.weapon_icon_updated = function (self, item, prioritized)
 	local id = item.gear_id or item.name
 	local requests_by_size = self._requests_by_size
@@ -47,6 +57,28 @@ end
 WeaponIconUI.load_weapon_icon = function (self, item, on_load_callback, optional_render_context, prioritized, on_unload_callback)
 	local gear_id = item.gear_id or item.name
 	local request_id_prefix = gear_id or math.uuid()
+
+	if not self._always_render then
+		local changed_player = false
+
+		if self._current_player ~= Managers.player:local_player(1) then
+			self._current_player = Managers.player:local_player(1)
+			changed_player = true
+		end
+
+		if self._current_player then
+			local weapon_icon_enabled_status = self:_check_weapon_icon_enabled_status()
+
+			if weapon_icon_enabled_status ~= self._render_enabled then
+				if changed_player then
+					Crashify.print_property("ui_weapon_icon_enabled", weapon_icon_enabled_status)
+				end
+
+				self:change_render_weapon_icon_status(weapon_icon_enabled_status)
+			end
+		end
+	end
+
 	local request_data = item
 	local reference_id = self:_generate_icon_request(request_id_prefix, request_data, on_load_callback, optional_render_context, prioritized, on_unload_callback)
 
@@ -259,6 +291,37 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 
 		world_spawner:set_camera_position(camera_position)
 		world_spawner:set_camera_rotation(camera_rotation)
+	end
+end
+
+WeaponIconUI.change_render_weapon_icon_status = function (self, value, force_change)
+	if not self._always_render and Application.rendering_enabled() and (self._render_enabled ~= value or force_change) then
+		self._render_enabled = value
+
+		if value then
+			local requests_by_size = self._requests_by_size
+
+			for size_key, requests in pairs(requests_by_size) do
+				for request_id, request in pairs(requests) do
+					for reference_id, _ in pairs(request.references_lookup) do
+						local on_load_callback = request.callbacks[reference_id]
+						local on_unload_callback = request.destroy_callbacks[reference_id]
+
+						self:_generate_icon_request(request_id, request.data, on_load_callback, request.render_context, request.prioritized, on_unload_callback, reference_id)
+					end
+				end
+			end
+		else
+			local requests_by_size = self._requests_by_size
+
+			for size_key, requests in pairs(requests_by_size) do
+				for request_id, request in pairs(requests) do
+					for reference_id, _ in pairs(request.references_lookup) do
+						self:unload_request_reference(reference_id, true)
+					end
+				end
+			end
+		end
 	end
 end
 

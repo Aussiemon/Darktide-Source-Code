@@ -107,8 +107,10 @@ end
 
 local function _add_friend_management_items(parent, player_info)
 	local friend_status = player_info:friend_status()
+	local online_status = player_info:online_status()
+	local platform_friend_status = player_info:platform_friend_status() or FriendStatus.none
 
-	if friend_status == FriendStatus.none then
+	if friend_status == FriendStatus.none and platform_friend_status == FriendStatus.none then
 		local list_item = _get_next_list_item()
 
 		list_item.blueprint = "button"
@@ -118,13 +120,13 @@ local function _add_friend_management_items(parent, player_info)
 		list_item.on_pressed_sound = UISoundEvents.social_menu_send_friend_request
 
 		_add_divider()
-	elseif friend_status == FriendStatus.friend then
+	elseif friend_status == FriendStatus.friend and platform_friend_status == FriendStatus.none then
 		local list_item = _get_next_list_item()
 
 		list_item.blueprint = "button"
 		list_item.label = Localize("loc_social_menu_unfriend_player")
 		list_item.callback = callback(parent, "cb_unfriend_player", player_info)
-	elseif friend_status == FriendStatus.invited then
+	elseif friend_status == FriendStatus.invited and platform_friend_status == FriendStatus.none then
 		local list_item = _get_next_list_item()
 
 		list_item.blueprint = "button"
@@ -133,7 +135,7 @@ local function _add_friend_management_items(parent, player_info)
 		list_item.on_pressed_sound = UISoundEvents.social_menu_cancel_friend_request
 
 		_add_divider()
-	elseif friend_status == FriendStatus.invite then
+	elseif friend_status == FriendStatus.invite and platform_friend_status == FriendStatus.none then
 		local can_accept, cannot_befriend_reason = Managers.data_service.social:can_befriend()
 		local user_display_name = player_info:user_display_name()
 		local request_header_params = {
@@ -159,6 +161,14 @@ local function _add_friend_management_items(parent, player_info)
 		list_item.on_pressed_sound = UISoundEvents.social_menu_friend_request_reject
 
 		_add_divider(4)
+	else
+		local social_service = Managers.data_service.social
+		local list_item = _get_next_list_item()
+
+		list_item.blueprint = "disabled_button_with_explanation"
+		list_item.label = Localize("loc_social_menu_unfriend_player")
+		list_item.is_disabled = true
+		list_item.reason_for_disabled = social_service:platform_unfriend_reason_for_disabled()
 	end
 end
 

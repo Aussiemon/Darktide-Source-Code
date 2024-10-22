@@ -122,4 +122,12 @@ AccountManagerBase.communication_restriction_iteration = function (self)
 	return nil
 end
 
+AccountManagerBase.return_to_title_screen = function (self)
+	return
+end
+
+AccountManagerBase.region_has_restriction = function (self, restriction)
+	return false
+end
+
 return AccountManagerBase

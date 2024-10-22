@@ -5,6 +5,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
+local RegionConstants = require("scripts/settings/region/region_constants")
 local attack_results = AttackSettings.attack_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local MinionDeath = {}
@@ -40,6 +41,10 @@ local IMPACT_FX_DATA = {
 
 MinionDeath.attack_ragdoll = function (ragdoll_unit, attack_direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_world_position_or_nil, attacking_unit_or_nil, hit_actor_or_nil, herding_template_or_nil, critical_strike_or_nil)
 	if not DEDICATED_SERVER then
+		if Managers.account:region_has_restriction(RegionConstants.restrictions.ragdoll_interaction) then
+			return
+		end
+
 		local attack_ragdolls_enabled_locally = Application.user_setting("gore_settings", "attack_ragdolls_enabled")
 
 		if attack_ragdolls_enabled_locally == nil then

@@ -301,11 +301,6 @@ emporium_font_style.size = {
 local required_aquilas_title_style = table.clone(UIFontSettings.header_1)
 
 required_aquilas_title_style.font_size = 40
-required_aquilas_title_style.offset = {
-	0,
-	0,
-	1,
-}
 required_aquilas_title_style.text_horizontal_alignment = "center"
 required_aquilas_title_style.text_vertical_alignment = "top"
 required_aquilas_title_style.offset = {

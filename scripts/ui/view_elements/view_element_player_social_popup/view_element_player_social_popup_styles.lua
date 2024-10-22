@@ -149,6 +149,18 @@ view_element_player_popup_style.player_header = {}
 
 local player_header_style = view_element_player_popup_style.player_header
 
+player_header_style.player_platform_icon = table.clone(UIFontSettings.header_2)
+
+local player_display_name_style = player_header_style.player_platform_icon
+
+player_display_name_style.default_material = "content/ui/materials/font_gradients/slug_font_gradient_header"
+player_display_name_style.text_color = Color.white(255, true)
+player_display_name_style.offset = {
+	0,
+	-3,
+	0,
+}
+player_display_name_style.text_vertical_alignment = "center"
 player_header_style.player_display_name = table.clone(UIFontSettings.header_2)
 
 local player_display_name_style = player_header_style.player_display_name
@@ -156,7 +168,7 @@ local player_display_name_style = player_header_style.player_display_name
 player_display_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 player_display_name_style.text_color = Color.white(255, true)
 player_display_name_style.offset = {
-	0,
+	45,
 	-3,
 	0,
 }

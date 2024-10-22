@@ -3,6 +3,8 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local PlayerManager = require("scripts/foundation/managers/player/player_manager")
+local _event_update_player_name, _create_character_text
 local template = {}
 local size = {
 	400,
@@ -70,19 +72,10 @@ end
 
 template.on_exit = function (widget, marker)
 	Managers.event:unregister(marker, "event_player_profile_updated")
+	Managers.event:unregister(marker, "event_update_player_name")
 end
 
 template.on_enter = function (widget, marker)
-	local player = marker.data
-	local content = widget.content
-	local profile = player:profile()
-	local peer_id = player:peer_id()
-
-	marker.peer_id = peer_id
-
-	local character_level = profile and profile.current_level or 1
-	local title = ProfileUtils.character_title(profile)
-
 	local function cb_event_player_profile_updated(self, synced_peer_id, synced_local_player_id, new_profile, force_update)
 		local valid = force_update or self.peer_id and self.peer_id == synced_peer_id
 
@@ -96,30 +89,25 @@ template.on_enter = function (widget, marker)
 			return
 		end
 
-		local archetype = new_profile and new_profile.archetype
-		local string_symbol = archetype and archetype.string_symbol or ""
-		local text = string_symbol .. " " .. new_profile.name .. " - " .. tostring(character_level) .. " "
+		local player_manager = Managers.player
+		local player = marker.data
+		local is_player_valid = player_manager:player_from_unique_id(marker.player_unique_id) ~= nil
 
-		if updated_title then
-			text = text .. "\n" .. updated_title
+		if is_player_valid and player then
+			player:set_profile(new_profile)
+			_create_character_text(marker)
 		end
-
-		marker.widget.content.header_text = text
 	end
 
+	local player = marker.data
+
+	marker.player_unique_id = player:unique_id()
 	marker.cb_event_player_profile_updated = cb_event_player_profile_updated
+	marker._event_update_player_name = _event_update_player_name
 
 	Managers.event:register(marker, "event_player_profile_updated", "cb_event_player_profile_updated")
-
-	local archetype = profile and profile.archetype
-	local string_symbol = archetype and archetype.string_symbol or ""
-	local text = string_symbol .. " " .. player:name() .. " - " .. tostring(character_level) .. " "
-
-	if title then
-		text = text .. " \n " .. title
-	end
-
-	content.header_text = text
+	Managers.event:register(marker, "event_update_player_name", "_event_update_player_name")
+	_create_character_text(marker)
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)
@@ -152,6 +140,37 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		content.line_of_sight_progress = line_of_sight_progress
 		widget.alpha_multiplier = line_of_sight_progress
 	end
+end
+
+function _event_update_player_name(self)
+	_create_character_text(self)
+end
+
+function _create_character_text(marker)
+	local player = marker.data
+	local player_manager = Managers.player
+	local is_player_valid = player_manager:player_from_unique_id(marker.player_unique_id) ~= nil
+
+	if not is_player_valid or not player then
+		return
+	end
+
+	local profile = player:profile()
+	local peer_id = player:peer_id()
+
+	marker.peer_id = peer_id
+
+	local character_level = profile and profile.current_level or 1
+	local title = ProfileUtils.character_title(profile)
+	local archetype = profile and profile.archetype
+	local string_symbol = archetype and archetype.string_symbol or ""
+	local text = string_symbol .. " " .. player:name() .. " - " .. tostring(character_level) .. " "
+
+	if title then
+		text = text .. " \n " .. title
+	end
+
+	marker.widget.content.header_text = text
 end
 
 return template

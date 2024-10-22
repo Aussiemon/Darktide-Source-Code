@@ -35,6 +35,8 @@ PlayerCharacterStateWalking.init = function (self, character_state_init_context,
 end
 
 PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateWalking.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local locomotion = self._locomotion_component
 	local locomotion_steering = self._locomotion_steering_component
 
@@ -66,6 +68,8 @@ PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateWalking.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateWalking.super.on_exit(self, unit, t, next_state)
+
 	local height_time_to_change
 
 	if next_state == "dodging" then

@@ -1,11 +1,12 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_definitions.lua
 
+local InputDevice = require("scripts/managers/input/input_device")
+local InputUtils = require("scripts/managers/input/input_utils")
+local ItemUtils = require("scripts/utilities/items")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local InputDevice = require("scripts/managers/input/input_device")
-local ItemUtils = require("scripts/utilities/items")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local default_button_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_click,
@@ -28,6 +29,13 @@ local mask_size = {
 	mask_width,
 	grid_height,
 }
+local service_type = "View"
+local gamepad_action_navigate_primary_left = "navigate_primary_left_pressed"
+local alias_key_navigate_primary_left = Managers.ui:get_input_alias_key(gamepad_action_navigate_primary_left, service_type)
+local input_text_navigate_primary_left = InputUtils.input_text_for_current_input_device(service_type, alias_key_navigate_primary_left)
+local gamepad_action_navigate_primary_right = "navigate_primary_right_pressed"
+local alias_key_navigate_primary_right = Managers.ui:get_input_alias_key(gamepad_action_navigate_primary_right, service_type)
+local input_text_navigate_primary_right = InputUtils.input_text_for_current_input_device(service_type, alias_key_navigate_primary_right)
 local menu_settings = {
 	scrollbar_width = 7,
 	top_padding = 140,
@@ -270,8 +278,8 @@ local widget_definitions = {
 		{
 			pass_type = "text",
 			style_id = "left_trigger",
-			value = "",
 			value_id = "left_trigger",
+			value = input_text_navigate_primary_left,
 			style = left_trigger_style,
 			visibility_function = function ()
 				return InputDevice.gamepad_active
@@ -282,8 +290,8 @@ local widget_definitions = {
 		{
 			pass_type = "text",
 			style_id = "right_trigger",
-			value = "",
 			value_id = "right_trigger",
+			value = input_text_navigate_primary_right,
 			style = right_trigger_style,
 			visibility_function = function ()
 				return InputDevice.gamepad_active

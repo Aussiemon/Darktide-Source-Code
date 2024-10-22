@@ -5,6 +5,7 @@ local PresenceInterface = require("scripts/managers/presence/presence_entry")
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local Promise = require("scripts/foundation/utilities/promise")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local PlayerInfo = class("PlayerInfo")
 local OnlineStatus = SocialConstants.OnlineStatus
 local PartyStatus = SocialConstants.PartyStatus
@@ -42,6 +43,14 @@ PlayerInfo.set_account = function (self, account_id, account_name)
 end
 
 PlayerInfo.set_platform_social = function (self, platform_social)
+	if not platform_social then
+		self._platform_social = platform_social
+
+		self:_update_presence()
+
+		return
+	end
+
 	local old_platform_social = self._platform_social
 
 	if platform_social == old_platform_social then
@@ -67,7 +76,7 @@ PlayerInfo.account_id = function (self)
 	return self._account_id or presence and presence:account_id() ~= "" and presence:account_id()
 end
 
-PlayerInfo.user_display_name = function (self, use_stale)
+PlayerInfo.user_display_name = function (self, use_stale, no_platform_icon)
 	local name = self._user_display_name
 
 	if use_stale and name then
@@ -79,22 +88,32 @@ PlayerInfo.user_display_name = function (self, use_stale)
 
 	name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
 
-	local platform_icon = self:platform_icon()
+	local platform_icon, color_override = self:platform_icon()
 
-	if platform_icon then
+	if platform_icon and not no_platform_icon then
 		name = string.format("%s %s", platform_icon, name)
+	end
+
+	if not no_platform_icon then
+		color_override = nil
 	end
 
 	self._user_display_name = name
 
-	return name
+	return name, color_override
 end
 
 PlayerInfo.platform_icon = function (self)
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
 
-	return presence and presence:platform_icon() or platform_social and platform_social:platform_icon() or nil
+	if presence then
+		return presence:platform_icon()
+	elseif platform_social then
+		return platform_social:platform_icon()
+	end
+
+	return nil
 end
 
 PlayerInfo.online_status = function (self, use_stale)
@@ -131,7 +150,11 @@ end
 PlayerInfo.is_friend = function (self)
 	local platform_social = self._platform_social
 
-	return not self._is_blocked and (self._friend_status == FriendStatus.friend or platform_social and platform_social:is_friend()) or false
+	if platform_social then
+		return not self._is_blocked and not platform_social:is_blocked() and (self._friend_status == FriendStatus.friend or platform_social and platform_social:is_friend()) or false
+	else
+		return not self._is_blocked and self._friend_status == FriendStatus.friend or false
+	end
 end
 
 PlayerInfo.friend_status = function (self)
@@ -140,6 +163,12 @@ end
 
 PlayerInfo.set_friend_status = function (self, status)
 	self._friend_status = status
+end
+
+PlayerInfo.platform_friend_status = function (self)
+	local platform_social = self._platform_social
+
+	return platform_social and (platform_social:is_friend() and FriendStatus.friend or FriendStatus.none)
 end
 
 PlayerInfo.is_blocked = function (self)
@@ -252,9 +281,19 @@ PlayerInfo.player_activity_loc_string = function (self)
 end
 
 PlayerInfo.character_name = function (self)
-	local profile = self:profile()
+	if self:is_blocked() then
+		return Localize("loc_blocking_player")
+	else
+		local user_has_restrictions = Managers.account:user_has_restriction()
+		local is_own_player = self:is_own_player()
+		local profile = self:profile()
 
-	return profile and profile.name or ""
+		if user_has_restrictions and not is_own_player then
+			return profile and ProfileUtils.character_archetype_title(profile, true) or ""
+		else
+			return profile and profile.name or ""
+		end
+	end
 end
 
 PlayerInfo.character_level = function (self)

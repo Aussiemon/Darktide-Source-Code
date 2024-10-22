@@ -4,6 +4,8 @@ local PlatformSocialInterface = require("scripts/managers/data_service/services/
 local Promise = require("scripts/foundation/utilities/promise")
 local FriendPSN = require("scripts/managers/data_service/services/social/friend_psn")
 local SocialPSN = class("SocialPSN")
+local web_api = WebApi
+local _debug_log
 
 SocialPSN.init = function (self)
 	self._num_friends = 0
@@ -11,6 +13,8 @@ SocialPSN.init = function (self)
 	self._friends_promise = nil
 	self._blocked_promise = nil
 	self._friends_promise = nil
+	self._update_friendlist = false
+	self._update_blocklist = false
 end
 
 SocialPSN.destroy = function (self)
@@ -22,11 +26,21 @@ SocialPSN.reset = function (self)
 end
 
 SocialPSN.update = function (self, dt, t)
-	return
+	local push_event = web_api.push_event()
+
+	if push_event then
+		if push_event.data_type == "np:service:friendlist:friend" then
+			self._update_friendlist = true
+		elseif push_event.data_type == "np:service:blocklist" then
+			self._update_blocklist = true
+
+			Managers.event:trigger("event_on_social_blocklist_update")
+		end
+	end
 end
 
 SocialPSN.friends_list_has_changes = function (self)
-	return false
+	return self._update_friendlist
 end
 
 local empty_friend_list = {}
@@ -77,6 +91,7 @@ SocialPSN.fetch_friends_list = function (self)
 
 		self._num_friends = #profiles
 		self._friends_promise = nil
+		self._update_friendlist = false
 
 		return_promise:resolve(profiles)
 	end)
@@ -85,7 +100,7 @@ SocialPSN.fetch_friends_list = function (self)
 end
 
 SocialPSN.blocked_list_has_changes = function (self)
-	return false
+	return self._update_blocklist
 end
 
 SocialPSN.fetch_blocked_list = function (self)
@@ -108,6 +123,7 @@ SocialPSN.fetch_blocked_list = function (self)
 		end
 
 		self._num_blocked = #blocked_list
+		self._update_blocklist = false
 
 		self._blocked_promise:resolve(blocked_list)
 	end):catch(function (error)
@@ -138,6 +154,10 @@ SocialPSN.fetch_blocked_list_ids_forced = function (self)
 end
 
 SocialPSN.update_recent_players = function (self, account_id)
+	return
+end
+
+function _debug_log(text)
 	return
 end
 

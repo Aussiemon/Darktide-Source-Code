@@ -107,6 +107,8 @@ PresenceEntryImmaterium.update_with = function (self, new_entry)
 		self:_update_from_platform()
 
 		self._account_and_platform_composite_id = self:account_id() .. ":" .. self:platform() .. ":" .. self:platform_user_id()
+
+		Managers.event:trigger("event_new_immaterium_entry", new_entry)
 	end
 end
 
@@ -162,7 +164,7 @@ PresenceEntryImmaterium.platform_icon = function (self)
 		elseif platform == "xbox" then
 			return ""
 		elseif platform == "psn" then
-			return ""
+			return "{#color(255,255,255)}{#reset()}", true
 		end
 	else
 		return ""
@@ -178,7 +180,14 @@ PresenceEntryImmaterium.is_online = function (self)
 end
 
 PresenceEntryImmaterium.platform_persona_name_or_account_name = function (self)
+	local user_has_restrictions = Managers.account:user_has_restriction()
+	local my_own_platform = self._my_own_platform
 	local platform = self:platform()
+
+	if user_has_restrictions and platform ~= my_own_platform then
+		return Localize("loc_cross_network_player")
+	end
+
 	local platform_user_id = self:platform_user_id()
 
 	if platform and platform_user_id then
@@ -263,6 +272,13 @@ PresenceEntryImmaterium._process_character_profile_convert = function (self, new
 
 			if parsed_character_profile then
 				parsed_character_profile.hash = character_profile.hash
+
+				local user_has_restrictions = Managers.account:user_has_restriction()
+
+				if user_has_restrictions then
+					parsed_character_profile.name = Localize(parsed_character_profile.archetype.archetype_name)
+				end
+
 				self._parsed_character_profile = parsed_character_profile
 
 				Managers.event:trigger("event_player_profile_updated", nil, nil, parsed_character_profile)
@@ -279,7 +295,7 @@ PresenceEntryImmaterium._update_from_platform = function (self)
 	local platform = self:platform()
 	local platform_user_id = self:platform_user_id()
 
-	if platform and platform_user_id then
+	if platform ~= "" and platform_user_id ~= "" then
 		Managers.presence:request_platform_username_async(platform, platform_user_id)
 	end
 end

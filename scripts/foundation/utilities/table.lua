@@ -848,7 +848,7 @@ table.add_meta_logging = function (real_table, debug_enabled, debug_name)
 	if debug_enabled then
 		local front_table = {}
 
-		front_table.__index = function (table, key)
+		front_table.__index = function (t, key)
 			local value = rawget(real_table, key)
 
 			print("meta getting", debug_name, key, value)
@@ -858,7 +858,7 @@ table.add_meta_logging = function (real_table, debug_enabled, debug_name)
 
 		setmetatable(front_table, front_table)
 
-		front_table.__newindex = function (table, key, value)
+		front_table.__newindex = function (t, key, value)
 			print("meta setting", debug_name, key, value)
 			rawset(real_table, key, value)
 		end
@@ -894,9 +894,9 @@ table.swap_delete = function (t, index)
 	t[table_length] = nil
 end
 
-table.set_readonly = function (table)
+table.set_readonly = function (t)
 	return setmetatable({}, {
-		__index = table,
+		__index = t,
 		__newindex = function (_, key, value)
 			error("Attempt to modify read-only table")
 		end,
@@ -978,7 +978,7 @@ table.make_non_unique = function (t)
 	return table.clone_instance(t.__data)
 end
 
-table.make_strict = function (table, name, optional_error_message__index, optional_error_message__newindex)
+table.make_strict = function (t, name, optional_error_message__index, optional_error_message__newindex)
 	local __index_err_msg = optional_error_message__index or ""
 	local __newindex_err_msg = optional_error_message__newindex or ""
 	local metatable = {
@@ -990,7 +990,7 @@ table.make_strict = function (table, name, optional_error_message__index, option
 		end,
 	}
 
-	setmetatable(table, metatable)
+	setmetatable(t, metatable)
 end
 
 table.make_strict_with_interface = function (t, name, interface)
@@ -1002,12 +1002,16 @@ table.make_strict_with_interface = function (t, name, interface)
 		valid_keys[field_name] = true
 	end
 
+	for field_name, field in pairs(t) do
+		-- Nothing
+	end
+
 	return setmetatable(t, {
 		__index = function (t, key)
 			return nil
 		end,
 		__newindex = function (t, key, val)
-			return rawset(t, key, val)
+			rawset(t, key, val)
 		end,
 	})
 end

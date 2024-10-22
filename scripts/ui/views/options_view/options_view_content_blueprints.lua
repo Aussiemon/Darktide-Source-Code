@@ -1018,14 +1018,14 @@ if IS_PLAYSTATION then
 			font_size = 18,
 			font_type = "proxima_nova_bold",
 			line_spacing = 1.2,
-			text_horizontal_alignment = "left",
+			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
 				250,
 			},
 			offset = {
-				30,
-				-controller_image_height - 35 + 110,
+				750,
+				-controller_image_height - 35 + 75,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1047,7 +1047,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				30,
-				-controller_image_height - 35 + 173,
+				-controller_image_height - 35 + 139,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1069,7 +1069,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				30,
-				-controller_image_height - 35 + 172 + 65,
+				-controller_image_height - 35 + 136 + 65,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1090,11 +1090,11 @@ if IS_PLAYSTATION then
 				250,
 			},
 			additional_inputs = {
-				"xbox_controller_left_thumb",
+				"ps4_controller_l3",
 			},
 			offset = {
 				30,
-				-controller_image_height - 35 + 300,
+				-controller_image_height - 35 + 307 + 208,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1116,7 +1116,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				30,
-				-controller_image_height - 35 + 244 + 145,
+				-controller_image_height - 35 + 119 + 145,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1138,7 +1138,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				30,
-				-controller_image_height - 35 + 276 + 176,
+				-controller_image_height - 35 + 214 + 112,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1160,7 +1160,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				30,
-				-controller_image_height - 35 + 307 + 208,
+				-controller_image_height - 35 + 389,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1182,7 +1182,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				30,
-				-controller_image_height - 35 + 338 + 240,
+				-controller_image_height - 35 + 212 + 240,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1204,7 +1204,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				750,
-				-controller_image_height - 35 + 110,
+				-controller_image_height - 35 + 264,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1226,7 +1226,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				750,
-				-controller_image_height - 35 + 173,
+				-controller_image_height - 35 + 139,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1248,7 +1248,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				750,
-				-controller_image_height - 35 + 172 + 65,
+				-controller_image_height - 35 + 136 + 65,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1270,7 +1270,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				750,
-				-controller_image_height - 35 + 308,
+				-controller_image_height - 35 + 327,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1292,7 +1292,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				750,
-				-controller_image_height - 35 + 195 + 177,
+				-controller_image_height - 35 + 245 + 145,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1314,7 +1314,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				750,
-				-controller_image_height - 35 + 226 + 208,
+				-controller_image_height - 35 + 276 + 176,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1336,7 +1336,7 @@ if IS_PLAYSTATION then
 			},
 			offset = {
 				750,
-				-controller_image_height - 35 + 257 + 240,
+				-controller_image_height - 35 + 307 + 208,
 				3,
 			},
 			text_color = Color.text_default(255, true),
@@ -1357,7 +1357,7 @@ if IS_PLAYSTATION then
 				250,
 			},
 			additional_inputs = {
-				"xbox_controller_right_thumb",
+				"ps4_controller_r3",
 			},
 			offset = {
 				750,

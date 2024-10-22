@@ -338,7 +338,7 @@ InventoryWeaponDetailsView._setup_weapon_preview = function (self)
 		local reference_name = "weapon_preview"
 		local layer = 1
 		local context = {
-			draw_background = false,
+			draw_background = true,
 			ignore_blur = true,
 		}
 

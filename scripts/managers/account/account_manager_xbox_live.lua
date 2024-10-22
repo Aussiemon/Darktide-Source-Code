@@ -5,6 +5,7 @@ local DefaultGameParameters = require("scripts/foundation/utilities/parameters/d
 local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
 local InputDevice = require("scripts/managers/input/input_device")
 local Promise = require("scripts/foundation/utilities/promise")
+local RegionRestrictionsXboxLive = require("scripts/settings/region/region_restrictions_xbox_live")
 local RenderSettings = require("scripts/settings/options/render_settings")
 local SoundSettings = require("scripts/settings/options/sound_settings")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
@@ -25,6 +26,8 @@ AccountManagerXboxLive.init = function (self)
 	self._signin_state = SIGNIN_STATES.idle
 	self._xbox_privileges = XboxPrivileges:new()
 	self._friends = {}
+
+	self:_setup_region()
 end
 
 AccountManagerXboxLive.reset = function (self)
@@ -333,6 +336,10 @@ end
 
 AccountManagerXboxLive.network_error = function (self)
 	return self._network_fatal_error
+end
+
+AccountManagerXboxLive.region_has_restriction = function (self, restriction)
+	return not not self._region_restrictions[restriction]
 end
 
 AccountManagerXboxLive._cb_user_signed_in = function (self, optional_input_device, async_block)
@@ -929,6 +936,20 @@ AccountManagerXboxLive.return_to_title_screen = function (self)
 	self._leave_game = true
 	self._wanted_state = CLASSES.StateError
 	self._wanted_state_params = {}
+end
+
+AccountManagerXboxLive._setup_region = function (self)
+	local country_code = XboxLive.user_default_geo_name()
+
+	if country_code then
+		country_code = string.lower(country_code)
+	else
+		country_code = "unknown"
+	end
+
+	self._region_restrictions = RegionRestrictionsXboxLive[country_code] or {}
+
+	Log.info("AccountManagerXboxLive", "Geo location: %q, regional restrictions: %s", country_code, table.tostring(self._region_restrictions))
 end
 
 return AccountManagerXboxLive

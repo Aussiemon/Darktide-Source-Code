@@ -3,6 +3,7 @@
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
+local RegionConstants = require("scripts/settings/region/region_constants")
 local render_settings = {}
 local SettingsUtilities = {}
 local RENDER_TEMPLATES = {
@@ -541,7 +542,7 @@ local RENDER_TEMPLATES = {
 			{
 				display_name = "loc_rt_setting_off",
 				id = 0,
-				require_restart = true,
+				require_restart = false,
 				values = {
 					render_settings = {
 						ffx_frame_gen_enabled = false,
@@ -552,7 +553,7 @@ local RENDER_TEMPLATES = {
 			{
 				display_name = "loc_rt_setting_on",
 				id = 1,
-				require_restart = true,
+				require_restart = false,
 				values = {
 					render_settings = {
 						ffx_frame_gen_enabled = true,
@@ -1991,6 +1992,10 @@ local RENDER_TEMPLATES = {
 		display_name = "loc_settings_menu_group_gore",
 		group_name = "gore",
 		widget_type = "group_header",
+		supported_platforms = {
+			win32 = true,
+			xbs = true,
+		},
 	},
 	{
 		default_value = true,
@@ -2001,6 +2006,10 @@ local RENDER_TEMPLATES = {
 		save_location = "gore_settings",
 		tooltip_text = "loc_blood_decals_enabled_mouseover",
 		value_type = "boolean",
+		supported_platforms = {
+			win32 = true,
+			xbs = true,
+		},
 	},
 	{
 		default_value = true,
@@ -2011,6 +2020,10 @@ local RENDER_TEMPLATES = {
 		save_location = "gore_settings",
 		tooltip_text = "loc_gibbing_enabled_mouseover",
 		value_type = "boolean",
+		supported_platforms = {
+			win32 = true,
+			xbs = true,
+		},
 	},
 	{
 		default_value = true,
@@ -2021,6 +2034,10 @@ local RENDER_TEMPLATES = {
 		save_location = "gore_settings",
 		tooltip_text = "loc_minion_wounds_enabled_mouseover",
 		value_type = "boolean",
+		supported_platforms = {
+			win32 = true,
+			xbs = true,
+		},
 	},
 	{
 		default_value = true,
@@ -2031,6 +2048,13 @@ local RENDER_TEMPLATES = {
 		save_location = "gore_settings",
 		tooltip_text = "loc_attack_ragdolls_enabled_mouseover",
 		value_type = "boolean",
+		supported_platforms = {
+			win32 = true,
+			xbs = true,
+		},
+		validation_function = function ()
+			return not Managers.account:region_has_restriction(RegionConstants.restrictions.ragdoll_interaction)
+		end,
 	},
 }
 local default_supported_platforms = {
@@ -2213,6 +2237,14 @@ render_settings[#render_settings + 1] = {
 local resolution_undefined_return_value = 0
 local resolution_custom_return_value = -1
 
+local function get_render_resolution()
+	if Application.back_buffer_size then
+		return Application.back_buffer_size()
+	end
+
+	return 0, 0
+end
+
 local function generate_resolution_options()
 	if not IS_WINDOWS then
 		return
@@ -2251,11 +2283,16 @@ local function generate_resolution_options()
 
 			if width >= DefaultGameParameters.lowest_resolution then
 				local index = #options + 1
+				local display_name = tostring(width) .. " x " .. tostring(height)
+
+				if i == num_modes then
+					display_name = string.format("%d x %d (%s)", width, height, Localize("loc_settings_resolution_native"))
+				end
 
 				options[index] = {
 					ignore_localization = true,
 					id = index,
-					display_name = tostring(width) .. " x " .. tostring(height),
+					display_name = display_name,
 					adapter_index = adapter_index,
 					output_screen = output_screen,
 					width = width,
@@ -2263,6 +2300,8 @@ local function generate_resolution_options()
 				}
 			end
 		end
+
+		local resolution_width, resolution_height = get_render_resolution()
 
 		if #options > 0 then
 			options[resolution_undefined_return_value] = {
@@ -2274,12 +2313,11 @@ local function generate_resolution_options()
 				output_screen = output_screen,
 			}
 			options[resolution_custom_return_value] = {
-				display_name = "",
-				height = 0,
 				ignore_localization = true,
-				loc_display_name = "loc_setting_resolution_custom",
-				width = 0,
 				id = resolution_custom_return_value,
+				display_name = string.format("%s (%d x %d)", Localize("loc_setting_resolution_custom"), resolution_width, resolution_height),
+				width = resolution_width,
+				height = resolution_height,
 				adapter_index = adapter_index,
 				output_screen = output_screen,
 			}
@@ -2364,15 +2402,12 @@ render_settings[#render_settings + 1] = {
 		return Localize("loc_settings_gameplay_fov_presentation_format", true, format_params)
 	end,
 }
-
-local resolution_options = generate_resolution_options()
-
 render_settings[#render_settings + 1] = {
 	display_name = "loc_setting_resolution",
 	id = "resolution",
 	require_apply = true,
 	tooltip_text = "loc_setting_resolution_mouseover",
-	options = resolution_options,
+	options_function = generate_resolution_options,
 	validation_function = function ()
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
 	end,
@@ -2384,7 +2419,13 @@ render_settings[#render_settings + 1] = {
 			return
 		end
 
+		local resolution_options = generate_resolution_options()
 		local option = resolution_options[value]
+
+		if option == nil then
+			return false, false
+		end
+
 		local output_screen = option.output_screen
 		local adapter_index = option.adapter_index
 		local width = option.width
@@ -2405,19 +2446,8 @@ render_settings[#render_settings + 1] = {
 		return true, template.require_apply
 	end,
 	get_function = function (template)
-		local resolution_width, resolution_height
-
-		if not Application.user_setting("fullscreen") and Application.back_buffer_size then
-			local window_width, window_height = Application.back_buffer_size()
-
-			resolution_width = window_width
-			resolution_height = window_height
-		else
-			local resolution = Application.user_setting("screen_resolution")
-
-			resolution_width = resolution and resolution[1]
-			resolution_height = resolution and resolution[2]
-		end
+		local resolution_width, resolution_height = get_render_resolution()
+		local resolution_options = generate_resolution_options()
 
 		if resolution_options and #resolution_options > 0 then
 			for i = 1, #resolution_options do
@@ -2428,19 +2458,7 @@ render_settings[#render_settings + 1] = {
 				end
 			end
 
-			if Application.back_buffer_size then
-				local option = resolution_options[resolution_custom_return_value]
-
-				if option and (option.width ~= resolution_width or option.height ~= resolution_height) then
-					option.width = resolution_width
-					option.height = resolution_height
-					option.display_name = string.format("%s (%d x %d)", Localize(option.loc_display_name), resolution_width, resolution_height)
-				end
-
-				return resolution_custom_return_value
-			end
-
-			return 1
+			return resolution_custom_return_value
 		end
 
 		return resolution_undefined_return_value
@@ -2513,6 +2531,72 @@ if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA th
 	}
 end
 
+if IS_PLAYSTATION and not Application.is_trinity() then
+	render_settings[#render_settings + 1] = {
+		apply_on_startup = true,
+		default_value = "performance",
+		display_name = "loc_setting_ps5_quality_preset",
+		id = "ps5_quality_preset",
+		require_apply = true,
+		tooltip_text = "loc_setting_ps5_quality_preset_mouseover",
+		options = {
+			{
+				display_name = "loc_setting_ps5_quality_preset_performance",
+				id = "performance",
+				data = {
+					height = 1440,
+					target_fps = 60,
+					width = 2560,
+				},
+			},
+			{
+				display_name = "loc_setting_ps5_quality_preset_quality",
+				id = "quality",
+				data = {
+					height = 2160,
+					target_fps = 40,
+					width = 3840,
+				},
+			},
+		},
+		on_activated = function (value, template)
+			SettingsUtilities.verify_and_apply_changes(template, value)
+		end,
+		on_changed = function (value, template)
+			local options = template.options
+			local index = table.index_of_condition(options, function (option)
+				return option.id == value
+			end)
+			local option = options[index]
+
+			if not option then
+				return
+			end
+
+			local target_fps = option.data.target_fps
+
+			Application.set_target_frame_rate(target_fps)
+
+			local width = option.data.width
+			local height = option.data.height
+
+			Application.set_resolution(width, height)
+			Application.set_user_setting("render_settings", "ps5_quality_preset", value)
+
+			if template.changed_callback then
+				template.changed_callback(value)
+			end
+
+			return true, template.require_apply
+		end,
+		get_function = function (template)
+			local ps5_quality_preset = Application.user_setting("render_settings", "ps5_quality_preset") or "performance"
+
+			return ps5_quality_preset
+		end,
+	}
+end
+
 local screen_mode_setting = {
 	apply_on_startup = true,
 	default_value = "window",
@@ -2534,15 +2618,8 @@ local screen_mode_setting = {
 			fullscreen = Application.user_setting("fullscreen")
 		end
 
-		local borderless_fullscreen = Application.user_setting("borderless_fullscreen")
-
-		if borderless_fullscreen then
-			screen_mode = "borderless_fullscreen"
-		elseif fullscreen then
-			screen_mode = "fullscreen"
-		elseif not borderless_fullscreen and not fullscreen then
-			screen_mode = "window"
-		end
+		fullscreen = fullscreen or Application.user_setting("borderless_fullscreen")
+		screen_mode = fullscreen and "fullscreen" or "window"
 
 		if screen_mode ~= user_screen_mode then
 			template.on_activated(screen_mode, template)
@@ -2600,17 +2677,6 @@ local screen_mode_setting = {
 			require_apply = true,
 			require_restart = false,
 			values = {
-				borderless_fullscreen = false,
-				fullscreen = false,
-			},
-		},
-		{
-			display_name = "loc_setting_screen_mode_borderless_fullscreen",
-			id = "borderless_fullscreen",
-			require_apply = true,
-			require_restart = false,
-			values = {
-				borderless_fullscreen = true,
 				fullscreen = false,
 			},
 		},
@@ -2620,19 +2686,8 @@ local screen_mode_setting = {
 			require_apply = true,
 			require_restart = false,
 			values = {
-				borderless_fullscreen = false,
 				fullscreen = true,
 			},
-		},
-	},
-	disable_rules = {
-		{
-			disable_value = 0,
-			id = "resolution",
-			reason = "loc_disable_rule_borderless_window",
-			validation_function = function (value)
-				return value == "borderless_fullscreen"
-			end,
 		},
 	},
 }

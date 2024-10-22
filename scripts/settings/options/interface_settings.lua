@@ -776,7 +776,7 @@ local settings_definitions = {
 		tooltip_text = "loc_settings_crossplay",
 		widget_type = "boolean",
 		on_value_changed = function (value)
-			Managers.event:trigger("event_crossplay_change", value)
+			Managers.event:trigger("event_crossplay_change", value, "loc_settings_menu_category_interface", "crossplay_enabled")
 		end,
 		validation_function = function ()
 			return IS_PLAYSTATION
@@ -787,7 +787,7 @@ local settings_definitions = {
 		display_name = "loc_interface_setting_telemetry_enabled",
 		id = "telemetry_enabled",
 		save_location = "interface_settings",
-		tooltip_text = "loc_settings_telemetry",
+		tooltip_text = "loc_interface_settings_telemetry_mouseover",
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_telemetry_change", value)

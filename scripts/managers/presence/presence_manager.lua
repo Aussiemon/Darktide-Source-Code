@@ -47,12 +47,12 @@ PresenceManager.init = function (self)
 	self._next_cross_play_check = 0
 	self._advertise_playing = false
 
-	if IS_XBS or IS_GDK then
+	if IS_XBS or IS_GDK or IS_PLAYSTATION then
 		self._load_buffer_in_flight = nil
-		self._load_buffer_request_xbox_gamertag = {}
-		self._load_buffer_request_xbox_gamertag_length = 0
-		self._last_request_xbox_gamertag = 0
-		self._loaded_xbox_gamertags = {}
+		self._load_buffer_request_platform_username = {}
+		self._load_buffer_request_platform_username_length = 0
+		self._last_request_platform_username = 0
+		self._loaded_platform_username = {}
 	end
 
 	self._batched_presence_streams = {}
@@ -373,25 +373,25 @@ end
 PresenceManager.request_platform_username_async = function (self, platform, platform_user_id)
 	if HAS_STEAM and platform == "steam" then
 		Steam.request_user_name_async(platform_user_id)
-	elseif (IS_XBS or IS_GDK) and platform == "xbox" then
+	elseif (IS_XBS or IS_GDK) and platform == "xbox" or IS_PLAYSTATION then
 		if self._load_buffer_in_flight and self._load_buffer_in_flight[platform_user_id] then
 			return
 		end
 
-		if self._loaded_xbox_gamertags[platform_user_id] or self._load_buffer_request_xbox_gamertag[platform_user_id] then
+		if self._loaded_platform_username[platform_user_id] or self._load_buffer_request_platform_username[platform_user_id] then
 			return
 		end
 
-		self._load_buffer_request_xbox_gamertag[platform_user_id] = true
-		self._load_buffer_request_xbox_gamertag_length = self._load_buffer_request_xbox_gamertag_length + 1
+		self._load_buffer_request_platform_username[platform_user_id] = true
+		self._load_buffer_request_platform_username_length = self._load_buffer_request_platform_username_length + 1
 	end
 end
 
 PresenceManager.get_requested_platform_username = function (self, platform, platform_user_id)
 	if HAS_STEAM and platform == "steam" then
 		return Steam.user_name(platform_user_id)
-	elseif (IS_XBS or IS_GDK) and platform == "xbox" then
-		return self._loaded_xbox_gamertags[platform_user_id]
+	elseif (IS_XBS or IS_GDK) and platform == "xbox" or IS_PLAYSTATION then
+		return self._loaded_platform_username[platform_user_id]
 	end
 end
 
@@ -483,39 +483,56 @@ PresenceManager.update = function (self, dt, t)
 		end
 	end
 
-	if self._load_buffer_request_xbox_gamertag_length and self._load_buffer_request_xbox_gamertag_length > 0 then
-		self._last_request_xbox_gamertag = self._last_request_xbox_gamertag + dt
+	if self._load_buffer_request_platform_username_length and self._load_buffer_request_platform_username_length > 0 then
+		self._last_request_platform_username = self._last_request_platform_username + dt
 
-		if self._last_request_xbox_gamertag > 0.2 then
+		if self._last_request_platform_username > 0.2 then
 			local buffer = {}
 
 			self._load_buffer_in_flight = {}
 
-			for id, _ in pairs(self._load_buffer_request_xbox_gamertag) do
+			for id, _ in pairs(self._load_buffer_request_platform_username) do
 				table.insert(buffer, id)
 
 				self._load_buffer_in_flight[id] = true
 			end
 
-			self._load_buffer_request_xbox_gamertag_length = 0
-			self._load_buffer_request_xbox_gamertag = {}
+			self._load_buffer_request_platform_username_length = 0
+			self._load_buffer_request_platform_username = {}
 
-			Log.info("PresenceManager", "Doing batched call to get_user_profiles with %s xuids", tostring(#buffer))
-			XboxLiveUtils.get_user_profiles(buffer):next(function (profiles)
-				self._load_buffer_in_flight = nil
+			Log.info("PresenceManager", "Doing batched call to get_user_profiles with %s uids", tostring(#buffer))
 
-				for i, profile in ipairs(profiles) do
-					self._loaded_xbox_gamertags[profile.xuid] = profile.gamertag
-				end
-			end):catch(function (error)
-				self._load_buffer_in_flight = nil
+			if IS_XBS or IS_GDK then
+				XboxLiveUtils.get_user_profiles(buffer):next(function (profiles)
+					self._load_buffer_in_flight = nil
 
-				_error("error when getting gamertags for xuids", table.tostring(buffer, 2))
+					for i, profile in ipairs(profiles) do
+						self._loaded_platform_username[profile.xuid] = profile.gamertag
+					end
+				end):catch(function (error)
+					self._load_buffer_in_flight = nil
 
-				self._last_request_xbox_gamertag = -10
-			end)
+					_error("error when getting gamertags for xuids", table.tostring(buffer, 2))
 
-			self._last_request_xbox_gamertag = 0
+					self._last_request_platform_username = -10
+				end)
+			elseif IS_PLAYSTATION then
+				Managers.account:get_public_profiles(table.clone_instance(buffer)):next(function (profiles)
+					self._load_buffer_in_flight = nil
+
+					for i, profile in pairs(profiles) do
+						self._loaded_platform_username[i] = profile.onlineId
+					end
+				end):catch(function (error)
+					self._load_buffer_in_flight = nil
+
+					_error("error when getting gamertags for xuids", table.tostring(buffer, 2))
+
+					self._last_request_platform_username = -10
+				end)
+			end
+
+			self._last_request_platform_username = 0
 		end
 	end
 

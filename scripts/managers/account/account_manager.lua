@@ -32,6 +32,8 @@ local interface = {
 	"user_restriction_verified",
 	"verify_connection",
 	"communication_restriction_iteration",
+	"region_has_restriction",
+	"return_to_title_screen",
 }
 local AccountManager = {}
 

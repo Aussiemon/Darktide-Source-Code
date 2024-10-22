@@ -16,6 +16,8 @@ local LADDER_LEAVE_NODE = "node_leave"
 local LADDER_ENTER_END_NODE = "node_enter_end"
 
 PlayerCharacterStateLadderTopEntering.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateLadderTopEntering.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local ladder_unit = params.ladder_unit
 	local locomotion_steering = self._locomotion_steering_component
 
@@ -78,6 +80,8 @@ PlayerCharacterStateLadderTopEntering._velocity_wanted = function (self, ladder_
 end
 
 PlayerCharacterStateLadderTopEntering.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateLadderTopEntering.super.on_exit(self, unit, t, next_state)
+
 	local ladder_character_state_component = self._ladder_character_state_component
 
 	if next_state and next_state ~= "ladder_climbing" then

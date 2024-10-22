@@ -538,12 +538,10 @@ InputManager.push_cursor = function (self, reference)
 		local stack_references = cursor_stack_data.stack_references
 
 		if cursor_stack_data.stack_depth == 0 and cursor_stack_data.allow_cursor_rendering then
-			local is_fullscreen = RESOLUTION_LOOKUP.fullscreen
-
 			if IS_WINDOWS then
 				self._show_cursor = true
 
-				Window.set_clip_cursor(is_fullscreen or false)
+				Window.set_clip_cursor(false)
 			else
 				self._software_cursor_active = true
 			end
@@ -588,12 +586,11 @@ end
 InputManager._update_clip_cursor = function (self)
 	if PLATFORM == "win32" then
 		local cursor_stack_data = self._cursor_stack_data
-		local is_fullscreen = RESOLUTION_LOOKUP.fullscreen
 
 		if cursor_stack_data.stack_depth == 0 then
 			Window.set_clip_cursor(true)
 		elseif cursor_stack_data.stack_depth > 0 then
-			Window.set_clip_cursor(is_fullscreen)
+			Window.set_clip_cursor(false)
 		end
 	end
 end
@@ -645,6 +642,40 @@ InputManager.load_input_layout = function (self, layout_name)
 			self:apply_alias_changes(service_type)
 		end
 	end
+end
+
+InputManager.has_active_gamepad = function (self)
+	for key, device in pairs(self._active_input_devices) do
+		if device == "xbox_controller" or device == "ps4_controller" then
+			return true
+		end
+	end
+
+	return false
+end
+
+InputManager.has_used_gamepad = function (self)
+	for key, device in pairs(self._used_input_devices) do
+		if device.device_type == "xbox_controller" or device.device_type == "ps4_controller" then
+			return true
+		end
+	end
+
+	return false
+end
+
+InputManager.is_using_gamepad = function (self)
+	local last_pressed_device = InputDevice.last_pressed_device
+
+	if not last_pressed_device then
+		return false
+	end
+
+	if last_pressed_device:type() == "xbox_controller" or last_pressed_device:type() == "ps4_controller" then
+		return true
+	end
+
+	return false
 end
 
 InputManager._set_wwise_rumble_state_from_device = function (self, device)

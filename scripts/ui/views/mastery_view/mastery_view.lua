@@ -1340,6 +1340,10 @@ MasteryView._find_closest_neighbour_vertical = function (self, index, input_dire
 		end
 	end
 
+	if not max_index then
+		return
+	end
+
 	local current_row = index / columns
 	local start_row = 1
 	local end_row = rows
@@ -1377,6 +1381,10 @@ MasteryView._find_closest_neighbour_horizontal = function (self, index, input_di
 		end
 	end
 
+	if not max_index then
+		return
+	end
+
 	local current_row = math.floor((index - 1) / columns)
 	local start_column = current_row * columns + 1
 	local end_column = math.min(start_column + columns - 1, max_index)
@@ -1395,12 +1403,7 @@ MasteryView._handle_input = function (self, input_service, dt, t)
 		local new_selection_index
 		local current_index = self._selected_trait_index or 1
 
-		if input_service:get("confirm_pressed") then
-			if self._selected_trait_index then
-				local widget = self._trait_widgets[self._selected_trait_index]
-				local config = widget.content.element
-			end
-		elseif input_service:get("navigate_up_continuous") then
+		if input_service:get("navigate_up_continuous") then
 			new_selection_index = self:_find_closest_neighbour_vertical(current_index, DIRECTION.UP)
 		elseif input_service:get("navigate_down_continuous") then
 			new_selection_index = self:_find_closest_neighbour_vertical(current_index, DIRECTION.DOWN)

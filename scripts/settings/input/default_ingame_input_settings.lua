@@ -509,4 +509,9 @@ if IS_XBS or IS_PLAYSTATION then
 	default_ingame_input_settings.settings.voip_push_to_talk = nil
 end
 
+if IS_PLAYSTATION then
+	default_ingame_input_settings.aliases.look_raw_controller.description = "loc_ingame_look_raw_controller"
+	default_ingame_input_settings.aliases.move_controller.description = "loc_ingame_move_controller_sony"
+end
+
 return settings("DefaultIngameInputSettings", default_ingame_input_settings)

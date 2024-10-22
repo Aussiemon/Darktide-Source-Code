@@ -14,6 +14,8 @@ local LADDER_LEAVE_NODE = "node_leave"
 local PlayerCharacterStateLadderTopLeaving = class("PlayerCharacterStateLadderTopLeaving", "PlayerCharacterStateBase")
 
 PlayerCharacterStateLadderTopLeaving.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateLadderTopLeaving.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local locomotion_steering = self._locomotion_steering_component
 
 	locomotion_steering.move_method = "script_driven"
@@ -45,6 +47,7 @@ PlayerCharacterStateLadderTopLeaving.on_enter = function (self, unit, dt, t, pre
 end
 
 PlayerCharacterStateLadderTopLeaving.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateLadderTopLeaving.super.on_exit(self, unit, t, next_state)
 	ForceRotation.stop(self._locomotion_force_rotation_component)
 	ForceTranslation.stop(self._locomotion_force_translation_component)
 

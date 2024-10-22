@@ -5,6 +5,7 @@ local settings = {
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective",
 	default_player_side_name = "heroes",
 	host_singleplay = false,
+	is_premium_feature = true,
 	max_bots = 3,
 	mission_end_grace_time_dead = 4,
 	mission_end_grace_time_disabled = 10,

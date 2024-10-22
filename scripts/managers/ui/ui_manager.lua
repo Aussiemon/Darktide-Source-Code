@@ -1813,10 +1813,47 @@ UIManager.event_portrait_render_change = function (self, value)
 	instance:change_render_portrait_status(value)
 end
 
-UIManager.event_crossplay_change = function (self, enabled)
+UIManager._set_crossplay_and_return_to_title_screen = function (self, enabled, category, id)
 	local restricted = not enabled
 
 	Managers.account:set_crossplay_restriction(restricted)
+	Managers.account:return_to_title_screen()
+end
+
+UIManager._unset_crossplay = function (self, enabled, category, id)
+	local old_value = not enabled
+
+	self._disable_crossplay_changed = true
+
+	Managers.event:trigger("set_option_value", category, id, old_value)
+
+	self._disable_crossplay_changed = false
+end
+
+UIManager.event_crossplay_change = function (self, enabled, category, id)
+	if self._disable_crossplay_changed and self._disable_crossplay_changed == true then
+		return
+	end
+
+	local context = {
+		description_text = "loc_popup_description_crossplay_changed",
+		priority_order = 1000,
+		title_text = "loc_popup_header_crossplay_changed",
+		options = {
+			{
+				close_on_pressed = true,
+				text = "loc_popup_button_confirm",
+				callback = callback(self, "_set_crossplay_and_return_to_title_screen", enabled),
+			},
+			{
+				close_on_pressed = true,
+				text = "loc_popup_button_close",
+				callback = callback(self, "_unset_crossplay", enabled, category, id),
+			},
+		},
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context)
 end
 
 UIManager.portrait_has_request = function (self, id)

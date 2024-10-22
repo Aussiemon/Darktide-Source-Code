@@ -350,8 +350,7 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, rotation)
 	rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, rotation)
 
-	local last_pressed_device = InputDevice.last_pressed_device
-	local gamepad_active = last_pressed_device and last_pressed_device:type() == "xbox_controller"
+	local gamepad_active = Managers.input:is_using_gamepad()
 	local enable_aim_assist = gamepad_active
 
 	if enable_aim_assist and not DevParameters.disable_aim_assist then

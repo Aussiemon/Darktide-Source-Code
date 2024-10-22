@@ -94,6 +94,12 @@ PortraitUI.load_profile_portrait = function (self, profile, on_load_callback, op
 end
 
 PortraitUI._check_portrait_enabled_status = function (self)
+	local force_disable = false
+
+	if force_disable then
+		return false
+	end
+
 	local save_manager = Managers.save
 
 	if self._current_player and save_manager then

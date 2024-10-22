@@ -625,9 +625,11 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	local context = self._context
 	local optional_camera_breed_name = context and context.optional_camera_breed_name
 	local breed_name = presentation_profile.breed
-	local default_camera_settings = self._breeds_default_camera_settings[optional_camera_breed_name or breed_name]
+	local default_camera_settings = self._breeds_default_camera_settings and self._breeds_default_camera_settings[optional_camera_breed_name or breed_name]
 
-	self:_set_initial_viewport_camera_position(default_camera_settings)
+	if default_camera_settings then
+		self:_set_initial_viewport_camera_position(default_camera_settings)
+	end
 end
 
 CosmeticsVendorView._fetch_store_items = function (self, ignore_focus_on_offer, optional_context)
@@ -949,6 +951,11 @@ CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 	end
 
 	UIRenderer.end_pass(ui_renderer)
+
+	if self._parent and self._parent._use_child_view_to_render then
+		self._parent:draw_passes(dt, t, ui_renderer, input_service, render_settings)
+	end
+
 	CosmeticsVendorView.super.draw(self, dt, t, input_service, layer)
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
@@ -1084,6 +1091,10 @@ end
 CosmeticsVendorView._setup_background_world = function (self)
 	local context = self._context
 	local level_settings = context and context.spawn_player and CosmeticsVendorViewSettings.gear_level_settings or CosmeticsVendorViewSettings.weapon_level_settings
+
+	if not level_settings then
+		return
+	end
 
 	self._breeds_item_camera_by_slot_id = {}
 	self._breeds_default_camera_settings = {}

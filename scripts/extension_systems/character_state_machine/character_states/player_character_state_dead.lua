@@ -21,6 +21,7 @@ PlayerCharacterStateDead.init = function (self, character_state_init_context, ..
 end
 
 PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateDead.super.on_enter(self, unit, dt, t, previous_state, params)
 	FirstPersonView.exit(t, self._first_person_mode_component)
 
 	self._locomotion_steering_component.velocity_wanted = Vector3.zero()
@@ -57,7 +58,7 @@ PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state,
 end
 
 PlayerCharacterStateDead.on_exit = function (self, unit, t, next_state)
-	return
+	PlayerCharacterStateDead.super.on_exit(self, unit, t, next_state)
 end
 
 PlayerCharacterStateDead.pre_update = function (self, unit, dt, t)

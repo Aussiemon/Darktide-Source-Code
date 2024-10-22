@@ -885,7 +885,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 
 	local panel_widget = slot.panel_widget
 	local panel_content = panel_widget.content
-	local character_name = ProfileUtils.character_name(profile)
+	local character_name = player:name()
 	local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 	local character_level = tostring(profile.current_level) .. " "
 

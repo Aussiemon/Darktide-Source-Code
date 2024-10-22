@@ -18,15 +18,6 @@ local cosmetics_vendor_view_settings = {
 		world_layer = 1,
 		world_name = "ui_vendor_cosmetics_preview_gear_preview",
 	},
-	weapon_level_settings = {
-		level_name = "content/levels/ui/vendor_cosmetics_preview_weapon/vendor_cosmetics_preview_weapon",
-		shading_environment = "content/shading_environments/ui/vendor_cosmetics_preview_weapon",
-		viewport_layer = 1,
-		viewport_name = "ui_vendor_cosmetics_preview_weapon_preview_viewport",
-		viewport_type = "default",
-		world_layer = 1,
-		world_name = "ui_vendor_cosmetics_preview_weapon_preview",
-	},
 }
 
 return settings("CosmeticsVendorViewSettings", cosmetics_vendor_view_settings)

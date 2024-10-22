@@ -57,6 +57,8 @@ local FALLING_ANIM_EVENT_3P = "to_inair"
 local FALLING_ANIM_EVENT_1P = "in_air_fall"
 
 PlayerCharacterStateFalling.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateFalling.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local locomotion_steering = self._locomotion_steering_component
 
 	locomotion_steering.move_method = "script_driven"
@@ -83,6 +85,8 @@ PlayerCharacterStateFalling.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateFalling.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateFalling.super.on_exit(self, unit, t, next_state)
+
 	if not next_state then
 		return
 	end

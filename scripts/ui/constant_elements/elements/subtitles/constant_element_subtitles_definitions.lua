@@ -60,7 +60,7 @@ local widget_definitions = {
 		{
 			pass_type = "text",
 			style_id = "text",
-			value = "<text>",
+			value = "",
 			value_id = "text",
 			style = text_style,
 		},

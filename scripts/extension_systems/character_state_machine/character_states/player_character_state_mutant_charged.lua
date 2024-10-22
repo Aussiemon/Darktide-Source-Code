@@ -37,6 +37,8 @@ local DISABLING_UNIT_LINK_NODE = "j_leftweaponattach"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
 
 PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateMutantCharged.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	if not params.cancel_assist then
 		local inventory_component = self._inventory_component
 		local visual_loadout_extension = self._visual_loadout_extension
@@ -96,6 +98,8 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 end
 
 PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateMutantCharged.super.on_exit(self, unit, t, next_state)
+
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 
 	if locomotion_force_rotation_component.use_force_rotation then

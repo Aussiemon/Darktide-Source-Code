@@ -16,6 +16,8 @@ PlayerCharacterStateLedgeHangingPullUp.init = function (self, character_state_in
 end
 
 PlayerCharacterStateLedgeHangingPullUp.on_enter = function (self, unit, dt, t, previous_state, params)
+	PlayerCharacterStateLedgeHangingPullUp.super.on_enter(self, unit, dt, t, previous_state, params)
+
 	local hang_ledge_unit = self._ledge_hanging_character_state_component.hang_ledge_unit
 
 	self:_teleport(unit, hang_ledge_unit)
@@ -23,6 +25,8 @@ PlayerCharacterStateLedgeHangingPullUp.on_enter = function (self, unit, dt, t, p
 end
 
 PlayerCharacterStateLedgeHangingPullUp.on_exit = function (self, unit, t, next_state)
+	PlayerCharacterStateLedgeHangingPullUp.super.on_exit(self, unit, t, next_state)
+
 	self._ledge_hanging_character_state_component.hang_ledge_unit = nil
 end
 
