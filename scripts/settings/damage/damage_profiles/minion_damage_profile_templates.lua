@@ -49,6 +49,34 @@ damage_templates.poxwalker = {
 		},
 	},
 }
+damage_templates.mutated_poxwalker = {
+	disorientation_type = "medium",
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_medium",
+	permanent_damage_ratio = 0.5,
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 35,
+		impact = 10,
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 1,
+	},
+	force_look_function = ForcedLookSettings.look_functions.light,
+	push_template = push_templates.light,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.lesser_mutated_poxwalker = table.clone(damage_templates.mutated_poxwalker)
+damage_templates.lesser_mutated_poxwalker.permanent_damage_ratio = 0.35
 damage_templates.melee_fighter_default = {
 	disorientation_type = "medium",
 	interrupt_alternate_fire = true,
@@ -3151,6 +3179,31 @@ damage_templates.beast_of_nurgle_melee_friendly_fire = {
 	},
 }
 damage_templates.beast_of_nurgle_self_gib = {
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 1,
+		impact = 1,
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 1,
+	},
+	ragdoll_push_force = {
+		500,
+		800,
+	},
+	gibbing_power = gibbing_power.impossible,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.maelstrom_plus_self_gib = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = default_armor_mod,

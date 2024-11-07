@@ -188,6 +188,22 @@ local elements = {
 			"default",
 		},
 	},
+	{
+		class_name = "ConstantElementVoiceChat",
+		filename = "scripts/ui/constant_elements/elements/voice_chat/constant_element_voice_chat",
+		package = "packages/ui/constant_elements/voice_chat/voice_chat",
+		use_hud_scale = true,
+		visibility_groups = {
+			"tactical_overlay",
+			"cutscene",
+			"mission_lobby",
+			"end_of_round",
+			"in_view",
+			"in_hub_view",
+			"in_loading",
+			"skippable_cinematic",
+		},
+	},
 }
 
 return elements

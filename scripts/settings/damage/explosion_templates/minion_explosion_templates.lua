@@ -100,6 +100,25 @@ local explosion_templates = {
 			"wwise/events/minions/play_beast_of_nurgle_death_explode",
 		},
 	},
+	nurgle_head_parasite = {
+		close_radius = 1,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = false,
+		min_close_radius = 0.5,
+		min_radius = 1,
+		override_friendly_fire = true,
+		radius = 3,
+		scalable_radius = true,
+		static_power_level = 250,
+		close_damage_profile = DamageProfileTemplates.barrel_explosion_close,
+		damage_profile = DamageProfileTemplates.barrel_explosion,
+		vfx = {
+			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter",
+		},
+		sfx = {
+			"wwise/events/minions/play_nurgle_corpse_explode",
+		},
+	},
 	renegade_captain_bolt_shell_kill = {
 		collision_filter = "filter_minion_explosion",
 		damage_falloff = true,

@@ -510,6 +510,20 @@ local settings_definitions = {
 		end,
 	},
 	{
+		default_value = true,
+		display_name = "loc_interface_setting_voice_chat_visible_all_time",
+		id = "voice_chat_visible_all_time",
+		save_location = "interface_settings",
+		tooltip_text = "loc_settings_voice_chat_visible_all_time_mouseover",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("voice_chat_visible_setting_update", value)
+		end,
+		validation_function = function ()
+			return not IS_PLAYSTATION
+		end,
+	},
+	{
 		display_name = "loc_settings_menu_group_subtitle_settings",
 		group_name = "subtitle_settings",
 		widget_type = "group_header",

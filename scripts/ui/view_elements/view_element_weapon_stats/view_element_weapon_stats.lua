@@ -852,7 +852,7 @@ ViewElementWeaponStats.update_expertise_value = function (self, start_value, ove
 
 			if widget.type == "weapon_stats" then
 				widget.content.start_expertise_value = start_value
-				widget.content.preview_expertise_value = override_value and math.min(max_expertise_level, override_value) or nil
+				widget.content.new_preview_expertise_value = override_value and math.min(max_expertise_level, override_value) or nil
 			end
 		end
 	end

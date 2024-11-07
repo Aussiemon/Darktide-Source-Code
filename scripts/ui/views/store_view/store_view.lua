@@ -1126,8 +1126,6 @@ StoreView._destroy_aquilas_presentation = function (self)
 end
 
 StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
-	self:_destroy_current_grid()
-
 	local storefront_request_id = self._storefront_request_id + 1
 
 	self._storefront_request_id = storefront_request_id
@@ -1155,7 +1153,11 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 	end
 
 	return self._store_promise:next(function (data)
+		self:_destroy_current_grid()
+
 		if storefront_request_id ~= self._storefront_request_id or not self._store_promise or not data then
+			self._store_promise = nil
+
 			return
 		end
 
@@ -1218,7 +1220,7 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		end
 
 		local layout_config = data.layout_config
-		local layout = layout_config.layout or {
+		local layout = layout_config and layout_config.layout or {
 			pages = {
 				{
 					items = {},
@@ -1544,7 +1546,7 @@ StoreView._handle_input = function (self, input_service)
 	local using_cursor = self._using_cursor_navigation
 
 	if not using_cursor then
-		if input_service:get("hotkey_menu_special_1") and not self._aquila_open then
+		if input_service:get("hotkey_menu_special_1") and not self._aquila_open and not self._widgets_by_name.aquila_button.content.hotspot.disabled then
 			self:_play_sound(UISoundEvents.default_click)
 
 			local on_complete_callback = callback(self, "setup_aquila_store")

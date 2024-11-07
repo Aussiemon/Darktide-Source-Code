@@ -593,6 +593,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_hide_nose_01 = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0,
+				0,
+			},
+			negative_mask = {
+				0,
+				0.88,
+				0.37,
+				0,
+			},
+		},
+	},
 	mask_full_face = {
 		property_overrides = {
 			positive_mask = {

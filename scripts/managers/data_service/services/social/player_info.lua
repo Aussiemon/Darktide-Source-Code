@@ -27,6 +27,8 @@ PlayerInfo.init = function (self, presence_account_id_change_callback)
 	self._player_unique_id = nil
 	self._last_time_played_with = nil
 	self._presence_account_id_change_callback = presence_account_id_change_callback
+	self._platform_id = nil
+	self._platform = nil
 end
 
 PlayerInfo.destroy = function (self)
@@ -86,7 +88,7 @@ PlayerInfo.user_display_name = function (self, use_stale, no_platform_icon)
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
 
-	name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
+	name = presence and presence:platform_persona_name_or_account_name(self._platform, self._platform_id) or platform_social and platform_social:name() or self._account_name or "N/A"
 
 	local platform_icon, color_override = self:platform_icon()
 
@@ -108,7 +110,7 @@ PlayerInfo.platform_icon = function (self)
 	local platform_social = self._platform_social
 
 	if presence then
-		return presence:platform_icon()
+		return presence:platform_icon(self._platform)
 	elseif platform_social then
 		return platform_social:platform_icon()
 	end
@@ -253,15 +255,29 @@ end
 PlayerInfo.platform = function (self)
 	local platform_social = self._platform_social
 	local presence = self:_get_presence()
+	local saved_platform = self._platform ~= "" and self._platform or nil
 
-	return platform_social and platform_social:platform() or presence and presence:platform() or "Unknown"
+	return saved_platform or platform_social and platform_social:platform() or presence and presence:platform() or "Unknown"
+end
+
+PlayerInfo.set_platform = function (self, platform)
+	if platform ~= "" then
+		self._platform = platform
+	end
 end
 
 PlayerInfo.platform_user_id = function (self)
 	local platform_social = self._platform_social
 	local presence = self:_get_presence()
+	local saved_platform_id = self._platform_id ~= "" and self._platform_id or nil
 
-	return platform_social and platform_social:id() or presence and presence:platform_user_id() or ""
+	return saved_platform_id or platform_social and platform_social:id() or presence and presence:platform_user_id() or ""
+end
+
+PlayerInfo.set_platform_user_id = function (self, platform_id)
+	if platform_id ~= "" then
+		self._platform_id = platform_id
+	end
 end
 
 PlayerInfo.player_activity_id = function (self)

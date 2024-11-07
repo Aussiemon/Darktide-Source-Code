@@ -148,6 +148,8 @@ SocialPSN.fetch_blocked_list_ids_forced = function (self)
 		end
 
 		result_promise:resolve(account_ids)
+	end):catch(function (error)
+		result_promise:reject(error)
 	end)
 
 	return result_promise

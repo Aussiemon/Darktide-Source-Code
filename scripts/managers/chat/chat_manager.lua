@@ -3,6 +3,7 @@
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local ChatManagerInterface = require("scripts/foundation/managers/chat/chat_manager_interface")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
+local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local ChatManager = class("ChatManager")
 local SOUND_SETTING_OPTIONS_VOICE_CHAT = table.enum("muted", "voice_activated", "push_to_talk")
 
@@ -41,10 +42,18 @@ ChatManager.init = function (self)
 	self._time_since_mute_local_mic = nil
 
 	Managers.event:register(self, "player_mute_status_changed", "player_mute_status_changed")
+
+	if IS_PLAYSTATION then
+		Managers.event:register(self, "event_new_block_user_states", "_event_new_block_user_states")
+	end
 end
 
 ChatManager.destroy = function (self)
 	Managers.event:unregister(self, "player_mute_status_changed")
+
+	if IS_PLAYSTATION then
+		Managers.event:unregister(self, "event_new_block_user_states")
+	end
 end
 
 ChatManager.split_displayname = function (self, input)
@@ -626,6 +635,7 @@ ChatManager._handle_event = function (self, message)
 			is_speaking = false,
 			is_text_muted_for_me = false,
 			is_validated = false,
+			waiting_for_block_states = false,
 			account_name = message.account_name,
 			participant_uri = message.participant_uri,
 			packed_displayname = message.displayname,
@@ -732,9 +742,13 @@ ChatManager._validate_participants = function (self)
 
 	for session_handle, channel in pairs(self._sessions) do
 		for participant_uri, participant in pairs(channel.participants) do
-			if not participant.is_validated then
+			if not participant.is_validated and not participant.waiting_for_block_states then
 				if not participant.player_info and participant.account_id and Managers.data_service.social then
 					local player_info = Managers.data_service.social:get_player_info_by_account_id(participant.account_id)
+
+					if player_info:online_status() == SocialConstants.OnlineStatus.offline then
+						return
+					end
 
 					participant.player_info = player_info
 				end
@@ -783,6 +797,8 @@ ChatManager._validate_participants = function (self)
 							end
 						end
 					elseif IS_PLAYSTATION then
+						Managers.account:set_wait_to_collect_accounts(true)
+
 						local platform = player_info:platform()
 						local platform_user_id = player_info:platform_user_id()
 
@@ -794,10 +810,22 @@ ChatManager._validate_participants = function (self)
 						end
 
 						local is_blocked = player_info:is_blocked()
+						local is_friend = player_info:is_friend()
+						local is_platform_id_already_requested = Managers.account:is_platform_id_already_requested(platform_user_id)
+
+						if not is_friend and platform == my_platform and not is_platform_id_already_requested then
+							Managers.account:request_block_user_states(platform_user_id)
+
+							participant.waiting_for_block_states = true
+
+							break
+						end
+
+						local is_player_blocking_me = Managers.account:is_player_blocking_me(player_info)
 						local communication_restricted = Managers.account:user_has_restriction()
 
-						text_mute = text_mute or communication_restricted or is_blocked
-						voice_mute = voice_mute or communication_restricted or is_blocked
+						text_mute = text_mute or communication_restricted or is_blocked or is_player_blocking_me
+						voice_mute = voice_mute or communication_restricted or is_blocked or is_player_blocking_me
 					end
 
 					if text_mute ~= participant.is_text_muted_for_me then
@@ -823,6 +851,10 @@ ChatManager._validate_participants = function (self)
 				end
 			end
 		end
+	end
+
+	if IS_PLAYSTATION then
+		Managers.account:set_wait_to_collect_accounts(false)
 	end
 end
 
@@ -851,6 +883,14 @@ ChatManager._update_transmitting_channel_priority = function (self)
 
 	if priority_channel then
 		Vivox.set_tx_session(priority_channel.session_handle)
+	end
+end
+
+ChatManager._event_new_block_user_states = function (self)
+	for session_handle, channel in pairs(self._sessions) do
+		for participant_uri, participant in pairs(channel.participants) do
+			participant.waiting_for_block_states = false
+		end
 	end
 end
 

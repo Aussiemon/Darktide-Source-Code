@@ -60,6 +60,24 @@ dialogue_breed_settings.chaos_poxwalker = {
 	vo_class_name = "chaos_poxwalker",
 	vo_triggers_enemy_kill_query = false,
 }
+dialogue_breed_settings.chaos_mutated_poxwalker = {
+	dialogue_memory_faction_name = "enemy",
+	has_dialogue_extension = false,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "chaos_poxwalker",
+	vo_triggers_enemy_kill_query = false,
+}
+dialogue_breed_settings.chaos_lesser_mutated_poxwalker = {
+	dialogue_memory_faction_name = "enemy",
+	has_dialogue_extension = false,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "chaos_poxwalker",
+	vo_triggers_enemy_kill_query = false,
+}
 dialogue_breed_settings.voice_preview = {
 	dialogue_memory_faction_name = "npc",
 	has_dialogue_extension = false,

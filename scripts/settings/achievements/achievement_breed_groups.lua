@@ -16,6 +16,8 @@ AchievementBreedGroups.all = {
 	"chaos_ogryn_executor",
 	"chaos_ogryn_gunner",
 	"chaos_plague_ogryn",
+	"chaos_mutated_poxwalker",
+	"chaos_lesser_mutated_poxwalker",
 	"chaos_poxwalker",
 	"chaos_poxwalker_bomber",
 	"chaos_spawn",

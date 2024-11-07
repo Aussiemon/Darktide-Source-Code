@@ -174,30 +174,33 @@ end
 
 local function _add_communication_management_items(parent, player_info, is_blocked)
 	local social_service = Managers.data_service.social
+	local is_social_restricted = Managers.account:user_has_restriction()
 	local account_id = player_info:account_id()
 	local platform_user_id = player_info:platform_user_id()
 	local can_toggle_mute_text, cannot_mute_text_reason = social_service:can_toggle_mute_in_text_chat(account_id, platform_user_id)
 	local is_text_muted = player_info:is_text_muted()
 	local list_item = _get_next_list_item()
 
+	cannot_mute_text_reason = not is_social_restricted and cannot_mute_text_reason and Localize(cannot_mute_text_reason)
 	list_item.blueprint = not is_blocked and cannot_mute_text_reason and "disabled_button_with_explanation" or "checkbox_button"
 	list_item.label = Localize("loc_social_menu_mute_chat")
-	list_item.is_checked = is_text_muted or is_blocked
+	list_item.is_checked = is_text_muted or is_blocked or is_social_restricted
 	list_item.callback = callback(parent, "cb_mute_text_chat", player_info)
-	list_item.is_disabled = not can_toggle_mute_text
-	list_item.reason_for_disabled = cannot_mute_text_reason and Localize(cannot_mute_text_reason)
+	list_item.is_disabled = not can_toggle_mute_text or is_social_restricted
+	list_item.reason_for_disabled = cannot_mute_text_reason
 	list_item.on_pressed_sound = is_text_muted and UISoundEvents.social_menu_unmute_player_text or UISoundEvents.social_menu_mute_player_text
 
 	local can_toggle_mute_voice, cannot_mute_voice_reason = social_service:can_toggle_mute_in_voice_chat(account_id, platform_user_id)
 	local is_voice_muted = player_info:is_voice_muted()
 
+	cannot_mute_voice_reason = not is_social_restricted and cannot_mute_voice_reason and Localize(cannot_mute_voice_reason)
 	list_item = _get_next_list_item()
 	list_item.blueprint = not is_blocked and cannot_mute_voice_reason and "disabled_button_with_explanation" or "checkbox_button"
 	list_item.label = Localize("loc_social_menu_mute_voice")
-	list_item.is_checked = is_voice_muted or is_blocked
+	list_item.is_checked = is_voice_muted or is_blocked or is_social_restricted
 	list_item.callback = callback(parent, "cb_mute_voice_chat", player_info)
-	list_item.is_disabled = not can_toggle_mute_voice
-	list_item.reason_for_disabled = cannot_mute_voice_reason and Localize(cannot_mute_voice_reason)
+	list_item.is_disabled = not can_toggle_mute_voice or is_social_restricted
+	list_item.reason_for_disabled = cannot_mute_voice_reason
 	list_item.on_pressed_sound = is_voice_muted and UISoundEvents.social_menu_unmute_player_voice or UISoundEvents.social_menu_mute_player_voice
 
 	local platform_blocked = player_info:is_platform_blocked()

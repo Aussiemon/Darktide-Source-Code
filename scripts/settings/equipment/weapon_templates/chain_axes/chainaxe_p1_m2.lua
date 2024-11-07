@@ -1126,6 +1126,7 @@ weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivatio
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 4,
 	keep_active_on_sprint = true,
+	keep_active_on_stun = true,
 	num_activations = 1,
 }
 weapon_template.fx_sources = {

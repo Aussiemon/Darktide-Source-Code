@@ -3157,6 +3157,10 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			end
 		end
 	end):catch(function (error)
+		if error and error.error == "empty_store" then
+			self:cb_on_close_pressed()
+		end
+
 		self._store_promise = nil
 	end)
 end

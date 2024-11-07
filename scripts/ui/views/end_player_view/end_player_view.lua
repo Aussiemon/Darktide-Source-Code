@@ -573,7 +573,7 @@ EndPlayerView._get_item = function (self, card_reward)
 		item_type = item.item_type,
 		baseItemLevel = item_overrides and item_overrides.baseItemLevel,
 	}
-	local item_level_text, has_level = Items.expertise_level(dummy_item, true)
+	local item_level_text, has_level = Items.expertise_level(dummy_item, true, true)
 	local item_level = has_level and tonumber(item_level_text)
 
 	return item, item_group, rarity, item_level

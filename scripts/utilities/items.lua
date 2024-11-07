@@ -540,10 +540,42 @@ Items.weapon_skin_preview_item = function (item, include_skin_item_info)
 	return visual_item
 end
 
-Items.expertise_level = function (item, no_symbol)
+Items.total_stats_value = function (item)
+	local item_type = item.item_type
+	local total_stats
+
+	if item_type and Items.is_weapon(item_type) then
+		local item_base_stats = item.base_stats
+
+		if item_base_stats and not table.is_empty(item_base_stats) then
+			total_stats = 0
+
+			for i = 1, #item_base_stats do
+				local stat = item_base_stats[i]
+				local value = stat.value
+
+				total_stats = total_stats + value
+			end
+
+			total_stats = math.floor(total_stats * 100 + 0.5)
+		end
+	end
+
+	return total_stats
+end
+
+Items.expertise_level = function (item, no_symbol, use_base_item_level)
 	if item.item_type ~= "GADGET" then
 		local base_item_level = item.baseItemLevel
-		local expertise_level = math.max(0, math.floor((base_item_level and base_item_level - 80 or 0) / 6) * expertise_multiplier)
+		local item_level
+
+		if use_base_item_level then
+			item_level = base_item_level
+		else
+			item_level = Items.total_stats_value(item)
+		end
+
+		local expertise_level = math.max(0, math.floor((item_level and item_level - 80 or 0) / 6) * expertise_multiplier)
 
 		if no_symbol then
 			return tostring(expertise_level), base_item_level ~= nil
@@ -1738,7 +1770,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 		}
 	end
 
-	local item_current_level = item.baseItemLevel
+	local item_current_level = Items.total_stats_value(item)
 	local item_max_level = 380
 
 	if not item_current_level then
@@ -1783,7 +1815,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 			for ii = 1, #stored_expertise_stats_increase do
 				local stored_expertise_stat_increase = stored_expertise_stats_increase[ii]
 
-				if stored_expertise_stat_increase.name == stat.name then
+				if stored_expertise_stat_increase.name == stat.name and max_stat_value > math.floor(stat.value + 0.5) then
 					added_expertise_fraction = stored_expertise_stat_increase.value
 
 					break

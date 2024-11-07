@@ -44,6 +44,10 @@ ExternalPaymentPlatformBase.fail_txn = function (self, order_id)
 	return Promise.resolved(nil)
 end
 
+ExternalPaymentPlatformBase.show_empty_store_error = function (self)
+	return Promise.resolved(nil)
+end
+
 implements(ExternalPaymentPlatformBase, ExternalPaymentPlatformInterface)
 
 return ExternalPaymentPlatformBase

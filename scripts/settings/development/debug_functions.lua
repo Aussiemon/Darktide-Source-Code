@@ -56,6 +56,7 @@ local categories = {
 	"Player Voice",
 	"Progression",
 	"Scripted Scenarios",
+	"Social Features",
 	"Stagger",
 	"Suppression",
 	"Sweep Spline",
@@ -3074,6 +3075,20 @@ local function initialize()
 	player_manager = Managers.player
 	ui_manager = Managers.ui
 end
+
+local function add_account_to_block_users_states()
+	if IS_PLAYSTATION then
+		Managers.account:request_block_user_states("4030197760692964687")
+	else
+		Log.error("Debug function add_account_to_block_users_states", string.format("You cannot use this function if you are not on Playstation! "))
+	end
+end
+
+functions.add_account_to_block_users_states = {
+	category = "Social Features",
+	name = "Request random block user states",
+	on_activated = add_account_to_block_users_states,
+}
 
 return {
 	parameters = functions,

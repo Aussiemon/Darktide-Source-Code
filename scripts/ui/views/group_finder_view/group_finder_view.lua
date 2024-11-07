@@ -2385,7 +2385,16 @@ GroupFinderView._update_listed_group = function (self)
 			local character_level = tostring(profile.current_level) .. " "
 
 			content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
-			content.character_name = player:name()
+
+			local social_service_manager = Managers.data_service.social
+			local player_info = social_service_manager and social_service_manager:get_player_info_by_account_id(player:account_id())
+			local platform = player_info and player_info:platform() or ""
+
+			if IS_PLAYSTATION and (platform == "psn" or platform == "ps5") then
+				content.character_name = player_info:user_display_name()
+			else
+				content.character_name = player:name()
+			end
 
 			local archetype = profile.archetype
 

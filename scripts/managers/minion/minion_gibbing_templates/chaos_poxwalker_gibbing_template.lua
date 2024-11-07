@@ -617,7 +617,7 @@ torso_sever.gib_settings.attach_inventory_slots_to_gib = {
 	"slot_upper_body_horn",
 	"zone_decal",
 }
-torso_sever.gib_settings.vfx = SharedGibbingTemplates.vfx.poxwalker_gushing
+torso_sever.gib_settings.vfx = table.clone(SharedGibbingTemplates.vfx.poxwalker_gushing)
 torso_sever.gib_settings.vfx.node_name = torso_sever.gib_settings.gib_actor
 torso_sever.gib_settings.sfx = nil
 torso_sever.stump_settings.stump_unit = "content/characters/enemy/chaos_poxwalker/gibbing/upper_torso_gib_cap"

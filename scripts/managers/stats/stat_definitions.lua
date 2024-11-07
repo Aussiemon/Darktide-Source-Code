@@ -5777,6 +5777,34 @@ StatDefinitions.live_event_moebian_21_deliveries = {
 		return self.data.circumstances[circumstance_name]
 	end,
 }
+StatDefinitions.live_event_nurgle_explosion_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		circumstances = {
+			nurgle_explosion_01 = true,
+			nurgle_explosion_02 = true,
+			nurgle_explosion_03 = true,
+			nurgle_explosion_04 = true,
+			nurgle_explosion_05 = true,
+			nurgle_explosion_06 = true,
+			nurgle_explosion_07 = true,
+		},
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
 StatDefinitions = _stat_data
 
 for _, stat in pairs(StatDefinitions) do

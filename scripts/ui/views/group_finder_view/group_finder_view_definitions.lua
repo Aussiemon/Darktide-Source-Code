@@ -2411,7 +2411,14 @@ local grid_blueprints = {
 				local character_level = tostring(profile.current_level) .. " "
 
 				content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
-				content.character_name = player_info:character_name()
+
+				local platform = player_info:platform()
+
+				if IS_PLAYSTATION and (platform == "psn" or platform == "ps5") then
+					content.character_name = player_info:user_display_name()
+				else
+					content.character_name = player_info:character_name()
+				end
 
 				local archetype = profile.archetype
 

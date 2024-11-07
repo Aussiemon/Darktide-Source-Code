@@ -6,6 +6,8 @@ local PlayerSessionPSN = require("scripts/managers/account/player_session_psn")
 local Promise = require("scripts/foundation/utilities/promise")
 local PSNRestrictions = require("scripts/managers/account/psn_restrictions")
 local ScriptWebApiPsn = require("scripts/managers/account/script_web_api_psn")
+local SoundSettings = require("scripts/settings/options/sound_settings")
+local PsnBlockUsersStatesManager = require("scripts/managers/account/psn_block_users_states_manager")
 local SIGNIN_STATES = {
 	acquiring_storage = "loc_signin_acquire_storage",
 	deleting_save = "loc_signin_delete_save",
@@ -20,7 +22,7 @@ local FRIEND_REQUEST_STATES = table.enum("idle", "fetching_friends")
 local BLOCKED_PROFILES_REQUEST_STATES = table.enum("idle", "fetching_blocked_profiles")
 local FRIEND_LIST_REQUEST_DELAY = 10
 local BLOCKED_PROFILES_REQUEST_DELAY = 10
-local PUBLIC_PROFILES_REQUEST_DELAY = 10
+local PUBLIC_PROFILES_REQUEST_DELAY = 0
 local FRIEND_LIST_REQUEST_LIMIT = 500
 local BLOCKED_PROFILES_REQUEST_LIMIT = 100
 local PUBLIC_PROFILES_REQUEST_LIMIT = 100
@@ -37,6 +39,9 @@ AccountManagerPSN.init = function (self)
 	self._restrictions = {}
 	self._restrictions.communication = nil
 	self._restrictions.cross_play = false
+	self._psn_block_users_states_manager = PsnBlockUsersStatesManager:new()
+
+	Managers.save:load(callback(self, "_apply_audio_settings"))
 end
 
 AccountManagerPSN.reset = function (self)
@@ -50,6 +55,8 @@ AccountManagerPSN.reset = function (self)
 
 		self._account_id = account_id
 		self._signed_in = true
+
+		self._psn_block_users_states_manager:set_account_id(account_id)
 	end
 
 	self._initial_user_id = PS5.initial_user_id()
@@ -82,6 +89,7 @@ AccountManagerPSN.reset = function (self)
 	self._restrictions.communication = nil
 	self._restrictions.cross_play = false
 	self._premium_verified = false
+	self._premium_notification_active = false
 	self._premium_notification_timer = 0
 	self._verify_signed_in_timer = 0
 end
@@ -102,24 +110,24 @@ AccountManagerPSN.update = function (self, dt, t)
 	end
 
 	self._web_api:update(dt)
+	self._psn_block_users_states_manager:update(dt, t)
 
 	if self._premium_verified then
 		self._premium_notification_timer = self._premium_notification_timer + dt
 		self._verify_signed_in_timer = self._verify_signed_in_timer + dt
 
 		if self._premium_notification_timer >= PREMIUM_NOTIFICATION_TIMER then
-			local game_mode_manager = Managers.state.game_mode
-
-			if game_mode_manager ~= nil then
-				if game_mode_manager:is_premium_feature() then
-					if self:has_crossplay_restriction() then
-						Playstation.notify_premium_feature(self._initial_user_id, NpMultiplayProperty.NONE)
-					else
-						Playstation.notify_premium_feature(self._initial_user_id, NpMultiplayProperty.CROSS_PLATFORM_PLAY)
-					end
+			if self:_is_premium_feature() then
+				if self:has_crossplay_restriction() then
+					Playstation.notify_premium_feature(self._initial_user_id, NpMultiplayProperty.NONE)
+				else
+					Playstation.notify_premium_feature(self._initial_user_id, NpMultiplayProperty.CROSS_PLATFORM_PLAY)
 				end
 
+				self._premium_notification_active = true
 				self._premium_notification_timer = 0
+			else
+				self._premium_notification_active = false
 			end
 		end
 
@@ -141,14 +149,59 @@ AccountManagerPSN.update = function (self, dt, t)
 	self:_check_input()
 end
 
+AccountManagerPSN._is_premium_feature = function (self)
+	local in_a_party = false
+
+	if Managers.party_immaterium then
+		local party_id = Managers.party_immaterium:party_id()
+
+		if party_id and Managers.party_immaterium:num_other_members() > 0 then
+			in_a_party = true
+		end
+	end
+
+	local current_state_name = Managers.ui:get_current_state_name()
+
+	if current_state_name == "StateLoading" then
+		return self._premium_notification_active and in_a_party
+	elseif current_state_name == "StateGameScore" or current_state_name == "StateVictoryDefeat" then
+		return self._premium_notification_active and in_a_party
+	elseif current_state_name == "StateGameplay" then
+		if Managers.ui:view_active("loading_view") or Managers.ui:view_active("mission_intro_view") then
+			return self._premium_notification_active and in_a_party
+		end
+
+		local cinematic_manager = Managers.state and Managers.state.cinematic
+
+		if cinematic_manager then
+			local waiting_for_player_input = cinematic_manager.waiting_for_player_input and cinematic_manager:waiting_for_player_input()
+			local is_playing = cinematic_manager.is_playing and cinematic_manager:is_playing()
+
+			if waiting_for_player_input or is_playing then
+				return self._premium_notification_active
+			end
+		end
+
+		local game_mode_manager = Managers.state.game_mode
+
+		if game_mode_manager ~= nil and game_mode_manager.is_premium_feature and game_mode_manager:is_premium_feature() then
+			return true
+		end
+	end
+
+	return false
+end
+
 AccountManagerPSN._check_input = function (self)
 	if not self._controller_popup_id and not Managers.input:has_active_gamepad() then
+		local online_id = Playstation.online_id()
+		local description_text = online_id and "loc_popup_desc_signed_out_error_sony" or "loc_popup_desc_controller_disconnect_error_sony"
 		local context = {
-			description_text = "loc_popup_desc_signed_out_error_sony",
 			title_text = "loc_popup_header_controller_disconnect_error_sony",
+			description_text = description_text,
 			priority_order = math.huge,
 			description_text_params = {
-				gamertag = Playstation.online_id(),
+				gamertag = online_id,
 			},
 			options = {
 				{
@@ -595,6 +648,8 @@ AccountManagerPSN.get_blocked_profiles = function (self)
 
 			self:_change_blocked_profiles_request_state(BLOCKED_PROFILES_REQUEST_STATES.idle)
 			Promise.resolved(self._blocked_profiles)
+		end):catch(function (error)
+			self._blocked_profiles_promise:reject(error)
 		end)
 
 		return self._blocked_profiles_promise
@@ -618,7 +673,7 @@ AccountManagerPSN._fetch_block_list = function (self, num_to_fetch, offset, resu
 
 	self._web_api:send_request(user_id, api_group, path, method, content):next(function (result)
 		if not result then
-			result_promise.reject()
+			result_promise:reject()
 
 			return result
 		end
@@ -654,8 +709,12 @@ AccountManagerPSN._fetch_block_list = function (self, num_to_fetch, offset, resu
 				end
 
 				result_promise:resolve(profiles)
+			end):catch(function (error)
+				profiles_result_promise:reject(error)
 			end)
 		end
+	end):catch(function (error)
+		result_promise:reject(error)
 	end)
 
 	return result_promise
@@ -689,6 +748,34 @@ AccountManagerPSN.get_public_profiles = function (self, account_ids)
 	end
 end
 
+AccountManagerPSN.is_public_profiles_promise_pending = function (self)
+	local public_profiles_promise = self._public_profiles_promise
+
+	return public_profiles_promise and public_profiles_promise:is_pending() or false
+end
+
+AccountManagerPSN.fetch_block_users_states = function (self, account_ids)
+	self._psn_block_users_states_manager:fetch_block_users_states(account_ids)
+end
+
+AccountManagerPSN.is_player_blocking_me = function (self, player_info)
+	local psn_block_users_states_manager = self._psn_block_users_states_manager
+
+	return psn_block_users_states_manager:is_blocking_me(player_info:account_id()) or psn_block_users_states_manager:is_blocking_me(player_info:platform_user_id())
+end
+
+AccountManagerPSN.request_block_user_states = function (self, account_id)
+	self._psn_block_users_states_manager:add_requested_account(account_id)
+end
+
+AccountManagerPSN.is_platform_id_already_requested = function (self, platform_id)
+	return self._psn_block_users_states_manager:is_platform_id_already_requested(platform_id)
+end
+
+AccountManagerPSN.set_wait_to_collect_accounts = function (self, new_value)
+	self._psn_block_users_states_manager:set_wait_to_collect_accounts(new_value)
+end
+
 AccountManagerPSN.region_has_restriction = function (self, restriction)
 	local country = Playstation.user_country(self._initial_user_id)
 
@@ -700,7 +787,7 @@ AccountManagerPSN.region_has_restriction = function (self, restriction)
 end
 
 AccountManagerPSN.create_psn_session = function (self, max_players, join_disabled, is_private)
-	PlayerSessionPSN.create_session(self._web_api, self:user_id(), max_players, join_disabled, is_private):next(function (session_id)
+	PlayerSessionPSN.create_session(self._web_api, self:user_id(), max_players, join_disabled, is_private, self:has_crossplay_restriction()):next(function (session_id)
 		Log.info("PlayerSession", "Created session %s, max_players %s, join_disabled %s, is_private: %s", session_id, max_players, join_disabled, is_private)
 		self:_set_psn_session_id(session_id)
 	end)
@@ -784,6 +871,26 @@ AccountManagerPSN._set_psn_session_id = function (self, session_id)
 	self._session_id = session_id
 
 	Managers.presence:set_psn_session_id(session_id)
+end
+
+AccountManagerPSN._apply_audio_settings = function (self)
+	local settings = SoundSettings.settings
+
+	for _, setting in ipairs(settings) do
+		local get_function = setting.get_function
+
+		if get_function then
+			local value = get_function()
+
+			if value ~= nil then
+				local commit = setting.commit
+
+				if commit then
+					commit(value)
+				end
+			end
+		end
+	end
 end
 
 return AccountManagerPSN

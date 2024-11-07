@@ -1407,6 +1407,7 @@ weapon_template.weapon_special_tweak_data = {
 	active_duration = 3,
 	allow_reactivation_while_active = true,
 	keep_active_on_sprint = true,
+	keep_active_on_stun = true,
 	num_activations = 1,
 }
 weapon_template.damage_window_start_sweep_trail_offset = -0.45

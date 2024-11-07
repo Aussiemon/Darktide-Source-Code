@@ -322,7 +322,8 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 
 	self._player_info = player_info
 
-	local player_display_name, user_display_name
+	local player_display_name = ""
+	local user_display_name = ""
 	local character_name = player_info:character_name()
 	local no_platform_icon = true
 
@@ -342,17 +343,13 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		else
 			user_display_name = player_info:user_display_name(nil, no_platform_icon)
 		end
+	elseif not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
+		local xuid = player_info:platform_user_id()
+		local platform_profile = parent:get_platform_profile(xuid)
+
+		player_display_name = platform_profile and platform_profile.gamertag or player_info:user_display_name(nil, no_platform_icon) or "N/A"
 	else
-		if not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
-			local xuid = player_info:platform_user_id()
-			local platform_profile = parent:get_platform_profile(xuid)
-
-			player_display_name = platform_profile and platform_profile.gamertag or player_info:user_display_name(nil, no_platform_icon) or "N/A"
-		else
-			player_display_name = player_info:user_display_name(nil, no_platform_icon)
-		end
-
-		user_display_name = ""
+		player_display_name = player_info:user_display_name(nil, no_platform_icon)
 	end
 
 	local platform_icon, color_override = player_info:platform_icon()

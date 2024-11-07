@@ -207,6 +207,14 @@ ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 		if status == web_api.COMPLETED then
 			local response = web_api.request_result(id, web_api.STRING)
 			local parsed = cjson.decode(response)
+
+			if parsed[1] == nil then
+				return {
+					success = false,
+				}
+			end
+
+			local item_count = 0
 			local result_by_id = {}
 
 			for i, v in ipairs(parsed[1].children) do
@@ -214,6 +222,13 @@ ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 
 				product.displayPrice = v.skus[1].displayPrice
 				result_by_id[v.label] = product
+				item_count = item_count + 1
+			end
+
+			if item_count == 0 then
+				return {
+					success = false,
+				}
 			end
 
 			self._platform_entitlements = result_by_id
@@ -352,6 +367,12 @@ ExternalPaymentPlatformPlaystation.get_options = function (self)
 	entitlement_promise = self:_get_entitlements()
 
 	return entitlement_promise:next(function (platform_entitlements)
+		if platform_entitlements.success == false then
+			return Promise.rejected({
+				error = "empty_store",
+			})
+		end
+
 		return self:payment_options():next(function (body)
 			local options = body.options
 
@@ -376,6 +397,34 @@ ExternalPaymentPlatformPlaystation.get_options = function (self)
 				return result
 			end
 		end)
+	end)
+end
+
+ExternalPaymentPlatformPlaystation.show_empty_store_error = function (self)
+	return Promise.until_value_is_true(function ()
+		local status = MsgDialog.update()
+
+		if status == MsgDialog.NONE then
+			MsgDialog.initialize()
+
+			return false
+		end
+
+		if status == MsgDialog.INITIALIZED then
+			MsgDialog.open(MsgDialog.SYSTEM_MSG_EMPTY_STORE, PS5.initial_user_id())
+
+			return false
+		end
+
+		if status == MsgDialog.RUNNING then
+			return false
+		end
+
+		MsgDialog.terminate()
+
+		return {
+			success = true,
+		}
 	end)
 end
 

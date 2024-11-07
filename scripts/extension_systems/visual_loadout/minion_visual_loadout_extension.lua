@@ -84,6 +84,17 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 	return slot_entry, new_seed
 end
 
+MinionVisualLoadoutExtension.create_slot_entry = function (self, unit, item_slot_data)
+	local lod_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod")
+	local lod_shadow_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod_shadow")
+	local item_definitions = MasterItems.get_cached()
+	local seed = math.random_seed()
+	local world = self._world
+	local newly_equipped = _create_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, seed, item_definitions)
+
+	return newly_equipped
+end
+
 local function _create_material_override_slot_entry(unit, item_slot_data, random_seed, item_definitions)
 	local items = item_slot_data.items
 	local num_items = #items
@@ -720,6 +731,10 @@ end
 
 MinionVisualLoadoutExtension.ailment_effect = function (self)
 	return self._ailment_effect_template
+end
+
+MinionVisualLoadoutExtension.inventory = function (self)
+	return self._inventory
 end
 
 MinionVisualLoadoutExtension.slot_material_override = function (self, slot_name)

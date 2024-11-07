@@ -16,6 +16,165 @@ local templates = {}
 
 table.make_unique(templates)
 
+specific_head_gib_settings = {
+	random_radius = 2,
+	hit_zones = {
+		"head",
+	},
+	damage_profile = DamageProfileTemplates.maelstrom_plus_self_gib,
+}
+head_parasite_item_overrides = {
+	human = {
+		{
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02",
+			},
+		},
+		{
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
+			},
+		},
+	},
+	ogryn = {
+		{
+			items = {
+				[1] = "content/items/characters/minions/chaos_ogryn/attachments_base/head_a",
+				[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/head_b",
+			},
+		},
+		{
+			items = {
+				[1] = "content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_01",
+				[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_02",
+			},
+		},
+	},
+	poxwalker = {
+		{
+			items = {
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
+				"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
+			},
+		},
+	},
+}
+
+local poxwalkers = {
+	chaos_lesser_mutated_poxwalker = true,
+	chaos_mutated_poxwalker = true,
+	chaos_poxwalker = true,
+}
+
+local function _parasite_head_stop_function(template_context, template_data)
+	local unit = template_context.unit
+	local position = POSITION_LOOKUP[unit]
+	local world, physics_world = template_context.world, template_context.physics_world
+	local impact_normal, charge_level, attack_type = Vector3.up(), 1
+	local power_level = 100
+	local explosion_template = ExplosionTemplates.nurgle_head_parasite
+
+	Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, power_level, charge_level, attack_type)
+
+	local visual_loadout_extension = template_data.visual_loadout_extension
+
+	Attack.execute(unit, DamageProfileTemplates.default, "power_level", 2000, "attack_direction", Vector3.up(), "instakill", true)
+
+	local unit_tags = template_context.breed.tags
+
+	if not unit_tags.monster then
+		local damage_profile = specific_head_gib_settings.damage_profile
+		local random_radius = specific_head_gib_settings.random_radius
+		local hit_zones = specific_head_gib_settings.hit_zones
+
+		for i = 1, #hit_zones do
+			local x = math.random() * 2 - 1
+			local y = math.random() * 2 - 1
+			local random_offset = Vector3(x * random_radius, y * random_radius, 1)
+			local direction = Vector3.normalize(random_offset)
+			local gib_hit_zone = hit_zones[i]
+
+			visual_loadout_extension:gib(gib_hit_zone, direction, damage_profile)
+		end
+	end
+end
+
+templates.headshot_parasite_enemies = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_minion_damage_taken] = 1,
+	},
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local attack_type = params.attack_type
+
+		if attack_type ~= "ranged" then
+			return
+		end
+
+		local hit_zone = params.hit_zone_name_or_nil
+
+		if hit_zone == "head" then
+			_parasite_head_stop_function(template_context, template_data)
+		end
+	end,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local breed_tags = template_context.breed.tags
+		local override_slot = {
+			[1] = "slot_head",
+			[2] = "slot_face",
+		}
+		local item_overrides = head_parasite_item_overrides.human
+
+		if breed_tags.ogryn then
+			item_overrides = head_parasite_item_overrides.ogryn
+			override_slot = {
+				[1] = "slot_head_attachment",
+				[2] = "slot_head",
+			}
+		end
+
+		if poxwalkers[template_context.breed.name] then
+			override_slot = {
+				[1] = "slot_head",
+			}
+			item_overrides = head_parasite_item_overrides.poxwalker
+		end
+
+		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
+		for i = 1, #override_slot do
+			local override = override_slot[1]
+			local can_unequip = template_data.visual_loadout_extension:can_unequip_slot(override)
+
+			if can_unequip then
+				template_data.visual_loadout_extension:unequip_slot(override)
+			end
+		end
+
+		for i = 1, #item_overrides do
+			local item_slot_data = item_overrides[i]
+			local swapped_slot = override_slot[i]
+			local inventory_slots = template_data.visual_loadout_extension:inventory_slots()
+
+			if inventory_slots[swapped_slot] then
+				inventory_slots[swapped_slot].use_outline = false
+			end
+
+			template_data.visual_loadout_extension:create_slot_entry(unit, item_slot_data)
+		end
+	end,
+}
 templates.mutator_minion_nurgle_blessing_tougher = {
 	class_name = "buff",
 	target = buff_targets.minion_only,

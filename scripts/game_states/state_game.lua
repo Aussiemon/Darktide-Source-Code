@@ -108,7 +108,7 @@ StateGame.on_enter = function (self, parent, params)
 		Managers.telemetry_events:system_settings()
 	end
 
-	if not IS_XBS then
+	if not IS_XBS and not IS_PLAYSTATION then
 		Managers.save:load()
 	end
 

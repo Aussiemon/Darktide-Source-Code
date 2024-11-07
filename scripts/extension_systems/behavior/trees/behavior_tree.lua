@@ -97,6 +97,8 @@ require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_ogryn_gunne
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_plague_ogryn_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_poxwalker_bomber_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_poxwalker_selector_node")
+require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_mutated_poxwalker_selector_node")
+require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_lesser_mutated_poxwalker_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_spawn_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_cultist_assault_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_cultist_berzerker_selector_node")

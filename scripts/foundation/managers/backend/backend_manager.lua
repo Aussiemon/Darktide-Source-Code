@@ -333,7 +333,7 @@ BackendManager.authenticate = function (self)
 
 				Backend.set_sd_index_choice(1)
 
-				return Promise.resolved()
+				return Managers.backend:authenticate()
 			end
 
 			return Promise.rejected(error)

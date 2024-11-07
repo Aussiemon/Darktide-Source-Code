@@ -124,7 +124,7 @@ PresenceEntryMyself.is_online = function (self)
 	return true
 end
 
-PresenceEntryMyself.platform_persona_name_or_account_name = function (self)
+PresenceEntryMyself.platform_persona_name_or_account_name = function (self, in_platform, in_platform_id)
 	return self:account_name()
 end
 

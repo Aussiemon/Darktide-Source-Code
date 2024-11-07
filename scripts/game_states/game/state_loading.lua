@@ -9,10 +9,12 @@ end
 
 local StateLoading = class("StateLoading")
 local STATES = table.enum("waiting_for_network", "waiting_for_despawn", "loading")
+local LOADING_STATES = table.enum("loading_global_packages", "loading_mission")
 
 StateLoading.init = function (self)
 	self._creation_context = nil
 	self._state = nil
+	self._loading_state = nil
 	self._failed_clients = nil
 	self._needs_load_level = false
 	self._level_name = nil
@@ -58,7 +60,7 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	Managers.event:register(self, "on_pre_suspend", "_on_pre_suspend")
 end
 
-StateLoading._start_loading = function (self)
+StateLoading._start_loading_mission = function (self)
 	_info("[_start_loading] needs_load_level(%s), mission_name(%s), circumstance_name(%s), side_mission(%s)", self._needs_load_level, self._mission_name, self._circumstance_name, self._side_mission)
 
 	if self._needs_load_level then
@@ -67,8 +69,18 @@ StateLoading._start_loading = function (self)
 	else
 		Managers.loading:no_level_needed()
 	end
+end
 
-	self:_load_global_packages()
+StateLoading._start_loading = function (self)
+	if self:_global_packages_loaded() then
+		self:_start_loading_mission()
+
+		self._loading_state = LOADING_STATES.loading_mission
+	else
+		self:_load_global_packages()
+
+		self._loading_state = LOADING_STATES.loading_global_packages
+	end
 end
 
 StateLoading._setup_loading_data = function (self, params)
@@ -274,31 +286,39 @@ StateLoading._global_packages_loaded = function (self)
 end
 
 StateLoading._update_loading = function (self)
-	local loading_manager = Managers.loading
+	if self._loading_state == LOADING_STATES.loading_global_packages and self:_global_packages_loaded() then
+		self:_start_loading_mission()
 
-	if loading_manager:load_finished() and self:_global_packages_loaded() then
-		local is_host = loading_manager:is_host()
-		local parameters = {}
+		self._loading_state = LOADING_STATES.loading_mission
+	end
 
-		parameters.level_name = self:_current_level()
-		parameters.mission_name = self._mission_name
-		parameters.is_host = is_host
-		parameters.spawn_group_id = loading_manager:spawn_group_id()
+	if self._loading_state == LOADING_STATES.loading_mission then
+		local loading_manager = Managers.loading
 
-		if self._needs_load_level then
-			local world, level, themes, world_name = loading_manager:take_ownership_of_level()
+		if self:_global_packages_loaded() and loading_manager:load_finished() then
+			local is_host = loading_manager:is_host()
+			local parameters = {}
 
-			parameters.world = world
-			parameters.level = level
-			parameters.themes = themes
-			parameters.world_name = world_name
+			parameters.level_name = self:_current_level()
+			parameters.mission_name = self._mission_name
+			parameters.is_host = is_host
+			parameters.spawn_group_id = loading_manager:spawn_group_id()
+
+			if self._needs_load_level then
+				local world, level, themes, world_name = loading_manager:take_ownership_of_level()
+
+				parameters.world = world
+				parameters.level = level
+				parameters.themes = themes
+				parameters.world_name = world_name
+			end
+
+			if self._next_state_params then
+				table.merge(parameters, self._next_state_params)
+			end
+
+			return true, parameters
 		end
-
-		if self._next_state_params then
-			table.merge(parameters, self._next_state_params)
-		end
-
-		return true, parameters
 	end
 end
 

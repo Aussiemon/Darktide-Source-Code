@@ -16,6 +16,8 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_hou
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_newly_infected_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_armored_infected_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_ogryn_bulwark_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_mutated_poxwalker_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_lesser_mutated_poxwalker_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_ogryn_executor_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_ogryn_gunner_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_plague_ogryn_actions")

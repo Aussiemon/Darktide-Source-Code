@@ -1296,7 +1296,8 @@ ConstantElementChat._participant_displayname = function (self, participant)
 	local player_info = self:_find_participant_player_info(participant)
 
 	if player_info then
-		local displayname = player_info:character_name()
+		local console = player_info:platform()
+		local displayname = IS_PLAYSTATION and (console == "psn" or console == "ps5") and player_info:user_display_name() or player_info:character_name()
 
 		if displayname and displayname ~= "" then
 			return displayname

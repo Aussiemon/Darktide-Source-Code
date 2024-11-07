@@ -106,7 +106,22 @@ PresenceEntryImmaterium.update_with = function (self, new_entry)
 
 		self:_update_from_platform()
 
-		self._account_and_platform_composite_id = self:account_id() .. ":" .. self:platform() .. ":" .. self:platform_user_id()
+		local account_id = self:account_id()
+
+		self._account_and_platform_composite_id = account_id .. ":" .. self:platform() .. ":" .. self:platform_user_id()
+
+		if account_id ~= "" then
+			local social_service = Managers.data_service.social
+
+			if social_service then
+				local player_info = social_service:get_player_info_by_account_id(account_id)
+
+				if player_info then
+					player_info:set_platform(self:platform())
+					player_info:set_platform_user_id(self:platform_user_id())
+				end
+			end
+		end
 
 		Managers.event:trigger("event_new_immaterium_entry", new_entry)
 	end
@@ -154,8 +169,11 @@ PresenceEntryImmaterium.platform = function (self)
 	return self._immaterium_entry.platform
 end
 
-PresenceEntryImmaterium.platform_icon = function (self)
+PresenceEntryImmaterium.platform_icon = function (self, in_platform)
 	local platform = self._immaterium_entry.platform
+
+	platform = platform ~= "" and platform or in_platform or ""
+
 	local is_on_my_platform = self._my_own_platform == platform
 
 	if is_on_my_platform then
@@ -179,16 +197,20 @@ PresenceEntryImmaterium.is_online = function (self)
 	return self._immaterium_entry.status == "ONLINE"
 end
 
-PresenceEntryImmaterium.platform_persona_name_or_account_name = function (self)
+PresenceEntryImmaterium.platform_persona_name_or_account_name = function (self, in_platform, in_platform_id)
 	local user_has_restrictions = Managers.account:user_has_restriction()
 	local my_own_platform = self._my_own_platform
 	local platform = self:platform()
+
+	platform = platform ~= "" and platform or in_platform or ""
 
 	if user_has_restrictions and platform ~= my_own_platform then
 		return Localize("loc_cross_network_player")
 	end
 
 	local platform_user_id = self:platform_user_id()
+
+	platform_user_id = platform_user_id ~= "" and platform_user_id or in_platform_id or ""
 
 	if platform and platform_user_id then
 		local platform_username = Managers.presence:get_requested_platform_username(platform, platform_user_id)

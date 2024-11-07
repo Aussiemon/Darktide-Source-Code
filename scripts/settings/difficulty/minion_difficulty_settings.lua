@@ -220,6 +220,8 @@ end
 
 minion_difficulty_settings.health = {
 	chaos_poxwalker = _horde_health_steps(150),
+	chaos_lesser_mutated_poxwalker = _horde_health_steps(160),
+	chaos_mutated_poxwalker = _horde_health_steps(180),
 	chaos_newly_infected = _horde_health_steps(120),
 	chaos_armored_infected = _horde_health_steps(250),
 	chaos_hound = _special_health_steps(700),
@@ -296,6 +298,22 @@ minion_difficulty_settings.hit_mass = {
 		1.25,
 	},
 	chaos_poxwalker = {
+		1.25,
+		1.25,
+		1.25,
+		1.5,
+		1.5,
+		1.5,
+	},
+	chaos_lesser_mutated_poxwalker = {
+		1.25,
+		1.25,
+		1.25,
+		1.5,
+		1.5,
+		1.5,
+	},
+	chaos_mutated_poxwalker = {
 		1.25,
 		1.25,
 		1.25,

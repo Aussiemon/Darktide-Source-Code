@@ -239,8 +239,8 @@ local templates = {
 		sfx_name_start = "wwise/events/weapon/play_aoe_liquid_fire_loop",
 		sfx_name_stop = "wwise/events/weapon/stop_aoe_liquid_fire_loop",
 		start_pressure = 40,
-		vfx_name_filled = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering_green",
-		vfx_name_rim = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering_green",
+		vfx_name_filled = "content/fx/particles/liquid_area/fire_lingering_cultist",
+		vfx_name_rim = "content/fx/particles/enemies/cultist_flamer/cultist_flame_edge_ignition",
 		spread_function = LiquidSpread.pour,
 	},
 }

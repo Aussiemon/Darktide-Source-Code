@@ -4302,6 +4302,10 @@ params.debug_show_logs_ps5_friends_blocks_update = {
 	category = "Social Features",
 	value = false,
 }
+params.debug_print_ps5_block_users_states = {
+	category = "Social Features",
+	value = false,
+}
 params.use_localized_talent_names_in_debug_menu = {
 	category = "Talents",
 	value = false,

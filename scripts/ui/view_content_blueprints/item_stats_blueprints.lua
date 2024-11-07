@@ -3482,7 +3482,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local total_stats = content.element.show_base_rating and 6 or 5
 				local item = content.element.item
 
-				_apply_stat_bar_values(widget, item)
+				if content.preview_expertise_value ~= content.new_preview_expertise_value then
+					content.preview_expertise_value = content.new_preview_expertise_value
+
+					_apply_stat_bar_values(widget, item)
+				end
 
 				if not content.element.interactive then
 					return

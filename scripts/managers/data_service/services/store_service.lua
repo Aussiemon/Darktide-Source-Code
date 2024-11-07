@@ -36,6 +36,7 @@ StoreService.init = function (self, backend_interface)
 	self._current_store_id = nil
 	self._store_cache = {}
 	self._wallet_caps_backend_updated = false
+	self._block_aquila_acquisition = false
 end
 
 StoreService.update_wallet_caps = function (self)
@@ -561,10 +562,36 @@ StoreService.on_crafting_done = function (self, costs)
 	end)
 end
 
+StoreService.can_purchase_aquilas = function (self)
+	return self._block_aquila_acquisition
+end
+
 StoreService.get_premium_store = function (self, storefront_key)
 	if storefront_key == "hard_currency_store" then
-		return Managers.backend.interfaces.external_payment:get_options():catch(function (error)
+		return Managers.backend.interfaces.external_payment:get_options():next(function (data)
+			self._block_aquila_acquisition = false
+
+			return data
+		end):catch(function (error)
 			Log.error("StoreService", "Failed to fetch external payment options %s", error)
+
+			if error.error and error.error == "empty_store" and Managers.backend.interfaces.external_payment.show_empty_store_error then
+				return Managers.backend.interfaces.external_payment:show_empty_store_error():next(function ()
+					self._block_aquila_acquisition = true
+
+					return Promise.rejected({
+						error = error.error,
+					})
+				end)
+			end
+
+			local show_error = error and (not type(error) == "table" and {
+				error = error,
+			} or error) or {}
+
+			self._block_aquila_acquisition = false
+
+			return Promise.rejected(show_error)
 		end)
 	end
 
@@ -621,10 +648,14 @@ StoreService.get_premium_store = function (self, storefront_key)
 		}
 	end):catch(function (error)
 		Log.error("StoreService", "Failed to fetch premium storefront %s %s", storefront_key, error)
+
+		return Promise.rejected(error)
 	end)
 
 	return store_cache[cache_key].promise:next(function (t)
 		return t and table.clone_instance(t)
+	end):catch(function (error)
+		return Promise.rejected(error)
 	end)
 end
 

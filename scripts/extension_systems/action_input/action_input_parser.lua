@@ -675,11 +675,8 @@ ActionInputParser._update_sequences = function (self, dt, t, template_name, hier
 	local base_hierarchy = self._ACTION_INPUT_HIERARCHY[template_name]
 	local hierarchy = _get_current_hierarchy(hierarchy_position, base_hierarchy, MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
 	local action_input_sequence_completed, action_input_sequence_config, action_input_raw_input
-	local sorted_action_inputs = table.keys(hierarchy)
 
-	table.sort(sorted_action_inputs)
-
-	for _, action_input in ipairs(sorted_action_inputs) do
+	for action_input, children in pairs(hierarchy) do
 		local sequence_config = sequence_configs[action_input]
 		local sequence_i = network_lookup[action_input]
 		local sequence = sequences[sequence_i]
@@ -811,11 +808,7 @@ ActionInputParser._jump_hierarchy = function (self, t, hierarchy_position, wante
 end
 
 ActionInputParser._prepare_child_sequences = function (self, children, sequences, t, network_lookup)
-	local sorted_action_inputs = table.keys(children)
-
-	table.sort(sorted_action_inputs)
-
-	for _, action_input in ipairs(sorted_action_inputs) do
+	for action_input, _ in pairs(children) do
 		local sequence_i = network_lookup[action_input]
 		local sequence = sequences[sequence_i]
 

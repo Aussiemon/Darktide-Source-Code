@@ -14,6 +14,8 @@ end
 
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/bot/bot_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_armored_infected_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_mutated_poxwalker_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_lesser_mutated_poxwalker_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_beast_of_nurgle_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_daemonhost_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_hound_behavior_tree")

@@ -46,7 +46,22 @@ PlayerCharacterOptionsView.on_enter = function (self)
 
 	local player = self._inspected_player
 	local profile = player and player:profile()
-	local player_name = player and player:name()
+	local player_name
+
+	if IS_PLAYSTATION then
+		local player_info = player and Managers.data_service.social:get_player_info_by_account_id(player:account_id())
+		local console = player_info and player_info:platform()
+		local is_blocked = player_info:is_blocked()
+
+		player_name = (console == "psn" or console == "ps5") and player_info and player_info:user_display_name() or player and player:name()
+
+		if is_blocked then
+			player_name = Localize("loc_blocking_player") or player_name
+		end
+	else
+		player_name = player and player:name()
+	end
+
 	local current_level = profile and profile.current_level
 
 	self:_set_player_name(player_name, current_level)

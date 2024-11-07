@@ -1340,13 +1340,16 @@ end
 
 SocialService._event_new_immaterium_entry = function (self, new_immaterium_entry)
 	local account_id = new_immaterium_entry.account_id
-	local player_info = self:get_player_info_by_account_id(account_id)
-	local old_platform_social = player_info:platform_social()
 
-	self:_update_player_info_platform_information(player_info)
+	if account_id ~= "" then
+		local player_info = self:get_player_info_by_account_id(account_id)
+		local old_platform_social = player_info:platform_social()
 
-	if old_platform_social == nil then
-		Managers.event:trigger("event_update_player_name")
+		self:_update_player_info_platform_information(player_info)
+
+		if old_platform_social == nil then
+			Managers.event:trigger("event_update_player_name")
+		end
 	end
 end
 

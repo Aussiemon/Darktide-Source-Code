@@ -447,6 +447,66 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_live_event_only_beast = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			specials_monster_spawn_config = {
+				chance_to_spawn_monster = 0.2,
+				max_monsters = 2,
+				max_monster_duration = {
+					180,
+					600,
+				},
+				breeds = {
+					"chaos_beast_of_nurgle",
+				},
+			},
+		},
+	},
+	mutator_headshot_parasite_enemies = {
+		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
+		random_spawn_buff_templates = {
+			buffs = {
+				"headshot_parasite_enemies",
+			},
+			breed_chances = {
+				chaos_armored_infected = 0.05,
+				chaos_beast_of_nurgle = 0,
+				chaos_daemonhost = 0,
+				chaos_hound = 0,
+				chaos_lesser_mutated_poxwalker = 0.1,
+				chaos_mutated_poxwalker = 0.1,
+				chaos_newly_infected = 0.05,
+				chaos_ogryn_bulwark = 0.5,
+				chaos_ogryn_executor = 0.5,
+				chaos_ogryn_gunner = 0.5,
+				chaos_plague_ogryn = 0,
+				chaos_poxwalker = 0.1,
+				chaos_poxwalker_bomber = 0.35,
+				chaos_spawn = 0,
+				cultist_assault = 0.1,
+				cultist_berzerker = 0.1,
+				cultist_flamer = 0.1,
+				cultist_grenadier = 0.1,
+				cultist_gunner = 0.1,
+				cultist_melee = 0.1,
+				cultist_mutant = 0,
+				cultist_shocktrooper = 0,
+				renegade_assault = 0.1,
+				renegade_berzerker = 0.25,
+				renegade_captain = 0.2,
+				renegade_executor = 0.05,
+				renegade_flamer = 0.05,
+				renegade_grenadier = 0.25,
+				renegade_gunner = 0.25,
+				renegade_melee = 0.1,
+				renegade_netgunner = 0.35,
+				renegade_rifleman = 0.1,
+				renegade_shocktrooper = 0,
+				renegade_sniper = 0.35,
+			},
+		},
+	},
 	mutator_no_monsters = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
@@ -576,6 +636,15 @@ local mutator_templates = {
 			breed_replacement = {
 				chaos_newly_infected = "chaos_armored_infected",
 				chaos_poxwalker = "chaos_armored_infected",
+			},
+		},
+	},
+	mutator_maelstrom_mutated_poxwalker = {
+		class = "scripts/managers/mutator/mutators/mutator_replace_breed",
+		init_replacement_breed = {
+			breed_replacement = {
+				chaos_newly_infected = "chaos_lesser_mutated_poxwalker",
+				chaos_poxwalker = "chaos_mutated_poxwalker",
 			},
 		},
 	},

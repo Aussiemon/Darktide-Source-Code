@@ -61,7 +61,7 @@ InvitesPSN.reset = function (self)
 end
 
 InvitesPSN.on_profile_signed_in = function (self, account_id)
-	if self._invite and self._invite.recipient_account_id ~= account_id then
+	if self._invite and self._invite.recipient_account_id ~= nil and self._invite.recipient_account_id ~= account_id then
 		self._invite = nil
 	end
 end

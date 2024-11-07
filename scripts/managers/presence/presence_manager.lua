@@ -487,6 +487,14 @@ PresenceManager.update = function (self, dt, t)
 		self._last_request_platform_username = self._last_request_platform_username + dt
 
 		if self._last_request_platform_username > 0.2 then
+			if IS_PLAYSTATION then
+				local is_public_profiles_promise_pending = Managers.account:is_public_profiles_promise_pending()
+
+				if is_public_profiles_promise_pending then
+					return
+				end
+			end
+
 			local buffer = {}
 
 			self._load_buffer_in_flight = {}
@@ -526,7 +534,7 @@ PresenceManager.update = function (self, dt, t)
 				end):catch(function (error)
 					self._load_buffer_in_flight = nil
 
-					_error("error when getting gamertags for xuids", table.tostring(buffer, 2))
+					_error("error when getting online_id for playstation", table.tostring(buffer, 2))
 
 					self._last_request_platform_username = -10
 				end)

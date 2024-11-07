@@ -776,8 +776,12 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	if not wanted_action_name then
 		local conditional_state_funcs = self._conditional_state_functions
 		local remaining_time = current_action_end_t - t
+		local conditional_states = table.keys(conditional_state_to_action_input)
 
-		for conditional_state, conditional_state_config in pairs(conditional_state_to_action_input) do
+		table.sort(conditional_states)
+
+		for _, conditional_state in ipairs(conditional_states) do
+			local conditional_state_config = conditional_state_to_action_input[conditional_state]
 			local conditional_action_input = conditional_state_config.input_name
 			local func = conditional_state_funcs[conditional_state]
 			local chain_action = allowed_chain_actions[conditional_action_input]

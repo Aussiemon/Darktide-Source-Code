@@ -25,6 +25,12 @@ breed_terror_event_settings.chaos_newly_infected = {
 breed_terror_event_settings.chaos_armored_infected = {
 	point_cost = 1000,
 }
+breed_terror_event_settings.chaos_mutated_poxwalker = {
+	point_cost = 1000,
+}
+breed_terror_event_settings.chaos_lesser_mutated_poxwalker = {
+	point_cost = 1000,
+}
 breed_terror_event_settings.chaos_ogryn_bulwark = {
 	point_cost = 10,
 }

@@ -26,6 +26,7 @@ local action_sweep_settings = {
 		[hit_zone_names.tongue] = 5,
 		[hit_zone_names.afro] = 6,
 		[hit_zone_names.backpack] = 9,
+		[hit_zone_names.tentacle] = 7,
 		[hit_zone_names.center_mass] = 6,
 		[hit_zone_names.corruptor_armor] = 6,
 		[hit_zone_names.right_shoulderguard] = 6,

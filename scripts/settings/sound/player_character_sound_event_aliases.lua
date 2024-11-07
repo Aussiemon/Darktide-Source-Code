@@ -366,6 +366,7 @@ local events = {
 		events = {
 			default = {
 				default = "wwise/events/player/play_footstep_boots_medium",
+				mech = "wwise/events/player/play_footstep_prosthetic_mech",
 				pegleg = "wwise/events/player/play_footstep_prosthetic",
 			},
 			ogryn = {

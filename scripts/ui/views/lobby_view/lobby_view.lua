@@ -153,7 +153,13 @@ LobbyView._initialize_background_world = function (self)
 
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
-	local level_name = LobbyViewSettings.level_name
+	local level_name
+
+	if self._maelstrom_plus_data then
+		level_name = LobbyViewSettings.maelstrom_plus_level_name
+	else
+		level_name = LobbyViewSettings.level_name
+	end
 
 	self._world_spawner:spawn_level(level_name)
 

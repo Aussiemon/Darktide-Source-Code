@@ -1362,6 +1362,7 @@ weapon_template.weapon_special_class = "WeaponSpecialWarpChargedAttacks"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 3,
 	keep_active_on_sprint = true,
+	keep_active_on_stun = true,
 }
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
 weapon_template.damage_window_end_sweep_trail_offset = 0.45

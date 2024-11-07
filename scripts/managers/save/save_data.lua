@@ -76,6 +76,7 @@ SaveData.default_account_data = {
 		subtitle_speaker_enabled = true,
 		subtitle_text_opacity = 100,
 		telemetry_enabled = true,
+		voice_chat_visible_all_time = true,
 		warp_charge_effects_intensity = 100,
 		flash_taskbar_enabled = IS_WINDOWS,
 	},
