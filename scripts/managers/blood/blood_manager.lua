@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/managers/blood/blood_manager.lua
 
 local BloodSettings = require("scripts/settings/blood/blood_settings")
+local RegionConstants = require("scripts/settings/region/region_constants")
 local blood_ball_settings = BloodSettings.blood_ball
 local damage_type_speed = BloodSettings.blood_ball.damage_type_speed
 local BloodManager = class("BloodManager")
@@ -104,6 +105,10 @@ BloodManager.queue_blood_ball = function (self, position, direction, blood_ball_
 	end
 
 	local blood_decals_enabled = self:_blood_decals_enabled()
+
+	if Managers.account and Managers.account:region_has_restriction(RegionConstants.restrictions.blood_decals) then
+		blood_decals_enabled = false
+	end
 
 	if not blood_decals_enabled then
 		return

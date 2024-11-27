@@ -742,7 +742,7 @@ ChatManager._validate_participants = function (self)
 
 	for session_handle, channel in pairs(self._sessions) do
 		for participant_uri, participant in pairs(channel.participants) do
-			if not participant.is_validated and not participant.waiting_for_block_states then
+			if not participant.is_validated then
 				if not participant.player_info and participant.account_id and Managers.data_service.social then
 					local player_info = Managers.data_service.social:get_player_info_by_account_id(participant.account_id)
 
@@ -760,6 +760,16 @@ ChatManager._validate_participants = function (self)
 				end
 
 				local player_info = participant.player_info
+
+				if IS_PLAYSTATION then
+					local is_friend = player_info:is_friend()
+					local party_status = player_info:party_status()
+					local is_same_party = party_status == SocialConstants.PartyStatus.mine or party_status == SocialConstants.PartyStatus.same_mission
+
+					if participant.waiting_for_block_states and not is_friend and not is_same_party then
+						break
+					end
+				end
 
 				if not participant.displayname then
 					local displayname = player_info:character_name()
@@ -811,9 +821,11 @@ ChatManager._validate_participants = function (self)
 
 						local is_blocked = player_info:is_blocked()
 						local is_friend = player_info:is_friend()
+						local party_status = player_info:party_status()
+						local is_same_party = party_status == SocialConstants.PartyStatus.mine or party_status == SocialConstants.PartyStatus.same_mission
 						local is_platform_id_already_requested = Managers.account:is_platform_id_already_requested(platform_user_id)
 
-						if not is_friend and platform == my_platform and not is_platform_id_already_requested then
+						if not is_friend and not is_same_party and platform == my_platform and not is_platform_id_already_requested then
 							Managers.account:request_block_user_states(platform_user_id)
 
 							participant.waiting_for_block_states = true

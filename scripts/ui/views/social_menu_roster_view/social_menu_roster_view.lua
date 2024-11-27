@@ -771,6 +771,17 @@ SocialMenuRosterView.cb_block_player = function (self, player_info)
 	self:_show_confirmation_popup(player_info, "block_account")
 end
 
+SocialMenuRosterView.cb_report_player = function (self, player_info)
+	local user_display_name = player_info:user_display_name()
+	local account_id = player_info:account_id()
+	local context = {
+		reportee_display_name = user_display_name,
+		reportee_account_id = account_id,
+	}
+
+	Managers.ui:open_view("report_player_view", nil, nil, nil, nil, context)
+end
+
 SocialMenuRosterView.cb_update_roster = function (self, result)
 	if self._destroyed then
 		return

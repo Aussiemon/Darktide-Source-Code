@@ -595,8 +595,6 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 	elseif IS_PLAYSTATION then
 		local content = input_widget.content
 
-		Log.info("ConstantElementChat", "send_chat_message(%s), confirm_pressed(%s), is_finished(%s), is_showing(%s), ", input_service:get("send_chat_message"), input_service:get("confirm_pressed"), PS5ImeDialog.is_finished(), PS5ImeDialog.is_showing())
-
 		if input_service:get("confirm_pressed") and not PS5ImeDialog.is_showing() then
 			local title = content.virtual_keyboard_title or content.placeholder_text
 			local description = content.virtual_keyboard_description or ""

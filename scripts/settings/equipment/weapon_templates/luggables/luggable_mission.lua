@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/luggables/luggable_mission.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -79,23 +80,56 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	drop = "stay",
-	push = "stay",
-	wield = "base",
-	aim_luggable = {
-		drop = "base",
-		throw = "stay",
-		aim_cancel_push = {
-			aim_cancel_push_release = "base",
-			drop = "base",
+	{
+		input = "push",
+		transition = "stay",
+	},
+	{
+		input = "aim_luggable",
+		transition = {
+			{
+				input = "aim_cancel_push",
+				transition = {
+					{
+						input = "aim_cancel_push_release",
+						transition = "base",
+					},
+					{
+						input = "drop",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "drop",
+				transition = "base",
+			},
+			{
+				input = "throw",
+				transition = "stay",
+			},
 		},
 	},
-	inspect_start = {
-		inspect_stop = "base",
+	{
+		input = "inspect_start",
+		transition = {
+			{
+				input = "inspect_stop",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "base",
+	},
+	{
+		input = "drop",
+		transition = "stay",
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_wield = {

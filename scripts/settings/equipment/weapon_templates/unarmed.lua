@@ -22,7 +22,10 @@ weapon_template.action_inputs = {
 	},
 }
 weapon_template.action_input_hierarchy = {
-	combat_ability = "base",
+	{
+		input = "combat_ability",
+		transition = "base",
+	},
 }
 weapon_template.actions = {
 	action_wield = {

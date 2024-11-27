@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/ogryn_heavystubber_p1_m3.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -133,33 +134,96 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	reload = "stay",
-	stab = "stay",
-	wield = "stay",
-	shoot = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		shoot_release = "base",
-		wield = "base",
-		zoom = "base",
-	},
-	zoom = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		wield = "base",
-		zoom_release = "base",
-		zoom_shoot = {
-			reload = "base",
-			shoot_release = "previous",
-			wield = "base",
-			zoom_release = "base",
+	{
+		input = "shoot",
+		transition = {
+			{
+				input = "shoot_release",
+				transition = "base",
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "zoom",
+				transition = "base",
+			},
 		},
+	},
+	{
+		input = "zoom",
+		transition = {
+			{
+				input = "zoom_release",
+				transition = "base",
+			},
+			{
+				input = "zoom_shoot",
+				transition = {
+					{
+						input = "reload",
+						transition = "base",
+					},
+					{
+						input = "zoom_release",
+						transition = "base",
+					},
+					{
+						input = "shoot_release",
+						transition = "previous",
+					},
+					{
+						input = "wield",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "reload",
+		transition = "stay",
+	},
+	{
+		input = "stab",
+		transition = "stay",
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

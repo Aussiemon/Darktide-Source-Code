@@ -14,7 +14,10 @@ ability_template.action_inputs = {
 	},
 }
 ability_template.action_input_hierarchy = {
-	stance_pressed = "stay",
+	{
+		input = "stance_pressed",
+		transition = "stay",
+	},
 }
 ability_template.actions = {
 	action_stance_change = {

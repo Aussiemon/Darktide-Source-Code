@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_smite.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -150,36 +151,102 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	combat_ability = "stay",
-	wield = "stay",
-	charge_power = {
-		charge_power_release = "base",
-		combat_ability = "base",
-		wield = "base",
-		charge_power_lock_on = {
-			charge_power_sticky_release = "base",
-			combat_ability = "base",
-			use_power = "base",
-			wield = "base",
+	{
+		input = "charge_power",
+		transition = {
+			{
+				input = "charge_power_release",
+				transition = "base",
+			},
+			{
+				input = "charge_power_lock_on",
+				transition = {
+					{
+						input = "charge_power_sticky_release",
+						transition = "base",
+					},
+					{
+						input = "use_power",
+						transition = "base",
+					},
+					{
+						input = "wield",
+						transition = "base",
+					},
+					{
+						input = "combat_ability",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
 		},
 	},
-	charge_power_sticky = {
-		charge_power_sticky_release = "base",
-		combat_ability = "base",
-		use_power = "base",
-		wield = "base",
+	{
+		input = "charge_power_sticky",
+		transition = {
+			{
+				input = "charge_power_sticky_release",
+				transition = "base",
+			},
+			{
+				input = "use_power",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+		},
 	},
-	vent = {
-		combat_ability = "base",
-		vent_release = "base",
-		wield = "base",
+	{
+		input = "vent",
+		transition = {
+			{
+				input = "vent_release",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+		},
 	},
-	inspect_start = {
-		inspect_stop = "base",
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "combat_ability",
+		transition = "stay",
+	},
+	{
+		input = "inspect_start",
+		transition = {
+			{
+				input = "inspect_stop",
+				transition = "base",
+			},
+		},
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

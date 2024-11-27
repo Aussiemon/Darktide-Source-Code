@@ -232,6 +232,10 @@ params.debug_input_filter_response_curves = {
 	category = "Input",
 	value = false,
 }
+params.preview_action_input_hierarchy = {
+	category = "Input",
+	value = false,
+}
 
 local function _debug_text_color_options()
 	local colors = table.clone(Color.list)
@@ -3883,6 +3887,10 @@ params.disable_achievement_backend_update = {
 		end
 	end,
 }
+params.debug_trophies = {
+	category = "Game Mode",
+	value = false,
+}
 params.debug_shading_environment = {
 	category = "Shading Environment",
 	value = false,
@@ -4222,6 +4230,10 @@ params.delay_packages_on_profile_changed = {
 	},
 }
 params.draw_package_loading = {
+	category = "Loading",
+	value = false,
+}
+params.debug_load_wait_info = {
 	category = "Loading",
 	value = false,
 }
@@ -4970,6 +4982,10 @@ params.force_hub_location_intros = {
 params.skip_prologue = {
 	category = "Game Flow",
 	value = BUILD ~= "release",
+}
+params.show_game_states = {
+	category = "Game Flow",
+	value = true,
 }
 params.debug_ledge_finder_rays = {
 	category = "Ledge Finder",

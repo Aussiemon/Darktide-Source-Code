@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/end_view/end_view_definitions.lua
 
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewStyles = require("scripts/ui/views/end_view/end_view_styles")
 local _color_lerp = ColorUtilities.color_lerp
@@ -8,6 +9,17 @@ local _math_floor = math.floor
 local _math_max = math.max
 local _math_min = math.min
 local panel_size = ViewStyles.panel_size
+local wait_reason_style = table.clone(UIFontSettings.header_1)
+
+wait_reason_style.font_size = 30
+wait_reason_style.text_horizontal_alignment = "center"
+wait_reason_style.text_vertical_alignment = "center"
+wait_reason_style.offset = {
+	0,
+	100,
+	0,
+}
+
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",
@@ -186,6 +198,20 @@ local scenegraph_definition = {
 			2,
 		},
 	},
+	loading = {
+		horizontal_alignment = "center",
+		scale = "fit",
+		vertical_alignment = "center",
+		size = {
+			1920,
+			1080,
+		},
+		position = {
+			0,
+			0,
+			200,
+		},
+	},
 }
 local widget_definitions = {
 	continue_button = UIWidget.create_definition({
@@ -320,6 +346,42 @@ local widget_definitions = {
 			end,
 		},
 	}, "vote_text", nil, nil, ViewStyles.stay_in_party_vote),
+	loading = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "background",
+			style = {
+				color = Color.black(127.5, true),
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon",
+			value = "content/ui/materials/loading/loading_icon",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				size = {
+					256,
+					256,
+				},
+				offset = {
+					0,
+					0,
+					1,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = wait_reason_style,
+		},
+	}, "loading", {
+		visible = false,
+	}),
 }
 local player_panel_pass_template = {
 	{

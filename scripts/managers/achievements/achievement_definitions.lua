@@ -7,6 +7,7 @@ local AchievementWeaponGroups = require("scripts/settings/achievements/achieveme
 local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementTypes = require("scripts/managers/achievements/achievement_types")
 local MissionTypes = require("scripts/settings/mission/mission_types")
+local PSNPlatformAchievements = require("scripts/settings/achievements/psn_platform_achievements")
 local SteamPlatformAchievements = require("scripts/settings/achievements/steam_platform_achievements")
 local XboxLivePlatformAchievements = require("scripts/settings/achievements/xbox_live_platform_achievements")
 local AchievementTypesLookup = table.enum(unpack(table.keys(AchievementTypes)))
@@ -3771,6 +3772,17 @@ for id, definition in pairs(AchievementDefinitions) do
 		definition.steam = {
 			id = platform_id,
 			stat_id = SteamPlatformAchievements.platform_to_stat[platform_id],
+		}
+	end
+end
+
+for id, definition in pairs(AchievementDefinitions) do
+	local platform_id = PSNPlatformAchievements.backend_to_platform[id]
+
+	if platform_id ~= nil then
+		definition.psn = {
+			id = platform_id,
+			show_progress = not not PSNPlatformAchievements.show_progress[platform_id],
 		}
 	end
 end

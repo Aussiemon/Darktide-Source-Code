@@ -74,7 +74,12 @@ ActionInputFormatter.format = function (action_input_type, templates, raw_inputs
 end
 
 function _read_action_inputs(name, action_inputs, sequences, network_lookup, total_num_action_inputs)
-	for action_input, data in pairs(action_inputs) do
+	local keys = table.keys(action_inputs)
+
+	table.sort(keys)
+
+	for _, action_input in ipairs(keys) do
+		local data = action_inputs[action_input]
 		local network_lookup_i = #network_lookup + 1
 
 		network_lookup[network_lookup_i] = action_input
@@ -82,13 +87,12 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 
 		local input_sequence = data.input_sequence
 		local num_elements = input_sequence and #input_sequence or 0
-		local clear_input_queue = data.clear_input_queue or false
 		local config = {
 			action_input_name = action_input,
 			elements = Script.new_array(num_elements),
 			buffer_time = data.buffer_time,
 			reevaluation_time = data.reevaluation_time or nil,
-			clear_input_queue = clear_input_queue,
+			clear_input_queue = data.clear_input_queue or false,
 			max_queue = data.max_queue or false,
 			dont_queue = data.dont_queue,
 		}
@@ -118,18 +122,21 @@ function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
 
 	local best_children_hierarchy_depth
 
-	for action_input, children in pairs(hierarchy_data) do
-		if type(children) == "table" then
-			local child_hierarchy_depth = _read_hierarchy(children, sequences, hierarchy_depth)
+	for _, entry in ipairs(hierarchy_data) do
+		local action_input = entry.input
+		local transition = entry.transition
+
+		if type(transition) == "table" then
+			local child_hierarchy_depth = _read_hierarchy(transition, sequences, hierarchy_depth)
 
 			if not best_children_hierarchy_depth or best_children_hierarchy_depth < child_hierarchy_depth then
 				best_children_hierarchy_depth = child_hierarchy_depth
 			end
 		else
-			local stay = children == "stay"
-			local base = children == "base"
+			local stay = transition == "stay"
+			local base = transition == "base"
 
-			if children ~= "previous" then
+			if transition ~= "previous" then
 				local var_1_0 = false
 			else
 				local previous = true

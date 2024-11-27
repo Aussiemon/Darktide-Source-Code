@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/devices/scanner_equip.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -76,28 +77,76 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	push = "stay",
-	unwield = "stay",
-	wield = "stay",
-	scan_start = {
-		scan_cancel = "base",
-		unwield = "base",
-		wield = "base",
-		scan_confirm = {
-			scan_cancel = "base",
-			scan_confirm_cancel = "previous",
-			unwield = "base",
-			wield = "base",
+	{
+		input = "scan_start",
+		transition = {
+			{
+				input = "scan_cancel",
+				transition = "base",
+			},
+			{
+				input = "scan_confirm",
+				transition = {
+					{
+						input = "scan_cancel",
+						transition = "base",
+					},
+					{
+						input = "scan_confirm_cancel",
+						transition = "previous",
+					},
+					{
+						input = "wield",
+						transition = "base",
+					},
+					{
+						input = "unwield",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "unwield",
+				transition = "base",
+			},
 		},
 	},
-	inspect_start = {
-		inspect_stop = "base",
-		unwield = "base",
-		wield = "base",
+	{
+		input = "inspect_start",
+		transition = {
+			{
+				input = "inspect_stop",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "unwield",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "push",
+		transition = "stay",
+	},
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "unwield",
+		transition = "stay",
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 local scan_settings = {
 	confirm_time = 1,

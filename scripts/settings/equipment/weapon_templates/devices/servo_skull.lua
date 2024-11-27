@@ -17,7 +17,10 @@ weapon_template.action_inputs = {
 	},
 }
 weapon_template.action_input_hierarchy = {
-	wield = "stay",
+	{
+		input = "wield",
+		transition = "stay",
+	},
 }
 weapon_template.actions = {
 	action_unwield = {

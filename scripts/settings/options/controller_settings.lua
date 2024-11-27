@@ -377,6 +377,11 @@ settings_definitions[#settings_definitions + 1] = {
 	group_name = "controller_aim_settings",
 	widget_type = "group_header",
 }
+
+if IS_PLAYSTATION then
+	settings_definitions[#settings_definitions].display_name = "loc_settings_menu_group_controller_rumble_settings_sony"
+end
+
 settings_definitions[#settings_definitions + 1] = {
 	default_value = true,
 	display_name = "loc_interface_setting_rumble_enabled",

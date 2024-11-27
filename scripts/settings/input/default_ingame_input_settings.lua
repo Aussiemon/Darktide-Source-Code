@@ -510,7 +510,7 @@ if IS_XBS or IS_PLAYSTATION then
 end
 
 if IS_PLAYSTATION then
-	default_ingame_input_settings.aliases.look_raw_controller.description = "loc_ingame_look_raw_controller"
+	default_ingame_input_settings.aliases.look_raw_controller.description = "loc_ingame_look_raw_controller_sony"
 	default_ingame_input_settings.aliases.move_controller.description = "loc_ingame_move_controller_sony"
 end
 

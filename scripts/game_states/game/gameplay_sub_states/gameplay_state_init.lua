@@ -4,6 +4,7 @@ local GameplayInitStepFrameRate = require("scripts/game_states/game/gameplay_sub
 local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_interface")
 local GameplayStateRun = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_run")
 local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
+local LoadingStateData = require("scripts/ui/loading_state_data")
 local MissionCleanupUtilies = require("scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities")
 local PositionLookupManager = require("scripts/managers/position_lookup/position_lookup_manager")
 local GameplayStateInit = class("GameplayStateInit")
@@ -13,7 +14,7 @@ GameplayStateInit.on_enter = function (self, parent, params)
 	local start_params = {
 		shared_state = shared_state,
 	}
-	local state_machine = GameStateMachine:new(self, GameplayInitStepFrameRate, start_params, nil, nil, "GamePlayInit")
+	local state_machine = GameStateMachine:new(self, GameplayInitStepFrameRate, start_params, nil, nil, "GamePlay", "GamePlayInit")
 
 	self._gameplay_state = parent
 	self._state_machine = state_machine
@@ -44,6 +45,8 @@ GameplayStateInit.on_exit = function (self, on_shutdown)
 end
 
 GameplayStateInit.update = function (self, main_dt, main_t)
+	Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.dedicated_server)
+
 	local shared_state = self._shared_state
 
 	shared_state.network_receive_function(main_dt)

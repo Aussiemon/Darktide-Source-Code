@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/pocketables/medical_crate_pocketable.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local Deployables = require("scripts/settings/deployables/deployables")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PocketablesTemplateSettings = require("scripts/settings/equipment/weapon_templates/pocketables/settings_templates/pocketables_template_settings")
@@ -12,7 +13,7 @@ table.add_missing(weapon_template.action_inputs, PocketablesTemplateSettings.act
 
 weapon_template.action_input_hierarchy = {}
 
-table.add_missing(weapon_template.action_input_hierarchy, PocketablesTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, PocketablesTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_place_complete = {

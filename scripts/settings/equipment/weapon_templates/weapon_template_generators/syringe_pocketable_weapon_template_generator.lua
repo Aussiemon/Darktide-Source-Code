@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/weapon_template_generators/syringe_pocketable_weapon_template_generator.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -94,25 +95,67 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 	table.add_missing(base_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 	base_template.action_input_hierarchy = {
-		special_action = "base",
-		use_self = "base",
-		wield = "base",
-		aim = {
-			aim_release = "base",
-			combat_ability = "base",
-			grenade_ability = "base",
-			use_ally = "base",
-			wield = "base",
+		{
+			input = "wield",
+			transition = "base",
 		},
-		aim_give = {
-			aim_give_release = "previous",
-			combat_ability = "base",
-			grenade_ability = "base",
-			wield = "base",
+		{
+			input = "use_self",
+			transition = "base",
+		},
+		{
+			input = "special_action",
+			transition = "base",
+		},
+		{
+			input = "aim",
+			transition = {
+				{
+					input = "use_ally",
+					transition = "base",
+				},
+				{
+					input = "aim_release",
+					transition = "base",
+				},
+				{
+					input = "wield",
+					transition = "base",
+				},
+				{
+					input = "combat_ability",
+					transition = "base",
+				},
+				{
+					input = "grenade_ability",
+					transition = "base",
+				},
+			},
+		},
+		{
+			input = "aim_give",
+			transition = {
+				{
+					input = "aim_give_release",
+					transition = "previous",
+				},
+				{
+					input = "wield",
+					transition = "base",
+				},
+				{
+					input = "combat_ability",
+					transition = "base",
+				},
+				{
+					input = "grenade_ability",
+					transition = "base",
+				},
+			},
 		},
 	}
 
-	table.add_missing(base_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+	ActionInputHierarchyUtils.add_missing_ordered(base_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 	base_template.actions = {
 		action_unwield = {

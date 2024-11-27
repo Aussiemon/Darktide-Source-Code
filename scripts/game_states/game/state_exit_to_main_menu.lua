@@ -1,11 +1,14 @@
 ﻿-- chunkname: @scripts/game_states/game/state_exit_to_main_menu.lua
 
+local LoadingStateData = require("scripts/ui/loading_state_data")
 local MainMenuLoader = require("scripts/loading/loaders/main_menu_loader")
 local StateMainMenu = require("scripts/game_states/game/state_main_menu")
 local StateError = require("scripts/game_states/game/state_error")
 local StateExitToMainMenu = class("StateExitToMainMenu")
 
 StateExitToMainMenu.on_enter = function (self, parent, params, creation_context)
+	Managers.event:trigger("event_start_waiting")
+
 	self._creation_context = creation_context
 	self._next_state = StateMainMenu
 	self._next_state_params = {}
@@ -41,11 +44,11 @@ StateExitToMainMenu._update_loading = function (self)
 	local main_menu_loader_done = main_menu_loader:is_loading_done()
 
 	if not main_menu_loader_done then
-		-- Nothing
+		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.read_disk)
 	end
 
 	if not backend_answered then
-		-- Nothing
+		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.backend)
 	end
 
 	if not main_menu_loader_done or not backend_answered then
@@ -106,6 +109,7 @@ StateExitToMainMenu.update = function (self, main_dt, main_t)
 end
 
 StateExitToMainMenu.on_exit = function (self)
+	Managers.event:trigger("event_stop_waiting")
 	Managers.player:on_game_state_exit(self)
 end
 

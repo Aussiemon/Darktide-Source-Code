@@ -29,6 +29,8 @@ SignInError.loc_description = function (self)
 
 	if is_xbox_live then
 		return "loc_popup_description_signin_error_console"
+	elseif IS_PLAYSTATION then
+		return "loc_psn_not_connected"
 	else
 		return "loc_popup_description_signin_error_win"
 	end

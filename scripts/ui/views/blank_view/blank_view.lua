@@ -17,7 +17,7 @@ BlankView.draw = function (self, dt, t, input_service, layer)
 	BaseView.draw(self, dt, t, input_service, layer)
 
 	if self._loading_icon then
-		Managers.ui:render_loading_icon()
+		Managers.ui:render_loading_info()
 	end
 end
 

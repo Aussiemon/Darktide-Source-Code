@@ -15,6 +15,8 @@ PresenceEntryMyself.get_platform = function ()
 		platform = "xbox"
 	elseif authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and Application.xbox_live and Application.xbox_live() == true then
 		platform = "xbox"
+	elseif authenticate_method == Managers.backend.AUTH_METHOD_PSN then
+		platform = "psn"
 	else
 		Log.warning("PresenceEntryMyself", "Could not resolve a platform for authenticate_method: " .. tostring(authenticate_method))
 

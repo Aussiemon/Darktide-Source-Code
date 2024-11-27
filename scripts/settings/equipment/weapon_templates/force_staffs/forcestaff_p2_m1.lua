@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/forcestaff_p2_m1.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -169,40 +170,115 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	shoot_pressed = "stay",
-	wield = "stay",
-	charge = {
-		charge_release = "base",
-		combat_ability = "base",
-		grenade_ability = "base",
-		vent = "base",
-		wield = "base",
-		trigger_charge_flame = {
-			cancel_flame = "base",
-			keep_charging = "previous",
-			vent = "base",
-			wield = "base",
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "shoot_pressed",
+		transition = "stay",
+	},
+	{
+		input = "charge",
+		transition = {
+			{
+				input = "charge_release",
+				transition = "base",
+			},
+			{
+				input = "trigger_charge_flame",
+				transition = {
+					{
+						input = "cancel_flame",
+						transition = "base",
+					},
+					{
+						input = "keep_charging",
+						transition = "previous",
+					},
+					{
+						input = "vent",
+						transition = "base",
+					},
+					{
+						input = "wield",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "vent",
+				transition = "base",
+			},
 		},
 	},
-	vent = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		vent_release = "base",
-		wield = "base",
+	{
+		input = "vent",
+		transition = {
+			{
+				input = "vent_release",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+		},
 	},
-	special_action_hold = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		special_action = "base",
-		special_action_heavy = "base",
-		special_action_light = "base",
-		wield = "base",
+	{
+		input = "special_action_hold",
+		transition = {
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "special_action",
+				transition = "base",
+			},
+			{
+				input = "special_action_light",
+				transition = "base",
+			},
+			{
+				input = "special_action_heavy",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+		},
 	},
 }
 weapon_template.burninating_template = "forcestaff_p2_m1"
 weapon_template.size_of_flame_template = "forcestaff_p2_m1"
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

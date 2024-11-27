@@ -41,6 +41,7 @@ local PresenceManagerDummy = require("scripts/managers/presence/presence_manager
 local ProfileSynchronizationManager = require("scripts/managers/loading/profile_synchronization_manager")
 local ProgressionManager = require("scripts/managers/progression/progression_manager")
 local Promise = require("scripts/foundation/utilities/promise")
+local PS5UDSManager = require("scripts/managers/ps5_uds/ps5_uds_manager")
 local SaveManager
 
 if IS_PLAYSTATION then
@@ -124,7 +125,7 @@ StateGame.on_enter = function (self, parent, params)
 		state_change_callbacks.PresenceManager = callback(Managers.presence, "cb_on_game_state_change")
 	end
 
-	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context, state_change_callbacks, "Game", true)
+	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context, state_change_callbacks, "Main", "Game", true)
 
 	if Managers.ui then
 		self._sm:register_on_state_change_callback("UIManager", callback(Managers.ui, "cb_on_game_state_change"))
@@ -261,6 +262,10 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 		Managers.presence = PresenceManagerDummy:new()
 	end
 
+	if IS_PLAYSTATION then
+		Managers.ps5_uds = PS5UDSManager:new()
+	end
+
 	Managers.stats = StatsManager:new(not DEDICATED_SERVER, event_delegate)
 
 	local use_batched_saving = is_dedicated_mission_server and GameParameters.save_achievements_in_batch
@@ -342,6 +347,7 @@ StateGame.update = function (self, dt)
 
 	if IS_PLAYSTATION then
 		Managers.save:update()
+		Managers.ps5_uds:update(dt)
 	end
 
 	if GameParameters.testify then

@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autoguns/autogun_p3_m2.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -193,31 +194,85 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	reload = "stay",
-	shoot = "stay",
-	wield = "stay",
-	zoom = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		special_action_hold = "base",
-		wield = "base",
-		zoom_release = "base",
-		zoom_shoot = "stay",
+	{
+		input = "shoot",
+		transition = "stay",
 	},
-	special_action_hold = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		special_action_heavy = "base",
-		special_action_light = "base",
-		wield = "base",
+	{
+		input = "zoom",
+		transition = {
+			{
+				input = "zoom_release",
+				transition = "base",
+			},
+			{
+				input = "zoom_shoot",
+				transition = "stay",
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "special_action_hold",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "reload",
+		transition = "stay",
+	},
+	{
+		input = "special_action_hold",
+		transition = {
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "special_action_light",
+				transition = "base",
+			},
+			{
+				input = "special_action_heavy",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+		},
 	},
 }
 
 local firerate = 0.25
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

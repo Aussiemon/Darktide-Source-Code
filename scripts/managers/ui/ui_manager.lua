@@ -7,6 +7,8 @@ local ItemIconLoaderUI = require("scripts/ui/item_icon_loader_ui")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local ItemUtils = require("scripts/utilities/items")
 local LoadingIcon = require("scripts/ui/loading_icon")
+local LoadingStateData = require("scripts/ui/loading_state_data")
+local LoadingReason = require("scripts/ui/loading_reason")
 local MasterItems = require("scripts/backend/master_items")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local PortraitUI = require("scripts/ui/portrait_ui")
@@ -75,6 +77,8 @@ UIManager.init = function (self)
 	self._input_service_name = input_service_name
 	self._view_handler = UIViewHandler:new(Views, timer_name)
 	self._close_view_input_action = "back"
+	self._loading_state_data = LoadingStateData:new()
+	self._loading_reason = LoadingReason:new()
 
 	local constant_elements = require("scripts/ui/constant_elements/constant_elements")
 
@@ -810,6 +814,9 @@ UIManager.destroy = function (self)
 	end
 
 	self:_unload_ui_element_packages("constant_elements")
+	self._loading_state_data:delete()
+
+	self._loading_state_data = nil
 
 	if self._ui_loading_icon_renderer then
 		self:destroy_renderer("ui_loading_icon_renderer")
@@ -1023,6 +1030,7 @@ UIManager.post_update = function (self, dt, t)
 	self._visible_widgets, self._prev_visible_widgets = prev_visible_widgets, visible_widgets
 
 	table.clear(prev_visible_widgets)
+	self._loading_state_data:post_update()
 end
 
 UIManager.frame_capture = function (self)
@@ -1085,6 +1093,7 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		player = Managers.player:player(peer_id, local_player_id)
 	end
 
+	local multiline = {}
 	local camera_pos, camera_rot
 
 	if free_flight_manager and free_flight_manager:is_in_free_flight() then
@@ -1190,6 +1199,10 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		end
 	end
 
+	local game_states, state_num_lines = GameStateDebugInfo:get_current_state_description()
+
+	multiline.show_game_states = state_num_lines
+
 	local network_info = "Network: " .. connection_manager.platform
 
 	if Managers.multiplayer_session:aws_matchmaking() then
@@ -1278,6 +1291,7 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		"show_lan_port_info",
 		"show_network_hash_info",
 		"show_screen_resolution_info",
+		"show_game_states",
 		"show_mission_name",
 		"show_level_name",
 		"show_game_mode_name",
@@ -1311,6 +1325,7 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		show_lan_port_info = "LAN port: " .. (GameParameters.lan_port or "n/a"),
 		show_network_hash_info = "Network Hash: " .. (DevParameters.network_hash or "n/a"),
 		show_screen_resolution_info = string.format("Resolution W:%i H:%i", w, h),
+		show_game_states = "Game States: " .. game_states,
 		show_mission_name = string.format("Mission: %s / %s", mission_name, side_mission_name),
 		show_level_name = string.format("Level: %s", level_name),
 		show_chunk_name = chunk_name_string,
@@ -1344,7 +1359,13 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 			if text then
 				UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, box_size, text_color_table, text_options)
 
-				position[2] = position[2] - box_size[2]
+				local num_lines = multiline[text_dev_flag] or 1
+
+				if num_lines > 1 then
+					position[2] = position[2] - (box_size[2] - 1) * num_lines * 0.45 - box_size[2]
+				else
+					position[2] = position[2] - box_size[2]
+				end
 			end
 		end
 	end
@@ -1681,7 +1702,18 @@ end
 UIManager.render_loading_icon = function (self)
 	local gui = self._ui_loading_icon_renderer.gui
 
-	LoadingIcon.render(gui)
+	self._loading_reason:render(gui, false)
+end
+
+UIManager.render_loading_info = function (self)
+	local gui = self._ui_loading_icon_renderer.gui
+	local wait_reason, wait_time, text_opacity = self._loading_state_data:current_wait_info()
+
+	self._loading_reason:render(gui, wait_reason, wait_time, text_opacity)
+end
+
+UIManager.current_wait_info = function (self)
+	return self._loading_state_data:current_wait_info()
 end
 
 UIManager.handling_popups = function (self)

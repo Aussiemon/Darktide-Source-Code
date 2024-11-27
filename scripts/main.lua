@@ -18,6 +18,7 @@ local StateLoadAudioSettings = require("scripts/game_states/boot/state_load_audi
 local StateLoadBootAssets = require("scripts/game_states/boot/state_load_boot_assets")
 local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_render_settings")
 local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
+local GameStateDebug = require("scripts/utilities/game_state_debug")
 local GAME_RESUME_COUNT = 0
 
 Main.init = function (self)
@@ -73,8 +74,10 @@ Main.init = function (self)
 		Wwise.load_bank("wwise/world_sound_fx")
 	end
 
+	rawset(_G, "GameStateDebugInfo", GameStateDebug:new())
+
 	self._package_manager = package_manager
-	self._sm = GameStateMachine:new(nil, StateBoot, params, nil, nil, "Main", true)
+	self._sm = GameStateMachine:new(nil, StateBoot, params, nil, nil, "", "Main", true)
 end
 
 Main.update = function (self, dt)

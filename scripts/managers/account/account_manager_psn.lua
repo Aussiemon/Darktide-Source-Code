@@ -4,10 +4,11 @@ local AccountManagerBase = require("scripts/managers/account/account_manager_bas
 local InputDevice = require("scripts/managers/input/input_device")
 local PlayerSessionPSN = require("scripts/managers/account/player_session_psn")
 local Promise = require("scripts/foundation/utilities/promise")
+local PsnBlockUsersStatesManager = require("scripts/managers/account/psn_block_users_states_manager")
 local PSNRestrictions = require("scripts/managers/account/psn_restrictions")
+local RegionRestrictionsPSN = require("scripts/settings/region/region_restrictions_psn")
 local ScriptWebApiPsn = require("scripts/managers/account/script_web_api_psn")
 local SoundSettings = require("scripts/settings/options/sound_settings")
-local PsnBlockUsersStatesManager = require("scripts/managers/account/psn_block_users_states_manager")
 local SIGNIN_STATES = {
 	acquiring_storage = "loc_signin_acquire_storage",
 	deleting_save = "loc_signin_delete_save",
@@ -60,6 +61,9 @@ AccountManagerPSN.reset = function (self)
 	end
 
 	self._initial_user_id = PS5.initial_user_id()
+
+	self:_setup_region()
+
 	self._signin_state = SIGNIN_STATES.idle
 	self._signin_callback = nil
 	self._friend_profiles = {}
@@ -133,7 +137,7 @@ AccountManagerPSN.update = function (self, dt, t)
 
 		if self._verify_signed_in_timer >= VERIFY_SIGNED_IN_TIMER then
 			if not Playstation.signed_in(self._initial_user_id) and self._signed_in == true then
-				self:_show_fatal_error("loc_popup_header_error", "loc_psn_premium_fail_desc")
+				self:_show_fatal_error("loc_popup_header_error", "loc_psn_not_connected")
 
 				self._signed_in = false
 			end
@@ -240,13 +244,21 @@ AccountManagerPSN.signin_profile = function (self, signin_callback, optional_inp
 		self._account_id = account_id
 		self._signed_in = true
 
+		local check_reachability = Playstation.check_reachability()
+
+		if check_reachability ~= 0 then
+			return
+		end
+
 		return PSNRestrictions:verify_premium()
 	end):next(function (_)
 		self._premium_verified = true
 
 		self:cb_signin_complete()
-	end):catch(function (_)
-		local fail_cb = callback(self, "_show_fatal_error", "loc_popup_header_error", "loc_psn_premium_fail_desc")
+	end):catch(function (error)
+		local fail_cb
+
+		fail_cb = callback(self, "_show_fatal_error", "loc_popup_header_error", error.message)
 
 		fail_cb()
 	end)
@@ -776,14 +788,15 @@ AccountManagerPSN.set_wait_to_collect_accounts = function (self, new_value)
 	self._psn_block_users_states_manager:set_wait_to_collect_accounts(new_value)
 end
 
+AccountManagerPSN._setup_region = function (self)
+	local country_code = Playstation.user_country(self._initial_user_id)
+
+	country_code = country_code or "unknown"
+	self._region_restrictions = RegionRestrictionsPSN[country_code] or {}
+end
+
 AccountManagerPSN.region_has_restriction = function (self, restriction)
-	local country = Playstation.user_country(self._initial_user_id)
-
-	if country == "at" or country == "de" or country == "jp" then
-		return true
-	end
-
-	return false
+	return not not self._region_restrictions[restriction]
 end
 
 AccountManagerPSN.create_psn_session = function (self, max_players, join_disabled, is_private)

@@ -51,6 +51,7 @@ end
 
 MissionIntroView.on_enter = function (self)
 	MissionIntroView.super.on_enter(self)
+	Managers.event:trigger("event_start_waiting")
 
 	self._animation_events_used = {}
 	self._num_animation_events_used = 0
@@ -59,7 +60,7 @@ end
 USE_DEBUG_RENDERER = false
 
 MissionIntroView.draw = function (self, dt, t, input_service, layer)
-	Managers.ui:render_loading_icon()
+	Managers.ui:render_loading_info()
 end
 
 MissionIntroView.event_register_mission_intro_spawn_point_1 = function (self, spawn_point_unit)
@@ -151,6 +152,7 @@ end
 
 MissionIntroView.on_exit = function (self)
 	MissionIntroView.super.on_exit(self)
+	Managers.event:trigger("event_stop_waiting")
 
 	local spawn_slots = self._spawn_slots
 	local num_slots = #spawn_slots

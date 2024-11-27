@@ -3,6 +3,7 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local WoundMaterials = require("scripts/extension_systems/wounds/utilities/wound_materials")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
+local RegionConstants = require("scripts/settings/region/region_constants")
 local attack_results = AttackSettings.attack_results
 local REUSE_WOUNDS = false
 local CLIENT_RPCS = {
@@ -143,6 +144,8 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 	if wounds_enabled_locally == nil then
 		wounds_enabled_locally = GameParameters.minion_wounds_enabled
 	end
+
+	wounds_enabled_locally = wounds_enabled_locally and not Managers.account:region_has_restriction(RegionConstants.restrictions.visible_minion_wounds)
 
 	if not DEDICATED_SERVER and wounds_enabled_locally then
 		WoundMaterials.apply(unit, wounds_data, wound_index, slot_items)

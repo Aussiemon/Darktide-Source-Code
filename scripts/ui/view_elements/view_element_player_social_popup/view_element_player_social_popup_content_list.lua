@@ -222,6 +222,15 @@ local function _add_communication_management_items(parent, player_info, is_block
 		list_item.is_disabled = not can_block
 		list_item.reason_for_disabled = cannot_block_reason and Localize(cannot_block_reason)
 	end
+
+	local can_report_player = true
+
+	list_item = _get_next_list_item()
+	list_item.blueprint = can_report_player and "button" or "disabled_button_with_explanation"
+	list_item.label = Localize("loc_social_menu_report")
+	list_item.callback = callback(parent, "cb_report_player", player_info)
+	list_item.is_disabled = not can_report_player
+	list_item.reason_for_disabled = not can_report_player and Localize("loc_social_fail_reason_user_not_online") or ""
 end
 
 local view_element_player_social_popup_content_list = {}

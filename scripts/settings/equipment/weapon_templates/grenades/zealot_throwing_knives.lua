@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/zealot_throwing_knives.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
@@ -40,13 +41,25 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	combat_ability = "stay",
-	quick_throw = "stay",
-	throw_pressed = "stay",
-	unwield_to_previous = "stay",
+	{
+		input = "throw_pressed",
+		transition = "stay",
+	},
+	{
+		input = "quick_throw",
+		transition = "stay",
+	},
+	{
+		input = "unwield_to_previous",
+		transition = "stay",
+	},
+	{
+		input = "combat_ability",
+		transition = "stay",
+	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_wield = {

@@ -6,6 +6,7 @@ local MinionGibbing = require("scripts/managers/minion/minion_gibbing")
 local SideColor = require("scripts/utilities/side_color")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_lod_group")
+local RegionConstants = require("scripts/settings/region/region_constants")
 local CLIENT_RPCS = {
 	"rpc_minion_wield_slot",
 	"rpc_minion_unwield_slot",
@@ -754,6 +755,8 @@ MinionVisualLoadoutExtension.gib = function (self, hit_zone_name_or_nil, attack_
 	if gibbing_enabled_locally == nil then
 		gibbing_enabled_locally = GameParameters.gibbing_enabled
 	end
+
+	gibbing_enabled_locally = gibbing_enabled_locally and not Managers.account:region_has_restriction(RegionConstants.restrictions.gibbing)
 
 	local spawned_gibs
 

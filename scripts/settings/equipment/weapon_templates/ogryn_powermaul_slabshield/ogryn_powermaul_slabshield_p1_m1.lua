@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_powermaul_slabshield/ogryn_powermaul_slabshield_p1_m1.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -30,9 +31,13 @@ local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
-weapon_template.action_input_hierarchy.special_action_hold = {
-	special_action_release = "base",
-}
+
+ActionInputHierarchyUtils.update_hierarchy_entry(weapon_template.action_input_hierarchy, "special_action_hold", {
+	{
+		input = "special_action_release",
+		transition = "base",
+	},
+})
 
 local hit_zone_priority = {
 	[hit_zone_names.head] = 1,

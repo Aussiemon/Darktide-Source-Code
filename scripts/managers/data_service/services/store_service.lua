@@ -18,6 +18,7 @@ local function _current_character_id()
 end
 
 StoreService.FEATURE_KEY = "premium_store_featured"
+StoreService.GET_PREMIUM_STORE_TIMEOUT = 60
 
 StoreService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
@@ -37,6 +38,7 @@ StoreService.init = function (self, backend_interface)
 	self._store_cache = {}
 	self._wallet_caps_backend_updated = false
 	self._block_aquila_acquisition = false
+	self._get_premium_store_last_call_time = nil
 end
 
 StoreService.update_wallet_caps = function (self)
@@ -669,6 +671,18 @@ end
 
 StoreService.has_new_feature_store = function (self)
 	if not self:_get_cached_store(StoreService.FEATURE_KEY, nop) then
+		local time_since_launch = Application.time_since_launch()
+
+		if self._get_premium_store_last_call_time then
+			local time_since_last_call = time_since_launch - self._get_premium_store_last_call_time
+
+			if time_since_last_call < StoreService.GET_PREMIUM_STORE_TIMEOUT then
+				return
+			end
+		end
+
+		self._get_premium_store_last_call_time = time_since_launch
+
 		self:get_premium_store(StoreService.FEATURE_KEY)
 	end
 

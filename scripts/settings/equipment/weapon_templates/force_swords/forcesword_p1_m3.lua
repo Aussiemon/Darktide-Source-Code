@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_swords/forcesword_p1_m3.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -50,12 +51,26 @@ weapon_template.action_inputs.vent_release = {
 		},
 	},
 }
-weapon_template.action_input_hierarchy.vent = {
-	combat_ability = "base",
-	grenade_ability = "base",
-	vent_release = "base",
-	wield = "base",
-}
+
+ActionInputHierarchyUtils.update_hierarchy_entry(weapon_template.action_input_hierarchy, "vent", {
+	{
+		input = "vent_release",
+		transition = "base",
+	},
+	{
+		input = "wield",
+		transition = "base",
+	},
+	{
+		input = "combat_ability",
+		transition = "base",
+	},
+	{
+		input = "grenade_ability",
+		transition = "base",
+	},
+})
+
 weapon_template.action_inputs.block.buffer_time = 0.1
 weapon_template.action_inputs.block_release.buffer_time = 0.35
 

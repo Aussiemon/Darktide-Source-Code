@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/forcesword_p1_m1_melee_action_input_setup.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -189,41 +190,128 @@ forcesword_p1_m1_melee_action_input_setup.action_inputs = {
 table.add_missing(forcesword_p1_m1_melee_action_input_setup.action_inputs, BaseTemplateSettings.action_inputs)
 
 forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy = {
-	combat_ability = "base",
-	grenade_ability = "base",
-	special_action = "base",
-	wield = "base",
-	start_attack = {
-		attack_cancel = "base",
-		block = "base",
-		grenade_ability = "base",
-		heavy_attack = "base",
-		light_attack = "base",
-		special_action = "base",
-		wield = "base",
-	},
-	block = {
-		block_release = "base",
-		combat_ability = "base",
-		grenade_ability = "base",
-		special_action = "base",
-		wield = "base",
-		push = {
-			push_follow_up_early_release = "base",
-			special_action = "base",
-			push_follow_up = {
-				combat_ability = "base",
-				find_target_release = "base",
-				fling_target = "base",
-				grenade_ability = "base",
-				push_follow_up_release = "base",
-				special_action = "base",
-				wield = "base",
+	{
+		input = "start_attack",
+		transition = {
+			{
+				input = "attack_cancel",
+				transition = "base",
+			},
+			{
+				input = "light_attack",
+				transition = "base",
+			},
+			{
+				input = "heavy_attack",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "special_action",
+				transition = "base",
+			},
+			{
+				input = "block",
+				transition = "base",
 			},
 		},
 	},
+	{
+		input = "block",
+		transition = {
+			{
+				input = "block_release",
+				transition = "base",
+			},
+			{
+				input = "push",
+				transition = {
+					{
+						input = "push_follow_up",
+						transition = {
+							{
+								input = "find_target_release",
+								transition = "base",
+							},
+							{
+								input = "push_follow_up_release",
+								transition = "base",
+							},
+							{
+								input = "fling_target",
+								transition = "base",
+							},
+							{
+								input = "wield",
+								transition = "base",
+							},
+							{
+								input = "combat_ability",
+								transition = "base",
+							},
+							{
+								input = "grenade_ability",
+								transition = "base",
+							},
+							{
+								input = "special_action",
+								transition = "base",
+							},
+						},
+					},
+					{
+						input = "push_follow_up_early_release",
+						transition = "base",
+					},
+					{
+						input = "special_action",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "special_action",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "special_action",
+		transition = "base",
+	},
+	{
+		input = "wield",
+		transition = "base",
+	},
+	{
+		input = "combat_ability",
+		transition = "base",
+	},
+	{
+		input = "grenade_ability",
+		transition = "base",
+	},
 }
 
-table.add_missing(forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 return forcesword_p1_m1_melee_action_input_setup

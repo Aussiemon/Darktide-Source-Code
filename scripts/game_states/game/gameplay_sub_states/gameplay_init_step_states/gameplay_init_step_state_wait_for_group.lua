@@ -2,6 +2,7 @@
 
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepStateLast = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_last")
+local LoadingStateData = require("scripts/ui/loading_state_data")
 local GameplayInitStepStateWaitForGroup = class("GameplayInitStepStateWaitForGroup")
 local CLIENT_RPCS = {
 	"rpc_group_loaded",
@@ -56,6 +57,8 @@ GameplayInitStepStateWaitForGroup.on_exit = function (self)
 end
 
 GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
+	Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.other_player)
+
 	if self._report_time_out then
 		self._report_time_out = self._report_time_out - main_dt
 

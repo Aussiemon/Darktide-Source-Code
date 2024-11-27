@@ -2,6 +2,7 @@
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Items = require("scripts/utilities/items")
+local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -1582,9 +1583,23 @@ StoreView.update = function (self, dt, t, input_service)
 	if self._store_promise or self._purchase_promise then
 		input_service = input_service:null_service()
 		self._widgets_by_name.loading.content.visible = true
+
+		if not self._show_loading then
+			Managers.event:trigger("event_start_waiting")
+		end
+
+		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.store)
+
+		local wait_reason, _, text_opacity = Managers.ui:current_wait_info()
+
+		self._widgets_by_name.loading.content.text = wait_reason or ""
+		self._widgets_by_name.loading.style.text.text_color[1] = text_opacity
 		self._show_loading = true
 	elseif self._show_loading then
 		self._show_loading = false
+
+		Managers.event:trigger("event_stop_waiting")
+
 		self._widgets_by_name.loading.content.visible = false
 	end
 

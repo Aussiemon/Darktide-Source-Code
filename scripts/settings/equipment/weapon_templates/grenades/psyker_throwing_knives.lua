@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_throwing_knives.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
@@ -168,33 +169,93 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	combat_ability = "stay",
-	rewield = "stay",
-	shoot = "stay",
-	wield = "stay",
-	vent = {
-		combat_ability = "base",
-		vent_release = "base",
-		wield = "base",
+	{
+		input = "vent",
+		transition = {
+			{
+				input = "vent_release",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+		},
 	},
-	force_vent = {
-		combat_ability = "base",
-		force_vent_release = "base",
-		wield = "base",
+	{
+		input = "force_vent",
+		transition = {
+			{
+				input = "force_vent_release",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+		},
 	},
-	zoom = {
-		combat_ability = "base",
-		force_vent = "base",
-		wield = "base",
-		zoom_release = "base",
-		zoom_shoot = "base",
+	{
+		input = "zoom",
+		transition = {
+			{
+				input = "zoom_release",
+				transition = "base",
+			},
+			{
+				input = "zoom_shoot",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "force_vent",
+				transition = "base",
+			},
+		},
 	},
-	inspect_start = {
-		inspect_stop = "base",
+	{
+		input = "shoot",
+		transition = "stay",
+	},
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "rewield",
+		transition = "stay",
+	},
+	{
+		input = "combat_ability",
+		transition = "stay",
+	},
+	{
+		input = "inspect_start",
+		transition = {
+			{
+				input = "inspect_stop",
+				transition = "base",
+			},
+		},
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

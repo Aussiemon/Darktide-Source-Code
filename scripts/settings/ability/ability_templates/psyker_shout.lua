@@ -41,9 +41,18 @@ ability_template.action_inputs = {
 	},
 }
 ability_template.action_input_hierarchy = {
-	shout_pressed = {
-		block_cancel = "base",
-		shout_released = "base",
+	{
+		input = "shout_pressed",
+		transition = {
+			{
+				input = "shout_released",
+				transition = "base",
+			},
+			{
+				input = "block_cancel",
+				transition = "base",
+			},
+		},
 	},
 }
 ability_template.actions = {

@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/lasgun_p1_m2.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -130,22 +131,58 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	reload = "stay",
-	shoot_pressed = "stay",
-	weapon_special = "stay",
-	wield = "stay",
-	zoom = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "previous",
-		wield = "base",
-		zoom_release = "base",
-		zoom_shoot = "stay",
-		zoom_weapon_special = "stay",
+	{
+		input = "shoot_pressed",
+		transition = "stay",
+	},
+	{
+		input = "zoom",
+		transition = {
+			{
+				input = "zoom_release",
+				transition = "base",
+			},
+			{
+				input = "zoom_shoot",
+				transition = "stay",
+			},
+			{
+				input = "reload",
+				transition = "previous",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "zoom_weapon_special",
+				transition = "stay",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "reload",
+		transition = "stay",
+	},
+	{
+		input = "weapon_special",
+		transition = "stay",
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

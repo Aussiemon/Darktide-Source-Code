@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/plasma_rifles/plasmagun_p1_m1.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -135,41 +136,125 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	reload = "base",
-	wield = "stay",
-	shoot_charge = {
-		charged_enough = "base",
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		shoot_cancel = "base",
-		vent = "base",
-		vent_override = "base",
-		wield = "base",
+	{
+		input = "shoot_charge",
+		transition = {
+			{
+				input = "charged_enough",
+				transition = "base",
+			},
+			{
+				input = "shoot_cancel",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+			{
+				input = "vent",
+				transition = "base",
+			},
+			{
+				input = "vent_override",
+				transition = "base",
+			},
+		},
 	},
-	brace = {
-		brace_release = "base",
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		shoot_braced = "base",
-		wield = "base",
+	{
+		input = "brace",
+		transition = {
+			{
+				input = "brace_release",
+				transition = "base",
+			},
+			{
+				input = "shoot_braced",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+		},
 	},
-	vent = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		vent_release = "base",
-		wield = "base",
+	{
+		input = "vent",
+		transition = {
+			{
+				input = "vent_release",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+		},
 	},
-	vent_override = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		vent_release = "base",
-		wield = "base",
+	{
+		input = "vent_override",
+		transition = {
+			{
+				input = "vent_release",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "reload",
+		transition = "base",
+	},
+	{
+		input = "wield",
+		transition = "stay",
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

@@ -4,6 +4,7 @@ local Definitions = require("scripts/ui/views/end_view/end_view_definitions")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local EndViewTestify = GameParameters.testify and require("scripts/ui/views/end_view/end_view_testify")
+local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ProfileUtils = require("scripts/utilities/profile_utils")
@@ -59,6 +60,7 @@ end
 EndView.on_enter = function (self)
 	EndView.super.on_enter(self)
 
+	self._waiting = false
 	self._widget_alpha = 0
 	self._game_mode_condition_widgets = {}
 
@@ -97,6 +99,8 @@ EndView.on_enter = function (self)
 end
 
 EndView.on_exit = function (self)
+	Managers.event:trigger("event_stop_waiting")
+
 	if Managers.ui:view_active(SUMMARY_VIEW_NAME) then
 		Managers.ui:close_view(SUMMARY_VIEW_NAME)
 	end
@@ -189,7 +193,44 @@ EndView.update = function (self, dt, t, input_service)
 		self:_update_buttons()
 	end
 
+	local waiting = not session_report or not end_time
+
+	if self._waiting ~= waiting then
+		if waiting then
+			Managers.event:trigger("event_start_waiting")
+		else
+			Managers.event:trigger("event_stop_waiting")
+
+			self._widgets_by_name.loading.content.visible = false
+		end
+
+		self._waiting = waiting
+	end
+
+	Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.backend)
+
+	if self._waiting or DevParameters.debug_load_wait_info then
+		local wait_reason, wait_time, debug_opacity = Managers.ui:current_wait_info()
+		local opacity_multiplier = math.clamp(wait_time - 5, 0, 1) * 255
+
+		if DevParameters.debug_load_wait_info then
+			opacity_multiplier = debug_opacity
+		end
+
+		if opacity_multiplier > 0 then
+			local loading_widget = self._widgets_by_name.loading
+
+			loading_widget.content.text = wait_reason or ""
+			loading_widget.content.visible = true
+			loading_widget.style.text.text_color[1] = opacity_multiplier
+			loading_widget.style.icon.color[1] = opacity_multiplier
+			loading_widget.style.background.color[1] = opacity_multiplier * 0.5
+		end
+	end
+
 	if not session_report then
+		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.backend)
+
 		local progression_manager = Managers.progression
 
 		if progression_manager:session_report_success() then
@@ -208,6 +249,8 @@ EndView.update = function (self, dt, t, input_service)
 	end
 
 	if not end_time then
+		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.dedicated_server)
+
 		end_time = Managers.progression:game_score_end_time()
 		self._end_time = end_time
 
@@ -220,6 +263,8 @@ EndView.update = function (self, dt, t, input_service)
 	end
 
 	if session_report and end_time and show_player_view_time and show_player_view_time < server_time and not is_showing_player_view then
+		Managers.event:trigger("event_stop_waiting")
+
 		local character_session_report = self._session_report.character
 		local context = self._context
 		local summary_view_context = self._end_player_view_context

@@ -358,6 +358,7 @@ end
 
 LoadingView.on_enter = function (self)
 	LoadingView.super.on_enter(self)
+	Managers.event:trigger("event_start_waiting")
 
 	self._entry_duration = LoadingViewSettings.entry_duration
 
@@ -372,7 +373,7 @@ end
 
 LoadingView.draw = function (self, dt, t, input_service, layer)
 	LoadingView.super.draw(self, dt, t, input_service, layer)
-	Managers.ui:render_loading_icon()
+	Managers.ui:render_loading_info()
 end
 
 LoadingView.can_exit = function (self)
@@ -381,6 +382,7 @@ end
 
 LoadingView.on_exit = function (self)
 	LoadingView.super.on_exit(self)
+	Managers.event:trigger("event_stop_waiting")
 	TaskbarFlash.flash_window()
 end
 

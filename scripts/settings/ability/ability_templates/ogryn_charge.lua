@@ -35,9 +35,18 @@ ability_template.action_inputs = {
 	},
 }
 ability_template.action_input_hierarchy = {
-	aim_pressed = {
-		aim_released = "base",
-		block_cancel = "base",
+	{
+		input = "aim_pressed",
+		transition = {
+			{
+				input = "aim_released",
+				transition = "base",
+			},
+			{
+				input = "block_cancel",
+				transition = "base",
+			},
+		},
 	},
 }
 ability_template.actions = {

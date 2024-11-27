@@ -1993,9 +1993,19 @@ local RENDER_TEMPLATES = {
 		group_name = "gore",
 		widget_type = "group_header",
 		supported_platforms = {
+			ps5 = true,
 			win32 = true,
 			xbs = true,
 		},
+		validation_function = function ()
+			for _, restriction in ipairs(RegionConstants.restrictions) do
+				if not Managers.account:region_has_restriction(restriction) then
+					return true
+				end
+			end
+
+			return false
+		end,
 	},
 	{
 		default_value = true,
@@ -2007,9 +2017,13 @@ local RENDER_TEMPLATES = {
 		tooltip_text = "loc_blood_decals_enabled_mouseover",
 		value_type = "boolean",
 		supported_platforms = {
+			ps5 = true,
 			win32 = true,
 			xbs = true,
 		},
+		validation_function = function ()
+			return not Managers.account:region_has_restriction(RegionConstants.restrictions.blood_decals)
+		end,
 	},
 	{
 		default_value = true,
@@ -2021,9 +2035,13 @@ local RENDER_TEMPLATES = {
 		tooltip_text = "loc_gibbing_enabled_mouseover",
 		value_type = "boolean",
 		supported_platforms = {
+			ps5 = true,
 			win32 = true,
 			xbs = true,
 		},
+		validation_function = function ()
+			return not Managers.account:region_has_restriction(RegionConstants.restrictions.gibbing)
+		end,
 	},
 	{
 		default_value = true,
@@ -2035,9 +2053,13 @@ local RENDER_TEMPLATES = {
 		tooltip_text = "loc_minion_wounds_enabled_mouseover",
 		value_type = "boolean",
 		supported_platforms = {
+			ps5 = true,
 			win32 = true,
 			xbs = true,
 		},
+		validation_function = function ()
+			return not Managers.account:region_has_restriction(RegionConstants.restrictions.visible_minion_wounds)
+		end,
 	},
 	{
 		default_value = true,
@@ -2049,6 +2071,7 @@ local RENDER_TEMPLATES = {
 		tooltip_text = "loc_attack_ragdolls_enabled_mouseover",
 		value_type = "boolean",
 		supported_platforms = {
+			ps5 = true,
 			win32 = true,
 			xbs = true,
 		},

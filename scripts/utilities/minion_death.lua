@@ -117,14 +117,22 @@ local function _find_random_hitzone(ragdoll_unit, optional_is_critical_strike)
 end
 
 function _gib(ragdoll_unit, hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)
-	if damage_profile.random_gib_hitzone then
-		hit_zone_name_or_nil = _find_random_hitzone(ragdoll_unit, is_critical_strike_or_nil)
+	local should_gib = true
+
+	if Managers.account and Managers.account:region_has_restriction(RegionConstants.restrictions.gibbing) then
+		should_gib = false
 	end
 
-	local visual_loadout_extension = ScriptUnit.extension(ragdoll_unit, "visual_loadout_system")
+	if should_gib then
+		if damage_profile.random_gib_hitzone then
+			hit_zone_name_or_nil = _find_random_hitzone(ragdoll_unit, is_critical_strike_or_nil)
+		end
 
-	if visual_loadout_extension:can_gib(hit_zone_name_or_nil) then
-		visual_loadout_extension:gib(hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)
+		local visual_loadout_extension = ScriptUnit.extension(ragdoll_unit, "visual_loadout_system")
+
+		if visual_loadout_extension:can_gib(hit_zone_name_or_nil) then
+			visual_loadout_extension:gib(hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)
+		end
 	end
 end
 

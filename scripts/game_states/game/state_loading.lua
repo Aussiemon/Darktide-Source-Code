@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/game_states/game/state_loading.lua
 
+local LoadingStateData = require("scripts/ui/loading_state_data")
 local LoadMissionError = require("scripts/managers/error/errors/load_mission_error")
 local Missions = require("scripts/settings/mission/mission_templates")
 
@@ -130,6 +131,8 @@ StateLoading._reset_state_loading = function (self, params)
 end
 
 StateLoading.update = function (self, main_dt, main_t)
+	Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.read_disk)
+
 	local context = self._creation_context
 
 	context.network_receive_function(main_dt)

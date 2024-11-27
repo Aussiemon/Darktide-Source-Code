@@ -963,6 +963,7 @@ _declare_view("story_mission_lore_view", require("scripts/ui/views/story_mission
 _declare_view("story_mission_play_view", require("scripts/ui/views/story_mission_play_view/story_mission_play_view_declaration_settings"))
 _declare_view("group_finder_view", require("scripts/ui/views/group_finder_view/group_finder_view_declaration_settings"))
 _declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
+_declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

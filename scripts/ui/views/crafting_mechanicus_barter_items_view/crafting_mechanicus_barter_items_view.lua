@@ -973,6 +973,11 @@ end
 CraftingMechanicusBarterItemsView._reset_master_xp_increase = function (self)
 	local mastery_id = self._selected_pattern
 	local mastery_data = self._masteries[mastery_id]
+
+	if mastery_data == nil then
+		return
+	end
+
 	local mastery_max_level = mastery_data.mastery_max_level
 	local exp_per_level = Mastery.get_weapon_xp_per_level(mastery_data)
 	local mastery_current_xp = mastery_data.current_xp

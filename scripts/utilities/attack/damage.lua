@@ -12,6 +12,7 @@ local HudElementPlayerHealthSettings = require("scripts/ui/hud/elements/player_h
 local MinionDeath = require("scripts/utilities/minion_death")
 local PlayerDeath = require("scripts/utilities/player_death")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local RegionConstants = require("scripts/settings/region/region_constants")
 local Vo = require("scripts/utilities/vo")
 local attack_results = AttackSettings.attack_results
 local buff_keywords = BuffSettings.keywords
@@ -247,8 +248,13 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	end
 
 	local wounds_template = damage_profile.wounds_template
+	local should_show_wounds = true
 
-	if is_minion and wounds_template and hit_world_position_or_nil then
+	if Managers.account and Managers.account:region_has_restriction(RegionConstants.restrictions.visible_minion_wounds) then
+		should_show_wounds = false
+	end
+
+	if is_minion and should_show_wounds and wounds_template and hit_world_position_or_nil then
 		local wounds_extension = ScriptUnit.has_extension(unit, "wounds_system")
 
 		if wounds_extension then

@@ -61,7 +61,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 		sub_state_change_callbacks.UIManager = callback(Managers.ui, "cb_on_game_sub_state_change")
 	end
 
-	local state_machine = GameStateMachine:new(self, GameplayStateInit, start_params, nil, sub_state_change_callbacks, "GamePlay")
+	local state_machine = GameStateMachine:new(self, GameplayStateInit, start_params, nil, sub_state_change_callbacks, "Game", "GamePlay")
 
 	self._state_machine = state_machine
 	self._shared_state = shared_state

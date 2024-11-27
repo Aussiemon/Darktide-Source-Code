@@ -61,14 +61,38 @@ weapon_template.action_inputs = {
 	},
 }
 weapon_template.action_input_hierarchy = {
-	wield = "stay",
-	wield_previous = "stay",
-	channel = {
-		cancel_channeling = "base",
-		wield = "base",
-		wield_previous = "base",
-		grenade_ability = {
-			wield_previous = "base",
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "wield_previous",
+		transition = "stay",
+	},
+	{
+		input = "channel",
+		transition = {
+			{
+				input = "cancel_channeling",
+				transition = "base",
+			},
+			{
+				input = "wield_previous",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = {
+					{
+						input = "wield_previous",
+						transition = "base",
+					},
+				},
+			},
 		},
 	},
 }

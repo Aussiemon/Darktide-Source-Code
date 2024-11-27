@@ -148,10 +148,22 @@ base_template_settings.actions = {
 	},
 }
 base_template_settings.action_input_hierarchy = {
-	combat_ability = "stay",
-	grenade_ability = "stay",
-	inspect_start = {
-		inspect_stop = "base",
+	{
+		input = "combat_ability",
+		transition = "stay",
+	},
+	{
+		input = "grenade_ability",
+		transition = "stay",
+	},
+	{
+		input = "inspect_start",
+		transition = {
+			{
+				input = "inspect_stop",
+				transition = "base",
+			},
+		},
 	},
 }
 

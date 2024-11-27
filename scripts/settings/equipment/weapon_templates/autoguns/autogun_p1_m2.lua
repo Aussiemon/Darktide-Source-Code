@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autoguns/autogun_p1_m2.lua
 
+local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -138,36 +139,108 @@ weapon_template.action_inputs = {
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
-	reload = "stay",
-	weapon_special = "stay",
-	wield = "stay",
-	shoot = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		shoot_release = "base",
-		wield = "base",
-		zoom = "base",
-	},
-	zoom = {
-		combat_ability = "base",
-		grenade_ability = "base",
-		reload = "base",
-		wield = "base",
-		zoom_release = "base",
-		zoom_weapon_special = "stay",
-		zoom_shoot = {
-			combat_ability = "base",
-			grenade_ability = "base",
-			reload = "base",
-			shoot_release = "previous",
-			wield = "base",
-			zoom_release = "base",
+	{
+		input = "shoot",
+		transition = {
+			{
+				input = "shoot_release",
+				transition = "base",
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "zoom",
+				transition = "base",
+			},
 		},
+	},
+	{
+		input = "zoom",
+		transition = {
+			{
+				input = "zoom_release",
+				transition = "base",
+			},
+			{
+				input = "zoom_shoot",
+				transition = {
+					{
+						input = "zoom_release",
+						transition = "base",
+					},
+					{
+						input = "shoot_release",
+						transition = "previous",
+					},
+					{
+						input = "reload",
+						transition = "base",
+					},
+					{
+						input = "wield",
+						transition = "base",
+					},
+					{
+						input = "combat_ability",
+						transition = "base",
+					},
+					{
+						input = "grenade_ability",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "reload",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "zoom_weapon_special",
+				transition = "stay",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "reload",
+		transition = "stay",
+	},
+	{
+		input = "weapon_special",
+		transition = "stay",
 	},
 }
 
-table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {

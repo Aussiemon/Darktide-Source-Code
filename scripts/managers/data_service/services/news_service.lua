@@ -76,9 +76,12 @@ NewsService._get_category = function (self, category, use_cache)
 		return {}
 	end):next(function (news)
 		self._cached_promise[category] = nil
-		self._cached_data[category] = news
 
-		return filter_news(news)
+		local filtered = filter_news(news)
+
+		self._cached_data[category] = filtered
+
+		return filtered
 	end)
 
 	self._cached_promise[category] = promise

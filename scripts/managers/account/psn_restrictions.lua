@@ -114,7 +114,10 @@ PSNRestrictions.psn_signin = function (self)
 		if Playstation.signed_in(PS5.initial_user_id()) then
 			return Promise.resolved()
 		else
-			return Promise.rejected({})
+			return Promise.rejected({
+				header = "PSNRestrictions.psn_signin()",
+				message = "loc_psn_not_connected",
+			})
 		end
 	end)
 end
@@ -128,7 +131,10 @@ PSNRestrictions.verify_premium = function (self)
 				if status.success then
 					return Promise.resolved()
 				else
-					return Promise.rejected({})
+					return Promise.rejected({
+						header = "PSNRestrictions.verify_premium()",
+						message = "loc_psn_premium_fail_desc",
+					})
 				end
 			end)
 		end
