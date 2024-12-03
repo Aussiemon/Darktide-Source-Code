@@ -1443,8 +1443,8 @@ recoil_templates.recoil_ogryn_heavystubber_p2_m3_braced = {
 					0.0825,
 				},
 				yaw = {
-					-0.02,
-					0.0325,
+					-0.015,
+					0.0275,
 				},
 			},
 			{
@@ -1453,8 +1453,8 @@ recoil_templates.recoil_ogryn_heavystubber_p2_m3_braced = {
 					0.07,
 				},
 				yaw = {
-					-0.02,
-					0.0375,
+					-0.015,
+					0.0275,
 				},
 			},
 			{
@@ -1463,8 +1463,8 @@ recoil_templates.recoil_ogryn_heavystubber_p2_m3_braced = {
 					0.0625,
 				},
 				yaw = {
-					-0.02,
-					0.0375,
+					-0.015,
+					0.0275,
 				},
 			},
 			{
@@ -1473,8 +1473,8 @@ recoil_templates.recoil_ogryn_heavystubber_p2_m3_braced = {
 					0.0475,
 				},
 				yaw = {
-					-0.02,
-					0.0375,
+					-0.015,
+					0.0275,
 				},
 			},
 		},

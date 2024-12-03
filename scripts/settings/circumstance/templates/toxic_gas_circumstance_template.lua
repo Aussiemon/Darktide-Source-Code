@@ -49,6 +49,22 @@ local circumstance_templates = {
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
+	toxic_gas_cultist_grenadier = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		theme_tag = "toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		mutators = {
+			"mutator_toxic_gas_volumes",
+			"mutator_cultist_grenadier",
+		},
+		ui = {
+			description = "loc_circumstance_toxic_gas_cultist_grenadier_description",
+			display_name = "loc_circumstance_toxic_gas_cultist_grenadier_title",
+			happening_display_name = "loc_happening_ventilation_purge",
+			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+		},
+		mission_overrides = MissionOverrides.more_corruption_syringes,
+	},
 	toxic_gas_twins_01 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
 		wwise_state = "ventilation_purge_01",

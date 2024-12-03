@@ -430,7 +430,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 
 				local target_breed_or_nil = Breed.unit_breed_or_nil(hit_unit)
 
-				if not HitScan.inside_faded_player(target_breed_or_nil, hit_distance) then
+				if HitScan.inside_faded_player(target_breed_or_nil, hit_distance) then
 					break
 				end
 
@@ -764,6 +764,7 @@ ActionShootPellets._can_play_impact_fx = function (self, hit_unit, num_impact_fx
 end
 
 ActionShootPellets.server_correction_occurred = function (self)
+	ActionShootPellets.super.server_correction_occurred(self)
 	table.clear(self._hit_units)
 	table.clear(self._suppressed_hits_per_unit)
 	table.clear(self._suppressed_hit_positions_per_unit)

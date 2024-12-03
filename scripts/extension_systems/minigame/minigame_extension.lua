@@ -71,6 +71,10 @@ MinigameExtension.unit = function (self)
 	return self._unit
 end
 
+MinigameExtension.decode_interrupt = function (self)
+	self._minigame:decode_interrupt()
+end
+
 MinigameExtension.start = function (self, player)
 	self:_set_state(STATES.active)
 	self._minigame:start(player)

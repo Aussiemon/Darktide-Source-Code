@@ -77,9 +77,15 @@ TerrorEventManager._load_mission_event_templates = function (self, mission)
 end
 
 TerrorEventManager._create_network_lookups = function (self, events)
+	local sorted_events_keys = table.keys(events)
+
+	table.sort(sorted_events_keys)
+
 	local flow_events_lookup = {}
 
-	for _, nodes in pairs(events) do
+	for _, key in ipairs(sorted_events_keys) do
+		local nodes = events[key]
+
 		for i = 1, #nodes do
 			local node = nodes[i]
 			local flow_event_name = node.flow_event_name

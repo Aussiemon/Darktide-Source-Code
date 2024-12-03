@@ -483,6 +483,7 @@ local function generate_base_template()
 	base_template.hud_configuration = {
 		uses_ammunition = true,
 		uses_overheat = false,
+		uses_weapon_special_charges = false,
 	}
 	base_template.sprint_ready_up_time = 0.1
 	base_template.max_first_person_anim_movement_speed = 5.8

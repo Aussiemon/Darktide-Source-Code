@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/managers/input/input_manager.lua
 
 local GamepadInputLayouts = require("scripts/settings/input/gamepad_input_layouts")
+local HapticTriggerEffects = require("scripts/managers/input/haptic_trigger_effects")
 local InputAliases = require("scripts/managers/input/input_aliases")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputManagerTestify = GameParameters.testify and require("scripts/managers/input/input_manager_testify")
@@ -39,8 +40,17 @@ InputManager.init = function (self)
 
 	event_manager:register(self, "device_activated", "_cb_device_activated")
 	event_manager:register(self, "device_deactivated", "_cb_device_deactivated")
-	event_manager:register(self, "event_update_rumble_enabled", "_event_update_rumble_enabled")
-	event_manager:register(self, "event_update_rumble_intensity", "_event_update_rumble_intensity")
+	event_manager:register(self, "event_update_rumble_enabled", "_cb_update_rumble_enabled")
+	event_manager:register(self, "event_update_rumble_intensity", "_cb_update_rumble_intensity")
+
+	if IS_PLAYSTATION then
+		event_manager:register(self, "event_update_haptic_trigger_effects_enabled", "_cb_update_haptic_trigger_effects_enabled")
+		event_manager:register(self, "event_update_haptic_trigger_melee_resistance_strength", "_cb_update_haptic_trigger_melee_resistance_strength")
+		event_manager:register(self, "event_update_haptic_trigger_ranged_resistance_strength", "_cb_update_haptic_trigger_ranged_resistance_strength")
+		event_manager:register(self, "event_update_haptic_trigger_melee_vibration_strength", "_cb_update_haptic_trigger_melee_vibration_strength")
+		event_manager:register(self, "event_update_haptic_trigger_ranged_vibration_strength", "_cb_update_haptic_trigger_ranged_vibration_strength")
+	end
+
 	event_manager:register(self, "event_player_authenticated", "_event_player_authenticated")
 
 	self._use_last_pressed = true
@@ -56,6 +66,10 @@ InputManager.init = function (self)
 		self:_set_allow_cursor_rendering(allow_cursor_rendering)
 		self:_update_clip_cursor()
 	end
+
+	if IS_PLAYSTATION then
+		self.haptic_trigger_effects = HapticTriggerEffects:new()
+	end
 end
 
 InputManager._event_player_authenticated = function (self)
@@ -63,8 +77,16 @@ InputManager._event_player_authenticated = function (self)
 		return
 	end
 
-	self:_event_update_rumble_enabled()
-	self:_event_update_rumble_intensity()
+	self:_cb_update_rumble_enabled()
+	self:_cb_update_rumble_intensity()
+
+	if IS_PLAYSTATION then
+		self:_cb_update_haptic_trigger_effects_enabled()
+		self:_cb_update_haptic_trigger_melee_resistance_strength()
+		self:_cb_update_haptic_trigger_ranged_resistance_strength()
+		self:_cb_update_haptic_trigger_melee_vibration_strength()
+		self:_cb_update_haptic_trigger_ranged_vibration_strength()
+	end
 end
 
 InputManager.software_cursor_active = function (self)
@@ -90,8 +112,8 @@ InputManager.init_all_devices = function (self)
 	end
 
 	for category, device_list in pairs(InputUtils.input_device_list) do
-		for i, device in ipairs(device_list) do
-			self:init_device(category, device, i)
+		for ii, device in ipairs(device_list) do
+			self:init_device(category, device, ii)
 		end
 	end
 
@@ -391,6 +413,10 @@ InputManager.update = function (self, dt, t)
 
 	self:_update_key_watch()
 
+	if IS_PLAYSTATION then
+		self.haptic_trigger_effects:update(dt, t)
+	end
+
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(InputManagerTestify, self)
 	end
@@ -602,6 +628,11 @@ InputManager.destroy = function (self)
 	event_manager:unregister(self, "device_deactivated")
 	event_manager:unregister(self, "event_update_rumble_enabled")
 	event_manager:unregister(self, "event_update_rumble_intensity")
+
+	if IS_PLAYSTATION then
+		event_manager:unregister(self, "event_update_haptic_trigger_effects_enabled")
+	end
+
 	event_manager:unregister(self, "event_player_authenticated")
 end
 
@@ -690,7 +721,7 @@ InputManager._set_wwise_rumble_state_from_device = function (self, device)
 	end
 end
 
-InputManager._event_update_rumble_enabled = function (self)
+InputManager._cb_update_rumble_enabled = function (self)
 	if DEDICATED_SERVER then
 		return
 	end
@@ -702,7 +733,7 @@ InputManager._event_update_rumble_enabled = function (self)
 	self._user_rumble_state = rumble_enabled
 end
 
-InputManager._event_update_rumble_intensity = function (self)
+InputManager._cb_update_rumble_intensity = function (self)
 	if DEDICATED_SERVER then
 		return
 	end
@@ -712,10 +743,14 @@ InputManager._event_update_rumble_intensity = function (self)
 	local rumble_intensity = (input_settings.rumble_intensity or 50) / 100
 	local rumble_intensity_gameplay = (input_settings.rumble_intensity_gameplay or 100) / 100
 	local rumble_intensity_immersive = (input_settings.rumble_intensity_immersive or 100) / 100
+	local rumble_intensity_combat_melee = (input_settings.rumble_intensity_combat_melee or 100) / 100
+	local rumble_intensity_combat_ranged = (input_settings.rumble_intensity_combat_ranged or 100) / 100
 
 	Wwise.set_parameter("options_rumble_slider", rumble_intensity)
 	Wwise.set_parameter("options_rumble_slider_gameplay", rumble_intensity_gameplay)
 	Wwise.set_parameter("options_rumble_slider_immersive", rumble_intensity_immersive)
+	Wwise.set_parameter("options_rumble_slider_combat_melee", rumble_intensity_combat_melee)
+	Wwise.set_parameter("options_rumble_slider_combat_ranged", rumble_intensity_combat_ranged)
 end
 
 InputManager._set_wwise_rumble_enabled = function (self, enabled)
@@ -753,6 +788,54 @@ InputManager.stop_suppress_wwise_rumble = function (self)
 	end
 
 	self._wwise_rumble_suppression = nil
+end
+
+InputManager._cb_update_haptic_trigger_effects_enabled = function (self)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local layout_name = input_settings.controller_layout
+	local gamepad_input_layout = GamepadInputLayouts[layout_name]
+	local haptic_trigger_effects_allowed = gamepad_input_layout.haptic_trigger_effects_allowed
+	local haptic_trigger_effects_setting_enabled = input_settings.haptic_trigger_effects_enabled
+	local haptic_trigger_effects_enabled = haptic_trigger_effects_allowed and haptic_trigger_effects_setting_enabled
+
+	self.haptic_trigger_effects:set_haptic_trigger_effects_enabled(haptic_trigger_effects_enabled)
+end
+
+InputManager._cb_update_haptic_trigger_melee_resistance_strength = function (self)
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local value = input_settings.haptic_trigger_melee_resistance_strength
+
+	self.haptic_trigger_effects:set_haptic_trigger_melee_resistance_strength(value)
+end
+
+InputManager._cb_update_haptic_trigger_ranged_resistance_strength = function (self)
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local value = input_settings.haptic_trigger_ranged_resistance_strength
+
+	self.haptic_trigger_effects:set_haptic_trigger_ranged_resistance_strength(value)
+end
+
+InputManager._cb_update_haptic_trigger_melee_vibration_strength = function (self)
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local value = input_settings.haptic_trigger_melee_vibration_strength
+
+	self.haptic_trigger_effects:set_haptic_trigger_melee_vibration_strength(value)
+end
+
+InputManager._cb_update_haptic_trigger_ranged_vibration_strength = function (self)
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local value = input_settings.haptic_trigger_ranged_vibration_strength
+
+	self.haptic_trigger_effects:set_haptic_trigger_ranged_vibration_strength(value)
 end
 
 return InputManager

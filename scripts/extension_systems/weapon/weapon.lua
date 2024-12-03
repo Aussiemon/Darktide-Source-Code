@@ -1,8 +1,10 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/weapon.lua
 
+require("scripts/extension_systems/weapon/special_classes/weapon_special_charging")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_deactivate_after_num_activations")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_explode_on_impact")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")
+require("scripts/extension_systems/weapon/special_classes/weapon_special_kill_count_charges")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_self_disorientation")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_shovels")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_simple_warp_charge")

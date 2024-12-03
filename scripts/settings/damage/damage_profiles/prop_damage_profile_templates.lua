@@ -260,6 +260,13 @@ damage_templates.corruptor_emerge_explosion = {
 	push_template = push_templates.grenadier_explosion,
 	catapulting_template = CatapultingTemplates.corruptor_emerge_explosion,
 }
+damage_templates.nurgle_head_parasite = table.clone(damage_templates.corruptor_emerge_explosion)
+damage_templates.nurgle_head_parasite.ignore_toughness = false
+damage_templates.nurgle_head_parasite.permanent_damage_ratio = 0.5
+damage_templates.nurgle_head_parasite.power_distribution = {
+	attack = 100,
+	impact = 50,
+}
 damage_templates.corruptor_damage_tick = {
 	ignore_toughness = true,
 	permanent_damage_ratio = 1,
@@ -323,7 +330,7 @@ damage_templates.flamer_backpack_explosion_close = {
 	disorientation_type = "grenadier",
 	ignore_stagger_reduction = true,
 	ignore_stun_immunity = true,
-	ignore_toughness = true,
+	ignore_toughness = false,
 	interrupt_alternate_fire = true,
 	ogryn_disorientation_type = "grenadier",
 	override_allow_friendly_fire = true,
@@ -367,6 +374,55 @@ damage_templates.flamer_backpack_explosion = table.clone(damage_templates.flamer
 damage_templates.flamer_backpack_explosion_close.power_distribution = {
 	attack = 100,
 	impact = 50,
+}
+damage_templates.interrupted_flamer_backpack_explosion_close = {
+	disorientation_type = "grenadier",
+	ignore_stagger_reduction = true,
+	ignore_stun_immunity = true,
+	ignore_toughness = false,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "grenadier",
+	override_allow_friendly_fire = true,
+	ragdoll_push_force = 500,
+	stagger_category = "explosion",
+	suppression_value = 20,
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.15,
+	},
+	armor_damage_modifier_ranged = {
+		near = barrel_explosion_close_admr,
+		far = barrel_explosion_far_admr,
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 10,
+			near = 100,
+		},
+		impact = {
+			far = 2,
+			near = 30,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	power_distribution = {
+		attack = 150,
+		impact = 75,
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.grenadier_explosion,
+	catapulting_template = CatapultingTemplates.interrupted_flamer_explosion,
+	gibbing_type = GibbingTypes.implosion,
+	gibbing_power = GibbingPower.heavy,
+}
+damage_templates.interrupted_flamer_backpack_explosion = table.clone(damage_templates.interrupted_flamer_backpack_explosion_close)
+damage_templates.interrupted_flamer_backpack_explosion.power_distribution = {
+	attack = 75,
+	impact = 25,
 }
 
 return {

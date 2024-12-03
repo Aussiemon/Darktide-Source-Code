@@ -693,7 +693,6 @@ local settings_definitions = {
 		display_name = "loc_interface_setting_title_color_type",
 		id = "character_titles_color_type",
 		save_location = "interface_settings",
-		tooltip_text = "loc_interface_setting_title_color_type_mouseover",
 		widget_type = "dropdown",
 		options = {
 			{
@@ -715,7 +714,6 @@ local settings_definitions = {
 		display_name = "loc_interface_setting_title_in_mission_color_type",
 		id = "character_titles_in_mission_color_type",
 		save_location = "interface_settings",
-		tooltip_text = "loc_interface_setting_title_in_mission_color_type_mouseover",
 		widget_type = "dropdown",
 		options = {
 			{

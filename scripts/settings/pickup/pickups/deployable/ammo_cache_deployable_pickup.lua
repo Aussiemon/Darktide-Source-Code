@@ -18,7 +18,10 @@ local pickup_data = {
 	unit_name = "content/pickups/pocketables/ammo_crate/deployable_ammo_crate",
 	unit_template_name = "pickup",
 	ammo_amount_func = function (max_ammunition_reserve, max_ammo_clip, pickup_data)
-		return max_ammunition_reserve + max_ammo_clip
+		local modifier = pickup_data.modifier or 1
+		local amount = math.ceil((max_ammunition_reserve + max_ammo_clip) * modifier)
+
+		return amount
 	end,
 }
 

@@ -167,6 +167,36 @@ LoadingClient.stop_load_mission = function (self)
 	shared_state.circumstance_name = nil
 end
 
+LoadingClient.load_mission = function (self, mission_name, level_name, circumstance_name, havoc_data)
+	local shared_state = self._shared_state
+
+	self:_cleanup_level(shared_state)
+
+	shared_state.state = "loading"
+	shared_state.level_name = level_name
+	shared_state.mission_name = mission_name
+	shared_state.circumstance_name = circumstance_name
+	shared_state.havoc_data = havoc_data
+
+	local state = self._state_machine:state()
+
+	if state.load_mission then
+		state:load_mission()
+	end
+end
+
+LoadingClient.stop_load_mission = function (self)
+	local shared_state = self._shared_state
+
+	self:_cleanup_level(shared_state)
+
+	shared_state.state = "loading"
+	shared_state.level_name = nil
+	shared_state.mission_name = nil
+	shared_state.circumstance_name = nil
+	shared_state.havoc_data = nil
+end
+
 LoadingClient.no_level_needed = function (self)
 	self._state_machine:event("no_level_needed")
 end

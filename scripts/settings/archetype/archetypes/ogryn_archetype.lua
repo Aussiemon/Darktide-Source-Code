@@ -34,12 +34,6 @@ local archetype_data = {
 	sprint = ArchetypeSprintTemplates.ogryn,
 	stamina = ArchetypeStaminaTemplates.ogryn,
 	warp_charge = ArchetypeWarpChargeTemplates.default,
-	specializations = {
-		ogryn_2 = {
-			archetype = "ogryn",
-			name = "ogryn_2",
-		},
-	},
 	talents = ArchetypeTalents.ogryn,
 	base_talents = {
 		ogryn_base_tank_passive = 1,

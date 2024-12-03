@@ -129,14 +129,21 @@ FootIk._instantiate_ik_data = function (self)
 	self:_refresh_slider_values()
 
 	self._distance_warp_sample = {}
-	self._surface_sample = {}
+	self._surface_sample = {
+		hips = {},
+		left = {},
+		right = {},
+	}
 	self._leaning_sample = {}
 	self._past_surface_sample = {
 		hips = {},
 		left = {},
 		right = {},
 	}
-	self._past_leaning_sample = {}
+	self._past_leaning_sample = {
+		move = Vector3Box(Vector3.zero()),
+		orient = QuaternionBox(Quaternion.identity()),
+	}
 
 	local init_hips_pos = Unit.local_position(self._unit, self._hips_handle)
 	local init_hips_rot = Unit.local_rotation(self._unit, self._hips_handle)
@@ -279,8 +286,7 @@ FootIk._get_handle_orientation_to_surface = function (self, orient_ref, weight, 
 	return Quaternion.lerp(Unit.local_rotation(self._unit, orient_ref), Matrix4x4.rotation(Matrix4x4.multiply(orient_ref_m, inv_parent_m)), weight * self.feet_orient_factor)
 end
 
-FootIk._get_foot_surface_data = function (self, unit_pose, foot_pose, weight, orient_ref, orient_ref_p, inv_forward)
-	local surface_data = {}
+FootIk._get_foot_surface_data = function (self, surface_data, unit_pose, foot_pose, weight, orient_ref, orient_ref_p, inv_forward)
 	local unit_pos = Matrix4x4.translation(unit_pose)
 	local foot_pos = Matrix4x4.translation(foot_pose)
 	local from_pos = Vector3(foot_pos.x, foot_pos.y, unit_pos.z)
@@ -302,16 +308,13 @@ FootIk._get_foot_surface_data = function (self, unit_pose, foot_pose, weight, or
 	surface_data.orient = self:_get_handle_orientation_to_surface(orient_ref, weight, orient_ref_p, surface_normal)
 	surface_data.hit_type = hit_type
 	surface_data.hit_distance = hit_distance
-
-	return surface_data
 end
 
 FootIk._surface_sampling = function (self, unit_pose, left_ref_pose, right_ref_pose, feet_weights, surface_sample, past_surface_sample)
-	surface_sample.left = self:_get_foot_surface_data(unit_pose, left_ref_pose, feet_weights.x, self._left_orient_ref, self._left_orient_ref_parent, false)
-	surface_sample.right = self:_get_foot_surface_data(unit_pose, right_ref_pose, feet_weights.y, self._right_orient_ref, self._right_orient_ref_parent, true)
-	surface_sample.hips = {
-		move = Vector3.zero(),
-	}
+	self:_get_foot_surface_data(surface_sample.left, unit_pose, left_ref_pose, feet_weights.x, self._left_orient_ref, self._left_orient_ref_parent, false)
+	self:_get_foot_surface_data(surface_sample.right, unit_pose, right_ref_pose, feet_weights.y, self._right_orient_ref, self._right_orient_ref_parent, true)
+
+	surface_sample.hips.move = Vector3.zero()
 
 	if surface_sample.left.hit_type == hit_types.down and surface_sample.right.hit_type == hit_types.down then
 		if surface_sample.left.hit_distance * feet_weights.x > surface_sample.right.hit_distance * feet_weights.y then
@@ -385,8 +388,8 @@ FootIk._lean_in_acceleration_sampling = function (self, leaning_sample, past_lea
 		leaning_sample.orient = Quaternion.lerp(QuaternionBox.unbox(past_leaning_sample.orient), leaning_sample.orient, self.dt * self.start_leaning_speed)
 	end
 
-	past_leaning_sample.move = Vector3Box(leaning_sample.move)
-	past_leaning_sample.orient = QuaternionBox(leaning_sample.orient)
+	Vector3Box.store(past_leaning_sample.move, leaning_sample.move)
+	QuaternionBox.store(past_leaning_sample.orient, leaning_sample.orient)
 end
 
 FootIk.solve_handles = function (self, surface_sample, leaning_sample, distance_warp_sample)
@@ -436,8 +439,9 @@ FootIk.update = function (self, unit, dt, t)
 		self._hub_jog_character_state_component = unit_data_extension:read_component("hub_jog_character_state")
 		self.dt = dt
 
-		table.clear(self._surface_sample)
-		table.clear(self._leaning_sample)
+		table.clear(self._surface_sample.hips)
+		table.clear(self._surface_sample.left)
+		table.clear(self._surface_sample.right)
 		table.clear(self._distance_warp_sample)
 		self:sampling(self._surface_sample, self._past_surface_sample, self._leaning_sample, self._past_leaning_sample, self._distance_warp_sample)
 		self:solve_handles(self._surface_sample, self._leaning_sample, self._distance_warp_sample)
@@ -463,7 +467,9 @@ FootIk.editor_update = function (self, unit, dt, t)
 	if dt < 1 / fps_threshold then
 		self.dt = dt
 
-		table.clear(self._surface_sample)
+		table.clear(self._surface_sample.hips)
+		table.clear(self._surface_sample.left)
+		table.clear(self._surface_sample.right)
 		table.clear(self._leaning_sample)
 		table.clear(self._distance_warp_sample)
 		self:sampling(self._surface_sample, self._past_surface_sample, self._leaning_sample, self._past_leaning_sample, self._distance_warp_sample)

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/loading/host_states/host_theme_state.lua
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local Havoc = require("scripts/utilities/havoc")
 local ThemePackage = require("scripts/foundation/managers/package/utilities/theme_package")
 local ThemeStateTestify = GameParameters.testify and require("scripts/loading/host_states/theme_state_testify")
 local HostThemeState = class("HostThemeState")
@@ -28,6 +29,23 @@ HostThemeState.init = function (self, state_machine, shared_state)
 	self._world = world
 
 	local themes = shared_state.themes
+	local havoc_data = shared_state.havoc_data
+
+	if havoc_data then
+		local parsed_data = Havoc.parse_data(havoc_data)
+		local theme_tag = parsed_data.theme
+		local level_name = shared_state.level_name
+		local theme_names = ThemePackage.level_resource_dependency_packages(level_name, theme_tag)
+
+		for _, theme_name in pairs(theme_names) do
+			local theme = World.create_theme(world, theme_name)
+
+			themes[#themes + 1] = theme
+		end
+
+		return
+	end
+
 	local circumstance_name = shared_state.circumstance_name
 
 	if circumstance_name then

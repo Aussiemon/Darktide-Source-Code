@@ -468,7 +468,12 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	self:_update_stamina(dt, t, fixed_frame)
 	self:_update_ammo()
 	self._sway_weapon_module:fixed_update(dt, t)
-	self._action_handler:fixed_update(dt, t)
+
+	local inventory_component = self._inventory_component
+	local wielded_slot = inventory_component.wielded_slot
+	local condition_func_params = self:condition_func_params(wielded_slot)
+
+	self._action_handler:fixed_update(dt, t, condition_func_params)
 
 	self._last_fixed_t = t
 
@@ -939,12 +944,13 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	temp_table.action_place_component = self._action_place_component
 	temp_table.alternate_fire_component = self._alternate_fire_read_component
 	temp_table.block_component = self._block_component
+	temp_table.character_state_component = self._character_state_component
 	temp_table.inventory_read_component = self._inventory_component
 	temp_table.inventory_slot_component = inventory_slot_component
+	temp_table.movement_state_component = self._movement_state_component
+	temp_table.sprint_character_state_component = self._sprint_character_state_component
 	temp_table.stamina_read_component = self._stamina_read_component
 	temp_table.warp_charge_component = self._warp_charge_component
-	temp_table.sprint_character_state_component = self._sprint_character_state_component
-	temp_table.movement_state_component = self._movement_state_component
 	temp_table.weapon_action_component = self._weapon_action_component
 	temp_table.action_module_charge_component = self._action_module_charge_component
 	temp_table.action_module_position_finder_component = self._action_module_position_finder_component

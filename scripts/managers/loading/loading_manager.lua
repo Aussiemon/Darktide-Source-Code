@@ -114,6 +114,22 @@ LoadingManager.load_mission = function (self, mission_name, level_name, circumst
 	end
 end
 
+LoadingManager.load_mission = function (self, mission_name, level_name, circumstance_name, havoc_data)
+	if mission_name then
+		level_name = level_name or Missions[mission_name].level
+	end
+
+	if self._loading_host then
+		self:_cleanup_shelved_loading_clients()
+		self._loading_host:load_mission(mission_name, level_name, circumstance_name, havoc_data)
+	end
+
+	if self._loading_client then
+		self:_cleanup_shelved_loading_clients()
+		self._loading_client:load_mission(mission_name, level_name, circumstance_name, havoc_data)
+	end
+end
+
 LoadingManager.stop_load_mission = function (self)
 	if self._loading_host then
 		self._loading_host:stop_load_mission()
@@ -168,26 +184,6 @@ LoadingManager.spawn_group_id = function (self)
 	end
 
 	return nil
-end
-
-local function instant_easing_function()
-	return 1
-end
-
-LoadingManager.show_instant_black_screen = function (self)
-	local local_player = Managers.player:local_player(1)
-
-	Managers.event:trigger("event_cutscene_fade_in", local_player, 0.1, instant_easing_function)
-
-	self.black_screen = true
-end
-
-LoadingManager.hide_instant_black_screen = function (self)
-	local local_player = Managers.player:local_player(1)
-
-	Managers.event:trigger("event_cutscene_fade_out", local_player, 0.1, instant_easing_function)
-
-	self.black_screen = false
 end
 
 return LoadingManager

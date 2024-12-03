@@ -16,6 +16,22 @@ local function _danger_display_name(challenge, resistance)
 	return danger_string
 end
 
+local function _get_havoc_rank(mission_data)
+	local min_havoc_rank = 1
+	local max_havoc_rank = 100
+	local havoc_rank_string = "havoc-rank-"
+
+	for i = min_havoc_rank, max_havoc_rank do
+		if mission_data.mission.flags[havoc_rank_string .. tostring(i)] then
+			return i
+		end
+	end
+
+	Log.error("Matchmaking Notification Handler", "Unable to get havoc rank")
+
+	return nil
+end
+
 local function _try_get_mission_text()
 	local game_state = Managers.party_immaterium:party_game_state()
 	local quickplay = game_state.params.qp == "true"
@@ -42,11 +58,16 @@ local function _try_get_mission_text()
 			local mission_key = mission_data.mission.map
 			local mission_template = MissionTemplates[mission_key]
 			local mission_name = Localize(mission_template.mission_name)
-			local challenge = mission_data.mission.challenge
-			local resistance = mission_data.mission.resistance
-			local danger = _danger_display_name(challenge, resistance)
 
-			return string.format("%s - %s", mission_name, danger)
+			if mission_data.mission.category == "havoc" then
+				return string.format("%s - %s", mission_name, Localize("loc_havoc_order_info_overlay") .. tostring(_get_havoc_rank(mission_data)))
+			else
+				local challenge = mission_data.mission.challenge
+				local resistance = mission_data.mission.resistance
+				local danger = _danger_display_name(challenge, resistance)
+
+				return string.format("%s - %s", mission_name, danger)
+			end
 		end
 	end
 end

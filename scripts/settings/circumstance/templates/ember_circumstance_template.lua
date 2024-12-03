@@ -12,7 +12,6 @@ local circumstance_templates = {
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_01",
 		},
 		mutators = {
-			"mutator_renegade_flamer_none_packs",
 			"mutator_only_traitor_guard_faction",
 		},
 	},

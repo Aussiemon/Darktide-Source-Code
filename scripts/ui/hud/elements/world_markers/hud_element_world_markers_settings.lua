@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/world_markers/hud_element_world_markers_settings.lua
 
 local hud_element_world_markers_settings = {
+	marker_draw_layer_increment = 10,
+	max_marker_draw_layer = 300,
 	raycasts_frame_delay = 5,
 	raycasts_per_frame = 10,
 	marker_templates = {

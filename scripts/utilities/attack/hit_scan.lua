@@ -125,7 +125,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 
 				MinionDeath.attack_ragdoll(hit_unit, direction, damage_profile, damage_type, hit_zone_name_or_nil, hit_position, attacker_unit, hit_actor, nil, optional_is_critical_strike)
 			elseif is_damagable then
-				if is_attacker_player and not HitScan.inside_faded_player(target_breed_or_nil, hit_distance) then
+				if is_attacker_player and HitScan.inside_faded_player(target_breed_or_nil, hit_distance) then
 					break
 				end
 
@@ -200,6 +200,8 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					end
 				end
 
+				local hit_any_weakspot = hit_weakspot
+
 				hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
 				target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
 				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
@@ -209,15 +211,12 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				local damage_dealt, attack_result, damage_efficiency
 
 				if should_deal_damage then
-					local previous_hit_weakspot = hit_weakspot
-
 					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
 
 					if attack_result == attack_results.blocked then
 						hit_position = _block_position(hit_unit, hit_position, direction)
 					end
 
-					hit_weakspot = previous_hit_weakspot or hit_weakspot
 					killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
 
 					local breed_is_minion = Breed.is_minion(target_breed_or_nil)
@@ -226,6 +225,8 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					hit_minion = hit_minion or breed_is_minion or breed_is_living_prop
 					number_of_units_hit = number_of_units_hit + 1
 				end
+
+				hit_weakspot = hit_any_weakspot or hit_weakspot
 
 				if Breed.is_character(target_breed_or_nil) or Breed.count_as_character(target_breed_or_nil) then
 					exploded = exploded or RangedAction.armor_explosion(is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, direction, damage_config, power_level, charge_level, optional_weapon_item)
@@ -322,11 +323,11 @@ HitScan.inside_faded_player = function (breed_or_nil, hit_distance)
 		local fade_distance = breed_or_nil and breed_or_nil.fade and (breed_or_nil.fade.min_distance + breed_or_nil.fade.max_distance) * 0.5 or 0
 
 		if is_target_player and hit_distance < fade_distance then
-			return false
+			return true
 		end
 	end
 
-	return true
+	return false
 end
 
 function _block_position(hit_unit, hit_position, attack_direction)

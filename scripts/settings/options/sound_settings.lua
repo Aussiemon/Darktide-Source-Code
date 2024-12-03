@@ -618,7 +618,7 @@ local voice_chat_settings = {
 
 if not IS_WINDOWS then
 	voice_chat_settings.options[3] = nil
-	voice_chat_settings.default_value = 2
+	voice_chat_settings.default_value = 1
 end
 
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)

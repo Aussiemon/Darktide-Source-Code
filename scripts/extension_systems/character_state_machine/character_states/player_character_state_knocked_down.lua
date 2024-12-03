@@ -91,7 +91,7 @@ PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous
 	end
 
 	if is_server then
-		self:_add_buffs(t)
+		self:_handle_on_enter_buffs(t)
 		health_extension:entered_knocked_down()
 		Managers.state.pacing:add_tension_type(TENSION_TYPE, unit)
 
@@ -144,7 +144,7 @@ PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
 	knocked_down_state_input.knock_down = false
 
 	if is_server and (next_state == "walking" or next_state == "warp_grabbed") then
-		self:_remove_buffs()
+		self:_handle_on_exit_buffs(t, next_state)
 		health_extension:exited_knocked_down()
 	end
 
@@ -290,7 +290,7 @@ PlayerCharacterStateKnockedDown._exit_third_person_mode = function (self, t)
 	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 end
 
-PlayerCharacterStateKnockedDown._add_buffs = function (self, t)
+PlayerCharacterStateKnockedDown._handle_on_enter_buffs = function (self, t)
 	local constants = self._constants
 	local buff_extension = self._buff_extension
 
@@ -313,7 +313,7 @@ PlayerCharacterStateKnockedDown._add_buffs = function (self, t)
 	end
 end
 
-PlayerCharacterStateKnockedDown._remove_buffs = function (self)
+PlayerCharacterStateKnockedDown._handle_on_exit_buffs = function (self, t, next_state)
 	local buff_extension = self._buff_extension
 	local damage_reduction_buff_indexes = self._damage_reduction_buff_indexes
 

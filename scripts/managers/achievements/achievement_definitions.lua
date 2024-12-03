@@ -2784,10 +2784,11 @@ do
 			end
 		end
 
-		old_numeric_target_family("missions_{index:%d}", {
+		tiered_target_family("missions_{index:%d}", {
 			description = "loc_achievement_missions_x_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0068",
 			stat_name = "missions",
+			title = "loc_achievement_missions_x_name",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_name,
 			flags = {},
@@ -2797,6 +2798,8 @@ do
 			150,
 			250,
 			500,
+			750,
+			1000,
 		})
 		old_numeric_target_family("scan_{index:%d}", {
 			description = "loc_achievement_scan_x_description",
@@ -3058,6 +3061,133 @@ do
 			10,
 			50,
 		})
+		tiered_target_family("mission_havoc_{index:%d}", {
+			category = "mission_havoc",
+			description = "loc_achievement_havoc_veteran_desc",
+			stat_name = "havoc_missions",
+			title = "loc_achievement_havoc_veteran_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "havoc_achievements/havoc_missions_havoc_veteran",
+			flags = {},
+		}, {
+			10,
+			25,
+			50,
+			75,
+			100,
+		})
+		tiered_target_family("havoc_win_assisted_{index:%d}", {
+			category = "mission_havoc",
+			description = "loc_achievement_havoc_clutch_description",
+			stat_name = "havoc_win_assisted",
+			title = "loc_achievement_havoc_clutch_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "havoc_achievements/havoc_missions_expedited_backup",
+			flags = {},
+		}, {
+			10,
+			25,
+			50,
+			75,
+			100,
+		})
+
+		local function _generate_havoc_rank_name()
+			local havoc_rank_name
+
+			return function (index, config, definition, key)
+				local loc_variables = definition[key]
+
+				loc_variables = loc_variables or {}
+				havoc_rank_name = "loc_havoc_militarium_rank_" .. string.format("%02d", index)
+				loc_variables.rank = Localize(havoc_rank_name)
+
+				return loc_variables
+			end
+		end
+
+		local function _generate_havoc_rank()
+			local havoc_rank_thresholds = {
+				5,
+				10,
+				15,
+				20,
+				25,
+				30,
+				35,
+				40,
+			}
+			local havoc_rank
+
+			return function (index, config, definition, key)
+				local loc_variables = definition[key]
+
+				loc_variables = loc_variables or {}
+				havoc_rank = havoc_rank_thresholds[index]
+				loc_variables.rank = tostring(havoc_rank)
+
+				return loc_variables
+			end
+		end
+
+		family({
+			category = "mission_havoc",
+			description = "loc_achievement_havoc_tier_description",
+			target = 1,
+			title = "loc_achievement_havoc_tier_reached",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "havoc_achievements/havoc_missions_adept_of_the_53rd",
+			flags = {},
+			loc_title_variables = {
+				rank = Localize("loc_havoc_militarium_rank_01"),
+			},
+			loc_variables = {
+				rank = Localize(40),
+			},
+		}, {
+			id = "mission_havoc_rank_reached_0{index:%d}",
+			stat_name = "havoc_rank_reached_0{index:%d}",
+			loc_title_variables = _generate_havoc_rank_name(),
+			loc_variables = _generate_havoc_rank(),
+		}, {
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+		})
+		tiered_target_family("mission_havoc_caches_earned_{index:%d}", {
+			category = "mission_havoc",
+			description = "loc_achievement_havoc_weekly_cache_description",
+			stat_name = "havoc_weekly_rewards_received",
+			title = "loc_achievement_havoc_weekly_cache_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "havoc_achievements/havoc_missions_the_militarium_giveth",
+			flags = {},
+		}, {
+			1,
+			5,
+			10,
+			15,
+			20,
+		})
+
+		AchievementDefinitions.flawless_havoc_won = {
+			category = "mission_havoc",
+			description = "loc_achievement_havoc_flawless_win_description",
+			stat_name = "flawless_havoc_won",
+			target = 1,
+			title = "loc_havoc_plus_flawless_win_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "havoc_achievements/havoc_missions_the_insane",
+			flags = {},
+			loc_variables = {
+				rank = 35,
+			},
+		}
 	end
 
 	AchievementDefinitions.mission_scavenge_samples = {
@@ -3130,6 +3260,7 @@ do
 		local excluded_maps_for_puzzles = {
 			core_research = true,
 			op_train = true,
+			upper_spire = true,
 		}
 
 		for _, mission in ipairs(missions) do
@@ -3487,6 +3618,56 @@ do
 		category = category_name,
 		flags = {},
 	}
+	AchievementDefinitions.total_syringes_used = {
+		description = "loc_achievement_total_syringes_used_description",
+		stat_name = "total_syringes_used",
+		target = 20,
+		title = "loc_achievement_total_syringes_used_name",
+		type = AchievementTypesLookup.increasing_stat,
+		icon = path .. "havoc_achievements/havoc_mission_total_syringes",
+		category = category_name,
+		flags = {},
+	}
+	AchievementDefinitions.elites_and_specials_killed_using_red_stimm = {
+		description = "loc_achievement_elites_and_specials_killed_using_red_stimm_description",
+		stat_name = "total_kills_gained_while_using_red_stimm",
+		target = 50,
+		title = "loc_achievement_elites_and_specials_killed_using_red_stimm_name",
+		type = AchievementTypesLookup.increasing_stat,
+		icon = path .. "havoc_achievements/havoc_mission_total_syringes",
+		category = category_name,
+		flags = {},
+	}
+	AchievementDefinitions.corruption_healed_using_green_stimm = {
+		description = "loc_achievement_corruption_healed_using_green_stimm_description",
+		stat_name = "corruption_healed_with_green_stimm",
+		target = 1000,
+		title = "loc_achievement_corruption_healed_using_green_stimm_stimm_name",
+		type = AchievementTypesLookup.increasing_stat,
+		icon = path .. "havoc_achievements/havoc_mission_use_green_stim",
+		category = category_name,
+		flags = {},
+	}
+	AchievementDefinitions.ability_time_saved_using_yellow_stimm = {
+		description = "loc_achievement_ability_time_saved_using_yellow_stimm_description",
+		stat_name = "ability_time_saved_by_yellow_stimm",
+		target = 1000,
+		title = "loc_achievement_ability_time_saved_using_yellow_stimm_name",
+		type = AchievementTypesLookup.increasing_stat,
+		icon = path .. "havoc_achievements/havoc_mission_use_red_stim",
+		category = category_name,
+		flags = {},
+	}
+	AchievementDefinitions.horde_kills_during_blue_stimm = {
+		description = "loc_achievement_horde_kills_during_blue_stimm_description",
+		stat_name = "total_kills_gained_while_using_blue_stimm",
+		target = 1000,
+		title = "loc_achievement_horde_kills_during_blue_stimm_name",
+		type = AchievementTypesLookup.increasing_stat,
+		icon = path .. "havoc_achievements/havoc_mission_use_yellow_stim",
+		category = category_name,
+		flags = {},
+	}
 end
 
 do
@@ -3535,10 +3716,35 @@ do
 		},
 	}
 
-	old_numeric_target_family("enemies_{index:%d}", {
+	for _, breed in pairs(AchievementBreedGroups.special_and_elite_breed_lookup) do
+		tiered_target_family("amount_of_" .. breed.name .. "_killed_{index:%d}", {
+			description = "loc_achievement_amount_of_x_description",
+			title = "loc_achievement_amount_of_x_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = breed.icon,
+			stat_name = string.format("x_amount_of_%s_killed", breed.name),
+			category = category_name,
+			flags = {},
+			loc_variables = {
+				breed = Localize(breed.local_variable),
+			},
+			loc_title_variables = {
+				breed = Localize(breed.title_local_variable),
+			},
+		}, {
+			breed.targets[1],
+			breed.targets[2],
+			breed.targets[3],
+			breed.targets[4],
+			breed.targets[5],
+		})
+	end
+
+	tiered_target_family("enemies_{index:%d}", {
 		description = "loc_achievement_enemies_x_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0089",
 		stat_name = "total_kills",
+		title = "loc_achievement_enemies_x_name",
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
 		flags = {},
@@ -3548,6 +3754,8 @@ do
 		100000,
 		250000,
 		500000,
+		750000,
+		1000000,
 	})
 
 	AchievementDefinitions.consecutive_headshots = {

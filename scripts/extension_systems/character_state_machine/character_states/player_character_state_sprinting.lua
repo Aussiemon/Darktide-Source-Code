@@ -363,7 +363,7 @@ local ALLOWED_INPUTS_IN_SPRINT = {
 
 function _check_input(action_input_extension, weapon_template, has_hip_fire_buff)
 	local peek = action_input_extension:peek_next_input("weapon_action")
-	local is_allowed = peek and ALLOWED_INPUTS_IN_SPRINT[peek]
+	local is_allowed = peek and (weapon_template.allowed_inputs_in_sprint or ALLOWED_INPUTS_IN_SPRINT)[peek]
 	local is_hipfire_input = peek and weapon_template and weapon_template.hipfire_inputs and weapon_template.hipfire_inputs[peek]
 	local is_hipfire_allowed_in_sprint = is_hipfire_input and has_hip_fire_buff
 

@@ -18,6 +18,7 @@ TrainBackdrop.init = function (self, unit)
 		wall_right = self:get_data(self._unit, "enable_wall_right"),
 		flat = self:get_data(self._unit, "enable_flat"),
 	}
+	self._wagons_in_tunnel = {}
 	self._spawned_units = {}
 	self._speed_multiplier = self:get_data(self._unit, "speed_multiplier")
 	self._speed_variable = Unit.animation_find_variable(self._unit, "move_speed")
@@ -234,9 +235,11 @@ TrainBackdrop._update_chunks = function (self)
 			to_remove = i
 		end
 
-		self:_update_effects(chunk)
+		self:_update_player_effects(chunk)
 		self:_update_light_groups(chunk)
 	end
+
+	self:_update_effects()
 
 	if to_remove ~= nil then
 		table.remove(self._active_chunks, to_remove)
@@ -275,33 +278,57 @@ TrainBackdrop._update_chunks = function (self)
 end
 
 TrainBackdrop._update_effects = function (self, chunk)
-	if chunk._chunk_type == "tunnel" then
-		if chunk.location_index >= self._wagons_chunk_location_start and chunk.location_index < self._wagons_chunk_location_end then
-			local wagon_number = chunk.location_index - (self._wagons_chunk_location_start - 1)
-			local flow_event = "in_wagon_tunnel_" .. wagon_number .. "_off"
+	local num_wagon_chunks = self._wagons_chunk_location_end - self._wagons_chunk_location_start
 
-			Unit.flow_event(self._unit, flow_event)
+	for i = 1, num_wagon_chunks do
+		local wagon_index = self._wagons_chunk_location_start - 1 + i
+		local wagon_number = string.format("%02d", i)
+
+		for _, active_chunk in pairs(self._active_chunks) do
+			local chunk_end = active_chunk.location_index - active_chunk._size - 1
+			local is_wagon_in_chunk = wagon_index <= active_chunk.location_index and chunk_end < wagon_index
+			local is_chunk_covered = active_chunk._chunk_type == "tunnel" or active_chunk._chunk_type == "covered"
+			local is_wagon_already_in_cover = self._wagons_in_tunnel[i] == true
+
+			if is_wagon_in_chunk and is_wagon_already_in_cover and not is_chunk_covered then
+				local flow_event = "in_wagon_" .. wagon_number .. "_tunnel_off"
+
+				Unit.flow_event(self._unit, flow_event)
+
+				self._wagons_in_tunnel[i] = false
+
+				break
+			elseif is_wagon_in_chunk and is_chunk_covered and not is_wagon_already_in_cover then
+				local flow_event = "in_wagon_" .. wagon_number .. "_tunnel_on"
+
+				Unit.flow_event(self._unit, flow_event)
+
+				self._wagons_in_tunnel[i] = true
+
+				break
+			end
 		end
+	end
+end
 
+TrainBackdrop._update_player_effects = function (self, chunk)
+	if chunk._chunk_type == "tunnel" or chunk._chunk_type == "covered" then
 		local chunk_end = chunk.location_index - chunk._size - 1
 
-		if chunk_end >= self._wagons_chunk_location_start and chunk_end < self._wagons_chunk_location_end then
-			local wagon_number = chunk_end - (self._wagons_chunk_location_start - 1)
-			local flow_event = "in_wagon_tunnel_" .. wagon_number .. "_on"
-
-			Unit.flow_event(self._unit, flow_event)
-		end
-
 		if self._current_player_chunk_location == chunk.location_index then
-			local flow_event = "in_player_tunnel_on"
-
-			Unit.flow_event(self._unit, flow_event)
-		end
-
-		if self._current_player_chunk_location == chunk_end then
 			local flow_event = "in_player_tunnel_off"
 
 			Unit.flow_event(self._unit, flow_event)
+
+			self._player_in_tunnel = true
+		end
+
+		if self._current_player_chunk_location == chunk_end then
+			local flow_event = "in_player_tunnel_on"
+
+			Unit.flow_event(self._unit, flow_event)
+
+			self._player_in_tunnel = false
 		end
 	end
 end

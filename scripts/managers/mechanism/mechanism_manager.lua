@@ -410,4 +410,10 @@ MechanismManager.profile_changes_are_allowed = function (self)
 	return mechanism:profile_changes_are_allowed()
 end
 
+MechanismManager.current_mechanism = function (self)
+	local mechanism = self._mechanism
+
+	return mechanism
+end
+
 return MechanismManager

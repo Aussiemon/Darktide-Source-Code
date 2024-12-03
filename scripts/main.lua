@@ -31,7 +31,7 @@ Main.init = function (self)
 
 	Application.set_time_step_policy("throttle", fps)
 
-	if type(GameParameters.window_title) == "string" and GameParameters.window_title ~= "" then
+	if IS_WINDOWS and type(GameParameters.window_title) == "string" and GameParameters.window_title ~= "" then
 		Window.set_title(GameParameters.window_title)
 	end
 

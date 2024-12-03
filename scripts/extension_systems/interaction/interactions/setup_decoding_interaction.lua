@@ -24,7 +24,7 @@ SetupDecodingInteraction.stop = function (self, world, interactor_unit, unit_dat
 		local target_unit = unit_data_component.target_unit
 		local decoder_device_extension = ScriptUnit.extension(target_unit, "decoder_device_system")
 
-		decoder_device_extension:decoder_setup_success(interactor_unit)
+		decoder_device_extension:decoder_setup_success()
 	end
 end
 

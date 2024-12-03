@@ -36,7 +36,15 @@ CraftingMechanicusModifyView.on_enter = function (self)
 	self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
 
 	if self._preselected_item then
-		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), self._preselected_item, CraftingSettings.type, {
+		local selected_index = self._crafting_recipe:selected_grid_index()
+
+		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), function ()
+			if selected_index then
+				self._crafting_recipe:select_grid_index(selected_index)
+			end
+
+			self:_update_weapon_stats_position("crafting_recipe_pivot", self._crafting_recipe)
+		end, self._preselected_item, CraftingSettings.type, {
 			masteries_data = self._masteries_data,
 		})
 	else
@@ -335,7 +343,15 @@ CraftingMechanicusModifyView._preview_item = function (self, item)
 	if not self._current_item and not self._preselected_item or self._current_item ~= item then
 		self._current_item = item
 
-		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), item, CraftingSettings.type, {
+		local selected_index = self._crafting_recipe:selected_grid_index()
+
+		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), function ()
+			if selected_index then
+				self._crafting_recipe:select_grid_index(selected_index)
+			end
+
+			self:_update_weapon_stats_position("crafting_recipe_pivot", self._crafting_recipe)
+		end, item, CraftingSettings.type, {
 			masteries_data = self._masteries_data,
 		})
 	end

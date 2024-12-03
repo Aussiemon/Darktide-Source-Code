@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/loading/loaders/level_loader.lua
 
+local Havoc = require("scripts/utilities/havoc")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local Loader = require("scripts/loading/loader")
@@ -31,6 +32,33 @@ LevelLoader.start_loading = function (self, mission_name, level_editor_level, ci
 	local circumstance_template = CircumstanceTemplates[circumstance_name]
 
 	self._theme_tag = circumstance_template.theme_tag
+
+	local item_definitions = MasterItems.get_cached()
+
+	self._load_state = LOAD_STATES.level_load
+
+	local function callback(_pkg_name)
+		self:_level_load_done_callback(item_definitions)
+	end
+
+	self._reference_name = "LevelLoader (" .. tostring(mission_name) .. ")"
+	self._level_package_id = Managers.package:load(level_name, self._reference_name, callback)
+end
+
+LevelLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name, havoc_data)
+	local level_name = Missions[mission_name].level or level_editor_level
+
+	self._level_name = level_name
+
+	if havoc_data then
+		local parsed_data = Havoc.parse_data(havoc_data)
+
+		self._theme_tag = parsed_data.theme
+	else
+		local circumstance_template = CircumstanceTemplates[circumstance_name]
+
+		self._theme_tag = circumstance_template.theme_tag
+	end
 
 	local item_definitions = MasterItems.get_cached()
 

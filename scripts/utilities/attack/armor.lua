@@ -30,6 +30,12 @@ function _character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or
 		return armor_types.super_armor
 	end
 
+	local havoc_infested_override = buff_extension and buff_extension:has_keyword(buff_keywords.infested_head_armor_override)
+
+	if havoc_infested_override and hit_zone_name_or_nil == "head" then
+		return armor_types.disgustingly_resilient
+	end
+
 	local armor_type
 	local has_toughess, toughness_armor_type = _check_toughness(unit, breed)
 

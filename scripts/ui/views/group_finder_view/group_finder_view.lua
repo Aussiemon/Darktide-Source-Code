@@ -1,20 +1,22 @@
 ﻿-- chunkname: @scripts/ui/views/group_finder_view/group_finder_view.lua
 
 local GroupFinderViewDefinitions = require("scripts/ui/views/group_finder_view/group_finder_view_definitions")
+local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local PlayerCompositions = require("scripts/utilities/players/player_compositions")
+local ProfileUtils = require("scripts/utilities/profile_utils")
+local Promise = require("scripts/foundation/utilities/promise")
+local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
+local TextUtilities = require("scripts/utilities/ui/text")
 local TextUtils = require("scripts/utilities/ui/text")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
-local PlayerCompositions = require("scripts/utilities/players/player_compositions")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local Promise = require("scripts/foundation/utilities/promise")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local TextUtilities = require("scripts/utilities/ui/text")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
-local ProfileUtils = require("scripts/utilities/profile_utils")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local GroupFinderView = class("GroupFinderView", "BaseView")
 local STATE = table.enum("idle", "fetching_tags", "browsing", "advertising")
 local settings_by_category = {
@@ -36,6 +38,9 @@ local settings_by_category = {
 	key_words = {
 		description_sort_order = 2,
 		text = Localize("loc_group_finder_category_key_words"),
+	},
+	havoc_threshold = {
+		text = Localize("loc_group_finder_subcategory_havoc_thresholds"),
 	},
 }
 
@@ -60,6 +65,9 @@ GroupFinderView.init = function (self, settings, context)
 	self._state = STATE.idle
 	self._selected_tags = {}
 	self._selected_tags_by_name = {}
+	self._metadata_for_selected_tags = {}
+	self._havoc_threshold_tag_to_inject = ""
+	self._has_active_havoc_order = false
 	self._is_party_full = false
 	self._groups = {}
 	self._sent_requests = {}
@@ -574,6 +582,13 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 
 		layout_data.required_level = not level_requirement_met and level_requirement
 		layout_data.level_requirement_met = level_requirement_met
+
+		if layout_data.level_requirement_met then
+			local personal_havoc_order_exists = self._has_active_havoc_order
+
+			layout_data.active_havoc_order = personal_havoc_order_exists
+		end
+
 		layout_data.dynamic_size = false
 		layout_data.size = {
 			grid_size[1],
@@ -952,7 +967,17 @@ GroupFinderView._cb_on_list_tag_pressed = function (self, element)
 			self:_play_sound(UISoundEvents.group_finder_filter_list_tag_selected)
 		end
 	elseif self:_is_tag_name_selected(pressed_tag_name) then
-		if self:_remove_selected_tag(tag) then
+		if tag.unlocks and element.auto_next then
+			for i = 1, #tag.unlocks do
+				local unlock_tag = tag.unlocks[i]
+
+				if self:_is_tag_name_selected(unlock_tag) then
+					self:_play_sound(UISoundEvents.group_finder_filter_list_tag_selected)
+
+					break
+				end
+			end
+		elseif self:_remove_selected_tag(tag) then
 			self:_play_sound(UISoundEvents.group_finder_filter_list_tag_deselected)
 		end
 	else
@@ -1283,6 +1308,7 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			description = group.description,
 			group_id = group.id,
 			tags = tags,
+			metadata = group.metadata,
 		}
 
 		layout[#layout + 1] = group_entry
@@ -1379,14 +1405,14 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			local preview_tag_row_width = player_request_grid_size[1]
 			local preview_tag_size = {
 				(preview_tag_row_width - spacing) * 0.5,
-				30,
+				45,
 			}
 
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {
 					preview_grid_size[1],
-					30,
+					45,
 				},
 			}
 			layout[#layout + 1] = {
@@ -1394,7 +1420,7 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 				text = Localize("loc_group_finder_category_option_key_words"),
 				size = {
 					preview_grid_size[1],
-					30,
+					45,
 				},
 			}
 			layout[#layout + 1] = {
@@ -1455,7 +1481,7 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 			widget_type = "dynamic_spacing",
 			size = {
 				preview_grid_size[1],
-				30,
+				45,
 			},
 		}
 
@@ -1465,77 +1491,6 @@ GroupFinderView._setup_group_preview = function (self, group_id)
 		self._previewed_group_id = nil
 
 		self:_set_preview_grid_visibility(false)
-	end
-end
-
-GroupFinderView._prepare_group_members_presence_data = function (self, group)
-	local members = group.members
-	local group_members = {}
-	local group_member_promises = {}
-
-	for _, member in ipairs(members) do
-		local member_status = member.status
-
-		if member_status == "CONNECTED" then
-			local member_account_id = member.account_id
-			local group_member = group_members[member_account_id]
-
-			if not group_member then
-				group_member = {
-					account_id = member_account_id,
-					presence_info = {},
-				}
-				group_members[#group_members + 1] = group_member
-			end
-
-			local _, promise = Managers.presence:get_presence(member_account_id)
-
-			group_member_promises[#group_member_promises + 1] = promise
-
-			self:_cancel_promise_on_exit(promise)
-			promise:next(function (data)
-				local member_data
-
-				for i = 1, #group_members do
-					if group_members[i].account_id == member_account_id then
-						member_data = group_members[i]
-
-						break
-					end
-				end
-
-				if member_data then
-					local presence_info = member_data.presence_info
-					local parsed_character_profile = data._parsed_character_profile
-
-					if parsed_character_profile then
-						local name = parsed_character_profile.name
-						local current_level = parsed_character_profile.current_level
-						local archetype = parsed_character_profile.archetype
-						local archetype_name = archetype.name
-
-						presence_info.name = name
-						presence_info.level = current_level
-						presence_info.archetype = archetype_name
-						presence_info.profile = parsed_character_profile
-					end
-				end
-			end):catch(function (error)
-				Log.error("GroupFinder", "Presence failed")
-			end)
-		end
-	end
-
-	if #group_member_promises > 0 then
-		local unpack_func = unpack_index[#group_member_promises]
-
-		return Promise.all(unpack_func(group_member_promises, 1)):next(function ()
-			return group_members
-		end)
-	else
-		return Promise.resolved():next(function ()
-			return group_members
-		end)
 	end
 end
 
@@ -1655,29 +1610,30 @@ GroupFinderView._cb_on_start_group_button_pressed = function (self)
 	end
 
 	local tags_for_group_advertisement = {}
+	local tag_set = {}
+
+	local function add_tag_if_not_exists(tag)
+		if not tag_set[tag] then
+			tag_set[tag] = true
+
+			table.insert(tags_for_group_advertisement, tag)
+		end
+	end
 
 	for i = 1, #selected_tags do
-		if selected_tags[i].name then
-			table.insert(tags_for_group_advertisement, selected_tags[i].name)
+		local tag_data = selected_tags[i]
 
-			if selected_tags[i].parents then
-				local parents_data = self:_get_tags_by_names(selected_tags[i].parents)
+		if tag_data.name then
+			add_tag_if_not_exists(tag_data.name)
+
+			if tag_data.parents then
+				local parents_data = self:_get_tags_by_names(tag_data.parents)
 
 				for j = 1, #parents_data do
-					if parents_data[j].root_tag then
-						local already_in_list = false
+					local parent_tag = parents_data[j]
 
-						for k = 1, #tags_for_group_advertisement do
-							if tags_for_group_advertisement[k] == parents_data[j].name then
-								already_in_list = true
-
-								break
-							end
-						end
-
-						if not already_in_list then
-							table.insert(tags_for_group_advertisement, parents_data[j].name)
-						end
+					if parent_tag.root_tag then
+						add_tag_if_not_exists(parent_tag.name)
 					end
 				end
 			end
@@ -1688,7 +1644,48 @@ GroupFinderView._cb_on_start_group_button_pressed = function (self)
 		return
 	end
 
-	local promise, id = party_immaterium:start_party_finder_advertise({}, tags_for_group_advertisement, region)
+	local function process_havoc_order_tags(tags)
+		for i = #tags, 1, -1 do
+			if tags[i] == "my_havoc_order" then
+				if self._has_active_havoc_order then
+					return true
+				else
+					table.remove(tags, i)
+
+					break
+				end
+			end
+		end
+
+		return false
+	end
+
+	local metadata_config = {}
+	local contains_personal_havoc_order_tag = process_havoc_order_tags(tags_for_group_advertisement)
+
+	if contains_personal_havoc_order_tag then
+		local havoc_threshold_tag_to_inject = self._havoc_threshold_tag_to_inject
+
+		for i = #tags_for_group_advertisement, 1, -1 do
+			local tag = tags_for_group_advertisement[i]
+
+			if string.starts_with(tag, "havoc_order_threshold_") and tag ~= havoc_threshold_tag_to_inject then
+				table.remove(tags_for_group_advertisement, i)
+
+				tag_set[tag] = nil
+			end
+		end
+
+		if not tag_set[havoc_threshold_tag_to_inject] then
+			tag_set[havoc_threshold_tag_to_inject] = true
+
+			table.insert(tags_for_group_advertisement, havoc_threshold_tag_to_inject)
+		end
+
+		metadata_config = self._metadata_for_selected_tags
+	end
+
+	local promise, id = party_immaterium:start_party_finder_advertise(metadata_config, tags_for_group_advertisement, region)
 
 	Log.info("Party advertisement initiated with ID:", id)
 	self:_cancel_promise_on_exit(promise)
@@ -1726,16 +1723,25 @@ local _temp_selected_unlocks = {}
 GroupFinderView.get_selected_unlocks_by_tag = function (self, tag)
 	table.clear(_temp_selected_unlocks)
 
-	local unlocks = tag.unlocks
+	local function add_if_selected(tag_name)
+		if self:_is_tag_name_selected(tag_name) then
+			local current_tag = self:_get_tag_by_name(tag_name)
 
-	if unlocks then
-		for i = 1, #unlocks do
-			local unlock_tag_name = unlocks[i]
+			_temp_selected_unlocks[#_temp_selected_unlocks + 1] = current_tag
+		end
+	end
 
-			if self:_is_tag_name_selected(unlock_tag_name) then
-				local unlock_tag = self:_get_tag_by_name(unlock_tag_name)
+	local unlocks = tag.unlocks or {}
 
-				_temp_selected_unlocks[#_temp_selected_unlocks + 1] = unlock_tag
+	for i = 1, #unlocks do
+		local unlock_tag_name = unlocks[i]
+		local unlock_tag = self:_get_tag_by_name(unlock_tag_name)
+
+		add_if_selected(unlock_tag_name)
+
+		if unlock_tag.widget_type == "tag_game_mode_with_unlocks" then
+			for j = 1, #(unlock_tag.unlocks or {}) do
+				add_if_selected(unlock_tag.unlocks[j])
 			end
 		end
 	end
@@ -1934,7 +1940,7 @@ GroupFinderView._set_state = function (self, new_state)
 
 				self:_on_fetching_tags_complete()
 			end
-		end)))
+		end), self:get_havoc_order_metadata()))
 	elseif new_state == STATE.browsing then
 		self:_set_group_list_empty_info_visibility(false)
 		self:_update_grids_selection()
@@ -1969,20 +1975,67 @@ end
 GroupFinderView._init_own_group_presentation = function (self, listed_group)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.own_group_presentation
+	local own_group_visualization = {}
 	local tags_by_name = listed_group.tags
 	local tags = {}
 
 	for _, tag_name in ipairs(tags_by_name) do
 		local tag = self:_get_tag_by_name(tag_name)
 
-		if tag and not tag.root_tag then
+		if tag and not tag.root_tag and not tag.pattern then
 			tags[#tags + 1] = tag
 		end
 	end
 
 	table.sort(tags, _tags_sort_function)
 
-	local own_group_visualization = {}
+	local metadata_config = listed_group.config
+
+	if metadata_config and next(metadata_config) then
+		local metadata = {
+			havoc_order_rank = metadata_config.havoc_order_rank,
+			havoc_mission_template = metadata_config.havoc_mission_template,
+			havoc_theme = metadata_config.havoc_theme,
+		}
+		local havoc_circumstances = {}
+
+		for key, value in pairs(metadata_config) do
+			if key:find("^havoc_circ") then
+				table.insert(havoc_circumstances, value)
+			end
+		end
+
+		if #havoc_circumstances > 0 then
+			metadata.havoc_circumstances = havoc_circumstances
+		end
+
+		if next(metadata) then
+			own_group_visualization.metadata = metadata
+		end
+
+		local mission_template = metadata_config.havoc_mission_template and MissionTemplates[metadata_config.havoc_mission_template]
+
+		if mission_template and mission_template.mission_name then
+			local mission_name = Localize(mission_template.mission_name)
+
+			tags[#tags + 1] = {
+				text = mission_name,
+			}
+		end
+
+		for i = 1, math.min(4, #havoc_circumstances) do
+			local circumstance = havoc_circumstances[i]
+			local circumstance_template = CircumstanceTemplates[circumstance]
+
+			if circumstance_template and circumstance_template.ui and circumstance_template.ui.display_name then
+				local circumstance_name = Localize(circumstance_template.ui.display_name)
+
+				tags[#tags + 1] = {
+					text = circumstance_name,
+				}
+			end
+		end
+	end
 
 	own_group_visualization.level_requirement_met = true
 	own_group_visualization.group_id = listed_group.party_id
@@ -1999,7 +2052,23 @@ GroupFinderView._init_own_group_presentation = function (self, listed_group)
 	local definitions = self._definitions
 	local groups_blueprints = definitions.groups_blueprints
 
-	groups_blueprints.group.init(self, widget, self._own_group_visualization, nil, nil, self._ui_renderer)
+	UIWidget.destroy(self._ui_renderer, widget)
+
+	local new_widget = UIWidget.init("own_group_presentation", UIWidget.create_definition(groups_blueprints.group.pass_template, "own_group_presentation"))
+
+	widgets_by_name.own_group_presentation = new_widget
+
+	for i = 1, #self._widgets do
+		local current_widget = self._widgets[i]
+
+		if current_widget.name == "own_group_presentation" then
+			self._widgets[i] = new_widget
+
+			break
+		end
+	end
+
+	groups_blueprints.group.init(self, new_widget, self._own_group_visualization, nil, nil, self._ui_renderer)
 end
 
 local time_loc_string_start = "loc_group_finder_group_list_last_time_updated_start"
@@ -2381,14 +2450,21 @@ GroupFinderView._update_listed_group = function (self)
 
 		if player then
 			local profile = player:profile()
-			local character_archetype_title = ProfileUtils.character_archetype_title(profile)
-			local character_level = tostring(profile.current_level) .. " "
-
-			content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
-
 			local social_service_manager = Managers.data_service.social
 			local player_info = social_service_manager and social_service_manager:get_player_info_by_account_id(player:account_id())
 			local platform = player_info and player_info:platform() or ""
+			local character_archetype_title = ProfileUtils.character_archetype_title(profile)
+			local character_level = tostring(profile.current_level) .. " "
+			local havoc_rank_all_time_high = player_info._presence:havoc_rank_all_time_high()
+
+			if havoc_rank_all_time_high ~= nil and profile.current_level ~= nil and profile.current_level >= 30 then
+				local havoc_prefix_text = Localize("loc_havoc_highest_order_reached")
+				local havoc_highest_rank = "- " .. havoc_prefix_text .. " " .. tostring(havoc_rank_all_time_high) .. " "
+
+				content.character_archetype_title = string.format("%s %s", character_archetype_title, havoc_highest_rank)
+			else
+				content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
+			end
 
 			if IS_PLAYSTATION and (platform == "psn" or platform == "ps5") then
 				content.character_name = player_info:user_display_name()
@@ -2447,6 +2523,7 @@ GroupFinderView._update_listed_group = function (self)
 
 			members[i].account_id = player:account_id()
 			members[i].presence_info.archetype = archetype.name
+			members[i].havoc_rank_all_time_high = havoc_rank_all_time_high
 			members[i].presence_info.synced = true
 		elseif members[i] then
 			members[i] = nil
@@ -2705,6 +2782,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 				for i = 1, #entries do
 					local entry = entries[i]
 					local entry_tags = entry.tags
+					local entry_metadata = entry.config or {}
 					local group_tags = {}
 
 					for k = 1, #entry_tags do
@@ -2718,11 +2796,64 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 
 					table.sort(group_tags, _tags_sort_function)
 
-					local description = self:_generate_tags_description(group_tags)
+					local group_metadata = {}
+
+					if entry_metadata and next(entry_metadata) then
+						local havoc_circumstances = {}
+
+						for key, value in pairs(entry_metadata) do
+							if key:find("^havoc_circ") then
+								havoc_circumstances[#havoc_circumstances + 1] = value
+							end
+						end
+
+						group_metadata = {
+							havoc_order_rank = entry_metadata.havoc_order_rank,
+							havoc_mission_template = entry_metadata.havoc_mission_template,
+							havoc_theme = entry_metadata.havoc_theme,
+							havoc_circumstances = havoc_circumstances,
+						}
+					end
+
+					local filtered_tags = {}
+
+					if group_metadata and next(group_metadata) then
+						if group_metadata.havoc_mission_template then
+							local mission_template = MissionTemplates[group_metadata.havoc_mission_template]
+							local mission_name = Localize(mission_template.mission_name)
+
+							filtered_tags[#filtered_tags + 1] = {
+								text = mission_name,
+							}
+						end
+
+						if group_metadata.havoc_circumstances then
+							for n = 1, math.min(4, #group_metadata.havoc_circumstances) do
+								local circumstance = group_metadata.havoc_circumstances[n]
+								local circumstance_template = CircumstanceTemplates[circumstance]
+								local circumstance_name = Localize(circumstance_template.ui.display_name)
+
+								filtered_tags[#filtered_tags + 1] = {
+									text = circumstance_name,
+								}
+							end
+						end
+					end
+
+					if group_tags then
+						for _, tag in ipairs(group_tags) do
+							if tag.name ~= "my_havoc_order" then
+								filtered_tags[#filtered_tags + 1] = tag
+							end
+						end
+					end
+
+					local description = self:_generate_tags_description(filtered_tags)
 					local required_level = self:_get_highest_tag_level_requirement(group_tags) or 0
 					local level_requirement_met = required_level <= current_level
 					local group = {
-						tags = group_tags,
+						tags = filtered_tags,
+						metadata = group_metadata,
 						id = entry.party_id,
 						members = {},
 						version = entry.version,
@@ -2826,6 +2957,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 										presence_info.level = member_current_level
 										presence_info.archetype = archetype_name
 										presence_info.profile = parsed_character_profile
+										presence_info.havoc_rank_all_time_high = data:havoc_rank_all_time_high()
 										presence_info.synced = true
 									end
 								end
@@ -3064,6 +3196,7 @@ GroupFinderView._populate_group_grid = function (self, groups, optional_complete
 			description = group.description,
 			group_id = group.id,
 			tags = group.tags,
+			metadata = group.metadata,
 			required_level = group.required_level,
 			level_requirement_met = group.level_requirement_met,
 			group_request_status_callback = function ()
@@ -3153,11 +3286,13 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests_by
 			local current_level = profile.current_level
 			local archetype = profile.archetype
 			local archetype_name = archetype.name
+			local havoc_rank_all_time_high = presence:havoc_rank_all_time_high()
 			local presence_info = {
 				name = name,
 				level = current_level,
 				archetype = archetype_name,
 				profile = profile,
+				havoc_rank_all_time_high = havoc_rank_all_time_high,
 			}
 			local entry = {
 				widget_type = "player_request_entry",
@@ -3463,6 +3598,53 @@ GroupFinderView.fetch_regions = function (self)
 	end)
 
 	return region_promise
+end
+
+GroupFinderView.get_havoc_order_metadata = function (self)
+	Managers.data_service.havoc:available_orders():next(function (havoc_order)
+		if not havoc_order or not havoc_order[1] then
+			return
+		end
+
+		local current_havoc_order = havoc_order[1]
+		local blueprint = current_havoc_order.blueprint or {}
+		local data = current_havoc_order.data or {}
+		local havoc_order_id = current_havoc_order.id
+		local havoc_order_rank = data.rank and tostring(data.rank)
+		local havoc_mission_template = blueprint.template and blueprint.template.id
+		local flags = blueprint.flags or {}
+
+		if not havoc_order_id or not havoc_order_rank or not havoc_mission_template or not next(flags) then
+			Log.warn("Havoc order data is incomplete for:", current_havoc_order)
+
+			return
+		end
+
+		local metadata_to_add = {
+			havoc_order_owner = self:_player():account_id(),
+			havoc_order_id = havoc_order_id,
+			havoc_order_rank = havoc_order_rank,
+			havoc_mission_template = havoc_mission_template,
+		}
+		local circ_counter = 1
+
+		for flag, _ in pairs(flags) do
+			if flag:find("^havoc%-circ%-") then
+				metadata_to_add["havoc_circ_" .. circ_counter] = flag:sub(#"havoc-circ-" + 1)
+				circ_counter = circ_counter + 1
+			elseif flag:find("^havoc%-theme%-") then
+				metadata_to_add.havoc_theme = flag:sub(#"havoc-theme-" + 1)
+			elseif flag:find("^havoc%-threshold%-") then
+				self._havoc_threshold_tag_to_inject = flag:sub(#"havoc-threshold-" + 1)
+			end
+		end
+
+		for key, value in pairs(metadata_to_add) do
+			self._metadata_for_selected_tags[key] = value
+		end
+
+		self._has_active_havoc_order = true
+	end)
 end
 
 GroupFinderView._callback_toggle_private_matchmaking = function (self)

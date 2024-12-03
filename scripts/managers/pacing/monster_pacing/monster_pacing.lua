@@ -5,8 +5,8 @@ local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liqu
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MinionPatrols = require("scripts/utilities/minion_patrols")
-local MonsterSettings = require("scripts/settings/monster/monster_settings")
 local MonsterInjectionTemplates = require("scripts/managers/pacing/monster_pacing/templates/monster_injection_templates")
+local MonsterSettings = require("scripts/settings/monster/monster_settings")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -137,6 +137,14 @@ MonsterPacing._generate_spawns = function (self, template)
 		end
 
 		num_to_spawn = math.max(num_to_spawn, #boss_injections)
+
+		if is_monster then
+			local add_num_monsters = Managers.state.havoc:get_modifier_value("add_num_monsters")
+
+			if add_num_monsters then
+				num_to_spawn = num_to_spawn + add_num_monsters
+			end
+		end
 
 		if current_num_sections < num_to_spawn then
 			Log.warning("MonsterPacing", "Requested %s spawns for type %s but only had %s sections. Clamped.", num_to_spawn, spawn_type, current_num_sections)
@@ -462,6 +470,24 @@ MonsterPacing.add_spawn_point = function (self, unit, position, path_position, t
 	return true
 end
 
+local captain_breeds = {
+	cultist = "cultist_captain",
+	renegade = "renegade_captain",
+}
+
+MonsterPacing._get_captain_faction = function (self, monster)
+	if monster.breed_name ~= "MUTATOR_CAPTAIN" then
+		return monster
+	end
+
+	local current_faction = Managers.state.pacing:current_faction()
+	local correct_captain = captain_breeds[current_faction]
+
+	monster.breed_name = correct_captain
+
+	return monster
+end
+
 MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 	local disabled = self._disabled
 
@@ -486,6 +512,8 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 			local spawn_travel_distance = monster.travel_distance
 
 			if spawn_travel_distance <= ahead_travel_distance then
+				monster = self:_get_captain_faction(monster)
+
 				self:_spawn_monster(monster, ahead_target_unit, side_id)
 				table.remove(monsters, i)
 
@@ -756,33 +784,36 @@ MonsterPacing.remove_monsters_behind_pos = function (self, position)
 		return false
 	end
 
-	local nav_spawn_points = main_path_manager:nav_spawn_points()
-	local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 1, 1, 1)
+	local nav_spawn_points, nav_world = main_path_manager:nav_spawn_points(), self._nav_world
+	local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 1, 1, 1)
 
 	if target_navmesh_position then
-		local group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, target_navmesh_position)
+		local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
 
 		if group_index then
 			local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
 			local end_index = start_index + 1
 			local _, distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
+			local monsters = self._monsters
 
-			if self._monsters then
-				for i = #self._monsters, 1, -1 do
-					local monster = self._monsters[i]
+			if monsters then
+				for i = #monsters, 1, -1 do
+					local monster = monsters[i]
 
 					if distance >= monster.travel_distance then
-						table.remove(self._monsters, i)
+						table.remove(monsters, i)
 					end
 				end
 			end
 
-			if self._boss_patrols then
-				for i = #self._boss_patrols, 1, -1 do
-					local boss_patrol = self._boss_patrols[i]
+			local boss_patrols = self._boss_patrols
+
+			if boss_patrols then
+				for i = #boss_patrols, 1, -1 do
+					local boss_patrol = boss_patrols[i]
 
 					if distance >= boss_patrol.travel_distance then
-						table.remove(self._boss_patrols, i)
+						table.remove(boss_patrols, i)
 					end
 				end
 			end

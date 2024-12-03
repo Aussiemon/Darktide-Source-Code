@@ -31,6 +31,12 @@ SpecialsPacing.init = function (self, nav_world)
 end
 
 SpecialsPacing.on_spawn_points_generated = function (self, template)
+	local add_max_alive_specials = Managers.state.havoc:get_modifier_value("add_max_alive_specials")
+
+	if add_max_alive_specials then
+		self._max_alive_specials_bonus = self._max_alive_specials_bonus + add_max_alive_specials
+	end
+
 	local first_spawn_timer_modifer = template.first_spawn_timer_modifer
 
 	self:_setup(template, first_spawn_timer_modifer)
@@ -1223,6 +1229,8 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 		second_ahead_distance = behind_travel_distance
 		second_behind_distance = ahead_travel_distance
 	else
+		local nav_spawn_points = self._nav_spawn_points
+
 		for i = 1, num_target_units do
 			local target_unit = target_units[i]
 
@@ -1231,7 +1239,7 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 				local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, enemy_position, ABOVE, BELOW, LATERAL)
 
 				if navmesh_position then
-					local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, self._nav_spawn_points, navmesh_position)
+					local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, navmesh_position)
 					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
 					local end_index = start_index + 1
 					local _, enemy_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(navmesh_position, start_index, end_index)

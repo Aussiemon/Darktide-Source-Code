@@ -87,7 +87,11 @@ OptionsView._map_validations = function (self, config)
 			validation_result = true
 		end
 
-		categories[setting.category].settings[setting.display_name] = {
+		local category = setting.category
+		local display_name = setting.display_name
+		local id = setting.id or category .. display_name
+
+		categories[category].settings[id] = {
 			validation_function = setting.validation_function,
 			validation_result = validation_result,
 		}
@@ -472,11 +476,13 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 		self:_update_settings_content_widgets(dt, t, input_service)
 	end
 
-	if self._validation_mapping then
+	local validation_mapping = self._validation_mapping
+
+	if validation_mapping then
 		local needs_reset = false
 		local reset_all = false
 
-		for category_name, category_data in pairs(self._validation_mapping) do
+		for category_name, category_data in pairs(validation_mapping) do
 			local valid = category_data.validation_function and category_data.validation_function()
 
 			if valid ~= nil and valid ~= category_data.validation_result then
@@ -713,13 +719,14 @@ OptionsView._setup_category_config = function (self, config)
 	local entries = {}
 	local reset_functions_by_category = {}
 	local categories_by_display_name = {}
+	local validation_mapping = self._validation_mapping
 
 	for i = 1, #config_categories do
 		local category_config = config_categories[i]
 		local category_display_name = category_config.display_name
 		local category_icon = category_config.icon
 		local category_reset_function = category_config.reset_function
-		local valid = self._validation_mapping[category_display_name].validation_result
+		local valid = validation_mapping[category_display_name].validation_result
 
 		if valid then
 			local entry = {
@@ -793,12 +800,14 @@ OptionsView._setup_settings_config = function (self, config)
 	local config_settings = config.settings
 	local category_widgets = {}
 	local settings_default_values = {}
-	local aligment_list = {}
 	local callback_name = "cb_on_settings_pressed"
 	local changed_callback_name = "cb_on_settings_changed"
+	local validation_mapping = self._validation_mapping
 
 	for setting_index, setting in ipairs(config_settings) do
-		local valid = self._validation_mapping[setting.category].settings[setting.display_name].validation_result
+		local display_name = setting.display_name
+		local id = setting.id or setting.category .. display_name
+		local valid = validation_mapping[setting.category].settings[id].validation_result
 
 		if valid and not setting.hidden then
 			local category = setting.category or "Uncategorized"

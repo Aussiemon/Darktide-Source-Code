@@ -53,6 +53,7 @@ DefaultGameParameters.debug_frame_tables = false
 DefaultGameParameters.dump_dev_parameters_on_startup = false
 DefaultGameParameters.dump_game_parameters_on_startup = false
 DefaultGameParameters.circumstance = "default"
+DefaultGameParameters.havoc_rank = 0
 DefaultGameParameters.side_mission = "default"
 DefaultGameParameters.testify = false
 DefaultGameParameters.testify_time_scale = false

@@ -1,12 +1,10 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/overcharge/hud_element_overcharge.lua
 
+local Colors = require("scripts/utilities/ui/colors")
 local Definitions = require("scripts/ui/hud/elements/overcharge/hud_element_overcharge_definitions")
-local HudElementOverchargeSettings = require("scripts/ui/hud/elements/overcharge/hud_element_overcharge_settings")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local WarpCharge = require("scripts/utilities/warp_charge")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local Overheat = require("scripts/utilities/overheat")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local HudElementOvercharge = class("HudElementOvercharge", "HudElementBase")
 local EPSILON = 0.00392156862745098
 
@@ -37,7 +35,7 @@ end
 
 HudElementOvercharge.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementOvercharge.super.update(self, dt, t, ui_renderer, render_settings, input_service)
-	self:_update_overcharge(dt)
+	self:_update_warp_charge(dt)
 	self:_update_overheat(dt)
 end
 
@@ -60,22 +58,22 @@ HudElementOvercharge._draw_widgets = function (self, dt, t, input_service, ui_re
 	render_settings.snap_pixel_positions = snap_pixel_positions
 end
 
-HudElementOvercharge._update_overcharge = function (self, dt)
+HudElementOvercharge._update_warp_charge = function (self, dt)
 	local warp_charge_level = 0
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
 
 	if player_extensions then
-		local player_unit_data = player_extensions.unit_data
+		local player_unit_data_extension = player_extensions.unit_data
 
-		if player_unit_data then
-			local warp_charge_component = player_unit_data:read_component("warp_charge")
+		if player_unit_data_extension then
+			local warp_charge_component = player_unit_data_extension:read_component("warp_charge")
 
 			warp_charge_level = warp_charge_component.current_percentage
 		end
 	end
 
-	local widget = self._widgets_by_name.overcharge
+	local widget = self._widgets_by_name.warp_charge
 
 	if warp_charge_level == 0 then
 		if widget.visible then
@@ -126,6 +124,29 @@ HudElementOvercharge._update_overcharge = function (self, dt)
 	self._warp_charge_level = warp_charge_level
 end
 
+HudElementOvercharge._overheat_configuration = function (self, slot_name, visual_loadout_extension)
+	if slot_name == "none" then
+		return nil
+	end
+
+	local slot_configuration = PlayerCharacterConstants.slot_configuration[slot_name]
+
+	if slot_configuration.slot_type ~= "weapon" then
+		return nil
+	end
+
+	local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_name)
+	local uses_overheat = weapon_template and weapon_template.hud_configuration and weapon_template.hud_configuration.uses_overheat
+
+	if not uses_overheat then
+		return nil
+	end
+
+	local overheat_configuration = Overheat.configuration(visual_loadout_extension, slot_name)
+
+	return overheat_configuration
+end
+
 HudElementOvercharge._update_overheat = function (self, dt)
 	local overheat_level = 0
 	local overheat_state = ""
@@ -134,47 +155,39 @@ HudElementOvercharge._update_overheat = function (self, dt)
 	local player_extensions = parent:player_extensions()
 
 	if player_extensions then
-		local player_unit_data = player_extensions.unit_data
+		local player_unit_data_extension = player_extensions.unit_data
+		local visual_loadout_extension = player_extensions.visual_loadout
 
-		if player_unit_data then
-			local weapon_extension = player_extensions.weapon
-			local weapon_template = weapon_extension:weapon_template()
+		if player_unit_data_extension and visual_loadout_extension then
+			local inventory_component = player_unit_data_extension:read_component("inventory")
+			local wielded_slot = inventory_component.wielded_slot
+			local wanted_slot = wielded_slot
 
-			if weapon_template and weapon_template.uses_overheat then
-				local inventory_component = player_unit_data:read_component("inventory")
-				local wielded_slot = inventory_component.wielded_slot
+			overheat_configuration = self:_overheat_configuration(wielded_slot, visual_loadout_extension)
 
-				if wielded_slot and wielded_slot ~= "none" then
-					local slot_configuration = PlayerCharacterConstants.slot_configuration[wielded_slot]
-
-					if slot_configuration.slot_type == "weapon" then
-						local slot_component = player_unit_data:read_component(wielded_slot)
-						local overheat_current_percentage = slot_component.overheat_current_percentage
-
-						overheat_level = overheat_current_percentage
-						overheat_state = slot_component.overheat_state
-						overheat_configuration = weapon_template.overheat_configuration
-					end
-				end
-			else
+			if not overheat_configuration then
 				local weapon_slots = self._weapon_slots
 
-				for i = 1, #weapon_slots do
-					local weapon_slot = weapon_slots[i]
-					local slot_component = player_unit_data:read_component(weapon_slot)
-					local overheat_current_percentage = slot_component.overheat_current_percentage
+				for ii = 1, #weapon_slots do
+					local weapon_slot_name = weapon_slots[ii]
 
-					if overheat_current_percentage > 0 then
-						overheat_level = overheat_current_percentage
-						overheat_state = slot_component.overheat_state
+					if weapon_slot_name ~= wielded_slot then
+						overheat_configuration = self:_overheat_configuration(weapon_slot_name, visual_loadout_extension)
+					end
 
-						local visual_loadout_extension = ScriptUnit.extension(parent:player_unit(), "visual_loadout_system")
-
-						overheat_configuration = Overheat.configuration(visual_loadout_extension, weapon_slot)
+					if overheat_configuration then
+						wanted_slot = weapon_slot_name
 
 						break
 					end
 				end
+			end
+
+			if overheat_configuration then
+				local slot_component = player_unit_data_extension:read_component(wanted_slot)
+
+				overheat_level = slot_component.overheat_current_percentage
+				overheat_state = slot_component.overheat_state
 			end
 		end
 	end
@@ -336,7 +349,7 @@ HudElementOvercharge._animate_widget_warnings = function (self, widget, value_fr
 			if wanted_color then
 				local text_color = warning_text_style.text_color
 
-				ColorUtilities.color_lerp(text_color, wanted_color, anim_progress, text_color, true)
+				Colors.color_lerp(text_color, wanted_color, anim_progress, text_color, true)
 			end
 		end
 	end

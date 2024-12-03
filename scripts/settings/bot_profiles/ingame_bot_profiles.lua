@@ -11,7 +11,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_green_01",
@@ -47,7 +46,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -83,7 +81,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_01_blind_left",
@@ -119,7 +116,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02",
@@ -155,7 +151,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -191,7 +186,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01",
@@ -227,7 +221,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_green_01",
@@ -263,7 +256,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -299,7 +291,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_01_blind_left",
@@ -335,7 +326,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02",
@@ -371,7 +361,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -407,7 +396,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01",
@@ -443,7 +431,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_green_01",
@@ -479,7 +466,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -515,7 +501,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_01_blind_left",
@@ -551,7 +536,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02",
@@ -587,7 +571,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -623,7 +606,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01",
@@ -659,7 +641,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_1",
 		selected_voice = "veteran_male_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_green_01",
@@ -695,7 +676,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_2",
 		selected_voice = "veteran_male_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -731,7 +711,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "male_names_1",
 		planet = "option_3",
 		selected_voice = "veteran_male_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_01_blind_left",
@@ -767,7 +746,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_4",
 		selected_voice = "veteran_female_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02",
@@ -803,7 +781,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_5",
 		selected_voice = "veteran_female_b",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_left",
@@ -839,7 +816,6 @@ local function ingame_bot_profiles(all_profiles)
 		name_list_id = "female_names_1",
 		planet = "option_6",
 		selected_voice = "veteran_female_c",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01",

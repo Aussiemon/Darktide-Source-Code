@@ -48,6 +48,43 @@ LoadingHostStateMachine.init = function (self, mission_name, level_editor_level,
 	self._state_machine = state_machine
 end
 
+LoadingHostStateMachine.init = function (self, mission_name, level_editor_level, circumstance_name, spawn_queue, loaders, done_loading_level_func, single_player, havoc_data)
+	local shared_state = {
+		state = "loading",
+		world_name = "level_world",
+		mission_name = mission_name,
+		level_name = Missions[mission_name].level or level_editor_level,
+		circumstance_name = circumstance_name,
+		havoc_data = havoc_data,
+		spawn_queue = spawn_queue,
+		done_loading_level_func = done_loading_level_func,
+		loaders = loaders,
+		themes = {},
+		single_player = single_player,
+	}
+
+	self._shared_state = shared_state
+
+	local parent
+	local state_machine = StateMachine:new("LoadingHostStateMachine", parent, shared_state)
+
+	state_machine:add_transition("HostDetermineSpawnGroupState", "spawn_group_done", HostLoadersState)
+	state_machine:add_transition("HostLoadersState", "load_done", HostCreateWorldState)
+	state_machine:add_transition("HostCreateWorldState", "load_done", HostThemeState)
+	state_machine:add_transition("HostThemeState", "load_done", HostLevelState)
+
+	if single_player then
+		state_machine:add_transition("HostLevelState", "load_done", HostWaitForMissionBriefingDoneState)
+		state_machine:add_transition("HostWaitForMissionBriefingDoneState", "mission_briefing_done", HostIngameState)
+	else
+		state_machine:add_transition("HostLevelState", "load_done", HostIngameState)
+	end
+
+	state_machine:set_initial_state(HostDetermineSpawnGroupState)
+
+	self._state_machine = state_machine
+end
+
 LoadingHostStateMachine.destroy = function (self)
 	local shared_state = self._shared_state
 

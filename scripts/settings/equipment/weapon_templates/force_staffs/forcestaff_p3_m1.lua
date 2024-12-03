@@ -1,11 +1,12 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/forcestaff_p3_m1.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -41,7 +42,6 @@ local chain_settings_charged_targeting = table.clone(chain_settings_charged)
 chain_settings_charged_targeting.radius = 20
 chain_settings_charged_targeting.max_angle = math.pi * 0.25
 chain_settings_charged_targeting.close_max_angle = math.pi * 0.5
-weapon_template.smart_targeting_template = SmartTargetingTemplates.force_staff_p1_single_target
 weapon_template.action_inputs = {
 	shoot_pressed = {
 		buffer_time = 0.15,
@@ -286,7 +286,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -663,6 +663,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_swipe_start = {
 		allowed_during_sprint = true,
@@ -719,6 +720,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_stab = {
 		allowed_during_sprint = true,
@@ -821,6 +823,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_stab_heavy = {
 		allowed_during_sprint = true,
@@ -924,6 +927,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_swipe = {
 		allowed_during_sprint = true,
@@ -1028,6 +1032,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_swipe_heavy = {
 		allowed_during_sprint = true,
@@ -1131,6 +1136,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_vent = {
 		abort_sprint = true,
@@ -1197,6 +1203,7 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.vent_warp_charge_multiplier,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -1210,6 +1217,7 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 }
 
@@ -1221,6 +1229,7 @@ weapon_template.spread_template = "default_force_staff_killshot"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1252,6 +1261,8 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "forcestaff_p3_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.smart_targeting_template = SmartTargetingTemplates.force_staff_p1_single_target
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.forcestaff
 weapon_template.charge_effects = {
 	sfx_parameter = "charge_level",
 	sfx_source_name = "_left",

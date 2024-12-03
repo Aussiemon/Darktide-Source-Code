@@ -34,12 +34,6 @@ local archetype_data = {
 	sprint = ArchetypeSprintTemplates.default,
 	stamina = ArchetypeStaminaTemplates.zealot,
 	warp_charge = ArchetypeWarpChargeTemplates.default,
-	specializations = {
-		zealot_2 = {
-			archetype = "zealot",
-			name = "zealot_2",
-		},
-	},
 	talents = ArchetypeTalents.zealot,
 	base_talents = {
 		zealot_dash = 1,

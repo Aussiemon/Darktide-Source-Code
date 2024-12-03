@@ -95,7 +95,7 @@ VotingByNetworkImpl.can_start_voting = function (self, template_name, params, in
 	end
 
 	if template.can_start then
-		return template.can_start()
+		return template.can_start(params)
 	end
 
 	return true

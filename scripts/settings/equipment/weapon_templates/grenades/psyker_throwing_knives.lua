@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_throwing_knives.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
@@ -44,16 +44,6 @@ local function _select_throw_anim(action_settings, condition_func_params)
 end
 
 weapon_template.action_inputs = {
-	combat_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
 	shoot = {
 		buffer_time = 0.2,
 		max_queue = 1,
@@ -164,6 +154,16 @@ weapon_template.action_inputs = {
 			},
 		},
 	},
+	combat_ability = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				input = "combat_ability_pressed",
+				value = true,
+			},
+		},
+	},
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -255,7 +255,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -775,6 +775,7 @@ weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

@@ -197,6 +197,15 @@ LoadingHost.load_mission = function (self, mission, level_editor_level, circumst
 	self._package_synchronizer_host:set_mission_name(mission)
 end
 
+LoadingHost.load_mission = function (self, mission, level_editor_level, circumstance_name, havoc_data)
+	self:stop_load_mission()
+
+	self._mission = mission
+	self._host = LoadingHostStateMachine:new(mission, level_editor_level, circumstance_name, self._spawn_queue, self._loaders, self._done_loading_level_func, self._single_player, havoc_data)
+
+	self._package_synchronizer_host:set_mission_name(mission)
+end
+
 LoadingHost.stop_load_mission = function (self)
 	self._spawn_queue:reset()
 

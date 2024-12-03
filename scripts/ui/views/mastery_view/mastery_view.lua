@@ -1148,7 +1148,9 @@ MasteryView._can_trait_be_acquired = function (self, trait_item_element)
 	local reached_max_rarity = trait_item_element.rarity == trait_item_element.next_rarity
 	local cost = trait_item_element.cost
 	local can_be_acquired = not not cost and cost <= points_available and next_rarity <= unlocked_rarity_level and not reached_max_rarity
-	local reason = not can_be_acquired and (not not cost and points_available < cost and "Not Enough Points" or unlocked_rarity_level < next_rarity and "Blessing Level " .. next_rarity .. " Locked" or "") or ""
+	local reason = not can_be_acquired and (not not cost and points_available < cost and Localize("loc_mastery_trait_no_points") or unlocked_rarity_level < next_rarity and Localize("loc_mastery_trait_level_locked", true, {
+		rarity_level = next_rarity,
+	}) or "") or ""
 
 	return can_be_acquired, reason
 end

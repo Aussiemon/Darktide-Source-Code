@@ -62,6 +62,10 @@ templates.syringe_heal_corruption_buff = {
 			return
 		end
 
+		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+
+		template_data.stimm_provider = buff_extension:get_inherited_buff_owner()
+
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 		local health_extension = ScriptUnit.extension(unit, "health_system")
@@ -162,6 +166,10 @@ templates.syringe_heal_corruption_buff = {
 
 			Managers.telemetry_events:player_stimm_heal(player, data)
 		end
+
+		local stimm_provider = template_data.stimm_provider
+
+		Managers.stats:record_private("hook_green_stimm_corruption_healed", stimm_provider, corruption_heal)
 	end,
 }
 templates.syringe_ability_boost_buff = {
@@ -179,6 +187,7 @@ templates.syringe_ability_boost_buff = {
 		local ability_extension = ScriptUnit.extension(unit, "ability_system")
 
 		template_data.ability_extension = ability_extension
+		template_data.total_time_reduced = 0
 
 		local fx_extension = ScriptUnit.extension(unit, "fx_system")
 		local particle_name = "content/fx/particles/pocketables/syringe_ability_3p"
@@ -195,6 +204,21 @@ templates.syringe_ability_boost_buff = {
 			local reduce_time = dt * effect
 
 			ability_extension:reduce_ability_cooldown_time(ability_type, reduce_time)
+
+			template_data.total_time_reduced = template_data.total_time_reduced + reduce_time
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local time_reduced = template_data.total_time_reduced
+
+		if time_reduced then
+			local player = template_context.player
+
+			Managers.stats:record_private("hook_ability_time_saved_by_yellow_stimm", player, time_reduced)
 		end
 	end,
 }
@@ -219,6 +243,14 @@ templates.syringe_power_boost_buff = {
 		local particle_name = "content/fx/particles/pocketables/syringe_power_3p"
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
+		Managers.stats:record_private("hook_red_stimm_active", template_context.player)
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		Managers.stats:record_private("hook_red_stimm_deactivated", template_context.player)
 	end,
 }
 templates.syringe_speed_boost_buff = {
@@ -250,6 +282,14 @@ templates.syringe_speed_boost_buff = {
 		local particle_name = "content/fx/particles/pocketables/syringe_speed_3p"
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
+		Managers.stats:record_private("hook_blue_stimm_active", template_context.player)
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		Managers.stats:record_private("hook_blue_stimm_deactivated", template_context.player)
 	end,
 }
 

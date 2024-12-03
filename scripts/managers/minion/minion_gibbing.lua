@@ -152,7 +152,9 @@ end
 
 function _create_inverse_root_node_bind_pose_lookup(unit, gib_template)
 	for hit_zone_name, data in pairs(gib_template) do
-		if hit_zone_name ~= "name" then
+		local is_hit_zone = hit_zone_name ~= "name" and hit_zone_name ~= "forced_fallback_gibbing_hit_zone_name"
+
+		if is_hit_zone then
 			for gibbing_type, entry in pairs(data) do
 				local conditional_entries = entry.conditional
 
@@ -253,16 +255,31 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		gibbing_type = critical_strike_settings and critical_strike_settings.gibbing_type or gibbing_type
 	end
 
+	local try_fallback = false
 	local gibs = self._gibs
 	local hit_zone_gib_template = _get_gibbing_template(self._template, gibs, hit_zone_name_or_nil, gibbing_type, self._portable_random, debug_explicit_gib_index)
 
 	if not hit_zone_gib_template then
-		return false
+		try_fallback = true
 	end
 
-	local gibbing_threshold = hit_zone_gib_template.gibbing_threshold or GibbingThresholds.light
+	local gibbing_threshold = hit_zone_gib_template and hit_zone_gib_template.gibbing_threshold or GibbingThresholds.light
 
 	if gibbing_power < gibbing_threshold then
+		try_fallback = true
+	end
+
+	if try_fallback then
+		local forced_fallback_gibbing_hit_zone_name = self._template.forced_fallback_gibbing_hit_zone_name
+
+		if forced_fallback_gibbing_hit_zone_name and forced_fallback_gibbing_hit_zone_name ~= hit_zone_name_or_nil then
+			local forced_gibbing_type = GibbingTypes.default
+
+			self:gib(forced_fallback_gibbing_hit_zone_name, attack_direction, damage_profile, forced_gibbing_type, nil, optional_is_critical_strike)
+
+			return true
+		end
+
 		return false
 	end
 

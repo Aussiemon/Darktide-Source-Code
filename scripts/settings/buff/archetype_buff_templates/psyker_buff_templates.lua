@@ -638,12 +638,16 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 	table.clear(broadphase_results)
 	table.clear(marked_targets)
 
-	local unit = template_context.unit
-	local rotation = template_data.first_person_component.rotation
-	local direction = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
-	local position = POSITION_LOOKUP[unit]
-	local distance = template_data.distance
-	local num_results = broadphase.query(broadphase, position, distance, broadphase_results, enemy_side_names)
+	local player_unit = template_context.unit
+	local player_rotation = template_data.first_person_component.rotation
+	local player_horizontal_look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(player_rotation)))
+	local player_position = POSITION_LOOKUP[player_unit]
+	local boradphase_distance = template_data.distance
+	local num_results = broadphase.query(broadphase, player_position, boradphase_distance, broadphase_results, enemy_side_names)
+	local end_search_on_first_valid_enemy = last_unit_pos == nil
+	local distance_check_position = last_unit_pos or player_position
+	local chosen_unit
+	local chosen_distance = math.huge
 
 	for i = 1, num_results do
 		local enemy_unit = broadphase_results[i]
@@ -654,37 +658,29 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 			local valid_breed = breed.psyker_mark_target
 
 			if valid_breed then
-				local unit_pos = POSITION_LOOKUP[enemy_unit]
-				local direction_to_target = Vector3.normalize(unit_pos - position)
-				local dot = Vector3.dot(direction, direction_to_target)
+				local enemy_pos = POSITION_LOOKUP[enemy_unit]
+				local direction_to_player = Vector3.normalize(enemy_pos - player_position)
+				local dot = Vector3.dot(player_horizontal_look_direction, direction_to_player)
 
 				if dot > 0.5 then
 					local perception_extension = ScriptUnit.has_extension(enemy_unit, "perception_system")
-					local has_line_of_sight = perception_extension and perception_extension:has_line_of_sight(unit)
+					local has_line_of_sight = perception_extension and perception_extension:has_line_of_sight(player_unit)
 
 					if has_line_of_sight then
-						local distance_to_unit = Vector3.distance_squared(last_unit_pos or unit_pos, position)
+						local distance_to_unit = Vector3.distance_squared(enemy_pos, distance_check_position)
 
-						marked_targets[enemy_unit] = distance_to_unit
+						if distance_to_unit < chosen_distance then
+							chosen_distance = distance_to_unit
+							chosen_unit = enemy_unit
+
+							if end_search_on_first_valid_enemy then
+								break
+							end
+						end
 					end
 				end
 			end
 		end
-	end
-
-	local chosen_unit
-
-	if last_unit_pos then
-		local chosen_distance = math.huge
-
-		for enemy_unit, distance_to_unit in pairs(marked_targets) do
-			if distance_to_unit < chosen_distance then
-				chosen_unit = enemy_unit
-				chosen_distance = distance_to_unit
-			end
-		end
-	else
-		chosen_unit = next(marked_targets)
 	end
 
 	if chosen_unit and template_data.current_target then

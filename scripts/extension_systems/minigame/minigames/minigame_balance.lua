@@ -23,13 +23,39 @@ MinigameBalance.init = function (self, unit, is_server, seed)
 	self._last_axis_set = 0
 	self._disrupt_timer = 0
 	self._objective = nil
-	self._progression = 0
+	self._start_progression = 0
 	self._is_stuck_indication = false
 	self._sound_alert_time = 0
 end
 
 MinigameBalance.hot_join_sync = function (self, sender, channel)
 	MinigameBalance.super.hot_join_sync(self, sender, channel)
+end
+
+MinigameBalance._player_fail = function (self, player)
+	if not player then
+		Log.error("MinigameBalance", "Trying to access user but there is none")
+
+		return
+	end
+
+	local unique_id = player:unique_id()
+
+	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
+end
+
+MinigameBalance.decode_interrupt = function (self)
+	MinigameBalance.super.decode_interrupt(self)
+
+	local target_extension = ScriptUnit.has_extension(self._minigame_unit, "mission_objective_target_system")
+
+	if self._start_progression == 0 and target_extension then
+		local objective_name = target_extension:objective_name()
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+		local objective = mission_objective_system:active_objective(objective_name)
+
+		self._start_progression = objective and objective:progression() or 0
+	end
 end
 
 MinigameBalance.start = function (self, player)
@@ -202,7 +228,7 @@ MinigameBalance.progression = function (self)
 		return 0
 	end
 
-	return self._objective:progression()
+	return (self._objective:progression() - self._start_progression) / (1 - self._start_progression)
 end
 
 return MinigameBalance

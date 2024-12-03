@@ -234,6 +234,12 @@ WeaponTraitParentProcBuff._show_in_hud = function (self)
 end
 
 WeaponTraitParentProcBuff._hud_show_stack_count = function (self)
+	local template = self._template
+
+	if template.hud_always_never_stacks then
+		return false
+	end
+
 	return true
 end
 

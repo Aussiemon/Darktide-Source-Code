@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/managers/horde/templates/far_vector_horde_template.lua
 
 local MainPathQueries = require("scripts/utilities/main_path_queries")
+local HordeUtilities = require("scripts/managers/horde/utilities/horde_utilities")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local aggro_states = PerceptionSettings.aggro_states
@@ -14,23 +15,6 @@ local horde_template = {
 		80,
 	},
 }
-
-local function _try_find_spawn_position(nav_world, traverse_logic, center_position, index, num_columns, max_attempts)
-	local Math_Random = math.random
-	local above, below = 2, 2
-	local offset = Vector3(-num_columns / 2 + index % num_columns, -num_columns / 2 + math.floor(index / num_columns), 0)
-
-	for i = 1, max_attempts do
-		local spawn_position = NavQueries.position_on_mesh(nav_world, center_position + offset, above, below, traverse_logic)
-
-		if spawn_position then
-			return spawn_position
-		else
-			offset = Vector3(4 * Math_Random() - 2, 4 * Math_Random() - 2, 0)
-		end
-	end
-end
-
 local breeds_to_spawn = {}
 
 local function _compose_spawn_list(composition)
@@ -53,31 +37,6 @@ local function _compose_spawn_list(composition)
 	table.shuffle(breeds_to_spawn)
 
 	return breeds_to_spawn, #breeds_to_spawn
-end
-
-local function _position_has_line_of_sight_to_any_enemy_player(physics_world, from_position, side, collision_filter)
-	local Vector3_length_squared, Vector3_normalize = Vector3.length_squared, Vector3.normalize
-	local PhysicsWorld_raycast = PhysicsWorld.raycast
-	local offset = Vector3.up()
-	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
-
-	for i = 1, #valid_enemy_player_units_positions do
-		local target_position = valid_enemy_player_units_positions[i] + offset
-		local to_target = target_position - from_position
-		local distance_sq = Vector3_length_squared(to_target)
-
-		if distance_sq > 0 then
-			local direction = Vector3_normalize(to_target)
-			local distance = math.sqrt(distance_sq)
-			local hit, _, _, _, _ = PhysicsWorld_raycast(physics_world, from_position, direction, distance, "closest", "collision_filter", collision_filter)
-
-			if not hit then
-				return true
-			end
-		end
-	end
-
-	return false
 end
 
 local function _try_find_position_ahead_or_behind_target_on_main_path(physics_world, nav_world, traverse_logic, check_ahead, travel_distance, euclidean_distance, side, target_side)
@@ -122,7 +81,7 @@ local function _try_find_position_ahead_or_behind_target_on_main_path(physics_wo
 	end
 
 	local collision_filter = "filter_minion_line_of_sight_check"
-	local in_line_of_sight = _position_has_line_of_sight_to_any_enemy_player(physics_world, wanted_position, side, collision_filter)
+	local in_line_of_sight = HordeUtilities.position_has_line_of_sight_to_any_enemy_player(physics_world, wanted_position, side, collision_filter)
 
 	if in_line_of_sight then
 		Log.info("FarVectorHorde", "\t\tSpawn position in line of sight of enemy player(s).")
@@ -233,7 +192,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local num_spawned = 0
 
 	for i = 1, num_to_spawn do
-		local spawn_position = _try_find_spawn_position(nav_world, traverse_logic, horde_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS)
+		local spawn_position = HordeUtilities.try_find_spawn_position(nav_world, horde_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS, traverse_logic)
 
 		if spawn_position then
 			local breed_name = spawn_list[i]

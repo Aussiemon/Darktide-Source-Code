@@ -59,6 +59,14 @@ local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = {
 	30,
 }
 local CHALLENGE_RATING_FOR_NO_MOVE_TIMER_OVERRIDE = 0
+local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = {
+	60,
+	60,
+	60,
+	15,
+	10,
+}
+local CHALLENGE_RATING_FOR_NO_MOVE_TIMER_OVERRIDE = 0
 
 HordePacing._update_horde_allowance = function (self, t, dt, side_id, target_side_id)
 	local main_path_manager = Managers.state.main_path
@@ -67,9 +75,9 @@ HordePacing._update_horde_allowance = function (self, t, dt, side_id, target_sid
 	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
 	local minion_spawn_limit_reached = total_minions_spawned >= template.max_active_minions
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
+	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
 	local allowed_hordes_per_travel_distance = math.ceil(furthest_travel_distance / self._required_travel_distance) - self._triggered_hordes
 	local hordes_enabled = pacing_manager:spawn_type_enabled("hordes") and allowed_hordes_per_travel_distance > 0
-	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
 	local travel_distance_allowed = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MIN or time_since_forward_travel_changed > TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MAX
 	local triggered_pre_stinger = self._triggered_pre_stinger
 	local current_wave = self._current_wave
@@ -515,6 +523,13 @@ HordePacing._setup_next_horde = function (self, template, optional_timer_modifie
 	self._next_horde_at = next_horde_at * (optional_timer_modifier or self._timer_modifier)
 
 	local pre_stinger_delay = template.pre_stinger_delays[horde_type]
+	local decreased_stinger = Managers.state.mutator:mutator("mutator_decreased_horde_pacing_stinger")
+
+	if decreased_stinger then
+		pre_stinger_delay = pre_stinger_delay * 0.5
+	end
+
+	local horde_started = self._horde_started
 
 	self._next_horde_pre_stinger_at = self._next_horde_at - pre_stinger_delay
 
@@ -591,10 +606,10 @@ local FAILED_TRAVEL_RANGE = {
 }
 
 HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, target_side_id)
+	local pacing_manager = Managers.state.pacing
 	local main_path_manager = Managers.state.main_path
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
 	local trickle_hordes = self._trickle_hordes
-	local pacing_manager = Managers.state.pacing
 	local ramp_up_timer_modifier = pacing_manager:get_ramp_up_frequency_modifier("trickle_hordes") or 1
 
 	for i = 1, #trickle_hordes do

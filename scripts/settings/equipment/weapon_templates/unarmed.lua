@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/unarmed.lua
 
+local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
@@ -21,6 +22,9 @@ weapon_template.action_inputs = {
 		},
 	},
 }
+
+table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.combat_ability_action_inputs)
+
 weapon_template.action_input_hierarchy = {
 	{
 		input = "combat_ability",
@@ -94,6 +98,7 @@ weapon_template.keywords = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.crosshair = {
 	crosshair_type = "ironsight",

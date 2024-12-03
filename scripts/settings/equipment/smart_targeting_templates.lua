@@ -150,6 +150,48 @@ smart_targeting_templates.alternate_fire_slow_brace = {
 		no_aim_input_multiplier = 0,
 	},
 }
+smart_targeting_templates.ogryn_heavystubber_p2_hipfire = {
+	precision_target = {
+		max_range = 100,
+		min_range = 1.5,
+		min_angle = _degrees_to_radians(1),
+		max_angle = _degrees_to_radians(2.25),
+		wanted_target = TORSO,
+	},
+	aim_assist = {
+		always_auto_aim = false,
+		base_multiplier = 0.6,
+		no_aim_input_multiplier = 0,
+	},
+	trajectory_assist = {
+		assist_multiplier = 0.6,
+		range = 35,
+		falloff_func = Range.power_4,
+		min_angle = _degrees_to_radians(1.5),
+		max_angle = _degrees_to_radians(2.3),
+	},
+}
+smart_targeting_templates.ogryn_heavystubber_p2_braced = {
+	precision_target = {
+		max_range = 100,
+		min_range = 1.5,
+		min_angle = _degrees_to_radians(0.15),
+		max_angle = _degrees_to_radians(0.3),
+		wanted_target = HEAD,
+	},
+	aim_assist = {
+		always_auto_aim = true,
+		base_multiplier = 1.2,
+		no_aim_input_multiplier = 0,
+	},
+	trajectory_assist = {
+		assist_multiplier = 0.6,
+		range = 25,
+		falloff_func = Range.power_4,
+		min_angle = _degrees_to_radians(0.5),
+		max_angle = _degrees_to_radians(1),
+	},
+}
 smart_targeting_templates.default_melee = {
 	precision_target = {
 		max_range = 100,
@@ -289,6 +331,7 @@ smart_targeting_templates.smite = {
 			cultist_melee = 1,
 			cultist_mutant = 20,
 			cultist_mutant_mutator = 20,
+			cultist_ritualist = 1,
 			cultist_shocktrooper = 10,
 			renegade_assault = 1,
 			renegade_berzerker = 10,
@@ -354,6 +397,7 @@ smart_targeting_templates.chain_lightning_single_target = {
 			cultist_melee = 1,
 			cultist_mutant = 20,
 			cultist_mutant_mutator = 20,
+			cultist_ritualist = 1,
 			cultist_shocktrooper = 10,
 			renegade_assault = 1,
 			renegade_berzerker = 10,
@@ -483,6 +527,7 @@ smart_targeting_templates.smart_tag_target = {
 			cultist_melee = 1,
 			cultist_mutant = 20,
 			cultist_mutant_mutator = 20,
+			cultist_ritualist = 1,
 			cultist_shocktrooper = 10,
 			renegade_assault = 1,
 			renegade_berzerker = 10,

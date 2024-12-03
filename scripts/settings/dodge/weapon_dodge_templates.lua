@@ -130,7 +130,7 @@ weapon_dodge_templates.psyker_heavy = {
 	},
 	diminishing_return_limit = {
 		lerp_basic = 2,
-		lerp_perfect = 3,
+		lerp_perfect = 4,
 	},
 	speed_modifier = {
 		lerp_basic = 1,

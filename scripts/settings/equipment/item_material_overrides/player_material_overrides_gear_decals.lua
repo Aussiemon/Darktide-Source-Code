@@ -8,6 +8,7 @@ local decal_table = {
 	decal_atlas_d7 = "content/textures/gear_decals/decal_atlas_d7",
 	decal_atlas_death_korps_of_krieg_01 = "content/textures/gear_decals/decal_atlas_death_korps_of_krieg_01",
 	decal_atlas_death_korps_of_krieg_02 = "content/textures/gear_decals/decal_atlas_death_korps_of_krieg_02",
+	decal_atlas_death_korps_of_krieg_03 = "content/textures/gear_decals/decal_atlas_death_korps_of_krieg_03",
 	decal_atlas_hive_scum_01 = "content/textures/gear_decals/decal_atlas_hive_scum_01",
 	decal_atlas_holidays_01 = "content/textures/gear_decals/decal_atlas_holidays_01",
 	decal_atlas_holidays_02 = "content/textures/gear_decals/decal_atlas_holidays_02",

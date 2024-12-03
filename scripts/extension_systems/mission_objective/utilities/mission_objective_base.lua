@@ -34,6 +34,7 @@ MissionObjectiveBase.init = function (self)
 	self._override_header = nil
 	self._override_description = nil
 	self._music_wwise_state = WWISE_MUSIC_STATE_NONE
+	self._music_wwise_priority = 0
 	self._mission_giver_voice_profile = nil
 	self._use_hud = true
 	self._use_hud_changed = false
@@ -62,9 +63,10 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	self._order_of_activation = last_activation_order
 	last_activation_order = last_activation_order + 1
 	self._ui_state = mission_objective_data.ui_state or "default"
-	self._header = mission_objective_data.header and Localize(mission_objective_data.header) or ""
+	self._header = mission_objective_data.localized_header or mission_objective_data.header and Localize(mission_objective_data.header) or ""
 	self._description = mission_objective_data.description and Localize(mission_objective_data.description) or ""
 	self._music_wwise_state = mission_objective_data.music_wwise_state or WWISE_MUSIC_STATE_NONE
+	self._music_wwise_priority = mission_objective_data.music_wwise_priority or 0
 	self._music_ignore_start_event = mission_objective_data.music_ignore_start_event or false
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
 	self._use_hud = mission_objective_data.hidden ~= true
@@ -483,6 +485,10 @@ end
 
 MissionObjectiveBase.music_wwise_state = function (self)
 	return self._music_wwise_state
+end
+
+MissionObjectiveBase.music_wwise_priority = function (self)
+	return self._music_wwise_priority
 end
 
 MissionObjectiveBase.mission_giver_voice_profile = function (self)

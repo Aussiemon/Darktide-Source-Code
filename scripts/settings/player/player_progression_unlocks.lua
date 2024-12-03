@@ -9,6 +9,7 @@ local player_progression_unlocks = {
 	gadget_slot_1 = 8,
 	gadget_slot_2 = 16,
 	gadget_slot_3 = 24,
+	havoc_missions = 30,
 	pot_contracts = 11,
 	pot_crafting = 4,
 	pot_gadgets = 8,

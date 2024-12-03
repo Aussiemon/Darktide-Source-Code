@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/shield/minion_husk_shield_extension.lua
 
-local HitZone = require("scripts/utilities/attack/hit_zone")
 local Breed = require("scripts/utilities/breed")
+local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionHuskShieldExtension = class("MinionHuskShieldExtension")
 
 MinionHuskShieldExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
@@ -35,13 +35,14 @@ MinionHuskShieldExtension.can_block_attack = function (self, damage_profile, att
 		return false
 	end
 
-	local breed = attacking_owner_unit_data_extension:breed()
+	local unit, attacking_owner_breed = self._unit, attacking_owner_unit_data_extension:breed()
+	local side_system = Managers.state.extension:system("side_system")
 
-	if Breed.is_minion(breed) then
+	if Breed.is_minion(attacking_owner_breed) and side_system:is_ally(unit, attacking_unit_owner_unit) then
 		return true
 	end
 
-	local hit_zone = hit_actor and HitZone.get(self._unit, hit_actor)
+	local hit_zone = hit_actor and HitZone.get(unit, hit_actor)
 	local hit_zone_name = hit_zone and hit_zone.name
 	local attacking_unit_position = POSITION_LOOKUP[attacking_unit]
 	local can_block_from_position = self:can_block_from_position(attacking_unit_position, hit_zone_name)

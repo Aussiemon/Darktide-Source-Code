@@ -833,6 +833,32 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_mask_fringe_02 = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				1,
+				0,
+				0,
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.5,
+			},
+			hair_mask_y = {
+				-1,
+				-0.1,
+			},
+			hair_mask_z = {
+				-1,
+				-1,
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				0,
+			},
+		},
+	},
 	hair_mask_fringe_tight = {
 		property_overrides = {
 			hair_mask_types_invert = {

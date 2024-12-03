@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/action_input/action_input_parser.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -286,7 +286,7 @@ ActionInputParser.action_transitioned_with_automatic_input = function (self, act
 	end
 
 	local hierarchy = _get_current_hierarchy(hierarchy_position, base_hierarchy, self._MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
-	local transition = ActionInputHierarchyUtils.find_hierarchy_transition(hierarchy, action_input)
+	local transition = ActionInputHierarchy.find_hierarchy_transition(hierarchy, action_input)
 	local hierarchy_s
 	local children_to_prepare = self:_handle_hierarchy_transition(transition, hierarchy_position, action_input, base_hierarchy, hierarchy)
 
@@ -457,7 +457,7 @@ ActionInputParser._fill_table_with_authoritative_hierarchy_position = function (
 
 			local prev_action_input = prev_entry[ACTION_INPUT]
 			local current_hierarchy = _get_current_hierarchy(table, base_hierarchy, max_hierarchy_depth, no_action_input)
-			local transition = ActionInputHierarchyUtils.find_hierarchy_transition(current_hierarchy, prev_action_input)
+			local transition = ActionInputHierarchy.find_hierarchy_transition(current_hierarchy, prev_action_input)
 			local _ = self:_handle_hierarchy_transition(transition, table, prev_action_input, base_hierarchy, current_hierarchy)
 		end
 	else
@@ -725,7 +725,7 @@ ActionInputParser._update_sequences = function (self, dt, t, template_name, hier
 			hierarchy = _get_current_hierarchy(hierarchy_position, base_hierarchy, MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
 		end
 
-		local hierarchy_transition = ActionInputHierarchyUtils.find_hierarchy_transition(hierarchy, action_input_sequence_completed)
+		local hierarchy_transition = ActionInputHierarchy.find_hierarchy_transition(hierarchy, action_input_sequence_completed)
 		local children_to_prepare = self:_handle_hierarchy_transition(hierarchy_transition, hierarchy_position, action_input_sequence_completed, base_hierarchy, hierarchy)
 
 		if children_to_prepare then
@@ -748,7 +748,7 @@ ActionInputParser._handle_hierarchy_transition = function (self, transition, hie
 	elseif transition == "base" then
 		self:_reset_hierarchy_position(hierarchy_position)
 
-		local base_entry = ActionInputHierarchyUtils.find_hierarchy_transition(base_hierarchy, action_input)
+		local base_entry = ActionInputHierarchy.find_hierarchy_transition(base_hierarchy, action_input)
 
 		if base_entry and type(base_entry) == "table" then
 			self:_progress_hierarchy_position(hierarchy_position, action_input)
@@ -1181,7 +1181,7 @@ ActionInputParser._clear_action_input_queue_from_matching_hierarchy_position = f
 		end
 
 		local entry_hierarchy = _get_current_hierarchy(entry_hierarchy_position, base_hierarchy, MAX_HIERARCHY_DEPTH, NO_ACTION_INPUT)
-		local transition = ActionInputHierarchyUtils.find_hierarchy_transition(entry_hierarchy, action_input)
+		local transition = ActionInputHierarchy.find_hierarchy_transition(entry_hierarchy, action_input)
 
 		if transition ~= nil then
 			clear_from_index = i
@@ -1241,7 +1241,7 @@ function _get_current_hierarchy(hierarchy_position, hierarchy, max_hierarchy_dep
 			break
 		end
 
-		local found_entry = ActionInputHierarchyUtils.find_hierarchy_entry(current_hierarchy, position)
+		local found_entry = ActionInputHierarchy.find_hierarchy_entry(current_hierarchy, position)
 
 		if not found_entry then
 			-- Nothing

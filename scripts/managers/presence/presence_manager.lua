@@ -192,6 +192,20 @@ PresenceManager.set_psn_session_id = function (self, session_id)
 	})
 end
 
+PresenceManager.set_havoc_status = function (self, value)
+	self._myself:set_havoc_status(value)
+	self:_update_my_presence({
+		havoc_status = true,
+	})
+end
+
+PresenceManager.set_havoc_rank_all_time_high = function (self, value)
+	self._myself:set_havoc_rank_all_time_high(value)
+	self:_update_my_presence({
+		havoc_rank_all_time_high = true,
+	})
+end
+
 PresenceManager.get_presence = function (self, account_id)
 	if account_id == gRPC.get_account_id() then
 		local myself = self:presence_entry_myself()

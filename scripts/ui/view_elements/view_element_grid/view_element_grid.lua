@@ -342,6 +342,10 @@ ViewElementGrid.set_color_intensity_multiplier = function (self, color_intensity
 	self._color_intensity_multiplier = color_intensity_multiplier or 1
 end
 
+ViewElementGrid.set_tutorial_color_intensity_multiplier = function (self, color_intensity_multiplier)
+	self._tutorial_color_intensity_multiplier = color_intensity_multiplier
+end
+
 ViewElementGrid.set_alpha_multiplier = function (self, alpha_multiplier)
 	self._alpha_multiplier = alpha_multiplier or 1
 end
@@ -392,6 +396,10 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 
 	local old_color_intensity_multiplier = render_settings.color_intensity_multiplier
 	local color_intensity_multiplier = self._color_intensity_multiplier or 1
+
+	if self._tutorial_color_intensity_multiplier then
+		color_intensity_multiplier = color_intensity_multiplier * self._tutorial_color_intensity_multiplier
+	end
 
 	render_settings.color_intensity_multiplier = (old_color_intensity_multiplier or 1) * color_intensity_multiplier
 

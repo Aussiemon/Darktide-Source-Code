@@ -1,22 +1,21 @@
 ﻿-- chunkname: @scripts/ui/views/talent_builder_view/talent_builder_view.lua
 
-local Definitions = require("scripts/ui/views/talent_builder_view/talent_builder_view_definitions")
 local Archetypes = require("scripts/settings/archetype/archetypes")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local CharacterSheet = require("scripts/utilities/character_sheet")
+local Colors = require("scripts/utilities/ui/colors")
+local Definitions = require("scripts/ui/views/talent_builder_view/talent_builder_view_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
 local NodeBuilderViewBase = require("scripts/ui/views/node_builder_view_base/node_builder_view_base")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
+local TalentBuilderViewSummaryBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_summary_blueprints")
+local TalentBuilderViewTutorialBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_tutorial_blueprints")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
-local TextUtilities = require("scripts/utilities/ui/text")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
+local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local CharacterSheet = require("scripts/utilities/character_sheet")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
-local ProfileUtils = require("scripts/utilities/profile_utils")
-local TalentBuilderViewTutorialBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_tutorial_blueprints")
-local TalentBuilderViewSummaryBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_summary_blueprints")
 local loadout_ability_widget_name_list = {
 	"loadout_slot_ability",
 	"loadout_slot_tactical",
@@ -195,7 +194,7 @@ TalentBuilderView._update_summery_button_text = function (self)
 	local action = self._summery_window_input_action
 	local service_type = "View"
 	local include_input_type = false
-	local summery_button_text = TextUtils.localize_with_button_hint(action, "loc_alias_talent_builder_view_hotkey_summary", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
+	local summery_button_text = Text.localize_with_button_hint(action, "loc_alias_talent_builder_view_hotkey_summary", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 
 	self._widgets_by_name.summary_button.content.text = summery_button_text
 end
@@ -450,10 +449,10 @@ TalentBuilderView.on_archetype_name_changed = function (self, archetype_name)
 
 	local node_connection_style = self._node_connection_widget.style
 
-	node_connection_style.line.material_values.fill_color = ColorUtilities.format_color_to_material(glow_colors.line_chosen.fill_color)
-	node_connection_style.line.material_values.blur_color = ColorUtilities.format_color_to_material(glow_colors.line_chosen.blur_color)
-	node_connection_style.line_available.material_values.fill_color = ColorUtilities.format_color_to_material(glow_colors.line_available.fill_color)
-	node_connection_style.line_available.material_values.blur_color = ColorUtilities.format_color_to_material(glow_colors.line_available.blur_color)
+	node_connection_style.line.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_chosen.fill_color)
+	node_connection_style.line.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_chosen.blur_color)
+	node_connection_style.line_available.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_available.fill_color)
+	node_connection_style.line_available.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_available.blur_color)
 
 	local material_name = TalentBuilderViewSettings.starting_points_material_by_name[archetype_name]
 	local node_widgets = self._node_widgets
@@ -464,11 +463,11 @@ TalentBuilderView.on_archetype_name_changed = function (self, archetype_name)
 
 		if node.type == "start" then
 			node_widget.content.icon = material_name
-			node_widget.style.icon.material_values.fill_color = ColorUtilities.format_color_to_material(glow_colors.line_chosen.fill_color)
-			node_widget.style.icon.material_values.blur_color = ColorUtilities.format_color_to_material(glow_colors.line_chosen.blur_color)
+			node_widget.style.icon.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_chosen.fill_color)
+			node_widget.style.icon.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_chosen.blur_color)
 		elseif node_widget.style.frame_selected then
-			node_widget.style.frame_selected.material_values.fill_color = ColorUtilities.format_color_to_material(glow_colors.line_chosen.fill_color)
-			node_widget.style.frame_selected.material_values.blur_color = ColorUtilities.format_color_to_material(glow_colors.line_chosen.blur_color)
+			node_widget.style.frame_selected.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_chosen.fill_color)
+			node_widget.style.frame_selected.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_chosen.blur_color)
 		end
 	end
 
@@ -882,7 +881,7 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 
 	self:_update_node_widgets_blocked_symbol_state()
 
-	if self:_handeling_popup_window() then
+	if self:_is_handling_popup_window() then
 		pass_input = false
 	end
 
@@ -906,7 +905,7 @@ TalentBuilderView.draw_layout = function (self, dt, t, input_service, layer)
 end
 
 TalentBuilderView._allowed_node_input = function (self)
-	if self:_handeling_popup_window() or self._input_blocked then
+	if self:_is_handling_popup_window() or self._input_blocked then
 		return false
 	end
 
@@ -918,7 +917,7 @@ TalentBuilderView._allowed_node_input = function (self)
 end
 
 TalentBuilderView.can_exit = function (self)
-	return not self:_handeling_popup_window()
+	return not self:_is_handling_popup_window()
 end
 
 TalentBuilderView.block_input = function (self, block)
@@ -966,7 +965,7 @@ TalentBuilderView._handle_input = function (self, input_service, dt, t)
 
 	TalentBuilderView.super._handle_input(self, input_service, dt, t)
 
-	if not self:_handeling_popup_window() and not input_blocked then
+	if not self:_is_handling_popup_window() and not input_blocked then
 		if not self._using_cursor_navigation then
 			local selected_node = self._selected_node
 
@@ -1383,7 +1382,7 @@ TalentBuilderView._set_node_points_spent_text = function (self, widget, points_s
 
 		local ignore_alpha = true
 
-		ColorUtilities.color_copy(color, text_style.text_color, ignore_alpha)
+		Colors.color_copy(color, text_style.text_color, ignore_alpha)
 	end
 end
 
@@ -1422,9 +1421,9 @@ TalentBuilderView._update_button_statuses = function (self, dt, t)
 	TalentBuilderView.super._update_button_statuses(self, dt, t)
 
 	local widgets_by_name = self._widgets_by_name
-	local handeling_popup_window = self:_handeling_popup_window()
+	local handling_popup_window = self:_is_handling_popup_window()
 	local input_blocked = self._input_blocked
-	local draw_tooltip = (self._can_draw_tooltip or self._selected_node_index ~= nil) and not handeling_popup_window and not input_blocked
+	local draw_tooltip = (self._can_draw_tooltip or self._selected_node_index ~= nil) and not handling_popup_window and not input_blocked
 
 	widgets_by_name.tooltip.content.visible = draw_tooltip
 	widgets_by_name.tooltip.alpha_multiplier = draw_tooltip and (self._tooltip_alpha_multiplier or 0) or 0
@@ -1439,13 +1438,13 @@ TalentBuilderView._update_button_statuses = function (self, dt, t)
 		end
 	end
 
-	widgets_by_name.summary_button.content.hotspot.disabled = handeling_popup_window or input_blocked
-	widgets_by_name.loadout_slot_aura.content.hotspot.disabled = handeling_popup_window or input_blocked
-	widgets_by_name.loadout_slot_ability.content.hotspot.disabled = handeling_popup_window or input_blocked
-	widgets_by_name.loadout_slot_tactical.content.hotspot.disabled = handeling_popup_window or input_blocked
+	widgets_by_name.summary_button.content.hotspot.disabled = handling_popup_window or input_blocked
+	widgets_by_name.loadout_slot_aura.content.hotspot.disabled = handling_popup_window or input_blocked
+	widgets_by_name.loadout_slot_ability.content.hotspot.disabled = handling_popup_window or input_blocked
+	widgets_by_name.loadout_slot_tactical.content.hotspot.disabled = handling_popup_window or input_blocked
 end
 
-TalentBuilderView._handeling_popup_window = function (self)
+TalentBuilderView._is_handling_popup_window = function (self)
 	return (self._summary_grid or self._tutorial_grid) and true or false
 end
 
@@ -1542,7 +1541,7 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 			local present_next_level_text = points_spent > 0 and points_spent < max_points
 
 			if present_next_level_text then
-				local next_level_title = TextUtilities.apply_color_to_text(Localize("loc_talent_mechanic_next_level"), Color.terminal_text_body_sub_header(255, true))
+				local next_level_title = Text.apply_color_to_text(Localize("loc_talent_mechanic_next_level"), Color.terminal_text_body_sub_header(255, true))
 				local next_level_description = TalentLayoutParser.talent_description(talent, points_spent + 1, Color.ui_terminal_dark(255, true))
 
 				content.next_level_title = next_level_title
@@ -1573,7 +1572,7 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 				local loc_key = settings_by_node_type.mutually_exclusive_tooltip_string or "loc_talent_mechanic_mutually_exclusive"
 
 				text_vertical_offset = text_vertical_offset + 20
-				content.exculsive_group_description = TextUtilities.apply_color_to_text(Localize(loc_key), Color.ui_terminal(255, true))
+				content.exculsive_group_description = Text.apply_color_to_text(Localize(loc_key), Color.ui_terminal(255, true))
 
 				local exculsive_group_description_height = self:_get_text_height(content.exculsive_group_description, style.exculsive_group_description, dummy_tooltip_text_size)
 
@@ -1597,8 +1596,8 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 						end
 
 						requirement_description = requirement_description .. Localize("loc_talent_mechanic_group_unlock", true, {
-							total_points = TextUtilities.apply_color_to_text(tostring(requirements.min_points_spent), Color.terminal_text_header(255, true)),
-							group_talents_amount = TextUtilities.apply_color_to_text(tostring(self:_points_spent_in_group(requirements.min_points_spent_in_group)), Color.terminal_text_header(255, true)),
+							total_points = Text.apply_color_to_text(tostring(requirements.min_points_spent), Color.terminal_text_header(255, true)),
+							group_talents_amount = Text.apply_color_to_text(tostring(self:_points_spent_in_group(requirements.min_points_spent_in_group)), Color.terminal_text_header(255, true)),
 						})
 						requirement_added = true
 					else
@@ -1607,8 +1606,8 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 						end
 
 						requirement_description = requirement_description .. Localize("loc_talent_mechanic_min_unlock_child", true, {
-							total_points = TextUtilities.apply_color_to_text(tostring(requirements.min_points_spent), Color.terminal_text_header(255, true)),
-							points_left = TextUtilities.apply_color_to_text(tostring(requirements.min_points_spent - node_points_spent), Color.terminal_text_header(255, true)),
+							total_points = Text.apply_color_to_text(tostring(requirements.min_points_spent), Color.terminal_text_header(255, true)),
+							points_left = Text.apply_color_to_text(tostring(requirements.min_points_spent - node_points_spent), Color.terminal_text_header(255, true)),
 						})
 						requirement_added = true
 					end
@@ -1662,18 +1661,18 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 
 				if points_spent ~= max_points then
 					if present_next_level_text then
-						input_text = TextUtils.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_next_level", nil, nil, Localize("loc_input_legend_text_template"))
+						input_text = Text.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_next_level", nil, nil, Localize("loc_input_legend_text_template"))
 					else
-						input_text = TextUtils.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_first_level", nil, nil, Localize("loc_input_legend_text_template"))
+						input_text = Text.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_first_level", nil, nil, Localize("loc_input_legend_text_template"))
 					end
 
 					input_text = input_text .. "  "
 				end
 
 				if points_spent > 1 then
-					input_text = input_text .. TextUtils.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level", nil, nil, Localize("loc_input_legend_text_template"))
+					input_text = input_text .. Text.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level", nil, nil, Localize("loc_input_legend_text_template"))
 				elseif points_spent > 0 then
-					input_text = input_text .. TextUtils.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level_first", nil, nil, Localize("loc_input_legend_text_template"))
+					input_text = input_text .. Text.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level_first", nil, nil, Localize("loc_input_legend_text_template"))
 				end
 
 				local input_text_style_color = style.input_text.text_color
@@ -1791,7 +1790,7 @@ end
 TalentBuilderView._update_node_widgets = function (self, dt, t)
 	TalentBuilderView.super._update_node_widgets(self, dt, t)
 
-	self._can_draw_tooltip = (self._hovered_node_widget or self._hovered_base_talent_widget) and not self._dragging_background and not self._summary_button_hovered and not self:_handeling_popup_window() and not self._input_blocked
+	self._can_draw_tooltip = (self._hovered_node_widget or self._hovered_base_talent_widget) and not self._dragging_background and not self._summary_button_hovered and not self:_is_handling_popup_window() and not self._input_blocked
 end
 
 TalentBuilderView._setup_talents_summary_grid = function (self)

@@ -136,12 +136,22 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 
 	local anim_settings = lunge_template.anim_settings
 	local on_enter_animation = anim_settings and anim_settings.on_enter
+	local weapon_template = WeaponTemplate.current_weapon_template(self._weapon_action_component)
+	local character_state_anim_events = weapon_template and weapon_template.character_state_anim_events
+
+	if character_state_anim_events then
+		local applicable_anim_events = character_state_anim_events[previous_state]
+
+		on_enter_animation = applicable_anim_events and applicable_anim_events.lunging or on_enter_animation
+	end
 
 	if on_enter_animation then
 		if type(on_enter_animation) ~= "table" then
 			self:_play_animation(self._animation_extension, on_enter_animation)
 		else
-			for _, anim in pairs(on_enter_animation) do
+			for ii = 1, #on_enter_animation do
+				local anim = on_enter_animation[ii]
+
 				self:_play_animation(self._animation_extension, anim)
 			end
 		end
@@ -435,6 +445,8 @@ PlayerCharacterStateLunging._check_transition = function (self, unit, t, input_e
 		local wants_sprint = Sprint.check(t, unit, self._movement_state_component, self._sprint_character_state_component, input_extension, self._locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants)
 
 		if wants_sprint then
+			next_state_params.disable_sprint_start_slowdown = true
+
 			return "sprinting"
 		else
 			return "walking"

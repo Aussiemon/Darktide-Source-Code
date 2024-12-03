@@ -16,6 +16,28 @@ local function validation_is_in_mission()
 	return false
 end
 
+local function validation_is_in_standard_mission()
+	if not validation_is_in_mission() then
+		return false
+	end
+
+	local mechanism = Managers.mechanism:current_mechanism()
+	local mechanism_data = mechanism and mechanism:mechanism_data()
+
+	return mechanism_data and not mechanism_data.havoc_data
+end
+
+local function validation_is_in_havoc_mission()
+	if not validation_is_in_mission() then
+		return false
+	end
+
+	local mechanism = Managers.mechanism:current_mechanism()
+	local mechanism_data = mechanism and mechanism:mechanism_data()
+
+	return mechanism_data and mechanism_data.havoc_data
+end
+
 local function _members_in_party()
 	local num_members = 0
 
@@ -45,7 +67,6 @@ local main_menu_list = {
 	},
 	{
 		icon = "content/ui/materials/icons/system/escape/social",
-		required_dev_parameter = "ui_show_social_menu",
 		text = "loc_social_view_display_name",
 		type = "large_button",
 		trigger_function = function (parent, widget, entry)
@@ -79,7 +100,6 @@ local main_menu_list = {
 	},
 	{
 		icon = "content/ui/materials/icons/system/escape/news",
-		required_dev_parameter = "ui_debug_news_screen",
 		text = "loc_news_view_title",
 		type = "button",
 		trigger_function = function ()
@@ -378,11 +398,40 @@ local default_list = {
 		icon = "content/ui/materials/icons/system/escape/leave_mission",
 		text = "loc_leave_mission_display_name",
 		type = "button",
-		validation_function = validation_is_in_mission,
+		validation_function = validation_is_in_standard_mission,
 		trigger_function = function ()
 			local context = {
 				description_text = "loc_popup_description_leave_mission",
 				title_text = "loc_popup_header_leave_mission",
+				options = {
+					{
+						close_on_pressed = true,
+						text = "loc_popup_button_leave_mission",
+						callback = callback(function ()
+							Managers.multiplayer_session:leave("leave_mission")
+						end),
+					},
+					{
+						close_on_pressed = true,
+						hotkey = "back",
+						template_type = "terminal_button_small",
+						text = "loc_popup_button_leave_continue_mission",
+					},
+				},
+			}
+
+			Managers.event:trigger("event_show_ui_popup", context)
+		end,
+	},
+	{
+		icon = "content/ui/materials/icons/system/escape/leave_mission",
+		text = "loc_leave_mission_display_name",
+		type = "button",
+		validation_function = validation_is_in_havoc_mission,
+		trigger_function = function ()
+			local context = {
+				description_text = "loc_system_leave_penalty_description",
+				title_text = "loc_system_leave_penalty",
 				options = {
 					{
 						close_on_pressed = true,

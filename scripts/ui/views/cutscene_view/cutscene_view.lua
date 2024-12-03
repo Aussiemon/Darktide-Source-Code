@@ -1,11 +1,10 @@
 ﻿-- chunkname: @scripts/ui/views/cutscene_view/cutscene_view.lua
 
 local Definitions = require("scripts/ui/views/cutscene_view/cutscene_view_definitions")
-local CutsceneViewSettings = require("scripts/ui/views/cutscene_view/cutscene_view_settings")
-local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local CutsceneView = class("CutsceneView", "BaseView")
 
 CutsceneView.init = function (self, settings, context)

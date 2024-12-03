@@ -11,7 +11,6 @@ DecoderDeviceExtension.init = function (self, extension_init_context, unit, exte
 	self._is_server = extension_init_context.is_server
 	self._unit_is_enabled = false
 	self._is_placed = false
-	self._placing_unit = nil
 	self._decoding_interrupted = false
 	self._is_finished = false
 	self._started_decode = false
@@ -161,16 +160,14 @@ DecoderDeviceExtension._set_visible_state = function (self, visible_state)
 	end
 end
 
-DecoderDeviceExtension.decoder_setup_success = function (self, placing_unit)
+DecoderDeviceExtension.decoder_setup_success = function (self)
 	if not self._is_placed then
-		self._placing_unit = placing_unit
-
 		self:place_unit()
 		self._decoder_synchronizer_extension:unblock_decoding_progression()
 	end
 end
 
-DecoderDeviceExtension.place_unit = function (self, placing_unit)
+DecoderDeviceExtension.place_unit = function (self)
 	if self._is_server and self._install_anim_event ~= "" then
 		local unit_id = Managers.state.unit_spawner:level_index(self._unit)
 
@@ -216,6 +213,12 @@ DecoderDeviceExtension.decode_interrupt = function (self)
 	self._decoding_interrupted = true
 
 	Unit.flow_event(self._unit, "lua_decode_on_hold")
+
+	local minigame_extension = self._minigame_extension
+
+	if minigame_extension then
+		minigame_extension:decode_interrupt()
+	end
 end
 
 DecoderDeviceExtension.finished = function (self)
@@ -258,10 +261,6 @@ end
 
 DecoderDeviceExtension.is_finished = function (self)
 	return self._is_finished
-end
-
-DecoderDeviceExtension.placing_unit = function (self)
-	return self._placing_unit
 end
 
 DecoderDeviceExtension.is_minigame_active = function (self)

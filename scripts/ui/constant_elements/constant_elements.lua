@@ -163,6 +163,13 @@ local elements = {
 		},
 	},
 	{
+		class_name = "ConstantElementHavocStatus",
+		filename = "scripts/ui/constant_elements/elements/havoc/constant_element_havoc_status",
+		visibility_groups = {
+			"in_hub",
+		},
+	},
+	{
 		class_name = "ConstantElementLoading",
 		filename = "scripts/ui/constant_elements/elements/loading/constant_element_loading",
 		visibility_groups = {

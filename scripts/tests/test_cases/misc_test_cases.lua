@@ -494,6 +494,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			"content/fx/particles/enemies/netgunner/netgunner_net_miss",
 			"content/fx/particles/enemies/plague_ogryn/plague_ogryn_body_odor",
 			"content/fx/particles/environment/foundry_molten_pool_boiling_01",
+			"content/fx/particles/environment/ice_zone/lightnings_emit_from_mesh_01",
 			"content/fx/particles/environment/molten_steel_splash",
 			"content/fx/particles/environment/molten_steel_splashes_impact",
 			"content/fx/particles/environment/roofdust_tremor",
@@ -502,10 +503,12 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			"content/fx/particles/interacts/airlock_closing",
 			"content/fx/particles/interacts/airlock_opening",
 			"content/fx/particles/liquid_area/fire_lingering_enemy",
-			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			"content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
 			"content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
-			"content/fx/particles/environment/ice_zone/lightnings_emit_from_mesh_01",
+			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh_loop",
+			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
+			"content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh_loop",
+			"content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh",
 		}
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then

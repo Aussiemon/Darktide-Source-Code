@@ -17,7 +17,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			-140,
-			10,
+			0,
 		},
 	},
 	input_pivot = {

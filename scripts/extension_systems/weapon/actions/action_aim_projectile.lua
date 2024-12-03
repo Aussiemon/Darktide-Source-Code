@@ -18,6 +18,8 @@ ActionAimProjectile.init = function (self, action_context, ...)
 end
 
 ActionAimProjectile.start = function (self, action_settings, t, time_scale, action_start_params)
+	ActionAimProjectile.super.start(self, action_settings, t, time_scale, action_start_params)
+
 	local locomotion_template = self:_locomotion_template()
 	local throw_type = action_settings.throw_type or "throw"
 	local throw_config = locomotion_template.trajectory_parameters[throw_type]

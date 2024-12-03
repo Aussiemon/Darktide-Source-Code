@@ -35,6 +35,7 @@ _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cu
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_gunner_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_melee_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_mutant_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_ritualist_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_shocktrooper_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_assault_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_berzerker_behavior_tree")

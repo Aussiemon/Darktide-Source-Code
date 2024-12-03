@@ -298,7 +298,7 @@ ItemPreviewer._select_root_unit_resource = function (self, item_data)
 			root_unit = "content/characters/player/ogryn/attachments_base/hair/hair_medium_mullet_a/hair_medium_mullet_a"
 		end
 
-		if table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") then
+		if table.array_contains(slots, "slot_body_face_makeup") or table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") then
 			if table.array_contains(breeds, "human") then
 				root_unit = "content/characters/player/human/attachments_base/male/face_caucasian_01/male_face_caucasian_01"
 			elseif table.array_contains(breeds, "ogryn") then

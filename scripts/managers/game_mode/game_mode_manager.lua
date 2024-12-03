@@ -88,7 +88,7 @@ GameModeManager.register_physics_safe_callback = function (self, cb)
 	self._num_physics_safe_callbacks = index
 end
 
-GameModeManager._async_raycast_result_cb = function (self, id, hits, num_hits)
+GameModeManager._async_raycast_result_cb = function (self, id, ...)
 	local queue = self._raycast_queue
 	local index = self._async_raycast_handles[id]
 	local cb = queue[index - 1]
@@ -106,7 +106,7 @@ GameModeManager._async_raycast_result_cb = function (self, id, hits, num_hits)
 		queue[jj] = nil
 	end
 
-	cb(id, hits, num_hits, data_buffer)
+	cb(id, data_buffer, ...)
 	table.clear(data_buffer)
 
 	self._async_raycast_handles[id] = nil
@@ -445,7 +445,7 @@ GameModeManager.mission_outro_played = function (self)
 		return true
 	end
 
-	if state == "outro_cinematic" and not Managers.state.cinematic:active() then
+	if state == "outro_cinematic" and not Managers.state.cinematic:cinematic_active() then
 		return true
 	end
 

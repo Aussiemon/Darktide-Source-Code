@@ -11,6 +11,11 @@ ViewTransitionUI.init = function (self, render_settings)
 		world_layer = 990,
 	}
 	self._render_settings = render_settings
+	self._fade_color = {
+		x = 0,
+		y = 0,
+		z = 0,
+	}
 end
 
 ViewTransitionUI._setup_renderer = function (self)
@@ -60,6 +65,12 @@ ViewTransitionUI._destroy_renderer = function (self)
 	end
 end
 
+ViewTransitionUI.set_fade_color_rgb = function (self, r, g, b)
+	self._fade_color.x = r or 0
+	self._fade_color.y = g or 0
+	self._fade_color.z = b or 0
+end
+
 ViewTransitionUI.progress = function (self)
 	return self._progress or 0
 end
@@ -100,7 +111,7 @@ ViewTransitionUI.update = function (self, dt, t, should_transition, transition_p
 		local screen_height = RESOLUTION_LOOKUP.height
 		local position = Vector3(0, 0, 999)
 		local size = Vector2(screen_width, screen_height)
-		local color = Color(255 * anim_progress, 0, 0, 0)
+		local color = Color(255 * anim_progress, self._fade_color.x, self._fade_color.y, self._fade_color.z)
 
 		Gui.rect(gui, position, size, color)
 	end

@@ -4,7 +4,6 @@ local cinematic_scene_templates = {
 	cutscene_1 = {
 		hide_players = true,
 		include_bots = false,
-		instant_black_screen_during_cutscene_loading = false,
 		is_skippable = true,
 		local_player_only = true,
 		mission_outro = false,

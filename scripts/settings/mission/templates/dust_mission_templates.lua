@@ -96,12 +96,29 @@ local mission_templates = {
 			"terror_events_dm_propaganda",
 		},
 		mission_brief_vo = {
-			vo_profile = "sergeant_a",
+			vo_profile = "explicator_a",
 			wwise_route_key = 1,
 			vo_events = {
 				"mission_propaganda_briefing_a",
 				"mission_propaganda_briefing_b",
 				"mission_propaganda_briefing_c",
+			},
+			mission_giver_packs = {
+				explicator_a = {
+					"explicator",
+					"dreg_lector",
+				},
+				sergeant_a = {
+					"sergeant",
+					"pilot",
+				},
+				tech_priest_a = {
+					"tech_priest",
+					"pilot",
+				},
+				pilot_a = {
+					"pilot",
+				},
 			},
 		},
 		dialogue_settings = {

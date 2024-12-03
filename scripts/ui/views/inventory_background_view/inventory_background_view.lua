@@ -559,16 +559,16 @@ InventoryBackgroundView.event_discard_item = function (self, item)
 	end)
 end
 
-InventoryBackgroundView.event_discard_items = function (self, items)
+InventoryBackgroundView.event_discard_items = function (self, gear_ids)
 	local local_changes_promise = self:_equip_local_changes()
 	local delete_promise
 
 	if local_changes_promise then
 		delete_promise = local_changes_promise:next(function ()
-			return Managers.data_service.gear:delete_gear_batch(items)
+			return Managers.data_service.gear:delete_gear_batch(gear_ids)
 		end)
 	else
-		delete_promise = Managers.data_service.gear:delete_gear_batch(items)
+		delete_promise = Managers.data_service.gear:delete_gear_batch(gear_ids)
 	end
 
 	delete_promise:next(function (result)
@@ -823,6 +823,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 				end
 
 				content.show_alert = has_new_items
+				content.show_warning = self:_has_loadout_slot(self._invalid_slots)
+				content.show_modified = self:_has_loadout_slot(self._modified_slots)
 			end,
 			view_context = {
 				tabs = {
@@ -1072,9 +1074,21 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					has_new_items = true
 				elseif self:has_new_items_by_type(ITEM_TYPES.GEAR_EXTRA_COSMETIC) then
 					has_new_items = true
+				elseif self:has_new_items_by_type(ITEM_TYPES.PORTRAIT_FRAME) then
+					has_new_items = true
+				elseif self:has_new_items_by_type(ITEM_TYPES.CHARACTER_INSIGNIA) then
+					has_new_items = true
+				elseif self:has_new_items_by_type(ITEM_TYPES.CHARACTER_TITLE) then
+					has_new_items = true
+				elseif self:has_new_items_by_type(ITEM_TYPES.EMOTE) then
+					has_new_items = true
+				elseif self:has_new_items_by_type(ITEM_TYPES.END_OF_ROUND) then
+					has_new_items = true
 				end
 
 				content.show_alert = has_new_items
+				content.show_warning = self:_has_cosmetic_slot(self._invalid_slots)
+				content.show_modified = self:_has_cosmetic_slot(self._modified_slots)
 			end,
 			view_context = {
 				tabs = {
@@ -1473,6 +1487,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			end
 
 			content.show_alert = self._has_empty_talent_nodes
+			content.show_warning = self._warning_talent
 		end,
 		context = {
 			can_exit = true,
@@ -1818,6 +1833,26 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	end
 end
 
+InventoryBackgroundView._has_loadout_slot = function (self, slots)
+	local has_loadout_slot = false
+
+	if slots.slot_primary or slots.slot_secondary or slots.slot_attachment_1 or slots.slot_attachment_2 or slots.slot_attachment_3 then
+		has_loadout_slot = true
+	end
+
+	return has_loadout_slot
+end
+
+InventoryBackgroundView._has_cosmetic_slot = function (self, slots)
+	local has_cosmetic_slot = false
+
+	if slots.slot_gear_head or slots.slot_gear_upperbody or slots.slot_gear_lowerbody or slots.slot_gear_extra_cosmetic or slots.slot_insignia or slots.slot_portrait_frame or slots.slot_character_title or slots.slot_animation_emote_1 or slots.slot_animation_emote_2 or slots.slot_animation_emote_3 or slots.slot_animation_emote_4 or slots.slot_animation_emote_5 or slots.slot_animation_emote_5 or slots.slot_animation_end_of_round then
+		has_cosmetic_slot = true
+	end
+
+	return has_cosmetic_slot
+end
+
 InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 	local presets = ProfileUtils.get_profile_presets()
 
@@ -1841,15 +1876,21 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 				local invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(loadout, is_read_only)
 				local show_warning = not table.is_empty(invalid_slots) or not table.is_empty(duplicated_slots)
 				local show_modified = not table.is_empty(modified_slots)
+				local warning_talent = false
 				local preset_talents_version = preset.talents_version
 
 				if not preset_talents_version or active_talent_version ~= preset_talents_version then
 					show_warning = true
+					warning_talent = true
 				end
 
 				self._profile_presets_element:show_profile_preset_missing_items_warning(show_warning, show_modified, preset.id)
 
 				if active_preset then
+					self._invalid_slots = table.merge(table.merge({}, invalid_slots), duplicated_slots)
+					self._modified_slots = modified_slots
+					self._warning_talent = warning_talent
+
 					self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
 				end
 			end
@@ -2568,6 +2609,10 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 		self._mastery_traits = Managers.data_service.mastery:get_all_traits_data(masteries_data)
 
 		Managers.data_service.mastery:check_and_claim_all_masteries_levels(masteries_data):next(function (data)
+			if self._destroyed then
+				return
+			end
+
 			for id, mastery_data in pairs(data) do
 				self.masteries_data[id] = mastery_data
 			end

@@ -2145,19 +2145,19 @@ local color_definitions = {
 		16,
 		21,
 	},
-	ui_hud_overcharge_low = {
+	ui_hud_warp_charge_low = {
 		255,
 		251,
 		195,
 		86,
 	},
-	ui_hud_overcharge_medium = {
+	ui_hud_warp_charge_medium = {
 		255,
 		245,
 		121,
 		21,
 	},
-	ui_hud_overcharge_high = {
+	ui_hud_warp_charge_high = {
 		255,
 		246,
 		69,

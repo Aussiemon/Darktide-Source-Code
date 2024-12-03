@@ -144,7 +144,6 @@ PickupSpawner.component_data = {
 			"syringe_power_boost_pocketable",
 			"syringe_speed_boost_pocketable",
 			"tome",
-			"collectible_01_pickup",
 		},
 		options_values = {
 			"none",
@@ -171,7 +170,6 @@ PickupSpawner.component_data = {
 			"syringe_power_boost_pocketable",
 			"syringe_speed_boost_pocketable",
 			"tome",
-			"collectible_01_pickup",
 		},
 	},
 	item_spawn_selection = {

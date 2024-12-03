@@ -3251,6 +3251,67 @@ ButtonPassTemplates.menu_panel_button = {
 			return content.show_alert
 		end,
 	},
+	{
+		pass_type = "texture",
+		style_id = "exclamation_mark",
+		value = "content/ui/materials/icons/generic/exclamation_mark",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "center",
+			color = {
+				255,
+				246,
+				69,
+				69,
+			},
+			size = {
+				16,
+				28,
+			},
+			offset = {
+				10,
+				15,
+				2,
+			},
+		},
+		visibility_function = function (content)
+			return content.show_warning
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "modified_exclamation_mark",
+		value = "content/ui/materials/icons/generic/exclamation_mark",
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "center",
+			color = {
+				255,
+				246,
+				202,
+				69,
+			},
+			size = {
+				16,
+				28,
+			},
+			offset = {
+				10,
+				15,
+				2,
+			},
+		},
+		visibility_function = function (content)
+			return content.show_modified
+		end,
+		change_function = function (content, style)
+			if content.show_warning then
+				style.offset[1] = 0
+			else
+				style.offset[1] = 10
+			end
+		end,
+	},
 }
 
 local tab_menu_button_hotspot_content = {
@@ -3306,6 +3367,12 @@ ButtonPassTemplates.tab_menu_button = {
 		style_id = "text",
 		value_id = "text",
 		style = table.clone(UIFontSettings.tab_menu_button),
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local is_disabled = hotspot.disabled
+
+			style.text_color = is_disabled and style.disabled_color or style.default_color
+		end,
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
@@ -3320,8 +3387,7 @@ ButtonPassTemplates.tab_menu_button = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local text_color = style.text_color
-			local math_max = math_max
-			local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+			local progress = math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_input_progress)
 
 			text_color[1] = 255 * math.easeInCubic(progress)
 		end,

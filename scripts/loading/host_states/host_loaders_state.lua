@@ -12,9 +12,10 @@ HostLoadersState.init = function (self, state_machine, shared_state)
 	local mission_name = shared_state.mission_name
 	local level_name = shared_state.level_name
 	local circumstance_name = shared_state.circumstance_name
+	local havoc_data = shared_state.havoc_data
 
 	for _, loader in ipairs(loaders) do
-		loader:start_loading(mission_name, level_name, circumstance_name)
+		loader:start_loading(mission_name, level_name, circumstance_name, havoc_data)
 	end
 end
 

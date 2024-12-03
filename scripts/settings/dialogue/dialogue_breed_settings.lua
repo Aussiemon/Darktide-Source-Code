@@ -12,6 +12,7 @@ dialogue_breed_settings.voice_classes_2d = {
 	"contract_vendor",
 	"shipmistress",
 	"enemy_nemesis_wolfer",
+	"enemy_ritualist",
 	"enemy_wolfer_adjutant",
 	"interrogator",
 	"barber",
@@ -214,6 +215,7 @@ dialogue_breed_settings.mission_giver = {
 		"contract_vendor_a",
 		"shipmistress_a",
 		"enemy_nemesis_wolfer_a",
+		"enemy_ritualist_a",
 		"enemy_wolfer_adjutant_a",
 		"enemy_wolfer_adjutant_b",
 		"enemy_wolfer_adjutant_c",
@@ -470,6 +472,20 @@ dialogue_breed_settings.dreg_lector = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"dreg_lector_a",
+	},
+}
+dialogue_breed_settings.enemy_ritualist = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "enemy_ritualist",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"enemy_ritualist_a",
 	},
 }
 dialogue_breed_settings.confessional = {
@@ -845,6 +861,7 @@ dialogue_breed_settings.cultist_melee = {
 		"enemy_cultist_melee_fighter_c",
 	},
 }
+dialogue_breed_settings.cultist_ritualist = table.clone(dialogue_breed_settings.cultist_melee)
 dialogue_breed_settings.cultist_assault = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
@@ -1082,6 +1099,8 @@ dialogue_breed_settings.mourningstar_soldier = {
 		"mourningstar_soldier_male_h",
 		"mourningstar_officer_male_a",
 		"mourningstar_officer_male_b",
+		"steelhead_a",
+		"steelhead_b",
 	},
 }
 dialogue_breed_settings.barber = {

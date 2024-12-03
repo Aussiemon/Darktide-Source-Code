@@ -727,7 +727,7 @@ PlayerUnitBuffExtension._is_cinematic_active = function (self)
 	local cinematic_scene_system = extension_manager:system("cinematic_scene_system")
 	local cinematic_scene_system_active = cinematic_scene_system:is_active()
 	local cinematic_manager = Managers.state.cinematic
-	local cinematic_manager_active = cinematic_manager:active()
+	local cinematic_manager_active = cinematic_manager:cinematic_active()
 
 	return cinematic_scene_system_active or cinematic_manager_active
 end
@@ -767,6 +767,20 @@ PlayerUnitBuffExtension._update_on_screen_fx = function (self)
 			end
 		end
 	end
+end
+
+local _inherited_buff_owner = {}
+
+PlayerUnitBuffExtension.add_inherited_buff_owner = function (self, buff_provider)
+	_inherited_buff_owner[#_inherited_buff_owner + 1] = buff_provider
+end
+
+PlayerUnitBuffExtension.get_inherited_buff_owner = function (self)
+	local inherited_buff_owner = _inherited_buff_owner[1]
+
+	table.remove(_inherited_buff_owner, 1)
+
+	return inherited_buff_owner
 end
 
 implements(PlayerUnitBuffExtension, BuffExtensionInterface)

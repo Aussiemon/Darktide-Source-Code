@@ -97,7 +97,9 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 
 			if close_condition then
 				if settings.on_deactivation then
-					settings.on_deactivation(settings)
+					local close_condition_met = not on_destroy
+
+					settings.on_deactivation(settings, close_condition_met)
 				end
 
 				settings.active = false
@@ -121,7 +123,9 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 			end
 
 			if settings.on_deactivation then
-				settings.on_deactivation(settings)
+				local close_condition_met = false
+
+				settings.on_deactivation(settings, close_condition_met)
 			end
 
 			settings.active = false

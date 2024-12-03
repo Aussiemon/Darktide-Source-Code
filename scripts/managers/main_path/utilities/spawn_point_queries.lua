@@ -6,7 +6,7 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local SpawnPointQueries = {}
 local ABOVE, BELOW, HORIZONTAL = 1, 1, 3
 
-SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_distance, group_cutoff_values)
+SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_distance, group_cutoff_values, nav_tag_cost_table)
 	local main_path_length = EngineOptimized.main_path_total_length()
 	local half_distance = group_distance / 2
 	local travel_distance = half_distance
@@ -31,7 +31,7 @@ SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_dista
 		travel_distance = travel_distance + group_distance
 	end
 
-	local nav_triangle_group = GwNavTriangleGroup.create_by_flood_fill_from_positions(nav_world, flood_fill_positions, group_cutoff_values)
+	local nav_triangle_group = GwNavTriangleGroup.create_by_flood_fill_from_positions(nav_world, flood_fill_positions, group_cutoff_values, nav_tag_cost_table)
 
 	return nav_triangle_group, flood_fill_positions, group_index_to_mainpath_index
 end

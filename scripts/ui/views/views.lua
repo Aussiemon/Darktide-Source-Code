@@ -537,6 +537,7 @@ local views = {
 		use_transition_ui = true,
 		levels = {
 			"content/levels/ui/lobby/lobby",
+			"content/levels/ui/havoc_lobby/havoc_lobby",
 		},
 		testify_flags = {
 			ui_views = false,
@@ -961,6 +962,10 @@ _declare_view("cosmetics_vendor_view", require("scripts/ui/views/cosmetics_vendo
 _declare_view("cosmetics_vendor_background_view", require("scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_declaration_settings"))
 _declare_view("story_mission_lore_view", require("scripts/ui/views/story_mission_lore_view/story_mission_lore_view_declaration_settings"))
 _declare_view("story_mission_play_view", require("scripts/ui/views/story_mission_play_view/story_mission_play_view_declaration_settings"))
+_declare_view("havoc_background_view", require("scripts/ui/views/havoc_background_view/havoc_background_view_declaration_settings"))
+_declare_view("havoc_play_view", require("scripts/ui/views/havoc_play_view/havoc_play_view_declaration_settings"))
+_declare_view("havoc_lore_view", require("scripts/ui/views/havoc_lore_view/havoc_lore_view_declaration_settings"))
+_declare_view("havoc_reward_presentation_view", require("scripts/ui/views/havoc_reward_presentation_view/havoc_reward_presentation_view_declaration_settings"))
 _declare_view("group_finder_view", require("scripts/ui/views/group_finder_view/group_finder_view_declaration_settings"))
 _declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))

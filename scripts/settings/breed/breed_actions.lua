@@ -32,6 +32,7 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_gunner_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_melee_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_mutant_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_ritualist_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_shocktrooper_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_assault_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_berzerker_actions")

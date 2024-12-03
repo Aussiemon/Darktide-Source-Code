@@ -311,6 +311,7 @@ local ui_settings = {
 		switch_mode = "loc_weapon_special_mode_switch",
 		vent = "loc_stats_special_action_venting_desc",
 		weapon_bash = "loc_weapon_special_fist_attack",
+		wind_slash = "loc_weapon_special_wind_slash",
 	},
 	weapon_card_icons = {
 		activate = "content/ui/materials/icons/weapons/actions/activate",
@@ -773,6 +774,26 @@ local ui_settings = {
 				},
 			},
 		},
+		ogryn_heavystubber_p2 = {
+			display_name = "loc_weapon_family_ogryn_heavystubber_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/ranged/ogryn_heavystubber_p2_m1",
+					name = "ogryn_heavystubber_p2_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/ogryn_heavystubber_p2_m2",
+					name = "ogryn_heavystubber_p2_m2",
+				},
+				{
+					item = "content/items/weapons/player/ranged/ogryn_heavystubber_p2_m3",
+					name = "ogryn_heavystubber_p2_m3",
+				},
+			},
+		},
 		ogryn_gauntlet_p1 = {
 			display_name = "loc_weapon_family_ogryn_gauntlet_p1_m1",
 			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_m1",
@@ -1053,6 +1074,22 @@ local ui_settings = {
 				},
 			},
 		},
+		powersword_2h_p1 = {
+			display_name = "loc_weapon_family_powersword_2h_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/powersword_2h_p1_m1",
+					name = "powersword_2h_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/powersword_2h_p1_m2",
+					name = "powersword_2h_p1_m2",
+				},
+			},
+		},
 		powermaul_p1 = {
 			display_name = "loc_weapon_family_powermaul_p1_m1",
 			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_p1",
@@ -1212,6 +1249,23 @@ local ui_settings = {
 				{
 					item = "content/items/weapons/player/melee/forcesword_p1_m3",
 					name = "forcesword_p1_m3",
+				},
+			},
+		},
+		forcesword_2h_p1 = {
+			display_name = "loc_weapon_family_forcesword_2h_p1_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/forcesword_2h_p1_m1",
+					name = "forcesword_2h_p1_m1",
+				},
+				{
+					comparison_text = "",
+					item = "content/items/weapons/player/melee/forcesword_2h_p1_m2",
+					name = "forcesword_2h_p1_m2",
 				},
 			},
 		},

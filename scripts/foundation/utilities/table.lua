@@ -1310,3 +1310,13 @@ table.is_array = function (t)
 
 	return true
 end
+
+table.concat_arrays = function (...)
+	local append, t = table.append, {}
+
+	for i = 1, select("#", ...) do
+		append(t, select(i, ...))
+	end
+
+	return t
+end

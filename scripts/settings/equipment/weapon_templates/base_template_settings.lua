@@ -32,7 +32,7 @@ end
 
 local base_template_settings = {}
 
-base_template_settings.action_inputs = {
+base_template_settings.combat_ability_action_inputs = {
 	combat_ability = {
 		buffer_time = 0,
 		clear_input_queue = true,
@@ -43,6 +43,8 @@ base_template_settings.action_inputs = {
 			},
 		},
 	},
+}
+base_template_settings.action_inputs = {
 	grenade_ability = {
 		buffer_time = 0,
 		clear_input_queue = true,
@@ -87,7 +89,10 @@ base_template_settings.action_inputs = {
 		},
 	},
 }
-base_template_settings.actions = {
+
+table.add_missing(base_template_settings.action_inputs, base_template_settings.combat_ability_action_inputs)
+
+base_template_settings.combat_ability_actions = {
 	combat_ability = {
 		kind = "unwield_to_specific",
 		slot_to_wield = "slot_combat_ability",
@@ -97,6 +102,8 @@ base_template_settings.actions = {
 		uninterruptible = true,
 		allowed_chain_actions = {},
 	},
+}
+base_template_settings.grenade_ability_actions = {
 	grenade_ability = {
 		action_priority = 1,
 		allowed_during_sprint = true,
@@ -147,6 +154,11 @@ base_template_settings.actions = {
 		end,
 	},
 }
+base_template_settings.actions = {}
+
+table.add_missing(base_template_settings.actions, base_template_settings.combat_ability_actions)
+table.add_missing(base_template_settings.actions, base_template_settings.grenade_ability_actions)
+
 base_template_settings.action_input_hierarchy = {
 	{
 		input = "combat_ability",

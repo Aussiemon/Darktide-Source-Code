@@ -21,7 +21,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			150,
+			0,
 		},
 	},
 	line_pivot = {

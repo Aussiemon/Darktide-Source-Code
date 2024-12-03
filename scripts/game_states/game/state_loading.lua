@@ -65,7 +65,7 @@ StateLoading._start_loading_mission = function (self)
 	_info("[_start_loading] needs_load_level(%s), mission_name(%s), circumstance_name(%s), side_mission(%s)", self._needs_load_level, self._mission_name, self._circumstance_name, self._side_mission)
 
 	if self._needs_load_level then
-		Managers.loading:load_mission(self._mission_name, self._level_name, self._circumstance_name)
+		Managers.loading:load_mission(self._mission_name, self._level_name, self._circumstance_name, self._havoc_data)
 		Managers.event:trigger("event_loading_resources_started", self._mission_name)
 	else
 		Managers.loading:no_level_needed()
@@ -96,6 +96,7 @@ StateLoading._setup_loading_data = function (self, params)
 	self._mission_giver_vo = params.mission_giver_vo or "none"
 	self._next_state = params.next_state
 	self._next_state_params = params.next_state_params
+	self._havoc_data = params.havoc_data
 end
 
 StateLoading._reset_player_game_state = function (self, mission_name, mission_giver_vo)

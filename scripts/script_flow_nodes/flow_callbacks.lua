@@ -1110,16 +1110,18 @@ FlowCallbacks.cutscene_fade_in = function (params)
 	local duration = params.duration
 	local easing_function = params.easing_function and math[params.easing_function]
 	local local_player = Managers.player:local_player(1)
+	local fade_color = params.fade_color
 
-	Managers.event:trigger("event_cutscene_fade_in", local_player, duration, easing_function)
+	Managers.event:trigger("event_cutscene_fade_in", local_player, duration, easing_function, fade_color)
 end
 
 FlowCallbacks.cutscene_fade_out = function (params)
 	local duration = params.duration
 	local easing_function = params.easing_function and math[params.easing_function]
 	local local_player = Managers.player:local_player(1)
+	local fade_color = params.fade_color
 
-	Managers.event:trigger("event_cutscene_fade_out", local_player, duration, easing_function)
+	Managers.event:trigger("event_cutscene_fade_out", local_player, duration, easing_function, fade_color)
 end
 
 FlowCallbacks.tutorial_display_popup_message = function (params)
@@ -1374,6 +1376,17 @@ FlowCallbacks.trigger_lua_unit_event = function (params)
 
 	if event_manager then
 		event_manager:trigger(event, unit)
+	end
+end
+
+FlowCallbacks.trigger_lua_level_and_unit_event = function (params)
+	local event = params.event
+	local level = params.level
+	local unit = params.unit
+	local event_manager = Managers.event
+
+	if event_manager then
+		event_manager:trigger(event, level, unit)
 	end
 end
 
@@ -1854,8 +1867,8 @@ FlowCallbacks.switchcase = function (params)
 
 	if params.case ~= "" then
 		for k, v in pairs(params) do
-			if k ~= "case" and params.case == v then
-				ret[outStr .. string.sub(k, -1)] = true
+			if k ~= "case" and k ~= "node_id" and params.case == v then
+				ret[outStr .. string.sub(k, 6, -1)] = true
 			end
 		end
 	end

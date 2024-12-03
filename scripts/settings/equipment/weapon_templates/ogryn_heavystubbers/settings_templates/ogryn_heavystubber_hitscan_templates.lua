@@ -32,6 +32,43 @@ hitscan_templates.default_ogryn_heavystubber_full_auto_m3 = {
 	},
 }
 
+local ogryn_heavy_stubber_p2_collision_tests = {
+	{
+		against = "statics",
+		collision_filter = "filter_player_character_shooting_raycast_statics",
+		test = "ray",
+	},
+	{
+		against = "dynamics",
+		collision_filter = "filter_player_character_shooting_raycast_dynamics",
+		radius = 0.05,
+		test = "sphere",
+	},
+}
+
+hitscan_templates.ogryn_heavystubber_p2_m1 = {
+	range = 100,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.ogryn_heavystubber_damage_p2_m1,
+		},
+	},
+}
+hitscan_templates.ogryn_heavystubber_p2_m1_braced = table.clone(hitscan_templates.ogryn_heavystubber_p2_m1)
+hitscan_templates.ogryn_heavystubber_p2_m1_braced.collision_tests = ogryn_heavy_stubber_p2_collision_tests
+hitscan_templates.ogryn_heavystubber_p2_m2 = table.clone(hitscan_templates.ogryn_heavystubber_p2_m1)
+hitscan_templates.ogryn_heavystubber_p2_m2.damage.impact.damage_profile = DamageProfileTemplates.ogryn_heavystubber_damage_p2_m2
+hitscan_templates.ogryn_heavystubber_p2_m2.damage.penetration = {
+	depth = 0.75,
+	target_index_increase = 3,
+}
+hitscan_templates.ogryn_heavystubber_p2_m2_braced = table.clone(hitscan_templates.ogryn_heavystubber_p2_m2)
+hitscan_templates.ogryn_heavystubber_p2_m2_braced.collision_tests = ogryn_heavy_stubber_p2_collision_tests
+hitscan_templates.ogryn_heavystubber_p2_m3 = table.clone(hitscan_templates.ogryn_heavystubber_p2_m2)
+hitscan_templates.ogryn_heavystubber_p2_m3.damage.impact.damage_profile = DamageProfileTemplates.ogryn_heavystubber_damage_p2_m3
+hitscan_templates.ogryn_heavystubber_p2_m3_braced = table.clone(hitscan_templates.ogryn_heavystubber_p2_m3)
+hitscan_templates.ogryn_heavystubber_p2_m3_braced.collision_tests = ogryn_heavy_stubber_p2_collision_tests
+
 return {
 	base_templates = hitscan_templates,
 	overrides = overrides,

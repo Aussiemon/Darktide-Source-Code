@@ -138,7 +138,13 @@ local function reset_function()
 		local alias = input_manager:alias_object(service_type)
 
 		if alias then
-			alias:restore_default_by_devices(nil, devices)
+			alias:restore_default()
+
+			local save_data = Managers.save:account_data()
+			local input_settings = save_data and save_data.input_settings
+			local saved_layout = input_settings and input_settings.controller_layout or "default"
+
+			input_manager:load_input_layout(saved_layout)
 			input_manager:apply_alias_changes(service_type)
 			input_manager:save_key_mappings(service_type)
 		end

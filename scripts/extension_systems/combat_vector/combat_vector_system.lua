@@ -5,8 +5,8 @@ require("scripts/extension_systems/combat_vector/combat_vector_user_extension")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local CombatVectorSettings = require("scripts/settings/combat_vector/combat_vector_settings")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
-local NavQueries = require("scripts/utilities/nav_queries")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
+local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local CombatVectorSystem = class("CombatVectorSystem", "ExtensionSystemBase")
@@ -730,14 +730,14 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 
 	if not best_aggro_unit then
 		local target_side_id = CombatVectorSettings.target_side_id
+		local main_path_manager = Managers.state.main_path
 
-		best_aggro_unit = Managers.state.main_path:ahead_unit(target_side_id)
+		best_aggro_unit = main_path_manager:ahead_unit(target_side_id)
 
 		local unit_data_extension = ScriptUnit.has_extension(best_aggro_unit, "unit_data_system")
 		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 
 		if character_state_component and PlayerUnitStatus.is_disabled(character_state_component) then
-			local main_path_manager = Managers.state.main_path
 			local nav_spawn_points = main_path_manager:nav_spawn_points()
 			local side_system = Managers.state.extension:system("side_system")
 			local side = side_system:get_side(target_side_id)
@@ -745,11 +745,17 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 			local num_valid_player_units = #valid_player_units
 			local best_travel_distance = 0
 
-			for j = 1, num_valid_player_units do
+			for i = 1, num_valid_player_units do
 				repeat
-					local player_unit = valid_player_units[j]
+					local player_unit = valid_player_units[i]
 
 					if player_unit == best_aggro_unit then
+						break
+					end
+
+					local player_character_state_component = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("character_state")
+
+					if PlayerUnitStatus.is_disabled(player_character_state_component) then
 						break
 					end
 
@@ -757,8 +763,7 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 					local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, player_position)
 
 					if not group_index then
-						local navigation_extension = ScriptUnit.extension(player_unit, "navigation_system")
-						local latest_position_on_nav_mesh = navigation_extension:latest_position_on_nav_mesh()
+						local latest_position_on_nav_mesh = ScriptUnit.extension(player_unit, "navigation_system"):latest_position_on_nav_mesh()
 
 						if latest_position_on_nav_mesh then
 							group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)

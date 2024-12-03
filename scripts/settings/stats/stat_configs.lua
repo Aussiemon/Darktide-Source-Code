@@ -15,6 +15,9 @@ StatConfigs.session = {
 	circumstance_name = {
 		required = true,
 	},
+	game_mode_name = {
+		default = "none",
+	},
 	is_auric_mission = {
 		default = false,
 	},
@@ -28,6 +31,15 @@ StatConfigs.session = {
 		default = false,
 	},
 	live_event = {
+		default = "none",
+	},
+	is_havoc = {
+		default = false,
+	},
+	havoc_rank = {
+		default = "nil",
+	},
+	havoc_order_owner = {
 		default = "none",
 	},
 }

@@ -416,7 +416,7 @@ BtChargeAction._check_wall_collision = function (self, unit, scratchpad, action_
 	local wall_raycast_distance = action_data.wall_raycast_distance
 	local rotation = Unit.local_rotation(unit, 1)
 	local direction = Vector3.flat(Quaternion.forward(rotation))
-	local collision_filter = "filter_minion_line_of_sight_check"
+	local collision_filter = "filter_minion_mover"
 	local hit, _, _, normal = PhysicsWorld.raycast(physics_world, from, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
 
 	return hit, normal

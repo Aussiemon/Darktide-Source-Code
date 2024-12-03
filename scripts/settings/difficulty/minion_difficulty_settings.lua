@@ -254,6 +254,7 @@ minion_difficulty_settings.health = {
 	renegade_gunner = _elite_health_steps(600),
 	renegade_berzerker = _elite_health_steps(1000),
 	cultist_berzerker = _elite_health_steps(1000),
+	cultist_ritualist = _roamer_health_steps(1000),
 	cultist_melee = _roamer_health_steps(275),
 	cultist_assault = _roamer_health_steps(200),
 	cultist_shocktrooper = _elite_health_steps(500),
@@ -277,7 +278,6 @@ minion_difficulty_settings.hit_mass = {
 	cultist_gunner = 4,
 	cultist_mutant = 10,
 	cultist_mutant_mutator = 8,
-	cultist_shocktrooper = 2,
 	renegade_berzerker = 10,
 	renegade_captain = 20,
 	renegade_executor = 10,
@@ -345,6 +345,22 @@ minion_difficulty_settings.hit_mass = {
 		2.5,
 		3,
 	},
+	cultist_ritualist = {
+		2.5,
+		2.5,
+		2.5,
+		2.5,
+		2.5,
+		3,
+	},
+	cultist_shocktrooper = {
+		4,
+		4,
+		4,
+		4,
+		4,
+		4,
+	},
 	renegade_assault = {
 		1.5,
 		1.5,
@@ -354,11 +370,11 @@ minion_difficulty_settings.hit_mass = {
 		2.5,
 	},
 	renegade_gunner = {
-		4,
-		4,
-		4,
-		4,
-		4,
+		5,
+		5,
+		5,
+		5,
+		5,
 		8,
 	},
 	renegade_melee = {
@@ -378,17 +394,25 @@ minion_difficulty_settings.hit_mass = {
 		2,
 	},
 	renegade_shocktrooper = {
-		2,
-		2,
-		2,
-		2,
-		2,
+		5,
+		5,
+		5,
+		5,
+		5,
 		6,
 	},
 }
 minion_difficulty_settings.power_level = {
 	horde_default_melee = _step_dmg_horde_melee(400),
 	renegade_default_melee = _step_dmg_roamer_melee(300),
+	chaos_engulfed_enemy_fire_attack = {
+		35,
+		50,
+		75,
+		100,
+		125,
+		200,
+	},
 	chaos_ogryn_executor_melee = _step_dmg_melee(400),
 	chaos_poxwalker_bomber_explosion = {
 		200,
@@ -422,11 +446,11 @@ minion_difficulty_settings.power_level = {
 		600,
 	},
 	cultist_captain_melee_two_hand = {
-		100,
-		150,
-		300,
+		250,
 		500,
-		800,
+		750,
+		1000,
+		1250,
 	},
 	cultist_captain_default_shot = _step_dmg_ranged(225),
 	cultist_flamer_default = _step_dmg_ranged(50),
@@ -484,7 +508,7 @@ minion_difficulty_settings.power_level = {
 		500,
 		800,
 	},
-	renegade_captain_default_shot = _step_dmg_ranged(225),
+	renegade_captain_default_shot = _step_dmg_ranged(350),
 	daemonhost_corruption_aura = {
 		6,
 		15,
@@ -553,9 +577,9 @@ minion_difficulty_settings.power_level = {
 }
 minion_difficulty_settings.shooting = {
 	chaos_ogryn_gunner = {
-		aim_durations = _equal_difficulty_values(1.3, 1.3),
+		aim_durations = _equal_difficulty_values(1, 1),
 		shoot_cooldown = _shoot_steps_desc(2, 3),
-		time_per_shot = _equal_difficulty_values(0.115, 0.115),
+		time_per_shot = _equal_difficulty_values(0.1, 0.1),
 		num_shots = _shoot_steps_asc(60, 60, true),
 	},
 	cultist_flamer = {

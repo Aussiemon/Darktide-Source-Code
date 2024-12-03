@@ -95,7 +95,7 @@ local categories = {
 	"Push",
 	"Respawn",
 	"Roamers",
-	"Rumble",
+	"Rumble & Haptics",
 	"Script Components",
 	"Shading Environment",
 	"Shooting Range",
@@ -374,6 +374,15 @@ params.debug_log_data_service_backend_cache = {
 	category = "Backend",
 	value = false,
 }
+params.auto_select_ps5_backend_environment = {
+	category = "Backend",
+	value = false,
+	options = {
+		false,
+		"staging",
+		"dev",
+	},
+}
 params.backend_telemetry_enable = {
 	category = "Backend",
 	value = false,
@@ -395,6 +404,10 @@ params.disable_chat = {
 	value = false,
 }
 params.debug_template_effects = {
+	category = "Effects",
+	value = false,
+}
+params.debug_draw_cultist_ritualist_chanting_effects = {
 	category = "Effects",
 	value = false,
 }
@@ -573,6 +586,46 @@ params.dont_randomize_destructibles = {
 	category = "Destructibles",
 	value = false,
 }
+
+local function _split_filter_string(filters_string)
+	local seperator = "%s"
+
+	return string.split(filters_string, seperator)
+end
+
+local function _generate_filter_string(filters)
+	local filter_string = ""
+
+	for _, filter in ipairs(filters) do
+		filter_string = filter_string .. " " .. filter
+	end
+
+	return #filter_string > 0 and string.trim(filter_string) or filter_string
+end
+
+local function _toggle_physics_filter(new_filter)
+	local current_active_filters_string = DevParameters.physics_debug_multiple_active_filters_string
+	local filters = _split_filter_string(current_active_filters_string)
+	local existing_filter_index = -1
+
+	for index, filter in ipairs(filters) do
+		if filter == new_filter then
+			existing_filter_index = index
+		end
+	end
+
+	if existing_filter_index > 0 then
+		table.remove(filters, existing_filter_index)
+	else
+		table.insert(filters, new_filter)
+	end
+
+	local new_filter_string = _generate_filter_string(filters)
+
+	ParameterResolver.set_dev_parameter("physics_debug_multiple_active_filters_string", new_filter_string)
+	ParameterResolver.set_dev_parameter("physics_debug_filters_active", "ACTIVE FILTERS: " .. #filters)
+end
+
 params.physics_debug = {
 	category = "Physics",
 	value = false,
@@ -618,6 +671,13 @@ params.physics_debug_filter = {
 		"filter_ray_aim_assist",
 		"filter_simple_geometry",
 	},
+	on_value_set = function (new_value, old_value)
+		local is_multiple_filters_allowed = DevParameters.physics_debug_allow_multiple_filters
+
+		if is_multiple_filters_allowed then
+			_toggle_physics_filter(new_value)
+		end
+	end,
 }
 params.physics_debug_range = {
 	category = "Physics",
@@ -637,6 +697,36 @@ params.physics_debug_only_draw_selected_unit = {
 params.physics_debug_draw_no_depth = {
 	category = "Physics",
 	value = false,
+}
+params.physics_debug_allow_multiple_filters = {
+	category = "Physics",
+	value = false,
+}
+params.physics_debug_filters_active = {
+	category = "Physics",
+	dynamic_contents = true,
+	hidden = false,
+	readonly = false,
+	value = "ACTIVE FILTERS",
+	options_function = function ()
+		local current_active_filters_string = DevParameters.physics_debug_multiple_active_filters_string
+
+		return _split_filter_string(current_active_filters_string)
+	end,
+	options_texts_function = function ()
+		local current_active_filters_string = DevParameters.physics_debug_multiple_active_filters_string
+
+		return _split_filter_string(current_active_filters_string)
+	end,
+	on_value_set = function (new_value, old_value)
+		_toggle_physics_filter(new_value)
+	end,
+}
+params.physics_debug_multiple_active_filters_string = {
+	category = "Physics",
+	hidden = true,
+	readonly = false,
+	value = "",
 }
 params.disable_self_assist = {
 	category = "Player Character",
@@ -1497,6 +1587,10 @@ params.debug_lua_sound_reflection = {
 	value = false,
 }
 params.always_play_husk_effects = {
+	category = "Wwise",
+	value = false,
+}
+params.debug_wwise_timestamp = {
 	category = "Wwise",
 	value = false,
 }
@@ -2440,6 +2534,57 @@ params.resistance = {
 		Managers.state.difficulty:set_resistance(new_value)
 	end,
 }
+params.havoc_rank = {
+	category = "Difficulty",
+	value = 0,
+	options = {
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10,
+		11,
+		12,
+		13,
+		14,
+		15,
+		16,
+		17,
+		18,
+		19,
+		20,
+		21,
+		22,
+		23,
+		24,
+		25,
+		26,
+		27,
+		28,
+		29,
+		30,
+		35,
+		40,
+		45,
+		50,
+		55,
+		60,
+		65,
+		70,
+		75,
+		80,
+		85,
+		90,
+		95,
+		100,
+	},
+}
 params.minion_friendly_fire = {
 	category = "Difficulty",
 	value = true,
@@ -3289,6 +3434,10 @@ params.ui_debug_mission_outro = {
 	category = "UI",
 	value = false,
 }
+params.ui_debug_havoc_menu = {
+	category = "UI",
+	value = false,
+}
 params.ui_enable_item_names = {
 	category = "UI",
 	value = false,
@@ -3348,6 +3497,10 @@ params.ui_always_show_tutorial_popup = {
 	category = "UI",
 	value = false,
 }
+params.debug_hud_element_fading = {
+	category = "UI",
+	value = false,
+}
 params.override_stun_type = {
 	category = "Damage",
 	value = false,
@@ -3382,7 +3535,7 @@ params.debug_async_explosions = {
 }
 params.enable_damage_debug = {
 	category = "Damage",
-	value = false,
+	value = IS_WINDOWS,
 }
 params.debug_damage_power_level = {
 	category = "Damage",
@@ -3471,6 +3624,10 @@ params.player_weapon_instakill = {
 	value = false,
 }
 params.player_damage_disabled = {
+	category = "Damage",
+	value = false,
+}
+params.always_min_damage_knocked_down_damage_tick = {
 	category = "Damage",
 	value = false,
 }
@@ -4318,6 +4475,10 @@ params.debug_print_ps5_block_users_states = {
 	category = "Social Features",
 	value = false,
 }
+params.debug_print_party_channels = {
+	category = "Social Features",
+	value = false,
+}
 params.use_localized_talent_names_in_debug_menu = {
 	category = "Talents",
 	value = false,
@@ -4494,11 +4655,11 @@ params.debug_charge_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
-params.debug_force_weapon_effects = {
+params.debug_force_weapon_block_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
-params.debug_force_weapon_block_effects = {
+params.debug_force_weapon_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
@@ -4510,11 +4671,19 @@ params.debug_grimoire_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
+params.debug_melee_idling_effects = {
+	category = "Weapon Effects",
+	value = false,
+}
 params.debug_plasmagun_overheat_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
 params.debug_power_weapon_effects = {
+	category = "Weapon Effects",
+	value = false,
+}
+params.debug_power_weapon_overheat_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
@@ -5085,7 +5254,15 @@ params.unlock_all_shooting_range_enemies = {
 	value = false,
 }
 params.trace_rumble_activation_events = {
-	category = "Rumble",
+	category = "Rumble & Haptics",
+	value = false,
+}
+params.trace_haptics_activation_events = {
+	category = "Rumble & Haptics",
+	value = false,
+}
+params.debug_haptics = {
+	category = "Rumble & Haptics",
 	value = false,
 }
 params.category_log_levels = {
@@ -5152,6 +5329,9 @@ params.debug_gadget_extension = {
 	value = false,
 }
 params.disable_beast_of_nurgle_consumed_effect = {
+	value = false,
+}
+params.enable_aim_labs_area_draw = {
 	value = false,
 }
 

@@ -4,7 +4,6 @@ local cinematic_scene_templates = {
 	outro_fail = {
 		hide_players = true,
 		include_bots = true,
-		instant_black_screen_during_cutscene_loading = false,
 		is_skippable = false,
 		local_player_only = false,
 		mission_outro = false,

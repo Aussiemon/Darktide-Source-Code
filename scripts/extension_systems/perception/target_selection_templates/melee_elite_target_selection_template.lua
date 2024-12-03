@@ -45,7 +45,7 @@ end
 
 local DEFAULT_STICKINESS_DISTANCE = 1
 local target_selection_template = {}
-local EXTRA_SHOOT_DISTANCE_SQ = 225
+local EXTRA_SHOOT_DISTANCE_SQ = 625
 
 target_selection_template.melee_elite = function (unit, side, perception_component, buff_extension, breed, target_units, line_of_sight_lookup, t, threat_units, force_new_target_attempt, force_new_target_attempt_config_or_nil, debug_target_weighting_or_nil)
 	local current_target_unit = perception_component.target_unit

@@ -36,19 +36,19 @@ local function highlight_color_change_function(content, style)
 	style.hdr = progress == 1
 end
 
-SliderPassTemplates.settings_percent_slider = function (width, height, settings_area_width, use_is_focused)
-	return SliderPassTemplates._settings_slider(width, height, settings_area_width, use_is_focused, true)
+SliderPassTemplates.settings_percent_slider = function (width, height, settings_area_width, use_is_focused, is_sub_setting)
+	return SliderPassTemplates._settings_slider(width, height, settings_area_width, use_is_focused, true, is_sub_setting)
 end
 
-SliderPassTemplates.settings_value_slider = function (width, height, settings_area_width, use_is_focused)
-	return SliderPassTemplates._settings_slider(width, height, settings_area_width, use_is_focused, false)
+SliderPassTemplates.settings_value_slider = function (width, height, settings_area_width, use_is_focused, is_sub_setting)
+	return SliderPassTemplates._settings_slider(width, height, settings_area_width, use_is_focused, false, is_sub_setting)
 end
 
-SliderPassTemplates.value_slider = function (width, height, value_width, use_is_focused)
-	return SliderPassTemplates._slider(width, height, value_width, use_is_focused, false)
+SliderPassTemplates.value_slider = function (width, height, value_width, use_is_focused, is_sub_setting)
+	return SliderPassTemplates._slider(width, height, value_width, use_is_focused, false, is_sub_setting)
 end
 
-SliderPassTemplates._settings_slider = function (width, height, settings_area_width, use_is_focused, is_percent_slider)
+SliderPassTemplates._settings_slider = function (width, height, settings_area_width, use_is_focused, is_percent_slider, is_sub_setting)
 	local track_thickness = is_percent_slider and 10 or SLIDER_ENDPLATE_WIDTH
 	local slider_area_width = settings_area_width - (SLIDER_ENDPLATE_WIDTH * 2 + SLIDER_THUMB_SIZE)
 	local header_width = width - settings_area_width
@@ -67,7 +67,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 	}
 	value_font_style.text_horizontal_alignment = "right"
 
-	local passes = ListHeaderPassTemplates.list_header(header_width - LABEL_WIDTH, height, use_is_focused)
+	local passes = ListHeaderPassTemplates.list_header(header_width - LABEL_WIDTH, height, use_is_focused, is_sub_setting)
 	local slider_passes = {
 		{
 			pass_type = "text",

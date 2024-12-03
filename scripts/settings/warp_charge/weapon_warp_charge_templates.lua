@@ -140,6 +140,29 @@ weapon_warp_charge_templates.forcesword_p1_m1 = {
 		0,
 	},
 }
+weapon_warp_charge_templates.forcesword_2h = {
+	auto_vent_delay_modifier = 1,
+	critical_threshold_decay_rate_modifier = 1,
+	critical_threshold_modifier = 1,
+	default_threshold_decay_rate_modifier = 1,
+	high_threshold_decay_rate_modifier = 1,
+	high_threshold_modifier = 1,
+	low_threshold_decay_rate_modifier = 1,
+	low_threshold_modifier = 1,
+	vent_interval_modifier = 1,
+	vent_duration_modifier = {
+		lerp_basic = 1.75,
+		lerp_perfect = 0.6,
+	},
+	auto_vent_duration_modifier = {
+		lerp_basic = 1.55,
+		lerp_perfect = 0.65,
+	},
+	vent_power_level_modifier = {
+		0,
+		0,
+	},
+}
 weapon_warp_charge_templates.psyker_smite = {
 	auto_vent_delay_modifier = 1,
 	critical_threshold_decay_rate_modifier = 1,

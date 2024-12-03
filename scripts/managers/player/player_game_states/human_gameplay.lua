@@ -224,7 +224,7 @@ HumanGameplay._input_active = function (self)
 		return false
 	end
 
-	if Managers.state.cinematic:active() then
+	if Managers.state.cinematic:cinematic_active() then
 		return false
 	end
 
@@ -489,7 +489,7 @@ HumanGameplay._handle_huds = function (self, camera_follow_unit_or_nil)
 	local spectated_player_unit_or_nil = spectated_player_or_nil and spectated_player_or_nil.player_unit
 	local spectating_ourself = spectated_player_or_nil and spectated_player_or_nil == own_player
 	local following_own_unit = own_player_unit_or_nil and camera_follow_unit_or_nil == own_player_unit_or_nil
-	local should_have_own_hud = following_own_unit and not spectating_ourself or Managers.state.cinematic:active()
+	local should_have_own_hud = following_own_unit and not spectating_ourself or Managers.state.cinematic:cinematic_active()
 	local following_spectated_player_unit = spectated_player_unit_or_nil and camera_follow_unit_or_nil == spectated_player_unit_or_nil
 
 	if self._has_own_hud and not should_have_own_hud then

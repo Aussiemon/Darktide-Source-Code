@@ -43,7 +43,7 @@ footstep_intervals_templates.chainsword = {
 	walking = 0.34,
 }
 footstep_intervals_templates.combat_axe = {
-	crouch_walking = 0.4,
+	crouch_walking = 0.61,
 	sprinting = 0.37,
 	walking = 0.4,
 }

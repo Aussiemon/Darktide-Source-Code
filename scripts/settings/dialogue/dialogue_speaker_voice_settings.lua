@@ -389,6 +389,13 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_enemy_daemonhost_a",
 		subtitles_enabled = false,
 	},
+	enemy_ritualist_a = {
+		full_name = "loc_npc_full_name_enemy_ritualist_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_ritualist_a",
+		subtitles_enabled = true,
+	},
 	prologue_traitor_a = {
 		full_name = "loc_npc_full_name_prologue_traitor_a",
 		player_voice = false,
@@ -755,6 +762,18 @@ local dialogue_speaker_voice_settings = {
 		full_name = "loc_credits_view_hadron_servitor_title",
 		player_voice = false,
 		short_name = "loc_credits_view_hadron_servitor_title",
+		subtitles_enabled = true,
+	},
+	steelhead_a = {
+		full_name = "loc_npc_full_name_steelhead_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_steelhead_a",
+		subtitles_enabled = true,
+	},
+	steelhead_b = {
+		full_name = "loc_npc_full_name_steelhead_b",
+		player_voice = false,
+		short_name = "loc_npc_short_name_steelhead_b",
 		subtitles_enabled = true,
 	},
 }

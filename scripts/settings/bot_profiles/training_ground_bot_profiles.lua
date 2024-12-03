@@ -10,7 +10,6 @@ local function training_ground_bot_profiles(all_profiles)
 		gender = "male",
 		name_list_id = "male_names_1",
 		selected_voice = "veteran_male_a",
-		specialization = "veteran_2",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/gear_arms/empty_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_01",

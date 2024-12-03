@@ -74,11 +74,22 @@ AccountService.signin = function (self)
 		local auth_data_promise = Promise.resolved(auth_data)
 		local immaterium_connection_info = Managers.backend.interfaces.immaterium:fetch_connection_info()
 		local crafting_costs_promise = Managers.backend.interfaces.crafting:refresh_all_costs()
+		local havoc_settings_promise = Managers.backend.interfaces.havoc:refresh_settings()
 
 		return migrations_promise:next(function (data)
 			local migration_data_promise = Promise.resolved(data)
+			local promises = {
+				status_promise,
+				settings_promise,
+				items_promise,
+				auth_data_promise,
+				immaterium_connection_info,
+				crafting_costs_promise,
+				migration_data_promise,
+				havoc_settings_promise,
+			}
 
-			return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, crafting_costs_promise, migration_data_promise)
+			return Promise.all(unpack(promises))
 		end)
 	end):next(function (results)
 		local status, _, _, auth_data, immaterium_connection_info, _, migration_data = unpack(results, 1, 8)

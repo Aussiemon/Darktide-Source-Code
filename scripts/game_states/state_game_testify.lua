@@ -11,12 +11,12 @@ local ParameterResolver = require("scripts/foundation/utilities/parameters/param
 local RenderSettings = require("scripts/settings/options/render_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local application_console_command = Application.console_command
-local flow_event = Unit.flow_event
 local unit_actor = Unit.actor
 local unit_animation_event = Unit.animation_event
-local unit_by_name = World.unit_by_name
+local unit_flow_event = Unit.flow_event
 local world_create_particles = World.create_particles
 local world_set_particles_life_time = World.set_particles_life_time
+local world_unit_by_name = World.unit_by_name
 
 local function _console_command(command, ...)
 	application_console_command(command, ...)
@@ -373,7 +373,7 @@ local StateGameTestify = {
 		local scale = 1
 		local save_depth = false
 		local output_dir = screenshot_settings.output_dir
-		local date_and_time = os.date("%y_%m_%d-%H%M%S")
+		local date_and_time = os.date("%y_%m_%d-%H%M")
 		local filename = screenshot_settings.filename .. "-" .. date_and_time
 		local filetype = screenshot_settings.filetype
 
@@ -393,13 +393,9 @@ local StateGameTestify = {
 
 		return actor
 	end,
-	unit_by_name = function (_, world, unit_name)
-		local unit = unit_by_name(world, unit_name)
-
-		return unit
-	end,
 	unit_flow_event = function (_, unit, flow_event_name)
-		flow_event(unit, flow_event_name)
+		Log.info("StateGameTestify", "Triggering flow event %s", flow_event_name)
+		unit_flow_event(unit, flow_event_name)
 	end,
 	unregister_timer = function (_, name)
 		Managers.time:unregister_timer(name)
@@ -429,6 +425,11 @@ local StateGameTestify = {
 		local world = Managers.world:world("level_world")
 
 		return world
+	end,
+	world_unit_by_name = function (_, world, unit_name)
+		local unit = world_unit_by_name(world, unit_name)
+
+		return unit
 	end,
 }
 

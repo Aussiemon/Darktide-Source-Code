@@ -182,6 +182,7 @@ local breed_data = {
 		jumps = 80,
 		ledges = 80,
 		ledges_with_fence = 80,
+		monster_walls = 1.5,
 		teleporters = 1.2,
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,

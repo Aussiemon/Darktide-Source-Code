@@ -917,7 +917,7 @@ local function team_member_definition(scenegraph_id)
 					120,
 					120,
 				},
-				default_color = Color.terminal_text_body_dark(nil, true),
+				default_color = Color.terminal_text_body(nil, true),
 				hover_color = Color.terminal_text_body_sub_header(nil, true),
 				size = {
 					nil,
@@ -1952,7 +1952,7 @@ local grid_blueprints = {
 						120,
 						120,
 					},
-					default_color = Color.terminal_text_body_dark(nil, true),
+					default_color = Color.terminal_text_body(nil, true),
 					hover_color = Color.terminal_text_body_sub_header(nil, true),
 					size = {
 						nil,
@@ -2409,8 +2409,16 @@ local grid_blueprints = {
 			if profile and player_info then
 				local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 				local character_level = tostring(profile.current_level) .. " "
+				local havoc_rank_all_time_high = presence_info.havoc_rank_all_time_high
 
-				content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
+				if havoc_rank_all_time_high ~= nil and profile.current_level ~= nil and profile.current_level >= 30 then
+					local havoc_prefix_text = Localize("loc_havoc_highest_order_reached")
+					local havoc_highest_rank = "- " .. havoc_prefix_text .. " " .. tostring(havoc_rank_all_time_high) .. " "
+
+					content.character_archetype_title = string.format("%s %s", character_archetype_title, havoc_highest_rank)
+				else
+					content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
+				end
 
 				local platform = player_info:platform()
 

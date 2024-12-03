@@ -353,7 +353,7 @@ OutlineSystem._cinematic_active = function (self)
 	local cinematic_scene_system = extension_manager:system("cinematic_scene_system")
 	local cinematic_scene_system_active = cinematic_scene_system:is_active()
 	local cinematic_manager = Managers.state.cinematic
-	local cinematic_manager_active = cinematic_manager:active()
+	local cinematic_manager_active = cinematic_manager:cinematic_active()
 
 	return cinematic_scene_system_active or cinematic_manager_active
 end

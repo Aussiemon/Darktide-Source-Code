@@ -12,8 +12,20 @@ local main_path_settings = {
 		50,
 		75,
 	},
+	triangle_group_forbidden_nav_tag_layers = {
+		"bot_damage_drops",
+		"bot_drops",
+		"bot_jumps",
+		"bot_ladders",
+		"bot_leap_of_faith",
+		"teleporters",
+	},
 	spawn_point_forbidden_nav_tag_volume_types = {
 		"content/volume_types/nav_tag_volumes/no_spawn",
+	},
+	path_types = {
+		linear = "scripts/managers/main_path/path_types/path_type_linear",
+		open = "scripts/managers/main_path/path_types/path_type_open",
 	},
 }
 

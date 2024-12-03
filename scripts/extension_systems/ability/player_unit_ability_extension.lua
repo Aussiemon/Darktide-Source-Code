@@ -346,7 +346,9 @@ PlayerUnitAbilityExtension.update = function (self, unit, dt, t)
 end
 
 PlayerUnitAbilityExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
-	self._action_handler:fixed_update(dt, t)
+	local condition_func_params = self:_condition_func_params()
+
+	self._action_handler:fixed_update(dt, t, condition_func_params)
 	self:_update_ability_cooldowns(t, dt)
 
 	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do

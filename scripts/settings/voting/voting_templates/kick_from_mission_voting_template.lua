@@ -137,7 +137,7 @@ local kick_from_mission_voting_template = {
 	network_interface = function ()
 		return Managers.connection
 	end,
-	can_start = function ()
+	can_start = function (params)
 		local min_num_voters = SocialConstants.min_num_party_members_to_vote
 		local is_in_mission = Managers.data_service.social:is_in_mission()
 
@@ -154,6 +154,16 @@ local kick_from_mission_voting_template = {
 
 		if num_voters < min_num_voters then
 			return false, "not enough players"
+		end
+
+		local mission_manager = Managers.mission_server
+
+		if mission_manager then
+			local can_kick, denied_reason = mission_manager:can_kick_from_mission(params.kick_peer_id)
+
+			if not can_kick then
+				return false, denied_reason
+			end
 		end
 
 		return true

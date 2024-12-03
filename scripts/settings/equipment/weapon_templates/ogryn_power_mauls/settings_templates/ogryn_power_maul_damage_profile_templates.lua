@@ -1650,7 +1650,7 @@ overrides.powermaul_2h_heavy_smiter = {
 	overrides = {
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.light,
+			melee_attack_strengths.heavy,
 		},
 		{
 			"targets",
@@ -1701,6 +1701,10 @@ overrides.powermaul_2h_heavy_smiter_active = {
 		{
 			"armor_damage_modifier",
 			light_active_am,
+		},
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.heavy,
 		},
 		{
 			"targets",

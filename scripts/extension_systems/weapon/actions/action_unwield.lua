@@ -6,7 +6,6 @@ local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local WeaponSpecial = require("scripts/utilities/weapon_special")
 local buff_proc_events = BuffSettings.proc_events
 local ActionUnwield = class("ActionUnwield", "ActionWeaponBase")
 
@@ -62,6 +61,10 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 
 	AimAssist.reset_ramp_multiplier(self._aim_assist_ramp_component)
 	self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "unwield")
+
+	if IS_PLAYSTATION and self._is_local_unit and self._is_human_controlled then
+		Managers.input.haptic_trigger_effects:unwield()
+	end
 end
 
 ActionUnwield.fixed_update = function (self, dt, t, time_in_action)

@@ -1,10 +1,57 @@
 ﻿-- chunkname: @scripts/ui/utilities/crosshair.lua
 
-local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
+local Recoil = require("scripts/utilities/recoil")
+local Sway = require("scripts/utilities/sway")
+local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local hit_indicator_colors = HudElementCrosshairSettings.hit_indicator_colors
 local Crosshair = {}
 local _apply_color_values, _hit_indicator_segment, _hit_indicator_offset, _hit_indicator_pivot, _hit_indicator_angle, _apply_hit_indicator_segment_style
+local CROSSHAIR_POSITION_LERP_SPEED = 35
+
+Crosshair.position = function (dt, t, ui_hud, ui_renderer, current_x, current_y, pivot_position)
+	local target_x, target_y = 0, 0
+	local player_extensions = ui_hud:player_extensions()
+	local weapon_extension = player_extensions and player_extensions.weapon
+	local player_camera = ui_hud:player_camera()
+
+	if weapon_extension and player_camera then
+		local unit_data_extension = player_extensions.unit_data
+		local first_person_extention = player_extensions.first_person
+		local first_person_unit = first_person_extention:first_person_unit()
+		local shoot_rotation = Unit.world_rotation(first_person_unit, 1)
+		local shoot_position = Unit.world_position(first_person_unit, 1)
+		local recoil_template = weapon_extension:recoil_template()
+		local recoil_component = unit_data_extension:read_component("recoil")
+		local movement_state_component = unit_data_extension:read_component("movement_state")
+
+		shoot_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, shoot_rotation)
+
+		local sway_component = unit_data_extension:read_component("sway")
+		local sway_template = weapon_extension:sway_template()
+
+		shoot_rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, shoot_rotation)
+
+		local range = 50
+		local shoot_direction = Quaternion.forward(shoot_rotation)
+		local world_aim_position = shoot_position + shoot_direction * range
+		local screen_aim_position = Camera.world_to_screen(player_camera, world_aim_position)
+		local abs_target_x, abs_target_y = screen_aim_position.x, screen_aim_position.y
+		local pivot_x, pivot_y = pivot_position[1], pivot_position[2]
+
+		target_x = abs_target_x - pivot_x
+		target_y = abs_target_y - pivot_y
+	end
+
+	local ui_renderer_scale = ui_renderer.scale
+	local ui_renderer_inverse_scale = ui_renderer.inverse_scale
+	local scaled_x, scaled_y = current_x * ui_renderer_scale, current_y * ui_renderer_scale
+	local lerp_t = math.min(CROSSHAIR_POSITION_LERP_SPEED * dt, 1)
+	local x = math.lerp(scaled_x, target_x, lerp_t) * ui_renderer_inverse_scale
+	local y = math.lerp(scaled_y, target_y, lerp_t) * ui_renderer_inverse_scale
+
+	return x, y
+end
 
 Crosshair.update_hit_indicator = function (style, hit_progress, hit_color, hit_weakspot, draw_hit_indicator)
 	local hit_alpha = math.ease_sine(hit_progress or 0) * 255

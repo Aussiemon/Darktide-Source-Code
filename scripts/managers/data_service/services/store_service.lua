@@ -17,6 +17,14 @@ local function _current_character_id()
 	return player:character_id()
 end
 
+local function _backend_time()
+	local current_time = Managers.time:time("main")
+	local backend_time = Managers.backend:get_server_time(current_time)
+
+	return backend_time
+end
+
+StoreService.max_cache_time = 3600000
 StoreService.FEATURE_KEY = "premium_store_featured"
 StoreService.GET_PREMIUM_STORE_TIMEOUT = 60
 
@@ -143,8 +151,18 @@ StoreService._get_cached_store = function (self, cache_key, logging_function)
 		return
 	end
 
-	local current_time = Managers.time:time("main")
-	local backend_time = Managers.backend:get_server_time(current_time)
+	local backend_time = _backend_time()
+	local cached_at = cache_data.cached_at
+	local cache_to = cached_at and cached_at + StoreService.max_cache_time
+
+	if cache_to == nil or cache_to < backend_time then
+		logging_function("StoreService", "Clearing cache for '%s'. Reason, passed max cache: '%s' < '%s'.", cache_key, cache_to, backend_time)
+
+		cache[cache_key] = nil
+
+		return
+	end
+
 	local valid_to = cache_data.valid_to
 
 	if valid_to == nil or valid_to < backend_time then
@@ -155,7 +173,7 @@ StoreService._get_cached_store = function (self, cache_key, logging_function)
 		return
 	end
 
-	logging_function("StoreService", "Use resolved promise for '%s'. '%s' >= '%s'.", cache_key, valid_to, backend_time)
+	logging_function("StoreService", "Use resolved promise for '%s'. '%s' / '%s' >= '%s'.", cache_key, valid_to, cache_to, backend_time)
 
 	return cache_promise
 end
@@ -635,6 +653,7 @@ StoreService.get_premium_store = function (self, storefront_key)
 		store_front:set_interaction_callback(callback(self, "invalidate_store_cache", cache_key))
 
 		store_cache[cache_key].valid_to = store_front:cache_until("public_filtered")
+		store_cache[cache_key].cached_at = _backend_time()
 
 		if StoreService:is_featured_store(storefront_key) then
 			self._current_store_id = id

@@ -266,7 +266,9 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 		Managers.ps5_uds = PS5UDSManager:new()
 	end
 
-	Managers.stats = StatsManager:new(not DEDICATED_SERVER, event_delegate)
+	local is_stat_client = not DEDICATED_SERVER
+
+	Managers.stats = StatsManager:new(is_stat_client, event_delegate)
 
 	local use_batched_saving = is_dedicated_mission_server and GameParameters.save_achievements_in_batch
 	local broadcast_unlocks = is_dedicated_mission_server

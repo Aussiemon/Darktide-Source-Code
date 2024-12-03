@@ -202,6 +202,20 @@ HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_re
 		local _, text_height = UIRenderer.text_size(ui_renderer, header_text, header_text_style.font_type, header_text_style.font_size, text_size, text_options)
 
 		header_height = text_height + 5
+
+		if new_hud_objective:progress_bar() then
+			local bar_height = style.bar.size[2] + 5
+			local text_y_offset_adjustment = -(bar_height / 2)
+
+			header_text_style.offset[2] = header_text_style.offset[2] + text_y_offset_adjustment
+
+			local bar_y_offset_adjustment = header_height / 2
+
+			style.bar.offset[2] = style.bar.offset[2] + bar_y_offset_adjustment
+			style.bar_background.offset[2] = style.bar_background.offset[2] + bar_y_offset_adjustment
+			style.bar_icon.offset[2] = style.bar_icon.offset[2] + bar_y_offset_adjustment
+			header_height = header_height + bar_height
+		end
 	end
 
 	local widget_height = math.max(header_size[2], header_height)
@@ -299,10 +313,10 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 
 		if alert then
 			style.hazard_above.color = HudElementMissionObjectiveFeedSettings.alert_color
-			style.overarching_background.size[2] = 15 + HudElementMissionObjectiveFeedSettings.header_size[2] + 10
+			style.overarching_background.size[2] = 15 + content.size[2] + 10
 		else
 			style.hazard_above.color = style.hazard_above.base_color
-			style.overarching_background.size[2] = 15 + HudElementMissionObjectiveFeedSettings.header_size[2] + 10 + 20
+			style.overarching_background.size[2] = 15 + content.size[2] + 10 + 20
 		end
 	else
 		content.show_alert = false

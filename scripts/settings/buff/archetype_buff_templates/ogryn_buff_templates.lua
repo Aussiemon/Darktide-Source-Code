@@ -1370,6 +1370,7 @@ local breed_name_size = {
 	cultist_melee = 1,
 	cultist_mutant = 5,
 	cultist_mutant_mutator = 5,
+	cultist_ritualist = 1,
 	cultist_shocktrooper = 2,
 	renegade_assault = 1,
 	renegade_berzerker = 3,

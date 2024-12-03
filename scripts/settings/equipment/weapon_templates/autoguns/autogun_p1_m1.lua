@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autoguns/autogun_p1_m1.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -8,6 +8,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FlashlightTemplates = require("scripts/settings/equipment/flashlight_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -240,7 +241,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -589,6 +590,7 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_toggle_flashlight = {
 		activation_time = 0,
@@ -669,6 +671,7 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 }
 
@@ -701,6 +704,7 @@ weapon_template.no_ammo_delay = 0.25
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_tweak_data = {
 	manual_toggle_only = true,
@@ -768,6 +772,7 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.assault
 weapon_template.wieldable_slot_scripts = {}
 
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")

@@ -552,14 +552,6 @@ local roamer_packs = {
 			},
 		},
 	},
-	renegade_flamers_mutator = {
-		{
-			weight = 1,
-			breeds = {
-				"renegade_flamer_mutator",
-			},
-		},
-	},
 	renegade_close_low_no_melee_ogryns = {
 		{
 			weight = 1,

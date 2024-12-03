@@ -27,6 +27,10 @@ local diamantine_info_size = {
 	details_panel_size[1] - 50,
 	40,
 }
+local havoc_info_size = {
+	details_panel_size[1] - 50,
+	180,
+}
 local screen_size = UIWorkspaceSettings.screen.size
 local right_content_size = {
 	ElementSettings.right_grid_width,
@@ -46,7 +50,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			100,
+			0,
 		},
 	},
 	left_panel = {
@@ -149,6 +153,31 @@ local scenegraph_definition = {
 			0,
 			-(right_header_size[2] + ElementSettings.section_buffer),
 			0,
+		},
+	},
+	havoc_pivot = {
+		horizontal_alignment = "right",
+		parent = "background",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			-1100,
+			100,
+			1,
+		},
+	},
+	havoc_panel = {
+		horizontal_alignment = "left",
+		parent = "havoc_pivot",
+		vertical_alignment = "top",
+		size = havoc_info_size,
+		position = {
+			0,
+			0,
+			1,
 		},
 	},
 }
@@ -435,7 +464,7 @@ local left_panel_widgets_definitions = {
 		},
 		{
 			pass_type = "text",
-			value_id = "plasteel_amount_id",
+			value_id = "amount_id",
 			style = {
 				horizontal_alignment = "left",
 				vertical_alignment = "top",
@@ -478,7 +507,7 @@ local left_panel_widgets_definitions = {
 		},
 		{
 			pass_type = "text",
-			value_id = "diamantine_amount_id",
+			value_id = "amount_id",
 			style = {
 				horizontal_alignment = "left",
 				vertical_alignment = "top",
@@ -495,6 +524,411 @@ local left_panel_widgets_definitions = {
 			},
 		},
 	}, "diamantine_info_panel"),
+	havoc_rank_info = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/icons/generic/danger",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = {
+					255,
+					169,
+					191,
+					153,
+				},
+				offset = {
+					5,
+					5,
+					2,
+				},
+				size = {
+					50,
+					50,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "havoc_text",
+			value_id = "havoc_text",
+			style = {
+				font_size = 34,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "center",
+				offset = {
+					60,
+					-45,
+					2,
+				},
+				size = {
+					mission_info_size[1] + 100,
+					50,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "havoc_rank",
+			value_id = "havoc_rank",
+			style = {
+				font_size = 34,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "center",
+				offset = {
+					420,
+					-45,
+					2,
+				},
+				size = {
+					mission_info_size[1] + 100,
+					50,
+				},
+				text_color = Color.golden_rod(255, true),
+			},
+		},
+	}, "mission_info_panel", nil, nil, element_styles.difficulty),
+	havoc_circumstance_info = UIWidget.create_definition({
+		{
+			pass_type = "texture_uv",
+			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
+			style = {
+				color = Color.terminal_background(160, true),
+				offset = {
+					0,
+					0,
+					-3,
+				},
+				uvs = {
+					{
+						0,
+						1,
+					},
+					{
+						1,
+						0,
+					},
+				},
+			},
+		},
+		{
+			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/default_square",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				size = {
+					3,
+				},
+				color = Color.golden_rod(255, true),
+			},
+		},
+		{
+			pass_type = "text",
+			value = Utf8.upper(Localize("loc_havoc_mutators")),
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "top",
+				offset = {
+					0,
+					-40,
+					10,
+				},
+				size = {
+					nil,
+					30,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon_01",
+			value = "content/ui/materials/icons/generic/danger",
+			value_id = "icon_01",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = Color.golden_rod(255, true),
+				offset = {
+					25,
+					0,
+					2,
+				},
+				size = {
+					40,
+					40,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon_02",
+			value = "content/ui/materials/icons/generic/danger",
+			value_id = "icon_02",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = Color.golden_rod(255, true),
+				offset = {
+					25,
+					90,
+					2,
+				},
+				size = {
+					40,
+					40,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon_03",
+			value = "content/ui/materials/icons/generic/danger",
+			value_id = "icon_03",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = Color.golden_rod(255, true),
+				offset = {
+					25,
+					180,
+					2,
+				},
+				size = {
+					40,
+					40,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon_04",
+			value = "content/ui/materials/icons/generic/danger",
+			value_id = "icon_04",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = Color.golden_rod(255, true),
+				offset = {
+					25,
+					270,
+					2,
+				},
+				size = {
+					40,
+					40,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_name_01",
+			value_id = "circumstance_name_01",
+			style = {
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				vertical_alignment = "top",
+				offset = {
+					75,
+					0,
+					10,
+				},
+				size = {
+					400,
+					40,
+				},
+				text_color = Color.golden_rod(255, true),
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_name_02",
+			value_id = "circumstance_name_02",
+			style = {
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				vertical_alignment = "top",
+				offset = {
+					75,
+					90,
+					10,
+				},
+				size = {
+					400,
+					40,
+				},
+				text_color = Color.golden_rod(255, true),
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_name_03",
+			value_id = "circumstance_name_03",
+			style = {
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				vertical_alignment = "top",
+				offset = {
+					75,
+					180,
+					10,
+				},
+				size = {
+					400,
+					40,
+				},
+				text_color = Color.golden_rod(255, true),
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_name_04",
+			value_id = "circumstance_name_04",
+			style = {
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				vertical_alignment = "top",
+				offset = {
+					75,
+					270,
+					10,
+				},
+				size = {
+					400,
+					40,
+				},
+				text_color = Color.golden_rod(255, true),
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_description_01",
+			value_id = "circumstance_description_01",
+			style = {
+				font_size = 20,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					80,
+					40,
+					10,
+				},
+				size = {
+					500,
+					10,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_description_02",
+			value_id = "circumstance_description_02",
+			style = {
+				font_size = 20,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					80,
+					130,
+					10,
+				},
+				size = {
+					500,
+					10,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_description_03",
+			value_id = "circumstance_description_03",
+			style = {
+				font_size = 20,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					80,
+					220,
+					10,
+				},
+				size = {
+					500,
+					10,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "circumstance_description_04",
+			value_id = "circumstance_description_04",
+			style = {
+				font_size = 20,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					80,
+					310,
+					10,
+				},
+				size = {
+					500,
+					10,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		},
+	}, "circumstance_info_panel"),
 }
 local right_panel_widgets_definitions = {
 	right_header_title = UIWidget.create_definition({

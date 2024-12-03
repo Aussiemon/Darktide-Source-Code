@@ -35,6 +35,8 @@ ActionThrowGrenade.start = function (self, action_settings, t, ...)
 	end
 
 	self._spawn_at_time = t + (action_settings.spawn_at_time or 0)
+
+	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 end
 
 ActionThrowGrenade.fixed_update = function (self, dt, t, time_in_action)
@@ -122,9 +124,6 @@ ActionThrowGrenade._spawn_projectile = function (self)
 			end
 
 			local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, nil, owner_side_name)
-			local buff_extension = self._buff_extension
-			local stat_buffs = buff_extension:stat_buffs()
-			local extra_grenade_throw_chance = stat_buffs.extra_grenade_throw_chance
 
 			if extra_grenade then
 				local damage_settings = projectile_template.damage

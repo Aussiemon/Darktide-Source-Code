@@ -151,14 +151,14 @@ PlayerManager._generate_session_id = function (self, account_id, character_id)
 	if not account_id or not character_id then
 		self._session_id_counter = self._session_id_counter + 1
 
-		return self._session_id_counter
+		return tostring(self._session_id_counter)
 	end
 
 	local cache_id = string.format("%s:%s", account_id, character_id)
 
 	if not self._session_id_cache[cache_id] then
 		self._session_id_counter = self._session_id_counter + 1
-		self._session_id_cache[cache_id] = self._session_id_counter
+		self._session_id_cache[cache_id] = tostring(self._session_id_counter)
 	end
 
 	return self._session_id_cache[cache_id]

@@ -8,6 +8,7 @@ local ChunkLodManager = require("scripts/managers/chunk_lod/chunk_lod_manager")
 local CinematicManager = require("scripts/managers/cinematic/cinematic_manager")
 local CircumstanceManager = require("scripts/managers/circumstance/circumstance_manager")
 local CollectiblesManager = require("scripts/managers/collectibles/collectibles_manager")
+local HavocManager = require("scripts/managers/havoc/havoc_manager")
 local DecalManager = require("scripts/managers/decal/decal_manager")
 local DifficultyManager = require("scripts/managers/difficulty/difficulty_manager")
 local EmoteManager = require("scripts/managers/emote/emote_manager")
@@ -54,8 +55,9 @@ GameplayInitStepManagers.on_enter = function (self, parent, params)
 	local nav_world = shared_state.nav_world
 	local has_navmesh = not table.is_empty(shared_state.nav_data)
 	local pacing_control = shared_state.pacing_control
+	local havoc_data = shared_state.havoc_data
 
-	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_time_step, time_query_handle)
+	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, havoc_data, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_time_step, time_query_handle)
 end
 
 GameplayInitStepManagers.update = function (self, main_dt, main_t)
@@ -68,7 +70,7 @@ GameplayInitStepManagers.update = function (self, main_dt, main_t)
 	return GameplayInitStepNvidiaAiAgent, next_step_params
 end
 
-GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_time_step, time_query_handle)
+GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, havoc_data, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_time_step, time_query_handle)
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
@@ -84,7 +86,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.chunk_lod = ChunkLodManager:new(world, mission, local_player)
 	Managers.state.network_story = NetworkStoryManager:new(world, is_server, network_event_delegate)
 	Managers.state.networked_flow_state = NetworkedFlowStateManager:new(world, is_server, network_event_delegate)
-	Managers.state.difficulty = DifficultyManager:new(is_server, resistance, challenge)
+	Managers.state.difficulty = DifficultyManager:new(is_server, resistance, challenge, havoc_data)
 
 	local mission_template = MissionTemplates[mission_name]
 	local game_mode_name = mission_template.game_mode_name
@@ -105,6 +107,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 
 	Managers.state.minion_death = MinionDeathManager:new(is_server, network_event_delegate, soft_cap_out_of_bounds_units)
 	Managers.state.terror_event = TerrorEventManager:new(world, is_server, network_event_delegate, mission_template, level_name)
+	Managers.state.havoc = HavocManager:new(is_server, world, nav_world, level_name, level_seed)
 	Managers.state.cinematic = CinematicManager:new(world, is_server, network_event_delegate)
 	Managers.state.video = VideoManager:new()
 	Managers.state.blood = BloodManager:new(world, is_server, network_event_delegate)

@@ -5,6 +5,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local highlight_size_addition = 10
+local TAB_SIZE = 20
 
 local function list_item_focused_visibility_function(content, style)
 	local hotspot = content.hotspot or content.parent and content.parent.hotspot
@@ -44,18 +45,20 @@ ListHeaderPassTemplates.list_highlight_color_change_function = highlight_color_c
 ListHeaderPassTemplates.list_item_focused_visibility_function = list_item_focused_visibility_function
 ListHeaderPassTemplates.list_item_highight_focused_visibility_function = list_item_highight_focused_visibility_function
 
-ListHeaderPassTemplates.list_header = function (header_width, height, use_is_focused)
+ListHeaderPassTemplates.list_header = function (header_width, height, use_is_focused, is_sub_setting)
 	local header_font_style = table.clone(UIFontSettings.header_4)
+	local default_offset = table.shallow_copy(header_font_style.offset)
 
 	header_font_style.size = {
 		header_width,
 		height,
 	}
 	header_font_style.size_addition = {
-		-60,
+		-60 + (is_sub_setting and TAB_SIZE or 0),
 		0,
 		1,
 	}
+	header_font_style.offset[1] = default_offset[1] + (is_sub_setting and TAB_SIZE or 0)
 	header_font_style.default_color = Color.terminal_text_body(255, true)
 	header_font_style.text_color = Color.terminal_text_body(255, true)
 	header_font_style.hover_color = Color.terminal_text_header_selected(255, true)

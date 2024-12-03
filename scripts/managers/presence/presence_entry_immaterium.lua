@@ -257,6 +257,16 @@ PresenceEntryImmaterium.psn_session_id = function (self)
 	return session_id ~= "none" and session_id or nil
 end
 
+PresenceEntryImmaterium.havoc_status = function (self)
+	return self:_key_value_string("havoc_status") or "none"
+end
+
+PresenceEntryImmaterium.havoc_rank_all_time_high = function (self)
+	local rank = self:_key_value_string("havoc_rank_all_time_high")
+
+	return rank ~= "none" and tonumber(rank) or nil
+end
+
 PresenceEntryImmaterium.is_alive = function (self)
 	if self._alive then
 		self._alive_queried = true

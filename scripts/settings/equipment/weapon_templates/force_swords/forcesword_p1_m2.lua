@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_swords/forcesword_p1_m2.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -8,6 +8,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local ForceswordMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/forcesword_p1_m1_melee_action_input_setup")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -52,7 +53,7 @@ weapon_template.action_inputs.vent_release = {
 	},
 }
 
-ActionInputHierarchyUtils.update_hierarchy_entry(weapon_template.action_input_hierarchy, "vent", {
+ActionInputHierarchy.update_hierarchy_entry(weapon_template.action_input_hierarchy, "vent", {
 	{
 		input = "vent_release",
 		transition = "base",
@@ -1329,6 +1330,7 @@ weapon_template.actions = {
 			fx_source = "fx_left_hand_offset_fwd",
 			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_parry",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.melee.push,
 	},
 	action_find_target = {
 		allowed_during_sprint = false,
@@ -1507,6 +1509,7 @@ weapon_template.actions = {
 				chain_time = 0.15,
 			},
 		},
+		haptic_trigger_template = HapticTriggerTemplates.melee.none,
 	},
 	action_activate_special = {
 		activation_cooldown = 3,
@@ -1545,6 +1548,7 @@ weapon_template.weapon_box = base_sweep_box
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1573,7 +1577,6 @@ weapon_template.keywords = {
 	"p1",
 	"activated",
 }
-weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.dodge_template = "psyker_ninja"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "forcesword_p1_m1"
@@ -1581,6 +1584,8 @@ weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "forcesword_p1_m1"
 weapon_template.movement_curve_modifier_template = "forcesword_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.melee.light
 weapon_template.overclocks = {
 	warp_charge_cost_up_dps_down = {
 		forcesword_p1_m1_dps_stat = -0.1,

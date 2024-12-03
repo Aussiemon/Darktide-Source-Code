@@ -291,7 +291,7 @@ local archetype_talents = {
 			},
 		},
 		ogryn_special_ammo = {
-			description = "loc_talent_ogryn_combat_ability_special_ammo_desc",
+			description = "loc_talent_ogryn_combat_ability_special_ammo_new_desc",
 			display_name = "loc_talent_ogryn_combat_ability_special_ammo",
 			large_icon = "content/ui/textures/icons/talents/ogryn_1/ogryn_1_combat",
 			name = "F-Ability - Enter a stance that reloads you ranged weapon with a custom magazine with 3 times capacity",

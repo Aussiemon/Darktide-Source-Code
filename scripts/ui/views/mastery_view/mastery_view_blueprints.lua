@@ -677,7 +677,7 @@ blueprints.trait_new = {
 				local weapon_trait_icon_index = string.sub(weapon_trait_icon_name, string.len(string_start) + 1)
 				local index_to_number = tonumber(weapon_trait_icon_index)
 
-				if not index_to_number or index_to_number > 236 then
+				if not index_to_number or index_to_number > 243 then
 					weapon_trait_icon_name = "weapon_trait_default"
 				end
 

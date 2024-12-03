@@ -165,6 +165,7 @@ weapon_template.actions = {
 			},
 			wield_previous = {
 				action_name = "action_unwield_to_previous",
+				chain_time = 0.5,
 			},
 			grenade_ability = {
 				{
@@ -223,10 +224,12 @@ weapon_template.conditional_state_to_action_input = {
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/pocketables"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/preacher_relic"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
+weapon_template.can_use_while_vaulting = true
 weapon_template.spread_template = "no_spread"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

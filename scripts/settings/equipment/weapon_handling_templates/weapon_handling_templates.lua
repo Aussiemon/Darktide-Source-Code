@@ -701,6 +701,75 @@ local weapon_handling_templates = {
 			max_critical_shots = 6,
 		},
 	},
+	ogryn_heavystubber_p2_m1_full_auto = {
+		fire_rate = {
+			auto_fire_time = 0.225,
+			fire_time = 0.08,
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 1,
+		},
+	},
+	ogryn_heavystubber_p2_m1_hip_fire = {
+		fire_rate = {
+			fire_time = 0.05,
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 1,
+		},
+	},
+	ogryn_heavystubber_p2_m2_full_auto = {
+		fire_rate = {
+			auto_fire_time = 0.29,
+			fire_time = 0.08,
+		},
+		critical_strike = {
+			max_critical_shots = 1,
+			chance_modifier = {
+				lerp_basic = -0.02,
+				lerp_perfect = 0.15,
+			},
+		},
+	},
+	ogryn_heavystubber_p2_m2_hip_fire = {
+		fire_rate = {
+			fire_time = 0.05,
+		},
+		critical_strike = {
+			max_critical_shots = 1,
+			chance_modifier = {
+				lerp_basic = -0.02,
+				lerp_perfect = 0.15,
+			},
+		},
+	},
+	ogryn_heavystubber_p2_m3_full_auto = {
+		fire_rate = {
+			auto_fire_time = 0.36,
+			fire_time = 0.05,
+		},
+		critical_strike = {
+			max_critical_shots = 1,
+			chance_modifier = {
+				lerp_basic = -0.02,
+				lerp_perfect = 0.15,
+			},
+		},
+	},
+	ogryn_heavystubber_p2_m3_aim = {
+		fire_rate = {
+			fire_time = 0.05,
+		},
+		critical_strike = {
+			max_critical_shots = 1,
+			chance_modifier = {
+				lerp_basic = -0.02,
+				lerp_perfect = 0.15,
+			},
+		},
+	},
 	shotgun_double_shot = {
 		fire_rate = {
 			auto_fire_time = 0.0005,

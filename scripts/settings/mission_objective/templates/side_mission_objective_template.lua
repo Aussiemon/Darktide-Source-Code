@@ -17,7 +17,7 @@ local mission_objective_templates = {
 				unit_name = "consumable",
 			},
 			side_mission_consumable = {
-				collect_amount = 9,
+				collect_amount = 6,
 				description = "loc_objective_side_mission_consumable_desc",
 				evaluate_at_level_end = true,
 				header = "loc_objective_side_mission_consumable_header",

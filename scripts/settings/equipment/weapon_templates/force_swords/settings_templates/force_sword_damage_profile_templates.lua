@@ -1063,6 +1063,145 @@ overrides.light_force_sword_stab_sticky = {
 		},
 	},
 }
+damage_templates.light_force_sword_uppercut = {
+	force_weapon_damage = true,
+	gibbing_power = 0,
+	ragdoll_push_force = 50,
+	stagger_category = "melee",
+	sticky_attack = false,
+	cleave_distribution = light_cleave,
+	gibbing_type = GibbingTypes.sawing,
+	wounds_template = WoundsTemplates.force_sword,
+	melee_attack_strength = melee_attack_strengths.light,
+	gib_push_force = GibbingSettings.gib_push_force.force_sword,
+	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_5,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+			[armor_types.super_armor] = damage_lerp_values.no_damage,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_5,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.no_damage,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+	},
+	targets = {
+		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+				},
+			},
+			power_distribution = {
+				attack = {
+					100,
+					200,
+				},
+				impact = {
+					5,
+					10,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				1.25,
+				3.5,
+			},
+			power_level_multiplier = {
+				0.8,
+				1.6,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					35,
+					65,
+				},
+				impact = {
+					5,
+					10,
+				},
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					15,
+					45,
+				},
+				impact = {
+					4,
+					8,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+overrides.light_force_sword_uppercut_sticky = {
+	parent_template_name = "light_force_sword_uppercut",
+	overrides = {
+		{
+			"stagger_category",
+			"sticky",
+		},
+		{
+			"stagger_override",
+			"sticky",
+		},
+		{
+			"shield_stagger_category",
+			"melee",
+		},
+		{
+			"sticky_attack",
+			true,
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.force_sword,
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				200,
+				300,
+			},
+		},
+	},
+}
 damage_templates.force_sword_push_followup_fling = {
 	ignore_stagger_reduction = true,
 	is_push = true,

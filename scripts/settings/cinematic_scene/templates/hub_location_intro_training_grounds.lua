@@ -4,7 +4,6 @@ local cinematic_scene_templates = {
 	hub_location_intro_training_grounds = {
 		hide_players = true,
 		include_bots = false,
-		instant_black_screen_during_cutscene_loading = false,
 		is_skippable = true,
 		local_player_only = true,
 		mission_outro = false,

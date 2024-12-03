@@ -394,6 +394,7 @@ local action_data = {
 	},
 	shoot_spray_n_pray = {
 		attack_intensity_type = "elite_ranged",
+		can_strafe_shoot = true,
 		clear_shot_line_of_sight_id = "gun",
 		degree_per_direction = 10,
 		fx_source_name = "muzzle",
@@ -405,6 +406,11 @@ local action_data = {
 		out_of_aim_anim_event = "out_of_aim",
 		randomized_direction_degree_range = 180,
 		rotation_speed = 2,
+		strafe_end_anim_event = "aim_standing",
+		strafe_extra_spread_multiplier = 1.2,
+		strafe_shoot_combat_vector = true,
+		strafe_shoot_distance = 3,
+		strafe_speed = 1.6,
 		suppressive_fire_spread_multiplier = 3,
 		utility_weight = 10,
 		vo_event = "start_shooting",
@@ -466,6 +472,12 @@ local action_data = {
 		stagger_type_reduction = {
 			killshot = 60,
 			ranged = 60,
+		},
+		strafe_anim_events = {
+			bwd = "move_bwd_walk_aim",
+			fwd = "move_fwd_walk_aim",
+			left = "move_left_walk_aim",
+			right = "move_right_walk_aim",
 		},
 	},
 	in_cover = {

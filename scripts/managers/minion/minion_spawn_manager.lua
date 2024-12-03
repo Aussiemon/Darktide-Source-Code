@@ -88,6 +88,13 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	TEMP_INIT_DATA.optional_group_id = optional_group_id
 	TEMP_INIT_DATA.optional_mission_objective_id = optional_mission_objective_id
 	TEMP_INIT_DATA.optional_attack_selection_template_name = optional_attack_selection_template_name
+
+	local additional_health_modifier = Managers.state.havoc:minion_health_modifier(breed)
+
+	if additional_health_modifier then
+		optional_health_modifier = optional_health_modifier and optional_health_modifier + additional_health_modifier or 1 + additional_health_modifier
+	end
+
 	TEMP_INIT_DATA.optional_health_modifier = optional_health_modifier
 
 	local unit_template_name = breed.unit_template_name
@@ -280,6 +287,10 @@ end
 
 MinionSpawnManager.num_spawned_minions = function (self)
 	return self._num_spawned_minions
+end
+
+MinionSpawnManager.spawned_minions = function (self)
+	return self._spawned_minions
 end
 
 return MinionSpawnManager

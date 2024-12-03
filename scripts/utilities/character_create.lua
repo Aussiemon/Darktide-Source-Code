@@ -576,14 +576,6 @@ CharacterCreate.set_specialization = function (self, specialization)
 	self:_increase_value_version("specialization")
 end
 
-CharacterCreate.specialization = function (self)
-	if self._profile.specialization then
-		local specialization_name = self._profile.specialization
-
-		return self._profile.archetype.specializations[specialization_name]
-	end
-end
-
 CharacterCreate._fetch_suggested_names_by_profile = function (self)
 	self._archetype_random_names = {}
 

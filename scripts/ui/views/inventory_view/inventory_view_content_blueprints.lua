@@ -1275,13 +1275,9 @@ local blueprints = {
 
 				if updated_mark then
 					content.item = equipped_item
-
-					local display_name = equipped_item and equipped_item.display_name
-
-					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
-					end
+					content.display_name = ItemUtils.weapon_card_display_name(equipped_item)
+					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(equipped_item)
+					content.rarity_name = ItemUtils.rarity_display_name(equipped_item)
 
 					Managers.ui:item_icon_updated(content.item)
 				end

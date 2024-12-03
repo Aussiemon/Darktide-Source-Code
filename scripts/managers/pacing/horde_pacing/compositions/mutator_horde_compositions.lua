@@ -243,6 +243,63 @@ local horde_compositions = {
 			},
 		},
 	},
+	mutator_cultist_grenadier = {
+		{
+			breeds = {
+				{
+					name = "cultist_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+	},
 	mutator_riflemen = {
 		{
 			breeds = {

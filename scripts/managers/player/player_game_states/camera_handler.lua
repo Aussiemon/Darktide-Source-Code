@@ -65,7 +65,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	local old_unit = self._camera_follow_unit
 	local new_unit = old_unit
 
-	if not Managers.state.cinematic:active() then
+	if not Managers.state.cinematic:cinematic_active() then
 		local player_is_available = player:unit_is_alive()
 		local is_hogtied = false
 		local is_being_rescued = false
@@ -200,7 +200,7 @@ end
 CameraHandler.post_update = function (self, dt, t, player_orientation)
 	local cinematic_manager = Managers.state.cinematic
 
-	if cinematic_manager:active() then
+	if cinematic_manager:cinematic_active() then
 		local old_unit = self._camera_follow_unit
 		local new_unit
 

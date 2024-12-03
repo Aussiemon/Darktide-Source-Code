@@ -114,6 +114,9 @@ DialogueSettings.level_specific_load_files = {
 	op_train = {
 		"mission_vo_op_train",
 	},
+	km_heresy = {
+		"mission_vo_km_heresy",
+	},
 }
 DialogueSettings.player_load_files = {
 	ogryn_a = {

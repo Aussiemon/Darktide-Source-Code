@@ -494,6 +494,7 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 
 	if camera then
 		local markers_by_type = self._markers_by_type
+		local layer_offset = 0
 
 		for marker_type, markers in pairs(markers_by_type) do
 			for i = 1, #markers do
@@ -523,6 +524,11 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 					end
 
 					if draw then
+						local offset = widget.offset
+
+						offset[3] = math.min(layer_offset, HudElementWorldMarkersSettings.max_marker_draw_layer)
+						layer_offset = layer_offset + HudElementWorldMarkersSettings.marker_draw_layer_increment
+
 						local previous_alpha_multiplier = widget.alpha_multiplier
 
 						widget.alpha_multiplier = (previous_alpha_multiplier or 1) * alpha_multiplier
@@ -747,7 +753,7 @@ HudElementWorldMarkers._raycast_markers = function (self, marker_raycast_queue)
 	table.clear(marker_raycast_queue)
 end
 
-HudElementWorldMarkers._async_raycast_result_cb = function (self, id, hit, hit_position, data)
+HudElementWorldMarkers._async_raycast_result_cb = function (self, id, data, hit, hit_position)
 	if self.destroyed then
 		return
 	end

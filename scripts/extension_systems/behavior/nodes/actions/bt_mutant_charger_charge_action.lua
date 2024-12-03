@@ -971,7 +971,7 @@ BtMutantChargerChargeAction._check_wall_collision = function (self, unit, scratc
 	local wall_raycast_distance = action_data.wall_raycast_distance
 	local rotation = Unit.local_rotation(unit, 1)
 	local direction = Vector3.flat(Quaternion.forward(rotation))
-	local collision_filter = "filter_minion_shooting_geometry"
+	local collision_filter = "filter_minion_mover"
 	local hit = PhysicsWorld.raycast(physics_world, from, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
 
 	if hit then

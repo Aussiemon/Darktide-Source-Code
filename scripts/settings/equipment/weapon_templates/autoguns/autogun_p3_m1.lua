@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autoguns/autogun_p3_m1.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -8,6 +8,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
@@ -250,7 +251,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -606,6 +607,7 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_bash_start = {
 		abort_sprint = true,
@@ -691,6 +693,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_bash = {
 		abort_sprint = true,
@@ -789,6 +792,7 @@ weapon_template.actions = {
 		damage_type = damage_types.weapon_butt,
 		damage_profile = DamageProfileTemplates.autogun_weapon_special_bash,
 		herding_template = HerdingTemplates.stab,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_bash_heavy = {
 		abort_sprint = true,
@@ -887,6 +891,7 @@ weapon_template.actions = {
 		damage_type = damage_types.weapon_butt,
 		damage_profile = DamageProfileTemplates.autogun_weapon_special_bash_heavy,
 		herding_template = HerdingTemplates.stab,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -903,6 +908,7 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 }
 
@@ -934,6 +940,7 @@ weapon_template.no_ammo_delay = 0.25
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_tweak_data = {}
 weapon_template.sprint_ready_up_time = 0.1
@@ -999,6 +1006,7 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.killshot_burst
 
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 

@@ -838,7 +838,7 @@ Items.weapon_skin_requirement_text = function (item)
 
 		local template_display_name_localized = item_or_nil and Items.weapon_card_display_name(item_or_nil)
 
-		if template_display_name_localized and not string.find(text, template_display_name_localized) then
+		if template_display_name_localized and not string.find(text, template_display_name_localized, nil, true) then
 			text = text .. "• " .. template_display_name_localized
 
 			if i < #weapon_template_restriction then

@@ -14,11 +14,11 @@ local mission_objective_templates = {
 				progress_bar_icon = "content/ui/materials/icons/objectives/secondary",
 				progression_sync_granularity = 0.001,
 				duration_by_difficulty = {
-					750,
-					700,
-					600,
-					530,
-					500,
+					825,
+					770,
+					660,
+					583,
+					550,
 				},
 			},
 			objective_flash_train_alert = {
@@ -29,6 +29,7 @@ local mission_objective_templates = {
 				music_wwise_state = "operation_stage_3",
 				objective_category = "overarching",
 				progress_timer = true,
+				turn_off_backfill = true,
 				ui_state = "alert",
 			},
 			objective_flash_train_defuse_bomb_one = {
@@ -37,6 +38,7 @@ local mission_objective_templates = {
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_1",
 				progress_bar = true,
+				progression_sync_granularity = 0.001,
 			},
 			objective_flash_train_defuse_bomb_two = {
 				description = "loc_objective_op_train_defuse_two_desc",
@@ -44,6 +46,7 @@ local mission_objective_templates = {
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_2",
 				progress_bar = true,
+				progression_sync_granularity = 0.001,
 				turn_off_backfill = true,
 			},
 			objective_op_train_luggable_one = {
@@ -64,6 +67,7 @@ local mission_objective_templates = {
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_2",
 				progress_bar = true,
+				progression_sync_granularity = 0.001,
 			},
 			objective_flash_train_defuse_bomb_four = {
 				description = "loc_objective_op_train_defuse_final_desc",
@@ -71,6 +75,7 @@ local mission_objective_templates = {
 				hide_widget = true,
 				mission_objective_type = "decode",
 				music_wwise_state = "operation_stage_2",
+				progression_sync_granularity = 0.001,
 			},
 			objective_flash_train_defuse_final_bombs = {
 				description = "loc_objective_op_train_defuse_final_desc",

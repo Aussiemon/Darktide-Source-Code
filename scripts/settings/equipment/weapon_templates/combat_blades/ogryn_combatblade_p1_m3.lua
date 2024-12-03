@@ -7,6 +7,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupSlow = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_slow")
@@ -1102,6 +1103,7 @@ weapon_template.actions = {
 		inner_damage_type = damage_types.ogryn_physical,
 		outer_damage_profile = DamageProfileTemplates.default_push,
 		outer_damage_type = damage_types.ogryn_physical,
+		haptic_trigger_template = HapticTriggerTemplates.melee.push,
 	},
 	action_special_uppercut = {
 		allowed_during_sprint = true,
@@ -1220,6 +1222,7 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.2
 weapon_template.max_first_person_anim_movement_speed = 4.8
@@ -1239,7 +1242,6 @@ weapon_template.keywords = {
 	"combat_blade",
 	"p1",
 }
-weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.damage_trait_templates = "ogryn"
 weapon_template.dodge_template = "ogryn"
 weapon_template.sprint_template = "ogryn_assault"
@@ -1247,6 +1249,8 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_combat_blade
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.melee.medium
 
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 

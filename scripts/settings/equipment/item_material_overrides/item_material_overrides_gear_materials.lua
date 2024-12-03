@@ -119,6 +119,15 @@ local material_overrides = {
 			},
 		},
 	},
+	dirt_color_01 = {
+		property_overrides = {
+			dirt_color = {
+				0.719,
+				0.276,
+				0,
+			},
+		},
+	},
 	oxidized_metal_steel_paint_forest_01_wear_01 = {
 		texture_overrides = {
 			oxid1_gradient = {
@@ -896,6 +905,43 @@ local material_overrides = {
 			},
 		},
 	},
+	oxidized_metal_steel_brass_02_wear_01 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.3,
+			},
+			oxid_level = {
+				0.1,
+				0.3,
+			},
+		},
+	},
 	oxidized_metal_brass_wear_01 = {
 		texture_overrides = {
 			oxid1_gradient = {
@@ -921,6 +967,43 @@ local material_overrides = {
 			},
 			oxid_mat2_orm = {
 				resource = "content/characters/tiling_materials/brass_01/metal_brass_01_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.3,
+			},
+			oxid_level = {
+				0.1,
+				0.3,
+			},
+		},
+	},
+	oxidized_metal_brass_02_wear_01 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
 			},
 		},
 		property_overrides = {
@@ -3051,6 +3134,33 @@ local material_overrides = {
 			},
 		},
 	},
+	fabric_wool_03_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_bca",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_bca",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_03/wool_03_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.1,
+			},
+		},
+	},
 	fabric_wool_01_wool_02_wear_01 = {
 		texture_overrides = {
 			mat1_bc = {
@@ -4266,6 +4376,33 @@ local material_overrides = {
 			},
 		},
 	},
+	fabric_wool_01_leather_03_wear_02 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_bc",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.3,
+			},
+		},
+	},
 	fabric_wool_01_leather_05_wear_01 = {
 		texture_overrides = {
 			mat1_bc = {
@@ -4833,6 +4970,60 @@ local material_overrides = {
 			},
 		},
 	},
+	fabric_vostroyan_brass_01_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_bca",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.1,
+			},
+		},
+	},
+	fabric_vostroyan_brass_01_wear_02 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_bca",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.3,
+			},
+		},
+	},
 	decal_blend_01 = {
 		property_overrides = {
 			bc_blend = {
@@ -4899,6 +5090,146 @@ local material_overrides = {
 	decal_blend_10 = {
 		property_overrides = {
 			bc_blend = {
+				1,
+			},
+		},
+	},
+	coated_decal_blend_01 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.1,
+			},
+		},
+	},
+	coated_decal_blend_02 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.2,
+			},
+		},
+	},
+	coated_decal_blend_03 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.3,
+			},
+		},
+	},
+	coated_decal_blend_04 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.4,
+			},
+		},
+	},
+	coated_decal_blend_05 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.5,
+			},
+		},
+	},
+	coated_decal_blend_06 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.6,
+			},
+		},
+	},
+	coated_decal_blend_07 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.7,
+			},
+		},
+	},
+	coated_decal_blend_08 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.8,
+			},
+		},
+	},
+	coated_decal_blend_09 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				0.9,
+			},
+		},
+	},
+	coated_decal_blend_10 = {
+		property_overrides = {
+			coated_decal_opacity = {
+				1,
+			},
+		},
+	},
+	oxidized_decal_blend_01 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.1,
+			},
+		},
+	},
+	oxidized_decal_blend_02 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.2,
+			},
+		},
+	},
+	oxidized_decal_blend_03 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.3,
+			},
+		},
+	},
+	oxidized_decal_blend_04 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.4,
+			},
+		},
+	},
+	oxidized_decal_blend_05 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.5,
+			},
+		},
+	},
+	oxidized_decal_blend_06 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.6,
+			},
+		},
+	},
+	oxidized_decal_blend_07 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.7,
+			},
+		},
+	},
+	oxidized_decal_blend_08 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.8,
+			},
+		},
+	},
+	oxidized_decal_blend_09 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
+				0.9,
+			},
+		},
+	},
+	oxidized_decal_blend_10 = {
+		property_overrides = {
+			oxidized_decal_opacity = {
 				1,
 			},
 		},

@@ -353,6 +353,10 @@ CheckProcFunctions.on_melee_crit_hit = function (params, template_data, template
 	return params.is_critical_strike and params.attack_type == attack_types.melee
 end
 
+CheckProcFunctions.on_shout_crit_hit = function (params, template_data, template_context, t)
+	return params.is_critical_strike and params.attack_type == attack_types.shout
+end
+
 CheckProcFunctions.on_first_target_melee_hit = function (params, template_data, template_context, t)
 	if not CheckProcFunctions.on_melee_hit(params, template_data, template_context, t) then
 		return false
@@ -553,6 +557,10 @@ end
 
 CheckProcFunctions.on_explosion_and_check_item_slot = function (params, template_data, template_context, t)
 	return CheckProcFunctions.on_explosion_hit(params, template_data, template_context, t) and CheckProcFunctions.check_item_slot(params, template_data, template_context, t)
+end
+
+CheckProcFunctions.is_weapon_special_active = function (params, template_data, template_context, t)
+	return params.is_weapon_special_active
 end
 
 CheckProcFunctions.on_continues_fire_full_auto = function (params, template_data, template_context, t)

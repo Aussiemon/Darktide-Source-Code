@@ -14,10 +14,12 @@ local NAV_COST_MAP_MAX_VOLUMES = 1024
 local NAV_COST_MAP_NUM_VOLUMES_GUESS = 16
 local NAV_COST_MAP_RECOMPUTATION_INTERVAL = 0.5
 
-NavMeshManager.init = function (self, world, nav_world, is_server, network_event_delegate, level_name)
+NavMeshManager.init = function (self, world, nav_world, is_server, network_event_delegate, level_name, dynamic_mesh_spawning)
 	self._world = world
 	self._nav_world = nav_world
 	self._is_server = is_server
+	self._dynamic_mesh_spawning = dynamic_mesh_spawning
+	self._sparse_graph_dirty = false
 	self._level_spawned = false
 	self._sparse_nav_graph_connected = false
 
@@ -75,6 +77,14 @@ NavMeshManager._require_nav_tag_volume_data = function (self, level_name, nav_ta
 end
 
 NavMeshManager._create_nav_tag_volumes_from_level_data = function (self, nav_tag_volume_data)
+	if self._dynamic_mesh_spawning then
+		self._sparse_graph_dirty = true
+
+		if self._sparse_nav_graph_connected then
+			return
+		end
+	end
+
 	local nav_world = self._nav_world
 	local layer_id_to_name = {}
 	local layer_name_to_id = {}
@@ -104,6 +114,14 @@ NavMeshManager._create_nav_tag_volumes_from_level_data = function (self, nav_tag
 end
 
 NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min, altitude_max, layer_name, allowed, optional_type)
+	if self._dynamic_mesh_spawning then
+		self._sparse_graph_dirty = true
+
+		if self._sparse_nav_graph_connected then
+			return
+		end
+	end
+
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local layer_id = nav_tag_layer_lookup[layer_name]
 
@@ -415,12 +433,17 @@ NavMeshManager.update_time_slice_volumes_integration = function (self)
 end
 
 NavMeshManager.on_gameplay_post_init = function (self)
+	self:_connect_sparse_graph()
+
+	self._level_spawned = true
+end
+
+NavMeshManager._connect_sparse_graph = function (self)
 	local num_nav_tag_layers = #self._nav_tag_layer_lookup
 
 	GwNavWorld.connect_sparse_graph(self._nav_world)
 
 	self._sparse_nav_graph_connected = true
-	self._level_spawned = true
 end
 
 NavMeshManager._recompute_nav_cost_maps = function (self)
@@ -442,6 +465,10 @@ NavMeshManager._recompute_nav_cost_maps = function (self)
 end
 
 NavMeshManager.update = function (self, dt, t)
+	if self._sparse_graph_dirty then
+		self._sparse_graph_dirty = false
+	end
+
 	if self._should_recompute_nav_cost_maps and t > self._next_nav_cost_map_recomputation_t then
 		self:_recompute_nav_cost_maps()
 
@@ -468,6 +495,10 @@ local NAV_MESH_ABOVE, NAV_MESH_BELOW = 0.5, 0.5
 
 NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	if not self._is_server then
+		return
+	end
+
+	if self._dynamic_mesh_spawning and self._sparse_nav_graph_connected then
 		return
 	end
 

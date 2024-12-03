@@ -168,6 +168,8 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true)
 
 		self._weapon_action_component.special_active_at_start = true
+
+		self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 	end
 
 	local special_active = inventory_slot_component.special_active
@@ -259,6 +261,17 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		if not self._unit_data_extension.is_resimulating then
 			table.clear(self._shot_result)
 			self:_shoot(position, rotation, DEFAULT_POWER_LEVEL, charge_level, t)
+
+			if IS_PLAYSTATION and self._is_local_unit and self._is_human_controlled then
+				local fire_rate_settings = self:_fire_rate_settings()
+				local auto_fire_time = fire_rate_settings.auto_fire_time
+
+				auto_fire_time = auto_fire_time and self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+
+				local frequency = auto_fire_time and 1 / auto_fire_time or 0
+
+				Managers.input.haptic_trigger_effects:trigger_vibration(frequency)
+			end
 		end
 
 		self._has_shot_this_frame = true
@@ -525,6 +538,22 @@ ActionShoot._set_fire_state = function (self, t, new_fire_state)
 	if new_fire_state == "shot" or new_fire_state == "waiting_to_shoot" then
 		self:_check_for_auto_critical_strike_end(t, new_fire_state)
 	end
+
+	if IS_PLAYSTATION and new_fire_state == "shot" and self._is_local_unit and self._is_human_controlled then
+		Managers.input.haptic_trigger_effects:stop_vibration()
+	end
+end
+
+ActionShoot.server_correction_occurred = function (self)
+	ActionShoot.super.server_correction_occurred(self)
+
+	if IS_PLAYSTATION then
+		local fire_state = self._action_component.fire_state
+
+		if fire_state == "shot" and self._is_local_unit and self._is_human_controlled then
+			Managers.input.haptic_trigger_effects:stop_vibration()
+		end
+	end
 end
 
 ActionShoot.finish = function (self, reason, data, t, time_in_action)
@@ -577,6 +606,10 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 
 	self._leadbelcher_shot = false
 	action_component.num_shots_fired = 0
+
+	if IS_PLAYSTATION and self._is_local_unit and self._is_human_controlled then
+		Managers.input.haptic_trigger_effects:stop_vibration()
+	end
 end
 
 ActionShoot._rewind_ms = function (self, is_local_unit, player, position, direction, max_distance)

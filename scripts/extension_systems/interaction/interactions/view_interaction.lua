@@ -11,6 +11,7 @@ local ui_view_level_requirement = {
 	crafting_view = PlayerProgressionUnlocks.crafting,
 	contracts_background_view = PlayerProgressionUnlocks.contracts,
 	cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor,
+	havoc_background_view = PlayerProgressionUnlocks.havoc_missions,
 }
 local view_story_chapter_requirement = {
 	credits_vendor_background_view = {
@@ -23,6 +24,10 @@ local view_story_chapter_requirement = {
 	},
 	contracts_background_view = {
 		chapter = "pot_contracts",
+		story = "path_of_trust",
+	},
+	havoc_background_view = {
+		chapter = "pot_story_final",
 		story = "path_of_trust",
 	},
 }

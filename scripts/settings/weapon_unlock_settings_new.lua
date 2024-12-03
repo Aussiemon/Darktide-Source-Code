@@ -59,6 +59,7 @@ local unlock_config = {
 		{
 			level = 9,
 			items = {
+				"content/items/weapons/player/melee/forcesword_2h_p1_m1",
 				"content/items/weapons/player/melee/combatsword_p2_m2",
 			},
 		},
@@ -66,6 +67,7 @@ local unlock_config = {
 			level = 10,
 			items = {
 				"content/items/weapons/player/melee/combataxe_p2_m1",
+				"content/items/weapons/player/melee/forcesword_2h_p1_m2",
 			},
 		},
 		{
@@ -280,7 +282,9 @@ local unlock_config = {
 		},
 		{
 			level = 18,
-			items = {},
+			items = {
+				"content/items/weapons/player/melee/powersword_2h_p1_m1",
+			},
 		},
 		{
 			level = 19,
@@ -413,7 +417,9 @@ local unlock_config = {
 		},
 		{
 			level = 16,
-			items = {},
+			items = {
+				"content/items/weapons/player/ranged/ogryn_heavystubber_p2_m1",
+			},
 		},
 		{
 			level = 17,

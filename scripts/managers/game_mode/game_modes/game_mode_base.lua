@@ -153,7 +153,8 @@ GameModeBase.rpc_change_game_mode_state = function (self, channel_id, new_state_
 end
 
 GameModeBase.hot_join_sync = function (self, sender, channel)
-	local state_id = self._states_lookup[self._state]
+	local state = self._state
+	local state_id = self._states_lookup[state]
 
 	if state_id ~= 1 then
 		RPC.rpc_change_game_mode_state(channel, state_id)
@@ -161,7 +162,7 @@ GameModeBase.hot_join_sync = function (self, sender, channel)
 end
 
 GameModeBase._cinematic_active = function (self)
-	if Managers.state.cinematic:active() then
+	if Managers.state.cinematic:cinematic_active() then
 		return true
 	end
 

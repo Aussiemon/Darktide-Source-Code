@@ -1650,8 +1650,6 @@ damage_templates.shocktrooper_shotgun = {
 		impact = 0.5,
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
-	push_template = push_templates.shocktrooper_shotgun,
-	ogryn_push_template = push_templates.heavy,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
@@ -1710,9 +1708,7 @@ damage_templates.sniper_bullet = {
 	},
 }
 damage_templates.gunner_aimed = {
-	disorientation_type = "medium",
 	interrupt_alternate_fire = true,
-	ogryn_disorientation_type = "ogryn_medium",
 	stagger_category = "ranged",
 	suppression_value = 5,
 	toughness_multiplier = 1,
@@ -1754,9 +1750,7 @@ damage_templates.gunner_aimed = {
 	},
 }
 damage_templates.gunner_spray_n_pray = {
-	disorientation_type = "medium",
 	interrupt_alternate_fire = true,
-	ogryn_disorientation_type = "ogryn_medium",
 	stagger_category = "ranged",
 	suppression_value = 5,
 	toughness_multiplier = 1,
@@ -1798,10 +1792,8 @@ damage_templates.gunner_spray_n_pray = {
 	},
 }
 damage_templates.gunner_sweep = {
-	disorientation_type = "medium",
 	grace_cost = 2,
 	interrupt_alternate_fire = true,
-	ogryn_disorientation_type = "ogryn_medium",
 	stagger_category = "ranged",
 	suppression_value = 5,
 	toughness_multiplier = 1,
@@ -2594,7 +2586,6 @@ damage_templates.chaos_ogryn_gunner_bullet = {
 	ogryn_disorientation_type = "ogryn_medium",
 	stagger_category = "ranged",
 	suppression_value = 100000,
-	toughness_multiplier = 0.5,
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = {
@@ -2616,8 +2607,6 @@ damage_templates.chaos_ogryn_gunner_bullet = {
 		attack = 0.175,
 		impact = 0.25,
 	},
-	push_template = push_templates.chaos_ogryn_gunner_bullet,
-	ogryn_push_template = push_templates.chaos_ogryn_gunner_bullet_ogryn,
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	targets = {
 		default_target = {
@@ -2655,6 +2644,35 @@ damage_templates.cultist_flamer_impact = {
 	},
 }
 damage_templates.renegade_flamer_impact = {
+	disorientation_type = "heavy",
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_heavy",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	unblockable = true,
+	undodgeable = true,
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 0.5,
+		impact = 2,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.renegade_flamer_push,
+	ogryn_push_template = push_templates.renegade_flamer_push,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.horde_flame_impact = {
 	disorientation_type = "heavy",
 	interrupt_alternate_fire = true,
 	ogryn_disorientation_type = "ogryn_heavy",
@@ -3203,7 +3221,7 @@ damage_templates.beast_of_nurgle_self_gib = {
 		},
 	},
 }
-damage_templates.maelstrom_plus_self_gib = {
+damage_templates.havoc_self_gib = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
@@ -3222,6 +3240,7 @@ damage_templates.maelstrom_plus_self_gib = {
 		800,
 	},
 	gibbing_power = gibbing_power.impossible,
+	gibbing_type = gibbing_types.crushing,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,

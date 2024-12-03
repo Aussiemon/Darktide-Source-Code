@@ -1277,7 +1277,7 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		end
 	end
 
-	local cinematic_active = Managers.state and Managers.state.cinematic and Managers.state.cinematic:active() and "active" or "inactive"
+	local cinematic_active = Managers.state and Managers.state.cinematic and Managers.state.cinematic:cinematic_active() and "active" or "inactive"
 	local cutscene_view_active = Managers.ui and Managers.ui:view_active("cutscene_view") and "active" or "inactive"
 	local cinematic_loading = Managers.state and Managers.state.cinematic and Managers.state.cinematic:is_loading_cinematic_levels() and "active" or "inactive"
 	local text_order = {

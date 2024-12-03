@@ -74,11 +74,15 @@ PlayerCharacterStateBase.game_object_initialized = function (self, game_session,
 end
 
 PlayerCharacterStateBase.on_enter = function (self, unit, dt, t, previous_state, params)
-	return
+	if IS_PLAYSTATION then
+		Managers.input.haptic_trigger_effects:on_character_state_enter(self._character_state_component)
+	end
 end
 
 PlayerCharacterStateBase.on_exit = function (self, unit, t, next_state)
-	return
+	if IS_PLAYSTATION then
+		Managers.input.haptic_trigger_effects:on_character_state_exit()
+	end
 end
 
 PlayerCharacterStateBase._air_movement = function (self, velocity_current, x, y, rotation, move_speed, player_speed_scale, dt)

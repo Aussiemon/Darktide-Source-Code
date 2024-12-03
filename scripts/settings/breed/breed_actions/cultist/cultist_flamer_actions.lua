@@ -546,11 +546,13 @@ local action_data = {
 	explode = {
 		explode_position_node = "j_spine1",
 		gib_override_damage_profile = "flamer_backpack_explosion",
+		interrupted_liquid_area = "interrupted_cultist_flamer_backpack",
 		liquid_area = "cultist_flamer_backpack",
 		override_hit_zone_name = "center_mass",
 		utility_weight = 1,
 		considerations = UtilityConsiderations.chaos_poxwalker_bomber_explode,
 		explosion_template = ExplosionTemplates.explosion_settings_cultist_flamer,
+		interrupted_explosion_template = ExplosionTemplates.explosion_settings_interrupted_cultist_flamer,
 	},
 }
 

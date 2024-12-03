@@ -214,7 +214,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 		self._initial_current_vote = current_vote
 
 		_info("Party Vote Started")
-		template.on_started(vote_id, template, current_vote.params)
+		template.on_started(vote_id, template, current_vote.params, current_vote.started_by_account_id)
 	end
 end
 

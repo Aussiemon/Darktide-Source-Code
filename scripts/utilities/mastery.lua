@@ -358,7 +358,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 		if item then
 			local master_item = item and MasterItems.get_item(item)
 			local icon = master_item and master_item.hud_icon or default_icon
-			local display_name = master_item and ItemUtils.display_name(master_item) or type
+			local display_name = master_item and ItemUtils.weapon_card_sub_display_name(master_item) or type
 
 			reward_data.icon = icon
 			reward_data.display_name = display_name
@@ -865,6 +865,38 @@ Mastery.get_default_mark_for_mastery = function (mastery_data)
 			return master_item
 		end
 	end
+end
+
+Mastery.get_unclaimed_rewards = function (mastery_data)
+	local result = {}
+
+	if not mastery_data or not mastery_data.milestones then
+		return result
+	end
+
+	local claimed_level = mastery_data.claimed_level
+
+	if claimed_level == -1 then
+		return result
+	end
+
+	for i = 1, claimed_level + 1 do
+		local milestone = mastery_data.milestones[i]
+		local rewards = milestone.rewards
+
+		if rewards then
+			for reward_name, data in pairs(rewards) do
+				if not data.claimed then
+					local claim_level_from_milestone = i - 1
+
+					result[claim_level_from_milestone] = result[claim_level_from_milestone] or {}
+					result[claim_level_from_milestone][#result[claim_level_from_milestone] + 1] = reward_name
+				end
+			end
+		end
+	end
+
+	return result
 end
 
 return Mastery

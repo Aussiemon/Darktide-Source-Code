@@ -39,6 +39,10 @@ AmmoCountEffects.update = function (self, unit, dt, t)
 		WwiseWorld.set_global_parameter(wwise_world, WWISE_PARAMETER_NAME, ammo_percentage)
 		WwiseWorld.set_source_parameter(wwise_world, muzzle_source, WWISE_PARAMETER_NAME, ammo_percentage)
 
+		if IS_PLAYSTATION and self._is_local_unit then
+			Managers.input.haptic_trigger_effects:set_ammo_count_percentage(ammo_percentage)
+		end
+
 		self._last_clip_size = current_clip
 	end
 end

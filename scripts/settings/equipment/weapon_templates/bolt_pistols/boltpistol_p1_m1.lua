@@ -1,13 +1,13 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolt_pistols/boltpistol_p1_m1.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
-local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -178,7 +178,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -551,6 +551,7 @@ weapon_template.actions = {
 				input_name = "reload",
 			},
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_push = {
 		allowed_during_sprint = true,
@@ -650,6 +651,7 @@ weapon_template.actions = {
 		},
 		damage_type = damage_types.weapon_butt,
 		damage_profile = DamageProfileTemplates.boltpistol_weapon_special,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -663,6 +665,7 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 }
 
@@ -806,6 +809,7 @@ weapon_template.no_ammo_delay = 0.35
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.051
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -872,20 +876,24 @@ weapon_template.keywords = {
 	"boltpistol",
 	"p1",
 }
+weapon_template.can_use_while_vaulting = true
 weapon_template.dodge_template = "assault"
 weapon_template.sprint_template = "assault"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "assault"
 weapon_template.movement_curve_modifier_template = "boltpistol_p1_m1"
-weapon_template.can_use_while_vaulting = true
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.bolter
 weapon_template.traits = {}
 
 local bespoke_boltpistol_p1_traits = table.ukeys(WeaponTraitsBespokeBoltpistolP1)
 
 table.append(weapon_template.traits, bespoke_boltpistol_p1_traits)
 
+weapon_template.hipfire_inputs = {
+	shoot_pressed = true,
+}
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_high_damage",

@@ -156,7 +156,7 @@ local function create_mission_objective(scenegraph_id)
 			style_id = "bar_background",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "bottom",
+				vertical_alignment = "center",
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
@@ -179,7 +179,7 @@ local function create_mission_objective(scenegraph_id)
 			style_id = "bar",
 			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				vertical_alignment = "bottom",
+				vertical_alignment = "center",
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
@@ -199,11 +199,11 @@ local function create_mission_objective(scenegraph_id)
 			value_id = "bar_icon",
 			style = {
 				horizontal_alignment = "left",
-				vertical_alignment = "bottom",
+				vertical_alignment = "center",
 				size = bar_icon_size,
 				offset = {
 					bar_offset[1],
-					bar_offset[2] + 7,
+					bar_offset[2],
 					8,
 				},
 				color = UIHudSettings.color_tint_main_1,

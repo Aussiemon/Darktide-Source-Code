@@ -96,7 +96,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 		local disabled = false
 		local validation_function = entry.validation_function
 
-		if verified and validation_function then
+		if validation_function then
 			verified, disabled = validation_function()
 			list_verification[#list_verification + 1] = {
 				verified = verified,

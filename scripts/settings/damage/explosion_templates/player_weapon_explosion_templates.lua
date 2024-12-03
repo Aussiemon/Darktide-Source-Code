@@ -232,6 +232,46 @@ local explosion_templates = {
 			},
 		},
 	},
+	forcesword_activated_implosion = {
+		collision_filter = "filter_player_character_explosion",
+		min_close_radius = 2,
+		min_radius = 3,
+		override_friendly_fire = false,
+		static_power_level = 500,
+		radius = {
+			4,
+			8,
+		},
+		close_radius = {
+			1,
+			3,
+		},
+		close_damage_profile = DamageProfileTemplates.forcesword_explosion,
+		close_damage_type = damage_types.blunt_thunder,
+		damage_profile = DamageProfileTemplates.forcesword_explosion_outer,
+		damage_type = damage_types.blunt_thunder,
+		explosion_area_suppression = {
+			instant_aggro = true,
+			suppression_falloff = true,
+			distance = {
+				10,
+				15,
+			},
+			suppression_value = {
+				20,
+				50,
+			},
+		},
+		vfx = {
+			"content/fx/particles/weapons/power_maul/power_maul_push_shockwave",
+		},
+		sfx = {
+			{
+				event_name = "wwise/events/weapon/play_explosion_grenade_krak",
+				has_husk_events = true,
+			},
+		},
+	},
 	trait_buff_flamer_p1_minion_explosion = {
 		collision_filter = "filter_player_character_explosion",
 		damage_falloff = false,
@@ -275,5 +315,41 @@ local explosion_templates = {
 		},
 	},
 }
+
+local function _create_trait_buff_powersword_2h_lockout_proc_explosion_buff(radius, min_radius, close_radius, min_close_radius)
+	return {
+		collision_filter = "filter_player_character_explosion",
+		override_friendly_fire = false,
+		static_power_level = 500,
+		radius = radius,
+		min_radius = min_radius,
+		close_radius = close_radius,
+		min_close_radius = min_close_radius,
+		close_damage_profile = DamageProfileTemplates.powermaul_explosion,
+		close_damage_type = damage_types.blunt_thunder,
+		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,
+		damage_type = damage_types.blunt_thunder,
+		explosion_area_suppression = {
+			distance = 3,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 5,
+		},
+		vfx = {
+			"content/fx/particles/weapons/power_maul/power_maul_push_shockwave",
+		},
+		sfx = {
+			{
+				event_name = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				has_husk_events = true,
+			},
+		},
+	}
+end
+
+explosion_templates.trait_buff_powersword_2h_lockout_proc_explosion_1 = _create_trait_buff_powersword_2h_lockout_proc_explosion_buff(3, 3, 2, 2)
+explosion_templates.trait_buff_powersword_2h_lockout_proc_explosion_2 = _create_trait_buff_powersword_2h_lockout_proc_explosion_buff(3.5, 3.5, 2.25, 2.25)
+explosion_templates.trait_buff_powersword_2h_lockout_proc_explosion_3 = _create_trait_buff_powersword_2h_lockout_proc_explosion_buff(4, 4, 2.5, 2.5)
+explosion_templates.trait_buff_powersword_2h_lockout_proc_explosion_4 = _create_trait_buff_powersword_2h_lockout_proc_explosion_buff(4.5, 4.5, 2.75, 2.75)
 
 return explosion_templates

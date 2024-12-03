@@ -549,6 +549,12 @@ local behavior_tree = {
 			action_data = action_data.jump_across,
 		},
 		{
+			"BtSmashObstacleAction",
+			condition = "at_smashable_obstacle_smart_object",
+			name = "smash_obstacle",
+			action_data = action_data.smash_obstacle,
+		},
+		{
 			"BtOpenDoorAction",
 			condition = "at_door_smart_object",
 			name = "open_door",

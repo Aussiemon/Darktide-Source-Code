@@ -18,6 +18,7 @@ _extract_circumstance_templates("scripts/settings/circumstance/templates/hunting
 _extract_circumstance_templates("scripts/settings/circumstance/templates/nurgle_manifestation_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/ventilation_purge_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/resistance_changes_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/havoc_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/toxic_gas_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/noir_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/ember_circumstance_template")

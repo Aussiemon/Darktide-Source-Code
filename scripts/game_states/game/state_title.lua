@@ -605,33 +605,39 @@ StateTitle._signin = function (self)
 		Managers.input:load_settings()
 
 		local local_player = _create_player(account_id, selected_profile)
-		local narrative_promise = Promise.resolved()
-
-		if selected_profile then
-			local character_id = selected_profile.character_id
-
-			narrative_promise = Managers.narrative:load_character_narrative(character_id)
-		end
 
 		Managers.live_event:add_player(1, account_id, true)
 		Managers.live_event:refresh()
 
 		local stats_promise = Managers.stats:add_user(1, account_id)
-		local sync_promises = Promise.all(narrative_promise, stats_promise)
+		local backend_settings_promise = Managers.backend:update_backend_settings()
+		local sync_promises = Promise.all(stats_promise, backend_settings_promise)
 
 		self._backend_promise = sync_promises
 		self._backend_data_synced = false
 
 		sync_promises:next(function ()
+			local narrative_promise = Promise.resolved()
+
+			if selected_profile then
+				local character_id = selected_profile.character_id
+
+				narrative_promise = Managers.narrative:load_character_narrative(character_id)
+			end
+
 			local achievement_promise = Managers.achievements:add_player(local_player)
+			local all_promise = Promise.all(narrative_promise, achievement_promise)
 
-			self._backend_promise = achievement_promise
+			self._backend_promise = all_promise
 
-			return achievement_promise
+			return all_promise
 		end):next(function ()
 			self._backend_promise = nil
 			self._backend_data_synced = true
 		end):catch(function ()
+			Managers.event:trigger("event_add_notification_message", "alert", {
+				text = Localize("loc_popup_description_backend_error"),
+			})
 			self:_on_error()
 		end)
 
@@ -677,6 +683,8 @@ StateTitle._signin = function (self)
 
 				Managers.presence:set_cross_play_disabled(cross_play_disabled)
 			end)
+			Managers.data_service.havoc:refresh_havoc_status()
+			Managers.data_service.havoc:refresh_havoc_rank()
 		end
 	end)
 end

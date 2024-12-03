@@ -4,8 +4,8 @@ local Breeds = require("scripts/settings/breed/breeds")
 local LoadedDice = require("scripts/utilities/loaded_dice")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MinionPatrols = require("scripts/utilities/minion_patrols")
-local NavQueries = require("scripts/utilities/nav_queries")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
+local NavQueries = require("scripts/utilities/nav_queries")
 local PatrolSettings = require("scripts/settings/roamer/patrol_settings")
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local RoamerSettings = require("scripts/settings/roamer/roamer_settings")
@@ -54,6 +54,16 @@ RoamerPacing.init = function (self, nav_world, seed, sub_faction_types)
 	self._roamer_pack_probabilities = roamer_pack_probabilities
 	self._faction_travel_distances = {}
 	self._density_type_travel_distances = {}
+
+	local havoc_data = Managers.state.difficulty:get_parsed_havoc_data()
+
+	if havoc_data then
+		local havoc_override_faction = havoc_data.faction
+
+		if havoc_override_faction and havoc_override_faction ~= "mixed" then
+			self._override_faction = havoc_override_faction
+		end
+	end
 
 	if not self._override_faction then
 		local faction_index = self:_random(1, num_roamer_sub_faction_types)
@@ -371,11 +381,12 @@ RoamerPacing._create_sub_zones = function (self, spawn_positions, density_settin
 end
 
 RoamerPacing._create_sub_zone_location = function (self, spawn_position, density_setting, group_id)
+	local nav_world = self._nav_world
 	local roamer_slot_placement_functions = density_setting.roamer_slot_placement_functions
 	local roamer_slot_placement_function_name = roamer_slot_placement_functions[self:_random(1, #roamer_slot_placement_functions)]
 	local roamer_slot_placement_settings = density_setting.roamer_slot_placement_settings[roamer_slot_placement_function_name]
-	local roamer_slots = RoamerSlotPlacementFunctions[roamer_slot_placement_function_name](self._nav_world, spawn_position, roamer_slot_placement_settings, self._traverse_logic, self)
-	local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, self._nav_spawn_points, spawn_position:unbox())
+	local roamer_slots = RoamerSlotPlacementFunctions[roamer_slot_placement_function_name](nav_world, spawn_position, roamer_slot_placement_settings, self._traverse_logic, self)
+	local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, self._nav_spawn_points, spawn_position:unbox())
 	local sub_zone_location = {
 		position = spawn_position,
 		roamer_slots = roamer_slots,
@@ -1017,13 +1028,13 @@ RoamerPacing._random = function (self, ...)
 end
 
 RoamerPacing.aggro_zone_range = function (self, target_unit, range)
-	local from_position = POSITION_LOOKUP[target_unit]
-	local group_index = SpawnPointQueries.group_from_position(self._nav_world, self._nav_spawn_points, from_position)
+	local from_position, nav_world, nav_spawn_points = POSITION_LOOKUP[target_unit], self._nav_world, self._nav_spawn_points
+	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, from_position)
 
 	if not group_index then
 		local position_on_main_path = MainPathQueries.closest_position(from_position)
 
-		group_index = SpawnPointQueries.group_from_position(self._nav_world, self._nav_spawn_points, position_on_main_path)
+		group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_main_path)
 	end
 
 	if not group_index then

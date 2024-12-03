@@ -1805,6 +1805,19 @@ local action_data = {
 		rotation_duration = 0.1,
 		stagger_immune = true,
 	},
+	smash_obstacle = {
+		rotation_duration = 0.1,
+		attack_anim_events = {
+			"attack_kick_01",
+		},
+		attack_anim_damage_timings = {
+			attack_kick_01 = 0.6666666666666666,
+		},
+		attack_anim_durations = {
+			attack_kick_01 = 1.7333333333333334,
+		},
+		damage_profile = DamageProfileTemplates.default,
+	},
 	exit_spawner = {
 		run_anim_event = "move_fwd",
 	},

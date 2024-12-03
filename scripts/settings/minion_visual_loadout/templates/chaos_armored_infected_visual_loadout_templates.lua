@@ -22,7 +22,7 @@ local basic_armored_infected_template = {
 		},
 		slot_decal = {
 			items = {
-				"content/items/characters/player/human/gear_attachments/atoma_prime_decals_01",
+				"content/items/characters/minions/decal_material_overrides/enemy_21st_decals_01",
 			},
 		},
 		slot_variation_gear = {

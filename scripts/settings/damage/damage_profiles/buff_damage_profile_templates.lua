@@ -438,6 +438,49 @@ damage_templates.killing_blow = {
 		default_target = {},
 	},
 }
+damage_templates.trait_powersword_2h_p1_trade_overheat_lockout_for_damage = {
+	disorientation_type = "trait_bespoke_powersword_2h_p1_trade_overheat_lockout_for_damage",
+	ignore_shield = true,
+	ogryn_disorientation_type = "trait_bespoke_powersword_2h_p1_trade_overheat_lockout_for_damage",
+	stagger_category = "melee",
+	toughness_disorientation_type = "trait_bespoke_powersword_2h_p1_trade_overheat_lockout_for_damage",
+	toughness_multiplier = 2.5,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0.1,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+		impact = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+	},
+	power_distribution = {
+		attack = 10,
+		impact = 0,
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 0,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 
 return {
 	base_templates = damage_templates,

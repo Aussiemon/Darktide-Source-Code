@@ -1290,6 +1290,23 @@ do
 			},
 		},
 	}
+	StatDefinitions.mission_failed = {
+		flags = {
+			StatFlags.no_sync,
+			StatFlags.never_log,
+			StatFlags.team,
+		},
+		triggers = {
+			{
+				id = "hook_mission_ended",
+				trigger = function (self, stat_data, won, ...)
+					if not won then
+						return self.id, ...
+					end
+				end,
+			},
+		},
+	}
 	StatDefinitions.whole_mission_won = {
 		flags = {
 			StatFlags.no_sync,
@@ -1873,7 +1890,7 @@ do
 					},
 				},
 				include_condition = function (self, config)
-					return self.data.mission_name == config.mission_name and self.data.difficulty <= config.difficulty
+					return self.data.mission_name == config.mission_name and self.data.difficulty <= config.difficulty and not config.is_havoc
 				end,
 			}
 		end
@@ -1902,7 +1919,7 @@ do
 					},
 				},
 				include_condition = function (self, config)
-					return self.data.mission_name == config.mission_name and self.data.difficulty <= config.difficulty and config.is_auric_mission
+					return self.data.mission_name == config.mission_name and self.data.difficulty <= config.difficulty and config.is_auric_mission and not config.is_havoc
 				end,
 			}
 		end
@@ -2112,6 +2129,212 @@ do
 				end,
 			},
 		},
+	}
+	StatDefinitions.debug_havoc_order = {
+		default = 10,
+		flags = {
+			StatFlags.backend,
+		},
+		data = {
+			player = "nil",
+		},
+		triggers = {
+			{
+				id = "mission_won",
+				trigger = function (self, stat_data, na, nu, user)
+					local is_havoc = Managers.state.havoc:is_havoc()
+
+					if is_havoc then
+						local user = Managers.stats:get_next_user()
+						local config = Managers.stats:get_stats_config()
+						local currently_highest_reached = read_stat(StatDefinitions.debug_havoc_order_highest_reached, stat_data)
+						local current_rank = Managers.state.havoc:get_current_rank()
+
+						if currently_highest_reached < current_rank then
+							set_to(StatDefinitions.debug_havoc_order_highest_reached, stat_data, current_rank)
+						end
+
+						if user.account_id == config.havoc_order_owner then
+							local new_seed = math.random(0, 16777215)
+
+							set_to(StatDefinitions.debug_havoc_order_seed, stat_data, new_seed)
+							set_to_max(StatDefinitions.debug_havoc_order_charges, stat_data, 2)
+
+							return increment(self, stat_data)
+						end
+					end
+				end,
+			},
+			{
+				id = "mission_failed",
+				trigger = function (self, stat_data)
+					local is_havoc = Managers.state.havoc:is_havoc()
+
+					if is_havoc then
+						local user = Managers.stats:get_next_user()
+						local config = Managers.stats:get_stats_config()
+
+						if user.account_id == config.havoc_order_owner then
+							local current_value = read_stat(StatDefinitions.debug_havoc_order_charges, stat_data)
+
+							if current_value >= 1 then
+								decrement(StatDefinitions.debug_havoc_order_charges, stat_data)
+							end
+
+							local new_value = read_stat(StatDefinitions.debug_havoc_order_charges, stat_data)
+
+							if new_value == 0 then
+								set_to_max(StatDefinitions.debug_havoc_order_charges, stat_data, 2)
+
+								local new_seed = math.random(0, 16777215)
+
+								set_to(StatDefinitions.debug_havoc_order_seed, stat_data, new_seed)
+
+								return decrement(self, stat_data)
+							end
+						end
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.debug_havoc_order_charges = {
+		default = 2,
+		flags = {
+			StatFlags.backend,
+		},
+	}
+	StatDefinitions.debug_havoc_order_seed = {
+		default = 8388607,
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "hook_player_spawned",
+				trigger = function (self, stat_data)
+					local id = self.id
+					local stat_value = stat_data[id] or self.default
+
+					if stat_value == self.default then
+						local new_seed = math.random(0, 16777215)
+
+						return set_to(self, stat_data, new_seed)
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.debug_havoc_order_highest_reached = {
+		default = 0,
+		flags = {
+			StatFlags.backend,
+		},
+	}
+	StatDefinitions.hook_havoc_win_assisted = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.havoc_weekly_rewards_received = {
+		flags = {
+			StatFlags.backend,
+			StatFlags.no_sync,
+		},
+		data = {},
+	}
+	StatDefinitions.havoc_missions = {
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "mission_won",
+				trigger = function (self, stat_data)
+					return increment(self, stat_data)
+				end,
+			},
+		},
+		include_condition = function (self, config)
+			return config.is_havoc
+		end,
+	}
+	StatDefinitions.havoc_win_assisted = {
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "mission_won",
+				trigger = function (self, stat_data)
+					local user = Managers.stats:get_next_user()
+					local config = Managers.stats:get_stats_config()
+					local assisting_player = user.account_id ~= config.havoc_order_owner
+
+					if assisting_player then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+		include_condition = function (self, config)
+			return config.is_havoc
+		end,
+	}
+
+	local havoc_rank_thresholds = {
+		5,
+		10,
+		15,
+		20,
+		25,
+		30,
+		35,
+		40,
+	}
+
+	for i = 1, #havoc_rank_thresholds do
+		local required_rank = havoc_rank_thresholds[i]
+
+		stat_name = string.format("havoc_rank_reached_0%s", i)
+		StatDefinitions[stat_name] = {
+			flags = {},
+			data = {
+				required_rank = required_rank,
+			},
+			triggers = {
+				{
+					id = "mission_won",
+					trigger = function (self, stat_data)
+						return increment(self, stat_data)
+					end,
+				},
+			},
+			include_condition = function (self, config)
+				return config.is_havoc and self.data.required_rank <= config.havoc_rank
+			end,
+		}
+	end
+
+	StatDefinitions.flawless_havoc_won = {
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "whole_mission_won",
+				trigger = function (self, stat_data)
+					local team_knock_downs = read_stat(StatDefinitions.team_knock_downs, stat_data)
+
+					if team_knock_downs == 0 then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+		include_condition = function (self, config)
+			return config.is_havoc and config.havoc_rank >= 35
+		end,
 	}
 end
 
@@ -2623,172 +2846,382 @@ StatDefinitions.hook_objective_side_incremented_progression = {
 		StatFlags.team,
 	},
 }
-StatDefinitions.total_deployables_placed = {
+StatDefinitions.hook_on_syringe_use = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+StatDefinitions.hook_red_stimm_deactivated = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+StatDefinitions.hook_red_stimm_active = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+StatDefinitions.hook_blue_stimm_deactivated = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+StatDefinitions.hook_blue_stimm_active = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+StatDefinitions.hook_green_stimm_corruption_healed = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+StatDefinitions.hook_ability_time_saved_by_yellow_stimm = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+StatDefinitions.total_syringes_used = {
 	flags = {
 		StatFlags.backend,
 	},
-	data = {
-		item_lookup = table.set({
-			"medical_crate_deployable",
-			"ammo_cache_deployable",
-		}),
-	},
+	data = {},
 	triggers = {
 		{
-			id = "hook_placed_item",
-			trigger = function (self, stat_data, item_name)
-				local item_lookup = self.data.item_lookup
-
-				if item_lookup[item_name] then
-					return increment(self, stat_data)
-				end
-			end,
-		},
-	},
-}
-StatDefinitions.collectibles_picked_up = {
-	flags = {},
-	triggers = {
-		{
-			id = "hook_collect_collectible",
+			id = "hook_on_syringe_use",
 			trigger = StatMacros.increment,
 		},
 	},
 }
 
-for i = 1, #mission_templates do
-	local mission_name = mission_templates[i]
-	local stat_name = string.format("mission_%s_collectible", mission_name)
+do
+	local _syringe_data = {
+		{
+			color = "green",
+			loc_var = "loc_pickup_pocketable_01",
+			pickup_name = "syringe_corruption_pocketable",
+		},
+		{
+			color = "red",
+			loc_var = "loc_pickup_syringe_pocketable_03",
+			pickup_name = "syringe_power_boost_pocketable",
+		},
+		{
+			color = "blue",
+			loc_var = "loc_pickup_syringe_pocketable_04",
+			pickup_name = "syringe_speed_boost_pocketable",
+		},
+		{
+			color = "yellow",
+			loc_var = "loc_pickup_syringe_pocketable_02",
+			pickup_name = "syringe_ability_boost_pocketable",
+		},
+	}
 
-	StatDefinitions[stat_name] = {
+	for i = 1, #_syringe_data do
+		local syringe_type = _syringe_data[i]
+		local color = syringe_type.color
+		local localization_key = syringe_type.loc_var
+		local stat_name = string.format("%s_syringe_used", color)
+
+		StatDefinitions[stat_name] = {
+			flags = {},
+			data = {
+				pickup_name = syringe_type.pickup_name,
+			},
+			stat_name = localization_key,
+			triggers = {
+				{
+					id = "hook_on_syringe_use",
+					trigger = function (self, stat_data, syringe_data)
+						local syringe_name = syringe_data.pickup_name
+
+						if syringe_name == self.data.pickup_name then
+							return set_to_max(self, stat_data, 1)
+						end
+					end,
+				},
+			},
+		}
+	end
+
+	StatDefinitions.red_stimm_active_status = {
+		flags = {},
+		data = {},
+		triggers = {
+			{
+				id = "hook_red_stimm_active",
+				trigger = function (self, stat_data, item_name)
+					return set_to_max(self, stat_data, 1)
+				end,
+			},
+			{
+				id = "hook_red_stimm_deactivated",
+				trigger = function (self, stat_data, item_name)
+					return set_to_min(self, stat_data, 0)
+				end,
+			},
+		},
+	}
+	StatDefinitions.total_kills_gained_while_using_red_stimm = {
 		flags = {
 			StatFlags.backend,
 		},
 		data = {
-			mission_name = mission_name,
+			breed_lookup = special_and_elite_breed_lookup,
 		},
 		triggers = {
 			{
-				id = "mission_won",
-				trigger = function (self, stat_data)
-					local track_collectible = read_stat(StatDefinitions.collectibles_picked_up, stat_data) >= 1
+				id = "hook_kill",
+				trigger = function (self, stat_data, attack_data)
+					local breed_name = attack_data.target_breed_name
+					local breed_lookup = self.data.breed_lookup
 
-					if track_collectible then
+					if not breed_lookup[breed_name] then
+						return
+					end
+
+					local red_stim_active = read_stat(StatDefinitions.red_stimm_active_status, stat_data) == 1
+
+					if red_stim_active then
 						return increment(self, stat_data)
 					end
 				end,
 			},
 		},
-		include_condition = function (self, config)
-			return self.data.mission_name == config.mission_name
-		end,
+	}
+	StatDefinitions.corruption_healed_with_green_stimm = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_green_stimm_corruption_healed",
+				trigger = function (self, stat_data, amount_healed)
+					return increment_by(self, stat_data, amount_healed)
+				end,
+			},
+		},
+	}
+	StatDefinitions.ability_time_saved_by_yellow_stimm = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_ability_time_saved_by_yellow_stimm",
+				trigger = function (self, stat_data, time_reduced)
+					return increment_by(self, stat_data, time_reduced)
+				end,
+			},
+		},
+	}
+	StatDefinitions.blue_stimm_active_status = {
+		flags = {},
+		data = {},
+		triggers = {
+			{
+				id = "hook_blue_stimm_active",
+				trigger = function (self, stat_data, item_name)
+					return set_to_max(self, stat_data, 1)
+				end,
+			},
+			{
+				id = "hook_blue_stimm_deactivated",
+				trigger = function (self, stat_data, item_name)
+					return set_to_min(self, stat_data, 0)
+				end,
+			},
+		},
+	}
+	StatDefinitions.total_kills_gained_while_using_blue_stimm = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_kill",
+				trigger = function (self, stat_data, attack_data)
+					local blue_stim_active = read_stat(StatDefinitions.blue_stimm_active_status, stat_data) == 1
+
+					if blue_stim_active then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.total_deployables_placed = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {
+			item_lookup = table.set({
+				"medical_crate_deployable",
+				"ammo_cache_deployable",
+			}),
+		},
+		triggers = {
+			{
+				id = "hook_placed_item",
+				trigger = function (self, stat_data, item_name)
+					local item_lookup = self.data.item_lookup
+
+					if item_lookup[item_name] then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.collectibles_picked_up = {
+		flags = {},
+		triggers = {
+			{
+				id = "hook_collect_collectible",
+				trigger = StatMacros.increment,
+			},
+		},
+	}
+
+	for i = 1, #mission_templates do
+		local mission_name = mission_templates[i]
+		local stat_name = string.format("mission_%s_collectible", mission_name)
+
+		StatDefinitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {
+				mission_name = mission_name,
+			},
+			triggers = {
+				{
+					id = "mission_won",
+					trigger = function (self, stat_data)
+						local track_collectible = read_stat(StatDefinitions.collectibles_picked_up, stat_data) >= 1
+
+						if track_collectible then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = function (self, config)
+				return self.data.mission_name == config.mission_name
+			end,
+		}
+	end
+
+	StatDefinitions.chest_opened = {
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "hook_team_chest_opened",
+				trigger = StatMacros.increment,
+			},
+		},
+	}
+	StatDefinitions.grimoire_carried = {
+		flags = {
+			StatFlags.team,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_objective_side_incremented_progression",
+				trigger = function (self, stat_data, objective_name, value)
+					if objective_name == "side_mission_grimoire" then
+						return set_to(self, stat_data, value)
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.grimoire_delivered = {
+		flags = {
+			StatFlags.team,
+			StatFlags.no_sync,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "mission_won",
+				trigger = function (self, stat_data)
+					local grimoire_count = read_stat(StatDefinitions.grimoire_carried, stat_data)
+
+					if grimoire_count >= 1 then
+						return self.id, grimoire_count
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.grimoire_recovered_mission_won = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "grimoire_delivered",
+				trigger = StatMacros.increment_by,
+			},
+		},
+	}
+	StatDefinitions.scriptures_carried = {
+		flags = {
+			StatFlags.team,
+		},
+		triggers = {
+			{
+				id = "hook_objective_side_incremented_progression",
+				trigger = function (self, stat_data, objective_name, value)
+					if objective_name == "side_mission_tome" then
+						return set_to(self, stat_data, value)
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.scriptures_delivered = {
+		flags = {
+			StatFlags.team,
+			StatFlags.no_sync,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "mission_won",
+				trigger = function (self, stat_data)
+					local scriptures_count = read_stat(StatDefinitions.scriptures_carried, stat_data)
+
+					if scriptures_count >= 1 then
+						return self.id, scriptures_count
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.scripture_recovered_mission_won = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "scriptures_delivered",
+				trigger = StatMacros.increment_by,
+			},
+		},
 	}
 end
 
-StatDefinitions.chest_opened = {
-	flags = {
-		StatFlags.backend,
-	},
-	triggers = {
-		{
-			id = "hook_team_chest_opened",
-			trigger = StatMacros.increment,
-		},
-	},
-}
-StatDefinitions.grimoire_carried = {
-	flags = {
-		StatFlags.team,
-	},
-	data = {},
-	triggers = {
-		{
-			id = "hook_objective_side_incremented_progression",
-			trigger = function (self, stat_data, objective_name, value)
-				if objective_name == "side_mission_grimoire" then
-					return set_to(self, stat_data, value)
-				end
-			end,
-		},
-	},
-}
-StatDefinitions.grimoire_delivered = {
-	flags = {
-		StatFlags.team,
-		StatFlags.no_sync,
-	},
-	data = {},
-	triggers = {
-		{
-			id = "mission_won",
-			trigger = function (self, stat_data)
-				local grimoire_count = read_stat(StatDefinitions.grimoire_carried, stat_data)
-
-				if grimoire_count >= 1 then
-					return self.id, grimoire_count
-				end
-			end,
-		},
-	},
-}
-StatDefinitions.grimoire_recovered_mission_won = {
-	flags = {
-		StatFlags.backend,
-	},
-	data = {},
-	triggers = {
-		{
-			id = "grimoire_delivered",
-			trigger = StatMacros.increment_by,
-		},
-	},
-}
-StatDefinitions.scriptures_carried = {
-	flags = {
-		StatFlags.team,
-	},
-	triggers = {
-		{
-			id = "hook_objective_side_incremented_progression",
-			trigger = function (self, stat_data, objective_name, value)
-				if objective_name == "side_mission_tome" then
-					return set_to(self, stat_data, value)
-				end
-			end,
-		},
-	},
-}
-StatDefinitions.scriptures_delivered = {
-	flags = {
-		StatFlags.team,
-		StatFlags.no_sync,
-	},
-	data = {},
-	triggers = {
-		{
-			id = "mission_won",
-			trigger = function (self, stat_data)
-				local scriptures_count = read_stat(StatDefinitions.scriptures_carried, stat_data)
-
-				if scriptures_count >= 1 then
-					return self.id, scriptures_count
-				end
-			end,
-		},
-	},
-}
-StatDefinitions.scripture_recovered_mission_won = {
-	flags = {
-		StatFlags.backend,
-	},
-	data = {},
-	triggers = {
-		{
-			id = "scriptures_delivered",
-			trigger = StatMacros.increment_by,
-		},
-	},
-}
 StatDefinitions.hook_assist_ally = {
 	flags = {
 		StatFlags.hook,
@@ -3018,6 +3451,18 @@ for i = 1, #mission_zones do
 	}
 end
 
+StatDefinitions.total_destructibles_destroyed = {
+	flags = {
+		StatFlags.backend,
+	},
+	data = {},
+	triggers = {
+		{
+			id = "mission_destructible_destroyed",
+			trigger = StatMacros.increment,
+		},
+	},
+}
 StatDefinitions.hook_ammo_consumed = {
 	flags = {
 		StatFlags.hook,
@@ -3071,133 +3516,255 @@ StatDefinitions.remaining_secondary_ammo = {
 		},
 	},
 }
-StatDefinitions.total_renegade_grenadier_melee = {
-	flags = {
-		StatFlags.backend,
-	},
-	triggers = {
-		{
-			id = "renegade_grenadier_killed",
-			trigger = function (self, stat_data, attack_data)
-				local attack_type = attack_data.attack_type
 
-				if attack_type == "melee" then
+do
+	local _target_breeds = {
+		{
+			name = "flamer",
+			breed_names = {
+				cultist_flamer = true,
+				renegade_flamer = true,
+			},
+		},
+		{
+			name = "grenadier",
+			breed_names = {
+				cultist_grenadier = true,
+				renegade_grenadier = true,
+			},
+		},
+		{
+			name = "berzerker",
+			breed_names = {
+				cultist_berzerker = true,
+				renegade_berzerker = true,
+			},
+		},
+		{
+			name = "gunner",
+			breed_names = {
+				cultist_gunner = true,
+				renegade_gunner = true,
+			},
+		},
+		{
+			name = "renegade_netgunner",
+			breed_names = {
+				renegade_netgunner = true,
+			},
+		},
+		{
+			name = "renegade_sniper",
+			breed_names = {
+				renegade_sniper = true,
+			},
+		},
+		{
+			name = "renegade_executor",
+			breed_names = {
+				renegade_executor = true,
+			},
+		},
+		{
+			name = "shocktrooper",
+			breed_names = {
+				cultist_shocktrooper = true,
+				renegade_shocktrooper = true,
+			},
+		},
+		{
+			name = "cultist_mutant",
+			breed_names = {
+				cultist_mutant = true,
+			},
+		},
+		{
+			name = "chaos_ogryn_bulwark",
+			breed_names = {
+				chaos_ogryn_bulwark = true,
+			},
+		},
+		{
+			name = "chaos_ogryn_executor",
+			breed_names = {
+				chaos_ogryn_executor = true,
+			},
+		},
+		{
+			name = "chaos_ogryn_gunner",
+			breed_names = {
+				chaos_ogryn_gunner = true,
+			},
+		},
+		{
+			name = "chaos_hound",
+			breed_names = {
+				chaos_hound = true,
+			},
+		},
+		{
+			name = "chaos_poxwalker_bomber",
+			breed_names = {
+				chaos_poxwalker_bomber = true,
+			},
+		},
+	}
+
+	for i = 1, #_target_breeds do
+		local breed_name_and_type = _target_breeds[i]
+		local stat_name = string.format("x_amount_of_%s_killed", breed_name_and_type.name)
+
+		StatDefinitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {
+				target_breed_names = breed_name_and_type.breed_names,
+			},
+			triggers = {
+				{
+					id = "hook_kill",
+					trigger = function (self, stat_data, attack_data)
+						local target_breed_names = self.data.target_breed_names
+						local target_breed = attack_data.target_breed_name
+
+						if target_breed_names[target_breed] then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+		}
+	end
+
+	StatDefinitions.total_renegade_grenadier_melee = {
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "renegade_grenadier_killed",
+				trigger = function (self, stat_data, attack_data)
+					local attack_type = attack_data.attack_type
+
+					if attack_type == "melee" then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.id_of_renegade_executors_hit_by_weakspot = {
+		default = false,
+		flags = {
+			StatFlags.no_sync,
+			StatFlags.team,
+		},
+		triggers = {
+			{
+				id = "renegade_executor_damaged",
+				trigger = function (self, stat_data, attack_data)
+					local target_id = attack_data.target_unit_id
+
+					if not target_id then
+						return
+					end
+
+					local id = self.id
+
+					stat_data[id] = stat_data[id] or {}
+
+					local data = stat_data[id]
+					local current_value = data[target_id] or self.default
+
+					if current_value then
+						return
+					end
+
+					if is_weakspot_hit(attack_data) then
+						data[target_id] = true
+
+						return id, target_id, data[target_id]
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.total_renegade_executors_non_headshot = {
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "renegade_executor_killed",
+				trigger = function (self, stat_data, attack_data)
+					local target_id = attack_data.target_unit_id
+					local weakspot_hits = stat_data.id_of_renegade_executors_hit_by_weakspot
+					local has_been_hit = weakspot_hits and weakspot_hits[target_id]
+
+					if has_been_hit then
+						return
+					end
+
+					if is_weakspot_hit(attack_data) then
+						return
+					end
+
 					return increment(self, stat_data)
-				end
-			end,
+				end,
+			},
 		},
-	},
-}
-StatDefinitions.id_of_renegade_executors_hit_by_weakspot = {
-	default = false,
-	flags = {
-		StatFlags.no_sync,
-		StatFlags.team,
-	},
-	triggers = {
-		{
-			id = "renegade_executor_damaged",
-			trigger = function (self, stat_data, attack_data)
-				local target_id = attack_data.target_unit_id
-
-				if not target_id then
-					return
-				end
-
-				local id = self.id
-
-				stat_data[id] = stat_data[id] or {}
-
-				local data = stat_data[id]
-				local current_value = data[target_id] or self.default
-
-				if current_value then
-					return
-				end
-
-				if is_weakspot_hit(attack_data) then
-					data[target_id] = true
-
-					return id, target_id, data[target_id]
-				end
-			end,
+	}
+	StatDefinitions.total_cultist_berzerker_head = {
+		flags = {
+			StatFlags.backend,
 		},
-	},
-}
-StatDefinitions.total_renegade_executors_non_headshot = {
-	flags = {
-		StatFlags.backend,
-	},
-	triggers = {
-		{
-			id = "renegade_executor_killed",
-			trigger = function (self, stat_data, attack_data)
-				local target_id = attack_data.target_unit_id
-				local weakspot_hits = stat_data.id_of_renegade_executors_hit_by_weakspot
-				local has_been_hit = weakspot_hits and weakspot_hits[target_id]
+		triggers = {
+			{
+				id = "cultist_berzerker_killed",
+				trigger = function (self, stat_data, attack_data)
+					local hit_zone_name = attack_data.hit_zone_name
 
-				if has_been_hit then
-					return
-				end
-
-				if is_weakspot_hit(attack_data) then
-					return
-				end
-
-				return increment(self, stat_data)
-			end,
+					if hit_zone_name == "head" then
+						return increment(self, stat_data)
+					end
+				end,
+			},
 		},
-	},
-}
-StatDefinitions.total_cultist_berzerker_head = {
-	flags = {
-		StatFlags.backend,
-	},
-	triggers = {
-		{
-			id = "cultist_berzerker_killed",
-			trigger = function (self, stat_data, attack_data)
-				local hit_zone_name = attack_data.hit_zone_name
+	}
+	StatDefinitions.total_ogryn_gunner_melee = {
+		flags = {
+			StatFlags.backend,
+		},
+		triggers = {
+			{
+				id = "chaos_ogryn_gunner_killed",
+				trigger = function (self, stat_data, attack_data)
+					local attack_type = attack_data.attack_type
 
-				if hit_zone_name == "head" then
-					return increment(self, stat_data)
-				end
-			end,
+					if attack_type == "melee" then
+						return increment(self, stat_data)
+					end
+				end,
+			},
 		},
-	},
-}
-StatDefinitions.total_ogryn_gunner_melee = {
-	flags = {
-		StatFlags.backend,
-	},
-	triggers = {
-		{
-			id = "chaos_ogryn_gunner_killed",
-			trigger = function (self, stat_data, attack_data)
-				local attack_type = attack_data.attack_type
-
-				if attack_type == "melee" then
-					return increment(self, stat_data)
-				end
-			end,
+	}
+	StatDefinitions.kill_daemonhost = {
+		flags = {
+			StatFlags.backend,
 		},
-	},
-}
-StatDefinitions.kill_daemonhost = {
-	flags = {
-		StatFlags.backend,
-	},
-	triggers = {
-		{
-			id = "hook_boss_died",
-			trigger = function (self, stat_data, breed_name, boss_max_health, boss_unit_id, time_since_first_damage)
-				if breed_name == "chaos_daemonhost" then
-					return set_to_max(self, stat_data, 1)
-				end
-			end,
+		triggers = {
+			{
+				id = "hook_boss_died",
+				trigger = function (self, stat_data, breed_name, boss_max_health, boss_unit_id, time_since_first_damage)
+					if breed_name == "chaos_daemonhost" then
+						return set_to_max(self, stat_data, 1)
+					end
+				end,
+			},
 		},
-	},
-}
+	}
+end
 
 do
 	local function archetype_include_condition(archetype_name)
@@ -5804,6 +6371,65 @@ StatDefinitions.live_event_nurgle_explosion_won = {
 
 		return self.data.circumstances[circumstance_name]
 	end,
+}
+StatDefinitions.havoc_won_live_event = {
+	flags = {
+		StatFlags.team,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		return config.is_havoc
+	end,
+}
+StatDefinitions.mission_won_with_sub_30_player = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+		StatFlags.always_log,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = function (self, stat_data)
+				local players = Managers.player:human_players()
+				local num_sub_30 = 0
+
+				for _, player in pairs(players) do
+					local profile = player:profile()
+
+					if profile.current_level < 30 then
+						num_sub_30 = num_sub_30 + 1
+					end
+				end
+
+				if num_sub_30 >= 1 then
+					return increment(self, stat_data)
+				end
+			end,
+		},
+	},
+}
+StatDefinitions.live_event_get_em_in_shape_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+		StatFlags.always_log,
+	},
+	triggers = {
+		{
+			id = "havoc_won_live_event",
+			trigger = StatMacros.increment,
+		},
+		{
+			id = "mission_won_with_sub_30_player",
+			trigger = StatMacros.increment,
+		},
+	},
 }
 StatDefinitions = _stat_data
 

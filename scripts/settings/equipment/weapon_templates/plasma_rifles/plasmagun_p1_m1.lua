@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/plasma_rifles/plasmagun_p1_m1.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -8,6 +8,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -254,7 +255,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -778,6 +779,7 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_overheat_explode = {
 		anim_end_event = "charge_explode_finished",
@@ -805,6 +807,7 @@ weapon_template.actions = {
 		sfx = {
 			on_start = "weapon_about_to_explode",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -818,6 +821,7 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 }
 weapon_template.base_stats = {
@@ -994,6 +998,7 @@ weapon_template.no_ammo_delay = 0.45
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = true,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1120,6 +1125,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.plasmagun
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.plasmagun
 weapon_template.traits = {}
 
 local bespoke_plasmagun_p1_traits = table.ukeys(WeaponTraitsBespokePlasmagunP1)

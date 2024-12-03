@@ -82,6 +82,8 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 	if action_settings.delay_explosion_to_finish then
 		self._prevent_explosion = true
 	end
+
+	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 end
 
 ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
@@ -110,6 +112,27 @@ ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
 
 		WarpCharge.check_and_set_state(t, warp_charge_component, buff_extension)
 	end
+
+	self:_set_haptic_trigger_template(nil, self._weapon_template)
+end
+
+ActionWeaponBase._set_haptic_trigger_template = function (self, action_settings, weapon_template)
+	if not IS_PLAYSTATION then
+		return
+	end
+
+	if self._is_local_unit and self._is_human_controlled then
+		local inventory_component = self._inventory_component
+		local wielded_slot = inventory_component.wielded_slot
+		local condition_func_params = wielded_slot ~= "none" and self._weapon_extension:condition_func_params(wielded_slot)
+
+		Managers.input.haptic_trigger_effects:set_haptic_trigger_template(action_settings, weapon_template, condition_func_params)
+	end
+end
+
+ActionWeaponBase.server_correction_occurred = function (self)
+	ActionWeaponBase.super.server_correction_occurred(self)
+	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 end
 
 ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_ranged, action_auto_crit, should_crit)
@@ -201,7 +224,7 @@ end
 ActionWeaponBase._setup_charge_template = function (self, action_settings)
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
-	local charge_template = action_settings.charge_template or weapon_template.charge_template or "none"
+	local charge_template = action_settings.charge_template or weapon_template.charge_template or weapon_template.special_charge_template or "none"
 
 	weapon_tweak_templates_component.charge_template_name = charge_template
 end

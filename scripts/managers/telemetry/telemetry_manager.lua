@@ -116,7 +116,7 @@ TelemetryManager.post_batch = function (self)
 
 		self._batch_in_flight = nil
 	end):catch(function (error)
-		Log.warning("TelemetryManager", "Error posting batch: %s", error)
+		Log.exception("TelemetryManager", "Error posting batch: %s", error)
 
 		self._batch_in_flight = nil
 	end)

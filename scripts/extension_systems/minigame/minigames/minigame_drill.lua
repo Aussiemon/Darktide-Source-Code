@@ -111,6 +111,23 @@ local function _target_overlap(x, y, targets)
 	return false
 end
 
+local function _target_has_axis_aligned_neighbor(x, y, targets)
+	local min_delta_for_alignment = 0.1
+
+	for i = 1, #targets do
+		local target = targets[i]
+		local position_delta_x = math.abs(target.x - x)
+		local position_delta_y = math.abs(target.y - y)
+		local is_aligned_with_target = position_delta_x < min_delta_for_alignment or position_delta_y < min_delta_for_alignment
+
+		if is_aligned_with_target then
+			return true
+		end
+	end
+
+	return false
+end
+
 MinigameDrill.generate_targets = function (self, seed)
 	self._start_seed = seed
 
@@ -128,13 +145,21 @@ MinigameDrill.generate_targets = function (self, seed)
 
 		for target = 1, MinigameSettings.drill_stage_targets do
 			local x, y
+			local tries = 100
+			local is_valid_position = false
 
 			repeat
+				tries = tries - 1
 				seed, x = math.next_random(seed, 1, 100)
 				x = -0.8 + x / 100 * 1.6
 				seed, y = math.next_random(seed, 1, 100)
 				y = -0.5 + y / 100 * 1
-			until not _target_overlap(x, y, stage_targets)
+				is_valid_position = not _target_overlap(x, y, stage_targets) and not _target_has_axis_aligned_neighbor(x, y, stage_targets)
+			until is_valid_position or tries <= 0
+
+			if tries <= 0 then
+				-- Nothing
+			end
 
 			stage_targets[target] = {
 				x = x,

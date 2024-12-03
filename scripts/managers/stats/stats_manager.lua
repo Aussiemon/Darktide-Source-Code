@@ -60,6 +60,8 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 		self._event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 	end
 
+	self._next_user = 0
+
 	self:clear()
 end
 
@@ -847,6 +849,8 @@ StatsManager._trigger = function (self, user, stat_name, ...)
 				...,
 			})
 		else
+			self._next_user = next_user
+
 			self:_trigger(next_user, trigger_func(trigger_stat, next_user.data, ...))
 		end
 	end
@@ -901,6 +905,14 @@ StatsManager.record_team = function (self, stat_name, ...)
 	if self:has_session() then
 		return self:_trigger(team, stat_name, ...)
 	end
+end
+
+StatsManager.get_next_user = function (self)
+	return self._next_user
+end
+
+StatsManager.get_stats_config = function (self)
+	return self._session_config
 end
 
 return StatsManager

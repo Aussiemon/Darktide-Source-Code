@@ -48,6 +48,12 @@ end
 
 ChainWeaponEffects.destroy = function (self)
 	self:_stop_vfx_loop(true)
+
+	local wwise_world = self._wwise_world
+	local melee_idling_source = self._fx_extension:sound_source(self._melee_idling_fx_source_name)
+
+	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", 0)
+	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", 0)
 end
 
 ChainWeaponEffects.wield = function (self)
@@ -60,6 +66,12 @@ ChainWeaponEffects.unwield = function (self)
 	end
 
 	self:_stop_vfx_loop(true)
+
+	local wwise_world = self._wwise_world
+	local melee_idling_source = self._fx_extension:sound_source(self._melee_idling_fx_source_name)
+
+	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", 0)
+	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", 0)
 end
 
 ChainWeaponEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -234,6 +246,13 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 		self._equipment_component.send_component_event(self._slot, "set_speed", anim_speed)
 
 		self._force_update = false
+	end
+
+	if IS_PLAYSTATION and self._is_local_unit then
+		local vibration_intensity = speed_settings.haptic_vibration_intensity
+		local frequency = math.lerp(vibration_intensity.min, vibration_intensity.max, intensity)
+
+		Managers.input.haptic_trigger_effects:trigger_vibration(frequency)
 	end
 
 	local resistance = is_sawing and 1 - math.random() * 0.1 or 0

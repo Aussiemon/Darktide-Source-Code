@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/managers/horde/templates/flood_horde_template.lua
 
 local MainPathQueries = require("scripts/utilities/main_path_queries")
-local NavQueries = require("scripts/utilities/nav_queries")
+local HordeUtilities = require("scripts/managers/horde/utilities/horde_utilities")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local aggro_states = PerceptionSettings.aggro_states
@@ -54,47 +54,6 @@ local function _compose_spawn_list(composition)
 	table.shuffle(breeds_to_spawn)
 
 	return breeds_to_spawn, #breeds_to_spawn
-end
-
-local function _position_has_line_of_sight_to_any_enemy_player(physics_world, from_position, side, collision_filter)
-	local Vector3_length_squared, Vector3_normalize = Vector3.length_squared, Vector3.normalize
-	local PhysicsWorld_raycast = PhysicsWorld.raycast
-	local offset = Vector3.up()
-	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
-
-	for i = 1, #valid_enemy_player_units_positions do
-		local target_position = valid_enemy_player_units_positions[i] + offset
-		local to_target = target_position - from_position
-		local distance_sq = Vector3_length_squared(to_target)
-
-		if distance_sq > 0 then
-			local direction = Vector3_normalize(to_target)
-			local distance = math.sqrt(distance_sq)
-			local hit, _, _, _, _ = PhysicsWorld_raycast(physics_world, from_position, direction, distance, "closest", "collision_filter", collision_filter)
-
-			if not hit then
-				return true
-			end
-		end
-	end
-
-	return false
-end
-
-local function _try_find_spawn_position(nav_world, center_position, index, num_columns, max_attempts)
-	local Math_Random = math.random
-	local above, below = 2, 2
-	local offset = Vector3(-num_columns / 2 + index % num_columns, -num_columns / 2 + math.floor(index / num_columns), 0)
-
-	for i = 1, max_attempts do
-		local spawn_position = NavQueries.position_on_mesh(nav_world, center_position + offset, above, below)
-
-		if spawn_position then
-			return spawn_position
-		else
-			offset = Vector3(4 * Math_Random() - 2, 4 * Math_Random() - 2, 0)
-		end
-	end
 end
 
 local NUM_COLUMNS = 6
@@ -184,19 +143,17 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 	local spawns_per_location = math.ceil(num_to_spawn / num_spawn_locations)
 
 	for i = 1, #nearby_spawners do
-		repeat
-			local spawner = nearby_spawners[i]
-			local breed_list = {}
+		local spawner = nearby_spawners[i]
+		local breed_list = {}
 
-			for j = 1, spawns_per_location do
-				local breed_name = spawn_list[num_spawned + 1]
+		for j = 1, spawns_per_location do
+			local breed_name = spawn_list[num_spawned + 1]
 
-				num_spawned = num_spawned + 1
-				breed_list[#breed_list + 1] = breed_name
-			end
+			num_spawned = num_spawned + 1
+			breed_list[#breed_list + 1] = breed_name
+		end
 
-			local queue_id = spawner:add_spawns(breed_list, side_id, target_side_id, nil, nil, group_id)
-		until true
+		spawner:add_spawns(breed_list, side_id, target_side_id, nil, nil, group_id)
 	end
 
 	local spawns_left = num_to_spawn - num_spawned
@@ -233,7 +190,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 	end
 
 	local collision_filter = "filter_minion_line_of_sight_check"
-	local in_line_of_sight = _position_has_line_of_sight_to_any_enemy_player(horde.physics_world, wanted_position, side, collision_filter)
+	local in_line_of_sight = HordeUtilities.position_has_line_of_sight_to_any_enemy_player(horde.physics_world, wanted_position, side, collision_filter)
 
 	if in_line_of_sight then
 		Log.info("FloodHorde", "\t\tFallback spawn position in line of sight of enemy player(s).")
@@ -245,7 +202,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 	local minion_spawn_manager = Managers.state.minion_spawn
 
 	for i = 1, spawns_left do
-		local spawn_position = _try_find_spawn_position(nav_world, wanted_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS)
+		local spawn_position = HordeUtilities.try_find_spawn_position(nav_world, wanted_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS)
 
 		if spawn_position then
 			local breed_name = spawn_list[i]

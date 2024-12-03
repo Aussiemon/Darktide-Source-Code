@@ -14,5 +14,6 @@ _add_live_event("mechanicus")
 _add_live_event("darkness")
 _add_live_event("moebian_21")
 _add_live_event("nurgle_explosion")
+_add_live_event("get_em_in_shape")
 
 return settings("LiveEvents", live_events)

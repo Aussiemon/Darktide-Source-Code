@@ -239,6 +239,8 @@ local particles = {
 		},
 		particles = {
 			default = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_hands_charge",
+			forcesword_2h_p1_m1 = "content/fx/particles/weapons/foce_sword/forcesword_2h_charge",
+			forcesword_2h_p1_m2 = "content/fx/particles/weapons/foce_sword/forcesword_2h_charge",
 			psyker_chain_lightning = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_hands_charge",
 		},
 	},
@@ -248,6 +250,8 @@ local particles = {
 		},
 		particles = {
 			default = "content/fx/particles/abilities/chainlightning/chainlightning_fingertips",
+			forcesword_2h_p1_m1 = "content/fx/particles/weapons/foce_sword/forcesword_2h_wisps_fingerstips",
+			forcesword_2h_p1_m2 = "content/fx/particles/weapons/foce_sword/forcesword_2h_wisps_fingerstips",
 			psyker_chain_lightning = "content/fx/particles/abilities/chainlightning/chainlightning_fingertips",
 		},
 	},
@@ -259,11 +263,22 @@ local particles = {
 		particles = {
 			powermaul_p1_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
 			powermaul_p1_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
+			powersword_2h_p1_m1 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh",
+			powersword_2h_p1_m2 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh",
 			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			powersword_p1_m2 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
-			powersword_p1_m3 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_oneoff",
 			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_oneoff",
+		},
+	},
+	weapon_special_end = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+		},
+		particles = {
+			powersword_2h_p1_m1 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_decharge_01",
+			powersword_2h_p1_m2 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_decharge_01",
 		},
 	},
 	weapon_special_custom = {
@@ -272,11 +287,78 @@ local particles = {
 			"wielded_weapon_template",
 		},
 		particles = {
-			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
-			powersword_p1_m2 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
-			powersword_p1_m3 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
 			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
 			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
+		},
+	},
+	wind_slash = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"level",
+		},
+		particles = {
+			forcesword_2h_p1_m1 = {
+				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_special_high",
+				low = "content/fx/particles/weapons/foce_sword/forcesword_2h_special_low",
+				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_special_middle",
+			},
+			forcesword_2h_p1_m2 = {
+				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_special_high",
+				low = "content/fx/particles/weapons/foce_sword/forcesword_2h_special_low",
+				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_special_middle",
+			},
+		},
+	},
+	wind_slash_stage_interfacing = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"stage",
+		},
+		particles = {
+			forcesword_2h_p1_m1 = {
+				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2",
+				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2",
+			},
+			forcesword_2h_p1_m2 = {
+				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2",
+				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2",
+			},
+		},
+	},
+	wind_slash_stage_screen_space = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"stage",
+		},
+		particles = {
+			forcesword_2h_p1_m1 = {
+				high = "content/fx/particles/weapons/screenspace/forcesword_2h_screenspace_stage3",
+				middle = "content/fx/particles/weapons/screenspace/forcesword_2h_screenspace_stage2",
+			},
+			forcesword_2h_p1_m2 = {
+				high = "content/fx/particles/weapons/screenspace/forcesword_2h_screenspace_stage3",
+				middle = "content/fx/particles/weapons/screenspace/forcesword_2h_screenspace_stage2",
+			},
+		},
+	},
+	wind_slash_stage_loop = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"stage",
+		},
+		particles = {
+			forcesword_2h_p1_m1 = {
+				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
+				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
+			},
+			forcesword_2h_p1_m2 = {
+				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
+				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
+			},
 		},
 	},
 	weapon_special_loop = {
@@ -298,6 +380,10 @@ local particles = {
 			powermaul_2h_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated_2hand",
 			powermaul_p1_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 			powermaul_p1_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
+			powersword_2h_p1_m1 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh_loop",
+			powersword_2h_p1_m2 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh_loop",
+			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh_loop",
+			powersword_p1_m2 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh_loop",
 			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
 			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
 		},
@@ -313,6 +399,10 @@ local particles = {
 				critical = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level03",
 				high = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level02",
 				low = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level01",
+			},
+			powersword_2h_p1_m1 = {
+				critical = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_critical_01",
+				high = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_01",
 			},
 		},
 	},
@@ -380,7 +470,10 @@ local particles = {
 			powersword_p1_m2 = {
 				["true"] = "content/fx/particles/weapons/swords/powersword_p1_m1_trail",
 			},
-			powersword_p1_m3 = {
+			powersword_2h_p1_m1 = {
+				["true"] = "content/fx/particles/weapons/swords/powersword_p1_m1_trail",
+			},
+			powersword_2h_p1_m2 = {
 				["true"] = "content/fx/particles/weapons/swords/powersword_p1_m1_trail",
 			},
 			thunderhammer_2h_p1_m1 = {
@@ -417,6 +510,8 @@ local particles = {
 			chainsword_p1_m2 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
 			chainsword_p1_m3 = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
 			default = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
+			forcesword_2h_p1_m1 = "content/fx/particles/abilities/psyker_block_impact_01",
+			forcesword_2h_p1_m2 = "content/fx/particles/abilities/psyker_block_impact_01",
 			forcesword_p1_m1 = "content/fx/particles/abilities/psyker_block_impact_01",
 			forcesword_p1_m2 = "content/fx/particles/abilities/psyker_block_impact_01",
 			forcesword_p1_m3 = "content/fx/particles/abilities/psyker_block_impact_01",
@@ -430,6 +525,8 @@ local particles = {
 		},
 		particles = {
 			default = "content/fx/particles/weapons/swords/chainsword/impact_metal_parry_01",
+			forcesword_2h_p1_m1 = "content/fx/particles/abilities/psyker_block_impact_01",
+			forcesword_2h_p1_m2 = "content/fx/particles/abilities/psyker_block_impact_01",
 			forcesword_p1_m1 = "content/fx/particles/abilities/psyker_block_impact_01",
 			forcesword_p1_m2 = "content/fx/particles/abilities/psyker_block_impact_01",
 			forcesword_p1_m3 = "content/fx/particles/abilities/psyker_block_impact_01",

@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay_definitions.lua
 
-local HudElementDamageIndicatorSettings = require("scripts/ui/hud/elements/damage_indicator/hud_element_damage_indicator_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {
 	screen = {
@@ -12,7 +11,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			800,
+			0,
 		},
 	},
 }

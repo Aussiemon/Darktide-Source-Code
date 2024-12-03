@@ -58,12 +58,12 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	self._time_since_last_update = ChatSettings.inactivity_timeout
 	self._input_field_widget = nil
 	self._reported_left_channel_handles = {}
+	self._chat_world_marker_id_by_peer_id = {}
 	self._virtual_keyboard_promise = nil
 
 	self:_setup_input()
 
 	for channel_handle, channel in pairs(Managers.chat:connected_chat_channels()) do
-		self:cb_chat_manager_added_channel(channel_handle, channel)
 		self:_on_connect_to_channel(channel_handle)
 	end
 end

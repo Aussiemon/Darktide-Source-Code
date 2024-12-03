@@ -36,6 +36,12 @@ local function beyond_story_chapter(story_name, chapter_name)
 	end
 end
 
+local function is_story_complete(story_name)
+	return function ()
+		return Managers.narrative:is_story_complete(story_name)
+	end
+end
+
 local function on_story_chapter(story_name, chapter_name)
 	return function ()
 		local narrative_manager = Managers.narrative
@@ -301,6 +307,13 @@ local narrative = {
 				requirement = beyond_story_chapter("s1_q3", "itemization_intro"),
 			},
 		},
+		s1_q4 = {
+			{
+				backend_id = 1,
+				name = "heresy_intro",
+				requirement = event_done("onboarding_step_mission_board_introduction"),
+			},
+		},
 		level_unlock_popups = {
 			{
 				backend_id = 1,
@@ -376,6 +389,23 @@ local narrative = {
 				backend_id = 15,
 				name = "level_unlock_talent_tier_6",
 				requirement = level_at_least(PlayerProgressionUnlocks.talent_6),
+			},
+		},
+		unlock_havoc = {
+			{
+				backend_id = 1,
+				name = "unlock_havoc_1",
+				requirement = is_story_complete("path_of_trust"),
+			},
+			{
+				backend_id = 2,
+				name = "unlock_havoc_2",
+				requirement = beyond_story_chapter("unlock_havoc", "unlock_havoc_1"),
+			},
+			{
+				backend_id = 3,
+				name = "unlock_havoc_3",
+				requirement = beyond_story_chapter("unlock_havoc", "unlock_havoc_2"),
 			},
 		},
 	},

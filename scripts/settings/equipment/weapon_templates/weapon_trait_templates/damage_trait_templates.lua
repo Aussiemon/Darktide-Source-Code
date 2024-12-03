@@ -326,6 +326,88 @@ damage_trait_templates.thumper_shotgun_power_stat = {
 		},
 	},
 }
+damage_trait_templates.heavystubber_p2_m1_power_stat = {
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+}
 damage_trait_templates.default_power_stat = {
 	{
 		"armor_damage_modifier_ranged",
@@ -3774,6 +3856,106 @@ damage_trait_templates.ogryn_gauntlet_p1_m1_explosion_damage_perk = {
 		"attack",
 		armor_types.void_shield,
 		0.05,
+	},
+}
+damage_trait_templates.ogryn_heavystubber_p2_dps_stat = {
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		1,
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		2,
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		3,
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		4,
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		5,
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		6,
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"power_distribution",
+		"attack",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
 	},
 }
 damage_trait_templates.combatsword_dps_stat = {

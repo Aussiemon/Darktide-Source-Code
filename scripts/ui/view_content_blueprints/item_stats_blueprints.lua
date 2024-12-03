@@ -1763,6 +1763,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						3,
 					},
 					text_color = Color.terminal_text_body(255, true),
+					preview_color = Color.ui_blue_light(255, true),
 				}),
 			}
 			pass_templates[#pass_templates + 1] = {
@@ -2129,12 +2130,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 		local start_preview_expertise = content.start_expertise_value
 		local current_preview_expertise = content.preview_expertise_value and math.max(content.preview_expertise_value - start_preview_expertise, 0) or 0
 		local max_preview_expertise = Items.max_expertise_level() - start_preview_expertise
-		local current_expertise = Items.expertise_level(item, true)
-		local is_preview = current_preview_expertise > 0
+		local disable_preview = content.disable_preview
+		local is_preview = current_preview_expertise > 0 and not disable_preview
 
 		content.show_glow = is_preview
 
-		local added_stats = Items.preview_stats_change(item, current_preview_expertise, comparing_stats)
+		local added_stats = Items.preview_stats_change(item, is_preview and current_preview_expertise or 0, comparing_stats)
 		local max_stats = Items.preview_stats_change(item, max_preview_expertise, comparing_stats)
 		local num_stats = #comparing_stats
 
@@ -2148,23 +2149,22 @@ local function generate_blueprints_function(grid_size, optional_item)
 			local divider_1_id = "divider_1_" .. ii
 			local divider_2_id = "divider_2_" .. ii
 			local percentage_id = "percentage_" .. ii
+			local display_name = Localize(stat_data.display_name)
 
-			widget.content.text = Localize(stat_data.display_name)
+			widget.content.text = display_name
 
 			local value_bar_width = math.round(bar_width * stat.fraction)
 			local bar_style = style[bar_id]
 
 			bar_style.size[1] = value_bar_width
 			bar_style.color = is_preview and bar_style.preview_color or bar_style.default_color
-
-			local display_name = Localize(stat_data.display_name)
-
 			content[text_id] = display_name
 
 			local stat_value_string = stat.value
+			local text_style = style[text_id]
 
 			if is_preview then
-				stat_value_string = Text.apply_color_to_text(stat_value_string, Color.ui_blue_light(255, true))
+				stat_value_string = Text.apply_color_to_text(stat_value_string, text_style.preview_color)
 			end
 
 			content[percentage_id] = string.format("[%s/%d]%%", stat_value_string, max_stat.value)

@@ -262,6 +262,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 
 			local stagger_impact_bonus
 
+			stagger_impact_bonus = 1 + (Managers.state.havoc:get_modifier_value("stagger_impact_bonus") or 0)
 			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, effective_backstab, effective_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action, current_stagger_impact, stagger_impact_bonus)
 		end
 	end
@@ -721,8 +722,6 @@ local function _format_weapon_name(name)
 	return name
 end
 
-local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
-
 function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
 	if not DEDICATED_SERVER then
 		return
@@ -842,24 +841,6 @@ function _trigger_backstab_interfacing(attacking_unit, attack_type)
 		local optional_position
 
 		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("backstab_interfacing", _backstab_gear_wwise_event_options, optional_position, except_sender)
-	end
-end
-
-local _flank_gear_wwise_event_options = {}
-
-function _trigger_flank_interfacing(attacking_unit, attack_type)
-	local attacking_unit_fx_extension = ScriptUnit.has_extension(attacking_unit, "fx_system")
-
-	if attacking_unit_fx_extension then
-		local except_sender = true
-
-		table.clear(_flank_gear_wwise_event_options)
-
-		_flank_gear_wwise_event_options.attack_type = attack_type
-
-		local optional_position
-
-		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("flank_interfacing", _flank_gear_wwise_event_options, optional_position, except_sender)
 	end
 end
 

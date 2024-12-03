@@ -135,7 +135,7 @@ local function _remove_player_frame_cb_func(widget, ui_renderer)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "havoc_status")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -246,6 +246,12 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			animation_exit = "popup_leave",
 			priority_order = 1,
 			total_time = 5,
+			widget_definition = Definitions.notification_message,
+		},
+		havoc_status = {
+			animation_enter = "popup_enter",
+			animation_exit = "popup_leave",
+			priority_order = 1,
 			widget_definition = Definitions.notification_message,
 		},
 	}
@@ -1060,6 +1066,17 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			color = background_rarity_color,
 			line_color = rarity_color,
 			enter_sound_event = enter_sound_event,
+		}
+	elseif message_type == MESSAGE_TYPES.havoc_status then
+		notification_data = {
+			texts = {
+				{
+					display_name = data,
+					color = Color.terminal_text_body(255, true),
+				},
+			},
+			line_color = Color.terminal_text_body(255, true),
+			color = Color.terminal_grid_background(100, true),
 		}
 	end
 

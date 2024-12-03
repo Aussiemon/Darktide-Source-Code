@@ -28,12 +28,19 @@ SaveData.default_account_data = {
 		controller_response_curve_strength = 50,
 		controller_response_curve_strength_ranged = 50,
 		diagonal_forward_dodge = true,
+		haptic_trigger_effects_enabled = true,
+		haptic_trigger_melee_resistance_strength = "strong",
+		haptic_trigger_melee_vibration_strength = "strong",
+		haptic_trigger_ranged_resistance_strength = "strong",
+		haptic_trigger_ranged_vibration_strength = "strong",
 		mouse_invert_look_y = false,
 		mouse_look_scale = 1,
 		mouse_look_scale_ranged = 1,
 		mouse_look_scale_ranged_alternate_fire = 1,
 		rumble_enabled = true,
 		rumble_intensity = 50,
+		rumble_intensity_combat_melee = 100,
+		rumble_intensity_combat_ranged = 100,
 		rumble_intensity_gameplay = 100,
 		rumble_intensity_immersive = 100,
 		stationary_dodge = false,
@@ -99,6 +106,10 @@ SaveData.default_character_data = {
 	},
 	favorite_items = {},
 	group_finder_search_tags = {},
+	mission_board = {
+		page = 1,
+		private_match = false,
+	},
 }
 
 SaveData.init = function (self)
@@ -131,9 +142,11 @@ SaveData.populate = function (self, save_data)
 						local default_character_data = SaveData.default_character_data
 
 						for character_id, character_id_data in pairs(character_data) do
-							if not character_id_data.view_settings then
-								character_id_data.view_settings = table.clone_instance(default_character_data.view_settings)
-							end
+							local new_character_data = table.clone_instance(default_character_data)
+
+							table.merge_recursive(new_character_data, character_id_data)
+
+							character_data[character_id] = new_character_data
 
 							if not character_id_data.group_finder_search_tags then
 								character_id_data.group_finder_search_tags = table.clone_instance(default_character_data.group_finder_search_tags)

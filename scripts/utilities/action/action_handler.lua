@@ -22,6 +22,7 @@ ActionHandler.init = function (self, unit, data)
 	self._actions = data.actions
 	self._action_kind_condition_funcs = data.action_kind_condition_funcs
 	self._action_kind_total_time_funcs = data.action_kind_total_time_funcs
+	self._action_kind_with_reversed_timescale = data.action_kind_with_reversed_timescale
 	self._conditional_state_functions = data.conditional_state_functions
 	self._registered_components = {}
 	self._unit = unit
@@ -114,7 +115,7 @@ ActionHandler.update = function (self, dt, t)
 	end
 end
 
-ActionHandler.fixed_update = function (self, dt, t)
+ActionHandler.fixed_update = function (self, dt, t, condition_func_params)
 	local registered_components = self._registered_components
 	local action_input_extension = self._action_input_extension
 
@@ -128,7 +129,7 @@ ActionHandler.fixed_update = function (self, dt, t)
 			if action_complete then
 				local action_settings = running_action:action_settings()
 
-				self:_finish_action(handler_data, "action_complete", nil, t, nil)
+				self:_finish_action(handler_data, "action_complete", nil, t, nil, condition_func_params)
 
 				local stop_input = action_settings.stop_input
 
@@ -191,11 +192,11 @@ ActionHandler._update_timeline_anims = function (self, action, t, start_t, end_t
 	end
 end
 
-ActionHandler._finish_action = function (self, handler_data, reason, data, t, next_action_params)
+ActionHandler._finish_action = function (self, handler_data, reason, data, t, next_action_params, condition_func_params)
 	local running_action = handler_data.running_action
 	local action_settings = running_action:action_settings()
 
-	self:_anim_end_event(action_settings, running_action, data, reason)
+	self:_anim_end_event(action_settings, running_action, data, reason, condition_func_params)
 
 	local component = handler_data.component
 	local time_in_action = t - component.start_t
@@ -240,7 +241,7 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 		interrupting_action_data.new_action_kind = action_settings.kind
 		interrupting_action_data.transition_type = transition_type
 
-		self:_finish_action(handler_data, "new_interrupting_action", interrupting_action_data, t, action_start_params)
+		self:_finish_action(handler_data, "new_interrupting_action", interrupting_action_data, t, action_start_params, condition_func_params)
 	end
 
 	if not action_objects[action_name] then
@@ -451,6 +452,35 @@ ActionHandler._anim_event = function (self, action_settings, action, is_chain, c
 	end
 end
 
+ActionHandler._anim_end_event = function (self, action_settings, action, data, reason, condition_func_params)
+	local anim_end_event, anim_end_event_3p
+	local anim_end_event_func = action_settings.anim_end_event_func
+
+	if anim_end_event_func then
+		anim_end_event, anim_end_event_3p = anim_end_event_func(action_settings, condition_func_params)
+		anim_end_event_3p = anim_end_event_3p or anim_end_event
+	else
+		anim_end_event = action_settings.anim_end_event
+		anim_end_event_3p = action_settings.anim_end_event_3p or anim_end_event
+	end
+
+	if not anim_end_event then
+		return
+	end
+
+	local anim_end_event_condition_func = action_settings.anim_end_event_condition_func
+
+	if anim_end_event_condition_func and not anim_end_event_condition_func(self._unit, data, reason) then
+		return
+	end
+
+	if action_settings.skip_3p_anims then
+		anim_end_event_3p = nil
+	end
+
+	action:trigger_anim_event(anim_end_event, anim_end_event_3p)
+end
+
 ActionHandler._update_combo_count = function (self, running_action, action_settings, component, automatic_input, reset_combo_override)
 	if reset_combo_override or not running_action and not automatic_input and not action_settings.keep_combo_on_start then
 		component.combo_count = 0
@@ -495,28 +525,6 @@ ActionHandler.server_correction_occurred = function (self, id, action_objects, a
 	end
 end
 
-ActionHandler._anim_end_event = function (self, action_settings, action, data, reason)
-	local anim_end_event = action_settings.anim_end_event
-
-	if not anim_end_event then
-		return
-	end
-
-	local anim_end_event_condition_func = action_settings.anim_end_event_condition_func
-
-	if anim_end_event_condition_func and not anim_end_event_condition_func(self._unit, data, reason) then
-		return
-	end
-
-	local anim_end_event_3p = action_settings.anim_end_event_3p or anim_end_event
-
-	if action_settings.skip_3p_anims then
-		anim_end_event_3p = nil
-	end
-
-	action:trigger_anim_event(anim_end_event, anim_end_event_3p)
-end
-
 ActionHandler.stop_action = function (self, id, reason, data, t, actions, action_objects, action_params, condition_func_params)
 	local handler_data = self._registered_components[id]
 	local running_action = handler_data.running_action
@@ -557,7 +565,7 @@ ActionHandler.stop_action = function (self, id, reason, data, t, actions, action
 
 	if finish_action then
 		self:_handle_action_input_on_stop_action(id, t, running_action)
-		self:_finish_action(handler_data, reason, data, t, nil)
+		self:_finish_action(handler_data, reason, data, t, nil, condition_func_params)
 	end
 end
 
@@ -829,8 +837,23 @@ end
 ActionHandler._validate_single_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 	local chain_time, chain_until, chain_validated
 
-	chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
-	chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
+	if time_scale < 1 then
+		local current_action_name = self._action_context.weapon_action_component.current_action_name
+		local current_action = actions[current_action_name]
+		local current_action_has_reversed_timescale = current_action and self._action_kind_with_reversed_timescale[current_action.kind]
+
+		if current_action_has_reversed_timescale then
+			chain_time = chain_action.chain_time and chain_action.chain_time * time_scale
+			chain_until = chain_action.chain_until and chain_action.chain_until * time_scale
+		else
+			chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
+			chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
+		end
+	else
+		chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
+		chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
+	end
+
 	chain_validated = not chain_time or (chain_time and chain_time <= current_action_t or not not chain_until and current_action_t <= chain_until) and true
 
 	local running_action_state_requirement = chain_action.running_action_state_requirement
@@ -985,7 +1008,7 @@ ActionHandler._update_stop_input = function (self, id, handler_data, t, conditio
 
 	if action_input == stop_input then
 		action_input_extension:consume_next_input(action_component_name, t)
-		self:_finish_action(handler_data, "hold_input_released", nil, t, nil)
+		self:_finish_action(handler_data, "hold_input_released", nil, t, nil, condition_func_params)
 
 		return
 	end
@@ -1001,7 +1024,7 @@ ActionHandler._update_stop_input = function (self, id, handler_data, t, conditio
 			local running_action_input = running_action_chain_config.input_name
 
 			if running_action_input == stop_input then
-				self:_finish_action(handler_data, "hold_input_released", nil, t, nil)
+				self:_finish_action(handler_data, "hold_input_released", nil, t, nil, condition_func_params)
 
 				return running_action_input
 			end

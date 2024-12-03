@@ -800,6 +800,12 @@ MoveablePlatformExtension._set_flow_all_players_onboard = function (self, val)
 end
 
 MoveablePlatformExtension.destroy = function (self)
+	if self._story_name then
+		self._network_story_manager:unregister_story(self._story_name, self._level)
+
+		self._story_name = nil
+	end
+
 	self:_unparent_all_passengers()
 
 	local overlap_manager = Managers.state.player_overlap_manager

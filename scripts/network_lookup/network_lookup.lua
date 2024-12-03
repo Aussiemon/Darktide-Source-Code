@@ -13,6 +13,7 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local CorruptorSettings = require("scripts/settings/corruptor/corruptor_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local HavocSettings = require("scripts/settings/havoc_settings")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueLookup = require("scripts/settings/dialogue/dialogue_lookup")
 local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_lookup_concepts")
@@ -449,6 +450,22 @@ NetworkLookup.weapon_modifier_override_keys = _create_lookup({}, {
 NetworkLookup.weapon_templates = _create_lookup({}, WeaponTemplates)
 NetworkLookup.wounds_templates = _create_lookup({}, WoundsTemplates)
 NetworkLookup.wounds_shapes = _create_lookup({}, WoundsSettings.shapes)
+
+local hash_table = {}
+
+for i = 1, #HavocSettings.modifiers do
+	local modifier = HavocSettings.modifiers[i]
+
+	hash_table[modifier] = true
+end
+
+for i = 1, #HavocSettings.positive_modifiers do
+	local modifier = HavocSettings.positive_modifiers[i]
+
+	hash_table[modifier] = true
+end
+
+NetworkLookup.havoc_modifiers = _create_lookup({}, hash_table)
 
 local function _init(name, lookup_table)
 	for index, key in ipairs(lookup_table) do

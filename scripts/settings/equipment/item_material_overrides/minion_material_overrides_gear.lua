@@ -35,6 +35,26 @@ local material_overrides = {
 			},
 		},
 	},
+	cultist_ritualist_color_var_01 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_06",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_07",
+			},
+		},
+	},
+	cultist_ritualist_color_var_02 = {
+		texture_overrides = {
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_07",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_cultist_06",
+			},
+		},
+	},
 	cultist_lowerbody_a_roamer_color_var_01 = {
 		texture_overrides = {
 			mat1_gradient = {

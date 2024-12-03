@@ -80,6 +80,13 @@ LobbyView.init = function (self, settings, context)
 	self._mission_data = context.mission_data
 	self._spawn_slots = {}
 	self._show_weapons = false
+
+	local _unparsed_havoc_data = Managers.mechanism._mechanism._mechanism_data.havoc_data
+
+	if _unparsed_havoc_data then
+		self._havoc_data = self:_parsed_havoc_data(_unparsed_havoc_data)
+	end
+
 	self._slot_changes = false
 	self._use_gamepad_tooltip_navigation = false
 
@@ -99,6 +106,7 @@ LobbyView.on_enter = function (self)
 	self:_setup_menu_list()
 	self:_setup_input_legend()
 	self:_setup_mission_descriptions()
+	self:_setup_havoc_info()
 
 	self._item_definitions = MasterItems.get_cached()
 
@@ -106,6 +114,76 @@ LobbyView.on_enter = function (self)
 	TaskbarFlash.flash_window()
 
 	self._item_stats = self:_setup_item_stats("item_stats")
+end
+
+LobbyView._parsed_havoc_data = function (self, data)
+	local parsed_data = {}
+	local split1 = string.split(data, ";")
+	local mission = split1[1]
+
+	parsed_data.mission = mission
+
+	local level = tonumber(split1[2])
+
+	parsed_data.level = level
+
+	local circumstances = split1[5]
+	local split2 = string.split(circumstances, ":")
+	local circumstances_entry = {}
+
+	for i = 1, #split2 do
+		circumstances_entry[#circumstances_entry + 1] = split2[i]
+	end
+
+	parsed_data.circumstances = circumstances_entry
+
+	return parsed_data
+end
+
+LobbyView._setup_havoc_info = function (self)
+	local havoc_data = self._havoc_data
+	local widgets = self._widgets_by_name
+
+	if not havoc_data then
+		widgets.havoc_title.visible = false
+		widgets.havoc_circumstance_01.visible = false
+		widgets.havoc_circumstance_02.visible = false
+		widgets.havoc_circumstance_03.visible = false
+		widgets.havoc_circumstance_04.visible = false
+
+		return
+	end
+
+	local havoc_title_content = widgets.havoc_title.content
+
+	havoc_title_content.havoc_rank = Utf8.upper(havoc_data.level)
+
+	local num_displayed_mutators = 0
+
+	for i = 1, #havoc_data.circumstances do
+		num_displayed_mutators = num_displayed_mutators + 1
+
+		local circumstance_data = havoc_data.circumstances[i]
+		local circumstance_template = Circumstances[circumstance_data]
+		local circumstance_ui_settings = circumstance_template.ui
+		local widget_name = "havoc_circumstance_0" .. i
+		local widget = self._widgets_by_name[widget_name]
+		local widget_content = widget.content
+
+		widget.offset[2] = (i - 1) * 96
+		widget_content.icon = circumstance_ui_settings.icon
+		widget_content.circumstance_name = Localize(circumstance_ui_settings.display_name)
+		widget_content.circumstance_description = Localize(circumstance_ui_settings.description)
+	end
+
+	if num_displayed_mutators ~= 4 then
+		for i = num_displayed_mutators + 1, 4 do
+			local widget_name = "havoc_circumstance_0" .. i
+			local widget = self._widgets_by_name[widget_name]
+
+			widget.visible = false
+		end
+	end
 end
 
 LobbyView._initialize_background_world = function (self)
@@ -155,8 +233,8 @@ LobbyView._initialize_background_world = function (self)
 
 	local level_name
 
-	if self._maelstrom_plus_data then
-		level_name = LobbyViewSettings.maelstrom_plus_level_name
+	if self._havoc_data then
+		level_name = LobbyViewSettings.havoc_level_name
 	else
 		level_name = LobbyViewSettings.level_name
 	end

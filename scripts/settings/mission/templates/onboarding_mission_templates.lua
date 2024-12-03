@@ -67,7 +67,6 @@ local mission_templates = {
 			"terror_events_training_ground",
 		},
 		testify_flags = {
-			cutscenes = false,
 			fly_through = false,
 			mission_server = false,
 			performance = false,

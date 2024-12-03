@@ -82,6 +82,20 @@ SharedGibbingTemplates.vfx.poxwalker_splatter = {
 	linked = false,
 	particle_effect = "content/fx/particles/impacts/flesh/poxwalker_splatter_gib_torso_small_01",
 }
+SharedGibbingTemplates.vfx.warp_wind_slash_large = {
+	node_name = "fx_blood",
+	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01",
+}
+SharedGibbingTemplates.vfx.ritualist_warp_gib = {
+	particle_effect = "content/fx/particles/impacts/flesh/ritualist_warp_gib_02",
+}
+SharedGibbingTemplates.vfx.ritualist_warp_stump_head = {
+	particle_effect = "content/fx/particles/impacts/flesh/ritualist_warp_gib_02",
+}
+SharedGibbingTemplates.vfx.ritualist_warp_stump = {
+	node_name = "fx_blood",
+	particle_effect = "content/fx/particles/impacts/flesh/ritualist_warp_gib_02",
+}
 SharedGibbingTemplates.sfx = {}
 SharedGibbingTemplates.sfx.warp_gib_lightning = {
 	sound_event = "wwise/events/weapon/play_psyker_lightning_bolt_impact_death",
@@ -99,6 +113,15 @@ SharedGibbingTemplates.sfx.blood_fountain_neck = {
 	sound_event = "wwise/events/weapon/play_combat_shared_gore_blood_fountain_neck",
 }
 SharedGibbingTemplates.sfx.root = "wwise/events/weapon/play_combat_dismember_full_body"
+SharedGibbingTemplates.sfx.warp_wind_slash_large = {
+	sound_event = "wwise/events/weapon/play_melee_hits_forcesword_special_cleave",
+}
+SharedGibbingTemplates.sfx.ritualist_warp_stump = {
+	sound_event = "wwise/events/weapon/play_heresy_minion_ritualist_death_burst_body",
+}
+SharedGibbingTemplates.sfx.ritualist_warp_stump_head = {
+	sound_event = "wwise/events/weapon/play_heresy_minion_ritualist_death_burst_head",
+}
 SharedGibbingTemplates.head = {
 	scale_node = "",
 	gib_settings = {
@@ -244,9 +267,6 @@ SharedGibbingTemplates.torso = {
 		},
 	},
 	gibbing_threshold = GibbingThresholds.heavy,
-	extra_hit_zone_gibs = {
-		"",
-	},
 	prevents_other_gibs = {
 		"head",
 		"center_mass",

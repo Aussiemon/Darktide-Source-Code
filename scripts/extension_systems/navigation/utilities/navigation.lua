@@ -107,6 +107,10 @@ Navigation.add_nav_data = function (nav_world, nav_data, level_name)
 	return nav_data_found
 end
 
+Navigation.remove_nav_data = function (nav_data)
+	GwNavWorld.remove_navdata(nav_data)
+end
+
 Navigation.vector3s_to_arrays = function (vectors)
 	local arrays = {}
 

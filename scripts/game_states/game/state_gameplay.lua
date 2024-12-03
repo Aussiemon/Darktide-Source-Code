@@ -36,6 +36,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	shared_state.is_dedicated_mission_server = Managers.connection:is_dedicated_mission_server()
 	shared_state.spawn_group_id = params.spawn_group_id
 	shared_state.pacing_control = mechanism_data.pacing_control
+	shared_state.havoc_data = mechanism_data.havoc_data
 	shared_state.nav_world = nil
 	shared_state.nav_data = nil
 	shared_state.hard_cap_out_of_bounds_units = nil

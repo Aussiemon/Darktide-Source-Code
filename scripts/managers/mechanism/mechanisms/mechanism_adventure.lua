@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_adventure.lua
 
+local Havoc = require("scripts/utilities/havoc")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -30,7 +31,7 @@ MechanismAdventure.init = function (self, ...)
 		self._is_owner_mission_server = Managers.connection:is_dedicated_mission_server()
 
 		local mission_name = context.mission_name
-		local challenge, resistance, circumstance_name, side_mission, backend_mission_id
+		local challenge, resistance, circumstance_name, havoc_data, side_mission, backend_mission_id
 		local host_type = Managers.connection:host_type()
 
 		if self._is_owner_mission_server then
@@ -40,12 +41,37 @@ MechanismAdventure.init = function (self, ...)
 			side_mission = context.side_mission
 			backend_mission_id = context.backend_mission_id
 
+			if DevParameters.havoc_rank and DevParameters.havoc_rank > 0 then
+				local data = Havoc.generate_havoc_data(DevParameters.havoc_rank)
+
+				havoc_data = data
+			elseif context.havoc_data then
+				havoc_data = context.havoc_data
+			elseif GameParameters.havoc_rank and GameParameters.havoc_rank > 0 then
+				local data = Havoc.generate_havoc_data(GameParameters.havoc_rank)
+
+				havoc_data = data
+			end
+
 			Log.info("MechanismAdventure", "Using mission backend data for challenge(%s), resistance (%s), circumstance(%s), side_mission(%s)", challenge, resistance, circumstance_name, side_mission)
 		else
 			challenge = context.challenge or DevParameters.challenge
 			resistance = context.resistance or DevParameters.resistance
 			circumstance_name = context.circumstance_name or GameParameters.circumstance or DevParameters.circumstance
 			side_mission = context.side_mission or GameParameters.side_mission or DevParameters.side_mission
+
+			if GameParameters.havoc_rank and GameParameters.havoc_rank > 0 then
+				local data = Havoc.generate_havoc_data(GameParameters.havoc_rank)
+
+				havoc_data = data
+			elseif DevParameters.havoc_rank and DevParameters.havoc_rank > 0 then
+				local data = Havoc.generate_havoc_data(DevParameters.havoc_rank)
+
+				havoc_data = data
+			elseif context.havoc_data then
+				havoc_data = context.havoc_data
+			end
+
 			backend_mission_id = nil
 
 			Log.info("MechanismAdventure", "Using context or dev parameters for challenge(%s), resistance (%s), circumstance(%s), side_mission(%s)", challenge, resistance, circumstance_name, side_mission)
@@ -68,6 +94,7 @@ MechanismAdventure.init = function (self, ...)
 		data.backend_mission_id = backend_mission_id
 		data.ready_voting_completed = false
 		data.pacing_control = context.pacing_control
+		data.havoc_data = havoc_data
 
 		local do_vote = self._is_owner_mission_server
 
@@ -105,7 +132,9 @@ end
 MechanismAdventure.sync_data = function (self, channel_id)
 	local data = self._mechanism_data
 
-	RPC.rpc_sync_mechanism_data_adventure(channel_id, NetworkLookup.missions[data.mission_name], NetworkLookup.circumstance_templates[data.circumstance_name], NetworkLookup.mission_objective_names[data.side_mission], self._state_index, NetworkLookup.game_mode_outcomes[data.end_result or "n/a"], data.ready_for_transition, data.victory_defeat_done, data.game_score_done, self._is_owner_mission_server, data.challenge, data.resistance, NetworkLookup.mission_giver_vo_overrides[data.mission_giver_vo_override], data.backend_mission_id, data.ready_voting_completed)
+	RPC.rpc_sync_mechanism_data_adventure(channel_id, NetworkLookup.missions[data.mission_name], NetworkLookup.circumstance_templates[data.circumstance_name], NetworkLookup.mission_objective_names[data.side_mission], self._state_index, NetworkLookup.game_mode_outcomes[data.end_result or "n/a"], data.ready_for_transition, data.victory_defeat_done, data.game_score_done, self._is_owner_mission_server, data.challenge, data.resistance, NetworkLookup.mission_giver_vo_overrides[data.mission_giver_vo_override], data.backend_mission_id, data.ready_voting_completed, data.havoc_data)
+
+	return RPC.rpc_sync_mechanism_data_adventure(channel_id, NetworkLookup.missions[data.mission_name], NetworkLookup.circumstance_templates[data.circumstance_name], NetworkLookup.mission_objective_names[data.side_mission], self._state_index, NetworkLookup.game_mode_outcomes[data.end_result or "n/a"], data.ready_for_transition, data.victory_defeat_done, data.game_score_done, self._is_owner_mission_server, data.challenge, data.resistance, NetworkLookup.mission_giver_vo_overrides[data.mission_giver_vo_override], data.backend_mission_id, data.ready_voting_completed)
 end
 
 MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_id, mission_name_id, circumstance_name_id, side_mission_id, state_index, end_result_id, ready_for_transition, victory_defeat_done, game_score_done, is_owner_mission_server, challenge, resistance, mission_giver_vo_override_id, backend_mission_id, ready_voting_completed)
@@ -138,6 +167,49 @@ MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_i
 	data.mission_giver_vo_override = mission_giver_vo_override
 	data.backend_mission_id = backend_mission_id
 	data.ready_voting_completed = ready_voting_completed
+
+	self._network_event_delegate:unregister_channel_events(self._context.server_channel, "rpc_sync_mechanism_data_adventure")
+
+	self._is_syncing = false
+	self._is_owner_mission_server = is_owner_mission_server
+	self._pending_state_change = true
+
+	if ready_voting_completed then
+		Managers.party_immaterium:ready_voting_completed()
+	end
+end
+
+MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_id, mission_name_id, circumstance_name_id, side_mission_id, state_index, end_result_id, ready_for_transition, victory_defeat_done, game_score_done, is_owner_mission_server, challenge, resistance, mission_giver_vo_override_id, backend_mission_id, ready_voting_completed, havoc_data)
+	local mission_name = NetworkLookup.missions[mission_name_id]
+	local circumstance_name = NetworkLookup.circumstance_templates[circumstance_name_id]
+	local side_mission = NetworkLookup.mission_objective_names[side_mission_id]
+	local mission_giver_vo_override = NetworkLookup.mission_giver_vo_overrides[mission_giver_vo_override_id]
+
+	self._state_index = state_index
+	self._state = self._states_lookup[state_index]
+
+	local end_result = NetworkLookup.game_mode_outcomes[end_result_id]
+
+	if end_result == "n/a" then
+		end_result = nil
+	end
+
+	local data = self._mechanism_data
+
+	data.level_name = Missions[mission_name].level
+	data.mission_name = mission_name
+	data.circumstance_name = circumstance_name
+	data.side_mission = side_mission
+	data.end_result = end_result
+	data.ready_for_transition = ready_for_transition
+	data.victory_defeat_done = victory_defeat_done
+	data.game_score_done = game_score_done
+	data.challenge = challenge
+	data.resistance = resistance
+	data.mission_giver_vo_override = mission_giver_vo_override
+	data.backend_mission_id = backend_mission_id
+	data.ready_voting_completed = ready_voting_completed
+	data.havoc_data = havoc_data
 
 	self._network_event_delegate:unregister_channel_events(self._context.server_channel, "rpc_sync_mechanism_data_adventure")
 
@@ -363,6 +435,7 @@ MechanismAdventure.wanted_transition = function (self)
 				circumstance_name = data.circumstance_name,
 				mission_giver_vo = data.mission_giver_vo_override,
 				side_mission = data.side_mission,
+				havoc_data = data.havoc_data,
 			}
 
 			return false, StateLoading, next_state_context
@@ -374,6 +447,7 @@ MechanismAdventure.wanted_transition = function (self)
 				mission_giver_vo = data.mission_giver_vo_override,
 				side_mission = data.side_mission,
 				next_state = StateGameplay,
+				havoc_data = data.havoc_data,
 				next_state_params = {
 					mechanism_data = self._mechanism_data,
 				},

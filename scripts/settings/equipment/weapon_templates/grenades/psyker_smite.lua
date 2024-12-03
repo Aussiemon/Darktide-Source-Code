@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_smite.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -74,16 +74,6 @@ weapon_template.action_inputs = {
 			},
 		},
 	},
-	combat_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
 	charge = {
 		buffer_time = 0,
 		input_sequence = {
@@ -143,6 +133,16 @@ weapon_template.action_inputs = {
 				input = "weapon_inspect_hold",
 				value = false,
 				time_window = math.huge,
+			},
+		},
+	},
+	combat_ability = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				input = "combat_ability_pressed",
+				value = true,
 			},
 		},
 	},
@@ -246,7 +246,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -324,14 +324,6 @@ weapon_template.actions = {
 				chain_time = 0.15,
 			},
 		},
-	},
-	combat_ability = {
-		kind = "unwield_to_specific",
-		slot_to_wield = "slot_combat_ability",
-		start_input = "combat_ability",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
 	},
 	action_charge_target_sticky = {
 		ability_type = "grenade_ability",
@@ -632,6 +624,14 @@ weapon_template.actions = {
 			crosshair_type = "inspect",
 		},
 	},
+	combat_ability = {
+		kind = "unwield_to_specific",
+		slot_to_wield = "slot_combat_ability",
+		start_input = "combat_ability",
+		total_time = 0,
+		uninterruptible = true,
+		allowed_chain_actions = {},
+	},
 }
 weapon_template.keywords = {
 	"psyker",
@@ -682,6 +682,7 @@ weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

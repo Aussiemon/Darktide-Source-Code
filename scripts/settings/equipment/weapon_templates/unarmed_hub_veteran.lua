@@ -27,6 +27,7 @@ weapon_template.keywords = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.crosshair = {
 	crosshair_type = "ironsight",

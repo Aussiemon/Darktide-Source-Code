@@ -38,6 +38,7 @@ local interactions = {
 	crafting = ViewInteraction,
 	decoding = DecodingInteraction,
 	door_control_panel = DoorControlPanelInteraction,
+	gamemode_havoc = ViewInteraction,
 	grenade = GrenadeInteraction,
 	health = HealthInteraction,
 	health_station = HealthStationInteraction,

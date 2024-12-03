@@ -44,11 +44,14 @@ end
 
 local template_groups = {
 	{
+		"chain_swords_2h",
+		"chainsword_2h_p1_m1",
+		"chainsword_2h_p1_m2",
+	},
+	{
 		"chain_swords",
 		"chainsword_p1_m1",
 		"chainsword_p1_m2",
-		"chainsword_2h_p1_m1",
-		"chainsword_2h_p1_m2",
 	},
 	{
 		"chain_axes",
@@ -91,6 +94,11 @@ local template_groups = {
 		"combatsword_p3_m3",
 	},
 	{
+		"force_swords_2h",
+		"forcesword_2h_p1_m1",
+		"forcesword_2h_p1_m2",
+	},
+	{
 		"force_swords",
 		"forcesword_p1_m1",
 		"forcesword_p1_m2",
@@ -116,10 +124,14 @@ local template_groups = {
 		"ogryn_powermaul_slabshield_p1_m1",
 	},
 	{
-		"ogryn_axes_2h",
+		"ogryn_pickaxes_2h",
 		"ogryn_pickaxe_2h_p1_m1",
 		"ogryn_pickaxe_2h_p1_m2",
 		"ogryn_pickaxe_2h_p1_m3",
+	},
+	{
+		"power_mauls_2h",
+		"powermaul_2h_p1_m1",
 	},
 	{
 		"power_mauls",
@@ -127,8 +139,9 @@ local template_groups = {
 		"powermaul_p1_m2",
 	},
 	{
-		"power_mauls_2h",
-		"powermaul_2h_p1_m1",
+		"power_swords_2h",
+		"powersword_2h_p1_m1",
+		"powersword_2h_p1_m2",
 	},
 	{
 		"power_swords",
@@ -136,7 +149,7 @@ local template_groups = {
 		"powersword_p1_m2",
 	},
 	{
-		"thunder_hammers",
+		"thunder_hammers_2h",
 		"thunderhammer_2h_p1_m1",
 		"thunderhammer_2h_p1_m2",
 	},
@@ -201,6 +214,9 @@ local template_groups = {
 		"ogryn_heavystubber_p1_m1",
 		"ogryn_heavystubber_p1_m2",
 		"ogryn_heavystubber_p1_m3",
+		"ogryn_heavystubber_p2_m1",
+		"ogryn_heavystubber_p2_m2",
+		"ogryn_heavystubber_p2_m3",
 	},
 	{
 		"plasma_rifles",

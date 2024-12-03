@@ -13,7 +13,9 @@ ActionAimForceField.init = function (self, action_context, ...)
 	self._action_component = unit_data_extension:write_component("action_place")
 end
 
-ActionAimForceField.start = function (self, dt, t)
+ActionAimForceField.start = function (self, action_settings, t, time_scale, action_start_params)
+	ActionAimForceField.super.start(self, action_settings, t, time_scale, action_start_params)
+
 	self._action_component.rotation_step = 0
 end
 

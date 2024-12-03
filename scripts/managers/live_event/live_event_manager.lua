@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/managers/live_event/live_event_manager.lua
 
+local LiveEvents = require("scripts/settings/live_event/live_events")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local LiveEvents = require("scripts/settings/live_event/live_events")
 local LiveEventManager = class("LiveEventManager")
 local REFRESH_TIMER_SUCCESS = 300
 local REFRESH_TIMER_FAILURE = 60
@@ -50,8 +50,14 @@ LiveEventManager.remove_player = function (self, id)
 
 		local active_event_xp = table.nested_get(player_data, "progress", event_id, "xp")
 
-		if active_event_xp then
-			promise = Managers.backend.interfaces.tracks:modify_track_account_state(account_id, event_id, active_event_xp)
+		if active_event_xp and active_event_xp ~= 0 then
+			promise = Managers.backend.interfaces.tracks:modify_track_account_state(account_id, event_id, active_event_xp):catch(function (error)
+				if type(error) == "string" then
+					Log.error("LiveEventManager", "Failed to modify track account state:\n%s\n-------", error)
+				else
+					Log.error("LiveEventManager", "Failed to modify track account state:\n%s\n-------", table.tostring(error, 5))
+				end
+			end)
 		end
 	end
 
@@ -64,7 +70,11 @@ LiveEventManager.remove_all = function (self)
 	local promises = {}
 
 	for id, _ in pairs(self._players) do
-		promises[#promises + 1] = self:remove_player(id)
+		local promise = self:remove_player(id)
+
+		if promise then
+			promises[#promises + 1] = promise
+		end
 	end
 
 	if #promises == 0 then

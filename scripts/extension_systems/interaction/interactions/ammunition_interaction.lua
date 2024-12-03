@@ -52,6 +52,9 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 	local unit_data_ext = ScriptUnit.extension(interactor_unit, "unit_data_system")
 	local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
 	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
+	local ammo_modifier = Managers.state.difficulty:get_ammo_modifier()
+
+	pickup_data.modifier = ammo_modifier
 
 	for slot_name, config in pairs(weapon_slot_configuration) do
 		local inventory_slot_component = unit_data_ext:write_component(slot_name)

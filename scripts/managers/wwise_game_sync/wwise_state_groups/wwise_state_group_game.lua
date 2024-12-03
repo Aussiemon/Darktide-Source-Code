@@ -128,7 +128,7 @@ WwiseStateGroupGame._in_cinematic_mode = function (self)
 	local cinematic_manager = Managers.state.cinematic
 
 	if cinematic_manager then
-		return cinematic_manager:active()
+		return cinematic_manager:cinematic_active()
 	end
 
 	return false

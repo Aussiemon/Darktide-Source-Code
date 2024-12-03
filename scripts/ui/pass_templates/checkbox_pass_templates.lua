@@ -77,9 +77,9 @@ end
 
 CheckboxPassTemplates.terminal_button_hover_change_function = terminal_button_hover_change_function
 
-CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area_width, num_options, use_is_focused)
+CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area_width, num_options, use_is_focused, is_sub_setting)
 	local header_width = width - settings_area_width
-	local passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused)
+	local passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused, is_sub_setting)
 
 	passes[#passes + 1] = {
 		pass_type = "texture",

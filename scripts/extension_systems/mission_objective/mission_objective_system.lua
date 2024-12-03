@@ -539,16 +539,19 @@ end
 
 MissionObjectiveSystem.objective_music_wwise_state = function (self)
 	local active_objectives = self._active_objectives
+	local highest_priority_found, target_music_wwise_state = -1
 
 	for _, objective in pairs(active_objectives) do
 		local music_wwise_state = objective:music_wwise_state()
+		local music_wwise_priority = objective:music_wwise_priority()
 
-		if music_wwise_state ~= WWISE_MUSIC_STATE_NONE then
-			return music_wwise_state
+		if music_wwise_state ~= WWISE_MUSIC_STATE_NONE and highest_priority_found < music_wwise_priority then
+			highest_priority_found = music_wwise_priority
+			target_music_wwise_state = music_wwise_state
 		end
 	end
 
-	return nil
+	return target_music_wwise_state
 end
 
 MissionObjectiveSystem.objective_event_type = function (self)

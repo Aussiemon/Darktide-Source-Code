@@ -26,6 +26,8 @@ local Crafting = require("scripts/backend/crafting")
 local PlayerRewards = require("scripts/backend/player_rewards")
 local Tracks = require("scripts/backend/tracks")
 local Mastery = require("scripts/backend/mastery")
+local Orders = require("scripts/backend/orders")
+local Havoc = require("scripts/backend/havoc")
 local BackendInterface = class("BackendInterface")
 
 BackendInterface.init = function (self)
@@ -55,6 +57,8 @@ BackendInterface.init = function (self)
 	self.player_rewards = PlayerRewards:new()
 	self.tracks = Tracks:new()
 	self.mastery = Mastery:new()
+	self.orders = Orders:new()
+	self.havoc = Havoc:new()
 end
 
 return BackendInterface

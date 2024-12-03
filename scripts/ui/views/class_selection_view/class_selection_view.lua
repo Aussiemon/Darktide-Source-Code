@@ -210,7 +210,9 @@ ClassSelectionView.update = function (self, dt, t, input_service)
 end
 
 ClassSelectionView._on_continue_pressed = function (self)
-	self._character_create:set_specialization(self._selected_specialization.name)
+	local selected_specialization_name = temp_archetype_to_specialization_lookup[self._selected_archetype.name]
+
+	self._character_create:set_specialization(selected_specialization_name)
 
 	if not self._using_cursor_navigation then
 		self:_play_sound(UISoundEvents.character_create_class_confirm)
@@ -423,8 +425,6 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 	end
 
 	local selected_specialization_name = temp_archetype_to_specialization_lookup[self._selected_archetype.name]
-
-	self._selected_specialization = self._selected_archetype.specializations[selected_specialization_name]
 
 	self:_update_archetype_info()
 end

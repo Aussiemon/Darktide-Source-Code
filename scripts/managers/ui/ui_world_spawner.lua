@@ -291,7 +291,7 @@ UIWorldSpawner._setup_extension_manager = function (self)
 	local circumstance_name = "default"
 	local use_time_slice = false
 
-	self._extension_manager = ExtensionManager:new(world, physics_world, wwise_world, nil, nil, level_name, circumstance_name, is_server, unit_templates, system_config, system_init_data, unit_categories, nil, nil, nil, {}, use_time_slice)
+	self._extension_manager = ExtensionManager:new(world, physics_world, wwise_world, nil, nil, level_name, circumstance_name, nil, is_server, unit_templates, system_config, system_init_data, unit_categories, nil, nil, nil, {}, use_time_slice)
 
 	Managers.ui:register_world_extension_manager_lookup(world, self._extension_manager)
 end

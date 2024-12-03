@@ -7,6 +7,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local MeleeActionInputSetupSlow = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_slow")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -1354,6 +1355,7 @@ weapon_template.actions = {
 		inner_damage_type = damage_types.physical,
 		outer_damage_profile = DamageProfileTemplates.default_push,
 		outer_damage_type = damage_types.physical,
+		haptic_trigger_template = HapticTriggerTemplates.melee.push,
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -1647,6 +1649,7 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_class = "WeaponSpecialExplodeOnImpact"
 weapon_template.weapon_special_tweak_data = {
@@ -1683,5 +1686,6 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "ogryn_club_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_powermaul
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.melee.medium
 
 return weapon_template

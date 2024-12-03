@@ -803,6 +803,129 @@ functions.mission_board_start_mission = {
 		end
 	end,
 }
+
+local function _havoc_options()
+	local havoc_options = {}
+
+	for i = 1, 100 do
+		havoc_options[#havoc_options + 1] = i
+	end
+
+	return havoc_options
+end
+
+functions.start_havoc_session = {
+	category = "Level & Mission",
+	debug_havoc_mission_input = true,
+	name = "Start Havoc Session",
+	on_activated = function (debug_mission)
+		local map = debug_mission.map
+		local havoc_rank = debug_mission.havoc_rank
+
+		Log.info("Havoc", "Starting havoc level %d", havoc_rank)
+		Managers.data_service.mission_board:create_havoc_debug_mission(map, havoc_rank):next(function (mission)
+			local mission_id = mission.id
+
+			Managers.party_immaterium:wanted_mission_selected(mission_id)
+		end):catch(function (error)
+			Log.error("DebugFunctions", "Could not create debug mission " .. table.tostring(error, 5))
+		end)
+	end,
+	maps = array_concat(mission_options(), mission_options_dev()),
+	havoc_options = _havoc_options(),
+	default_value = {
+		havoc_rank = 5,
+		map = "dm_forge",
+	},
+}
+functions.start_havoc_test_session_voting = {
+	category = "Level & Mission",
+	name = "Start Havoc Mission Vote",
+	on_activated = function (debug_mission)
+		local transition_time
+		local close_previous = false
+		local close_all = false
+		local close_transition_time
+		local context = {
+			backend_mission_id = "eac4d0dc-5ab1-41ed-87e9-85bedac46ad6",
+			voting_id = "immaterium_party:bcd93b02-c635-4aba-89ef-ed786217f2a6",
+			mission_data = {
+				category = "havoc",
+				challenge = 5,
+				circumstance = "default",
+				credits = 24500,
+				depleted = false,
+				displayIndex = 0,
+				expiry = "2082758399000",
+				id = "eac4d0dc-5ab1-41ed-87e9-85bedac46ad6",
+				map = "km_station",
+				minPrivateParticipants = 3,
+				missionGiver = "explicator_a",
+				missionSize = 1,
+				requiredLevel = 1,
+				resistance = 5,
+				start = "1730109745545",
+				xp = 5550,
+				eligibleParticipants = {},
+				extraRewards = {},
+				flags = {
+					["havoc-circ-darkness_01"] = {},
+					["havoc-circ-mutator_havoc_enemies_parasite_headshot"] = {},
+					["havoc-circ-mutator_havoc_tougher_skin"] = {},
+					["havoc-circ-mutator_highest_difficulty"] = {},
+					["havoc-faction-renegade"] = {},
+					["havoc-mods-ammo_pickup_modifier-5"] = {},
+					["havoc-mods-buff_elites-4"] = {},
+					["havoc-mods-buff_horde-5"] = {},
+					["havoc-mods-buff_monsters-4"] = {},
+					["havoc-mods-buff_specials-4"] = {},
+					["havoc-mods-horde_spawn_rate_increase-6"] = {},
+					["havoc-mods-melee_minion_attack_speed-5"] = {},
+					["havoc-mods-melee_minion_permanent_damage-5"] = {},
+					["havoc-mods-melee_minion_power_level_buff-5"] = {},
+					["havoc-mods-more_alive_specials-4"] = {},
+					["havoc-mods-more_elites-5"] = {},
+					["havoc-mods-more_ogryns-5"] = {},
+					["havoc-mods-ranged_minion_attack_speed-5"] = {},
+					["havoc-mods-reduce_health_and_wounds-5"] = {},
+					["havoc-mods-reduce_toughness-5"] = {},
+					["havoc-mods-reduce_toughness_regen-5"] = {},
+					["havoc-mods-terror_event_point_increase-5"] = {},
+					["havoc-rank-35"] = {},
+					["havoc-theme-darkness"] = {},
+					["order-id-642629d7-7c88-464a-b710-d1d2d79c71bb"] = {},
+					["order-owner-aaebd154-43dc-4c9c-9d6b-7b48605a4b4a"] = {},
+				},
+			},
+		}
+		local settings_override = {
+			class = "MissionVotingView",
+			close_on_hotkey_gamepad = false,
+			close_on_hotkey_pressed = true,
+			disable_game_world = false,
+			display_name = "loc_mission_voting_view",
+			game_world_blur = 1,
+			load_always = true,
+			load_in_hub = true,
+			name = "mission_voting_view",
+			package = "packages/ui/views/mission_voting_view/mission_voting_view",
+			path = "scripts/ui/views/mission_voting_view/mission_voting_view",
+			state_bound = true,
+			enter_sound_events = {
+				"wwise/events/ui/play_ui_mission_request",
+			},
+			testify_flags = {
+				ui_views = false,
+			},
+		}
+
+		if not table.is_empty(Managers.ui:active_views()) then
+			Managers.ui:close_all_views()
+		end
+
+		Managers.ui:open_view("mission_voting_view", transition_time, close_previous, close_all, close_transition_time, context, settings_override)
+	end,
+}
 functions.mission_board_update_missions = {
 	category = "Level & Mission",
 	name = "Mission Board Update",

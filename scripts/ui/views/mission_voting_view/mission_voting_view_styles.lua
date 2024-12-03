@@ -17,13 +17,35 @@ title_font_style.font_size = 28
 title_font_style.text_vertical_alignment = "bottom"
 title_font_style.offset = {
 	0,
-	0,
+	-23,
 	12,
 }
 title_font_style.text_horizontal_alignment = "center"
 
+local initiator_font_style = table.clone(UIFontSettings.header_3)
+
+initiator_font_style.font_size = 24
+initiator_font_style.text_vertical_alignment = "bottom"
+initiator_font_style.offset = {
+	0,
+	0,
+	12,
+}
+initiator_font_style.text_horizontal_alignment = "center"
+initiator_font_style.text_color = {
+	255,
+	169,
+	191,
+	153,
+}
+
 local flash_title_style = table.clone(title_font_style)
 
+flash_title_style.offset = {
+	0,
+	0,
+	12,
+}
 flash_title_style.size_addition = {
 	-20,
 	-20,
@@ -133,6 +155,28 @@ challenge_text_font_style.size = {
 	35,
 }
 
+local rank_text_font_style = table.clone(UIFontSettings.header_3)
+
+rank_text_font_style.font_size = 34
+rank_text_font_style.offset = {
+	60,
+	10,
+	0,
+}
+rank_text_font_style.text_horizontal_alignment = "left"
+rank_text_font_style.text_color = {
+	255,
+	216,
+	229,
+	207,
+}
+rank_text_font_style.horizontal_alignment = "left"
+rank_text_font_style.vertical_alignment = "center"
+rank_text_font_style.size = {
+	300,
+	35,
+}
+
 local mission_reward_text_style = {
 	font_size = 24,
 	font_type = "proxima_nova_bold",
@@ -190,6 +234,7 @@ stat_circumstances_bonuses_icon_style.offset = table.clone(stat_circumstances_bo
 
 local styles = {
 	title_font_style = title_font_style,
+	initiator_font_style = initiator_font_style,
 	mission_title_font_style = mission_title_font_style,
 	mission_type_font_style = mission_type_font_style,
 	mission_reward_text_style = mission_reward_text_style,
@@ -197,6 +242,7 @@ local styles = {
 	mission_detail_top = mission_detail_top,
 	mission_detail_bottom = mission_detail_bottom,
 	challenge_text_font_style = challenge_text_font_style,
+	rank_text_font_style = rank_text_font_style,
 	mission_rewards_title_text_style = mission_rewards_title_text_style,
 	flash_title_style = flash_title_style,
 	inner_panel_border_style = {

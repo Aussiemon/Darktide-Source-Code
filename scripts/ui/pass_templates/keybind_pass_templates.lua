@@ -32,7 +32,7 @@ local list_item_focused_visibility_function = ListHeaderPassTemplates.list_item_
 local highlight_color_change_function = ListHeaderPassTemplates.list_highlight_color_change_function
 local KeybindPassTemplates = {}
 
-KeybindPassTemplates.settings_keybind = function (width, height, settings_area_width, use_is_focused)
+KeybindPassTemplates.settings_keybind = function (width, height, settings_area_width, use_is_focused, is_sub_setting)
 	local header_width = width - settings_area_width
 	local value_font_style = table.clone(UIFontSettings.list_button)
 
@@ -48,7 +48,7 @@ KeybindPassTemplates.settings_keybind = function (width, height, settings_area_w
 	value_font_style.horizontal_alignment = "right"
 	value_font_style.text_horizontal_alignment = "center"
 
-	local header_passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused)
+	local header_passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused, is_sub_setting)
 	local keybind_passes = {
 		{
 			pass_type = "texture",

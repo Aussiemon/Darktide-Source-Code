@@ -183,6 +183,11 @@ local function _initialize_minion_specific_game_object_data(game_object_type, ga
 	if game_object_type == "minion_daemonhost" then
 		game_object_data.stage = 1
 	end
+
+	if game_object_type == "minion_ritualist" then
+		game_object_data.effect_template_variation_id = -1
+		game_object_data.level_unit_id = NetworkConstants.invalid_level_unit_id
+	end
 end
 
 local function _resolve_minion_attacks(init_data, breed, game_object_data, attack_selection_seed)

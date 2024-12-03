@@ -49,6 +49,16 @@ Account.get_has_migrated_commendation_score = function (self)
 	return self:get_data("core", "has_migrated_commendation_score")
 end
 
+Account.set_havoc_unlock_status = function (self, value)
+	return self:set_data("core", {
+		havoc_unlock_status = value,
+	})
+end
+
+Account.get_havoc_unlock_status = function (self)
+	return self:get_data("core", "havoc_unlock_status")
+end
+
 Account.get = function (self)
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("")):next(function (data)
 		return data.body

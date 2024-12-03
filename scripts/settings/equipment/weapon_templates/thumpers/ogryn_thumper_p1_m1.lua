@@ -1,12 +1,13 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/ogryn_thumper_p1_m1.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -166,7 +167,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_wield = {
@@ -526,6 +527,7 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.reload_speed,
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_bash = {
 		abort_sprint = true,
@@ -642,6 +644,7 @@ weapon_template.actions = {
 		damage_type = damage_types.blunt,
 		damage_profile = DamageProfileTemplates.light_ogryn_shotgun_tank,
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_bash_right = {
 		abort_sprint = true,
@@ -757,6 +760,7 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_bullet_bounce,
 		damage_profile = DamageProfileTemplates.light_ogryn_shotgun_tank,
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -770,6 +774,7 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 }
 
@@ -919,10 +924,10 @@ weapon_template.conditional_state_to_action_input = {
 weapon_template.no_ammo_delay = 0.1
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.ammo_template = "ogryn_thumper_p1_m1"
@@ -944,6 +949,8 @@ weapon_template.sprint_template = "ogryn"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_thumper_shotgun
+weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.thumper_p1_m1
 weapon_template.traits = {}
 
 local bespoke_traits = table.ukeys(WeaponTraitsBespokeThumperP1)

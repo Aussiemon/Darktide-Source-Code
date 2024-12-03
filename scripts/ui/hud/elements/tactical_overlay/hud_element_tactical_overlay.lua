@@ -2,6 +2,7 @@
 
 local Blueprints = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_blueprints")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local HavocSettings = require("scripts/settings/havoc_settings")
 local Definitions = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_definitions")
 local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_settings")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -35,9 +36,11 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 	self._circumstance_manager = Managers.state.circumstance
 	self._backend_interfaces = Managers.backend.interfaces
 	self._contract_data = {}
+	self._game_mode_name = Managers.state.game_mode:game_mode_name()
 
 	self:_fetch_task_list()
 
+	self._havoc_data = Managers.state.difficulty:get_parsed_havoc_data()
 	self._preferred_page = Managers.save:account_data().right_panel_category
 	self._right_panel_entries = {}
 	self._tracked_achievements = 0
@@ -109,7 +112,13 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 	if active and not self._active then
 		Managers.event:trigger("event_set_tactical_overlay_state", true)
 		self:_sync_mission_info()
-		self:_sync_circumstance_info()
+
+		if self._havoc_data then
+			self:_setup_havoc_mutators()
+		else
+			self:_sync_circumstance_info()
+		end
+
 		self:_update_left_panel_elements(ui_renderer)
 		self:_start_animation("enter", self._left_panel_widgets)
 		Managers.telemetry_reporters:reporter("tactical_overlay"):register_event(self._tracked_achievements)
@@ -172,6 +181,36 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		self:_set_scenegraph_size("circumstance_info_panel", nil, circumstance_height)
 
 		total_size = total_size + circumstance_height
+	end
+
+	local havoc_circumstance_info = self._widgets_by_name.havoc_circumstance_info
+
+	if havoc_circumstance_info.visible == true then
+		local title_margin = 20
+
+		total_size = total_size + margin + title_margin
+
+		self:set_scenegraph_position("circumstance_info_panel", nil, total_size)
+
+		local circumstance_info_content = havoc_circumstance_info.content
+		local circumstance_name_style = havoc_circumstance_info.style.circumstance_name_01
+		local circumstance_name_font_options = UIFonts.get_font_options_by_style(circumstance_name_style)
+		local _, circumstance_name_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_name_01, circumstance_name_style.font_type, circumstance_name_style.font_size, {
+			circumstance_name_style.size[1],
+			1000,
+		}, circumstance_name_font_options)
+		local description_margin = 5
+		local min_height = havoc_circumstance_info.style.icon_01.size[2]
+		local title_height = math.max(min_height, circumstance_name_height)
+
+		circumstance_name_style.size[2] = title_height
+
+		local num_displayed_mutators = havoc_circumstance_info.num_displayed_mutators
+		local mutator_height = num_displayed_mutators * 70 + title_height + title_margin * 2 + description_margin
+
+		total_size = total_size + mutator_height
+
+		self:_set_scenegraph_size("circumstance_info_panel", nil, mutator_height)
 	end
 
 	total_size = total_size + margin
@@ -724,6 +763,10 @@ end
 
 HudElementTacticalOverlay._set_difficulty_icons = function (self, difficulty_value)
 	local danger_info_widget = self._widgets_by_name.danger_info
+	local havoc_rank_info = self._widgets_by_name.havoc_rank_info
+
+	havoc_rank_info.visible = false
+
 	local visible = difficulty_value ~= 0 and self._context.show_left_side_details
 
 	danger_info_widget.visible = visible
@@ -732,6 +775,84 @@ HudElementTacticalOverlay._set_difficulty_icons = function (self, difficulty_val
 	local difficulty_icon_style = danger_info_style.difficulty_icon
 
 	difficulty_icon_style.amount = difficulty_value
+end
+
+HudElementTacticalOverlay._havoc_rank = function (self)
+	local havoc_rank_info = self._widgets_by_name.havoc_rank_info
+	local danger_info = self._widgets_by_name.danger_info
+
+	danger_info.visible = false
+
+	local data = self._havoc_data
+	local visible = self._context.show_left_side_details
+
+	havoc_rank_info.visible = visible
+
+	local havoc_content = havoc_rank_info.content
+
+	havoc_content.havoc_rank = Utf8.upper(data.havoc_rank)
+	havoc_content.havoc_text = Utf8.upper("Havoc Order rank:  ")
+end
+
+HudElementTacticalOverlay._setup_havoc_mutators = function (self)
+	local mutators = self._havoc_data.circumstances
+	local havoc_circumstance_info = self._widgets_by_name.havoc_circumstance_info
+	local circumstance_info_widget = self._widgets_by_name.circumstance_info
+
+	circumstance_info_widget.visible = false
+
+	local num_displayed_mutators = 0
+
+	for i = 1, #mutators do
+		local mutator_data = mutators[i]
+
+		num_displayed_mutators = num_displayed_mutators + 1
+
+		local circumstance_info_content = havoc_circumstance_info.content
+		local circumstance_template = CircumstanceTemplates[mutator_data]
+		local circumstance_ui_settings = circumstance_template.ui
+		local circumstance_icon = circumstance_ui_settings.icon
+		local circumstance_display_name = circumstance_ui_settings.display_name
+		local circumstance_description = circumstance_ui_settings.description
+
+		circumstance_info_content.icon = circumstance_icon
+
+		local circumstance_icon_identifer = "icon_0" .. i
+
+		circumstance_info_content[circumstance_icon_identifer] = circumstance_icon
+
+		local title = Localize(circumstance_display_name)
+		local circumstance_name_identifer = "circumstance_name_0" .. i
+
+		circumstance_info_content[circumstance_name_identifer] = title
+
+		local description = Localize(circumstance_description)
+		local circumstance_description_identifier = "circumstance_description_0" .. i
+
+		circumstance_info_content[circumstance_description_identifier] = description
+		havoc_circumstance_info.visible = true
+	end
+
+	havoc_circumstance_info.num_displayed_mutators = num_displayed_mutators
+
+	if num_displayed_mutators ~= 4 then
+		for i = num_displayed_mutators + 1, 4 do
+			local circumstance_icon_identifer = "icon_0" .. i
+			local icon_style = havoc_circumstance_info.style[circumstance_icon_identifer]
+
+			icon_style.visible = false
+
+			local circumstance_name_identifer = "circumstance_name_0" .. i
+			local name_style = havoc_circumstance_info.style[circumstance_name_identifer]
+
+			name_style.visible = false
+
+			local circumstance_description_identifier = "circumstance_description_0" .. i
+			local description_style = havoc_circumstance_info.style[circumstance_description_identifier]
+
+			description_style.visible = false
+		end
+	end
 end
 
 HudElementTacticalOverlay._setup_left_panel_widgets = function (self)
@@ -747,7 +868,11 @@ end
 HudElementTacticalOverlay._sync_mission_info = function (self)
 	local challenge = self._difficulty_manager:get_challenge()
 
-	self:_set_difficulty_icons(challenge)
+	if self._havoc_data then
+		self:_havoc_rank()
+	else
+		self:_set_difficulty_icons(challenge)
+	end
 
 	local mission_info_widget = self._widgets_by_name.mission_info
 	local mission_info_content = mission_info_widget.content
@@ -777,6 +902,9 @@ end
 HudElementTacticalOverlay._sync_circumstance_info = function (self)
 	local circumstance_name = self._circumstance_manager:circumstance_name()
 	local circumstance_info_widget = self._widgets_by_name.circumstance_info
+	local havoc_circumstance_info = self._widgets_by_name.havoc_circumstance_info
+
+	havoc_circumstance_info.visible = false
 
 	if circumstance_name ~= "default" then
 		local circumstance_info_content = circumstance_info_widget.content
@@ -898,13 +1026,13 @@ HudElementTacticalOverlay._update_materials_collected = function (self)
 	local plasteel_info_content = plasteel_info_widget.content
 
 	plasteel_info_widget.visible = show_details
-	plasteel_info_content.plasteel_amount_id = self:_total_materials_collected("plasteel")
+	plasteel_info_content.amount_id = self:_total_materials_collected("plasteel")
 
 	local diamantine_info_widget = self._widgets_by_name.diamantine_info
 	local diamantine_info_content = diamantine_info_widget.content
 
 	diamantine_info_widget.visible = show_details
-	diamantine_info_content.diamantine_amount_id = self:_total_materials_collected("diamantine")
+	diamantine_info_content.amount_id = self:_total_materials_collected("diamantine")
 end
 
 HudElementTacticalOverlay.on_resolution_modified = function (self)

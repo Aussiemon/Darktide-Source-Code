@@ -22,6 +22,7 @@ template.position_offset = {
 template.check_line_of_sight = true
 template.max_distance = 15
 template.screen_clamp = false
+template.start_layer = 300
 template.scale_settings = {
 	distance_max = 20,
 	distance_min = 10,

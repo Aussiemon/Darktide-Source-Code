@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/forcesword_p1_m1_melee_action_input_setup.lua
 
-local ActionInputHierarchyUtils = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -312,6 +312,6 @@ forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchyUtils.add_missing_ordered(forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing_ordered(forcesword_p1_m1_melee_action_input_setup.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 return forcesword_p1_m1_melee_action_input_setup

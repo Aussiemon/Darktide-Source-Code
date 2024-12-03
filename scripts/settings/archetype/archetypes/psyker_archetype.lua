@@ -34,12 +34,6 @@ local archetype_data = {
 	sprint = ArchetypeSprintTemplates.psyker,
 	stamina = ArchetypeStaminaTemplates.psyker,
 	warp_charge = ArchetypeWarpChargeTemplates.psyker,
-	specializations = {
-		psyker_2 = {
-			archetype = "psyker",
-			name = "psyker_2",
-		},
-	},
 	talents = ArchetypeTalents.psyker,
 	base_talents = {
 		psyker_aura_ability_cooldown = 1,

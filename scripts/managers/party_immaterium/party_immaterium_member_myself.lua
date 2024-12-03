@@ -76,6 +76,14 @@ PartyImmateriumMemberMyself.psn_session_id = function (self)
 	return self._presence_entry:psn_session_id()
 end
 
+PartyImmateriumMemberMyself.havoc_status = function (self)
+	return self._presence_entry:havoc_status()
+end
+
+PartyImmateriumMemberMyself.havoc_rank_all_time_high = function (self)
+	return self._presence_entry:havoc_rank_all_time_high()
+end
+
 PartyImmateriumMemberMyself.destroy = function (self)
 	return
 end

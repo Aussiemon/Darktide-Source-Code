@@ -396,8 +396,11 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 
 		if selected_data then
 			human_data[account_id] = nil
-			selected_data.damage_percent = math.min(selected_data.damage_percent, 0.95)
-			selected_data.permanent_damage_percent = math.min(selected_data.permanent_damage_percent, 0.95)
+
+			local settings = self._settings.persistent_player_data_settings
+
+			selected_data.damage_percent = math.min(selected_data.damage_percent, settings.max_damage_percent_from_self)
+			selected_data.permanent_damage_percent = math.min(selected_data.permanent_damage_percent, settings.max_permanent_damage_percent_from_self)
 
 			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous self: %s", account_id, table.tostring(selected_data, 3))
 		elseif #bot_data > 0 then
@@ -405,8 +408,8 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 
 			local settings = self._settings.persistent_player_data_settings
 
-			selected_data.damage_percent = math.min(selected_data.damage_percent, settings.max_damage_percent)
-			selected_data.permanent_damage_percent = math.min(selected_data.permanent_damage_percent, settings.max_permanent_damage_percent)
+			selected_data.damage_percent = math.min(selected_data.damage_percent, settings.max_damage_percent_from_bot)
+			selected_data.permanent_damage_percent = math.min(selected_data.permanent_damage_percent, settings.max_permanent_damage_percent_from_bot)
 
 			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous bot: %s", account_id, table.tostring(selected_data, 3))
 		end
@@ -477,8 +480,9 @@ GameModeCoopCompleteObjective.should_spawn_dead = function (self, player)
 
 		if my_data then
 			local state_name = my_data.character_state_name
+			local respawn_dead_states = self._settings.persistent_player_data_settings.respawn_dead_from_character_states
 
-			return state_name == "hogtied" or state_name == "dead"
+			return table.contains(respawn_dead_states, state_name)
 		end
 	end
 

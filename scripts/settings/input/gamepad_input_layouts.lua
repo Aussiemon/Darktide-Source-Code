@@ -5,6 +5,7 @@ local default_view_settings = require("scripts/settings/input/default_view_input
 local layouts = {
 	default = {
 		display_name = "loc_setting_controller_layout_default",
+		haptic_trigger_effects_allowed = true,
 		sort_order = 1,
 		input_settings = {
 			Ingame = default_ingame_settings.aliases,
@@ -13,6 +14,7 @@ local layouts = {
 	},
 	advanced = {
 		display_name = "loc_setting_controller_layout_advanced_new",
+		haptic_trigger_effects_allowed = true,
 		sort_order = 2,
 		input_settings = {
 			Ingame = {
@@ -134,6 +136,7 @@ local layouts = {
 	},
 	BlitzFocus = {
 		display_name = "loc_setting_controller_layout_blitz_focus",
+		haptic_trigger_effects_allowed = true,
 		sort_order = 4,
 		input_settings = {
 			Ingame = {
@@ -246,6 +249,7 @@ local layouts = {
 	},
 	BumperAttackerBlocker = {
 		display_name = "loc_setting_controller_layout_bumper_attacker",
+		haptic_trigger_effects_allowed = false,
 		sort_order = 5,
 		input_settings = {
 			Ingame = {
@@ -358,6 +362,7 @@ local layouts = {
 	},
 	TriggerDodgerBumperAttacker = {
 		display_name = "loc_setting_controller_layout_bumper_attacker_dodger",
+		haptic_trigger_effects_allowed = false,
 		sort_order = 6,
 		input_settings = {
 			Ingame = {
@@ -469,6 +474,7 @@ local layouts = {
 	},
 	v2 = {
 		display_name = "loc_setting_controller_layout_v2",
+		haptic_trigger_effects_allowed = true,
 		sort_order = 7,
 		input_settings = {
 			Ingame = {
@@ -581,6 +587,7 @@ local layouts = {
 	},
 	toms = {
 		display_name = "loc_setting_controller_layout_toms",
+		haptic_trigger_effects_allowed = true,
 		sort_order = 3,
 		input_settings = {
 			Ingame = {

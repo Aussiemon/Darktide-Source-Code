@@ -157,7 +157,7 @@ end
 ActionSweep.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionSweep.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	self._weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or "none"
+	self._weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or self._weapon_template.special_charge_template or "none"
 	self._auto_completed = action_start_params.auto_completed
 
 	local is_chain_action = action_start_params.is_chain_action

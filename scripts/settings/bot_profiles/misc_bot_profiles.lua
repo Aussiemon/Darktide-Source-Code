@@ -9,7 +9,6 @@ local function misc_bot_profiles(all_profiles)
 		current_level = 1,
 		gender = "male",
 		selected_voice = "veteran_male_a",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/gear_arms/empty_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_01",
@@ -40,7 +39,6 @@ local function misc_bot_profiles(all_profiles)
 		current_level = 1,
 		gender = "male",
 		selected_voice = "ogryn_a",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/ogryn/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_green_02",
@@ -67,7 +65,6 @@ local function misc_bot_profiles(all_profiles)
 		current_level = 1,
 		gender = "female",
 		selected_voice = "zealot_female_c",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02",
@@ -94,7 +91,6 @@ local function misc_bot_profiles(all_profiles)
 		current_level = 1,
 		gender = "male",
 		selected_voice = "psyker_male_a",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_psyker_02",
@@ -121,7 +117,6 @@ local function misc_bot_profiles(all_profiles)
 		current_level = 1,
 		gender = "female",
 		selected_voice = "veteran_female_b",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/gear_arms/empty_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01",
@@ -148,7 +143,6 @@ local function misc_bot_profiles(all_profiles)
 		current_level = 1,
 		gender = "male",
 		selected_voice = "zealot_male_b",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_02",
@@ -176,7 +170,6 @@ local function misc_bot_profiles(all_profiles)
 		current_level = 1,
 		gender = "female",
 		selected_voice = "psyker_female_a",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_psyker_02",

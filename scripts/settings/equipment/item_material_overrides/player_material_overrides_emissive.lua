@@ -71,6 +71,16 @@ local material_overrides = {
 			},
 		},
 	},
+	emissive_orange_04 = {
+		property_overrides = {
+			emissive_color_intensity = {
+				1,
+				0.178,
+				0,
+				0.5,
+			},
+		},
+	},
 }
 
 return material_overrides

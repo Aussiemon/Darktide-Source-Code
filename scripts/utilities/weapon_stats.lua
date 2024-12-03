@@ -403,8 +403,8 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local stagger_count = 0
 	local num_triggered_staggers = 0
 	local is_attacked_unit_suppressed = false
-	local uses_overheat = weapon_template.uses_overheat
 	local hud_configuration = weapon_template.hud_configuration
+	local uses_overheat = hud_configuration and hud_configuration.uses_overheat
 	local uses_ammunition = hud_configuration and hud_configuration.uses_ammunition
 	local actions = weapon_template.actions
 	local rate_of_fire

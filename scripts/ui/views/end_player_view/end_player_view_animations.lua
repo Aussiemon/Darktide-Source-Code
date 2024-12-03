@@ -434,6 +434,11 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 			local pass_params = {}
 			local widget_style = widget.style
 			local pass_style = widget_style[style_name]
+
+			if not pass_style then
+				return
+			end
+
 			local pass_color = pass_style.text_color or pass_style.color
 
 			pass_params.pass_color = pass_color
@@ -457,7 +462,17 @@ local function _create_fade_in_pass_animation(animation_table, style_name, start
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local color_utils_color_lerp = _color_utils_color_lerp
+
+			if not params.pass_params then
+				return
+			end
+
 			local pass_params = params.pass_params[style_name]
+
+			if not pass_params then
+				return
+			end
+
 			local pass_color = pass_params.pass_color
 			local start_color = pass_params.start_color
 			local target_color = pass_params.target_color
@@ -496,19 +511,19 @@ local function _create_init_weapon_animation(animation_table, start_time)
 	for f = 1, #slots do
 		local slot = slots[f]
 
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_title_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_level_" .. slot, added_time(dafault_added_time))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_icon_" .. slot, added_time(dafault_added_time))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_background_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_background_gradient_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_button_gradient_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_frame_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_corner_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_total_exp_" .. slot, added_time(dafault_added_time))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_experience_bar_" .. slot, added_time(dafault_added_time))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_experience_bar_background_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_experience_bar_line_" .. slot, added_time(0))
-		_create_fade_in_pass_animation(animations.weapon_card_show_content, "weapon_added_exp_text_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animation_table, "weapon_title_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_level_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animation_table, "weapon_icon_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animation_table, "weapon_background_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_background_gradient_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_button_gradient_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_frame_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_corner_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_total_exp_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animation_table, "weapon_experience_bar_" .. slot, added_time(dafault_added_time))
+		_create_fade_in_pass_animation(animation_table, "weapon_experience_bar_background_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_experience_bar_line_" .. slot, added_time(0))
+		_create_fade_in_pass_animation(animation_table, "weapon_added_exp_text_" .. slot, added_time(dafault_added_time))
 	end
 end
 
@@ -633,6 +648,235 @@ local function _create_dim_weapon_animation(animation_table)
 
 				widget.style[name].offset[2] = widget.style[name].start_offset[2] + current_offset
 			end
+		end,
+	}
+end
+
+local function _create_init_havoc_animation(animation_table, start_time)
+	start_time = start_time or 0
+
+	local function added_time(time_added)
+		start_time = start_time + time_added
+
+		return start_time
+	end
+
+	_create_fade_in_pass_animation(animation_table, "havoc_rank_badge", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "previous_havoc_rank_value_1", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "previous_havoc_rank_value_2", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "havoc_badge_background", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "havoc_charge_1", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "havoc_charge_2", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "havoc_charge_3", added_time(0))
+end
+
+local function _create_progress_havoc_animation(animation_table, start_time, end_time)
+	local start_anim_time = start_time + _text_fade_in_time
+	local end_anim_time = end_time + _text_fade_in_time
+
+	animation_table[#animation_table + 1] = {
+		name = "change_charge",
+		start_time = start_anim_time + 1.2,
+		end_time = end_anim_time - 0.4,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local content = widget.content
+			local style = widget.style
+			local current_charges = content.current_charges
+			local previous_charges = content.previous_charges
+
+			if current_charges and previous_charges then
+				local decrease_charges = current_charges < previous_charges
+				local increase_charges = previous_charges < current_charges
+				local max_charges = widget.content.max_charges
+				local anim_charge_progress = math.easeInCubic(progress)
+
+				for i = 1, max_charges do
+					local charge_style = style["havoc_charge_" .. i]
+
+					if charge_style then
+						if decrease_charges and current_charges < i then
+							charge_style.color[1] = style["havoc_charge_" .. i].in_focus_color[1] - anim_charge_progress * 128
+						elseif increase_charges and previous_charges < i and i <= current_charges then
+							charge_style.color[1] = style["havoc_charge_" .. i].in_focus_color[1] + anim_charge_progress * 127
+						end
+					end
+				end
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "change_badge",
+		start_time = start_anim_time + 1.2,
+		end_time = end_anim_time + 0.8,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local content = widget.content
+			local style = widget.style
+
+			if style.havoc_rank_badge.material_values.afterTexture ~= style.havoc_rank_badge.material_values.beforeTexure then
+				style.havoc_rank_badge.material_values.AnimationSpeedFireAmountt[1] = progress
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "update_previous_rank",
+		start_time = start_anim_time + 1,
+		end_time = end_anim_time - 0.2,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local content = widget.content
+			local style = widget.style
+			local y_anim_offset = 20
+			local anim_progress = math.easeInCubic(progress)
+
+			if content.state == "rank_increase" then
+				for i = 1, content.previous_rank_size do
+					style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
+					style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y - y_anim_offset * anim_progress
+				end
+			elseif content.state == "rank_decrease" then
+				for i = 1, content.previous_rank_size do
+					style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
+					style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y + y_anim_offset * anim_progress
+				end
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "update_current_rank",
+		start_time = start_anim_time + 1.2,
+		end_time = end_anim_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local content = widget.content
+			local style = widget.style
+			local y_anim_offset = 20
+			local anim_progress = math.easeInCubic(progress)
+
+			if content.state == "rank_increase" then
+				for i = 1, content.current_rank_size do
+					style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
+					style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y + y_anim_offset - y_anim_offset * anim_progress
+				end
+			elseif content.state == "rank_decrease" then
+				for i = 1, content.current_rank_size do
+					style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
+					style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y - y_anim_offset + y_anim_offset * anim_progress
+				end
+			end
+		end,
+	}
+end
+
+local function _create_dim_havoc_animation(animation_table)
+	animation_table[#animation_table + 1] = {
+		name = "compress_havoc",
+		start_time = 0,
+		end_time = ViewSettings.animation_times.card_compress_content_time,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local current_alpha = 255 - 255 * progress
+		end,
+	}
+end
+
+local function _create_init_havoc_highest_rank_animation(animation_table, start_time)
+	start_time = start_time or 0
+
+	local function added_time(time_added)
+		start_time = start_time + time_added
+
+		return start_time
+	end
+
+	_create_fade_in_pass_animation(animation_table, "havoc_icon", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "highest_havoc_rank", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "highest_havoc_description", added_time(0))
+end
+
+local function _create_progress_havoc_highest_rank_animation(animation_table, start_time, end_time)
+	animation_table[#animation_table + 1] = {
+		name = "update_havoc_highest_rank",
+		start_time = start_time + _text_fade_in_time,
+		end_time = end_time,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			return
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+	}
+end
+
+local function _create_dim_havoc_highest_rank_animation(animation_table)
+	animation_table[#animation_table + 1] = {
+		name = "compress_havoc_highest_rank",
+		start_time = 0,
+		end_time = ViewSettings.animation_times.card_compress_content_time,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local current_alpha = 255 - 255 * progress
+		end,
+	}
+end
+
+local function _create_init_havoc_week_rank_animation(animation_table, start_time)
+	start_time = start_time or 0
+
+	local function added_time(time_added)
+		start_time = start_time + time_added
+
+		return start_time
+	end
+
+	_create_fade_in_pass_animation(animation_table, "week_havoc_rank", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "week_havoc_icon", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "havoc_week_description", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "havoc_reward_week_icon", added_time(0))
+	_create_fade_in_pass_animation(animation_table, "havoc_reward_week_icon_glow", added_time(0))
+end
+
+local function _create_progress_havoc_week_rank_animation(animation_table, start_time, end_time)
+	animation_table[#animation_table + 1] = {
+		name = "update_havoc_week_rank",
+		start_time = start_time + _text_fade_in_time,
+		end_time = end_time,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			return
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+	}
+end
+
+local function _create_dim_havoc_week_rank_animation(animation_table)
+	animation_table[#animation_table + 1] = {
+		name = "compress_havoc_week_rank",
+		start_time = 0,
+		end_time = ViewSettings.animation_times.card_compress_content_time,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local size_progress = 1 - 0.3 * progress
+			local icon_start_size = widget.style.havoc_reward_week_icon.start_size
+
+			widget.style.havoc_reward_week_icon.size = {
+				icon_start_size[1] * size_progress,
+				icon_start_size[2] * size_progress,
+			}
+
+			local glow_start_size = widget.style.havoc_reward_week_icon_glow.start_size
+
+			widget.style.havoc_reward_week_icon_glow.size = {
+				glow_start_size[1] * size_progress,
+				glow_start_size[2] * size_progress,
+			}
 		end,
 	}
 end
@@ -951,6 +1195,27 @@ animations.weapon_card_dim_out_content = {}
 _create_init_weapon_animation(animations.weapon_card_show_content, 0.1)
 _create_progress_weapon_animation(animations.weapon_card_show_content, 0.25, 7)
 _create_dim_weapon_animation(animations.weapon_card_dim_out_content)
+
+animations.havoc_card_show_content = {}
+animations.havoc_card_dim_out_content = {}
+
+_create_init_havoc_animation(animations.havoc_card_show_content, 0.1)
+_create_progress_havoc_animation(animations.havoc_card_show_content, 0.25, 2.45)
+_create_dim_havoc_animation(animations.havoc_card_dim_out_content)
+
+animations.havoc_highest_rank_card_show_content = {}
+animations.havoc_highest_rank_card_dim_out_content = {}
+
+_create_init_havoc_highest_rank_animation(animations.havoc_highest_rank_card_show_content, 0.1)
+_create_progress_havoc_highest_rank_animation(animations.havoc_highest_rank_card_show_content, 0.25, 2.45)
+_create_dim_havoc_highest_rank_animation(animations.havoc_highest_rank_card_dim_out_content)
+
+animations.havoc_week_rank_card_show_content = {}
+animations.havoc_week_rank_card_dim_out_content = {}
+
+_create_init_havoc_week_rank_animation(animations.havoc_week_rank_card_show_content, 0.1)
+_create_progress_havoc_week_rank_animation(animations.havoc_week_rank_card_show_content, 0.25, 2.45)
+_create_dim_havoc_week_rank_animation(animations.havoc_week_rank_card_dim_out_content)
 
 animations.wallet_change_function = function (content, style, animation, dt)
 	local anim_progress = content._anim_progress

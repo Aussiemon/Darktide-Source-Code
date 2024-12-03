@@ -11,11 +11,11 @@ local PartyImmateriumManagerTestify = GameParameters.testify and require("script
 local PartyImmateriumMember = require("scripts/managers/party_immaterium/party_immaterium_member")
 local PartyImmateriumMemberMyself = require("scripts/managers/party_immaterium/party_immaterium_member_myself")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
+local PlaystationJoinPermission = require("scripts/managers/party_immaterium/join_permission/playstation_join_permission")
 local Promise = require("scripts/foundation/utilities/promise")
 local SteamJoinPermission = require("scripts/managers/party_immaterium/join_permission/steam_join_permission")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local XboxJoinPermission = require("scripts/managers/party_immaterium/join_permission/xbox_join_permission")
-local PlaystationJoinPermission = require("scripts/managers/party_immaterium/join_permission/playstation_join_permission")
 local PartyImmateriumManager = class("PartyImmateriumManager")
 local ADVERTISEMENT_STATE = table.enum("SEARCHING", "CANCELED")
 local JOIN_REQUESTS_STATE = table.enum("PENDING", "ACCEPTED", "DECLINED")
@@ -1189,7 +1189,9 @@ PartyImmateriumManager.current_game_session_mission_data = function (self)
 	local game_state = self:party_game_state()
 
 	if game_state.status == "GAME_SESSION_IN_PROGRESS" then
-		return cjson.decode(game_state.params.mission_data)
+		local mission_data = game_state.params and game_state.params.mission_data
+
+		return mission_data and cjson.decode(mission_data) or nil
 	else
 		return nil
 	end
@@ -1456,6 +1458,7 @@ PartyImmateriumManager._handle_member_left = function (self, member_account_id)
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_leave_party)
 	end)
+	self:_validate_advertisement_on_member_left(member_account_id)
 end
 
 PartyImmateriumManager._handle_member_kicked = function (self, member_account_id, reason)
@@ -1477,6 +1480,7 @@ PartyImmateriumManager._handle_member_disconnected = function (self, member_acco
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_leave_party)
 	end)
+	self:_validate_advertisement_on_member_left(member_account_id)
 end
 
 PartyImmateriumManager._handle_invite_created = function (self, invite_token, platform, platform_user_id, inviter_account_id)
@@ -1706,6 +1710,7 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 						required_level = party_data.required_level,
 						restrictions = party_data.restrictions,
 						tags = party_data.tags,
+						metadata = party_data.metadata,
 						version = party_data.version,
 					}
 				end
@@ -2031,6 +2036,25 @@ PartyImmateriumManager.send_request_to_join_party = function (self, data, accoun
 	self._party_join_request_parties_by_id[id] = data
 
 	return Managers.grpc:party_finder_request_to_join(id, account_id)
+end
+
+PartyImmateriumManager._validate_advertisement_on_member_left = function (self, member_account_id)
+	local advertising_state = self._advertising_state
+
+	if not advertising_state then
+		return
+	end
+
+	local havoc_order_owner = advertising_state.config.havoc_order_owner
+
+	if not havoc_order_owner then
+		return
+	end
+
+	if havoc_order_owner == member_account_id then
+		Log.info("PartyImmateriumManager", "Havoc order owner no longer in the party, cancelling advertisement")
+		self:cancel_party_finder_advertise()
+	end
 end
 
 return PartyImmateriumManager

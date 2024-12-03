@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/utilities/weapon/action_input_hierarchy.lua
 
-local ActionInputHierarchyUtils = {}
+local ActionInputHierarchy = {}
 
-ActionInputHierarchyUtils.update_hierarchy_entry = function (hierarchy, target_input, new_transition)
+ActionInputHierarchy.update_hierarchy_entry = function (hierarchy, target_input, new_transition)
 	local target_index
 
 	for i, entry in ipairs(hierarchy) do
@@ -25,7 +25,7 @@ ActionInputHierarchyUtils.update_hierarchy_entry = function (hierarchy, target_i
 	end
 end
 
-ActionInputHierarchyUtils.find_hierarchy_transition = function (hierarchy, action_input)
+ActionInputHierarchy.find_hierarchy_transition = function (hierarchy, action_input)
 	for _, entry in ipairs(hierarchy) do
 		if entry.input == action_input then
 			return entry.transition
@@ -35,7 +35,7 @@ ActionInputHierarchyUtils.find_hierarchy_transition = function (hierarchy, actio
 	return nil
 end
 
-ActionInputHierarchyUtils.find_hierarchy_entry = function (hierarchy, action_input)
+ActionInputHierarchy.find_hierarchy_entry = function (hierarchy, action_input)
 	for _, entry in ipairs(hierarchy) do
 		if entry.input == action_input then
 			return entry
@@ -45,31 +45,7 @@ ActionInputHierarchyUtils.find_hierarchy_entry = function (hierarchy, action_inp
 	return nil
 end
 
-ActionInputHierarchyUtils.get_hierarchy_path_text = function (base_hierarchy, hierarchy_position, max_depth, no_action_input)
-	local text = ""
-	local current_level = base_hierarchy
-
-	for i = 1, max_depth do
-		local pos = hierarchy_position[i]
-
-		if pos == no_action_input then
-			break
-		end
-
-		for _, entry in ipairs(current_level) do
-			if entry.input == pos then
-				text = string.format("%s %s", text, entry.input)
-				current_level = entry.transition
-
-				break
-			end
-		end
-	end
-
-	return text
-end
-
-ActionInputHierarchyUtils.add_missing_ordered = function (dest, source)
+ActionInputHierarchy.add_missing_ordered = function (dest, source)
 	local existing_keys = {}
 
 	for _, entry in ipairs(dest) do
@@ -85,4 +61,4 @@ ActionInputHierarchyUtils.add_missing_ordered = function (dest, source)
 	return dest
 end
 
-return ActionInputHierarchyUtils
+return ActionInputHierarchy

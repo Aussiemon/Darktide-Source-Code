@@ -314,7 +314,11 @@ local MissionBoardViewSettings = {
 			},
 			quickplay_mission_position = {
 				110,
-				255,
+				225,
+			},
+			havoc_mission_position = {
+				110,
+				390,
 			},
 		},
 		auric = {
@@ -374,7 +378,11 @@ local MissionBoardViewSettings = {
 			},
 			quickplay_mission_position = {
 				110,
-				255,
+				225,
+			},
+			havoc_mission_position = {
+				110,
+				390,
 			},
 		},
 	},

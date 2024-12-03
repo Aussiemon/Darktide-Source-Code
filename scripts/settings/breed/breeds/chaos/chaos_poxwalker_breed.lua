@@ -57,6 +57,7 @@ local breed_data = {
 		horde = true,
 		melee = true,
 		minion = true,
+		poxwalker = true,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.disgustingly_resilient,

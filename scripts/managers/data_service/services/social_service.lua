@@ -814,6 +814,10 @@ SocialService.can_kick_from_party = function (self, player_info)
 		return false, "loc_social_fail_too_few_to_kick_vote"
 	end
 
+	if self:_is_havoc_mission_order_owner(player_info) then
+		return false, "loc_havoc_cannot_kick_order_owner"
+	end
+
 	local peer_id = player_info:peer_id()
 	local voting_template = self:_get_kick_voting_template(player_info)
 
@@ -824,6 +828,32 @@ SocialService.can_kick_from_party = function (self, player_info)
 	end
 
 	return true
+end
+
+SocialService._is_havoc_mission_order_owner = function (self, player_info)
+	if not GameParameters.prod_like_backend then
+		return false
+	end
+
+	local mission_data = Managers.party_immaterium:current_game_session_mission_data()
+	local mission = mission_data and mission_data.mission
+
+	if not mission or mission.category ~= "havoc" then
+		return false
+	end
+
+	if mission.flags then
+		for flag_key, _ in pairs(mission.flags) do
+			if flag_key:find("^order%-owner%-") then
+				local owner_account_id = flag_key:sub(#"order-owner-" + 1)
+				local is_order_owner = math.is_uuid(owner_account_id) and owner_account_id == player_info:account_id()
+
+				return is_order_owner
+			end
+		end
+	end
+
+	return false
 end
 
 SocialService.initiate_kick_vote = function (self, player_info)

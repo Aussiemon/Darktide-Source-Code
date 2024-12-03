@@ -58,11 +58,12 @@ local breed_data = {
 		horde = true,
 		melee = true,
 		minion = true,
+		poxwalker = true,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.disgustingly_resilient,
 	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
-	gib_template = MinionGibbingTemplates.chaos_poxwalker,
+	gib_template = MinionGibbingTemplates.chaos_lesser_mutated_poxwalker,
 	stagger_durations = {
 		[stagger_types.light] = 0.5,
 		[stagger_types.medium] = 0.8,
@@ -90,7 +91,7 @@ local breed_data = {
 		[stagger_types.killshot] = 0.5,
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_lesser_mutated_poxwalker,
-	sounds = require("scripts/settings/breed/breeds/chaos/chaos_poxwalker_sounds"),
+	sounds = require("scripts/settings/breed/breeds/chaos/chaos_mutated_poxwalker_sounds"),
 	vfx = require("scripts/settings/breed/breeds/chaos/chaos_common_vfx"),
 	behavior_tree_name = breed_name,
 	animation_variables = {

@@ -23,6 +23,7 @@ GameplayInitStepExtensions.on_enter = function (self, parent, params)
 	local level_name = shared_state.level_name
 	local level_seed = shared_state.level_seed
 	local circumstance_name = shared_state.circumstance_name
+	local havoc_data = shared_state.havoc_data
 	local nav_world = shared_state.nav_world
 	local has_navmesh = not table.is_empty(shared_state.nav_data)
 	local soft_cap_out_of_bounds_units = shared_state.soft_cap_out_of_bounds_units
@@ -31,7 +32,7 @@ GameplayInitStepExtensions.on_enter = function (self, parent, params)
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
-	self:_init_extensions(world, physics_world, is_server, mission_name, level_name, level_seed, circumstance_name, nav_world, has_navmesh, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_time_step, network_event_delegate)
+	self:_init_extensions(world, physics_world, is_server, mission_name, level_name, level_seed, circumstance_name, havoc_data, nav_world, has_navmesh, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_time_step, network_event_delegate)
 end
 
 GameplayInitStepExtensions.update = function (self, main_dt, main_t)
@@ -57,7 +58,7 @@ GameplayInitStepExtensions.update = function (self, main_dt, main_t)
 	return GameplayInitStepManagers, next_step_params
 end
 
-GameplayInitStepExtensions._init_extensions = function (self, world, physics_world, is_server, mission_name, level_name, level_seed, circumstance_name, nav_world, has_navmesh, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_time_step, network_event_delegate)
+GameplayInitStepExtensions._init_extensions = function (self, world, physics_world, is_server, mission_name, level_name, level_seed, circumstance_name, havoc_data, nav_world, has_navmesh, soft_cap_out_of_bounds_units, vo_sources_cache, fixed_time_step, network_event_delegate)
 	local wwise_world = Managers.world:wwise_world(world)
 	local game_session_manager = Managers.state.game_session
 	local game_session = game_session_manager:game_session()
@@ -145,7 +146,7 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 	local ExtensionSystemConfiguration = require("scripts/extension_systems/extension_system_configuration")
 	local use_time_slice = true
 
-	Managers.state.extension = ExtensionManager:new(world, physics_world, wwise_world, nav_world, has_navmesh, level_name, circumstance_name, is_server, UnitTemplates, ExtensionSystemConfiguration, system_init_data, unit_categories, network_event_delegate, fixed_time_step, game_session, soft_cap_out_of_bounds_units, use_time_slice)
+	Managers.state.extension = ExtensionManager:new(world, physics_world, wwise_world, nav_world, has_navmesh, level_name, circumstance_name, havoc_data, is_server, UnitTemplates, ExtensionSystemConfiguration, system_init_data, unit_categories, network_event_delegate, fixed_time_step, game_session, soft_cap_out_of_bounds_units, use_time_slice)
 end
 
 implements(GameplayInitStepExtensions, GameplayInitStepInterface)

@@ -10,7 +10,6 @@ local function tutorial_bot_profiles(all_profiles)
 		display_name = "Zola",
 		gender = "female",
 		selected_voice = "explicator_a",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/attachment_base/female_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02_blind_right",
@@ -42,7 +41,6 @@ local function tutorial_bot_profiles(all_profiles)
 		display_name = "Jilande",
 		gender = "female",
 		selected_voice = "zealot_female_a",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/gear_arms/empty_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_brown_02",
@@ -74,7 +72,6 @@ local function tutorial_bot_profiles(all_profiles)
 		display_name = "Kreft",
 		gender = "male",
 		selected_voice = "ogryn_a",
-		specialization = "none",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/ogryn/attachment_base/male_arms",
 			slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_green_02",

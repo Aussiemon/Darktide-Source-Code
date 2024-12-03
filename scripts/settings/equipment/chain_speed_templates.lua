@@ -26,6 +26,10 @@ chain_speed_templates.chainaxe = {
 		idle = 0.05,
 		sawing = 0.1,
 	},
+	haptic_vibration_intensity = {
+		max = 35,
+		min = 0,
+	},
 }
 chain_speed_templates.chainsword = {
 	intensity_epsilon = 0.01,
@@ -51,6 +55,10 @@ chain_speed_templates.chainsword = {
 		idle = 0.05,
 		sawing = 0.1,
 	},
+	haptic_vibration_intensity = {
+		max = 40,
+		min = 0,
+	},
 }
 chain_speed_templates.chainsword_2h = {
 	intensity_epsilon = 0.01,
@@ -75,6 +83,10 @@ chain_speed_templates.chainsword_2h = {
 		activated_sawing = 0.2,
 		idle = 0.05,
 		sawing = 0.1,
+	},
+	haptic_vibration_intensity = {
+		max = 30,
+		min = 0,
 	},
 }
 

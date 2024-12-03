@@ -112,6 +112,40 @@ DummySessionReport.fetch_session_report = function (account_id)
 							},
 						},
 						{
+							kind = "havocOrder",
+							target = "account",
+							rewards = {
+								{
+									charges = 3,
+									rank = 5,
+									rewardType = "havocOrder",
+									source = "skill",
+								},
+							},
+						},
+						{
+							kind = "havocOrder",
+							target = "account",
+							rewards = {
+								{
+									rank = 5,
+									rewardType = "havocHighestRank",
+									statType = "week",
+								},
+							},
+						},
+						{
+							kind = "havocOrder",
+							target = "account",
+							rewards = {
+								{
+									rank = 5,
+									rewardType = "havocHighestRank",
+									statType = "all-time",
+								},
+							},
+						},
+						{
 							kind = "levelUp",
 							level = 9,
 							target = "character",

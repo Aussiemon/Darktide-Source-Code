@@ -343,5 +343,11 @@ wwise_vo_routing_settings[55] = {
 	wwise_event_path = "wwise/events/vo/play_sfx_es_cultist_captain_vo_important",
 	wwise_sound_source = "es_cultist_captain_vo_important",
 }
+wwise_vo_routing_settings[56] = {
+	display_name = "2d VO",
+	is_default = false,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_2d_vo",
+	wwise_sound_source = "es_2d_vo",
+}
 
 return settings("wwise_vo_routing_settings", wwise_vo_routing_settings)

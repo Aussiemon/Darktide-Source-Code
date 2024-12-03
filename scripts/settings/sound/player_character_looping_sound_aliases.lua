@@ -162,6 +162,16 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_force_weapon_block_loop",
 		},
 	},
+	wind_slash_stage_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_wind_slash_stage_loop",
+		},
+		stop = {
+			event_alias = "stop_wind_slash_stage_loop",
+		},
+	},
 	interact_loop = {
 		is_2d = true,
 		is_exclusive = true,

@@ -34,10 +34,12 @@ MissionVotingView.init = function (self, settings, context)
 		if context.qp then
 			self._voting_id = context.voting_id
 			self._backend_mission_id = context.backend_mission_id
+			self._voting_started_by_account_id = context.started_by_account_id
 			self._is_quickplay = true
 		else
 			self._voting_id = context.voting_id
 			self._mission_data = context.mission_data
+			self._voting_started_by_account_id = context.started_by_account_id
 			self._is_quickplay = false
 		end
 	end
@@ -54,6 +56,7 @@ MissionVotingView.on_enter = function (self)
 
 	self._allow_close_hotkey = false
 
+	self:_try_get_voting_initiator_presence()
 	self:_setup_main_page_widgets()
 	self:_setup_button_widgets()
 	self:_setup_details_page_static_widgets()
@@ -78,6 +81,16 @@ end
 MissionVotingView.on_exit = function (self)
 	MissionVotingView.super.on_exit(self)
 	self:_destroy_renderer()
+
+	local presence_promise = self._presence_promise
+
+	if presence_promise then
+		if presence_promise:is_pending() then
+			presence_promise:cancel()
+		end
+
+		self._presence_promise = nil
+	end
 end
 
 MissionVotingView.update = function (self, dt, t, input_service)
@@ -306,6 +319,36 @@ MissionVotingView._destroy_renderer = function (self)
 	end
 end
 
+MissionVotingView._try_get_voting_initiator_presence = function (self)
+	self._voting_started_by_character_name = nil
+
+	if not math.is_uuid(self._voting_started_by_account_id) then
+		return
+	end
+
+	local _, presence_promise = Managers.presence:get_presence(self._voting_started_by_account_id)
+
+	self._presence_promise = presence_promise
+
+	presence_promise:next(function (presence)
+		if presence then
+			self._voting_started_by_character_name = presence:character_name()
+
+			local initiator_widget = self._widgets_by_name.initiator
+
+			if initiator_widget then
+				initiator_widget.content.initiator_text = self._voting_started_by_character_name or ""
+			end
+		end
+
+		self._presence_promise = nil
+	end):catch(function (err)
+		self._presence_promise = nil
+
+		Log.error("MissionVotingView", "Failed getting presence for voting initiator: %s", table.tostring(err, 5))
+	end)
+end
+
 MissionVotingView._setup_main_page_widgets = function (self)
 	local definitions = {
 		widget_definitions = self._definitions.mission_info_widget_definitions,
@@ -503,6 +546,22 @@ MissionVotingView._populate_quickplay_data = function (self)
 	accept_confirmation_widget.visible = false
 end
 
+local function _get_havoc_rank(mission_data)
+	local min_havoc_rank = 1
+	local max_havoc_rank = 100
+	local havoc_rank_string = "havoc-rank-"
+
+	for i = min_havoc_rank, max_havoc_rank do
+		if mission_data.flags[havoc_rank_string .. tostring(i)] then
+			return i
+		end
+	end
+
+	Log.error("Matchmaking Notification Handler", "Unable to get havoc rank")
+
+	return nil
+end
+
 MissionVotingView._set_mission_data = function (self, mission_data)
 	local mission_template = MissionTemplates[mission_data.map]
 	local zone_id = mission_template.zone_id
@@ -528,11 +587,24 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 	self:_set_rewards_info(mission_data)
 
 	local danger_level_widget = self._widgets_by_name.mission_danger_info
-	local danger_level, danger_level_text = calculate_danger_level(mission_data)
 
-	self:_set_difficulty_icons(danger_level_widget.style, danger_level)
+	if mission_data.category == "havoc" then
+		danger_level_widget.content.danger_icon = "content/ui/materials/icons/generic/havoc"
+		danger_level_widget.content.danger_icon_drop_shadow = "content/ui/materials/icons/generic/havoc"
+		danger_level_widget.content.danger_text = Utf8.upper(Localize("loc_havoc_name"))
+		danger_level_widget.style.difficulty_icon.amount = 0
+		danger_level_widget.style.diffulty_icon_background.amount = 0
 
-	danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_level_text))
+		local havoc_rank = _get_havoc_rank(mission_data)
+
+		danger_level_widget.content.rank_text = Utf8.upper(tostring(havoc_rank))
+	else
+		local danger_level, danger_level_text = calculate_danger_level(mission_data)
+
+		self:_set_difficulty_icons(danger_level_widget.style, danger_level)
+
+		danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_level_text))
+	end
 
 	local accept_confirmation_widget = self._widgets_by_name.accept_confirmation
 
@@ -587,6 +659,22 @@ MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, ic
 	return icon_definition
 end
 
+MissionVotingView._get_havoc_mutators = function (self, mission_data)
+	local mutators = {}
+
+	for k, _ in pairs(mission_data.flags) do
+		if string.find(k, "havoc%-circ%-") then
+			mutators[#mutators + 1] = k
+		end
+	end
+
+	if #mutators > 0 then
+		return mutators
+	else
+		return nil
+	end
+end
+
 MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 	table.clear(self._mission_icons_widgets)
 
@@ -612,6 +700,7 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 
 		local has_side_mission = not not mission_data.sideMission
 		local has_circumstance = mission_data.circumstance and mission_data.circumstance ~= "default"
+		local havoc_mutators = self:_get_havoc_mutators(mission_data)
 		local mission_type = MissionTypes[mission_template.mission_type]
 
 		mission_icon_settings[#mission_icon_settings + 1] = {
@@ -653,6 +742,26 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 						icon = circumstance_ui_settings.icon,
 						color = Color.golden_rod(255, true),
 					}
+				end
+			end
+		end
+
+		if havoc_mutators then
+			for _, v in ipairs(havoc_mutators) do
+				local circumstance_template_name = string.sub(v, 12)
+				local circumstance_template = CircumstanceTemplates[circumstance_template_name]
+
+				if circumstance_template then
+					local circumstance_ui_settings = circumstance_template.ui
+
+					if circumstance_ui_settings then
+						mission_icon_settings[#mission_icon_settings + 1] = {
+							icon = circumstance_ui_settings.icon,
+							color = Color.golden_rod(225, true),
+						}
+					end
+				else
+					Log.error("MissionVotingView", "Unable to find circumstance %s", circumstance_template_name)
 				end
 			end
 		end

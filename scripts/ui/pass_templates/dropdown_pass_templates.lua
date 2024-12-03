@@ -17,7 +17,7 @@ local DROPDOWN_BUTTON_SIZE = {
 local DROPDOWN_BUTTON_MARGIN = 30
 local DROPDOWN_BUTTON_CLEARANCE = DROPDOWN_BUTTON_SIZE[1] + 2 * DROPDOWN_BUTTON_MARGIN
 
-DropdownPassTemplates.settings_dropdown = function (width, height, settings_area_width, num_options, use_is_focused)
+DropdownPassTemplates.settings_dropdown = function (width, height, settings_area_width, num_options, use_is_focused, is_sub_setting)
 	local value_font_style = table.clone(UIFontSettings.list_button)
 
 	value_font_style.size = {
@@ -38,7 +38,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 	local scrollbar_horizontal_offset = 0
 	local scrollbar_height = height * num_options
 	local header_width = width - settings_area_width
-	local header_passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused)
+	local header_passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused, is_sub_setting)
 
 	for i = 1, #header_passes do
 		local pass = header_passes[i]

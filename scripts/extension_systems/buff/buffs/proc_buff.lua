@@ -150,7 +150,8 @@ end
 
 ProcBuff._cooldown_progress = function (self, t)
 	local active_cooldown = self:_cooldown_duration() or 0
-	local active_start_time = self._active_start_time
+	local active_duration = self:_active_duration() or 0
+	local active_start_time = self._active_start_time + active_duration
 	local time_lapsed = t - active_start_time
 
 	return time_lapsed / active_cooldown

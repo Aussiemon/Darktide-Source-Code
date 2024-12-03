@@ -74,5 +74,11 @@ weapon_movement_curve_modifier_templates.boltpistol_p1_m1 = {
 		lerp_perfect = 1.25,
 	},
 }
+weapon_movement_curve_modifier_templates.forcesword_2h = {
+	modifier = {
+		lerp_basic = 0.6,
+		lerp_perfect = 1.1,
+	},
+}
 
 return settings("WeaponCurveModifierTemplates", weapon_movement_curve_modifier_templates)

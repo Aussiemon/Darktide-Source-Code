@@ -43,6 +43,7 @@ weapon_action_data.actions = {
 	overload_charge = _require_weapon_action("action_overload_charge"),
 	overload_charge_position_finder = _require_weapon_action("action_overload_charge_position_finder"),
 	overload_charge_target_finder = _require_weapon_action("action_overload_charge_target_finder"),
+	overload_charge_weapon_special = _require_weapon_action("action_overload_charge_weapon_special"),
 	overload_explosion = _require_weapon_action("action_overload_explosion"),
 	overload_target_finder = _require_weapon_action("action_overload_target_finder"),
 	place_deployable = _require_weapon_action("action_place_deployable"),
@@ -310,6 +311,9 @@ weapon_action_data.action_kind_condition_funcs = {
 		return true
 	end,
 	activate_special = function (action_settings, condition_func_params, used_input)
+		return _weapon_special_active_cooldown(action_settings, condition_func_params)
+	end,
+	overload_charge_weapon_special = function (action_settings, condition_func_params, used_input)
 		return _weapon_special_active_cooldown(action_settings, condition_func_params)
 	end,
 	ranged_load_special = function (action_settings, condition_func_params, used_input)
@@ -647,6 +651,10 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 	overload_charge_target_finder = {
 		fully_charged = true,
 	},
+	overload_charge_weapon_special = {
+		fully_charged = true,
+		overheating = true,
+	},
 	reload_shotgun = {
 		reload_loop = true,
 	},
@@ -670,6 +678,13 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 	vent_warp_charge = {
 		fully_vented = true,
 	},
+}
+weapon_action_data.action_kind_with_reversed_timescale = {
+	overload_charge = true,
+	overload_charge_position_finder = true,
+	overload_charge_target_finder = true,
+	overload_charge_weapon_special = true,
+	overload_target_finder = true,
 }
 
 for name, _ in pairs(weapon_action_data.action_kind_condition_funcs) do

@@ -97,7 +97,7 @@ local mission_info_top_panel_size = {
 }
 local title_bar_size = {
 	outer_panel_size[1],
-	80,
+	99,
 }
 local mission_circumstance_size = {
 	mission_info_size[1],
@@ -194,7 +194,7 @@ local zone_image_bottom_fade_position = {
 }
 local reward_main_mission_position = {
 	0,
-	10,
+	18,
 	10,
 }
 local timer_bar_position = {
@@ -584,6 +584,14 @@ local widget_definitions = {
 			style = ViewStyles.title_font_style,
 		},
 	}, "title_bar"),
+	initiator = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			value = "",
+			value_id = "initiator_text",
+			style = ViewStyles.initiator_font_style,
+		},
+	}, "title_bar"),
 	title_bar_bottom = UIWidget.create_definition({
 		{
 			pass_type = "rect",
@@ -735,6 +743,26 @@ local mission_info_widget_definitions = {
 				offset = {
 					-20,
 					10,
+					1,
+				},
+				size = {
+					50,
+					50,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "danger_icon_drop_shadow",
+			value = "content/ui/materials/icons/generic/danger",
+			value_id = "danger_icon_drop_shadow",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				color = Color.black(255, true),
+				offset = {
+					-18,
+					10,
 					0,
 				},
 				size = {
@@ -752,6 +780,13 @@ local mission_info_widget_definitions = {
 			pass_type = "multi_texture",
 			style_id = "difficulty_icon",
 			value = "content/ui/materials/backgrounds/default_square",
+		},
+		{
+			pass_type = "text",
+			style_id = "rank_text",
+			value = "",
+			value_id = "rank_text",
+			style = ViewStyles.rank_text_font_style,
 		},
 	}, "mission_danger_level", nil, nil, ViewStyles.difficulty),
 	rewards_text = UIWidget.create_definition({

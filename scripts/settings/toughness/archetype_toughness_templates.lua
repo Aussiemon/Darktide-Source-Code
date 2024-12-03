@@ -27,7 +27,7 @@ archetype_toughness_templates.veteran = {
 	},
 }
 archetype_toughness_templates.psyker = {
-	max = 60,
+	max = 75,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {

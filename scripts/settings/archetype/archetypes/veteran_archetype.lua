@@ -34,12 +34,6 @@ local archetype_data = {
 	sprint = ArchetypeSprintTemplates.default,
 	stamina = ArchetypeStaminaTemplates.veteran,
 	warp_charge = ArchetypeWarpChargeTemplates.default,
-	specializations = {
-		veteran_2 = {
-			archetype = "veteran",
-			name = "veteran_2",
-		},
-	},
 	talents = ArchetypeTalents.veteran,
 	base_talents = {
 		veteran_aura_gain_ammo_on_elite_kill = 1,

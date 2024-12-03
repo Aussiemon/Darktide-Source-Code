@@ -87,6 +87,16 @@ BtDieAction.init_values = function (self, blackboard)
 	death_component.herding_template_name = ""
 	death_component.killing_damage_type = ""
 	death_component.force_instant_ragdoll = false
+
+	local has_gib_override = Blackboard.has_component(blackboard, "gib_override")
+
+	if has_gib_override then
+		local gib_override_component = Blackboard.write_component(blackboard, "gib_override")
+
+		gib_override_component.should_override = false
+		gib_override_component.target_template = ""
+		gib_override_component.override_hit_zone_name = ""
+	end
 end
 
 BtDieAction._set_dead = function (self, unit, scratchpad, breed, action_data, blackboard)

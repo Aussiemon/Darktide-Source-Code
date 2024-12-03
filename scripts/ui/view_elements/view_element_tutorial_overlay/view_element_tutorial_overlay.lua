@@ -116,6 +116,13 @@ ViewElementTutorialOverlay._present_next = function (self)
 	self:_present_tooltip_grid_layout(layout)
 
 	self._highligt_color_intensity = current_index == 1 and 0 or DEFAULT_COLOR_INTENSITY_VALUE
+
+	if self._tutorial_window_open_animation_id then
+		self:_stop_animation(self._tutorial_window_open_animation_id)
+
+		self._tutorial_window_open_animation_id = nil
+	end
+
 	self._tutorial_window_open_animation_id = self:_start_animation("tutorial_window_open", self._widgets_by_name, self)
 
 	return true
@@ -166,6 +173,7 @@ end
 ViewElementTutorialOverlay.draw_external_element = function (self, element, dt, t, ui_renderer, render_settings, input_service)
 	local table_name = table_to_address_string(ui_renderer)
 	local elements = self:active_tutorial_elements()
+	local element_color_intensity = self._background_color_intensity
 
 	if self._active and elements then
 		for i = 1, #elements do
@@ -175,13 +183,22 @@ ViewElementTutorialOverlay.draw_external_element = function (self, element, dt, 
 				local previous_color_intensity_multiplier = self._previous_color_intensities_by_renderer[table_name] or 1
 
 				ui_renderer.color_intensity_multiplier = math.max(self._background_color_intensity, self._highligt_color_intensity) * previous_color_intensity_multiplier
+				element_color_intensity = nil
 
 				break
 			end
 		end
 	end
 
+	if element_color_intensity and element.set_tutorial_color_intensity_multiplier then
+		element:set_tutorial_color_intensity_multiplier(element_color_intensity)
+	end
+
 	element:draw(dt, t, ui_renderer, render_settings, input_service)
+
+	if element_color_intensity and element.set_tutorial_color_intensity_multiplier then
+		element:set_tutorial_color_intensity_multiplier(nil)
+	end
 
 	if self._active then
 		ui_renderer.color_intensity_multiplier = self._background_color_intensity

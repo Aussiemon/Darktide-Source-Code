@@ -410,7 +410,7 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 		scratchpad.num_shots = math.random(diff_num_shots[1], diff_num_shots[2]) * minion_num_shots_modifier
 
 		if scratchpad.num_shots > 1 and Managers.state.pacing:is_auric() then
-			scratchpad.num_shots = scratchpad.num_shots * 2
+			scratchpad.num_shots = scratchpad.num_shots * 1.5
 		end
 	end
 
@@ -1086,6 +1086,10 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 	if action_data.bot_power_level_modifier and is_player_character and not player_unit_spawn_manager:owner(target_unit):is_human_controlled() then
 		power_level = power_level * action_data.bot_power_level_modifier
 	end
+
+	local power_level_modifier = Managers.state.havoc:get_power_level_modifier(attack_type)
+
+	power_level = power_level * power_level_modifier
 
 	if is_player_character then
 		local slot_extension = ScriptUnit.extension(target_unit, "slot_system")

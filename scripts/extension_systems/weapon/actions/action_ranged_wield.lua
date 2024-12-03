@@ -7,6 +7,8 @@ local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_
 local ActionRangedWield = class("ActionRangedWield", "ActionWeaponBase")
 
 ActionRangedWield.start = function (self, action_settings, t, time_scale, action_start_params)
+	ActionRangedWield.super.start(self, action_settings, t, time_scale, action_start_params)
+
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
 	local reload_template = weapon_template.reload_template

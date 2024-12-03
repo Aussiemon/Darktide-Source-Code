@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/loading/constant_element_loading.lua
 
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local NO_TRANSITION_UI = {
 	use_transition_ui = false,
@@ -9,7 +9,6 @@ local NO_TRANSITION_UI = {
 local LOADING_ICON = {
 	loading_icon = true,
 }
-local CINEMATIC_VIEWS = {}
 local VIEW_SETTINGS = {
 	{
 		view_name = "mission_intro_view",
@@ -83,17 +82,10 @@ local VIEW_SETTINGS = {
 			"GameplayStateRun",
 		},
 		validation_func = function ()
-			local cinematic = Managers.state.cinematic:is_loading_cinematic_levels()
+			local cinematic_loading = Managers.state.cinematic:is_loading_cinematic_levels()
 
-			if cinematic then
-				local template = CinematicSceneTemplates[cinematic]
-				local instant_black_screen_during_cutscene_loading = template.instant_black_screen_during_cutscene_loading
-
-				if instant_black_screen_during_cutscene_loading then
-					return true, nil, NO_TRANSITION_UI
-				else
-					return true
-				end
+			if cinematic_loading then
+				return true
 			end
 
 			local mission_outro_played = Managers.state.game_mode:mission_outro_played()

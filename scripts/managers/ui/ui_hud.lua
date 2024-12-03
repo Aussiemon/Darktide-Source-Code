@@ -209,7 +209,7 @@ UIHud._add_element = function (self, definition, elements, elements_array)
 		local use_hud_scale = definition.use_hud_scale
 		local class = require(filename)
 		local optional_context = definition.context
-		local draw_layer = 0
+		local draw_layer = UIHudSettings.element_draw_layers[class_name] or 0
 		local hud_scale = use_hud_scale and Hud.hud_scale() or RESOLUTION_LOOKUP.scale
 		local element = class:new(self, draw_layer, hud_scale, optional_context)
 

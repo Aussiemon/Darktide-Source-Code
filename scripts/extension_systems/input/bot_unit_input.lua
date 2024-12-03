@@ -160,7 +160,7 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 	local on_ladder = character_state_name == "ladder_climbing"
 	local look_at_player_unit = ALIVE[self._look_at_player_unit] and self._look_at_player_unit or nil
 	local look_at_player_has_moved = look_at_player_unit and ScriptUnit.extension(look_at_player_unit, "locomotion_system").has_moved_from_start_position
-	local has_cinematic_finished = not Managers.state.cinematic:active()
+	local has_cinematic_finished = not Managers.state.cinematic:cinematic_active()
 	local up = Vector3.up()
 
 	if current_goal and on_ladder then

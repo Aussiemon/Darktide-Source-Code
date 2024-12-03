@@ -93,6 +93,83 @@ local mutator_templates = {
 			},
 		},
 	},
+	havoc_mutator_more_captains_01 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			monster_spawn_type = "captains",
+			monsters_per_travel_distance = {
+				240,
+				360,
+			},
+			monster_breed_name = {
+				"MUTATOR_CAPTAIN",
+			},
+		},
+	},
+	havoc_mutator_more_captains_02 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			monster_spawn_type = "captains",
+			monsters_per_travel_distance = {
+				120,
+				240,
+			},
+			monster_breed_name = {
+				"MUTATOR_CAPTAIN",
+			},
+		},
+	},
+	havoc_mutator_more_hordes_01 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			required_horde_travel_distance = 60,
+		},
+	},
+	havoc_mutator_more_hordes_02 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			required_horde_travel_distance = 30,
+		},
+	},
+	havoc_mutator_monster_specials_01 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			specials_monster_spawn_config = {
+				chance_to_spawn_monster = 0.2,
+				max_monsters = 2,
+				max_monster_duration = {
+					250,
+					330,
+				},
+				breeds = {
+					"chaos_plague_ogryn",
+					"chaos_beast_of_nurgle",
+					"chaos_spawn",
+				},
+			},
+		},
+	},
+	havoc_mutator_monster_specials_02 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			specials_monster_spawn_config = {
+				chance_to_spawn_monster = 0.2,
+				max_monsters = 2,
+				max_monster_duration = {
+					120,
+					200,
+				},
+				breeds = {
+					"chaos_plague_ogryn",
+					"chaos_beast_of_nurgle",
+					"chaos_spawn",
+				},
+			},
+		},
+	},
+	mutator_decreased_horde_pacing_stinger = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
+	},
 	mutator_more_boss_patrols = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
@@ -211,17 +288,6 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
 			horde_timer_modifier = 99999,
-		},
-	},
-	mutator_renegade_flamer_none_packs = {
-		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
-		init_modify_pacing = {
-			override_roamer_packs = {
-				none = {
-					renegade = RoamerPacks.renegade_flamers_mutator,
-					cultist = RoamerPacks.renegade_flamers_mutator,
-				},
-			},
 		},
 	},
 	mutator_only_traitor_guard_faction = {
@@ -476,13 +542,13 @@ local mutator_templates = {
 				chaos_hound = 0,
 				chaos_lesser_mutated_poxwalker = 0.1,
 				chaos_mutated_poxwalker = 0.1,
-				chaos_newly_infected = 0.05,
-				chaos_ogryn_bulwark = 0.5,
-				chaos_ogryn_executor = 0.5,
-				chaos_ogryn_gunner = 0.5,
+				chaos_newly_infected = 0.1,
+				chaos_ogryn_bulwark = 0.2,
+				chaos_ogryn_executor = 0.2,
+				chaos_ogryn_gunner = 0.2,
 				chaos_plague_ogryn = 0,
 				chaos_poxwalker = 0.1,
-				chaos_poxwalker_bomber = 0.35,
+				chaos_poxwalker_bomber = 0,
 				chaos_spawn = 0,
 				cultist_assault = 0.1,
 				cultist_berzerker = 0.1,
@@ -491,19 +557,19 @@ local mutator_templates = {
 				cultist_gunner = 0.1,
 				cultist_melee = 0.1,
 				cultist_mutant = 0,
-				cultist_shocktrooper = 0,
+				cultist_shocktrooper = 0.1,
 				renegade_assault = 0.1,
 				renegade_berzerker = 0.25,
 				renegade_captain = 0,
 				renegade_executor = 0.05,
 				renegade_flamer = 0.05,
-				renegade_grenadier = 0.25,
-				renegade_gunner = 0.25,
+				renegade_grenadier = 0.1,
+				renegade_gunner = 0.1,
 				renegade_melee = 0.1,
-				renegade_netgunner = 0.35,
+				renegade_netgunner = 0,
 				renegade_rifleman = 0.1,
-				renegade_shocktrooper = 0,
-				renegade_sniper = 0.35,
+				renegade_shocktrooper = 0.1,
+				renegade_sniper = 0,
 			},
 		},
 	},
@@ -630,7 +696,7 @@ local mutator_templates = {
 	mutator_single_twin = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 	},
-	mutator_maelstrom_armored_infected = {
+	mutator_havoc_armored_infected = {
 		class = "scripts/managers/mutator/mutators/mutator_replace_breed",
 		init_replacement_breed = {
 			breed_replacement = {

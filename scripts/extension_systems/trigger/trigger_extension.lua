@@ -45,15 +45,15 @@ TriggerExtension.init = function (self, extension_init_context, unit, ...)
 end
 
 TriggerExtension.destroy = function (self)
+	if self._is_server then
+		self:_unregister_volume()
+	end
+
 	if self._trigger_condition then
 		self._trigger_condition:destroy()
 	end
 
 	self._trigger_action:destroy()
-
-	if self._is_server then
-		self:_unregister_volume()
-	end
 end
 
 TriggerExtension.reset = function (self)

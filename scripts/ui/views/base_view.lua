@@ -125,10 +125,13 @@ BaseView._create_widgets = function (self, definitions, widgets, widgets_by_name
 	widgets = widgets or {}
 	widgets_by_name = widgets_by_name or {}
 
+	local widget_count = #widgets
+
 	for name, definition in pairs(widget_definitions) do
 		local widget = self:_create_widget(name, definition)
 
-		widgets[#widgets + 1] = widget
+		widget_count = widget_count + 1
+		widgets[widget_count] = widget
 	end
 
 	return widgets, widgets_by_name

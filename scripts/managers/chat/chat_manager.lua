@@ -486,6 +486,7 @@ ChatManager._poll_party = function (self)
 					local voice = true
 					local text = true
 
+					self:_reset_party_channels()
 					self:join_chat_channel(channel, nil, voice, text, ChatManagerConstants.ChannelTag.PARTY, token)
 
 					self._party_id_session_handles[party_id] = channel
@@ -494,14 +495,18 @@ ChatManager._poll_party = function (self)
 				end)
 			end
 		else
-			local party_id_session_handles = self._party_id_session_handles
-
-			for key, session_handle in pairs(party_id_session_handles) do
-				self:leave_channel(session_handle)
-
-				party_id_session_handles[key] = nil
-			end
+			self:_reset_party_channels()
 		end
+	end
+end
+
+ChatManager._reset_party_channels = function (self)
+	local party_id_session_handles = self._party_id_session_handles
+
+	for key, session_handle in pairs(party_id_session_handles) do
+		self:leave_channel(session_handle)
+
+		party_id_session_handles[key] = nil
 	end
 end
 

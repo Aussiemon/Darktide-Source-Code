@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/special_classes/weapon_special_warp_charged_attacks.lua
 
+local HazardProp = require("scripts/utilities/level_props/hazard_prop")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponSpecial = require("scripts/utilities/weapon_special")
 local WeaponSpecialInterface = require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")

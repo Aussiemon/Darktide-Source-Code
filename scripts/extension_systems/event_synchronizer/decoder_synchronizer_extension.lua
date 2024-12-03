@@ -24,12 +24,12 @@ DecoderSynchronizerExtension.init = function (self, extension_init_context, unit
 	self._event_active = false
 	self._setup_only = false
 	self._progress_in_minigame = false
-	self._auto_open_auspex = false
+	self._progress_in_minigame_on_stall = false
 	self._loaded_view = false
 	self._event_synchronizer_system = Managers.state.extension:system("event_synchronizer_system")
 end
 
-DecoderSynchronizerExtension.setup_from_component = function (self, objective_name, auto_start, min_time_until_stalling, max_time_until_stalling, num_active_units, stall_once_per_device, setup_only, progress_in_minigame, auto_open_auspex)
+DecoderSynchronizerExtension.setup_from_component = function (self, objective_name, auto_start, min_time_until_stalling, max_time_until_stalling, num_active_units, stall_once_per_device, setup_only, progress_in_minigame)
 	self._objective_name = objective_name
 	self._auto_start = auto_start
 	self._min_time_until_stalling = min_time_until_stalling
@@ -37,15 +37,13 @@ DecoderSynchronizerExtension.setup_from_component = function (self, objective_na
 	self._num_active_units = num_active_units
 	self._stall_once_per_device = stall_once_per_device
 	self._setup_only = setup_only
-	self._progress_in_minigame = progress_in_minigame
 
-	local mission_name = Managers.state.mission:mission_name()
-
-	if mission_name == "op_train" then
-		self._progress_in_minigame = true
+	if progress_in_minigame == "On Stall" then
+		self._progress_in_minigame_on_stall = true
+		self._progress_in_minigame = false
+	else
+		self._progress_in_minigame = progress_in_minigame
 	end
-
-	self._auto_open_auspex = auto_open_auspex
 
 	local unit = self._unit
 
@@ -111,7 +109,7 @@ DecoderSynchronizerExtension.fixed_update = function (self, unit, dt, t)
 			else
 				local stall = false
 
-				if not self._progress_in_minigame then
+				if self._progress_in_minigame == false then
 					if self._pause_timer < self._time_till_next_stall then
 						self._pause_timer = self._pause_timer + dt
 					else
@@ -295,27 +293,9 @@ DecoderSynchronizerExtension.pause_event = function (self)
 			Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_paused", unit_id)
 			Unit.flow_event(self._unit, "lua_event_paused")
 
-			local placing_unit = decoder_device_extension:placing_unit()
-
-			if self._auto_open_auspex and PlayerUnitStatus.can_interact_with_objective(placing_unit) then
-				local decoder_unit = rnd_unit
-				local unit_data_extension = ScriptUnit.extension(placing_unit, "unit_data_system")
-				local minigame_character_state = unit_data_extension:write_component("minigame_character_state")
-
-				minigame_character_state.interface_unit_id = Managers.state.unit_spawner:level_index(decoder_unit)
-
-				local interactee_extension = ScriptUnit.extension(decoder_unit, "interactee_system")
-				local item = interactee_extension:interactor_item_to_equip()
-				local fixed_t = FixedFrame.get_latest_fixed_time()
-				local inventory_component = unit_data_extension:read_component("inventory")
-				local visual_loadout_extension = ScriptUnit.extension(placing_unit, "visual_loadout_system")
-
-				if PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, "slot_device") then
-					PlayerUnitVisualLoadout.unequip_item_from_slot(placing_unit, "slot_device", fixed_t)
-				end
-
-				PlayerUnitVisualLoadout.equip_item_to_slot(placing_unit, item, "slot_device", nil, fixed_t)
-				PlayerUnitVisualLoadout.wield_slot("slot_device", placing_unit, fixed_t)
+			if self._progress_in_minigame_on_stall then
+				self._progress_in_minigame_on_stall = false
+				self._progress_in_minigame = true
 			end
 		end
 	else
@@ -372,10 +352,6 @@ end
 
 DecoderSynchronizerExtension.is_stuck = function (self)
 	return not self._networked_timer_extension:is_counting()
-end
-
-DecoderSynchronizerExtension.auto_open_auspex = function (self)
-	return self._auto_open_auspex
 end
 
 DecoderSynchronizerExtension._network_timer_is_finished = function (self)

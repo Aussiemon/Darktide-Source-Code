@@ -2,6 +2,7 @@
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breeds = require("scripts/settings/breed/breeds")
+local HordeUtilities = require("scripts/managers/horde/utilities/horde_utilities")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MinionPatrols = require("scripts/utilities/minion_patrols")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -34,31 +35,6 @@ local function _compose_spawn_list(composition)
 	table.shuffle(TEMP_BREED_NAMES)
 
 	return TEMP_BREED_NAMES, #TEMP_BREED_NAMES
-end
-
-local function _position_has_line_of_sight_to_any_enemy_player(physics_world, from_position, side, collision_filter)
-	local Vector3_length_squared, Vector3_normalize = Vector3.length_squared, Vector3.normalize
-	local PhysicsWorld_raycast = PhysicsWorld.raycast
-	local offset = Vector3.up()
-	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
-
-	for i = 1, #valid_enemy_player_units_positions do
-		local target_position = valid_enemy_player_units_positions[i] + offset
-		local to_target = target_position - from_position
-		local distance_sq = Vector3_length_squared(to_target)
-
-		if distance_sq > 0 then
-			local direction = Vector3_normalize(to_target)
-			local distance = math.sqrt(distance_sq)
-			local hit, _, _, _, _ = PhysicsWorld_raycast(physics_world, from_position, direction, distance, "closest", "collision_filter", collision_filter)
-
-			if not hit then
-				return true
-			end
-		end
-	end
-
-	return false
 end
 
 local MIN_DISTANCE_FROM_PLAYERS = 25
@@ -102,7 +78,7 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 	local end_index = start_index + 1
 	local closest_mainpath_position = MainPathQueries.closest_position_between_nodes(random_occluded_position, start_index, end_index)
 
-	if _position_has_line_of_sight_to_any_enemy_player(physics_world, closest_mainpath_position + Vector3.up(), side, OCCLUDED_POINTS_COLLISION_FILTER) then
+	if HordeUtilities.position_has_line_of_sight_to_any_enemy_player(physics_world, closest_mainpath_position + Vector3.up(), side, OCCLUDED_POINTS_COLLISION_FILTER) then
 		return false, nil, nil, nil
 	end
 

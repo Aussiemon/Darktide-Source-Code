@@ -8,7 +8,7 @@ local MainPathSettings = require("scripts/settings/main_path/main_path_settings"
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local MainPathManager = class("MainPathManager")
 
-MainPathManager.init = function (self, world, nav_world, level_name, level_seed, num_sides, is_server, use_nav_point_time_slice)
+MainPathManager.init = function (self, world, nav_world, level_name, level_seed, mission_name, num_sides, is_server, use_nav_point_time_slice)
 	self._is_server = is_server
 
 	local main_path_resource_name = level_name .. "_main_path"
@@ -269,12 +269,21 @@ MainPathManager.on_gameplay_post_init = function (self)
 end
 
 MainPathManager._generate_spawn_points = function (self)
+	local nav_mesh_manager, nav_triangle_group_cost_table = Managers.state.nav_mesh, GwNavTagLayerCostTable.create()
+	local triangle_group_forbidden_nav_tag_layers = MainPathSettings.triangle_group_forbidden_nav_tag_layers
+
+	for i = 1, #triangle_group_forbidden_nav_tag_layers do
+		local layer_name = triangle_group_forbidden_nav_tag_layers[i]
+		local layer_id = nav_mesh_manager:nav_tag_layer_id(layer_name)
+
+		GwNavTagLayerCostTable.forbid_layer(nav_triangle_group_cost_table, layer_id)
+	end
+
 	local nav_world, triangle_group_distance, triangle_group_cutoff_values = self._nav_world, MainPathSettings.triangle_group_distance, MainPathSettings.triangle_group_cutoff_values
-	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, triangle_group_distance, triangle_group_cutoff_values)
+	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, triangle_group_distance, triangle_group_cutoff_values, nav_triangle_group_cost_table)
 
 	self._nav_triangle_group, self._group_to_main_path_index = nav_triangle_group, group_to_main_path_index
 
-	local nav_mesh_manager = Managers.state.nav_mesh
 	local spawn_point_cost_table = GwNavTagLayerCostTable.create()
 
 	nav_mesh_manager:initialize_nav_tag_cost_table(spawn_point_cost_table, {})

@@ -16,6 +16,7 @@ local settings_grid_width = 1000
 local settings_value_width = 500
 local settings_value_height = 64
 local group_header_height = 80
+local group_sub_header_height = 30
 local DEFAULT_NUM_DECIMALS = 0
 local value_font_style = table.clone(UIFontSettings.list_button)
 
@@ -34,6 +35,17 @@ header_font_style.offset = {
 	0,
 	0,
 }
+
+local sub_header_font_style = table.clone(UIFontSettings.header_4)
+
+sub_header_font_style.text_vertical_alignment = "bottom"
+sub_header_font_style.font_size = 26
+sub_header_font_style.offset = {
+	30,
+	0,
+	0,
+}
+sub_header_font_style.drop_shadow = false
 
 local blueprints = {}
 
@@ -131,6 +143,28 @@ blueprints.group_header = {
 		content.text = Managers.localization:localize(display_name)
 	end,
 }
+blueprints.group_sub_header = {
+	size_function = function (parent, entry)
+		return {
+			entry.size and entry.size[1] or settings_grid_width,
+			entry.size and entry.size[2] or group_sub_header_height,
+		}
+	end,
+	pass_template = {
+		{
+			pass_type = "text",
+			value_id = "text",
+			style = sub_header_font_style,
+			value = Localize("loc_settings_option_unavailable"),
+		},
+	},
+	init = function (parent, widget, entry, callback_name, changed_callback_name)
+		local content = widget.content
+		local display_name = entry.display_name
+
+		content.text = Managers.localization:localize(display_name)
+	end,
+}
 blueprints.checkbox = {
 	size_function = function (parent, entry)
 		return {
@@ -139,7 +173,7 @@ blueprints.checkbox = {
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
-		return CheckboxPassTemplates.settings_checkbox(size[1], size[2], entry.value_width or settings_value_width, 2, true)
+		return CheckboxPassTemplates.settings_checkbox(size[1], size[2], entry.value_width or settings_value_width, 2, true, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
@@ -238,7 +272,7 @@ blueprints.percent_slider = {
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
-		return SliderPassTemplates.settings_percent_slider(size[1], size[2], entry.value_width or settings_value_width, true)
+		return SliderPassTemplates.settings_percent_slider(size[1], size[2], entry.value_width or settings_value_width, true, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		slider_init_function(parent, widget, entry, callback_name, changed_callback_name)
@@ -334,7 +368,7 @@ blueprints.value_slider = {
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
-		return SliderPassTemplates.settings_value_slider(size[1], size[2], entry.value_width or settings_value_width, true)
+		return SliderPassTemplates.settings_value_slider(size[1], size[2], entry.value_width or settings_value_width, true, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		slider_init_function(parent, widget, entry, callback_name, changed_callback_name)
@@ -437,7 +471,7 @@ blueprints.slider = {
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
-		return SliderPassTemplates.settings_value_slider(size[1], size[2], entry.value_width or settings_value_width, true)
+		return SliderPassTemplates.settings_value_slider(size[1], size[2], entry.value_width or settings_value_width, true, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
@@ -565,7 +599,7 @@ blueprints.dropdown = {
 		local options = entry.options_function and entry.options_function() or entry.options
 		local num_visible_options = math.min(#options, max_visible_options)
 
-		return DropdownPassTemplates.settings_dropdown(size[1], size[2], entry.value_width or settings_value_width, num_visible_options, true)
+		return DropdownPassTemplates.settings_dropdown(size[1], size[2], entry.value_width or settings_value_width, num_visible_options, true, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
@@ -588,7 +622,9 @@ blueprints.dropdown = {
 		local options_by_id = {}
 
 		for index, option in pairs(options) do
-			options_by_id[option.id] = option
+			local option_id = option.id
+
+			options_by_id[option_id] = option
 		end
 
 		content.number_format = number_format
@@ -825,7 +861,7 @@ blueprints.keybind = {
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
-		return KeybindPassTemplates.settings_keybind(size[1], size[2], entry.value_width or settings_value_width)
+		return KeybindPassTemplates.settings_keybind(size[1], size[2], entry.value_width or settings_value_width, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
@@ -947,7 +983,7 @@ local function controller_image_apply_text_function(widget)
 							local main_input = key_info.main
 
 							if temp_input_display_values[main_input] then
-								temp_input_display_values[main_input] = temp_input_display_values[main_input] .. " / " .. Localize(display_name)
+								temp_input_display_values[main_input] = temp_input_display_values[main_input] .. "/" .. Localize(display_name)
 							else
 								temp_input_display_values[main_input] = Localize(display_name)
 							end
@@ -966,7 +1002,7 @@ local function controller_image_apply_text_function(widget)
 											local additional_alias_display_name = alias:description(extra_alias_name)
 
 											if additional_alias_display_name then
-												temp_input_display_values[main_input] = temp_input_display_values[main_input] .. " / " .. Localize(additional_alias_display_name)
+												temp_input_display_values[main_input] = temp_input_display_values[main_input] .. "/" .. Localize(additional_alias_display_name)
 											end
 										end
 									end
@@ -1865,7 +1901,7 @@ blueprints.large_value_slider = {
 		}
 	end,
 	pass_template_function = function (parent, entry, size)
-		return SliderPassTemplates.value_slider(size[1], size[2], entry.value_width, true)
+		return SliderPassTemplates.value_slider(size[1], size[2], entry.value_width, true, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content

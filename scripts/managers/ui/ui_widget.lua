@@ -38,7 +38,6 @@ UIWidget.init = function (name, widget_definition)
 	local size = widget_definition.size and table.clone(widget_definition.size) or nil
 
 	content.size = size
-	content.size_table = {}
 
 	return {
 		visible = true,
@@ -241,22 +240,6 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	local content = widget.content
 	local size = content.size
 	local widget_offset = widget.offset
-
-	if not size then
-		local scenegraph_id = widget.scenegraph_id
-
-		size = content.size_table
-
-		local w, h = UIScenegraph.get_size(ui_scenegraph, scenegraph_id, scale)
-
-		if widget_optional_scale then
-			w = w * widget_optional_scale
-			h = h * widget_optional_scale
-		end
-
-		size[1], size[2] = w, h
-	end
-
 	local dt = ui_renderer.dt
 	local render_settings = ui_renderer.render_settings or temp_render_settings
 	local previous_render_settings_alpha_multiplier = render_settings.alpha_multiplier
@@ -307,7 +290,23 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 		pos_x, pos_y, pos_z = Vector3.to_elements(position)
 	end
 
-	local size_x, size_y = size[1], size[2]
+	local size_x, size_y
+
+	if size then
+		size_x, size_y = size[1], size[2]
+	end
+
+	if not size_x or not size_y then
+		local scenegraph_id = widget.scenegraph_id
+		local w, h = UIScenegraph.get_size(ui_scenegraph, scenegraph_id, scale)
+
+		if widget_optional_scale then
+			w = w * widget_optional_scale
+			h = h * widget_optional_scale
+		end
+
+		size_x, size_y = size_x or w, size_y or h
+	end
 
 	for i = 1, #passes do
 		repeat

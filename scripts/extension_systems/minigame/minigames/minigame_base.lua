@@ -53,6 +53,10 @@ MinigameBase.hot_join_sync = function (self, sender, channel)
 	end
 end
 
+MinigameBase.decode_interrupt = function (self)
+	return
+end
+
 MinigameBase.start = function (self, player_or_nil)
 	self._player_session_id = player_or_nil and player_or_nil:session_id()
 end

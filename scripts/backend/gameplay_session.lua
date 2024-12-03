@@ -223,6 +223,17 @@ GameplaySession.events = function (self, session_id, events)
 	return promise
 end
 
+GameplaySession.lock = function (self, category, lock_state, participants)
+	return Managers.backend:title_request("/gameplay/sessions/lock", {
+		method = "PUT",
+		body = {
+			category = category,
+			lockState = lock_state,
+			participants = participants,
+		},
+	})
+end
+
 implements(GameplaySession, Interface)
 
 return GameplaySession

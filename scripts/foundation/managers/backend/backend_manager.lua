@@ -4,7 +4,6 @@ local BackendError = require("scripts/foundation/managers/backend/backend_error"
 local BackendInterface = require("scripts/backend/backend_interface")
 local BackendManagerTestify = GameParameters.testify and require("scripts/foundation/managers/backend/backend_manager_testify")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local DefaultBackendSettings = require("scripts/settings/backend/default_backend_settings")
 local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
@@ -169,13 +168,6 @@ BackendManager.update = function (self, dt, t)
 		end
 	end
 
-	local authenticated = initialized and self:authenticated()
-	local settings_need_update = not self._settings_promise and not self._backend_settings
-
-	if authenticated and settings_need_update then
-		self:_download_settings()
-	end
-
 	local was_slow_frame = dt >= 0.5
 
 	if not DEDICATED_SERVER and not was_slow_frame then
@@ -271,12 +263,22 @@ BackendManager.authenticate = function (self)
 			end):next(function (result)
 				local success, error_code = Backend.initialize(debug_log, result.authentication_service_url, result.title_service_url, result.telemetry_service_url)
 
+				if not success then
+					Log.info("Backend", "Backend.initialize() parameters: '%s', '%s', '%s', '%s'", tostring(debug_log), tostring(DEFAULT_AUTHENTICATION_SERIVCE_URL), tostring(DEFAULT_TITLE_SERIVCE_URL), tostring(DEFAULT_TELEMERTY_SERVICE_URL))
+					Log.exception("Backend", "Backend.initialize() failed with error=%s", error_code)
+				end
+
 				self._initialized = true
 
 				self._initialize_promise:resolve()
 			end)
 		else
 			local success, error_code = Backend.initialize(debug_log, DEFAULT_AUTHENTICATION_SERIVCE_URL, DEFAULT_TITLE_SERIVCE_URL, DEFAULT_TELEMERTY_SERVICE_URL)
+
+			if not success then
+				Log.info("Backend", "Backend.initialize() parameters: '%s', '%s', '%s', '%s'", tostring(debug_log), tostring(DEFAULT_AUTHENTICATION_SERIVCE_URL), tostring(DEFAULT_TITLE_SERIVCE_URL), tostring(DEFAULT_TELEMERTY_SERVICE_URL))
+				Log.exception("Backend", "Backend.initialize() failed with error=%s", error_code)
+			end
 
 			self._initialized = true
 
@@ -575,18 +577,31 @@ BackendManager.failed_request = function (self)
 	end)
 end
 
-BackendManager._download_settings = function (self)
-	self._settings_promise = self:title_request(BackendUtilities.url_builder("/gameplay/config/sessions"):to_string())
+BackendManager.update_backend_settings = function (self)
+	if self._settings_promise then
+		return self._settings_promise
+	end
 
-	return self._settings_promise:next(function (message)
-		return message.body
-	end):next(function (settings)
-		self._backend_settings = settings
+	self._backend_settings = nil
+
+	local session_config = self:title_request(BackendUtilities.url_builder("/gameplay/config/sessions"):to_string()):next(function (data)
+		return data.body
+	end)
+
+	self._settings_promise = Promise.all(session_config)
+
+	return self._settings_promise:next(function (settings)
+		local backend_settings = {}
+
+		for i = 1, #settings do
+			table.merge(backend_settings, settings[i])
+		end
+
+		self._backend_settings = backend_settings
 		self._settings_promise = nil
 	end):catch(function (error)
 		Log.warning("Failed to fetch backend settings.")
 
-		self._backend_settings = {}
 		self._settings_promise = nil
 
 		return Promise.rejected(error)
@@ -594,18 +609,9 @@ BackendManager._download_settings = function (self)
 end
 
 BackendManager.session_setting = function (self, ...)
-	local res
 	local backend_settings = self._backend_settings
 
-	if backend_settings then
-		res = table.nested_get(backend_settings, ...)
-	end
-
-	if res == nil then
-		res = table.nested_get(DefaultBackendSettings, ...)
-	end
-
-	return res
+	return table.nested_get(backend_settings, ...)
 end
 
 implements(BackendManager, Interface)

@@ -10,7 +10,7 @@ local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_sty
 local Items = require("scripts/utilities/items")
 local MasteryUtils = require("scripts/utilities/mastery")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
-local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "weapon")
+local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "weapon", "havocOrder", "havoc_highest_rank", "havoc_week_rank")
 local item_type_group_lookup = UISettings.item_type_group_lookup
 local EndPlayerView = class("EndPlayerView", "BaseView")
 local animation_speed = 1
@@ -385,6 +385,8 @@ EndPlayerView._create_cards = function (self)
 					card_widgets[card_index] = widget
 				end
 			end
+		elseif card_type == CARD_TYPES.havocOrder then
+			-- Nothing
 		else
 			local widget = self:_create_card_widget(card_index + 1, card_type, card_data)
 
@@ -393,6 +395,24 @@ EndPlayerView._create_cards = function (self)
 				card_widgets[card_index] = widget
 			end
 		end
+	end
+
+	if session_report.havoc_order_reward then
+		card_index = card_index + 1
+
+		local card_data = session_report.havoc_order_reward
+
+		card_widgets[card_index] = self:_create_card_widget(card_index, "havocOrder", session_report.havoc_order_reward)
+	end
+
+	if session_report.havoc_highest_rank then
+		card_index = card_index + 1
+		card_widgets[card_index] = self:_create_card_widget(card_index, "havoc_highest_rank", session_report.havoc_highest_rank)
+	end
+
+	if session_report.havoc_week_rank then
+		card_index = card_index + 1
+		card_widgets[card_index] = self:_create_card_widget(card_index, "havoc_week_rank", session_report.havoc_week_rank)
 	end
 
 	if session_report.mastery_rewards then
@@ -472,6 +492,12 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 		}
 	elseif card_type == CARD_TYPES.weapon then
 		blueprint_name = "weapon"
+	elseif card_type == CARD_TYPES.havocOrder then
+		blueprint_name = "havoc"
+	elseif card_type == CARD_TYPES.havoc_highest_rank then
+		blueprint_name = "havoc_highest_rank"
+	elseif card_type == CARD_TYPES.havoc_week_rank then
+		blueprint_name = "havoc_week_rank"
 	else
 		return
 	end

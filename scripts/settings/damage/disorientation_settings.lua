@@ -555,6 +555,9 @@ disorientation_settings.disorientation_templates = {
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
 		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
 	},
+	trait_bespoke_powersword_2h_p1_trade_overheat_lockout_for_damage = {
+		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
+	},
 }
 disorientation_settings.disorientation_types = table.enum(unpack(table.keys(disorientation_settings.disorientation_templates)))
 

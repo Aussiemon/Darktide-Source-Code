@@ -39,6 +39,61 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 	end
 end
 
+MutatorManager.init = function (self, is_server, nav_world, network_event_delegate, circumstance_name, level_seed)
+	self._is_server = is_server
+	self._network_event_delegate = network_event_delegate
+	self._mutators = {}
+	self._nav_world = nav_world
+	self._level_seed = level_seed
+
+	self:_load_mutators(circumstance_name)
+
+	if is_server then
+		local event_manager = Managers.event
+
+		event_manager:register(self, "player_unit_spawned", "_on_player_unit_spawned")
+		event_manager:register(self, "player_unit_despawned", "_on_player_unit_despawned")
+		event_manager:register(self, "minion_unit_spawned", "_on_minion_unit_spawned")
+	end
+end
+
+MutatorManager._load_mutators = function (self, circumstance_name)
+	local havoc_data = Managers.state.difficulty:get_parsed_havoc_data()
+	local mutators_to_load
+
+	if havoc_data then
+		local circumstances = havoc_data.circumstances
+
+		for i = 1, #circumstances do
+			local circumstance = circumstances[i]
+			local circumstance_template = CircumstanceTemplates[circumstance]
+
+			if mutators_to_load then
+				table.append(mutators_to_load, circumstance_template.mutators)
+			else
+				mutators_to_load = table.clone(circumstance_template.mutators)
+			end
+		end
+	else
+		local circumstance_template = CircumstanceTemplates[circumstance_name]
+
+		mutators_to_load = circumstance_template.mutators
+	end
+
+	local is_server = self._is_server
+	local network_event_delegate = self._network_event_delegate
+	local mutators = self._mutators
+
+	if mutators_to_load then
+		for _, mutator_name in ipairs(mutators_to_load) do
+			local mutator_template = MutatorTemplates[mutator_name]
+			local mutator_class = require(mutator_template.class)
+
+			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._level_seed)
+		end
+	end
+end
+
 MutatorManager.destroy = function (self)
 	if self._is_server then
 		local event_manager = Managers.event

@@ -7,6 +7,7 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local Health = require("scripts/utilities/health")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
+local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
@@ -85,6 +86,13 @@ PickupSystem._fetch_settings = function (self)
 	local mission_overrides = circumstance_template.mission_overrides
 
 	if mission_overrides and mission_overrides.pickup_settings then
+		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(mission_overrides.pickup_settings, difficulty)
+
+		self:_add_to_table(selected_pools, pickup_settings_adjust)
+	end
+
+	if Managers.state.havoc:is_havoc() then
+		local mission_overrides = MissionOverrides.havoc_pickups
 		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(mission_overrides.pickup_settings, difficulty)
 
 		self:_add_to_table(selected_pools, pickup_settings_adjust)

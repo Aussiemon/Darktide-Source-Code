@@ -34,7 +34,7 @@ local mission_vote_matchmaking_immaterium = {
 	static_params = {
 		matchmaker_type = "mission",
 	},
-	on_started = function (voting_id, template, params)
+	on_started = function (voting_id, template, params, started_by_account_id)
 		if Managers.ui:view_active("system_view") then
 			Managers.ui:close_view("system_view")
 		end
@@ -47,6 +47,7 @@ local mission_vote_matchmaking_immaterium = {
 					qp = params.qp,
 					voting_id = voting_id,
 					backend_mission_id = params.backend_mission_id,
+					started_by_account_id = started_by_account_id,
 				}
 
 				_open_voting_view(view_context)
@@ -55,6 +56,7 @@ local mission_vote_matchmaking_immaterium = {
 					voting_id = voting_id,
 					backend_mission_id = params.backend_mission_id,
 					mission_data = cjson.decode(params.mission_data).mission,
+					started_by_account_id = started_by_account_id,
 				}
 
 				_open_voting_view(view_context)

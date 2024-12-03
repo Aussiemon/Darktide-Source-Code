@@ -527,6 +527,159 @@ StepperPassTemplates.difficulty_stepper = {
 	},
 }
 
+local MIN_HAVOC_RANK = 1
+local MAX_HAVOC_RANK = 40
+
+StepperPassTemplates.havoc_stepper = {
+	{
+		pass_type = "logic",
+		value = function (pass, ui_renderer, logic_style, content, position, size)
+			if not content.disabled then
+				local min_level = math.clamp(content.min_level or MIN_HAVOC_RANK, MIN_HAVOC_RANK, MAX_HAVOC_RANK)
+				local max_level = math.clamp(content.max_level or MAX_HAVOC_RANK, MAX_HAVOC_RANK, MAX_HAVOC_RANK)
+
+				min_level = min_level <= max_level and min_level or max_level
+				content.min_level = min_level
+				content.max_level = max_level
+				content.level = min_level <= content.level and max_level >= content.level and content.level or min_level
+
+				local level = content.level
+				local input_service = ui_renderer.input_service
+
+				if (content.hotspot_left.on_released or input_service:get("navigate_primary_left_pressed")) and min_level < level then
+					level = level - 1
+				elseif (content.hotspot_right.on_released or input_service:get("navigate_primary_right_pressed")) and level < max_level then
+					level = level + 1
+				end
+
+				local hover_index = content.level
+
+				if content.last_level ~= level then
+					content.difficulty_text = tostring(level)
+					content.last_level = level
+					content.level = level
+
+					local cb = content.on_changed_callback
+
+					if cb then
+						cb()
+					end
+				end
+
+				content._hover_index_1 = math.min(hover_index, level)
+				content._hover_index_2 = math.max(hover_index, level)
+
+				local gamepad_active = InputDevice.gamepad_active
+
+				if content.was_gamepad_active ~= gamepad_active then
+					content.was_gamepad_active = gamepad_active
+					content.stepper_left = gamepad_active and input_text_navigate_primary_left or "<"
+					content.stepper_right = gamepad_active and input_text_navigate_primary_right or ">"
+				end
+			end
+		end,
+	},
+	{
+		pass_type = "text",
+		value = "<",
+		value_id = "stepper_left",
+		style = {
+			font_size = 32,
+			font_type = "proxima_nova_bold",
+			horizontal_alignment = "center",
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			vertical_alignment = "center",
+			text_color = color_terminal_text_header,
+			size = {
+				75,
+				75,
+			},
+			offset = {
+				-120,
+				30,
+				1,
+			},
+		},
+	},
+	{
+		pass_type = "text",
+		value = ">",
+		value_id = "stepper_right",
+		style = {
+			font_size = 32,
+			font_type = "proxima_nova_bold",
+			horizontal_alignment = "center",
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			vertical_alignment = "center",
+			text_color = color_terminal_text_header,
+			size = {
+				75,
+				75,
+			},
+			offset = {
+				120,
+				30,
+				1,
+			},
+		},
+	},
+	{
+		content_id = "hotspot_left",
+		pass_type = "hotspot",
+		content = difficulty_picker_stepper_hotspot_content,
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size = {
+				75,
+				75,
+			},
+			offset = {
+				-140,
+				30,
+				1,
+			},
+		},
+	},
+	{
+		content_id = "hotspot_right",
+		pass_type = "hotspot",
+		content = difficulty_picker_stepper_hotspot_content,
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size = {
+				75,
+				75,
+			},
+			offset = {
+				140,
+				30,
+				1,
+			},
+		},
+	},
+	{
+		pass_type = "text",
+		value = "difficulty_text",
+		value_id = "difficulty_text",
+		style = {
+			font_size = 45,
+			font_type = "proxima_nova_bold",
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			text_color = color_terminal_text_header,
+			offset = {
+				0,
+				20,
+				3,
+			},
+		},
+	},
+}
+
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
 
 terminal_button_text_style.offset = {

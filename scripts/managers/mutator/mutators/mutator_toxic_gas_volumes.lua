@@ -5,9 +5,9 @@ require("scripts/managers/mutator/mutators/mutator_base")
 local Component = require("scripts/utilities/component")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
-local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
-local NavQueries = require("scripts/utilities/nav_queries")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
+local NavQueries = require("scripts/utilities/nav_queries")
+local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local MutatorToxicGasVolumes = class("MutatorToxicGasVolumes", "MutatorBase")
 local GasPhases = table.enum("dormant", "activating", "active")
 local GAS_START_SOUND_EVENT = "wwise/events/world/play_event_toxic_gas_high_start"
@@ -307,7 +307,9 @@ end
 MutatorToxicGasVolumes._setup_static_clouds = function (self)
 	local gas_clouds = self._gas_clouds
 	local num_sections = self:_get_clouds(gas_clouds)
-	local active_gas_clouds = {}
+	local main_path_manager = Managers.state.main_path
+	local nav_spawn_points = main_path_manager:nav_spawn_points()
+	local active_gas_clouds, nav_world = {}, self._nav_world
 	local force_next_to_not_skip = false
 
 	for i = 1, num_sections do
@@ -317,7 +319,6 @@ MutatorToxicGasVolumes._setup_static_clouds = function (self)
 			local section_entry = gas_clouds[random_section_id]
 			local random_id = self:_random(1, #section_entry)
 			local clouds = section_entry[random_id]
-			local main_path_manager = Managers.state.main_path
 
 			if not force_next_to_not_skip and math.random() < CHANCE_TO_NOT_SPAWN_CLOUD then
 				force_next_to_not_skip = true
@@ -346,11 +347,10 @@ MutatorToxicGasVolumes._setup_static_clouds = function (self)
 				end
 
 				local position = Unit.local_position(cloud_unit, 1)
-				local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 5, 10, 5)
+				local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 5, 10, 5)
 
 				if position_on_navmesh then
-					local nav_spawn_points = main_path_manager:nav_spawn_points()
-					local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, position_on_navmesh)
+					local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_navmesh)
 
 					if spawn_point_group_index then
 						local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index)
@@ -384,7 +384,8 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 
 	self:_get_corals(corals)
 
-	local main_path_manager = Managers.state.main_path
+	local main_path_manager, nav_world = Managers.state.main_path, self._nav_world
+	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local alternating_gas_clouds = {}
 	local alternating_timers = {}
 	local sound_positions = {}
@@ -430,11 +431,10 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 					end
 
 					local position = Unit.local_position(cloud_unit, 1)
-					local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 5, 10, 5)
+					local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 5, 10, 5)
 
 					if position_on_navmesh then
-						local nav_spawn_points = main_path_manager:nav_spawn_points()
-						local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, position_on_navmesh)
+						local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_navmesh)
 
 						if spawn_point_group_index then
 							local alternating_min_range = wanted_component:get_data(cloud_unit, "alternating_min_range")

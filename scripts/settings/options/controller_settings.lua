@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/options/controller_settings.lua
 
-local OptionsUtilities = require("scripts/utilities/ui/options")
+local Options = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
@@ -16,6 +16,7 @@ local function construct_interface_settings_boolean(template)
 	entry.validation_function = template.validation_function
 	entry.tooltip_text = template.tooltip_text
 	entry.disable_rules = template.disable_rules
+	entry.is_sub_setting = template.is_sub_setting
 	entry.id = template.id
 
 	local id = template.id
@@ -121,9 +122,10 @@ local function construct_interface_settings_percent_slider(template)
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
+		is_sub_setting = template.is_sub_setting,
 	}
 
-	return OptionsUtilities.create_percent_slider_template(params)
+	return Options.create_percent_slider_template(params)
 end
 
 local function construct_interface_settings_value_slider(template)
@@ -168,9 +170,10 @@ local function construct_interface_settings_value_slider(template)
 		id = template.id,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
+		is_sub_setting = template.is_sub_setting,
 	}
 
-	return OptionsUtilities.create_value_slider_template(params)
+	return Options.create_value_slider_template(params)
 end
 
 local function construct_interface_settings_dropdown(template)
@@ -219,6 +222,7 @@ local function construct_interface_settings_dropdown(template)
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
 		default_value = template.default_value,
+		is_sub_setting = template.is_sub_setting,
 	}
 
 	return params
@@ -349,6 +353,14 @@ settings_definitions[#settings_definitions + 1] = {
 				input_manager:save_key_mappings(service_type)
 			end
 		end
+
+		if IS_PLAYSTATION then
+			Managers.event:trigger("event_update_haptic_trigger_effects_enabled")
+			Managers.event:trigger("event_update_haptic_trigger_melee_resistance_strength")
+			Managers.event:trigger("event_update_haptic_trigger_ranged_resistance_strength")
+			Managers.event:trigger("event_update_haptic_trigger_melee_vibration_strength")
+			Managers.event:trigger("event_update_haptic_trigger_ranged_vibration_strength")
+		end
 	end,
 }
 
@@ -392,7 +404,9 @@ settings_definitions[#settings_definitions + 1] = {
 		Managers.event:trigger("event_update_rumble_enabled", value)
 
 		if value then
-			Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
+			local event_name = IS_PLAYSTATION and UISoundEvents.rumble_enabled_ps5 or UISoundEvents.rumble_enabled
+
+			Managers.ui:play_2d_sound(event_name)
 		end
 	end,
 }
@@ -406,7 +420,7 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "percent_slider",
 	on_value_changed = function (value)
 		Managers.event:trigger("event_update_rumble_intensity", value)
-		Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
+		Managers.ui:play_2d_sound(UISoundEvents.rumble_changed)
 	end,
 }
 
@@ -414,6 +428,46 @@ if IS_PLAYSTATION then
 	settings_definitions[#settings_definitions].tooltip_text = "loc_settings_menu_rumble_intensity_mouseover_sony"
 end
 
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_settings_menu_group_rumble_combat",
+	group_name = "trigger_haptics",
+	widget_type = "group_sub_header",
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	default_value = 100,
+	display_name = "loc_setting_melee",
+	id = "rumble_intensity_combat_melee",
+	is_sub_setting = true,
+	min_value = 0,
+	save_location = "input_settings",
+	tooltip_text = "loc_settings_menu_rumble_rumble_combat_melee_mouseover",
+	widget_type = "percent_slider",
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_rumble_intensity", value)
+	end,
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	default_value = 100,
+	display_name = "loc_setting_ranged",
+	id = "rumble_intensity_combat_ranged",
+	is_sub_setting = true,
+	min_value = 0,
+	save_location = "input_settings",
+	tooltip_text = "loc_settings_menu_rumble_rumble_combat_ranged_mouseover",
+	widget_type = "percent_slider",
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_rumble_intensity", value)
+	end,
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+}
 settings_definitions[#settings_definitions + 1] = {
 	default_value = 100,
 	display_name = "loc_settings_menu_rumble_gameplay",
@@ -426,6 +480,11 @@ settings_definitions[#settings_definitions + 1] = {
 		Managers.event:trigger("event_update_rumble_intensity", value)
 	end,
 }
+
+if IS_PLAYSTATION then
+	settings_definitions[#settings_definitions].tooltip_text = "loc_settings_menu_rumble_gameplay_mouseover_sony"
+end
+
 settings_definitions[#settings_definitions + 1] = {
 	default_value = 100,
 	display_name = "loc_settings_menu_rumble_immersive",
@@ -436,6 +495,172 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "percent_slider",
 	on_value_changed = function (value)
 		Managers.event:trigger("event_update_rumble_intensity", value)
+	end,
+}
+
+if IS_PLAYSTATION then
+	settings_definitions[#settings_definitions].tooltip_text = "loc_settings_menu_rumble_immersive_mouseover_sony"
+end
+
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_settings_menu_group_trigger_haptics_settings",
+	group_name = "trigger_haptics",
+	widget_type = "group_header",
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	default_value = true,
+	display_name = "loc_settings_menu_trigger_effects_enabled",
+	id = "haptic_trigger_effects_enabled",
+	save_location = "input_settings",
+	widget_type = "boolean",
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_haptic_trigger_effects_enabled", value)
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_settings_menu_group_trigger_haptics_resistance_strength_settings",
+	group_name = "trigger_haptics",
+	widget_type = "group_sub_header",
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_melee",
+	id = "haptic_trigger_melee_resistance_strength",
+	is_sub_setting = true,
+	save_location = "input_settings",
+	widget_type = "dropdown",
+	options = {
+		{
+			display_name = "loc_setting_haptic_trigger_strength_off",
+			name = "off",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_subtle",
+			name = "subtle",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_strong",
+			name = "strong",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_full",
+			name = "full",
+		},
+	},
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_haptic_trigger_melee_resistance_strength", value)
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_ranged",
+	id = "haptic_trigger_ranged_resistance_strength",
+	is_sub_setting = true,
+	save_location = "input_settings",
+	widget_type = "dropdown",
+	options = {
+		{
+			display_name = "loc_setting_haptic_trigger_strength_off",
+			name = "off",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_subtle",
+			name = "subtle",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_strong",
+			name = "strong",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_full",
+			name = "full",
+		},
+	},
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_haptic_trigger_ranged_resistance_strength", value)
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_settings_menu_group_trigger_haptics_vibration_strength_settings",
+	group_name = "trigger_haptics",
+	widget_type = "group_sub_header",
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_melee",
+	id = "haptic_trigger_melee_vibration_strength",
+	is_sub_setting = true,
+	save_location = "input_settings",
+	widget_type = "dropdown",
+	options = {
+		{
+			display_name = "loc_setting_haptic_trigger_strength_off",
+			name = "off",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_subtle",
+			name = "subtle",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_strong",
+			name = "strong",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_full",
+			name = "full",
+		},
+	},
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_haptic_trigger_melee_vibration_strength", value)
+	end,
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_ranged",
+	id = "haptic_trigger_ranged_vibration_strength",
+	is_sub_setting = true,
+	save_location = "input_settings",
+	widget_type = "dropdown",
+	options = {
+		{
+			display_name = "loc_setting_haptic_trigger_strength_off",
+			name = "off",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_subtle",
+			name = "subtle",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_strong",
+			name = "strong",
+		},
+		{
+			display_name = "loc_setting_haptic_trigger_strength_full",
+			name = "full",
+		},
+	},
+	validation_function = function ()
+		return IS_PLAYSTATION
+	end,
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_haptic_trigger_ranged_vibration_strength", value)
 	end,
 }
 settings_definitions[#settings_definitions + 1] = {
@@ -484,16 +709,36 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "boolean",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_rotation_speed_curves",
+	display_name = "loc_setting_menu_group_response_curve_type",
+	group_name = "controller_aim_settings",
+	widget_type = "group_sub_header",
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_melee",
 	id = "controller_response_curve",
+	is_sub_setting = true,
 	save_location = "input_settings",
 	widget_type = "dropdown",
 	options = _response_curve_options(),
 }
 settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_ranged",
+	id = "controller_response_curve_ranged",
+	is_sub_setting = true,
+	save_location = "input_settings",
+	widget_type = "dropdown",
+	options = _response_curve_options(),
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_menu_group_response_curve_strength",
+	group_name = "controller_aim_settings",
+	widget_type = "group_sub_header",
+}
+settings_definitions[#settings_definitions + 1] = {
 	default_value = 0,
-	display_name = "loc_setting_controller_rotation_speed_curves_strength",
+	display_name = "loc_setting_melee",
 	id = "controller_response_curve_strength",
+	is_sub_setting = true,
 	max_value = 100,
 	min_value = -100,
 	save_location = "input_settings",
@@ -501,16 +746,10 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "percent_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_rotation_speed_curves_ranged",
-	id = "controller_response_curve_ranged",
-	save_location = "input_settings",
-	widget_type = "dropdown",
-	options = _response_curve_options(),
-}
-settings_definitions[#settings_definitions + 1] = {
 	default_value = 0,
-	display_name = "loc_setting_controller_rotation_speed_curves_strength_ranged",
+	display_name = "loc_setting_ranged",
 	id = "controller_response_curve_strength_ranged",
+	is_sub_setting = true,
 	max_value = 100,
 	min_value = -100,
 	save_location = "input_settings",
@@ -529,13 +768,14 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "value_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_settings_menu_group_controller_sensitivity_settings",
+	display_name = "loc_setting_menu_group_horizontal_sensitivity",
 	group_name = "controller_aim_settings",
-	widget_type = "group_header",
+	widget_type = "group_sub_header",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_look_scale_horizontal",
+	display_name = "loc_setting_melee",
 	id = "controller_look_scale",
+	is_sub_setting = true,
 	max_value = 10,
 	min_value = 0.1,
 	num_decimals = 1,
@@ -544,8 +784,9 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "value_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_look_scale_horizontal_ranged",
+	display_name = "loc_setting_ranged",
 	id = "controller_look_scale_ranged",
+	is_sub_setting = true,
 	max_value = 10,
 	min_value = 0.1,
 	num_decimals = 1,
@@ -554,8 +795,9 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "value_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_look_scale_horizontal_ranged_alternate_fire",
+	display_name = "loc_setting_ranged_alt_fire",
 	id = "controller_look_scale_ranged_alternate_fire",
+	is_sub_setting = true,
 	max_value = 10,
 	min_value = 0.1,
 	num_decimals = 1,
@@ -564,8 +806,14 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "value_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_look_scale_vertical",
+	display_name = "loc_setting_menu_group_vertical_sensitivity",
+	group_name = "controller_aim_settings",
+	widget_type = "group_sub_header",
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_setting_melee",
 	id = "controller_look_scale_vertical",
+	is_sub_setting = true,
 	max_value = 10,
 	min_value = 0.1,
 	num_decimals = 1,
@@ -574,8 +822,9 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "value_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_look_scale_vertical_ranged",
+	display_name = "loc_setting_ranged",
 	id = "controller_look_scale_vertical_ranged",
+	is_sub_setting = true,
 	max_value = 10,
 	min_value = 0.1,
 	num_decimals = 1,
@@ -584,8 +833,9 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "value_slider",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_setting_controller_look_scale_vertical_ranged_alternate_fire",
+	display_name = "loc_setting_ranged_alt_fire",
 	id = "controller_look_scale_vertical_ranged_alternate_fire",
+	is_sub_setting = true,
 	max_value = 10,
 	min_value = 0.1,
 	num_decimals = 1,

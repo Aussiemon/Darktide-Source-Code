@@ -6,8 +6,31 @@ local buff_keywords = BuffSettings.keywords
 local SharedFunctions = SharedOverheatAndWarpChargeFunctions
 local Overheat = {}
 
+local function _try_enter_lockout(unit, new_heat, inventory_slot_component)
+	if new_heat >= 1 then
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local overheat_configuration = Overheat.configuration(visual_loadout_extension, inventory_slot_component.__name)
+
+		if overheat_configuration.lockout_enabled and inventory_slot_component.overheat_state ~= "exploding" then
+			local buff_extension = ScriptUnit.extension(unit, "buff_system")
+			local use_overheat_soft_lockout = buff_extension:has_keyword(buff_keywords.use_overheat_soft_lockout)
+
+			if use_overheat_soft_lockout then
+				inventory_slot_component.overheat_state = "soft_lockout"
+			else
+				inventory_slot_component.overheat_state = "lockout"
+			end
+		end
+	end
+end
+
 Overheat.increase_immediate = function (t, charge_level, inventory_slot_component, charge_template, unit, is_critical_strike)
 	local current_state = inventory_slot_component.overheat_state
+
+	if current_state == "lockout" or current_state == "soft_lockout" then
+		return
+	end
+
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local buff_multiplier = stat_buffs and stat_buffs.overheat_amount * stat_buffs.overheat_immediate_amount or 1
@@ -25,6 +48,8 @@ Overheat.increase_immediate = function (t, charge_level, inventory_slot_componen
 	inventory_slot_component.overheat_last_charge_at_t = t
 	inventory_slot_component.overheat_current_percentage = new_heat
 	inventory_slot_component.overheat_state = new_state or current_state
+
+	_try_enter_lockout(unit, new_heat, inventory_slot_component)
 end
 
 Overheat.decrease_immediate = function (remove_percentage, inventory_slot_component)
@@ -33,10 +58,19 @@ Overheat.decrease_immediate = function (remove_percentage, inventory_slot_compon
 	local new_percentage, new_state = SharedFunctions.remove_immediate(remove_percentage, current_percentage)
 
 	inventory_slot_component.overheat_current_percentage = new_percentage
+
+	if inventory_slot_component.overheat_state ~= "lockout" or new_percentage ~= 0 then
+		return
+	end
+
 	inventory_slot_component.overheat_state = new_state or current_state
 end
 
 Overheat.increase_over_time = function (dt, t, charge_level, inventory_slot_component, charge_template, unit)
+	if inventory_slot_component.overheat_state == "lockout" then
+		return
+	end
+
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local buff_multiplier = stat_buffs and stat_buffs.overheat_amount * stat_buffs.overheat_over_time_amount or 1
@@ -48,6 +82,8 @@ Overheat.increase_over_time = function (dt, t, charge_level, inventory_slot_comp
 
 	inventory_slot_component.overheat_current_percentage = new_heat
 	inventory_slot_component.overheat_last_charge_at_t = t
+
+	_try_enter_lockout(unit, new_heat, inventory_slot_component)
 end
 
 Overheat.update = function (dt, t, inventory_slot_component, weapon_template, unit, first_person_unit, charge_weapon_tweak_templates)
@@ -68,18 +104,21 @@ Overheat.update = function (dt, t, inventory_slot_component, weapon_template, un
 	local last_charge_at_t = inventory_slot_component.overheat_last_charge_at_t
 	local auto_vent_delay = overheat_decay.auto_vent_delay
 	local reload_state = inventory_slot_component.reload_state
-	local reload_state_overrides = overheat_decay.reload_state_overrides
-	local reload_state_override = reload_state_overrides[reload_state]
 
-	if reload_state_override then
-		local remove_percentage = dt * reload_state_override
+	if reload_state ~= "none" then
+		local reload_state_overrides = overheat_decay.reload_state_overrides
+		local reload_state_override = reload_state_overrides[reload_state]
 
-		Overheat.decrease_immediate(remove_percentage, inventory_slot_component)
+		if reload_state_override then
+			local remove_percentage = dt * reload_state_override
 
-		return
+			Overheat.decrease_immediate(remove_percentage, inventory_slot_component)
+
+			return
+		end
 	end
 
-	local idle = current_state == "idle"
+	local idle = current_state == "idle" or current_state == "lockout"
 	local start_decay_at_t = last_charge_at_t + auto_vent_delay
 	local waiting_for_decay = t < start_decay_at_t
 	local overheat_variable_1p = Unit.animation_find_variable(first_person_unit, "overheat")
@@ -111,6 +150,10 @@ Overheat.update = function (dt, t, inventory_slot_component, weapon_template, un
 	local new_heat = SharedFunctions.update(dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate_modifier, high_threshold_decay_rate_modifier, critical_threshold_decay_rate_modifier)
 
 	inventory_slot_component.overheat_current_percentage = new_heat
+
+	if inventory_slot_component.overheat_state == "lockout" and new_heat == 0 then
+		inventory_slot_component.overheat_state = "idle"
+	end
 end
 
 Overheat.can_vent = function (inventory_slot_component)

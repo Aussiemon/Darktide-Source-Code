@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/difficulty/difficulty_manager.lua
 
+local Havoc = require("scripts/utilities/havoc")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerDifficultySettings = require("scripts/settings/difficulty/player_difficulty_settings")
 local DifficultyManager = class("DifficultyManager")
@@ -11,6 +12,34 @@ DifficultyManager.init = function (self, is_server, resistance, challenge)
 	self._initial_challenge = challenge
 
 	Log.info("DifficultyManager", "Difficulty initialized to challenge %s, resistance %s", challenge, resistance)
+end
+
+DifficultyManager.init = function (self, is_server, resistance, challenge, havoc_data)
+	self._is_server = is_server
+	self._resistance = resistance
+	self._challenge = challenge
+	self._initial_challenge = challenge
+	self._ammo_modifier = 1
+
+	Log.info("DifficultyManager", "Difficulty initialized to challenge %s, resistance %s", challenge, resistance)
+
+	if havoc_data then
+		local parsed_havoc_data = Havoc.parse_data(havoc_data)
+
+		self._parsed_havoc_data = parsed_havoc_data
+	end
+end
+
+DifficultyManager.get_parsed_havoc_data = function (self)
+	return self._parsed_havoc_data
+end
+
+DifficultyManager.set_ammo_modifier = function (self, modifier)
+	self._ammo_modifier = modifier
+end
+
+DifficultyManager.get_ammo_modifier = function (self)
+	return self._ammo_modifier
 end
 
 DifficultyManager.get_minion_max_health = function (self, breed_name)

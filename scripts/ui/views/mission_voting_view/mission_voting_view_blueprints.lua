@@ -101,7 +101,7 @@ local details_widgets_blueprints = {
 		main_objective = {
 			size = {
 				475,
-				175,
+				100,
 			},
 			pass_template = {
 				{
@@ -384,6 +384,22 @@ local details_widgets_blueprints = {
 	utility_functions = {},
 }
 
+local function get_havoc_mutators(mission_data)
+	local mutators = {}
+
+	for k, _ in pairs(mission_data.flags) do
+		if string.find(k, "havoc%-circ%-") then
+			mutators[#mutators + 1] = k
+		end
+	end
+
+	if #mutators > 0 then
+		return mutators
+	else
+		return nil
+	end
+end
+
 details_widgets_blueprints.utility_functions.prepare_details_data = function (mission_data, include_mission_header)
 	local details_data = {}
 	local has_side_mission = has_side_mission(mission_data)
@@ -407,16 +423,38 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 		}
 	end
 
-	local circumstance = mission_data.circumstance
-	local circumstance_ui_settings = CircumstanceTemplates[circumstance].ui
+	do
+		local circumstance = mission_data.circumstance
+		local circumstance_ui_settings = CircumstanceTemplates[circumstance].ui
 
-	if circumstance and circumstance ~= "default" and circumstance_ui_settings then
-		details_data[#details_data + 1] = {
-			template = "circumstance",
-			widget_data = {
-				circumstance = circumstance,
-			},
-		}
+		if circumstance and circumstance ~= "default" and circumstance_ui_settings then
+			details_data[#details_data + 1] = {
+				template = "circumstance",
+				widget_data = {
+					circumstance = circumstance,
+				},
+			}
+		end
+	end
+
+	do
+		local havoc_mutators = get_havoc_mutators(mission_data)
+
+		if havoc_mutators then
+			for _, v in ipairs(havoc_mutators) do
+				local circumstance = string.sub(v, 12)
+				local circumstance_ui_settings = CircumstanceTemplates[circumstance].ui
+
+				if circumstance_ui_settings then
+					details_data[#details_data + 1] = {
+						template = "circumstance",
+						widget_data = {
+							circumstance = circumstance,
+						},
+					}
+				end
+			end
+		end
 	end
 
 	return details_data

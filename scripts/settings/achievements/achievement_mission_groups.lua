@@ -7,6 +7,7 @@ AchievementMissionGroups.missions = {
 	{
 		local_variable = "loc_mission_name_km_station",
 		name = "km_station",
+		zone = "transit",
 		category = {
 			default = "endeavours_transit",
 			puzzle = "exploration_transit",
@@ -16,12 +17,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0003",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0004",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement02",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement02",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_lm_rails",
 		name = "lm_rails",
+		zone = "transit",
 		category = {
 			default = "endeavours_transit",
 			puzzle = "exploration_transit",
@@ -31,12 +33,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0001",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0002",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement01",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement01",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_cm_habs",
 		name = "cm_habs",
+		zone = "transit",
 		category = {
 			default = "endeavours_transit",
 			puzzle = "exploration_transit",
@@ -46,12 +49,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0002",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0006",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement03",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement03",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_dm_rise",
 		name = "dm_rise",
+		zone = "transit",
 		category = {
 			default = "endeavours_transit",
 			puzzle = "exploration_transit",
@@ -61,12 +65,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0004",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0008",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement04",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement04",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_dm_stockpile",
 		name = "dm_stockpile",
+		zone = "watertown",
 		category = {
 			default = "endeavours_watertown",
 			puzzle = "exploration_watertown",
@@ -76,12 +81,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0012",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0016",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement08",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement08",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_hm_cartel",
 		name = "hm_cartel",
+		zone = "watertown",
 		category = {
 			default = "endeavours_watertown",
 			puzzle = "exploration_watertown",
@@ -91,12 +97,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0011",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0018",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement09",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement09",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_km_enforcer",
 		name = "km_enforcer",
+		zone = "watertown",
 		category = {
 			default = "endeavours_watertown",
 			puzzle = "exploration_watertown",
@@ -106,12 +113,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0013",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0020",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement10",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement10",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_lm_cooling",
 		name = "lm_cooling",
+		zone = "tank_foundry",
 		category = {
 			default = "endeavours_foundry",
 			puzzle = "exploration_foundry",
@@ -121,12 +129,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0006",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0014",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement07",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement07",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_fm_cargo",
 		name = "fm_cargo",
+		zone = "tank_foundry",
 		category = {
 			default = "endeavours_foundry",
 			puzzle = "exploration_foundry",
@@ -136,12 +145,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0007",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0010",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement05",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement05",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_dm_forge",
 		name = "dm_forge",
+		zone = "tank_foundry",
 		category = {
 			default = "endeavours_foundry",
 			puzzle = "exploration_foundry",
@@ -151,12 +161,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0005",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0012",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement06",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement06",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_lm_scavenge",
 		name = "lm_scavenge",
+		zone = "dust",
 		category = {
 			default = "endeavours_dust",
 			puzzle = "exploration_dust",
@@ -166,12 +177,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0010",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0022",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement11",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement11",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_hm_strain",
 		name = "hm_strain",
+		zone = "dust",
 		category = {
 			default = "endeavours_dust",
 			puzzle = "exploration_dust",
@@ -181,12 +193,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0009",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0026",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement14",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement14",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_dm_propaganda",
 		name = "dm_propaganda",
+		zone = "dust",
 		category = {
 			default = "endeavours_dust",
 			puzzle = "exploration_dust",
@@ -196,12 +209,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0008",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0024",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement12",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement12",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_fm_resurgence",
 		name = "fm_resurgence",
+		zone = "throneside",
 		category = {
 			default = "endeavours_throneside",
 			puzzle = "exploration_throneside",
@@ -211,12 +225,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0014",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0028",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement15",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement15",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_cm_archives",
 		name = "cm_archives",
+		zone = "throneside",
 		category = {
 			default = "endeavours_throneside",
 			puzzle = "exploration_throneside",
@@ -226,12 +241,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0016",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0032",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement17",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement17",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_hm_complex",
 		name = "hm_complex",
+		zone = "throneside",
 		category = {
 			default = "endeavours_throneside",
 			puzzle = "exploration_throneside",
@@ -241,12 +257,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0015",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0030",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement16",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement16",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_fm_armoury",
 		name = "fm_armoury",
+		zone = "entertainment",
 		category = {
 			default = "endeavours_entertainment",
 			puzzle = "exploration_entertainment",
@@ -256,12 +273,13 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0017",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0034",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement18",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement18",
 		},
 	},
 	{
 		local_variable = "loc_mission_name_cm_raid",
 		name = "cm_raid",
+		zone = "entertainment",
 		category = {
 			default = "endeavours_entertainment",
 			puzzle = "exploration_entertainment",
@@ -271,8 +289,17 @@ AchievementMissionGroups.missions = {
 			collectible = path .. "mission_achievements/missions_achievement_puzzle_0018",
 			auric = path .. "mission_achievements/missions_achievement_difficulty_0036",
 			challange = path .. "default",
-			maelstrom_plus = path .. "havoc_achievements/havoc_mission_achievement19",
+			havoc = path .. "havoc_achievements/havoc_mission_achievement19",
 		},
+	},
+	{
+		local_variable = "loc_mission_name_km_heresy",
+		name = "km_heresy",
+		category = {
+			default = "endeavours_entertainment",
+			puzzle = "exploration_entertainment",
+		},
+		icon = {},
 	},
 	{
 		local_variable = "loc_mission_name_core_research",

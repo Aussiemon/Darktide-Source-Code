@@ -290,7 +290,57 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 	local account_level_up_promise = self:_check_level_up(account_stats, item_rewards)
 
 	table.insert(promise_list, account_level_up_promise)
-	Promise.all(unpack(promise_list)):next(function ()
+
+	if self._session_report.eor.mission.gameModeDetails and self._session_report.eor.mission.gameModeDetails.type == "havoc" then
+		self._session_report.character.havoc_highest_rank = self:_get_havoc_highest_rank(account_data)
+		self._session_report.character.havoc_week_rank = self:_get_havoc_week_rank(account_data)
+
+		local is_order_owner = my_account_id == self._session_report.eor.mission.gameModeDetails.ownerId
+		local havoc_history_promise = is_order_owner and Managers.data_service.havoc:history() or Promise.resolved()
+
+		table.insert(promise_list, havoc_history_promise)
+	end
+
+	return Promise.all(unpack(promise_list)):next(function (results)
+		local havoc_data = results[3]
+
+		if havoc_data and havoc_data.items then
+			local promises = {
+				Managers.data_service.havoc:order_by_id(havoc_data.items[1].orderId),
+			}
+
+			if havoc_data.items[2] then
+				promises[#promises + 1] = Managers.data_service.havoc:order_by_id(havoc_data.items[2].orderId)
+			end
+
+			return Promise.all(unpack(promises)):next(function (orders)
+				local havoc_session = {
+					current = {
+						rank = havoc_data.items[1].rank,
+						charges = orders[1].charges,
+					},
+					previous = {
+						rank = havoc_data.items[2] and havoc_data.items[2].rank or 1,
+						charges = orders[2] and orders[2].charges or 3,
+					},
+				}
+				local havoc_order_reward = self:_get_havoc_order_rewards(account_data, havoc_session)
+				local should_present_reward = havoc_order_reward.current_rank and havoc_order_reward.current_rank ~= havoc_order_reward.previous_rank or havoc_order_reward.current_charges and havoc_order_reward.current_rank and havoc_order_reward.current_rank ~= havoc_order_reward.min_rank and havoc_order_reward.current_charges ~= havoc_order_reward.previous_charges
+
+				if should_present_reward then
+					self._session_report.character.havoc_order_reward = havoc_order_reward
+
+					Managers.data_service.havoc:set_show_promotion_info(havoc_session)
+				end
+
+				return Promise.resolved()
+			end)
+		end
+
+		return Promise.resolved()
+	end):catch(function ()
+		return Promise.resolved()
+	end):next(function ()
 		if GameParameters.testify or self._session_report_is_dummy then
 			return Promise.resolved()
 		end
@@ -317,6 +367,11 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 					mastery_reward.exp_per_level = exp_per_level
 
 					local gained_xp = mastery_reward.gainedXp
+
+					if gained_xp == 0 then
+						mastery_reward.startXp = mastery_data.current_xp or 0
+					end
+
 					local start_xp = mastery_reward.startXp
 					local end_xp = start_xp + gained_xp
 
@@ -426,6 +481,136 @@ ProgressionManager._get_mastery_rewards = function (self, account_data)
 	end
 
 	return weapons
+end
+
+ProgressionManager._has_won_mission = function (self, account_data)
+	local session_statistics = account_data.sessionStatistics
+	local mission_data
+
+	for i, stat in ipairs(session_statistics) do
+		local type_path = stat.typePath
+
+		if type_path == "mission" then
+			local session_value = stat.sessionValue
+
+			for data_name, data_value in pairs(session_value) do
+				mission_data = data_name
+
+				break
+			end
+		end
+	end
+
+	if mission_data then
+		local split = string.split(mission_data, "|")
+
+		for i = 1, #split do
+			local split_string = split[i]
+			local found_string = string.find(split_string, "win")
+
+			if found_string then
+				local found_string_split = string.split(split_string, ":")
+
+				return found_string_split[2] == "true"
+			end
+		end
+	end
+
+	return false
+end
+
+ProgressionManager._get_havoc_order_rewards = function (self, account_data, havoc_session)
+	local havoc_info = Managers.data_service.havoc:get_settings()
+	local min_rank = 1
+	local max_rank = havoc_info.max_rank
+	local max_charges = havoc_info.max_charges
+	local round_won = self:_has_won_mission(account_data)
+	local reward_cards = account_data.rewardCards
+	local modify_previous_reward = true
+
+	for i = 1, #reward_cards do
+		local reward_card = reward_cards[i]
+
+		if reward_card.kind == "havocOrder" then
+			local rewards = reward_card.rewards
+			local reward = rewards[1]
+
+			if reward and reward.rewardType == "havocOrder" then
+				modify_previous_reward = false
+
+				break
+			end
+		end
+	end
+
+	if modify_previous_reward then
+		havoc_session.previous.rank = havoc_session.current.rank
+		havoc_session.previous.charges = havoc_session.current.charges + (round_won and -1 or 1)
+	end
+
+	local current_rank = havoc_session.current.rank
+	local current_charges = havoc_session.current.charges
+	local previous_charges = havoc_session.previous.charges
+	local previous_rank = havoc_session.previous.rank
+	local max_charges = max_charges
+	local min_rank = min_rank
+	local max_rank = max_rank
+
+	return {
+		previous_charges = previous_charges,
+		current_charges = current_charges,
+		previous_rank = previous_rank,
+		current_rank = current_rank,
+		min_rank = min_rank,
+		max_rank = max_rank,
+		max_charges = max_charges,
+	}
+end
+
+ProgressionManager._get_havoc_highest_rank = function (self, account_data)
+	local round_won = self:_has_won_mission(account_data)
+
+	if round_won then
+		local reward_cards = account_data.rewardCards
+
+		for i = 1, #reward_cards do
+			local reward_card = reward_cards[i]
+
+			if reward_card.kind == "havocOrder" then
+				local rewards = reward_card.rewards
+				local reward = rewards[1]
+
+				if reward and reward.statType == "all-time" and reward.rewardType == "havocHighestRank" then
+					return {
+						rank = reward.rank,
+					}
+				end
+			end
+		end
+	end
+end
+
+ProgressionManager._get_havoc_week_rank = function (self, account_data)
+	local round_won = self:_has_won_mission(account_data)
+
+	if round_won then
+		local reward_cards = account_data.rewardCards
+
+		for i = 1, #reward_cards do
+			local reward_card = reward_cards[i]
+
+			if reward_card.kind == "havocOrder" then
+				local rewards = reward_card.rewards
+				local reward = rewards[1]
+
+				if reward and reward.statType == "week" and reward.rewardType == "havocHighestRank" then
+					return {
+						rank = reward.rank,
+					}
+				end
+			end
+		end
+	end
 end
 
 ProgressionManager._parse_wallets = function (self, wallets)
@@ -1054,6 +1239,22 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 				return self.wallets[3]
 			end
 		end,
+	}
+
+	self._session_report.character.havoc_order_reward = {
+		current_charges = 3,
+		current_rank = 13,
+		max_charges = 3,
+		max_rank = 40,
+		min_rank = 1,
+		previous_charges = 1,
+		previous_rank = 12,
+	}
+	self._session_report.character.havoc_week_rank = {
+		rank = 13,
+	}
+	self._session_report.character.havoc_highest_rank = {
+		rank = 13,
 	}
 
 	self:_parse_report(session_report, dummy_wallet)

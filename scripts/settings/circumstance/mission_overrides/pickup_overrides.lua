@@ -16,6 +16,60 @@ local removed = flat(-99)
 local not_changed = flat(0)
 
 do
+	local no_currency_pickup = {
+		small_metal = removed,
+		small_platinum = removed,
+		large_metal = removed,
+		large_platinum = removed,
+	}
+
+	PickupOverrides.havoc_pickups = {
+		pickup_settings = {
+			rubberband_pool = {
+				forge_material = no_currency_pickup,
+				ammo = {
+					small_clip = flat(2),
+					large_clip = flat(2),
+					ammo_cache_pocketable = not_changed,
+				},
+			},
+			mid_event = {
+				forge_material = no_currency_pickup,
+				ammo = {
+					small_clip = flat(2),
+					large_clip = flat(2),
+					ammo_cache_pocketable = not_changed,
+				},
+			},
+			end_event = {
+				forge_material = no_currency_pickup,
+				ammo = {
+					small_clip = flat(2),
+					large_clip = flat(2),
+					ammo_cache_pocketable = not_changed,
+				},
+			},
+			primary = {
+				forge_material = no_currency_pickup,
+				ammo = {
+					small_clip = flat(2),
+					large_clip = flat(2),
+					ammo_cache_pocketable = not_changed,
+				},
+			},
+			secondary = {
+				forge_material = no_currency_pickup,
+				ammo = {
+					small_clip = flat(2),
+					large_clip = flat(2),
+					ammo_cache_pocketable = not_changed,
+				},
+			},
+		},
+	}
+end
+
+do
 	local no_ammo_pickup = {
 		small_clip = removed,
 		large_clip = removed,
@@ -38,6 +92,35 @@ do
 			},
 			secondary = {
 				ammo = no_ammo_pickup,
+			},
+		},
+	}
+end
+
+do
+	local no_currency_pickup = {
+		small_metal = removed,
+		small_platinum = removed,
+		large_metal = removed,
+		large_platinum = removed,
+	}
+
+	PickupOverrides.no_currency_pickups = {
+		pickup_settings = {
+			rubberband_pool = {
+				currency = no_currency_pickup,
+			},
+			mid_event = {
+				currency = no_currency_pickup,
+			},
+			end_event = {
+				currency = no_currency_pickup,
+			},
+			primary = {
+				currency = no_currency_pickup,
+			},
+			secondary = {
+				currency = no_currency_pickup,
 			},
 		},
 	}

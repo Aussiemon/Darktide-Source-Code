@@ -6,7 +6,7 @@ return {
 	name = "ogryn_tree",
 	node_points = 30,
 	talent_points = 30,
-	version = 15,
+	version = 16,
 	nodes = {
 		{
 			max_points = 1,
@@ -165,9 +165,9 @@ return {
 			},
 		},
 		{
-			icon = "content/ui/textures/icons/talents/ogryn/ogryn_reloading_grants_damage",
+			icon = "content/ui/textures/icons/talents/ogryn/ogryn_coherency_radius_increase",
 			max_points = 1,
-			talent = "ogryn_reloading_grants_damage",
+			talent = "ogryn_coherency_radius_increase",
 			type = "default",
 			widget_name = "node_09e9b9b7-c1c8-4a9c-88eb-235ca27cc9e0",
 			x = 1205,
@@ -538,9 +538,9 @@ return {
 			},
 		},
 		{
-			icon = "content/ui/textures/icons/talents/ogryn/ogryn_multi_hits_grant_reload_speed",
+			icon = "content/ui/textures/icons/talents/ogryn/ogryn_increase_explosion_radius",
 			max_points = 1,
-			talent = "ogryn_multi_hits_grant_reload_speed",
+			talent = "ogryn_increase_explosion_radius",
 			type = "default",
 			widget_name = "node_a68be7fb-c454-4cfd-9ab9-626b1facc88b",
 			x = 1265,
@@ -633,7 +633,7 @@ return {
 		{
 			icon = "content/ui/textures/icons/talents/ogryn/ogryn_default_general_talent",
 			max_points = 1,
-			talent = "base_ranged_damage_node_buff_low_1",
+			talent = "base_suppression_node_buff_low_1",
 			type = "stat",
 			widget_name = "node_e0e49074-00b9-436a-869d-6fa7cf18e92c",
 			x = 1324,
@@ -654,9 +654,9 @@ return {
 			},
 		},
 		{
-			icon = "content/ui/textures/icons/talents/ogryn/ogryn_coherency_radius_increase",
+			icon = "content/ui/textures/icons/talents/ogryn/ogryn_multi_hits_grant_reload_speed",
 			max_points = 1,
-			talent = "ogryn_coherency_radius_increase",
+			talent = "ogryn_multi_hits_grant_reload_speed",
 			type = "default",
 			widget_name = "node_65087f4f-47f2-428b-8c72-a5120e1116ac",
 			x = 1355,
@@ -1223,7 +1223,7 @@ return {
 		{
 			icon = "content/ui/textures/icons/talents/ogryn/ogryn_default_general_talent",
 			max_points = 1,
-			talent = "base_suppression_node_buff_low_1",
+			talent = "base_ranged_damage_node_buff_low_1",
 			type = "stat",
 			widget_name = "node_387adcbf-5a43-4004-b575-862acfb59183",
 			x = 1415,
@@ -1313,9 +1313,9 @@ return {
 			},
 		},
 		{
-			icon = "content/ui/textures/icons/talents/ogryn/ogryn_increase_explosion_radius",
+			icon = "content/ui/textures/icons/talents/ogryn/ogryn_reloading_grants_damage",
 			max_points = 1,
-			talent = "ogryn_increase_explosion_radius",
+			talent = "ogryn_reloading_grants_damage",
 			type = "default",
 			widget_name = "node_a48230be-6330-4e03-871c-0a3881828604",
 			x = 1355,

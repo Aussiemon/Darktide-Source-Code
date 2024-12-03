@@ -564,6 +564,8 @@ local constants = {
 					"increasing",
 					"decreasing",
 					"exploding",
+					"soft_lockout",
+					"lockout",
 				},
 			},
 			overheat_last_charge_at_t = {

@@ -7,6 +7,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
@@ -1128,6 +1129,7 @@ weapon_template.actions = {
 		inner_damage_type = damage_types.punch,
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.punch,
+		haptic_trigger_template = HapticTriggerTemplates.melee.push,
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -1156,6 +1158,7 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
+	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1175,13 +1178,14 @@ weapon_template.keywords = {
 	"combat_sword",
 	"p1",
 }
-weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.melee.medium
 weapon_template.overclocks = {
 	cleave_damage_up_dps_down = {
 		combatsword_p1_m1_cleave_damage_stat = 0.1,

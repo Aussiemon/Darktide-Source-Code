@@ -337,6 +337,22 @@ local function create_definitions(settings)
 					end
 				end,
 			},
+			{
+				end_time = 0.8,
+				name = "disable_preview",
+				start_time = 0,
+				update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+					local disable_preview = progress < 1
+
+					for _, widget in pairs(widgets) do
+						if widget.type == "weapon_stats" then
+							for ii = 1, 5 do
+								widget.content.disable_preview = disable_preview
+							end
+						end
+					end
+				end,
+			},
 		},
 	}
 

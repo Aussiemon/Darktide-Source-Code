@@ -117,4 +117,9 @@ for name, template in pairs(MinionPushFxTemplates) do
 	end
 end
 
+vfx_names["content/fx/particles/enemies/bolstering_shockwave"] = true
+vfx_names["content/fx/particles/debug/fx_debug_1m_burst"] = true
+vfx_names["content/fx/particles/impacts/flesh/nurgle_corruption_death"] = true
+vfx_names["content/fx/particles/liquid_area/nurgle_buff_slime"] = true
+
 return vfx_names

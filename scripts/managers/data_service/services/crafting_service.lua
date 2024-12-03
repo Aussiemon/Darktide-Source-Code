@@ -206,16 +206,13 @@ CraftingService.warm_trait_sticker_book_cache = function (self)
 		return Promise.resolved()
 	end
 
-	local found_trait_categories = get_all_trait_category_ids()
-	local cache_promises = {}
-
-	for trait_category_id, _ in pairs(found_trait_categories) do
-		cache_promises[#cache_promises + 1] = cache:get_data(trait_category_id, function ()
-			return self._backend_interface.crafting:trait_sticker_book(trait_category_id)
-		end)
-	end
-
-	return Promise.all(unpack(cache_promises))
+	return self._backend_interface.crafting:all_trait_sticker_book():next(function (data)
+		for trait_category_id, trait_data in pairs(data) do
+			cache:get_data(trait_category_id, function ()
+				return Promise.resolved(trait_data)
+			end)
+		end
+	end)
 end
 
 CraftingService._on_trait_extracted = function (self, extracted_traits)

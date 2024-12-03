@@ -3,12 +3,12 @@
 local definition_path = "scripts/ui/hud/elements/crosshair/hud_element_crosshair_definitions"
 local Action = require("scripts/utilities/weapon/action")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Crosshair = require("scripts/ui/utilities/crosshair")
 local Fov = require("scripts/utilities/camera/fov")
 local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Recoil = require("scripts/utilities/recoil")
 local Suppression = require("scripts/utilities/attack/suppression")
-local Sway = require("scripts/utilities/sway")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_results = AttackSettings.attack_results
@@ -396,58 +396,12 @@ HudElementCrosshair._sync_active_crosshair = function (self, crosshair_settings)
 	end
 end
 
-local CROSSHAIR_POSITION_LERP_SPEED = 35
-
-HudElementCrosshair._crosshair_position = function (self, dt, t, ui_renderer)
-	local target_x, target_y = 0, 0
-	local ui_renderer_scale = ui_renderer.scale
-	local parent = self._parent
-	local player_extensions = parent:player_extensions()
-	local weapon_extension = player_extensions and player_extensions.weapon
-	local player_camera = parent:player_camera()
-
-	if weapon_extension and player_camera then
-		local unit_data_extension = player_extensions.unit_data
-		local first_person_extention = player_extensions.first_person
-		local first_person_unit = first_person_extention:first_person_unit()
-		local shoot_rotation = Unit.world_rotation(first_person_unit, 1)
-		local shoot_position = Unit.world_position(first_person_unit, 1)
-		local recoil_template = weapon_extension:recoil_template()
-		local recoil_component = unit_data_extension:read_component("recoil")
-		local movement_state_component = unit_data_extension:read_component("movement_state")
-
-		shoot_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, shoot_rotation)
-
-		local sway_component = unit_data_extension:read_component("sway")
-		local sway_template = weapon_extension:sway_template()
-
-		shoot_rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, shoot_rotation)
-
-		local range = 50
-		local shoot_direction = Quaternion.forward(shoot_rotation)
-		local world_aim_position = shoot_position + shoot_direction * range
-		local screen_aim_position = Camera.world_to_screen(player_camera, world_aim_position)
-		local abs_target_x, abs_target_y = screen_aim_position.x, screen_aim_position.y
-		local pivot_position = self:scenegraph_world_position("pivot", ui_renderer_scale)
-		local pivot_x, pivot_y = pivot_position[1], pivot_position[2]
-
-		target_x = abs_target_x - pivot_x
-		target_y = abs_target_y - pivot_y
-	end
-
-	local current_x, current_y = self._crosshair_position_x * ui_renderer_scale, self._crosshair_position_y * ui_renderer_scale
-	local ui_renderer_inverse_scale = ui_renderer.inverse_scale
-	local lerp_t = math.min(CROSSHAIR_POSITION_LERP_SPEED * dt, 1)
-	local x = math.lerp(current_x, target_x, lerp_t) * ui_renderer_inverse_scale
-	local y = math.lerp(current_y, target_y, lerp_t) * ui_renderer_inverse_scale
-
-	self._crosshair_position_x, self._crosshair_position_y = x, y
-
-	return x, y
-end
-
 HudElementCrosshair._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
-	local x, y = self:_crosshair_position(dt, t, ui_renderer)
+	local pivot_position = self:scenegraph_world_position("pivot", ui_renderer.scale)
+	local x, y = Crosshair.position(dt, t, self._parent, ui_renderer, self._crosshair_position_x, self._crosshair_position_y, pivot_position)
+
+	self._crosshair_position_x = x
+	self._crosshair_position_y = y
 
 	HudElementCrosshair.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 

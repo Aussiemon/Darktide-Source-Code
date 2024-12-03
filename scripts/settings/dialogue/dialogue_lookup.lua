@@ -52,6 +52,7 @@ _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_hm_com
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_hm_strain")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_km_enforcer")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_km_enforcer_twins")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_km_heresy")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_km_station")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_lm_cooling")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_lm_rails")

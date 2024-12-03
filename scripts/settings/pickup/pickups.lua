@@ -44,7 +44,6 @@ _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_speed_b
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/consumable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/grimoire_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/tome_pickup")
-_create_pickup_entry("scripts/settings/pickup/pickups/collectible/collectible_01_pickup")
 
 for group_name, group_pickup in pairs(pickups.by_group) do
 	local total_spawn_weighting = 0
