@@ -1,7 +1,20 @@
 ﻿-- chunkname: @content/levels/entertainment/cellar/world_item_dep.lua
 
 local item_dependencies = {
-	minion_items = {},
+	minion_items = {
+		["content/items/characters/minions/chaos_poxwalker/attachments_base/body"] = 2,
+		["content/items/characters/minions/chaos_poxwalker/attachments_base/body_skin_02"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_base/body_skin_03"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_base/hair_b"] = 2,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/fullbody_a"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/horn_arm_left_01"] = 3,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/horn_head_03"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/horn_head_04"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/horn_torso_03"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/lowerbody_a"] = 3,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/upperbody_a"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/upperbody_b"] = 1,
+	},
 	player_items = {
 		["content/items/characters/player/eye_colors/eye_color_blind_both"] = 1,
 		["content/items/characters/player/eye_colors/eye_color_brown_01_blind_right"] = 2,

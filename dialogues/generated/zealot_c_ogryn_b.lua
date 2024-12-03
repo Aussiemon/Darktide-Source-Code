@@ -42,14 +42,12 @@ local zealot_c_ogryn_b = {
 	},
 	combat_pause_limited_zealot_c_20_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
 			[1] = "loc_ogryn_b__combat_pause_limited_zealot_c_20_b_01",
-			[2] = "loc_ogryn_b__combat_pause_limited_zealot_c_20_b_02",
 		},
 		sound_events_duration = {
 			[1] = 1.930083,
-			[2] = 4.921604,
 		},
 		randomize_indexes = {},
 	},

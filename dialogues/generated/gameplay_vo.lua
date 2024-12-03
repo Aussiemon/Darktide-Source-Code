@@ -2096,7 +2096,7 @@ return function ()
 		},
 	})
 	define_rule({
-		category = "enemy_alerts_prio_0",
+		category = "enemy_alerts_prio_1",
 		database = "gameplay_vo",
 		name = "enemy_kill_monster",
 		response = "enemy_kill_monster",
@@ -2111,11 +2111,13 @@ return function ()
 			{
 				"query_context",
 				"killed_type",
-				OP.EQ,
-				"monster",
+				OP.SET_INCLUDES,
+				args = {
+					"monster",
+				},
 			},
 			{
-				"user_memory",
+				"faction_memory",
 				"enemy_kill_monster",
 				OP.TIMEDIFF,
 				OP.GT,
@@ -2124,7 +2126,7 @@ return function ()
 		},
 		on_done = {
 			{
-				"user_memory",
+				"faction_memory",
 				"enemy_kill_monster",
 				OP.TIMESET,
 			},

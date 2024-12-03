@@ -5,6 +5,503 @@ return function ()
 		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
 		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_01_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_01_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_airlock",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_airlock",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_airlock",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_01_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_01_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_airlock_01_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_01_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_01_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_airlock_01_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_02_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_02_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_airlock_disabled",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_airlock",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_airlock",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_02_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_02_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_airlock_02_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_02_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_02_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_airlock_02_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_03_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_03_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_airlock",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_airlock",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_airlock",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_03_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_03_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_airlock_03_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_03_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_03_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_airlock_03_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_04_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_04_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_airlock_04_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_airlock_04",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_airlock_04",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_airlock_04_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_airlock_04_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_airlock_04_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
 		name = "mission_propaganda_bypass_security",
 		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",
@@ -81,6 +578,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"dreg_lector",
 				},
 			},
 			{
@@ -99,7 +597,50 @@ return function ()
 			},
 		},
 		heard_speak_routing = {
-			target = "self",
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_complex_heart_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_complex_heart_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_complex_heart",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
 		},
 	})
 	define_rule({
@@ -132,6 +673,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -150,7 +692,50 @@ return function ()
 			},
 		},
 		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_consulate_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_consulate_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_consulate",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
 		},
 	})
 	define_rule({
@@ -182,6 +767,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"dreg_lector",
 				},
 			},
 			{
@@ -200,12 +786,104 @@ return function ()
 			},
 		},
 		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_corruptor_event_align_bridges_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_corruptor_event_align_bridges_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_corruptor_event_align_bridges",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
 			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_corruptor_event_align_bridges_switch_01_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_corruptor_event_align_bridges_switch_01_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_corruptor_event_align_bridges_switch_01_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_align_bridges_switch_01_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_align_bridges_switch_01_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
 		},
 	})
 	define_rule({
@@ -238,6 +916,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -257,6 +936,208 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_corruptor_event_realigning_01_a",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_propaganda_corruptor_event_realigning_01_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_corruptor_event_realigning_01_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_realigning_01_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_realigning_01_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_corruptor_event_realigning_01_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_corruptor_event_realigning_01_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_corruptor_event_realigning_01_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_corruptor_event_realigning_02_a",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_propaganda_corruptor_event_realigning_02_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_corruptor_event_realigning_02_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_realigning_02_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_realigning_02_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_corruptor_event_restore_signal_a",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_propaganda_corruptor_event_restore_signal_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_corruptor_event_restore_signal_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_restore_signal_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_restore_signal_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
 		},
 	})
 	define_rule({
@@ -289,6 +1170,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -340,6 +1222,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -359,6 +1242,59 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_corruptor_event_track_signal_a",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_propaganda_corruptor_event_track_signal_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_corruptor_event_track_signal_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_track_signal_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_corruptor_event_track_signal_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
 		},
 	})
 	define_rule({
@@ -409,6 +1345,411 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_01_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_01_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_elevator_conversation",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_elevator_conversation",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_elevator_conversation",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_01_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_01_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_elevator_conversation_01_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_01_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_01_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_elevator_conversation_01_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_02_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_02_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_elevator_conversation",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_elevator_conversation",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_elevator_conversation",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_02_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_02_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_elevator_conversation_02_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_02_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_02_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_elevator_conversation_02_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_03_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_03_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_elevator_conversation",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_elevator_conversation",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_elevator_conversation",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_03_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_03_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_elevator_conversation_03_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_elevator_conversation_03_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_elevator_conversation_03_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_elevator_conversation_03_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
 		},
 	})
 	define_rule({
@@ -790,6 +2131,102 @@ return function ()
 		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
 		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_evacuate_a",
+		post_wwise_event = "play_radio_static_end",
+		response = "mission_propaganda_evacuate_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_evacuate_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_evacuate_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_evacuate_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_evacuate_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_evacuate_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_evacuate_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
 		name = "mission_propaganda_first_objective",
 		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",
@@ -810,6 +2247,9 @@ return function ()
 					"mission_propaganda_short_elevator_conversation_one_b",
 					"mission_propaganda_short_elevator_conversation_two_b",
 					"mission_propaganda_short_elevator_conversation_three_b",
+					"mission_propaganda_safe_zone_01_e",
+					"mission_propaganda_safe_zone_02_e",
+					"mission_propaganda_safe_zone_03_e",
 				},
 			},
 			{
@@ -820,6 +2260,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 		},
@@ -913,6 +2354,55 @@ return function ()
 		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
 		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_last_push_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_last_push_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_last_push_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_last_push_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_last_push_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
 		name = "mission_propaganda_luggable_event_end",
 		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",
@@ -939,6 +2429,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -952,6 +2443,55 @@ return function ()
 			{
 				"faction_memory",
 				"mission_propaganda_luggable_event_end",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_luggable_event_fan_splat",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_luggable_event_fan_splat",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_luggable_event_fan_splat",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_luggable_event_fan_splat",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_luggable_event_fan_splat",
 				OP.ADD,
 				1,
 			},
@@ -990,6 +2530,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -1003,6 +2544,55 @@ return function ()
 			{
 				"faction_memory",
 				"mission_propaganda_luggable_event_start",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_luggable_event_switch_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_luggable_event_switch_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_luggable_event_switch_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_luggable_event_switch_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_luggable_event_switch_a",
 				OP.ADD,
 				1,
 			},
@@ -1041,6 +2631,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -1060,6 +2651,761 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_01_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_01_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_safe_zone",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_safe_zone",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_safe_zone",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_01_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_01_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_01_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_01_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_01_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_01_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_01_d",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_01_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_01_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_01_e",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_01_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_01_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_02_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_02_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_safe_zone",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_safe_zone",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_safe_zone",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_02_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_02_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_02_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_02_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_02_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_02_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_02_d",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_02_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_02_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_02_e",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_02_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_02_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_03_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_03_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_safe_zone",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_safe_zone",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_safe_zone",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_03_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_03_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_03_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_03_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_03_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_03_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_03_d",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_03_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_03_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_safe_zone_03_e",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_safe_zone_03_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_safe_zone_03_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_shanty_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_shanty_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_propaganda_shanty_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+			{
+				"faction_memory",
+				"mission_propaganda_shanty_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_propaganda_shanty_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_dm_propaganda",
+		name = "mission_propaganda_shanty_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_propaganda_shanty_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_propaganda_shanty_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"dreg_lector",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
 		},
 	})
 	define_rule({
@@ -1448,6 +3794,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"explicator",
 				},
 			},
 			{
@@ -1537,6 +3884,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"pilot",
+					"explicator",
 				},
 			},
 		},

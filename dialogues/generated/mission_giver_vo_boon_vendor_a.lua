@@ -1,90 +1,21 @@
 ﻿-- chunkname: @dialogues/generated/mission_giver_vo_boon_vendor_a.lua
 
 local mission_giver_vo_boon_vendor_a = {
-	mission_complex_brief_a = {
+	mission_agnostic_dropship_deploy_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 6,
 		sound_events = {
-			"loc_boon_vendor_a__mission_complex_brief_a_01",
-			"loc_boon_vendor_a__mission_complex_brief_a_02",
-			"loc_boon_vendor_a__mission_complex_brief_a_03",
+			"loc_boon_vendor_a__mission_agnostic_dropship_deploy_a_01",
+			"loc_boon_vendor_a__mission_agnostic_dropship_deploy_a_02",
+			"loc_boon_vendor_a__mission_agnostic_dropship_deploy_a_03",
+			"loc_boon_vendor_a__mission_agnostic_dropship_deploy_a_04",
+			"loc_boon_vendor_a__mission_agnostic_dropship_deploy_a_05",
+			"loc_boon_vendor_a__mission_agnostic_dropship_deploy_a_06",
 		},
 		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,
-		},
-		randomize_indexes = {},
-	},
-	mission_complex_brief_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_boon_vendor_a__mission_complex_brief_b_01",
-			"loc_boon_vendor_a__mission_complex_brief_b_02",
-			"loc_boon_vendor_a__mission_complex_brief_b_03",
-		},
-		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-		},
-		randomize_indexes = {},
-	},
-	mission_complex_brief_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_boon_vendor_a__mission_complex_brief_c_01",
-			"loc_boon_vendor_a__mission_complex_brief_c_02",
-			"loc_boon_vendor_a__mission_complex_brief_c_03",
-		},
-		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-		},
-		randomize_indexes = {},
-	},
-	mission_resurgence_brief_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_boon_vendor_a__mission_resurgence_brief_a_01",
-			"loc_boon_vendor_a__mission_resurgence_brief_a_02",
-			"loc_boon_vendor_a__mission_resurgence_brief_a_03",
-		},
-		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-		},
-		randomize_indexes = {},
-	},
-	mission_resurgence_brief_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_boon_vendor_a__mission_resurgence_brief_b_01",
-			"loc_boon_vendor_a__mission_resurgence_brief_b_02",
-			"loc_boon_vendor_a__mission_resurgence_brief_b_03",
-		},
-		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-		},
-		randomize_indexes = {},
-	},
-	mission_resurgence_brief_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_boon_vendor_a__mission_resurgence_brief_c_01",
-			"loc_boon_vendor_a__mission_resurgence_brief_c_02",
-			"loc_boon_vendor_a__mission_resurgence_brief_c_03",
-		},
-		sound_events_duration = {
 			3.45678,
 			3.45678,
 			3.45678,

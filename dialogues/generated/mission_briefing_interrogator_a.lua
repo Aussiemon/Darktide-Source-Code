@@ -181,6 +181,51 @@ local mission_briefing_interrogator_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_heresy_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_interrogator_a__mission_heresy_briefing_a_01",
+			"loc_interrogator_a__mission_heresy_briefing_a_02",
+			"loc_interrogator_a__mission_heresy_briefing_a_03",
+		},
+		sound_events_duration = {
+			10.46456,
+			9.317291,
+			12.0259,
+		},
+		randomize_indexes = {},
+	},
+	mission_heresy_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_interrogator_a__mission_heresy_briefing_b_01",
+			"loc_interrogator_a__mission_heresy_briefing_b_02",
+			"loc_interrogator_a__mission_heresy_briefing_b_03",
+		},
+		sound_events_duration = {
+			10.86923,
+			11.67723,
+			11.84346,
+		},
+		randomize_indexes = {},
+	},
+	mission_heresy_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_interrogator_a__mission_heresy_briefing_c_01",
+			"loc_interrogator_a__mission_heresy_briefing_c_02",
+			"loc_interrogator_a__mission_heresy_briefing_c_03",
+		},
+		sound_events_duration = {
+			10.2029,
+			12.23304,
+			13.65846,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_briefing_interrogator_a", mission_briefing_interrogator_a)

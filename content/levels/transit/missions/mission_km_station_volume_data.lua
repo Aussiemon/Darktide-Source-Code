@@ -539,54 +539,6 @@ local volume_data = {
 			1,
 		},
 	},
-	{
-		height = 2,
-		name = "volume",
-		type = "content/volume_types/player_mover_blocker",
-		alt_max_vector = {
-			-43.5,
-			-293,
-			12.959480285644531,
-		},
-		alt_min_vector = {
-			-43.5,
-			-293,
-			9.5,
-		},
-		bottom_points = {
-			{
-				-45,
-				-290,
-				9.5,
-			},
-			{
-				-41,
-				-292,
-				9.5,
-			},
-			{
-				-38.5,
-				-289,
-				9.5,
-			},
-			{
-				-44.5,
-				-286.5,
-				9.5,
-			},
-		},
-		color = {
-			255,
-			255,
-			125,
-			0,
-		},
-		up_vector = {
-			0,
-			0,
-			1.729740023612976,
-		},
-	},
 }
 
 return {

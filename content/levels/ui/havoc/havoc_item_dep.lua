@@ -1,4 +1,4 @@
-﻿-- chunkname: @content/levels/ui/maelstrom_plus/maelstrom_plus_item_dep.lua
+﻿-- chunkname: @content/levels/ui/havoc/havoc_item_dep.lua
 
 local item_dependencies = {
 	minion_items = {},
@@ -13,7 +13,6 @@ local item_dependencies = {
 		["content/items/characters/player/human/gear_lowerbody/imperial_guard_pants_c"] = 1,
 		["content/items/characters/player/human/gear_lowerbody/npc_darinda_dukane_lowerbody"] = 1,
 		["content/items/characters/player/human/gear_torso/npc_darinda_dukane_upperbody"] = 1,
-		["content/items/characters/player/human/gear_torso/steel_legion_upperbody_a"] = 1,
 		["content/items/characters/player/human/gear_upperbody/steel_legion_upperbody_a"] = 1,
 		["content/items/characters/player/human/hair/npc_hair_darinda_dukane"] = 1,
 	},
