@@ -36,8 +36,6 @@ CosmeticsVendorBackgroundView.on_enter = function (self)
 
 	self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_a", nil, 1)
 	self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_servitor_a", nil, 0)
-
-	self._use_child_view_to_render = true
 end
 
 CosmeticsVendorBackgroundView.on_exit = function (self)
@@ -67,6 +65,7 @@ CosmeticsVendorBackgroundView._set_wallet_background_width = function (self, wid
 	local widget = widgets_by_name[scenegraph_id]
 
 	if widget then
+		widget.content.visible = true
 		widget.style.texture.uvs[2][1] = math.min(uv_fractions, 1)
 	end
 
@@ -82,17 +81,15 @@ CosmeticsVendorBackgroundView.update = function (self, dt, t, input_service)
 end
 
 CosmeticsVendorBackgroundView.draw = function (self, dt, t, input_service, layer)
-	if not self._active_view_instance or self._active_view_instance and not self._use_child_view_to_render then
-		local render_scale = self._render_scale
-		local render_settings = self._render_settings
-		local ui_renderer = self._ui_renderer
+	local render_scale = self._render_scale
+	local render_settings = self._render_settings
+	local ui_renderer = self._ui_renderer
 
-		render_settings.start_layer = layer
-		render_settings.scale = render_scale
-		render_settings.inverse_scale = render_scale and 1 / render_scale
+	render_settings.start_layer = layer
+	render_settings.scale = render_scale
+	render_settings.inverse_scale = render_scale and 1 / render_scale
 
-		self:draw_passes(dt, t, ui_renderer, input_service, render_settings)
-	end
+	self:draw_passes(dt, t, ui_renderer, input_service, render_settings)
 end
 
 CosmeticsVendorBackgroundView.draw_passes = function (self, dt, t, ui_renderer, input_service, render_settings)

@@ -9,10 +9,24 @@ ExternalPaymentPlatformPlaystation._get_payment_platform = function (self)
 	return "psn"
 end
 
-ExternalPaymentPlatformPlaystation._get_platform_token = function (self)
-	local request_id
+ExternalPaymentPlatformPlaystation._get_platform_token = function (self, retry_delay)
+	local request_id, start_time
+
+	if retry_delay then
+		start_time = Managers.time:time("main")
+	end
 
 	return Promise.until_value_is_true(function ()
+		if retry_delay then
+			local current_time = Managers.time:time("main")
+
+			if current_time < start_time + retry_delay then
+				return false
+			else
+				retry_delay = nil
+			end
+		end
+
 		if not request_id then
 			request_id = Playstation.request_auth_code()
 
@@ -24,7 +38,9 @@ ExternalPaymentPlatformPlaystation._get_platform_token = function (self)
 		if err then
 			Log.error("ExternalPayment", "get_auth_code_results() " .. "%s", err)
 
-			return err
+			return nil, {
+				message = err,
+			}
 		end
 
 		if result then
@@ -84,8 +100,8 @@ ExternalPaymentPlatformPlaystation.payment_options = function (self)
 	end)
 end
 
-ExternalPaymentPlatformPlaystation.reconcile_pending_txns = function (self)
-	return self:_get_platform_token():next(function (token)
+ExternalPaymentPlatformPlaystation.reconcile_pending_txns = function (self, retry_delay)
+	return self:_get_platform_token(retry_delay):next(function (token)
 		return Managers.backend:authenticate():next(function (account)
 			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/reconcile"):query("platform", self:_get_payment_platform())
 
@@ -98,6 +114,24 @@ ExternalPaymentPlatformPlaystation.reconcile_pending_txns = function (self)
 				return response.body
 			end)
 		end)
+	end):catch(function (error)
+		if type(error) == "table" and error.message then
+			error = error.message
+		end
+
+		if not retry_delay then
+			local retry_delay = 2
+
+			Log.error("ExternalPayment", "Failed to reconcile pending transactions, error: %s, retrying again with a %s seconds delay", tostring(error), retry_delay)
+
+			return self:reconcile_pending_txns(retry_delay)
+		else
+			Log.exception("ExternalPayment", "Failed to reconcile pending transactions, error: %s", tostring(error))
+
+			return Promise.rejected({
+				error,
+			})
+		end
 	end)
 end
 

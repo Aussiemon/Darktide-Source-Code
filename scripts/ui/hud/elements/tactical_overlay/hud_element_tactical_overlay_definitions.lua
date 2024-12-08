@@ -527,7 +527,7 @@ local left_panel_widgets_definitions = {
 	havoc_rank_info = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/icons/generic/danger",
+			value = "content/ui/materials/icons/generic/havoc",
 			style = {
 				horizontal_alignment = "left",
 				vertical_alignment = "top",
@@ -687,7 +687,7 @@ local left_panel_widgets_definitions = {
 				color = Color.golden_rod(255, true),
 				offset = {
 					25,
-					90,
+					115,
 					2,
 				},
 				size = {
@@ -707,7 +707,7 @@ local left_panel_widgets_definitions = {
 				color = Color.golden_rod(255, true),
 				offset = {
 					25,
-					180,
+					230,
 					2,
 				},
 				size = {
@@ -727,7 +727,7 @@ local left_panel_widgets_definitions = {
 				color = Color.golden_rod(255, true),
 				offset = {
 					25,
-					270,
+					345,
 					2,
 				},
 				size = {
@@ -768,7 +768,7 @@ local left_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				offset = {
 					75,
-					90,
+					115,
 					10,
 				},
 				size = {
@@ -789,7 +789,7 @@ local left_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				offset = {
 					75,
-					180,
+					230,
 					10,
 				},
 				size = {
@@ -810,7 +810,7 @@ local left_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				offset = {
 					75,
-					270,
+					345,
 					10,
 				},
 				size = {
@@ -837,7 +837,7 @@ local left_panel_widgets_definitions = {
 				},
 				size = {
 					500,
-					10,
+					25,
 				},
 				text_color = {
 					255,
@@ -859,12 +859,12 @@ local left_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				offset = {
 					80,
-					130,
+					155,
 					10,
 				},
 				size = {
 					500,
-					10,
+					25,
 				},
 				text_color = {
 					255,
@@ -886,12 +886,12 @@ local left_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				offset = {
 					80,
-					220,
+					270,
 					10,
 				},
 				size = {
 					500,
-					10,
+					25,
 				},
 				text_color = {
 					255,
@@ -913,12 +913,12 @@ local left_panel_widgets_definitions = {
 				vertical_alignment = "top",
 				offset = {
 					80,
-					310,
+					385,
 					10,
 				},
 				size = {
 					500,
-					10,
+					25,
 				},
 				text_color = {
 					255,

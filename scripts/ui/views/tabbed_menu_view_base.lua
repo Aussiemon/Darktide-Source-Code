@@ -103,6 +103,14 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 	return TabbedMenuViewBase.super.update(self, dt, t, input_service)
 end
 
+TabbedMenuViewBase.set_bar_visibility = function (self, visible)
+	local tab_bar = self._elements.tab_bar
+
+	if tab_bar then
+		tab_bar:set_visibility(visible)
+	end
+end
+
 TabbedMenuViewBase._blur_fade_in = function (self, duration, anim_func)
 	if self._world_spawner then
 		self._world_spawner:set_camera_blur(0.75, duration, anim_func)

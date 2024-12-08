@@ -206,7 +206,7 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		circumstance_name_style.size[2] = title_height
 
 		local num_displayed_mutators = havoc_circumstance_info.num_displayed_mutators
-		local mutator_height = num_displayed_mutators * 70 + title_height + title_margin * 2 + description_margin
+		local mutator_height = num_displayed_mutators * 90 + title_height + title_margin * 2 + description_margin
 
 		total_size = total_size + mutator_height
 
@@ -303,8 +303,15 @@ HudElementTacticalOverlay._update_right_timer_text = function (self, dt, t, ui_r
 	if not last_seen_value or math.floor(timer_value) ~= math.floor(last_seen_value) then
 		self._last_seen_time = timer_value
 
+		local timer_text
+
+		if timer_value ~= -math.huge then
+			timer_text = TextUtils.format_time_span_localized(timer_value, true)
+		else
+			timer_text = Localize("loc_live_event_expired")
+		end
+
 		local timer_widget = self._widgets_by_name.right_timer
-		local timer_text = TextUtils.format_time_span_localized(timer_value, true)
 
 		timer_widget.content.time_left = timer_text
 		timer_widget.style.time_name.offset[1] = -(2 * ElementSettings.buffer + _text_width(ui_renderer, timer_text, timer_widget.style.time_name))

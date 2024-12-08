@@ -4,6 +4,7 @@ local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_mana
 local ChatManagerInterface = require("scripts/foundation/managers/chat/chat_manager_interface")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
+local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local ChatManager = class("ChatManager")
 local SOUND_SETTING_OPTIONS_VOICE_CHAT = table.enum("muted", "voice_activated", "push_to_talk")
 
@@ -29,6 +30,7 @@ end
 
 ChatManager.init = function (self)
 	self._initialized = false
+	self._logged_in = false
 	self._t = 0
 	self._account_handle = nil
 	self._privileges_manager = nil
@@ -39,6 +41,7 @@ ChatManager.init = function (self)
 	self._input_service = Managers.input:get_input_service("Ingame")
 	self._party_id_session_handles = {}
 	self._capture_devices = {}
+	self._retry_login_count = 0
 	self._time_since_mute_local_mic = nil
 
 	Managers.event:register(self, "player_mute_status_changed", "player_mute_status_changed")
@@ -146,9 +149,13 @@ ChatManager.login = function (self, peer_id, account_id, vivox_token)
 	else
 		Log.warning("ChatManager", "Already logged in.")
 	end
+
+	self._logged_in = true
 end
 
 ChatManager.logout = function (self)
+	self._logged_in = false
+
 	if not self:is_logged_in() then
 		Log.warning("ChatManager", "Already logged out")
 
@@ -538,6 +545,14 @@ ChatManager._handle_event = function (self, message)
 			else
 				self:mute_local_mic(true)
 			end
+
+			self._retry_login_count = 0
+		elseif state == ChatManagerConstants.LoginState.LOGGED_OUT and self._logged_in and self:is_connected() and self._retry_login_count == 0 then
+			self._retry_login_count = self._retry_login_count + 1
+
+			self:_get_vivox_token():next(function (data)
+				self:login(Network.peer_id(), data.account_id, data.vivox_token)
+			end)
 		end
 	elseif message.event == Vivox.EventType_CONNECTION_STATE_CHANGE then
 		local state = connection_state_enum(message.state)
@@ -909,6 +924,27 @@ ChatManager._event_new_block_user_states = function (self)
 			participant.waiting_for_block_states = false
 		end
 	end
+end
+
+ChatManager._get_vivox_token = function (self)
+	return Managers.backend:authenticate():next(function (account)
+		local account_id = account.sub
+		local builder = BackendUtilities.url_builder():path("/social/"):path(account_id):path("/chat"):path("/login")
+		local options = {
+			method = "GET",
+		}
+
+		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
+			if data.status ~= 200 then
+				return Promise.rejected(data)
+			end
+
+			return {
+				account_id = account_id,
+				vivox_token = data.body.VivoxToken,
+			}
+		end)
+	end)
 end
 
 implements(ChatManager, ChatManagerInterface)

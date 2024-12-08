@@ -6,6 +6,7 @@ local circumstance_templates = {
 		theme_tag = "darkness",
 		wwise_state = "darkness_01",
 		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutator_lights_out",
 			description = "loc_circumstance_darkness_description",
 			display_name = "loc_circumstance_darkness_title",
 			happening_display_name = "loc_happening_darkness",
@@ -26,6 +27,7 @@ local circumstance_templates = {
 			"circumstance_vo_hunting_grounds",
 		},
 		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutator_lights_out",
 			description = "loc_circumstance_darkness_hunting_grounds_description",
 			display_name = "loc_circumstance_darkness_hunting_grounds_title",
 			happening_display_name = "loc_happening_darkness",

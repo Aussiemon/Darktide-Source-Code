@@ -588,13 +588,45 @@ MissionBoardViewStyles.detail_widget_style = {
 		offset = {
 			0,
 			-40,
-			6,
+			7,
 		},
 		size = {
 			nil,
 			40,
 		},
 		text_color = MissionBoardViewSettings.color_accent,
+	},
+	unlock_text_background = {
+		color = Color.black(76.5, true),
+		size = {
+			nil,
+			40,
+		},
+		offset = {
+			0,
+			0,
+			6,
+		},
+	},
+	unlock_text = {
+		font_size = 18,
+		font_type = "proxima_nova_bold",
+		text_horizontal_alignment = "left",
+		text_vertical_alignment = "center",
+		offset = {
+			20,
+			0,
+			7,
+		},
+		size = {
+			nil,
+			40,
+		},
+		size_addition = {
+			-10,
+			0,
+		},
+		text_color = MissionBoardViewSettings.color_accent_light,
 	},
 }
 MissionBoardViewStyles.objective_widget_style = {
@@ -1862,13 +1894,45 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 			offset = {
 				0,
 				-40,
-				6,
+				7,
 			},
 			size = {
 				nil,
 				40,
 			},
 			text_color = MissionBoardViewSettings.color_accent,
+		},
+		unlock_text_background = {
+			color = Color.black(76.5, true),
+			size = {
+				nil,
+				40,
+			},
+			offset = {
+				0,
+				0,
+				6,
+			},
+		},
+		unlock_text = {
+			font_size = 18,
+			font_type = "proxima_nova_bold",
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "center",
+			offset = {
+				20,
+				0,
+				7,
+			},
+			size = {
+				nil,
+				40,
+			},
+			size_addition = {
+				-10,
+				0,
+			},
+			text_color = MissionBoardViewSettings.color_accent_light,
 		},
 	}
 

@@ -19,6 +19,9 @@ local Breeds = require("scripts/settings/breed/breeds")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
+local WalletSettings = require("scripts/settings/wallet_settings")
+local TextUtilities = require("scripts/utilities/ui/text")
 local CosmeticsVendorView = class("CosmeticsVendorView", "VendorViewBase")
 
 CosmeticsVendorView.init = function (self, settings, context)
@@ -34,6 +37,7 @@ end
 
 CosmeticsVendorView.on_enter = function (self)
 	CosmeticsVendorView.super.on_enter(self)
+	self._parent:set_bar_visibility(false)
 
 	self._render_settings.alpha_multiplier = 0
 
@@ -61,6 +65,50 @@ CosmeticsVendorView.on_enter = function (self)
 	})
 	self:_setup_background_world()
 	self._item_grid:set_sort_button_offset(0, 40)
+	self:_setup_tabs()
+
+	if context and not context.spawn_player then
+		self:_register_event("vendor_wallet_updated", "_update_wallets_presentation")
+	end
+end
+
+CosmeticsVendorView._setup_tabs = function (self)
+	local cosmetic_tabs = {}
+
+	if self._archetype_tabs then
+		self:_remove_element(self._archetype_tabs)
+	end
+
+	for archetype_name, archetype in pairs(Archetypes) do
+		cosmetic_tabs[#cosmetic_tabs + 1] = {
+			display_name = archetype.archetype_name,
+			ui_selection_order = archetype.ui_selection_order,
+		}
+	end
+
+	table.sort(cosmetic_tabs, function (a, b)
+		return a.ui_selection_order < b.ui_selection_order
+	end)
+
+	local context = self._context
+
+	if context and not context.spawn_player then
+		self._archetype_tabs = self:_add_element(ViewElementMenuPanel, "cosmetics_tab_bar", 10)
+
+		self._archetype_tabs:set_is_handling_navigation_input(true)
+		self._parent:set_is_handling_navigation_input(false)
+
+		for i = 1, #cosmetic_tabs do
+			local cosmetic_tab = cosmetic_tabs[i]
+
+			self._archetype_tabs:add_entry(Localize(cosmetic_tab.display_name), function ()
+				self._parent:cb_switch_tab(cosmetic_tab.ui_selection_order)
+				self._archetype_tabs:set_selected_panel_index(cosmetic_tab.ui_selection_order)
+			end)
+		end
+
+		self._archetype_tabs:set_selected_panel_index(self._parent:selected_index())
+	end
 end
 
 CosmeticsVendorView._set_preview_widgets_visibility = function (self, visible)
@@ -469,6 +517,8 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 end
 
 CosmeticsVendorView.on_exit = function (self)
+	self._parent:set_bar_visibility(true)
+	self._parent:set_is_handling_navigation_input(true)
 	self:_destroy_side_panel()
 
 	if self._on_enter_anim_id then
@@ -950,12 +1000,17 @@ CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 		UIWidget.draw(widget, ui_renderer)
 	end
 
-	UIRenderer.end_pass(ui_renderer)
+	local wallet_widgets = self._wallet_widgets
 
-	if self._parent and self._parent._use_child_view_to_render then
-		self._parent:draw_passes(dt, t, ui_renderer, input_service, render_settings)
+	if wallet_widgets then
+		for i = 1, #wallet_widgets do
+			local widget = wallet_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
+	UIRenderer.end_pass(ui_renderer)
 	CosmeticsVendorView.super.draw(self, dt, t, input_service, layer)
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
@@ -1272,6 +1327,92 @@ CosmeticsVendorView._trigger_zoom_logic = function (self, instant, optional_slot
 		world_spawner:set_camera_rotation_axis_offset("y", 0, duration, func_ptr)
 		world_spawner:set_camera_rotation_axis_offset("z", 0, duration, func_ptr)
 	end
+end
+
+CosmeticsVendorView._update_wallets_presentation = function (self, wallets_data)
+	if self._wallet_widgets then
+		for i = 1, #self._wallet_widgets do
+			local widget = self._wallet_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._wallet_widgets = nil
+	end
+
+	local total_width = 0
+	local widgets = {}
+	local wallet_definition = Definitions.wallet_definitions
+
+	self._wallets_data = wallets_data
+
+	for i = 1, #self._parent._wallet_type do
+		local wallet_type = self._parent._wallet_type[i]
+		local wallet_settings = WalletSettings[wallet_type]
+		local font_gradient_material = wallet_settings.font_gradient_material
+		local icon_texture_small = wallet_settings.icon_texture_small
+		local widget = self:_create_widget("wallet_" .. i, wallet_definition)
+
+		widget.style.text.material = font_gradient_material
+		widget.content.texture = icon_texture_small
+
+		local amount = 0
+
+		if wallets_data then
+			local wallet = wallets_data:by_type(wallet_type)
+			local balance = wallet and wallet.balance
+
+			amount = balance and balance.amount or 0
+		end
+
+		local text = TextUtilities.format_currency(amount)
+
+		self._current_balance[wallet_type] = amount
+		widget.content.text = text
+
+		local style = widget.style
+		local text_style = style.text
+		local text_width, _ = self:_text_size(text, text_style.font_type, text_style.font_size)
+		local texture_width = widget.style.texture.size[1]
+		local text_offset = widget.style.text.original_offset
+		local texture_offset = widget.style.texture.original_offset
+		local text_margin = 0
+		local price_margin = i < #self._parent._wallet_type and 5 or 0
+
+		if i == 1 then
+			total_width = texture_offset[1]
+		end
+
+		widget.style.texture.offset[1] = -total_width
+		total_width = total_width + texture_width
+		widget.style.text.offset[1] = -total_width
+		total_width = total_width + text_width + texture_width * 0.5 + text_margin + price_margin
+		widgets[#widgets + 1] = widget
+	end
+
+	self:_set_scenegraph_size("wallet_pivot", total_width, nil)
+	self:_set_wallet_background_width(total_width)
+
+	self._wallet_widgets = widgets
+end
+
+CosmeticsVendorView._set_wallet_background_width = function (self, width)
+	width = 150 + width
+
+	local scenegraph_id = "corner_top_right"
+	local definitions = self._definitions
+	local scenegraph_definition = definitions.scenegraph_definition
+	local default_scenegraph = scenegraph_definition[scenegraph_id]
+	local original_width = default_scenegraph.size[1]
+	local uv_fractions = width / original_width
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name[scenegraph_id]
+
+	if widget then
+		widget.style.texture.uvs[2][1] = math.min(uv_fractions, 1)
+	end
+
+	self:_set_scenegraph_size(scenegraph_id, width, nil)
 end
 
 return CosmeticsVendorView

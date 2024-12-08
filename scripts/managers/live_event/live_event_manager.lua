@@ -477,7 +477,7 @@ LiveEventManager.active_time_left = function (self, optional_t)
 	local event_data = self:_active_event()
 
 	if not event_data or not event_data.ends_at then
-		return false
+		return -math.huge
 	end
 
 	local t = Managers.backend:get_server_time(optional_t or Managers.time:time("main"))

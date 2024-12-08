@@ -938,7 +938,7 @@ local templates = {
 			end
 		end,
 		close_condition = function (self)
-			return Managers.ui:view_active("havoc_background_view")
+			return Managers.ui:is_view_closing("havoc_background_view")
 		end,
 		sync_on_events = {},
 	},
@@ -957,6 +957,14 @@ local templates = {
 				return
 			end
 
+			local narrative_manager = Managers.narrative
+
+			if narrative_manager:get_havoc_unlock_status() == 2 then
+				narrative_manager:skip_story("unlock_havoc")
+
+				return
+			end
+
 			local objective_name = self.name
 			local localized_header = string.format("{#color(169,191,153)}%s{#reset()}\n%s", Localize("loc_quest_havoc_maelstrom_description"), Localize("loc_quest_havoc_maelstrom_objective"))
 			local interaction_type = "gamemode_havoc"
@@ -967,7 +975,7 @@ local templates = {
 
 			Managers.event:trigger("event_add_mission_objective", objective)
 			Managers.data_service.havoc:set_havoc_unlock_status(1)
-			Managers.narrative:set_havoc_unlock_status(1)
+			narrative_manager:set_havoc_unlock_status(1)
 		end,
 		on_deactivation = function (self, close_condition_met)
 			if not self.objective then
@@ -1007,6 +1015,14 @@ local templates = {
 				return
 			end
 
+			local narrative_manager = Managers.narrative
+
+			if narrative_manager:get_havoc_unlock_status() == 2 then
+				narrative_manager:skip_story("unlock_havoc")
+
+				return
+			end
+
 			local objective_name = self.name
 			local localized_header = string.format("{#color(169,191,153)}%s{#reset()}\n%s", Localize("loc_quest_havoc_final_description"), Localize("loc_quest_havoc_final_objective"))
 			local interaction_type = "gamemode_havoc"
@@ -1038,7 +1054,7 @@ local templates = {
 			end
 		end,
 		close_condition = function (self)
-			return Managers.ui:view_active("havoc_background_view")
+			return Managers.ui:is_view_closing("havoc_background_view")
 		end,
 		sync_on_events = {},
 	},

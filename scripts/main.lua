@@ -193,8 +193,10 @@ end
 function on_resume()
 	GAME_RESUME_COUNT = GAME_RESUME_COUNT + 1
 
-	Crashify.print_property("game_resume_count", GAME_RESUME_COUNT)
-	Crashify.print_breadcrumb(string.format("on_resume: %s", GAME_RESUME_COUNT))
+	if rawget(_G, "Crashify") then
+		Crashify.print_property("game_resume_count", GAME_RESUME_COUNT)
+		Crashify.print_breadcrumb(string.format("on_resume: %s", GAME_RESUME_COUNT))
+	end
 
 	if rawget(_G, "Managers") and Managers.backend then
 		Managers.backend:time_sync_restart()

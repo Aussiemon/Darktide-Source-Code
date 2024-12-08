@@ -184,9 +184,16 @@ Havoc.refresh_settings = function (self)
 		if havoc_settings then
 			self._havoc_settings = {
 				min_participants = havoc_settings.minPrivateParticipants,
-				max_rank = havoc_settings.rankSystem.maxRank,
-				max_charges = havoc_settings.rankSystem.charges,
 			}
+
+			if havoc_settings.rankSystem then
+				self._havoc_settings.max_rank = havoc_settings.rankSystem.maxRank
+				self._havoc_settings.max_charges = havoc_settings.rankSystem.charges
+				self._havoc_settings.starting_rank = {
+					normal = havoc_settings.rankSystem.startingRank,
+					auric = havoc_settings.rankSystem.startingRankAuric,
+				}
+			end
 
 			return self._havoc_settings
 		end

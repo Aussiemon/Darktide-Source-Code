@@ -4,7 +4,7 @@ local Component = require("scripts/utilities/component")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local PowerWeaponEffects = class("PowerWeaponEffects")
-local _set_start_time, _set_stop_time, _unit_components
+local _unit_components
 local _sfx_external_properties = {}
 local _vfx_external_properties = {}
 local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
@@ -53,21 +53,15 @@ end
 
 PowerWeaponEffects.wield = function (self)
 	PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_WIELD)
-
-	local t = World.time(self._world)
-
-	_set_stop_time(t, self._weapon_material_variables_1p)
-	_set_stop_time(t, self._weapon_material_variables_3p)
+	self:_set_stop_time()
 end
 
 PowerWeaponEffects.unwield = function (self)
 	self:_stop_sfx_loop()
 	self:_stop_vfx_loop()
+	self:_set_stop_time()
 
-	local t = World.time(self._world)
-
-	_set_stop_time(t, self._weapon_material_variables_1p)
-	_set_stop_time(t, self._weapon_material_variables_3p)
+	self._is_active = false
 end
 
 PowerWeaponEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -79,7 +73,11 @@ PowerWeaponEffects.update = function (self, unit, dt, t)
 end
 
 PowerWeaponEffects.update_first_person_mode = function (self, first_person_mode)
-	return
+	self:_stop_sfx_loop()
+	self:_stop_vfx_loop()
+	self:_set_stop_time()
+
+	self._is_active = false
 end
 
 PowerWeaponEffects._play_single_sfx = function (self, sound_alias, fx_source_name)
@@ -112,7 +110,6 @@ end
 PowerWeaponEffects._update_active = function (self)
 	local is_active = self._is_active
 	local special_active = self._inventory_slot_component.special_active
-	local t = World.time(self._world)
 	local current_playing_id = self._looping_playing_id
 	local should_start = not current_playing_id and not is_active and special_active
 	local should_stop = current_playing_id and is_active and not special_active
@@ -121,16 +118,14 @@ PowerWeaponEffects._update_active = function (self)
 		self:_start_sfx_loop()
 		self:_start_vfx_loop()
 		PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_POWER_ON)
-		_set_start_time(t, self._weapon_material_variables_1p)
-		_set_start_time(t, self._weapon_material_variables_3p)
+		self:_set_start_time()
 	elseif should_stop then
 		self:_stop_sfx_loop()
 		self:_stop_vfx_loop()
 		self:_play_single_sfx(SPECIAL_OFF_SFX_ALIAS, self._special_active_fx_source_name)
 		self:_play_single_vfx(SPECIAL_OFF_VFX_ALIAS, self._special_active_fx_source_name)
 		PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_POWER_OFF)
-		_set_stop_time(t, self._weapon_material_variables_1p)
-		_set_stop_time(t, self._weapon_material_variables_3p)
+		self:_set_stop_time()
 	end
 
 	if special_active then
@@ -204,17 +199,37 @@ PowerWeaponEffects._stop_vfx_loop = function (self, destroy)
 	self._looping_effect_id = nil
 end
 
-function _set_start_time(t, weapon_material_variables)
-	for ii = 1, #weapon_material_variables do
-		local weapon_material_variable = weapon_material_variables[ii]
+PowerWeaponEffects._set_start_time = function (self)
+	local t = World.time(self._world)
+	local variables_1p = self._weapon_material_variables_1p
+	local variables_3p = self._weapon_material_variables_3p
+
+	for ii = 1, #variables_1p do
+		local weapon_material_variable = variables_1p[ii]
+
+		weapon_material_variable.component:set_start_time(t, weapon_material_variable.unit)
+	end
+
+	for ii = 1, #variables_3p do
+		local weapon_material_variable = variables_3p[ii]
 
 		weapon_material_variable.component:set_start_time(t, weapon_material_variable.unit)
 	end
 end
 
-function _set_stop_time(t, weapon_material_variables)
-	for ii = 1, #weapon_material_variables do
-		local weapon_material_variable = weapon_material_variables[ii]
+PowerWeaponEffects._set_stop_time = function (self)
+	local t = World.time(self._world)
+	local variables_1p = self._weapon_material_variables_1p
+	local variables_3p = self._weapon_material_variables_3p
+
+	for ii = 1, #variables_1p do
+		local weapon_material_variable = variables_1p[ii]
+
+		weapon_material_variable.component:set_stop_time(t, weapon_material_variable.unit)
+	end
+
+	for ii = 1, #variables_3p do
+		local weapon_material_variable = variables_3p[ii]
 
 		weapon_material_variable.component:set_stop_time(t, weapon_material_variable.unit)
 	end

@@ -101,7 +101,7 @@ local details_widgets_blueprints = {
 		main_objective = {
 			size = {
 				475,
-				100,
+				130,
 			},
 			pass_template = {
 				{

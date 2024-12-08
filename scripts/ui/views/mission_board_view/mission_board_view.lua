@@ -880,7 +880,7 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 	local flash_mission_widget = self._flash_mission_widget
 
 	if flash_mission_widget and flash_mission_widget.visible and flash_mission_widget.content.hotspot.on_pressed then
-		self:_set_selected_mission(flash_mission_widget.content.mission, true, true)
+		self:_set_selected_mission(flash_mission_widget.content.mission, true)
 	end
 
 	local story_mission_view_button = self._widgets_by_name.story_mission_view_button
@@ -1308,7 +1308,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	self._widgets_by_name.play_team_button_legend.visible = true
 end
 
-MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_cursor, is_flash)
+MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_cursor)
 	self:_reset_selection()
 
 	self._selected_mission = mission
@@ -1435,6 +1435,29 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 			end
 
 			self._bonus_widgets = nil
+		end
+
+		content.unlock_text = ""
+
+		if content.is_flash then
+			local narrative_manager = Managers.narrative
+			local narrative_story = "unlock_havoc"
+			local not_visited_chapter_name = "unlock_havoc_2"
+			local current_chapter = narrative_manager:current_chapter(narrative_story)
+			local current_chapter_name = current_chapter and current_chapter.name
+
+			if current_chapter_name == not_visited_chapter_name then
+				local havoc_info = Managers.data_service.havoc:get_settings()
+				local mission_type = self._selected_mission_type
+
+				if havoc_info.starting_rank and havoc_info.starting_rank[mission_type] then
+					local rank = havoc_info.starting_rank[mission_type]
+
+					content.unlock_text = Localize("loc_havoc_maelstrom_access", true, {
+						rank = rank,
+					})
+				end
+			end
 		end
 	end
 

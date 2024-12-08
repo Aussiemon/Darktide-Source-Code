@@ -9,6 +9,7 @@ local circumstance_templates = {
 			"mutator_ventilation_purge_los",
 		},
 		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutator_vent",
 			description = "loc_circumstance_ventilation_purge_description",
 			display_name = "loc_circumstance_ventilation_purge_title",
 			happening_display_name = "loc_happening_ventilation_purge",
@@ -54,6 +55,7 @@ local circumstance_templates = {
 			"mutator_ventilation_purge_los",
 		},
 		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutator_vent_sniper",
 			description = "loc_circumstance_ventilation_purge_with_snipers_description",
 			display_name = "loc_circumstance_ventilation_purge_with_snipers_title",
 			happening_display_name = "loc_happening_ventilation_purge",

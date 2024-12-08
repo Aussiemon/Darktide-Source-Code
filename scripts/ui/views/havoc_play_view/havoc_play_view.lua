@@ -18,6 +18,7 @@ local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view
 local ViewElementTutorialOverlay = require("scripts/ui/view_elements/view_element_tutorial_overlay/view_element_tutorial_overlay")
 local Zones = require("scripts/settings/zones/zones")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local HavocPlayView = class("HavocPlayView", "BaseView")
 local havoc_info = Managers.data_service.havoc:get_settings()
 
@@ -54,13 +55,45 @@ HavocPlayView.on_enter = function (self)
 
 	self._widgets_by_name.play_button.content.hotspot.pressed_callback = callback(self, "_cb_on_mission_start")
 	self._widgets_by_name.party_finder_button.content.hotspot.pressed_callback = callback(self, "_cb_on_party_finder_pressed")
-	self._widgets_by_name.play_button.content.hotspot.disabled = not self._parent.havoc_order.id
 
 	Managers.data_service.havoc:refresh_havoc_status()
 	self:_populate_week_data()
+	self:_setup_text_positions()
 	self:_setup_forward_gui()
 
 	self._tutorial_overlay = self:_add_element(ViewElementTutorialOverlay, "tutorial_overlay", 200, {})
+end
+
+HavocPlayView._setup_text_positions = function (self)
+	local reward_title_widget = self._widgets_by_name.reward_title
+	local reward_title_text = reward_title_widget.content.text
+	local reward_title_style = reward_title_widget.style.text
+	local reward_title_text_options = UIFonts.get_font_options_by_style(reward_title_style)
+	local reward_title_width = self:_scenegraph_size(reward_title_widget.scenegraph_id)
+	local reward_title_size = {
+		reward_title_width,
+		2000,
+	}
+	local _, reward_title_height = UIRenderer.text_size(self._ui_renderer, reward_title_text, reward_title_style.font_type, reward_title_style.font_size, reward_title_size, reward_title_text_options)
+	local reward_description_widget = self._widgets_by_name.reward_description
+	local reward_description_text = reward_description_widget.content.text
+	local reward_description_style = reward_description_widget.style.text
+	local reward_description_text_options = UIFonts.get_font_options_by_style(reward_description_style)
+	local reward_description_width = self:_scenegraph_size(reward_description_widget.scenegraph_id)
+	local reward_description_size = {
+		reward_description_width,
+		2000,
+	}
+	local _, reward_description_height = UIRenderer.text_size(self._ui_renderer, reward_description_text, reward_description_style.font_type, reward_description_style.font_size, reward_description_size, reward_description_text_options)
+	local description_y_position = reward_title_height + 10
+	local objective_1_y_position = description_y_position + reward_description_height + 30
+	local objective_2_y_position = objective_1_y_position + 60
+	local weekly_reward_y_position = objective_2_y_position + 130
+
+	self:_set_scenegraph_position("reward_description", nil, description_y_position)
+	self:_set_scenegraph_position("reward_objective_1", nil, objective_1_y_position)
+	self:_set_scenegraph_position("reward_objective_2", nil, objective_2_y_position)
+	self:_set_scenegraph_position("weekly_reward", nil, weekly_reward_y_position)
 end
 
 HavocPlayView._setup_current_havoc_mission_data = function (self)
@@ -83,8 +116,21 @@ HavocPlayView._setup_current_havoc_mission_data = function (self)
 
 	charges_widget.content.visible = current_havoc_order.data.rank > 1
 
+	local num_charges = current_havoc_order.charges
+
 	for i = 1, 3 do
-		charges_widget.style["havoc_charge_" .. i].color[1] = i <= current_havoc_order.charges and 255 or 127
+		local destination_color = charges_widget.style["havoc_charge_" .. i].color
+
+		if i <= num_charges then
+			ColorUtilities.color_copy(Color.terminal_text_header(255, true), destination_color)
+		else
+			ColorUtilities.color_copy({
+				255,
+				74,
+				21,
+				21,
+			}, destination_color)
+		end
 	end
 
 	local _player = self:_player()
@@ -100,7 +146,6 @@ HavocPlayView._setup_current_havoc_mission_data = function (self)
 		highest_reached = Localize("loc_generic_interaction")
 	end
 
-	widgets_by_name.all_time_highest_level_header.content.text = highest_reached
 	self._reward_end_time = self._parent._havoc_week_end_time
 
 	local mission = current_havoc_order.blueprint.template
@@ -256,6 +301,12 @@ HavocPlayView._populate_week_data = function (self, data)
 			weekly_reward_header_widget.content.visible = true
 		end
 	end
+
+	local weekly_reward_widget = widgets_by_name.weekly_reward
+	local weekly_reward_header_widget = widgets_by_name.reward_header
+
+	weekly_reward_widget.content.visible = true
+	weekly_reward_header_widget.content.visible = true
 end
 
 HavocPlayView._update_reward_timer = function (self, dt)
@@ -284,7 +335,7 @@ HavocPlayView._update_reward_timer = function (self, dt)
 		timer_color[4] = timer_color[4] * background_color_intensity
 	end
 
-	self._widgets_by_name.reward_timer_header.content.text = string.format("Time left until order reset %s", TextUtilities.apply_color_to_text(TextUtilities.format_time_span_long_form_localized(self._reward_end_time), timer_color))
+	self._widgets_by_name.reward_timer_header.content.text = string.format("%s %s", Localize("loc_havoc_time"), TextUtilities.apply_color_to_text(TextUtilities.format_time_span_long_form_localized(self._reward_end_time), timer_color))
 end
 
 HavocPlayView._setup_mission_detail_grid = function (self, mission_circumstances)
@@ -329,12 +380,14 @@ HavocPlayView._setup_mission_detail_grid = function (self, mission_circumstances
 	for _, entry in ipairs(mission_circumstances) do
 		local title = entry.display_name
 		local description = entry.description
+		local background = entry.background
 		local icon = entry.icon
 
 		layout[#layout + 1] = {
 			widget_type = "mutator",
 			header = Localize(title),
 			text = Localize(description),
+			background = background,
 			icon = icon,
 		}
 	end
@@ -359,6 +412,7 @@ HavocPlayView._cb_on_party_finder_pressed = function (self)
 	}
 	local view_name = "group_finder_view"
 
+	self:_play_sound(UISoundEvents.default_click)
 	Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 end
 
@@ -388,7 +442,7 @@ HavocPlayView._cb_on_mission_start = function (self)
 
 		Managers.party_immaterium:wanted_mission_selected(mission_id, private_match)
 	end):catch(function (error)
-		Log.error("DebugFunctions", "Could not create debug mission " .. table.tostring(error, 5))
+		Log.error("DebugFunctions", "Could not create mission " .. table.tostring(error, 5))
 	end)
 end
 
@@ -535,7 +589,7 @@ end
 HavocPlayView._update_can_play = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local all_can_play, denied_info = Managers.data_service.havoc:can_all_party_members_play_havoc()
-	local all_participants_avaialble = self._party_manager:are_all_members_in_hub()
+	local all_participants_available = self._party_manager:are_all_members_in_hub()
 	local min_participants = havoc_info.min_participants or 1
 	local party_members
 
@@ -547,8 +601,9 @@ HavocPlayView._update_can_play = function (self)
 
 	local party_size = party_members and #party_members > 0 and #party_members or 1
 	local is_min_party_size = min_participants <= party_size
+	local order_id = self._parent.havoc_order.id
 
-	if all_can_play and all_participants_avaialble and is_min_party_size then
+	if order_id and all_can_play and all_participants_available and is_min_party_size then
 		widgets_by_name.play_button.content.hotspot.disabled = false
 		widgets_by_name.play_button_disabled_info.visible = false
 	else
@@ -652,8 +707,6 @@ HavocPlayView.cb_on_help_pressed = function (self)
 		window_width = 800,
 		widgets_name = {
 			"page_header",
-			"all_time_highest_description_header",
-			"all_time_highest_level_header",
 			"reward_timer_header",
 		},
 		position_data = {

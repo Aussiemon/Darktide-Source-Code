@@ -170,7 +170,7 @@ LobbyView._setup_havoc_info = function (self)
 		local widget = self._widgets_by_name[widget_name]
 		local widget_content = widget.content
 
-		widget.offset[2] = (i - 1) * 96
+		widget.offset[2] = (i - 1) * 113
 		widget_content.icon = circumstance_ui_settings.icon
 		widget_content.circumstance_name = Localize(circumstance_ui_settings.display_name)
 		widget_content.circumstance_description = Localize(circumstance_ui_settings.description)

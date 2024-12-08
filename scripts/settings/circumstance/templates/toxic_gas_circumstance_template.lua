@@ -10,6 +10,7 @@ local circumstance_templates = {
 			"mutator_toxic_gas_volumes",
 		},
 		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutator_toxic_gas",
 			description = "loc_circumstance_toxic_gas_description",
 			display_name = "loc_circumstance_toxic_gas_title",
 			happening_display_name = "loc_happening_ventilation_purge",
@@ -58,6 +59,7 @@ local circumstance_templates = {
 			"mutator_cultist_grenadier",
 		},
 		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutator_toxic_gas",
 			description = "loc_circumstance_toxic_gas_cultist_grenadier_description",
 			display_name = "loc_circumstance_toxic_gas_cultist_grenadier_title",
 			happening_display_name = "loc_happening_ventilation_purge",

@@ -93,15 +93,16 @@ StickyEffects._start_stickyness = function (self, t)
 
 	if sticky_armor_type and self._sticky_armor_type ~= sticky_armor_type then
 		local visual_loadout_extension = self._visual_loadout_extension
-		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()
-		local resolved, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(STICKYNESS_SFX_LOOP_ALIAS, should_play_husk_effect, _external_properties)
+		local fx_extension = self._fx_extension
+		local should_play_husk_effect = fx_extension:should_play_husk_effect()
+		local resolved_sfx, event_name, resolved_stop, stop_event_name = visual_loadout_extension:resolve_looping_gear_sound(STICKYNESS_SFX_LOOP_ALIAS, should_play_husk_effect, _external_properties)
 
-		if resolved then
+		if resolved_sfx then
 			local wwise_world = self._wwise_world
 			local sticky_fx_source_name = self._sticky_fx_source_name
-			local source_id = self._fx_extension:sound_source(sticky_fx_source_name)
+			local source_id = fx_extension:sound_source(sticky_fx_source_name)
 
-			WwiseWorld.set_switch(self._wwise_world, "armor_types", sticky_armor_type, source_id)
+			WwiseWorld.set_switch(wwise_world, "armor_types", sticky_armor_type, source_id)
 
 			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
 
@@ -112,14 +113,13 @@ StickyEffects._start_stickyness = function (self, t)
 			end
 		end
 
-		local world = self._world
-		local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
-
 		_external_properties.armor_type = _sticky_armor_type(action_sweep_component)
 
-		local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(STICKYNESS_VFX_LOOP_ALIAS, _external_properties)
+		local resolved_vfx, effect_name = visual_loadout_extension:resolve_gear_particle(STICKYNESS_VFX_LOOP_ALIAS, _external_properties)
 
-		if resolved then
+		if resolved_vfx then
+			local world = self._world
+			local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
 			local effect_id = World.create_particles(world, effect_name, Vector3.zero())
 
 			World.link_particles(world, effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")

@@ -5,6 +5,7 @@ require("scripts/extension_systems/character_state_machine/character_states/play
 local FirstPersonView = require("scripts/utilities/first_person_view")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Pocketable = require("scripts/utilities/pocketable")
 local Vo = require("scripts/utilities/vo")
 local PlayerCharacterStateDead = class("PlayerCharacterStateDead", "PlayerCharacterStateBase")
@@ -22,6 +23,7 @@ end
 
 PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state, params)
 	PlayerCharacterStateDead.super.on_enter(self, unit, dt, t, previous_state, params)
+	PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
 	FirstPersonView.exit(t, self._first_person_mode_component)
 
 	self._locomotion_steering_component.velocity_wanted = Vector3.zero()

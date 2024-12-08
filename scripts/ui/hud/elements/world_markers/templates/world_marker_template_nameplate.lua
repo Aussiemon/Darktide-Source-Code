@@ -74,6 +74,14 @@ end
 template.on_exit = function (widget, marker)
 	Managers.event:unregister(marker, "event_player_profile_updated")
 	Managers.event:unregister(marker, "event_update_player_name")
+
+	if marker.rank_promise then
+		if marker.rank_promise:is_pending() then
+			marker.rank_promise:cancel()
+		end
+
+		marker.rank_promise = nil
+	end
 end
 
 template.on_enter = function (widget, marker)
@@ -172,6 +180,26 @@ function _create_character_text(marker)
 	end
 
 	marker.widget.content.header_text = text
+
+	if character_level >= 30 then
+		local rank_promise = Managers.data_service.havoc:havoc_rank_all_time_high(player:account_id())
+
+		rank_promise:next(function (rank)
+			marker.rank_promise = nil
+
+			if rank then
+				text = string_symbol .. " " .. player:name() .. " - " .. tostring(rank) .. " "
+
+				if title then
+					text = text .. "\n" .. title
+				end
+
+				marker.widget.content.header_text = text
+			end
+		end)
+
+		marker.rank_promise = rank_promise
+	end
 end
 
 return template

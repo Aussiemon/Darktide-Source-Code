@@ -66,13 +66,13 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		size = LobbyViewSettings.grid_size,
 		position = {
-			-275,
+			-29,
 			-170,
 			1,
 		},
 	},
 	grid_start = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		parent = "grid_background",
 		vertical_alignment = "top",
 		size = {
@@ -116,25 +116,14 @@ local scenegraph_definition = {
 	havoc_title = {
 		horizontal_alignment = "right",
 		parent = "screen",
-		vertical_alignment = "center",
-		size = {
-			1200,
-			100,
-		},
-		position = {
-			700,
-			-200,
-			1,
-		},
-	},
-	havoc_pivot = {
-		horizontal_alignment = "center",
-		parent = "havoc_title",
 		vertical_alignment = "bottom",
-		size = LobbyViewSettings.panel_size,
+		size = {
+			425,
+			550,
+		},
 		position = {
-			0,
-			0,
+			-62,
+			-287,
 			1,
 		},
 	},
@@ -486,11 +475,11 @@ local widget_definitions = {
 			style_id = "havoc_icon",
 			value = "content/ui/materials/icons/generic/havoc",
 			style = {
-				horizontal_alignment = "left",
+				horizontal_alignment = "center",
 				vertical_alignment = "top",
 				color = Color.golden_rod(255, true),
 				offset = {
-					143,
+					-53,
 					16,
 					11,
 				},
@@ -505,11 +494,11 @@ local widget_definitions = {
 			style_id = "havoc_icon_drop_shadow",
 			value = "content/ui/materials/icons/generic/havoc",
 			style = {
-				horizontal_alignment = "left",
+				horizontal_alignment = "center",
 				vertical_alignment = "top",
 				color = Color.black(255, true),
 				offset = {
-					144,
+					-52,
 					16,
 					10,
 				},
@@ -526,12 +515,12 @@ local widget_definitions = {
 			value_id = "havoc_rank",
 			style = {
 				font_size = 40,
-				horizontal_alignment = "left",
-				text_horizontal_alignment = "left",
+				horizontal_alignment = "center",
+				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
 				vertical_alignment = "top",
 				offset = {
-					203,
+					0,
 					21,
 					10,
 				},
@@ -543,14 +532,15 @@ local widget_definitions = {
 			style_id = "divider",
 			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
 			style = {
-				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				vertical_alignment = "top",
 				size = {
-					430,
+					437,
 					20,
 				},
 				offset = {
-					11,
-					-44,
+					0,
+					-4,
 					3,
 				},
 			},
@@ -560,14 +550,15 @@ local widget_definitions = {
 			style_id = "divider_02",
 			value = "content/ui/materials/dividers/skull_rendered_center_01",
 			style = {
-				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				vertical_alignment = "top",
 				size = {
 					200,
 					30,
 				},
 				offset = {
-					125,
-					-50,
+					0,
+					-8,
 					4,
 				},
 			},
@@ -577,15 +568,17 @@ local widget_definitions = {
 			style_id = "divider_03",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
+				horizontal_alignment = "left",
 				scale_to_material = true,
+				vertical_alignment = "top",
 				color = Color.terminal_grid_background_gradient(255, true),
 				size = {
-					440,
-					510,
+					441,
+					570,
 				},
 				offset = {
-					5,
-					-5,
+					-8,
+					-8,
 					2,
 				},
 			},
@@ -595,6 +588,9 @@ local widget_definitions = {
 			style_id = "divider_04",
 			value = "content/ui/materials/frames/dropshadow_heavy",
 			style = {
+				horizontal_alignment = "left",
+				scale_to_material = true,
+				vertical_alignment = "top",
 				color = {
 					255,
 					169,
@@ -603,10 +599,10 @@ local widget_definitions = {
 				},
 				size = {
 					425,
-					500,
+					550,
 				},
 				offset = {
-					13,
+					0,
 					0,
 					2,
 				},
@@ -622,13 +618,13 @@ local widget_definitions = {
 					153,
 				},
 				offset = {
-					20,
-					0,
+					5,
+					5,
 					1,
 				},
 				size = {
-					410,
-					500,
+					415,
+					540,
 				},
 			},
 		},
@@ -747,7 +743,7 @@ for i = 1, 4 do
 				vertical_alignment = "top",
 				color = Color.golden_rod(255, true),
 				offset = {
-					29,
+					16,
 					82,
 					5,
 				},
@@ -772,7 +768,7 @@ for i = 1, 4 do
 					20,
 				},
 				offset = {
-					63,
+					54,
 					87,
 					10,
 				},
@@ -791,10 +787,10 @@ for i = 1, 4 do
 				vertical_alignment = "top",
 				size = {
 					393,
-					52,
+					51,
 				},
 				offset = {
-					29,
+					16,
 					120,
 					10,
 				},

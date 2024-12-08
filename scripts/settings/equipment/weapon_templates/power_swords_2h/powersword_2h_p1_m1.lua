@@ -1618,8 +1618,8 @@ weapon_template.actions = {
 			start_modifier = 1,
 		},
 		anim_end_event_func = function (action_settings, condition_func_params)
-			local character_state_component = condition_func_params.character_state_component
-			local state_name = character_state_component.state_name
+			local character_state_component = condition_func_params and condition_func_params.character_state_component
+			local state_name = character_state_component and character_state_component.state_name or "none"
 			local is_sliding = state_name == "sliding"
 
 			return is_sliding and "parry_finished_01" or "parry_finished"

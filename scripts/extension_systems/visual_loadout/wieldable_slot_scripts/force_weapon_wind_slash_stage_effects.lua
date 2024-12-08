@@ -37,7 +37,6 @@ ForceWeaponWindSlashStageEffects.init = function (self, context, slot, weapon_te
 	self._fx_source_name = fx_source_name
 	self._weapon_material_variables_1p = {}
 	self._weapon_material_variables_3p = {}
-	self._current_charges = -1
 	self._current_stage = "low"
 	self._looping_stage_effect_id = nil
 	self._looping_stage_playing_id = nil
@@ -59,7 +58,6 @@ ForceWeaponWindSlashStageEffects.unwield = function (self)
 	self:_stop_stage_particle_loop(true)
 	self:_stop_stage_sound_loop()
 
-	self._current_charges = 0
 	self._current_stage = "low"
 end
 
@@ -72,42 +70,36 @@ ForceWeaponWindSlashStageEffects.update = function (self, dt, t)
 end
 
 ForceWeaponWindSlashStageEffects._update_effects = function (self, update_stage_interfacing, update_loops, force_update)
-	local current_charges = self._current_charges
 	local current_stage = self._current_stage
 	local num_charges = self._inventory_slot_component.num_special_charges
+	local tweak_data = self._weapon_special_tweak_data
+	local thresholds = tweak_data.thresholds
+	local wanted_stage = "low"
 
-	if current_charges ~= num_charges then
-		local tweak_data = self._weapon_special_tweak_data
-		local thresholds = tweak_data.thresholds
-		local wanted_stage = "low"
+	for ii = #thresholds, 1, -1 do
+		if num_charges >= thresholds[ii].threshold then
+			wanted_stage = thresholds[ii].name
 
-		for ii = #thresholds, 1, -1 do
-			if num_charges >= thresholds[ii].threshold then
-				wanted_stage = thresholds[ii].name
-
-				break
-			end
+			break
 		end
-
-		local stage_changed = current_stage ~= wanted_stage
-
-		if stage_changed and update_stage_interfacing then
-			self:_update_stage_interfacing(current_stage, wanted_stage)
-		end
-
-		if update_loops then
-			self:_update_stage_particle_loop(current_stage, wanted_stage)
-			self:_update_sound_loop(current_stage, wanted_stage)
-		end
-
-		if stage_changed or force_update then
-			self:_update_material_variables(wanted_stage)
-		end
-
-		self._current_stage = wanted_stage
 	end
 
-	self._current_charges = num_charges
+	local stage_changed = current_stage ~= wanted_stage
+
+	if stage_changed and update_stage_interfacing then
+		self:_update_stage_interfacing(current_stage, wanted_stage)
+	end
+
+	if stage_changed or force_update then
+		self:_update_material_variables(wanted_stage)
+	end
+
+	if update_loops then
+		self:_update_particle_loop(current_stage, wanted_stage)
+		self:_update_sound_loop(current_stage, wanted_stage)
+	end
+
+	self._current_stage = wanted_stage
 end
 
 ForceWeaponWindSlashStageEffects._update_stage_interfacing = function (self, current_stage, wanted_stage)
@@ -151,18 +143,17 @@ ForceWeaponWindSlashStageEffects._update_stage_interfacing = function (self, cur
 	end
 end
 
-ForceWeaponWindSlashStageEffects._update_stage_particle_loop = function (self, current_stage, wanted_stage)
-	local trigger_fx = STAGE_RANKING[wanted_stage] > 1
-	local stop_fx = STAGE_RANKING[wanted_stage] <= 1
+ForceWeaponWindSlashStageEffects._update_particle_loop = function (self, current_stage, wanted_stage)
+	local looping_stage_effect_id = self._looping_stage_effect_id
+	local trigger_fx = STAGE_RANKING[wanted_stage] > 1 and not looping_stage_effect_id
+	local stop_fx = STAGE_RANKING[wanted_stage] <= 1 and looping_stage_effect_id
 
 	if trigger_fx then
 		self:_stop_stage_particle_loop()
 
-		local visual_loadout_extension = self._visual_loadout_extension
+		_external_properties.stage = nil
 
-		_external_properties.stage = wanted_stage
-
-		local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(PARTICLE_STAGE_LOOP_FX, _external_properties)
+		local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(PARTICLE_STAGE_LOOP_FX, _external_properties)
 
 		if resolved then
 			local world = self._world
@@ -221,13 +212,13 @@ ForceWeaponWindSlashStageEffects._stop_stage_particle_loop = function (self, for
 	self._looping_stage_effect_id = nil
 end
 
-ForceWeaponWindSlashStageEffects._stop_stage_sound_loop = function (self)
+ForceWeaponWindSlashStageEffects._stop_stage_sound_loop = function (self, force_stop)
 	local wwise_world = self._wwise_world
 	local sfx_source_id = self._fx_extension:sound_source(self._fx_source_name)
 	local current_playing_id = self._looping_stage_playing_id
 	local stop_event_name = self._looping_stage_stop_event
 
-	if stop_event_name and sfx_source_id then
+	if not force_stop and stop_event_name and sfx_source_id then
 		WwiseWorld.trigger_resource_event(wwise_world, stop_event_name, sfx_source_id)
 	elseif current_playing_id then
 		WwiseWorld.stop_event(wwise_world, current_playing_id)
@@ -253,7 +244,10 @@ ForceWeaponWindSlashStageEffects._update_material_variables = function (self, wa
 end
 
 ForceWeaponWindSlashStageEffects.update_first_person_mode = function (self, first_person_mode)
-	return
+	self:_stop_stage_particle_loop(true)
+	self:_stop_stage_sound_loop(true)
+
+	self._current_stage = "low"
 end
 
 function _set_intensity(charge_level, weapon_material_variables)

@@ -652,55 +652,478 @@ local function _create_dim_weapon_animation(animation_table)
 	}
 end
 
-local function _create_init_havoc_animation(animation_table, start_time)
-	start_time = start_time or 0
+local function get_havoc_positions(widget)
+	local ids = {
+		widget.content.order_reward_state and "order",
+		widget.content.highest_rank and "highest",
+		widget.content.week_rank and "week",
+	}
+	local positions = {}
 
-	local function added_time(time_added)
-		start_time = start_time + time_added
+	for i = 1, #ids do
+		local id_name = ids[i]
 
-		return start_time
+		if id_name then
+			positions[#positions + 1] = id_name
+		end
 	end
 
-	_create_fade_in_pass_animation(animation_table, "havoc_rank_badge", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "previous_havoc_rank_value_1", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "previous_havoc_rank_value_2", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "havoc_badge_background", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "havoc_charge_1", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "havoc_charge_2", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "havoc_charge_3", added_time(0))
+	return positions
 end
 
-local function _create_progress_havoc_animation(animation_table, start_time, end_time)
+local function get_havoc_id_by_wanted_position(widget, position)
+	local positions = get_havoc_positions(widget)
+
+	return positions[position]
+end
+
+local function get_havoc_position_by_id(widget, id)
+	local positions = get_havoc_positions(widget)
+
+	for i = 1, #positions do
+		local position_id = positions[i]
+
+		if id == position_id then
+			return i
+		end
+	end
+end
+
+local havoc_fade_in_passes_by_id = {
+	order = {
+		"havoc_rank_badge",
+		"previous_havoc_rank_value_1",
+		"previous_havoc_rank_value_2",
+		"havoc_badge_background",
+		"havoc_charge_1",
+		"havoc_charge_2",
+		"havoc_charge_3",
+	},
+	highest = {
+		"havoc_icon",
+		"highest_havoc_rank",
+		"highest_havoc_description",
+	},
+	week = {
+		"havoc_week_description",
+		"havoc_reward_week_icon_glow",
+		"havoc_reward_week_icon",
+		"week_havoc_icon",
+		"week_havoc_rank",
+	},
+}
+local havoc_fade_out_passes_by_id = {
+	order = {
+		"havoc_rank_badge",
+		"previous_havoc_rank_value_1",
+		"previous_havoc_rank_value_2",
+		"current_havoc_rank_value_1",
+		"current_havoc_rank_value_2",
+		"havoc_badge_background",
+		"havoc_charge_1",
+		"havoc_charge_2",
+		"havoc_charge_3",
+	},
+	highest = {
+		"havoc_icon",
+		"highest_havoc_rank",
+		"highest_havoc_description",
+	},
+	week = {
+		"havoc_week_description",
+		"havoc_reward_week_icon_glow",
+		"havoc_reward_week_icon",
+		"week_havoc_icon",
+		"week_havoc_rank",
+	},
+}
+local havoc_concat_passes_by_id = {
+	order = {
+		"havoc_rank_badge",
+		"current_havoc_rank_value_1",
+		"current_havoc_rank_value_2",
+		"previous_havoc_rank_value_1",
+		"previous_havoc_rank_value_2",
+		"havoc_badge_background",
+		"havoc_charge_1",
+		"havoc_charge_2",
+		"havoc_charge_3",
+		"havoc_charge_ghost_1",
+		"havoc_charge_ghost_2",
+		"havoc_charge_ghost_3",
+	},
+	highest = {
+		"havoc_icon",
+		"highest_havoc_rank",
+		"highest_havoc_description",
+	},
+	week = {
+		"havoc_week_description",
+		"havoc_reward_week_icon_glow",
+		"havoc_reward_week_icon",
+		"week_havoc_icon",
+		"week_havoc_rank",
+	},
+}
+
+local function havoc_fade_in_init_by_id(id, widget, parent, params)
+	local max_positions = table.size(havoc_concat_passes_by_id)
+	local positions = get_havoc_positions(widget)
+	local positions_size = #positions
+	local id_position = get_havoc_position_by_id(widget, id)
+	local lerp_from_positions = 1 - math.ilerp(1, max_positions, positions_size)
+
+	if id == "order" or id == "highest" or id == "week" then
+		local style_names = havoc_fade_in_passes_by_id[id]
+
+		if style_names then
+			for i = 1, #style_names do
+				local style_name = style_names[i]
+				local pass_params = {}
+				local widget_style = widget.style
+				local pass_style = widget_style[style_name]
+
+				if pass_style then
+					local pass_color = pass_style.text_color or pass_style.color
+
+					pass_params.pass_color = pass_color
+					pass_params.start_color = pass_style.start_color or widget_style.start_color
+
+					if pass_style.text_color and not pass_style.material then
+						pass_params.target_color = pass_style.in_focus_text_color or widget_style.in_focus_text_color
+					else
+						pass_params.target_color = pass_style.in_focus_color or widget_style.in_focus_color
+					end
+
+					if not params.pass_params then
+						params.pass_params = {}
+					end
+
+					params.pass_params[style_name] = pass_params
+
+					if pass_style.sound_event_on_show then
+						parent:play_sound(pass_style.sound_event_on_show)
+					end
+				end
+			end
+		end
+	end
+end
+
+local function havoc_fade_in_progress_by_id(id, widget, parent, params, progress)
+	local color_utils_color_lerp = _color_utils_color_lerp
+
+	if id == "order" or id == "highest" or id == "week" then
+		local style_names = havoc_fade_in_passes_by_id[id]
+
+		if style_names then
+			for i = 1, #style_names do
+				local style_name = style_names[i]
+				local pass_params = params.pass_params[style_name]
+
+				if pass_params then
+					local pass_color = pass_params.pass_color
+					local start_color = pass_params.start_color
+					local target_color = pass_params.target_color
+					local color_progress = _math_ease_sine(progress)
+
+					color_utils_color_lerp(start_color, target_color, color_progress, pass_color)
+				end
+			end
+		end
+	end
+end
+
+local function havoc_fade_in_all_progress_by_id(id, widget, parent, params, progress)
+	local color_utils_color_lerp = _color_utils_color_lerp
+
+	if id == "order" or id == "highest" or id == "week" then
+		local style_names = havoc_concat_passes_by_id[id]
+
+		if style_names then
+			for i = 1, #style_names do
+				local style_name = style_names[i]
+				local pass_params = params.pass_params[style_name]
+
+				if pass_params then
+					local pass_color = pass_params.pass_color
+					local start_color = pass_params.start_color
+					local target_color = pass_params.target_color
+					local color_progress = _math_ease_sine(progress)
+
+					color_utils_color_lerp(start_color, target_color, color_progress, pass_color)
+				end
+			end
+		end
+	end
+end
+
+local function havoc_fade_out_progress_by_id(id, widget, parent, params, progress)
+	local color_utils_color_lerp = _color_utils_color_lerp
+
+	if id == "order" or id == "highest" or id == "week" then
+		local style_names = havoc_fade_out_passes_by_id[id]
+
+		if style_names then
+			for i = 1, #style_names do
+				local style_name = style_names[i]
+				local pass_params = params.pass_params[style_name]
+
+				if pass_params then
+					local pass_color = pass_params.pass_color
+					local start_color = pass_params.start_color
+					local target_color = pass_params.target_color
+					local color_progress = _math_ease_sine(progress)
+
+					color_utils_color_lerp(target_color, start_color, color_progress, pass_color)
+				end
+			end
+		end
+	end
+end
+
+local function havoc_concat_init_by_id(id, widget, parent, params)
+	if not params.pass_params then
+		params.pass_params = {}
+	end
+
+	local max_positions = table.size(havoc_concat_passes_by_id)
+	local positions = get_havoc_positions(widget)
+	local positions_size = #positions
+	local id_position = get_havoc_position_by_id(widget, id)
+	local widget_style = widget.style
+
+	if id == "order" then
+		if positions_size > 1 then
+			if positions_size == max_positions then
+				widget_style.havoc_charge_1.offset[2] = -15
+				widget_style.havoc_charge_2.offset[2] = -15
+				widget_style.havoc_charge_3.offset[2] = -15
+				widget_style.havoc_badge_background.offset[2] = widget_style.havoc_badge_background.offset[2] + 10
+				widget_style.havoc_charge_1.offset[1] = -30
+				widget_style.havoc_charge_2.offset[1] = 0
+				widget_style.havoc_charge_3.offset[1] = 30
+				widget_style.previous_havoc_rank_value_1.offset[2] = widget_style.previous_havoc_rank_value_1.offset[2] + 10
+				widget_style.current_havoc_rank_value_1.offset[2] = widget_style.current_havoc_rank_value_1.offset[2] + 10
+
+				if widget_style.previous_havoc_rank_value_2 then
+					widget_style.previous_havoc_rank_value_1.offset[1] = widget_style.previous_havoc_rank_value_1.offset[1] + 5
+					widget_style.previous_havoc_rank_value_2.offset[1] = widget_style.previous_havoc_rank_value_2.offset[1] - 5
+					widget_style.previous_havoc_rank_value_2.offset[2] = widget_style.current_havoc_rank_value_2.offset[2] + 10
+				end
+
+				if widget_style.current_havoc_rank_value_2 then
+					widget_style.current_havoc_rank_value_1.offset[1] = widget_style.current_havoc_rank_value_1.offset[1] + 5
+					widget_style.current_havoc_rank_value_2.offset[1] = widget_style.current_havoc_rank_value_2.offset[1] - 5
+					widget_style.current_havoc_rank_value_2.offset[2] = widget_style.current_havoc_rank_value_2.offset[2] + 5
+				end
+			else
+				widget_style.havoc_charge_1.offset[2] = 10
+				widget_style.havoc_charge_2.offset[2] = 10
+				widget_style.havoc_charge_3.offset[2] = 10
+				widget_style.havoc_badge_background.offset[2] = widget_style.havoc_badge_background.offset[2] + 10
+				widget_style.havoc_charge_1.offset[1] = -45
+				widget_style.havoc_charge_2.offset[1] = 0
+				widget_style.havoc_charge_3.offset[1] = 45
+				widget_style.previous_havoc_rank_value_1.offset[2] = widget_style.previous_havoc_rank_value_1.offset[2] + 5
+				widget_style.current_havoc_rank_value_1.offset[2] = widget_style.current_havoc_rank_value_1.offset[2] + 5
+
+				if widget_style.previous_havoc_rank_value_2 then
+					widget_style.previous_havoc_rank_value_1.offset[1] = widget_style.previous_havoc_rank_value_1.offset[1] + 2
+					widget_style.previous_havoc_rank_value_2.offset[1] = widget_style.previous_havoc_rank_value_2.offset[1] - 2
+					widget_style.previous_havoc_rank_value_2.offset[2] = widget_style.previous_havoc_rank_value_2.offset[2] + 5
+				end
+
+				if widget_style.current_havoc_rank_value_2 then
+					widget_style.current_havoc_rank_value_1.offset[1] = widget_style.current_havoc_rank_value_1.offset[1] + 2
+					widget_style.current_havoc_rank_value_2.offset[1] = widget_style.current_havoc_rank_value_2.offset[1] - 2
+					widget_style.current_havoc_rank_value_2.offset[2] = widget_style.current_havoc_rank_value_2.offset[2] + 5
+				end
+			end
+
+			local style_names = havoc_concat_passes_by_id[id]
+			local lerp_from_positions = math.ilerp(1, max_positions, positions_size)
+
+			if style_names then
+				for i = 1, #style_names do
+					local style_name = style_names[i]
+					local pass_style = widget_style[style_name]
+
+					if positions_size == 1 then
+						return
+					end
+
+					if pass_style then
+						local end_size_percent = math.lerp(1, 0.5, lerp_from_positions)
+
+						pass_style.size[1] = pass_style.size[1] * end_size_percent
+						pass_style.size[2] = pass_style.size[2] * end_size_percent
+
+						local start_y = pass_style.offset and pass_style.offset[2]
+						local max_y_offset = start_y - 100
+						local end_y = math.lerp(start_y, max_y_offset, lerp_from_positions)
+
+						pass_style.offset[2] = end_y
+					end
+				end
+			end
+		end
+	elseif id == "highest" then
+		if positions_size > 1 then
+			widget_style.highest_havoc_description.offset[2] = -20
+			widget_style.highest_havoc_rank.offset[2] = 20
+			widget_style.havoc_icon.offset[2] = 20
+
+			local added_offset = 0
+
+			if positions_size == 2 then
+				added_offset = id_position < positions_size and -40 or 40
+			end
+
+			local style_names = havoc_concat_passes_by_id[id]
+
+			if style_names then
+				for i = 1, #style_names do
+					local style_name = style_names[i]
+					local pass_style = widget_style[style_name]
+
+					if pass_style then
+						pass_style.offset[2] = pass_style.offset[2] + added_offset
+					end
+				end
+			end
+		end
+	elseif id == "week" and positions_size > 1 then
+		widget_style.havoc_reward_week_icon_glow.color[1] = 0
+		widget_style.havoc_reward_week_icon.color[1] = 0
+		widget_style.havoc_reward_week_icon_glow.in_focus_color[1] = 0
+		widget_style.havoc_reward_week_icon.in_focus_color[1] = 0
+		widget_style.havoc_week_description.offset[2] = -20
+		widget_style.week_havoc_icon.offset[1] = widget_style.havoc_icon.offset[1]
+		widget_style.week_havoc_rank.offset[1] = widget_style.highest_havoc_rank.offset[1]
+		widget_style.week_havoc_icon.offset[2] = 20
+		widget_style.week_havoc_rank.offset[2] = 20
+		widget_style.week_havoc_icon.font_size = widget_style.havoc_icon.font_size
+		widget_style.week_havoc_rank.font_size = widget_style.highest_havoc_rank.font_size
+
+		local lerp_from_positions = math.ilerp(1, max_positions, positions_size)
+		local style_names = havoc_concat_passes_by_id[id]
+
+		if style_names then
+			for i = 1, #style_names do
+				local style_name = style_names[i]
+				local pass_style = widget_style[style_name]
+
+				if pass_style then
+					local start_y = pass_style.offset and pass_style.offset[2]
+					local max_y_offset = start_y + 90
+					local end_y = math.lerp(start_y, max_y_offset, lerp_from_positions)
+
+					pass_style.offset[2] = end_y
+				end
+			end
+		end
+	end
+end
+
+local function _create_progress_havoc_animation(animation_table, start_time)
 	local start_anim_time = start_time + _text_fade_in_time
-	local end_anim_time = end_time + _text_fade_in_time
+	local info_time = 3
+	local reward_1_start_time = start_anim_time + 0.3
+	local reward_1_progress_time = reward_1_start_time + (info_time - 1)
+	local reward_1_end_time = reward_1_start_time + info_time
+	local reward_2_start_time = reward_1_end_time + 0.3
+	local reward_2_progress_time = reward_2_start_time + 0.5
+	local reward_2_end_time = reward_2_start_time + info_time
+	local reward_3_start_time = reward_2_end_time + 0.3
+	local reward_3_progress_time = reward_3_start_time + 0.5
+	local reward_3_end_time = reward_3_start_time + info_time
+	local reward_all_start_time = reward_3_end_time + 0.3
+	local reward_all_end_time = reward_all_start_time + 0.5
 
 	animation_table[#animation_table + 1] = {
-		name = "change_charge",
-		start_time = start_anim_time + 1.2,
-		end_time = end_anim_time - 0.4,
+		name = "fade_in_havoc_reward_1",
+		start_time = start_anim_time,
+		end_time = reward_1_start_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
-			return
+			local start_id = get_havoc_id_by_wanted_position(widget, 1)
+
+			havoc_fade_in_init_by_id(start_id, widget, parent, params)
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local content = widget.content
-			local style = widget.style
-			local current_charges = content.current_charges
-			local previous_charges = content.previous_charges
+			if not params.pass_params then
+				return
+			end
 
-			if current_charges and previous_charges then
-				local decrease_charges = current_charges < previous_charges
-				local increase_charges = previous_charges < current_charges
+			local start_id = get_havoc_id_by_wanted_position(widget, 1)
+
+			havoc_fade_in_progress_by_id(start_id, widget, parent, params, progress)
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "change_charge",
+		start_time = reward_1_start_time,
+		end_time = reward_1_progress_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			if widget.content.order_reward_state then
+				local content = widget.content
+				local current_charges = content.current_charges
+				local previous_charges = content.previous_charges
+
+				if current_charges ~= previous_charges then
+					parent:_play_sound(UISoundEvents.havoc_charge_change)
+				end
+			end
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			if widget.content.order_reward_state then
 				local max_charges = widget.content.max_charges
-				local anim_charge_progress = math.easeInCubic(progress)
+				local content = widget.content
+				local style = widget.style
+				local current_charges = content.current_charges
+				local previous_charges = content.previous_charges
 
-				for i = 1, max_charges do
-					local charge_style = style["havoc_charge_" .. i]
+				if current_charges and previous_charges then
+					local decrease_charges = current_charges < previous_charges
+					local increase_charges = previous_charges < current_charges
+					local anim_charge_progress = math.easeInCubic(progress)
 
-					if charge_style then
-						if decrease_charges and current_charges < i then
-							charge_style.color[1] = style["havoc_charge_" .. i].in_focus_color[1] - anim_charge_progress * 128
-						elseif increase_charges and previous_charges < i and i <= current_charges then
-							charge_style.color[1] = style["havoc_charge_" .. i].in_focus_color[1] + anim_charge_progress * 127
+					for i = 1, max_charges do
+						local charge_style = style["havoc_charge_" .. i]
+						local charge_ghost_style = style["havoc_charge_ghost_" .. i]
+
+						if charge_style then
+							local in_focus_color = charge_style.in_focus_color
+							local charges_color = charge_style.charges_color
+							local no_charges_color = charge_style.no_charges_color
+
+							if decrease_charges and current_charges < i and i <= previous_charges then
+								ColorUtilities.color_lerp(charges_color, no_charges_color, anim_charge_progress, charge_style.color)
+
+								if charge_ghost_style then
+									charge_ghost_style.color[1] = 255 - 255 * anim_charge_progress
+
+									local charge_size = charge_ghost_style.size
+									local charge_default_size = charge_ghost_style.default_size
+									local size_add = 50 * anim_charge_progress
+
+									charge_size[1] = charge_default_size[1] + size_add
+									charge_size[2] = charge_default_size[2] + size_add
+								end
+							elseif increase_charges and previous_charges < i and i <= current_charges then
+								ColorUtilities.color_lerp(no_charges_color, charges_color, anim_charge_progress, charge_style.color)
+
+								if charge_ghost_style then
+									charge_ghost_style.color[1] = 255 * anim_charge_progress
+
+									local charge_size = charge_ghost_style.size
+									local charge_default_size = charge_ghost_style.default_size
+									local size_add = 50 - 50 * anim_charge_progress
+
+									charge_size[1] = charge_default_size[1] + size_add
+									charge_size[2] = charge_default_size[2] + size_add
+								end
+							end
 						end
 					end
 				end
@@ -709,69 +1132,250 @@ local function _create_progress_havoc_animation(animation_table, start_time, end
 	}
 	animation_table[#animation_table + 1] = {
 		name = "change_badge",
-		start_time = start_anim_time + 1.2,
-		end_time = end_anim_time + 0.8,
+		start_time = reward_1_start_time,
+		end_time = reward_1_progress_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
-			return
+			if widget.content.order_reward_state then
+				local content = widget.content
+				local style = widget.style
+				local previous_rank = content.previous_rank
+				local current_rank = content.current_rank
+				local rank_up = current_rank ~= nil and (not previous_rank or previous_rank <= current_rank)
+
+				style.havoc_rank_badge.material_values.RankupRankdown = rank_up and 0 or 1
+			end
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local content = widget.content
-			local style = widget.style
+			if widget.content.order_reward_state then
+				local content = widget.content
+				local style = widget.style
 
-			if style.havoc_rank_badge.material_values.afterTexture ~= style.havoc_rank_badge.material_values.beforeTexure then
-				style.havoc_rank_badge.material_values.AnimationSpeedFireAmountt[1] = progress
+				if style.havoc_rank_badge.material_values.afterTexture ~= style.havoc_rank_badge.material_values.beforeTexure then
+					style.havoc_rank_badge.material_values.AnimationSpeedFireAmountt[1] = progress
+				end
 			end
 		end,
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_previous_rank",
-		start_time = start_anim_time + 1,
-		end_time = end_anim_time - 0.2,
+		start_time = reward_1_start_time,
+		end_time = reward_1_progress_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
-			return
+			if widget.content.order_reward_state then
+				local content = widget.content
+
+				if content.order_reward_state == "rank_increase" then
+					parent:play_sound(UISoundEvents.havoc_eor_rank_up)
+				elseif content.order_reward_state == "rank_decrease" then
+					parent:play_sound(UISoundEvents.havoc_eor_rank_down)
+				end
+			end
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local content = widget.content
-			local style = widget.style
-			local y_anim_offset = 20
-			local anim_progress = math.easeInCubic(progress)
+			if widget.content.order_reward_state then
+				local content = widget.content
+				local style = widget.style
+				local y_anim_offset = 20
+				local anim_progress = math.easeInCubic(progress)
 
-			if content.state == "rank_increase" then
-				for i = 1, content.previous_rank_size do
-					style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
-					style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y - y_anim_offset * anim_progress
-				end
-			elseif content.state == "rank_decrease" then
-				for i = 1, content.previous_rank_size do
-					style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
-					style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y + y_anim_offset * anim_progress
+				if content.order_reward_state == "rank_increase" then
+					for i = 1, content.previous_rank_size do
+						style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
+						style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y - y_anim_offset * anim_progress
+					end
+				elseif content.order_reward_state == "rank_decrease" then
+					for i = 1, content.previous_rank_size do
+						style["previous_havoc_rank_value_" .. i].color[1] = 255 - anim_progress * 255
+						style["previous_havoc_rank_value_" .. i].offset[2] = style["previous_havoc_rank_value_" .. i].start_offset_y + y_anim_offset * anim_progress
+					end
 				end
 			end
 		end,
 	}
 	animation_table[#animation_table + 1] = {
 		name = "update_current_rank",
-		start_time = start_anim_time + 1.2,
-		end_time = end_anim_time,
+		start_time = reward_1_start_time,
+		end_time = reward_1_progress_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			return
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local content = widget.content
-			local style = widget.style
-			local y_anim_offset = 20
-			local anim_progress = math.easeInCubic(progress)
+			if widget.content.order_reward_state then
+				local content = widget.content
+				local style = widget.style
+				local y_anim_offset = 20
+				local anim_progress = math.easeInCubic(progress)
 
-			if content.state == "rank_increase" then
-				for i = 1, content.current_rank_size do
-					style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
-					style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y + y_anim_offset - y_anim_offset * anim_progress
+				if content.order_reward_state == "rank_increase" then
+					for i = 1, content.current_rank_size do
+						style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
+						style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y + y_anim_offset - y_anim_offset * anim_progress
+					end
+				elseif content.order_reward_state == "rank_decrease" then
+					for i = 1, content.current_rank_size do
+						style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
+						style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y - y_anim_offset + y_anim_offset * anim_progress
+					end
 				end
-			elseif content.state == "rank_decrease" then
-				for i = 1, content.current_rank_size do
-					style["current_havoc_rank_value_" .. i].color[1] = anim_progress * 255
-					style["current_havoc_rank_value_" .. i].offset[2] = style["current_havoc_rank_value_" .. i].start_offset_y - y_anim_offset + y_anim_offset * anim_progress
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "fade_out_havoc_reward_1",
+		start_time = reward_1_end_time,
+		end_time = reward_2_start_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local widget_style = widget.style
+			local start_id = get_havoc_id_by_wanted_position(widget, 1)
+
+			if start_id == "order" then
+				widget_style.havoc_charge_ghost_1.color[1] = 0
+				widget_style.havoc_charge_ghost_2.color[1] = 0
+				widget_style.havoc_charge_ghost_3.color[1] = 0
+				widget_style.havoc_charge_1.in_focus_color = table.clone(widget_style.havoc_charge_1.color)
+				widget_style.havoc_charge_2.in_focus_color = table.clone(widget_style.havoc_charge_2.color)
+				widget_style.havoc_charge_3.in_focus_color = table.clone(widget_style.havoc_charge_3.color)
+				widget_style.havoc_charge_1.start_color = table.clone(widget_style.havoc_charge_1.color)
+				widget_style.havoc_charge_2.start_color = table.clone(widget_style.havoc_charge_2.color)
+				widget_style.havoc_charge_3.start_color = table.clone(widget_style.havoc_charge_3.color)
+				widget_style.havoc_charge_1.start_color[1] = 0
+				widget_style.havoc_charge_2.start_color[1] = 0
+				widget_style.havoc_charge_3.start_color[1] = 0
+				params.pass_params.havoc_charge_1 = params.pass_params.havoc_charge_1 or {}
+				params.pass_params.havoc_charge_1.pass_color = widget_style.havoc_charge_1.color
+				params.pass_params.havoc_charge_1.start_color = widget_style.havoc_charge_1.start_color
+				params.pass_params.havoc_charge_1.target_color = widget_style.havoc_charge_1.in_focus_color
+				params.pass_params.havoc_charge_2 = params.pass_params.havoc_charge_2 or {}
+				params.pass_params.havoc_charge_2.pass_color = widget_style.havoc_charge_2.color
+				params.pass_params.havoc_charge_2.start_color = widget_style.havoc_charge_2.start_color
+				params.pass_params.havoc_charge_2.target_color = widget_style.havoc_charge_2.in_focus_color
+				params.pass_params.havoc_charge_3 = params.pass_params.havoc_charge_3 or {}
+				params.pass_params.havoc_charge_3.pass_color = widget_style.havoc_charge_3.color
+				params.pass_params.havoc_charge_3.start_color = widget_style.havoc_charge_3.start_color
+				params.pass_params.havoc_charge_3.target_color = widget_style.havoc_charge_3.in_focus_color
+
+				if widget_style.current_havoc_rank_value_1 then
+					params.pass_params.current_havoc_rank_value_1 = params.pass_params.current_havoc_rank_value_1 or {}
+					params.pass_params.current_havoc_rank_value_1.pass_color = widget_style.current_havoc_rank_value_1.color
+					params.pass_params.current_havoc_rank_value_1.start_color = widget_style.current_havoc_rank_value_1.start_color
+					params.pass_params.current_havoc_rank_value_1.target_color = widget_style.current_havoc_rank_value_1.in_focus_color
+					params.pass_params.previous_havoc_rank_value_1.pass_color = widget_style.previous_havoc_rank_value_1.color
+					params.pass_params.previous_havoc_rank_value_1.start_color = widget_style.previous_havoc_rank_value_1.start_color
+					params.pass_params.previous_havoc_rank_value_1.target_color = widget_style.previous_havoc_rank_value_1.start_color
+
+					if widget_style.previous_havoc_rank_value_2 then
+						params.pass_params.previous_havoc_rank_value_2.pass_color = widget_style.previous_havoc_rank_value_2.color
+						params.pass_params.previous_havoc_rank_value_2.start_color = widget_style.previous_havoc_rank_value_1.start_color
+						params.pass_params.previous_havoc_rank_value_2.target_color = widget_style.previous_havoc_rank_value_1.start_color
+					end
 				end
+
+				if widget_style.current_havoc_rank_value_2 then
+					params.pass_params.current_havoc_rank_value_2 = params.pass_params.current_havoc_rank_value_2 or {}
+					params.pass_params.current_havoc_rank_value_2.pass_color = widget_style.current_havoc_rank_value_2.color
+					params.pass_params.current_havoc_rank_value_2.start_color = widget_style.current_havoc_rank_value_2.start_color
+					params.pass_params.current_havoc_rank_value_2.target_color = widget_style.current_havoc_rank_value_2.in_focus_color
+				end
+			end
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local start_id = get_havoc_id_by_wanted_position(widget, 1)
+			local next_id = get_havoc_id_by_wanted_position(widget, 2)
+
+			if next_id then
+				havoc_fade_out_progress_by_id(start_id, widget, parent, params, progress)
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "fade_in_havoc_reward_2",
+		start_time = reward_2_start_time,
+		end_time = reward_2_progress_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local start_id = get_havoc_id_by_wanted_position(widget, 2)
+
+			havoc_fade_in_init_by_id(start_id, widget, parent, params)
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			if not params.pass_params then
+				return
+			end
+
+			local start_id = get_havoc_id_by_wanted_position(widget, 2)
+
+			havoc_fade_in_progress_by_id(start_id, widget, parent, params, progress)
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "fade_out_havoc_reward_2",
+		start_time = reward_2_end_time,
+		end_time = reward_3_start_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local start_id = get_havoc_id_by_wanted_position(widget, 2)
+			local next_id = get_havoc_id_by_wanted_position(widget, 3)
+
+			if next_id then
+				havoc_fade_out_progress_by_id(start_id, widget, parent, params, progress)
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "fade_in_havoc_reward_3",
+		start_time = reward_3_start_time,
+		end_time = reward_3_progress_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local start_id = get_havoc_id_by_wanted_position(widget, 3)
+
+			havoc_fade_in_init_by_id(start_id, widget, parent, params)
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			if not params.pass_params then
+				return
+			end
+
+			local start_id = get_havoc_id_by_wanted_position(widget, 3)
+
+			havoc_fade_in_progress_by_id(start_id, widget, parent, params, progress)
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "fade_out_havoc_reward_3",
+		start_time = reward_3_end_time,
+		end_time = reward_all_start_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local start_id = get_havoc_id_by_wanted_position(widget, 3)
+
+			if start_id then
+				havoc_fade_out_progress_by_id(start_id, widget, parent, params, progress)
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "havoc_reward_show_all",
+		start_time = reward_all_start_time,
+		end_time = reward_all_end_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local positions = get_havoc_positions(widget)
+
+			for i = 1, #positions do
+				local id = get_havoc_id_by_wanted_position(widget, i)
+
+				havoc_concat_init_by_id(id, widget, parent, params)
+			end
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local positions = get_havoc_positions(widget)
+
+			for i = 1, #positions do
+				local id = get_havoc_id_by_wanted_position(widget, i)
+
+				havoc_fade_in_all_progress_by_id(id, widget, parent, params, progress)
 			end
 		end,
 	}
@@ -782,101 +1386,64 @@ local function _create_dim_havoc_animation(animation_table)
 		name = "compress_havoc",
 		start_time = 0,
 		end_time = ViewSettings.animation_times.card_compress_content_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			params.pass_params = params.pass_params or {}
+
+			local positions = get_havoc_positions(widget)
+			local positions_size = #positions
+
+			if positions_size == 1 then
+				return
+			end
+
+			local order_styles = havoc_concat_passes_by_id.order
+			local widget_style = widget.style
+
+			if order_styles then
+				for i = 1, #order_styles do
+					local style_name = order_styles[i]
+					local pass_style = widget_style[style_name]
+
+					if pass_style then
+						params.pass_params[style_name] = params.pass_params[style_name] or {}
+						params.pass_params[style_name].final_order_offset_start = pass_style.offset[2]
+					end
+				end
+			end
+		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local current_alpha = 255 - 255 * progress
-		end,
-	}
-end
+			local positions = get_havoc_positions(widget)
+			local positions_size = #positions
 
-local function _create_init_havoc_highest_rank_animation(animation_table, start_time)
-	start_time = start_time or 0
+			if positions_size == 1 then
+				return
+			end
 
-	local function added_time(time_added)
-		start_time = start_time + time_added
+			local order_styles = havoc_concat_passes_by_id.order
+			local widget_style = widget.style
+			local max_positions = table.size(havoc_concat_passes_by_id)
 
-		return start_time
-	end
+			if order_styles then
+				for i = 1, #order_styles do
+					local style_name = order_styles[i]
+					local pass_style = widget_style[style_name]
 
-	_create_fade_in_pass_animation(animation_table, "havoc_icon", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "highest_havoc_rank", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "highest_havoc_description", added_time(0))
-end
+					if pass_style and params.pass_params[style_name] and params.pass_params[style_name].final_order_offset_start then
+						local start_y = params.pass_params[style_name].final_order_offset_start
+						local end_y
 
-local function _create_progress_havoc_highest_rank_animation(animation_table, start_time, end_time)
-	animation_table[#animation_table + 1] = {
-		name = "update_havoc_highest_rank",
-		start_time = start_time + _text_fade_in_time,
-		end_time = end_time,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			return
-		end,
-		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
-			return
-		end,
-	}
-end
+						if positions_size == max_positions then
+							end_y = start_y + 50
+						else
+							end_y = start_y + 20
+						end
 
-local function _create_dim_havoc_highest_rank_animation(animation_table)
-	animation_table[#animation_table + 1] = {
-		name = "compress_havoc_highest_rank",
-		start_time = 0,
-		end_time = ViewSettings.animation_times.card_compress_content_time,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local current_alpha = 255 - 255 * progress
-		end,
-	}
-end
+						local progress_y = math.lerp(start_y, end_y, progress)
 
-local function _create_init_havoc_week_rank_animation(animation_table, start_time)
-	start_time = start_time or 0
-
-	local function added_time(time_added)
-		start_time = start_time + time_added
-
-		return start_time
-	end
-
-	_create_fade_in_pass_animation(animation_table, "week_havoc_rank", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "week_havoc_icon", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "havoc_week_description", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "havoc_reward_week_icon", added_time(0))
-	_create_fade_in_pass_animation(animation_table, "havoc_reward_week_icon_glow", added_time(0))
-end
-
-local function _create_progress_havoc_week_rank_animation(animation_table, start_time, end_time)
-	animation_table[#animation_table + 1] = {
-		name = "update_havoc_week_rank",
-		start_time = start_time + _text_fade_in_time,
-		end_time = end_time,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			return
-		end,
-		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
-			return
-		end,
-	}
-end
-
-local function _create_dim_havoc_week_rank_animation(animation_table)
-	animation_table[#animation_table + 1] = {
-		name = "compress_havoc_week_rank",
-		start_time = 0,
-		end_time = ViewSettings.animation_times.card_compress_content_time,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local size_progress = 1 - 0.3 * progress
-			local icon_start_size = widget.style.havoc_reward_week_icon.start_size
-
-			widget.style.havoc_reward_week_icon.size = {
-				icon_start_size[1] * size_progress,
-				icon_start_size[2] * size_progress,
-			}
-
-			local glow_start_size = widget.style.havoc_reward_week_icon_glow.start_size
-
-			widget.style.havoc_reward_week_icon_glow.size = {
-				glow_start_size[1] * size_progress,
-				glow_start_size[2] * size_progress,
-			}
+						pass_style.offset[2] = progress_y
+					end
+				end
+			end
 		end,
 	}
 end
@@ -1199,23 +1766,8 @@ _create_dim_weapon_animation(animations.weapon_card_dim_out_content)
 animations.havoc_card_show_content = {}
 animations.havoc_card_dim_out_content = {}
 
-_create_init_havoc_animation(animations.havoc_card_show_content, 0.1)
-_create_progress_havoc_animation(animations.havoc_card_show_content, 0.25, 2.45)
+_create_progress_havoc_animation(animations.havoc_card_show_content, 0.25)
 _create_dim_havoc_animation(animations.havoc_card_dim_out_content)
-
-animations.havoc_highest_rank_card_show_content = {}
-animations.havoc_highest_rank_card_dim_out_content = {}
-
-_create_init_havoc_highest_rank_animation(animations.havoc_highest_rank_card_show_content, 0.1)
-_create_progress_havoc_highest_rank_animation(animations.havoc_highest_rank_card_show_content, 0.25, 2.45)
-_create_dim_havoc_highest_rank_animation(animations.havoc_highest_rank_card_dim_out_content)
-
-animations.havoc_week_rank_card_show_content = {}
-animations.havoc_week_rank_card_dim_out_content = {}
-
-_create_init_havoc_week_rank_animation(animations.havoc_week_rank_card_show_content, 0.1)
-_create_progress_havoc_week_rank_animation(animations.havoc_week_rank_card_show_content, 0.25, 2.45)
-_create_dim_havoc_week_rank_animation(animations.havoc_week_rank_card_dim_out_content)
 
 animations.wallet_change_function = function (content, style, animation, dt)
 	local anim_progress = content._anim_progress

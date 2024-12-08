@@ -60,7 +60,7 @@ local function _try_get_mission_text()
 			local mission_name = Localize(mission_template.mission_name)
 
 			if mission_data.mission.category == "havoc" then
-				return string.format("%s - %s", mission_name, Localize("loc_havoc_order_info_overlay") .. tostring(_get_havoc_rank(mission_data)))
+				return string.format("%s - %s", mission_name, Localize("loc_havoc_order_info_overlay") .. " " .. tostring(_get_havoc_rank(mission_data)))
 			else
 				local challenge = mission_data.mission.challenge
 				local resistance = mission_data.mission.resistance

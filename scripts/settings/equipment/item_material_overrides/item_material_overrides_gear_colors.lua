@@ -2445,6 +2445,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_2_colour_ice_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_ice_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_ice_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_ice_01",
+			},
+		},
+	},
 	color_3_colour_xbox_retail_01 = {
 		texture_overrides = {
 			color_gradient = {

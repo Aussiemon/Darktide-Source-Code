@@ -24,7 +24,6 @@ HavocRewardPresentationView.on_enter = function (self)
 
 	if not rewards then
 		Managers.event:trigger("event_select_havoc_background_option", 1)
-		self._parent:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_greeting, "commissar_a", nil, 0.8)
 	elseif rewards.type == "week" then
 		self:_generate_reward_widgets(rewards)
 		self._parent:play_vo_events(HavocRewardPresentationViewSettings.vo_event_weekly_reward, "commissar_a", nil, 0.8)
@@ -66,14 +65,12 @@ HavocRewardPresentationView._generate_promotion_widgets = function (self, reward
 		if previous_rank < current_rank then
 			animation_name = "rank_increase"
 
-			self:_play_sound(UISoundEvents.havoc_eor_rank_up)
 			self._parent:play_vo_events(HavocRewardPresentationViewSettings.vo_event_promotion, "commissar_a", nil, 0.8)
 
 			self._widgets_by_name.rank_display_name.content.text = Localize("loc_havoc_eor_promotion")
 		elseif current_rank < previous_rank then
 			animation_name = "rank_decrease"
 
-			self:_play_sound(UISoundEvents.havoc_eor_rank_down)
 			self._parent:play_vo_events(HavocRewardPresentationViewSettings.vo_event_demotion, "commissar_a", nil, 0.8)
 
 			self._widgets_by_name.rank_display_name.content.text = Localize("loc_havoc_eor_demotion")
@@ -100,6 +97,7 @@ HavocRewardPresentationView._generate_reward_widgets = function (self, rewards)
 	local x_margin = 50
 	local reward_count = 0
 	local total_width = 0
+	local reward_widgets = {}
 
 	for type, value in pairs(rewards.rewards) do
 		local widget_definition = UIWidget.create_definition(rewards_definitions.passes, "rewards", nil, rewards_definitions.size)
@@ -117,8 +115,10 @@ HavocRewardPresentationView._generate_reward_widgets = function (self, rewards)
 		total_width = x_offset
 		self._widgets_by_name["reward_" .. type] = widget
 		self._widgets[1 + #self._widgets] = widget
+		reward_widgets[#reward_widgets + 1] = widget
 	end
 
+	self.reward_widgets = reward_widgets
 	total_width = total_width - x_margin
 
 	self:_set_scenegraph_size("rewards", total_width)
@@ -133,6 +133,7 @@ HavocRewardPresentationView._generate_reward_widgets = function (self, rewards)
 end
 
 HavocRewardPresentationView.cb_on_continue_pressed = function (self)
+	self:_play_sound(UISoundEvents.default_click)
 	Managers.event:trigger("event_select_havoc_background_option", 1)
 end
 
@@ -172,6 +173,10 @@ HavocRewardPresentationView.dialogue_system = function (self)
 	if parent then
 		return parent.dialogue_system and parent:dialogue_system()
 	end
+end
+
+HavocRewardPresentationView.set_alpha_multiplier = function (self, alpha_multiplier)
+	self._render_settings.alpha_multiplier = alpha_multiplier
 end
 
 return HavocRewardPresentationView

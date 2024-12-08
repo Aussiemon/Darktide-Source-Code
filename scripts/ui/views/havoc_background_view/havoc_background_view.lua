@@ -76,7 +76,7 @@ HavocBackgroundView.on_enter = function (self)
 
 		local narrative_manager = Managers.narrative
 		local narrative_story = "unlock_havoc"
-		local not_visited_chapter_name = "unlock_havoc_2"
+		local not_visited_chapter_name = "unlock_havoc_1"
 		local current_chapter = narrative_manager:current_chapter(narrative_story)
 		local current_chapter_name = current_chapter and current_chapter.name
 
@@ -121,6 +121,10 @@ HavocBackgroundView.on_enter = function (self)
 			widgets_by_name.button_divider.visible = false
 		end
 
+		if not self._rewards then
+			self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_greeting, "commissar_a", nil, 0.8)
+		end
+
 		self:_register_event("event_select_havoc_background_option")
 	end
 end
@@ -148,11 +152,13 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 
 					for i = 1, #rewards_data.rewards do
 						local reward = rewards_data.rewards[i]
-						local currency = reward.type
-						local amount = reward.currency
+						local currency_type = reward.type
+						local amount = reward.amount
 
-						if amount > 0 then
-							self._rewards.rewards[currency] = amount
+						if amount == nil then
+							Log.error("HavocBackgroundView", "Reward amount is nil value")
+						elseif amount > 0 then
+							self._rewards.rewards[currency_type] = amount
 						end
 					end
 				end

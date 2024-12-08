@@ -23,6 +23,7 @@ local RENDER_TEMPLATES = {
 		tooltip_text = "loc_setting_brightness_mouseover",
 		widget_type = "button",
 		supported_platforms = {
+			ps5 = true,
 			win32 = true,
 			xbs = true,
 		},
@@ -1736,6 +1737,7 @@ local RENDER_TEMPLATES = {
 		},
 		default_value = IS_XBS and true,
 		supported_platforms = {
+			ps5 = true,
 			win32 = true,
 			xbs = true,
 		},

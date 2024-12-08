@@ -530,6 +530,8 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 	self:_set_wallet_background_width(total_width)
 
 	self._wallet_widgets = widgets
+
+	Managers.event:trigger("vendor_wallet_updated", wallets_data)
 end
 
 VendorInteractionViewBase._set_wallet_background_width = function (self, total_width)

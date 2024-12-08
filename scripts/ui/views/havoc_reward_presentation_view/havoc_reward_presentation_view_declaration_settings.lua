@@ -6,17 +6,11 @@ local view_settings = {
 	class = "HavocRewardPresentationView",
 	disable_game_world = false,
 	game_world_blur = 1.1,
-	load_in_hub = false,
+	load_in_hub = true,
 	package = "packages/ui/views/havoc_reward_presentation_view/havoc_reward_presentation_view",
 	path = "scripts/ui/views/havoc_reward_presentation_view/havoc_reward_presentation_view",
 	state_bound = true,
 	use_transition_ui = false,
-	enter_sound_events = {
-		UISoundEvents.end_screen_enter,
-	},
-	exit_sound_events = {
-		UISoundEvents.end_screen_exit,
-	},
 	testify_flags = {
 		ui_views = false,
 	},

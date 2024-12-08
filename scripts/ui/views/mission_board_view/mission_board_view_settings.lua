@@ -23,6 +23,12 @@ local MissionBoardViewSettings = {
 	},
 	color_main_light = Color.terminal_text_header(nil, true),
 	color_accent = Color.golden_rod(nil, true),
+	color_accent_light = {
+		255,
+		236,
+		212,
+		160,
+	},
 	color_disabled = {
 		30,
 		78,
@@ -72,6 +78,12 @@ local MissionBoardViewSettings = {
 				238,
 				186,
 				74,
+			},
+			color_accent_light = {
+				255,
+				236,
+				212,
+				160,
 			},
 			color_disabled = {
 				30,
@@ -127,6 +139,12 @@ local MissionBoardViewSettings = {
 				130,
 			},
 			color_accent = Color.golden_rod(nil, true),
+			color_accent_light = {
+				255,
+				236,
+				212,
+				160,
+			},
 			color_disabled = {
 				30,
 				78,

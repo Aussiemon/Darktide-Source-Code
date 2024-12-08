@@ -348,17 +348,10 @@ local particles = {
 		no_default = true,
 		switch = {
 			"wielded_weapon_template",
-			"stage",
 		},
 		particles = {
-			forcesword_2h_p1_m1 = {
-				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
-				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
-			},
-			forcesword_2h_p1_m2 = {
-				high = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
-				middle = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
-			},
+			forcesword_2h_p1_m1 = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
+			forcesword_2h_p1_m2 = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
 		},
 	},
 	weapon_special_loop = {

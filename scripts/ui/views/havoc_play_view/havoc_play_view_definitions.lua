@@ -14,6 +14,10 @@ local mission_detail_background_size = {
 	column_width + 200,
 	554,
 }
+local badge_size = {
+	294,
+	235.2,
+}
 local mission_detail_grid_size = {
 	mission_detail_background_size[1] - 30,
 	mission_detail_background_size[2],
@@ -44,7 +48,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			130,
-			30,
+			10,
 			2,
 		},
 	},
@@ -72,7 +76,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			-150,
-			50,
+			32,
 			1,
 		},
 	},
@@ -109,7 +113,7 @@ local scenegraph_definition = {
 		parent = "reward_area",
 		vertical_alignment = "top",
 		size = {
-			400,
+			450,
 			50,
 		},
 		position = {
@@ -123,7 +127,7 @@ local scenegraph_definition = {
 		parent = "reward_area",
 		vertical_alignment = "top",
 		size = {
-			400,
+			450,
 			50,
 		},
 		position = {
@@ -174,34 +178,6 @@ local scenegraph_definition = {
 			1,
 		},
 	},
-	current_rank = {
-		horizontal_alignment = "left",
-		parent = "detail",
-		vertical_alignment = "top",
-		size = {
-			0,
-			0,
-		},
-		position = {
-			0,
-			-220,
-			5,
-		},
-	},
-	current_rank_header = {
-		horizontal_alignment = "left",
-		parent = "current_rank",
-		vertical_alignment = "top",
-		size = {
-			800,
-			100,
-		},
-		position = {
-			220,
-			70,
-			0,
-		},
-	},
 	mission_detail_grid_background = {
 		horizontal_alignment = "right",
 		parent = "detail",
@@ -250,6 +226,31 @@ local scenegraph_definition = {
 			0,
 			250,
 			2,
+		},
+	},
+	current_rank_header = {
+		horizontal_alignment = "center",
+		parent = "detail",
+		vertical_alignment = "top",
+		size = {
+			column_width,
+			25,
+		},
+		position = {
+			0,
+			-290,
+			0,
+		},
+	},
+	current_rank = {
+		horizontal_alignment = "center",
+		parent = "current_rank_header",
+		vertical_alignment = "top",
+		size = badge_size,
+		position = {
+			0,
+			-10,
+			5,
 		},
 	},
 	detail_header = {
@@ -306,6 +307,20 @@ local scenegraph_definition = {
 			0,
 			0,
 			10,
+		},
+	},
+	reward_timer = {
+		horizontal_alignment = "left",
+		parent = "objective",
+		vertical_alignment = "bottom",
+		size = {
+			800,
+			30,
+		},
+		position = {
+			0,
+			0,
+			1,
 		},
 	},
 	play_button = {
@@ -1052,7 +1067,7 @@ local widget_definitions = {
 				drop_shadow = true,
 				font_size = 36,
 				font_type = "machine_medium",
-				text_horizontal_alignment = "left",
+				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
 				offset = {
 					0,
@@ -1064,53 +1079,10 @@ local widget_definitions = {
 			value = Localize("loc_havoc_order_info_overlay"),
 		},
 	}, "current_rank_header"),
-	all_time_highest_description_header = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "text",
-			value_id = "text",
-			style = {
-				drop_shadow = true,
-				font_size = 20,
-				font_type = "machine_medium",
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "center",
-				offset = {
-					0,
-					0,
-					1,
-				},
-				text_color = Color.terminal_text_body_sub_header(nil, true),
-			},
-			value = Localize("loc_havoc_highest_order_reached"),
-		},
-	}, "page_sub_header"),
-	all_time_highest_level_header = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "text",
-			value = "99",
-			value_id = "text",
-			style = {
-				drop_shadow = true,
-				font_size = 20,
-				font_type = "machine_medium",
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "center",
-				offset = {
-					180,
-					0,
-					1,
-				},
-				text_color = Color.terminal_text_key_value(255, true),
-			},
-		},
-	}, "page_sub_header"),
 	reward_timer_header = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			style_id = "text",
-			value = "Time left until order reset",
 			value_id = "text",
 			style = {
 				drop_shadow = true,
@@ -1125,8 +1097,9 @@ local widget_definitions = {
 				},
 				text_color = Color.terminal_text_body(255, true),
 			},
+			value = Localize("loc_havoc_time"),
 		},
-	}, "page_sub_header"),
+	}, "reward_timer"),
 	play_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "play_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_story_mission_play_menu_button_start_mission")),
@@ -1640,7 +1613,6 @@ local grid_blueprints = {
 		pass_template = {
 			{
 				pass_type = "rect",
-				style_id = "background",
 				style = {
 					color = {
 						200,
@@ -1651,11 +1623,37 @@ local grid_blueprints = {
 				},
 			},
 			{
+				pass_type = "texture",
+				style_id = "background",
+				value_id = "background",
+				style = {
+					color = {
+						255,
+						255,
+						255,
+						255,
+					},
+					offset = {
+						0,
+						0,
+						1,
+					},
+				},
+				visibility_function = function (content)
+					return content.background
+				end,
+			},
+			{
 				pass_type = "rect",
 				style = {
 					color = Color.terminal_text_key_value(255, true),
 					size = {
 						5,
+					},
+					offset = {
+						0,
+						0,
+						2,
 					},
 				},
 			},
@@ -1771,11 +1769,13 @@ local grid_blueprints = {
 			local text = element.text
 			local header = element.header
 			local icon = element.icon
+			local background = element.background
 
 			content.element = element
 			content.text = text
 			content.header = header
 			content.icon = icon or "content/ui/materials/icons/circumstances/special_waves_01"
+			content.background = background
 
 			local total_text_height = 0
 			local size = content.size
@@ -1924,10 +1924,6 @@ local animations = {
 		},
 	},
 }
-local badge_size = {
-	210,
-	168,
-}
 local rank_badges = {
 	{
 		level = 1,
@@ -1971,10 +1967,10 @@ local badge_definitions = {
 			75,
 		}
 		local letter_size = {
-			43,
-			43,
+			60.199999999999996,
+			60.199999999999996,
 		}
-		local letter_margin = 9
+		local letter_margin = 12.6
 		local current_rank = config.rank
 		local current_rank_badge = rank_badges[#rank_badges]
 
@@ -2020,7 +2016,7 @@ local badge_definitions = {
 				color = Color.white(255, true),
 				offset = {
 					0,
-					40,
+					56,
 					10,
 				},
 				size = {
@@ -2048,7 +2044,7 @@ local badge_definitions = {
 				style_id = "current_havoc_rank_value_" .. i,
 				style = {
 					horizontal_alignment = "left",
-					start_offset_y = 90,
+					start_offset_y = 125.99999999999999,
 					size = {
 						letter_size[1],
 						letter_size[2],
@@ -2056,7 +2052,7 @@ local badge_definitions = {
 					color = Color.white(255, true),
 					offset = {
 						x_offset,
-						90,
+						125.99999999999999,
 						6,
 					},
 					material_values = {

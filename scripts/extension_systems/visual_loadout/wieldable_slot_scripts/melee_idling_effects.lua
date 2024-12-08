@@ -21,7 +21,7 @@ MeleeIdlingEffects.init = function (self, context, slot, weapon_template, fx_sou
 end
 
 MeleeIdlingEffects.destroy = function (self)
-	self:_stop_sfx()
+	self:_stop_sfx(true)
 end
 
 MeleeIdlingEffects.wield = function (self)
@@ -44,7 +44,7 @@ end
 
 MeleeIdlingEffects.update_first_person_mode = function (self, first_person_mode)
 	if self._first_person_mode ~= first_person_mode then
-		self:_stop_sfx()
+		self:_stop_sfx(true)
 
 		self._first_person_mode = first_person_mode
 	end
@@ -67,12 +67,12 @@ MeleeIdlingEffects._start_sfx = function (self)
 	end
 end
 
-MeleeIdlingEffects._stop_sfx = function (self)
+MeleeIdlingEffects._stop_sfx = function (self, force_stop)
 	local looping_playing_id = self._looping_playing_id
 	local looping_stop_event_name = self._looping_stop_event_name
 	local sfx_source_id = self._fx_extension:sound_source(self._fx_source_name)
 
-	if looping_stop_event_name and sfx_source_id then
+	if not force_stop and looping_stop_event_name and sfx_source_id then
 		WwiseWorld.trigger_resource_event(self._wwise_world, looping_stop_event_name, sfx_source_id)
 	elseif self._looping_playing_id then
 		WwiseWorld.stop_event(self._wwise_world, looping_playing_id)
