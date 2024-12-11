@@ -93,7 +93,7 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 
 	if self._tab_bar_visibility_function then
 		local visible = self._tab_bar_visibility_function(self)
-		local tab_bar = self._elements.tab_bar
+		local tab_bar = self._elements and self._elements.tab_bar
 
 		if tab_bar and tab_bar:visible() ~= visible then
 			tab_bar:set_visibility(visible)
@@ -104,7 +104,7 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 end
 
 TabbedMenuViewBase.set_bar_visibility = function (self, visible)
-	local tab_bar = self._elements.tab_bar
+	local tab_bar = self._elements and self._elements.tab_bar
 
 	if tab_bar then
 		tab_bar:set_visibility(visible)
@@ -132,9 +132,14 @@ TabbedMenuViewBase.set_active_view_instance = function (self, view)
 end
 
 TabbedMenuViewBase.set_can_navigate = function (self, value)
-	local has_tab_bar_menu = self._elements.tab_bar ~= nil and #self._tab_bar_views > 1
+	local has_tab_bar_menu = self._elements and self._elements.tab_bar ~= nil and #self._tab_bar_views > 1
+	local tab_bar_menu = self._elements and self._elements.tab_bar
 
-	self._can_navigate = value and has_tab_bar_menu
+	if tab_bar_menu then
+		tab_bar_menu:set_is_handling_navigation_input(has_tab_bar_menu)
+	end
+
+	self._can_navigate = has_tab_bar_menu
 end
 
 TabbedMenuViewBase.cb_on_close_pressed = function (self)
@@ -255,7 +260,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 		self._previous_story_name = nil
 	end
 
-	if self._elements.tab_bar then
+	if self._elements and self._elements.tab_bar then
 		self:_remove_element("tab_bar")
 	end
 
@@ -309,7 +314,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 
 	self._tab_bar_views = tab_bar_views
 
-	self:set_can_navigate(not tab_bar_params.hide_tabs)
+	self:set_can_navigate()
 
 	self._next_tab_index = #tab_bar_views > 0 and (optional_start_index and math.clamp(optional_start_index, 0, #tab_bar_views) or 1) or nil
 end
@@ -373,7 +378,7 @@ TabbedMenuViewBase.input_legend_entry_set_display_name = function (self, entry_i
 end
 
 TabbedMenuViewBase._switch_tab = function (self, index)
-	local tab_bar_menu = self._elements.tab_bar
+	local tab_bar_menu = self._elements and self._elements.tab_bar
 
 	if tab_bar_menu then
 		tab_bar_menu:set_selected_panel_index(index)
@@ -473,13 +478,6 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 end
 
 TabbedMenuViewBase._handle_input = function (self, input_service)
-	local tab_bar_menu = self._elements.tab_bar
-	local can_navigate = self._can_navigate
-
-	if tab_bar_menu then
-		tab_bar_menu:set_is_handling_navigation_input(can_navigate)
-	end
-
 	if input_service:get("back") then
 		self:_handle_back_pressed()
 	end
@@ -510,7 +508,7 @@ TabbedMenuViewBase._close_active_view = function (self)
 end
 
 TabbedMenuViewBase.selected_index = function (self)
-	local tab_bar_menu = self._elements.tab_bar
+	local tab_bar_menu = self._elements and self._elements.tab_bar
 
 	if tab_bar_menu then
 		return tab_bar_menu:selected_index()
@@ -518,7 +516,7 @@ TabbedMenuViewBase.selected_index = function (self)
 end
 
 TabbedMenuViewBase.set_selected_panel_index = function (self, index)
-	local tab_bar_menu = self._elements.tab_bar
+	local tab_bar_menu = self._elements and self._elements.tab_bar
 
 	if tab_bar_menu then
 		tab_bar_menu:set_selected_panel_index(index)
@@ -526,7 +524,7 @@ TabbedMenuViewBase.set_selected_panel_index = function (self, index)
 end
 
 TabbedMenuViewBase.set_is_handling_navigation_input = function (self, is_enabled)
-	local tab_bar_menu = self._elements.tab_bar
+	local tab_bar_menu = self._elements and self._elements.tab_bar
 
 	if tab_bar_menu then
 		tab_bar_menu:set_is_handling_navigation_input(is_enabled)

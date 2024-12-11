@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/live_event/live_event_manager.lua
 
+local Items = require("scripts/utilities/items")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -98,17 +99,10 @@ LiveEventManager._on_tier_claimed_success = function (self, id, event_id, comple
 		return Promise.resolved()
 	end
 
-	local tier = progress_data.tier
-	local tier_data = event_data.tiers[tier + 2]
-	local rewards = tier_data and tier_data.rewards
-	local reward_count = rewards and #rewards
+	local rewards = result.body.rewards
 
-	for i = 1, reward_count do
-		local reward = rewards[i]
-		local reward_type = reward and reward.type
-		local is_currency = reward_type == "currency"
-
-		if is_currency then
+	for _, reward in pairs(rewards) do
+		if reward.type == "currency" then
 			local reason = Localize("loc_event_tier_completed")
 
 			Managers.event:trigger("event_add_notification_message", "currency", {
@@ -116,28 +110,19 @@ LiveEventManager._on_tier_claimed_success = function (self, id, event_id, comple
 				currency = reward.currency,
 				amount = reward.amount,
 			})
-		end
+		elseif reward.type == "item" then
+			local rewarded_master_item = Items.register_track_reward(reward)
+			local sound_event = UISoundEvents.character_news_feed_new_item
+			local reason = Localize("loc_item_rewarded_from_live_event")
 
-		local is_item = reward_type == "item"
-
-		if is_item then
-			local master_item_id = reward.id
-
-			if MasterItems.item_exists(master_item_id) then
-				local rewarded_master_item = MasterItems.get_item(master_item_id)
-				local sound_event = UISoundEvents.character_news_feed_new_item
-
-				Managers.event:trigger("event_add_notification_message", "item_granted", {
-					reason = Localize("loc_item_rewarded_from_live_event"),
-					item = rewarded_master_item,
-				}, nil, sound_event)
-			else
-				Log.warning("LiveEventsManager", "Received invalid item %s as reward from backend.", master_item_id)
-			end
+			Managers.event:trigger("event_add_notification_message", "item_granted", {
+				reason = reason,
+				item = rewarded_master_item,
+			}, nil, sound_event)
 		end
 	end
 
-	progress_data.tier = tier + 1
+	progress_data.tier = progress_data.tier + 1
 
 	return Managers.data_service.store:on_event_tier_completed(result):next(callback(self, "_claim_next_tier", id, event_id))
 end

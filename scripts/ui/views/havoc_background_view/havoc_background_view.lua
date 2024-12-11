@@ -31,6 +31,84 @@ HavocBackgroundView.init = function (self, settings, context)
 	end
 
 	self:_register_event("event_havoc_background_on_end_time_met")
+	self:_register_event("event_revoke_havoc_mission", "revoke_mission")
+end
+
+HavocBackgroundView.revoke_mission = function (self)
+	local charges_left = self.havoc_order.charges
+
+	self._rewards = {
+		type = "promotion",
+		current = {},
+		previous = {
+			rank = self.havoc_order.data.rank,
+			charges = self.havoc_order.charges,
+		},
+	}
+
+	self:_close_active_view()
+
+	local function next_function(data)
+		if self._destroyed then
+			return
+		end
+
+		local on_complete_callback = callback(function ()
+			self._rewards.current.charges = self.havoc_order.charges
+			self._rewards.current.rank = self.havoc_order.data and self.havoc_order.data.rank
+
+			if not self._rewards.current.rank or not self._rewards.current.charges or self._rewards.previous.charges == self._rewards.current.charges and self._rewards.previous.rank == self._rewards.current.rank then
+				self._rewards = nil
+			end
+
+			if self._current_state == "key" then
+				local starting_option_index = self._rewards and 3 or self._base_definitions.starting_option_index
+
+				if starting_option_index then
+					local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
+					local option = button_options_definitions[starting_option_index]
+
+					if option then
+						self:on_option_button_pressed(starting_option_index, option)
+					end
+				end
+			end
+		end)
+
+		self:_initialize_havoc_state(on_complete_callback)
+	end
+
+	local function catch_function(data)
+		if self._destroyed then
+			return
+		end
+
+		self._rewards = nil
+
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_popup_description_backend_error"),
+		})
+
+		local starting_option_index = self._base_definitions.starting_option_index
+
+		if starting_option_index then
+			local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
+			local option = button_options_definitions[starting_option_index]
+
+			if option then
+				self:on_option_button_pressed(starting_option_index, option)
+			end
+		end
+	end
+
+	local ongoing_mission_id = self.havoc_order.ongoing_mission_id
+	local order_id = self.havoc_order.id
+
+	if ongoing_mission_id and charges_left > 1 then
+		Managers.data_service.havoc:delete_personal_mission(ongoing_mission_id):next(next_function):catch(catch_function)
+	elseif order_id then
+		Managers.data_service.havoc:reject_order(order_id):next(next_function):catch(catch_function)
+	end
 end
 
 HavocBackgroundView.event_havoc_background_on_end_time_met = function (self)
@@ -131,11 +209,19 @@ end
 
 HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callback)
 	return Managers.data_service.havoc:latest():next(function (latest_data)
+		if self._destroyed then
+			return
+		end
+
 		local next_promise
 		local server_time = Managers.backend:get_server_time(Managers.time:time("main")) / 1000
 
 		if not table.is_empty(latest_data) and server_time >= latest_data.end_time and not latest_data.is_rewarded then
 			next_promise = Promise.all(Managers.data_service.havoc:get_rewards_if_available(), Managers.data_service.havoc:status_by_id(latest_data.id)):next(function (return_data)
+				if self._destroyed then
+					return
+				end
+
 				local rewards_data = return_data[1]
 				local havoc_week_data = return_data[2]
 				local week_rank = havoc_week_data.havoc_stats.rank.week or 0
@@ -182,6 +268,10 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 				self._havoc_week_data = parsed_week_data
 
 				return Managers.data_service.havoc:latest():next(function (new_latest_data)
+					if self._destroyed then
+						return
+					end
+
 					self._latest = new_latest_data
 
 					return Managers.data_service.havoc:available_orders()
@@ -190,6 +280,10 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 		elseif not table.is_empty(latest_data) and latest_data.id then
 			self._latest = latest_data
 			next_promise = Managers.data_service.havoc:status_by_id(latest_data.id):next(function (havoc_week_data)
+				if self._destroyed then
+					return
+				end
+
 				local week_rank = havoc_week_data.havoc_stats.rank.week or 0
 				local all_time_rank = havoc_week_data.havoc_stats.rank.allTime or 0
 				local parsed_week_data = {
@@ -265,7 +359,8 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 
 					if valid_ongoing_havoc_data and not table.is_empty(valid_ongoing_havoc_data) then
 						self.havoc_order.charges = self.havoc_order.charges + #valid_ongoing_havoc_data
-						self.havoc_order.ongoing_id = ongoing_havoc_data[1].id
+						self.havoc_order.ongoing_mission_id = ongoing_havoc_data[1].id
+						self.havoc_order.participants = ongoing_havoc_data[1].eligibleParticipants
 					end
 
 					if on_complete_callback then
@@ -281,6 +376,10 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 			end
 		end)
 	end):catch(function (error)
+		if self._destroyed then
+			return
+		end
+
 		Managers.ui:close_view(self.view_name)
 		Managers.event:trigger("event_add_notification_message", "alert", {
 			text = Localize("loc_popup_description_backend_error"),

@@ -911,30 +911,34 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 	local achievements = Managers.achievements:achievement_definitions()
 
 	for _, achievement in pairs(achievements) do
-		local reward_item = AchievementUIHelper.get_reward_item(achievement)
+		local reward_items = AchievementUIHelper.get_all_reward_items(achievement)
 
-		if reward_item and reward_item.slots and self:_item_valid_by_current_profile(reward_item) and table.find(reward_item.slots, selected_slot_name) then
-			local description_text
+		for i = 1, #reward_items do
+			local reward_item = reward_items[i].reward_item
 
-			if achievement.type == "meta" then
-				local sub_penances_count = table.size(achievement.achievements)
+			if reward_item and reward_item.slots and self:_item_valid_by_current_profile(reward_item) and table.find(reward_item.slots, selected_slot_name) then
+				local description_text
 
-				description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-					penance_amount = sub_penances_count,
-				})
-			else
-				description_text = AchievementUIHelper.localized_description(achievement)
-			end
+				if achievement.type == "meta" then
+					local sub_penances_count = table.size(achievement.achievements)
 
-			local is_visible_before_unlock = not achievement.flags.hide_missing
-			local valid = true
+					description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
+						penance_amount = sub_penances_count,
+					})
+				else
+					description_text = AchievementUIHelper.localized_description(achievement)
+				end
 
-			if valid and is_visible_before_unlock then
-				achievement_items[#achievement_items + 1] = {
-					item = reward_item,
-					label = AchievementUIHelper.localized_title(achievement),
-					description = description_text,
-				}
+				local is_visible_before_unlock = not achievement.flags.hide_missing
+				local valid = true
+
+				if valid and is_visible_before_unlock then
+					achievement_items[#achievement_items + 1] = {
+						item = reward_item,
+						label = AchievementUIHelper.localized_title(achievement),
+						description = description_text,
+					}
+				end
 			end
 		end
 	end

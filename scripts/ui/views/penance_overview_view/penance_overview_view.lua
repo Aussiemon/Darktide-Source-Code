@@ -46,18 +46,6 @@ local function _format_progress(current_progress, goal)
 	return Localize("loc_achievement_progress", true, params)
 end
 
-local function _penance_reward_item_to_gear(item)
-	local gear = table.clone(item)
-	local gear_id = gear.uuid
-
-	gear.overrides = nil
-	gear.id = nil
-	gear.uuid = nil
-	gear.gear_id = nil
-
-	return gear_id, gear
-end
-
 local RESULT_TYPES = table.enum("wintrack", "penance")
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
 local PenanceOverviewView = class("PenanceOverviewView", "BaseView")
@@ -2141,28 +2129,7 @@ PenanceOverviewView._claim_wintrack_reward = function (self, index)
 
 			for reward_name, claimed_reward in pairs(claimed_rewards) do
 				if claimed_reward.type == "item" then
-					local item_id = claimed_reward.id
-					local reward_id = claimed_reward.gearId
-					local rewarded_master_item = MasterItems.get_item(item_id)
-
-					rewarded_master_item.uuid = reward_id
-					rewarded_master_item.masterDataInstance = {
-						id = item_id,
-						overrides = {},
-						slots = rewarded_master_item.slots,
-					}
-
-					local gear_id, gear = _penance_reward_item_to_gear(rewarded_master_item)
-
-					Managers.data_service.gear:on_gear_created(gear_id, gear)
-
-					local item = MasterItems.get_item_instance(gear, gear_id)
-
-					if item then
-						local skip_notification = true
-
-						ItemUtils.mark_item_id_as_new(item, skip_notification)
-					end
+					ItemUtils.register_track_reward(claimed_reward)
 				end
 			end
 
@@ -2473,7 +2440,7 @@ PenanceOverviewView._claim_penance = function (self, reward_bundle)
 					}
 
 					do
-						local gear_id, gear = _penance_reward_item_to_gear(rewarded_master_item)
+						local gear_id, gear = ItemUtils.track_reward_item_to_gear(rewarded_master_item)
 
 						Managers.data_service.gear:on_gear_created(gear_id, gear)
 

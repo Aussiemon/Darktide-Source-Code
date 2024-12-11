@@ -36,6 +36,30 @@ AchievementUIHelper.get_reward_item = function (achievement_definition)
 	return reward_item, item_group
 end
 
+AchievementUIHelper.get_all_reward_items = function (achievement_definition)
+	local reward_item, item_group
+	local rewards = achievement_definition and achievement_definition.rewards
+	local rewards_data = {}
+
+	if rewards and #rewards > 0 then
+		for i = 1, #rewards do
+			local reward_id = rewards[i].masterId
+
+			reward_item = MasterItems.get_item(reward_id)
+
+			local item_type = reward_item and reward_item.item_type
+
+			item_group = item_type and _item_type_group_lookup[item_type]
+			rewards_data[#rewards_data + 1] = {
+				reward_item = reward_item,
+				item_type = item_type,
+			}
+		end
+	end
+
+	return rewards_data
+end
+
 AchievementUIHelper.get_acheivement_by_reward_item = function (item)
 	local achievements = Managers.achievements:achievement_definitions()
 
@@ -43,11 +67,13 @@ AchievementUIHelper.get_acheivement_by_reward_item = function (item)
 		local rewards = achievement.rewards
 
 		if rewards and #rewards > 0 then
-			local reward_id = rewards[1].masterId
-			local reward_item = MasterItems.get_item(reward_id)
+			for i = 1, #rewards do
+				local reward_id = rewards[i].masterId
+				local reward_item = MasterItems.get_item(reward_id)
 
-			if reward_item and reward_item.name == item.name then
-				return achievement
+				if reward_item and reward_item.name == item.name then
+					return achievement
+				end
 			end
 		end
 	end

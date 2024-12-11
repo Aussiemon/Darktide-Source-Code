@@ -19,6 +19,7 @@ local ViewElementTutorialOverlay = require("scripts/ui/view_elements/view_elemen
 local Zones = require("scripts/settings/zones/zones")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputUtils = require("scripts/managers/input/input_utils")
 local HavocPlayView = class("HavocPlayView", "BaseView")
 local havoc_info = Managers.data_service.havoc:get_settings()
 
@@ -85,10 +86,37 @@ HavocPlayView._setup_text_positions = function (self)
 		2000,
 	}
 	local _, reward_description_height = UIRenderer.text_size(self._ui_renderer, reward_description_text, reward_description_style.font_type, reward_description_style.font_size, reward_description_size, reward_description_text_options)
+	local reward_objective_1_widget = self._widgets_by_name.reward_objective_1
+	local reward_objective_1_text = reward_objective_1_widget.content.text
+	local reward_objective_1_style = reward_objective_1_widget.style.text
+	local reward_objective_1_text_options = UIFonts.get_font_options_by_style(reward_objective_1_style)
+	local reward_objective_1_width = self:_scenegraph_size(reward_objective_1_widget.scenegraph_id) + reward_objective_1_style.size_addition[1]
+	local reward_objective_1_size = {
+		reward_objective_1_width,
+		2000,
+	}
+	local _, reward_objective_1_height = UIRenderer.text_size(self._ui_renderer, reward_objective_1_text, reward_objective_1_style.font_type, reward_objective_1_style.font_size, reward_objective_1_size, reward_objective_1_text_options)
+	local reward_objective_2_widget = self._widgets_by_name.reward_objective_2
+	local reward_objective_2_text = reward_objective_2_widget.content.text
+	local reward_objective_2_style = reward_objective_2_widget.style.text
+	local reward_objective_2_text_options = UIFonts.get_font_options_by_style(reward_objective_2_style)
+	local reward_objective_2_width = self:_scenegraph_size(reward_objective_2_widget.scenegraph_id) + reward_objective_2_style.size_addition[1]
+	local reward_objective_2_size = {
+		reward_objective_2_width,
+		2000,
+	}
+	local _, reward_objective_2_height = UIRenderer.text_size(self._ui_renderer, reward_objective_2_text, reward_objective_2_style.font_type, reward_objective_2_style.font_size, reward_objective_2_size, reward_objective_2_text_options)
+	local reward_objective_margin = 40
+	local reward_objective_1_height = reward_objective_1_height + reward_objective_margin
+	local reward_objective_2_height = reward_objective_2_height + reward_objective_margin
+
+	self:_set_scenegraph_size(reward_objective_1_widget.scenegraph_id, nil, reward_objective_1_height)
+	self:_set_scenegraph_size(reward_objective_2_widget.scenegraph_id, nil, reward_objective_2_height)
+
 	local description_y_position = reward_title_height + 10
 	local objective_1_y_position = description_y_position + reward_description_height + 30
-	local objective_2_y_position = objective_1_y_position + 60
-	local weekly_reward_y_position = objective_2_y_position + 130
+	local objective_2_y_position = objective_1_y_position + reward_objective_1_height + 10
+	local weekly_reward_y_position = objective_2_y_position + reward_objective_2_height + 60
 
 	self:_set_scenegraph_position("reward_description", nil, description_y_position)
 	self:_set_scenegraph_position("reward_objective_1", nil, objective_1_y_position)
@@ -201,6 +229,10 @@ HavocPlayView._setup_current_havoc_mission_data = function (self)
 
 		self:_setup_mission_detail_grid(mission_circumstances_presentation_data)
 	end
+
+	local participants = current_havoc_order.participants
+
+	self:_update_mission_participants(participants)
 
 	self.can_start_mission = true
 end
@@ -398,8 +430,45 @@ HavocPlayView._setup_mission_detail_grid = function (self, mission_circumstances
 	grid:set_handle_grid_navigation(true)
 end
 
-HavocPlayView._cb_view_story_mission_lore = function (self)
-	Managers.event:trigger("event_select_story_mission_background_option", 3)
+HavocPlayView._cb_on_mission_revoke_pressed = function (self)
+	local popup_params = {}
+	local ongoing_mission = self:_ongoing_mission_id()
+
+	if ongoing_mission then
+		popup_params.title_text = "loc_havoc_cancel_warning_header"
+		popup_params.description_text = "loc_havoc_cancel_warning_desc"
+	else
+		popup_params.title_text = "loc_havoc_revoke_warning_header"
+		popup_params.description_text = "loc_havoc_revoke_warning_desc"
+	end
+
+	popup_params.type = "warning"
+	popup_params.options = {
+		{
+			close_on_pressed = true,
+			stop_exit_sound = true,
+			template_type = "terminal_button_hold_small",
+			text = "loc_main_menu_delete_character_popup_confirm",
+			on_complete_sound = UISoundEvents.delete_character_confirm,
+			callback = callback(function ()
+				self._revoke_popup_id = nil
+				self._revoke_mission_on_update = true
+			end),
+		},
+		{
+			close_on_pressed = true,
+			hotkey = "back",
+			template_type = "terminal_button_small",
+			text = "loc_main_menu_delete_character_popup_cancel",
+			callback = callback(function ()
+				self._revoke_popup_id = nil
+			end),
+		},
+	}
+
+	Managers.event:trigger("event_show_ui_popup", popup_params, function (id)
+		self._revoke_popup_id = id
+	end)
 end
 
 HavocPlayView._cb_on_party_finder_pressed = function (self)
@@ -424,9 +493,9 @@ HavocPlayView._cb_on_mission_start = function (self)
 	local current_havoc_order = self._parent.havoc_order
 	local activate_mission_promise
 
-	if current_havoc_order.ongoing_id then
+	if current_havoc_order.ongoing_mission_id then
 		activate_mission_promise = Promise.resolved({
-			id = current_havoc_order.ongoing_id,
+			id = current_havoc_order.ongoing_mission_id,
 		})
 	else
 		activate_mission_promise = Managers.data_service.havoc:activate_havoc_mission(current_havoc_order.id)
@@ -438,12 +507,118 @@ HavocPlayView._cb_on_mission_start = function (self)
 		Managers.event:trigger("event_story_mission_started")
 
 		local mission_id = mission.id
+
+		self:_update_mission_participants(mission.participants)
+
 		local private_match = false
 
 		Managers.party_immaterium:wanted_mission_selected(mission_id, private_match)
 	end):catch(function (error)
 		Log.error("DebugFunctions", "Could not create mission " .. table.tostring(error, 5))
 	end)
+end
+
+HavocPlayView._update_mission_participants = function (self, participants)
+	local widget = self._widgets_by_name.detail
+
+	if participants and #participants > 0 then
+		local current_havoc_order = self._parent.havoc_order
+
+		current_havoc_order.participants = participants
+
+		local function update_names(names)
+			local current_offset = widget.style.participant_1.offset[2]
+
+			for i = 1, #names do
+				local player_name = names[i]
+
+				if player_name and not table.is_empty(player_name) then
+					local character_name = player_name.character_name or ""
+					local account_name = player_name.account_name or ""
+
+					if character_name and character_name ~= "" then
+						widget.content["participant_" .. i] = string.format(" %s - %s", character_name, account_name)
+					else
+						widget.content["participant_" .. i] = string.format(" %s", account_name)
+					end
+				else
+					widget.content["participant_" .. i] = ""
+				end
+
+				local widget_text = widget.content["participant_" .. i]
+				local widget_style = widget.style["participant_" .. i]
+
+				widget_style.offset[2] = current_offset
+
+				local widget_text_options = UIFonts.get_font_options_by_style(widget_style)
+				local widget_width = self:_scenegraph_size(widget.scenegraph_id) + widget_style.size_addition[1]
+				local widget_size = {
+					widget_width,
+					2000,
+				}
+				local _, widget_text_height = UIRenderer.text_size(self._ui_renderer, widget_text, widget_style.font_type, widget_style.font_size, widget_size, widget_text_options)
+
+				current_offset = current_offset + widget_text_height + 5
+			end
+		end
+
+		widget.content.locked = true
+
+		local name_promises = {}
+		local initial_names = {}
+		local requires_backend = false
+
+		for i = 1, 4 do
+			local account_id = participants[i]
+
+			if account_id then
+				local player_info = Managers.data_service.social:get_player_info_by_account_id(account_id)
+				local character_name = player_info:character_name()
+				local account_name = player_info:user_display_name()
+
+				initial_names[#initial_names + 1] = {
+					character_name = character_name,
+					account_name = account_name,
+				}
+
+				if player_info and player_info:online_status() ~= "online" then
+					requires_backend = true
+					name_promises[#name_promises + 1] = Managers.backend.interfaces.account:get_account_name_by_account_id(account_id):next(function (data)
+						return {
+							character_name = "",
+							account_name = data,
+						}
+					end):catch(function ()
+						return {
+							character_name = "",
+							account_name = account_name,
+						}
+					end)
+				else
+					name_promises[#name_promises + 1] = Promise.resolved({
+						character_name = character_name,
+						account_name = account_name,
+					})
+				end
+			else
+				name_promises[#name_promises + 1] = Promise.resolved({})
+			end
+		end
+
+		update_names(initial_names)
+
+		if requires_backend then
+			Promise.all(unpack(name_promises)):next(function (data)
+				if self._destroyed then
+					return
+				end
+
+				update_names(data)
+			end)
+		end
+	else
+		widget.content.locked = false
+	end
 end
 
 HavocPlayView._on_navigation_input_changed = function (self)
@@ -583,6 +758,12 @@ HavocPlayView.update = function (self, dt, t, input_service)
 	self:_update_can_play()
 	self:_update_reward_timer(dt)
 
+	if self._revoke_mission_on_update then
+		self._revoke_mission_on_update = nil
+
+		Managers.event:trigger("event_revoke_havoc_mission")
+	end
+
 	return HavocPlayView.super.update(self, dt, t, input_service)
 end
 
@@ -599,11 +780,37 @@ HavocPlayView._update_can_play = function (self)
 		party_members = self._party_manager:members()
 	end
 
+	local all_party_members_participants = true
+
+	if self._parent.havoc_order.participants then
+		for i = 1, #party_members do
+			local found = false
+			local party_member = party_members[i]
+			local account_id = party_member:account_id()
+
+			for f = 1, #self._parent.havoc_order.participants do
+				local participant_account_id = self._parent.havoc_order.participants[f]
+
+				if account_id == participant_account_id then
+					found = true
+
+					break
+				end
+			end
+
+			if not found then
+				all_party_members_participants = false
+
+				break
+			end
+		end
+	end
+
 	local party_size = party_members and #party_members > 0 and #party_members or 1
 	local is_min_party_size = min_participants <= party_size
 	local order_id = self._parent.havoc_order.id
 
-	if order_id and all_can_play and all_participants_available and is_min_party_size then
+	if order_id and all_can_play and all_participants_available and is_min_party_size and all_party_members_participants then
 		widgets_by_name.play_button.content.hotspot.disabled = false
 		widgets_by_name.play_button_disabled_info.visible = false
 	else
@@ -683,6 +890,12 @@ HavocPlayView.on_exit = function (self)
 		self._play_button_animation_id = nil
 	end
 
+	if self._revoke_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._revoke_popup_id)
+
+		self._revoke_popup_id = nil
+	end
+
 	self:_destroy_forward_gui()
 	HavocPlayView.super.on_exit(self)
 end
@@ -697,6 +910,14 @@ HavocPlayView.dialogue_system = function (self)
 	if parent then
 		return parent.dialogue_system and parent:dialogue_system()
 	end
+end
+
+HavocPlayView._ongoing_mission_id = function (self)
+	if self._parent and self._parent.havoc_order then
+		return self._parent.havoc_order.ongoing_mission_id
+	end
+
+	return nil
 end
 
 HavocPlayView.cb_on_help_pressed = function (self)

@@ -104,6 +104,17 @@ Account.get_data = function (self, section, part, ...)
 	end)
 end
 
+Account.get_account_name_by_account_id = function (self, account_id)
+	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/name")
+	local options = {
+		method = "GET",
+	}
+
+	return Managers.backend:title_request(builder:to_string(), options):next(function (data)
+		return data.body and data.body.name
+	end)
+end
+
 Account.rename_account = function (self, requested_name)
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/name"), {
 		method = "POST",

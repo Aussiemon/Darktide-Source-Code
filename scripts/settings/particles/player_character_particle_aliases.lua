@@ -397,6 +397,10 @@ local particles = {
 				critical = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_critical_01",
 				high = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_01",
 			},
+			powersword_2h_p1_m2 = {
+				critical = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_critical_01",
+				high = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_01",
+			},
 		},
 	},
 	chain_lightning_hand = {

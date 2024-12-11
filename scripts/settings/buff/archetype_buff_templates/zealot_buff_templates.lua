@@ -1152,6 +1152,13 @@ templates.zealot_flame_grenade_thrown = {
 		buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
 	end,
 }
+
+local ALLOWED_FIRE_DAMAGE_PROFILES = {
+	fire_grenade_impact = true,
+	flame_grenade_liquid_area_fire_burning = true,
+	liquid_area_fire_burning = true,
+}
+
 templates.zealot_enemies_engulfed_by_flames = {
 	class_name = "proc_buff",
 	duration = 10,
@@ -1160,7 +1167,7 @@ templates.zealot_enemies_engulfed_by_flames = {
 		[proc_events.on_damage_dealt] = 1,
 	},
 	proc_func = function (params, template_data, template_context)
-		if params.damage_profile_name ~= "liquid_area_fire_burning" then
+		if not ALLOWED_FIRE_DAMAGE_PROFILES[params.damage_profile_name] then
 			return
 		end
 

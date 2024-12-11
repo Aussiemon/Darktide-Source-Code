@@ -763,12 +763,10 @@ ChatManager._validate_participants = function (self)
 	for session_handle, channel in pairs(self._sessions) do
 		for participant_uri, participant in pairs(channel.participants) do
 			if not participant.is_validated then
+				local is_offline, invalid_player_info, waiting_for_ps5 = false, false, false
+
 				if not participant.player_info and participant.account_id and Managers.data_service.social then
 					local player_info = Managers.data_service.social:get_player_info_by_account_id(participant.account_id)
-
-					if player_info:online_status() == SocialConstants.OnlineStatus.offline then
-						return
-					end
 
 					participant.player_info = player_info
 				end
@@ -776,22 +774,32 @@ ChatManager._validate_participants = function (self)
 				if not participant.player_info then
 					Log.warning("ChatManager", "Invalid participant %s, could not get PlayerInfo", participant_uri)
 
-					return
+					invalid_player_info = true
+				end
+
+				if not invalid_player_info and participant.player_info:online_status() == SocialConstants.OnlineStatus.offline then
+					is_offline = true
 				end
 
 				local player_info = participant.player_info
+				local is_block_states_required = false
 
-				if IS_PLAYSTATION then
+				if IS_PLAYSTATION and not is_offline and not invalid_player_info then
+					local platform = player_info:platform()
 					local is_friend = player_info:is_friend()
 					local party_status = player_info:party_status()
 					local is_same_party = party_status == SocialConstants.PartyStatus.mine or party_status == SocialConstants.PartyStatus.same_mission
 
-					if participant.waiting_for_block_states and not is_friend and not is_same_party then
-						break
+					is_block_states_required = not is_friend and not is_same_party and platform == my_platform
+
+					if is_block_states_required and participant.waiting_for_block_states then
+						waiting_for_ps5 = true
 					end
 				end
 
-				if not participant.displayname then
+				local is_invalid_participant = is_offline or invalid_player_info or waiting_for_ps5
+
+				if not is_invalid_participant and not participant.displayname then
 					local displayname = player_info:character_name()
 
 					if displayname and displayname ~= "" and displayname ~= "N/A" then
@@ -799,7 +807,7 @@ ChatManager._validate_participants = function (self)
 					end
 				end
 
-				if not participant.is_mute_status_set then
+				if not is_invalid_participant and not participant.is_mute_status_set then
 					local text_mute = player_info:is_text_muted()
 					local voice_mute = player_info:is_voice_muted()
 
@@ -840,35 +848,34 @@ ChatManager._validate_participants = function (self)
 						end
 
 						local is_blocked = player_info:is_blocked()
-						local is_friend = player_info:is_friend()
-						local party_status = player_info:party_status()
-						local is_same_party = party_status == SocialConstants.PartyStatus.mine or party_status == SocialConstants.PartyStatus.same_mission
 						local is_platform_id_already_requested = Managers.account:is_platform_id_already_requested(platform_user_id)
 
-						if not is_friend and not is_same_party and platform == my_platform and not is_platform_id_already_requested then
+						if is_block_states_required and not is_platform_id_already_requested then
 							Managers.account:request_block_user_states(platform_user_id)
 
 							participant.waiting_for_block_states = true
-
-							break
 						end
 
-						local is_player_blocking_me = Managers.account:is_player_blocking_me(player_info)
-						local communication_restricted = Managers.account:user_has_restriction()
+						if not is_block_states_required or not participant.waiting_for_block_states then
+							local is_player_blocking_me = Managers.account:is_player_blocking_me(player_info)
+							local communication_restricted = Managers.account:user_has_restriction()
 
-						text_mute = text_mute or communication_restricted or is_blocked or is_player_blocking_me
-						voice_mute = voice_mute or communication_restricted or is_blocked or is_player_blocking_me
+							text_mute = text_mute or communication_restricted or is_blocked or is_player_blocking_me
+							voice_mute = voice_mute or communication_restricted or is_blocked or is_player_blocking_me
+						end
 					end
 
-					if text_mute ~= participant.is_text_muted_for_me then
-						self:channel_text_mute_participant(session_handle, participant.participant_uri, text_mute)
-					end
+					if not is_block_states_required or not participant.waiting_for_block_states then
+						if text_mute ~= participant.is_text_muted_for_me then
+							self:channel_text_mute_participant(session_handle, participant.participant_uri, text_mute)
+						end
 
-					if voice_mute ~= participant.is_muted_for_me then
-						self:channel_voip_mute_participant(session_handle, participant.participant_uri, voice_mute)
-					end
+						if voice_mute ~= participant.is_muted_for_me then
+							self:channel_voip_mute_participant(session_handle, participant.participant_uri, voice_mute)
+						end
 
-					participant.is_mute_status_set = true
+						participant.is_mute_status_set = true
+					end
 				end
 
 				if participant.displayname and participant.is_mute_status_set then

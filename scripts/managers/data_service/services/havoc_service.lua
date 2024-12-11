@@ -281,4 +281,12 @@ HavocService.havoc_rank_all_time_high = function (self, account_id)
 	return rank_promise
 end
 
+HavocService.reject_order = function (self, order_id)
+	return Managers.backend.interfaces.havoc:reject_order(order_id)
+end
+
+HavocService.delete_personal_mission = function (self, mission_id)
+	return Managers.backend.interfaces.havoc:delete_personal_mission(mission_id)
+end
+
 return HavocService

@@ -2152,7 +2152,7 @@ weapon_template.crosshair = {
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.weapon_counter = {
-	show_when_unwielded = true,
+	show_when_unwielded = false,
 	weapon_counter_type = "overheat_lockout",
 }
 weapon_template.keywords = {

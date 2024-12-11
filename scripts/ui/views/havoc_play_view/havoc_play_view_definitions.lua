@@ -113,7 +113,7 @@ local scenegraph_definition = {
 		parent = "reward_area",
 		vertical_alignment = "top",
 		size = {
-			450,
+			400,
 			50,
 		},
 		position = {
@@ -127,7 +127,7 @@ local scenegraph_definition = {
 		parent = "reward_area",
 		vertical_alignment = "top",
 		size = {
-			450,
+			400,
 			50,
 		},
 		position = {
@@ -433,7 +433,6 @@ local function reward_objective_definition(scenegraph_id, text)
 				color = Color.terminal_grid_background_gradient(nil, true),
 				size = {
 					50,
-					50,
 				},
 				offset = {
 					0,
@@ -572,7 +571,7 @@ local function rank_objective_definition(scenegraph_id, text)
 					1,
 				},
 				size_addition = {
-					40,
+					-90,
 					0,
 				},
 			},
@@ -1245,6 +1244,170 @@ local widget_definitions = {
 					texture_map = "content/ui/textures/missions/quickplay",
 				},
 			},
+		},
+		{
+			pass_type = "rect",
+			scenegraph_id = "detail_location",
+			style_id = "locked_background",
+			style = {
+				color = Color.black(150, true),
+				offset = {
+					0,
+					0,
+					6,
+				},
+			},
+			visibility_function = function (content)
+				return content.locked
+			end,
+		},
+		{
+			pass_type = "text",
+			scenegraph_id = "detail_location",
+			style_id = "location_lock",
+			value = "",
+			style = {
+				drop_shadow = false,
+				font_size = 160,
+				font_type = "itc_novarese_bold",
+				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
+				text_color = Color.black(200, true),
+				offset = {
+					0,
+					0,
+					7,
+				},
+			},
+			visibility_function = function (content)
+				return content.locked
+			end,
+		},
+		{
+			pass_type = "text",
+			scenegraph_id = "detail_location",
+			style_id = "participant_title",
+			value_id = "participant_title",
+			value = Localize("loc_main_menu_warband_count"),
+			style = {
+				drop_shadow = true,
+				font_size = 20,
+				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_header(nil, true),
+				offset = {
+					20,
+					10,
+					8,
+				},
+			},
+			visibility_function = function (content)
+				return content.locked
+			end,
+		},
+		{
+			pass_type = "text",
+			scenegraph_id = "detail_location",
+			style_id = "participant_1",
+			value = "",
+			value_id = "participant_1",
+			style = {
+				drop_shadow = true,
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_body(nil, true),
+				offset = {
+					20,
+					48,
+					8,
+				},
+				size_addition = {
+					-40,
+					0,
+				},
+			},
+			visibility_function = function (content)
+				return content.locked
+			end,
+		},
+		{
+			pass_type = "text",
+			scenegraph_id = "detail_location",
+			style_id = "participant_2",
+			value = "",
+			value_id = "participant_2",
+			style = {
+				drop_shadow = true,
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_body(nil, true),
+				offset = {
+					20,
+					71,
+					8,
+				},
+				size_addition = {
+					-40,
+					0,
+				},
+			},
+			visibility_function = function (content)
+				return content.locked
+			end,
+		},
+		{
+			pass_type = "text",
+			scenegraph_id = "detail_location",
+			style_id = "participant_3",
+			value = "",
+			value_id = "participant_3",
+			style = {
+				drop_shadow = true,
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_body(nil, true),
+				offset = {
+					20,
+					94,
+					8,
+				},
+				size_addition = {
+					-40,
+					0,
+				},
+			},
+			visibility_function = function (content)
+				return content.locked
+			end,
+		},
+		{
+			pass_type = "text",
+			scenegraph_id = "detail_location",
+			style_id = "participant_4",
+			value = "",
+			value_id = "participant_4",
+			style = {
+				drop_shadow = true,
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_body(nil, true),
+				offset = {
+					20,
+					117,
+					8,
+				},
+				size_addition = {
+					-40,
+					0,
+				},
+			},
+			visibility_function = function (content)
+				return content.locked
+			end,
 		},
 	}, "detail"),
 	objective = UIWidget.create_definition({

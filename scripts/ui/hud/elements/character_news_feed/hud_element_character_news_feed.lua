@@ -108,7 +108,6 @@ HudElementCharacterNewsFeed._fetch_new_items = function (self)
 
 	if new_item_notifications and not table.is_empty(new_item_notifications) then
 		local new_items_by_inventory = {}
-		local show_item_notification = {}
 
 		for gear_id, notification_data in pairs(new_item_notifications) do
 			local has_item, item = self:_has_item_in_inventory(gear_id)

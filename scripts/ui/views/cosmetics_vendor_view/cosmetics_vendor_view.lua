@@ -37,7 +37,8 @@ end
 
 CosmeticsVendorView.on_enter = function (self)
 	CosmeticsVendorView.super.on_enter(self)
-	self._parent:set_bar_visibility(false)
+
+	local parent = self._parent
 
 	self._render_settings.alpha_multiplier = 0
 
@@ -91,23 +92,24 @@ CosmeticsVendorView._setup_tabs = function (self)
 	end)
 
 	local context = self._context
+	local parent = self._parent
 
-	if context and not context.spawn_player then
+	if context and not context.spawn_player and parent then
 		self._archetype_tabs = self:_add_element(ViewElementMenuPanel, "cosmetics_tab_bar", 10)
 
 		self._archetype_tabs:set_is_handling_navigation_input(true)
-		self._parent:set_is_handling_navigation_input(false)
+		parent:set_is_handling_navigation_input(false)
 
 		for i = 1, #cosmetic_tabs do
 			local cosmetic_tab = cosmetic_tabs[i]
 
 			self._archetype_tabs:add_entry(Localize(cosmetic_tab.display_name), function ()
-				self._parent:cb_switch_tab(cosmetic_tab.ui_selection_order)
+				parent:cb_switch_tab(cosmetic_tab.ui_selection_order)
 				self._archetype_tabs:set_selected_panel_index(cosmetic_tab.ui_selection_order)
 			end)
 		end
 
-		self._archetype_tabs:set_selected_panel_index(self._parent:selected_index())
+		self._archetype_tabs:set_selected_panel_index(parent:selected_index())
 	end
 end
 
@@ -517,8 +519,8 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 end
 
 CosmeticsVendorView.on_exit = function (self)
-	self._parent:set_bar_visibility(true)
-	self._parent:set_is_handling_navigation_input(true)
+	local parent = self._parent
+
 	self:_destroy_side_panel()
 
 	if self._on_enter_anim_id then
@@ -1330,6 +1332,10 @@ CosmeticsVendorView._trigger_zoom_logic = function (self, instant, optional_slot
 end
 
 CosmeticsVendorView._update_wallets_presentation = function (self, wallets_data)
+	if not self._parent then
+		return
+	end
+
 	if self._wallet_widgets then
 		for i = 1, #self._wallet_widgets do
 			local widget = self._wallet_widgets[i]

@@ -1743,7 +1743,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_weapon_special_right_2",
-				chain_time = 0.68,
+				chain_time = 0.35,
 			},
 		},
 	},
@@ -1796,7 +1796,7 @@ weapon_template.actions = {
 				chain_time = 0.4,
 			},
 			special_action = {
-				action_name = "action_weapon_special_left",
+				action_name = "action_weapon_special_right_2",
 				chain_time = 0.4,
 			},
 			block = {
@@ -2193,12 +2193,12 @@ weapon_template.actions = {
 		end,
 	},
 	action_weapon_special_pushfollow_combo = {
-		activate_anim_event = "activate",
+		activate_anim_event = "activate_left",
 		activate_anim_event_3p = "activate",
 		activation_time = 0.45,
 		allowed_during_sprint = true,
 		block_duration = 0.6,
-		deactivate_anim_event = "deactivate",
+		deactivate_anim_event = "deactivate_left",
 		deactivate_anim_event_3p = "activate",
 		deactivation_time = 0.37,
 		kind = "toggle_special_with_block",

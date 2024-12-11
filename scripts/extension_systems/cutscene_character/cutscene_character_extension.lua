@@ -231,8 +231,16 @@ CutsceneCharacterExtension._load_props = function (self)
 end
 
 CutsceneCharacterExtension.unassign_player_loadout = function (self)
-	self._profile_spawner:reset()
+	if self._current_state_machine ~= AnimationType.None then
+		local unit = self._unit
+
+		Unit.disable_animation_state_machine(unit)
+
+		self._current_state_machine = AnimationType.None
+	end
+
 	self:_clear_loadout()
+	self._profile_spawner:reset()
 
 	self._player_unique_id = nil
 end
@@ -274,7 +282,6 @@ CutsceneCharacterExtension._start_weapon_specific_walk_animation = function (sel
 		local state_machine_3p, _ = WeaponTemplate.state_machines(weapon_template, self._breed_name)
 
 		Unit.set_animation_state_machine(unit, state_machine_3p)
-		Unit.enable_animation_state_machine(unit)
 
 		self._current_state_machine = AnimationType.Weapon
 	end

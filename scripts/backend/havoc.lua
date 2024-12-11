@@ -208,4 +208,44 @@ Havoc.settings = function (self)
 	return self._havoc_settings
 end
 
+Havoc.delete_personal_mission = function (self, mission_id)
+	return Managers.backend:authenticate():next(function (account)
+		local account_id = account.sub
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/missions/"):path(mission_id)
+		local options = {
+			method = "DELETE",
+		}
+
+		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
+			if data.status ~= 200 then
+				return Promise.rejected(data)
+			end
+
+			return data.body
+		end):catch(function (error)
+			return
+		end)
+	end)
+end
+
+Havoc.reject_order = function (self, order_id)
+	return Managers.backend:authenticate():next(function (account)
+		local account_id = account.sub
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/havoc/orders/"):path(order_id)
+		local options = {
+			method = "DELETE",
+		}
+
+		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
+			if data.status ~= 200 then
+				return Promise.rejected(data)
+			end
+
+			return data.body
+		end):catch(function (error)
+			return
+		end)
+	end)
+end
+
 return Havoc

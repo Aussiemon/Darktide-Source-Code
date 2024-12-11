@@ -187,11 +187,6 @@ end
 
 VendorInteractionViewBase._handle_input = function (self, input_service)
 	local tab_bar_menu = self._elements.tab_bar
-	local can_navigate = self._can_navigate
-
-	if tab_bar_menu then
-		tab_bar_menu:set_is_handling_navigation_input(can_navigate)
-	end
 
 	input_service = self._presenting_options and input_service or input_service:null_service()
 

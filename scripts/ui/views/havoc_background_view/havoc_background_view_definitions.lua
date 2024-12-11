@@ -185,6 +185,23 @@ local button_options_definitions = {
 										return tutorial_overlay and not tutorial_overlay:is_active()
 									end,
 								},
+								{
+									alignment = "right_alignment",
+									display_name = "",
+									input_action = "group_finder_refresh_groups",
+									on_pressed_callback = "_cb_on_mission_revoke_pressed",
+									visibility_function = function (parent, id)
+										local active_view = parent._active_view_instance
+										local display_name = active_view and active_view._ongoing_mission_id and active_view:_ongoing_mission_id() and "loc_havoc_cancel_mission" or "loc_havoc_revoke_mission"
+
+										parent._input_legend_element:set_display_name(id, display_name)
+
+										local tutorial_overlay = active_view and active_view._tutorial_overlay
+										local tutorial_overlay_active = tutorial_overlay and tutorial_overlay:is_active()
+
+										return active_view and active_view.view_name == "havoc_play_view" and not active_view._revoke_popup_id and not tutorial_overlay_active
+									end,
+								},
 							},
 						},
 					},

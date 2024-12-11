@@ -390,6 +390,8 @@ local blueprints = {
 					style.background_gradient.color = style.background_gradient.default_color
 				end
 			end
+
+			content.has_new_items_update_callback = element.has_new_items_update_callback
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
@@ -439,6 +441,11 @@ local blueprints = {
 					end
 				end
 			end
+
+			local item_type = element.item_type
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
+
+			content.has_new_items = has_new_items
 		end,
 		destroy = function (parent, widget, element, ui_renderer)
 			local content = widget.content
