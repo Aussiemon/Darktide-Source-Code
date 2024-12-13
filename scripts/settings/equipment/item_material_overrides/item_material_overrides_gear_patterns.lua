@@ -899,6 +899,23 @@ local material_overrides = {
 			},
 		},
 	},
+	pattern_camo_52 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_52",
+			},
+		},
+	},
+	pattern_camo_52_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_52",
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_52",
+			},
+		},
+	},
 	pattern_camo_hestia = {
 		texture_overrides = {
 			coat_pattern = {

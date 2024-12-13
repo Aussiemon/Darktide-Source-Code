@@ -372,10 +372,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 						mastery_reward.startXp = mastery_data.current_xp or 0
 					end
 
-					local start_xp = mastery_reward.startXp
-					local end_xp = start_xp + gained_xp
-
-					claim_promises[#claim_promises + 1] = Managers.data_service.mastery:claim_levels_by_new_exp(mastery_data, end_xp)
+					claim_promises[#claim_promises + 1] = Managers.data_service.mastery:claim_levels_by_new_exp(mastery_data)
 				end
 			end
 

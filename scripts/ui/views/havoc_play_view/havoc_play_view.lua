@@ -29,11 +29,7 @@ HavocPlayView.init = function (self, settings, context)
 	self._parent = parent
 	self._play_button_anim_delay = 1
 	self._play_fast_enter_animation = context and context.play_fast_enter_animation
-
-	local player = self:_player()
-	local profile = player:profile()
-
-	self._player_level = profile.current_level
+	self._can_cancel_mission = true
 
 	local party_manager
 
@@ -757,6 +753,15 @@ HavocPlayView.update = function (self, dt, t, input_service)
 
 	self:_update_can_play()
 	self:_update_reward_timer(dt)
+
+	local ongoing_mission_start_time = self._parent.havoc_order.ongoing_mission_start
+
+	if ongoing_mission_start_time then
+		local current_vote = Managers.party_immaterium:party_vote_state()
+		local voting_ongoing = current_vote.type == "start_matchmaking" and current_vote.state == "ONGOING"
+
+		self._can_cancel_mission = not voting_ongoing
+	end
 
 	if self._revoke_mission_on_update then
 		self._revoke_mission_on_update = nil

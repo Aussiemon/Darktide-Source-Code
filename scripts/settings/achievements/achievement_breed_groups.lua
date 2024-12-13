@@ -50,7 +50,6 @@ AchievementBreedGroups.all = {
 AchievementBreedGroups.chaos = {
 	"chaos_hound",
 	"chaos_newly_infected",
-	"chaos_armored_infected",
 	"chaos_ogryn_bulwark",
 	"chaos_ogryn_executor",
 	"chaos_ogryn_gunner",

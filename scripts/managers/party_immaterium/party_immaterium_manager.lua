@@ -645,6 +645,8 @@ PartyImmateriumManager._handle_party_event = function (self, event)
 		self:_handle_advertisement_state_update_event_trigger(event)
 	elseif event.event_type == "advertisement_request_to_join_list_update" then
 		self:_handle_advertisement_request_to_join_list_update_event_trigger(event)
+	elseif event.event_type == "party_vote_update" then
+		self:_handle_party_vote_update_event(event)
 	end
 end
 
@@ -801,6 +803,27 @@ PartyImmateriumManager._handle_party_update_event = function (self, event)
 
 	if #members >= 4 then
 		self:cancel_party_finder_advertise()
+	end
+end
+
+PartyImmateriumManager._handle_party_vote_update_event = function (self, event)
+	if (event.state == "COMPLETED_REJECTED" or event.state == "FAILED_TIMEOUT") and event.started_by_account_id == self:get_myself():unique_id() then
+		local params = event.params
+
+		if params.mission_data and string.find(params.mission_data, "havoc-rank", nil, true) then
+			Managers.data_service.havoc:personal_mission(params.backend_mission_id):next(function (data)
+				if data and data.start then
+					local server_time = Managers.backend:get_server_time(Managers.time:time("main"))
+					local server_cancel_max_time = 60
+
+					if server_cancel_max_time > (server_time - data.start) / 1000 then
+						Managers.data_service.havoc:delete_personal_mission(params.backend_mission_id):next(function ()
+							Managers.event:trigger("event_auto_cancel_havoc_mission")
+						end)
+					end
+				end
+			end)
+		end
 	end
 end
 

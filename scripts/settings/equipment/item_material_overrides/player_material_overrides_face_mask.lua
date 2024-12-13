@@ -449,6 +449,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_face_hide_chin_mouth_brow = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0.61,
+				0.355,
+			},
+			negative_mask = {
+				0,
+				0.328,
+				0.242,
+				1,
+			},
+		},
+	},
 	mask_brow = {
 		property_overrides = {
 			positive_mask = {

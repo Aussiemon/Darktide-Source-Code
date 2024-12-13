@@ -31,5 +31,6 @@ _create_circumstance_entry("scripts/settings/circumstance/templates/toxic_gas_ci
 _create_circumstance_entry("scripts/settings/circumstance/templates/ventilation_purge_circumstance_template")
 _create_circumstance_entry("scripts/settings/circumstance/templates/live_event_moebian_21st_circumstance_template")
 _create_circumstance_entry("scripts/settings/circumstance/templates/live_event_nurgle_explosion_circumstance_template")
+_create_circumstance_entry("scripts/settings/circumstance/templates/live_event_abhuman_circumstance_template")
 
 return settings("circumstances", circumstances)

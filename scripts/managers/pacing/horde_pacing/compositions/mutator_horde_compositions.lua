@@ -357,6 +357,105 @@ local horde_compositions = {
 			},
 		},
 	},
+	mutator_live_abhuman = {
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						10,
+						12,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						15,
+						17,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						0,
+						1,
+					},
+				},
+				{
+					name = "chaos_ogryn_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						0,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						0,
+						2,
+					},
+				},
+				{
+					name = "chaos_ogryn_gunner",
+					amount = {
+						0,
+						2,
+					},
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						0,
+						2,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						1,
+						3,
+					},
+				},
+				{
+					name = "chaos_ogryn_gunner",
+					amount = {
+						1,
+						3,
+					},
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						3,
+					},
+				},
+			},
+		},
+	},
 }
 
 return horde_compositions

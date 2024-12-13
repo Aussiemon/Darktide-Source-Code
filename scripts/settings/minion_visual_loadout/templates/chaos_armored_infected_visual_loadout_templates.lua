@@ -44,7 +44,6 @@ local basic_armored_infected_template = {
 		},
 		slot_hair = {
 			items = {
-				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_moebian_01",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_a_var_01",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_a_var_02",

@@ -299,7 +299,12 @@ AchievementMissionGroups.missions = {
 			default = "endeavours_entertainment",
 			puzzle = "exploration_entertainment",
 		},
-		icon = {},
+		icon = {
+			mission_default = path .. "mission_achievements/missions_achievement_0041",
+			collectible = path .. "mission_achievements/missions_achievement_puzzle_0020",
+			auric = path .. "mission_achievements/missions_achievement_difficulty_0039",
+			challange = path .. "default",
+		},
 	},
 	{
 		local_variable = "loc_mission_name_core_research",

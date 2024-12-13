@@ -5024,6 +5024,60 @@ local material_overrides = {
 			},
 		},
 	},
+	fabric_vostroyan_brass_01_wear_02_inv = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_bca",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.3,
+			},
+		},
+	},
+	fabric_leather_01_brass_01_wear_02 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_bc",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_bca",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.3,
+			},
+		},
+	},
 	decal_blend_01 = {
 		property_overrides = {
 			bc_blend = {

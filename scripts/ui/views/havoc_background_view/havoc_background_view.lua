@@ -32,6 +32,45 @@ HavocBackgroundView.init = function (self, settings, context)
 
 	self:_register_event("event_havoc_background_on_end_time_met")
 	self:_register_event("event_revoke_havoc_mission", "revoke_mission")
+	self:_register_event("event_auto_cancel_havoc_mission", "auto_cancel_mission")
+end
+
+HavocBackgroundView.auto_cancel_mission = function (self)
+	local charges_left = self.havoc_order.charges
+
+	self._rewards = {
+		type = "promotion",
+		current = {},
+		previous = {
+			rank = self.havoc_order.data.rank,
+			charges = self.havoc_order.charges,
+		},
+	}
+
+	local on_complete_callback = callback(function ()
+		self._rewards.current.charges = self.havoc_order.charges
+		self._rewards.current.rank = self.havoc_order.data and self.havoc_order.data.rank
+
+		if not self._rewards.current.rank or not self._rewards.current.charges or self._rewards.previous.charges == self._rewards.current.charges and self._rewards.previous.rank == self._rewards.current.rank then
+			self._rewards = nil
+		end
+
+		if self._current_state == "key" then
+			local starting_option_index = self._rewards and 3 or self._base_definitions.starting_option_index
+
+			if starting_option_index then
+				local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
+				local option = button_options_definitions[starting_option_index]
+
+				if option then
+					self:on_option_button_pressed(starting_option_index, option)
+				end
+			end
+		end
+	end)
+
+	self:_close_active_view()
+	self:_initialize_havoc_state(on_complete_callback)
 end
 
 HavocBackgroundView.revoke_mission = function (self)
@@ -360,6 +399,7 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 					if valid_ongoing_havoc_data and not table.is_empty(valid_ongoing_havoc_data) then
 						self.havoc_order.charges = self.havoc_order.charges + #valid_ongoing_havoc_data
 						self.havoc_order.ongoing_mission_id = ongoing_havoc_data[1].id
+						self.havoc_order.ongoing_mission_start = ongoing_havoc_data[1].start
 						self.havoc_order.participants = ongoing_havoc_data[1].eligibleParticipants
 					end
 

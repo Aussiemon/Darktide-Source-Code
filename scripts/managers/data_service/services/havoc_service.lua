@@ -289,4 +289,8 @@ HavocService.delete_personal_mission = function (self, mission_id)
 	return Managers.backend.interfaces.havoc:delete_personal_mission(mission_id)
 end
 
+HavocService.personal_mission = function (self, mission_id)
+	return Managers.backend.interfaces.havoc:personal_mission(mission_id)
+end
+
 return HavocService

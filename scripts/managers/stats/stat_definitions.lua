@@ -6431,6 +6431,34 @@ StatDefinitions.live_event_get_em_in_shape_won = {
 		},
 	},
 }
+StatDefinitions.live_event_abhuman_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		circumstances = {
+			abhuman_01 = true,
+			abhuman_02 = true,
+			abhuman_03 = true,
+			abhuman_04 = true,
+			abhuman_05 = true,
+			abhuman_06 = true,
+			abhuman_07 = true,
+		},
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
 StatDefinitions = _stat_data
 
 for _, stat in pairs(StatDefinitions) do

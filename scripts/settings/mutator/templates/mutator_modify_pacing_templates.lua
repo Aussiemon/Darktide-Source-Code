@@ -93,6 +93,19 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_live_abhuman_monster = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			monster_spawn_type = "monsters",
+			monsters_per_travel_distance = {
+				90,
+				160,
+			},
+			monster_breed_name = {
+				"chaos_plague_ogryn",
+			},
+		},
+	},
 	havoc_mutator_more_captains_01 = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {

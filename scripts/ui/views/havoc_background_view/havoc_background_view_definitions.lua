@@ -198,8 +198,9 @@ local button_options_definitions = {
 
 										local tutorial_overlay = active_view and active_view._tutorial_overlay
 										local tutorial_overlay_active = tutorial_overlay and tutorial_overlay:is_active()
+										local show = active_view and active_view._ongoing_mission_id and active_view:_ongoing_mission_id() and active_view._can_cancel_mission or active_view and (not active_view._ongoing_mission_id or active_view._ongoing_mission_id and not active_view:_ongoing_mission_id())
 
-										return active_view and active_view.view_name == "havoc_play_view" and not active_view._revoke_popup_id and not tutorial_overlay_active
+										return active_view and active_view.view_name == "havoc_play_view" and not active_view._revoke_popup_id and not tutorial_overlay_active and show
 									end,
 								},
 							},

@@ -1470,6 +1470,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_3_colour_gray_02_inv = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_gray_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_gray_02",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_gray_01",
+			},
+		},
+	},
 	color_3_colour_gray_03 = {
 		texture_overrides = {
 			color_gradient = {
@@ -2400,6 +2413,19 @@ local material_overrides = {
 			},
 			mat1_gradient = {
 				resource = "content/textures/colors/1_colour_black_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_black_01",
+			},
+		},
+	},
+	color_truskan_snowhounds_04 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_city_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_truskan_snowhounds_01",
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/1_colour_black_01",
