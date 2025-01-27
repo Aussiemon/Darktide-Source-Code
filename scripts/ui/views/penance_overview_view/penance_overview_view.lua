@@ -1919,19 +1919,25 @@ PenanceOverviewView._set_handle_navigation = function (self)
 	if self._penance_grid then
 		local should_disable_navigation = result_active or self._wintracks_focused
 
-		self._penance_grid:disable_input(should_disable_navigation)
+		if self._penance_grid:input_disabled() ~= should_disable_navigation then
+			self._penance_grid:disable_input(should_disable_navigation)
+		end
 	end
 
 	if self._categories_tab_bar then
 		local should_use_navigation = not result_active and self._selected_top_option_key == "browser" and not self._wintracks_focused
 
-		self._categories_tab_bar:set_is_handling_navigation_input(should_use_navigation)
+		if self._categories_tab_bar:is_handling_navigation_input() ~= should_use_navigation then
+			self._categories_tab_bar:set_is_handling_navigation_input(should_use_navigation)
+		end
 	end
 
 	if self._top_panel then
 		local should_use_navigation = not result_active and not self._wintracks_focused
 
-		self._top_panel:set_is_handling_navigation_input(should_use_navigation)
+		if self._top_panel:is_handling_navigation_input() ~= should_use_navigation then
+			self._top_panel:set_is_handling_navigation_input(should_use_navigation)
+		end
 	end
 end
 

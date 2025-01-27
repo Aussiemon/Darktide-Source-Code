@@ -112,7 +112,9 @@ end
 ComponentSystem.flow_call_component = function (self, unit, guid, function_name, ...)
 	local extension = self._unit_to_extension_map[unit]
 
-	extension:flow_call_component(guid, function_name, ...)
+	if extension then
+		extension:flow_call_component(guid, function_name, ...)
+	end
 end
 
 ComponentSystem.get_components = function (self, unit, component_name)

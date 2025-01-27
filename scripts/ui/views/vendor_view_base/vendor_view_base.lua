@@ -247,7 +247,6 @@ end
 VendorViewBase._fetch_store_items = function (self, ignore_focus_on_offer)
 	self._current_rotation_end = nil
 	self._offer_items_layout = nil
-	self._filtered_offer_items_layout = nil
 	self._next_tab_index = nil
 	self._next_tab_index_ignore_item_selection = nil
 
@@ -367,7 +366,6 @@ VendorViewBase._fetch_store_items = function (self, ignore_focus_on_offer)
 
 			self._current_rotation_end = nil
 			self._offer_items_layout = nil
-			self._filtered_offer_items_layout = nil
 			self._next_tab_index = nil
 			self._next_tab_index_ignore_item_selection = nil
 			self._store_promise = nil

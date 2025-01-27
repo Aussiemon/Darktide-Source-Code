@@ -198,19 +198,23 @@ function on_resume()
 		Crashify.print_breadcrumb(string.format("on_resume: %s", GAME_RESUME_COUNT))
 	end
 
-	if rawget(_G, "Managers") and Managers.backend then
-		Managers.backend:time_sync_restart()
-	end
+	if rawget(_G, "Managers") then
+		if Managers.backend then
+			Managers.backend:time_sync_restart()
+		end
 
-	if Managers.telemetry_events then
-		Managers.telemetry_events:game_resumed()
-	end
+		if Managers.telemetry_events then
+			Managers.telemetry_events:game_resumed()
+		end
 
-	if Managers.telemetry then
-		Managers.telemetry:post_batch()
-	end
+		if Managers.telemetry then
+			Managers.telemetry:post_batch()
+		end
 
-	Managers.package:resume_unloading()
+		if Managers.package then
+			Managers.package:resume_unloading()
+		end
+	end
 end
 
 function shutdown()

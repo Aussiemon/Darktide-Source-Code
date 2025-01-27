@@ -729,11 +729,17 @@ ProfileUtils.generate_random_name = function (profile)
 	return name
 end
 
-ProfileUtils.character_archetype_title = function (profile, exlude_symbol)
+ProfileUtils.character_archetype_title = function (profile, exclude_symbol)
+	if not profile or table.is_empty(profile) then
+		Log.error("ProfileUtils", "Empty argument profile in function character_archetype_title")
+
+		return "???"
+	end
+
 	local archetype = profile.archetype
 	local text
 
-	if UISettings.archetype_font_icon[archetype.name] and not exlude_symbol then
+	if UISettings.archetype_font_icon[archetype.name] and not exclude_symbol then
 		text = string.format("%s %s", UISettings.archetype_font_icon[archetype.name], Localize(archetype.archetype_name))
 	else
 		text = Localize(archetype.archetype_name)

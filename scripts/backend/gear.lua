@@ -66,15 +66,15 @@ Gear.delete_gear = function (self, item_id)
 	end)
 end
 
-Gear.delete_gear_batch = function (self, items)
+Gear.delete_gear_batch = function (self, gear_ids)
 	local operations = {}
 
-	for i = 1, #items do
-		local item = items[i]
+	for i = 1, #gear_ids do
+		local gear_id = gear_ids[i]
 
 		operations[#operations + 1] = {
 			op = "delete",
-			gearId = item.gear_id,
+			gearId = gear_id,
 		}
 	end
 

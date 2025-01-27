@@ -150,7 +150,7 @@ InventoryWeaponMarksView.on_exit = function (self)
 
 	self:_destroy_forward_gui()
 
-	if self._equipped_item and self._equipped_item ~= self._presentation_item then
+	if self._equipped_item and self._presentation_item and self._equipped_item.name ~= self._presentation_item.name then
 		local gear_id = self._presentation_item.__original_gear_id
 		local mark_id = self._equipped_item.name
 

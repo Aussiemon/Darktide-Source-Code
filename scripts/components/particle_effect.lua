@@ -20,6 +20,8 @@ ParticleEffect.init = function (self, unit)
 
 	local create_particle_on_spawn = self:get_data(unit, "create_particle_on_spawn")
 
+	Unit.flow_event(unit, "particle_effect_component_init")
+
 	if create_particle_on_spawn then
 		self:_create_particle()
 	end

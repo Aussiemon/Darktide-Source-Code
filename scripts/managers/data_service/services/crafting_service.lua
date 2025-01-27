@@ -286,7 +286,7 @@ CraftingService.add_weapon_expertise = function (self, gear_id, added_expertise,
 end
 
 CraftingService.extract_weapon_mastery = function (self, mastery_id, gear_ids)
-	local max_operations = 25
+	local max_operations = 40
 	local track_id = Managers.data_service.mastery:get_track_id(mastery_id)
 	local num_batches = gear_ids and math.floor(#gear_ids / max_operations + 1) or 0
 	local gear_batches = {}

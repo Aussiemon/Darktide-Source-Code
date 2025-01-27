@@ -832,7 +832,9 @@ EndPlayerView.update_weapon_values = function (self, added_exp, slot, widget)
 			current_mastery_level = current_mastery_level + 1
 
 			if self["_levelup_mastery_animation_id_" .. slot] then
-				self:_complete_animation(self["_levelup_mastery_animation_id_" .. slot])
+				if not self:is_animation_done(self["_levelup_mastery_animation_id_" .. slot]) then
+					self:_complete_animation(self["_levelup_mastery_animation_id_" .. slot])
+				end
 
 				self["_levelup_mastery_animation_id_" .. slot] = nil
 			end

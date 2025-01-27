@@ -1897,6 +1897,10 @@ GroupFinderView._cb_on_refresh_button_pressed = function (self)
 end
 
 GroupFinderView._set_state = function (self, new_state)
+	if self._update_listed_group_on_update and self._state == STATE.advertising and new_state ~= STATE.advertising then
+		self._update_listed_group_on_update = false
+	end
+
 	Log.info("[GroupFinderView] - set state: CURRENT STATE: " .. self._state .. " | NEW STATE: " .. new_state)
 
 	self._state = new_state
@@ -2238,6 +2242,10 @@ GroupFinderView.update = function (self, dt, t, input_service)
 			if own_group_visualization.group_id ~= self:party_id() then
 				self:_set_state(STATE.advertising)
 			end
+
+			if self._update_listed_group_on_update then
+				self:_update_listed_group()
+			end
 		else
 			self:_set_state(STATE.browsing)
 		end
@@ -2424,6 +2432,10 @@ GroupFinderView._update_party_statuses = function (self)
 end
 
 GroupFinderView._update_listed_group = function (self)
+	if self._update_listed_group_on_update then
+		self._update_listed_group_on_update = false
+	end
+
 	local widgets_by_name = self._widgets_by_name
 	local player_composition_name_party = "party"
 	local temp_team_players = {}
@@ -2447,9 +2459,9 @@ GroupFinderView._update_listed_group = function (self)
 		local widget = widgets_by_name[widget_name]
 		local content = widget.content
 		local style = widget.style
+		local profile = player and player:profile()
 
-		if player then
-			local profile = player:profile()
+		if player and profile then
 			local social_service_manager = Managers.data_service.social
 			local player_info = social_service_manager and social_service_manager:get_player_info_by_account_id(player:account_id())
 			local platform = player_info and player_info:platform() or ""
@@ -2525,11 +2537,18 @@ GroupFinderView._update_listed_group = function (self)
 			members[i].presence_info.archetype = archetype.name
 			members[i].havoc_rank_all_time_high = havoc_rank_all_time_high
 			members[i].presence_info.synced = true
-		elseif members[i] then
-			members[i] = nil
-		end
+			content.slot_filled = true
+		else
+			if player and not profile then
+				self._update_listed_group_on_update = true
+			end
 
-		content.slot_filled = player ~= nil
+			if members[i] then
+				members[i] = nil
+			end
+
+			content.slot_filled = false
+		end
 	end
 end
 

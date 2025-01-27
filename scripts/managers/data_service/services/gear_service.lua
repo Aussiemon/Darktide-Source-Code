@@ -191,32 +191,33 @@ GearService.delete_gear = function (self, gear_id)
 	end)
 end
 
-GearService.delete_gear_batch = function (self, items)
-	local max_operations = 25
-	local num_batches = items and math.floor(#items / max_operations + 1) or 0
-	local item_batches = {}
+GearService.delete_gear_batch = function (self, gear_ids)
+	local max_operations = 40
+	local gear_ids_size = table.size(gear_ids)
+	local num_batches = gear_ids and math.floor(gear_ids_size / max_operations + 1) or 0
+	local gear_ids_batches = {}
 
 	if num_batches > 0 then
 		for i = 1, num_batches do
-			item_batches[i] = {}
+			gear_ids_batches[i] = {}
 
 			local start_batch = (i - 1) * max_operations + 1
-			local end_batch = i < num_batches and start_batch + max_operations or #items
+			local end_batch = i < num_batches and start_batch + max_operations or gear_ids_size
 
 			for ii = start_batch, end_batch do
-				item_batches[i][#item_batches[i] + 1] = items[ii]
+				gear_ids_batches[i][#gear_ids_batches[i] + 1] = gear_ids[ii]
 			end
 		end
 	end
 
-	return self:_delete_item_batches(item_batches, {})
+	return self:_delete_item_batches(gear_ids_batches, {})
 end
 
-GearService._delete_item_batches = function (self, item_batches, result)
-	if item_batches[1] then
-		local items = item_batches[1]
+GearService._delete_item_batches = function (self, gear_ids_batches, result)
+	if gear_ids_batches[1] then
+		local gear_ids = gear_ids_batches[1]
 
-		return self._backend_interface.gear:delete_gear_batch(items):next(function (data)
+		return self._backend_interface.gear:delete_gear_batch(gear_ids):next(function (data)
 			if data and data.operations then
 				for i = 1, #data.operations do
 					local operation = data.operations[i]
@@ -230,13 +231,13 @@ GearService._delete_item_batches = function (self, item_batches, result)
 				end
 			end
 
-			table.remove(item_batches, 1)
+			table.remove(gear_ids_batches, 1)
 
-			return self:_delete_item_batches(item_batches, result)
+			return self:_delete_item_batches(gear_ids_batches, result)
 		end):catch(function (data)
-			table.remove(item_batches, 1)
+			table.remove(gear_ids_batches, 1)
 
-			return self:_delete_item_batches(item_batches, result)
+			return self:_delete_item_batches(gear_ids_batches, result)
 		end)
 	else
 		self:invalidate_gear_cache()

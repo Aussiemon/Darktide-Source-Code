@@ -356,6 +356,10 @@ ViewElementTabMenu.set_input_actions = function (self, input_action_left, input_
 	self:_update_input_action_texts()
 end
 
+ViewElementTabMenu.is_handling_navigation_input = function (self)
+	return self._is_handling_navigation_input
+end
+
 ViewElementTabMenu.set_is_handling_navigation_input = function (self, is_enabled)
 	self._is_handling_navigation_input = is_enabled
 end

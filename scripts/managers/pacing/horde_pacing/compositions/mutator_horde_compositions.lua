@@ -385,7 +385,7 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						0,
+						1,
 						1,
 					},
 				},
@@ -399,7 +399,7 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						0,
+						1,
 						1,
 					},
 				},
@@ -410,21 +410,21 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						0,
+						1,
 						2,
 					},
 				},
 				{
 					name = "chaos_ogryn_gunner",
 					amount = {
-						0,
+						1,
 						2,
 					},
 				},
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						0,
+						1,
 						2,
 					},
 				},

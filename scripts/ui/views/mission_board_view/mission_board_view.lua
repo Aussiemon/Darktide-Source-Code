@@ -1298,6 +1298,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 		widget.style.speaker_corner.offset[2] = widget.content.size[2]
 		widget.style.speaker_icon.offset[2] = widget.content.size[2]
 		widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
+		self._widgets_by_name.difficulty_stepper_window.offset[2] = widget.offset[2] + widget.content.size[2] + margin
 		self._widgets_by_name.difficulty_stepper.offset[2] = widget.offset[2] + widget.content.size[2] + margin
 	end
 

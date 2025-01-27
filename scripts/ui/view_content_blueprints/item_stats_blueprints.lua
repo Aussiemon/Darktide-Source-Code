@@ -1548,6 +1548,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 		local item = content.item
 		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 		local displayed_attacks = weapon_template.displayed_attacks
+		local min_desc_size = 20
+		local desc_size = 0
 
 		if displayed_attacks then
 			local statistics_template = weapon_template.displayed_weapon_stats and WeaponUIStatsTemplates[weapon_template.displayed_weapon_stats] or weapon_template.displayed_weapon_stats_table
@@ -1578,6 +1580,18 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local desc_id = UISettings.attack_type_desc_lookup[attack_type] or data.desc
 					local desc = desc_id and Localize(desc_id) or ""
 
+					if desc ~= "" then
+						local desc_style = style.extra_information
+						local text_options = UIFonts.get_font_options_by_style(desc_style)
+						local text_size = {
+							desc_style.size[1],
+							2000,
+						}
+						local _, text_height = UIRenderer.text_size(ui_renderer, desc, desc_style.font_type, desc_style.font_size, text_size, text_options)
+
+						desc_size = math.max(min_desc_size, text_height) - min_desc_size
+					end
+
 					content.attack_type_icon = attack_type_icon
 					content.attack_type_name = display_name
 					content.attack_type_desc = desc
@@ -1596,6 +1610,16 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 		content.current_attack_index = attack_index
 		content.current_chain_index = chain_index
+
+		local original_offset = 115
+		local original_bottom_size = 160
+		local original_top_size = 150
+
+		style.tile_top.size[2] = original_top_size + desc_size
+		style.corner_top.size[2] = original_top_size + desc_size
+		style.tile_bottom.offset[2] = original_offset + desc_size
+		style.corner_bottom.offset[2] = original_offset + desc_size
+		style.detailed_bottom.size[2] = original_bottom_size + desc_size
 	end
 
 	local function _update_connection_line(old_attack_index, old_chain_index, new_attack_index, new_chain_index, content, style)
@@ -5456,6 +5480,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			pass_template = {
 				{
 					pass_type = "texture",
+					style_id = "tile_top",
 					value = "content/ui/materials/frames/frame_tile_1px",
 					style = {
 						horizontal_alignment = "center",
@@ -5474,6 +5499,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				},
 				{
 					pass_type = "texture",
+					style_id = "corner_top",
 					value = "content/ui/materials/frames/frame_corner_2px",
 					style = {
 						horizontal_alignment = "center",
@@ -5492,6 +5518,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				},
 				{
 					pass_type = "texture",
+					style_id = "tile_bottom",
 					value = "content/ui/materials/frames/frame_tile_1px",
 					style = {
 						horizontal_alignment = "center",
@@ -5510,6 +5537,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				},
 				{
 					pass_type = "texture",
+					style_id = "corner_bottom",
 					value = "content/ui/materials/frames/frame_corner_2px",
 					style = {
 						horizontal_alignment = "center",
@@ -5528,6 +5556,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				},
 				{
 					pass_type = "texture",
+					style_id = "detailed_bottom",
 					value = "content/ui/materials/frames/line_thin_detailed_01",
 					style = {
 						horizontal_alignment = "center",
