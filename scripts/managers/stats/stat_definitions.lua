@@ -2324,9 +2324,10 @@ do
 			{
 				id = "whole_mission_won",
 				trigger = function (self, stat_data)
+					local team_deaths = read_stat(StatDefinitions.team_deaths, stat_data)
 					local team_knock_downs = read_stat(StatDefinitions.team_knock_downs, stat_data)
 
-					if team_knock_downs == 0 then
+					if team_knock_downs == 0 and team_deaths == 0 then
 						return increment(self, stat_data)
 					end
 				end,

@@ -4,9 +4,9 @@ local CraftingModifyViewDefinitions = require("scripts/ui/views/crafting_modify_
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local Items = require("scripts/utilities/items")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
-local ItemUtils = require("scripts/utilities/items")
 
 require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
@@ -35,13 +35,20 @@ CraftingModifyView.on_enter = function (self)
 	self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
 
 	local character_id = self:_player():character_id()
+	local slot_filter_list = {
+		"slot_primary",
+		"slot_secondary",
+		"slot_attachment_1",
+		"slot_attachment_2",
+		"slot_attachment_3",
+	}
 	local item_type_filter_list = {
 		"WEAPON_MELEE",
 		"WEAPON_RANGED",
 		"GADGET",
 	}
 
-	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, nil, item_type_filter_list)
+	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, slot_filter_list, item_type_filter_list)
 
 	self._inventory_promise:next(callback(self, "_cb_fetch_inventory_items"))
 end
@@ -82,96 +89,96 @@ CraftingModifyView._setup_sort_options = function (self)
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					">",
 					"item",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 					">",
 					"item",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					"<",
 					"item",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 					">",
 					"item",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					">",
 					"item",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					">",
 					"item",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					"<",
 					"item",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					">",
 					"item",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 					">",
 					"item",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					">",
 					"item",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					">",
 					"item",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 					">",
 					"item",
-					ItemUtils.compare_item_level,
+					Items.compare_item_level,
 					">",
 					"item",
-					ItemUtils.compare_item_rarity,
+					Items.compare_item_rarity,
 				}),
 			},
 		}

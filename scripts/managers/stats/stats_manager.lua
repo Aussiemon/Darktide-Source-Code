@@ -334,6 +334,10 @@ end
 StatsManager.remove_user = function (self, key)
 	local user = self._users[key]
 
+	if user == self._next_user then
+		self._next_user = 0
+	end
+
 	if user.state == UserStates.tracking then
 		self:stop_tracking_user(key)
 	end

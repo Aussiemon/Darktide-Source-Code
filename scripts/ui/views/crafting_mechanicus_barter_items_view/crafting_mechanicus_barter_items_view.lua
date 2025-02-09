@@ -2,27 +2,22 @@
 
 local CraftingMechanicusBarterItemsViewDefinitions = require("scripts/ui/views/crafting_mechanicus_barter_items_view/crafting_mechanicus_barter_items_view_definitions")
 local CraftingMechanicusBarterItemsViewSettings = require("scripts/ui/views/crafting_mechanicus_barter_items_view/crafting_mechanicus_barter_items_view_settings")
-local CraftingSettings = require("scripts/settings/item/crafting_mechanicus_settings")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ContentBlueprints = require("scripts/ui/views/masteries_overview_view/masteries_overview_view_blueprints")
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Mastery = require("scripts/utilities/mastery")
-local Promise = require("scripts/foundation/utilities/promise")
+local RaritySettings = require("scripts/settings/item/rarity_settings")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementDiscardItems = require("scripts/ui/view_elements/view_element_discard_items/view_element_discard_items")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local RaritySettings = require("scripts/settings/item/rarity_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local CraftingMechanicusBarterItemsView = class("CraftingMechanicusBarterItemsView", "BaseView")
 
 CraftingMechanicusBarterItemsView.init = function (self, settings, context)
@@ -40,12 +35,16 @@ CraftingMechanicusBarterItemsView.on_enter = function (self)
 	self._parent:set_active_view_instance(self)
 
 	local character_id = self:_player():character_id()
+	local slot_filter_list = {
+		"slot_primary",
+		"slot_secondary",
+	}
 	local item_type_filter_list = {
 		"WEAPON_MELEE",
 		"WEAPON_RANGED",
 	}
 
-	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, nil, item_type_filter_list)
+	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, slot_filter_list, item_type_filter_list)
 
 	self._inventory_promise:next(callback(self, "_cb_fetch_inventory_items"))
 	self:_setup_button_callbacks()
@@ -879,14 +878,15 @@ CraftingMechanicusBarterItemsView._present_pattern_layout = function (self, slot
 	end
 end
 
+local ITEMS_LAYOUT_GRID_SIZE = {
+	640,
+	800,
+}
+
 CraftingMechanicusBarterItemsView._present_items_layout = function (self, layout, present_callback)
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
-	local grid_size = {
-		640,
-		800,
-	}
-	local ItemContentBlueprints = generate_blueprints_function(grid_size)
+	local ItemContentBlueprints = generate_blueprints_function(ITEMS_LAYOUT_GRID_SIZE)
 	local item_layout = {}
 
 	for gear_id, layout in pairs(layout) do
@@ -909,7 +909,6 @@ CraftingMechanicusBarterItemsView._present_items_layout = function (self, layout
 	self._item_grid_layout = item_layout
 
 	self._current_present_grid_layout_callback = function (self, callback_layout)
-		table.dump(callback_layout[1])
 		self._item_grid:present_grid_layout(callback_layout, ItemContentBlueprints, left_click_callback, nil, nil, grow_direction, function ()
 			local mastery_id = self._selected_pattern
 
@@ -936,13 +935,14 @@ CraftingMechanicusBarterItemsView._add_external_layout = function (self, layout)
 	table.insert(layout, #layout + 1, spacing_entry)
 end
 
+local SACRIFICE_LAYOUT_GRID_SIZE = {
+	640,
+	900,
+}
+
 CraftingMechanicusBarterItemsView._present_sacrifice_layout = function (self, layout)
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
-	local grid_size = {
-		640,
-		900,
-	}
-	local ItemContentBlueprints = generate_blueprints_function(grid_size)
+	local ItemContentBlueprints = generate_blueprints_function(SACRIFICE_LAYOUT_GRID_SIZE)
 	local item_layout = table.append({}, layout)
 
 	if item_layout[1] and not item_layout[1].is_external then
@@ -958,7 +958,6 @@ CraftingMechanicusBarterItemsView._present_sacrifice_layout = function (self, la
 	self._item_grid_layout = item_layout
 
 	self._current_present_grid_layout_callback = function (self, callback_layout)
-		table.dump(callback_layout[1])
 		self._item_grid:present_grid_layout(callback_layout, ItemContentBlueprints, nil, nil, nil, nil, function ()
 			if not self._using_cursor_navigation then
 				self._item_grid:select_first_index()

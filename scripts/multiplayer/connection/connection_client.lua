@@ -36,6 +36,8 @@ ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lo
 			self._region = instance_id_split[2]
 			self._deployment_id = instance_id_split[3]
 			self._unique_instance_id = instance_id_split[4] .. "--" .. instance_id_split[5]
+		else
+			Log.exception("ConnectionClient", "Broken JWT Ticket, instance id: '%s'", jwt_payload.instanceId ~= nil or "nil")
 		end
 
 		local instance_id = jwt_payload.instanceId
