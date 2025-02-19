@@ -445,4 +445,12 @@ NarrativeManager.set_havoc_unlock_status = function (self, value)
 	self._havoc_unlock_status = value
 end
 
+NarrativeManager.get_havoc_cadence_status = function (self)
+	return self._havoc_cadence_status
+end
+
+NarrativeManager.set_havoc_cadence_status = function (self, cadence_status)
+	self._havoc_cadence_status = cadence_status
+end
+
 return NarrativeManager

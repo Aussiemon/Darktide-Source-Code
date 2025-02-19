@@ -33,12 +33,7 @@ Havoc.latest = function (self, optional_account_id)
 					parsed_data.rank_week = havoc_stats.rank and havoc_stats.rank.week
 				end
 
-				local rewards = data.body.rewards
-
-				if rewards then
-					parsed_data.amount = rewards.amount
-					parsed_data.type = rewards.type
-				end
+				parsed_data.rewards = data.body.rewards
 
 				return parsed_data
 			else
@@ -83,6 +78,47 @@ Havoc.summary = function (self, optional_account_id)
 						blueprint = local_blueprint,
 					}
 				end
+
+				local cadence_status = {
+					active = true,
+					current_cadence = {
+						next_cadence_start_date = 9999999999,
+					},
+				}
+
+				if data.body.cadenceStatus ~= nil then
+					if not table.is_empty(data.body.cadenceStatus) then
+						if data.body.cadenceStatus.active ~= nil then
+							cadence_status.active = data.body.cadenceStatus.active
+						else
+							Log.warning("HavocBackend", "Havoc:summary() cadenceStatus.active is nil")
+
+							cadence_status.active = false
+						end
+
+						if data.body.cadenceStatus.currentCadence ~= nil then
+							if data.body.cadenceStatus.currentCadence.startDate ~= nil then
+								cadence_status.current_cadence.start_date = tonumber(data.body.cadenceStatus.currentCadence.startDate)
+							end
+
+							if data.body.cadenceStatus.currentCadence.endDate ~= nil then
+								cadence_status.current_cadence.end_date = tonumber(data.body.cadenceStatus.currentCadence.endDate)
+							end
+
+							if data.body.cadenceStatus.currentCadence.nextCadenceStartDate ~= nil then
+								cadence_status.current_cadence.next_cadence_start_date = tonumber(data.body.cadenceStatus.currentCadence.nextCadenceStartDate)
+							end
+						end
+					else
+						Log.warning("HavocBackend", "Havoc:summary() cadenceStatus is not nil but is empty")
+
+						cadence_status.active = false
+					end
+				else
+					Log.warning("HavocBackend", "Havoc:summary() table cadenceStatus is nil")
+				end
+
+				parsed_data.cadence_status = cadence_status
 
 				return parsed_data
 			else

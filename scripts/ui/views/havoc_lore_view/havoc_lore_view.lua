@@ -45,7 +45,7 @@ HavocLoreView.on_resolution_modified = function (self, scale)
 end
 
 HavocLoreView.on_back_pressed = function (self)
-	Managers.event:trigger("event_select_havoc_background_option", 1)
+	Managers.event:trigger("event_reset_havoc_background_view")
 
 	return true
 end

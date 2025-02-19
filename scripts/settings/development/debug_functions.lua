@@ -838,6 +838,14 @@ functions.start_havoc_session = {
 		map = "dm_forge",
 	},
 }
+functions.set_havoc_unlock_status = {
+	category = "Progression",
+	name = "Reset havoc_unlock_status",
+	on_activated = function ()
+		Managers.data_service.havoc:set_havoc_unlock_status("locked")
+		Managers.narrative:set_havoc_unlock_status("locked")
+	end,
+}
 functions.start_havoc_test_session_voting = {
 	category = "Level & Mission",
 	name = "Start Havoc Mission Vote",

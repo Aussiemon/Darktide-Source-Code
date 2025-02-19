@@ -4,6 +4,8 @@ local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local HavocService = class("HavocService")
 
+HavocService.HAVOC_UNLOCK_STATUS = table.index_lookup_table("locked", "awaiting_maelstrom_completion", "unlocked")
+
 HavocService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
 
@@ -48,24 +50,36 @@ end
 
 HavocService.get_havoc_unlock_status = function (self)
 	return Managers.backend.interfaces.account:get_havoc_unlock_status():next(function (value)
-		return value
+		if value == nil then
+			return self.HAVOC_UNLOCK_STATUS[1]
+		end
+
+		return self.HAVOC_UNLOCK_STATUS[value + 1]
 	end):catch(function (err)
 		Log.error("HavocService", "Error getting havoc_unlock_status")
-
-		return Promise.rejected(err)
+		ferror(err)
 	end)
 end
 
 HavocService.set_havoc_unlock_status = function (self, value)
-	return Managers.backend.interfaces.account:set_havoc_unlock_status(value):catch(function (err)
-		Log.error("HavocService", "Error setting havoc_unlock_status")
+	local backend_value
 
-		return Promise.rejected(err)
+	for i = 1, #HavocService.HAVOC_UNLOCK_STATUS do
+		if value == HavocService.HAVOC_UNLOCK_STATUS[i] then
+			backend_value = i - 1
+
+			break
+		end
+	end
+
+	return Managers.backend.interfaces.account:set_havoc_unlock_status(backend_value):catch(function (err)
+		Log.error("HavocService", "Error setting havoc_unlock_status")
+		ferror(err)
 	end)
 end
 
 HavocService.summary = function (self)
-	return Managers.backend.interfaces.account:summary():next(function (data)
+	return Managers.backend.interfaces.havoc:summary():next(function (data)
 		return data
 	end):catch(function (err)
 		local error_string = tostring(err)

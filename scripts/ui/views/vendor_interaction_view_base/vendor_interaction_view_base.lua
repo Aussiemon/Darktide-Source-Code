@@ -282,7 +282,46 @@ VendorInteractionViewBase._handle_back_pressed = function (self)
 	end
 end
 
+VendorInteractionViewBase._present_options = function (self)
+	if self._on_option_enter_anim_id and self:_is_animation_active(self._on_option_enter_anim_id) then
+		self:_complete_animation(self._on_option_enter_anim_id)
+	end
+
+	self._on_option_enter_anim_id = nil
+
+	if not self._on_option_exit_anim_id then
+		local widgets_by_name = self._widgets_by_name
+		local widget_list = {
+			widgets_by_name.title_text,
+			widgets_by_name.description_text,
+			widgets_by_name.button_divider,
+			widgets_by_name.title_text,
+		}
+		local button_widgets = self._button_widgets
+
+		if button_widgets then
+			for i = 1, #button_widgets do
+				widget_list[#widget_list + 1] = button_widgets[i]
+			end
+		end
+
+		self._on_option_exit_anim_id = self:_start_animation("on_option_exit", widget_list, self)
+	end
+
+	self._presenting_options = true
+end
+
 VendorInteractionViewBase._setup_option_buttons = function (self, options)
+	if self._button_widgets then
+		for i = 1, #self._button_widgets do
+			local widget = self._button_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		table.clear(self._button_widgets)
+	end
+
 	local option_button_settings = self._option_button_settings
 	local scenegraph_id = "button_pivot"
 	local button_definition = UIWidget.create_definition(table.clone(option_button_settings.button_template), scenegraph_id)

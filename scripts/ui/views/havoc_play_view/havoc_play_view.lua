@@ -279,7 +279,7 @@ HavocPlayView._extract_havoc_flags_data = function (self)
 end
 
 HavocPlayView.cb_view_lore = function (self)
-	Managers.event:trigger("event_select_havoc_background_option", 2)
+	Managers.event:trigger("event_reset_havoc_background_view")
 end
 
 HavocPlayView._populate_week_data = function (self, data)

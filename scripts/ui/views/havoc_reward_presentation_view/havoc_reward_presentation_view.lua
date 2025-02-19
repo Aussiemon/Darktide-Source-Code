@@ -23,7 +23,7 @@ HavocRewardPresentationView.on_enter = function (self)
 	local rewards = self._parent._rewards
 
 	if not rewards then
-		Managers.event:trigger("event_select_havoc_background_option", 1)
+		Managers.event:trigger("event_reset_havoc_background_view")
 	elseif rewards.type == "week" then
 		self:_generate_reward_widgets(rewards)
 		self._parent:play_vo_events(HavocRewardPresentationViewSettings.vo_event_weekly_reward, "commissar_a", nil, 0.8)
@@ -134,7 +134,7 @@ end
 
 HavocRewardPresentationView.cb_on_continue_pressed = function (self)
 	self:_play_sound(UISoundEvents.default_click)
-	Managers.event:trigger("event_select_havoc_background_option", 1)
+	Managers.event:trigger("event_reset_havoc_background_view")
 end
 
 HavocRewardPresentationView.on_back_pressed = function (self)

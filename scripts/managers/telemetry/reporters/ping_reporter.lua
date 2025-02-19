@@ -8,6 +8,7 @@ PingReporter.init = function (self, params)
 	self._measures = {}
 	self._last_sample_time = 0
 	self._mission_name = params.mission_name
+	self._region = Managers.connection:region() or "unknown"
 end
 
 PingReporter.destroy = function (self)
@@ -59,7 +60,7 @@ PingReporter.report = function (self)
 	local p50 = table.percentile(self._measures, 50)
 	local p25 = table.percentile(self._measures, 25)
 	local observations = #self._measures
-	local region = Managers.connection:region() or "unknown"
+	local region = Managers.connection:region() or self._region
 	local map_name = self._mission_name
 
 	Managers.telemetry_events:performance_ping(avg, std_dev, p99_9, p99, p95, p90, p75, p50, p25, observations, region, map_name)

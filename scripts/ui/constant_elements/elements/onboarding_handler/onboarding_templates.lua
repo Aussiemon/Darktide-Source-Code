@@ -133,6 +133,12 @@ local function _complete_current_story_chapter(story_name)
 	Managers.narrative:complete_current_chapter(story_name)
 end
 
+local function _is_havoc_cadence_active()
+	local cadence_status = Managers.narrative:get_havoc_cadence_status()
+
+	return cadence_status.active
+end
+
 local templates = {
 	{
 		name = "Training Ground Objective - Morrow",
@@ -892,7 +898,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_1")
+			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_1") and _is_havoc_cadence_active()
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -903,7 +909,7 @@ local templates = {
 
 			local narrative_manager = Managers.narrative
 
-			if narrative_manager:get_havoc_unlock_status() == 2 then
+			if narrative_manager:get_havoc_unlock_status() == "unlocked" then
 				narrative_manager:skip_story("unlock_havoc")
 
 				return
@@ -948,7 +954,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_2")
+			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_2") and _is_havoc_cadence_active()
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -959,7 +965,7 @@ local templates = {
 
 			local narrative_manager = Managers.narrative
 
-			if narrative_manager:get_havoc_unlock_status() == 2 then
+			if narrative_manager:get_havoc_unlock_status() == "unlocked" then
 				narrative_manager:skip_story("unlock_havoc")
 
 				return
@@ -974,8 +980,8 @@ local templates = {
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
-			Managers.data_service.havoc:set_havoc_unlock_status(1)
-			narrative_manager:set_havoc_unlock_status(1)
+			Managers.data_service.havoc:set_havoc_unlock_status("awaiting_maelstrom_completion")
+			narrative_manager:set_havoc_unlock_status("awaiting_maelstrom_completion")
 		end,
 		on_deactivation = function (self, close_condition_met)
 			if not self.objective then
@@ -1006,7 +1012,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_3")
+			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_3") and _is_havoc_cadence_active()
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -1017,7 +1023,7 @@ local templates = {
 
 			local narrative_manager = Managers.narrative
 
-			if narrative_manager:get_havoc_unlock_status() == 2 then
+			if narrative_manager:get_havoc_unlock_status() == "unlocked" then
 				narrative_manager:skip_story("unlock_havoc")
 
 				return
@@ -1049,8 +1055,8 @@ local templates = {
 
 			if close_condition_met then
 				Managers.narrative:complete_current_chapter("unlock_havoc", "unlock_havoc_3")
-				Managers.data_service.havoc:set_havoc_unlock_status(2)
-				Managers.narrative:set_havoc_unlock_status(2)
+				Managers.data_service.havoc:set_havoc_unlock_status("unlocked")
+				Managers.narrative:set_havoc_unlock_status("unlocked")
 			end
 		end,
 		close_condition = function (self)

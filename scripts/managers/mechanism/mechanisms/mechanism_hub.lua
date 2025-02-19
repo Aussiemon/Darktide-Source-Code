@@ -47,28 +47,13 @@ local function _fetch_client_data()
 
 	local player = Managers.player:local_player(1)
 	local character_id = player:character_id()
-	local havoc_latest_promise, havoc_unlock_status_promise
-
-	if Managers.data_service.havoc then
-		havoc_latest_promise = Managers.data_service.havoc:latest()
-		havoc_unlock_status_promise = Managers.data_service.havoc:get_havoc_unlock_status()
-	end
-
 	local contracts_promise
 
 	if math.is_uuid(character_id) then
 		local contract_service = Managers.data_service.contracts
 		local contract_exists_promise = contract_service:has_contract(character_id)
 
-		contracts_promise = Promise.all(contract_exists_promise, narrative_promise, havoc_latest_promise, havoc_unlock_status_promise):next(function (results)
-			local havoc_latest_data = results[3]
-
-			Managers.narrative:set_ever_received_havoc_order(havoc_latest_data)
-
-			local havoc_unlock_status_data = results[4]
-
-			Managers.narrative:set_havoc_unlock_status(havoc_unlock_status_data)
-
+		contracts_promise = Promise.all(contract_exists_promise, narrative_promise):next(function (results)
 			local contract_exist = results[1]
 			local should_create_contract = Managers.narrative:is_event_complete("level_unlock_contract_store_visited")
 
@@ -95,12 +80,31 @@ local function _fetch_client_data()
 		end)
 	end
 
+	local havoc_latest_promise, havoc_unlock_status_promise, havoc_cadence_status_promise
+
+	if Managers.data_service.havoc and Managers.narrative then
+		havoc_latest_promise = Managers.data_service.havoc:latest():next(function (results)
+			Managers.narrative:set_ever_received_havoc_order(results)
+		end)
+		havoc_unlock_status_promise = Managers.data_service.havoc:get_havoc_unlock_status():next(function (results)
+			Managers.narrative:set_havoc_unlock_status(results)
+		end)
+		havoc_cadence_status_promise = Managers.data_service.havoc:summary():next(function (results)
+			local cadence_status = results.cadence_status
+
+			Managers.narrative:set_havoc_cadence_status(cadence_status)
+		end)
+	end
+
 	local promises = {}
 
 	promises[#promises + 1] = narrative_promise
 	promises[#promises + 1] = contracts_promise
 	promises[#promises + 1] = Managers.data_service.havoc:refresh_havoc_status()
 	promises[#promises + 1] = Managers.data_service.havoc:refresh_havoc_rank()
+	promises[#promises + 1] = havoc_latest_promise
+	promises[#promises + 1] = havoc_unlock_status_promise
+	promises[#promises + 1] = havoc_cadence_status_promise
 
 	Managers.data_service.store:invalidate_wallets_cache()
 

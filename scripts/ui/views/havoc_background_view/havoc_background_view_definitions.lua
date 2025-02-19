@@ -138,6 +138,14 @@ local widget_definitions = {
 }
 local input_legend_params = {}
 local intro_texts = {
+	off_cadence = {
+		description_text = "loc_havoc_off_season_description",
+		title_text = "loc_havoc_off_season_title",
+	},
+	rewarding = {
+		unlocalized_description_text = "",
+		unlocalized_title_text = "",
+	},
 	no_key = {
 		description_text = "loc_havoc_pre_description",
 		title_text = "loc_havoc_pre_title",
@@ -148,6 +156,44 @@ local intro_texts = {
 	},
 }
 local button_options_definitions = {
+	off_cadence = {
+		{
+			blur_background = false,
+			display_name = "loc_havoc_off_season_button_leave",
+			callback = function (self)
+				Managers.ui:close_view(self.view_name)
+			end,
+		},
+	},
+	rewarding = {
+		{
+			unlocalized_name = "",
+			callback = function (self)
+				local tab_bar_params = {
+					hide_tabs = true,
+					layer = 10,
+					tabs_params = {
+						{
+							blur_background = false,
+							display_name = "",
+							view = "havoc_reward_presentation_view",
+							context = {},
+							input_legend_buttons = {
+								{
+									alignment = "right_alignment",
+									display_name = "loc_continue",
+									input_action = "next",
+									on_pressed_callback = "cb_on_continue_pressed",
+								},
+							},
+						},
+					},
+				}
+
+				self:_setup_tab_bar(tab_bar_params, {})
+			end,
+		},
+	},
 	no_key = {
 		{
 			blur_background = false,
@@ -223,33 +269,6 @@ local button_options_definitions = {
 							display_name = "",
 							view = "havoc_lore_view",
 							context = {},
-						},
-					},
-				}
-
-				self:_setup_tab_bar(tab_bar_params, {})
-			end,
-		},
-		{
-			unlocalized_name = "",
-			callback = function (self)
-				local tab_bar_params = {
-					hide_tabs = true,
-					layer = 10,
-					tabs_params = {
-						{
-							blur_background = false,
-							display_name = "",
-							view = "havoc_reward_presentation_view",
-							context = {},
-							input_legend_buttons = {
-								{
-									alignment = "right_alignment",
-									display_name = "loc_continue",
-									input_action = "next",
-									on_pressed_callback = "cb_on_continue_pressed",
-								},
-							},
 						},
 					},
 				}

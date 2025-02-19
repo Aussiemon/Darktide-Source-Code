@@ -4,6 +4,7 @@ local Definitions = require("scripts/ui/views/havoc_background_view/havoc_backgr
 local HavocRewardPresentationViewSettings = require("scripts/ui/views/havoc_reward_presentation_view/havoc_reward_presentation_view_settings")
 local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 local Promise = require("scripts/foundation/utilities/promise")
+local Text = require("scripts/utilities/ui/text")
 local HavocBackgroundView = class("HavocBackgroundView", "VendorInteractionViewBase")
 
 HavocBackgroundView.init = function (self, settings, context)
@@ -55,17 +56,13 @@ HavocBackgroundView.auto_cancel_mission = function (self)
 			self._rewards = nil
 		end
 
-		if self._current_state == "key" then
-			local starting_option_index = self._rewards and 3 or self._base_definitions.starting_option_index
-
-			if starting_option_index then
-				local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
-				local option = button_options_definitions[starting_option_index]
-
-				if option then
-					self:on_option_button_pressed(starting_option_index, option)
-				end
-			end
+		if self._rewards then
+			self:_setup_rewarding_ui()
+		elseif self._current_state == "key" then
+			self:_setup_key_ui()
+		else
+			Log.error("HavocBackgroundView", "HavocBackgroundView:auto_cancel_mission() called when HavocBackgroundView:_current_state is not \"key\"")
+			ferror("HavocBackgroundView:auto_cancel_mission() called when HavocBackgroundView:_current_state is not \"key\"")
 		end
 	end)
 
@@ -100,17 +97,13 @@ HavocBackgroundView.revoke_mission = function (self)
 				self._rewards = nil
 			end
 
-			if self._current_state == "key" then
-				local starting_option_index = self._rewards and 3 or self._base_definitions.starting_option_index
-
-				if starting_option_index then
-					local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
-					local option = button_options_definitions[starting_option_index]
-
-					if option then
-						self:on_option_button_pressed(starting_option_index, option)
-					end
-				end
+			if self._rewards then
+				self:_setup_rewarding_ui()
+			elseif self._current_state == "key" then
+				self:_setup_key_ui()
+			else
+				Log.error("HavocBackgroundView", "HavocBackgroundView:revoke_mission() called when HavocBackgroundView:_current_state is not \"key\"")
+				ferror("HavocBackgroundView:revoke_mission() called when HavocBackgroundView:_current_state is not \"key\"")
 			end
 		end)
 
@@ -155,95 +148,106 @@ HavocBackgroundView.event_havoc_background_on_end_time_met = function (self)
 
 	local on_complete_callback = callback(function ()
 		if self._current_state == "key" then
-			local starting_option_index = self._rewards and 3 or self._base_definitions.starting_option_index
-
-			if starting_option_index then
-				local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
-				local option = button_options_definitions[starting_option_index]
-
-				if option then
-					self:_close_active_view()
-					self:on_option_button_pressed(starting_option_index, option)
-				end
-			end
+			self:_close_active_view()
+			self:_setup_key_ui()
 		end
 	end)
 
 	self:_initialize_havoc_state(on_complete_callback)
 end
 
+HavocBackgroundView._setup_core_ui = function (self, state)
+	self:_setup_tab_bar({
+		tabs_params = {},
+	})
+
+	local button_options_definitions = self._base_definitions.button_options_definitions[state]
+
+	self:_setup_option_buttons(button_options_definitions)
+
+	self._presenting_options = true
+	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
+
+	local intro_texts = self._base_definitions.intro_texts[state]
+
+	self:_set_intro_texts(intro_texts)
+end
+
+HavocBackgroundView._setup_off_cadence_ui = function (self)
+	self:_setup_core_ui(self._current_state)
+	self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_greeting, "commissar_a", nil, 0.8)
+end
+
+HavocBackgroundView._setup_no_key_ui = function (self)
+	self:_setup_core_ui(self._current_state)
+
+	local narrative_manager = Managers.narrative
+	local narrative_story = "unlock_havoc"
+	local not_visited_chapter_name = "unlock_havoc_1"
+	local current_chapter = narrative_manager:current_chapter(narrative_story)
+	local current_chapter_name = current_chapter and current_chapter.name
+
+	if current_chapter_name == not_visited_chapter_name then
+		self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_first_interaction, "commissar_a", nil, 0.8)
+	else
+		self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_greeting, "commissar_a", nil, 0.8)
+	end
+end
+
+HavocBackgroundView._setup_key_ui = function (self)
+	self:_setup_core_ui(self._current_state)
+
+	self._hide_option_buttons = self._base_definitions.hide_option_buttons
+
+	local starting_option_index = self._base_definitions.starting_option_index
+
+	if starting_option_index then
+		local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
+		local option = button_options_definitions[starting_option_index]
+
+		if option then
+			self:on_option_button_pressed(starting_option_index, option)
+		end
+	end
+
+	if self._hide_option_buttons then
+		local widgets_by_name = self._widgets_by_name
+
+		widgets_by_name.title_text.visible = false
+		widgets_by_name.description_text.visible = false
+		widgets_by_name.button_divider.visible = false
+	end
+
+	self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_greeting, "commissar_a", nil, 0.8)
+end
+
+HavocBackgroundView._setup_rewarding_ui = function (self)
+	local button_options_definitions = self._base_definitions.button_options_definitions.rewarding
+	local starting_option_index = self._base_definitions.starting_option_index
+
+	if starting_option_index then
+		local option = button_options_definitions[starting_option_index]
+
+		if option then
+			self:on_option_button_pressed(starting_option_index, option)
+		end
+	end
+end
+
 HavocBackgroundView.on_enter = function (self)
 	VendorInteractionViewBase.super.on_enter(self)
 
-	if self._current_state == "no_key" then
-		self:_setup_tab_bar({
-			tabs_params = {},
-		})
-
-		local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
-
-		self:_setup_option_buttons(button_options_definitions)
-
-		self._presenting_options = true
-		self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
-
-		local intro_texts = self._base_definitions.intro_texts[self._current_state]
-
-		self:_set_intro_texts(intro_texts)
-
-		local narrative_manager = Managers.narrative
-		local narrative_story = "unlock_havoc"
-		local not_visited_chapter_name = "unlock_havoc_1"
-		local current_chapter = narrative_manager:current_chapter(narrative_story)
-		local current_chapter_name = current_chapter and current_chapter.name
-
-		if current_chapter_name == not_visited_chapter_name then
-			self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_first_interaction, "commissar_a", nil, 0.8)
-		else
-			self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_greeting, "commissar_a", nil, 0.8)
-		end
+	if self._rewards then
+		self:_setup_rewarding_ui()
+	elseif self._current_state == "off_cadence" then
+		self:_setup_off_cadence_ui()
+	elseif self._current_state == "no_key" then
+		self:_setup_no_key_ui()
 	elseif self._current_state == "key" then
-		self:_setup_tab_bar({
-			tabs_params = {},
-		})
-
-		local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
-
-		self:_setup_option_buttons(button_options_definitions)
-
-		self._presenting_options = true
-		self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
-
-		local intro_texts = self._base_definitions.intro_texts
-
-		self:_set_intro_texts(intro_texts)
-
-		self._hide_option_buttons = self._base_definitions.hide_option_buttons
-
-		local starting_option_index = self._rewards and 3 or self._base_definitions.starting_option_index
-
-		if starting_option_index then
-			local option = button_options_definitions[starting_option_index]
-
-			if option then
-				self:on_option_button_pressed(starting_option_index, option)
-			end
-		end
-
-		if self._hide_option_buttons then
-			local widgets_by_name = self._widgets_by_name
-
-			widgets_by_name.title_text.visible = false
-			widgets_by_name.description_text.visible = false
-			widgets_by_name.button_divider.visible = false
-		end
-
-		if not self._rewards then
-			self:play_vo_events(HavocRewardPresentationViewSettings.vo_event_vendor_greeting, "commissar_a", nil, 0.8)
-		end
-
-		self:_register_event("event_select_havoc_background_option")
+		self:_setup_key_ui()
 	end
+
+	self:_register_event("event_reset_havoc_background_view")
 end
 
 HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callback)
@@ -349,11 +353,13 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 			next_promise = Managers.data_service.havoc:available_orders()
 		end
 
-		return next_promise:next(function (order_data)
+		return Promise.all(next_promise, Managers.data_service.havoc:summary()):next(function (data)
 			if self._destroyed then
 				return
 			end
 
+			local order_data = data[1]
+			local cadence_status = data[2].cadence_status
 			local order_index = 1
 			local max_rank = 0
 
@@ -369,7 +375,13 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 			end
 
 			self.havoc_order = order_data and order_data[order_index]
-			self._current_state = self.havoc_order and "key" or "no_key"
+
+			if cadence_status.active == true then
+				self._current_state = self.havoc_order and "key" or "no_key"
+			else
+				self._current_state = "off_cadence"
+				self._time_next_cadence = cadence_status.current_cadence.next_cadence_start_date
+			end
 
 			local server_time = Managers.backend:get_server_time(Managers.time:time("main")) / 1000
 
@@ -384,7 +396,6 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 					self._loading = nil
 
 					local valid_ongoing_havoc_data = {}
-					local current_ongoing_havoc_data = {}
 
 					if ongoing_havoc_data then
 						for i = 1, #ongoing_havoc_data do
@@ -441,20 +452,28 @@ HavocBackgroundView._on_view_load_complete = function (self, loaded)
 	self:_initialize_havoc_state(on_complete_callback)
 end
 
-HavocBackgroundView.event_select_havoc_background_option = function (self, index)
-	local button_options_definitions = self._base_definitions.button_options_definitions[self._current_state]
+HavocBackgroundView.event_reset_havoc_background_view = function (self)
+	self:_close_active_view()
 
-	if index then
-		local option = button_options_definitions[index]
+	self._rewards = nil
 
-		if option then
-			self:on_option_button_pressed(index, option)
-		end
+	local input_legend_params = self._definitions.input_legend_params
+
+	self:_setup_input_legend(input_legend_params or {})
+
+	if self._current_state == "off_cadence" then
+		self:_setup_off_cadence_ui()
+	elseif self._current_state == "no_key" then
+		self:_setup_no_key_ui()
+	elseif self._current_state == "key" then
+		self:_setup_key_ui()
 	end
+
+	self:_present_options()
 end
 
 HavocBackgroundView.on_exit = function (self)
-	Managers.event:unregister(self, "event_select_havoc_background_option")
+	Managers.event:unregister(self, "event_reset_havoc_background_view")
 	HavocBackgroundView.super.on_exit(self)
 end
 
@@ -485,7 +504,11 @@ HavocBackgroundView._set_intro_texts = function (self, intro_texts)
 	local unlocalized_description_text = intro_texts.unlocalized_description_text
 
 	if description_text then
-		widgets_by_name.description_text.content.text = Localize(description_text)
+		if self._current_state == "off_cadence" then
+			self:_set_off_cadence_description_text_with_timer(self._time_next_cadence)
+		else
+			widgets_by_name.description_text.content.text = Localize(description_text)
+		end
 	end
 
 	if unlocalized_description_text then
@@ -493,6 +516,25 @@ HavocBackgroundView._set_intro_texts = function (self, intro_texts)
 	end
 
 	self:_update_text_height()
+end
+
+HavocBackgroundView._set_off_cadence_description_text_with_timer = function (self, next_cadence_start_date)
+	local server_time = Managers.backend:get_server_time(Managers.time:time("main")) / 1000
+	local time_remaining = next_cadence_start_date - server_time
+	local timer_text = Text.format_time_span_long_form_localized(time_remaining) or nil
+	local loc_string = self._base_definitions.intro_texts.off_cadence.description_text
+
+	self._widgets_by_name.description_text.content.text = Localize(loc_string, true, {
+		time = timer_text,
+	})
+end
+
+HavocBackgroundView.update = function (self, dt, t, input_service)
+	HavocBackgroundView.super.update(self, dt, t, input_service)
+
+	if self._current_state == "off_cadence" then
+		self:_set_off_cadence_description_text_with_timer(self._time_next_cadence)
+	end
 end
 
 return HavocBackgroundView

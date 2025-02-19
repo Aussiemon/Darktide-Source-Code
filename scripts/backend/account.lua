@@ -50,13 +50,25 @@ Account.get_has_migrated_commendation_score = function (self)
 end
 
 Account.set_havoc_unlock_status = function (self, value)
+	if type(value) ~= "number" and not type(value == "nil") then
+		return Promise.rejected("Backend was asked to set invalid type '" .. type(value) .. "', expected 'number' or 'nil'")
+	end
+
 	return self:set_data("core", {
 		havoc_unlock_status = value,
 	})
 end
 
 Account.get_havoc_unlock_status = function (self)
-	return self:get_data("core", "havoc_unlock_status")
+	local data = self:get_data("core", "havoc_unlock_status"):next(function (value)
+		if type(value) ~= "number" and type(value) ~= "nil" then
+			Promise.rejected("Backend returned invalid type '" .. type(value) .. "', expected 'number' or 'nil'")
+		end
+
+		return value
+	end)
+
+	return data
 end
 
 Account.get = function (self)
