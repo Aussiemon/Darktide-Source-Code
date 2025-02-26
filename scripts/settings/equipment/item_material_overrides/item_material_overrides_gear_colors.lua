@@ -469,7 +469,7 @@ local material_overrides = {
 			},
 		},
 	},
-	color_1_colour_green_01 = {
+	color_1_colour_green_02 = {
 		texture_overrides = {
 			color_gradient = {
 				resource = "content/textures/colors/1_colour_green_03",

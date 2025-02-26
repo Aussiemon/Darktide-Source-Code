@@ -208,7 +208,7 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 
 		local button_input_actions = self._button_input_actions
 
-		if num_buttons > 0 then
+		if num_buttons > 0 and focused_index then
 			local next_index
 
 			if input_service:get(button_input_actions[1]) and focused_index < num_buttons then
