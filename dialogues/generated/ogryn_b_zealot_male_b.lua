@@ -117,10 +117,6 @@ local ogryn_b_zealot_male_b = {
 			[1] = 4.614333,
 			[2] = 3.523521,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_killing_stopped_b = {

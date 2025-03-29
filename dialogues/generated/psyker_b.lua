@@ -52,7 +52,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"veteran_female_b",
@@ -131,7 +130,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"veteran_female_b",
@@ -338,7 +336,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"zealot_female_a",
@@ -415,7 +412,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"zealot_female_a",
@@ -1781,7 +1777,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"zealot_female_a",
 					"zealot_male_a",
 					"zealot_female_b",
@@ -1860,7 +1855,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"zealot_female_a",
 					"zealot_male_a",
 					"zealot_female_b",
@@ -2212,7 +2206,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"ogryn_a",
 					"veteran_female_b",
 					"veteran_male_b",
@@ -2290,7 +2283,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"ogryn_a",
 					"veteran_female_b",
 					"veteran_male_b",
@@ -2357,7 +2349,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"veteran_female_b",
 					"veteran_male_b",
 					"veteran_female_c",
@@ -2436,7 +2427,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"veteran_female_b",
 					"veteran_male_b",
 					"veteran_female_c",
@@ -2645,7 +2635,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"zealot_female_a",
@@ -2722,7 +2711,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"zealot_female_a",
@@ -2934,7 +2922,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3085,7 +3072,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3236,7 +3222,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3384,7 +3369,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3535,7 +3519,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3632,6 +3615,93 @@ return function ()
 	define_rule({
 		category = "conversations_prio_1",
 		database = "psyker_b",
+		name = "combat_pause_quirk_heights_a",
+		response = "combat_pause_quirk_heights_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at",
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"",
+			},
+			{
+				"query_context",
+				"distance",
+				OP.GT,
+				1,
+			},
+			{
+				"query_context",
+				"distance",
+				OP.LT,
+				25,
+			},
+			{
+				"faction_memory",
+				"",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "psyker_b",
+		name = "combat_pause_quirk_heights_b",
+		response = "combat_pause_quirk_heights_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"combat_pause_quirk_heights_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "psyker_b",
 		name = "combat_pause_quirk_lonely_a",
 		response = "combat_pause_quirk_lonely_a",
 		wwise_route = 0,
@@ -3683,7 +3753,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3834,7 +3903,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -4003,7 +4071,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_female_b",
 					"veteran_female_c",
@@ -4298,7 +4365,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_female_b",
 					"veteran_female_c",
@@ -4552,7 +4618,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_female_b",
 					"veteran_female_c",

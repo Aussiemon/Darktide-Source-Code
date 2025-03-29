@@ -91,10 +91,6 @@ local veteran_a_zealot_male_b = {
 			[1] = 2.081156,
 			[2] = 1.561927,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_emperor_b = {
@@ -121,10 +117,6 @@ local veteran_a_zealot_male_b = {
 			[1] = 6.703927,
 			[2] = 5.507083,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_rations_b = {
@@ -137,10 +129,6 @@ local veteran_a_zealot_male_b = {
 		sound_events_duration = {
 			[1] = 3.190854,
 			[2] = 3.158292,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

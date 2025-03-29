@@ -115,10 +115,6 @@ local ogryn_c_psyker_female_b = {
 			[1] = 5.436979,
 			[2] = 3.349333,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_glutton_b = {
@@ -132,9 +128,18 @@ local ogryn_c_psyker_female_b = {
 			[1] = 4.684938,
 			[2] = 5.64375,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
+		randomize_indexes = {},
+	},
+	combat_pause_quirk_hates_goo_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_b__combat_pause_quirk_hates_goo_b_01",
+			[2] = "loc_psyker_female_b__combat_pause_quirk_hates_goo_b_02",
+		},
+		sound_events_duration = {
+			[1] = 4.883979,
+			[2] = 4.749896,
 		},
 		randomize_indexes = {},
 	},

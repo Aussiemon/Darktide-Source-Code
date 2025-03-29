@@ -1855,7 +1855,6 @@ return function ()
 					"psyker_male_a",
 					"psyker_female_a",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_male_c",
 					"psyker_female_c",
 				},
@@ -5521,6 +5520,210 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "npc_prio_0",
+		database = "conversations_hub",
+		name = "hub_horde_greeting_agnostic_a",
+		response = "hub_horde_greeting_agnostic_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"",
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_",
+				OP.TIMESET,
+			},
+		},
+	})
+	define_rule({
+		category = "npc_prio_0",
+		database = "conversations_hub",
+		name = "hub_horde_greeting_first_a",
+		response = "hub_horde_greeting_first_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"",
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_",
+				OP.TIMESET,
+			},
+		},
+	})
+	define_rule({
+		category = "npc_prio_0",
+		database = "conversations_hub",
+		name = "hub_horde_greeting_first_b",
+		response = "hub_horde_greeting_first_b",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"",
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_",
+				OP.TIMESET,
+			},
+		},
+	})
+	define_rule({
+		category = "npc_prio_0",
+		database = "conversations_hub",
+		name = "hub_horde_greeting_first_c",
+		response = "hub_horde_greeting_first_c",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"",
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_",
+				OP.TIMESET,
 			},
 		},
 	})
@@ -10012,7 +10215,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -10094,7 +10296,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -10171,7 +10372,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -23636,7 +23836,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",

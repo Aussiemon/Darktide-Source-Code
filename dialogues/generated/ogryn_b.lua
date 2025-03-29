@@ -10588,7 +10588,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"zealot_female_b",
@@ -10667,7 +10666,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"zealot_female_b",
@@ -10876,7 +10874,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"zealot_female_a",
@@ -10953,7 +10950,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"zealot_female_a",
@@ -11596,7 +11592,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"veteran_female_b",
 					"veteran_male_b",
 					"veteran_female_c",
@@ -11675,7 +11670,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"veteran_female_b",
 					"veteran_male_b",
 					"veteran_female_c",
@@ -11879,7 +11873,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"zealot_female_b",
@@ -11958,7 +11951,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"zealot_female_b",
@@ -12169,7 +12161,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"veteran_female_b",
@@ -12248,7 +12239,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"veteran_female_b",
@@ -12458,7 +12448,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"zealot_female_a",
@@ -12535,7 +12524,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"zealot_female_a",
@@ -12743,7 +12731,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -12822,7 +12809,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -13033,7 +13019,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"zealot_female_a",
@@ -13110,7 +13095,6 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d",
 					"veteran_female_a",
 					"veteran_male_a",
 					"zealot_female_a",
@@ -13320,7 +13304,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -13467,7 +13450,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -13627,7 +13609,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -13777,7 +13758,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -13924,7 +13904,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -14074,7 +14053,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -14221,7 +14199,6 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
-					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",

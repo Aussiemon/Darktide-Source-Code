@@ -273,9 +273,6 @@ local psyker_c_psyker_female_c = {
 		sound_events_duration = {
 			[1] = 4.467802,
 		},
-		sound_event_weights = {
-			[1] = 1,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_messelina_a = {
@@ -297,15 +294,14 @@ local psyker_c_psyker_female_c = {
 	},
 	combat_pause_quirk_messelina_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 1,
+		sound_events_n = 2,
 		sound_events = {
-			[1] = "loc_psyker_female_c__combat_pause_quirk_messelina_b_02",
+			[1] = "loc_psyker_female_c__combat_pause_quirk_messelina_b_01",
+			[2] = "loc_psyker_female_c__combat_pause_quirk_messelina_b_02",
 		},
 		sound_events_duration = {
-			[1] = 6.041552,
-		},
-		sound_event_weights = {
-			[1] = 1,
+			[1] = 4.151396,
+			[2] = 6.041552,
 		},
 		randomize_indexes = {},
 	},

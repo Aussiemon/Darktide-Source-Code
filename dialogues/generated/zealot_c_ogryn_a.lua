@@ -62,10 +62,6 @@ local zealot_c_ogryn_a = {
 			[1] = 3.187177,
 			[2] = 3.923146,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_pilgrimage_b = {

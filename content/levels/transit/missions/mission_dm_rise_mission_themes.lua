@@ -4,6 +4,9 @@ local mission_themes = {
 	darkness = {
 		"content/levels/transit/missions/dm_rise_themes/darkness_01/theme_darkness_01_dm_rise",
 	},
+	ember = {
+		"content/levels/transit/missions/dm_rise_themes/ember_01/theme_ember_01_dm_rise",
+	},
 	ventilation_purge = {
 		"content/levels/transit/missions/dm_rise_themes/ventilation_purge_01/theme_ventilation_purge_01_dm_rise",
 	},

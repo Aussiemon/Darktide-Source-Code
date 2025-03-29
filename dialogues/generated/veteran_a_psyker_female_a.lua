@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/veteran_a_psyker_female_a.lua
 
 local veteran_a_psyker_female_a = {
+	combat_pause_limited_bolt_on_a_veteran_a_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__combat_pause_limited_bolt_on_a_veteran_a_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.45678,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_a_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -80,10 +91,6 @@ local veteran_a_psyker_female_a = {
 			[1] = 3.017979,
 			[2] = 1.951854,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_emperor_b = {
@@ -110,10 +117,6 @@ local veteran_a_psyker_female_a = {
 			[1] = 3.238021,
 			[2] = 3.481,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_rations_b = {
@@ -126,10 +129,6 @@ local veteran_a_psyker_female_a = {
 		sound_events_duration = {
 			[1] = 2.795979,
 			[2] = 5.989,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

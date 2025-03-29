@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/veteran_a_zealot_male_a.lua
 
 local veteran_a_zealot_male_a = {
+	combat_pause_limited_bolt_on_a_veteran_a_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_a__combat_pause_limited_bolt_on_a_veteran_a_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.698604,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_a_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_a__combat_pause_limited_bolt_on_a_veteran_a_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.31225,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_a_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -91,10 +113,6 @@ local veteran_a_zealot_male_a = {
 			[1] = 2.396,
 			[2] = 3.210844,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_emperor_b = {
@@ -121,10 +139,6 @@ local veteran_a_zealot_male_a = {
 			[1] = 5.03449,
 			[2] = 5.649156,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_rations_b = {
@@ -137,10 +151,6 @@ local veteran_a_zealot_male_a = {
 		sound_events_duration = {
 			[1] = 3.108958,
 			[2] = 3.511979,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

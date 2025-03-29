@@ -1,6 +1,58 @@
 ﻿-- chunkname: @dialogues/generated/conversations_hub_training_ground_psyker_a.lua
 
 local conversations_hub_training_ground_psyker_a = {
+	hub_horde_greeting_agnostic_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_01",
+			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_02",
+			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_03",
+			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_04",
+			"loc_training_ground_psyker_a__hub_horde_greeting_agnostic_a_05",
+		},
+		sound_events_duration = {
+			6.860875,
+			6.613146,
+			5.693542,
+			5.277854,
+			6.993104,
+		},
+		randomize_indexes = {},
+	},
+	hub_horde_greeting_first_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.224104,
+		},
+		randomize_indexes = {},
+	},
+	hub_horde_greeting_first_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.524563,
+		},
+		randomize_indexes = {},
+	},
+	hub_horde_greeting_first_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_training_ground_psyker_a__hub_horde_greeting_first_c_01",
+		},
+		sound_events_duration = {
+			[1] = 10.40365,
+		},
+		randomize_indexes = {},
+	},
 	hub_idle = {
 		randomize_indexes_n = 0,
 		sound_events_n = 19,

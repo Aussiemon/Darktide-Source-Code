@@ -374,23 +374,6 @@ local mission_briefing_explicator_a = {
 		},
 		randomize_indexes = {},
 	},
-	mission_enforcer_end_event_conversation_one_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_explicator_a__mission_enforcer_end_event_conversation_one_b_01",
-			"loc_explicator_a__mission_enforcer_end_event_conversation_one_b_02",
-			"loc_explicator_a__mission_enforcer_end_event_conversation_one_b_03",
-			"loc_explicator_a__mission_enforcer_end_event_conversation_one_b_04",
-		},
-		sound_events_duration = {
-			5.506688,
-			5.433854,
-			4.995979,
-			4.440708,
-		},
-		randomize_indexes = {},
-	},
 	mission_forge_briefing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

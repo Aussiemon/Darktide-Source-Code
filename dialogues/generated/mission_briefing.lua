@@ -5,6 +5,128 @@ return function ()
 		category = "vox_prio_0",
 		concurrent_wwise_event = "play_vox_static_loop",
 		database = "mission_briefing",
+		name = "hub_horde_briefing_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "hub_horde_briefing_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_brief",
+			},
+			{
+				"query_context",
+				"starter_line",
+				OP.EQ,
+				"hub_horde_briefing_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_briefing",
+		name = "hub_horde_briefing_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "hub_horde_briefing_b",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_horde_briefing_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_briefing",
+		name = "hub_horde_briefing_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "hub_horde_briefing_c",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_horde_briefing_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_briefing",
 		name = "mission_archives_brief_a",
 		post_wwise_event = "play_radio_static_end",
 		pre_wwise_event = "play_radio_static_start",
@@ -1011,49 +1133,6 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "disabled",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "vox_prio_0",
-		concurrent_wwise_event = "play_vox_static_loop",
-		database = "mission_briefing",
-		name = "mission_enforcer_end_event_conversation_one_b",
-		post_wwise_event = "play_radio_static_end",
-		pre_wwise_event = "play_radio_static_start",
-		response = "mission_enforcer_end_event_conversation_one_b",
-		wwise_route = 1,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"mission_enforcer_end_event_conversation_one_a",
-				},
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"explicator",
-				},
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

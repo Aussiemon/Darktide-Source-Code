@@ -91,10 +91,6 @@ local psyker_a_veteran_female_a = {
 			[1] = 2.786313,
 			[2] = 3.604104,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_dislikes_grenades_b = {

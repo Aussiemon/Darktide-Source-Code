@@ -102,12 +102,14 @@ local ogryn_a_zealot_male_c = {
 	},
 	combat_pause_limited_ogryn_a_19_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 1,
+		sound_events_n = 2,
 		sound_events = {
-			[1] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_19_b_01",
+			[1] = "loc_zealot_male_c__combat_pause_limited_ogryn_a_19_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_19_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.774292,
+			[1] = 3.45678,
+			[2] = 1.774292,
 		},
 		randomize_indexes = {},
 	},

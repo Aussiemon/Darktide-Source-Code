@@ -117,10 +117,6 @@ local ogryn_b_veteran_female_a = {
 			[1] = 3.896958,
 			[2] = 5.759208,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_killing_stopped_b = {

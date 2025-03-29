@@ -21,6 +21,29 @@ local circumstance_vo_hunting_grounds_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	hunting_circumstance_start_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__hunting_circumstance_start_b_01",
+			"loc_sergeant_a__hunting_circumstance_start_b_02",
+			"loc_sergeant_a__hunting_circumstance_start_b_03",
+			"loc_sergeant_a__hunting_circumstance_start_b_04",
+		},
+		sound_events_duration = {
+			2.998917,
+			3.258625,
+			3.677104,
+			3.727313,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("circumstance_vo_hunting_grounds_sergeant_a", circumstance_vo_hunting_grounds_sergeant_a)

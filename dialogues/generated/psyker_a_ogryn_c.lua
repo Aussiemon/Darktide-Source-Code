@@ -64,10 +64,6 @@ local psyker_a_ogryn_c = {
 			[1] = 3.156781,
 			[2] = 2.169583,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_dislikes_grenades_b = {

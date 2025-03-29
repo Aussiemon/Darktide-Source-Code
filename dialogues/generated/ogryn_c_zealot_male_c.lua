@@ -93,10 +93,6 @@ local ogryn_c_zealot_male_c = {
 			[1] = 2.530146,
 			[2] = 4.426719,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_glutton_b = {
@@ -110,9 +106,18 @@ local ogryn_c_zealot_male_c = {
 			[1] = 4.886938,
 			[2] = 3.800094,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
+		randomize_indexes = {},
+	},
+	combat_pause_quirk_hates_goo_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_male_c__combat_pause_quirk_hates_goo_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_quirk_hates_goo_b_02",
+		},
+		sound_events_duration = {
+			[1] = 3.643563,
+			[2] = 1.184646,
 		},
 		randomize_indexes = {},
 	},

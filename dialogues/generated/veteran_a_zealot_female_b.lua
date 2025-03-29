@@ -91,10 +91,6 @@ local veteran_a_zealot_female_b = {
 			[1] = 2.199938,
 			[2] = 1.619063,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_emperor_b = {
@@ -121,10 +117,6 @@ local veteran_a_zealot_female_b = {
 			[1] = 4.838021,
 			[2] = 3.659229,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_rations_b = {
@@ -137,10 +129,6 @@ local veteran_a_zealot_female_b = {
 		sound_events_duration = {
 			[1] = 3.791354,
 			[2] = 3.589021,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

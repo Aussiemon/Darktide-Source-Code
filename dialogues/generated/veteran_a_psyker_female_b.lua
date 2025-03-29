@@ -94,10 +94,6 @@ local veteran_a_psyker_female_b = {
 			[1] = 1.2375,
 			[2] = 1.782875,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_emperor_b = {
@@ -124,10 +120,6 @@ local veteran_a_psyker_female_b = {
 			[1] = 4.950875,
 			[2] = 4.435938,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_rations_b = {
@@ -140,10 +132,6 @@ local veteran_a_psyker_female_b = {
 		sound_events_duration = {
 			[1] = 3.087063,
 			[2] = 2.404792,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

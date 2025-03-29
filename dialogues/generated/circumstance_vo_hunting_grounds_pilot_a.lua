@@ -24,6 +24,29 @@ local circumstance_vo_hunting_grounds_pilot_a = {
 		},
 		randomize_indexes = {},
 	},
+	hunting_circumstance_start_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_pilot_a__hunting_circumstance_start_b_01",
+			"loc_pilot_a__hunting_circumstance_start_b_02",
+			"loc_pilot_a__hunting_circumstance_start_b_03",
+			"loc_pilot_a__hunting_circumstance_start_b_04",
+		},
+		sound_events_duration = {
+			2.412313,
+			4.947979,
+			4.221438,
+			4.513271,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("circumstance_vo_hunting_grounds_pilot_a", circumstance_vo_hunting_grounds_pilot_a)

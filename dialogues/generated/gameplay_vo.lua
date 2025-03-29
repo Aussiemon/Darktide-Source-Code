@@ -206,109 +206,6 @@ return function ()
 	define_rule({
 		category = "player_prio_1",
 		database = "gameplay_vo",
-		name = "ammo_hog_a",
-		response = "ammo_hog_a",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"ammo_hog",
-			},
-			{
-				"user_context",
-				"friends_close",
-				OP.GT,
-				0,
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-				},
-			},
-			{
-				"user_context",
-				"total_ammo_percentage",
-				OP.LTEQ,
-				0.5,
-			},
-			{
-				"faction_memory",
-				"last_ammo_hog",
-				OP.TIMEDIFF,
-				OP.GT,
-				600,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"last_ammo_hog",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1,
-			},
-		},
-	})
-	define_rule({
-		category = "conversations_prio_1",
-		database = "gameplay_vo",
-		name = "ammo_hog_b",
-		response = "ammo_hog_b",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"ammo_hog_a",
-				},
-			},
-			{
-				"user_memory",
-				"last_ammo_hogger",
-				OP.GT,
-				1,
-			},
-			{
-				"user_memory",
-				"last_ammo_hogger",
-				OP.TIMEDIFF,
-				OP.LT,
-				10,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "player_prio_1",
-		database = "gameplay_vo",
 		name = "away_from_squad",
 		response = "away_from_squad",
 		wwise_route = 0,
@@ -990,6 +887,218 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 2,
+			},
+		},
+	})
+	define_rule({
+		category = "player_prio_1",
+		database = "gameplay_vo",
+		name = "combat_pause_quirk_ammo_hog_a",
+		response = "combat_pause_quirk_ammo_hog_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"ammo_hog",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+				},
+			},
+			{
+				"user_context",
+				"total_ammo_percentage",
+				OP.LTEQ,
+				0.5,
+			},
+			{
+				"faction_memory",
+				"last_ammo_hog",
+				OP.TIMEDIFF,
+				OP.GT,
+				600,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"last_ammo_hog",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "combat_pause_quirk_ammo_hog_b",
+		response = "combat_pause_quirk_ammo_hog_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"combat_pause_quirk_ammo_hog_a",
+				},
+			},
+			{
+				"user_memory",
+				"last_ammo_hogger",
+				OP.GT,
+				1,
+			},
+			{
+				"user_memory",
+				"last_ammo_hogger",
+				OP.TIMEDIFF,
+				OP.LT,
+				10,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "player_prio_1",
+		database = "gameplay_vo",
+		name = "combat_pause_quirk_health_hog_a",
+		response = "combat_pause_quirk_health_hog_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"health_hog",
+			},
+			{
+				"user_context",
+				"health",
+				OP.LT,
+				0.5,
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+				},
+			},
+			{
+				"faction_memory",
+				"health_hog",
+				OP.TIMEDIFF,
+				OP.GT,
+				600,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"health_hog",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "combat_pause_quirk_health_hog_b",
+		response = "combat_pause_quirk_health_hog_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"health_hog_a",
+				},
+			},
+			{
+				"user_memory",
+				"last_health_hogger",
+				OP.GT,
+				1,
+			},
+			{
+				"user_memory",
+				"last_health_hogger",
+				OP.TIMEDIFF,
+				OP.LT,
+				10,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
 			},
 		},
 	})
@@ -1795,66 +1904,6 @@ return function ()
 	define_rule({
 		category = "enemy_alerts_prio_1",
 		database = "gameplay_vo",
-		name = "enemy_kill_cultist_mutant",
-		response = "enemy_kill_cultist_mutant",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"enemy_kill",
-			},
-			{
-				"query_context",
-				"killed_type",
-				OP.EQ,
-				"cultist_mutant",
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-					"high",
-				},
-			},
-			{
-				"user_memory",
-				"time_since_enemy_kill_cultist_mutant",
-				OP.TIMEDIFF,
-				OP.GT,
-				5,
-			},
-			{
-				"faction_memory",
-				"enemy_cultist_mutant",
-				OP.TIMEDIFF,
-				OP.GT,
-				3,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_enemy_kill_cultist_mutant",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_1",
-		database = "gameplay_vo",
 		name = "enemy_kill_cultist_mutant_quick_agnostic",
 		response = "enemy_kill_cultist_mutant_quick_agnostic",
 		wwise_route = 0,
@@ -2137,6 +2186,66 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 3,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_alerts_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_mutant_charger",
+		response = "enemy_kill_mutant_charger",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill",
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.EQ,
+				"cultist_mutant",
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high",
+				},
+			},
+			{
+				"user_memory",
+				"time_since_enemy_kill_cultist_mutant",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_mutant",
+				OP.TIMEDIFF,
+				OP.GT,
+				3,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_enemy_kill_cultist_mutant",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5,
 			},
 		},
 	})
@@ -5121,115 +5230,6 @@ return function ()
 				"faction_memory",
 				"heal_start_faction",
 				OP.TIMESET,
-			},
-		},
-	})
-	define_rule({
-		category = "player_prio_1",
-		database = "gameplay_vo",
-		name = "health_hog_a",
-		response = "health_hog_a",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"health_hog",
-			},
-			{
-				"user_context",
-				"health",
-				OP.LT,
-				0.5,
-			},
-			{
-				"user_context",
-				"friends_close",
-				OP.GT,
-				0,
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-				},
-			},
-			{
-				"faction_memory",
-				"health_hog",
-				OP.TIMEDIFF,
-				OP.GT,
-				600,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"health_hog",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1,
-			},
-		},
-	})
-	define_rule({
-		category = "conversations_prio_1",
-		database = "gameplay_vo",
-		name = "health_hog_b",
-		response = "health_hog_b",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"user_context",
-				"friends_close",
-				OP.GT,
-				0,
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"health_hog_a",
-				},
-			},
-			{
-				"user_memory",
-				"last_health_hogger",
-				OP.GT,
-				1,
-			},
-			{
-				"user_memory",
-				"last_health_hogger",
-				OP.TIMEDIFF,
-				OP.LT,
-				10,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
 			},
 		},
 	})
@@ -10447,75 +10447,6 @@ return function ()
 	define_rule({
 		category = "player_prio_1",
 		database = "gameplay_vo",
-		name = "response_for_ogryn_start_revive_ogryn",
-		response = "response_for_ogryn_start_revive_ogryn",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"user_context",
-				"friends_close",
-				OP.GT,
-				0,
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LTEQ,
-				7,
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"ogryn_start_revive_ogryn",
-				},
-			},
-			{
-				"query_context",
-				"speaker_class",
-				OP.EQ,
-				"ogryn",
-			},
-			{
-				"query_context",
-				"class_name",
-				OP.EQ,
-				"ogryn",
-			},
-			{
-				"user_memory",
-				"last_revivee",
-				OP.GT,
-				1,
-			},
-			{
-				"user_memory",
-				"last_revivee",
-				OP.TIMEDIFF,
-				OP.LT,
-				10,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "player_prio_1",
-		database = "gameplay_vo",
 		name = "response_for_ogryn_start_revive_psyker",
 		response = "response_for_ogryn_start_revive_psyker",
 		wwise_route = 0,
@@ -15053,41 +14984,6 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_0",
-		database = "gameplay_vo",
-		name = "seen_horde_static",
-		response = "seen_horde_static",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_horde",
-			},
-			{
-				"query_context",
-				"horde_type",
-				OP.EQ,
-				"static",
-			},
-			{
-				"faction_memory",
-				"last_seen_horde",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"last_seen_horde",
-				OP.TIMESET,
 			},
 		},
 	})

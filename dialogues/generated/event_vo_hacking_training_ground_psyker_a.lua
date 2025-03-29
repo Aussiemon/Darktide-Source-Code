@@ -35,6 +35,27 @@ local event_vo_hacking_training_ground_psyker_a = {
 		},
 		randomize_indexes = {},
 	},
+	cmd_hacking_place_device = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_training_ground_psyker_a__cmd_hacking_place_device_01",
+			"loc_training_ground_psyker_a__cmd_hacking_place_device_02",
+			"loc_training_ground_psyker_a__cmd_hacking_place_device_03",
+			"loc_training_ground_psyker_a__cmd_hacking_place_device_04",
+			"loc_training_ground_psyker_a__cmd_hacking_place_device_05",
+			"loc_training_ground_psyker_a__cmd_hacking_place_device_06",
+		},
+		sound_events_duration = {
+			5.446896,
+			5.393313,
+			4.674167,
+			7.870646,
+			7.565854,
+			4.913021,
+		},
+		randomize_indexes = {},
+	},
 	info_hacking_decoding_in_progress = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

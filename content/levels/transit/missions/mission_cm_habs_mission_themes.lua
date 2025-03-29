@@ -1,17 +1,20 @@
 ﻿-- chunkname: @content/levels/transit/missions/mission_cm_habs_mission_themes.lua
 
 local mission_themes = {
+	ember = {
+		"content/levels/transit/missions/cm_habs_themes/ember_01/theme_ember_01_cm_habs",
+	},
 	default = {
 		"content/levels/transit/missions/cm_habs_themes/default/theme_default_cm_habs",
+	},
+	ventilation_purge = {
+		"content/levels/transit/missions/cm_habs_themes/ventilation_purge_01/theme_ventilation_purge_01_cm_habs",
 	},
 	toxic_gas = {
 		"content/levels/transit/missions/cm_habs_themes/toxic_gas_01/theme_toxic_gas_01_cm_habs",
 	},
 	darkness = {
 		"content/levels/transit/missions/cm_habs_themes/darkness_01/theme_darkness_01_cm_habs",
-	},
-	ventilation_purge = {
-		"content/levels/transit/missions/cm_habs_themes/ventilation_purge_01/theme_ventilation_purge_01_cm_habs",
 	},
 	nurgle_manifestation = {
 		"content/levels/transit/missions/cm_habs_themes/nurgle_01/theme_nurgle_01_cm_habs",

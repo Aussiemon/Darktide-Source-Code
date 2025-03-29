@@ -71,15 +71,14 @@ local psyker_a_psyker_female_c = {
 	},
 	combat_pause_quirk_cold_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 1,
+		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_psyker_female_c__combat_pause_quirk_cold_b_01",
+			[2] = "loc_psyker_female_c__combat_pause_quirk_cold_b_02",
 		},
 		sound_events_duration = {
 			[1] = 2.439333,
-		},
-		sound_event_weights = {
-			[1] = 1,
+			[2] = 2.759615,
 		},
 		randomize_indexes = {},
 	},

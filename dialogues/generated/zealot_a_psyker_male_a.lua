@@ -130,10 +130,6 @@ local zealot_a_psyker_male_a = {
 			[1] = 2.889167,
 			[2] = 2.216021,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_stench_b = {

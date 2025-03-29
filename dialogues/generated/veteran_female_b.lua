@@ -420,7 +420,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -566,7 +566,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -804,7 +804,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -1042,7 +1042,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -3285,7 +3285,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -3518,7 +3518,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -3652,7 +3652,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -3833,7 +3833,7 @@ return function ()
 				duration = 0.2,
 			},
 			random_ignore_vo = {
-				chance = 0.1,
+				chance = 0.3,
 				hold_for = 0,
 				max_failed_tries = 0,
 			},
@@ -3980,9 +3980,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 		},
 		on_done = {
@@ -4073,9 +4071,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"user_memory",
@@ -4165,9 +4161,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"user_memory",
@@ -4860,9 +4854,7 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"faction_memory",
@@ -4934,9 +4926,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 		},
 		on_done = {
@@ -5027,9 +5017,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"user_memory",
@@ -5392,9 +5380,7 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"faction_memory",
@@ -5466,9 +5452,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 		},
 		on_done = {
@@ -5559,9 +5543,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"user_memory",
@@ -6552,9 +6534,7 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"faction_memory",
@@ -6618,9 +6598,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 		},
 		on_done = {
@@ -6711,9 +6689,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"user_memory",
@@ -7565,9 +7541,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 		},
 		on_done = {
@@ -7658,9 +7632,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"user_memory",
@@ -7750,9 +7722,7 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {
-					"ogryn_d",
-				},
+				args = {},
 			},
 			{
 				"user_memory",

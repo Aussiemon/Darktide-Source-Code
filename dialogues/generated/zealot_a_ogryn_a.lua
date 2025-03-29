@@ -103,10 +103,6 @@ local zealot_a_ogryn_a = {
 			[1] = 2.383115,
 			[2] = 2.107167,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_stench_b = {

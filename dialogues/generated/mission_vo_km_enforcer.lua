@@ -201,6 +201,56 @@ return function ()
 		},
 	})
 	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_km_enforcer",
+		name = "mission_enforcer_end_event_conversation_one_b",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_enforcer_end_event_conversation_one_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_enforcer_end_event_conversation_one_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+				},
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"allow_captain_taunt_response",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
 		category = "conversations_prio_0",
 		database = "mission_vo_km_enforcer",
 		name = "mission_enforcer_end_event_conversation_one_c",
@@ -315,7 +365,14 @@ return function ()
 				},
 			},
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"allow_captain_taunt_response",
+				OP.ADD,
+				1,
+			},
+		},
 		heard_speak_routing = {
 			target = "players",
 		},
@@ -440,7 +497,14 @@ return function ()
 				},
 			},
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"allow_captain_taunt_response",
+				OP.ADD,
+				1,
+			},
+		},
 		heard_speak_routing = {
 			target = "players",
 		},

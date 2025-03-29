@@ -274,10 +274,6 @@ local ogryn_b_psyker_male_b = {
 			[1] = 4.014729,
 			[2] = 4.073667,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_killing_stopped_b = {

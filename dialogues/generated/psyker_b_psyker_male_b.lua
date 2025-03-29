@@ -416,6 +416,34 @@ local psyker_b_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_quirk_heights_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_psyker_male_b__combat_pause_quirk_heights_a_01",
+			"loc_psyker_male_b__combat_pause_quirk_heights_a_02",
+			"loc_psyker_male_b__combat_pause_quirk_heights_a_03",
+		},
+		sound_events_duration = {
+			4.112708,
+			3.481792,
+			5.889042,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_quirk_heights_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__combat_pause_quirk_heights_b_01",
+			[2] = "loc_psyker_male_b__combat_pause_quirk_heights_b_02",
+		},
+		sound_events_duration = {
+			[1] = 3.409333,
+			[2] = 3.336292,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_quirk_lonely_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

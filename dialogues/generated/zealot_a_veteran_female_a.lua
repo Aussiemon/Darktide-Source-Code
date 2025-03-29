@@ -110,10 +110,6 @@ local zealot_a_veteran_female_a = {
 			[1] = 4.176521,
 			[2] = 3.652375,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_stench_b = {

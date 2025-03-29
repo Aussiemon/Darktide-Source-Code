@@ -169,4 +169,6 @@ DialogueLookup[DialogueLookup_n + 166] = "combat_pause_quirk_deddog_a"
 DialogueLookup[DialogueLookup_n + 167] = "combat_pause_quirk_deddog_b"
 DialogueLookup[DialogueLookup_n + 168] = "combat_pause_quirk_glutton_a"
 DialogueLookup[DialogueLookup_n + 169] = "combat_pause_quirk_glutton_b"
-DialogueLookup_n = DialogueLookup_n + 169
+DialogueLookup[DialogueLookup_n + 170] = "combat_pause_quirk_hates_goo_a"
+DialogueLookup[DialogueLookup_n + 171] = "combat_pause_quirk_hates_goo_b"
+DialogueLookup_n = DialogueLookup_n + 171

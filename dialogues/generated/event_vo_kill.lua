@@ -42,6 +42,12 @@ return function ()
 				OP.NEQ,
 				"op_train",
 			},
+			{
+				"faction_memory",
+				"allow_captain_taunt_response",
+				OP.GT,
+				0,
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {

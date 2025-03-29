@@ -191,18 +191,21 @@ local mission_vo_hm_cartel_psyker_female_a = {
 	},
 	mission_cartel_shanty_response_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 3,
 		sound_events = {
-			[1] = "loc_psyker_female_a__zone_watertown_01",
-			[2] = "loc_psyker_female_a__zone_watertown_02",
+			"loc_psyker_female_a__zone_watertown_01",
+			"loc_psyker_female_a__zone_watertown_02",
+			"loc_psyker_female_a__zone_watertown_03",
 		},
 		sound_events_duration = {
-			[1] = 4.392667,
-			[2] = 5.03925,
+			4.392667,
+			5.03925,
+			5.818875,
 		},
 		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
+			0.3333333,
+			0.3333333,
+			0.3333333,
 		},
 		randomize_indexes = {},
 	},

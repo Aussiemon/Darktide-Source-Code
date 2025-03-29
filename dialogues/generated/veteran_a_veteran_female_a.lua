@@ -20,6 +20,50 @@ local veteran_a_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_bolt_on_a_veteran_a_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__combat_pause_limited_bolt_on_a_veteran_a_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.821167,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_a_03_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__combat_pause_limited_bolt_on_a_veteran_a_03_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.753313,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_a_04_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__combat_pause_limited_bolt_on_a_veteran_a_04_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.794292,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_a_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__combat_pause_limited_bolt_on_a_veteran_a_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.7,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_a_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -360,10 +404,6 @@ local veteran_a_veteran_female_a = {
 			[1] = 0.872667,
 			[2] = 0.743958,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_emperor_a = {
@@ -420,10 +460,6 @@ local veteran_a_veteran_female_a = {
 			[1] = 2.095938,
 			[2] = 2.849938,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_rations_a = {
@@ -451,10 +487,6 @@ local veteran_a_veteran_female_a = {
 		sound_events_duration = {
 			[1] = 4.605094,
 			[2] = 4.510396,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

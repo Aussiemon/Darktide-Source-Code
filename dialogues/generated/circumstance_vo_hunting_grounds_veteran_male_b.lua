@@ -148,6 +148,29 @@ local circumstance_vo_hunting_grounds_veteran_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	hunting_circumstance_start_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_b__hunting_circumstance_start_b_01",
+			"loc_veteran_male_b__hunting_circumstance_start_b_02",
+			"loc_veteran_male_b__hunting_circumstance_start_b_03",
+			"loc_veteran_male_b__hunting_circumstance_start_b_04",
+		},
+		sound_events_duration = {
+			4.696771,
+			3.591021,
+			2.923583,
+			4.341646,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	smart_tag_vo_enemy_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

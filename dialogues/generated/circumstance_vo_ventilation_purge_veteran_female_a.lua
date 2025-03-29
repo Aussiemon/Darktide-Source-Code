@@ -66,6 +66,29 @@ local circumstance_vo_ventilation_purge_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	vent_circumstance_start_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_a__vent_circumstance_start_b_01",
+			"loc_veteran_female_a__vent_circumstance_start_b_02",
+			"loc_veteran_female_a__vent_circumstance_start_b_03",
+			"loc_veteran_female_a__vent_circumstance_start_b_04",
+		},
+		sound_events_duration = {
+			1.981458,
+			4.306063,
+			2.068771,
+			3.347667,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("circumstance_vo_ventilation_purge_veteran_female_a", circumstance_vo_ventilation_purge_veteran_female_a)

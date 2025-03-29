@@ -80,10 +80,6 @@ local psyker_a_zealot_male_b = {
 			[1] = 2.759229,
 			[2] = 2.989292,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_quirk_dislikes_grenades_b = {
