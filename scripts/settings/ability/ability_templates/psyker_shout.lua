@@ -84,6 +84,7 @@ ability_template.actions = {
 		shout_shape = "cone",
 		sound_source = "head",
 		sprint_ready_up_time = 0,
+		target_allies = true,
 		target_enemies = true,
 		total_time = 0.75,
 		uninterruptible = true,

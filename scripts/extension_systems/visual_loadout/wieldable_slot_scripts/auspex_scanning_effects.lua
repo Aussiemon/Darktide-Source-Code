@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_scanning_effects.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Component = require("scripts/utilities/component")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local Scanning = require("scripts/utilities/scanning")

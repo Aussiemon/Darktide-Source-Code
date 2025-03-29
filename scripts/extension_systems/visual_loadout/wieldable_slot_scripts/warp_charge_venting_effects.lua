@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_charge_venting_effects.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local WarpChargeVentingEffects = class("WarpChargeVentingEffects")
 local _start_vfx, _stop_vfx

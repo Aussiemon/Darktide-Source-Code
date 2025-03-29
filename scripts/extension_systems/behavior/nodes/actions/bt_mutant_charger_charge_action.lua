@@ -802,7 +802,10 @@ BtMutantChargerChargeAction._play_smash_anim = function (self, scratchpad, actio
 	disabled_state_input.trigger_animation = "smash"
 end
 
-local THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN = 0.75, 0
+local THROW_TELEPORT_UP_OFFSET = {
+	human = 0.75,
+	ogryn = 0,
+}
 
 BtMutantChargerChargeAction._update_throwing = function (self, unit, scratchpad, action_data, breed, t)
 	local throw_direction = scratchpad.throw_direction:unbox()
@@ -828,10 +831,9 @@ BtMutantChargerChargeAction._update_throwing = function (self, unit, scratchpad,
 
 		if wants_catapult then
 			local hit_unit_breed_name = scratchpad.hit_unit_breed_name
-			local is_human = hit_unit_breed_name == "human"
 			local disabling_unit_position = POSITION_LOOKUP[unit]
 			local unit_rotation = Unit.local_rotation(unit, 1)
-			local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
+			local up = Vector3.up() * (THROW_TELEPORT_UP_OFFSET[hit_unit_breed_name] or THROW_TELEPORT_UP_OFFSET.human)
 			local disabling_unit_forward = Quaternion.forward(unit_rotation)
 			local teleport_position = disabling_unit_position + disabling_unit_forward + up
 			local target_unit = scratchpad.grabbed_target
@@ -919,7 +921,7 @@ BtMutantChargerChargeAction._test_throw_trajectory = function (self, unit, scrat
 	local force = action_data.catapult_force[hit_unit_breed_name]
 	local z_force = action_data.catapult_z_force[hit_unit_breed_name]
 	local physics_world = scratchpad.physics_world
-	local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, hit_unit_breed_name, physics_world, force, z_force, test_direction, to, PlayerCharacterConstants.gravity, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME)
+	local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, physics_world, force, z_force, test_direction, to, PlayerCharacterConstants.gravity, THROW_TELEPORT_UP_OFFSET[hit_unit_breed_name] or THROW_TELEPORT_UP_OFFSET_DEFAULT, MAX_STEPS, MAX_TIME)
 
 	if hit then
 		local navigation_extension = scratchpad.navigation_extension

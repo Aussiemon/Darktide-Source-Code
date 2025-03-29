@@ -99,6 +99,9 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_melee_power_after_ranged_explos
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
+	buff_data = {
+		required_num_hits = 3,
+	},
 	proc_events = {
 		[proc_events.on_explosion_hit] = 1,
 	},
@@ -126,6 +129,9 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_after_weapon_specia
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	predicted = false,
+	buff_data = {
+		required_num_hits = 3,
+	},
 	proc_events = {
 		[proc_events.on_explosion_hit] = 1,
 	},

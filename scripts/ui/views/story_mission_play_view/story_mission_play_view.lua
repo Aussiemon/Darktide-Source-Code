@@ -5,6 +5,7 @@ local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_me
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
+local Danger = require("scripts/utilities/danger")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local TextUtilities = require("scripts/utilities/ui/text")
@@ -21,6 +22,7 @@ local TextUtils = require("scripts/utilities/ui/text")
 local ItemUtils = require("scripts/utilities/items")
 local MissionUtilities = require("scripts/utilities/ui/mission")
 local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local PLAY_BUTTON_ANIM_DELAY = 5
 local StoryMissionPlayView = class("StoryMissionPlayView", "BaseView")
 
@@ -29,7 +31,7 @@ StoryMissionPlayView.init = function (self, settings, context)
 
 	self._parent = parent
 	self._backend_data_expiry_time = -1
-	self._promises = {}
+	self._promise_container = PromiseContainer:new()
 	self._cb_fetch_success = callback(self, "_fetch_success")
 	self._cb_fetch_failure = callback(self, "_fetch_failure")
 	self._play_button_anim_delay = 1
@@ -106,7 +108,7 @@ StoryMissionPlayView._update_fetch_missions = function (self, t)
 
 	self._is_fetching_missions = true
 
-	local missions_promise = self:_cancel_promise_on_exit(Managers.data_service.mission_board:fetch(nil, 1))
+	local missions_promise = self._promise_container:cancel_on_destroy(Managers.data_service.mission_board:fetch(nil, 1))
 
 	self._mission_promise = missions_promise
 
@@ -122,8 +124,8 @@ StoryMissionPlayView._fetch_success = function (self, data)
 	local story_missions = MissionUtilities.filter_latest_narrative_missions(missions)
 
 	local function sort_func(a, b)
-		local a_danger_level = DangerSettings.calculate_danger(a.challenge, a.resistance)
-		local b_danger_level = DangerSettings.calculate_danger(b.challenge, b.resistance)
+		local a_danger_level = Danger.calculate_danger(a.challenge, a.resistance)
+		local b_danger_level = Danger.calculate_danger(b.challenge, b.resistance)
 
 		return a_danger_level < b_danger_level
 	end
@@ -181,22 +183,6 @@ StoryMissionPlayView._fetch_failure = function (self, error_message)
 
 	self._backend_data_expiry_time = Managers.time:time("main") + fetch_retry_cooldown
 	self._is_fetching_missions = false
-end
-
-StoryMissionPlayView._cancel_promise_on_exit = function (self, promise)
-	local promises = self._promises
-
-	if promise:is_pending() and not promises[promise] then
-		promises[promise] = true
-
-		promise:next(function ()
-			self._promises[promise] = nil
-		end, function ()
-			self._promises[promise] = nil
-		end)
-	end
-
-	return promise
 end
 
 StoryMissionPlayView._populate_achievement_rewards = function (self, achievements)
@@ -339,15 +325,14 @@ StoryMissionPlayView._assign_option_data = function (self, option_index, data)
 
 	content.hotspot.pressed_callback = callback(self, "_cb_on_options_button_pressed", option_index, data)
 
-	local danger_level = DangerSettings.calculate_danger(data.challenge, data.resistance)
-	local danger_settings = DangerSettings.by_index[danger_level]
+	local danger_settings = Danger.danger_by_difficulty(data.challenge, data.resistance)
 	local danger_color = danger_settings.color
 
 	for i = 1, 5 do
 		local difficulty_style_id = "difficulty_box_" .. i
 		local color = style[difficulty_style_id].color
 
-		if i <= danger_level then
+		if i <= danger_settings.index then
 			local ignore_alpha = true
 
 			ColorUtilities.color_copy(danger_color, color, ignore_alpha)
@@ -631,6 +616,8 @@ StoryMissionPlayView._handle_input = function (self, input_service, dt, t)
 end
 
 StoryMissionPlayView.on_exit = function (self)
+	self._promise_container:delete()
+
 	if self._mission_promise then
 		self._mission_promise:cancel()
 
@@ -767,11 +754,11 @@ StoryMissionPlayView.fetch_regions = function (self)
 
 	self._region_promise = region_promise
 
-	self:_cancel_promise_on_exit(region_promise):next(function (regions_data)
+	self._promise_container:cancel_on_destroy(region_promise):next(function (regions_data)
 		local prefered_region_promise
 
 		if BackendUtilities.prefered_mission_region == "" then
-			prefered_region_promise = self:_cancel_promise_on_exit(Managers.backend.interfaces.region_latency:get_preferred_reef())
+			prefered_region_promise = self._promise_container:cancel_on_destroy(Managers.backend.interfaces.region_latency:get_preferred_reef())
 		else
 			prefered_region_promise = Promise.resolved()
 		end

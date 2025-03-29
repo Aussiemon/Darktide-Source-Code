@@ -193,6 +193,8 @@ PlayerUnitBuffExtension.add_internally_controlled_buff = function (self, templat
 		else
 			self:_add_rpc_synced_buff(template, t, ...)
 		end
+	elseif template.predicted then
+		self:_update_predicted_buff_start_time_component_on_refresh(template_name)
 	end
 end
 
@@ -283,6 +285,22 @@ PlayerUnitBuffExtension._add_predicted_buff = function (self, template, t, ...)
 	end
 
 	return index, component_index
+end
+
+PlayerUnitBuffExtension._update_predicted_buff_start_time_component_on_refresh = function (self, template_name)
+	local stacking_buff_instance = self._stacking_buffs[template_name]
+	local component_index = stacking_buff_instance and stacking_buff_instance:component_index()
+
+	if stacking_buff_instance and component_index and stacking_buff_instance:need_to_sync_start_time() then
+		local buff_component = self._buff_component
+		local component_keys = COMPONENT_KEY_LOOKUP[component_index]
+		local start_time_key = component_keys.start_time_key
+		local start_time = stacking_buff_instance:start_time()
+
+		buff_component[start_time_key] = start_time
+
+		stacking_buff_instance:set_need_to_sync_start_time(false)
+	end
 end
 
 PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, local_index, component_index)

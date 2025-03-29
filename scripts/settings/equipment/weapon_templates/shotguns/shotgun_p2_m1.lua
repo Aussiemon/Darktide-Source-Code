@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotguns/shotgun_p2_m1.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -273,7 +273,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 local function _can_shoot_due_to_reload(action_settings, condition_func_params, used_input)
 	local inventory_slot_component = condition_func_params.inventory_slot_component
@@ -910,6 +910,10 @@ weapon_template.actions = {
 		damage_type = damage_types.weapon_butt,
 		damage_profile = DamageProfileTemplates.shotgun_weapon_special_bash_light,
 		herding_template = HerdingTemplates.linesman_left_heavy,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_bash_heavy = {
@@ -1010,6 +1014,10 @@ weapon_template.actions = {
 		damage_type = damage_types.weapon_butt,
 		damage_profile = DamageProfileTemplates.autogun_weapon_special_bash_heavy,
 		herding_template = HerdingTemplates.stab,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
@@ -1054,7 +1062,6 @@ weapon_template.ammo_template = "shotgun_p2_m1"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

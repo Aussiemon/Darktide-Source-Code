@@ -49,11 +49,14 @@ end
 LuggableInteraction.stop = function (self, world, interactor_unit, unit_data_component, t, result, is_server)
 	if is_server and result == "success" then
 		local interactee_unit = unit_data_component.target_unit
+		local pickup_name = Unit.get_data(interactee_unit, "pickup_type")
+		local pickup_data = Pickups.by_name[pickup_name]
 
 		Luggable.equip_to_player_unit(interactor_unit, interactee_unit, t)
 
-		local pickup_name = Unit.get_data(interactee_unit, "pickup_type")
-		local pickup_data = Pickups.by_name[pickup_name]
+		if pickup_data.on_pickup_func then
+			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data)
+		end
 
 		if pickup_data.pickup_sound then
 			local interactee_position = POSITION_LOOKUP[interactee_unit]

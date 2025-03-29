@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/lasgun_p2_m3.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -347,7 +347,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 local action_movement_curve_mark_modifier = 0.8
 local RESET_CHARGE_ACTION_KINDS = {
@@ -1175,6 +1175,10 @@ weapon_template.actions = {
 		damage_type = damage_types.knife,
 		damage_profile = DamageProfileTemplates.bayonette_weapon_special_slash,
 		wounds_shape = wounds_shapes.right_45_slash_clean,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
@@ -1229,7 +1233,6 @@ weapon_template.no_ammo_delay = 0.5
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_tweak_data = {
 	keep_active_on_sprint = true,

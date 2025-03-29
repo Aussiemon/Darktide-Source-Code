@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view.lua
 
-local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings")
 local Definitions = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_definitions")
+local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings")
+local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Personalities = require("scripts/settings/character/personalities")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
@@ -37,6 +37,9 @@ CosmeticsInspectView.init = function (self, settings, context)
 			type = context.bundle.type,
 		}
 	end
+
+	self._zoom_level = 1
+	self._zoom_speed = 0
 
 	if not is_in_debug then
 		local item = context.preview_item
@@ -73,7 +76,7 @@ CosmeticsInspectView.init = function (self, settings, context)
 			local archetype = profile.archetype
 			local real_item = item.items and item.items[1] or item
 
-			self._mannequin_profile = ItemUtils.create_mannequin_profile_by_item(real_item, gender_name, archetype)
+			self._mannequin_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype)
 
 			local slots = self._preview_item and self._preview_item.slots
 			local slot_name = context.slot_name or slots and slots[1]
@@ -122,11 +125,10 @@ CosmeticsInspectView.init = function (self, settings, context)
 
 			self._previewed_with_gear = false
 			self._presentation_profile = self._mannequin_profile
-			self._camera_zoomed_in = true
 
 			if item and item.item_type == "SET" then
 				self._camera_focus_slot_name = "slot_gear_upperbody"
-				self._camera_zoomed_in = false
+				self._zoom_level = 0
 			end
 		end
 	end
@@ -741,8 +743,6 @@ CosmeticsInspectView._setup_item_description = function (self, description_text,
 		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_equippable_on_header")))
 		_add_spacing(10)
 		_add_text_widget(Definitions.item_text_pass, restriction_text)
-
-		desired_spacing = 50
 	end
 
 	if #widgets > 0 then
@@ -818,7 +818,7 @@ CosmeticsInspectView._start_preview_item = function (self)
 			local item_face_animation_event = item.face_animation_event
 			local animation_event_name_suffix = self._animation_event_name_suffix
 
-			self._disable_zoom = context.disable_zoom or true
+			self._disable_zoom = true
 			context.state_machine = context.state_machine or item.state_machine
 			context.animation_event = context.animation_event or item_animation_event
 			context.face_animation_event = self._previewed_with_gear and (context.face_animation_event or item_face_animation_event) or nil
@@ -862,8 +862,8 @@ CosmeticsInspectView._start_preview_item = function (self)
 
 		self:_set_preview_widgets_visibility(true)
 
-		local property_text = ItemUtils.item_property_text(item, true)
-		local restriction_text, present_restriction_text = ItemUtils.restriction_text(item)
+		local property_text = Items.item_property_text(item, true)
+		local restriction_text, present_restriction_text = Items.restriction_text(item)
 
 		if not present_restriction_text then
 			restriction_text = nil
@@ -907,12 +907,12 @@ end
 CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
 	self._widgets_by_name.title.content.text = ignore_localization and item.display_name or Localize(item.display_name) or ""
 
-	local item_type = ignore_localization and item.item_type or ItemUtils.type_display_name(item)
+	local item_type = ignore_localization and item.item_type or Items.type_display_name(item)
 	local sub_text = item_type
 
 	if item.rarity then
-		local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
-		local rarity_display_name = ItemUtils.rarity_display_name(item)
+		local rarity_color, rarity_color_dark = Items.rarity_color(item)
+		local rarity_display_name = Items.rarity_display_name(item)
 
 		sub_text = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
 	end
@@ -1009,18 +1009,6 @@ CosmeticsInspectView.cb_on_preview_with_gear_toggled = function (self, id, input
 	self:_play_sound(UISoundEvents.cosmetics_vendor_show_with_gear)
 end
 
-CosmeticsInspectView.cb_on_camera_zoom_toggled = function (self, id, input_pressed, instant)
-	self._camera_zoomed_in = not self._camera_zoomed_in
-
-	if self._camera_zoomed_in then
-		self:_play_sound(UISoundEvents.apparel_zoom_in)
-	else
-		self:_play_sound(UISoundEvents.apparel_zoom_out)
-	end
-
-	self:_trigger_zoom_logic(instant, self._camera_focus_slot_name)
-end
-
 CosmeticsInspectView._stop_current_voice = function (self)
 	local ui_world = Managers.ui:world()
 	local wwise_world = Managers.world:wwise_world(ui_world)
@@ -1078,32 +1066,17 @@ end
 
 CosmeticsInspectView._can_preview_voice = function (self)
 	local has_profile = self._preview_profile and self._previewed_with_gear
-	local has_voice_fx = self._preview_item and self._preview_item.voice_fx_preset ~= nil
+	local has_voice_fx = self._preview_item and self._preview_item.voice_fx_preset ~= nil and self._preview_item.voice_fx_preset ~= "voice_fx_rtpc_none"
 
 	return has_profile and has_voice_fx
 end
 
-CosmeticsInspectView._can_zoom = function (self)
-	return not self._disable_zoom
-end
-
-CosmeticsInspectView._trigger_zoom_logic = function (self, instant, optional_slot_name)
+CosmeticsInspectView._trigger_zoom_logic = function (self, optional_slot_name, optional_time)
 	local selected_slot = self._selected_slot
 	local selected_slot_name = optional_slot_name or selected_slot and selected_slot.name
 	local func_ptr = math.easeCubic
-	local world_spawner = self._world_spawner
-	local duration = instant and 0 or 1
 
-	if self._camera_zoomed_in then
-		self:_set_camera_item_slot_focus(selected_slot_name, duration, func_ptr)
-	else
-		world_spawner:set_camera_position_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("z", 0, duration, func_ptr)
-	end
+	self:_set_camera_item_slot_focus(selected_slot_name, optional_time or 0, func_ptr, self._zoom_level)
 end
 
 CosmeticsInspectView.on_exit = function (self)
@@ -1146,6 +1119,43 @@ CosmeticsInspectView.cb_on_close_pressed = function (self)
 	self:_handle_back_pressed()
 end
 
+CosmeticsInspectView._update_zoom_logic = function (self, dt, input_service)
+	if self._disable_zoom then
+		return
+	end
+
+	local scroll_axis = input_service:get("scroll_axis")
+	local scroll_delta = scroll_axis and scroll_axis[2] or 0
+	local scroll_content = self._widgets_by_name.description_scrollbar.content
+
+	if scroll_content.in_scroll_area then
+		scroll_delta = 0
+	end
+
+	local zoom_speed, zoom_level = self._zoom_speed, self._zoom_level
+
+	zoom_speed = scroll_delta * zoom_speed < 0 and 0 or zoom_speed + scroll_delta / 20
+
+	if math.abs(zoom_speed) < 0.01 then
+		zoom_speed = 0
+	end
+
+	zoom_level = math.clamp(zoom_level + zoom_speed * 18 * dt, 0, 1)
+	zoom_speed = zoom_speed * math.pow(0.006, dt)
+
+	if zoom_level == 0 or zoom_level == 1 then
+		zoom_speed = 0
+	end
+
+	local has_changed = zoom_level ~= self._zoom_level
+
+	self._zoom_level, self._zoom_speed = zoom_level, zoom_speed
+
+	if has_changed then
+		self:_trigger_zoom_logic()
+	end
+end
+
 CosmeticsInspectView.update = function (self, dt, t, input_service)
 	if self._spawn_player and self._spawn_point_unit and self._default_camera_unit then
 		local context = self._context
@@ -1156,11 +1166,6 @@ CosmeticsInspectView.update = function (self, dt, t, input_service)
 		self:_spawn_profile(profile, initial_rotation, disable_rotation_input)
 
 		self._spawn_player = false
-
-		local selected_slot = self._selected_slot
-		local selected_slot_name = selected_slot and selected_slot.name
-
-		self:_trigger_zoom_logic(true, self._camera_focus_slot_name or selected_slot_name)
 
 		local wield_slot = context.prop_item and context.prop_item.slots and context.prop_item.slots[1] or context.wield_slot
 
@@ -1191,7 +1196,11 @@ CosmeticsInspectView.update = function (self, dt, t, input_service)
 
 			self._profile_spawner:assign_animation_variable(index, value)
 		end
+
+		self:_trigger_zoom_logic()
 	end
+
+	self:_update_zoom_logic(dt, input_service)
 
 	local profile_spawner = self._profile_spawner
 
@@ -1317,6 +1326,13 @@ CosmeticsInspectView.spawn_point_unit = function (self)
 	return self._spawn_point_unit
 end
 
+CosmeticsInspectView.cb_on_camera_zoom_toggled = function (self)
+	self._zoom_level = self._zoom_level > 0.5 and 0 or 1
+	self._zoom_speed = 0
+
+	self:_trigger_zoom_logic(nil, 0.5)
+end
+
 CosmeticsInspectView.event_register_cosmetics_preview_character_spawn_point = function (self, spawn_point_unit)
 	self:_unregister_event("event_register_cosmetics_preview_character_spawn_point")
 
@@ -1327,7 +1343,7 @@ CosmeticsInspectView.event_register_cosmetics_preview_character_spawn_point = fu
 	end
 end
 
-CosmeticsInspectView._set_camera_item_slot_focus = function (self, slot_name, time, func_ptr)
+CosmeticsInspectView._set_camera_item_slot_focus = function (self, slot_name, time, func_ptr, zoom_percentage)
 	local world_spawner = self._world_spawner
 	local slot_camera = self._item_camera_by_slot_id[slot_name] or self._default_camera_unit
 	local camera_world_position = Unit.world_position(slot_camera, 1)
@@ -1335,18 +1351,18 @@ CosmeticsInspectView._set_camera_item_slot_focus = function (self, slot_name, ti
 	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
 	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", camera_world_position.x - default_camera_world_position.x, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", camera_world_position.y - default_camera_world_position.y, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", camera_world_position.z - default_camera_world_position.z, time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("x", zoom_percentage * (camera_world_position.x - default_camera_world_position.x), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("y", zoom_percentage * (camera_world_position.y - default_camera_world_position.y), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("z", zoom_percentage * (camera_world_position.z - default_camera_world_position.z), time, func_ptr)
 
 	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
 	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
 	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
 
-	world_spawner:set_camera_rotation_axis_offset("x", camera_world_rotation_x - default_camera_world_rotation_x, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", camera_world_rotation_y - default_camera_world_rotation_y, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("x", zoom_percentage * (camera_world_rotation_x - default_camera_world_rotation_x), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("y", zoom_percentage * (camera_world_rotation_y - default_camera_world_rotation_y), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("z", zoom_percentage * (camera_world_rotation_z - default_camera_world_rotation_z), time, func_ptr)
 end
 
 CosmeticsInspectView._set_camera_node_focus = function (self, node_name, time, func_ptr)

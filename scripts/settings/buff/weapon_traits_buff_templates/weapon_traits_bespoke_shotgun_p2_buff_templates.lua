@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p2_buff_templates.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")

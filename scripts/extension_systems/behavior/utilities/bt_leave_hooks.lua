@@ -4,6 +4,16 @@ local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local ChaosBeastOfNurgleSettings = require("scripts/settings/monster/chaos_beast_of_nurgle_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+
+local function _set_component_value(unit, breed, blackboard, scratchpad, action_data, t, args)
+	local component_name = args.component_name
+	local field = args.field
+	local value = args.value
+	local component = Blackboard.write_component(blackboard, component_name)
+
+	component[field] = value
+end
+
 local BtLeaveHooks = {
 	reset_enter_combat_range_flag = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
@@ -21,13 +31,11 @@ local BtLeaveHooks = {
 
 		shield_extension:set_blocking(true)
 	end,
-	set_component_value = function (unit, breed, blackboard, scratchpad, action_data, t, args)
-		local component_name = args.component_name
-		local field = args.field
-		local value = args.value
-		local component = Blackboard.write_component(blackboard, component_name)
-
-		component[field] = value
+	set_component_value = _set_component_value,
+	set_component_values = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		for ii = 1, #args do
+			_set_component_value(unit, breed, blackboard, scratchpad, action_data, t, args[ii])
+		end
 	end,
 	set_scratchpad_value = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local field = args.field

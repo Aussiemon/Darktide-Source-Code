@@ -8,6 +8,28 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = {
 			{
@@ -34,6 +56,27 @@ templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_f
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = {
 			{
@@ -52,6 +95,28 @@ templates.weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = {
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
 			{
@@ -78,6 +143,40 @@ templates.weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide = {
+	format_values = {
+		reload_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.reload_speed,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent = {
 			{
@@ -108,6 +207,20 @@ templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide = {
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
+	format_values = {
+		range = {
+			format_type = "string",
+			find_value = {
+				find_value_type = "rarity_value",
+				trait_value = {
+					"5m",
+					"6m",
+					"7m",
+					"8m",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 			{
@@ -146,6 +259,20 @@ templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage_when_flanking = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage_when_flanking",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.flanking_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage_when_flanking = {
 			{
@@ -172,6 +299,20 @@ templates.weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage = {
 			{
@@ -198,6 +339,43 @@ templates.weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage = {
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_increase_on_close_kills = {
+	format_values = {
+		recoil_reduction = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_increase_on_close_kills",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.recoil_modifier,
+				},
+			},
+		},
+		suppression = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_increase_on_close_kills",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.suppression_dealt,
+				},
+			},
+		},
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_increase_on_close_kills",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.damage_vs_suppressed,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_increase_on_close_kills = {
 			{
@@ -232,6 +410,30 @@ templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_in
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_parent",
+				find_value_type = "trait_override",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_enemies_parent = {
 			{
@@ -262,6 +464,32 @@ templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_
 	},
 }
 templates.weapon_trait_bespoke_autopistol_p1_hipfire_while_sprinting = {
+	format_values = {
+		weapon_spread = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.spread_modifier,
+				},
+			},
+		},
+		damage_near = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_autopistol_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_autopistol_p1_hipfire_while_sprinting = {
 			{

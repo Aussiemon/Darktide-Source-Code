@@ -55,11 +55,11 @@ local circumstance_templates = {
 	},
 	bolstering_minions_01 = {
 		ui = {
-			background = "content/ui/materials/backgrounds/mutators/havoc_mutator_nurgle",
-			description = "loc_circumstance_nurgle_manifestation_description",
-			display_name = "loc_circumstance_nurgle_manifestation_title",
+			background = "content/ui/materials/backgrounds/mutators/mutators_bg_rampaging_enemies",
+			description = "loc_havoc_bolstering_enemies_description",
+			display_name = "loc_havoc_bolstering_enemies_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_rampaging_enemies",
 		},
 		mutators = {
 			"mutator_bolstering_minions",
@@ -119,6 +119,47 @@ local circumstance_templates = {
 		},
 		mission_overrides = {},
 	},
+	mutator_havoc_enraged = {
+		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutators_bg_the_final_toll",
+			description = "loc_havoc_mutator_enraged_description",
+			display_name = "loc_havoc_mutator_enraged_name",
+			happening_display_name = "loc_happening_nurgle_manifestation",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_final_toll",
+		},
+		mutators = {
+			"mutator_havoc_enraged",
+		},
+		mission_overrides = {},
+	},
+	mutator_havoc_chaos_rituals = {
+		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutators_bg_heinous_rituals",
+			description = "loc_havoc_chaos_ritual_desc",
+			display_name = "loc_havoc_chaos_ritual_name",
+			happening_display_name = "loc_happening_nurgle_manifestation",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_heinous_rituals",
+		},
+		mutators = {
+			"mutator_monster_spawner",
+			"mutator_no_witches",
+			"mutator_havoc_no_stagger_ritualist",
+		},
+		mission_overrides = {},
+	},
+	mutator_encroaching_garden = {
+		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutators_bg_the_encroaching_garden",
+			description = "loc_havoc_encroaching_garden_description",
+			display_name = "loc_havoc_encroaching_garden_name",
+			happening_display_name = "loc_happening_nurgle_manifestation",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_encroaching_garden",
+		},
+		mutators = {
+			"mutator_encroaching_garden",
+		},
+		mission_overrides = {},
+	},
 	mutator_increased_difficulty = {
 		ui = {
 			background = "content/ui/materials/backgrounds/mutators/havoc_emperor_01",
@@ -131,7 +172,10 @@ local circumstance_templates = {
 			"mutator_auric_tension_modifier",
 			"mutator_enable_auric",
 			"havoc_mutator_more_captains_01",
-			"havoc_mutator_more_hordes_01",
+			"havoc_higher_stagger_thresholds",
+			"mutator_havoc_override_horde_pacing_01",
+			"mutator_monster_havoc_twins",
+			"havoc_mutator_monster_specials_01",
 		},
 		mission_overrides = {},
 	},
@@ -149,9 +193,10 @@ local circumstance_templates = {
 			"mutator_auric_tension_modifier",
 			"mutator_add_resistance",
 			"havoc_mutator_more_captains_02",
-			"havoc_mutator_more_hordes_02",
 			"havoc_higher_stagger_thresholds",
-			"mutator_decreased_horde_pacing_stinger",
+			"mutator_havoc_override_horde_pacing_02",
+			"mutator_monster_havoc_twins",
+			"havoc_mutator_monster_specials_02",
 		},
 		mission_overrides = {},
 	},

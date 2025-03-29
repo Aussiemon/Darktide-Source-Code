@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_target_effects.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Breed = require("scripts/utilities/breed")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ChainLightningTargetEffects = class("ChainLightningTargetEffects")

@@ -96,7 +96,7 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 
 	self._item_definitions = MasterItems.get_cached()
 
-	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, item_streaming_settings)
+	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, item_streaming_settings, nil, nil)
 
 	self._equipment_component = equipment_component
 
@@ -188,16 +188,6 @@ PlayerHuskVisualLoadoutExtension.destroy = function (self)
 
 	for slot_name, source in pairs(self._fx_sources) do
 		_unregister_fx_sources(self._fx_extension, source)
-	end
-end
-
-local function _update_vfx_sources(fx_extension, sources, source_config, new_parent_unit, new_attachments)
-	for alias, source_name in pairs(sources) do
-		fx_extension:unregister_vfx_spawner(source_name)
-
-		local node_name = source_config[alias]
-
-		fx_extension:register_vfx_spawner(source_name, new_parent_unit, new_attachments, node_name)
 	end
 end
 

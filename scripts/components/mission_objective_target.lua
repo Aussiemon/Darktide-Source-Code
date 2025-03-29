@@ -142,6 +142,7 @@ MissionObjectiveTarget.component_data = {
 			"decode",
 			"escort",
 			"kill",
+			"resupply",
 			"scanning",
 		},
 		options_values = {
@@ -150,6 +151,7 @@ MissionObjectiveTarget.component_data = {
 			"decode",
 			"escort",
 			"kill",
+			"resupply",
 			"scanning",
 		},
 	},

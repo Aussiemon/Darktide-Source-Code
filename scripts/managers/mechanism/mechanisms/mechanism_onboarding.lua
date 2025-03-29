@@ -14,13 +14,19 @@ MechanismOnboarding.init = function (self, ...)
 
 	local context = self._context
 
-	self._challenge_level = context.challenge_level
-	self._mission_name = context.mission_name
-
-	local mission_settings = Missions[self._mission_name]
-
-	self._level_name = mission_settings.level
 	self._singleplay_type = context.singleplay_type
+
+	local mission_name = context.mission_name
+	local mission_settings = Missions[mission_name]
+	local level_name = mission_settings.level
+	local data = self._mechanism_data
+
+	data.challenge = context.challenge_level or DevParameters.challenge
+	data.resistance = DevParameters.resistance
+	data.level_name = level_name
+	data.mission_name = mission_name
+	data.circumstance_name = GameParameters.circumstance
+	data.side_mission = GameParameters.side_mission
 	self._init_scenario = context.init_scenario
 end
 
@@ -42,29 +48,25 @@ end
 
 MechanismOnboarding.wanted_transition = function (self)
 	local state = self._state
+	local mechanism_data = self._mechanism_data
 
 	if state == "init" then
 		self:_set_state("gameplay")
 
-		local challenge = self._challenge_level or DevParameters.challenge
-		local resistance = DevParameters.resistance
-		local circumstance = GameParameters.circumstance
-		local side_mission = GameParameters.side_mission
+		local mission_name = mechanism_data.mission_name
+		local level_name = mechanism_data.level_name
+		local challenge = mechanism_data.challenge
+		local resistance = mechanism_data.resistance
+		local side_mission = mechanism_data.side_mission
+		local circumstance_name = mechanism_data.circumstance_name
 
 		Log.info("MechanismOnboarding", "Using dev parameters for challenge and resistance (%s/%s)", challenge, resistance)
 
-		local mechanism_data = {
-			challenge = challenge,
-			resistance = resistance,
-			circumstance_name = circumstance,
-			side_mission = side_mission,
-		}
-
 		return false, StateLoading, {
 			wait_for_despawn = true,
-			level = self._level_name,
-			mission_name = self._mission_name,
-			circumstance_name = circumstance,
+			level = level_name,
+			mission_name = mission_name,
+			circumstance_name = circumstance_name,
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {
@@ -124,8 +126,8 @@ MechanismOnboarding.wanted_transition = function (self)
 			local chapter_data = current_chapter.data
 			local mission_name = chapter_data.mission_name
 
-			self._mission_name = mission_name
-			self._level_name = Missions[mission_name].level
+			mechanism_data.mission_name = mission_name
+			mechanism_data.level_name = Missions[mission_name].level
 
 			self:_set_state("init")
 

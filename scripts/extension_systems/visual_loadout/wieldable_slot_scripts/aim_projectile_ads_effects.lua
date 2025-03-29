@@ -2,7 +2,7 @@
 
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AimProjectileAdsEffects = class("AimProjectileAdsEffects", "AimProjectileEffects")

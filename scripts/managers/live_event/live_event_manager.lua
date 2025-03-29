@@ -45,8 +45,9 @@ LiveEventManager.remove_player = function (self, id)
 	local event_id = self:active_event_id()
 	local account_id = player_data.account_id
 	local is_host = self._is_host
+	local has_data = player_data.progress[event_id] ~= nil
 
-	if is_host and event_id and account_id then
+	if is_host and event_id and account_id and has_data then
 		self:_update_player_xp(id, event_id)
 
 		local active_event_xp = table.nested_get(player_data, "progress", event_id, "xp")
@@ -191,6 +192,11 @@ LiveEventManager._on_track_state_success = function (self, id, event_id, backend
 	progress_data.backend_data = backend_data
 
 	local backend_state = backend_data.state
+
+	if not backend_state.rewarded then
+		Log.warning("LiveEventManager", "on_track_state_success bad data")
+		table.dump(backend_data, "backend_data", 10)
+	end
 
 	progress_data.value = backend_state.xpTracked
 	progress_data.tier = backend_state.rewarded
@@ -340,6 +346,8 @@ LiveEventManager._add_event = function (self, backend_data)
 		Log.warning("LiveEventManager", "No template for event '%s' with category '%s'.", id, category)
 
 		return
+	else
+		Log.info("LiveEventManager", "Added live event '%s', id '%s' with category '%s'.", template_name, id, category)
 	end
 
 	local tiers = {}

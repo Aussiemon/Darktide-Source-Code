@@ -37,16 +37,20 @@ AttackReportManager.init = function (self, is_server, network_event_delegate)
 	local ring_buffer = Script.new_array(RING_BUFFER_SIZE)
 
 	for i = 1, RING_BUFFER_SIZE do
-		ring_buffer[i] = {
-			absorbed_damage = 0,
-			damage = 0,
-			hit_weakspot = false,
-			attack_direction = Vector3Box(),
-			hit_world_position = Vector3Box(),
-			attack_result = attack_results.died,
-			attack_type = attack_types.melee,
-			damage_efficiency = damage_efficiencies.full,
-		}
+		local buffer_data = Script.new_map(11)
+
+		buffer_data.attacked_unit = nil
+		buffer_data.attacking_unit = nil
+		buffer_data.attack_direction = Vector3Box()
+		buffer_data.hit_world_position = Vector3Box()
+		buffer_data.hit_zone_name = nil
+		buffer_data.hit_weakspot = false
+		buffer_data.damage = 0
+		buffer_data.absorbed_damage = 0
+		buffer_data.attack_result = attack_results.died
+		buffer_data.attack_type = attack_types.melee
+		buffer_data.damage_efficiency = damage_efficiencies.full
+		ring_buffer[i] = buffer_data
 	end
 
 	self._ring_buffer = ring_buffer

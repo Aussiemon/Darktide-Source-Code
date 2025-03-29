@@ -3,7 +3,9 @@
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local BtEnterHooks = {
+local BtEnterHooks = {}
+
+BtEnterHooks = {
 	trigger_anim_event = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local anim_event = args.anim_event
 		local animation_extension = ScriptUnit.extension(unit, "animation_system")
@@ -37,6 +39,11 @@ local BtEnterHooks = {
 		local component = Blackboard.write_component(blackboard, component_name)
 
 		component[field] = value
+	end,
+	set_component_values = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		for ii = 1, #args do
+			BtEnterHooks.set_component_value(unit, breed, blackboard, scratchpad, action_data, t, args[ii])
+		end
 	end,
 	set_scratchpad_value = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local field = args.field

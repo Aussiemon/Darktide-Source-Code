@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/ui/views/views.lua
 
-local Archetypes = require("scripts/settings/archetype/archetypes")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -334,10 +333,10 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/class_selection/class_selection_zealot/class_selection_zealot",
-			"content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran",
-			"content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
 			"content/levels/ui/class_selection/class_selection_ogryn/class_selection_ogryn",
+			"content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
+			"content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran",
+			"content/levels/ui/class_selection/class_selection_zealot/class_selection_zealot",
 		},
 		testify_flags = {
 			ui_views = false,
@@ -412,6 +411,7 @@ local views = {
 		use_transition_ui = true,
 		levels = {
 			"content/levels/ui/end_of_round/ui_eor_background",
+			"content/levels/ui/horde_end_of_round/horde_end_of_round",
 		},
 		enter_sound_events = {
 			UISoundEvents.end_screen_enter,
@@ -453,9 +453,6 @@ local views = {
 		package = "packages/ui/views/mission_intro_view/mission_intro_view",
 		path = "scripts/ui/views/mission_intro_view/mission_intro_view",
 		use_transition_ui = true,
-		levels = {
-			"content/levels/ui/mission_intro/mission_intro",
-		},
 		enter_sound_events = {
 			UISoundEvents.mission_briefing_start,
 		},
@@ -538,6 +535,7 @@ local views = {
 		levels = {
 			"content/levels/ui/lobby/lobby",
 			"content/levels/ui/havoc_lobby/havoc_lobby",
+			"content/levels/ui/horde_lobby/horde_lobby",
 		},
 		testify_flags = {
 			ui_views = false,
@@ -946,14 +944,12 @@ _declare_view("crafting_modify_view", require("scripts/ui/views/crafting_modify_
 _declare_view("crafting_upgrade_item_view", require("scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_declaration_settings"))
 _declare_view("crafting_extract_trait_view", require("scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view_declaration_settings"))
 _declare_view("crafting_replace_trait_view", require("scripts/ui/views/crafting_replace_trait_view/crafting_replace_trait_view_declaration_settings"))
-_declare_view("crafting_modify_options_view", require("scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_declaration_settings"))
 _declare_view("crafting_replace_perk_view", require("scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view_declaration_settings"))
 _declare_view("crafting_mechanicus_modify_view", require("scripts/ui/views/crafting_mechanicus_modify_view/crafting_mechanicus_modify_view_declaration_settings"))
 _declare_view("crafting_mechanicus_barter_items_view", require("scripts/ui/views/crafting_mechanicus_barter_items_view/crafting_mechanicus_barter_items_view_declaration_settings"))
 _declare_view("crafting_mechanicus_upgrade_item_view", require("scripts/ui/views/crafting_mechanicus_upgrade_item_view/crafting_mechanicus_upgrade_item_view_declaration_settings"))
 _declare_view("crafting_mechanicus_replace_trait_view", require("scripts/ui/views/crafting_mechanicus_replace_trait_view/crafting_mechanicus_replace_trait_view_declaration_settings"))
 _declare_view("crafting_mechanicus_replace_perk_view", require("scripts/ui/views/crafting_mechanicus_replace_perk_view/crafting_mechanicus_replace_perk_view_declaration_settings"))
-_declare_view("crafting_mechanicus_modify_options_view", require("scripts/ui/views/crafting_mechanicus_modify_options_view/crafting_mechanicus_modify_options_view_declaration_settings"))
 _declare_view("crafting_mechanicus_upgrade_expertise_view", require("scripts/ui/views/crafting_mechanicus_upgrade_expertise_view/crafting_mechanicus_upgrade_expertise_view_declaration_settings"))
 _declare_view("masteries_overview_view", require("scripts/ui/views/masteries_overview_view/masteries_overview_view_declaration_settings"))
 _declare_view("mastery_view", require("scripts/ui/views/mastery_view/mastery_view_declaration_settings"))
@@ -969,6 +965,7 @@ _declare_view("havoc_reward_presentation_view", require("scripts/ui/views/havoc_
 _declare_view("group_finder_view", require("scripts/ui/views/group_finder_view/group_finder_view_declaration_settings"))
 _declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
+_declare_view("horde_play_view", require("scripts/ui/views/horde_play_view/horde_play_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

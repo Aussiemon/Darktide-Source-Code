@@ -9,7 +9,7 @@ local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -499,7 +499,7 @@ EndView._update_buttons = function (self)
 	local continue_button_action = _continue_button_action
 	local can_skip = self._can_skip
 	local input_legend_text_template = can_skip and Localize("loc_input_legend_text_template") or nil
-	local button_text = TextUtilities.localize_with_button_hint(continue_button_action, continue_button_loc_string, nil, service_type, input_legend_text_template)
+	local button_text = Text.localize_with_button_hint(continue_button_action, continue_button_loc_string, nil, service_type, input_legend_text_template)
 	local time = continue_button_content.time
 
 	if time and self._has_shown_summary_view then
@@ -522,7 +522,7 @@ EndView._update_buttons = function (self)
 
 	local loc_string = EndViewSettings.stay_in_party_vote_text
 	local vote_button_action = _vote_button_action
-	local vote_button_text = TextUtilities.localize_with_button_hint(vote_button_action, loc_string, nil, service_type, input_legend_text_template)
+	local vote_button_text = Text.localize_with_button_hint(vote_button_action, loc_string, nil, service_type, input_legend_text_template)
 
 	voting_widget_content.vote_text = vote_button_text
 
@@ -607,7 +607,14 @@ EndView._setup_background_world = function (self)
 
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
-	local level_name = EndViewSettings.level_name
+	local level_name
+	local played_mission = self._context.played_mission
+
+	if played_mission == "psykhanium" then
+		level_name = EndViewSettings.horde_level_name
+	else
+		level_name = EndViewSettings.level_name
+	end
 
 	self._world_spawner:spawn_level(level_name)
 	self:_register_event("end_of_round_blur_background_world", "_end_of_round_blur_background_world")
@@ -888,16 +895,16 @@ EndView._set_character_names = function (self)
 				elseif not self._has_shown_summary_view then
 					local character_level = report.currentLevel
 
-					widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
+					widget_content.character_name = Text.formatted_character_name(character_name, character_level)
 				elseif player_info:is_own_player() then
 					local character_level = player_info:character_level()
 
-					widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
+					widget_content.character_name = Text.formatted_character_name(character_name, character_level)
 				else
 					local xp = report.currentXp
 					local level_after_mission = self:_level_from_xp(experience_settings, xp)
 
-					widget_content.character_name = TextUtilities.formatted_character_name(character_name, level_after_mission)
+					widget_content.character_name = Text.formatted_character_name(character_name, level_after_mission)
 				end
 
 				widget_content.account_name = player_info:user_display_name()
@@ -923,7 +930,7 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 		local text_params = {
 			total_kills = team_session_report.total_kills,
 			total_deaths = team_session_report.total_deaths,
-			mission_time = TextUtilities.format_time_span_long_form_localized(mission_time_in_sec),
+			mission_time = Text.format_time_span_long_form_localized(mission_time_in_sec),
 			font_size = mission_sub_header_style.stats_font_size * render_scale,
 			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4]),
 		}

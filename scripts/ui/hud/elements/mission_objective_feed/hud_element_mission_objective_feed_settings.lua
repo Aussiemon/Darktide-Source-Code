@@ -14,14 +14,22 @@ local hud_element_mission_objective_feed_settings = {
 		event_remove_mission_objective = "_remove_objective",
 	},
 	entry_spacing_by_category = {
-		default = 10,
+		default = 0,
 		overarching = 10,
 		side_mission = 0,
+		warning = 0,
+	},
+	widget_padding_by_category = {
+		default = 10,
+		overarching = 30,
+		side_mission = 10,
+		warning = 0,
 	},
 	entry_order_by_objective_category = {
 		default = 2,
 		overarching = 1,
 		side_mission = 3,
+		warning = 4,
 	},
 	base_color = UIHudSettings.color_tint_main_1,
 	alert_color = {
@@ -55,6 +63,14 @@ local hud_element_mission_objective_feed_settings = {
 			header_text = UIHudSettings.color_tint_6,
 			counter_text = UIHudSettings.color_tint_6,
 		},
+		warning = {
+			bar = UIHudSettings.color_tint_main_1,
+			bar_frame = UIHudSettings.color_tint_main_1,
+			bar_background = UIHudSettings.color_tint_0,
+			icon = UIHudSettings.color_tint_main_1,
+			header_text = UIHudSettings.color_tint_main_1,
+			counter_text = UIHudSettings.color_tint_main_1,
+		},
 	},
 	size_by_category = {
 		overarching = {
@@ -73,6 +89,12 @@ local hud_element_mission_objective_feed_settings = {
 			icon = {
 				20,
 				20,
+			},
+		},
+		warning = {
+			icon = {
+				0,
+				0,
 			},
 		},
 	},
@@ -94,6 +116,13 @@ local hud_element_mission_objective_feed_settings = {
 		side_mission = {
 			icon = {
 				16,
+				0,
+				6,
+			},
+		},
+		warning = {
+			icon = {
+				0,
 				0,
 				6,
 			},

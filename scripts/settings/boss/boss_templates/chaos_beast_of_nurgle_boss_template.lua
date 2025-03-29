@@ -23,7 +23,11 @@ local WEAKSPOT_COLOR = {
 	0.2,
 }
 local _num_nearby_enemies
-local FORCE, Z_FORCE, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME = 12, 4, 1.5, 1.5, 20, 1.75
+local FORCE, Z_FORCE, MAX_STEPS, MAX_TIME = 12, 4, 20, 1.75
+local THROW_TELEPORT_UP_OFFSET = {
+	human = 1.5,
+	ogryn = 1.5,
+}
 local THROW_TEST_DISTANCE = 8
 local template = {
 	name = "chaos_beast_of_nurgle",
@@ -91,7 +95,7 @@ local template = {
 					local physics_world = template_context.physics_world
 					local test_direction = Quaternion.forward(Unit.local_rotation(unit, 1))
 					local to = POSITION_LOOKUP[unit] + test_direction * THROW_TEST_DISTANCE
-					local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, hit_unit_breed_name, physics_world, FORCE, Z_FORCE, test_direction, to, gravity, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME)
+					local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, physics_world, FORCE, Z_FORCE, test_direction, to, gravity, THROW_TELEPORT_UP_OFFSET[hit_unit_breed_name] or THROW_TELEPORT_UP_OFFSET.human, MAX_STEPS, MAX_TIME)
 
 					if hit then
 						local navigation_extension = template_data.navigation_extension

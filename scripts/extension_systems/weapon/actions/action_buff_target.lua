@@ -4,10 +4,10 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local CoherencyUtils = require("scripts/extension_systems/coherency/coherency_utils")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local ActionBuffTarget = class("ActionBuffTarget", "ActionAbilityBase")
 
 ActionBuffTarget.init = function (self, action_context, action_params, action_setting)

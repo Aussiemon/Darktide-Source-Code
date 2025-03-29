@@ -883,5 +883,321 @@ Blueprints.texture_icon = {
 		end
 	end,
 }
+Blueprints.buff_title = {
+	size = {
+		300,
+		50,
+	},
+	pass_template = {
+		{
+			pass_type = "rect",
+			style_id = "rect",
+			style = {
+				offset = {
+					0,
+					0,
+					1,
+				},
+				size = {
+					5,
+				},
+				color = Color.terminal_text_header(255, true),
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "title",
+			value = "<UNDEFINED>",
+			value_id = "title",
+			style = {
+				font_size = 24,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					25,
+					0,
+					1,
+				},
+				text_color = Color.terminal_text_header(255, true),
+				size = {
+					250,
+					2000,
+				},
+			},
+		},
+	},
+	init = function (parent, widget, config, ui_renderer)
+		local content = widget.content
+		local style = widget.style
+
+		content.title = config.title
+
+		local title_height = _text_height(ui_renderer, content.title, style.title)
+		local big_margin = 4
+
+		style.title.size[2] = title_height
+		style.title.offset[2] = big_margin
+		content.size[2] = title_height + big_margin * 2
+	end,
+}
+Blueprints.buff_sub_title = {
+	size = {
+		300,
+		60,
+	},
+	pass_template = {
+		{
+			pass_type = "rect",
+			style_id = "rect",
+			style = {
+				offset = {
+					0,
+					0,
+					1,
+				},
+				size = {
+					5,
+				},
+				color = Color.terminal_text_header(255, true),
+			},
+		},
+		{
+			pass_type = "texture_uv",
+			style_id = "line",
+			value = "content/ui/materials/gradients/gradient_horizontal",
+			value_id = "line",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				offset = {
+					25,
+					0,
+					1,
+				},
+				size = {
+					150,
+					2,
+				},
+				color = Color.terminal_text_header(255, true),
+				uvs = {
+					{
+						1,
+						0,
+					},
+					{
+						0,
+						1,
+					},
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "title",
+			value = "<UNDEFINED>",
+			value_id = "title",
+			style = {
+				font_size = 16,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					25,
+					0,
+					1,
+				},
+				text_color = Color.terminal_text_header(255, true),
+				size = {
+					250,
+					2000,
+				},
+			},
+		},
+	},
+	init = function (parent, widget, config, ui_renderer)
+		local content = widget.content
+		local style = widget.style
+
+		content.title = config.title
+
+		local small_margin = 2
+		local big_margin = 8
+		local title_height = _text_height(ui_renderer, content.title, style.title)
+
+		style.title.size[2] = title_height
+		style.title.offset[2] = big_margin
+		style.line.offset[2] = style.title.offset[2] + style.title.size[2] + small_margin
+
+		local bottom_margin = math.min(0, big_margin - small_margin - style.line.size[2])
+
+		content.size[2] = style.line.offset[2] + style.line.size[2] + big_margin + bottom_margin
+	end,
+}
+
+local buff_icon_size = {
+	50,
+	50,
+}
+
+Blueprints.buff = {
+	size = {
+		400,
+		60,
+	},
+	pass_template = {
+		{
+			pass_type = "rect",
+			style_id = "rect",
+			style = {
+				offset = {
+					0,
+					0,
+					1,
+				},
+				size = {
+					5,
+				},
+				color = Color.terminal_text_header(255, true),
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon",
+			value = "content/ui/materials/base/ui_default_base",
+			value_id = "icon",
+			style = {
+				horizontal_alignment = "left",
+				scale_to_material = true,
+				vertical_alignment = "top",
+				offset = {
+					25,
+					0,
+					1,
+				},
+				size = buff_icon_size,
+				material_values = {
+					texture_map = "content/ui/textures/placeholder_texture",
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "title",
+			value = "<UNDEFINED>",
+			value_id = "title",
+			style = {
+				font_size = 18,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					85,
+					0,
+					1,
+				},
+				text_color = Color.terminal_text_header(255, true),
+				size = {
+					265,
+					2000,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "description",
+			value = "<UNDEFINED>",
+			value_id = "description",
+			style = {
+				font_size = 20,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					85,
+					24,
+					1,
+				},
+				text_color = Color.terminal_text_body(255, true),
+				size = {
+					265,
+					2000,
+				},
+			},
+		},
+	},
+	init = function (parent, widget, config, ui_renderer)
+		local content = widget.content
+		local style = widget.style
+
+		if config.title then
+			content.title = config.title
+		end
+
+		if config.description then
+			content.description = config.description
+		end
+
+		if config.material then
+			content.icon = config.material
+		end
+
+		if config.texture then
+			if config.texture == "" then
+				style.icon.material_values.texture_map = nil
+			else
+				style.icon.material_values.texture_map = config.texture
+			end
+		end
+
+		if config.gradient then
+			style.icon.material_values.gradient_map = config.gradient
+		end
+
+		if config.material_values then
+			for name, data in pairs(config.material_values) do
+				if name == "texture_map" and data == "" then
+					style.icon.material_values[name] = nil
+				else
+					style.icon.material_values[name] = data
+				end
+			end
+		end
+
+		if config.icon_color then
+			style.icon.color = config.icon_color
+		end
+
+		if config.icon_size then
+			style.icon.size = config.icon_size
+		end
+
+		if config.icon_offset then
+			style.icon.offset[1] = config.icon_offset[1] and style.icon.offset[1] + config.icon_offset[1] or style.icon.offset[1]
+			style.icon.offset[2] = config.icon_offset[2] and style.icon.offset[2] + config.icon_offset[2] or style.icon.offset[2]
+		end
+
+		local title_height = _text_height(ui_renderer, content.title, style.title)
+		local description_height = _text_height(ui_renderer, content.description, style.description)
+		local small_margin = 0
+		local big_margin = 4
+
+		style.title.size[2] = title_height
+		style.title.offset[2] = big_margin
+		style.icon.offset[2] = big_margin
+		style.description.offset[2] = style.title.offset[2] + style.title.size[2] + small_margin
+		content.size[2] = math.max(style.description.offset[2] + description_height + big_margin * 2, buff_icon_size[2] + big_margin * 2)
+	end,
+}
+Blueprints.buff_spacing = {
+	size = {
+		400,
+		5,
+	},
+}
 
 return Blueprints

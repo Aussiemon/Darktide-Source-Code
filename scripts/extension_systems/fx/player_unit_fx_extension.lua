@@ -1005,6 +1005,31 @@ PlayerUnitFxExtension.trigger_wwise_event = function (self, event_name, append_h
 	return WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, ...)
 end
 
+PlayerUnitFxExtension.trigger_wwise_events_local_only = function (self, local_event_name, optional_occlusion, optional_unit, optional_node_index, optional_position, optional_rotation, optional_parameter_name, optional_parameter_value, optional_switch_name, optional_switch_value)
+	if self._unit_data_extension.is_resimulating then
+		return
+	end
+
+	optional_occlusion = not not optional_occlusion
+
+	local optional_unit_id, is_level_unit = nil, false
+
+	if optional_unit then
+		is_level_unit, optional_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(optional_unit)
+	end
+
+	local optional_parameter_name_id = optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name]
+	local optional_switch_name_id = optional_switch_name and NetworkLookup.sound_switches[optional_switch_name]
+	local optional_switch_value_id = optional_switch_value and NetworkLookup.sound_switch_values[optional_switch_value]
+	local append_husk_to_event_name = false
+
+	if self._is_local_unit then
+		self:_trigger_wwise_event_synced(local_event_name, append_husk_to_event_name, optional_occlusion, optional_unit, optional_node_index, optional_position, optional_rotation, optional_parameter_name, optional_parameter_value, optional_switch_name, optional_switch_value)
+	else
+		Managers.state.game_session:send_rpc_client("rpc_player_trigger_wwise_event_synced", self._player:peer_id(), self._game_object_id, NetworkLookup.player_character_sounds[local_event_name], append_husk_to_event_name, optional_occlusion, optional_unit_id, is_level_unit, optional_node_index, optional_position, optional_rotation, optional_parameter_name_id, optional_parameter_value, optional_switch_name_id, optional_switch_value_id)
+	end
+end
+
 PlayerUnitFxExtension.trigger_wwise_events_local_and_husk = function (self, local_event_name, husk_event_name, optional_occlusion, optional_unit, optional_node_index, optional_position, optional_rotation, optional_parameter_name, optional_parameter_value, optional_switch_name, optional_switch_value)
 	if self._unit_data_extension.is_resimulating then
 		return

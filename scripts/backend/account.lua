@@ -50,8 +50,10 @@ Account.get_has_migrated_commendation_score = function (self)
 end
 
 Account.set_havoc_unlock_status = function (self, value)
-	if type(value) ~= "number" and not type(value == "nil") then
-		return Promise.rejected("Backend was asked to set invalid type '" .. type(value) .. "', expected 'number' or 'nil'")
+	local value_type = type(value)
+
+	if value_type ~= "number" and value_type ~= "nil" then
+		return Promise.rejected("Backend was asked to set invalid type '" .. value_type .. "', expected 'number' or 'nil'")
 	end
 
 	return self:set_data("core", {
@@ -60,15 +62,41 @@ Account.set_havoc_unlock_status = function (self, value)
 end
 
 Account.get_havoc_unlock_status = function (self)
-	local data = self:get_data("core", "havoc_unlock_status"):next(function (value)
-		if type(value) ~= "number" and type(value) ~= "nil" then
-			Promise.rejected("Backend returned invalid type '" .. type(value) .. "', expected 'number' or 'nil'")
+	return self:get_data("core", "havoc_unlock_status"):next(function (value)
+		local value_type = type(value)
+
+		if value_type ~= "number" and value_type ~= "nil" then
+			return Promise.rejected("Backend returned invalid type '" .. value_type .. "', expected 'number' or 'nil'")
 		end
 
 		return value
+	end):catch(function (err)
+		return Promise.rejected(err)
 	end)
+end
 
-	return data
+Account.get_feature_horde_vo = function (self)
+	return self:get_data("feature_horde", "vo")
+end
+
+Account.set_feature_horde_vo = function (self, vo_line)
+	return self:get_feature_horde_vo():next(function (vo_player)
+		if vo_player == nil then
+			vo_player = {}
+		end
+
+		if not table.contains(vo_player, vo_line) then
+			table.insert(vo_player, vo_line)
+
+			return self:set_data("feature_horde", {
+				vo = vo_player,
+			})
+		end
+	end):catch(function (err)
+		Log.error("BackendAccountVo", "Error setting vo %s", vo_type)
+
+		return Promise.rejected(err)
+	end)
 end
 
 Account.get = function (self)

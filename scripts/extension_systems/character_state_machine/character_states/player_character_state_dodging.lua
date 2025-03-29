@@ -2,7 +2,7 @@
 
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
@@ -225,6 +225,12 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
+		local unit_rotation = self._first_person_component.rotation
+		local flat_unit_rotation = Quaternion.look(Vector3.normalize(Vector3.flat(Quaternion.forward(unit_rotation))), Vector3.up())
+		local move_direction = Quaternion.rotate(flat_unit_rotation, dodge_direction)
+
+		param_table.dodge_direction = Vector3Box(move_direction)
+
 		buff_extension:add_proc_event(proc_events.on_dodge_start, param_table)
 	end
 end
@@ -260,6 +266,8 @@ PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
 
 	if next_state == "sliding" and _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension) == 1 then
 		dodge_character_state_component.consecutive_dodges = math.min(dodge_character_state_component.consecutive_dodges + 1, NetworkConstants.max_consecutive_dodges)
+	elseif next_state == "falling" then
+		dodge_character_state_component.dodge_time = dodge_character_state_component.dodge_time + 0.5
 	end
 
 	local param_table = buff_extension:request_proc_event_param_table()

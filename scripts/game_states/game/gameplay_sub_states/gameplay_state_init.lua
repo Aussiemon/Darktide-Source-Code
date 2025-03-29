@@ -24,7 +24,7 @@ GameplayStateInit.on_enter = function (self, parent, params)
 	Managers.state.position_lookup = PositionLookupManager:new()
 end
 
-GameplayStateInit.on_exit = function (self, on_shutdown)
+GameplayStateInit.on_exit = function (self, exit_params)
 	local initialized_steps = self._shared_state.initialized_steps
 
 	if not initialized_steps.GameplayInitStepStateLast then
@@ -35,8 +35,9 @@ GameplayStateInit.on_exit = function (self, on_shutdown)
 	local shared_state = self._shared_state
 	local world = shared_state.world
 	local is_server = shared_state.is_server
+	local can_cleanup_suspend = initialized_steps.GameplayInitStepStateLastChecks or initialized_steps.GameplayInitStepStateLast
 
-	if on_shutdown then
+	if exit_params and (exit_params.on_shutdown or exit_params.on_suspend and can_cleanup_suspend) then
 		MissionCleanupUtilies.cleanup(shared_state, self._gameplay_state, initialized_steps)
 	end
 

@@ -161,9 +161,7 @@ local function _extract_weapon_tweak_template_names(target_table, tweak_type)
 		local weapon_template = WeaponTemplates[weapon_template_name]
 		local base_template_lookup = weapon_template.__base_template_lookup
 		local tweak_templates = base_template_lookup[tweak_type]
-		local tweak_template_keys
-
-		tweak_template_keys = table.keys(tweak_templates)
+		local tweak_template_keys = table.keys(tweak_templates)
 
 		table.sort(tweak_template_keys)
 
@@ -190,6 +188,12 @@ local WEAPON_HANDLING_TEMPLATES = {
 }
 
 _extract_weapon_tweak_template_names(WEAPON_HANDLING_TEMPLATES, tweak_template_types.weapon_handling)
+
+local WEAPON_SHOUT_TEMPLATES = {
+	"none",
+}
+
+_extract_weapon_tweak_template_names(WEAPON_SHOUT_TEMPLATES, tweak_template_types.weapon_shout)
 
 local SWAY_TEMPLATES = {
 	"none",
@@ -620,7 +624,10 @@ local PlayerComponentConfig = {
 		player_speed_scale = "movement_settings",
 	},
 	minigame_character_state = {
-		interface_unit_id = "level_unit_id",
+		interface_game_object_id = "game_object_id",
+		interface_is_level_unit = "bool",
+		interface_level_unit_id = "level_unit_id",
+		pocketable_device_active = "bool",
 	},
 	ladder_character_state = {
 		end_position = "Vector3",
@@ -816,9 +823,6 @@ local PlayerComponentConfig = {
 		rotation = "Quaternion",
 		speed = "projectile_speed",
 	},
-	action_heal_target_over_time = {
-		target_unit = "Unit",
-	},
 	action_sweep = {
 		attack_direction = "Vector3",
 		is_sticky = "bool",
@@ -1002,11 +1006,12 @@ local PlayerComponentConfig = {
 		spread_template_name = SPREAD_TEMPLATES,
 		sprint_template_name = SPRINT_TEMPLATES,
 		stamina_template_name = STAMINA_TEMPLATES,
-		sway_template_name = SWAY_TEMPLATES,
 		suppression_template_name = SUPPRESSION_TEMPLATES,
+		sway_template_name = SWAY_TEMPLATES,
 		toughness_template_name = TOUGHNESS_TEMPLATES,
 		warp_charge_template_name = WARP_CHARGE_TEMPLATES,
 		weapon_handling_template_name = WEAPON_HANDLING_TEMPLATES,
+		weapon_shout_template_name = WEAPON_SHOUT_TEMPLATES,
 	},
 	aim_assist_ramp = {
 		decay_end_time = "fixed_frame_offset_end_t_7bit",
@@ -1053,8 +1058,8 @@ local buff_component_config = {
 	seed = "random_seed",
 }
 
-for i = 1, max_component_buffs do
-	local key_lookup = component_key_lookup[i]
+for ii = 1, max_component_buffs do
+	local key_lookup = component_key_lookup[ii]
 	local template_name_key = key_lookup.template_name_key
 	local start_time_key = key_lookup.start_time_key
 	local active_start_time_key = key_lookup.active_start_time_key

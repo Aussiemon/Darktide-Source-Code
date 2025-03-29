@@ -2,7 +2,7 @@
 
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Breed = require("scripts/utilities/breed")
 local Fov = require("scripts/utilities/camera/fov")
 local Orientation = require("scripts/utilities/orientation")

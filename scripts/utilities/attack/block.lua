@@ -1,16 +1,16 @@
 ﻿-- chunkname: @scripts/utilities/attack/block.lua
 
+local Action = require("scripts/utilities/action/action")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Action = require("scripts/utilities/weapon/action")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local Stamina = require("scripts/utilities/attack/stamina")
 local Stun = require("scripts/utilities/attack/stun")
 local attack_types = AttackSettings.attack_types
+local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local stat_buff_types = BuffSettings.stat_buffs
-local buff_keywords = BuffSettings.keywords
 local DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE = "block_broken"
 local BLOCK_ANGLE_DISTANCE_SQUARED_EPSILON = 0.010000000000000002
 local _block_buff_modifier, _calculate_block_angle, _get_block_angles, _get_block_cost
@@ -99,22 +99,32 @@ Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_t
 	return can_block
 end
 
-Block.attack_is_blockable = function (damage_profile, optional_target_unit, optional_weapon_template)
+Block.attack_is_blockable = function (damage_profile, optional_target_unit, optional_weapon_template, optional_buff_extension)
 	if not damage_profile.unblockable then
 		return true
+	end
+
+	if optional_buff_extension then
+		local block_unblockable = optional_buff_extension:has_keyword(buff_keywords.block_unblockable)
+
+		if block_unblockable then
+			return true
+		end
 	end
 
 	if optional_weapon_template then
 		local unit_data_extension = ScriptUnit.extension(optional_target_unit, "unit_data_system")
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 		local _, action_setting = Action.current_action(weapon_action_component, optional_weapon_template)
-		local block_unblockable = action_setting and action_setting.block_unblockable
-		local block_goes_brrr = action_setting and action_setting.block_goes_brrr or action_setting and action_setting.parry_block
 
-		return block_unblockable or block_goes_brrr
-	else
-		return false
+		if not action_setting then
+			return false
+		end
+
+		return action_setting.block_unblockable or action_setting.block_goes_brrr or action_setting.parry_block
 	end
+
+	return false
 end
 
 Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_position, attack_type, attack_direction, weapon_template, damage_profile)
@@ -233,12 +243,15 @@ end
 
 local PERFECT_BLOCK_WINDOW = 0.3
 
-Block.start_block_action = function (t, block_component)
+Block.start_block_action = function (t, block_component, skip_update_perfect_blocking)
 	block_component.is_blocking = true
 	block_component.has_blocked = false
-	block_component.is_perfect_blocking = true
 
-	return t + PERFECT_BLOCK_WINDOW
+	if not skip_update_perfect_blocking then
+		block_component.is_perfect_blocking = true
+
+		return t + PERFECT_BLOCK_WINDOW
+	end
 end
 
 Block.update_perfect_blocking = function (t, perfect_block_ends_at_t, block_component)

@@ -46,7 +46,19 @@ BtCultistRitualistSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_stagger = children[2]
+		local node_disable = children[2]
+		local disable_component = blackboard.disable
+		local condition_result = disable_component.is_disabled
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_disable
+
+			return node_disable
+		end
+	end
+
+	do
+		local node_stagger = children[3]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -58,7 +70,7 @@ BtCultistRitualistSelectorNode.evaluate = function (self, unit, blackboard, scra
 		end
 	end
 
-	local node_chanting = children[3]
+	local node_chanting = children[4]
 
 	new_running_child_nodes[node_identifier] = node_chanting
 

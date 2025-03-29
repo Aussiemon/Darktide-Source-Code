@@ -283,9 +283,9 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		local backpack_offset_node_index = Unit.has_node(parent_unit, "j_backpackoffset") and Unit.node(parent_unit, "j_backpackoffset")
 
 		if backpack_offset_node_index then
-			local backpack_offset_v3 = Vector3(0, backpack_offset, 0)
+			local offset_translation = Vector3(0, backpack_offset, 0)
 
-			Unit.set_local_position(parent_unit, backpack_offset_node_index, backpack_offset_v3)
+			Unit.set_local_position(parent_unit, backpack_offset_node_index, offset_translation)
 		end
 	end
 
@@ -295,9 +295,10 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		Unit.set_unit_objects_visibility(spawned_unit, false, true, VisibilityContexts.RAYTRACING_CONTEXT)
 	end
 
-	local keep_local_transform = not settings.skip_link_children and true
+	local skip_link_children = not not not settings.skip_link_children
+	local map_mode = skip_link_children and World.LINK_MODE_NODE_NAME or World.LINK_MODE_NONE
 
-	World.link_unit(settings.world, spawned_unit, 1, parent_unit, attach_node_index, keep_local_transform)
+	World.link_unit(settings.world, spawned_unit, 1, parent_unit, attach_node_index, map_mode)
 
 	if settings.lod_group and Unit.has_lod_object(spawned_unit, "lod") and not settings.is_first_person then
 		local attached_lod_object = Unit.lod_object(spawned_unit, "lod")

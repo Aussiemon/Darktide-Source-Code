@@ -21,30 +21,6 @@ TrainingGroundsView.on_enter = function (self)
 		self._world_spawner:set_listener(viewport_name)
 	end
 
-	if not Managers.narrative:is_chapter_complete("onboarding", "play_training") then
-		for i = 2, #Definitions.button_options_definitions do
-			local button = self._widgets_by_name["option_button_" .. i]
-			local button_hotspot = button.content.hotspot
-
-			button_hotspot.disabled = true
-		end
-	end
-
-	local shooting_range_min_level = PlayerProgressionUnlocks.shooting_range
-	local player = Managers.player:local_player(1)
-	local profile = player:profile()
-	local player_level = profile.current_level
-
-	if player_level < shooting_range_min_level then
-		local shooting_range_button = self._widgets_by_name.option_button_3
-		local shooting_range_name = shooting_range_button.content.text
-
-		shooting_range_button.content.text = string.format("%s (%s)", shooting_range_name, Localize("loc_requires_level", true, {
-			level = shooting_range_min_level,
-		}))
-		shooting_range_button.content.hotspot.disabled = true
-	end
-
 	self:play_vo_events({
 		"hub_interact_training_ground_psyker",
 	}, "training_ground_psyker_a", nil, 0.8, true)

@@ -47,7 +47,10 @@ combat_sword_action_inputs.parry = {
 
 local combat_sword_action_input_hierarchy = table.clone(MeleeActionInputSetupFast.action_input_hierarchy)
 
-combat_sword_action_input_hierarchy.parry = "base"
+combat_sword_action_input_hierarchy[#combat_sword_action_input_hierarchy + 1] = {
+	input = "parry",
+	transition = "base",
+}
 weapon_template.action_inputs = combat_sword_action_inputs
 weapon_template.action_input_hierarchy = combat_sword_action_input_hierarchy
 
@@ -873,8 +876,8 @@ weapon_template.actions = {
 		anim_event = "attack_special_stab",
 		anim_event_3p = "attack_swing_stab",
 		attack_direction_override = "push",
-		damage_window_end = 0.12,
-		damage_window_start = 0.07,
+		damage_window_end = 0.18333333333333332,
+		damage_window_start = 0.13333333333333333,
 		first_person_hit_anim = "hit_stop",
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "attack_hit_stab",
@@ -945,7 +948,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.3,
+				-0.1,
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combatsword_p3_stab,
@@ -1114,7 +1117,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8

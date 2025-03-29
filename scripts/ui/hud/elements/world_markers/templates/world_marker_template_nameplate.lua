@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate.lua
 
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local PlayerManager = require("scripts/foundation/managers/player/player_manager")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UiSettings = require("scripts/settings/ui/ui_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local _event_update_player_name, _create_character_text
 local template = {}
 local size = {
@@ -172,7 +172,8 @@ function _create_character_text(marker)
 	local character_level = profile and profile.current_level or 1
 	local title = ProfileUtils.character_title(profile)
 	local archetype = profile and profile.archetype
-	local string_symbol = archetype and archetype.string_symbol or ""
+	local archetype_name = archetype and archetype.name
+	local string_symbol = archetype_name and UiSettings.archetype_font_icon[archetype_name] or ""
 	local text = string_symbol .. " " .. player:name() .. " - " .. tostring(character_level) .. " "
 
 	if title then
@@ -182,7 +183,7 @@ function _create_character_text(marker)
 	marker.widget.content.header_text = text
 
 	if character_level >= 30 then
-		local rank_promise = Managers.data_service.havoc:havoc_rank_all_time_high(player:account_id())
+		local rank_promise = Managers.data_service.havoc:havoc_rank_cadence_high(player:account_id())
 
 		rank_promise:next(function (rank)
 			marker.rank_promise = nil

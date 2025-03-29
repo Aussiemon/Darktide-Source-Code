@@ -610,8 +610,8 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_stab_03",
 		anim_event_3p = "attack_swing_stab",
-		damage_window_end = 0.45,
-		damage_window_start = 0.23,
+		damage_window_end = 0.35,
+		damage_window_start = 0.2833333333333333,
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
@@ -677,7 +677,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.2,
+				-0.3,
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer_stab,
@@ -1296,7 +1296,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

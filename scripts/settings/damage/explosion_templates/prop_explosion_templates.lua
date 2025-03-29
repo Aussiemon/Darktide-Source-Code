@@ -14,6 +14,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		close_damage_profile = DamageProfileTemplates.barrel_explosion_close,
 		damage_profile = DamageProfileTemplates.barrel_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/explosions/frag_grenade_01",
 		},
@@ -34,6 +39,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		close_damage_profile = DamageProfileTemplates.fire_barrel_explosion_close,
 		damage_profile = DamageProfileTemplates.fire_barrel_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/destructibles/explosive_barrel_explosion",
 		},
@@ -53,6 +63,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.breach_charge_explosion,
 		damage_profile = DamageProfileTemplates.breach_charge_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 	},
 	corruptor_emerge = {
 		close_radius = 2,
@@ -65,11 +80,17 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/corruptor/corruptor_core_erupt",
 		},
 	},
 	heresy_shield_1_explosion = {
+		broadphase_explosion_filter = "heroes",
 		close_radius = 2,
 		collision_filter = "filter_explosion_player_only",
 		damage_falloff = false,
@@ -82,6 +103,7 @@ local explosion_templates = {
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 	},
 	heresy_shield_2_explosion = {
+		broadphase_explosion_filter = "heroes",
 		close_radius = 2,
 		collision_filter = "filter_explosion_player_only",
 		damage_falloff = false,
@@ -94,6 +116,7 @@ local explosion_templates = {
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 	},
 	heresy_shield_3_explosion = {
+		broadphase_explosion_filter = "heroes",
 		close_radius = 2,
 		collision_filter = "filter_explosion_player_only",
 		damage_falloff = false,

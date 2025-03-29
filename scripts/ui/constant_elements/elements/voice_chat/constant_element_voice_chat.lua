@@ -59,14 +59,14 @@ ConstantElementVoiceChat.update = function (self, dt, t, ui_renderer, render_set
 	end
 end
 
-ConstantElementVoiceChat._update_players_speaking = function (self, dt, t, ui_renderer)
-	local widgets_names = {
-		"player_1",
-		"player_2",
-		"player_3",
-		"player_4",
-	}
+local widgets_names = {
+	"player_1",
+	"player_2",
+	"player_3",
+	"player_4",
+}
 
+ConstantElementVoiceChat._update_players_speaking = function (self, dt, t, ui_renderer)
 	for i = 1, #widgets_names do
 		local widget_name = widgets_names[i]
 		local account_id = self._players_speaking_order[i]

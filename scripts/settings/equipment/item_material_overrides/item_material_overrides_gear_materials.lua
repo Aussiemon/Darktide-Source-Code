@@ -98,6 +98,39 @@ local material_overrides = {
 			},
 		},
 	},
+	oxidized_wear_03 = {
+		property_overrides = {
+			edge_chipping = {
+				0.2,
+			},
+			oxid_level = {
+				0.6,
+				0.35,
+			},
+		},
+	},
+	oxidized_wear_04 = {
+		property_overrides = {
+			edge_chipping = {
+				0.3,
+			},
+			oxid_level = {
+				0.8,
+				0.7,
+			},
+		},
+	},
+	oxidized_wear_05 = {
+		property_overrides = {
+			edge_chipping = {
+				0.6,
+			},
+			oxid_level = {
+				0.75,
+				0.8,
+			},
+		},
+	},
 	outfit_dirt_01 = {
 		property_overrides = {
 			dirt = {
@@ -125,6 +158,24 @@ local material_overrides = {
 				0.719,
 				0.276,
 				0,
+			},
+		},
+	},
+	dirt_color_02 = {
+		property_overrides = {
+			dirt_color = {
+				0.133,
+				0.024,
+				0,
+			},
+		},
+	},
+	dirt_color_03 = {
+		property_overrides = {
+			dirt_color = {
+				0.431,
+				0.344,
+				0.104,
 			},
 		},
 	},
@@ -942,6 +993,43 @@ local material_overrides = {
 			},
 		},
 	},
+	oxidized_metal_iron_brass_02_wear_01 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_black_01",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.5,
+			},
+			oxid_level = {
+				0.1,
+				0.3,
+			},
+		},
+	},
 	oxidized_metal_brass_wear_01 = {
 		texture_overrides = {
 			oxid1_gradient = {
@@ -1013,6 +1101,117 @@ local material_overrides = {
 			oxid_level = {
 				0.1,
 				0.3,
+			},
+		},
+	},
+	oxidized_metal_brass_02_wear_02 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.4,
+			},
+			oxid_level = {
+				0.2,
+				0.5,
+			},
+		},
+	},
+	oxidized_metal_brass_02_wear_03 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.4,
+			},
+			oxid_level = {
+				0.4,
+				0.5,
+			},
+		},
+	},
+	oxidized_metal_brass_02_wear_04 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01",
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_bca",
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_nm",
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/brass_02/metal_brass_02_orm",
+			},
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.3,
+			},
+			oxid_level = {
+				0.65,
+				0.52,
 			},
 		},
 	},
@@ -3161,6 +3360,33 @@ local material_overrides = {
 			},
 		},
 	},
+	fabric_wool_04_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_bc",
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_nm",
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_orm",
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_bc",
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_nm",
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_orm",
+			},
+		},
+		property_overrides = {
+			dirt = {
+				0.1,
+			},
+		},
+	},
 	fabric_wool_01_wool_02_wear_01 = {
 		texture_overrides = {
 			mat1_bc = {
@@ -4973,13 +5199,13 @@ local material_overrides = {
 	fabric_vostroyan_brass_01_wear_01 = {
 		texture_overrides = {
 			mat1_bc = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_bc",
 			},
 			mat1_nm = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_nm",
 			},
 			mat1_orm = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_orm",
 			},
 			mat2_bc = {
 				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_bca",
@@ -5000,13 +5226,13 @@ local material_overrides = {
 	fabric_vostroyan_brass_01_wear_02 = {
 		texture_overrides = {
 			mat1_bc = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_bc",
 			},
 			mat1_nm = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_nm",
 			},
 			mat1_orm = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_orm",
 			},
 			mat2_bc = {
 				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_bca",
@@ -5036,13 +5262,13 @@ local material_overrides = {
 				resource = "content/characters/tiling_materials/fabric_brass_01/fabric_brass_01_orm",
 			},
 			mat2_bc = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_bc",
 			},
 			mat2_nm = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_nm",
 			},
 			mat2_orm = {
-				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm",
+				resource = "content/characters/tiling_materials/fabric_wool_04/wool_04_orm",
 			},
 		},
 		property_overrides = {

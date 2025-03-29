@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/data_service/services/profiles_service.lua
 
+local Archetypes = require("scripts/settings/archetype/archetypes")
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local MasterItems = require("scripts/backend/master_items")
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
@@ -39,17 +40,25 @@ local function _fetch_all_backend_profiles(backend_interface)
 		end
 
 		local profiles = {}
-		local selected_profile
+		local selected_profile, backup_profile
 
 		for i = 1, #characters do
 			local character = characters[i]
-			local progression = _find_character_progression(character, characters_progression)
-			local profile = ProfileUtils.character_to_profile(character, gear_list, progression)
+			local archetype_name = character.archetype
 
-			profiles[#profiles + 1] = profile
+			if Archetypes[archetype_name] then
+				local progression = _find_character_progression(character, characters_progression)
+				local profile = ProfileUtils.character_to_profile(character, gear_list, progression)
 
-			if selected_character_id and character.id == selected_character_id then
-				selected_profile = profile
+				profiles[#profiles + 1] = profile
+
+				if selected_character_id and character.id == selected_character_id then
+					selected_profile = profile
+				else
+					backup_profile = profile
+				end
+			elseif backup_profile then
+				selected_profile = backup_profile
 			end
 		end
 

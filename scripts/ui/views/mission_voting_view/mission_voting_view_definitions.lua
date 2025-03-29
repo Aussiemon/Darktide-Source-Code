@@ -99,10 +99,6 @@ local title_bar_size = {
 	outer_panel_size[1],
 	99,
 }
-local mission_circumstance_size = {
-	mission_info_size[1],
-	71,
-}
 local details_panel_size = {
 	inner_panel_size[1],
 	500,
@@ -115,17 +111,9 @@ local scrollbar_size = {
 	10,
 	details_panel_size[2] - 40,
 }
-local accept_button_size = {
-	440,
-	78,
-}
 local timer_bar_size = {
 	310,
 	10,
-}
-local secondary_button_size = {
-	398,
-	64,
 }
 local title_bar_bottom_size = {
 	zone_image_panel_size[1],
@@ -162,20 +150,10 @@ local mission_info_panel_position = {
 	50,
 	3,
 }
-local mission_type_position = {
-	0,
-	50,
-	4,
-}
 local mission_summary_position = {
 	0,
 	20,
 	4,
-}
-local mission_difficulty_challenge_position = {
-	0,
-	15,
-	1,
 }
 local details_button_position = {
 	0,
@@ -247,25 +225,10 @@ local mission_difficulty_position = {
 	0,
 	4,
 }
-local mission_circumstance_position = {
-	0,
-	0,
-	0,
-}
 local footer_position = {
 	0,
 	0,
 	25,
-}
-local player_portrait_position = {
-	18,
-	26,
-	15,
-}
-local mission_difficulty_extra_offset = {
-	0,
-	20,
-	0,
 }
 local details_panel_position = {
 	0,
@@ -523,7 +486,7 @@ local scenegraph_definition = {
 		parent = "zone_image_panel",
 		vertical_alignment = "bottom",
 		size = {
-			49.6,
+			0,
 			49.6,
 		},
 		position = {
@@ -739,7 +702,7 @@ local mission_info_widget_definitions = {
 			style = {
 				horizontal_alignment = "left",
 				vertical_alignment = "center",
-				color = Color.terminal_text_header(255, true),
+				color = Color.terminal_text_body(255, true),
 				offset = {
 					-20,
 					10,
@@ -780,6 +743,16 @@ local mission_info_widget_definitions = {
 			pass_type = "multi_texture",
 			style_id = "difficulty_icon",
 			value = "content/ui/materials/backgrounds/default_square",
+		},
+		{
+			pass_type = "multi_texture",
+			style_id = "rankup_icon_background",
+			value = "content/ui/materials/icons/generic/havoc_chevron",
+		},
+		{
+			pass_type = "multi_texture",
+			style_id = "rankup_icon",
+			value = "content/ui/materials/icons/generic/havoc_chevron",
 		},
 		{
 			pass_type = "text",

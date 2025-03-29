@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ripperguns/ogryn_rippergun_p1_m2.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -121,7 +121,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	stab = {
-		buffer_time = 0,
+		buffer_time = 0.3,
 		clear_input_queue = true,
 		input_sequence = {
 			{
@@ -199,7 +199,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -269,7 +269,7 @@ weapon_template.actions = {
 		weapon_handling_template = "rippergun_burst",
 		action_movement_curve = {
 			{
-				modifier = 0.5,
+				modifier = 0.6,
 				t = 0.05,
 			},
 			{
@@ -277,7 +277,7 @@ weapon_template.actions = {
 				t = 0.15,
 			},
 			{
-				modifier = 0.775,
+				modifier = 0.8,
 				t = 0.175,
 			},
 			{
@@ -288,7 +288,7 @@ weapon_template.actions = {
 				modifier = 1,
 				t = 0.5,
 			},
-			start_modifier = 0.6,
+			start_modifier = 0.7,
 		},
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
@@ -423,6 +423,7 @@ weapon_template.actions = {
 		start_input = "zoom",
 		total_time = 1.25,
 		uninterruptible = true,
+		weapon_handling_template = "time_scale_1_3",
 		crosshair = {
 			crosshair_type = "spray_n_pray",
 		},
@@ -786,6 +787,10 @@ weapon_template.actions = {
 		damage_type = damage_types.combat_blade,
 		damage_profile = DamageProfileTemplates.rippergun_weapon_special,
 		herding_template = HerdingTemplates.stab,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
 	action_inspect = {
@@ -839,7 +844,6 @@ weapon_template.no_ammo_delay = 0.5
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

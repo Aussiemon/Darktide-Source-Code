@@ -20,9 +20,7 @@ local mission_templates = {
 		texture_medium = "content/ui/textures/missions/op_train_medium",
 		texture_small = "content/ui/textures/missions/op_train_small",
 		zone_id = "operations",
-		testify_flags = {
-			validate_minion_pathing_on_mission = false,
-		},
+		testify_flags = {},
 		cinematics = {
 			intro_abc = {
 				"c_cam",
@@ -65,6 +63,7 @@ local mission_templates = {
 		mission_brief_vo = {
 			vo_profile = "sergeant_a",
 			wwise_route_key = 1,
+			wwise_state = "None",
 			mission_giver_packs = {
 				sergeant_a = {
 					"sergeant",

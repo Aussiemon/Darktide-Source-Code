@@ -6,6 +6,9 @@ local roamer_rifleman = "cultist_assault"
 local elite_berzerker = "cultist_berzerker"
 local elite_gunner = "cultist_gunner"
 local elite_gunner_two = "cultist_gunner"
+local bulwark = "chaos_ogryn_bulwark"
+local ogryn_gunner = "chaos_ogryn_gunner"
+local ogryn_executor = "chaos_ogryn_executor"
 local elite_shocktrooper = "cultist_shocktrooper"
 local shocktrooper_two = "cultist_shocktrooper"
 local roamer_packs = {
@@ -401,6 +404,108 @@ local roamer_packs = {
 				roamer_rifleman,
 				roamer_rifleman,
 				elite_gunner_two,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				"chaos_ogryn_gunner",
+				elite_gunner,
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				"chaos_ogryn_bulwark",
+				elite_gunner,
+				elite_gunner,
+				"chaos_ogryn_gunner",
+			},
+		},
+	},
+	cultist_mixed_low = {
+		{
+			weight = 1,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				bulwark,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				ogryn_gunner,
+				elite_gunner,
+				elite_gunner,
+				bulwark,
+				bulwark,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 2,
+			breeds = {
+				elite_gunner,
+				elite_gunner,
+				bulwark,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				bulwark,
+			},
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				ogryn_gunner,
+				roamer_rifleman,
+				elite_berzerker,
+				elite_gunner_two,
+			},
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				ogryn_gunner,
+				elite_berzerker,
+			},
+		},
+	},
+	cultist_mixed_high = {
+		{
+			weight = 1,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				bulwark,
+				bulwark,
+				elite_berzerker,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				"chaos_ogryn_gunner",
+				roamer_rifleman,
+				roamer_rifleman,
+				elite_gunner_two,
+				bulwark,
+				elite_berzerker,
 			},
 		},
 		{

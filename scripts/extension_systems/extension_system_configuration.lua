@@ -26,8 +26,8 @@ _system_require("cinematic_scene", "cinematic_scene_system")
 _system_require("coherency", "coherency_system")
 _system_require("combat_vector", "combat_vector_system")
 _system_require("component", "component_system")
-_system_require("corruptor", "corruptor_system")
 _system_require("corruptor_arm", "corruptor_arm_system")
+_system_require("corruptor", "corruptor_system")
 _system_require("cover", "cover_system")
 _system_require("cutscene_character", "cutscene_character_system")
 _system_require("darkness", "darkness_system")
@@ -157,8 +157,8 @@ local systems = {
 		true,
 		enabled_in_runtime_loaded_levels,
 		{
-			"MinionPerceptionExtension",
 			"BotPerceptionExtension",
+			"MinionPerceptionExtension",
 		},
 	},
 	{
@@ -195,9 +195,9 @@ local systems = {
 		true,
 		enabled_in_runtime_loaded_levels,
 		{
-			"MinionBehaviorExtension",
 			"BotBehaviorExtension",
 			"CombatRangeUserBehaviorExtension",
+			"MinionBehaviorExtension",
 		},
 	},
 	{
@@ -703,7 +703,7 @@ local systems = {
 		"ExtensionSystemBase",
 		false,
 		true,
-		false,
+		true,
 		true,
 		enabled_in_runtime_loaded_levels,
 		{

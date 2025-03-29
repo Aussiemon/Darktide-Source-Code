@@ -7,6 +7,9 @@ local elite_executor = "renegade_executor"
 local elite_berzerker = "renegade_berzerker"
 local elite_gunner = "renegade_gunner"
 local elite_gunner_two = "renegade_gunner"
+local bulwark = "chaos_ogryn_bulwark"
+local ogryn_gunner = "chaos_ogryn_gunner"
+local ogryn_executor = "chaos_ogryn_executor"
 local elite_shocktrooper = "renegade_shocktrooper"
 local shocktrooper_two = "renegade_shocktrooper"
 local roamer_packs = {
@@ -333,7 +336,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				bulwark,
 				shocktrooper_two,
 				roamer_assault,
 				roamer_assault,
@@ -353,7 +356,7 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				bulwark,
 				shocktrooper_two,
 				shocktrooper_two,
 				roamer_assault,
@@ -549,6 +552,129 @@ local roamer_packs = {
 				"chaos_ogryn_bulwark",
 				elite_gunner,
 				"chaos_ogryn_gunner",
+			},
+		},
+	},
+	renegade_mixed_low = {
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				bulwark,
+			},
+		},
+		{
+			weight = 2,
+			breeds = {
+				ogryn_gunner,
+				roamer_rifleman,
+				elite_berzerker,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				ogryn_gunner,
+				elite_gunner,
+				elite_berzerker,
+				elite_gunner,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				ogryn_gunner,
+				elite_gunner_two,
+				bulwark,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				ogryn_gunner,
+				elite_gunner,
+				bulwark,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+	},
+	renegade_mixed_high = {
+		{
+			weight = 1,
+			breeds = {
+				shocktrooper_two,
+				ogryn_gunner,
+				elite_gunner,
+				ogryn_executor,
+				bulwark,
+				bulwark,
+				elite_executor,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				shocktrooper_two,
+				elite_gunner,
+				elite_gunner,
+				ogryn_executor,
+				roamer_rifleman,
+				bulwark,
+				elite_executor,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_executor,
+				roamer_rifleman,
+				roamer_rifleman,
+				elite_gunner,
+				bulwark,
+			},
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				shocktrooper_two,
+				elite_gunner,
+				bulwark,
+				bulwark,
+				elite_gunner,
+				elite_gunner_two,
+				roamer_rifleman,
+				roamer_rifleman,
+			},
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
+				elite_executor,
+			},
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				bulwark,
+				elite_gunner,
+				ogryn_gunner,
 			},
 		},
 	},

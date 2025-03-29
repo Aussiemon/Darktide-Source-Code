@@ -8,6 +8,23 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_forcesword_2h_p1_guaranteed_melee_crit_on_activated_kill = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_guaranteed_melee_crit_on_activated_kill",
+				find_value_type = "trait_override",
+				path = {
+					"buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+			value_manipulation = function (value)
+				return math.abs(value) * 10
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_guaranteed_melee_crit_on_activated_kill = {
 			{
@@ -34,6 +51,20 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_guaranteed_melee_crit_on_activat
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_warp_charge_power_bonus = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_warp_charge_power_bonus",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_warp_charge_power_bonus = {
 			{
@@ -60,6 +91,23 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_warp_charge_power_bonus = {
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_can_block_ranged = {
+	format_values = {
+		block_cost = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_can_block_ranged",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.block_cost_multiplier,
+				},
+			},
+			value_manipulation = function (value)
+				return 100 - value * 100
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_can_block_ranged = {
 			{
@@ -86,6 +134,30 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_can_block_ranged = {
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit = {
 			{
@@ -116,6 +188,18 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit = {
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_wind_slash_crits = {
+	format_values = {
+		cooldown = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_wind_slash_crits",
+				find_value_type = "trait_override",
+				path = {
+					"cooldown_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_wind_slash_crits = {
 			{
@@ -134,6 +218,41 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_wind_slash_crits = {
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_increased_attack_cleave_on_multiple_hits = {
+	format_values = {
+		cleave = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_increased_attack_cleave_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.max_hit_mass_attack_modifier,
+				},
+			},
+		},
+		multiple_hit = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_increased_attack_cleave_on_multiple_hits",
+				find_value_type = "buff_template",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_increased_attack_cleave_on_multiple_hits",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_increased_attack_cleave_on_multiple_hits = {
 			{
@@ -160,6 +279,30 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_increased_attack_cleave_on_multi
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_melee_cleave = {
+	format_values = {
+		cleave = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_melee_cleave_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.max_hit_mass_attack_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_melee_cleave_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_melee_cleave_parent = {
 			{
@@ -186,6 +329,30 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_melee_cle
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_finesse_bonus = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_finesse_bonus",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.finesse_modifier_bonus,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_finesse_bonus",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_finesse_bonus = {
 			{
@@ -216,6 +383,30 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_finesse_bonus = {
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_critical_strike_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_critical_strike_chance",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_critical_strike_chance",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_critical_strike_chance = {
 			{
@@ -242,6 +433,30 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_critical_strike_cha
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_vent_warp_charge_on_multiple_hits = {
+	format_values = {
+		warp_charge = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_vent_warp_charge_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"vent_percentage",
+				},
+			},
+		},
+		multiple_hit = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_vent_warp_charge_on_multiple_hits",
+				find_value_type = "buff_template",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_vent_warp_charge_on_multiple_hits = {
 			{
@@ -260,6 +475,31 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_vent_warp_charge_on_multiple_hit
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_toughness_recovery_on_multiple_hits = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_toughness_recovery_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"buff_data",
+					"replenish_percentage",
+				},
+			},
+		},
+		multiple_hit = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_toughness_recovery_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_toughness_recovery_on_multiple_hits = {
 			{
@@ -290,6 +530,30 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_toughness_recovery_on_multiple_h
 	},
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_crit_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_crit_chance_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_crit_chance_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_crit_chance_parent = {
 			{

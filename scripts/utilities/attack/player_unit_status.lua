@@ -253,7 +253,7 @@ local AbilityTemplate, Action
 
 PlayerUnitStatus.is_aiming_lunge = function (combat_ability_action_read_component)
 	AbilityTemplate = AbilityTemplate or require("scripts/utilities/ability/ability_template")
-	Action = Action or require("scripts/utilities/weapon/action")
+	Action = Action or require("scripts/utilities/action/action")
 
 	local ability_template = AbilityTemplate.current_ability_template(combat_ability_action_read_component)
 	local _, current_action_settings = Action.current_action(combat_ability_action_read_component, ability_template)

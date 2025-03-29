@@ -76,7 +76,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	self._game_world_fullscreen_blur_amount = 0
 end
 
-StateGameplay.on_exit = function (self, on_shutdown)
+StateGameplay.on_exit = function (self, exit_params)
 	self._next_state = nil
 	self._next_state_context = nil
 
@@ -84,7 +84,7 @@ StateGameplay.on_exit = function (self, on_shutdown)
 		self._state_machine:unregister_on_state_change_callback("UIManager")
 	end
 
-	self._state_machine:delete(on_shutdown)
+	self._state_machine:delete(exit_params)
 end
 
 StateGameplay.update = function (self, main_dt, main_t)

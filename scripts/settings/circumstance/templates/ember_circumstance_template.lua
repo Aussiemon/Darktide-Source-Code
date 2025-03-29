@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/circumstance/templates/ember_circumstance_template.lua
 
+local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local circumstance_templates = {
 	ember_01 = {
 		dialogue_id = "circumstance_vo_ember",
@@ -13,7 +14,9 @@ local circumstance_templates = {
 		},
 		mutators = {
 			"mutator_only_traitor_guard_faction",
+			"mutator_renegade_grenadier",
 		},
+		mission_overrides = MissionOverrides.all_fire_barrels,
 	},
 }
 

@@ -3,7 +3,7 @@
 local deployables = {}
 
 local function _require_deployable(name)
-	local path = "scripts/settings/deployables/" .. name
+	local path = "scripts/settings/deployables/templates/" .. name
 	local deployable = require(path)
 
 	deployables[name] = deployable

@@ -1,7 +1,5 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/weapon_trait_templates/burninating_trait_templates.lua
 
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local burninating_trait_templates = {}
 
 burninating_trait_templates.flamer_p1_m1_burninating_stat = {

@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/ui/views/tabbed_menu_view_base.lua
 
+local Breeds = require("scripts/settings/breed/breeds")
+local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
-local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local Views = require("scripts/ui/views/views")
-local Breeds = require("scripts/settings/breed/breeds")
 local TabbedMenuViewBase = class("TabbedMenuViewBase", "BaseView")
 
 TabbedMenuViewBase.init = function (self, definitions, settings, context)

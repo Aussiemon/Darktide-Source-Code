@@ -361,7 +361,13 @@ ConstantElementNotificationFeed.event_remove_notification = function (self, noti
 end
 
 ConstantElementNotificationFeed.event_clear_notifications = function (self)
-	self:clear()
+	table.clear(self._queue_notifications)
+
+	for _, notification in pairs(self._notifications) do
+		notification.time, notification.total_time = 0, 0
+	end
+
+	self:_update_notification_queue_counter()
 end
 
 ConstantElementNotificationFeed._get_new_id = function (self)
@@ -370,11 +376,13 @@ ConstantElementNotificationFeed._get_new_id = function (self)
 	return self._notification_id_counter
 end
 
-ConstantElementNotificationFeed.clear = function (self)
-	while #self._notifications > 0 do
-		local notification = self._notifications[1]
+ConstantElementNotificationFeed.clear = function (self, ui_renderer)
+	local notifications = self._notifications
 
-		self:_remove_notification(notification)
+	while #notifications > 0 do
+		local notification = notifications[1]
+
+		self:_remove_notification(notification, ui_renderer)
 	end
 end
 
@@ -1360,7 +1368,7 @@ ConstantElementNotificationFeed.update = function (self, dt, t, ui_renderer, ren
 	if DEBUG_RELOAD then
 		DEBUG_RELOAD = false
 
-		self:clear()
+		self:clear(ui_renderer)
 	end
 
 	local notification_message_delay_queue = self._notification_message_delay_queue

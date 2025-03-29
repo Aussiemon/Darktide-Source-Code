@@ -3,6 +3,8 @@
 local sound_data = {
 	events = {
 		ground_impact = "wwise/events/minions/play_enemy_foley_body_impact_medium_ground_gore",
+		mutator_awakened_stinger = "wwise/events/minions/play_daemonhost_mutator_awakened_stinger",
+		mutator_death_stinger = "wwise/events/minions/play_daemonhost_mutator_death_stinger",
 		stop_vce = "wwise/events/minions/stop_all_daemonhost_vce",
 		vce_attack_long = "wwise/events/minions/play_enemy_daemonhost_attack_vce_longer",
 		vce_attack_short = "wwise/events/minions/play_enemy_daemonhost_attack_vce_short",

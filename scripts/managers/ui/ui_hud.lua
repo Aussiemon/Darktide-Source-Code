@@ -58,6 +58,8 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	Managers.event:register(self, "event_update_hud_scale", "event_update_hud_scale")
 
 	self._refresh_retained = true
+
+	Managers.event:trigger("event_on_hud_created")
 end
 
 UIHud.get_player_extension = function (self, player, extension_name)

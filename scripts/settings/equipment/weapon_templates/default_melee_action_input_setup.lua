@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/default_melee_action_input_setup.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local default_melee_action_input_setup = {}
 
@@ -288,6 +288,6 @@ default_melee_action_input_setup.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(default_melee_action_input_setup.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(default_melee_action_input_setup.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 return default_melee_action_input_setup

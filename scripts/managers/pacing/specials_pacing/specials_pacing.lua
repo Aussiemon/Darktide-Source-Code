@@ -244,12 +244,12 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 
 	local main_path_manager = Managers.state.main_path
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
+	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
+	local time_since_forward_behind_changed = main_path_manager:time_since_behind_travel_changed(target_side_id)
 	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
 
 	self._old_furthest_travel_distance = furthest_travel_distance
 
-	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
-	local time_since_forward_behind_changed = main_path_manager:time_since_behind_travel_changed(target_side_id)
 	local travel_distance_allowed_forward = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MIN or time_since_forward_travel_changed > TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MAX
 	local travel_distance_allowed_behind = time_since_forward_behind_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MIN or time_since_forward_behind_changed > TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MAX
 	local travel_distance_allowed = travel_distance_allowed_forward or travel_distance_allowed_behind
@@ -586,7 +586,14 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 
 	local slot_target_unit = specials_slot.target_unit
 	local target_unit = ALIVE[slot_target_unit] and slot_target_unit or closest_target_unit
-	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_states.aggroed, target_unit, nil, nil, nil, nil, optional_health_modifier)
+	local minion_spawn_manager = Managers.state.minion_spawn
+	local param_table = minion_spawn_manager:request_param_table()
+
+	param_table.optional_aggro_state = aggro_states.aggroed
+	param_table.optional_target_unit = target_unit
+	param_table.optional_health_modifier = optional_health_modifier
+
+	local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, param_table)
 
 	return true, unit
 end
@@ -845,9 +852,14 @@ SpecialsPacing._filter_too_close_spawners = function (self, target_side_id, opti
 end
 
 SpecialsPacing._add_spawner_special = function (self, spawner, breed_name, side_id, target_side_id, optional_health_modifier)
+	local param_table = spawner:request_param_table()
+
+	param_table.target_side_id = target_side_id
+	param_table.max_health_modifier = optional_health_modifier
+
 	local spawner_queue_id = spawner:add_spawns({
 		breed_name,
-	}, side_id, target_side_id, nil, nil, nil, nil, nil, optional_health_modifier)
+	}, side_id, param_table)
 
 	return spawner_queue_id, spawner
 end
@@ -867,7 +879,7 @@ SpecialsPacing._check_stuck_special = function (self, unit, specials_slot, templ
 		local failed_move_attempts = navigation_extension:failed_move_attempts()
 
 		if failed_move_attempts > NUM_FAILED_MOVE_TO_DESPAWN then
-			Managers.state.minion_spawn:despawn(unit)
+			Managers.state.minion_spawn:despawn_minion(unit)
 
 			return
 		end
@@ -894,7 +906,7 @@ SpecialsPacing._check_stuck_special = function (self, unit, specials_slot, templ
 		local distance_behind_sq = Vector3.distance_squared(special_position, behind_position)
 
 		if destroy_special_distance_sq <= distance_ahead_sq and destroy_special_distance_sq <= distance_behind_sq then
-			Managers.state.minion_spawn:despawn(unit)
+			Managers.state.minion_spawn:despawn_minion(unit)
 		end
 	end
 end

@@ -2,10 +2,10 @@
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
+local gibbing_power = GibbingSettings.gibbing_power
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local damage_templates = {}
 local overrides = {}
@@ -21,7 +21,7 @@ damage_templates.heavy_tank = {
 		attack = 0.4,
 		impact = 0.5,
 	},
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = gibbing_power.heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -106,10 +106,7 @@ damage_templates.heavy_tank = {
 		},
 	},
 }
-
-local heavy_tank_shotgun = table.clone(damage_templates.heavy_tank)
-
-damage_templates.heavy_tank_shotgun = heavy_tank_shotgun
+damage_templates.heavy_tank_shotgun = table.clone(damage_templates.heavy_tank)
 damage_templates.shotgun_tank = {
 	ragdoll_only = true,
 	ragdoll_push_force = 500,
@@ -118,7 +115,7 @@ damage_templates.shotgun_tank = {
 		attack = 0.1,
 		impact = 1,
 	},
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = gibbing_power.heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -211,7 +208,7 @@ damage_templates.default_powersword_heavy = {
 		attack = 0.75,
 		impact = 0.75,
 	},
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = gibbing_power.heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{

@@ -5,7 +5,7 @@ local talent_settings = {
 		tank = {
 			damage_taken_multiplier = 0.8,
 			static_movement_reduction_multiplier = 0,
-			toughness_damage_taken_multiplier = 0.8,
+			toughness_damage_taken_multiplier = 0.75,
 		},
 		revive = {
 			assist_speed_modifier = 0.25,
@@ -13,6 +13,176 @@ local talent_settings = {
 		},
 		radius = {
 			coherency_aura_size_increase = 0.5,
+		},
+		explosions_burn = {
+			close_stacks = 2,
+			max_stacks = 8,
+			stacks = 1,
+		},
+		frag_bomb_bleed = {
+			stacks = 12,
+		},
+		box_bleed = {
+			stacks = 2,
+		},
+		ogryn_suppression_immunity_on_high_toughness = {
+			toughness = 0.5,
+		},
+		ogryn_movement_boost_on_ranged_damage = {
+			cooldown_duration = 6,
+			duration = 1,
+			ranged_damage_taken_multiplier = 0.25,
+		},
+		ogryn_protect_allies = {
+			cooldown_duration = 30,
+			duration = 10,
+			power_level_modifier = 0.1,
+			revive_speed_modifier = 0.25,
+			toughness_damage_reduction = 0.75,
+		},
+		ogryn_damage_reduction_after_elite_kill = {
+			damage_taken_multiplier = 0.9,
+			duration = 5,
+		},
+		ogryn_melee_attacks_give_mtdr = {
+			damage_taken_multiplier = 0.96,
+			stacks = 5,
+		},
+		ogryn_reload_speed_on_empty = {
+			reload_speed = 0.15,
+		},
+		ogryn_stagger_cleave_on_third = {
+			count = 3,
+			max_hit_mass_attack_modifier = 0.25,
+			melee_impact_modifier = 0.25,
+		},
+		ogryn_block_increases_power = {
+			duration = 6,
+			melee_impact_modifier = 0.1,
+			stacks = 8,
+		},
+		ogryn_stacking_attack_speed = {
+			duration = 5,
+			max_stacks = 5,
+			melee_attack_speed = 0.025,
+		},
+		ogryn_taking_damage_improves_handling = {
+			duration = 5,
+			recoil_modifier = -0.35,
+			spread_modifier = -0.35,
+		},
+		ogryn_damage_reduction_on_high_stamina = {
+			damage_taken_multiplier = 0.85,
+			stamina_threshold = 0.75,
+		},
+		ogryn_multiple_staggers_restore_stamina = {
+			stamina = 0.15,
+		},
+		ogryn_melee_damage_after_heavy = {
+			duration = 5,
+			melee_damage_modifier = 0.15,
+		},
+		ogryn_far_damage = {
+			damage_far = 0.15,
+		},
+		ogryn_corruption_resistance = {
+			corruption_taken_multiplier = 0.7,
+		},
+		ogryn_carapace_explosion = {
+			stacks = 5,
+			toughness = 0.5,
+		},
+		ogryn_heavy_hitter = {
+			cleave = 0.15,
+			heavy_stacks = 2,
+			max_stacks = 8,
+			melee_damage = 0.03,
+			stacks = 1,
+			stagger = 0.1,
+			tdr = 0.015,
+			toughness_melee_replenish = 0.15,
+		},
+		toughness_coherency_aura = {
+			toughness_replenish_modifier = 0.15,
+		},
+		special_ammo_armor_pen = {
+			damage = 0.15,
+			rending_multiplier = 0.15,
+		},
+		ogryn_weakspot_damage = {
+			power = 0.1,
+		},
+		ogryn_big_box_of_hurt_more_bombs = {
+			amount = 3,
+		},
+		ogryn_staggering_increases_damage_taken = {
+			damage = 0.15,
+			duration = 5,
+		},
+		ogryn_drain_stamina_for_handling = {
+			recoil_modifier = -0.15,
+			spread_modifier = -0.2,
+			stamina_per_second = 0.5,
+			sway_modifier = 0.4,
+		},
+		ogryn_wield_speed_increase = {
+			wield_speed = 0.2,
+		},
+		ogryn_ranged_damage_immunity = {
+			cooldown = 4,
+			duration = 2.5,
+			ranged_damage_taken_multiplier = 0.8,
+		},
+		ogryn_melee_improves_ranged = {
+			duration = 8,
+			max_stacks = 6,
+			ranged_damage = 0.025,
+		},
+		ogryn_pushing_applies_brittleness = {
+			stacks = 4,
+		},
+		ogryn_taunt_restore_toughness = {
+			duration = 3.25,
+			instant_toughness = 0.1,
+			max_stacks = 20,
+			toughness_per_hit = 0.005,
+		},
+		ogryn_ranged_improves_melee = {
+			duration = 6,
+			melee_attack_speed = 0.075,
+			melee_damage = 0.15,
+		},
+		ogryn_crit_damage_increase = {
+			critical_strike_damage = 0.5,
+		},
+		ogryn_block_all_attacks = {
+			duration = 5,
+			melee_damage = 0.2,
+		},
+		ogryn_blo_melee = {
+			chance = 0.1,
+			max_stacks = 10,
+		},
+		ogryn_blo_ally_ranged_buffs = {
+			duration = 8,
+			ranged_damage = 0.15,
+		},
+		ogryn_damage_taken_by_all_increases_strength_tdr = {
+			duration = 10,
+			max_stacks = 5,
+			power_level_modifier = 0.025,
+			tdr = 0.85,
+		},
+		ogryn_replenish_rock_on_miss = {
+			cooldown_duration = 5,
+		},
+		ogryn_thrust = {
+			max_stacks = 4,
+			melee_damage = 0.0375,
+			melee_impact_modifier = 0.075,
+		},
+		ogryn_suppression_increase = {
+			suppression = 0.25,
 		},
 	},
 	ogryn_1 = {
@@ -23,7 +193,12 @@ local talent_settings = {
 			resistance_duration = 5,
 		},
 		passive_1 = {
-			free_ammo_proc_chance = 0.08,
+			duration = 10,
+			fire_rate = 0.015,
+			free_ammo_proc_chance = 0.15,
+			max_stacks = 10,
+			ranged_damage = 0.02,
+			wield_speed = 0.015,
 		},
 		passive_2 = {
 			reduced_damage_while_braced = 0.75,
@@ -45,8 +220,8 @@ local talent_settings = {
 			increased_clip_size = 0.25,
 		},
 		offensive_1 = {
-			crit_chance_on_kill = 0.01,
-			duration = 10,
+			crit_chance_on_kill = 0.015,
+			duration = 12,
 			max_stacks = 8,
 		},
 		offensive_2 = {
@@ -55,16 +230,16 @@ local talent_settings = {
 		offensive_3 = {
 			duration = 5,
 			multi_hit_window = 0.5,
-			num_multi_hit = 5,
-			reload_speed_on_multi_hit = 0.25,
+			num_multi_hit = 3,
+			reload_speed_on_multi_hit = 0.15,
 		},
 		defensive_1 = {},
 		defensive_2 = {
-			duration = 2,
+			duration = 3,
 			move_speed_on_ranged_kill = 0.2,
 		},
 		defensive_3 = {
-			braced_toughness_regen = 0.05,
+			braced_toughness_regen = 0.125,
 		},
 		coop_1 = {
 			team_max_ammo_increase = 0.15,
@@ -78,15 +253,16 @@ local talent_settings = {
 			reduced_ranged_damage_per_ally = 0.75,
 		},
 		spec_passive_1 = {
-			duration = 2,
-			increased_cooldown_regeneration = 2,
+			duration = 4,
+			increased_cooldown_regeneration = 1,
 		},
 		spec_passive_2 = {
 			increased_passive_proc_chance = 0.12,
 		},
 		spec_passive_3 = {},
 		combat_ability_1 = {
-			num_stacks = 2,
+			max_stacks = 16,
+			num_stacks = 4,
 		},
 		combat_ability_2 = {
 			reduced_clip_size_modifier = -1,
@@ -117,7 +293,9 @@ local talent_settings = {
 			melee_damage_improved = 0.1,
 		},
 		passive_1 = {
+			cooldown = 1,
 			impact_modifier = 0.25,
+			stamina = 0.05,
 		},
 		passive_2 = {
 			damage_taken_multiplier = 0.75,
@@ -128,11 +306,13 @@ local talent_settings = {
 		},
 		toughness_2 = {
 			on_sweep_finish_proc_chance = 1,
-			toughness = 0.2,
+			reduced_toughness = 0.05,
+			toughness = 0.15,
 		},
 		toughness_3 = {
+			heavy_toughness = 0.15,
 			on_sweep_finish_proc_chance = 1,
-			toughness = 0.2,
+			toughness = 0.05,
 		},
 		offensive_1 = {
 			damage_vs_ogryn = 0.3,
@@ -140,6 +320,7 @@ local talent_settings = {
 		},
 		offensive_2 = {},
 		offensive_3 = {
+			light_stacks = 2,
 			stacks = 4,
 		},
 		coop_1 = {
@@ -154,10 +335,12 @@ local talent_settings = {
 		coop_3 = {
 			cooldown = 0.04,
 			damage_taken_multiplier = 0.5,
+			duration = 3,
+			increased_cooldown_regeneration = 1,
 		},
 		defensive_1 = {
-			max = 0.52,
-			max_stacks = 6,
+			max = 0.68,
+			max_stacks = 4,
 			min = 1,
 			time = 1,
 		},
@@ -172,7 +355,7 @@ local talent_settings = {
 			toughness_replenish_modifier = 1,
 		},
 		offensive_2_1 = {
-			damage = 0.2,
+			damage = 0.15,
 			time = 5,
 		},
 		offensive_2_2 = {

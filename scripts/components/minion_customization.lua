@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/components/minion_customization.lua
 
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
-local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
+local MasterItems = require("scripts/backend/master_items")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MinionCustomization = component("MinionCustomization")
 
 MinionCustomization.editor_init = function (self, unit)
@@ -43,6 +43,7 @@ MinionCustomization._construct_attach_settings = function (self, unit, world, in
 	local is_first_person = self:get_data(unit, "is_first_person")
 	local attach_settings = {
 		from_script_component = true,
+		from_ui_profile_spawner = false,
 		is_minion = true,
 		world = world,
 		character_unit = unit,
@@ -84,21 +85,21 @@ MinionCustomization._customize = function (self, unit, item_definitions)
 
 	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
 
-	self:spawn_items(item_table)
+	self:_spawn_items(item_table)
 
 	if attach_settings.lod_group then
-		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
+		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
 
-		if bv then
-			LODGroup.override_bounding_volume(attach_settings.lod_group, bv)
+		if bounding_volume then
+			LODGroup.override_bounding_volume(attach_settings.lod_group, bounding_volume)
 		end
 	end
 
 	if attach_settings.lod_shadow_group then
-		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
+		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
 
-		if bv then
-			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bv)
+		if bounding_volume then
+			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bounding_volume)
 		end
 	end
 
@@ -107,7 +108,7 @@ MinionCustomization._customize = function (self, unit, item_definitions)
 	end
 end
 
-MinionCustomization.spawn_items = function (self, items)
+MinionCustomization._spawn_items = function (self, items)
 	local unit = self._unit
 	local attach_settings = self._attach_settings
 	local item_definitions = attach_settings.item_definitions

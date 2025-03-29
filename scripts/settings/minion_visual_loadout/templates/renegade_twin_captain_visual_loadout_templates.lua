@@ -63,6 +63,11 @@ local basic_cultist_grenadier_template = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_fx_bubble",
 			},
 		},
+		slot_face = {
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+			},
+		},
 	},
 }
 local default_1 = table.clone(basic_cultist_grenadier_template)
@@ -78,6 +83,39 @@ foundry_1.slots.envrionmental_override.items = {
 }
 templates.renegade_twin_captain[zone_ids.tank_foundry] = {
 	foundry_1,
+}
+
+local havoc = table.clone(basic_cultist_grenadier_template)
+
+havoc.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/dirt_02",
+}
+havoc.slots.slot_variation_gear = {
+	use_outline = true,
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_var_02",
+	},
+}
+havoc.slots.slot_variation_gear_2 = {
+	use_outline = true,
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_lieutenant_c",
+	},
+}
+havoc.slots.slot_face = {
+	use_outline = true,
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_01",
+	},
+}
+havoc.slots.slot_head = {
+	use_outline = true,
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_02",
+	},
+}
+templates.renegade_twin_captain.havoc_twin_visual_loadout = {
+	havoc,
 }
 
 local dust_1 = table.clone(basic_cultist_grenadier_template)

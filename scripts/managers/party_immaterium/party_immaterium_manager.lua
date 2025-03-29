@@ -1660,8 +1660,25 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 
 			local context
 			local is_group_finder_invite = account_id == "00000000-0000-0000-0000-000000000000"
+			local character_name = inviter_presence:character_name()
+			local character_profile = inviter_presence:character_profile()
+			local character_level = character_profile and character_profile.current_level
+			local player_name_and_level
 
-			if is_group_finder_invite then
+			if character_level then
+				player_name_and_level = Localize("loc_social_menu_character_name_format", true, {
+					character_level = character_level,
+					character_name = character_name,
+				})
+			end
+
+			if self:current_state() == PartyConstants.State.in_mission then
+				local inviter_name = player_name_and_level or character_name
+
+				self._invite_notification_handler:add_invite(party_id, invite_token, inviter_name)
+
+				return
+			elseif is_group_finder_invite then
 				local GroupFinderBlueprintsGenerateFunction = require("scripts/ui/views/group_finder_view/group_finder_blueprints")
 				local ConstantElementPopupHandlerSettings = require("scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler_settings")
 				local grid_width = ConstantElementPopupHandlerSettings.text_max_width
@@ -1793,26 +1810,6 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 					},
 				}
 			else
-				local character_name = inviter_presence:character_name()
-				local character_profile = inviter_presence:character_profile()
-				local character_level = character_profile and character_profile.current_level
-				local player_name_and_level
-
-				if character_level then
-					player_name_and_level = Localize("loc_social_menu_character_name_format", true, {
-						character_level = character_level,
-						character_name = character_name,
-					})
-				end
-
-				if self:current_state() == PartyConstants.State.in_mission then
-					local inviter_name = player_name_and_level or character_name
-
-					self._invite_notification_handler:add_invite(party_id, invite_token, inviter_name)
-
-					return
-				end
-
 				context = {
 					description_text = "loc_social_party_invite_received_description",
 					title_text = "loc_social_party_invite_received_header",
@@ -1845,8 +1842,10 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 						},
 						{
 							close_on_pressed = true,
+							stop_exit_sound = true,
+							template_type = "terminal_button_hold_small",
 							text = "loc_social_party_invite_received_decline_and_block_button",
-							on_pressed_sound = UISoundEvents.social_menu_block_player,
+							on_complete_sound = UISoundEvents.social_menu_block_player,
 							callback = function ()
 								self:_decline_party_invite(party_id, invite_token)
 								Managers.data_service.social:block_account(inviter_account_id)
@@ -1947,8 +1946,10 @@ PartyImmateriumManager._request_to_join_popup = function (self, joiner_account_i
 				},
 				{
 					close_on_pressed = true,
+					stop_exit_sound = true,
+					template_type = "terminal_button_hold_small",
 					text = "loc_social_party_request_to_join_decline_and_block_button",
-					on_pressed_sound = UISoundEvents.social_menu_block_player,
+					on_complete_sound = UISoundEvents.social_menu_block_player,
 					callback = function ()
 						Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "MEMBER_DECLINED_REQUEST_TO_JOIN")
 						Managers.data_service.social:block_account(joiner_account_id)

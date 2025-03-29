@@ -7,6 +7,7 @@ local AchievementWeaponGroups = require("scripts/settings/achievements/achieveme
 local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementTypes = require("scripts/managers/achievements/achievement_types")
 local MissionTypes = require("scripts/settings/mission/mission_types")
+local MissionBuffsAllowed = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local PSNPlatformAchievements = require("scripts/settings/achievements/psn_platform_achievements")
 local SteamPlatformAchievements = require("scripts/settings/achievements/steam_platform_achievements")
 local XboxLivePlatformAchievements = require("scripts/settings/achievements/xbox_live_platform_achievements")
@@ -1272,7 +1273,7 @@ do
 			},
 		}
 		AchievementDefinitions.ogryn_kills_during_max_stacks_heavy_hitter = {
-			description = "loc_achievement_ogryn_kills_during_max_stacks_heavy_hitter_description",
+			description = "loc_achievement_ogryn_kills_during_max_stacks_heavy_hitter_new_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_20",
 			stat_name = "ogryn_kills_during_max_stacks_heavy_hitter",
 			target = 5000,
@@ -2606,9 +2607,14 @@ do
 
 	do
 		local category_name = "missions_general"
-		local excluded_maps = {}
-		local excluded_zones = {}
+		local excluded_maps = {
+			psykhanium = true,
+		}
+		local excluded_zones = {
+			horde = true,
+		}
 		local excluded_zones_for_destructible = {
+			horde = true,
 			operations = true,
 		}
 
@@ -3188,6 +3194,180 @@ do
 				rank = 35,
 			},
 		}
+
+		tiered_target_family("horde_complete_{index:%d}_island", {
+			category = "mission_survival",
+			description = "loc_achievement_horde_complete_islands_description",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_island_complete",
+			stat_name = "game_mode_survival_islands_completed",
+			title = "loc_achievement_horde_complete_islands_name",
+			type = AchievementTypesLookup.increasing_stat,
+			flags = {},
+		}, {
+			1,
+			10,
+			20,
+			50,
+		})
+
+		AchievementDefinitions.horde_mortis_collect_one = {
+			category = "mission_survival",
+			description = "loc_achievement_horde_mortis_collect_one_description",
+			stat_name = "game_mode_survival_mcguffin_returned",
+			target = 1,
+			title = "loc_achievement_horde_mortis_collect_one_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "horde_achievements/horde_memory_shard_one",
+			flags = {},
+		}
+		AchievementDefinitions.horde_win_in_less_than_X = {
+			category = "mission_survival",
+			description = "loc_achievement_horde_win_in_less_than_X_description",
+			stat_name = "game_mode_survival_game_end_flawless",
+			target = 1,
+			title = "loc_achievement_horde_win_in_less_than_X_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "horde_achievements/horde_archetype_time",
+			flags = {},
+			loc_variables = {
+				target = 25,
+			},
+		}
+		AchievementDefinitions.horde_complete_all_maps = {
+			category = "mission_survival",
+			description = "loc_achievement_horde_complete_all_maps_description",
+			target = 2,
+			title = "loc_achievement_horde_complete_all_maps_name",
+			type = AchievementTypesLookup.multi_stat,
+			icon = path .. "horde_achievements/horde_island_complete_two_maps",
+			stats = {
+				horde_win_island_void = {
+					increasing = true,
+					target = 1,
+				},
+				horde_win_island_rooftops = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			flags = {},
+			loc_variables = {},
+		}
+
+		local survival_classes = MissionBuffsAllowed.available_family_builds
+		local icon_prefix = "content/ui/textures/icons/achievements/horde_achievements/horde_archetype_"
+
+		for i = 1, #survival_classes do
+			local class_name = survival_classes[i]
+			local horde_win_all_archetype = "horde_win_" .. class_name .. "_archetype"
+			local icon_name = icon_prefix .. class_name
+			local title = "loc_achievement_horde_win_" .. class_name .. "_archetype_name"
+			local description = "loc_achievement_horde_win_" .. class_name .. "_archetype_description"
+
+			AchievementDefinitions[horde_win_all_archetype] = {
+				category = "mission_survival",
+				target = 1,
+				type = AchievementTypesLookup.increasing_stat,
+				stat_name = horde_win_all_archetype,
+				title = title,
+				description = description,
+				loc_variables = {
+					class = class_name,
+				},
+				icon = icon_name,
+				flags = {},
+			}
+		end
+
+		AchievementDefinitions.horde_win_all_archetype = {
+			category = "mission_survival",
+			description = "loc_achievement_horde_win_all_archetype_description",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_archetype_all",
+			target = 5,
+			title = "loc_achievement_horde_win_all_archetype_name",
+			type = AchievementTypesLookup.meta,
+			achievements = table.set({
+				"horde_win_fire_archetype",
+				"horde_win_electric_archetype",
+				"horde_win_cowboy_archetype",
+				"horde_win_elementalist_archetype",
+				"horde_win_unkillable_archetype",
+			}),
+			flags = {},
+		}
+
+		local function generate_vo_stats(name, num_vo, target)
+			local stats = {}
+
+			for i = 1, num_vo do
+				local stat_name = string.format("backstory_%s_part_%s", name, i)
+
+				stats[stat_name] = {
+					increasing = true,
+					target = target,
+				}
+			end
+
+			return stats
+		end
+
+		local function generate_vo_stats_sorting(name, num_vo)
+			local stats_sorting = {}
+
+			for i = 1, num_vo do
+				local stat_name = string.format("backstory_%s_part_%s", name, i)
+
+				stats_sorting[#stats_sorting + 1] = stat_name
+			end
+
+			return stats_sorting
+		end
+
+		local vo_target = 1
+		local morrow_num_vo = 9
+		local zola_num_vo = 7
+
+		AchievementDefinitions.horde_morrow_story = {
+			category = "mission_survival",
+			description = "loc_horde_morrow_story_desc",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_morrow",
+			title = "loc_horde_morrow_story_title",
+			type = AchievementTypesLookup.multi_stat,
+			target = morrow_num_vo,
+			stats = generate_vo_stats("morrow", morrow_num_vo, vo_target),
+			stats_sorting = generate_vo_stats_sorting("morrow", morrow_num_vo),
+			flags = {},
+			loc_variables = {
+				target = vo_target,
+			},
+		}
+		AchievementDefinitions.horde_zola_story = {
+			category = "mission_survival",
+			description = "loc_horde_zola_story_desc",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_zola",
+			title = "loc_horde_zola_story_title",
+			type = AchievementTypesLookup.multi_stat,
+			target = zola_num_vo,
+			stats = generate_vo_stats("zola", zola_num_vo, vo_target),
+			stats_sorting = generate_vo_stats_sorting("zola", zola_num_vo),
+			flags = {},
+			loc_variables = {
+				target = vo_target,
+			},
+		}
+		AchievementDefinitions.horde_mortis_collect_all = {
+			category = "mission_survival",
+			description = "loc_achievement_horde_mortis_collect_all_description",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memory_shard_collect_all",
+			target = 2,
+			title = "loc_achievement_horde_mortis_collect_all_name",
+			type = AchievementTypesLookup.meta,
+			achievements = table.set({
+				"horde_morrow_story",
+				"horde_zola_story",
+			}),
+			flags = {},
+		}
 	end
 
 	AchievementDefinitions.mission_scavenge_samples = {
@@ -3260,7 +3440,7 @@ do
 		local excluded_maps_for_puzzles = {
 			core_research = true,
 			op_train = true,
-			upper_spire = true,
+			psykhanium = true,
 		}
 
 		for _, mission in ipairs(missions) do
@@ -3289,6 +3469,7 @@ do
 		end
 
 		local excluded_zones = {
+			horde = true,
 			operations = true,
 		}
 

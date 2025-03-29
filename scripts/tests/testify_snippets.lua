@@ -306,7 +306,6 @@ end
 TestifySnippets.memory_tree = function (depth, ascii_separator, memory_limit)
 	Testify:make_request_to_runner("start_memory_tree_monitoring", ascii_separator)
 	Testify:make_request("console_command_memory_tree_formatted", depth, ascii_separator, memory_limit)
-	TestifySnippets.wait(1)
 
 	local memory_tree = Testify:make_request_to_runner("stop_memory_tree_monitoring")
 

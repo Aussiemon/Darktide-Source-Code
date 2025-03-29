@@ -8,6 +8,7 @@ require("scripts/foundation/utilities/patches")
 require("scripts/foundation/utilities/settings")
 require("scripts/foundation/utilities/table")
 
+local GameStateDebug = require("scripts/utilities/game_state_debug")
 local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
 local LocalizationManager = require("scripts/managers/localization/localization_manager")
 local PackageManager = require("scripts/foundation/managers/package/package_manager")
@@ -19,6 +20,7 @@ local StateLoadBootAssets = require("scripts/game_states/boot/state_load_boot_as
 local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_render_settings")
 local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
 local GameStateDebug = require("scripts/utilities/game_state_debug")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local GAME_RESUME_COUNT = 0
 
 Main.init = function (self)
@@ -107,9 +109,11 @@ Main.shutdown = function (self)
 		owns_package_manager = false
 	end
 
-	local on_shutdown = true
+	local exit_param = {
+		on_shutdown = true,
+	}
 
-	self._sm:destroy(on_shutdown)
+	self._sm:destroy(exit_param)
 
 	if owns_package_manager then
 		self._package_manager:delete()
@@ -162,7 +166,6 @@ end
 
 function on_suspend()
 	if rawget(_G, "Managers") then
-		Managers.package:pause_unloading()
 		Managers.event:trigger("on_pre_suspend")
 		Managers.event:trigger("on_suspend")
 
@@ -210,10 +213,10 @@ function on_resume()
 		if Managers.telemetry then
 			Managers.telemetry:post_batch()
 		end
+	end
 
-		if Managers.package then
-			Managers.package:resume_unloading()
-		end
+	if IS_XBS then
+		XboxLiveUtils.close_user_context()
 	end
 end
 

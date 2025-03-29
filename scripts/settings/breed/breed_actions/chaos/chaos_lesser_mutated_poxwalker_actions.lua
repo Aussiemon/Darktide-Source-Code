@@ -271,6 +271,9 @@ local action_data = {
 			jump_vault_right_2 = "jumping",
 		},
 	},
+	disable = {
+		disable_anims = {},
+	},
 	follow = {
 		controlled_stagger = true,
 		controlled_stagger_ignored_combat_range = "melee",

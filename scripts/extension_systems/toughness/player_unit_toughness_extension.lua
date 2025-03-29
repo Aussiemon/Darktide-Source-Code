@@ -379,6 +379,11 @@ PlayerUnitToughnessExtension.add_damage = function (self, damage_amount, attack_
 	if start_tougness > 0 and self._toughness_damage == max_toughness then
 		self:_record_toughness_broken()
 	end
+
+	local current_toughness = max_toughness - clamped_toughness_damage
+	local toughness_damage_dealt = start_tougness - current_toughness
+
+	return toughness_damage_dealt
 end
 
 local ABILITIES_ALLOW_RECOVERY_REASONS = {

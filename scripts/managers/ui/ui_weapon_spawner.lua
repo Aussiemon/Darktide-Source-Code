@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/managers/ui/ui_weapon_spawner.lua
 
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
-local MasterItems = require("scripts/backend/master_items")
-local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local InputDevice = require("scripts/managers/input/input_device")
+local MasterItems = require("scripts/backend/master_items")
+local UiCharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local UIWeaponSpawner = class("UIWeaponSpawner")
 
 UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawner)
@@ -58,7 +58,7 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 	self._weapon_loader_index = (self._weapon_loader_index or 0) + 1
 
 	local reference_name = self._reference_name .. "_weapon_item_loader_" .. tostring(self._weapon_loader_index)
-	local single_item_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions)
+	local single_item_loader = UiCharacterProfilePackageLoader:new(reference_name, self._item_definitions)
 	local slot_id = "slot_primary"
 	local on_loaded_callback = callback(self, "cb_on_item_package_loaded", slot_id, item, on_spawn_cb)
 
@@ -170,15 +170,20 @@ UIWeaponSpawner._despawn_weapon = function (self)
 		local item_unit_3p, attachment_units_3p = weapon_spawn_data.item_unit_3p, weapon_spawn_data.attachment_units_3p
 		local link_unit = weapon_spawn_data.link_unit
 
-		for i = #attachment_units_3p, 1, -1 do
-			local unit = attachment_units_3p[i]
+		if attachment_units_3p then
+			for ii = #attachment_units_3p, 1, -1 do
+				local unit = attachment_units_3p[ii]
 
-			unit_spawner:mark_for_deletion(unit)
+				unit_spawner:mark_for_deletion(unit)
+			end
 		end
 
 		unit_spawner:mark_for_deletion(item_unit_3p)
 		unit_spawner:mark_for_deletion(link_unit)
-		unit_spawner:remove_pending_units()
+
+		if unit_spawner.remove_pending_units then
+			unit_spawner:remove_pending_units()
+		end
 
 		self._weapon_spawn_data = nil
 	end

@@ -97,11 +97,11 @@ end
 HudElementMissionObjectivePopup._can_present_mission = function (self, mission_name)
 	local mission_objective = self._mission_objective_system:active_objective(mission_name)
 
-	if mission_objective and mission_objective:use_hud() then
-		return true
+	if not mission_objective then
+		return false
 	end
 
-	return mission_objective:popups_enabled()
+	return mission_objective:use_hud() and mission_objective:popups_enabled()
 end
 
 HudElementMissionObjectivePopup.event_mission_objective_start = function (self, mission_name)

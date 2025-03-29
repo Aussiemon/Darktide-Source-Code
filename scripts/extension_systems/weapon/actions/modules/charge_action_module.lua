@@ -93,7 +93,7 @@ local DEFAULT_RESET_CHARGE_ACTION_KINDS = {
 	unwield_to_specific = true,
 	vent_warp_charge = true,
 }
-local DEFAULT_INTERUPT_REASONS = {
+local DEFAULT_INTERRUPT_REASONS = {
 	catapulted = true,
 	dead = true,
 	hold_input_released = true,
@@ -115,7 +115,7 @@ ChargeActionModule.finish = function (self, reason, data, t, force_reset, ignore
 	reset_action_kinds = reset_action_kinds or DEFAULT_RESET_CHARGE_ACTION_KINDS
 
 	local action_kind_reset = reason == "new_interrupting_action" and new_action_kind and reset_action_kinds[new_action_kind]
-	local reason_reset = DEFAULT_INTERUPT_REASONS[reason]
+	local reason_reset = DEFAULT_INTERRUPT_REASONS[reason]
 
 	if force_reset or action_kind_reset or reason_reset then
 		local action_module_charge_component = self._action_module_charge_component

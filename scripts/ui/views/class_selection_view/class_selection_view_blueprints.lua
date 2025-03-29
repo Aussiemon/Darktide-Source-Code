@@ -2,9 +2,8 @@
 
 local ClassSelectionViewFontStyle = require("scripts/ui/views/class_selection_view/class_selection_view_font_style")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_view/class_selection_view_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -254,16 +253,11 @@ local class_selection_view_blueprints = {
 			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
-			local style = widget.style
 			local content = widget.content
 			local description = element.description
 
 			content.element = element
 			content.text = description
-
-			local size = content.size
-			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content

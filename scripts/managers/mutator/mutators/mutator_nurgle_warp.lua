@@ -17,6 +17,7 @@ MutatorNurgleWarp.init = function (self, is_server, network_event_delegate, muta
 	self._is_active = true
 	self._buffs = {}
 	self._template = mutator_template
+	self._template_compositions = self._template.compositions
 
 	local spawn_queue = Script.new_array(MINION_QUEUE_RING_BUFFER_SIZE)
 
@@ -29,6 +30,14 @@ MutatorNurgleWarp.init = function (self, is_server, network_event_delegate, muta
 	self._spawn_queue_write_index = 1
 	self._spawn_queue_size = 0
 	self._nav_world = nav_world
+
+	local world = Managers.world:world("level_world")
+
+	self._world = world
+
+	local physics_world = World.physics_world(world)
+
+	self._physics_world = physics_world
 end
 
 local MIN_DISTANCE_FROM_PLAYERS = 1
@@ -75,28 +84,36 @@ end
 
 local TEMP_FLOOD_FILL_POSITONS = {}
 
-MutatorNurgleWarp.spawn_group = function (self, num_to_spawn, physics_world, unit)
+MutatorNurgleWarp.spawn_group = function (self, composition, unit)
 	local nav_world = self._nav_world
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
 	local enemy_side = side_system:get_side_from_name("heroes")
-	local mutator_manager = Managers.state.mutator
-	local nurgle_warp_mutator = mutator_manager:mutator("mutator_havoc_sticky_poxburster")
+	local physics_world = self._physics_world
 	local success, random_occluded_position, target_direction = self:_try_find_occluded_position(nav_world, physics_world, side, enemy_side, 3, true, nil, nil)
-	local spawn_rotation = Quaternion.look(Vector3(target_direction.x, target_direction.y, 0))
 
 	if success then
+		local spawn_rotation = Quaternion.look(Vector3(target_direction.x, target_direction.y, 0))
+		local num_to_spawn = #composition
 		local below, above = 2, 2
 		local num_positions = GwNavQueries.flood_fill_from_position(nav_world, random_occluded_position, above, below, num_to_spawn, TEMP_FLOOD_FILL_POSITONS)
 
 		for i = 1, num_positions do
 			local spawn_position = TEMP_FLOOD_FILL_POSITONS[i]
 
-			nurgle_warp_mutator:add_split_spawn(spawn_position, spawn_rotation, "chaos_poxwalker", nil, unit)
+			self:add_split_spawn(spawn_position, spawn_rotation, composition[i], nil, unit)
 		end
 
 		table.clear_array(TEMP_FLOOD_FILL_POSITONS, num_positions)
 	end
+end
+
+MutatorNurgleWarp.spawn_random_from_template = function (self, optional_target_unit)
+	local template_compositions = self._template_compositions
+	local index = math.random(1, #template_compositions)
+	local random_composition = template_compositions[index]
+
+	self:spawn_group(random_composition, optional_target_unit)
 end
 
 MutatorNurgleWarp.update = function (self, dt, t)
@@ -120,10 +137,17 @@ MutatorNurgleWarp.update = function (self, dt, t)
 		local breed_name = queue_entry[MINION_QUEUE_PARAMETERS.breed_name]
 		local rotation = queue_entry[MINION_QUEUE_PARAMETERS.rotation]:unbox()
 		local target_unit = queue_entry[MINION_QUEUE_PARAMETERS.optional_target_unit]
+		local side_id = 2
+		local minion_spawn_manager = Managers.state.minion_spawn
+		local param_table = minion_spawn_manager:request_param_table()
+
+		param_table.optional_aggro_state = aggro_states.aggroed
 
 		if ALIVE[target_unit] then
-			Managers.state.minion_spawn:spawn_minion(breed_name, position_on_navmesh, rotation, 2, aggro_states.aggroed, target_unit)
+			param_table.optional_target_unit = target_unit
 		end
+
+		minion_spawn_manager:spawn_minion(breed_name, position_on_navmesh, rotation, side_id, param_table)
 	end
 
 	self._spawn_queue_read_index = read_index % MINION_QUEUE_RING_BUFFER_SIZE + 1

@@ -15,6 +15,7 @@ local projectile_locomotion_states = ProjectileLocomotionSettings.states
 local ALL_CLIENTS = false
 local EXTERNAL_PROPERTIES
 local SYNC_TO_CLIENTS = true
+local DEFAULT_FIRE_TIME = 0.1
 local ActionSpawnProjectile = class("ActionSpawnProjectile", "ActionWeaponBase")
 
 ActionSpawnProjectile.init = function (self, action_context, action_params, action_settings)
@@ -40,7 +41,7 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 	self._fx_sources = weapon.fx_sources
 	self._muzzle_fx_source_name = self._fx_sources._muzzle
 
-	if action_settings.use_target then
+	if action_settings.track_towards_target then
 		local targeting_component = unit_data_extension:write_component("action_module_targeting")
 
 		self._targeting_component = targeting_component
@@ -48,6 +49,16 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 		local target_finder_module_class_name = action_settings.target_finder_module_class_name
 
 		self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_component, action_settings)
+	end
+
+	if action_settings.track_towards_position then
+		local position_finder_component = unit_data_extension:write_component("action_module_position_finder")
+
+		self._position_finder_component = position_finder_component
+
+		local position_finder_module_class_name = action_settings.position_finder_module_class_name
+
+		self._position_finder_module = ActionModules[position_finder_module_class_name]:new(physics_world, player_unit, position_finder_component, action_settings)
 	end
 
 	self._side_system = Managers.state.extension:system("side_system")
@@ -84,13 +95,13 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 		local ability_type = action_settings.ability_type
 		local ability_extension = self._ability_extension
 		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
-		local anim_noammo_event = action_settings.anim_noammo_event
+		local anim_event_no_ammo = action_settings.anim_event_no_ammo
 		local is_going_to_run_out = remaining_charges <= 1
 
-		if is_going_to_run_out and anim_noammo_event then
-			local anim_noammo_event_3p = action_settings.anim_noammo_event_3p or anim_noammo_event
+		if is_going_to_run_out and anim_event_no_ammo then
+			local anim_event_no_ammo_3p = action_settings.anim_event_no_ammo_3p or anim_event_no_ammo
 
-			self:trigger_anim_event(anim_noammo_event, anim_noammo_event_3p)
+			self:trigger_anim_event(anim_event_no_ammo, anim_event_no_ammo_3p)
 		end
 	end
 
@@ -145,7 +156,7 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 
 	local action_settings = self._action_settings
 	local time_scale = self._weapon_action_component.time_scale
-	local fire_time = action_settings.fire_time
+	local fire_time = action_settings.fire_time or DEFAULT_FIRE_TIME
 	local fire_time_scaled = fire_time / time_scale
 
 	if self._is_server then
@@ -291,9 +302,10 @@ ActionSpawnProjectile._check_direction = function (self)
 	return name == "rapid_right", name == "rapid_left"
 end
 
-ActionSpawnProjectile._get_projectile_template = function (self)
+ActionSpawnProjectile._projectile_template = function (self)
 	local unit = self._player_unit
 	local action_settings = self._action_settings
+	local weapon_template = self._weapon_template
 	local projectile_template_func = action_settings.projectile_template_func
 	local projectile_template
 
@@ -302,56 +314,40 @@ ActionSpawnProjectile._get_projectile_template = function (self)
 	end
 
 	projectile_template = projectile_template or action_settings.projectile_template
+	projectile_template = projectile_template or weapon_template.projectile_template
 
 	return projectile_template
 end
 
-local COLLISION_FILTER = "filter_player_character_shooting_projectile"
-
 ActionSpawnProjectile._target_unit_and_position = function (self)
-	local target_unit
-	local action_settings = self._action_settings
-	local use_target = action_settings.use_target
+	local target_unit, target_position
+	local targeting_component = self._targeting_component
+	local position_finder_component = self._position_finder_component
 
-	if use_target then
-		target_unit = self._targeting_component.target_unit_1
+	if targeting_component then
+		target_unit = targeting_component.target_unit_1
 	end
 
-	local target_position
-	local use_target_position = action_settings.use_target_position
-
-	if use_target_position and not target_unit then
-		local first_person = self._first_person_component
-		local from = first_person.position
-		local look_rotation = first_person.rotation
-		local direction = Quaternion.forward(look_rotation)
-		local distance = action_settings.target_position_distance or 50
-		local physics_world = self._physics_world
-		local result, hit_position, _, _, _ = PhysicsWorld.raycast(physics_world, from, direction, distance, "closest", "collision_filter", COLLISION_FILTER)
-
-		if result then
-			target_position = hit_position
-		else
-			target_position = from + direction * distance
-		end
+	if position_finder_component then
+		target_position = position_finder_component.position
 	end
 
 	return target_unit, target_position
 end
 
 ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strike)
-	local projectile_template = self:_get_projectile_template()
+	local projectile_template = self:_projectile_template()
 	local first_person_component = self._first_person_component
 	local position, rotation = first_person_component.position, first_person_component.rotation
 	local action_settings = self._action_settings
-	local material = projectile_template.material or nil
+	local material = projectile_template.material
 	local inventory_item_name = action_settings.projectile_item
 	local item
 
 	if inventory_item_name then
 		item = self._item_definitions[inventory_item_name]
 	else
-		item = ActionUtility.get_ability_item(action_settings, self._ability_extension)
+		item = ActionUtility.ability_item(action_settings, self._ability_extension)
 	end
 
 	local starting_state = projectile_locomotion_states.sleep
@@ -390,7 +386,8 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strik
 
 	local owner_side = self._side_system.side_by_unit[self._player_unit]
 	local owner_side_name = owner_side and owner_side:name()
-	local projectile_unit = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item, nil, owner_side_name)
+	local unit_template_name = projectile_template.unit_template_name or "item_projectile"
+	local projectile_unit = Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item, nil, owner_side_name)
 
 	if Unit.alive(projectile_unit) then
 		Unit.set_unit_visibility(projectile_unit, false, true)
@@ -452,9 +449,8 @@ end
 
 ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, time_difference_from_paying, projectile_locomotion_extension, offset)
 	local action_settings = self._action_settings
-	local unit = self._player_unit
-	local target_unit, target_position = self:_target_unit_and_position()
-	local projectile_template = self:_get_projectile_template()
+	local player_unit = self._player_unit
+	local projectile_template = self:_projectile_template()
 	local projectile_locomotion_template = projectile_template.locomotion_template
 	local shoot_parameters = projectile_locomotion_template.shoot_parameters
 	local first_person = self._first_person_component
@@ -462,7 +458,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	local spawn_node = action_settings.spawn_node
 
 	if spawn_node then
-		local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
+		local first_person_extension = ScriptUnit.extension(player_unit, "first_person_system")
 		local first_person_unit = first_person_extension:first_person_unit()
 		local node = Unit.node(first_person_unit, spawn_node)
 
@@ -501,10 +497,11 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 		rotation = Quaternion.multiply(first_person.rotation, local_rotation)
 	end
 
+	local target_unit, target_position = self:_target_unit_and_position()
+	local have_target = target_unit or target_position
 	local look_rotation = first_person.rotation
 	local shoot_rotation = look_rotation
 	local is_right, is_left = self:_check_direction()
-	local have_target = target_unit or target_position
 
 	if have_target then
 		local pitch_settings = shoot_parameters.has_target_pitch_offset
@@ -569,9 +566,9 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	end
 
 	if starting_state == projectile_locomotion_states.manual_physics then
-		projectile_locomotion_extension:switch_to_manual(position, rotation, direction, speed, momentum)
+		projectile_locomotion_extension:switch_to_manual_physics(position, rotation, direction, speed, momentum)
 	elseif starting_state == projectile_locomotion_states.engine_physics then
-		projectile_locomotion_extension:switch_to_engine(position, rotation, direction * speed, momentum)
+		projectile_locomotion_extension:switch_to_engine_physics(position, rotation, direction * speed, momentum)
 	elseif starting_state == projectile_locomotion_states.true_flight then
 		projectile_locomotion_extension:switch_to_true_flight(position, rotation, direction, speed, momentum, target_unit, target_position)
 	else
@@ -584,7 +581,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 end
 
 ActionSpawnProjectile._proc_buffs = function (self)
-	local projectile_template = self:_get_projectile_template()
+	local projectile_template = self:_projectile_template()
 	local buff_extension = self._buff_extension
 	local unit = self._player_unit
 	local action_component = self._action_component

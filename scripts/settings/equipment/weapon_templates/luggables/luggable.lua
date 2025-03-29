@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/luggables/luggable.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
@@ -127,7 +127,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -331,7 +331,6 @@ weapon_template.ammo_template = "no_ammo"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

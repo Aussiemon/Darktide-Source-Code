@@ -2,19 +2,18 @@
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
+local gibbing_power = GibbingSettings.gibbing_power
 local melee_attack_strengths = AttackSettings.melee_attack_strength
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
-
-local single_cleave = DamageProfileSettings.single_cleave
 
 damage_templates.light_ninjafencer = {
 	ragdoll_push_force = 100,
@@ -186,7 +185,7 @@ damage_templates.medium_ninjafencer = {
 	ragdoll_push_force = 100,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
-	gibbing_power = GibbingPower.light,
+	gibbing_power = gibbing_power.light,
 	melee_attack_strength = melee_attack_strengths.light,
 	targets = {
 		{

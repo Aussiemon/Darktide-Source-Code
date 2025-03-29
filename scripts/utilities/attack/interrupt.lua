@@ -3,7 +3,6 @@
 local ActionAvailability = require("scripts/extension_systems/weapon/utilities/action_availability")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
-local WeaponSpecial = require("scripts/utilities/weapon_special")
 local buff_keywords = BuffSettings.keywords
 local Interrupt = {}
 local _is_interrupt_immune_from_buff

@@ -11,6 +11,8 @@ MissionObjectiveZoneSynchronizer.init = function (self, unit)
 		local automatic_start = self:get_data(unit, "automatic_start")
 
 		mission_objective_zone_synchronizer_extension:setup_from_component(num_zones_in_mission_objective, objective_name, automatic_start)
+
+		self._mission_objective_zone_synchronizer_extension = mission_objective_zone_synchronizer_extension
 	end
 end
 

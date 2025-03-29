@@ -143,7 +143,7 @@ RemotePlayer.destroy = function (self)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
 	if self.is_server and player_unit_spawn_manager then
-		player_unit_spawn_manager:despawn(self)
+		player_unit_spawn_manager:despawn_player(self)
 	end
 end
 

@@ -22,13 +22,15 @@ SingleLevelLoader.destroy = function (self)
 	self:cleanup()
 end
 
-SingleLevelLoader.start_loading = function (self, level_name, level_editor_level, circumstance_name)
+SingleLevelLoader.start_loading = function (self, context)
+	local level_name = context.level_name
+	local circumstance_name = context.circumstance_name
+	local theme_tag = context.theme_tag
+
+	self._theme_tag = theme_tag
 	self._level_name = level_name
 
 	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
-
-	self._theme_tag = circumstance_template and circumstance_template.theme_tag
-
 	local item_definitions = MasterItems.get_cached()
 
 	self._load_state = LOAD_STATES.level_load
@@ -106,8 +108,6 @@ SingleLevelLoader.is_loading_done = function (self)
 end
 
 SingleLevelLoader.cleanup = function (self)
-	Managers.world_level_despawn:flush()
-
 	local package_manager = Managers.package
 	local packages = self._package_ids
 

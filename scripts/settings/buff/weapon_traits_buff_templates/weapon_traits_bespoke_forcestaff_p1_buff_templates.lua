@@ -76,7 +76,7 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 	end,
 }
 templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = table.clone(BaseWeaponTraitBuffTemplates.uninterruptable_while_charging)
-templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging.uninteruptable_actions = {
+templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging.uninterruptable_actions = {
 	action_charge = true,
 }
 templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks_parent = table.clone(BaseWeaponTraitBuffTemplates.faster_charge_on_chained_secondary_attacks_parent)

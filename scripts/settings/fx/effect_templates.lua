@@ -21,6 +21,8 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_hound_
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_ogryn_gunner_heavy_stubber")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_plague_ogryn_charge_impact")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_poxwalker_bomber_foley")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_mutator_ritualist_chanting")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_mutator_daemonhost_shield")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/cultist_assault_autogun")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/cultist_flamer_approach")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/cultist_flamer")

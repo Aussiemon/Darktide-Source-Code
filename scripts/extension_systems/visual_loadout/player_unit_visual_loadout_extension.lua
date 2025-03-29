@@ -3,6 +3,7 @@
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local Luggable = require("scripts/utilities/luggable")
+local MasterItems = require("scripts/backend/master_items")
 local MispredictPackageHandler = require("scripts/extension_systems/visual_loadout/mispredict_package_handler")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -13,7 +14,6 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local Pocketable = require("scripts/utilities/pocketable")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WieldableSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts")
-local MasterItems = require("scripts/backend/master_items")
 local PlayerUnitVisualLoadoutExtension = class("PlayerUnitVisualLoadoutExtension")
 
 PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, unit_spawn_parameter_or_game_object_id)
@@ -70,7 +70,7 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 
 	self._item_definitions = MasterItems.get_cached()
 
-	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, optional_item_streaming_settings)
+	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, optional_item_streaming_settings, nil, nil)
 
 	self._equipment_component = equipment_component
 	self._physics_world = physics_world

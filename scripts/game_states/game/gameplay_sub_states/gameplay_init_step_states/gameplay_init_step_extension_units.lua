@@ -39,20 +39,22 @@ GameplayInitStepExtensionUnits.update = function (self, main_dt, main_t)
 	local next_step_params = {
 		shared_state = self._shared_state,
 	}
+	local next_step = GameplayInitStepStateNetworkEvents
 
-	return GameplayInitStepStateNetworkEvents, next_step_params
+	return next_step, next_step_params
 end
 
-GameplayInitStepExtensionUnits._optimize_level_units = function (self, world)
-	ScriptWorld.optimize_level_units(world)
+GameplayInitStepExtensionUnits._optimize_world_units = function (self, world)
+	ScriptWorld.optimize_world_units(world)
 end
 
 GameplayInitStepExtensionUnits._init_extension_unit_registration = function (self, world, level, time_query_handle)
+	local units = Level.units(level, true)
+
 	Level.finish_spawn_time_sliced(level)
-	self:_optimize_level_units(world)
+	self:_optimize_world_units(world)
 
 	local extension_manager = Managers.state.extension
-	local units = Level.units(level, true)
 	local optional_category
 
 	extension_manager:init_time_slice_add_and_register_level_units(world, units, optional_category)

@@ -1,13 +1,13 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_swords_2h/forcesword_2h_p1_m1.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
-local ForceswordMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/forcesword_p1_m1_melee_action_input_setup")
+local ForceswordMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/forcesword_melee_action_input_setup")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -2652,7 +2652,7 @@ weapon_template.weapon_special_tweak_data = {
 	max_charges = 20,
 	num_charges_to_remove = 1,
 	set_inactive_func = function (inventory_slot_component, reason, tweak_data)
-		local keep_special_active = reason == "started_sprint" or reason == "ledge_vaulting"
+		local keep_special_active = reason == "started_sprint" or reason == "ledge_vaulting" or reason == "stunned"
 
 		if not keep_special_active then
 			inventory_slot_component.special_active = false
@@ -2686,7 +2686,6 @@ weapon_template.weapon_special_tweak_data = {
 		hit_zone_name = "torso",
 		particle_alias = "wind_slash",
 		range = 30,
-		shape = "cone",
 		sound_alias = "wind_slash",
 		start_time = 0.25,
 		target_enemies = true,

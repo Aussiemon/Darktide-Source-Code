@@ -61,6 +61,7 @@ _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_op_tra
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_om_hub_01")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_om_hub_02")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_prologue")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_psykhanium")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_ogryn_a")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_ogryn_b")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_ogryn_c")

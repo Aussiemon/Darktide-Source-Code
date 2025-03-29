@@ -4,6 +4,7 @@ local PerformanceReporter = class("PerformanceReporter")
 local application_get_frame_times = Application.get_frame_times
 local application_get_batchcount_stats = Application.get_batchcount_stats
 local application_get_primitives_count = Application.get_primitives_count
+local renderer_set_gpu_profiling = Renderer.set_gpu_profiling
 local table = table
 
 PerformanceReporter.init = function (self, values_to_measure)
@@ -25,7 +26,7 @@ PerformanceReporter._initialize_tables = function (self)
 		measurements.frame_time_render = {}
 		measurements.frame_time_gpu = {}
 
-		Renderer.set_gpu_profiling(true)
+		renderer_set_gpu_profiling(true)
 	end
 
 	if self._measure_batchcount then

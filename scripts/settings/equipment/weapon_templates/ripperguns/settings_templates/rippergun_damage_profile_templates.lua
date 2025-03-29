@@ -8,28 +8,24 @@ local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
 local melee_attack_strengths = AttackSettings.melee_attack_strength
+local double_cleave = DamageProfileSettings.double_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local double_cleave = DamageProfileSettings.double_cleave
-
 damage_templates.default_rippergun_assault = {
 	ignore_stagger_reduction = true,
 	ragdoll_only = true,
 	stagger_category = "ranged",
-	cleave_distribution = {
-		attack = 2,
-		impact = 2,
-	},
+	cleave_distribution = double_cleave,
 	ranges = {
 		min = {
 			6,
@@ -87,13 +83,13 @@ damage_templates.default_rippergun_assault = {
 		},
 	},
 	critical_strike = {
-		gibbing_power = GibbingPower.heavy,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	power_distribution = {
 		attack = {
-			300,
-			600,
+			350,
+			700,
 		},
 		impact = {
 			20,
@@ -103,8 +99,8 @@ damage_templates.default_rippergun_assault = {
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
 	wounds_template = WoundsTemplates.rippergun,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
 		0.05,
 		1,
@@ -138,10 +134,7 @@ damage_templates.rippergun_p1_m2_assault = {
 	ignore_stagger_reduction = true,
 	ragdoll_only = true,
 	stagger_category = "ranged",
-	cleave_distribution = {
-		attack = 2,
-		impact = 2,
-	},
+	cleave_distribution = double_cleave,
 	ranges = {
 		min = {
 			6,
@@ -199,8 +192,8 @@ damage_templates.rippergun_p1_m2_assault = {
 		},
 	},
 	critical_strike = {
-		gibbing_power = GibbingPower.heavy,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	power_distribution = {
 		attack = {
@@ -215,8 +208,8 @@ damage_templates.rippergun_p1_m2_assault = {
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
 	wounds_template = WoundsTemplates.rippergun,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
 		0.05,
 		1,
@@ -246,14 +239,117 @@ damage_templates.rippergun_p1_m2_assault = {
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 }
+damage_templates.rippergun_p1_m3_assault = {
+	ignore_stagger_reduction = true,
+	ragdoll_only = true,
+	stagger_category = "ranged",
+	cleave_distribution = double_cleave,
+	ranges = {
+		min = {
+			6,
+			15,
+		},
+		max = {
+			22,
+			50,
+		},
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_75,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			},
+			impact = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_7,
+				[armor_types.armored] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_4,
+				[armor_types.player] = damage_lerp_values.lerp_0_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_3,
+			},
+			impact = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+				[armor_types.armored] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.player] = damage_lerp_values.no_damage,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_2,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+			},
+		},
+	},
+	critical_strike = {
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.ballistic,
+	},
+	power_distribution = {
+		attack = {
+			250,
+			500,
+		},
+		impact = {
+			20,
+			60,
+		},
+	},
+	herding_template = HerdingTemplates.shotgun,
+	damage_type = damage_types.rippergun_pellet,
+	wounds_template = WoundsTemplates.rippergun,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.ballistic,
+	suppression_value = {
+		0.05,
+		1,
+	},
+	on_kill_area_suppression = {
+		suppression_value = {
+			1,
+			8,
+		},
+		distance = {
+			3,
+			6,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve_multiplier_finesse = 1.5,
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	ragdoll_push_force = {
+		50,
+		50,
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
+}
 damage_templates.default_rippergun_snp = {
 	ignore_stagger_reduction = true,
 	ragdoll_only = true,
 	stagger_category = "ranged",
-	cleave_distribution = {
-		attack = 2,
-		impact = 2,
-	},
+	cleave_distribution = double_cleave,
 	ranges = {
 		min = {
 			6,
@@ -311,13 +407,13 @@ damage_templates.default_rippergun_snp = {
 		},
 	},
 	critical_strike = {
-		gibbing_power = GibbingPower.heavy,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	power_distribution = {
 		attack = {
-			300,
-			600,
+			350,
+			700,
 		},
 		impact = {
 			10,
@@ -327,8 +423,8 @@ damage_templates.default_rippergun_snp = {
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
 	wounds_template = WoundsTemplates.rippergun,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
 		0.05,
 		1,
@@ -365,9 +461,9 @@ damage_templates.rippergun_weapon_special = {
 	stagger_category = "flamer",
 	cleave_distribution = double_cleave,
 	damage_type = damage_types.combat_blade,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.sawing,
-	melee_attack_strength = melee_attack_strengths.heavy,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.sawing,
+	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.combat_blade,
 	armor_damage_modifier = {
 		attack = {
@@ -393,7 +489,7 @@ damage_templates.rippergun_weapon_special = {
 	},
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.5,
+			boost_curve_multiplier_finesse = 1.2,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -417,15 +513,15 @@ damage_templates.rippergun_weapon_special = {
 				},
 			},
 			power_distribution = {
-				attack = 200,
-				impact = 25,
+				attack = 300,
+				impact = 30,
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.1,
+				[armor_types.unarmored] = 0.25,
 				[armor_types.armored] = 0.5,
 				[armor_types.resistant] = 0.1,
 				[armor_types.player] = 0.1,
-				[armor_types.berserker] = 0.1,
+				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.25,
 				[armor_types.void_shield] = 0.25,
@@ -457,7 +553,7 @@ damage_templates.rippergun_weapon_special = {
 			},
 			power_distribution = {
 				attack = 50,
-				impact = 6,
+				impact = 12,
 			},
 		},
 		default_target = {

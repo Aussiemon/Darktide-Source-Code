@@ -13,6 +13,7 @@ local lobby_view_settings = {
 	delay_ready_exit = 3,
 	field_of_view = 40,
 	havoc_level_name = "content/levels/ui/havoc_lobby/havoc_lobby",
+	horde_level_name = "content/levels/ui/horde_lobby/horde_lobby",
 	level_name = "content/levels/ui/lobby/lobby",
 	list_button_spacing = 10,
 	max_player_slots = 4,

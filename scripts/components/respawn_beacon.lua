@@ -86,6 +86,10 @@ RespawnBeacon.editor_destroy = function (self, unit)
 	LineObject.dispatch(world, line_object)
 	World.destroy_line_object(world, line_object)
 
+	if RespawnBeacon._nav_info ~= nil then
+		SharedNav.destroy(RespawnBeacon._nav_info)
+	end
+
 	local gui = self._gui
 
 	if self._debug_text_id then

@@ -137,6 +137,10 @@ NavGraph.editor_destroy = function (self, unit)
 		return
 	end
 
+	if NavGraph._nav_info ~= nil then
+		SharedNav.destroy(NavGraph._nav_info)
+	end
+
 	local line_object, world = self._line_object, self._world
 
 	LineObject.reset(line_object)

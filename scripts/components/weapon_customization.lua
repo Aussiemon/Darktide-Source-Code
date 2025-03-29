@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/components/weapon_customization.lua
 
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
-local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
+local MasterItems = require("scripts/backend/master_items")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local WeaponCustomization = component("WeaponCustomization")
 
 WeaponCustomization.editor_init = function (self, unit)
@@ -42,6 +42,7 @@ end
 WeaponCustomization._construct_attach_settings = function (self, unit, world, in_editor)
 	local attach_settings = {
 		from_script_component = true,
+		from_ui_profile_spawner = false,
 		is_first_person = false,
 		world = world,
 		character_unit = unit,
@@ -102,42 +103,42 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 
 	local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
 
-	self:spawn_item_attachments(unit, item_data, skin_data)
+	self:_spawn_item_attachments(unit, item_data, skin_data)
 
-	for i, material_override in pairs(item_data.material_overrides) do
+	for _, material_override in pairs(item_data.material_overrides) do
 		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
 	end
 
 	if skin_data then
-		for i, material_override in pairs(skin_data.material_overrides) do
+		for _, material_override in pairs(skin_data.material_overrides) do
 			VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
 		end
 	end
 
 	if attach_settings.lod_group then
-		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
+		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
 
-		if bv then
-			LODGroup.override_bounding_volume(attach_settings.lod_group, bv)
+		if bounding_volume then
+			LODGroup.override_bounding_volume(attach_settings.lod_group, bounding_volume)
 		end
 	end
 
 	if attach_settings.lod_shadow_group then
-		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
+		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
 
-		if bv then
-			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bv)
+		if bounding_volume then
+			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bounding_volume)
 		end
 	end
 
 	local unit_material_overrides = self:get_data(unit, "material_override")
 
-	for i, material_override in pairs(unit_material_overrides) do
+	for _, material_override in pairs(unit_material_overrides) do
 		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
 	end
 end
 
-WeaponCustomization.spawn_item_attachments = function (self, unit, item_data, skin_data)
+WeaponCustomization._spawn_item_attachments = function (self, unit, item_data, skin_data)
 	local attach_settings = self._attach_settings
 	local attachments = item_data.attachments
 	local attachment_units = {}

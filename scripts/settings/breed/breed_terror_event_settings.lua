@@ -16,6 +16,9 @@ breed_terror_event_settings.chaos_spawn = {
 breed_terror_event_settings.chaos_daemonhost = {
 	point_cost = 1000,
 }
+breed_terror_event_settings.chaos_mutator_daemonhost = {
+	point_cost = 1000,
+}
 breed_terror_event_settings.chaos_hound = {
 	point_cost = 12,
 }

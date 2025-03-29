@@ -23,11 +23,50 @@ PlayerSpawnerSystem.init = function (self, extension_init_context, system_init_d
 	self._spawn_points_by_identifier = {}
 	self._next_spawn_point_index_by_identifier = {}
 	self._in_safe_volume = true
+	self._backup_progression_cooldown = 40
+	self._backup_progression_spawn_point = {
+		found = false,
+	}
 end
 
 PlayerSpawnerSystem.destroy = function (self)
 	if self._is_server then
 		Managers.event:unregister(self, "in_safe_volume")
+	end
+end
+
+PlayerSpawnerSystem.update = function (self, system_context, dt, t)
+	if self._is_server then
+		self._backup_progression_cooldown = self._backup_progression_cooldown - dt
+
+		if self._backup_progression_cooldown <= 0 then
+			local wanted_spawn_point
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+
+			if game_mode.next_spawn_point_identifier then
+				wanted_spawn_point = game_mode:next_spawn_point_identifier()
+			end
+
+			local player_manager = Managers.player
+			local players = player_manager:players()
+
+			if not wanted_spawn_point and not table.is_empty(players) then
+				local found, position, rotation, parent, side = self:_find_progression_spawn_point()
+
+				if found then
+					local backup = self._backup_progression_spawn_point
+
+					backup.found = true
+					backup.position = Vector3Box(position)
+					backup.rotation = QuaternionBox(rotation)
+					backup.parent = parent
+					backup.side = side
+				end
+			end
+
+			self._backup_progression_cooldown = self._backup_progression_cooldown + 10
+		end
 	end
 end
 
@@ -242,7 +281,17 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 		end
 	end
 
-	Log.warning("PlayerSpawnerSystem", "[_find_progression_spawn_point] Failed to find progression point. %s players with %s eligible units \n%s", num_players, #progression_players, Script.callstack())
+	local backup = self._backup_progression_spawn_point
+
+	if backup.found then
+		local position = backup.position:unbox()
+
+		Log.info("PlayerSpawnerSystem", "[_find_progression_spawn_point] Failed to find progression point, using backup position: %s", position)
+
+		return backup.found, position, backup.rotation:unbox(), backup.parent, backup.side
+	end
+
+	Log.error("PlayerSpawnerSystem", "[_find_progression_spawn_point] Failed to find progression point, no backup. %s players with %s eligible units \n%s", num_players, #progression_players, Script.callstack())
 
 	for i = 1, #progression_players do
 		local info = progression_players[i]
@@ -258,7 +307,15 @@ PlayerSpawnerSystem._add_progression_player = function (self, player, bot)
 
 	if player_unit then
 		local player_pos = Unit.world_position(player_unit, 1)
-		local _, travel_distance = MainPathQueries.closest_position(player_pos)
+		local main_path_manager = Managers.state.main_path
+		local travel_distance = 0
+
+		if main_path_manager:is_main_path_available() then
+			local _, dist = MainPathQueries.closest_position(player_pos)
+
+			travel_distance = dist
+		end
+
 		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 
 		if unit_data_extension then

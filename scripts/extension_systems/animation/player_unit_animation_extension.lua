@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/animation/player_unit_animation_extension.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local PlayerUnitAnimationState = require("scripts/extension_systems/animation/utilities/player_unit_animation_state")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 

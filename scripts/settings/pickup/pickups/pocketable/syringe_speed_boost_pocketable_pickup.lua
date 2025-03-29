@@ -2,7 +2,6 @@
 
 local pickup_data = {
 	description = "loc_pickup_syringe_pocketable_04",
-	game_object_type = "pickup",
 	group = "pocketable",
 	interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_syringe_speed",
 	interaction_type = "pocketable",
@@ -13,9 +12,7 @@ local pickup_data = {
 	pickup_sound = "wwise/events/player/play_pick_up_syringe",
 	smart_tag_target_type = "pickup",
 	spawn_unit_component_event = "set_colors",
-	spawn_weighting = 0,
 	unit_name = "content/pickups/pocketables/syringe/pup_syringe_case",
-	unit_template_name = "pickup",
 	on_pickup_func = function (pickup_unit, interactor_unit, pickup_data)
 		local unit_data_extension = ScriptUnit.has_extension(interactor_unit, "unit_data_system")
 		local inventory_component = unit_data_extension and unit_data_extension:read_component("inventory")

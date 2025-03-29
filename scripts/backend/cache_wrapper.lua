@@ -63,7 +63,11 @@ CacheWrapper.refresh = function (self, version, url)
 			return self._current_value
 		end
 	end):catch(function (e)
-		Log.warning("CacheWrapper", "Error refreshing data for cached value \n%s", tostring(e))
+		if type(e) == "table" then
+			Log.warning("CacheWrapper", "Error refreshing data for cached value \n%s", table.tostring(e, 3))
+		else
+			Log.warning("CacheWrapper", "Error refreshing data for cached value \n%s", tostring(e))
+		end
 
 		if self._current_value then
 			return self._current_value

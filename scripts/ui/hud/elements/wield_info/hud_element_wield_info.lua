@@ -7,7 +7,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local InputUtils = require("scripts/managers/input/input_utils")
 local TextUtils = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local InputDevice = require("scripts/managers/input/input_device")
 local HudElementWieldInfo = class("HudElementWieldInfo", "HudElementBase")
 

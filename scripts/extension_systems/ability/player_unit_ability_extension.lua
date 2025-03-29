@@ -6,15 +6,16 @@ local ActionHandler = require("scripts/utilities/action/action_handler")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local EquippedAbilityEffectScripts = require("scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local proc_events = BuffSettings.proc_events
+local buff_keywords = BuffSettings.keywords
 local PlayerUnitAbilityExtension = class("PlayerUnitAbilityExtension")
 
 PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -629,7 +630,7 @@ PlayerUnitAbilityExtension.can_use_ability = function (self, ability_type)
 	if required_weapon_type and required_weapon_type == "ranged" then
 		local item_in_primary_slot = self._visual_loadout_extension:item_in_slot("slot_primary")
 		local item_in_secondary_slot = self._visual_loadout_extension:item_in_slot("slot_secondary")
-		local has_ranged_weapon = ItemUtils.is_weapon_template_ranged(item_in_primary_slot) or ItemUtils.is_weapon_template_ranged(item_in_secondary_slot)
+		local has_ranged_weapon = Items.is_weapon_template_ranged(item_in_primary_slot) or Items.is_weapon_template_ranged(item_in_secondary_slot)
 
 		if not has_ranged_weapon then
 			return false
@@ -753,10 +754,16 @@ PlayerUnitAbilityExtension.max_ability_charges = function (self, ability_type)
 		return 0
 	end
 
+	local buff_extension = self._buff_extension
+	local has_extra_charges_keyword = buff_extension:has_keyword(buff_keywords.allow_extra_ability_charges)
 	local equipped_abilities = self._equipped_abilities
 	local ability = equipped_abilities[ability_type]
 	local max_charges = ability.max_charges
 	local ability_stat_buff = ability.stat_buff
+
+	if has_extra_charges_keyword and ability_type == "combat_ability" and ability_stat_buff == nil then
+		ability_stat_buff = "ability_extra_charges"
+	end
 
 	if ability_stat_buff then
 		local stat_buffs = self._buff_extension:stat_buffs()

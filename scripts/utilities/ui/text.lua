@@ -4,7 +4,7 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local TextUtilities = {}
 
 TextUtilities.apply_color_to_text = function (text, color)
-	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
+	return string.format("{#color(%d,%d,%d)}%s{#reset()}", color[2], color[3], color[4], text)
 end
 
 TextUtilities.localize_to_upper = function (localization_key, optional_localization_context)

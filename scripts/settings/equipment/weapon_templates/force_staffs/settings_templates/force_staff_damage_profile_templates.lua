@@ -7,26 +7,19 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
 local armor_types = ArmorSettings.types
+local crit_armor_mod = DamageProfileSettings.crit_armor_mod
+local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local melee_attack_strengths = AttackSettings.melee_attack_strength
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
-
-local melee_attack_strengths = AttackSettings.melee_attack_strength
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local default_armor_mod = DamageProfileSettings.default_armor_mod
-local flat_one_armor_mod = DamageProfileSettings.flat_one_armor_mod
-local single_cleave = DamageProfileSettings.single_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local big_cleave = DamageProfileSettings.big_cleave
 
 damage_templates.force_staff_ball = {
 	force_staff_primary = true,
@@ -76,8 +69,8 @@ damage_templates.force_staff_ball = {
 			8,
 		},
 	},
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.warp,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_assault,
 	wounds_template = WoundsTemplates.psyker_ball,
 	suppression_value = {
@@ -100,7 +93,6 @@ damage_templates.force_staff_ball = {
 }
 damage_templates.default_force_staff_bfg = {
 	force_weapon_damage = true,
-	ignore_roamer_hitzone_multipliers = true,
 	ignore_shield = true,
 	ragdoll_only = true,
 	ragdoll_push_force = 1000,
@@ -110,9 +102,15 @@ damage_templates.default_force_staff_bfg = {
 		attack = 10,
 		impact = 12,
 	},
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.warp,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_bfg,
+	ignore_hitzone_multipliers_breed_tags = {
+		"horde",
+		"roamer",
+		"elite",
+		"special",
+	},
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.25,
@@ -248,8 +246,8 @@ damage_templates.default_force_staff_demolition = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.warp,
-	gibbing_power = GibbingPower.medium,
+	gibbing_type = gibbing_types.warp,
+	gibbing_power = gibbing_power.medium,
 	gib_push_force = GibbingSettings.gib_push_force.force_assault,
 }
 damage_templates.close_force_staff_p4_demolition = {
@@ -304,8 +302,8 @@ damage_templates.close_force_staff_p4_demolition = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.warp,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.warp,
+	gibbing_power = gibbing_power.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.force_assault,
 }
 damage_templates.force_staff_p4_demolition = {
@@ -383,8 +381,8 @@ damage_templates.force_staff_p4_demolition = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.warp,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.warp,
+	gibbing_power = gibbing_power.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.force_demolition,
 }
 damage_templates.close_force_staff_demolition = {
@@ -439,8 +437,8 @@ damage_templates.close_force_staff_demolition = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.warp,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.warp,
+	gibbing_power = gibbing_power.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.force_demolition,
 }
 damage_templates.force_staff_bash = {
@@ -598,7 +596,7 @@ damage_templates.default_warpfire_assault = {
 		min = 5,
 	},
 	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
-	gibbing_type = GibbingTypes.warp,
+	gibbing_type = gibbing_types.warp,
 	targets = {
 		{
 			power_distribution = {
@@ -703,7 +701,7 @@ damage_templates.default_warpfire_assault_burst = {
 		min = 5,
 	},
 	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
-	gibbing_type = GibbingTypes.warp,
+	gibbing_type = gibbing_types.warp,
 	power_distribution = {
 		attack = {
 			15,
@@ -832,7 +830,6 @@ damage_templates.default_chain_lighting_attack = {
 		},
 		impact = crit_impact_armor_mod,
 	},
-	damage_type = damage_types.electrocution,
 	targets = {
 		{
 			power_distribution = {
@@ -912,8 +909,8 @@ damage_templates.default_chain_lighting_attack = {
 		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
 	},
 	damage_type = damage_types.electrocution,
-	gibbing_power = GibbingPower.infinite,
-	gibbing_type = GibbingTypes.warp_lightning,
+	gibbing_power = gibbing_power.infinite,
+	gibbing_type = gibbing_types.warp_lightning,
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 }
 damage_templates.default_chain_lighting_interval = {

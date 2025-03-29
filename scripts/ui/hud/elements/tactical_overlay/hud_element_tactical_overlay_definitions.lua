@@ -4,6 +4,8 @@ local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_el
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local element_styles = ElementSettings.styles
 local line_width = ElementSettings.line_width
 local buffer = ElementSettings.buffer
@@ -19,13 +21,9 @@ local circumstance_info_size = {
 	details_panel_size[1] - 50,
 	120,
 }
-local plasteel_info_size = {
-	details_panel_size[1] - 50,
-	40,
-}
-local diamantine_info_size = {
-	details_panel_size[1] - 50,
-	40,
+local currency_info_size = {
+	110,
+	33,
 }
 local havoc_info_size = {
 	details_panel_size[1] - 50,
@@ -40,8 +38,23 @@ local right_header_size = {
 	ElementSettings.right_grid_width,
 	ElementSettings.right_header_height,
 }
+local left_panel_x_position = 25
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
+	canvas = {
+		horizontal_alignment = "center",
+		parent = "screen",
+		vertical_alignment = "center",
+		size = {
+			1920,
+			1080,
+		},
+		position = {
+			0,
+			0,
+			0,
+		},
+	},
 	background = {
 		horizontal_alignment = "center",
 		parent = "screen",
@@ -59,8 +72,8 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		size = details_panel_size,
 		position = {
+			left_panel_x_position,
 			25,
-			0,
 			0,
 		},
 	},
@@ -81,14 +94,14 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		size = circumstance_info_size,
 		position = {
-			0,
-			0,
+			420,
+			220,
 			1,
 		},
 	},
 	crafting_pickup_pivot = {
-		horizontal_alignment = "left",
-		parent = "left_panel",
+		horizontal_alignment = "center",
+		parent = "background",
 		vertical_alignment = "top",
 		size = {
 			0,
@@ -96,26 +109,15 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			0,
+			50,
 			1,
 		},
 	},
-	plasteel_info_panel = {
-		horizontal_alignment = "left",
+	crafting_pickup_panel = {
+		horizontal_alignment = "center",
 		parent = "crafting_pickup_pivot",
 		vertical_alignment = "top",
-		size = plasteel_info_size,
-		position = {
-			0,
-			0,
-			1,
-		},
-	},
-	diamantine_info_panel = {
-		horizontal_alignment = "left",
-		parent = "crafting_pickup_pivot",
-		vertical_alignment = "top",
-		size = diamantine_info_size,
+		size = currency_info_size,
 		position = {
 			0,
 			0,
@@ -155,29 +157,88 @@ local scenegraph_definition = {
 			0,
 		},
 	},
-	havoc_pivot = {
-		horizontal_alignment = "right",
-		parent = "background",
+	buff_pivot = {
+		horizontal_alignment = "left",
+		parent = "left_panel",
 		vertical_alignment = "top",
 		size = {
 			0,
 			0,
 		},
 		position = {
-			-1100,
-			100,
+			0,
+			180,
 			1,
 		},
 	},
-	havoc_panel = {
+	buff_panel_background = {
 		horizontal_alignment = "left",
-		parent = "havoc_pivot",
+		parent = "buff_pivot",
 		vertical_alignment = "top",
-		size = havoc_info_size,
+		size = {
+			400,
+			800,
+		},
 		position = {
 			0,
 			0,
 			1,
+		},
+	},
+	buff_panel = {
+		horizontal_alignment = "left",
+		parent = "buff_pivot",
+		vertical_alignment = "top",
+		size = {
+			400,
+			760,
+		},
+		position = {
+			0,
+			20,
+			1,
+		},
+	},
+	buff_panel_content = {
+		horizontal_alignment = "top",
+		parent = "buff_panel",
+		vertical_alignment = "left",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
+			1,
+		},
+	},
+	buff_panel_mask = {
+		horizontal_alignment = "center",
+		parent = "buff_panel",
+		vertical_alignment = "center",
+		size = {
+			440,
+			800,
+		},
+		position = {
+			0,
+			0,
+			2,
+		},
+	},
+	buff_panel_scrollbar = {
+		horizontal_alignment = "right",
+		parent = "buff_panel",
+		vertical_alignment = "center",
+		size = {
+			8,
+			760,
+		},
+		position = {
+			0,
+			0,
+			3,
 		},
 	},
 }
@@ -196,7 +257,134 @@ local widget_definitions = {
 			},
 		},
 	}, "background"),
+	buff_panel_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "buff_panel_scrollbar", {
+		using_custom_gamepad_navigation = true,
+	}),
+	buff_panel_scrollbar_input_icon = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = table.merge(table.clone(UIFontSettings.input_legend_button), {
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "bottom",
+				offset = {
+					-15,
+					40,
+					0,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			}),
+		},
+	}, "buff_panel_mask", {
+		visible = false,
+	}),
+	buff_panel_background = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "background",
+			style = {
+				color = Color.black(127.5, true),
+			},
+		},
+	}, "buff_panel_background", {
+		visible = false,
+	}),
 }
+
+local function generate_currency_passes(currency_texture)
+	local default_texture = "content/ui/materials/icons/currencies/credits_small"
+
+	return {
+		{
+			pass_type = "rect",
+			style_id = "reward_background",
+			style = {
+				color = {
+					200,
+					0,
+					0,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "reward_gradient",
+			value = "content/ui/materials/gradients/gradient_vertical",
+			style = {
+				color = {
+					32,
+					169,
+					211,
+					158,
+				},
+				offset = {
+					0,
+					0,
+					1,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "reward_frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				scale_to_material = true,
+				color = Color.terminal_frame(255, true),
+				offset = {
+					0,
+					0,
+					2,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "reward_icon",
+			value = currency_texture or default_texture,
+			style = {
+				horizontal_alignment = "right",
+				vertical_alignment = "center",
+				size = {
+					28,
+					20,
+				},
+				offset = {
+					0,
+					0,
+					3,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "reward_text",
+			value = "0",
+			value_id = "amount_id",
+			style = {
+				font_size = 20,
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "center",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					-28,
+					0,
+					3,
+				},
+			},
+		},
+	}
+end
+
 local left_panel_widgets_definitions = {
 	danger_info = UIWidget.create_definition({
 		{
@@ -438,92 +626,9 @@ local left_panel_widgets_definitions = {
 			},
 		},
 	}, "circumstance_info_panel"),
-	plasteel_info = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = Localize(WalletSettings.plasteel.display_name),
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "top",
-				offset = {
-					0,
-					0,
-					10,
-				},
-				size = {
-					nil,
-					30,
-				},
-				text_color = {
-					255,
-					169,
-					191,
-					153,
-				},
-			},
-		},
-		{
-			pass_type = "text",
-			value_id = "amount_id",
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "top",
-				offset = {
-					200,
-					0,
-					10,
-				},
-				size = {
-					400,
-					30,
-				},
-				text_color = Color.golden_rod(255, true),
-			},
-		},
-	}, "plasteel_info_panel"),
-	diamantine_info = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = Localize(WalletSettings.diamantine.display_name),
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "top",
-				offset = {
-					0,
-					0,
-					10,
-				},
-				size = {
-					nil,
-					30,
-				},
-				text_color = {
-					255,
-					169,
-					191,
-					153,
-				},
-			},
-		},
-		{
-			pass_type = "text",
-			value_id = "amount_id",
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "top",
-				offset = {
-					200,
-					0,
-					10,
-				},
-				size = {
-					400,
-					30,
-				},
-				text_color = Color.golden_rod(255, true),
-			},
-		},
-	}, "diamantine_info_panel"),
+	plasteel_info = UIWidget.create_definition(generate_currency_passes("content/ui/materials/icons/currencies/plasteel_small"), "crafting_pickup_panel", nil, currency_info_size),
+	diamantine_info = UIWidget.create_definition(generate_currency_passes("content/ui/materials/icons/currencies/diamantine_small"), "crafting_pickup_panel", nil, currency_info_size),
+	survival_currency = UIWidget.create_definition(generate_currency_passes(), "crafting_pickup_panel", nil, currency_info_size),
 	havoc_rank_info = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -1187,7 +1292,7 @@ local animations = {
 			name = "reset",
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				local start_pos = 25 - details_panel_size[1]
+				local start_pos = left_panel_x_position - details_panel_size[1]
 
 				parent:set_scenegraph_position("left_panel", start_pos)
 				for_all_left_widgets(parent, function (widget)
@@ -1203,7 +1308,7 @@ local animations = {
 			name = "left_panel_enter",
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local new_pos = 25 - details_panel_size[1] + details_panel_size[1] * math.easeOutCubic(progress)
+				local new_pos = left_panel_x_position - details_panel_size[1] + details_panel_size[1] * math.easeOutCubic(progress)
 
 				parent:set_scenegraph_position("left_panel", new_pos)
 				for_all_left_widgets(parent, function (widget)
@@ -1236,7 +1341,7 @@ local animations = {
 			name = "left_panel_exit",
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local new_pos = 25 - details_panel_size[1] * math.easeOutCubic(progress)
+				local new_pos = left_panel_x_position - details_panel_size[1] * math.easeOutCubic(progress)
 
 				parent:set_scenegraph_position("left_panel", new_pos)
 				for_all_left_widgets(parent, function (widget)

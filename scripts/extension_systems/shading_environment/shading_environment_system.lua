@@ -11,12 +11,20 @@ ShadingEnvironmentSystem.init = function (self, ...)
 end
 
 ShadingEnvironmentSystem.on_gameplay_post_init = function (self, level, themes)
-	self:_fetch_theme_shading_environments(themes)
+	self:on_theme_changed(themes)
+end
+
+ShadingEnvironmentSystem.on_theme_changed = function (self, themes, force_reset)
+	table.clear(self._theme_shading_environment_slots)
+
+	if themes then
+		self:_fetch_theme_shading_environments(themes)
+	end
 
 	local unit_to_extension_map = self._unit_to_extension_map
 
 	for unit, extension in pairs(unit_to_extension_map) do
-		extension:setup_theme(self)
+		extension:setup_theme(self, force_reset)
 	end
 end
 

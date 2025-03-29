@@ -51,10 +51,10 @@ ImpactFxResourceDependencies.impact_decal_units = function (id, data_table)
 	return resource_packages
 end
 
-function _fetch_impact_fx_lookups_recursive(data_table, impact_fx_map, path)
+function _fetch_impact_fx_lookups_recursive(data_table, impact_fx_map)
 	for key, value in pairs(data_table) do
 		if type(value) == "table" and not _is_class(value) then
-			_fetch_impact_fx_lookups_recursive(value, impact_fx_map, (path or "") .. "." .. key)
+			_fetch_impact_fx_lookups_recursive(value, impact_fx_map)
 		elseif type(value) == "string" and rawget(damage_types, value) then
 			impact_fx_map[value] = impact_fx_lookup[value]
 		end

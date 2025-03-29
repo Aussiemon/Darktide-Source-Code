@@ -983,8 +983,8 @@ weapon_template.actions = {
 		anim_event = "attack_swing_stab",
 		anim_event_3p = "attack_swing_stab",
 		attack_direction_override = "push",
-		damage_window_end = 0.38,
-		damage_window_start = 0.266,
+		damage_window_end = 0.35,
+		damage_window_start = 0.2833333333333333,
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
@@ -1055,7 +1055,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.17,
+				-0.25,
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_combat_knife_linesman,
@@ -1380,7 +1380,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

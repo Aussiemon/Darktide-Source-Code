@@ -2,12 +2,12 @@
 
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local talent_settings = TalentSettings.shared.venting
 local ActionVentWarpCharge = class("ActionVentWarpCharge", "ActionWeaponBase")
 

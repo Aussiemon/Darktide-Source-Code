@@ -1,32 +1,28 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local damage_types = DamageSettings.damage_types
 local gibbing_power = GibbingSettings.gibbing_power
 local gibbing_types = GibbingSettings.gibbing_types
 local melee_attack_strengths = AttackSettings.melee_attack_strength
+local double_cleave = DamageProfileSettings.double_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local no_cleave = DamageProfileSettings.no_cleave
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local light_cleave = DamageProfileSettings.light_cleave
 local lasgun_armor_mod_default = {
 	near = {
 		attack = {

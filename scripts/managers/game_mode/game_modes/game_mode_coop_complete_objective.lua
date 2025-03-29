@@ -550,6 +550,44 @@ GameModeCoopCompleteObjective.rpc_set_player_respawn_time = function (self, chan
 	end
 end
 
+GameModeCoopCompleteObjective.hot_join_sync = function (self, sender, channel)
+	GameModeCoopCompleteObjective.super.hot_join_sync(self, sender, channel)
+
+	local sender_player = Managers.player:player(sender, 1)
+	local sender_account_id = sender_player and sender_player:account_id()
+
+	if not sender_account_id then
+		Log.error("GameModeCoopCompleteObjective", "Unable to retrieve account id of peer %s", sender)
+
+		return
+	end
+
+	local mission_id = Managers.mechanism:backend_mission_id()
+
+	if not mission_id then
+		return
+	end
+
+	Managers.data_service.mission_board:fetch_mission(mission_id):next(function (data)
+		local order_owner_id
+		local flags = data.mission and data.mission.flags
+
+		for key, _ in pairs(flags) do
+			if string.find(key, "order%-owner%-") then
+				order_owner_id = string.gsub(key, "order%-owner%-", "")
+
+				break
+			end
+		end
+
+		if order_owner_id then
+			local order_joiner_id = sender_account_id
+
+			Managers.backend.interfaces.orders:join_personal_mission(order_owner_id, mission_id, order_joiner_id)
+		end
+	end)
+end
+
 implements(GameModeCoopCompleteObjective, GameModeBase.INTERFACE)
 
 return GameModeCoopCompleteObjective

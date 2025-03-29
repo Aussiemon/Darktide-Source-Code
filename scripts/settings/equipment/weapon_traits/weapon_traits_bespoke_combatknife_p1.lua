@@ -8,6 +8,40 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot = {
+	format_values = {
+		rending = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.rending_multiplier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent",
+				find_value_type = "trait_override",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent = {
 			{
@@ -38,6 +72,40 @@ templates.weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot = {
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_power_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_power_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_power_parent = {
 			{
@@ -64,6 +132,30 @@ templates.weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_po
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_heavy_chained_hits_increases_killing_blow_chance = {
+	format_values = {
+		proc_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_heavy_chained_hits_increases_killing_blow_chance_parent",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"killing_blow_chance",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_heavy_chained_hits_increases_killing_blow_chance_parent",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_heavy_chained_hits_increases_killing_blow_chance_parent = {
 			{
@@ -90,6 +182,30 @@ templates.weapon_trait_bespoke_combatknife_p1_heavy_chained_hits_increases_killi
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.finesse_modifier_bonus,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus = {
 			{
@@ -120,6 +236,30 @@ templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus = {
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chance",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chance",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chance = {
 			{
@@ -146,6 +286,19 @@ templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chanc
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_bleed_on_non_weakspot_hit = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_bleed_on_non_weakspot_hit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_bleed_on_non_weakspot_hit = {
 			{
@@ -172,6 +325,19 @@ templates.weapon_trait_bespoke_combatknife_p1_bleed_on_non_weakspot_hit = {
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_bleed_on_crit = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_bleed_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_bleed_on_crit = {
 			{
@@ -198,6 +364,20 @@ templates.weapon_trait_bespoke_combatknife_p1_bleed_on_crit = {
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_rending_on_backstab = {
+	format_values = {
+		rending = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_rending_on_backstab",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.backstab_rending_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_rending_on_backstab = {
 			{
@@ -224,6 +404,20 @@ templates.weapon_trait_bespoke_combatknife_p1_rending_on_backstab = {
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_increased_weakspot_damage_against_bleeding = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_increased_weakspot_damage_against_bleeding",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.melee_weakspot_damage_vs_bleeding,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_increased_weakspot_damage_against_bleeding = {
 			{
@@ -250,6 +444,30 @@ templates.weapon_trait_bespoke_combatknife_p1_increased_weakspot_damage_against_
 	},
 }
 templates.weapon_trait_bespoke_combatknife_p1_increased_crit_chance_on_staggered_weapon_special_hit = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_increased_crit_chance_on_staggered_weapon_special_hit_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combatknife_p1_increased_crit_chance_on_staggered_weapon_special_hit_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combatknife_p1_increased_crit_chance_on_staggered_weapon_special_hit_parent = {
 			{

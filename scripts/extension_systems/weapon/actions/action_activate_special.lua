@@ -62,17 +62,4 @@ ActionActivateSpecial.fixed_update = function (self, dt, t, time_in_action)
 	end
 end
 
-ActionActivateSpecial.finish = function (self, reason, data, t, time_in_action)
-	ActionActivateSpecial.super.finish(self, reason, data, t, time_in_action)
-
-	if reason ~= "action_complete" then
-		local action_settings = self._action_settings
-		local abort_sound_alias = action_settings.abort_sound_alias
-
-		if abort_sound_alias then
-			-- Nothing
-		end
-	end
-end
-
 return ActionActivateSpecial

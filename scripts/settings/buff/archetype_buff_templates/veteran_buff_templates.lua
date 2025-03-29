@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/buff/archetype_buff_templates/veteran_buff_templates.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Ammo = require("scripts/utilities/ammo")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -16,7 +16,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stamina = require("scripts/utilities/attack/stamina")
 local Suppression = require("scripts/utilities/attack/suppression")
@@ -30,7 +30,7 @@ local buff_categories = BuffSettings.buff_categories
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local talent_settings_2 = TalentSettings.veteran_2
 local talent_settings_3 = TalentSettings.veteran_3
@@ -209,6 +209,9 @@ templates.veteran_combat_ability_stance_master = {
 			off_state = "none",
 			on_state = "veteran_stance",
 		},
+	},
+	related_talents = {
+		"veteran_combat_ability_stance",
 	},
 }
 templates.veteran_combat_ability_outlines = {
@@ -507,6 +510,9 @@ templates.veteran_combat_ability_increased_melee_and_ranged_damage = {
 		[stat_buffs.melee_damage] = 0.1,
 		[stat_buffs.ranged_damage] = 0.1,
 	},
+	related_talents = {
+		"veteran_combat_ability_melee_and_ranged_damage_to_coherency",
+	},
 }
 templates.veteran_increased_explosion_radius = {
 	class_name = "buff",
@@ -545,6 +551,9 @@ templates.veteran_bonus_crit_chance_on_ammo = {
 
 		return ammunition_percentage <= current_animation_percentage
 	end,
+	related_talents = {
+		"veteran_bonus_crit_chance_on_ammo",
+	},
 }
 templates.veteran_no_ammo_consumption_on_lasweapon_crit = {
 	class_name = "buff",
@@ -626,66 +635,51 @@ templates.veteran_movement_bonuses_on_toughness_broken = {
 	proc_func = function (params, template_data, template_context)
 		Stamina.add_stamina_percent(template_context.unit, 0.5)
 	end,
+	related_talents = {
+		"veteran_movement_bonuses_on_toughness_broken",
+	},
 }
 
 local in_melee_range = DamageSettings.in_melee_range
 local check_interval_time = 0.1
+local melee_hit_cooldown = talent_settings_2.veteran_ranged_power_out_of_melee.cooldown
 
 templates.veteran_ranged_power_out_of_melee = {
 	always_show_in_hud = true,
-	class_name = "buff",
+	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_ranged_power_out_of_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
 	predicted = false,
-	conditional_stat_buffs = {
-		[stat_buffs.ranged_damage] = 0.2,
+	proc_events = {
+		[proc_events.on_player_hit_received] = 1,
 	},
-	start_func = function (template_data, template_context)
-		local broadphase_system = Managers.state.extension:system("broadphase_system")
-		local broadphase = broadphase_system.broadphase
-
-		template_data.broadphase = broadphase
-		template_data.broadphase_results = {}
-
+	check_proc_func = CheckProcFunctions.on_melee_hit,
+	proc_func = function (params, template_data, template_context, t)
+		local attacked_unit = params.attacked_unit
 		local unit = template_context.unit
-		local side_system = Managers.state.extension:system("side_system")
-		local side = side_system.side_by_unit[unit]
-		local enemy_side_names = side:relation_side_names("enemy")
 
-		template_data.enemy_side_names = enemy_side_names
-	end,
-	update_func = function (template_data, template_context, dt, t, template)
-		local next_check_time = template_data.next_check_time
-
-		if not next_check_time then
-			template_data.next_check_time = t + check_interval_time
-
+		if attacked_unit ~= unit then
 			return
 		end
 
-		if next_check_time < t then
-			local player_unit = template_context.unit
-			local player_position = POSITION_LOOKUP[player_unit]
-			local broadphase = template_data.broadphase
-			local enemy_side_names = template_data.enemy_side_names
-			local broadphase_results = template_data.broadphase_results
-
-			table.clear(broadphase_results)
-
-			local num_hits = broadphase.query(broadphase, player_position, in_melee_range, broadphase_results, enemy_side_names)
-
-			if num_hits == 0 then
-				template_data.next_check_time = t + check_interval_time
-				template_data.is_active = true
-			else
-				template_data.is_active = false
-			end
-		end
+		template_data.last_hit_t = t
+	end,
+	conditional_stat_buffs = {
+		[stat_buffs.ranged_damage] = 0.15,
+	},
+	start_func = function (template_data, template_context)
+		template_data.last_hit_t = 0
+	end,
+	update_func = function (template_data, template_context, dt, t, template)
+		template_data.is_active = t > template_data.last_hit_t + melee_hit_cooldown
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
 	end,
+	related_talents = {
+		"veteran_ranged_power_out_of_melee",
+	},
 }
 templates.veteran_increase_suppression = {
 	class_name = "buff",
@@ -744,15 +738,18 @@ templates.veteran_damage_after_sprinting = {
 }
 templates.veteran_damage_after_sprinting_buff = {
 	class_name = "buff",
-	duration = 8,
+	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_increase_damage_after_sprinting",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
-	max_stacks = 5,
+	max_stacks = 4,
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.05,
+		[stat_buffs.damage] = 0.0625,
+	},
+	related_talents = {
+		"veteran_increase_damage_after_sprinting",
 	},
 }
 templates.veteran_big_game_hunter = {
@@ -784,6 +781,9 @@ templates.veteran_damage_coherency = {
 		[stat_buffs.damage] = 0.05,
 	},
 	start_func = _penance_start_func("veteran_damage_coherency_tracking_buff"),
+	related_talents = {
+		"veteran_increased_damage_coherency",
+	},
 }
 templates.veteran_damage_coherency_tracking_buff = {
 	class_name = "proc_buff",
@@ -830,6 +830,9 @@ templates.veteran_movement_speed_coherency = {
 		[stat_buffs.movement_speed] = 0.05,
 	},
 	start_func = _penance_start_func("veteran_movement_speed_coherency_tracking_buff"),
+	related_talents = {
+		"veteran_movement_speed_coherency",
+	},
 }
 templates.veteran_movement_speed_coherency_tracking_buff = {
 	class_name = "buff",
@@ -906,6 +909,9 @@ templates.veteran_melee_kills_grant_range_damage = {
 	proc_stat_buffs = {
 		[stat_buffs.ranged_damage] = 0.25,
 	},
+	related_talents = {
+		"veteran_kill_grants_damage_to_other_slot",
+	},
 }
 templates.veteran_ranged_kills_grant_melee_damage = {
 	active_duration = 5,
@@ -921,10 +927,13 @@ templates.veteran_ranged_kills_grant_melee_damage = {
 	proc_stat_buffs = {
 		[stat_buffs.melee_damage] = 0.25,
 	},
+	related_talents = {
+		"veteran_kill_grants_damage_to_other_slot",
+	},
 }
 templates.veteran_hits_cause_bleed = {
 	class_name = "proc_buff",
-	num_stacks_on_hit = 1,
+	num_stacks_on_hit = 2,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -1022,6 +1031,9 @@ templates.veteran_damage_bonus_leaving_invisibility = {
 	stat_buffs = {
 		[stat_buffs.damage] = 0.3,
 	},
+	related_talents = {
+		"veteran_damage_bonus_leaving_invisibility",
+	},
 }
 templates.veteran_toughness_bonus_leaving_invisibility = {
 	class_name = "veteran_stealth_bonuses_buff",
@@ -1031,6 +1043,9 @@ templates.veteran_toughness_bonus_leaving_invisibility = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = 0.5,
+	},
+	related_talents = {
+		"veteran_toughness_bonus_leaving_invisibility",
 	},
 }
 
@@ -1083,9 +1098,14 @@ templates.veteran_invisibility = {
 			return
 		end
 
+		local buff_extension = template_context.buff_extension
+		local can_attack_during_invisibility = false
+
+		can_attack_during_invisibility = buff_extension:has_keyword(keywords.can_attack_during_invisibility)
+
 		local damage_type = params.damage_type
 
-		if damage_type and ALLOWED_INVISIBILITY_DAMAGE_TYPES[damage_type] then
+		if damage_type and (ALLOWED_INVISIBILITY_DAMAGE_TYPES[damage_type] or can_attack_during_invisibility) then
 			return
 		end
 
@@ -1185,6 +1205,9 @@ templates.veteran_invisibility = {
 			Managers.stats:record_private("hook_veteran_infiltrate_stagger", template_context.player, number_of_enemies_staggered)
 		end
 	end,
+	related_talents = {
+		"veteran_invisibility_on_combat_ability",
+	},
 }
 templates.veteran_invisibility_on_combat_ability = {
 	allow_proc_while_active = true,
@@ -1289,6 +1312,9 @@ templates.veteran_reload_speed_on_elite_kill_effect = {
 
 		return template_data.done and not is_reloading
 	end,
+	related_talents = {
+		"veteran_reload_speed_on_elite_kill",
+	},
 }
 templates.veteran_increase_ranged_far_damage = {
 	class_name = "buff",
@@ -1328,6 +1354,9 @@ templates.veteran_toughness_on_elite_kill_effect = {
 
 		template_data.next_regen_t = nil
 	end,
+	related_talents = {
+		"veteran_elite_kills_replenish_toughness",
+	},
 }
 templates.veteran_ads_stamina_boost = {
 	class_name = "proc_buff",
@@ -1402,6 +1431,9 @@ templates.veteran_ads_stamina_boost = {
 
 		return 0.01
 	end,
+	related_talents = {
+		"veteran_ads_drain_stamina",
+	},
 }
 templates.veteran_aura_gain_ammo_on_elite_kill = {
 	always_show_in_hud = true,
@@ -1449,6 +1481,9 @@ templates.veteran_aura_gain_ammo_on_elite_kill = {
 			end
 		end
 	end,
+	related_talents = {
+		"veteran_aura_gain_ammo_on_elite_kill",
+	},
 }
 templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 	always_show_in_hud = true,
@@ -1496,6 +1531,9 @@ templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 			end
 		end
 	end,
+	related_talents = {
+		"veteran_aura_gain_ammo_on_elite_kill_improved",
+	},
 }
 templates.veteran_replenish_toughness_of_ally_close_to_victim = {
 	class_name = "proc_buff",
@@ -1564,66 +1602,53 @@ templates.veteran_replenish_toughness_of_ally_close_to_victim_damage_buff = {
 	stat_buffs = {
 		[stat_buffs.damage] = talent_settings_2.coop_3.damage,
 	},
+	related_talents = {
+		"veteran_replenish_toughness_and_boost_allies",
+	},
 }
 
 local range = talent_settings_2.toughness_3.range
+local melee_hit_cooldown_toughness = talent_settings_2.toughness_3.cooldown
 
 templates.veteran_toughness_regen_out_of_melee = {
 	always_show_in_hud = true,
-	class_name = "buff",
+	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_replenish_toughness_outside_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
 	predicted = false,
-	start_func = function (template_data, template_context)
-		local broadphase_system = Managers.state.extension:system("broadphase_system")
-		local broadphase = broadphase_system.broadphase
-
-		template_data.broadphase = broadphase
-		template_data.broadphase_results = {}
-
+	proc_events = {
+		[proc_events.on_player_hit_received] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_melee_hit,
+	proc_func = function (params, template_data, template_context, t)
+		local attacked_unit = params.attacked_unit
 		local unit = template_context.unit
-		local side_system = Managers.state.extension:system("side_system")
-		local side = side_system.side_by_unit[unit]
-		local enemy_side_names = side:relation_side_names("enemy")
 
-		template_data.enemy_side_names = enemy_side_names
-	end,
-	update_func = function (template_data, template_context, dt, t, template)
-		local next_regen_t = template_data.next_regen_t
-
-		if not next_regen_t then
-			template_data.next_regen_t = t + talent_settings_2.toughness_3.time
-
+		if attacked_unit ~= unit then
 			return
 		end
 
-		if next_regen_t < t then
-			local player_unit = template_context.unit
-			local player_position = POSITION_LOOKUP[player_unit]
-			local broadphase = template_data.broadphase
-			local enemy_side_names = template_data.enemy_side_names
-			local broadphase_results = template_data.broadphase_results
+		template_data.last_hit_t = t
+	end,
+	start_func = function (template_data, template_context)
+		template_data.last_hit_t = 0
+	end,
+	update_func = function (template_data, template_context, dt, t, template)
+		local is_active = t > template_data.last_hit_t + melee_hit_cooldown_toughness
 
-			table.clear(broadphase_results)
-
-			local num_hits = broadphase.query(broadphase, player_position, range, broadphase_results, enemy_side_names)
-
-			if num_hits == 0 then
-				if template_context.is_server then
-					Toughness.replenish_percentage(template_context.unit, talent_settings_2.toughness_3.toughness, false, "talent_toughness_3")
-				end
-
-				template_data.next_regen_t = t + talent_settings_2.toughness_3.time
-				template_data.is_active = true
-			else
-				template_data.is_active = false
-			end
+		if is_active and template_context.is_server then
+			Toughness.replenish_percentage(template_context.unit, talent_settings_2.toughness_3.toughness * dt, false, "talent_toughness_3")
 		end
+
+		template_data.is_active = is_active
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
 	end,
+	related_talents = {
+		"veteran_replenish_toughness_outside_melee",
+	},
 }
 templates.veteran_ranged_weakspot_toughness_recovery = {
 	class_name = "proc_buff",
@@ -1654,6 +1679,9 @@ templates.veteran_ranged_weakspot_toughenss_buff = {
 	max_stacks = talent_settings_2.toughness_2.max_stacks,
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.toughness_2.toughness_damage_taken_multiplier,
+	},
+	related_talents = {
+		"veteran_replenish_toughness_on_weakspot_kill",
 	},
 }
 templates.veteran_reload_speed_on_non_empty_clip = {
@@ -1688,6 +1716,9 @@ templates.veteran_reload_speed_on_non_empty_clip = {
 		end
 	end,
 	check_active_func = ConditionalFunctions.is_reloading,
+	related_talents = {
+		"veteran_faster_reload_on_non_empty_clips",
+	},
 }
 templates.veteran_frag_grenade_bleed = {
 	class_name = "proc_buff",
@@ -1808,6 +1839,9 @@ templates.veteran_grenade_replenishment = {
 
 		return 1 - percentage_left
 	end,
+	related_talents = {
+		"veteran_replenish_grenades",
+	},
 }
 templates.veteran_stamina_on_ranged_dodges = {
 	class_name = "proc_buff",
@@ -1844,6 +1878,9 @@ templates.veteran_reduced_threat_gain = {
 
 		return standing_still
 	end,
+	related_talents = {
+		"veteran_reduced_threat_when_still",
+	},
 }
 templates.veteran_buffs_after_combat_ability = {
 	class_name = "proc_buff",
@@ -1893,6 +1930,9 @@ templates.veteran_reduced_threat_generation = {
 	stat_buffs = {
 		[stat_buffs.threat_weight_multiplier] = talent_settings_2.defensive_3.threat_weight_multiplier,
 	},
+	related_talents = {
+		"veteran_reduced_threat_when_still",
+	},
 }
 templates.veteran_increased_close_damage_after_combat_ability = {
 	class_name = "veteran_stealth_bonuses_buff",
@@ -1903,6 +1943,9 @@ templates.veteran_increased_close_damage_after_combat_ability = {
 	stat_buffs = {
 		[stat_buffs.damage_near] = 0.15,
 	},
+	related_talents = {
+		"veteran_increased_close_damage_after_combat_ability",
+	},
 }
 templates.veteran_increased_weakspot_power_after_combat_ability = {
 	class_name = "veteran_stealth_bonuses_buff",
@@ -1912,6 +1955,9 @@ templates.veteran_increased_weakspot_power_after_combat_ability = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.weakspot_power_level_modifier] = 0.2,
+	},
+	related_talents = {
+		"veteran_increased_weakspot_power_after_combat_ability",
 	},
 }
 templates.veteran_aura_gain_grenade_on_elite_kill = {
@@ -2006,6 +2052,9 @@ templates.veteran_suppression_immunity = {
 	keywords = {
 		keywords.suppression_immune,
 	},
+	related_talents = {
+		"veteran_supression_immunity",
+	},
 }
 templates.veteran_all_kills_replenish_bonus_toughness = {
 	class_name = "proc_buff",
@@ -2085,6 +2134,9 @@ templates.veteran_allies_kills_damage_buff = {
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_veteran_killshot",
 	},
+	related_talents = {
+		"veteran_ally_kills_increase_damage",
+	},
 }
 
 function _is_in_weapon_alternate_fire_with_stamina(template_data, template_context)
@@ -2132,6 +2184,9 @@ templates.veteran_combat_ability_increase_toughness_to_coherency = {
 			return
 		end
 	end,
+	related_talents = {
+		"veteran_combat_ability_increase_and_restore_toughness_to_coherency",
+	},
 }
 templates.veteran_share_toughness_gained = {
 	class_name = "proc_buff",
@@ -2273,6 +2328,9 @@ templates.veteran_increased_move_speed_when_moving_towards_disabled_allies = {
 
 		return template_data.is_active
 	end,
+	related_talents = {
+		"veteran_movement_speed_towards_downed",
+	},
 }
 templates.veteran_reduced_damage_taken = {
 	class_name = "buff",
@@ -2286,6 +2344,9 @@ templates.veteran_reduced_damage_taken = {
 		[stat_buffs.damage_taken_multiplier] = talent_settings_3.defensive_1.damage_taken_multiplier,
 	},
 	duration = talent_settings_3.defensive_1.duration,
+	related_talents = {
+		"veteran_movement_speed_towards_downed",
+	},
 }
 templates.veteran_combat_ability_revive_nearby_allies = {
 	class_name = "buff",
@@ -2390,6 +2451,9 @@ templates.veteran_dodging_crit_buff = {
 	stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.05,
 	},
+	related_talents = {
+		"veteran_dodging_grants_crit",
+	},
 }
 templates.veteran_improved_toughness_stamina = {
 	class_name = "proc_buff",
@@ -2474,6 +2538,9 @@ templates.veteran_tdr_on_high_toughness = {
 
 		return current_toughness > 0.75
 	end,
+	related_talent = {
+		"veteran_tdr_on_high_toughness",
+	},
 }
 
 local snipers_focus_max_stacks = 10
@@ -2689,6 +2756,9 @@ templates.veteran_snipers_focus = {
 
 		template_data.talent_resource_component.current_resource = 0
 	end,
+	related_talents = {
+		"veteran_snipers_focus",
+	},
 }
 templates.veteran_snipers_focus_effect = {
 	class_name = "buff",
@@ -2764,7 +2834,7 @@ templates.veteran_snipers_focus_rending_buff = {
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.1,
+		[stat_buffs.rending_multiplier] = 0.15,
 	},
 }
 
@@ -2909,6 +2979,9 @@ templates.veteran_weapon_switch_melee_visual = {
 	predicted = false,
 	use_talent_resource = true,
 	max_stacks = max_melee_stacks,
+	related_talents = {
+		"veteran_weapon_switch_passive",
+	},
 }
 
 local ammo_replenish_percent = 0.33
@@ -2993,6 +3066,9 @@ templates.veteran_weapon_switch_ranged_buff = {
 
 		return wielded_slot_name ~= "slot_secondary"
 	end,
+	related_talents = {
+		"veteran_weapon_switch_passive",
+	},
 }
 templates.veteran_weapon_switch_reload_speed = {
 	class_name = "buff",
@@ -3004,6 +3080,9 @@ templates.veteran_weapon_switch_reload_speed = {
 	duration = veteran_weapon_switch_ranged_duration,
 	stat_buffs = {
 		[stat_buffs.reload_speed] = 0.2,
+	},
+	related_talents = {
+		"veteran_weapon_switch_reload_speed",
 	},
 }
 templates.veteran_weapon_switch_melee_buff = {
@@ -3048,6 +3127,9 @@ templates.veteran_weapon_switch_melee_buff = {
 
 		return wielded_slot_name ~= "slot_primary"
 	end,
+	related_talents = {
+		"veteran_weapon_switch_melee_buff",
+	},
 }
 
 local veteran_weapon_switch_melee_bonuses_duration = 3
@@ -3062,6 +3144,9 @@ templates.veteran_weapon_switch_melee_stamina_reduction = {
 	duration = veteran_weapon_switch_melee_bonuses_duration,
 	stat_buffs = {
 		[stat_buffs.stamina_cost_multiplier] = 0.75,
+	},
+	related_talents = {
+		"veteran_weapon_switch_stamina_reduction",
 	},
 }
 
@@ -3311,6 +3396,9 @@ templates.veteran_improved_tag = {
 
 		return duration
 	end,
+	related_talents = {
+		"veteran_improved_tag",
+	},
 }
 templates.veteran_improved_tag_effect = {
 	class_name = "buff",
@@ -3348,6 +3436,9 @@ templates.veteran_improved_tag_allied_buff = {
 	max_stacks = tag_max_stacks,
 	stat_buffs = {
 		[stat_buffs.damage] = 0.015,
+	},
+	related_talents = {
+		"veteran_improved_tag_dead_bonus",
 	},
 }
 templates.veteran_improved_tag_allied_buff_increased_stacks = table.clone(templates.veteran_improved_tag_allied_buff)

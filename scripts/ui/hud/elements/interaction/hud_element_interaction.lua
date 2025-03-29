@@ -519,11 +519,9 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 	local interaction_input = interactee_extension:interaction_input() or "interact_pressed"
 	local interaction_input_alias_key = _get_alias_key(interaction_input)
 	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
-	local description_text, hud_description
+	local description_text, hud_description, hud_description_context
 
 	if not use_minimal_presentation then
-		hud_description = interactor_extension:hud_description()
-
 		local interactee_player = Managers.player:player_by_unit(interactee_unit)
 
 		if interactee_player then
@@ -533,7 +531,13 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 
 			description_text = color_string .. "{#size(30)} {#reset()}" .. interactee_player:name()
 		else
-			description_text = Localize(hud_description)
+			hud_description, hud_description_context = interactor_extension:hud_description()
+
+			if hud_description_context then
+				description_text = Localize(hud_description, true, hud_description_context)
+			else
+				description_text = Localize(hud_description)
+			end
 		end
 	else
 		description_text = ""

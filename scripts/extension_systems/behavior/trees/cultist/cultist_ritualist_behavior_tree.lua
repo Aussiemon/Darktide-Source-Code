@@ -11,6 +11,12 @@ local behavior_tree = {
 		action_data = action_data.death,
 	},
 	{
+		"BtDisableAction",
+		condition = "is_minion_disabled",
+		name = "disable",
+		action_data = action_data.disable,
+	},
+	{
 		"BtStaggerAction",
 		condition = "is_staggered",
 		name = "stagger",

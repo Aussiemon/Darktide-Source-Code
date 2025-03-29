@@ -8,7 +8,8 @@ local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset
 local VoQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local Vo = {}
 local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event, _get_player_level, _can_interact, _get_interaction_level_req
-local Interactions = {
+local DEFAULT_OPINION = "dislikes_character"
+local INTERACTIONS = {
 	health_station = function (dialogue_extension)
 		local event_data = dialogue_extension:get_event_data_payload()
 		local event_name = "heal_start"
@@ -30,7 +31,7 @@ end
 
 Vo.interaction_start_event = function (unit, target_unit, interaction_template_name)
 	if ScriptUnit.has_extension(unit, "dialogue_context_system") then
-		local vo_event = Interactions[interaction_template_name]
+		local vo_event = INTERACTIONS[interaction_template_name]
 
 		if vo_event then
 			local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
@@ -1207,6 +1208,70 @@ Vo.reinforcements = function (dialogue_extension_unit, dialogue_extension)
 	Vo.enemy_generic_vo_event(dialogue_extension_unit, "reinforcements", breed.name)
 end
 
+Vo.backend_vo_event = function (backend_group_id)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
+	local backend_vo_table = dialogue_system:backend_vo_table(backend_group_id)
+
+	if backend_vo_table then
+		local lowest_val = 4
+		local lowest_val_table = {}
+
+		for i, v in ipairs(backend_vo_table) do
+			if v < lowest_val then
+				lowest_val = v
+
+				table.clear(lowest_val_table)
+
+				lowest_val_table[1] = i
+			elseif v == lowest_val then
+				lowest_val_table[#lowest_val_table + 1] = i
+			end
+		end
+
+		local backend_rule_id = lowest_val_table[math.random(1, #lowest_val_table)]
+		local rule_name = dialogue_system:get_backend_vo_rule(backend_group_id, backend_rule_id)
+
+		Vo.mission_giver_mission_info_vo("rule_based", nil, rule_name)
+		dialogue_system:set_session_backend_vo(backend_group_id, rule_name)
+	end
+end
+
+Vo.save_backend_vo = function ()
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
+
+	dialogue_system:save_session_backend_vo()
+end
+
+Vo.play_next_backend_vo = function (backend_group_id, optional_substring)
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
+	local rule_name, last_line = dialogue_system:extract_next_backend_vo(backend_group_id, optional_substring)
+
+	if rule_name then
+		Vo.mission_giver_mission_info_vo("rule_based", nil, rule_name)
+	end
+
+	return last_line
+end
+
+Vo.substring_exists_in_backend_vo = function (backend_group_id, substring)
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
+	local exists = dialogue_system:substring_exists_in_backend_vo(backend_group_id, substring)
+
+	return exists
+end
+
 Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, wwise_route_key, on_play_callback, seed, is_opinion_vo)
 	local vo_unit, dialogue_extension
 	local unit_to_extension_map = dialogue_system:unit_to_extension_map()
@@ -1232,7 +1297,7 @@ Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, ww
 				local opinion = opinion_settings[player_voice_profile]
 				local rule = vo_rules[1]
 
-				rule = rule .. "_" .. opinion
+				rule = rule .. "_" .. (opinion or DEFAULT_OPINION)
 
 				dialogue_extension:play_local_vo_event(rule, wwise_route_key, nil, seed)
 			end
@@ -1268,7 +1333,7 @@ Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_op
 			local opinion_settings = DialogueBreedSettings[npc_class].opinion_settings
 			local opinion = opinion_settings[player_voice_profile]
 
-			rule_name = rule_name .. "_" .. opinion
+			rule_name = rule_name .. "_" .. (opinion or DEFAULT_OPINION)
 		end
 
 		local pre_wwise_event, post_wwise_event
@@ -1325,7 +1390,9 @@ Vo.mission_giver_check_event = function ()
 		local voice_over_spawn_manager = Managers.state.voice_over_spawn
 		local voice_profile = voice_over_spawn_manager:current_voice_profile()
 		local level = Managers.state.mission:mission_level()
+		local mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
 
+		Level.set_flow_variable(level, "default_mission_giver_unit", mission_giver_unit)
 		Level.trigger_event(level, voice_profile .. "_selected")
 	end
 end

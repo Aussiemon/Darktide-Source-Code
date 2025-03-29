@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -307,8 +307,6 @@ local widget_definitions = {
 		hotspot = {},
 	}),
 }
-local menu_zoom_out = "loc_inventory_menu_zoom_out"
-local menu_zoom_in = "loc_inventory_menu_zoom_in"
 local legend_inputs = {
 	{
 		alignment = "left_alignment",
@@ -318,23 +316,16 @@ local legend_inputs = {
 	},
 	{
 		alignment = "right_alignment",
-		display_name = "loc_inventory_menu_zoom_in",
-		input_action = "hotkey_menu_special_2",
-		on_pressed_callback = "cb_on_camera_zoom_toggled",
-		visibility_function = function (parent, id)
-			local display_name = parent._camera_zoomed_in and menu_zoom_out or menu_zoom_in
-
-			parent._input_legend_element:set_display_name(id, display_name)
-
-			return parent._initialize_zoom
-		end,
-	},
-	{
-		alignment = "right_alignment",
 		display_name = "loc_weapon_inventory_inspect_button",
 		input_action = "hotkey_item_inspect",
 		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
+			local previewed_element = parent._previewed_element
+
+			if previewed_element and previewed_element.premium_offer then
+				return false
+			end
+
 			local previewed_item = parent._previewed_item
 
 			if previewed_item then
@@ -347,6 +338,19 @@ local legend_inputs = {
 			end
 
 			return false
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_inventory_menu_zoom_in",
+		input_action = "hotkey_menu_special_2",
+		on_pressed_callback = "cb_on_camera_zoom_toggled",
+		visibility_function = function (parent, id)
+			local display_name = parent._zoom_level >= 0.5 and "loc_inventory_menu_zoom_out" or "loc_inventory_menu_zoom_in"
+
+			parent._input_legend_element:set_display_name(id, display_name)
+
+			return parent._initialize_zoom
 		end,
 	},
 }

@@ -170,9 +170,11 @@ local function remove_repeated_entries(changes_list, start_index)
 	end
 end
 
-local function verify_and_apply_changes(changed_setting, new_value, affected_settings, origin_id, settings_by_id)
+local function verify_and_apply_changes(changed_setting, new_value, startup, affected_settings, origin_id, settings_by_id)
 	local changes_list = {}
 	local first_level = not affected_settings
+	local changed_setting_valid = not changed_setting.validation_function or changed_setting.validation_function and changed_setting.validation_function(changed_setting)
+	local settings_list = affected_settings or {}
 
 	if first_level then
 		changes_list[#changes_list + 1] = {
@@ -181,10 +183,17 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 			save_location = changed_setting.save_location,
 			require_apply = changed_setting.require_apply,
 		}
-	end
 
-	local settings_list = affected_settings or {}
-	local changed_setting_valid = not changed_setting.validation_function or changed_setting.validation_function and changed_setting.validation_function(changed_setting)
+		if startup and changed_setting.apply_on_startup and not changed_setting_valid then
+			if changed_setting.validation_function and not changed_setting.validation_function() then
+				new_value = changed_setting.default_value
+				changes_list[#changes_list].value = new_value
+			end
+
+			settings_list[#settings_list + 1] = changes_list[#changes_list]
+			changed_setting_valid = true
+		end
+	end
 
 	if changed_setting_valid and (not changed_setting.disabled or changed_setting.disabled and changed_setting.disabled_origin == origin_id) then
 		if changed_setting.disable_rules then
@@ -360,7 +369,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 				local should_verify = first_level and i > 1 or not first_level
 
 				if should_verify then
-					verify_and_apply_changes(settings_by_id[change.id], change.value, settings_list, changed_setting.id, settings_by_id)
+					verify_and_apply_changes(settings_by_id[change.id], change.value, startup, settings_list, changed_setting.id, settings_by_id)
 				end
 			end
 		end
@@ -440,8 +449,8 @@ local function generate_settings(settings)
 
 	return {
 		settings_by_id = settings_by_id,
-		verify_and_apply_changes = function (changed_setting, new_value, affected_settings, origin_id)
-			return verify_and_apply_changes(changed_setting, new_value, affected_settings, origin_id, settings_by_id)
+		verify_and_apply_changes = function (changed_setting, new_value, startup, affected_settings, origin_id)
+			return verify_and_apply_changes(changed_setting, new_value, startup, affected_settings, origin_id, settings_by_id)
 		end,
 		is_same = function (current, new)
 			return is_same(current, new)

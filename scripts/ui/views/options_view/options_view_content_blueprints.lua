@@ -681,6 +681,7 @@ blueprints.dropdown = {
 			parent:set_can_exit(false)
 		end
 
+		local new_selection_index
 		local selected_index = content.selected_index
 		local value, new_value
 		local hotspot = content.hotspot
@@ -728,8 +729,6 @@ blueprints.dropdown = {
 
 		content.grow_downwards = grow_downwards
 
-		local new_selection_index
-
 		if not selected_index or not focused then
 			for i = 1, #options do
 				local option = options[i]
@@ -744,18 +743,70 @@ blueprints.dropdown = {
 			selected_index = selected_index or 1
 		end
 
+		local is_selected_option_disabled = false
+		local first_option_index_available
+
+		for i = 1, #options do
+			local option = options[i]
+
+			if option.validation_function and not option.validation_function() then
+				option.is_disabled = true
+
+				if content.selected_index == i then
+					is_selected_option_disabled = true
+				end
+			else
+				option.is_disabled = false
+				first_option_index_available = first_option_index_available or i
+			end
+		end
+
+		if is_selected_option_disabled then
+			if first_option_index_available then
+				new_selection_index = first_option_index_available
+				new_value = first_option_index_available
+			else
+				content.selected_index = nil
+				new_value = nil
+			end
+		end
+
+		local prev_option_index, next_option_index
+
+		if selected_index then
+			for i = selected_index - 1, 1, -1 do
+				local option = options[i]
+
+				if not option.is_disabled then
+					prev_option_index = i
+
+					break
+				end
+			end
+
+			for i = selected_index + 1, #options do
+				local option = options[i]
+
+				if not option.is_disabled then
+					next_option_index = i
+
+					break
+				end
+			end
+		end
+
 		if selected_index and focused then
 			if input_service:get("navigate_up_continuous") then
 				if grow_downwards or not grow_downwards and always_keep_order then
-					new_selection_index = math.max(selected_index - 1, 1)
+					new_selection_index = prev_option_index
 				else
-					new_selection_index = math.min(selected_index + 1, num_options)
+					new_selection_index = next_option_index
 				end
 			elseif input_service:get("navigate_down_continuous") then
 				if grow_downwards or not grow_downwards and always_keep_order then
-					new_selection_index = math.min(selected_index + 1, num_options)
+					new_selection_index = next_option_index
 				else
-					new_selection_index = math.max(selected_index - 1, 1)
+					new_selection_index = prev_option_index
 				end
 			end
 		end
@@ -802,13 +853,13 @@ blueprints.dropdown = {
 			local option_hotspot_id = "option_hotspot_" .. option_index
 			local outline_style_id = "outline_" .. option_index
 			local option_hotspot = content[option_hotspot_id]
-
-			option_hovered = option_hovered or option_hotspot.is_hover
-			option_hotspot.is_selected = actual_i == selected_index
-
 			local option = options[actual_i]
 
-			if not new_value and focused and not using_gamepad and option_hotspot.on_pressed then
+			option_hotspot.is_disabled = option.is_disabled
+			option_hovered = option_hovered or option_hotspot.is_hover and not option_hotspot.is_disabled
+			option_hotspot.is_selected = actual_i == selected_index
+
+			if not new_value and focused and not using_gamepad and option_hotspot.on_pressed and not option_hotspot.is_disabled then
 				option_hotspot.on_pressed = nil
 				new_value = option.id
 				content.selected_index = actual_i

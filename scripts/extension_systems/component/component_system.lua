@@ -134,6 +134,21 @@ ComponentSystem.get_components = function (self, unit, component_name)
 	return result
 end
 
+ComponentSystem.get_all_components = function (self, unit)
+	local result = {}
+	local extension = self._unit_to_extension_map[unit]
+
+	if extension then
+		local components = extension:components()
+
+		for i = 1, #components do
+			result[#result + 1] = components[i]
+		end
+	end
+
+	return result
+end
+
 local EMPTY_TABLE = {}
 
 ComponentSystem.get_units_from_component_name = function (self, component_name)

@@ -46,8 +46,9 @@ DamageProfile.max_hit_mass = function (damage_profile, power_level, charge_level
 	local attack_modifier
 	local max_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_attack_modifier or 1
 	local psyker_smite_max_hit_mass_attack_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_attack_modifier or 1
+	local max_melee_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_melee_hit_mass_attack_modifier or 1
 
-	attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier - 1
+	attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier + max_melee_hit_mass_attack_modifier - 2
 	max_hit_mass_attack = max_hit_mass_attack * attack_modifier
 
 	local impact_modifier

@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
+local Pickups = require("scripts/settings/pickup/pickups")
 local Luggable = require("scripts/utilities/luggable")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ActionThrowLuggable = class("ActionThrowLuggable", "ActionWeaponBase")
@@ -87,6 +88,16 @@ end
 ActionThrowLuggable._throw_unit = function (self, existing_unit, throw_type)
 	if self._is_server then
 		local locomotion_extension = ScriptUnit.extension(existing_unit, "locomotion_system")
+		local pickup_name = Unit.get_data(existing_unit, "pickup_type")
+		local pickup_data = pickup_name and Pickups.by_name[pickup_name]
+
+		if pickup_data and pickup_data.on_drop_func then
+			local player_unit = self._player_unit
+
+			pickup_data.on_drop_func(existing_unit, player_unit)
+		end
+
+		Managers.state.extension:system("pickup_system"):dropped(existing_unit)
 
 		if throw_type == "throw" then
 			local action_aim_projectile = self._action_aim_projectile_component
@@ -96,7 +107,7 @@ ActionThrowLuggable._throw_unit = function (self, existing_unit, throw_type)
 			local speed = action_aim_projectile.speed
 			local momentum = action_aim_projectile.momentum
 
-			locomotion_extension:switch_to_manual(position, rotation, direction, speed, momentum)
+			locomotion_extension:switch_to_manual_physics(position, rotation, direction, speed, momentum)
 		elseif throw_type == "drop" and self._is_server then
 			local first_person_component = self._first_person_component
 			local locomotion_component = self._locomotion_component

@@ -329,7 +329,7 @@ ViewElementPerksItemBlueprints.perk = {
 		local perk_rarity = config.perk_rarity
 		local content = widget.content
 
-		content.description = Items.perk_description(perk_item, perk_rarity, 1)
+		content.description = Items.trait_description(perk_item, perk_rarity, 1)
 		content.rank = Items.perk_textures(perk_item, perk_rarity)
 		content.hotspot.pressed_callback = callback(parent, callback_name, widget, config)
 	end,

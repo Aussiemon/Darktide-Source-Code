@@ -631,8 +631,13 @@ CinematicManager.load_levels = function (self, cinematic_name, level_names, on_l
 	Managers.state.game_mode:set_wants_single_threaded_physics(true, "CinematicManager")
 
 	local on_levels_loaded = callback(self, "_on_levels_loaded", request_id, load_only)
+	local loader_context = {
+		cinematic_name = cinematic_name,
+		level_names = level_names,
+		callback = on_levels_loaded,
+	}
 
-	self._cinematic_level_loader:start_loading(cinematic_name, level_names, on_levels_loaded)
+	self._cinematic_level_loader:start_loading(loader_context)
 
 	if self._is_server then
 		if not client_channel_id and not hotjoin_only then
@@ -742,10 +747,6 @@ end
 CinematicManager._unspawn_level = function (self, level)
 	Level.trigger_level_shutdown(level)
 
-	local unit_spawner_manager = Managers.state.unit_spawner
-
-	unit_spawner_manager:unregister_runtime_loaded_level(level)
-
 	local level_units = Level.units(level, true)
 	local extension_manager = Managers.state.extension
 
@@ -756,6 +757,9 @@ CinematicManager._unspawn_level = function (self, level)
 
 	level_name = level_name:match("(.+)%..+$")
 
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	unit_spawner_manager:unregister_runtime_loaded_level(level)
 	ScriptWorld.destroy_level(world, level_name)
 end
 

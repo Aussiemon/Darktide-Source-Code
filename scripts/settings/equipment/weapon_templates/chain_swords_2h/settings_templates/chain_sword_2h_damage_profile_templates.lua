@@ -1,33 +1,29 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/chain_swords_2h/settings_templates/chain_sword_2h_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local melee_attack_strengths = AttackSettings.melee_attack_strength
+local big_cleave = DamageProfileSettings.big_cleave
+local large_cleave = DamageProfileSettings.large_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
+local no_cleave = DamageProfileSettings.no_cleave
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local melee_attack_strengths = AttackSettings.melee_attack_strength
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local no_cleave = DamageProfileSettings.no_cleave
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local light_cleave = DamageProfileSettings.light_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local large_cleave = DamageProfileSettings.large_cleave
-local big_cleave = DamageProfileSettings.big_cleave
 local chainsword_sawing = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -148,8 +144,8 @@ damage_templates.default_light_chainsword_2h = {
 	crit_mod = chain_sword_crit_mod,
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.sawing,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	wounds_template = WoundsTemplates.chainsword_2h,
@@ -726,7 +722,7 @@ overrides.light_chainsword_sticky_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.medium,
+			gibbing_power.medium,
 		},
 		{
 			"sticky_attack",
@@ -734,7 +730,7 @@ overrides.light_chainsword_sticky_2h = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -823,7 +819,7 @@ overrides.light_chainsword_sticky_last_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.medium,
+			gibbing_power.medium,
 		},
 		{
 			"sticky_attack",
@@ -831,7 +827,7 @@ overrides.light_chainsword_sticky_last_2h = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -910,7 +906,7 @@ overrides.light_chainsword_2h_sticky_last_quick = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.medium,
+			gibbing_power.medium,
 		},
 		{
 			"sticky_attack",
@@ -918,7 +914,7 @@ overrides.light_chainsword_2h_sticky_last_quick = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -977,8 +973,8 @@ damage_templates.smiter_light_chainsword_2h = {
 	crit_mod = chain_sword_crit_mod,
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.sawing,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	wounds_template = WoundsTemplates.chainsword_2h,
@@ -1155,7 +1151,7 @@ overrides.smiter_light_chainsword_2h_sticky = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.medium,
+			gibbing_power.medium,
 		},
 		{
 			"sticky_attack",
@@ -1163,7 +1159,7 @@ overrides.smiter_light_chainsword_2h_sticky = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -1252,7 +1248,7 @@ overrides.smiter_light_chainsword_sticky_last_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.medium,
+			gibbing_power.medium,
 		},
 		{
 			"sticky_attack",
@@ -1260,7 +1256,7 @@ overrides.smiter_light_chainsword_sticky_last_2h = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -1323,8 +1319,8 @@ damage_templates.heavy_chainsword_2h = {
 	crit_mod = chain_sword_crit_mod,
 	cleave_distribution = large_cleave,
 	damage_type = damage_types.sawing,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	wounds_template = WoundsTemplates.chainsword_2h,
@@ -1520,8 +1516,8 @@ damage_templates.heavy_chainsword_2h_smiter = {
 	crit_mod = chain_sword_crit_mod,
 	cleave_distribution = no_cleave,
 	damage_type = damage_types.sawing,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	wounds_template = WoundsTemplates.chainsword_2h,
@@ -1740,7 +1736,7 @@ overrides.heavy_chainsword_active_2h = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -1869,7 +1865,7 @@ overrides.heavy_chainsword_active_2h_smiter = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2118,7 +2114,7 @@ overrides.heavy_chainsword_active_2h_cleave = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2221,7 +2217,7 @@ overrides.heavy_chainsword_active_abort_2h = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2280,7 +2276,7 @@ overrides.heavy_chainsword_sticky_2h = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2384,11 +2380,11 @@ overrides.heavy_chainsword_smiter_sticky_quick_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.light,
+			gibbing_power.light,
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2480,11 +2476,11 @@ overrides.heavy_chainsword_sticky_quick_last_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.heavy,
+			gibbing_power.heavy,
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2585,7 +2581,7 @@ overrides.heavy_chainsword_sticky_last_2h = {
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2682,11 +2678,11 @@ overrides.heavy_chainsword_smiter_sticky_quick_last_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.light,
+			gibbing_power.light,
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2825,11 +2821,11 @@ overrides.heavy_chainsword_smiter_active_abort_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.light,
+			gibbing_power.light,
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2888,11 +2884,11 @@ overrides.heavy_chainsword_smiter_sticky_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.light,
+			gibbing_power.light,
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",
@@ -2992,11 +2988,11 @@ overrides.heavy_chainsword_smiter_sticky_last_2h = {
 		},
 		{
 			"gibbing_power",
-			GibbingPower.light,
+			gibbing_power.light,
 		},
 		{
 			"gibbing_type",
-			GibbingTypes.sawing,
+			gibbing_types.sawing,
 		},
 		{
 			"wounds_template",

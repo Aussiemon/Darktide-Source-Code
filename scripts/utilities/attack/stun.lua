@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/utilities/attack/stun.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")

@@ -79,7 +79,7 @@ local ui_settings = {
 		1000,
 		2000,
 	},
-	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "CHARACTER_TITLE", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE", "FACE_HAIR", "FACE_SCAR", "FACE_TATTOO", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR", "HAIR_COLOR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN", "WEAPON_TRINKET"),
+	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "CHARACTER_TITLE", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE_HAIR", "FACE_SCAR", "FACE_TATTOO", "FACE", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR_COLOR", "HAIR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN", "WEAPON_TRINKET"),
 	item_type_group_lookup = {
 		BOON = "boons",
 		CHARACTER_INSIGNIA = "nameplates",
@@ -204,6 +204,7 @@ local ui_settings = {
 	item_type_material_lookup = {
 		BODY_TATTOO = "content/ui/materials/icons/item_types/body_tattoos",
 		CHARACTER_INSIGNIA = "content/ui/materials/icons/item_types/nameplates",
+		CHARACTER_TITLE = "content/ui/materials/icons/item_types/nameplates",
 		DEVICE = "content/ui/materials/icons/item_types/devices",
 		END_OF_ROUND = "content/ui/materials/icons/item_types/poses",
 		EYE_COLOR = "content/ui/materials/icons/item_types/eye_color",
@@ -233,13 +234,13 @@ local ui_settings = {
 		mars = "loc_item_pattern_mars",
 	},
 	item_store_categories = {
-		"outfits",
-		"nameplates",
-		"weapons",
-		"devices",
-		"poses",
-		"emotes",
 		"boons",
+		"devices",
+		"emotes",
+		"nameplates",
+		"outfits",
+		"poses",
+		"weapons",
 	},
 	texture_by_store_category = {
 		boons = "content/ui/materials/icons/item_types/boons",
@@ -499,6 +500,12 @@ local ui_settings = {
 		zealot = "",
 	},
 	inventory_frames_by_archetype = {
+		ogryn = {
+			left_lower = "content/ui/materials/frames/screen/class_ogryn_01_lower_left",
+			left_upper = "content/ui/materials/frames/screen/class_ogryn_01_upper_left",
+			right_lower = "content/ui/materials/frames/screen/class_ogryn_01_lower_right",
+			right_upper = "content/ui/materials/frames/screen/class_ogryn_01_upper_right",
+		},
 		psyker = {
 			left_lower = "content/ui/materials/frames/screen/class_psyker_01_lower_left",
 			left_upper = "content/ui/materials/frames/screen/class_psyker_01_upper_left",
@@ -516,12 +523,6 @@ local ui_settings = {
 			left_upper = "content/ui/materials/frames/screen/class_zealot_01_upper_left",
 			right_lower = "content/ui/materials/frames/screen/class_zealot_01_lower_right",
 			right_upper = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
-		},
-		ogryn = {
-			left_lower = "content/ui/materials/frames/screen/class_ogryn_01_lower_left",
-			left_upper = "content/ui/materials/frames/screen/class_ogryn_01_upper_left",
-			right_lower = "content/ui/materials/frames/screen/class_ogryn_01_lower_right",
-			right_upper = "content/ui/materials/frames/screen/class_ogryn_01_upper_right",
 		},
 	},
 	item_preview_required_slots_per_slot = {

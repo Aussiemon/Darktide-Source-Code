@@ -138,6 +138,51 @@ local minion_projectile_locomotion_templates = {
 			use_actor_mass_radius = false,
 		},
 	},
+	mutator_pestilent_bauble = {
+		trajectory_parameters = {
+			throw = {
+				aim_max_iterations = 150,
+				inherit_owner_velocity_percentage = 1,
+				offset_forward = 0,
+				offset_right = 0,
+				place_distance = 0,
+				rotation_charge_duration = 0,
+				speed_charge_duration = 0,
+				speed_initial = 1,
+				speed_maximal = 2,
+				locomotion_state = locomotion_states.manual_physics,
+				rotation_offset_initial = Vector3Box(0, 0, 0),
+				rotation_offset_maximal = Vector3Box(0, 0, 0),
+				randomized_angular_velocity = {
+					x = math.pi / 10,
+					y = math.pi,
+					z = math.pi / 2,
+				},
+			},
+			drop = {
+				inherit_owner_velocity_percentage = 1,
+				speed = 0,
+				locomotion_state = locomotion_states.manual_physics,
+				randomized_angular_velocity = {
+					x = math.pi / 10,
+					y = math.pi,
+					z = math.pi / 2,
+				},
+			},
+		},
+		integrator_parameters = {
+			air_density = 0,
+			coefficient_of_restitution = 0,
+			collision_filter = "filter_minion_throwing",
+			collision_types = "both",
+			drag_coefficient = 0,
+			gravity = 0.5,
+			mass = 0.8,
+			max_hit_count = 1,
+			radius = 0.025,
+			use_actor_mass_radius = false,
+		},
+	},
 }
 
 return minion_projectile_locomotion_templates

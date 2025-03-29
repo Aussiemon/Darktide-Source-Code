@@ -59,7 +59,6 @@ DefaultGameParameters.testify = false
 DefaultGameParameters.testify_time_scale = false
 DefaultGameParameters.debug_testify = false
 DefaultGameParameters.machine_name = ""
-DefaultGameParameters.steam_branch = ""
 DefaultGameParameters.svn_branch = ""
 DefaultGameParameters.skip_gamertag_popup = false
 DefaultGameParameters.nvidia_ai_agent = true

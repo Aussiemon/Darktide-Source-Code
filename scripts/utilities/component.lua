@@ -12,7 +12,39 @@ Component.event_lookup = {}
 Component.lookup = {}
 Component.default_rpc_name = "rpc_trigger_client_component_event"
 
-Component.parse_components = function (components)
+local function _syntax_check_component_data(component_name, component_data, is_array_function, is_struct_array_function)
+	for key, value in pairs(component_data) do
+		if key == "inputs" or key == "enable_inputs" then
+			for event_key, event in pairs(component_data[key]) do
+				-- Nothing
+			end
+		elseif key == "extensions" then
+			if rawget(_G, "Managers") and Managers.state and Managers.state.extension then
+				for _, extension_name in ipairs(value) do
+					-- Nothing
+				end
+			end
+		elseif is_struct_array_function(value) then
+			for struct_key, struct_value in pairs(value.definition) do
+				_syntax_check_component_data(component_name, struct_value, is_array_function, is_struct_array_function)
+			end
+		elseif is_array_function(value) then
+			-- Nothing
+		elseif not value.ui_type then
+			ferror("Component data %q in component %q is missing ui_definition and is not inputs, extensions nor struct_array.", key, component_name)
+		end
+	end
+end
+
+local function _syntax_check_component(name, component, is_array_function, is_struct_array_function)
+	local component_data = component.component_data
+
+	if component_data then
+		_syntax_check_component_data(name, component_data, is_array_function, is_struct_array_function)
+	end
+end
+
+Component.parse_components = function (components, is_array_function, is_struct_array_function)
 	local event_lookup = Component.event_lookup
 	local event_index = 1
 	local component_index = 1
@@ -71,6 +103,13 @@ end
 Component.get_components_by_name = function (unit, component_name)
 	local component_system = Managers.state.extension:system("component_system")
 	local components = component_system:get_components(unit, component_name)
+
+	return components
+end
+
+Component.get_all_components = function (unit)
+	local component_system = Managers.state.extension:system("component_system")
+	local components = component_system:get_all_components(unit)
 
 	return components
 end

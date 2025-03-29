@@ -500,9 +500,7 @@ spread_templates.default_lasgun_spraynpray = {
 	},
 }
 
-local spread_multi = 0.8
-local base_spread = 4
-local perfect_spread = 2.25
+local SPREAD_MULTI = 0.8
 
 spread_templates.hip_lasgun_killshot = {
 	still = {
@@ -587,71 +585,71 @@ spread_templates.hip_lasgun_killshot = {
 				{
 					pitch = {
 						lerp_perfect = 0.75,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.375 * spread_multi,
+						lerp_basic = 1.375 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.375 * spread_multi,
+						lerp_basic = 1.375 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.15 * spread_multi,
+						lerp_basic = 1.15 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 1.15 * spread_multi,
+						lerp_basic = 1.15 * SPREAD_MULTI,
 					},
 				},
 			},
@@ -871,71 +869,71 @@ spread_templates.hip_lasgun_killshot_p1_m2 = {
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.175,
-						lerp_basic = 1.375 * spread_multi,
+						lerp_basic = 1.375 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.175,
-						lerp_basic = 1.375 * spread_multi,
+						lerp_basic = 1.375 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.15 * spread_multi,
+						lerp_basic = 1.15 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.15 * spread_multi,
+						lerp_basic = 1.15 * SPREAD_MULTI,
 					},
 				},
 			},
@@ -1155,71 +1153,71 @@ spread_templates.hip_lasgun_killshot_p1_m3 = {
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.175,
-						lerp_basic = 1.375 * spread_multi,
+						lerp_basic = 1.375 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.175,
-						lerp_basic = 1.375 * spread_multi,
+						lerp_basic = 1.375 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.2,
-						lerp_basic = 1.3 * spread_multi,
+						lerp_basic = 1.3 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.15 * spread_multi,
+						lerp_basic = 1.15 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.15 * spread_multi,
+						lerp_basic = 1.15 * SPREAD_MULTI,
 					},
 				},
 			},
@@ -1357,7 +1355,7 @@ spread_templates.hip_lasgun_killshot_p1_m3 = {
 	},
 }
 
-local p2_spread_multi = 1
+local P2_SPREAD_MULTI = 1
 
 spread_templates.hip_lasgun_killshot_p2_m1 = {
 	charge_scale = {
@@ -1444,31 +1442,31 @@ spread_templates.hip_lasgun_killshot_p2_m1 = {
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * p2_spread_multi,
+						lerp_basic = 2 * P2_SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * p2_spread_multi,
+						lerp_basic = 2 * P2_SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * p2_spread_multi,
+						lerp_basic = 1.75 * P2_SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * p2_spread_multi,
+						lerp_basic = 1.75 * P2_SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * p2_spread_multi,
+						lerp_basic = 1.5 * P2_SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * p2_spread_multi,
+						lerp_basic = 1.5 * P2_SPREAD_MULTI,
 					},
 				},
 			},
@@ -1729,31 +1727,31 @@ spread_templates.ads_lasgun_killshot_p2_m1 = {
 				{
 					pitch = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.5,
-						lerp_basic = 2 * spread_multi,
+						lerp_basic = 2 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.25,
-						lerp_basic = 1.75 * spread_multi,
+						lerp_basic = 1.75 * SPREAD_MULTI,
 					},
 				},
 				{
 					pitch = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 					yaw = {
 						lerp_perfect = 0.15,
-						lerp_basic = 1.5 * spread_multi,
+						lerp_basic = 1.5 * SPREAD_MULTI,
 					},
 				},
 			},

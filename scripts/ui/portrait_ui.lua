@@ -1,10 +1,9 @@
 ﻿-- chunkname: @scripts/ui/portrait_ui.lua
 
-local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-
 require("scripts/ui/render_target_icon_generator_base")
 
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local PortraitUI = class("PortraitUI", "RenderTargetIconGeneratorBase")
 
 PortraitUI.init = function (self, render_settings)

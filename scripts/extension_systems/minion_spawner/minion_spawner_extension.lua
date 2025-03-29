@@ -19,6 +19,7 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._nav_world = extension_init_context.nav_world
 	self._traverse_logic = extension_init_context.traverse_logic
 	self._owner_system = extension_init_context.owner_system
+	self._free_spawn_parameter_tables = {}
 	self._spawn_queue = MinionSpawnerQueue:new()
 	self._next_spawn_time = nil
 	self._is_setup = false
@@ -151,19 +152,17 @@ MinionSpawnerExtension.rotation = function (self)
 	return self._spawn_rotation:unbox()
 end
 
-MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, optional_target_side_id, optional_spawn_delay, optional_mission_objective_id, optional_group_id, optional_attack_selection_template_name, optional_aggro_state, optional_max_health_modifier)
+MinionSpawnerExtension.request_param_table = function (self)
+	return Script.new_array(10)
+end
+
+MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, optional_param_table)
 	local queue = self._spawn_queue
-	local spawn_delay = optional_spawn_delay or DEFAULT_SPAWN_DELAY
-	local spawn_data = {
-		spawn_delay = spawn_delay,
-		spawn_side_id = spawn_side_id,
-		target_side_id = optional_target_side_id,
-		mission_objective_id = optional_mission_objective_id,
-		group_id = optional_group_id,
-		attack_selection_template_name = optional_attack_selection_template_name,
-		aggro_state = optional_aggro_state,
-		max_health_modifier = optional_max_health_modifier,
-	}
+	local spawn_data = optional_param_table
+
+	spawn_data.spawn_delay = spawn_data.optional_spawn_delay or DEFAULT_SPAWN_DELAY
+	spawn_data.spawn_side_id = spawn_side_id
+
 	local queue_id = queue:enqueue(breed_list, spawn_data)
 
 	if not self._next_spawn_time then
@@ -273,8 +272,18 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 		end
 	end
 
-	local max_health_modifier, group_id, attack_selection_template_name = spawn_data.max_health_modifier, spawn_data.group_id, spawn_data.attack_selection_template_name
-	local spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_state, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name, max_health_modifier, self._randomized_index)
+	local minion_spawn_manager = Managers.state.minion_spawn
+	local param_table = minion_spawn_manager:request_param_table()
+
+	param_table.optional_aggro_state = aggro_state
+	param_table.optional_target_unit = target_unit
+	param_table.optional_spawner_unit = unit
+	param_table.optional_group_id = spawn_data.group_id
+	param_table.optional_attack_selection_template_name = spawn_data.attack_selection_template_name
+	param_table.optional_mission_objective_id = mission_objective_id
+	param_table.optional_spawner_spawn_index = self._randomized_index
+
+	local spawned_unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, param_table)
 
 	return spawned_unit
 end

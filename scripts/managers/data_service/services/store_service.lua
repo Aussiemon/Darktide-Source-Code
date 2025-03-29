@@ -3,6 +3,7 @@
 local DataServiceBackendCache = require("scripts/managers/data_service/data_service_backend_cache")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
+local StoreNames = require("scripts/settings/backend/store_names")
 local StoreService = class("StoreService")
 
 local function _get_local_player()
@@ -196,8 +197,10 @@ StoreService._get_archetype_store_catalogue = function (self, store_by_archetype
 		if store_front then
 			local store_data = store_front.data
 
-			offers = store_data[catalogue_name]
-			current_rotation_end = store_data.currentRotationEnd
+			if store_data then
+				offers = store_data[catalogue_name]
+				current_rotation_end = store_data.currentRotationEnd
+			end
 		end
 
 		local event_manager = Managers.event
@@ -217,63 +220,28 @@ StoreService._get_archetype_store_catalogue = function (self, store_by_archetype
 	end)
 end
 
-StoreService.credit_store_archetypes = {
-	ogryn = "get_ogryn_credits_store",
-	psyker = "get_psyker_credits_store",
-	veteran = "get_veteran_credits_store",
-	zealot = "get_zealot_credits_store",
-}
-
 StoreService.get_credits_store = function (self, ignore_event_trigger)
-	return self:_get_archetype_store_catalogue(StoreService.credit_store_archetypes, "personal", ignore_event_trigger ~= true and "event_credits_store_fetched" or nil, nil)
+	return self:_get_archetype_store_catalogue(StoreNames.by_archetype.credit, "personal", ignore_event_trigger ~= true and "event_credits_store_fetched" or nil, nil)
 end
-
-StoreService.credit_goods_store_archetypes = {
-	ogryn = "get_ogryn_credits_goods_store",
-	psyker = "get_psyker_credits_goods_store",
-	veteran = "get_veteran_credits_goods_store",
-	zealot = "get_zealot_credits_goods_store",
-}
 
 StoreService.get_credits_goods_store = function (self, ignore_event_trigger)
-	return self:_get_archetype_store_catalogue(StoreService.credit_goods_store_archetypes, "public", ignore_event_trigger ~= true and "event_credits_store_fetched" or nil, nil)
+	return self:_get_archetype_store_catalogue(StoreNames.by_archetype.credit_goods, "public", ignore_event_trigger ~= true and "event_credits_store_fetched" or nil, nil)
 end
-
-StoreService.credit_cosmetics_store_archetypes = {
-	ogryn = "get_ogryn_credits_cosmetics_store",
-	psyker = "get_psyker_credits_cosmetics_store",
-	veteran = "get_veteran_credits_cosmetics_store",
-	zealot = "get_zealot_credits_cosmetics_store",
-}
 
 StoreService.get_credits_cosmetics_store = function (self, archetype_name)
-	return self:_get_archetype_store_catalogue(StoreService.credit_cosmetics_store_archetypes, "public", nil, archetype_name)
+	return self:_get_archetype_store_catalogue(StoreNames.by_archetype.credit_cosmetics, "public", nil, archetype_name)
 end
-
-StoreService.credit_weapon_cosmetics_store_archetypes = {
-	ogryn = "get_ogryn_credits_weapon_cosmetics_store",
-	psyker = "get_psyker_credits_weapon_cosmetics_store",
-	veteran = "get_veteran_credits_weapon_cosmetics_store",
-	zealot = "get_zealot_credits_weapon_cosmetics_store",
-}
 
 StoreService.get_credits_weapon_cosmetics_store = function (self, archetype_name)
-	return self:_get_archetype_store_catalogue(StoreService.credit_weapon_cosmetics_store_archetypes, "public", nil, archetype_name)
+	return self:_get_archetype_store_catalogue(StoreNames.by_archetype.credit_weapon_cosmetics, "public", nil, archetype_name)
 end
 
-StoreService.mark_store_archetypes = {
-	ogryn = "get_ogryn_marks_store",
-	psyker = "get_psyker_marks_store",
-	veteran = "get_veteran_marks_store",
-	zealot = "get_zealot_marks_store",
-}
-
 StoreService.get_marks_store = function (self)
-	return self:_get_archetype_store_catalogue(StoreService.mark_store_archetypes, "public_filtered", nil, nil)
+	return self:_get_archetype_store_catalogue(StoreNames.by_archetype.mark, "public_filtered", nil, nil)
 end
 
 StoreService.get_marks_store_temporary = function (self)
-	return self:_get_archetype_store_catalogue(StoreService.mark_store_archetypes, "personal", nil, nil)
+	return self:_get_archetype_store_catalogue(StoreNames.by_archetype.mark, "personal", nil, nil)
 end
 
 local function _purchased_item_to_gear(item)
@@ -584,6 +552,28 @@ end
 
 StoreService.can_purchase_aquilas = function (self)
 	return self._block_aquila_acquisition
+end
+
+StoreService._character_premium_store_key = function (self, archetype_name)
+	if not archetype_name then
+		local player = _get_local_player()
+
+		archetype_name = player:archetype_name()
+	end
+
+	local storefront_key = StoreNames.by_archetype.premium[archetype_name]
+
+	return storefront_key
+end
+
+StoreService.has_character_premium_store = function (self, archetype_name)
+	return self:_character_premium_store_key(archetype_name) ~= nil
+end
+
+StoreService.get_character_premium_store = function (self, archetype_name)
+	local storefront_key = self:_character_premium_store_key(archetype_name)
+
+	return self:get_premium_store(storefront_key)
 end
 
 StoreService.get_premium_store = function (self, storefront_key)

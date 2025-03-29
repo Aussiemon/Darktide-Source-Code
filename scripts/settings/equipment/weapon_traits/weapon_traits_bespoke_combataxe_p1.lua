@@ -8,6 +8,30 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_parent = {
 			{
@@ -38,6 +62,30 @@ templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance_parent = {
 			{
@@ -64,6 +112,20 @@ templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance =
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_infinite_melee_cleave_on_weakspot_kill = {
+	format_values = {
+		weakspot_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_infinite_melee_cleave_on_weakspot_kill",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_weakspot_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_infinite_melee_cleave_on_weakspot_kill = {
 			{
@@ -90,6 +152,30 @@ templates.weapon_trait_bespoke_combataxe_p1_infinite_melee_cleave_on_weakspot_ki
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_windup_increases_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_windup_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_windup_increases_power_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_windup_increases_power_parent = {
 			{
@@ -116,6 +202,50 @@ templates.weapon_trait_bespoke_combataxe_p1_windup_increases_power = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_targets_receive_rending_debuff = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_targets_receive_rending_debuff",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		rending = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"stat_buffs",
+					stat_buffs.rending_multiplier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"duration",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_targets_receive_rending_debuff = {
 			{
@@ -142,6 +272,40 @@ templates.weapon_trait_bespoke_combataxe_p1_targets_receive_rending_debuff = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill = {
+	format_values = {
+		finesse = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_finesse_modifier_bonus,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent = {
 			{
@@ -172,6 +336,31 @@ templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_switch_stat_buffs",
+					1,
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		cooldown = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack",
+				find_value_type = "trait_override",
+				path = {
+					"no_power_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack = {
 			{
@@ -210,6 +399,40 @@ templates.weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_increase_power_on_hit = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_increase_power_on_hit_parent = {
 			{
@@ -236,6 +459,20 @@ templates.weapon_trait_bespoke_combataxe_p1_increase_power_on_hit = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p1_power_bonus_scaled_on_stamina = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p1_power_bonus_scaled_on_stamina",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p1_power_bonus_scaled_on_stamina = {
 			{

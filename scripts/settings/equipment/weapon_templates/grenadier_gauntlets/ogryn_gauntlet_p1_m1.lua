@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenadier_gauntlets/ogryn_gauntlet_p1_m1.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -262,7 +262,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_wield = {
@@ -275,7 +275,7 @@ weapon_template.actions = {
 		allowed_chain_actions = {
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.9,
+				chain_time = 0.8,
 			},
 			reload = {
 				action_name = "action_reload",
@@ -455,6 +455,7 @@ weapon_template.actions = {
 		stop_alternate_fire = true,
 		total_time = 4.1666,
 		uninterruptible = true,
+		weapon_handling_template = "time_scale_1_05",
 		crosshair = {
 			crosshair_type = "none",
 		},
@@ -591,6 +592,7 @@ weapon_template.actions = {
 		haptic_trigger_template = HapticTriggerTemplates.melee.heavy,
 	},
 	action_melee_start_right = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_heavy_charge_right_diagonal_up",
 		first_person_hit_anim = "attack_hit",
@@ -662,6 +664,7 @@ weapon_template.actions = {
 		haptic_trigger_template = HapticTriggerTemplates.melee.heavy,
 	},
 	action_melee_start_left_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_charge_stab",
 		first_person_hit_anim = "attack_hit",
@@ -944,7 +947,6 @@ weapon_template.actions = {
 		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_up",
-		attack_direction_override = "up",
 		damage_window_end = 0.4,
 		damage_window_start = 0.23333333333333334,
 		hit_armor_anim = "attack_hit",
@@ -1174,7 +1176,7 @@ weapon_template.actions = {
 				chain_time = 0.3,
 			},
 			start_attack = {
-				action_name = "action_melee_start_left_2",
+				action_name = "action_melee_start_left",
 				chain_time = 1,
 			},
 			special_action_start = {
@@ -1382,6 +1384,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit",
 		hit_explosion_anim = "attack_hit_special",
 		hit_stop_anim = "attack_hit",
+		ignore_stagger_reduction = true,
 		kind = "melee_explosive",
 		range_mod = 1.15,
 		total_time = 1.28,
@@ -1465,7 +1468,7 @@ weapon_template.actions = {
 			},
 		},
 		herding_template = HerdingTemplates.ogryn_punch,
-		damage_profile = DamageProfileTemplates.special_grenadier_gauntlet_tank,
+		damage_profile = DamageProfileTemplates.special_grenadier_gauntlet_smiter,
 		damage_type = damage_types.blunt_heavy,
 		explosion_template = ExplosionTemplates.special_gauntlet_grenade,
 		explosion_offset = Vector3Box(0, 2.25, 0),
@@ -1553,7 +1556,6 @@ weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.ammo_template = "ogryn_gauntlet_p1_m1"
 weapon_template.fx_sources = {
@@ -1630,6 +1632,9 @@ weapon_template.base_stats = {
 			action_shoot_zoomed = {
 				explosion_trait_templates.default_explosion_size_stat,
 				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats,
+			},
+			action_execute_special = {
+				explosion_trait_templates.default_explosion_size_stat,
 			},
 		},
 	},

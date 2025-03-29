@@ -33,6 +33,7 @@ local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local LUNGE_ATTACK_POWER_LEVEL = 1000
 local HIT_WEAKSPOT = false
+local IS_CRITICAL_STRIKE = false
 local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete, _apply_buff_to_hit_unit
 local PlayerCharacterStateLunging = class("PlayerCharacterStateLunging", "PlayerCharacterStateBase")
 
@@ -130,8 +131,10 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		end
 	end
 
-	if lunge_template.disallow_weapons then
-		PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
+	local slot_to_wield = lunge_template.slot_to_wield
+
+	if slot_to_wield then
+		PlayerUnitVisualLoadout.wield_slot(slot_to_wield, unit, t)
 	end
 
 	local anim_settings = lunge_template.anim_settings
@@ -267,7 +270,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		self._camera_extension:trigger_camera_shake(lunge_end_camera_shake, will_be_predicted)
 	end
 
-	if next_state ~= "dead" and lunge_template.disallow_weapons then
+	if next_state ~= "dead" and lunge_template.slot_to_wield and not lunge_template.keep_slot_wielded_on_lunge_end then
 		PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
 	end
 
@@ -565,7 +568,8 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 			local hit_world_position = Actor.position(hit_actor)
 			local behaviour_extension = ScriptUnit.has_extension(hit_unit, "behavior_system")
 			local hit_unit_action = behaviour_extension and behaviour_extension:running_action()
-			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
+			local attack_type = AttackSettings.attack_types.melee
+			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
@@ -587,7 +591,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 
 			_record_stat_on_lunge_hit(self._player, hit_unit, attack_result, hit_unit_action, lunge_template)
 
-			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT)
+			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT, IS_CRITICAL_STRIKE, attack_type)
 
 			if use_armor_type then
 				local hit_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")

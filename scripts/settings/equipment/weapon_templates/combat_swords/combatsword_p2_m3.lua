@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_swords/combatsword_p2_m3.lua
 
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -48,23 +49,69 @@ combat_sword_action_inputs.parry = {
 
 local combat_sword_action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 
-combat_sword_action_input_hierarchy.parry = "base"
-combat_sword_action_input_hierarchy.special_action = {
-	attack_cancel = "base",
-	block = "base",
-	grenade_ability = "base",
-	special_action = "base",
-	wield = "base",
-	start_attack = {
-		attack_cancel = "base",
-		block = "base",
-		grenade_ability = "base",
-		heavy_attack = "base",
-		light_attack = "base",
-		special_action = "base",
-		wield = "base",
+combat_sword_action_input_hierarchy[#combat_sword_action_input_hierarchy + 1] = {
+	input = "parry",
+	transition = "base",
+}
+
+local new_special_action_transition = {
+	{
+		input = "attack_cancel",
+		transition = "base",
+	},
+	{
+		input = "start_attack",
+		transition = {
+			{
+				input = "attack_cancel",
+				transition = "base",
+			},
+			{
+				input = "light_attack",
+				transition = "base",
+			},
+			{
+				input = "heavy_attack",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "special_action",
+				transition = "base",
+			},
+			{
+				input = "block",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "base",
+	},
+	{
+		input = "grenade_ability",
+		transition = "base",
+	},
+	{
+		input = "block",
+		transition = "base",
+	},
+	{
+		input = "special_action",
+		transition = "base",
 	},
 }
+
+ActionInputHierarchy.update_hierarchy_entry(combat_sword_action_input_hierarchy, "special_action", new_special_action_transition)
+
 weapon_template.action_inputs = combat_sword_action_inputs
 weapon_template.action_input_hierarchy = combat_sword_action_input_hierarchy
 
@@ -1548,7 +1595,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8

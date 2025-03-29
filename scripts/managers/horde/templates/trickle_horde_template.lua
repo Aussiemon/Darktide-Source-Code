@@ -182,7 +182,13 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		for i = 1, num_positions do
 			local breed_name = spawn_list[i]
 			local spawn_position = flood_fill_positions[i]
-			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.passive, nil, nil, group_id, nil, nil, optional_spawn_max_health_modifier)
+			local param_table = minion_spawn_manager:request_param_table()
+
+			param_table.optional_aggro_state = aggro_states.passive
+			param_table.optional_group_id = group_id
+			param_table.optional_health_modifier = optional_spawn_max_health_modifier
+
+			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
 			local blackboard = BLACKBOARDS[unit]
 			local patrol_component = Blackboard.write_component(blackboard, "patrol")
 
@@ -207,7 +213,14 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		for i = 1, num_positions do
 			local breed_name = spawn_list[i]
 			local spawn_position = flood_fill_positions[i]
-			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id, nil, nil, optional_spawn_max_health_modifier)
+			local param_table = minion_spawn_manager:request_param_table()
+
+			param_table.optional_aggro_state = aggro_states.aggroed
+			param_table.optional_target_unit = target_unit
+			param_table.optional_group_id = group_id
+			param_table.optional_health_modifier = optional_spawn_max_health_modifier
+
+			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
 
 			spawned_minions[i] = unit
 		end

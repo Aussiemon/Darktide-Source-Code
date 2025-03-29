@@ -1,28 +1,27 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view.lua
 
+require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
-local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions")
-local InputDevice = require("scripts/managers/input/input_device")
 local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Personalities = require("scripts/settings/character/personalities")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local ViewElementPlayerPanel = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel")
+local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local WIDGET_TYPE_BY_SLOT = {
 	slot_animation_emote_1 = "ui_item",
@@ -49,6 +48,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 	self._sort_options = {}
 	self._debug = context.debug
 	self._hide_item_source_in_tooltip = true
+	self._promise_container = PromiseContainer:new()
 	context.preview_player = context.player or Managers.player:local_player(1)
 	context.preview_loadout = self._preview_profile_equipped_items or context.preview_player.loadout
 	context.character_id = "cosmetics_view_preview_character"
@@ -57,9 +57,6 @@ InventoryCosmeticsView.init = function (self, settings, context)
 
 	if not self._debug then
 		self._selected_slot = context.selected_slot
-		self._selected_slots = context.selected_slots or {
-			context.selected_slot,
-		}
 		self._initial_rotation = context.initial_rotation
 		self._disable_rotation_input = context.disable_rotation_input
 		self._animation_event_name_suffix = context.animation_event_name_suffix
@@ -74,199 +71,154 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._selected_slot = {
 			name = "slot_gear_upperbody",
 		}
-		self._selected_slots = {
-			self._selected_slot,
-		}
 		self._initial_rotation = 0
 	end
 
+	self._zoom_level = 1
+	self._zoom_speed = 0
 	self._pass_input = false
 	self._pass_draw = false
 	self._parent = context and context.parent
+	self._telemetry_id = table.nested_get(self, "_selected_slot", "name")
+end
+
+local function sort_function_generator(item_comparator)
+	return function (a, b)
+		if a.sort_group ~= b.sort_group then
+			return a.sort_group < b.sort_group
+		end
+
+		if a.widget_type == "divider" and b.widget_type == "divider" then
+			return false
+		end
+
+		return item_comparator(a, b)
+	end
+end
+
+InventoryCosmeticsView._load_layout = function (self, selected_slot)
+	self._inventory_items = {}
+
+	self:_stop_previewing()
+	self:set_loading_state(true)
+
+	self._refresh_in_seconds = nil
+
+	self._promise_container:cancel_on_destroy(self:_fetch_inventory_items(selected_slot)):next(function ()
+		self:set_loading_state(false)
+
+		local selected_slot_name = selected_slot.name
+		local spawn_player = selected_slot_name ~= "slot_insignia" and selected_slot_name ~= "slot_portrait_frame"
+
+		self._spawn_player = spawn_player
+
+		local has_rarity, has_locked = false, false
+		local cosmetics_layout = self._cosmetic_layout
+
+		for i = 1, #cosmetics_layout do
+			local layout = cosmetics_layout[i]
+
+			if layout.item and layout.item.rarity then
+				has_rarity = true
+			end
+
+			if layout.locked then
+				has_locked = true
+			end
+
+			if has_rarity and has_locked then
+				break
+			end
+		end
+
+		if has_locked then
+			self._show_locked_cosmetics = true
+
+			if self._parent and self._parent.show_locked_cosmetics ~= nil then
+				self._show_locked_cosmetics = self._parent.show_locked_cosmetics
+			end
+		end
+
+		local sort_options = {}
+
+		self._sort_options = sort_options
+
+		if has_rarity then
+			sort_options[#sort_options + 1] = {
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+				}),
+				sort_function = sort_function_generator(Items.sort_comparator({
+					"<",
+					Items.compare_item_sort_order,
+					">",
+					Items.compare_item_rarity,
+					"<",
+					Items.compare_item_name,
+				})),
+			}
+			sort_options[#sort_options + 1] = {
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+				}),
+				sort_function = sort_function_generator(Items.sort_comparator({
+					"<",
+					Items.compare_item_sort_order,
+					"<",
+					Items.compare_item_rarity,
+					"<",
+					Items.compare_item_name,
+				})),
+			}
+		end
+
+		sort_options[#sort_options + 1] = {
+			display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+			}),
+			sort_function = sort_function_generator(Items.sort_comparator({
+				"<",
+				Items.compare_item_sort_order,
+				"<",
+				Items.compare_item_name,
+			})),
+		}
+		sort_options[#sort_options + 1] = {
+			display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+			}),
+			sort_function = sort_function_generator(Items.sort_comparator({
+				"<",
+				Items.compare_item_sort_order,
+				">",
+				Items.compare_item_name,
+			})),
+		}
+
+		self:_setup_sort_options()
+		self:_start_show_layout()
+	end):catch(function ()
+		self:set_loading_state(false)
+	end)
+end
+
+InventoryCosmeticsView.event_force_refresh_inventory = function (self)
+	self._force_refresh = true
 end
 
 InventoryCosmeticsView.on_enter = function (self)
 	InventoryCosmeticsView.super.on_enter(self)
 
-	local selected_slots = self._selected_slots
+	local selected_slot = self._selected_slot
 
-	if selected_slots then
-		self._inventory_items = {}
-
-		self:_stop_previewing()
-		self:set_loading_state(true)
-		self:_fetch_inventory_items(selected_slots):next(function ()
-			self:set_loading_state(false)
-
-			local spawn_player = false
-
-			for i = 1, #selected_slots do
-				local slot = selected_slots[i]
-				local selected_slot_name = slot.name
-
-				if selected_slot_name ~= "slot_insignia" and selected_slot_name ~= "slot_portrait_frame" then
-					spawn_player = true
-
-					break
-				end
-			end
-
-			self._spawn_player = spawn_player
-
-			local has_rarity = false
-			local has_locked = false
-
-			for i = 1, #self._cosmetic_layout do
-				local layout = self._cosmetic_layout[i]
-
-				if layout.item and layout.item.rarity then
-					has_rarity = true
-				end
-
-				if layout.locked then
-					has_locked = true
-				end
-
-				if layout.locked == true and has_rarity == true then
-					break
-				end
-			end
-
-			if has_locked then
-				self._show_locked_cosmetics = true
-
-				if self._parent and self._parent.show_locked_cosmetics ~= nil then
-					self._show_locked_cosmetics = self._parent.show_locked_cosmetics
-				end
-			end
-
-			self._sort_options = {}
-
-			if has_rarity then
-				self._sort_options[#self._sort_options + 1] = {
-					display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-						sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
-					}),
-					sort_function = function (a, b)
-						local a_locked, b_locked = a.locked, b.locked
-
-						if not a_locked and b_locked == true then
-							return true
-						elseif not b_locked and a_locked == true then
-							return false
-						end
-
-						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
-							return false
-						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
-							return true
-						end
-
-						return ItemUtils.sort_comparator({
-							">",
-							ItemUtils.compare_item_rarity,
-							"<",
-							ItemUtils.compare_item_name,
-						})(a, b)
-					end,
-				}
-				self._sort_options[#self._sort_options + 1] = {
-					display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-						sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
-					}),
-					sort_function = function (a, b)
-						local a_locked, b_locked = a.locked, b.locked
-
-						if not a_locked and b_locked == true then
-							return true
-						elseif not b_locked and a_locked == true then
-							return false
-						end
-
-						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
-							return false
-						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
-							return true
-						end
-
-						return ItemUtils.sort_comparator({
-							"<",
-							ItemUtils.compare_item_rarity,
-							"<",
-							ItemUtils.compare_item_name,
-						})(a, b)
-					end,
-				}
-			end
-
-			self._sort_options[#self._sort_options + 1] = {
-				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
-				}),
-				sort_function = function (a, b)
-					local a_locked, b_locked = a.locked, b.locked
-
-					if not a_locked and b_locked == true then
-						return true
-					elseif not b_locked and a_locked == true then
-						return false
-					end
-
-					if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
-						return false
-					elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
-						return true
-					end
-
-					return ItemUtils.sort_comparator({
-						"<",
-						ItemUtils.compare_item_name,
-					})(a, b)
-				end,
-			}
-			self._sort_options[#self._sort_options + 1] = {
-				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
-				}),
-				sort_function = function (a, b)
-					local a_locked, b_locked = a.locked, b.locked
-
-					if not a_locked and b_locked == true then
-						return true
-					elseif not b_locked and a_locked == true then
-						return false
-					end
-
-					if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
-						return false
-					elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
-						return true
-					end
-
-					return ItemUtils.sort_comparator({
-						">",
-						ItemUtils.compare_item_name,
-					})(a, b)
-				end,
-			}
-
-			self:_setup_sort_options()
-			self:_start_show_layout()
-		end):catch(function ()
-			self:set_loading_state(false)
-		end)
+	if selected_slot then
+		self:_load_layout(selected_slot)
 	end
 
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
+	self:_register_event("event_force_refresh_inventory", "event_force_refresh_inventory")
 	self:_setup_background_world()
-
-	local x, y = self:_scenegraph_position("item_grid_pivot")
-	local sort_button_widget = self:sort_button_widget()
-	local sort_button_scenegraph = self:sort_button_scenegraph()
-	local sort_button_world_position = self:get_sort_button_world_position()
-	local margin = 5
-	local sort_height = sort_button_widget.content.size and sort_button_widget.content.size[2] or sort_button_scenegraph.size[2]
 end
 
 InventoryCosmeticsView._setup_input_legend = function (self)
@@ -287,12 +239,11 @@ InventoryCosmeticsView._set_preview_widgets_visibility = function (self, visible
 
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.equip_button.content.visible = allow_equip_button and true or visible
+	widgets_by_name.equip_button.content.visible = allow_equip_button or visible
 end
 
 InventoryCosmeticsView._stop_previewing = function (self)
 	InventoryCosmeticsView.super._stop_previewing(self)
-	self:_set_preview_widgets_visibility(false)
 	self:_destroy_side_panel()
 
 	if self._item_name_widget then
@@ -427,8 +378,8 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 		y_offset = y_offset + height
 	end
 
-	local properties_text = ItemUtils.item_property_text(item, true)
-	local unlock_title, unlock_description = ItemUtils.obtained_display_name(item)
+	local properties_text = Items.item_property_text(item, true)
+	local unlock_title, unlock_description = Items.obtained_display_name(item)
 
 	if unlock_title and is_locked then
 		unlock_title = string.format("%s %s", "", unlock_title)
@@ -484,7 +435,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	self:_stop_previewing()
 
 	local item = element.item
-	local item_display_name = item.display_name
+	local item_display_name = item and item.display_name or ""
 
 	if string.match(item_display_name, "unarmed") then
 		return
@@ -496,6 +447,8 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	if not item then
 		return
 	end
+
+	self._last_seen_item_name = item.name
 
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot and selected_slot.name
@@ -544,7 +497,6 @@ InventoryCosmeticsView._preview_element = function (self, element)
 
 	if selected_slot_name == "slot_portrait_frame" or selected_slot_name == "slot_insignia" then
 		InventoryCosmeticsView.super._preview_element(self, element)
-		self:_set_preview_widgets_visibility(false, true)
 	end
 
 	local item_size = {
@@ -558,6 +510,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	local template = Blueprints[widget_type]
 	local config = {
 		horizontal_alignment = "right",
+		ignore_negative_rarity = true,
 		vertical_alignment = "bottom",
 		size = item_size,
 		item = item,
@@ -586,11 +539,11 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	end
 
 	local is_locked = element.locked
-	local can_equip = not is_locked
+	local should_display_button = self:_update_equip_button_status() ~= "disabled"
 
-	self:_set_preview_widgets_visibility(can_equip)
+	self:_set_preview_widgets_visibility(false, should_display_button)
 
-	local y_offset = not can_equip and 80 or 0
+	local y_offset = not should_display_button and 80 or 0
 
 	widget.offset[2] = widget.offset[2] + y_offset
 
@@ -613,90 +566,52 @@ InventoryCosmeticsView._register_button_callbacks = function (self)
 	widgets_by_name.equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
 end
 
-InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id, input_pressed, instant)
-	self._camera_zoomed_in = not self._camera_zoomed_in
-
-	if self._camera_zoomed_in then
-		self:_play_sound(UISoundEvents.apparel_zoom_in)
-	else
-		self:_play_sound(UISoundEvents.apparel_zoom_out)
-	end
-
-	self:_trigger_zoom_logic(instant)
-end
-
-InventoryCosmeticsView._trigger_zoom_logic = function (self, instant, optional_slot_name)
+InventoryCosmeticsView._trigger_zoom_logic = function (self, optional_slot_name, optional_time)
 	local selected_slot = self._selected_slot
 	local selected_slot_name = optional_slot_name or selected_slot and selected_slot.name
 	local func_ptr = math.easeCubic
-	local world_spawner = self._world_spawner
-	local duration = instant and 0 or 1
 
-	if self._camera_zoomed_in then
-		self:_set_camera_item_slot_focus(selected_slot_name, duration, func_ptr)
-	else
-		world_spawner:set_camera_position_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("z", 0, duration, func_ptr)
-	end
+	self:_set_camera_item_slot_focus(selected_slot_name, optional_time or 0, func_ptr, self._zoom_level)
 end
 
-InventoryCosmeticsView.cb_on_lock_pressed = function (self)
-	self._show_locked_cosmetics = not self._show_locked_cosmetics
+local function _filter_locked_elements(element)
+	return not element.locked or element.widget_type == "divider"
+end
 
-	if self._parent then
-		self._parent.show_locked_cosmetics = self._show_locked_cosmetics
+InventoryCosmeticsView._filtered_layout = function (self)
+	local filtered_layout = self._cosmetic_layout
+
+	if self._show_locked_cosmetics == false then
+		filtered_layout = table.filtered_array(filtered_layout, _filter_locked_elements)
 	end
 
-	if self._item_grid and InputDevice.gamepad_active then
-		self._item_grid:disable_input(true)
+	return filtered_layout
+end
 
-		self._filter_triggered = true
+InventoryCosmeticsView._requested_index_on_present = function (self)
+	local requested_index
+	local last_seen_item_name = self._last_seen_item_name
+
+	if not requested_index and last_seen_item_name then
+		requested_index = self:index_by_item_name(last_seen_item_name)
 	end
 
-	self:_stop_previewing()
-	self:_start_show_layout()
+	local selected_slot = self._selected_slot
+	local selected_slot_name = selected_slot.name
+	local equipped_item = self:equipped_item_in_slot(selected_slot_name)
+
+	if not requested_index and equipped_item then
+		requested_index = self:item_grid_index(equipped_item)
+	end
+
+	return requested_index
 end
 
 InventoryCosmeticsView._start_show_layout = function (self)
-	if self._show_locked_cosmetics == false then
-		local filtered_layout = {}
+	self._offer_items_layout = self:_filtered_layout()
 
-		for i = 1, #self._cosmetic_layout do
-			local layout = self._cosmetic_layout[i]
-
-			if not layout.locked and layout.widget_type ~= "divider" then
-				filtered_layout[#filtered_layout + 1] = layout
-			end
-		end
-
-		self._offer_items_layout = filtered_layout
-	else
-		self._offer_items_layout = self._cosmetic_layout
-	end
-
-	local start_index = 1
 	local selected_slot = self._selected_slot
-	local selected_slot_name = selected_slot.name
 	local slot_display_name = selected_slot and selected_slot.display_name
-	local equipped_item = start_index and self:equipped_item_in_slot(selected_slot_name)
-
-	if equipped_item then
-		start_index = self:item_grid_index(equipped_item) or start_index
-
-		if start_index then
-			self._selected_gear_id = equipped_item and equipped_item.gear_id
-		end
-	else
-		local first_item = self:first_grid_item()
-
-		if first_item then
-			self._selected_gear_id = first_item and first_item.gear_id
-		end
-	end
 
 	self:_present_layout_by_slot_filter(nil, nil, slot_display_name)
 end
@@ -714,15 +629,23 @@ InventoryCosmeticsView.cb_on_equip_pressed = function (self)
 		return
 	end
 
-	local selected_slot_name = selected_slot.name
+	local current_status = self._equip_button_status
 
-	self:_equip_item(selected_slot_name, previewed_item)
+	if current_status == "equip" then
+		local selected_slot_name = selected_slot.name
+
+		self:_equip_item(selected_slot_name, previewed_item)
+	elseif current_status == "purchase" then
+		self:cb_on_purchase_pressed()
+	end
 end
 
 InventoryCosmeticsView.on_exit = function (self)
 	if self._world_spawner then
 		self._world_spawner:set_camera_blur(0, 0)
 	end
+
+	self._promise_container:delete()
 
 	if self._profile_spawner then
 		self._profile_spawner:destroy()
@@ -782,7 +705,37 @@ InventoryCosmeticsView._verify_items = function (self, source_items, owned_gear)
 	return verified_items
 end
 
-InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
+InventoryCosmeticsView._parse_store_items = function (self, selected_slot_name, offers, items)
+	for i = 1, #offers do
+		local offer = offers[i]
+		local id = offer.description and offer.description.id
+
+		if id and id ~= "n/a" then
+			local item = MasterItems.get_item(id)
+
+			if item and self:_item_valid_by_current_profile(item) and table.find(item.slots, selected_slot_name) then
+				local valid = true
+
+				if valid then
+					items[#items + 1] = {
+						item = item,
+						offer = offer,
+					}
+				end
+			end
+		end
+
+		local bundle_info = offer.bundleInfo
+
+		if bundle_info then
+			self:_parse_store_items(selected_slot_name, bundle_info, items)
+		end
+	end
+
+	return items
+end
+
+InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local character_id = player:character_id()
@@ -793,24 +746,13 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 		return Promise.resolved()
 	end
 
-	local filter = {}
-
-	for i = 1, #selected_slots do
-		local slot = selected_slots[i]
-		local slot_name = slot.name
-
-		filter[#filter + 1] = slot_name
-	end
-
-	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot.name
+	local filter = {
+		selected_slot_name,
+	}
 	local promises = {}
 
-	promises[#promises + 1] = Managers.data_service.gear:fetch_inventory(character_id, filter):next(function (items)
-		if self._destroyed then
-			return
-		end
-
+	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.gear:fetch_inventory(character_id, filter)):next(function (items)
 		local item_definitions = MasterItems.get_cached()
 
 		items = self:_verify_items(item_definitions, items)
@@ -843,30 +785,12 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 
 		return valid_items
 	end)
-	promises[#promises + 1] = Managers.data_service.store:get_credits_cosmetics_store():next(function (data)
+	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.store:get_credits_cosmetics_store()):next(function (data)
 		local offers = data.offers
-		local store_items = {}
 
-		for i = 1, #offers do
-			local offer = offers[i]
-			local id = offer.description and offer.description.id
-
-			if id then
-				local item = MasterItems.get_item(id)
-
-				if item and self:_item_valid_by_current_profile(item) and table.find(item.slots, selected_slot_name) then
-					local valid = true
-
-					if valid then
-						store_items[#store_items + 1] = item
-					end
-				end
-			end
-		end
-
-		return store_items
+		return self:_parse_store_items(selected_slot_name, offers, {})
 	end)
-	promises[#promises + 1] = Managers.data_service.penance_track:get_track(PENANCE_TRACK_ID):next(function (data)
+	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.penance_track:get_track(PENANCE_TRACK_ID)):next(function (data)
 		local penance_track_items = {}
 		local tiers = data and data.tiers
 
@@ -899,9 +823,26 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 		return penance_track_items
 	end)
 
-	return Promise.all(unpack(promises)):next(function (data)
+	local has_premium_store = Managers.data_service.store:has_character_premium_store()
+
+	if has_premium_store then
+		promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.store:get_character_premium_store()):next(function (data)
+			local offers = data.offers
+			local catalog_validity = data.catalog_validity
+			local valid_to = catalog_validity and catalog_validity.valid_to
+
+			self._premium_rotation_ends_at = valid_to
+
+			return self:_parse_store_items(selected_slot_name, offers, {})
+		end)
+	else
+		promises[#promises + 1] = Promise.resolved({})
+	end
+
+	return self._promise_container:cancel_on_destroy(Promise.all(unpack(promises))):next(function (data)
 		self._cosmetic_layout = self:_prepare_cosmetic_layout_data(data)
 	end):catch(function (data)
+		self._refresh_in_seconds = 5
 		self._cosmetic_layout = self:_prepare_cosmetic_layout_data(data)
 	end)
 end
@@ -946,70 +887,58 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 	return achievement_items
 end
 
+local function items_by_name(entry_array, is_item)
+	local _items_by_name = {}
+
+	for i = 1, #entry_array do
+		local entry = entry_array[i]
+		local item = is_item and entry or entry.item
+		local name = item.name
+
+		if name then
+			_items_by_name[name] = entry
+		end
+	end
+
+	return _items_by_name
+end
+
 InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
-	local inventory_items, store_items, penance_track_items = unpack(result)
-	local layout = {}
-	local used_achivements = {}
-	local used_penance_track = {}
-	local used_store = {}
-	local used_achievements_count = 0
-	local used_penance_track_count = 0
-	local used_store_count = 0
+	local inventory_items, store_items, penance_track_items, premium_items = unpack(result)
+	local layout_count, layout = 0, {}
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot.name
 	local achievement_items = self:_achievement_items(selected_slot_name)
 	local player = self._preview_player
 	local profile = player:profile()
+	local remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
+	local locked_achievement_items_by_name = items_by_name(achievement_items, false)
+	local locked_store_items_by_name = items_by_name(store_items, false)
+	local locked_penance_track_items_by_name = items_by_name(penance_track_items, false)
+	local locked_premium_items_by_name = items_by_name(premium_items, false)
 
 	for i = 1, #inventory_items do
 		local inventory_item = inventory_items[i]
-		local found_achievement, found_penance_track, found_store
+		local item_name = inventory_item.name
+		local found_achievement = locked_achievement_items_by_name[item_name]
 
-		for j = 1, #achievement_items do
-			local achievement_item = achievement_items[j]
+		locked_achievement_items_by_name[item_name] = nil
 
-			if achievement_item.item.name == inventory_item.name then
-				found_achievement = achievement_item
-				used_achivements[achievement_item.item.name] = true
-				used_achievements_count = used_achievements_count + 1
+		local found_penance_track = locked_penance_track_items_by_name[item_name]
 
-				break
-			end
-		end
+		locked_penance_track_items_by_name[item_name] = nil
 
-		for k = 1, #store_items do
-			local store_item = store_items[k]
+		local found_store = locked_store_items_by_name[item_name]
 
-			if store_item.name == inventory_item.name then
-				found_store = store_item
-				used_store[store_item.name] = true
-				used_store_count = used_store_count + 1
-
-				break
-			end
-		end
-
-		for l = 1, #penance_track_items do
-			local penance_track_item = penance_track_items[l]
-
-			if penance_track_item.item.name == inventory_item.name then
-				found_penance_track = penance_track_item
-				used_penance_track[penance_track_item.item.name] = true
-				used_penance_track_count = used_penance_track_count + 1
-
-				break
-			end
-		end
+		locked_store_items_by_name[item_name] = nil
+		locked_premium_items_by_name[item_name] = nil
 
 		local gear_id = inventory_item.gear_id
 		local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
-		local remove_new_marker_callback
 
-		if is_new then
-			remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
-		end
-
-		layout[#layout + 1] = {
+		layout_count = layout_count + 1
+		layout[layout_count] = {
+			sort_group = 1,
 			item = inventory_item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
@@ -1022,52 +951,75 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 		}
 	end
 
-	if #achievement_items > 0 and used_achievements_count < #achievement_items or #penance_track_items > 0 and used_penance_track_count < #penance_track_items or #store_items > 0 and used_store_count < #store_items then
-		layout[#layout + 1] = {
+	local has_locked_achievement_item = next(locked_achievement_items_by_name) ~= nil
+	local has_locked_penance_track_item = next(locked_penance_track_items_by_name) ~= nil
+	local has_locked_store_item = next(locked_store_items_by_name) ~= nil
+
+	if has_locked_achievement_item or has_locked_store_item or has_locked_penance_track_item then
+		layout_count = layout_count + 1
+		layout[layout_count] = {
+			sort_group = 4,
 			widget_type = "divider",
 		}
 	end
 
-	for i = 1, #achievement_items do
-		local achievement_item = achievement_items[i]
-
-		if not used_achivements[achievement_item.item.name] then
-			layout[#layout + 1] = {
-				locked = true,
-				item = achievement_item.item,
-				slot = selected_slot,
-				widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-				achievement = achievement_item,
-			}
-		end
+	for _, achievement_item in pairs(locked_achievement_items_by_name) do
+		layout_count = layout_count + 1
+		layout[layout_count] = {
+			locked = true,
+			sort_group = 5,
+			item = achievement_item.item,
+			slot = selected_slot,
+			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
+			achievement = achievement_item,
+		}
 	end
 
-	for i = 1, #penance_track_items do
-		local penance_track_item = penance_track_items[i]
-
-		if not used_penance_track[penance_track_item.item.name] then
-			layout[#layout + 1] = {
-				locked = true,
-				item = penance_track_item.item,
-				slot = selected_slot,
-				widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-				penance_track = penance_track_item,
-			}
-		end
+	for _, penance_track_item in pairs(locked_penance_track_items_by_name) do
+		layout_count = layout_count + 1
+		layout[layout_count] = {
+			locked = true,
+			sort_group = 5,
+			item = penance_track_item.item,
+			slot = selected_slot,
+			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
+			penance_track = penance_track_item,
+		}
 	end
 
-	for i = 1, #store_items do
-		local store_item = store_items[i]
+	for _, store_item in pairs(locked_store_items_by_name) do
+		layout_count = layout_count + 1
+		layout[layout_count] = {
+			locked = true,
+			sort_group = 5,
+			item = store_item.item,
+			slot = selected_slot,
+			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
+			store = store_item.item,
+		}
+	end
 
-		if not used_store[store_item.name] then
-			layout[#layout + 1] = {
-				locked = true,
-				item = store_item,
-				slot = selected_slot,
-				widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-				store = store_item,
-			}
-		end
+	local has_locked_premium_item = next(locked_premium_items_by_name) ~= nil
+
+	if has_locked_premium_item then
+		layout_count = layout_count + 1
+		layout[layout_count] = {
+			sort_group = 2,
+			widget_type = "divider",
+		}
+	end
+
+	for _, premium_item in pairs(locked_premium_items_by_name) do
+		layout_count = layout_count + 1
+		layout[layout_count] = {
+			locked = true,
+			sort_group = 3,
+			item = premium_item.item,
+			slot = selected_slot,
+			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
+			store = premium_item.item,
+			premium_offer = premium_item.offer,
+		}
 	end
 
 	return layout
@@ -1082,6 +1034,20 @@ InventoryCosmeticsView._calc_text_size = function (self, widget, text_and_style_
 	}
 
 	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+end
+
+InventoryCosmeticsView.is_item_owned = function (self, target_gear_id)
+	local inventory_items = self._inventory_items
+
+	for _, item in ipairs(inventory_items) do
+		local gear_id = item.gear_id
+
+		if gear_id == target_gear_id then
+			return true
+		end
+	end
+
+	return false
 end
 
 InventoryCosmeticsView._get_item_from_inventory = function (self, wanted_item)
@@ -1127,25 +1093,11 @@ InventoryCosmeticsView._item_valid_by_current_profile = function (self, item)
 end
 
 InventoryCosmeticsView._on_double_click = function (self, widget, element)
-	local selected_slot = self._selected_slot
-
-	if not selected_slot then
-		return
-	end
-
-	local previewed_item = self._previewed_item
-
-	if not previewed_item then
-		return
-	end
-
-	local selected_slot_name = selected_slot.name
-
-	self:_equip_item(selected_slot_name, previewed_item)
+	return self:cb_on_equip_pressed()
 end
 
 InventoryCosmeticsView._equip_item = function (self, slot_name, item)
-	if self._equip_button_disabled then
+	if self._equip_button_status ~= "equip" then
 		return
 	end
 
@@ -1178,6 +1130,7 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 			ProfileUtils.save_item_id_for_profile_preset(active_profile_preset_id, slot_name, item_gear_id)
 		end
 
+		Managers.telemetry_events:equip_item(slot_name, item)
 		Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 	end
 end
@@ -1219,28 +1172,40 @@ end
 
 InventoryCosmeticsView._update_equip_button_status = function (self)
 	local previewed_item = self._previewed_item
-	local disable_button = not previewed_item
-	local cannot_equip = false
+	local previewed_element = self._previewed_element
+	local is_disabled = not previewed_item
+	local is_locked = previewed_element and not not previewed_element.locked
+	local is_premium = previewed_element and previewed_element.premium_offer ~= nil
+	local is_equipped = false
 
-	if not disable_button then
+	if not is_disabled then
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot and selected_slot.name
 		local equipped_item = selected_slot_name and self:equipped_item_in_slot(selected_slot_name)
 
-		disable_button = equipped_item and equipped_item.gear_id == previewed_item.gear_id
-		cannot_equip = self._previewed_element.locked
+		is_equipped = equipped_item and equipped_item.gear_id == previewed_item.gear_id
 	end
 
-	if self._equip_button_disabled ~= disable_button or self._equip_button_disabled ~= cannot_equip then
-		self._equip_button_disabled = disable_button or cannot_equip
+	local target_status
 
+	target_status = is_equipped and "equipped" or is_premium and "purchase" or (is_disabled or is_locked) and "disabled" or "equip"
+
+	local current_equip_button_status = self._equip_button_status
+
+	if target_status ~= current_equip_button_status then
 		local button = self._widgets_by_name.equip_button
 		local button_content = button.content
 
-		button_content.hotspot.disabled = disable_button or cannot_equip
-		button_content.visible = not cannot_equip
-		button_content.original_text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
+		button_content.hotspot.disabled = target_status == "disabled" or target_status == "equipped"
+		button_content.visible = target_status ~= "disabled"
+
+		local loc_key = target_status == "equipped" and "loc_weapon_inventory_equipped_button" or target_status == "purchase" and "loc_premium_store_purchase_item" or "loc_weapon_inventory_equip_button"
+
+		button_content.original_text = Utf8.upper(Localize(loc_key))
+		self._equip_button_status = target_status
 	end
+
+	return target_status
 end
 
 InventoryCosmeticsView.cb_on_close_pressed = function (self)
@@ -1292,9 +1257,80 @@ InventoryCosmeticsView.draw = function (self, dt, t, input_service, layer)
 	InventoryCosmeticsView.super.draw(self, dt, t, input_service, layer)
 end
 
+InventoryCosmeticsView._update_zoom_logic = function (self, dt, input_service)
+	local scroll_axis = input_service:get("scroll_axis")
+	local scroll_delta = scroll_axis and scroll_axis[2] or 0
+	local item_grid_hovered = self._item_grid and self._item_grid:hovered()
+
+	if item_grid_hovered then
+		scroll_delta = 0
+	end
+
+	local zoom_speed, zoom_level = self._zoom_speed, self._zoom_level
+
+	zoom_speed = scroll_delta * zoom_speed < 0 and 0 or zoom_speed + scroll_delta / 20
+
+	if math.abs(zoom_speed) < 0.01 then
+		zoom_speed = 0
+	end
+
+	zoom_level = math.clamp(zoom_level + zoom_speed * 18 * dt, 0, 1)
+	zoom_speed = zoom_speed * math.pow(0.006, dt)
+
+	if zoom_level == 0 or zoom_level == 1 then
+		zoom_speed = 0
+	end
+
+	local has_changed = zoom_level ~= self._zoom_level
+
+	self._zoom_level, self._zoom_speed = zoom_level, zoom_speed
+
+	if has_changed then
+		self:_trigger_zoom_logic()
+	end
+end
+
+InventoryCosmeticsView._should_refresh = function (self, dt, t)
+	local is_loading = self:get_loading_state()
+
+	if is_loading then
+		return false
+	end
+
+	local server_time = Managers.backend:get_server_time(t)
+	local premium_rotation_ends_at = self._premium_rotation_ends_at
+
+	if premium_rotation_ends_at and premium_rotation_ends_at < server_time then
+		return true
+	end
+
+	if self._force_refresh then
+		self._force_refresh = false
+
+		return true
+	end
+
+	local refresh_in_seconds = self._refresh_in_seconds
+
+	refresh_in_seconds = refresh_in_seconds and math.max(refresh_in_seconds - dt, 0)
+	self._refresh_in_seconds = refresh_in_seconds
+
+	if refresh_in_seconds and refresh_in_seconds == 0 then
+		return true
+	end
+
+	return false
+end
+
 InventoryCosmeticsView.update = function (self, dt, t, input_service)
 	if self:profile_preset_handling_input() then
 		input_service = input_service:null_service()
+	end
+
+	if self:_should_refresh(dt, t) then
+		local selected_slot = self._selected_slot
+
+		self:_load_layout(selected_slot)
 	end
 
 	if self._spawn_player then
@@ -1311,7 +1347,7 @@ InventoryCosmeticsView.update = function (self, dt, t, input_service)
 			local selected_slot = self._selected_slot
 			local selected_slot_name = selected_slot and selected_slot.name
 
-			self:_trigger_zoom_logic(true, selected_slot_name)
+			self:_trigger_zoom_logic(selected_slot_name)
 		end
 
 		if self._player_spawned and not self._initialize_zoom then
@@ -1319,7 +1355,9 @@ InventoryCosmeticsView.update = function (self, dt, t, input_service)
 		end
 	end
 
-	self:_update_equip_button_status(dt)
+	self:_update_vo(dt, t)
+	self:_update_zoom_logic(dt, input_service)
+	self:_update_equip_button_status()
 
 	local profile_spawner = self._profile_spawner
 
@@ -1425,7 +1463,7 @@ InventoryCosmeticsView.event_register_cosmetics_preview_character_spawn_point = 
 	end
 end
 
-InventoryCosmeticsView._set_camera_item_slot_focus = function (self, slot_name, time, func_ptr)
+InventoryCosmeticsView._set_camera_item_slot_focus = function (self, slot_name, time, func_ptr, zoom_level)
 	local world_spawner = self._world_spawner
 	local slot_camera = self._item_camera_by_slot_id[slot_name] or self._default_camera_unit
 	local camera_world_position = Unit.world_position(slot_camera, 1)
@@ -1433,18 +1471,18 @@ InventoryCosmeticsView._set_camera_item_slot_focus = function (self, slot_name, 
 	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
 	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", camera_world_position.x - default_camera_world_position.x, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", camera_world_position.y - default_camera_world_position.y, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", camera_world_position.z - default_camera_world_position.z, time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("x", zoom_level * (camera_world_position.x - default_camera_world_position.x), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("y", zoom_level * (camera_world_position.y - default_camera_world_position.y), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("z", zoom_level * (camera_world_position.z - default_camera_world_position.z), time, func_ptr)
 
 	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
 	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
 	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
 
-	world_spawner:set_camera_rotation_axis_offset("x", camera_world_rotation_x - default_camera_world_rotation_x, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", camera_world_rotation_y - default_camera_world_rotation_y, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("x", zoom_level * (camera_world_rotation_x - default_camera_world_rotation_x), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("y", zoom_level * (camera_world_rotation_y - default_camera_world_rotation_y), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("z", zoom_level * (camera_world_rotation_z - default_camera_world_rotation_z), time, func_ptr)
 end
 
 InventoryCosmeticsView._set_camera_node_focus = function (self, node_name, time, func_ptr)
@@ -1467,6 +1505,169 @@ end
 
 InventoryCosmeticsView._set_camera_rotation_axis_offset = function (self, axis, value, animation_time, func_ptr)
 	self._world_spawner:set_camera_rotation_axis_offset(axis, value, animation_time, func_ptr)
+end
+
+InventoryCosmeticsView._can_preview_voice = function (self)
+	local voice_fx_key = table.nested_get(self, "_previewed_item", "voice_fx_preset")
+	local has_voice_fx = voice_fx_key and voice_fx_key ~= "voice_fx_rtpc_none"
+
+	return has_voice_fx
+end
+
+InventoryCosmeticsView._stop_current_voice = function (self)
+	local ui_world = Managers.ui:world()
+	local wwise_world = Managers.world:wwise_world(ui_world)
+
+	if not wwise_world then
+		return
+	end
+
+	local current_event = self._sound_event_id
+
+	if not current_event then
+		return
+	end
+
+	if not WwiseWorld.is_playing(wwise_world, current_event) then
+		return
+	end
+
+	WwiseWorld.stop_event(wwise_world, current_event)
+
+	self._sound_event_id = nil
+end
+
+InventoryCosmeticsView.cb_preview_voice = function (self)
+	local voice_fx_preset_key = table.nested_get(self, "_previewed_item", "voice_fx_preset")
+	local voice_fx_preset_rtcp = VoiceFxPresetSettings[voice_fx_preset_key]
+
+	if not voice_fx_preset_key then
+		return
+	end
+
+	local personality_key = table.nested_get(self, "_preview_player", "_profile", "lore", "backstory", "personality")
+	local personality_settings = Personalities[personality_key]
+	local sound_event = personality_settings and personality_settings.preview_sound_event
+
+	if not sound_event then
+		return
+	end
+
+	local ui_world = Managers.ui:world()
+	local wwise_world = Managers.world:wwise_world(ui_world)
+
+	if not wwise_world then
+		return
+	end
+
+	self:_stop_current_voice()
+
+	local source = WwiseWorld.make_auto_source(wwise_world, Vector3.zero())
+
+	WwiseWorld.set_source_parameter(wwise_world, source, "voice_fx_preset", voice_fx_preset_rtcp)
+
+	self._sound_event_id = WwiseWorld.trigger_resource_event(wwise_world, sound_event, source)
+end
+
+InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self)
+	self._zoom_level = self._zoom_level > 0.5 and 0 or 1
+	self._zoom_speed = 0
+
+	self:_trigger_zoom_logic(nil, 0.5)
+end
+
+InventoryCosmeticsView.cb_on_purchase_pressed = function (self)
+	local element = self._previewed_element
+	local premium_offer = element and element.premium_offer
+
+	if not premium_offer then
+		return
+	end
+
+	Managers.ui:open_view("store_item_detail_view", nil, nil, nil, nil, {
+		store_item = {
+			offer = premium_offer,
+		},
+		parent = self,
+	})
+end
+
+InventoryCosmeticsView._update_vo = function (self, dt, t)
+	if self._hub_interaction then
+		local queued_vo_event_request = self._queued_vo_event_request
+
+		if queued_vo_event_request then
+			local delay = queued_vo_event_request.delay
+
+			if delay <= 0 then
+				local events = queued_vo_event_request.events
+				local voice_profile = queued_vo_event_request.voice_profile
+				local optional_route_key = queued_vo_event_request.optional_route_key
+				local is_opinion_vo = queued_vo_event_request.is_opinion_vo
+				local world_spawner = self._world_spawner
+				local dialogue_system = world_spawner and self:dialogue_system()
+
+				if dialogue_system then
+					self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
+
+					self._queued_vo_event_request = nil
+				else
+					self._queued_vo_event_request = nil
+				end
+			else
+				queued_vo_event_request.delay = delay - dt
+			end
+		end
+
+		local current_vo_id = self._current_vo_id
+
+		if not current_vo_id then
+			return
+		end
+
+		local unit = self._vo_unit
+		local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+		local is_playing = dialogue_extension:is_playing(current_vo_id)
+
+		if not is_playing then
+			self._current_vo_id = nil
+			self._current_vo_event = nil
+		end
+	end
+end
+
+InventoryCosmeticsView.dialogue_system = function (self)
+	local world_spawner = self._world_spawner
+	local world = world_spawner and world_spawner:world()
+	local extension_manager = world and Managers.ui:world_extension_manager(world)
+	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueExtension")
+
+	return dialogue_system
+end
+
+InventoryCosmeticsView._cb_on_play_vo = function (self, id, event_name)
+	self._current_vo_event = event_name
+	self._current_vo_id = id
+end
+
+InventoryCosmeticsView.play_vo_events = function (self, events, voice_profile, optional_route_key, optional_delay, is_opinion_vo)
+	local dialogue_system = self:dialogue_system()
+
+	if optional_delay then
+		self._queued_vo_event_request = {
+			events = events,
+			voice_profile = voice_profile,
+			optional_route_key = optional_route_key,
+			delay = optional_delay,
+			is_opinion_vo = is_opinion_vo,
+		}
+	else
+		local wwise_route_key = optional_route_key or 40
+		local callback = self._vo_callback
+		local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, nil, is_opinion_vo)
+
+		self._vo_unit = vo_unit
+	end
 end
 
 return InventoryCosmeticsView

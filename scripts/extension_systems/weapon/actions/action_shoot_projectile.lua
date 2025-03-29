@@ -69,7 +69,8 @@ ActionShootProjectile._shoot = function (self)
 	if self._is_server then
 		local owner_side = self._side_system.side_by_unit[self._player_unit]
 		local owner_side_name = owner_side and owner_side:name()
-		local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, weapon_item, nil, owner_side_name)
+		local unit_template_name = projectile_template.unit_template_name or "item_projectile"
+		local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, weapon_item, nil, owner_side_name)
 	end
 end
 

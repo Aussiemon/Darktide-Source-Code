@@ -5,15 +5,19 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
+local Stagger = require("scripts/utilities/attack/stagger")
+local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local talent_settings = TalentSettings.psyker_2
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local CLOSE_RANGE = 9
+local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
+local stagger_types = StaggerSettings.stagger_types
 local ActionPsykerShout = class("ActionPsykerShout", "ActionAbilityBase")
 local broadphase_results = {}
 local external_properties = {}
@@ -110,7 +114,16 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 		self:_handle_enemies(action_settings, side, t, talent_extension)
 	end
 
+	local target_allies = action_settings.target_allies
+
+	if target_allies then
+		self:_handle_allies(action_settings, side, t, talent_extension)
+	end
+
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+
+	self._buff_extension = buff_extension
+
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
@@ -127,6 +140,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 end
 
 ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)
+	local buff_extension = self._buff_extension
 	local shout_distance_traveled = self._shout_distance_traveled
 	local total_hits = self._total_hits
 	local damage_profile = self._damage_profile
@@ -146,9 +160,15 @@ ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)
 			local actual_distance = math.sqrt(distance)
 			local min_range = 0.15 * shout_range
 			local scale_factor = 1 - (math.max(actual_distance, min_range) - min_range) / (shout_range - min_range)
-			local scaled_powerlevel = power_level * (0.25 + 0.75 * (scale_factor * scale_factor))
+			local scaled_power_level = power_level * (0.25 + 0.75 * (scale_factor * scale_factor))
 
-			Attack.execute(unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_powerlevel, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit)
+			Attack.execute(unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit)
+
+			local has_force_strong_stagger_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.shout_forces_strong_stagger)
+
+			if has_force_strong_stagger_keyword then
+				Stagger.force_stagger(unit, stagger_types.explosion, attack_direction, 4, 1, 4, player_unit)
+			end
 
 			total_hits[unit] = nil
 		end
@@ -179,6 +199,9 @@ ActionPsykerShout.finish = function (self, reason, data, t, time_in_action, acti
 
 	table.clear(self._total_hits)
 end
+
+local STARTING_RANGE = 2.5
+local RANGE_STEP_MULTIPLIER = 2
 
 ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, talent_extension)
 	local enemy_side_names = side:relation_side_names("enemy")
@@ -214,7 +237,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, ta
 		local total_num_hits = 0
 
 		while total_range > 0 do
-			local range = previous_range > 0 and previous_range * 2 or 2.5
+			local range = previous_range > 0 and previous_range * RANGE_STEP_MULTIPLIER or STARTING_RANGE
 			local slice_radius = range - previous_range
 
 			total_range = total_range - range
@@ -245,6 +268,77 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, ta
 				if (shout_dot < dot or distance_squared < CLOSE_RANGE) and not total_hits[enemy_unit] then
 					self._num_hits = self._num_hits + 1
 					total_hits[enemy_unit] = distance_squared
+				end
+			end
+		end
+	end
+end
+
+local function _ally_hit_by_shout(origin_player_unit, ally_unit)
+	local buff_extension = ScriptUnit.extension(origin_player_unit, "buff_system")
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.ally_unit = ally_unit
+
+		buff_extension:add_proc_event(proc_events.on_psyker_shout_hit_ally, param_table)
+	end
+end
+
+ActionPsykerShout._handle_allies = function (self, action_settings, side, t, talent_extension)
+	local ally_side_name = side:name()
+	local locomotion_component = self._locomotion_component
+	local locomotion_position = locomotion_component.position
+	local player_unit = self._player_unit
+	local player_position = locomotion_position
+	local player_rotation = locomotion_component.rotation
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+	local broadphase = broadphase_system.broadphase
+	local shout_shape = action_settings.shout_shape
+
+	if shout_shape and shout_shape == "cone" then
+		local shout_dot = action_settings.shout_dot
+		local shout_range = action_settings.shout_range
+		local shout_direction = self._shout_direction
+		local allies_hit = {}
+		local total_range = shout_range
+		local previous_range = 0
+		local total_num_hits = 0
+
+		while total_range > 0 do
+			local range = previous_range > 0 and previous_range * RANGE_STEP_MULTIPLIER or STARTING_RANGE
+			local slice_radius = range - previous_range
+
+			total_range = total_range - range
+			previous_range = range
+
+			local position = player_position + shout_direction * range
+
+			table.clear(broadphase_results)
+
+			local num_hits = broadphase.query(broadphase, position, slice_radius, broadphase_results, ally_side_name)
+
+			total_num_hits = total_num_hits + num_hits
+
+			for ii = 1, num_hits do
+				local ally_unit = broadphase_results[ii]
+
+				if ally_unit ~= player_unit then
+					local ally_unit_position = POSITION_LOOKUP[ally_unit]
+					local distance_squared = Vector3.distance_squared(ally_unit_position, player_position)
+					local attack_direction = Vector3.normalize(Vector3.flat(ally_unit_position - player_position))
+
+					if Vector3.length_squared(attack_direction) == 0 then
+						attack_direction = Quaternion.forward(player_rotation)
+					end
+
+					local dot = Vector3.dot(shout_direction, attack_direction)
+
+					if (shout_dot < dot or distance_squared < CLOSE_RANGE) and not allies_hit[ally_unit] then
+						_ally_hit_by_shout(player_unit, ally_unit)
+
+						allies_hit[ally_unit] = true
+					end
 				end
 			end
 		end

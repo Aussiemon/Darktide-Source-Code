@@ -40,6 +40,7 @@ InputManager.init = function (self)
 
 	event_manager:register(self, "device_activated", "_cb_device_activated")
 	event_manager:register(self, "device_deactivated", "_cb_device_deactivated")
+	event_manager:register(self, "event_update_dead_zone", "_cb_update_dead_zone")
 	event_manager:register(self, "event_update_rumble_enabled", "_cb_update_rumble_enabled")
 	event_manager:register(self, "event_update_rumble_intensity", "_cb_update_rumble_intensity")
 
@@ -77,6 +78,7 @@ InputManager._event_player_authenticated = function (self)
 		return
 	end
 
+	self:_cb_update_dead_zone()
 	self:_cb_update_rumble_enabled()
 	self:_cb_update_rumble_intensity()
 
@@ -274,11 +276,27 @@ InputManager.last_pressed_device = function (self)
 	return InputDevice.last_pressed_device
 end
 
-InputManager.set_dead_zones = function (self, raw_device)
-	local num_axes = raw_device.num_axes()
+local STICK_AXES = {
+	"left",
+	"right",
+}
 
-	for i = 1, num_axes do
-		raw_device.set_dead_zone(i, raw_device.CIRCULAR, 0.24)
+InputManager.set_dead_zones = function (self, raw_device)
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local dead_zone = input_settings.controller_look_dead_zone
+
+	for i = 1, #STICK_AXES do
+		local stick_axis = STICK_AXES[i]
+		local axis_id = raw_device.axis_index(stick_axis)
+
+		if raw_device._name == "Pad1" then
+			axis_id = axis_id + 1
+		end
+
+		if axis_id and axis_id ~= 0 then
+			raw_device.set_dead_zone(axis_id, raw_device.CIRCULAR, dead_zone)
+		end
 	end
 end
 
@@ -626,6 +644,7 @@ InputManager.destroy = function (self)
 
 	event_manager:unregister(self, "device_activated")
 	event_manager:unregister(self, "device_deactivated")
+	event_manager:unregister(self, "event_update_dead_zone")
 	event_manager:unregister(self, "event_update_rumble_enabled")
 	event_manager:unregister(self, "event_update_rumble_intensity")
 
@@ -645,12 +664,11 @@ InputManager.load_input_layout = function (self, layout_name)
 			"xbox_controller",
 		},
 	}
-	local input_manager = Managers.input
 	local gamepad_input_layout = GamepadInputLayouts[layout_name]
 	local input_settings = gamepad_input_layout.input_settings
 
 	for service_type, aliases in pairs(input_settings) do
-		local alias = input_manager:alias_object(service_type)
+		local alias = self:alias_object(service_type)
 
 		if alias then
 			alias:restore_default_by_devices(nil, devices)
@@ -707,6 +725,16 @@ InputManager.is_using_gamepad = function (self)
 	end
 
 	return false
+end
+
+InputManager._cb_update_dead_zone = function (self)
+	for _, device in pairs(self._all_input_devices) do
+		local raw_device = device:raw_device()
+
+		if raw_device._name ~= "mouse" then
+			self:set_dead_zones(raw_device)
+		end
+	end
 end
 
 InputManager._set_wwise_rumble_state_from_device = function (self, device)

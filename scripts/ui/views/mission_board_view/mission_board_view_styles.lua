@@ -16,7 +16,7 @@ MissionBoardViewStyles.difficulty_bar_change_function = function (content, style
 			danger_level = math.clamp(content.danger, 1, max_danger)
 		end
 
-		local danger_color = DangerSettings.by_index[danger_level] and DangerSettings.by_index[danger_level].color or DangerSettings.by_index[1].color
+		local danger_color = DangerSettings[danger_level] and DangerSettings[danger_level].color or DangerSettings[1].color
 
 		ColorUtilities.color_copy(danger_color, style.color, true)
 	end
@@ -373,8 +373,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_1 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		default_color = DangerSettings.by_index[1].color,
-		color = DangerSettings.by_index[1].color,
+		default_color = DangerSettings[1].color,
+		color = DangerSettings[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -389,8 +389,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_2 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		default_color = DangerSettings.by_index[1].color,
-		color = DangerSettings.by_index[1].color,
+		default_color = DangerSettings[1].color,
+		color = DangerSettings[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -405,8 +405,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_3 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		default_color = DangerSettings.by_index[1].color,
-		color = DangerSettings.by_index[1].color,
+		default_color = DangerSettings[1].color,
+		color = DangerSettings[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -421,8 +421,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_4 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		default_color = DangerSettings.by_index[1].color,
-		color = DangerSettings.by_index[1].color,
+		default_color = DangerSettings[1].color,
+		color = DangerSettings[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -437,8 +437,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_5 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		default_color = DangerSettings.by_index[1].color,
-		color = DangerSettings.by_index[1].color,
+		default_color = DangerSettings[1].color,
+		color = DangerSettings[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -1098,7 +1098,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_1 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		color = DangerSettings.by_index[1].color,
+		color = DangerSettings[1].color,
 		size = {
 			6,
 			16,
@@ -1112,7 +1112,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_2 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		color = DangerSettings.by_index[1].color,
+		color = DangerSettings[1].color,
 		size = {
 			6,
 			16,
@@ -1126,7 +1126,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_3 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		color = DangerSettings.by_index[1].color,
+		color = DangerSettings[1].color,
 		size = {
 			6,
 			16,
@@ -1140,7 +1140,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_4 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		color = DangerSettings.by_index[1].color,
+		color = DangerSettings[1].color,
 		size = {
 			6,
 			16,
@@ -1154,7 +1154,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_5 = {
 		horizontal_alignment = "center",
 		vertical_alignment = "center",
-		color = DangerSettings.by_index[1].color,
+		color = DangerSettings[1].color,
 		size = {
 			6,
 			16,
@@ -1679,8 +1679,8 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_1 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
-			default_color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
+			default_color = DangerSettings[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
 				5,
@@ -1695,8 +1695,8 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_2 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
-			default_color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
+			default_color = DangerSettings[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
 				5,
@@ -1711,8 +1711,8 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_3 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
-			default_color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
+			default_color = DangerSettings[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
 				5,
@@ -1727,8 +1727,8 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_4 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
-			default_color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
+			default_color = DangerSettings[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
 				5,
@@ -1743,8 +1743,8 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_5 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
-			default_color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
+			default_color = DangerSettings[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
 				5,
@@ -2438,7 +2438,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_1 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 			size = {
 				6,
 				16,
@@ -2452,7 +2452,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_2 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 			size = {
 				6,
 				16,
@@ -2466,7 +2466,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_3 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 			size = {
 				6,
 				16,
@@ -2480,7 +2480,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_4 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 			size = {
 				6,
 				16,
@@ -2494,7 +2494,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_5 = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 			size = {
 				6,
 				16,
@@ -2774,19 +2774,19 @@ end
 MissionBoardViewStyles.difficulty_stepper_style_function = function (mission_type)
 	return {
 		difficulty_bar_1 = {
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 		},
 		difficulty_bar_2 = {
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 		},
 		difficulty_bar_3 = {
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 		},
 		difficulty_bar_4 = {
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 		},
 		difficulty_bar_5 = {
-			color = DangerSettings.by_index[1].color,
+			color = DangerSettings[1].color,
 		},
 		danger = {
 			color = _get_color_by_name("color_main_light", mission_type),

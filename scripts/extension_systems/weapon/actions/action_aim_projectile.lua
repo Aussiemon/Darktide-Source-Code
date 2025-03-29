@@ -4,8 +4,8 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AimProjectile = require("scripts/utilities/aim_projectile")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
+local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local ActionAimProjectile = class("ActionAimProjectile", "ActionWeaponBase")
 
 ActionAimProjectile.init = function (self, action_context, ...)
@@ -69,7 +69,7 @@ ActionAimProjectile._existing_unit = function (self)
 end
 
 ActionAimProjectile._locomotion_template = function (self)
-	local existing_unit, locomotion_extension = self:_existing_unit()
+	local _, locomotion_extension = self:_existing_unit()
 	local action_settings = self._action_settings
 	local weapon_template = self._weapon_template
 	local locomotion_template
@@ -81,9 +81,9 @@ ActionAimProjectile._locomotion_template = function (self)
 
 		locomotion_template = ProjectileLocomotionTemplates[template_name_from_action]
 	elseif weapon_template.projectile_template then
-		local projectile_templates = weapon_template.projectile_template
+		local projectile_template = weapon_template.projectile_template
 
-		locomotion_template = projectile_templates.locomotion_template
+		locomotion_template = projectile_template.locomotion_template
 	end
 
 	return locomotion_template

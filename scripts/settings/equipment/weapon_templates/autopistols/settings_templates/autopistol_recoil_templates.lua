@@ -196,14 +196,6 @@ recoil_templates.default_autopistol_assault = {
 		},
 	},
 }
-
-local yaw_offset_l = 0.05
-local yaw_offset_r = 0.3
-local pitch_low = 0.07500000000000001
-local pitch_high = 0.125
-local offset_perfect = 0.25
-local random_range = 0.25
-
 recoil_templates.default_autopistol_spraynpray = {
 	still = {
 		camera_recoil_percentage = 0.8,

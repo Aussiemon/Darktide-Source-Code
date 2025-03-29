@@ -13,7 +13,6 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_recoil_templates", recoil_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_recoil_templates", recoil_templates, loaded_template_files)

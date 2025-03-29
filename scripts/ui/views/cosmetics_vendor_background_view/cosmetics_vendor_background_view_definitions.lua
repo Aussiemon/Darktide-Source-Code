@@ -1,15 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_definitions.lua
 
+local Archetypes = require("scripts/settings/archetype/archetypes")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local WalletSettings = require("scripts/settings/wallet_settings")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	info_box = {
@@ -98,8 +97,6 @@ local intro_texts = {
 	description_text = "loc_cosmetics_vendor_view_intro_description",
 	title_text = "loc_cosmetics_vendor_view_intro_title",
 }
-local menu_zoom_out = "loc_inventory_menu_zoom_out"
-local menu_zoom_in = "loc_inventory_menu_zoom_in"
 local menu_preview_with_gear_off = "loc_inventory_menu_preview_with_gear_off"
 local menu_preview_with_gear_on = "loc_inventory_menu_preview_with_gear_on"
 local cosmetics_vendor_option_tab_definition = {
@@ -273,23 +270,24 @@ local cosmetics_vendor_option_tab_definition = {
 			on_pressed_callback = "cb_on_camera_zoom_toggled",
 			visibility_function = function (parent, id)
 				local active_view = parent._active_view
+				local view_instance = active_view and Managers.ui:view_instance(active_view)
 
-				if active_view then
-					local view_instance = Managers.ui:view_instance(active_view)
-
-					if view_instance:_can_zoom() then
-						local display_name = view_instance._camera_zoomed_in and menu_zoom_out or menu_zoom_in
-						local input_legend = parent:_element("input_legend")
-
-						if input_legend then
-							input_legend:set_display_name(id, display_name)
-						end
-
-						return view_instance._on_enter_animation_triggered
-					end
+				if not view_instance then
+					return false
 				end
 
-				return false
+				if not view_instance._can_zoom or not view_instance:_can_zoom() then
+					return false
+				end
+
+				local display_name = view_instance._zoom_level >= 0.5 and "loc_inventory_menu_zoom_out" or "loc_inventory_menu_zoom_in"
+				local input_legend = parent:_element("input_legend")
+
+				if input_legend then
+					input_legend:set_display_name(id, display_name)
+				end
+
+				return true
 			end,
 		},
 		{
@@ -346,6 +344,7 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 	view = "cosmetics_vendor_view",
 	view_function = "present_items",
 	context = {
+		draw_parents_input_legend = true,
 		fetch_store_items_on_enter = false,
 		grid_id = "weapon_grid",
 		hide_price = true,
@@ -478,15 +477,15 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 local cosmetic_gear_tabs = {}
 local cosmetic_weapon_tabs = {}
 
-for archetype_name, settings in pairs(Archetypes) do
+for archetype_name, archetype in pairs(Archetypes) do
 	local cosmetics_vendor_option_tab = table.clone_instance(cosmetics_vendor_option_tab_definition)
 
 	cosmetic_gear_tabs[#cosmetic_gear_tabs + 1] = cosmetics_vendor_option_tab
 	cosmetics_vendor_option_tab.view_function_context = {
 		archetype_name = archetype_name,
 	}
-	cosmetics_vendor_option_tab.display_name = settings.archetype_name
-	cosmetics_vendor_option_tab.ui_selection_order = settings.ui_selection_order
+	cosmetics_vendor_option_tab.display_name = archetype.archetype_name
+	cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
 
 	local weapon_cosmetics_vendor_option_tab = table.clone_instance(weapon_cosmetics_vendor_option_tab_definition)
 
@@ -494,8 +493,8 @@ for archetype_name, settings in pairs(Archetypes) do
 	weapon_cosmetics_vendor_option_tab.view_function_context = {
 		archetype_name = archetype_name,
 	}
-	weapon_cosmetics_vendor_option_tab.display_name = settings.archetype_name
-	weapon_cosmetics_vendor_option_tab.ui_selection_order = settings.ui_selection_order
+	weapon_cosmetics_vendor_option_tab.display_name = archetype.archetype_name
+	weapon_cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
 end
 
 table.sort(cosmetic_gear_tabs, function (a, b)

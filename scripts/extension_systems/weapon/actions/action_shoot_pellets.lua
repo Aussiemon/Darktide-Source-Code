@@ -394,7 +394,8 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 		local hit_results = pellet_hits.hit_results
 		local charge_level = pellet_hits.charge_level
 		local position = pellet_hits.fire_position:unbox()
-		local hit_mass_budget_attack, hit_mass_budget_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, damage_profile_lerp_values, is_critical_strike, player_unit, attack_types.ranged)
+		local attack_type_ranged = attack_types.ranged
+		local hit_mass_budget_attack, hit_mass_budget_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, damage_profile_lerp_values, is_critical_strike, player_unit, attack_type_ranged)
 		local target_index = 0
 		local exit_distance = 0
 		local penetrated = false
@@ -478,7 +479,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 					if not unit_to_damage_data_index[hit_unit] then
 						hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
 						target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
-						hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
+						hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, is_critical_strike, attack_type_ranged)
 						stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
 
 						local instakill = false
@@ -538,7 +539,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 							can_play_impact_fx, num_impact_fx = self:_can_play_impact_fx(hit_unit, num_impact_fx)
 
 							if can_play_impact_fx then
-								ImpactEffect.play(hit_unit, hit_actor, impact_damage_dealt, damage_type, hit_zone_name_or_nil, impact_attack_result, hit_position, hit_normal, direction, player_unit, IMPACT_FX_DATA, stop, attack_types.ranged, impact_damage_efficiency, damage_profile)
+								ImpactEffect.play(hit_unit, hit_actor, impact_damage_dealt, damage_type, hit_zone_name_or_nil, impact_attack_result, hit_position, hit_normal, direction, player_unit, IMPACT_FX_DATA, stop, attack_type_ranged, impact_damage_efficiency, damage_profile)
 							end
 						else
 							can_play_impact_fx, num_impact_fx = self:_can_play_impact_fx(hit_unit, num_impact_fx, 30)

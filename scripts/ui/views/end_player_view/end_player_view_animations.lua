@@ -660,9 +660,7 @@ local function get_havoc_positions(widget)
 	}
 	local positions = {}
 
-	for i = 1, #ids do
-		local id_name = ids[i]
-
+	for index, id_name in pairs(ids) do
 		if id_name then
 			positions[#positions + 1] = id_name
 		end
@@ -698,6 +696,7 @@ local havoc_fade_in_passes_by_id = {
 		"havoc_charge_1",
 		"havoc_charge_2",
 		"havoc_charge_3",
+		"havoc_order_text",
 	},
 	highest = {
 		"havoc_icon",
@@ -723,6 +722,7 @@ local havoc_fade_out_passes_by_id = {
 		"havoc_charge_1",
 		"havoc_charge_2",
 		"havoc_charge_3",
+		"havoc_order_text",
 	},
 	highest = {
 		"havoc_icon",
@@ -751,6 +751,7 @@ local havoc_concat_passes_by_id = {
 		"havoc_charge_ghost_1",
 		"havoc_charge_ghost_2",
 		"havoc_charge_ghost_3",
+		"havoc_order_text",
 	},
 	highest = {
 		"havoc_icon",
@@ -895,134 +896,199 @@ local function havoc_concat_init_by_id(id, widget, parent, params)
 
 	if id == "order" then
 		if positions_size > 1 then
+			widget_style.havoc_charge_1.vertical_alignment = "top"
+			widget_style.havoc_charge_2.vertical_alignment = "top"
+			widget_style.havoc_charge_3.vertical_alignment = "top"
+			widget_style.havoc_badge_background.vertical_alignment = "top"
+			widget_style.havoc_rank_badge.vertical_alignment = "top"
+			widget_style.previous_havoc_rank_value_1.vertical_alignment = "top"
+
+			if widget_style.previous_havoc_rank_value_2 then
+				widget_style.previous_havoc_rank_value_2.vertical_alignment = "top"
+			end
+
+			if widget_style.current_havoc_rank_value_1 then
+				widget_style.current_havoc_rank_value_1.vertical_alignment = "top"
+			end
+
+			if widget_style.current_havoc_rank_value_2 then
+				widget_style.current_havoc_rank_value_2.vertical_alignment = "top"
+			end
+
+			local charge_scale, badge_scale
+
 			if positions_size == max_positions then
-				widget_style.havoc_charge_1.offset[2] = -15
-				widget_style.havoc_charge_2.offset[2] = -15
-				widget_style.havoc_charge_3.offset[2] = -15
-				widget_style.havoc_badge_background.offset[2] = widget_style.havoc_badge_background.offset[2] + 10
-				widget_style.havoc_charge_1.offset[1] = -30
-				widget_style.havoc_charge_2.offset[1] = 0
-				widget_style.havoc_charge_3.offset[1] = 30
-				widget_style.previous_havoc_rank_value_1.offset[2] = widget_style.previous_havoc_rank_value_1.offset[2] + 10
-				widget_style.current_havoc_rank_value_1.offset[2] = widget_style.current_havoc_rank_value_1.offset[2] + 10
+				local start_badge_offset = 20
+				local numbers_added_offset = 40
+				local charges_added_offset = 120
+
+				widget_style.havoc_rank_badge.offset[2] = start_badge_offset
+				widget_style.havoc_badge_background.offset[2] = start_badge_offset + 20
+				widget_style.previous_havoc_rank_value_1.offset[2] = start_badge_offset + numbers_added_offset
 
 				if widget_style.previous_havoc_rank_value_2 then
 					widget_style.previous_havoc_rank_value_1.offset[1] = widget_style.previous_havoc_rank_value_1.offset[1] + 5
 					widget_style.previous_havoc_rank_value_2.offset[1] = widget_style.previous_havoc_rank_value_2.offset[1] - 5
-					widget_style.previous_havoc_rank_value_2.offset[2] = widget_style.current_havoc_rank_value_2.offset[2] + 10
+					widget_style.previous_havoc_rank_value_2.offset[2] = start_badge_offset + numbers_added_offset
+				end
+
+				if widget_style.current_havoc_rank_value_1 then
+					widget_style.current_havoc_rank_value_1.offset[2] = start_badge_offset + numbers_added_offset
 				end
 
 				if widget_style.current_havoc_rank_value_2 then
 					widget_style.current_havoc_rank_value_1.offset[1] = widget_style.current_havoc_rank_value_1.offset[1] + 5
 					widget_style.current_havoc_rank_value_2.offset[1] = widget_style.current_havoc_rank_value_2.offset[1] - 5
-					widget_style.current_havoc_rank_value_2.offset[2] = widget_style.current_havoc_rank_value_2.offset[2] + 5
+					widget_style.current_havoc_rank_value_2.offset[2] = start_badge_offset + numbers_added_offset
 				end
-			else
-				widget_style.havoc_charge_1.offset[2] = 10
-				widget_style.havoc_charge_2.offset[2] = 10
-				widget_style.havoc_charge_3.offset[2] = 10
-				widget_style.havoc_badge_background.offset[2] = widget_style.havoc_badge_background.offset[2] + 10
-				widget_style.havoc_charge_1.offset[1] = -45
+
+				widget_style.havoc_charge_1.offset[1] = -20
 				widget_style.havoc_charge_2.offset[1] = 0
-				widget_style.havoc_charge_3.offset[1] = 45
-				widget_style.previous_havoc_rank_value_1.offset[2] = widget_style.previous_havoc_rank_value_1.offset[2] + 5
-				widget_style.current_havoc_rank_value_1.offset[2] = widget_style.current_havoc_rank_value_1.offset[2] + 5
+				widget_style.havoc_charge_3.offset[1] = 20
+				widget_style.havoc_charge_1.offset[2] = start_badge_offset + charges_added_offset
+				widget_style.havoc_charge_2.offset[2] = start_badge_offset + charges_added_offset
+				widget_style.havoc_charge_3.offset[2] = start_badge_offset + charges_added_offset
+				badge_scale = 0.8
+				charge_scale = 0.4
+			else
+				local start_badge_offset = 40
+				local numbers_added_offset = 45
+				local charges_added_offset = 140
+
+				widget_style.havoc_rank_badge.offset[2] = start_badge_offset
+				widget_style.havoc_badge_background.offset[2] = start_badge_offset + 35
+				widget_style.previous_havoc_rank_value_1.offset[2] = start_badge_offset + numbers_added_offset
 
 				if widget_style.previous_havoc_rank_value_2 then
 					widget_style.previous_havoc_rank_value_1.offset[1] = widget_style.previous_havoc_rank_value_1.offset[1] + 2
 					widget_style.previous_havoc_rank_value_2.offset[1] = widget_style.previous_havoc_rank_value_2.offset[1] - 2
-					widget_style.previous_havoc_rank_value_2.offset[2] = widget_style.previous_havoc_rank_value_2.offset[2] + 5
+					widget_style.previous_havoc_rank_value_2.offset[2] = start_badge_offset + numbers_added_offset
+				end
+
+				if widget_style.current_havoc_rank_value_1 then
+					widget_style.current_havoc_rank_value_1.offset[2] = start_badge_offset + numbers_added_offset
 				end
 
 				if widget_style.current_havoc_rank_value_2 then
 					widget_style.current_havoc_rank_value_1.offset[1] = widget_style.current_havoc_rank_value_1.offset[1] + 2
 					widget_style.current_havoc_rank_value_2.offset[1] = widget_style.current_havoc_rank_value_2.offset[1] - 2
-					widget_style.current_havoc_rank_value_2.offset[2] = widget_style.current_havoc_rank_value_2.offset[2] + 5
+					widget_style.current_havoc_rank_value_2.offset[2] = start_badge_offset + numbers_added_offset
 				end
+
+				widget_style.havoc_charge_1.offset[1] = -40
+				widget_style.havoc_charge_2.offset[1] = 0
+				widget_style.havoc_charge_3.offset[1] = 40
+				widget_style.havoc_charge_1.offset[2] = start_badge_offset + charges_added_offset
+				widget_style.havoc_charge_2.offset[2] = start_badge_offset + charges_added_offset
+				widget_style.havoc_charge_3.offset[2] = start_badge_offset + charges_added_offset
+				badge_scale = 0.9
+				charge_scale = 0.6
 			end
 
-			local style_names = havoc_concat_passes_by_id[id]
-			local lerp_from_positions = math.ilerp(1, max_positions, positions_size)
+			widget_style.havoc_charge_1.size = {
+				widget_style.havoc_charge_1.size[1] * charge_scale,
+				widget_style.havoc_charge_1.size[2] * charge_scale,
+			}
+			widget_style.havoc_charge_2.size = {
+				widget_style.havoc_charge_2.size[1] * charge_scale,
+				widget_style.havoc_charge_2.size[2] * charge_scale,
+			}
+			widget_style.havoc_charge_3.size = {
+				widget_style.havoc_charge_3.size[1] * charge_scale,
+				widget_style.havoc_charge_3.size[2] * charge_scale,
+			}
+			widget_style.havoc_badge_background.size = {
+				widget_style.havoc_badge_background.size[1] * badge_scale,
+				widget_style.havoc_badge_background.size[2] * badge_scale,
+			}
+			widget_style.havoc_rank_badge.size = {
+				widget_style.havoc_rank_badge.size[1] * badge_scale,
+				widget_style.havoc_rank_badge.size[2] * badge_scale,
+			}
+			widget_style.previous_havoc_rank_value_1.size = {
+				widget_style.previous_havoc_rank_value_1.size[1] * badge_scale,
+				widget_style.previous_havoc_rank_value_1.size[2] * badge_scale,
+			}
 
-			if style_names then
-				for i = 1, #style_names do
-					local style_name = style_names[i]
-					local pass_style = widget_style[style_name]
+			if widget_style.previous_havoc_rank_value_2 then
+				widget_style.previous_havoc_rank_value_2.size = {
+					widget_style.previous_havoc_rank_value_2.size[1] * badge_scale,
+					widget_style.previous_havoc_rank_value_2.size[2] * badge_scale,
+				}
+			end
 
-					if positions_size == 1 then
-						return
-					end
+			if widget_style.current_havoc_rank_value_1 then
+				widget_style.current_havoc_rank_value_1.size = {
+					widget_style.current_havoc_rank_value_1.size[1] * badge_scale,
+					widget_style.current_havoc_rank_value_1.size[2] * badge_scale,
+				}
+			end
 
-					if pass_style then
-						local end_size_percent = math.lerp(1, 0.5, lerp_from_positions)
-
-						pass_style.size[1] = pass_style.size[1] * end_size_percent
-						pass_style.size[2] = pass_style.size[2] * end_size_percent
-
-						local start_y = pass_style.offset and pass_style.offset[2]
-						local max_y_offset = start_y - 100
-						local end_y = math.lerp(start_y, max_y_offset, lerp_from_positions)
-
-						pass_style.offset[2] = end_y
-					end
-				end
+			if widget_style.current_havoc_rank_value_2 then
+				widget_style.current_havoc_rank_value_2.size = {
+					widget_style.current_havoc_rank_value_2.size[1] * badge_scale,
+					widget_style.current_havoc_rank_value_2.size[2] * badge_scale,
+				}
 			end
 		end
 	elseif id == "highest" then
 		if positions_size > 1 then
-			widget_style.highest_havoc_description.offset[2] = -20
-			widget_style.highest_havoc_rank.offset[2] = 20
-			widget_style.havoc_icon.offset[2] = 20
-
 			local added_offset = 0
 
-			if positions_size == 2 then
-				added_offset = id_position < positions_size and -40 or 40
+			if positions_size == 2 and id_position < positions_size then
+				widget_style.highest_havoc_description.vertical_alignment = "top"
+				widget_style.highest_havoc_rank.vertical_alignment = "top"
+				widget_style.havoc_icon.vertical_alignment = "top"
+
+				local start_offset = 80
+
+				widget_style.highest_havoc_description.offset[2] = start_offset
+				widget_style.highest_havoc_rank.offset[2] = start_offset + 30
+				widget_style.havoc_icon.offset[2] = start_offset + 30
+			elseif positions_size == 2 and id_position == positions_size then
+				widget_style.highest_havoc_description.vertical_alignment = "bottom"
+				widget_style.highest_havoc_rank.vertical_alignment = "bottom"
+				widget_style.havoc_icon.vertical_alignment = "bottom"
+
+				local start_offset = -80
+
+				widget_style.highest_havoc_description.offset[2] = start_offset - 50
+				widget_style.highest_havoc_rank.offset[2] = start_offset
+				widget_style.havoc_icon.offset[2] = start_offset
+			else
+				local start_offset = -20
+
+				widget_style.highest_havoc_description.offset[2] = start_offset
+				widget_style.highest_havoc_rank.offset[2] = start_offset + 40
+				widget_style.havoc_icon.offset[2] = start_offset + 40
 			end
 
-			local style_names = havoc_concat_passes_by_id[id]
-
-			if style_names then
-				for i = 1, #style_names do
-					local style_name = style_names[i]
-					local pass_style = widget_style[style_name]
-
-					if pass_style then
-						pass_style.offset[2] = pass_style.offset[2] + added_offset
-					end
-				end
-			end
+			widget_style.havoc_icon.font_size = 48
+			widget_style.highest_havoc_rank.font_size = 36
+			widget_style.havoc_icon.offset[1] = -20
+			widget_style.highest_havoc_rank.offset[1] = 20
 		end
 	elseif id == "week" and positions_size > 1 then
 		widget_style.havoc_reward_week_icon_glow.color[1] = 0
 		widget_style.havoc_reward_week_icon.color[1] = 0
 		widget_style.havoc_reward_week_icon_glow.in_focus_color[1] = 0
 		widget_style.havoc_reward_week_icon.in_focus_color[1] = 0
-		widget_style.havoc_week_description.offset[2] = -20
+		widget_style.week_havoc_icon.vertical_alignment = "bottom"
+		widget_style.week_havoc_rank.vertical_alignment = "bottom"
+		widget_style.havoc_week_description.vertical_alignment = "bottom"
+
+		local start_offset
+
+		start_offset = positions_size == 2 and -70 or -40
+		widget_style.havoc_week_description.offset[2] = start_offset - 50
+		widget_style.week_havoc_rank.offset[2] = start_offset
+		widget_style.week_havoc_icon.offset[2] = start_offset
 		widget_style.week_havoc_icon.offset[1] = widget_style.havoc_icon.offset[1]
 		widget_style.week_havoc_rank.offset[1] = widget_style.highest_havoc_rank.offset[1]
-		widget_style.week_havoc_icon.offset[2] = 20
-		widget_style.week_havoc_rank.offset[2] = 20
-		widget_style.week_havoc_icon.font_size = widget_style.havoc_icon.font_size
-		widget_style.week_havoc_rank.font_size = widget_style.highest_havoc_rank.font_size
-
-		local lerp_from_positions = math.ilerp(1, max_positions, positions_size)
-		local style_names = havoc_concat_passes_by_id[id]
-
-		if style_names then
-			for i = 1, #style_names do
-				local style_name = style_names[i]
-				local pass_style = widget_style[style_name]
-
-				if pass_style then
-					local start_y = pass_style.offset and pass_style.offset[2]
-					local max_y_offset = start_y + 90
-					local end_y = math.lerp(start_y, max_y_offset, lerp_from_positions)
-
-					pass_style.offset[2] = end_y
-				end
-			end
-		end
+		widget_style.week_havoc_icon.font_size = 48
+		widget_style.week_havoc_rank.font_size = 36
+		widget_style.week_havoc_icon.offset[1] = -20
+		widget_style.week_havoc_rank.offset[1] = 20
 	end
 end
 
@@ -1047,6 +1113,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 		end_time = reward_1_start_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			local start_id = get_havoc_id_by_wanted_position(widget, 1)
+			local positions = get_havoc_positions(widget)
 
 			havoc_fade_in_init_by_id(start_id, widget, parent, params)
 		end,
@@ -1227,6 +1294,8 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			local widget_style = widget.style
 			local start_id = get_havoc_id_by_wanted_position(widget, 1)
+			local positions = get_havoc_positions(widget)
+			local positions_size = #positions
 
 			if start_id == "order" then
 				widget_style.havoc_charge_ghost_1.color[1] = 0
@@ -1276,6 +1345,13 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 					params.pass_params.current_havoc_rank_value_2.start_color = widget_style.current_havoc_rank_value_2.start_color
 					params.pass_params.current_havoc_rank_value_2.target_color = widget_style.current_havoc_rank_value_2.in_focus_color
 				end
+
+				if widget_style.havoc_order_text and positions_size > 1 then
+					widget_style.havoc_order_text.text_color = Color.black(0, true)
+					params.pass_params.havoc_order_text.pass_color = Color.black(0, true)
+					params.pass_params.havoc_order_text.start_color = Color.black(0, true)
+					params.pass_params.havoc_order_text.target_color = Color.black(0, true)
+				end
 			end
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
@@ -1295,6 +1371,10 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			local start_id = get_havoc_id_by_wanted_position(widget, 2)
 
 			havoc_fade_in_init_by_id(start_id, widget, parent, params)
+
+			if start_id then
+				parent:play_sound(UISoundEvents.havoc_eor_card_short)
+			end
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			if not params.pass_params then
@@ -1330,6 +1410,10 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 			local start_id = get_havoc_id_by_wanted_position(widget, 3)
 
 			havoc_fade_in_init_by_id(start_id, widget, parent, params)
+
+			if start_id then
+				parent:play_sound(UISoundEvents.havoc_eor_card_short)
+			end
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			if not params.pass_params then
@@ -1363,6 +1447,12 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			local positions = get_havoc_positions(widget)
 
+			if #positions == 1 then
+				return
+			end
+
+			parent:play_sound(UISoundEvents.havoc_eor_card_full)
+
 			for i = 1, #positions do
 				local id = get_havoc_id_by_wanted_position(widget, i)
 
@@ -1371,6 +1461,10 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local positions = get_havoc_positions(widget)
+
+			if #positions == 1 then
+				return
+			end
 
 			for i = 1, #positions do
 				local id = get_havoc_id_by_wanted_position(widget, i)
@@ -1389,58 +1483,90 @@ local function _create_dim_havoc_animation(animation_table)
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params.pass_params = params.pass_params or {}
 
+			local widget_style = widget.style
 			local positions = get_havoc_positions(widget)
+			local max_positions = table.size(havoc_concat_passes_by_id)
 			local positions_size = #positions
 
-			if positions_size == 1 then
-				return
-			end
+			for i = 1, positions_size do
+				local position = positions[i]
 
-			local order_styles = havoc_concat_passes_by_id.order
-			local widget_style = widget.style
+				for f = 1, #havoc_concat_passes_by_id[position] do
+					local style_name = havoc_concat_passes_by_id[position][f]
 
-			if order_styles then
-				for i = 1, #order_styles do
-					local style_name = order_styles[i]
-					local pass_style = widget_style[style_name]
-
-					if pass_style then
+					if widget_style[style_name] then
 						params.pass_params[style_name] = params.pass_params[style_name] or {}
-						params.pass_params[style_name].final_order_offset_start = pass_style.offset[2]
+						params.pass_params[style_name].pass_color = widget_style[style_name].text_color or widget_style[style_name].color
+						params.pass_params[style_name].target_color = table.clone(params.pass_params[style_name].pass_color)
+						params.pass_params[style_name].start_color = table.clone(params.pass_params[style_name].pass_color)
+						params.pass_params[style_name].start_color[1] = params.pass_params[style_name].start_color[1] > 0 and 127 or 0
 					end
 				end
+			end
+
+			if widget_style.havoc_charge_1 then
+				if positions_size == max_positions then
+					local charge_styles = {
+						"havoc_charge_1",
+						"havoc_charge_2",
+						"havoc_charge_3",
+					}
+
+					for i = 1, #charge_styles do
+						local charge_style = charge_styles[i]
+
+						params.pass_params[charge_style].pass_color = widget_style[charge_style].color
+						params.pass_params[charge_style].start_color = widget_style[charge_style].start_color
+						params.pass_params[charge_style].target_color = widget_style[charge_style].in_focus_color
+					end
+
+					params.pass_params.havoc_charge_3.target_color = widget_style.havoc_charge_3.in_focus_color
+				end
+
+				local ghost_styles = {
+					"havoc_charge_ghost_1",
+					"havoc_charge_ghost_2",
+					"havoc_charge_ghost_3",
+				}
+
+				for i = 1, #ghost_styles do
+					local ghost_style = ghost_styles[i]
+
+					widget_style[ghost_style].color = Color.black(0, true)
+					params.pass_params[ghost_style].pass_color = Color.black(0, true)
+					params.pass_params[ghost_style].start_color = Color.black(0, true)
+					params.pass_params[ghost_style].target_color = Color.black(0, true)
+				end
+			end
+
+			if widget_style.havoc_order_text and positions_size == 1 then
+				widget_style.havoc_order_text.text_color = Color.black(0, true)
+				params.pass_params.havoc_order_text.pass_color = widget_style.havoc_order_text.text_color
+				params.pass_params.havoc_order_text.target_color = table.clone(params.pass_params.havoc_order_text.pass_color)
+				params.pass_params.havoc_order_text.start_color = table.clone(params.pass_params.havoc_order_text.pass_color)
+				params.pass_params.havoc_order_text.start_color[1] = 0
 			end
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local positions = get_havoc_positions(widget)
-			local positions_size = #positions
-
-			if positions_size == 1 then
-				return
-			end
-
-			local order_styles = havoc_concat_passes_by_id.order
 			local widget_style = widget.style
-			local max_positions = table.size(havoc_concat_passes_by_id)
+			local color_utils_color_lerp = _color_utils_color_lerp
 
-			if order_styles then
-				for i = 1, #order_styles do
-					local style_name = order_styles[i]
+			for i = 1, #positions do
+				local position = positions[i]
+
+				for f = 1, #havoc_concat_passes_by_id[position] do
+					local style_name = havoc_concat_passes_by_id[position][f]
 					local pass_style = widget_style[style_name]
+					local pass_params = params.pass_params and params.pass_params[style_name]
 
-					if pass_style and params.pass_params[style_name] and params.pass_params[style_name].final_order_offset_start then
-						local start_y = params.pass_params[style_name].final_order_offset_start
-						local end_y
+					if pass_style and pass_params then
+						local pass_color = pass_params.pass_color
+						local start_color = pass_params.start_color
+						local target_color = pass_params.target_color
+						local color_progress = _math_ease_sine(progress)
 
-						if positions_size == max_positions then
-							end_y = start_y + 50
-						else
-							end_y = start_y + 20
-						end
-
-						local progress_y = math.lerp(start_y, end_y, progress)
-
-						pass_style.offset[2] = progress_y
+						color_utils_color_lerp(target_color, start_color, color_progress, pass_color)
 					end
 				end
 			end

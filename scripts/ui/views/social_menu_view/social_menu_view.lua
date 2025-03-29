@@ -26,4 +26,8 @@ SocialMenuView.cb_find_player_pressed = function (self)
 	end
 end
 
+SocialMenuView._handle_input = function (self)
+	return
+end
+
 return SocialMenuView

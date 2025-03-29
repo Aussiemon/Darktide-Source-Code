@@ -11,9 +11,7 @@ local pickup_data = {
 	name = "prismata_case_01_luggable",
 	pickup_sound = "wwise/events/world/play_int_battery_pick_up",
 	smart_tag_target_type = "pickup",
-	spawn_weighting = 1,
 	unit_name = "content/pickups/luggables/prismata_case_01/luggable_prismata_case_01",
-	unit_template_name = "pickup",
 	projectile_template = ProjectileTemplates.luggable,
 	spawn_offset = Vector3Box(0, 0, 0.4),
 }

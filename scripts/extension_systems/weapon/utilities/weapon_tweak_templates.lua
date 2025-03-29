@@ -11,20 +11,21 @@ local WeaponChargeTemplates = require("scripts/settings/equipment/weapon_handlin
 local WeaponDodgeTemplates = require("scripts/settings/dodge/weapon_dodge_templates")
 local WeaponHandlingTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_handling_templates")
 local WeaponMovementCurveModifierTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_movement_curve_modifier_templates")
+local WeaponShoutTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_shout_templates")
 local WeaponSizeOfFlameTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_size_of_flame_templates")
 local WeaponSprintTemplates = require("scripts/settings/sprint/weapon_sprint_templates")
 local WeaponStaminaTemplates = require("scripts/settings/stamina/weapon_stamina_templates")
 local WeaponToughnessTemplates = require("scripts/settings/toughness/weapon_toughness_templates")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
+local WeaponTweakStatsUiData = require("scripts/settings/equipment/weapon_tweak_stats_ui_data")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponWarpChargeTemplates = require("scripts/settings/warp_charge/weapon_warp_charge_templates")
-local WeaponTweakStatsUIData = require("scripts/settings/equipment/weapon_tweak_stats_ui_data")
 local template_types = WeaponTweakTemplateSettings.template_types
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFAULT_STAT_TRAIT_VALUE = WeaponTweakTemplateSettings.DEFAULT_STAT_TRAIT_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
-local WeaponTweakStatsUIDataStats = WeaponTweakStatsUIData.stats
+local WeaponTweakStatsUiDataStats = WeaponTweakStatsUiData.stats
 local WeaponTweakTemplates = {}
 local math_lerp = math.lerp
 local math_clamp = math.clamp
@@ -38,6 +39,7 @@ WeaponTweakTemplates.preparse_weapon_template = function (weapon_template)
 	base_template_lookup[template_types.suppression] = _preparse_templates(weapon_template, template_types.suppression)
 	base_template_lookup[template_types.spread] = _preparse_templates(weapon_template, template_types.spread)
 	base_template_lookup[template_types.weapon_handling] = _preparse_templates(weapon_template, template_types.weapon_handling)
+	base_template_lookup[template_types.weapon_shout] = _preparse_templates(weapon_template, template_types.weapon_shout)
 	base_template_lookup[template_types.dodge] = _preparse_templates(weapon_template, template_types.dodge)
 	base_template_lookup[template_types.sprint] = _preparse_templates(weapon_template, template_types.sprint)
 	base_template_lookup[template_types.stamina] = _preparse_templates(weapon_template, template_types.stamina)
@@ -62,6 +64,7 @@ WeaponTweakTemplates.create = function (lerp_values, weapon_template, override_l
 	templates[template_types.spread] = _build_templates(SpreadTemplates, base_template_lookup[template_types.spread], lerp_values[template_types.spread], override_lerp_value_or_nil)
 	templates[template_types.suppression] = _build_templates(SuppressionTemplates, base_template_lookup[template_types.suppression], lerp_values[template_types.suppression], override_lerp_value_or_nil)
 	templates[template_types.weapon_handling] = _build_templates(WeaponHandlingTemplates, base_template_lookup[template_types.weapon_handling], lerp_values[template_types.weapon_handling], override_lerp_value_or_nil)
+	templates[template_types.weapon_shout] = _build_templates(WeaponShoutTemplates, base_template_lookup[template_types.weapon_shout], lerp_values[template_types.weapon_shout], override_lerp_value_or_nil)
 	templates[template_types.dodge] = _build_templates(WeaponDodgeTemplates, base_template_lookup[template_types.dodge], lerp_values[template_types.dodge], override_lerp_value_or_nil)
 	templates[template_types.sprint] = _build_templates(WeaponSprintTemplates, base_template_lookup[template_types.sprint], lerp_values[template_types.sprint], override_lerp_value_or_nil)
 	templates[template_types.stamina] = _build_templates(WeaponStaminaTemplates, base_template_lookup[template_types.stamina], lerp_values[template_types.stamina], override_lerp_value_or_nil)
@@ -486,21 +489,22 @@ function _build_templates(source_templates, base_template_lookup, lerp_values, o
 end
 
 local BASE_TEMPLATES = {
-	[template_types.recoil] = RecoilTemplates,
-	[template_types.spread] = SpreadTemplates,
-	[template_types.sway] = SwayTemplates,
-	[template_types.suppression] = SuppressionTemplates,
-	[template_types.dodge] = WeaponDodgeTemplates,
-	[template_types.sprint] = WeaponSprintTemplates,
-	[template_types.stamina] = WeaponStaminaTemplates,
-	[template_types.toughness] = WeaponToughnessTemplates,
 	[template_types.ammo] = WeaponAmmoTemplates,
 	[template_types.burninating] = WeaponBurninatingTemplates,
-	[template_types.size_of_flame] = WeaponSizeOfFlameTemplates,
-	[template_types.weapon_handling] = WeaponHandlingTemplates,
-	[template_types.movement_curve_modifier] = WeaponMovementCurveModifierTemplates,
 	[template_types.charge] = WeaponChargeTemplates,
+	[template_types.dodge] = WeaponDodgeTemplates,
+	[template_types.movement_curve_modifier] = WeaponMovementCurveModifierTemplates,
+	[template_types.recoil] = RecoilTemplates,
+	[template_types.size_of_flame] = WeaponSizeOfFlameTemplates,
+	[template_types.spread] = SpreadTemplates,
+	[template_types.sprint] = WeaponSprintTemplates,
+	[template_types.stamina] = WeaponStaminaTemplates,
+	[template_types.suppression] = SuppressionTemplates,
+	[template_types.sway] = SwayTemplates,
+	[template_types.toughness] = WeaponToughnessTemplates,
 	[template_types.warp_charge] = WeaponWarpChargeTemplates,
+	[template_types.weapon_handling] = WeaponHandlingTemplates,
+	[template_types.weapon_shout] = WeaponShoutTemplates,
 }
 
 WeaponTweakTemplates.get_base_stats = function (weapon_template, template_type, target)
@@ -582,7 +586,7 @@ WeaponTweakTemplates.get_base_stats_lerp_values = function (stat_data)
 end
 
 WeaponTweakTemplates.get_stat_ui_data = function (template_type, stat_data, path_length_offset)
-	local base_template_ui_data = WeaponTweakStatsUIDataStats[template_type]
+	local base_template_ui_data = WeaponTweakStatsUiDataStats[template_type]
 
 	if not base_template_ui_data then
 		return nil

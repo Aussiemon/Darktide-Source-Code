@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/first_person/first_person_look_delta_animation_control.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local LookDelta = require("scripts/utilities/look_delta")
 local Recoil = require("scripts/utilities/recoil")
 local Sway = require("scripts/utilities/sway")
@@ -91,14 +91,20 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 		elseif self._character_state_component.state_name == "minigame" then
 			settings = look_delta_template.inspect
 
-			local is_level_unit = true
-			local level_unit_id = self._minigame_character_state_component.interface_unit_id
-			local interact_unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
-			local interact_unit_pos = Unit.world_position(interact_unit, 1)
-			local first_person_pos = first_person_component.position
-			local player_to_interact_unit_dir = Vector3.normalize(interact_unit_pos - first_person_pos)
+			local minigame_character_state = self._minigame_character_state_component
 
-			previous_rotation = Quaternion.look(player_to_interact_unit_dir, Quaternion.up(rotation))
+			if minigame_character_state.interface_level_unit_id ~= NetworkConstants.invalid_level_unit_id then
+				local is_level_unit = true
+				local level_unit_id = minigame_character_state.interface_level_unit_id
+				local interact_unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
+				local interact_unit_pos = Unit.world_position(interact_unit, 1)
+				local first_person_pos = first_person_component.position
+				local player_to_interact_unit_dir = Vector3.normalize(interact_unit_pos - first_person_pos)
+
+				previous_rotation = Quaternion.look(player_to_interact_unit_dir, Quaternion.up(rotation))
+			else
+				previous_rotation = self._previous_rotation and self._previous_rotation:unbox() or first_person_component.previous_rotation
+			end
 		else
 			settings = look_delta_template.idle
 			previous_rotation = self._previous_rotation and self._previous_rotation:unbox() or first_person_component.previous_rotation

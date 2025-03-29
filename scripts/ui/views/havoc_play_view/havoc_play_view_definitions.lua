@@ -2125,9 +2125,9 @@ local badge_definitions = {
 	size = badge_size,
 	pass_template_function = function (parent, config)
 		local default_rank_texture = rank_badges[1].texture
-		local icon_size = {
-			75,
-			75,
+		local circle_size = {
+			100,
+			100,
 		}
 		local letter_size = {
 			60.199999999999996,
@@ -2155,14 +2155,15 @@ local badge_definitions = {
 				value_id = "havoc_badge_background",
 				style = {
 					horizontal_alignment = "center",
+					vertical_alignment = "center",
 					offset = {
 						0,
-						74,
+						40,
 						4,
 					},
 					size = {
-						icon_size[1],
-						icon_size[2],
+						circle_size[1],
+						circle_size[2],
 					},
 					color = Color.black(255, true),
 				},

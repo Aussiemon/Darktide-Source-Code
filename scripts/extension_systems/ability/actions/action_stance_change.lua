@@ -2,21 +2,22 @@
 
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
+local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local buff_proc_events = BuffSettings.proc_events
 local proc_events = BuffSettings.proc_events
 local reload_kinds = ReloadStates.reload_kinds
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local ActionStanceChange = class("ActionStanceChange", "ActionAbilityBase")
 
 ActionStanceChange.init = function (self, action_context, action_params, action_settings)
@@ -50,6 +51,7 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	local anim_3p = action_settings.anim_3p or anim
 	local block_weapon_actions = action_settings.block_weapon_actions
 	local refill_toughness = action_settings.refill_toughness
+	local vent_warp_charge = action_settings.vent_warp_charge
 	local vo_tag = action_settings.vo_tag
 	local player_unit = self._player_unit
 	local ability_template_tweak_data = self._ability_template_tweak_data
@@ -150,6 +152,12 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 
 	if self._is_server and refill_toughness then
 		Toughness.recover_max_toughness(player_unit, "ability stance")
+	end
+
+	if self._is_server and vent_warp_charge then
+		local warp_charge_component = self._unit_data_extension:write_component("warp_charge")
+
+		WarpCharge.decrease_immediate(vent_warp_charge, warp_charge_component, player_unit)
 	end
 
 	if action_settings then

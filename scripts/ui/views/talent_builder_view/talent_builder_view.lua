@@ -12,7 +12,6 @@ local TalentBuilderViewSummaryBlueprints = require("scripts/ui/views/talent_buil
 local TalentBuilderViewTutorialBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_tutorial_blueprints")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local Text = require("scripts/utilities/ui/text")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")

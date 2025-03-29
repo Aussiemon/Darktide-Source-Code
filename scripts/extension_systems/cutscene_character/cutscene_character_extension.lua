@@ -107,6 +107,10 @@ CutsceneCharacterExtension.breed_name = function (self)
 	return self._breed_name
 end
 
+CutsceneCharacterExtension.breed = function (self)
+	return Breeds[self._breed_name]
+end
+
 CutsceneCharacterExtension.slot = function (self)
 	return self._slot
 end
@@ -251,6 +255,21 @@ end
 
 CutsceneCharacterExtension.wield_slot = function (self, slot_name)
 	self._profile_spawner:wield_slot(slot_name)
+end
+
+CutsceneCharacterExtension.wield_slot_set_visibility = function (self, state)
+	if self._profile_spawner._character_spawn_data ~= nil then
+		local slot = self._profile_spawner._character_spawn_data.wielded_slot
+
+		slot.wants_hidden_by_gameplay_1p = not state
+		slot.wants_hidden_by_gameplay_3p = not state
+
+		self._profile_spawner:_update_items_visibility()
+	end
+end
+
+CutsceneCharacterExtension.set_visibility = function (self, state)
+	self._profile_spawner:set_visibility(state)
 end
 
 CutsceneCharacterExtension.set_weapon_animation_event = function (self, animation_event)

@@ -1,20 +1,20 @@
 ﻿-- chunkname: @scripts/ui/views/store_item_detail_view/store_item_detail_view.lua
 
+local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ContentBlueprints = require("scripts/ui/views/store_view/store_view_content_blueprints")
 local Definitions = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_definitions")
-local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
+local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Offer = require("scripts/utilities/offer")
 local Personalities = require("scripts/settings/character/personalities")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local StoreItemDetailViewSettings = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_settings")
 local Text = require("scripts/utilities/ui/text")
-local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
@@ -53,6 +53,8 @@ StoreItemDetailView.init = function (self, settings, context)
 	self._profile = player:profile()
 	self._aquilas_showing = false
 	self._url_textures = {}
+	self._zoom_speed, self._zoom_level, self._zoom_delay = 0, 1, 0
+	self._has_purchased_item = false
 
 	if IS_PLAYSTATION then
 		self._ps_store_icon_showing = false
@@ -199,7 +201,7 @@ StoreItemDetailView.on_enter = function (self)
 		30,
 	})
 
-	self._items = context.parent:_extract_items(offer)
+	self._items = Offer.extract_items(offer)
 
 	self:_create_loading_widget()
 	self:_destroy_aquilas_presentation()
@@ -333,7 +335,7 @@ StoreItemDetailView._setup_item_presentation = function (self)
 			element.offer = offer
 			self._selected_element = element
 
-			local profile = self:_get_generic_profile_from_item(item)
+			local profile = self:_generic_profile_from_item(item)
 			local slots = item.slots
 
 			if slots then
@@ -342,8 +344,8 @@ StoreItemDetailView._setup_item_presentation = function (self)
 
 			element.dummy_profile = profile
 
-			local title_text = ItemUtils.display_name(element.item)
-			local item_type = ItemUtils.type_display_name(element.item)
+			local title_text = Items.display_name(element.item)
+			local item_type = Items.type_display_name(element.item)
 
 			self:_setup_details(title_text, item_type)
 			self:_setup_description_grid(element.item)
@@ -352,7 +354,7 @@ StoreItemDetailView._setup_item_presentation = function (self)
 	else
 		local title_text = offer.sku.name or ""
 		local item_type_lookup = offer.description.type
-		local item_type_display_name_localized = ItemUtils.type_display_name({
+		local item_type_display_name_localized = Items.type_display_name({
 			item_type = item_type_lookup,
 		})
 
@@ -394,11 +396,11 @@ StoreItemDetailView._setup_details = function (self, title, type)
 	local title_options = UIFonts.get_font_options_by_style(title_style)
 	local sub_title_options = UIFonts.get_font_options_by_style(sub_title_style)
 	local max_width = self._ui_scenegraph.title.size[1]
-	local title_width, title_height = self:_text_size(self._widgets_by_name.title.content.text, title_style.font_type, title_style.font_size, {
+	local _, title_height = self:_text_size(self._widgets_by_name.title.content.text, title_style.font_type, title_style.font_size, {
 		max_width,
 		math.huge,
 	}, title_options)
-	local sub_title_width, sub_title_height = self:_text_size(self._widgets_by_name.title.content.sub_text, sub_title_style.font_type, sub_title_style.font_size, {
+	local _, sub_title_height = self:_text_size(self._widgets_by_name.title.content.sub_text, sub_title_style.font_type, sub_title_style.font_size, {
 		max_width,
 		math.huge,
 	}, sub_title_options)
@@ -442,7 +444,7 @@ end
 StoreItemDetailView._setup_item_price = function (self)
 	self:_destroy_details()
 
-	local is_owned, owned_items = self:_is_owned(self._items)
+	local is_owned, _ = self:_is_owned(self._items)
 	local offer = self._store_item.offer
 
 	if is_owned then
@@ -496,7 +498,7 @@ StoreItemDetailView._setup_item_price = function (self)
 		local price_data = offer.price.amount
 		local type = price_data.type
 		local price = price_data.amount
-		local price_text = TextUtils.format_currency(price)
+		local price_text = Text.format_currency(price)
 		local wallet_settings = WalletSettings[type]
 		local content = price_widget.content
 		local style = price_widget.style
@@ -561,7 +563,7 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	local price_data = offer.price.amount
 	local type = price_data.type
 	local price = price_data.amount
-	local price_text = TextUtils.format_currency(price)
+	local price_text = Text.format_currency(price)
 
 	content.has_price_tag = true
 	content.price_text = price_text
@@ -584,7 +586,7 @@ StoreItemDetailView._setup_bundle_button = function (self)
 
 	if offer.discount then
 		style.discount_price.text_color = Color.terminal_text_body(255, true)
-		content.discount_price = string.format("{#strike(true)}%s{#strike(false)}", TextUtils.format_currency(offer.discount))
+		content.discount_price = string.format("{#strike(true)}%s{#strike(false)}", Text.format_currency(offer.discount))
 	else
 		content.discount_price = ""
 	end
@@ -617,12 +619,12 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	local title_max_width = (title_style.size and title_style.size[1] or size[1]) + (title_style.size_addition and title_style.size_addition[1] or 0)
 	local description_max_width = (style.description.size and style.description.size[1] or size[1]) + (style.description.size_addition and style.description.size_addition[1] or 0)
 	local title_style_options = UIFonts.get_font_options_by_style(title_style)
-	local title_width, title_height = self:_text_size(content.title, title_style.font_type, title_style.font_size, {
+	local _, title_height = self:_text_size(content.title, title_style.font_type, title_style.font_size, {
 		title_max_width,
 		1080,
 	}, title_style_options)
 	local description_style_options = UIFonts.get_font_options_by_style(style.description)
-	local description_width, description_height = self:_text_size(content.description, style.description.font_type, style.description.font_size, {
+	local _, description_height = self:_text_size(content.description, style.description.font_type, style.description.font_size, {
 		description_max_width,
 		1080,
 	}, description_style_options)
@@ -655,8 +657,8 @@ StoreItemDetailView._setup_description_grid = function (self, item)
 	self:_destroy_description_grid()
 
 	local description_text = Localize(item.description)
-	local properties_text = ItemUtils.item_property_text(item, true)
-	local restriction_text, present_restrictions = ItemUtils.restriction_text(item)
+	local properties_text = Items.item_property_text(item, true)
+	local restriction_text, present_restrictions = Items.restriction_text(item)
 
 	if not present_restrictions then
 		restriction_text = nil
@@ -736,8 +738,6 @@ StoreItemDetailView._setup_description_grid = function (self, item)
 		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_equippable_on_header")))
 		_add_spacing(10)
 		_add_text_widget(Definitions.item_text_pass, restriction_text)
-
-		desired_spacing = 50
 	end
 
 	if #widgets > 0 then
@@ -817,7 +817,7 @@ StoreItemDetailView._setup_item_grid = function (self)
 				end
 			end
 
-			local profile = self:_get_generic_profile_from_item(item)
+			local profile = self:_generic_profile_from_item(item)
 
 			profile.loadout[item.slots[1]] = item
 			element.dummy_profile = profile
@@ -929,7 +929,7 @@ StoreItemDetailView._present_bundle = function (self, offer)
 	end
 
 	local item_type_lookup = offer.description.type
-	local item_type_display_name_localized = ItemUtils.type_display_name({
+	local item_type_display_name_localized = Items.type_display_name({
 		item_type = item_type_lookup,
 	})
 	local item_size = {
@@ -1049,7 +1049,7 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 	local widget_type = "item_name"
 	local template = self._content_blueprints[widget_type]
 	local title = item.display_name and Localize(item.display_name) or ""
-	local sub_type = ItemUtils.type_display_name(item)
+	local sub_type = Items.type_display_name(item)
 	local title_item = {
 		display_name = title,
 		item_type = sub_type,
@@ -1140,8 +1140,8 @@ StoreItemDetailView._setup_side_panel = function (self, element)
 		return
 	end
 
-	local properties_text = ItemUtils.item_property_text(item, true)
-	local restrictions_text, present_restrictions = ItemUtils.restriction_text(item, true)
+	local properties_text = Items.item_property_text(item, true)
+	local restrictions_text, present_restrictions = Items.restriction_text(item, true)
 
 	if not present_restrictions then
 		restrictions_text = nil
@@ -1301,36 +1301,36 @@ StoreItemDetailView._destroy_details = function (self)
 	self._details_widget = nil
 end
 
-StoreItemDetailView._get_generic_profile_from_item = function (self, item)
+StoreItemDetailView._generic_profile_from_item = function (self, item)
 	local profile = self._profile
 	local item_gender, item_breed, item_archetype
 
 	if profile then
-		local profile_gender = profile.gender
+		local wanted_gender = profile.gender
 		local item_genders = item.genders
 
 		if item_genders and not table.is_empty(item_genders) then
-			item_gender = table.array_contains(item_genders, profile_gender) and profile_gender
+			item_gender = table.array_contains(item_genders, wanted_gender) and wanted_gender
 		else
-			item_gender = profile.gender
+			item_gender = wanted_gender
 		end
 
-		local profile_breed = profile.breed
+		local wanted_breed = profile.breed
 		local item_breeds = item.breeds
 
 		if item_breeds and not table.is_empty(item_breeds) then
-			item_breed = table.array_contains(item_breeds, profile_breed) and profile_breed
+			item_breed = table.array_contains(item_breeds, wanted_breed) and wanted_breed
 		else
-			item_breed = profile.breed
+			item_breed = wanted_breed
 		end
 
-		local profile_archetype = profile.archetype
+		local wanted_archetype = profile.archetype
 		local item_archetypes = item.archetypes
 
 		if item_archetypes and not table.is_empty(item_archetypes) then
-			item_archetype = table.array_contains(item_archetypes, profile_archetype.name) and profile_archetype
+			item_archetype = table.array_contains(item_archetypes, wanted_archetype.name) and wanted_archetype
 		else
-			item_archetype = profile.archetype
+			item_archetype = wanted_archetype
 		end
 	end
 
@@ -1359,7 +1359,7 @@ StoreItemDetailView._generate_spawn_profile = function (self, item)
 	local profile
 
 	if item then
-		profile = self:_get_generic_profile_from_item(item)
+		profile = self:_generic_profile_from_item(item)
 	else
 		local player = self:_player()
 
@@ -1401,7 +1401,7 @@ StoreItemDetailView._is_spawn_profile_by_item_valid = function (self, item)
 		current_profile = player:profile()
 	end
 
-	local required_profile = self:_get_generic_profile_from_item(item)
+	local required_profile = self:_generic_profile_from_item(item)
 	local same_breed = required_profile.breed == current_profile.breed
 	local same_gender = required_profile.gender == current_profile.gender
 	local same_archetype = required_profile.archetype.name == current_profile.archetype.name
@@ -1570,9 +1570,6 @@ StoreItemDetailView._setup_viewport_camera = function (self, camera_unit)
 	local shading_environment = level_settings.shading_environment
 
 	world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
-
-	self._camera_zoomed_in = true
-
 	self:_trigger_zoom_logic(true)
 end
 
@@ -1641,30 +1638,18 @@ StoreItemDetailView._reset_mannequin = function (self, optional_item)
 	end
 end
 
-StoreItemDetailView.cb_on_camera_zoom_toggled = function (self, id, input_pressed, instant)
-	self._camera_zoomed_in = not self._camera_zoomed_in
-
-	if self._camera_zoomed_in then
-		self:_play_sound(UISoundEvents.apparel_zoom_in)
-	else
-		self:_play_sound(UISoundEvents.apparel_zoom_out)
-	end
-
-	self:_trigger_zoom_logic(instant)
-end
-
 StoreItemDetailView._can_zoom = function (self)
 	local item_type = table.nested_get(self, "_selected_element", "item", "item_type")
 
-	return item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_UPPERBODY"
+	return self._zoom_delay == 0 and (item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_UPPERBODY")
 end
 
 StoreItemDetailView._can_preview_voice = function (self)
 	local has_profile = self._preview_profile and self._previewed_with_gear
-	local has_voice_fx = table.nested_get(self, "_selected_element", "item", "voice_fx_preset") ~= nil
-	local can_inspect = self._valid_inspect
+	local voice_fx_key = table.nested_get(self, "_selected_element", "item", "voice_fx_preset")
+	local has_voice_fx = voice_fx_key and voice_fx_key ~= "voice_fx_rtpc_none"
 
-	return not self._aquilas_showing and has_profile and has_voice_fx and not can_inspect
+	return not self._aquilas_showing and has_profile and has_voice_fx
 end
 
 StoreItemDetailView._stop_current_voice = function (self)
@@ -1723,7 +1708,6 @@ StoreItemDetailView.cb_preview_voice = function (self)
 end
 
 StoreItemDetailView._trigger_zoom_logic = function (self, instant, optional_slot_name)
-	local world_spawner = self._world_spawner
 	local selected_slot = self._selected_slot
 	local selected_slot_name = optional_slot_name or selected_slot and selected_slot.name
 
@@ -1732,24 +1716,17 @@ StoreItemDetailView._trigger_zoom_logic = function (self, instant, optional_slot
 	end
 
 	local func_ptr = math.easeCubic
-	local duration = instant and 0 or 1
 	local profile = self._presentation_profile
 	local archetype = profile and profile.archetype
 	local breed_name = profile and archetype.breed or ""
+	local duration = instant and 0 or 0.4
 
-	if self._camera_zoomed_in then
-		self:_set_camera_item_slot_focus(breed_name, selected_slot_name, duration, func_ptr)
-	else
-		world_spawner:set_camera_position_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("z", 0, duration, func_ptr)
-	end
+	self._zoom_delay = duration
+
+	self:_set_camera_item_slot_focus(breed_name, selected_slot_name, duration, func_ptr, self._zoom_level)
 end
 
-StoreItemDetailView._set_camera_item_slot_focus = function (self, breed_name, slot_name, time, func_ptr)
+StoreItemDetailView._set_camera_item_slot_focus = function (self, breed_name, slot_name, time, func_ptr, zoom_percentage)
 	local world_spawner = self._world_spawner
 	local breeds_item_camera_by_slot_id = self._breeds_item_camera_by_slot_id
 	local breed_item_camera_by_slot_id = breeds_item_camera_by_slot_id[breed_name]
@@ -1759,18 +1736,18 @@ StoreItemDetailView._set_camera_item_slot_focus = function (self, breed_name, sl
 	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
 	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", camera_world_position.x - default_camera_world_position.x, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", camera_world_position.y - default_camera_world_position.y, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", camera_world_position.z - default_camera_world_position.z, time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("x", zoom_percentage * (camera_world_position.x - default_camera_world_position.x), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("y", zoom_percentage * (camera_world_position.y - default_camera_world_position.y), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("z", zoom_percentage * (camera_world_position.z - default_camera_world_position.z), time, func_ptr)
 
 	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
 	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
 	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
 
-	world_spawner:set_camera_rotation_axis_offset("x", camera_world_rotation_x - default_camera_world_rotation_x, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", camera_world_rotation_y - default_camera_world_rotation_y, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("x", zoom_percentage * (camera_world_rotation_x - default_camera_world_rotation_x), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("y", zoom_percentage * (camera_world_rotation_y - default_camera_world_rotation_y), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("z", zoom_percentage * (camera_world_rotation_z - default_camera_world_rotation_z), time, func_ptr)
 end
 
 StoreItemDetailView._set_initial_viewport_camera_position = function (self, default_camera_settings)
@@ -1822,8 +1799,16 @@ StoreItemDetailView.on_exit = function (self)
 
 	self:_unload_url_textures()
 
-	if self._context.parent then
-		self._context.parent:_update_wallets()
+	local parent = self._context.parent
+
+	if parent and parent._update_wallets then
+		parent:_update_wallets()
+	end
+
+	local has_purchased_item = self._has_purchased_item
+
+	if has_purchased_item then
+		Managers.event:trigger("event_force_refresh_inventory")
 	end
 
 	StoreItemDetailView.super.on_exit(self)
@@ -1897,6 +1882,46 @@ StoreItemDetailView._on_navigation_input_changed = function (self)
 	end
 end
 
+StoreItemDetailView._update_zoom_logic = function (self, dt, input_service)
+	self._zoom_delay = math.max(self._zoom_delay - dt, 0)
+
+	if not self:_can_zoom() then
+		return
+	end
+
+	local scroll_axis = input_service:get("scroll_axis")
+	local scroll_delta = scroll_axis and scroll_axis[2] or 0
+	local description_scroll_content = self._widgets_by_name.description_scrollbar.content
+	local grid_scroll_content = self._widgets_by_name.grid_scrollbar.content
+
+	if description_scroll_content.in_scroll_area or grid_scroll_content.in_scroll_area then
+		scroll_delta = 0
+	end
+
+	local zoom_speed, zoom_level = self._zoom_speed, self._zoom_level
+
+	zoom_speed = scroll_delta * zoom_speed < 0 and 0 or zoom_speed + scroll_delta / 20
+
+	if math.abs(zoom_speed) < 0.01 then
+		zoom_speed = 0
+	end
+
+	zoom_level = math.clamp(zoom_level + zoom_speed * 18 * dt, 0, 1)
+	zoom_speed = zoom_speed * math.pow(0.006, dt)
+
+	if zoom_level == 0 or zoom_level == 1 then
+		zoom_speed = 0
+	end
+
+	local has_changed = zoom_level ~= self._zoom_level
+
+	self._zoom_level, self._zoom_speed = zoom_level, zoom_speed
+
+	if has_changed then
+		self:_trigger_zoom_logic(true)
+	end
+end
+
 StoreItemDetailView.update = function (self, dt, t, input_service)
 	local has_promise = self._store_promise or self._purchase_promise or self._wallet_promise
 
@@ -1919,6 +1944,8 @@ StoreItemDetailView.update = function (self, dt, t, input_service)
 		self._keep_current_rotation = nil
 		self._spawn_player = false
 	end
+
+	self:_update_zoom_logic(dt, input_service)
 
 	local profile_spawner = self._profile_spawner
 
@@ -2511,13 +2538,13 @@ StoreItemDetailView._update_price_presentation = function (self)
 		1920,
 		1080,
 	}, price_style_options)
-	local total_width = 0
 	local icon_margin = 0
 	local discount_margin = 10
 	local texture_width = style.price_icon.size[1]
 
 	price_widget.style.price.offset[1] = -texture_width - icon_margin
-	total_width = icon_margin + texture_width + text_width
+
+	local total_width = icon_margin + texture_width + text_width
 
 	if discount_width > 0 then
 		total_width = total_width + discount_margin + discount_width
@@ -2646,7 +2673,7 @@ StoreItemDetailView._update_purchase_buttons = function (self)
 	purchase_item_button.content.original_text = purchase_button_text
 
 	local purchase_item_button_style_options = UIFonts.get_font_options_by_style(purchase_item_button.style.text)
-	local purchase_item_button_width, purchase_item_button_height = self:_text_size(purchase_button_text, purchase_item_button.style.text.font_type, purchase_item_button.style.text.font_size, {
+	local purchase_item_button_width, _ = self:_text_size(purchase_button_text, purchase_item_button.style.text.font_type, purchase_item_button.style.text.font_size, {
 		1920,
 		ButtonPassTemplates.default_button.size[2],
 	}, purchase_item_button_style_options)
@@ -2679,6 +2706,8 @@ StoreItemDetailView.can_afford = function (self, cost, currency)
 end
 
 StoreItemDetailView._make_purchase = function (self, is_bundle, offer, wallet_data, purchased_items)
+	self._has_purchased_item = true
+
 	local purchase_button_widget = self._widgets_by_name.purchase_item_button
 
 	self._purchase_promise = Managers.data_service.store:purchase_item_with_wallet(offer, wallet_data):next(function (_)
@@ -2690,7 +2719,9 @@ StoreItemDetailView._make_purchase = function (self, is_bundle, offer, wallet_da
 
 		parent:play_vo_events(StoreItemDetailViewSettings.vo_event_vendor_purchase, "purser_a", nil, 1.4)
 
-		self._purchase_promise = parent:_update_store_page():next(function (data)
+		local update_store_page_promise = parent and parent._update_store_page and parent:_update_store_page() or Promise.resolved(nil)
+
+		self._purchase_promise = update_store_page_promise:next(function (data)
 			self._store_item = data or self._store_item
 
 			return self:_update_wallets()
@@ -2709,7 +2740,7 @@ StoreItemDetailView._make_purchase = function (self, is_bundle, offer, wallet_da
 				local item_not_owned = purchased_items[i]
 				local item = item_not_owned.item
 
-				ItemUtils.mark_item_id_as_new(item, true)
+				Items.mark_item_id_as_new(item, true)
 
 				if not condense_notifications then
 					Managers.event:trigger("event_add_notification_message", "item_granted", item)
@@ -2777,7 +2808,7 @@ StoreItemDetailView.cb_on_purchase_pressed = function (self)
 
 	if not is_bundle then
 		local sub_type = selected_element.item.item_type
-		local item_type_display_name_localized = ItemUtils.type_display_name({
+		local item_type_display_name_localized = Items.type_display_name({
 			item_type = sub_type,
 		})
 
@@ -3324,8 +3355,8 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 		local player = self:_player()
 		local player_profile = player:profile()
 		local include_skin_item_texts = true
-		local item = item_type == "WEAPON_SKIN" and ItemUtils.weapon_skin_preview_item(previewed_item, include_skin_item_texts) or previewed_item
-		local is_item_supported_on_played_character = false
+		local item = item_type == "WEAPON_SKIN" and Items.weapon_skin_preview_item(previewed_item, include_skin_item_texts) or previewed_item
+		local is_item_supported_on_played_character
 		local item_archetypes = item.archetypes
 
 		if item_archetypes and not table.is_empty(item_archetypes) then
@@ -3334,7 +3365,7 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 			is_item_supported_on_played_character = true
 		end
 
-		local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or ItemUtils.create_mannequin_profile_by_item(item)
+		local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or Items.create_mannequin_profile_by_item(item)
 
 		context = {
 			use_store_appearance = true,
@@ -3385,6 +3416,13 @@ end
 
 StoreItemDetailView.dialogue_system = function (self)
 	return self._context.parent:dialogue_system()
+end
+
+StoreItemDetailView.cb_on_camera_zoom_toggled = function (self)
+	self._zoom_level = self._zoom_level > 0.5 and 0 or 1
+	self._zoom_speed = 0
+
+	self:_trigger_zoom_logic(false, nil)
 end
 
 return StoreItemDetailView

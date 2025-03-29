@@ -229,14 +229,15 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 		}, sub_title_options)
 		local sub_title_margin = 10
 		local price_margin = 10
+		local bottom_margin = 10
 
 		sub_title_style.offset[2] = sub_title_margin + title_height
 
 		local title_total_size = sub_title_style.offset[2] + sub_title_height
 		local price_height = price_widgets[1].style and price_widgets[1].style.texture.size[2] or 0
-		local total_offer_text_height = title_total_size + sub_title_height + price_margin + price_height
+		local total_offer_text_height = title_total_size + sub_title_height + price_margin + price_height + bottom_margin
 
-		self:_set_scenegraph_size("offer_price_text", total_prices_width, price_height)
+		self:_set_scenegraph_size("offer_price_text", total_prices_width, price_height + bottom_margin)
 		self:_set_scenegraph_size("offer_text", nil, total_offer_text_height)
 
 		self._offer_price_widgets = price_widgets
@@ -490,11 +491,13 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			content.size[1] = text_length
 
 			if pass_template.init then
-				pass_template.init(self, widget, ui_renderer, {
-					ignore_gamepad_on_text = true,
-					text = text,
-					complete_function = callback(self, "_cb_on_button_pressed", widget),
-				})
+				local template_options = option.template_options and table.clone(option.template_options) or {}
+
+				template_options.text = text
+				template_options.complete_function = callback(self, "_cb_on_button_pressed", widget)
+				template_options.ignore_gamepad_on_text = true
+
+				pass_template.init(self, widget, ui_renderer, template_options)
 			end
 		end
 
@@ -1086,11 +1089,11 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 
 	local handle_input = handling_popups and not self._on_exit_anim_id and not self._on_enter_anim_id
 
-	if handle_input then
-		self:_update_button_input(input_service)
-	else
+	if not handle_input then
 		input_service = input_service:null_service()
 	end
+
+	self:_update_button_input(input_service)
 
 	local grid = self._description_grid
 

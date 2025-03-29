@@ -48,7 +48,10 @@ combat_sword_action_inputs.parry = {
 
 local combat_sword_action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 
-combat_sword_action_input_hierarchy.parry = "base"
+combat_sword_action_input_hierarchy[#combat_sword_action_input_hierarchy + 1] = {
+	input = "parry",
+	transition = "base",
+}
 weapon_template.action_inputs = combat_sword_action_inputs
 weapon_template.action_input_hierarchy = combat_sword_action_input_hierarchy
 weapon_template.action_inputs.block.buffer_time = 0.1
@@ -173,7 +176,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.75,
+				chain_time = 0.65,
 			},
 			block = {
 				action_name = "action_block",
@@ -454,7 +457,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		range_mod = 1.25,
 		total_time = 2,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_1",
 		action_movement_curve = {
 			{
 				modifier = 1.15,
@@ -924,7 +927,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event = "attack_special",
 		attack_direction_override = "push",
-		block_duration = 0.2,
+		block_duration = 0.5,
 		damage_window_end = 0.3,
 		damage_window_start = 0.15,
 		hit_armor_anim = "attack_hit_shield",
@@ -1158,7 +1161,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1180,7 +1182,7 @@ weapon_template.keywords = {
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
-weapon_template.stamina_template = "default"
+weapon_template.stamina_template = "linesman"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default

@@ -1,22 +1,19 @@
 ﻿-- chunkname: @scripts/settings/damage/damage_profiles/killshot_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local gibbing_power = GibbingSettings.gibbing_power
 local armor_types = ArmorSettings.types
+local single_cleave = DamageProfileSettings.single_cleave
+local double_cleave = DamageProfileSettings.double_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
 local killshot_armor_mod = {
 	near = {
 		attack = {
@@ -123,7 +120,7 @@ damage_templates.default_killshot = {
 		attack = 0.175,
 		impact = 0.4,
 	},
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = gibbing_power.heavy,
 	on_kill_area_suppression = {
 		distance = 0,
 		suppression_value = 0,
@@ -153,7 +150,7 @@ damage_templates.close_killshot = {
 		attack = 0.25,
 		impact = 0.2,
 	},
-	gibbing_power = GibbingPower.light,
+	gibbing_power = gibbing_power.light,
 	on_kill_area_suppression = {
 		distance = 0,
 		suppression_value = 0,
@@ -228,7 +225,7 @@ damage_templates.medium_killshot = {
 		attack = 0.4,
 		impact = 0.2,
 	},
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = gibbing_power.medium,
 	on_kill_area_suppression = {
 		distance = 0,
 		suppression_value = 0,
@@ -303,7 +300,7 @@ damage_templates.heavy_killshot = {
 		attack = 1,
 		impact = 1.5,
 	},
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = gibbing_power.heavy,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 12,
@@ -384,7 +381,7 @@ damage_templates.shotgun_killshot = {
 		attack = 1,
 		impact = 0.75,
 	},
-	gibbing_power = GibbingPower.light,
+	gibbing_power = gibbing_power.light,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.2,

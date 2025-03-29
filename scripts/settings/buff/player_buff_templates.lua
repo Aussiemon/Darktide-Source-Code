@@ -7,14 +7,14 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stamina = require("scripts/utilities/attack/stamina")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local buff_proc_events = BuffSettings.proc_events
 local buff_stat_buffs = BuffSettings.stat_buffs
 local keywords = BuffSettings.keywords
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local zealot_1 = TalentSettings.zealot_1
 local templates = {}
@@ -194,10 +194,14 @@ templates.weakspot_kill_reload_speed = {
 }
 templates.coherency_toughness_regen = {
 	class_name = "stepped_stat_buff",
+	description = "Increased thoughness regeneration while near squad members.\nEffect stacks with each member nearby.",
+	display_description = "loc_player_buff_coherency_toughness_regen_desc",
+	display_title = "loc_player_buff_coherency_toughness_regen",
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_coherence_buff_hud",
 	hud_priority = 0,
 	max_stacks = 4,
 	predicted = false,
+	title = "Coherency",
 	keywords = {},
 	stepped_stat_buffs = {
 		{
@@ -234,8 +238,12 @@ templates.coherency_toughness_regen = {
 }
 templates.sprint_with_stamina_buff = {
 	class_name = "buff",
+	description = "Increased sprint by consuming available stamina.",
+	display_description = "loc_player_buff_sprint_with_stamina_buff_desc",
+	display_title = "loc_player_buff_sprint_with_stamina_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud",
 	predicted = false,
+	title = "Better run faster!",
 	hud_priority = math.huge,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -414,6 +422,72 @@ templates.player_toughness_damage_reduction_node_buff_medium_2 = table.clone(tem
 templates.player_toughness_damage_reduction_node_buff_medium_3 = table.clone(templates.player_toughness_damage_reduction_node_buff_medium_1)
 templates.player_toughness_damage_reduction_node_buff_medium_4 = table.clone(templates.player_toughness_damage_reduction_node_buff_medium_1)
 templates.player_toughness_damage_reduction_node_buff_medium_5 = table.clone(templates.player_toughness_damage_reduction_node_buff_medium_1)
+templates.player_ranged_toughness_damage_reduction_node_buff_medium_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.1,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.1,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.2,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.3,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.4,
+			},
+		},
+	},
+}
+templates.player_ranged_toughness_damage_reduction_node_buff_medium_2 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
+templates.player_ranged_toughness_damage_reduction_node_buff_medium_3 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
+templates.player_ranged_toughness_damage_reduction_node_buff_medium_4 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
+templates.player_ranged_toughness_damage_reduction_node_buff_medium_5 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
+templates.player_melee_toughness_damage_reduction_node_buff_medium_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.toughness_damage_taken_modifier] = -0.1,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.toughness_damage_taken_modifier] = -0.1,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.toughness_damage_taken_modifier] = -0.2,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.toughness_damage_taken_modifier] = -0.3,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.toughness_damage_taken_modifier] = -0.4,
+			},
+		},
+	},
+}
+templates.player_melee_toughness_damage_reduction_node_buff_medium_2 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
+templates.player_melee_toughness_damage_reduction_node_buff_medium_3 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
+templates.player_melee_toughness_damage_reduction_node_buff_medium_4 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
+templates.player_melee_toughness_damage_reduction_node_buff_medium_5 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
 templates.reduced_stamina_regen_delay_1 = {
 	class_name = "buff",
 	predicted = false,
@@ -1039,13 +1113,10 @@ templates.player_crit_chance_node_buff_2.stats_buffs = {
 templates.player_max_ammo_node_buff_1 = {
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ammo_reserve_capacity] = 0.1,
+		[stat_buffs.ammo_reserve_capacity] = 0.15,
 	},
 }
 templates.player_max_ammo_node_buff_2 = table.clone(templates.player_max_ammo_node_buff_1)
-templates.player_max_ammo_node_buff_2.stats_buffs = {
-	[stat_buffs.ammo_reserve_capacity] = 0.2,
-}
 templates.player_coherency_regen_node_buff_1 = {
 	class_name = "buff",
 	stat_buffs = {

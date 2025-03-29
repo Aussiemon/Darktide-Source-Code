@@ -6,9 +6,9 @@ local ActionUtility = require("scripts/extension_systems/weapon/actions/utilitie
 local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local ActionUseSyringe = class("ActionUseSyringe", "ActionWeaponBase")
 
 ActionUseSyringe.init = function (self, action_context, action_params, action_settings)

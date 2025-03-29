@@ -28,11 +28,11 @@ local function _include_talents_definition(file_name, base_talents)
 	return archetype_talents
 end
 
-local base_talents = _include_talents_definition("scripts/settings/ability/archetype_talents/base_talents")
+local base_talents = _include_talents_definition("scripts/settings/ability/archetype_talents/talents/base_talents")
 
-_include_talents_definition("scripts/settings/ability/archetype_talents/ogryn_talents", base_talents)
-_include_talents_definition("scripts/settings/ability/archetype_talents/psyker_talents", base_talents)
-_include_talents_definition("scripts/settings/ability/archetype_talents/veteran_talents", base_talents)
-_include_talents_definition("scripts/settings/ability/archetype_talents/zealot_talents", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/talents/ogryn_talents", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/talents/psyker_talents", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/talents/veteran_talents", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/talents/zealot_talents", base_talents)
 
 return settings(archetype_talents_name, talents)

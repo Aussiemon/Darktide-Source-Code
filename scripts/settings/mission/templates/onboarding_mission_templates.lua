@@ -111,6 +111,7 @@ local mission_templates = {
 			mission_giver_packs = {
 				training_ground_psyker_a = {
 					"training_ground_psyker",
+					"past",
 				},
 			},
 		},

@@ -5,11 +5,13 @@ local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_r
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local BreedActions = require("scripts/settings/breed/breed_actions")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local Herding = require("scripts/utilities/herding")
 local MinionState = require("scripts/utilities/minion_state")
 local StaggerCalculation = require("scripts/utilities/attack/stagger_calculation")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
+local buff_keywords = BuffSettings.keywords
 local Stagger = {}
 local _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, _apply_stagger, _get_stagger_duration_modifier, _get_stagger_count, _should_trigger_stagger, _get_system_overrides
 local EMPTY_STAT_BUFFS = {}
@@ -128,6 +130,13 @@ Stagger.can_stagger = function (unit)
 end
 
 Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration, length_scale, immune_time, attacker_unit)
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local no_stagger = buff_extension and buff_extension:has_keyword(buff_keywords.no_stagger)
+
+	if no_stagger then
+		return
+	end
+
 	local t = Managers.time:time("gameplay")
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
@@ -291,6 +300,13 @@ function _get_stagger_duration_modifier(lerp_values, damage_profile)
 end
 
 function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_direction, duration_scale, length_scale, damage_profile, lerp_values, attacker_stat_buffs)
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local no_stagger = buff_extension and buff_extension:has_keyword(buff_keywords.no_stagger)
+
+	if no_stagger then
+		return
+	end
+
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 	local t = Managers.time:time("gameplay")
@@ -331,6 +347,13 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 end
 
 function _apply_action_controlled_stagger(unit, stagger_type, attack_direction)
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local no_stagger = buff_extension and buff_extension:has_keyword(buff_keywords.no_stagger)
+
+	if no_stagger then
+		return
+	end
+
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 

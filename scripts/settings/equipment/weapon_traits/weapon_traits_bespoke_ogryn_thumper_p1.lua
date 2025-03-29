@@ -7,6 +7,32 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting = {
+	format_values = {
+		weapon_spread = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.spread_modifier,
+				},
+			},
+		},
+		damage_near = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting = {
 			{
@@ -45,6 +71,20 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting = {
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_suppression_on_close_kill = {
+	format_values = {
+		range = {
+			format_type = "string",
+			find_value = {
+				find_value_type = "rarity_value",
+				trait_value = {
+					"5m",
+					"6m",
+					"7m",
+					"8m",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_suppression_on_close_kill = {
 			{
@@ -83,6 +123,27 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_suppression_on_close_kill = {
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = {
 			{
@@ -101,6 +162,28 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = {
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire = {
 			{
@@ -127,6 +210,34 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire =
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = {
+	format_values = {
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time",
+				find_value_type = "trait_override",
+				path = {
+					"duration_per_stack",
+				},
+			},
+		},
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "string",
+			value = "10",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = {
 			{
@@ -157,6 +268,41 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = 
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+		num_hits = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots",
+				find_value_type = "buff_template",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots = {
 			{
@@ -187,6 +333,30 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_enemy_with_all = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_enemy_with_all",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_enemy_with_all",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_enemy_with_all = {
 			{
@@ -213,6 +383,30 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_en
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_special_cleave = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_special_cleave",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.ranged_power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_special_cleave",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_special_cleave = {
 			{
@@ -251,6 +445,20 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_sp
 	},
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p1_pass_past_armor_on_weapon_special = {
+	format_values = {
+		stagger = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_thumper_p1_pass_past_armor_on_weapon_special",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_impact_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_thumper_p1_pass_past_armor_on_weapon_special = {
 			{

@@ -5,6 +5,7 @@ local mission_objective_target_ui_type_strings = {
 	"demolition",
 	"decode",
 	"escort",
+	"resupply",
 	"scanning",
 	"kill",
 }

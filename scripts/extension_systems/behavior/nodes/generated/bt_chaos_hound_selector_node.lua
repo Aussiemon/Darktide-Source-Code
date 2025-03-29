@@ -193,7 +193,21 @@ BtChaosHoundSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 		end
 	end
 
-	local node_idle = children[6]
+	do
+		local node_roaming = children[6]
+		local perception_component = blackboard.perception
+		local aggro_state = perception_component.aggro_state
+		local is_passive = aggro_state == "passive"
+		local condition_result = is_passive
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_roaming
+
+			return node_roaming
+		end
+	end
+
+	local node_idle = children[7]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

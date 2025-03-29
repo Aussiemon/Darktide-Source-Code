@@ -48,7 +48,7 @@ BtRenegadeTwinCaptainDisappearAction.run = function (self, unit, breed, blackboa
 
 		local minion_spawn_manager = Managers.state.minion_spawn
 
-		minion_spawn_manager:despawn(unit)
+		minion_spawn_manager:despawn_minion(unit)
 
 		return "done"
 	end

@@ -10,6 +10,7 @@ circumstance_templates.abhuman_01 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
+		"mutator_live_abhuman_replacement",
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_01_description",
@@ -30,6 +31,7 @@ circumstance_templates.abhuman_02 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
+		"mutator_live_abhuman_replacement",
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_02_description",
@@ -51,6 +53,7 @@ circumstance_templates.abhuman_03 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
+		"mutator_live_abhuman_replacement",
 	},
 }
 circumstance_templates.abhuman_04 = {
@@ -71,6 +74,7 @@ circumstance_templates.abhuman_04 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
+		"mutator_live_abhuman_replacement",
 	},
 }
 circumstance_templates.abhuman_05 = {
@@ -83,6 +87,7 @@ circumstance_templates.abhuman_05 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
+		"mutator_live_abhuman_replacement",
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_05_description",
@@ -103,6 +108,7 @@ circumstance_templates.abhuman_06 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
+		"mutator_live_abhuman_replacement",
 	},
 	ui = {
 		description = "loc_circumstance_live_abhuman_06_description",
@@ -128,6 +134,7 @@ circumstance_templates.abhuman_07 = {
 		"mutator_live_abhuman_trickle",
 		"mutator_live_abhuman_monster",
 		"mutator_only_traitor_guard_faction",
+		"mutator_live_abhuman_replacement",
 	},
 }
 

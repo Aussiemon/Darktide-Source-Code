@@ -228,29 +228,31 @@ local _gamepad_devices = {
 	},
 }
 
-InputUtils.input_text_for_current_input_device = function (service_type, alias_key, color_tint_text)
-	local input_manager = Managers.input
-	local alias_array_index = 1
-	local device_types = _keyboard_devices
+InputUtils.get_gamepad_device_type = function ()
+	if IS_XBS then
+		return _gamepad_devices.xbox_controller
+	elseif IS_PLAYSTATION then
+		return _gamepad_devices.ps4_controller
+	else
+		local device = Managers.input:last_pressed_device()
+		local type = device:type()
 
-	if input_manager:device_in_use("gamepad") then
-		if IS_XBS then
-			device_types = _gamepad_devices.xbox_controller
-		elseif IS_PLAYSTATION then
-			device_types = _gamepad_devices.ps4_controller
-		else
-			local device = input_manager:last_pressed_device()
-			local type = device:type()
-
-			device_types = _gamepad_devices[type] or _keyboard_devices
-		end
+		return _gamepad_devices[type] or _keyboard_devices
 	end
+end
 
-	local alias = input_manager:alias_object(service_type)
+InputUtils.input_text_for_device_types = function (service_type, alias_key, color_tint_text, device_types)
+	local alias = Managers.input:alias_object(service_type)
 	local key_info = alias:get_keys_for_alias(alias_key, device_types)
 	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info, color_tint_text) or ""
 
 	return input_key
+end
+
+InputUtils.input_text_for_current_input_device = function (service_type, alias_key, color_tint_text)
+	local device_types = Managers.input:device_in_use("gamepad") and InputUtils.get_gamepad_device_type() or _keyboard_devices
+
+	return InputUtils.input_text_for_device_types(service_type, alias_key, color_tint_text, device_types)
 end
 
 InputUtils.is_gamepad = function (device_type)

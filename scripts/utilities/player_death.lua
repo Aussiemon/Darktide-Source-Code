@@ -32,6 +32,8 @@ PlayerDeath.die = function (unit, optional_despawn_time, optional_attacking_unit
 
 		Managers.state.pacing:player_died(player.player_unit)
 	end
+
+	Managers.event:trigger("event_player_died", player)
 end
 
 PlayerDeath.knock_down = function (unit)

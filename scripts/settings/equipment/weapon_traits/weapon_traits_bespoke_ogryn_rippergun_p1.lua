@@ -7,6 +7,20 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_suppression_on_close_kill = {
+	format_values = {
+		range = {
+			format_type = "string",
+			find_value = {
+				find_value_type = "rarity_value",
+				trait_value = {
+					"5m",
+					"6m",
+					"7m",
+					"8m",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_suppression_on_close_kill = {
 			{
@@ -45,6 +59,40 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_suppression_on_close_kill = {
 	},
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill = {
+	format_values = {
+		close_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent = {
 			{
@@ -75,6 +123,19 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close
 	},
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
 			{
@@ -93,6 +154,50 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills
 	},
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff_on_weapon_special = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff_on_weapon_special",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		rending = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"stat_buffs",
+					stat_buffs.rending_multiplier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"duration",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff_on_weapon_special = {
 			{
@@ -119,6 +224,28 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff
 	},
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire = {
 			{
@@ -145,6 +272,27 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continu
 	},
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = {
 			{
@@ -163,6 +311,28 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire =
 	},
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		ammo = {
+			format_type = "string",
+			value = "10%",
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
 			{
@@ -189,6 +359,19 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire
 	},
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
 			{

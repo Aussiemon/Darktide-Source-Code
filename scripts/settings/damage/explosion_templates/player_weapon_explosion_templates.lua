@@ -12,6 +12,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		damage_profile = DamageProfileTemplates.plasma_overheat,
 		close_damage_profile = DamageProfileTemplates.plasma_overheat,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
@@ -43,6 +48,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.laser,
 		damage_profile = DamageProfileTemplates.ogryn_thumper_p1_m2_default,
 		damage_type = damage_types.laser,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			instant_aggro = true,
 			suppression_falloff = true,
@@ -86,6 +96,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.ogryn_thumper_p1_m2_default_instant,
 		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			instant_aggro = true,
 			suppression_falloff = true,
@@ -130,6 +145,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.blunt_thunder,
 		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,
 		damage_type = damage_types.blunt_thunder,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			instant_aggro = true,
 			suppression_falloff = true,
@@ -170,6 +190,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.blunt_thunder,
 		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,
 		damage_type = damage_types.blunt_thunder,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			instant_aggro = true,
 			suppression_falloff = true,
@@ -210,6 +235,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.blunt_thunder,
 		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,
 		damage_type = damage_types.blunt_thunder,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			instant_aggro = true,
 			suppression_falloff = true,
@@ -250,6 +280,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.blunt_thunder,
 		damage_profile = DamageProfileTemplates.forcesword_explosion_outer,
 		damage_type = damage_types.blunt_thunder,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			instant_aggro = true,
 			suppression_falloff = true,
@@ -279,6 +314,11 @@ local explosion_templates = {
 		radius = 3,
 		static_power_level = 1000,
 		damage_profile = DamageProfileTemplates.default_grenade,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 10,
 			instant_aggro = true,
@@ -300,6 +340,11 @@ local explosion_templates = {
 		radius = 4,
 		static_power_level = 600,
 		damage_profile = DamageProfileTemplates.default_grenade,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 10,
 			instant_aggro = true,
@@ -325,15 +370,20 @@ local function _create_trait_buff_powersword_2h_lockout_proc_explosion_buff(radi
 		min_radius = min_radius,
 		close_radius = close_radius,
 		min_close_radius = min_close_radius,
-		close_damage_profile = DamageProfileTemplates.powermaul_explosion,
+		close_damage_profile = DamageProfileTemplates.powersword_explosion,
 		close_damage_type = damage_types.blunt_thunder,
-		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,
+		damage_profile = DamageProfileTemplates.powersword_explosion_outer,
 		damage_type = damage_types.blunt_thunder,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
-			distance = 3,
+			distance = 5,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 5,
+			suppression_value = 10,
 		},
 		vfx = {
 			"content/fx/particles/weapons/power_maul/power_maul_push_shockwave",

@@ -182,6 +182,28 @@ weapon_dodge_templates.ogryn = {
 		lerp_perfect = 0.9,
 	},
 }
+weapon_dodge_templates.ogryn_fast = {
+	distance_scale = {
+		lerp_basic = 0.8,
+		lerp_perfect = 1.1,
+	},
+	diminishing_return_distance_modifier = {
+		lerp_basic = 0.4,
+		lerp_perfect = 0.2,
+	},
+	diminishing_return_start = {
+		lerp_basic = 2,
+		lerp_perfect = 4,
+	},
+	diminishing_return_limit = {
+		lerp_basic = 2,
+		lerp_perfect = 4,
+	},
+	speed_modifier = {
+		lerp_basic = 0.9,
+		lerp_perfect = 1,
+	},
+}
 weapon_dodge_templates.support = {
 	consecutive_dodges_reset = 0,
 	distance_scale = {

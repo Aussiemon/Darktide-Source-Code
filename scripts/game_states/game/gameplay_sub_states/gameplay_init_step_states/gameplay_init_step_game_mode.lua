@@ -13,13 +13,12 @@ GameplayInitStepGameMode.on_enter = function (self, parent, params)
 
 	local mission_name = shared_state.mission_name
 	local world = shared_state.world
-	local nav_world = shared_state.nav_world
 	local physics_world = shared_state.physics_world
 	local is_server = shared_state.is_server
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
-	self:_init_game_mode(mission_name, world, physics_world, nav_world, is_server, network_event_delegate)
+	self:_init_game_mode(mission_name, world, physics_world, is_server, network_event_delegate)
 end
 
 GameplayInitStepGameMode.update = function (self, main_dt, main_t)
@@ -39,13 +38,12 @@ GameplayInitStepGameMode.update = function (self, main_dt, main_t)
 	return GameplayInitStepMission, next_step_params
 end
 
-GameplayInitStepGameMode._init_game_mode = function (self, mission_name, world, physics_world, nav_world, is_server, network_event_delegate)
+GameplayInitStepGameMode._init_game_mode = function (self, mission_name, world, physics_world, is_server, network_event_delegate)
 	local mission = MissionTemplates[mission_name]
 	local game_mode_name = mission.game_mode_name
 	local gameplay_modifiers = mission.gameplay_modifiers
 	local game_mode_context = {
 		world = world,
-		nav_world = nav_world,
 		physics_world = physics_world,
 		is_server = is_server,
 	}

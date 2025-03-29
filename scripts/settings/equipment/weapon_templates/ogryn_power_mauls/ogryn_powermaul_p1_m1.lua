@@ -405,7 +405,7 @@ weapon_template.actions = {
 		end,
 	},
 	action_right_light = {
-		allowed_during_sprint = "true",
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_up",
 		anim_event_3p = "attack_swing_up_slow",
 		attack_direction_override = "up",
@@ -497,6 +497,7 @@ weapon_template.actions = {
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active,
 	},
 	action_right_heavy = {
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_heavy_right",
 		attack_direction_override = "right",
 		damage_window_end = 0.5166666666666667,
@@ -577,6 +578,7 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 	},
 	action_melee_start_left_2 = {
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_left",
 		chain_anim_event = "attack_swing_charge_left_pose",
 		chain_anim_event_3p = "attack_swing_charge_left",
@@ -642,6 +644,7 @@ weapon_template.actions = {
 		},
 	},
 	action_left_light_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_left_diagonal",
 		anim_event_3p = "attack_swing_left_diagonal_slow",
@@ -738,6 +741,7 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.linesman_left_heavy,
 	},
 	action_melee_start_right_2 = {
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_right",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
@@ -801,6 +805,7 @@ weapon_template.actions = {
 		},
 	},
 	action_right_light_2 = {
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_right_diagonal",
 		anim_event_3p = "attack_swing_right_diagonal_slow",
 		attack_direction_override = "right",
@@ -893,6 +898,7 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.linesman_right_heavy,
 	},
 	action_melee_start_heavy_follow_up_part_1 = {
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_right",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
@@ -1429,7 +1435,7 @@ weapon_template.actions = {
 		damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
 	},
 	action_weapon_special = {
-		activation_time = 0.8,
+		activation_time = 0.75,
 		allowed_during_sprint = true,
 		anim_event = "activate",
 		kind = "activate_special",
@@ -1442,19 +1448,19 @@ weapon_template.actions = {
 				t = 0.15,
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.6,
 				t = 0.2,
 			},
 			{
-				modifier = 0.3,
+				modifier = 0.5,
 				t = 0.3,
 			},
 			{
-				modifier = 0.1,
-				t = 0.6,
+				modifier = 0.6,
+				t = 0.9,
 			},
 			{
-				modifier = 0.55,
+				modifier = 0.8,
 				t = 1.2,
 			},
 			{
@@ -1480,16 +1486,16 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 1,
+				chain_time = 0.85,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1,
+				chain_time = 0.85,
 			},
 		},
 	},
 	action_weapon_special_right = {
-		activation_time = 0.8,
+		activation_time = 0.75,
 		allowed_during_sprint = true,
 		anim_event = "activate",
 		kind = "activate_special",
@@ -1501,19 +1507,23 @@ weapon_template.actions = {
 				t = 0.15,
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.6,
 				t = 0.2,
 			},
 			{
-				modifier = 0.3,
+				modifier = 0.4,
 				t = 0.3,
 			},
 			{
-				modifier = 0.1,
+				modifier = 0.3,
 				t = 0.6,
 			},
 			{
-				modifier = 0.55,
+				modifier = 0.5,
+				t = 0.9,
+			},
+			{
+				modifier = 0.8,
 				t = 1.2,
 			},
 			{
@@ -1539,11 +1549,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 1,
+				chain_time = 0.85,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1,
+				chain_time = 0.85,
 			},
 		},
 	},
@@ -2059,7 +2069,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_class = "WeaponSpecialExplodeOnImpact"
 weapon_template.weapon_special_tweak_data = {
@@ -2068,6 +2077,8 @@ weapon_template.weapon_special_tweak_data = {
 	allow_reactivation_while_active = true,
 	disorientation_type = "ogryn_powermaul_disorientation",
 	keep_active_on_sprint = true,
+	keep_active_on_stun = true,
+	keep_active_on_vault = true,
 	explosion_template = ExplosionTemplates.powermaul_activated_impact,
 }
 weapon_template.sprint_ready_up_time = 0.2

@@ -656,7 +656,12 @@ ScriptedScenarioSystem.dissolve_unit = function (self, unit, t)
 end
 
 ScriptedScenarioSystem.spawn_breed_ramping = function (self, breed_name, position, rotation, t, duration, side_id, optional_delay, optional_spawn_aggro_state)
-	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, position, rotation, side_id, optional_spawn_aggro_state)
+	local minion_spawn_manager = Managers.state.minion_spawn
+	local param_table = minion_spawn_manager:request_param_table()
+
+	param_table.optional_aggro_state = optional_spawn_aggro_state
+
+	local unit = minion_spawn_manager:spawn_minion(breed_name, position, rotation, side_id, param_table)
 	local delay = optional_delay or 0
 	local world = self._world
 	local spawn_data = MinionDissolveUtility.start_dissolve(unit, t, true)

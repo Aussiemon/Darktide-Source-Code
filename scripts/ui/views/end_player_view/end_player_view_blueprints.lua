@@ -1350,7 +1350,7 @@ end_player_view_blueprints.havoc = {
 			current_rank_badge = previous_rank_badge
 		end
 
-		local badge_start_y_offset = -badge_size[2] * 0.5
+		local badge_start_y_offset = -40
 		local pass_templates = {
 			{
 				pass_type = "circle",
@@ -1435,7 +1435,7 @@ end_player_view_blueprints.havoc = {
 						},
 						offset = {
 							current_x_offset,
-							badge_size[2] * 0.5 + 40,
+							badge_start_y_offset + 120,
 							1,
 						},
 						size = {
@@ -1462,7 +1462,7 @@ end_player_view_blueprints.havoc = {
 						color = Color.terminal_text_header(0, true),
 						offset = {
 							current_x_offset,
-							badge_size[2] * 0.5 + 40,
+							badge_start_y_offset + 120,
 							0,
 						},
 						size = {
@@ -1506,10 +1506,10 @@ end_player_view_blueprints.havoc = {
 					},
 					offset = {
 						x_offset,
-						badge_start_y_offset - 17,
+						badge_start_y_offset - 12,
 						5,
 					},
-					start_offset_y = badge_start_y_offset - 17,
+					start_offset_y = badge_start_y_offset - 12,
 					material_values = {
 						number = rank_number,
 					},
@@ -1542,10 +1542,10 @@ end_player_view_blueprints.havoc = {
 					in_focus_color = Color.white(nil, true),
 					offset = {
 						x_offset,
-						badge_start_y_offset - 17,
+						badge_start_y_offset - 12,
 						6,
 					},
-					start_offset_y = badge_start_y_offset - 17,
+					start_offset_y = badge_start_y_offset - 12,
 					material_values = {
 						number = rank_number,
 					},
@@ -1555,6 +1555,30 @@ end_player_view_blueprints.havoc = {
 
 		pass_templates[#pass_templates + 1] = {
 			pass_type = "text",
+			style_id = "havoc_order_text",
+			value = "",
+			value_id = "havoc_order_text",
+			style = {
+				font_size = 18,
+				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
+				vertical_alignment = "center",
+				start_color = Color.terminal_text_header(0, true),
+				text_color = Color.terminal_text_header(0, true),
+				in_focus_text_color = Color.terminal_text_header(255, true),
+				offset = {
+					20,
+					badge_start_y_offset - 120,
+					5,
+				},
+				size = {
+					folded_card_size[1] - 40,
+					30,
+				},
+			},
+		}
+		pass_templates[#pass_templates + 1] = {
+			pass_type = "text",
 			style_id = "havoc_icon",
 			value = "",
 			value_id = "havoc_icon",
@@ -1562,6 +1586,7 @@ end_player_view_blueprints.havoc = {
 				font_size = 72,
 				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
+				vertical_alignment = "center",
 				start_color = Color.white(0, true),
 				text_color = Color.white(0, true),
 				in_focus_text_color = Color.white(255, true),
@@ -1569,6 +1594,10 @@ end_player_view_blueprints.havoc = {
 					-30,
 					-40,
 					5,
+				},
+				size = {
+					folded_card_size[1],
+					50,
 				},
 			},
 		}
@@ -1582,6 +1611,7 @@ end_player_view_blueprints.havoc = {
 				font_type = "machine_medium",
 				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
+				vertical_alignment = "center",
 				start_color = Color.terminal_text_header(0, true),
 				text_color = Color.terminal_text_header(0, true),
 				in_focus_text_color = Color.terminal_text_header(255, true),
@@ -1589,6 +1619,10 @@ end_player_view_blueprints.havoc = {
 					30,
 					-40,
 					5,
+				},
+				size = {
+					folded_card_size[1],
+					50,
 				},
 			},
 		}
@@ -1601,13 +1635,18 @@ end_player_view_blueprints.havoc = {
 				font_size = 18,
 				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
+				vertical_alignment = "center",
 				start_color = Color.terminal_text_header(0, true),
 				text_color = Color.terminal_text_header(0, true),
 				in_focus_text_color = Color.terminal_text_header(255, true),
 				offset = {
-					0,
+					20,
 					40,
 					5,
+				},
+				size = {
+					folded_card_size[1] - 40,
+					30,
 				},
 			},
 		}
@@ -1618,7 +1657,6 @@ end_player_view_blueprints.havoc = {
 			value = Localize("loc_havoc_eor_week_highest"),
 			style = {
 				font_size = 18,
-				horizontal_alignment = "center",
 				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
 				vertical_alignment = "center",
@@ -1626,9 +1664,13 @@ end_player_view_blueprints.havoc = {
 				start_color = Color.terminal_text_header(0, true),
 				in_focus_text_color = Color.terminal_text_header(255, true),
 				offset = {
-					0,
+					20,
 					-120,
 					5,
+				},
+				size = {
+					folded_card_size[1] - 40,
+					30,
 				},
 			},
 		}
@@ -1697,7 +1739,7 @@ end_player_view_blueprints.havoc = {
 				text_vertical_alignment = "center",
 				vertical_alignment = "center",
 				size = {
-					200,
+					folded_card_size[1],
 					50,
 				},
 				start_color = Color.white(0, true),
@@ -1723,7 +1765,7 @@ end_player_view_blueprints.havoc = {
 				text_vertical_alignment = "center",
 				vertical_alignment = "center",
 				size = {
-					200,
+					folded_card_size[1],
 					50,
 				},
 				start_color = Color.terminal_text_header(0, true),
@@ -1753,6 +1795,8 @@ end_player_view_blueprints.havoc = {
 
 		local order_reward = config.order_reward
 
+		content.label = Localize("loc_havoc_name")
+
 		if order_reward then
 			local current_charges = order_reward.current_charges
 			local previous_charges = order_reward.previous_charges
@@ -1764,10 +1808,18 @@ end_player_view_blueprints.havoc = {
 			local animation_state
 
 			if current_rank and previous_rank then
-				animation_state = previous_rank < current_rank and "rank_increase" or current_rank < previous_rank and "rank_decrease" or "charge_change"
+				if previous_rank < current_rank then
+					animation_state = "rank_increase"
+					content.havoc_order_text = Localize("loc_havoc_eor_promotion")
+				elseif current_rank < previous_rank then
+					animation_state = "rank_decrease"
+					content.havoc_order_text = Localize("loc_havoc_eor_demotion")
+				else
+					animation_state = "charge_change"
+					content.havoc_order_text = Localize("loc_havoc_eor_charge_used")
+				end
 			end
 
-			content.label = Localize("loc_havoc_name")
 			content.current_charges = current_charges
 			content.previous_charges = previous_charges
 			content.previous_rank = previous_rank
@@ -1797,13 +1849,13 @@ end_player_view_blueprints.havoc = {
 			content.current_rank_size = current_rank_to_string and #current_rank_to_string
 		end
 
-		local highest_rank_reward = config.highest_rank
+		local highest_rank_reward = config.highest_rank and config.highest_rank.rank
 
 		if highest_rank_reward then
 			content.highest_rank = highest_rank_reward
 		end
 
-		local week_rank_reward = config.week_rank
+		local week_rank_reward = config.week_rank and config.week_rank.rank
 
 		if week_rank_reward then
 			content.week_rank = week_rank_reward

@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autopistols/autopistol_p1_m1.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -240,7 +240,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -293,20 +293,20 @@ weapon_template.actions = {
 		},
 	},
 	action_shoot_hip = {
+		allowed_during_sprint = true,
 		ammunition_usage = 1,
 		anim_end_event = "attack_finished",
 		kind = "shoot_hit_scan",
 		recoil_template = "default_autopistol_assault",
 		spread_template = "default_autopistol_assault",
-		sprint_ready_up_time = 0.2,
-		sprint_requires_press_to_interrupt = true,
+		sprint_ready_up_time = 0,
 		start_input = "shoot",
 		stop_input = "shoot_release",
 		weapon_handling_template = "autogun_full_auto_fast",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 1.1,
+				modifier = 1.05,
 				t = 0.25,
 			},
 			{
@@ -314,10 +314,10 @@ weapon_template.actions = {
 				t = 0.4,
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.8,
 				t = 1,
 			},
-			start_modifier = 1.25,
+			start_modifier = 1.1,
 		},
 		fx = {
 			auto_fire_time_parameter_name = "wpn_fire_interval",
@@ -740,7 +740,6 @@ weapon_template.ammo_template = "autopistol_p1_m1"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_tweak_data = {
 	manual_toggle_only = true,

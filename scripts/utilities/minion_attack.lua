@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/utilities/minion_attack.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
@@ -408,10 +408,6 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 		local minion_num_shots_modifier = shoot_template.shotgun_blast and 1 or stat_buffs.minion_num_shots_modifier or 1
 
 		scratchpad.num_shots = math.random(diff_num_shots[1], diff_num_shots[2]) * minion_num_shots_modifier
-
-		if scratchpad.num_shots > 1 and Managers.state.pacing:is_auric() then
-			scratchpad.num_shots = scratchpad.num_shots * 1.5
-		end
 	end
 
 	scratchpad.shooting = true
@@ -1038,7 +1034,7 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 	local offtarget_damage_profile = action_data.offtarget_damage_profile
 	local damage_profile = override_damage_profile_or_nil or is_ally and friendly_fire_damage_profile or offtarget_hit_or_nil and offtarget_damage_profile or action_data.damage_profile
 	local attack_type = attack_types.melee
-	local target_weapon_template
+	local target_weapon_template, target_buff_extension
 	local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
 	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 	local is_player_character = Breed.is_player(breed_or_nil)
@@ -1047,8 +1043,9 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 
 		target_weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+		target_buff_extension = ScriptUnit.extension(target_unit, "buff_system")
 
-		local is_blockable = Block.attack_is_blockable(damage_profile, target_unit, target_weapon_template)
+		local is_blockable = Block.attack_is_blockable(damage_profile, target_unit, target_weapon_template, target_buff_extension)
 		local is_blocking = Block.is_blocking(target_unit, unit, attack_type, target_weapon_template, true)
 		local is_dodging = Dodge.is_dodging(target_unit, attack_type)
 

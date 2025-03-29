@@ -55,7 +55,7 @@ local background_world_params = {
 	world_layer = 1,
 	world_name = "ui_penances_world",
 }
-local penance_overview_view = {
+local penance_overview_view_settings = {
 	carousel_initial_scroll_speed = 0.6,
 	carousel_max_entries = 10,
 	carousel_max_scroll_speed = 15,
@@ -205,6 +205,32 @@ local penance_overview_view = {
 		zealot_2 = "content/ui/materials/icons/achievements/categories/category_zealot",
 	},
 	default_highlight_penances = {
+		ogryn = {
+			"basic_training",
+			"slide_dodge",
+			"missions_ogryn_2_easy_difficulty_1",
+			"coherency_toughness",
+			"fast_headshot_1",
+			"enemies_1",
+			"rank_ogryn_2_1",
+			"kill_renegades_1",
+			"mission_circumstace_1",
+			"ogryn_2_easy_2",
+			"amount_of_chests_opened_1",
+		},
+		psyker = {
+			"basic_training",
+			"slide_dodge",
+			"missions_psyker_2_easy_difficulty_1",
+			"coherency_toughness",
+			"fast_headshot_1",
+			"enemies_1",
+			"rank_psyker_2_1",
+			"kill_renegades_1",
+			"mission_circumstace_1",
+			"psyker_2_easy_1",
+			"amount_of_chests_opened_1",
+		},
 		veteran = {
 			"basic_training",
 			"slide_dodge",
@@ -231,33 +257,7 @@ local penance_overview_view = {
 			"zealot_2_easy_2",
 			"amount_of_chests_opened_1",
 		},
-		psyker = {
-			"basic_training",
-			"slide_dodge",
-			"missions_psyker_2_easy_difficulty_1",
-			"coherency_toughness",
-			"fast_headshot_1",
-			"enemies_1",
-			"rank_psyker_2_1",
-			"kill_renegades_1",
-			"mission_circumstace_1",
-			"psyker_2_easy_1",
-			"amount_of_chests_opened_1",
-		},
-		ogryn = {
-			"basic_training",
-			"slide_dodge",
-			"missions_ogryn_2_easy_difficulty_1",
-			"coherency_toughness",
-			"fast_headshot_1",
-			"enemies_1",
-			"rank_ogryn_2_1",
-			"kill_renegades_1",
-			"mission_circumstace_1",
-			"ogryn_2_easy_2",
-			"amount_of_chests_opened_1",
-		},
 	},
 }
 
-return settings("PenanceOverviewViewSettings", penance_overview_view)
+return settings("PenanceOverviewViewSettings", penance_overview_view_settings)

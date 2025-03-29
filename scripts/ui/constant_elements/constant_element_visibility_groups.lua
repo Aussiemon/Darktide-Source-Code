@@ -103,6 +103,17 @@ local visibility_groups = {
 		end,
 	},
 	{
+		name = "in_mission",
+		validation_function = function (element)
+			local view_open = Managers.ui:has_active_view()
+			local mechanism_manager = Managers.mechanism
+			local mechanism_name = mechanism_manager:mechanism_name()
+			local in_cinematic = Managers.state.cinematic and Managers.state.cinematic:active_camera()
+
+			return mechanism_name == "adventure" and not view_open and not in_cinematic
+		end,
+	},
+	{
 		name = "default",
 		validation_function = function (element)
 			return true

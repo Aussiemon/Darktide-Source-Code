@@ -56,7 +56,7 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 	local alternate_fire_component = self._alternate_fire_component
 
 	if alternate_fire_component.is_active then
-		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit, true)
+		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, self._player_unit, true)
 	end
 
 	AimAssist.reset_ramp_multiplier(self._aim_assist_ramp_component)

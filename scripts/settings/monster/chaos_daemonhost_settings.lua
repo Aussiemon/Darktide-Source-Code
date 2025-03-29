@@ -212,6 +212,13 @@ local chaos_daemonhost_settings = {
 		1,
 		1,
 	},
+	mutator_num_player_kills_for_despawn = {
+		1,
+		1,
+		2,
+		3,
+		4,
+	},
 }
 
 return settings("ChaosDaemonhostSettings", chaos_daemonhost_settings)

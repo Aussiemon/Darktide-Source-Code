@@ -8,6 +8,20 @@ table.make_unique(weapon_traits_ranged_warp_charge)
 local stat_buffs = BuffSettings.stat_buffs
 
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_increased_vent_speed = {
+	format_values = {
+		vent_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_increased_vent_speed",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.vent_warp_charge_speed,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_increased_vent_speed = {
 			{
@@ -34,6 +48,20 @@ weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_increased
 	},
 }
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_reduced_vent_damage_taken = {
+	format_values = {
+		damage_reduction = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_reduced_vent_damage_taken",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.vent_warp_charge_damage_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_reduced_vent_damage_taken = {
 			{
@@ -60,6 +88,20 @@ weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_reduced_v
 	},
 }
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_reduced_warp_charge_generation_firing = {
+	format_values = {
+		warp_charge_reduction = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_reduced_warp_charge_generation_firing",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.warp_charge_immediate_amount,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_reduced_warp_charge_generation_firing = {
 			{
@@ -86,6 +128,20 @@ weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_reduced_w
 	},
 }
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_reduced_warp_charge_generation_charging = {
+	format_values = {
+		warp_charge_reduction = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_reduced_warp_charge_generation_charging",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.warp_charge_over_time_amount,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_reduced_warp_charge_generation_charging = {
 			{
@@ -112,6 +168,20 @@ weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_reduced_w
 	},
 }
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_increased_charge_speed = {
+	format_values = {
+		charge_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_increased_charge_speed",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.charge_up_time,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_increased_charge_speed = {
 			{
@@ -138,6 +208,20 @@ weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_increased
 	},
 }
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_increased_damage_on_full_charge = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_increased_damage_on_full_charge",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.fully_charged_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_increased_damage_on_full_charge = {
 			{
@@ -164,6 +248,20 @@ weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_increased
 	},
 }
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_high_warp_charge_increased_charge_speed = {
+	format_values = {
+		charge_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_high_warp_charge_increased_charge_speed",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.charge_up_time,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_high_warp_charge_increased_charge_speed = {
 			{
@@ -190,6 +288,20 @@ weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_high_warp
 	},
 }
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_high_warp_charge_increased_damage_on_full_charge = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_warp_charge_wield_high_warp_charge_increased_damage_on_full_charge",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.fully_charged_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_warp_charge_wield_high_warp_charge_increased_damage_on_full_charge = {
 			{

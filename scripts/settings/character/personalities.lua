@@ -345,4 +345,4 @@ local personalities = {
 	},
 }
 
-return personalities
+return settings("Personalities", personalities)

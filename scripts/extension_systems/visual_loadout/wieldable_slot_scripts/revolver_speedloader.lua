@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_speedloader.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Component = require("scripts/utilities/component")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")

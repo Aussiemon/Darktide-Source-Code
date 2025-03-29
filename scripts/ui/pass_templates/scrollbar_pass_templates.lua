@@ -143,7 +143,10 @@ local scrollbar_base = {
 				is_hover = not content.using_custom_gamepad_navigation and content.enable_gamepad_scrolling and (hotspot.is_selected or hotspot.is_focused or content.focused or content.selected)
 			end
 
-			local scroll_axis = input_service:get("scroll_axis")
+			content.in_scroll_area = using_cursor_navigation and is_hover
+
+			local axis_name = not using_cursor_navigation and content.gamepad_axis_name or "scroll_axis"
+			local scroll_axis = input_service:get(axis_name)
 			local scroll_multiplier = math.abs(scroll_axis[axis]) * 0.8
 			local scroll_amount = (content.scroll_amount or 0.1) * scroll_multiplier
 

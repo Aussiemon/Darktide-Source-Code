@@ -411,8 +411,10 @@ local default_view_input_settings = {
 		},
 		accept_invite_notification = {
 			"keyboard_f10",
-			"xbox_controller_start",
-			"ps4_controller_options",
+			"xbox_controller_d_right+xbox_controller_a",
+			"xbox_controller_a+xbox_controller_d_right",
+			"ps4_controller_d_right+ps4_controller_cross",
+			"ps4_controller_cross+ps4_controller_d_right",
 			bindable = false,
 			description = "",
 		},

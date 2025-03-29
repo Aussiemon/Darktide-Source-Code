@@ -273,4 +273,4 @@ local growing_up = {
 	},
 }
 
-return growing_up
+return settings("GrowingUp", growing_up)

@@ -4,6 +4,7 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local Items = require("scripts/utilities/items")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
+local Offer = require("scripts/utilities/offer")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local StoreViewContentBlueprints = require("scripts/ui/views/store_view/store_view_content_blueprints")
@@ -629,69 +630,6 @@ StoreView._is_owned = function (self, items)
 	return total_count == owned_count, owned_items
 end
 
-StoreView._extract_items = function (self, offer)
-	local offer_type = offer.description.type
-	local items = {}
-
-	if offer_type == "bundle" then
-		local bundle_info = offer.bundleInfo
-
-		for i = 1, #bundle_info do
-			local bundle_offer = bundle_info[i]
-			local real_item, item = self:_extract_item(bundle_offer.description)
-
-			items[#items + 1] = {
-				real_item = real_item,
-				gearId = bundle_offer.description.gearId,
-				item = item,
-				offer = bundle_offer,
-			}
-		end
-	else
-		local real_item, item = self:_extract_item(offer.description)
-
-		items[#items + 1] = {
-			real_item = real_item,
-			gearId = offer.description.gearId,
-			item = item,
-			offer = offer,
-		}
-	end
-
-	return items
-end
-
-StoreView._extract_item = function (self, description)
-	local modified_desciption = table.clone(description)
-
-	modified_desciption.gear_id = description.gearId
-
-	local item = MasterItems.get_store_item_instance(modified_desciption)
-
-	if not item then
-		return
-	end
-
-	local visual_item
-	local item_type = item.item_type
-
-	if item_type == "WEAPON_SKIN" then
-		visual_item = Items.weapon_skin_preview_item(item)
-	elseif item_type == "WEAPON_TRINKET" then
-		visual_item = Items.weapon_trinket_preview_item(item)
-
-		if visual_item and not visual_item.slots then
-			visual_item.slots = {
-				"slot_trinket_1",
-			}
-		end
-	end
-
-	visual_item = visual_item or item
-
-	return item, visual_item
-end
-
 StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules)
 	self:_unload_url_textures()
 
@@ -726,7 +664,7 @@ StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules
 			if bundle_info then
 				local starting_price = offer.price and offer.price.amount.amount or 0
 				local discounted_price = starting_price
-				local items = self:_extract_items(offer)
+				local items = Offer.extract_items(offer)
 				local _, owned_items = self:_is_owned(items)
 
 				if #owned_items > 0 then

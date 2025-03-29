@@ -117,12 +117,12 @@ local weapon_ammo_templates = {
 	},
 	ogryn_gauntlet_p1_m1 = {
 		ammunition_clip = {
-			lerp_basic = 3,
-			lerp_perfect = 5,
+			lerp_basic = 4,
+			lerp_perfect = 6,
 		},
 		ammunition_reserve = {
-			lerp_basic = 18,
-			lerp_perfect = 40,
+			lerp_basic = 32,
+			lerp_perfect = 55,
 		},
 	},
 	lasgun_p1_m1 = {
@@ -252,7 +252,7 @@ local weapon_ammo_templates = {
 		},
 		ammunition_reserve = {
 			lerp_basic = 72,
-			lerp_perfect = 168,
+			lerp_perfect = 192,
 		},
 	},
 	ogryn_rippergun_p1_m2 = {

@@ -231,11 +231,11 @@ end
 function _interrupt_alternate_fire(unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
 	local alternate_fire = unit_data_extension:write_component("alternate_fire")
 	local alternate_fire_settings = target_weapon_template and target_weapon_template.alternate_fire_settings
-	local always_interupt_alternate_fire = alternate_fire_settings and alternate_fire_settings.always_interupt
+	local always_interrupt_alternate_fire = alternate_fire_settings and alternate_fire_settings.always_interrupt
 	local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 	local has_buff = buff_extension:has_keyword(buff_keywords.stun_immune)
 
-	if (interrupt_alternate_fire or always_interupt_alternate_fire) and alternate_fire.is_active and not has_buff then
+	if (interrupt_alternate_fire or always_interrupt_alternate_fire) and alternate_fire.is_active and not has_buff then
 		local weapon_tweak_templates_component = unit_data_extension:write_component("weapon_tweak_templates")
 		local animation_extension = ScriptUnit.has_extension(attacked_unit, "animation_system")
 
@@ -262,7 +262,7 @@ function _interrupt_alternate_fire(unit_data_extension, target_weapon_template, 
 				local peeking_component = unit_data_extension:write_component("peeking")
 				local first_person_extension = ScriptUnit.extension(attacked_unit, "first_person_system")
 
-				AlternateFire.stop(alternate_fire, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, target_weapon_template, false, attacked_unit, false)
+				AlternateFire.stop(alternate_fire, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, target_weapon_template, attacked_unit, false)
 			end
 		end
 	end

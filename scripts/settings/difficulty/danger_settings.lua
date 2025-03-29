@@ -1,91 +1,85 @@
 ﻿-- chunkname: @scripts/settings/difficulty/danger_settings.lua
 
-local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local DangerSettings = {
-	by_index = {
-		{
-			display_name = "loc_mission_board_danger_lowest",
-			expected_resistance = 2,
-			index = 1,
-			name = "sedition",
-			color = {
-				255,
-				169,
-				211,
-				158,
-			},
+	{
+		challenge = 1,
+		difficulty = 1,
+		display_name = "loc_mission_board_danger_lowest",
+		is_auric = false,
+		name = "sedition",
+		resistance = 2,
+		unlocks_at = 1,
+		color = {
+			255,
+			169,
+			211,
+			158,
 		},
-		{
-			display_name = "loc_mission_board_danger_low",
-			expected_resistance = 2,
-			index = 2,
-			name = "uprising",
-			color = {
-				255,
-				169,
-				211,
-				158,
-			},
+	},
+	{
+		challenge = 2,
+		difficulty = 2,
+		display_name = "loc_mission_board_danger_low",
+		is_auric = false,
+		name = "uprising",
+		resistance = 2,
+		unlocks_at = 1,
+		color = {
+			255,
+			169,
+			211,
+			158,
 		},
-		{
-			display_name = "loc_mission_board_danger_medium",
-			expected_resistance = 3,
-			index = 3,
-			name = "malice",
-			color = {
-				255,
-				228,
-				189,
-				81,
-			},
+	},
+	{
+		challenge = 3,
+		difficulty = 3,
+		display_name = "loc_mission_board_danger_medium",
+		is_auric = false,
+		name = "malice",
+		resistance = 3,
+		unlocks_at = 3,
+		color = {
+			255,
+			228,
+			189,
+			81,
 		},
-		{
-			display_name = "loc_mission_board_danger_high",
-			expected_resistance = 3,
-			index = 4,
-			name = "heresy",
-			color = {
-				255,
-				228,
-				189,
-				81,
-			},
+	},
+	{
+		challenge = 4,
+		difficulty = 4,
+		display_name = "loc_mission_board_danger_high",
+		is_auric = false,
+		name = "heresy",
+		resistance = 4,
+		unlocks_at = 9,
+		color = {
+			255,
+			228,
+			189,
+			81,
 		},
-		{
-			display_name = "loc_mission_board_danger_highest",
-			expected_resistance = 4,
-			index = 5,
-			name = "damnation",
-			color = {
-				255,
-				233,
-				84,
-				84,
-			},
+	},
+	{
+		challenge = 5,
+		difficulty = 5,
+		display_name = "loc_mission_board_danger_highest",
+		is_auric = false,
+		name = "damnation",
+		resistance = 4,
+		unlocks_at = 15,
+		color = {
+			255,
+			233,
+			84,
+			84,
 		},
 	},
 }
 
-DangerSettings.calculate_danger = function (challenge, resistance)
-	return challenge
-end
-
-DangerSettings.required_level_by_mission_type = function (index, mission_type)
-	if not mission_type or not PlayerProgressionUnlocks.mission_difficulty_unlocks[mission_type] then
-		mission_type = "normal"
-	end
-
-	return PlayerProgressionUnlocks.mission_difficulty_unlocks[mission_type][index] or 1
-end
-
-DangerSettings.danger_by_name = function (name)
-	for i = 1, #DangerSettings.by_index do
-		local danger = DangerSettings.by_index[i]
-
-		if danger.name == name then
-			return danger
-		end
-	end
+for i, data in ipairs(DangerSettings) do
+	data.index = i
 end
 
 return settings("DangerSettings", DangerSettings)

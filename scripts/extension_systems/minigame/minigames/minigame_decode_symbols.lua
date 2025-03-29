@@ -67,7 +67,9 @@ MinigameDecodeSymbols.start = function (self, player)
 	if is_server then
 		local player_unit = player.player_unit
 		local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
-		local fx_sources = visual_loadout_extension:source_fx_for_slot("slot_device")
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local inventory_component = unit_data_extension:read_component("inventory")
+		local fx_sources = visual_loadout_extension:source_fx_for_slot(inventory_component.wielded_slot)
 
 		Unit.set_flow_variable(self._minigame_unit, "player_unit", player_unit)
 

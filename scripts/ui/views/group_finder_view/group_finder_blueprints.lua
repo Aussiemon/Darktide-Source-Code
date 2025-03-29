@@ -3,7 +3,7 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
+local Danger = require("scripts/utilities/danger")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -2480,32 +2480,15 @@ local function generate_blueprints_func(grid_size)
 							sub_header_text = first_selected_tag and first_selected_tag.text or "-"
 
 							local difficulty_name = first_selected_tag.difficulty
+							local difficulty_board = first_selected_tag.difficulty_board
+							local difficulty_index = Danger.index_by_name(difficulty_name)
 
-							if difficulty_name then
-								local difficulty_board = first_selected_tag.difficulty_board
-								local difficulty_setting = DangerSettings.danger_by_name(difficulty_name)
+							if difficulty_index then
+								content.difficulty_text = Danger.text_bars(difficulty_index)
 
-								if difficulty_setting then
-									local difficulty_index = difficulty_setting.index
-									local difficulty_color = difficulty_setting.color
-									local difficulty_text = TextUtilities.apply_color_to_text(" ", Color.terminal_text_header(255, true))
+								local is_auric_board = difficulty_board and difficulty_board == "auric"
 
-									difficulty_text = difficulty_text .. "{#color(" .. difficulty_color[2] .. "," .. difficulty_color[3] .. "," .. difficulty_color[4] .. ")}"
-
-									for i = 1, #DangerSettings.by_index do
-										if i == difficulty_index + 1 then
-											difficulty_text = difficulty_text .. "{#reset()}"
-										end
-
-										difficulty_text = difficulty_text .. ""
-									end
-
-									content.difficulty_text = difficulty_text
-
-									if difficulty_board and difficulty_board == "auric" then
-										content.difficulty_text_overlay = ""
-									end
-								end
+								content.difficulty_text_overlay = is_auric_board and "" or content.difficulty_text_overlay
 							end
 						end
 
@@ -3373,28 +3356,14 @@ local function generate_blueprints_func(grid_size)
 				local tag = element.tag
 				local difficulty_name = tag.difficulty
 				local difficulty_board = tag.difficulty_board
-				local difficulty_setting = DangerSettings.danger_by_name(difficulty_name)
+				local difficulty_index = Danger.index_by_name(difficulty_name)
 
-				if difficulty_setting then
-					local difficulty_index = difficulty_setting.index
-					local difficulty_color = difficulty_setting.color
-					local difficulty_text = TextUtilities.apply_color_to_text(" ", Color.terminal_text_header(255, true))
+				if difficulty_index then
+					content.difficulty_text = Danger.text_bars(difficulty_index)
 
-					difficulty_text = difficulty_text .. "{#color(" .. difficulty_color[2] .. "," .. difficulty_color[3] .. "," .. difficulty_color[4] .. ")}"
+					local is_auric_board = difficulty_board and difficulty_board == "auric"
 
-					for i = 1, #DangerSettings.by_index do
-						if i == difficulty_index + 1 then
-							difficulty_text = difficulty_text .. "{#reset()}"
-						end
-
-						difficulty_text = difficulty_text .. ""
-					end
-
-					content.difficulty_text = difficulty_text
-
-					if difficulty_board and difficulty_board == "auric" then
-						content.difficulty_text_overlay = ""
-					end
+					content.difficulty_text_overlay = is_auric_board and "" or content.difficulty_text_overlay
 				end
 			end,
 		},
@@ -4375,24 +4344,10 @@ local function generate_blueprints_func(grid_size)
 						background_texture_style.material_values.texture_map = background_texture
 					end
 
-					if difficulty_name then
-						local difficulty_setting = DangerSettings.danger_by_name(difficulty_name)
+					local difficulty_index = Danger.index_by_name(difficulty_name)
 
-						if difficulty_setting then
-							local difficulty_index = difficulty_setting.index
-							local difficulty_color = difficulty_setting.color
-
-							difficulty_text = TextUtilities.apply_color_to_text(" ", Color.terminal_text_header(255, true))
-							difficulty_text = difficulty_text .. "{#color(" .. difficulty_color[2] .. "," .. difficulty_color[3] .. "," .. difficulty_color[4] .. ")}"
-
-							for i = 1, #DangerSettings.by_index do
-								if i == difficulty_index + 1 then
-									difficulty_text = difficulty_text .. "{#reset()}"
-								end
-
-								difficulty_text = difficulty_text .. ""
-							end
-						end
+					if difficulty_index then
+						difficulty_text = Danger.text_bars(difficulty_index)
 					end
 
 					content.difficulty_text = difficulty_text or ""

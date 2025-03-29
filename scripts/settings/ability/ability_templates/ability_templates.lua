@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/ability/ability_templates/ability_templates.lua
 
+local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local ability_templates = {}
 
 local function _require_ability_templates(path_prefix, template_names)
@@ -19,19 +20,13 @@ local function _require_ability_templates(path_prefix, template_names)
 	})
 end
 
+local template_names = {}
+
+for _, ability in pairs(PlayerAbilities) do
+	template_names[#template_names + 1] = ability.ability_template
+end
+
 local path_prefix = "scripts/settings/ability/ability_templates/%s"
-local template_names = {
-	"ogryn_charge",
-	"ogryn_gunlugger_stance",
-	"ogryn_taunt_shout",
-	"psyker_overcharge_stance",
-	"psyker_shout",
-	"psyker_stance",
-	"veteran_combat_ability",
-	"veteran_stealth_combat_ability",
-	"zealot_dash",
-	"zealot_invisibility",
-}
 
 _require_ability_templates(path_prefix, template_names)
 

@@ -195,8 +195,8 @@ local havoc_settings = {
 				modify_horde_hit_mass = 1.5,
 			},
 			{
-				modify_horde_health = 0.35,
-				modify_horde_hit_mass = 2.2,
+				modify_horde_health = 0.3,
+				modify_horde_hit_mass = 1.7,
 			},
 		},
 		more_elites = {
@@ -295,10 +295,10 @@ local havoc_settings = {
 				ammo_pickup_modifier = 0.5,
 			},
 			{
-				ammo_pickup_modifier = 0.35,
+				ammo_pickup_modifier = 0.45,
 			},
 			{
-				ammo_pickup_modifier = 0.25,
+				ammo_pickup_modifier = 0.4,
 			},
 		},
 		horde_spawn_rate_increase = {

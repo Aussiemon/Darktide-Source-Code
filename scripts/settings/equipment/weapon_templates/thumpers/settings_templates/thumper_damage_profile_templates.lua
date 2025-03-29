@@ -1,31 +1,25 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local melee_attack_strengths = AttackSettings.melee_attack_strength
+local big_cleave = DamageProfileSettings.big_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
-
-local melee_attack_strengths = AttackSettings.melee_attack_strength
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local big_cleave = DamageProfileSettings.big_cleave
 
 damage_templates.light_ogryn_shotgun_tank = {
 	ragdoll_only = true,
@@ -58,8 +52,8 @@ damage_templates.light_ogryn_shotgun_tank = {
 		},
 	},
 	damage_type = damage_types.blunt,
-	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.default,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -245,8 +239,8 @@ damage_templates.default_ogryn_shotgun_assault = {
 	},
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.ballistic,
 	wounds_template = WoundsTemplates.thumper_shotgun,
 	on_kill_area_suppression = {
 		distance = 5,

@@ -64,6 +64,8 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 		end
 	end
 
+	self._area_template_name = template.name
+	self._source_side_name = source_side_name
 	self._sides = side_system:sides()
 	self._side_names = side_names or side_system:side_names()
 
@@ -428,6 +430,14 @@ LiquidAreaExtension.destroy = function (self)
 			end
 		end
 	end
+end
+
+LiquidAreaExtension.source_side_name = function (self)
+	return self._source_side_name
+end
+
+LiquidAreaExtension.area_template_name = function (self)
+	return self._area_template_name
 end
 
 LiquidAreaExtension.is_position_inside = function (self, position)

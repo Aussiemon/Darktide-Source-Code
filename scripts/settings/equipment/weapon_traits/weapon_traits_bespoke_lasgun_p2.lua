@@ -8,6 +8,30 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_burninating_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_burninating_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
 			{
@@ -38,6 +62,36 @@ templates.weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
 	},
 }
 templates.weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot = {
+	format_values = {
+		stagger = {
+			format_type = "percentage",
+			num_decimals = 0,
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.stagger_weakspot_reduction_modifier,
+				},
+			},
+			value_manipulation = function (value)
+				return 100 - math.round(value * 100)
+			end,
+		},
+		ranged_stagger = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot",
+				find_value_type = "buff_template",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_impact_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot = {
 			{
@@ -64,6 +118,34 @@ templates.weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot = 
 	},
 }
 templates.weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time = {
+	format_values = {
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time",
+				find_value_type = "trait_override",
+				path = {
+					"duration_per_stack",
+				},
+			},
+		},
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "string",
+			value = "10",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time = {
 			{
@@ -94,6 +176,20 @@ templates.weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time = {
 	},
 }
 templates.weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = {
 			{
@@ -120,6 +216,20 @@ templates.weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = {
 	},
 }
 templates.weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.stagger_count_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = {
 			{
@@ -146,6 +256,23 @@ templates.weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = {
 	},
 }
 templates.weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_attacks = {
+	format_values = {
+		charge_time = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_attacks",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.charge_up_time,
+				},
+			},
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_attacks = {
 			{
@@ -172,6 +299,65 @@ templates.weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_atta
 	},
 }
 templates.weapon_trait_bespoke_lasgun_p2_targets_receive_rending_debuff_on_charged_shots = {
+	format_values = {
+		min_stack_count = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_targets_receive_rending_debuff_on_charged_shots",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"threshold_num_stacks_on_proc",
+					1,
+					"num_stacks",
+				},
+			},
+		},
+		max_stack_count = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_targets_receive_rending_debuff_on_charged_shots",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"threshold_num_stacks_on_proc",
+					2,
+					"num_stacks",
+				},
+			},
+		},
+		rending = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"stat_buffs",
+					stat_buffs.rending_multiplier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"duration",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_targets_receive_rending_debuff_on_charged_shots = {
 			{
@@ -234,6 +420,19 @@ templates.weapon_trait_bespoke_lasgun_p2_targets_receive_rending_debuff_on_charg
 	},
 }
 templates.weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits = {
+	format_values = {
+		hit_mass_reduction = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits = {
 			{

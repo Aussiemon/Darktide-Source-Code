@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/devices/scanner_equip.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -146,7 +146,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 local scan_settings = {
 	confirm_time = 1,
@@ -349,7 +349,7 @@ weapon_template.conditional_state_to_action_input = {
 	},
 }
 weapon_template.alternate_fire_settings = {
-	always_interupt = true,
+	always_interrupt = true,
 	start_anim_event = "aim_start",
 	stop_anim_event = "aim_end",
 	movement_speed_modifier = {
@@ -387,7 +387,6 @@ weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/auspex_sc
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 

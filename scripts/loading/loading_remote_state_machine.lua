@@ -10,7 +10,7 @@ local LoadingRemoteStateMachine = class("LoadingRemoteStateMachine")
 
 LoadingRemoteStateMachine.TIMEOUT = 30
 
-LoadingRemoteStateMachine.init = function (self, network_delegate, client_channel_id, spawn_queue, done_loading_level_func)
+LoadingRemoteStateMachine.init = function (self, network_delegate, client_channel_id, spawn_queue, done_loading_level_func, mission_seed)
 	local shared_state = {
 		added_to_game_session = false,
 		state = "loading",
@@ -20,6 +20,7 @@ LoadingRemoteStateMachine.init = function (self, network_delegate, client_channe
 		timeout = LoadingRemoteStateMachine.TIMEOUT,
 		spawn_queue = spawn_queue,
 		done_loading_level_func = done_loading_level_func,
+		mission_seed = mission_seed,
 	}
 
 	self._shared_state = shared_state
@@ -40,11 +41,18 @@ LoadingRemoteStateMachine.init = function (self, network_delegate, client_channe
 	state_machine:set_initial_state(RemoteDetermineSpawnGroupState)
 
 	self._state_machine = state_machine
+
+	network_delegate:register_connection_channel_events(self, client_channel_id, "rpc_request_mission_seed")
+end
+
+LoadingRemoteStateMachine.rpc_request_mission_seed = function (self, channel_id)
+	RPC.rpc_set_mission_seed(channel_id, self._shared_state.mission_seed)
 end
 
 LoadingRemoteStateMachine.destroy = function (self)
 	local shared_state = self._shared_state
 
+	shared_state.network_delegate:unregister_channel_events(shared_state.client_channel_id, "rpc_request_mission_seed")
 	self._state_machine:event("disconnected")
 	self._state_machine:update(0)
 	self._state_machine:delete()

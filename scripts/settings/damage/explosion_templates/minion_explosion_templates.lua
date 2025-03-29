@@ -15,6 +15,11 @@ local explosion_templates = {
 		static_power_level = 0,
 		close_damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact_close,
 		damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast",
 		},
@@ -34,6 +39,11 @@ local explosion_templates = {
 		static_power_level = 0,
 		close_damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact_close,
 		damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_gas",
 			"wwise/events/weapon/play_explosion_refl_small",
@@ -49,6 +59,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.twin_grenade_explosion,
 		damage_profile = DamageProfileTemplates.twin_grenade_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		scaled_power_level = {
 			100,
 			200,
@@ -75,6 +90,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.poxwalker_explosion_close,
 		damage_profile = DamageProfileTemplates.poxwalker_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/explosions/poxwalker_explode",
 		},
@@ -93,6 +113,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.poxwalker_explosion_close,
 		damage_profile = DamageProfileTemplates.poxwalker_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter",
 		},
@@ -112,6 +137,11 @@ local explosion_templates = {
 		static_power_level = 250,
 		close_damage_profile = DamageProfileTemplates.nurgle_head_parasite,
 		damage_profile = DamageProfileTemplates.nurgle_head_parasite,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/beast_of_nurgle/bon_death_splatter",
 		},
@@ -126,6 +156,11 @@ local explosion_templates = {
 		scalable_radius = false,
 		damage_profile = DamageProfileTemplates.renegade_captain_bolt_pistol_kill_explosion,
 		damage_type = damage_types.boltshell,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/weapons/rifles/bolter/bolter_burrowed_explode",
 		},
@@ -140,6 +175,11 @@ local explosion_templates = {
 		scalable_radius = false,
 		damage_profile = DamageProfileTemplates.renegade_captain_bolt_pistol_stop_explosion,
 		damage_type = damage_types.boltshell,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 4,
 			suppression_value = 4,
@@ -158,6 +198,11 @@ local explosion_templates = {
 		scalable_radius = false,
 		damage_profile = DamageProfileTemplates.renegade_captain_bolt_pistol_stop_explosion,
 		damage_type = damage_types.boltshell,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 4,
 			suppression_value = 4,
@@ -177,6 +222,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		close_damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact_close,
 		damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast",
 		},
@@ -199,6 +249,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade,
 		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/explosions/frag_grenade_01",
 		},
@@ -221,6 +276,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.renegade_shocktrooper_frag_grenade,
 		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/explosions/frag_grenade_01",
 		},
@@ -239,6 +299,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.renegade_captain_toughness_depleted,
 		damage_profile = DamageProfileTemplates.renegade_captain_toughness_depleted,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/renegade_captain/renegade_captain_shield_burst",
 		},
@@ -256,6 +321,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		damage_profile = DamageProfileTemplates.chaos_hound_push,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/chaos_hound/chaos_hound_pounce",
 		},
@@ -271,6 +341,11 @@ local explosion_templates = {
 		static_power_level = 0,
 		close_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		damage_profile = DamageProfileTemplates.chaos_hound_push,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/purple_stimmed_explosion",
 		},
@@ -290,6 +365,11 @@ local explosion_templates = {
 		static_power_level = 0,
 		close_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		damage_profile = DamageProfileTemplates.chaos_hound_push,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/twin_disappear_cloud",
 		},
@@ -308,6 +388,11 @@ local explosion_templates = {
 		static_power_level = 0,
 		close_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		damage_profile = DamageProfileTemplates.chaos_hound_push,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/twin_disappear_cloud",
 		},
@@ -328,6 +413,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		close_damage_profile = DamageProfileTemplates.flamer_backpack_explosion_close,
 		damage_profile = DamageProfileTemplates.flamer_backpack_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuel_detonation",
 		},
@@ -348,6 +438,11 @@ local explosion_templates = {
 		static_power_level = 150,
 		close_damage_profile = DamageProfileTemplates.interrupted_flamer_backpack_explosion_close,
 		damage_profile = DamageProfileTemplates.interrupted_flamer_backpack_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuel_detonation",
 		},
@@ -368,6 +463,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		close_damage_profile = DamageProfileTemplates.flamer_backpack_explosion_close,
 		damage_profile = DamageProfileTemplates.flamer_backpack_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuel_detonation",
 		},
@@ -388,6 +488,11 @@ local explosion_templates = {
 		static_power_level = 500,
 		close_damage_profile = DamageProfileTemplates.interrupted_flamer_backpack_explosion_close,
 		damage_profile = DamageProfileTemplates.interrupted_flamer_backpack_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		vfx = {
 			"content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuel_detonation",
 		},

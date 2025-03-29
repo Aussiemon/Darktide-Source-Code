@@ -10,6 +10,7 @@ MissionObjectiveTimed.init = function (self)
 	self._duration = 0
 	self._time_left = 0
 	self._time_elapsed = 0
+	self._paused = false
 end
 
 MissionObjectiveTimed._get_duration = function (self, mission_objective_data)
@@ -18,7 +19,7 @@ MissionObjectiveTimed._get_duration = function (self, mission_objective_data)
 	end
 
 	if mission_objective_data.duration_by_difficulty then
-		local difficulty = Managers.state.difficulty:get_difficulty()
+		local difficulty = Managers.state.difficulty:get_initial_challenge()
 
 		if difficulty > #mission_objective_data.duration_by_difficulty then
 			Log.error("MissionObjectiveTimed", "duration_by_difficulty misses a duration corresponding to difficulty '%d', falling back to the duration on the highest index instead (duration will be '%d')", difficulty, mission_objective_data.duration_by_difficulty[#mission_objective_data.duration_by_difficulty])
@@ -51,20 +52,28 @@ end
 MissionObjectiveTimed.update = function (self, dt)
 	MissionObjectiveTimed.super.update(self, dt)
 
-	local timed_synchronizer_extension = self:synchronizer_extension()
-
-	if timed_synchronizer_extension then
-		dt = timed_synchronizer_extension:rubberband_time(dt)
+	if not self._paused then
+		self._time_elapsed = self._time_elapsed + dt
+		self._time_elapsed = math.min(self._time_elapsed, self._duration)
+		self._time_left = self._duration - self._time_elapsed
 	end
-
-	self._time_elapsed = self._time_elapsed + dt
-	self._time_elapsed = math.min(self._time_elapsed, self._duration)
-	self._time_left = self._duration - self._time_elapsed
 end
 
 MissionObjectiveTimed.add_time = function (self, time)
 	self._time_elapsed = math.clamp(self._time_elapsed + time, 0, self._duration)
 	self._time_left = self._duration - self._time_elapsed
+end
+
+MissionObjectiveTimed.pause = function (self)
+	self._paused = true
+end
+
+MissionObjectiveTimed.resume = function (self)
+	self._paused = false
+end
+
+MissionObjectiveTimed.timer_paused = function (self)
+	return self._paused
 end
 
 MissionObjectiveTimed.update_progression = function (self)

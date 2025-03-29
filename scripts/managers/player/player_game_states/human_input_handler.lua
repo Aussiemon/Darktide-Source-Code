@@ -167,9 +167,11 @@ HumanInputHandler._buffer_index = function (self, frame)
 end
 
 HumanInputHandler.pre_update = function (self, dt, t, input_service, ui_interaction_action)
+	local ui_inputs_in_use = Managers.ui:inputs_in_use()
+
 	for i = 1, self._num_ephemeral_actions do
 		local old_value = self._ephemeral_action_cache[i]
-		local new_value = old_value or input_service:get(self._ephemeral_actions[i])
+		local new_value = old_value or input_service:get_with_filters(self._ephemeral_actions[i], ui_inputs_in_use)
 
 		self._ephemeral_action_cache[i] = old_value or new_value
 	end
@@ -232,6 +234,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 		ferror("Trying to fill non-positive index to input cache.")
 	end
 
+	local ui_inputs_in_use = Managers.ui:inputs_in_use()
 	local actions = self._actions
 	local num_actions = self._num_actions
 	local num_ephemeral_actions = self._num_ephemeral_actions
@@ -239,7 +242,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 	for i = 1, num_actions do
 		local action = actions[i]
 
-		input_cache[i][index] = input_service:get(action)
+		input_cache[i][index] = input_service:get_with_filters(action, ui_inputs_in_use)
 	end
 
 	local ephemeral_action_cache = self._ephemeral_action_cache

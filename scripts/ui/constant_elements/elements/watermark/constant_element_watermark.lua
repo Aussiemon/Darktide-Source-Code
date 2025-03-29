@@ -41,7 +41,7 @@ ConstantElementWatermark.destroy = function (self)
 		self._world_spawner = nil
 	end
 
-	ConstantElementWatermark.super.destroy()
+	ConstantElementWatermark.super.destroy(self)
 end
 
 ConstantElementWatermark._initialize_world = function (self)

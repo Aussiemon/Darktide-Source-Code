@@ -3,7 +3,7 @@
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PocketableUtils = {}
 
-local function _validate_slot_not_equipped(target_unit, slot_name)
+PocketableUtils.validate_slot_not_equipped = function (target_unit, slot_name)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local target_player = target_unit and player_unit_spawn_manager:owner(target_unit)
 	local is_valid_target = target_player and target_player:is_human_controlled()
@@ -21,11 +21,11 @@ local function _validate_slot_not_equipped(target_unit, slot_name)
 end
 
 PocketableUtils.validate_give_pocketable_target_func = function (target_unit)
-	return _validate_slot_not_equipped(target_unit, "slot_pocketable")
+	return PocketableUtils.validate_slot_not_equipped(target_unit, "slot_pocketable")
 end
 
 PocketableUtils.validate_give_pocketable_small_target_func = function (target_unit)
-	return _validate_slot_not_equipped(target_unit, "slot_pocketable_small")
+	return PocketableUtils.validate_slot_not_equipped(target_unit, "slot_pocketable_small")
 end
 
 return PocketableUtils

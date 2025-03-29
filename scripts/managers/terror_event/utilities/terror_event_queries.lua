@@ -67,6 +67,15 @@ TerrorEventQueries.num_alive_minions_in_level = function (optional_tag, optional
 	end
 end
 
+TerrorEventQueries.get_alive_entities_in_level = function (optional_tag, optional_side_name)
+	local tag = optional_tag or "minion"
+	local side_name = optional_side_name or DEFAULT_SIDE_NAME
+	local side = Managers.state.extension:system("side_system"):get_side_from_name(side_name)
+	local _, allied_alive_minion_units = side:relation_sides("allied"), side:alive_units_by_tag("allied", tag)
+
+	return allied_alive_minion_units
+end
+
 TerrorEventQueries.num_aggroed_minions_in_level = function (optional_side_name)
 	local side_name = optional_side_name or DEFAULT_SIDE_NAME
 	local side = Managers.state.extension:system("side_system"):get_side_from_name(side_name)

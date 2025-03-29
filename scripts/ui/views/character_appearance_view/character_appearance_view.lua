@@ -9,7 +9,6 @@ local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local ContentBlueprints = require("scripts/ui/views/character_appearance_view/character_appearance_view_content_blueprints")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
-local TextUtils = require("scripts/utilities/ui/text")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
@@ -32,7 +31,7 @@ local Personalities = require("scripts/settings/character/personalities")
 local Breeds = require("scripts/settings/breed/breeds")
 local CharacterAppearanceView = class("CharacterAppearanceView", "BaseView")
 local InputUtils = require("scripts/managers/input/input_utils")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local CharacterCreate = require("scripts/utilities/character_create")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -355,9 +354,15 @@ CharacterAppearanceView._setup_button_callbacks = function (self)
 	self._widgets_by_name.continue_button.content.hotspot.pressed_callback = callback(self, "_on_continue_pressed")
 end
 
+local BREED_TO_EVENT_SUFFIX = {
+	human = "human",
+	ogryn = "ogryn",
+}
+
 CharacterAppearanceView._setup_background_world = function (self)
 	local breed_name = self._character_create:breed()
-	local default_camera_event_id = "event_register_character_appearance_default_camera_" .. breed_name
+	local event_suffix = BREED_TO_EVENT_SUFFIX[breed_name] or breed_name
+	local default_camera_event_id = "event_register_character_appearance_default_camera_" .. event_suffix
 
 	self[default_camera_event_id] = function (self, camera_unit)
 		self._default_camera_unit = camera_unit
@@ -381,7 +386,7 @@ CharacterAppearanceView._setup_background_world = function (self)
 
 	for slot_name, slot in pairs(ItemSlotSettings) do
 		if slot.slot_type == "body" then
-			local item_camera_event_id = "event_register_character_appearance_camera_" .. breed_name .. "_" .. slot_name
+			local item_camera_event_id = "event_register_character_appearance_camera_" .. event_suffix .. "_" .. slot_name
 
 			self[item_camera_event_id] = function (self, camera_unit)
 				self._camera_by_slot_id[slot_name] = camera_unit
@@ -397,7 +402,7 @@ CharacterAppearanceView._setup_background_world = function (self)
 	self:_register_event("event_register_character_spawn_point")
 
 	if self._is_barber_mindwipe then
-		local spawn_point_event_id = "event_register_character_spawn_point_" .. breed_name
+		local spawn_point_event_id = "event_register_character_spawn_point_" .. event_suffix
 
 		self[spawn_point_event_id] = function (self, spawn_point_unit)
 			self._spawn_point_unit = spawn_point_unit
@@ -555,7 +560,7 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 									local changed_items = self:_filter_changed_items(items)
 
 									if changed_items then
-										ItemUtils.equip_slot_master_items(changed_items)
+										Items.equip_slot_master_items(changed_items)
 									end
 
 									local player = Managers.player:local_player(1)
@@ -1316,8 +1321,8 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 
 	local num_widgets = 0
 
-	for i = 1, #options do
-		local option = options[i]
+	for ii = 1, #options do
+		local option = options[ii]
 
 		if option.visibility_function and option.visibility_function() == true or not option.visibility_function then
 			num_widgets = num_widgets + 1
@@ -1690,8 +1695,8 @@ CharacterAppearanceView._is_option_valid = function (self, value_table, profile_
 
 	local is_option_valid = false
 
-	for i = 1, #value_table do
-		local value = value_table[i]
+	for ii = 1, #value_table do
+		local value = value_table[ii]
 
 		if profile_choice == value then
 			is_option_valid = true
@@ -1919,8 +1924,8 @@ CharacterAppearanceView._draw_grid = function (self, dt, t, input_service)
 	local render_settings = self._render_settings
 	local ui_scenegraph = self._ui_scenegraph
 
-	for i = 1, #self._page_grids do
-		local page_grid = self._page_grids[i]
+	for ii = 1, #self._page_grids do
+		local page_grid = self._page_grids[ii]
 		local grid = page_grid.grid
 		local widgets = page_grid.widgets
 		local support_widgets = page_grid.support_widgets
@@ -1929,16 +1934,16 @@ CharacterAppearanceView._draw_grid = function (self, dt, t, input_service)
 		UIRenderer.begin_pass(self._ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 		if support_widgets then
-			for i = 1, #support_widgets do
-				local widget = support_widgets[i]
+			for jj = 1, #support_widgets do
+				local widget = support_widgets[jj]
 
 				UIWidget.draw(widget, self._ui_renderer)
 			end
 		end
 
 		if widgets and not offset then
-			for i = 1, #widgets do
-				local widget = widgets[i]
+			for jj = 1, #widgets do
+				local widget = widgets[jj]
 
 				if grid and grid:is_widget_visible(widget) then
 					UIWidget.draw(widget, self._ui_renderer)
@@ -1952,8 +1957,8 @@ CharacterAppearanceView._draw_grid = function (self, dt, t, input_service)
 		UIRenderer.begin_pass(self._offscreen_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 		if widgets and offset then
-			for i = 1, #widgets do
-				local widget = widgets[i]
+			for jj = 1, #widgets do
+				local widget = widgets[jj]
 
 				if grid and grid:is_widget_visible(widget) then
 					UIWidget.draw(widget, self._offscreen_renderer)
@@ -2004,10 +2009,12 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 
 	self:_sync_profile_changes()
 
-	if self._profile_spawner then
-		self._profile_spawner:update(dt, t, input_service)
+	local profile_spawner = self._profile_spawner
 
-		local is_spawned = self._profile_spawner:spawned()
+	if profile_spawner then
+		profile_spawner:update(dt, t, input_service)
+
+		local is_spawned = profile_spawner:spawned()
 
 		if is_spawned and self._character_spawned_next_frame then
 			self._character_spawned_next_frame = false
@@ -2018,9 +2025,9 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 		end
 
 		if page.show_character and not self._is_character_showing and is_spawned then
-			local original_scale = self._profile_spawner:character_scale()
+			local original_scale = profile_spawner:character_scale()
 			local profile_height = self._character_create:height()
-			local head_world_position = Vector3.to_array(self._profile_spawner:node_world_position("j_head"))
+			local head_world_position = Vector3.to_array(profile_spawner:node_world_position("j_head"))
 			local spawn_position = self._spawn_point_position
 			local default_head_z_position = head_world_position[3] - spawn_position[3]
 			local starting_scale_diff = 1 + (1 - original_scale[3])
@@ -2034,17 +2041,19 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 			self._height_changed = true
 		end
 
-		if is_spawned and self._is_barber_mindwipe and self._active_page_number >= 6 and self._mindwiped_level ~= nil then
-			local character_unit = self._profile_spawner:spawned_character_unit()
+		local mindwiped_level = self._mindwiped_level
 
-			Level.set_flow_variable(self._mindwiped_level, "lua_character_unit", character_unit)
+		if is_spawned and self._is_barber_mindwipe and self._active_page_number >= 6 and mindwiped_level ~= nil then
+			local character_unit = profile_spawner:spawned_character_unit()
+
+			Level.set_flow_variable(mindwiped_level, "lua_character_unit", character_unit)
 
 			local breed_name = self._character_create:breed()
 
 			if breed_name == "ogryn" then
-				Level.trigger_event(self._mindwiped_level, "lua_character_spawned_ogryn")
+				Level.trigger_event(mindwiped_level, "lua_character_spawned_ogryn")
 			else
-				Level.trigger_event(self._mindwiped_level, "lua_character_spawned_human")
+				Level.trigger_event(mindwiped_level, "lua_character_spawned_human")
 			end
 
 			self._mindwiped_level = nil
@@ -2056,7 +2065,7 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 			if self._twitching_time <= 0 then
 				local animation_event = "pose_fear"
 
-				self._profile_spawner:assign_face_animation_event(animation_event)
+				profile_spawner:assign_face_animation_event(animation_event)
 
 				self._twitching_time = nil
 			end
@@ -2539,8 +2548,6 @@ CharacterAppearanceView._create_page_indicators = function (self)
 	local page_indicator_widgets = {}
 	local width = 15
 	local spacing = 10
-	local total_width = 0
-	local definitions = self._definitions
 	local page_indicator_definition = UIWidget.create_definition(ButtonPassTemplates.page_indicator_terminal, "page_indicator", nil, {
 		20,
 		20,
@@ -2556,7 +2563,7 @@ CharacterAppearanceView._create_page_indicators = function (self)
 	end
 
 	if num_pages > 0 then
-		total_width = page_indicator_widgets[num_pages].offset[1] + width + spacing
+		local total_width = page_indicator_widgets[num_pages].offset[1] + width + spacing
 
 		self:_set_scenegraph_size("page_indicator", total_width, nil)
 
@@ -2863,7 +2870,7 @@ CharacterAppearanceView._populate_backstory_info = function (self, settings)
 
 	self:_set_scenegraph_size("backstory_selection_pivot_background", background_size[1], background_size[2])
 
-	local list_width, list_height = self:_scenegraph_size("list_background")
+	local _, list_height = self:_scenegraph_size("list_background")
 
 	if list_height < background_size[2] then
 		local active_page_number = self._active_page_number
@@ -4139,8 +4146,8 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		local colors_eye_blind_both = {}
 		local colors_eye = {}
 
-		for i = 1, #eye_color_options do
-			local eye_color = eye_color_options[i]
+		for ii = 1, #eye_color_options do
+			local eye_color = eye_color_options[ii]
 			local index = get_eye_type_index_by_option(eye_color)
 
 			if eye_types[index].name == "black_scalera" then
@@ -5156,8 +5163,8 @@ CharacterAppearanceView._check_personality_continue_block = function (self, page
 end
 
 CharacterAppearanceView._check_valid_appearance_options = function (self, category_options)
-	for i = 1, #category_options do
-		local category_option = category_options[i]
+	for ii = 1, #category_options do
+		local category_option = category_options[ii]
 		local requires_reselection = false
 		local filtered_options = {}
 		local available_options = {}
@@ -5169,8 +5176,8 @@ CharacterAppearanceView._check_valid_appearance_options = function (self, catego
 			focused_value = focused_value.__master_item
 		end
 
-		for f = 1, #options do
-			local option = options[f]
+		for jj = 1, #options do
+			local option = options[jj]
 			local should_present_option = self:_should_present_option(option)
 
 			if self._is_barber_appearance and should_present_option.should_present_option == false and should_present_option.reason then
@@ -5213,8 +5220,8 @@ CharacterAppearanceView._check_valid_appearance_options = function (self, catego
 			start_count = start_count + 1
 		end
 
-		for i = start_count, #filtered_options do
-			local filtered_option = filtered_options[i]
+		for jj = start_count, #filtered_options do
+			local filtered_option = filtered_options[jj]
 
 			if filtered_option.should_present_option and filtered_option.should_present_option.should_present_option == true and filtered_option.should_present_option.reason then
 				temp_backstory_enabled[#temp_backstory_enabled + 1] = filtered_option
@@ -5228,7 +5235,7 @@ CharacterAppearanceView._check_valid_appearance_options = function (self, catego
 		temp_backstory_enabled = table.append(temp_backstory_enabled, temp_remaining)
 		temp_backstory_enabled = table.append(temp_backstory_enabled, temp_backstory_disabled)
 		filtered_options = temp_backstory_enabled
-		category_options[i].options = filtered_options
+		category_options[ii].options = filtered_options
 	end
 end
 
@@ -5749,10 +5756,6 @@ CharacterAppearanceView._align_background = function (self)
 		local screen_width = RESOLUTION_LOOKUP.width
 		local screen_height = RESOLUTION_LOOKUP.height
 		local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
-		local parent_size = {
-			screen_width * inverse_scale,
-			screen_height * inverse_scale,
-		}
 		local reference_size = {
 			1920,
 			1080,

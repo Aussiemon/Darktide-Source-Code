@@ -5,6 +5,8 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 local Attack = require("scripts/utilities/attack/attack")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
+local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Stagger = require("scripts/utilities/attack/stagger")
 local Suppression = require("scripts/utilities/attack/suppression")
@@ -16,6 +18,7 @@ local TICK_RATE = talent_settings_3.bolstering_prayer.tick_rate
 local MINION_BREED_TYPE = BreedSettings.types.minion
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
+local buff_keywords = BuffSettings.keywords
 local ActionZealotChannel = class("ActionZealotChannel", "ActionAbilityBase")
 
 ActionZealotChannel.init = function (self, action_context, action_params, action_settings)
@@ -36,6 +39,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
 	local player_unit = self._player_unit
+	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 
 	self._combat_ability_component.active = true
 	self._ability_extension = ScriptUnit.extension(player_unit, "ability_system")
@@ -49,6 +53,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	self._defensive_buff = self._talent_extension:has_special_rule(special_rules.zealot_channel_grants_defensive_buff) and action_settings.defensive_buff
 	self._toughness_bonus_buff = action_settings.toughness_bonus_buff
 	self._zealot_channel_staggers = self._talent_extension:has_special_rule(special_rules.zealot_channel_staggers)
+	self._zealot_channel_heals_corruption = buff_extension and buff_extension:has_keyword(buff_keywords.zealot_channel_heals_corruption)
 
 	local wwise_state = action_settings.wwise_state
 
@@ -97,9 +102,9 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 		self._fx_extension:spawn_particles(vfx, vfx_pos, rotation)
 	end
 
-	self._total_num_ticks = math.ceil(action_settings.total_time - 0.5 / TICK_RATE)
+	self._total_num_ticks = math.ceil((action_settings.total_time - 0.5) / TICK_RATE)
+	self._zealot_channel_corruption_healing_per_tick = HordesBuffsData.hordes_buff_zealot_channel_heals_corruption.buff_stats.health.value / self._total_num_ticks
 
-	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
@@ -177,6 +182,17 @@ ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t
 
 		if toughness_extension and toughness_extension:current_toughness_percent() == 1 then
 			buff_extension:add_internally_controlled_buff(self._toughness_bonus_buff, t)
+		end
+
+		if self._zealot_channel_heals_corruption then
+			local health_extension = ScriptUnit.extension(in_coherence_unit, "health_system")
+
+			if health_extension then
+				local max_health = health_extension:max_health()
+				local corruption_heal_amount = max_health * self._zealot_channel_corruption_healing_per_tick
+
+				health_extension:add_heal(corruption_heal_amount, DamageSettings.heal_types.buff_corruption_healing)
+			end
 		end
 
 		local fx_extension = ScriptUnit.has_extension(in_coherence_unit, "fx_system")

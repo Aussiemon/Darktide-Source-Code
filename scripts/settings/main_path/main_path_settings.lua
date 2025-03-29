@@ -3,6 +3,7 @@
 local main_path_settings = {
 	main_path_version = "1.00",
 	num_spawn_points_per_subgroup = 20,
+	num_spawn_points_per_triangle = 0.03,
 	occluded_points_collision_filter = "filter_ray_aim_assist_line_of_sight",
 	spawn_point_min_distance_to_others = 1.5,
 	spawn_point_min_free_radius = 0.5,

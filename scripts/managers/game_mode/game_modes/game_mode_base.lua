@@ -18,6 +18,7 @@ GameModeBase.INTERFACE = {
 
 local CLIENT_RPCS = {
 	"rpc_change_game_mode_state",
+	"rpc_client_set_local_player_orientation",
 }
 
 local function _log(...)
@@ -56,6 +57,14 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 	if settings.afk_check then
 		self._afk_checker = AFKChecker:new(self._is_server, settings.afk_check, network_event_delegate)
 	end
+end
+
+GameModeBase.on_gameplay_init = function (self)
+	return
+end
+
+GameModeBase.can_player_enter_game = function (self)
+	return true
 end
 
 GameModeBase.destroy = function (self)
@@ -119,6 +128,10 @@ GameModeBase.player_time_until_spawn = function (self, player)
 	return nil
 end
 
+GameModeBase.cleanup_game_mode_dynamic_lavels = function (self)
+	return
+end
+
 GameModeBase.cleanup_game_mode_units = function (self)
 	local bot_backfilling_allowed = self._settings.bot_backfilling_allowed
 
@@ -152,6 +165,13 @@ GameModeBase.rpc_change_game_mode_state = function (self, channel_id, new_state_
 	self:_change_state(new_state)
 end
 
+GameModeBase.rpc_client_set_local_player_orientation = function (self, channel_id, yaw, pitch, roll)
+	local player_manager = Managers.player
+	local local_player = player_manager:local_player(1)
+
+	local_player:set_orientation(yaw, pitch, roll)
+end
+
 GameModeBase.hot_join_sync = function (self, sender, channel)
 	local state = self._state
 	local state_id = self._states_lookup[state]
@@ -173,6 +193,10 @@ end
 
 GameModeBase.should_spawn_dead = function (self, player)
 	return false
+end
+
+GameModeBase.get_additional_pickups = function (self)
+	return nil
 end
 
 return GameModeBase

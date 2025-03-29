@@ -52,6 +52,9 @@ MissionObjectiveZoneSynchronizerExtension.start_event = function (self)
 	if self._is_server then
 		if self._servor_skull_activator_extension then
 			self._servor_skull_activator_extension:on_start_event()
+		elseif self._zone_type == ZONE_TYPES.capture then
+			MissionObjectiveZoneSynchronizerExtension.super.start_event(self)
+			mission_objective_zone_system:start_event(self._objective_name)
 		end
 	else
 		mission_objective_zone_system:register_objective_name(self._objective_name)

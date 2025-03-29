@@ -28,7 +28,7 @@ end
 ActionThrowGrenade.start = function (self, action_settings, t, ...)
 	self:_check_for_critical_strike(false, true)
 
-	local projectile_template = ActionUtility.get_projectile_template(action_settings, self._weapon_template, self._ability_extension)
+	local projectile_template = ActionUtility.projectile_template(action_settings, self._weapon_template, self._ability_extension)
 
 	if projectile_template then
 		Vo.throwing_item_event(self._player_unit, projectile_template.name)
@@ -39,8 +39,10 @@ ActionThrowGrenade.start = function (self, action_settings, t, ...)
 	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 end
 
+local LAG_COMPENSATION_MULTIPLIER = 0.0005
+
 ActionThrowGrenade.fixed_update = function (self, dt, t, time_in_action)
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player) / 1000 / 2
+	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player) * LAG_COMPENSATION_MULTIPLIER
 
 	if self._spawn_at_time and t + rewind_ms > self._spawn_at_time then
 		self._spawn_at_time = nil
@@ -57,81 +59,86 @@ ActionThrowGrenade.fixed_update = function (self, dt, t, time_in_action)
 end
 
 ActionThrowGrenade._spawn_projectile = function (self)
-	if self._is_server then
-		local ability_extension = self._ability_extension
-		local action_settings = self._action_settings
-		local weapon_template = self._weapon_template
-		local item, origin_item_slot = ActionUtility.get_ability_item(action_settings, ability_extension)
-		local projectile_template = ActionUtility.get_projectile_template(action_settings, weapon_template, ability_extension)
-		local locomotion_template = projectile_template.locomotion_template
-		local owner_unit = self._player_unit
-		local material
-		local fire_config = action_settings.fire_configuration
-		local skip_aiming = fire_config and fire_config.skip_aiming
-		local first_person_component = self._first_person_component
-		local look_rotation = first_person_component.rotation
-		local look_position = first_person_component.position
-		local position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, look_position, look_rotation, locomotion_template)
+	if not self._is_server then
+		return
+	end
 
-		if not skip_aiming then
-			local throw_type = action_settings.throw_type
-			local aim_parameters = AimProjectile.aim_parameters(position, look_position, look_rotation, locomotion_template, throw_type, 0)
-			local radius = locomotion_template.integrator_parameters.radius
+	local ability_extension = self._ability_extension
+	local action_settings = self._action_settings
+	local weapon_template = self._weapon_template
+	local item, origin_item_slot = ActionUtility.ability_item(action_settings, ability_extension)
+	local projectile_template = ActionUtility.projectile_template(action_settings, weapon_template, ability_extension)
+	local locomotion_template = projectile_template.locomotion_template
+	local owner_unit = self._player_unit
+	local material
+	local fire_config = action_settings.fire_configuration
+	local skip_aiming = fire_config and fire_config.skip_aiming
+	local first_person_component = self._first_person_component
+	local look_rotation = first_person_component.rotation
+	local look_position = first_person_component.position
+	local position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, look_position, look_rotation, locomotion_template)
 
-			position = AimProjectile.check_throw_position(aim_parameters.position, look_position, locomotion_template, radius, self._physics_world)
-
-			local action_aim_projectile_component = self._action_aim_projectile_component
-
-			rotation = action_aim_projectile_component.rotation
-			speed = action_aim_projectile_component.speed
-			momentum = action_aim_projectile_component.momentum
-		end
-
-		local spawn_node = action_settings.spawn_node
-
-		if spawn_node then
-			local first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
-			local first_person_unit = first_person_extension:first_person_unit()
-			local node = Unit.node(first_person_unit, spawn_node)
-
-			position = Unit.world_position(first_person_unit, node)
-		end
-
+	if not skip_aiming then
 		local throw_type = action_settings.throw_type
-		local trajectory_parameters = locomotion_template and locomotion_template.trajectory_parameters and locomotion_template.trajectory_parameters[throw_type]
-		local starting_state = trajectory_parameters and trajectory_parameters.locomotion_state or locomotion_states.manual_physics
-		local is_critical_strike = self._critical_strike_component.is_active
+		local aim_parameters = AimProjectile.aim_parameters(position, look_position, look_rotation, locomotion_template, throw_type, 0)
+		local radius = locomotion_template.integrator_parameters.radius
 
-		if self._is_server then
-			local owner_side = self._side_system.side_by_unit[self._player_unit]
-			local owner_side_name = owner_side and owner_side:name()
-			local buff_extension = self._buff_extension
-			local stat_buffs = buff_extension:stat_buffs()
-			local extra_grenade_throw_chance = stat_buffs.extra_grenade_throw_chance
-			local extra_direction = direction
-			local extra_grenade = extra_grenade_throw_chance > 0 and extra_grenade_throw_chance > math.random()
+		position = AimProjectile.check_throw_position(aim_parameters.position, look_position, locomotion_template, radius, self._physics_world)
 
-			if extra_grenade then
-				local split_settings = projectile_template.split_settings
-				local split_angle = split_settings and split_settings.split_angle or math.pi * 0.05
-				local angle = split_angle * (math.random() < 0.5 and -1 or 1)
+		local action_aim_projectile_component = self._action_aim_projectile_component
 
-				extra_direction = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), angle), extra_direction)
+		rotation = action_aim_projectile_component.rotation
+		speed = action_aim_projectile_component.speed
+		momentum = action_aim_projectile_component.momentum
+	end
 
-				if split_settings and split_settings.even_split then
-					direction = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), -angle), direction)
-				end
+	local spawn_node = action_settings.spawn_node
+
+	if spawn_node then
+		local first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
+		local first_person_unit = first_person_extension:first_person_unit()
+		local node = Unit.node(first_person_unit, spawn_node)
+
+		position = Unit.world_position(first_person_unit, node)
+	end
+
+	local throw_type = action_settings.throw_type
+	local trajectory_parameters = locomotion_template and locomotion_template.trajectory_parameters and locomotion_template.trajectory_parameters[throw_type]
+	local starting_state = trajectory_parameters and trajectory_parameters.locomotion_state or locomotion_states.manual_physics
+	local is_critical_strike = self._critical_strike_component.is_active
+
+	if self._is_server then
+		local owner_side = self._side_system.side_by_unit[self._player_unit]
+		local owner_side_name = owner_side and owner_side:name()
+		local buff_extension = self._buff_extension
+		local stat_buffs = buff_extension:stat_buffs()
+		local extra_grenade_throw_chance = stat_buffs.extra_grenade_throw_chance
+		local extra_direction = direction
+		local extra_grenade = extra_grenade_throw_chance > 0 and extra_grenade_throw_chance > math.random()
+
+		if extra_grenade then
+			local split_settings = projectile_template.split_settings
+			local split_angle = split_settings and split_settings.split_angle or math.pi * 0.05
+			local angle = split_angle * (math.random() < 0.5 and -1 or 1)
+
+			extra_direction = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), angle), extra_direction)
+
+			if split_settings and split_settings.even_split then
+				direction = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), -angle), direction)
 			end
+		end
 
-			local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, nil, owner_side_name)
+		local unit_template_name = projectile_template.unit_template_name or "item_projectile"
 
-			if extra_grenade then
-				local damage_settings = projectile_template.damage
-				local fuse_settings = damage_settings and damage_settings.fuse
-				local fuse_base_time = fuse_settings and fuse_settings.fuse_time
-				local fuse_time_override = fuse_base_time and fuse_base_time + 0.3 or nil
-				local extra_projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, extra_direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, fuse_time_override, owner_side_name)
-			end
+		Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, nil, owner_side_name)
+
+		if extra_grenade then
+			local damage_settings = projectile_template.damage
+			local fuse_settings = damage_settings and damage_settings.fuse
+			local fuse_base_time = fuse_settings and fuse_settings.fuse_time
+			local fuse_time_override = fuse_base_time and fuse_base_time + 0.3 or nil
+
+			Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, material, item, projectile_template, starting_state, extra_direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, fuse_time_override, owner_side_name)
 		end
 	end
 end

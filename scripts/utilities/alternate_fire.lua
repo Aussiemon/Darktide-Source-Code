@@ -61,7 +61,7 @@ AlternateFire.start = function (alternate_fire_component, weapon_tweak_templates
 	Managers.stats:record_private("hook_alternate_fire_start", player)
 end
 
-AlternateFire.stop = function (alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, weapon_template, skip_stop_anim, player_unit, from_action_input)
+AlternateFire.stop = function (alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, weapon_template, player_unit, from_action_input)
 	alternate_fire_component.is_active = false
 
 	local spread_template_name = weapon_template.spread_template or "none"
@@ -84,7 +84,7 @@ AlternateFire.stop = function (alternate_fire_component, peeking_component, firs
 	local stop_anim_event = alternate_fire_settings.stop_anim_event
 	local stop_anim_event_3p = alternate_fire_settings.stop_anim_event_3p or stop_anim_event
 
-	if stop_anim_event and stop_anim_event_3p and not skip_stop_anim then
+	if stop_anim_event and stop_anim_event_3p then
 		animation_extension:anim_event_1p(stop_anim_event)
 		animation_extension:anim_event(stop_anim_event_3p)
 	end

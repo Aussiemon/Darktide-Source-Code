@@ -26,14 +26,8 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local Zones = require("scripts/settings/zones/zones")
-local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local INVENTORY_VIEW_NAME = "inventory_background_view"
 local SOCIAL_VIEW_NAME = "social_menu_view"
-local talents_presentation_style_id_list = {
-	"talent_1",
-	"talent_2",
-	"talent_3",
-}
 local loadout_presentation_order = {
 	"ability",
 	"blitz",
@@ -82,6 +76,10 @@ LobbyView.init = function (self, settings, context)
 	self._show_weapons = false
 
 	local _unparsed_havoc_data = Managers.mechanism._mechanism._mechanism_data.havoc_data
+
+	if context.debug_preview and context.debug_unparsed_havoc_data then
+		_unparsed_havoc_data = context.debug_unparsed_havoc_data
+	end
 
 	if _unparsed_havoc_data then
 		self._havoc_data = self:_parsed_havoc_data(_unparsed_havoc_data)
@@ -235,6 +233,8 @@ LobbyView._initialize_background_world = function (self)
 
 	if self._havoc_data then
 		level_name = LobbyViewSettings.havoc_level_name
+	elseif self._mission_data and self._mission_data.mission_name == "psykhanium" then
+		level_name = LobbyViewSettings.horde_level_name
 	else
 		level_name = LobbyViewSettings.level_name
 	end
@@ -943,7 +943,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local unique_id = player:unique_id()
 	local profile = player:profile()
 	local archetype_settings = profile.archetype
-	local breed_name = archetype_settings.breed
+	local breed_name = archetype_settings and archetype_settings.breed or profile.breed
 	local spawn_point_unit
 
 	if breed_name == "ogryn" then
@@ -1399,23 +1399,6 @@ LobbyView._slot_by_index = function (self, index)
 	end
 end
 
-LobbyView._slot_by_unit = function (self, unit)
-	local spawn_slots = self._spawn_slots
-
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
-		local profile_spawner = slot.profile_spawner
-
-		if profile_spawner then
-			local character_unit = profile_spawner:spawned_character_unit()
-
-			if character_unit and unit and character_unit == unit then
-				return slot
-			end
-		end
-	end
-end
-
 LobbyView._own_player_ready_status = function (self)
 	local player = Managers.player:local_player(1)
 	local slot_index = self:_get_slot_index_by_player(player)
@@ -1761,7 +1744,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 	spawn_slot.profile_spawner:destroy()
 
 	local archetype_settings = profile.archetype
-	local breed_name = archetype_settings.breed
+	local breed_name = archetype_settings and archetype_settings.breed or profile.breed
 	local spawn_point_unit
 
 	if breed_name == "ogryn" then
@@ -1793,18 +1776,18 @@ LobbyView._set_weapons_visibility = function (self)
 	local loadout_size = LobbyViewSettings.loadout_size
 	local panel_size = LobbyViewSettings.panel_size
 
-	for i = 1, #self._spawn_slots do
-		local slot = self._spawn_slots[i]
+	for ii = 1, #self._spawn_slots do
+		local slot = self._spawn_slots[ii]
 
 		if slot.occupied then
-			for i = 1, #slot.weapon_widgets do
-				local weapon_widgets = slot.weapon_widgets[i]
+			for jj = 1, #slot.weapon_widgets do
+				local weapon_widgets = slot.weapon_widgets[jj]
 
 				weapon_widgets.content.visible = is_active
 			end
 
-			for i = 1, #slot.talent_widgets do
-				local talent_widget = slot.talent_widgets[i]
+			for jj = 1, #slot.talent_widgets do
+				local talent_widget = slot.talent_widgets[jj]
 
 				talent_widget.content.visible = not is_active
 			end
@@ -1892,9 +1875,6 @@ LobbyView._start_animation_unready = function (self, spawn_slot)
 	spawn_slot.profile_spawner:assign_animation_event("unready")
 end
 
-local FALLBACK_DISPLAY_NAME = "loc_talent_display_name_fallback"
-local FALLBACK_DESCRIPTION = "loc_talent_description_fallback"
-local FALLBACK_ICON = "content/ui/textures/icons/talents/fallback"
 local dummy_tooltip_text_size = {
 	400,
 	20,

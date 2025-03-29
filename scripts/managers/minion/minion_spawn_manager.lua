@@ -7,7 +7,6 @@ local MinionSpawnManagerTestify = GameParameters.testify and require("scripts/ma
 local Vo = require("scripts/utilities/vo")
 local MinionSpawnManager = class("MinionSpawnManager")
 local MINION_QUEUE_RING_BUFFER_SIZE = 256
-local MINION_QUEUE_PARAMETERS = table.enum("breed_name", "position", "rotation", "side_id", "optional_aggro_state", "optional_target_unit", "optional_spawner_unit", "optional_group_id", "optional_mission_objective_id", "optional_attack_selection_template_name")
 
 MinionSpawnManager.init = function (self, level_seed, soft_cap_out_of_bounds_units, network_event_delegate)
 	self._seed = level_seed
@@ -20,7 +19,7 @@ MinionSpawnManager.init = function (self, level_seed, soft_cap_out_of_bounds_uni
 	local spawn_queue = Script.new_array(MINION_QUEUE_RING_BUFFER_SIZE)
 
 	for i = 1, MINION_QUEUE_RING_BUFFER_SIZE do
-		spawn_queue[i] = Script.new_array(#MINION_QUEUE_PARAMETERS)
+		spawn_queue[i] = {}
 	end
 
 	self._spawn_queue = spawn_queue
@@ -40,7 +39,7 @@ MinionSpawnManager.delete_units = function (self)
 	for i = num_spawned, 1, -1 do
 		local minion_unit = spawned_minions[i]
 
-		self:despawn(minion_unit)
+		self:despawn_minion(minion_unit)
 	end
 end
 
@@ -58,14 +57,20 @@ MinionSpawnManager.update = function (self, dt, t)
 
 		if soft_cap_out_of_bounds_units[unit] then
 			Log.info("MinionSpawnManager", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
-			self:despawn(unit)
+			self:despawn_minion(unit)
 		end
 	end
 end
 
 local TEMP_INIT_DATA = {}
 
-MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name, optional_health_modifier, optional_spawner_spawn_index)
+MinionSpawnManager.request_param_table = function (self)
+	table.clear(TEMP_INIT_DATA)
+
+	return TEMP_INIT_DATA
+end
+
+MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_param_table)
 	if self._mutator_breed_data then
 		local breedlookup = self._mutator_breed_data.breed_replacement
 
@@ -76,29 +81,30 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 		end
 	end
 
+	local temp_data = optional_param_table or self:request_param_table()
 	local breed = Breeds[breed_name]
 	local seed = math.random_seed(self._seed)
-	local spawn_aggro_state = optional_aggro_state or breed.spawn_aggro_state
 
-	TEMP_INIT_DATA.side_id = side_id
-	TEMP_INIT_DATA.breed = breed
-	TEMP_INIT_DATA.random_seed = seed
-	TEMP_INIT_DATA.optional_aggro_state = spawn_aggro_state
-	TEMP_INIT_DATA.optional_target_unit = optional_target_unit
-	TEMP_INIT_DATA.optional_group_id = optional_group_id
-	TEMP_INIT_DATA.optional_mission_objective_id = optional_mission_objective_id
-	TEMP_INIT_DATA.optional_attack_selection_template_name = optional_attack_selection_template_name
+	temp_data.side_id = side_id
+	temp_data.breed = breed
+	temp_data.random_seed = seed
+	temp_data.optional_aggro_state = temp_data.optional_aggro_state or breed.spawn_aggro_state
 
 	local additional_health_modifier = Managers.state.havoc:minion_health_modifier(breed)
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+	local game_mode_name = game_mode:name()
 
-	if additional_health_modifier then
-		optional_health_modifier = optional_health_modifier and optional_health_modifier + additional_health_modifier or 1 + additional_health_modifier
+	if game_mode_name == "survival" then
+		additional_health_modifier = game_mode:get_minion_health_modifier(breed)
 	end
 
-	TEMP_INIT_DATA.optional_health_modifier = optional_health_modifier
+	if additional_health_modifier then
+		temp_data.optional_health_modifier = (temp_data.optional_health_modifier or 1) + additional_health_modifier
+	end
 
 	local unit_template_name = breed.unit_template_name
-	local unit = Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, nil, TEMP_INIT_DATA)
+	local unit = Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, nil, temp_data)
 
 	self._seed = seed
 
@@ -118,11 +124,11 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 
 	local blackboard = BLACKBOARDS[unit]
 
-	self:_initialize_inventory(unit, breed, blackboard, optional_attack_selection_template_name)
-	self:_initialize_blackboard_components(breed, blackboard, seed, optional_spawner_unit, optional_spawner_spawn_index)
+	self:_initialize_inventory(unit, breed, blackboard, temp_data.optional_attack_selection_template_name)
+	self:_initialize_blackboard_components(breed, blackboard, seed, temp_data.optional_spawner_unit, temp_data.optional_spawner_spawn_index)
 
-	if optional_mission_objective_id then
-		self:_register_minion_to_objective(unit, optional_mission_objective_id)
+	if temp_data.optional_mission_objective_id then
+		self:_register_minion_to_objective(unit, temp_data.optional_mission_objective_id)
 	end
 
 	local vo_breed_settings = DialogueBreedSettings[breed_name]
@@ -150,23 +156,19 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	return unit
 end
 
-MinionSpawnManager.queue_minion_to_spawn = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name)
+MinionSpawnManager.queue_minion_to_spawn = function (self, breed_name, position, rotation, side_id)
 	local queue = self._spawn_queue
 	local write_index = self._spawn_queue_write_index
 	local queue_entry = queue[write_index]
 
-	queue_entry[MINION_QUEUE_PARAMETERS.breed_name] = breed_name
-	queue_entry[MINION_QUEUE_PARAMETERS.position] = Vector3Box(position)
-	queue_entry[MINION_QUEUE_PARAMETERS.rotation] = QuaternionBox(rotation)
-	queue_entry[MINION_QUEUE_PARAMETERS.side_id] = side_id
-	queue_entry[MINION_QUEUE_PARAMETERS.optional_aggro_state] = optional_aggro_state
-	queue_entry[MINION_QUEUE_PARAMETERS.optional_target_unit] = optional_target_unit
-	queue_entry[MINION_QUEUE_PARAMETERS.optional_spawner_unit] = optional_spawner_unit
-	queue_entry[MINION_QUEUE_PARAMETERS.optional_group_id] = optional_group_id
-	queue_entry[MINION_QUEUE_PARAMETERS.optional_mission_objective_id] = optional_mission_objective_id
-	queue_entry[MINION_QUEUE_PARAMETERS.optional_attack_selection_template_name] = optional_attack_selection_template_name
+	queue_entry.breed_name = breed_name
+	queue_entry.position = Vector3Box(position)
+	queue_entry.rotation = QuaternionBox(rotation)
+	queue_entry.side_id = side_id
 	self._spawn_queue_write_index = write_index % MINION_QUEUE_RING_BUFFER_SIZE + 1
 	self._spawn_queue_size = self._spawn_queue_size + 1
+
+	return queue_entry
 end
 
 MinionSpawnManager._update_spawn_queue = function (self)
@@ -180,7 +182,8 @@ MinionSpawnManager._update_spawn_queue = function (self)
 	local read_index = self._spawn_queue_read_index
 	local queue_entry = queue[read_index]
 
-	self:spawn_minion(queue_entry[MINION_QUEUE_PARAMETERS.breed_name], queue_entry[MINION_QUEUE_PARAMETERS.position]:unbox(), queue_entry[MINION_QUEUE_PARAMETERS.rotation]:unbox(), queue_entry[MINION_QUEUE_PARAMETERS.side_id], queue_entry[MINION_QUEUE_PARAMETERS.optional_aggro_state], queue_entry[MINION_QUEUE_PARAMETERS.optional_target_unit], queue_entry[MINION_QUEUE_PARAMETERS.optional_spawner_unit], queue_entry[MINION_QUEUE_PARAMETERS.optional_group_id], queue_entry[MINION_QUEUE_PARAMETERS.optional_mission_objective_id], queue_entry[MINION_QUEUE_PARAMETERS.optional_attack_selection_template_name])
+	self:spawn_minion(queue_entry.breed_name, queue_entry.position:unbox(), queue_entry.rotation:unbox(), queue_entry.side_id, queue_entry)
+	table.clear(queue_entry)
 
 	self._spawn_queue_read_index = read_index % MINION_QUEUE_RING_BUFFER_SIZE + 1
 	self._spawn_queue_size = self._spawn_queue_size - 1
@@ -270,18 +273,18 @@ MinionSpawnManager.despawn_all_minions = function (self)
 	for i = #spawned_minions, 1, -1 do
 		local minion_unit = spawned_minions[i]
 
-		self:despawn(minion_unit)
+		self:despawn_minion(minion_unit)
 	end
 end
 
-MinionSpawnManager.despawn = function (self, unit)
+MinionSpawnManager.despawn_minion = function (self, unit)
 	local success = self:unregister_unit(unit)
 
 	if success then
 		Managers.state.pacing:remove_aggroed_minion(unit)
 		Managers.state.unit_spawner:mark_for_deletion(unit)
 	else
-		Log.warning("MinionSpawnManager", "Tried to despawn a minion twice. Might be due to locomotion system deleting a unit outside of world. Poke Morja if this gets spammed for the same unit.")
+		Log.warning("MinionSpawnManager", "Tried to despawn a minion twice. Might be due to locomotion system deleting a unit outside of world. Poke Sebastian if this gets spammed for the same unit.")
 	end
 end
 

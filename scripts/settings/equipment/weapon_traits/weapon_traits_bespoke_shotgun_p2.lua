@@ -7,6 +7,18 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_bespoke_shotgun_p2_count_as_dodge_vs_ranged_on_close_kill = {
+	format_values = {
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_count_as_dodge_vs_ranged_on_close_kill",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_count_as_dodge_vs_ranged_on_close_kill = {
 			{
@@ -25,6 +37,40 @@ templates.weapon_trait_bespoke_shotgun_p2_count_as_dodge_vs_ranged_on_close_kill
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_increase_power_on_close_kill = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_increase_power_on_close_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_increase_power_on_close_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_increase_power_on_close_kill_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_increase_power_on_close_kill_parent = {
 			{
@@ -55,6 +101,40 @@ templates.weapon_trait_bespoke_shotgun_p2_increase_power_on_close_kill = {
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_increase_close_damage_on_close_kill = {
+	format_values = {
+		close_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_increase_close_damage_on_close_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_increase_close_damage_on_close_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_increase_close_damage_on_close_kill_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_increase_close_damage_on_close_kill_parent = {
 			{
@@ -85,6 +165,20 @@ templates.weapon_trait_bespoke_shotgun_p2_increase_close_damage_on_close_kill = 
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_suppression_on_close_kill = {
+	format_values = {
+		range = {
+			format_type = "string",
+			find_value = {
+				find_value_type = "rarity_value",
+				trait_value = {
+					"5m",
+					"6m",
+					"7m",
+					"8m",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_suppression_on_close_kill = {
 			{
@@ -123,6 +217,19 @@ templates.weapon_trait_bespoke_shotgun_p2_suppression_on_close_kill = {
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_bleed_on_crit = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_bleed_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_bleed_on_crit = {
 			{
@@ -149,6 +256,20 @@ templates.weapon_trait_bespoke_shotgun_p2_bleed_on_crit = {
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_cleave_on_crit = {
+	format_values = {
+		stagger = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_cleave_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_impact_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_cleave_on_crit = {
 			{
@@ -175,6 +296,30 @@ templates.weapon_trait_bespoke_shotgun_p2_cleave_on_crit = {
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_power_bonus_on_hitting_single_enemy_with_all = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_power_bonus_on_hitting_single_enemy_with_all",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_power_bonus_on_hitting_single_enemy_with_all",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_power_bonus_on_hitting_single_enemy_with_all = {
 			{
@@ -201,6 +346,30 @@ templates.weapon_trait_bespoke_shotgun_p2_power_bonus_on_hitting_single_enemy_wi
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_crit_chance_on_hitting_multiple_with_one_shot = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_crit_chance_on_hitting_multiple_with_one_shot_parent",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_crit_chance_on_hitting_multiple_with_one_shot_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_crit_chance_on_hitting_multiple_with_one_shot_parent = {
 			{
@@ -227,6 +396,40 @@ templates.weapon_trait_bespoke_shotgun_p2_crit_chance_on_hitting_multiple_with_o
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_slide = {
+	format_values = {
+		reload_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_reload_speed_on_slide_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.reload_speed,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_reload_speed_on_slide_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_reload_speed_on_slide_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_reload_speed_on_slide_parent = {
 			{
@@ -257,6 +460,30 @@ templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_slide = {
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_crit_chance_on_reload = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_crit_chance_on_reload",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.ranged_critical_strike_chance,
+				},
+			},
+		},
+		time = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_crit_chance_on_reload",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_crit_chance_on_reload = {
 			{
@@ -283,6 +510,32 @@ templates.weapon_trait_bespoke_shotgun_p2_crit_chance_on_reload = {
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_hipfire_while_sprinting = {
+	format_values = {
+		weapon_spread = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.spread_modifier,
+				},
+			},
+		},
+		damage_near = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_hipfire_while_sprinting = {
 			{
@@ -321,6 +574,20 @@ templates.weapon_trait_bespoke_shotgun_p2_hipfire_while_sprinting = {
 	},
 }
 templates.weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill = {
+	format_values = {
+		reload_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.reload_speed,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_shotgun_p2_reload_speed_on_ranged_weapon_special_kill = {
 			{

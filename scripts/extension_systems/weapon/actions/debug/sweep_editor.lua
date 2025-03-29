@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/actions/debug/sweep_editor.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local SweepSpline = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepSplineVisualizer = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_visualizer")

@@ -15,7 +15,6 @@ end
 
 TrueFlightSmite.smite_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 	local true_flight_template = integration_data.true_flight_template
-	local on_target_time = integration_data.on_target_time
 	local time_without_bounce = integration_data.time_without_bounce
 	local position = integration_data.position
 	local velocity = integration_data.velocity
@@ -35,9 +34,9 @@ TrueFlightSmite.smite_update_towards_position = function (target_position, physi
 		local lerp_modifier_func = _lerp_modifier_func(true_flight_template)
 		local lerp_modifier_1 = lerp_modifier_func(integration_data, to_target_distance)
 
-		lerp_modifier = lerp_modifier_1 * lerp_modifier_1 * (math.min(time_without_bounce * 0.5, 0.5) / 1)
+		lerp_modifier = lerp_modifier_1 * lerp_modifier_1 * math.min(time_without_bounce * 0.5, 0.5)
 	else
-		local lerp_modifier_1 = math.min(time_without_bounce * 1, 0.5) / 1
+		local lerp_modifier_1 = math.min(time_without_bounce, 0.5)
 
 		lerp_modifier = lerp_modifier_1 * lerp_modifier_1
 	end

@@ -400,6 +400,10 @@ MechanismManager.backend_mission_id = function (self)
 	return backend_mission_id
 end
 
+MechanismManager.mechanism_data = function (self)
+	return self._mechanism:mechanism_data()
+end
+
 MechanismManager.profile_changes_are_allowed = function (self)
 	local mechanism = self._mechanism
 

@@ -1095,7 +1095,7 @@ local templates = {
 				local text = Localize(localization_key, true, {
 					level = level or 0,
 				})
-				local objective = _create_objective(objective_name, localization_key)
+				local objective = _create_objective(objective_name, nil, nil, false, text)
 
 				self.objective = objective
 

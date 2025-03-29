@@ -2,10 +2,10 @@
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
+local gibbing_power = GibbingSettings.gibbing_power
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local damage_templates = {}
 local overrides = {}
@@ -21,7 +21,7 @@ damage_templates.heavy_linesman = {
 		attack = 1,
 		impact = 0.5,
 	},
-	gibbing_power = GibbingPower.heavy,
+	gibbing_power = gibbing_power.heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -112,7 +112,7 @@ damage_templates.light_linesman = {
 		attack = 0.25,
 		impact = 0.25,
 	},
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = gibbing_power.medium,
 	targets = {
 		{
 			armor_damage_modifier = {
@@ -185,7 +185,7 @@ damage_templates.default_powersword = {
 		attack = 0.25,
 		impact = 0.25,
 	},
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = gibbing_power.medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	targets = {
 		{

@@ -3,8 +3,6 @@
 local LevelPropCustomization = component("LevelPropCustomization")
 
 LevelPropCustomization.init = function (self, unit)
-	self:enable(unit)
-
 	self._unit = unit
 	self._world = Unit.world(self._unit)
 	self._child_units = {}
@@ -13,11 +11,18 @@ LevelPropCustomization.init = function (self, unit)
 	self._editor_toggle_visibility_state = true
 
 	self:_spawn_children()
+
+	self._lerp_material_variables_data = {}
+	self._lerp_reverse = false
+	self._should_update = false
+
 	self:_set_material_variables()
 
 	if Managers and Managers.state and Managers.state.chunk_lod and Managers.state.chunk_lod:register_unit(unit, callback(self, "on_chunk_visibility_state_changed")) then
 		self._chunk_lodding_registered = true
 	end
+
+	return true
 end
 
 LevelPropCustomization.editor_validate = function (self, unit)
@@ -165,6 +170,21 @@ LevelPropCustomization._set_material_variables = function (self)
 			Unit.set_vector3_for_material(unit, material, variable, Vector3(r / 255, g / 255, b / 255))
 		end
 	end
+
+	local lerp_material_variables = self:get_data(unit, "lerp_material_variables")
+
+	for _, entry in ipairs(lerp_material_variables) do
+		local material = entry.material
+		local variable = entry.variable
+
+		self._lerp_material_variables_data[entry] = 0
+
+		if material == nil or material == "" or variable == nil or variable == "" then
+			return
+		end
+
+		Unit.set_scalar_for_material(unit, material, variable, entry.scalar_from)
+	end
 end
 
 LevelPropCustomization.enable = function (self, unit)
@@ -173,6 +193,60 @@ end
 
 LevelPropCustomization.disable = function (self, unit)
 	return
+end
+
+LevelPropCustomization.update = function (self, unit, dt, t)
+	if self._should_update then
+		local keep_update = false
+
+		for entry, current_t in pairs(self._lerp_material_variables_data) do
+			local material = entry.material
+			local variable = entry.variable
+			local lerp_t = math.clamp01(current_t / entry.duration)
+
+			if lerp_t ~= 1 then
+				keep_update = true
+
+				local value = not self._lerp_reverse and math.lerp(entry.scalar_from, entry.scalar_to, lerp_t) or math.lerp(entry.scalar_to, entry.scalar_from, lerp_t)
+
+				self._lerp_material_variables_data[entry] = current_t + dt
+
+				Unit.set_scalar_for_material(unit, material, variable, value)
+			end
+		end
+
+		self._should_update = keep_update
+	end
+
+	return self._should_update
+end
+
+LevelPropCustomization._reset_lerp_material_variables_data = function (self)
+	for entry, _ in pairs(self._lerp_material_variables_data) do
+		self._lerp_material_variables_data[entry] = 0
+	end
+end
+
+LevelPropCustomization.play_lerp_material_variables = function (self, unit)
+	self:_reset_lerp_material_variables_data()
+
+	self._lerp_reverse = false
+	self._should_update = true
+
+	return true
+end
+
+LevelPropCustomization.reverse_lerp_material_variables = function (self, unit)
+	self:_reset_lerp_material_variables_data()
+
+	self._lerp_reverse = true
+	self._should_update = true
+
+	return true
+end
+
+LevelPropCustomization.editor_update = function (self, unit, dt, t)
+	return self:update(unit, dt, t)
 end
 
 LevelPropCustomization.editor_property_changed = function (self, unit)
@@ -291,6 +365,55 @@ LevelPropCustomization.component_data = {
 			"vector",
 			"use_color",
 			"color",
+		},
+	},
+	lerp_material_variables = {
+		category = "Material Variables",
+		ui_name = "Lerp Material Variables",
+		ui_type = "struct_array",
+		definition = {
+			material = {
+				ui_name = "Material",
+				ui_type = "text_box",
+				value = "",
+			},
+			variable = {
+				ui_name = "Variable",
+				ui_type = "text_box",
+				value = "",
+			},
+			scalar_from = {
+				ui_name = "From Value (Scalar)",
+				ui_type = "number",
+				value = 0,
+			},
+			scalar_to = {
+				ui_name = "To Value (Scalar)",
+				ui_type = "number",
+				value = 0,
+			},
+			duration = {
+				ui_name = "Duration",
+				ui_type = "number",
+				value = 0,
+			},
+		},
+		control_order = {
+			"material",
+			"variable",
+			"scalar_from",
+			"scalar_to",
+			"duration",
+		},
+	},
+	inputs = {
+		play_lerp_material_variables = {
+			accessibility = "public",
+			type = "event",
+		},
+		reverse_lerp_material_variables = {
+			accessibility = "public",
+			type = "event",
 		},
 	},
 }

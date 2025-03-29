@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotguns/shotgun_p1_m3.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -193,7 +193,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -894,7 +894,6 @@ weapon_template.ammo_template = "shotgun_p1_m3"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_tweak_data = {
 	keep_active_until_shot_complete = true,
@@ -906,9 +905,17 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
 }
 weapon_template.crosshair = {
-	crosshair_type = "shotgun",
-	crosshair_type_special_active = "flamer",
 	spread_scalar_horizontal = 0.35,
+	crosshair_type_func = function (condition_func_params)
+		local inventory_slot_component = condition_func_params.inventory_slot_component
+		local special_active = inventory_slot_component.special_active
+
+		if special_active then
+			return "flamer"
+		end
+
+		return "shotgun"
+	end,
 }
 weapon_template.alternate_fire_settings = {
 	look_delta_template = "lasgun_holo_aiming",

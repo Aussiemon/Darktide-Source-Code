@@ -6,6 +6,7 @@ local Health = require("scripts/utilities/health")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local proc_events = BuffSettings.proc_events
+local buff_keywords = BuffSettings.keywords
 local REPORT_TIME = 1
 local PlayerUnitHealthExtension = class("PlayerUnitHealthExtension")
 
@@ -114,7 +115,12 @@ PlayerUnitHealthExtension.is_unkillable = function (self)
 end
 
 PlayerUnitHealthExtension.is_invulnerable = function (self)
-	return self._is_invulnerable
+	local is_invulnerable = self._is_invulnerable
+	local buff_extension = self._buff_extension
+
+	is_invulnerable = is_invulnerable or buff_extension and buff_extension:has_keyword(buff_keywords.invulnerable) or false
+
+	return is_invulnerable
 end
 
 PlayerUnitHealthExtension.current_health = function (self)

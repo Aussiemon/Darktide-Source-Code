@@ -41,6 +41,12 @@ Interactable.init = function (self, unit, is_server)
 			action_text = nil
 		end
 
+		local missing_players_text = self:get_data(unit, "missing_players_description")
+
+		if missing_players_text == "" then
+			missing_players_text = nil
+		end
+
 		if not start_enabled then
 			self:interactable_disable(unit)
 		end
@@ -53,6 +59,7 @@ Interactable.init = function (self, unit, is_server)
 		interaction_context.interactor_item_to_equip = interactor_item_to_equip
 		interaction_context.description = description
 		interaction_context.action_text = action_text
+		interaction_context.missing_players_text = missing_players_text
 		interaction_context.interaction_icon = interaction_icon ~= "use_template" and interaction_icon or nil
 		interaction_context.ui_interaction_type = ui_interaction_type ~= "use_template" and ui_interaction_type or nil
 		interaction_context.display_start_event = display_start_event
@@ -61,7 +68,7 @@ Interactable.init = function (self, unit, is_server)
 		interactee_extension:set_emissive_material_name(emissive_material_name)
 
 		if require_all_players then
-			interactee_extension:set_block_text("loc_action_interaction_generic_missing_players")
+			interactee_extension:set_block_text(missing_players_text or "loc_action_interaction_generic_missing_players")
 		end
 
 		local has_animation_state_machine = Unit.has_animation_state_machine(unit)
@@ -159,6 +166,15 @@ end
 
 Interactable.interactable_disable = function (self, unit)
 	self:disable(unit)
+end
+
+Interactable.interactable_disable_local = function (self, unit)
+	self:disable(unit, true)
+
+	local interactee_extension = self._interactee_extension
+
+	interactee_extension:set_active(false)
+	interactee_extension:disable_active_hotjoin_sync()
 end
 
 Interactable.interactable_clear_block = function (self, unit)
@@ -498,6 +514,12 @@ Interactable.component_data = {
 	sub_description = {
 		category = "UI",
 		ui_name = "Override Action Text",
+		ui_type = "text_box",
+		value = "",
+	},
+	missing_players_description = {
+		category = "UI",
+		ui_name = "Override Missing Players Text",
 		ui_type = "text_box",
 		value = "",
 	},

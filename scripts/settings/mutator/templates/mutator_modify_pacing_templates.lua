@@ -106,6 +106,59 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_live_abhuman_replacement = {
+		class = "scripts/managers/mutator/mutators/mutator_replace_breed",
+		init_replacement_breed = {
+			breed_replacement = {
+				renegade_berzerker = "chaos_ogryn_bulwark",
+				renegade_executor = "chaos_ogryn_executor",
+				renegade_gunner = "chaos_ogryn_gunner",
+			},
+		},
+	},
+	mutator_monster_spawner = {
+		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
+		spawner_template = {
+			force_horde_on_spawn = true,
+			trigger_distance = 55,
+			monster_breed_name = {
+				"chaos_mutator_daemonhost",
+			},
+			num_to_spawn_per_mission = {
+				cm_archives = 5,
+				cm_habs = 3,
+				cm_raid = 5,
+				core_research = 4,
+				dm_forge = 5,
+				dm_propaganda = 5,
+				dm_rise = 5,
+				fm_armoury = 5,
+				fm_cargo = 5,
+				fm_resurgence = 5,
+				hm_cartel = 5,
+				hm_complex = 5,
+				hm_strain = 5,
+				km_enforcer = 5,
+				km_heresy = 5,
+				km_station = 5,
+				lm_cooling = 5,
+				lm_rails = 5,
+				lm_scavenge = 5,
+			},
+		},
+	},
+	mutator_monster_havoc_twins = {
+		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
+		spawner_template = {
+			force_horde_on_spawn = true,
+			injection_template = "havoc_twins",
+			num_to_spawn = 1,
+			trigger_distance = 55,
+			monster_breed_name = {
+				"havoc_twins",
+			},
+		},
+	},
 	havoc_mutator_more_captains_01 = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
@@ -148,11 +201,16 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
 			specials_monster_spawn_config = {
-				chance_to_spawn_monster = 0.2,
-				max_monsters = 2,
+				chance_to_spawn_monster = 0.05,
+				max_monsters = 1,
+				health_modifiers = {
+					chaos_beast_of_nurgle = 0.4,
+					chaos_plague_ogryn = 0.4,
+					chaos_spawn = 0.4,
+				},
 				max_monster_duration = {
-					250,
-					330,
+					550,
+					600,
 				},
 				breeds = {
 					"chaos_plague_ogryn",
@@ -166,11 +224,16 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
 			specials_monster_spawn_config = {
-				chance_to_spawn_monster = 0.2,
-				max_monsters = 2,
+				chance_to_spawn_monster = 0.1,
+				max_monsters = 1,
+				health_modifiers = {
+					chaos_beast_of_nurgle = 0.4,
+					chaos_plague_ogryn = 0.4,
+					chaos_spawn = 0.4,
+				},
 				max_monster_duration = {
-					120,
-					200,
+					450,
+					500,
 				},
 				breeds = {
 					"chaos_plague_ogryn",

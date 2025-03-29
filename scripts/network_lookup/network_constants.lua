@@ -77,7 +77,7 @@ _check_network_lookup_boundaries("lookup_5bit", "line_effects")
 _check_network_lookup_boundaries("lookup_2bit", "moveable_platform_direction")
 _check_network_lookup_boundaries("lookup_2bit", "minigame_states")
 _check_network_lookup_boundaries("minion_fx_source_name", "minion_fx_source_names")
-_check_network_lookup_boundaries("lookup_9bit", "mission_objective_names")
+_check_network_lookup_boundaries("mission_objective_name_id", "mission_objective_names")
 _check_network_lookup_boundaries("mission_objective_ui_string_id", "mission_objective_ui_strings")
 _check_network_lookup_boundaries("mission_ui_target_type_id", "mission_objective_target_ui_types")
 _check_network_lookup_boundaries("mission_giver_vo_id", "mission_giver_vo_overrides")
@@ -111,6 +111,7 @@ local max_allowed_buff_stack_count = BuffSettings.max_stack_count
 local level_unit_id = Network.type_info("level_unit_id")
 
 NetworkConstants.invalid_level_unit_id = level_unit_id.min
+NetworkConstants.level_unit_id = level_unit_id
 NetworkConstants.health_small = Network.type_info("health_small")
 NetworkConstants.health_medium = Network.type_info("health_medium")
 NetworkConstants.health_large = Network.type_info("health_large")

@@ -70,6 +70,14 @@ MissionObjectiveZoneBaseExtension.zone_type = function (self)
 	return self._zone_type
 end
 
+MissionObjectiveZoneBaseExtension.is_scanning_zone = function (self)
+	return self._zone_type == "scan"
+end
+
+MissionObjectiveZoneBaseExtension.is_capture_zone = function (self)
+	return self._zone_type == "capture"
+end
+
 MissionObjectiveZoneBaseExtension.set_seed = function (self, seed)
 	self._seed = seed
 end

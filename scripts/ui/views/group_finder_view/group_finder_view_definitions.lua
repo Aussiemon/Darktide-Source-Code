@@ -2409,13 +2409,13 @@ local grid_blueprints = {
 			if profile and player_info then
 				local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 				local character_level = tostring(profile.current_level) .. " "
-				local havoc_rank_all_time_high = presence_info.havoc_rank_all_time_high
+				local havoc_rank_cadence_high = presence_info.havoc_rank_cadence_high
 
-				if havoc_rank_all_time_high ~= nil and profile.current_level ~= nil and profile.current_level >= 30 then
+				if havoc_rank_cadence_high ~= nil and profile.current_level ~= nil and profile.current_level >= 30 then
 					local havoc_prefix_text = Localize("loc_havoc_highest_order_reached")
-					local havoc_highest_rank = "- " .. havoc_prefix_text .. " " .. tostring(havoc_rank_all_time_high) .. " "
+					local havoc_highest_cadence_rank = "- " .. havoc_prefix_text .. " " .. tostring(havoc_rank_cadence_high) .. " "
 
-					content.character_archetype_title = string.format("%s %s", character_archetype_title, havoc_highest_rank)
+					content.character_archetype_title = string.format("%s %s", character_archetype_title, havoc_highest_cadence_rank)
 				else
 					content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
 				end

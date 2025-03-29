@@ -39,6 +39,29 @@ local function _compose_spawn_list(composition)
 	return breeds_to_spawn, #breeds_to_spawn
 end
 
+local function _check_spawn_is_hidden(physics_world, wanted_position, side)
+	local collision_filter = "filter_minion_line_of_sight_check"
+	local in_line_of_sight = HordeUtilities.position_has_line_of_sight_to_any_enemy_player(physics_world, wanted_position, side, collision_filter)
+
+	if in_line_of_sight then
+		Log.info("FarVectorHorde", "\t\tSpawn position in line of sight of enemy player(s).")
+
+		return false
+	end
+
+	return true
+end
+
+local function _find_nav_position(nav_world, traverse_logic, wanted_position)
+	local nav_position, _ = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, wanted_position)
+
+	if not nav_position then
+		Log.info("FarVectorHorde", "\t\tCouldn't find path position at position: %s", wanted_position)
+	end
+
+	return nav_position
+end
+
 local function _try_find_position_ahead_or_behind_target_on_main_path(physics_world, nav_world, traverse_logic, check_ahead, travel_distance, euclidean_distance, side, target_side)
 	local main_path_manager = Managers.state.main_path
 	local target_unit, target_travel_distance, target_path_position
@@ -80,12 +103,7 @@ local function _try_find_position_ahead_or_behind_target_on_main_path(physics_wo
 		return false
 	end
 
-	local collision_filter = "filter_minion_line_of_sight_check"
-	local in_line_of_sight = HordeUtilities.position_has_line_of_sight_to_any_enemy_player(physics_world, wanted_position, side, collision_filter)
-
-	if in_line_of_sight then
-		Log.info("FarVectorHorde", "\t\tSpawn position in line of sight of enemy player(s).")
-
+	if not _check_spawn_is_hidden(physics_world, wanted_position, side) then
 		return false
 	end
 
@@ -196,9 +214,11 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 		if spawn_position then
 			local breed_name = spawn_list[i]
+			local queue_parameters = minion_spawn_manager:queue_minion_to_spawn(breed_name, spawn_position, spawn_rotation, side_id)
 
-			minion_spawn_manager:queue_minion_to_spawn(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
-
+			queue_parameters.optional_aggro_state = aggro_states.aggroed
+			queue_parameters.optional_target_unit = target_unit
+			queue_parameters.optional_group_id = group_id
 			num_spawned = num_spawned + 1
 		end
 	end

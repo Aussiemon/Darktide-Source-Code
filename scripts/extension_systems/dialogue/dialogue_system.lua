@@ -25,6 +25,8 @@ local RPCS = {
 	"rpc_dialogue_system_joined",
 	"rpc_set_dynamic_smart_tag",
 	"rpc_trigger_subtitle_event",
+	"rpc_server_sync_backend_vo",
+	"rpc_save_backend_vo",
 }
 local DialogueSystem = class("DialogueSystem", "ExtensionSystemBase")
 
@@ -186,6 +188,10 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 		self._missions = {}
 		self._time_since_mission_fetch = 0
 		self._missions_board_promise = nil
+		self._backend_vo_table = {}
+		self._backend_vo_table.peers = {}
+
+		Managers.event:register(self, "multiplayer_session_client_disconnected", "_on_client_left")
 	elseif not is_rule_db_enabled then
 		self._vo_rule_queue = {}
 	end
@@ -217,6 +223,10 @@ DialogueSystem.destroy = function (self)
 		for setting_name, value in pairs(self._original_dialogue_settings) do
 			DialogueSettings[setting_name] = value
 		end
+	end
+
+	if self._is_server then
+		Managers.event:unregister(self, "multiplayer_session_client_disconnected", "_on_client_left")
 	end
 
 	table.clear(self)
@@ -298,6 +308,25 @@ DialogueSystem.extensions_ready = function (self, world, unit, extension_name)
 
 		if self._current_game_mode == "coop_complete_objective" then
 			self:_load_player_resource(voice_profile)
+		elseif self._current_game_mode == "survival" and not DEDICATED_SERVER or self._current_game_mode == "shooting_range" then
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local player = player_unit_spawn_manager:owner(unit)
+
+			if player:is_human_controlled() then
+				local backend_group_id = "horde_mode"
+
+				if not self._backend_vo_synced then
+					local local_player = Managers.player:local_player(1)
+					local local_player_unique_id = local_player:unique_id()
+					local player_unique_id = player:unique_id()
+
+					if local_player_unique_id == player_unique_id then
+						self:_sync_backend_vo_to_server(backend_group_id)
+
+						self._backend_vo_synced = true
+					end
+				end
+			end
 		end
 	end
 end
@@ -323,6 +352,15 @@ DialogueSystem.on_remove_extension = function (self, unit, extension_name)
 	self._update_units[unit] = nil
 
 	DialogueSystem.super.on_remove_extension(self, unit, extension_name)
+end
+
+DialogueSystem._on_client_left = function (self, players_data)
+	if self._current_game_mode == "survival" then
+		local backend_group_id = "horde_mode"
+		local peer_id = players_data[1].peer_id
+
+		self:_remove_player_backend_vo(backend_group_id, peer_id)
+	end
 end
 
 local _function_by_op = {
@@ -471,6 +509,12 @@ DialogueSystem._update_currently_playing_dialogues = function (self, dt, t)
 
 									if level then
 										Level.trigger_event(level, success_rule.name)
+									end
+								elseif heard_speak_target == "level_event_generic" then
+									local level = Managers.state.mission:mission_level()
+
+									if level then
+										Level.trigger_event(level, "generic_level_event_vo")
 									end
 								elseif heard_speak_target == "all_including_self" then
 									for registered_unit, registered_extension in pairs(unit_to_extension_map) do
@@ -1722,6 +1766,168 @@ DialogueSystem._load_dialogue_resource = function (self, file_name)
 			self._tagquery_loader:load_file(rule_file_path)
 		end
 	end
+end
+
+DialogueSystem._remove_player_backend_vo = function (self, backend_group_id, peer_id)
+	local player_backend_table = self._backend_vo_table.peers[peer_id]
+	local backend_group_vo_table = self._backend_vo_table[backend_group_id]
+
+	if player_backend_table and backend_group_vo_table then
+		for _, saved_val in ipairs(player_backend_table) do
+			backend_group_vo_table[saved_val] = backend_group_vo_table[saved_val] and backend_group_vo_table[saved_val] - 1
+		end
+
+		self._backend_vo_table.peers[peer_id] = nil
+	end
+end
+
+DialogueSystem.backend_vo_table = function (self, backend_id)
+	return self._backend_vo_table[backend_id]
+end
+
+DialogueSystem.set_session_backend_vo = function (self, backend_group_id, rule_name)
+	self._backend_vo_group_id = backend_group_id
+	self._backend_vo_rule_name = rule_name
+end
+
+DialogueSystem.save_session_backend_vo = function (self)
+	local backend_group_id = self._backend_vo_group_id
+	local rule_name = self._backend_vo_rule_name
+
+	if backend_group_id and rule_name then
+		local backend_group_id_rpc = NetworkLookup.backend_vo_groups[backend_group_id]
+		local backend_group_lookup_id = backend_group_id .. "_vo"
+		local rule_name_rpc = NetworkLookup[backend_group_lookup_id][rule_name]
+
+		Managers.state.game_session:send_rpc_clients("rpc_save_backend_vo", backend_group_id_rpc, rule_name_rpc)
+
+		local stat_name = DialogueSettings.stats[backend_group_id][rule_name]
+
+		Managers.stats:record_team(stat_name)
+	end
+end
+
+DialogueSystem.extract_next_backend_vo = function (self, backend_group_id, optional_substring)
+	if self._saved_backend_vo then
+		local backend_table = self._saved_backend_vo[backend_group_id]
+		local chosen_index, has_next
+
+		if optional_substring then
+			for i, rule_name in ipairs(backend_table) do
+				if string.find(rule_name, optional_substring) then
+					if not chosen_index then
+						chosen_index = i
+					else
+						has_next = true
+
+						break
+					end
+				end
+			end
+		else
+			chosen_index = 1
+		end
+
+		if chosen_index then
+			local rule_name = backend_table[chosen_index]
+
+			table.remove(self._saved_backend_vo[backend_group_id], chosen_index)
+
+			if not optional_substring then
+				has_next = backend_table[chosen_index]
+			end
+
+			local last_line = not has_next
+
+			return rule_name, last_line
+		end
+	end
+end
+
+DialogueSystem.substring_exists_in_backend_vo = function (self, backend_group_id, substring)
+	if self._saved_backend_vo then
+		local backend_table = self._saved_backend_vo[backend_group_id]
+
+		for i, rule_name in ipairs(backend_table) do
+			if string.find(rule_name, substring) then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+DialogueSystem._sync_backend_vo_to_server = function (self, backend_group_id)
+	self._saved_vo_promise = Managers.backend.interfaces.account:get_feature_horde_vo():next(function (saved_vo)
+		local backend_group_id_rpc = NetworkLookup.backend_vo_groups[backend_group_id]
+		local rules_array_rpc = {}
+
+		if saved_vo then
+			local lookup_group_name = backend_group_id .. "_vo"
+
+			for i, rule_name in ipairs(saved_vo) do
+				rules_array_rpc[i] = NetworkLookup[lookup_group_name][rule_name]
+			end
+
+			if not self._saved_backend_vo then
+				self._saved_backend_vo = {}
+			end
+
+			self._saved_backend_vo[backend_group_id] = table.clone(saved_vo)
+
+			table.sort(self._saved_backend_vo[backend_group_id])
+		end
+
+		local player = Managers.player:local_player(1)
+		local peer_id = player:peer_id()
+
+		if not self._is_server then
+			Managers.state.game_session:send_rpc_server("rpc_server_sync_backend_vo", peer_id, backend_group_id_rpc, rules_array_rpc)
+		end
+	end)
+end
+
+DialogueSystem.rpc_server_sync_backend_vo = function (self, channel_id, peer_id, backend_group_id_rpc, rules_array_rpc)
+	self:_populate_backend_vo(peer_id, backend_group_id_rpc, rules_array_rpc)
+end
+
+DialogueSystem._populate_backend_vo = function (self, peer_id, backend_group_id_rpc, rules_array_rpc)
+	local backend_group_id = NetworkLookup.backend_vo_groups[backend_group_id_rpc]
+
+	if not self._backend_vo_table[backend_group_id] then
+		self._backend_vo_table[backend_group_id] = {}
+
+		local lookup_group_name = backend_group_id .. "_vo"
+		local num_backend_vo = #NetworkLookup[lookup_group_name]
+
+		for i = 1, num_backend_vo do
+			self._backend_vo_table[backend_group_id][i] = 0
+		end
+	end
+
+	local backend_group_vo_table = self._backend_vo_table[backend_group_id]
+
+	for _, val in ipairs(rules_array_rpc) do
+		backend_group_vo_table[val] = backend_group_vo_table[val] and backend_group_vo_table[val] + 1
+	end
+
+	self._backend_vo_table.peers[peer_id] = rules_array_rpc
+end
+
+DialogueSystem.rpc_save_backend_vo = function (self, channel_id, backend_group_id_rpc, rule_name_id_rpc)
+	local backend_group_id = NetworkLookup.backend_vo_groups[backend_group_id_rpc]
+	local backend_group_lookup_id = backend_group_id .. "_vo"
+	local rule_name = NetworkLookup[backend_group_lookup_id][rule_name_id_rpc]
+
+	Managers.backend.interfaces.account:set_feature_horde_vo(rule_name)
+end
+
+DialogueSystem.get_backend_vo_rule = function (self, group_name, rule_id)
+	local backend_group_lookup_id = group_name .. "_vo"
+	local rule = NetworkLookup[backend_group_lookup_id][rule_id]
+
+	return rule
 end
 
 DialogueSystem.dialogue_system_subtitle = function (self)

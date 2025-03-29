@@ -326,7 +326,14 @@ local widget_definitions = {
 			},
 		},
 	}, "title"),
-	description_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "description_scrollbar"),
+	description_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "description_scrollbar", {
+		enable_gamepad_scrolling = true,
+		focused = true,
+		gamepad_axis_name = "navigate_controller",
+		hotspot = {
+			is_focused = true,
+		},
+	}),
 	description_mask = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -374,8 +381,6 @@ local item_text_pass = {
 		style = item_text_style,
 	},
 }
-local menu_zoom_out = "loc_inventory_menu_zoom_out"
-local menu_zoom_in = "loc_inventory_menu_zoom_in"
 local menu_preview_with_gear_off = "loc_inventory_menu_preview_with_gear_off"
 local menu_preview_with_gear_on = "loc_inventory_menu_preview_with_gear_on"
 local legend_inputs = {
@@ -384,6 +389,19 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_inventory_menu_zoom_in",
+		input_action = "hotkey_menu_special_2",
+		on_pressed_callback = "cb_on_camera_zoom_toggled",
+		visibility_function = function (parent, id)
+			local display_name = parent._zoom_level >= 0.5 and "loc_inventory_menu_zoom_out" or "loc_inventory_menu_zoom_in"
+
+			parent._input_legend_element:set_display_name(id, display_name)
+
+			return not parent._disable_zoom
+		end,
 	},
 	{
 		alignment = "right_alignment",
@@ -406,23 +424,6 @@ local legend_inputs = {
 		store_appearance_option = true,
 		visibility_function = function (parent)
 			return parent:_can_swap_weapon()
-		end,
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_inventory_menu_zoom_in",
-		input_action = "hotkey_menu_special_2",
-		on_pressed_callback = "cb_on_camera_zoom_toggled",
-		visibility_function = function (parent, id)
-			if parent:_can_zoom() then
-				local display_name = parent._camera_zoomed_in and menu_zoom_out or menu_zoom_in
-
-				parent._input_legend_element:set_display_name(id, display_name)
-
-				return true
-			end
-
-			return false
 		end,
 	},
 	{

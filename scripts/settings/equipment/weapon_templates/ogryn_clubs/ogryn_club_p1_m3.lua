@@ -36,6 +36,7 @@ local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
 weapon_template.action_inputs.grenade_ability.buffer_time = 0.4
+weapon_template.action_inputs.wield.buffer_time = 0.3
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
 
 local hit_zone_priority = {
@@ -230,25 +231,25 @@ weapon_template.actions = {
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
-					chain_time = 0.8,
+					chain_time = 0.7,
 				},
 				{
 					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
+					chain_time = 0.7,
 				},
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.8,
+				chain_time = 0.7,
 			},
 			start_attack = {
 				{
 					action_name = "action_melee_start_left_special",
-					chain_time = 1.3,
+					chain_time = 0.8,
 				},
 				{
 					action_name = "action_melee_start_right",
-					chain_time = 1.3,
+					chain_time = 0.7,
 				},
 			},
 			special_action = {
@@ -257,7 +258,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.8,
+				chain_time = 0.7,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -346,16 +347,16 @@ weapon_template.actions = {
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 1.3,
+				chain_time = 0.9,
 			},
 			start_attack = {
 				{
 					action_name = "action_melee_start_left_special",
-					chain_time = 1.95,
+					chain_time = 1.45,
 				},
 				{
 					action_name = "action_melee_start_right",
-					chain_time = 1.5,
+					chain_time = 1.32,
 				},
 			},
 			special_action = {
@@ -364,7 +365,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1.1,
+				chain_time = 0.9,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -534,7 +535,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.75,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -792,7 +793,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -897,7 +898,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				0,
+				-0.1,
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_heavy_tank,
@@ -1042,7 +1043,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.5,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1057,9 +1058,9 @@ weapon_template.actions = {
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_down_left",
 			anchor_point_offset = {
+				0.15,
 				0,
 				0,
-				-0,
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_smiter,
@@ -1203,7 +1204,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1338,8 +1339,10 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
+		power_level = 550,
 		range_mod = 1.25,
 		total_time = 2,
+		uninterruptible = true,
 		weapon_handling_template = "time_scale_1",
 		action_movement_curve = {
 			{
@@ -1398,7 +1401,7 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = {
 			0.2,
-			0.15,
+			0.2,
 			1.15,
 		},
 		spline_settings = {
@@ -1406,10 +1409,10 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				0,
+				-0.15,
 			},
 		},
-		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank_followup,
+		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank,
 		damage_type = damage_types.blunt,
 		herding_template = HerdingTemplates.linesman_right_heavy_inverted,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
@@ -1517,7 +1520,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.2
 weapon_template.max_first_person_anim_movement_speed = 4.8

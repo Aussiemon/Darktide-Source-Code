@@ -87,6 +87,16 @@ local zones = {
 			mission_vote = "content/ui/materials/icons/missions/zone_void_standard",
 		},
 	},
+	horde = {
+		map_node = "horde_01",
+		name = "loc_horde_mission_breifing_zone",
+		name_short = "loc_horde_mission_breifing_zone",
+		images = {
+			default = "content/ui/materials/icons/missions/zone_horde_standard",
+			mission_board_details = "content/ui/materials/icons/zones/horde",
+			mission_vote = "content/ui/materials/icons/missions/zone_horde_standard",
+		},
+	},
 	watertown = {
 		map_node = "watertown_01",
 		name = "loc_zone_watertown",

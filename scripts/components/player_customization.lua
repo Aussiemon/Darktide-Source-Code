@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/components/player_customization.lua
 
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
-local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
+local MasterItems = require("scripts/backend/master_items")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local PlayerCustomization = component("PlayerCustomization")
 
 PlayerCustomization.editor_init = function (self, unit)
@@ -47,6 +47,7 @@ PlayerCustomization._construct_attach_settings = function (self, unit, world, in
 	local is_first_person = self:get_data(unit, "is_first_person")
 	local attach_settings = {
 		from_script_component = true,
+		from_ui_profile_spawner = false,
 		world = world,
 		character_unit = unit,
 		in_editor = in_editor,
@@ -114,18 +115,18 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	end
 
 	if attach_settings.lod_group then
-		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
+		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
 
-		if bv then
-			LODGroup.override_bounding_volume(attach_settings.lod_group, bv)
+		if bounding_volume then
+			LODGroup.override_bounding_volume(attach_settings.lod_group, bounding_volume)
 		end
 	end
 
 	if attach_settings.lod_shadow_group then
-		local bv = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
+		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_shadow_group)
 
-		if bv then
-			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bv)
+		if bounding_volume then
+			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bounding_volume)
 		end
 	end
 

@@ -4,6 +4,7 @@ local Loader = require("scripts/loading/loader")
 local LocalCreateWorldState = require("scripts/loading/local_states/local_create_world_state")
 local LocalDetermineLevelState = require("scripts/loading/local_states/local_determine_level_state")
 local LocalDetermineSpawnGroupState = require("scripts/loading/local_states/local_determine_spawn_group_state")
+local LocalMechanismLevelState = require("scripts/loading/local_states/local_mechanism_level_state")
 local LocalIngameState = require("scripts/loading/local_states/local_ingame_state")
 local LocalLevelState = require("scripts/loading/local_states/local_level_state")
 local LocalLoadersState = require("scripts/loading/local_states/local_loaders_state")
@@ -36,10 +37,6 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 	state_machine:add_transition("LocalDetermineLevelState", "hub_determined", LocalLoadersState)
 	state_machine:add_transition("LocalDetermineLevelState", "no_level_needed", LocalIngameState)
 	state_machine:add_transition("LocalDetermineLevelState", "reset", StateMachine.IGNORE_EVENT)
-	state_machine:add_transition("LocalDetermineSpawnGroupState", "spawn_group_set_mission", LocalIngameState)
-	state_machine:add_transition("LocalDetermineSpawnGroupState", "spawn_group_set_hub", LocalIngameState)
-	state_machine:add_transition("LocalDetermineSpawnGroupState", "no_level_needed", LocalIngameState)
-	state_machine:add_transition("LocalDetermineSpawnGroupState", "reset", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalResetState", "reset", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalResetState", "no_level_needed", LocalIngameState)
 	state_machine:add_transition("LocalResetState", "start_load", LocalLoadersState)
@@ -56,15 +53,23 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 	state_machine:add_transition("LocalThemeState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalThemeState", "reset", LocalResetState)
 	state_machine:add_transition("LocalThemeState", "disconnected", LocalLoadFailState)
-	state_machine:add_transition("LocalLevelState", "mission_load_done", LocalWaitForMissionBriefingDoneState)
+	state_machine:add_transition("LocalLevelState", "mission_load_done", LocalMechanismLevelState)
 	state_machine:add_transition("LocalLevelState", "hub_load_done", LocalDetermineSpawnGroupState)
 	state_machine:add_transition("LocalLevelState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalLevelState", "reset", LocalResetState)
 	state_machine:add_transition("LocalLevelState", "disconnected", LocalLoadFailState)
+	state_machine:add_transition("LocalMechanismLevelState", "spawning_done", LocalWaitForMissionBriefingDoneState)
+	state_machine:add_transition("LocalMechanismLevelState", "no_level_needed", StateMachine.IGNORE_EVENT)
+	state_machine:add_transition("LocalMechanismLevelState", "reset", LocalResetState)
+	state_machine:add_transition("LocalMechanismLevelState", "disconnected", LocalLoadFailState)
 	state_machine:add_transition("LocalWaitForMissionBriefingDoneState", "mission_briefing_done", LocalDetermineSpawnGroupState)
 	state_machine:add_transition("LocalWaitForMissionBriefingDoneState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalWaitForMissionBriefingDoneState", "reset", LocalResetState)
 	state_machine:add_transition("LocalWaitForMissionBriefingDoneState", "disconnected", LocalLoadFailState)
+	state_machine:add_transition("LocalDetermineSpawnGroupState", "spawn_group_set_mission", LocalIngameState)
+	state_machine:add_transition("LocalDetermineSpawnGroupState", "spawn_group_set_hub", LocalIngameState)
+	state_machine:add_transition("LocalDetermineSpawnGroupState", "no_level_needed", LocalIngameState)
+	state_machine:add_transition("LocalDetermineSpawnGroupState", "reset", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalIngameState", "disconnected", LocalLoadFailState)
 	state_machine:add_transition("LocalIngameState", "load_mission", LocalLoadersState)
 	state_machine:add_transition("LocalIngameState", "load_hub", LocalLoadersState)
@@ -74,6 +79,14 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 
 	self._state_machine = state_machine
 	self._shared_state = shared_state
+
+	network_delegate:register_connection_channel_events(self, host_channel_id, "rpc_set_mission_seed")
+end
+
+LoadingClient.rpc_set_mission_seed = function (self, channel_id, mission_seed)
+	local shared_state = self._shared_state
+
+	shared_state.mission_seed = mission_seed
 end
 
 LoadingClient.destroy = function (self)
@@ -91,13 +104,7 @@ LoadingClient.destroy = function (self)
 	end
 
 	table.clear(shared_state.loaders)
-
-	if Managers.state.game_session then
-		Managers.state.game_session:delete()
-
-		Managers.state.game_session = nil
-	end
-
+	self._network_delegate:unregister_channel_events(shared_state.host_channel_id, "rpc_set_mission_seed")
 	self._state_machine:delete()
 
 	self._state_machine = nil
@@ -107,6 +114,8 @@ end
 LoadingClient._cleanup_level = function (self, shared_state)
 	self._state_machine:event("reset")
 	self._state_machine:update(0)
+
+	shared_state.mission_seed = nil
 
 	local themes = shared_state.themes
 	local level = shared_state.level
@@ -121,7 +130,7 @@ LoadingClient._cleanup_level = function (self, shared_state)
 	end
 
 	if shared_state.level_spawner then
-		shared_state.level_spawner:destroy()
+		shared_state.level_spawner:delete()
 
 		shared_state.level_spawner = nil
 	elseif level then
@@ -139,44 +148,16 @@ LoadingClient._cleanup_level = function (self, shared_state)
 	end
 end
 
-LoadingClient.load_mission = function (self, mission_name, level_name, circumstance_name)
+LoadingClient.load_mission = function (self, context)
 	local shared_state = self._shared_state
 
 	self:_cleanup_level(shared_state)
 
 	shared_state.state = "loading"
-	shared_state.level_name = level_name
-	shared_state.mission_name = mission_name
-	shared_state.circumstance_name = circumstance_name
-
-	local state = self._state_machine:state()
-
-	if state.load_mission then
-		state:load_mission()
-	end
-end
-
-LoadingClient.stop_load_mission = function (self)
-	local shared_state = self._shared_state
-
-	self:_cleanup_level(shared_state)
-
-	shared_state.state = "loading"
-	shared_state.level_name = nil
-	shared_state.mission_name = nil
-	shared_state.circumstance_name = nil
-end
-
-LoadingClient.load_mission = function (self, mission_name, level_name, circumstance_name, havoc_data)
-	local shared_state = self._shared_state
-
-	self:_cleanup_level(shared_state)
-
-	shared_state.state = "loading"
-	shared_state.level_name = level_name
-	shared_state.mission_name = mission_name
-	shared_state.circumstance_name = circumstance_name
-	shared_state.havoc_data = havoc_data
+	shared_state.level_name = context.level_name
+	shared_state.mission_name = context.mission_name
+	shared_state.circumstance_name = context.circumstance_name
+	shared_state.havoc_data = context.havoc_data
 
 	local state = self._state_machine:state()
 
@@ -211,6 +192,15 @@ end
 
 LoadingClient.state = function (self)
 	return self._shared_state.state
+end
+
+LoadingClient.take_ownership_of_loaders = function (self)
+	local shared_state = self._shared_state
+	local loaders = shared_state.loaders
+
+	shared_state.loaders = {}
+
+	return loaders
 end
 
 LoadingClient.take_ownership_of_level = function (self)

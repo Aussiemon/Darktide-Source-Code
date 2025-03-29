@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/visual_loadout_system.lua
 
 require("scripts/extension_systems/visual_loadout/minion_visual_loadout_extension")
-require("scripts/extension_systems/visual_loadout/player_unit_visual_loadout_extension")
 require("scripts/extension_systems/visual_loadout/player_husk_visual_loadout_extension")
+require("scripts/extension_systems/visual_loadout/player_unit_visual_loadout_extension")
 
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local VisualLoadoutSystem = class("VisualLoadoutSystem", "ExtensionSystemBase")

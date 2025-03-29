@@ -59,6 +59,8 @@ ActionDiscard._discard = function (self, action_settings)
 		if equipped_pickup_data and equipped_pickup_data.on_drop_func then
 			equipped_pickup_data.on_drop_func(placed_unit)
 		end
+
+		pickup_system:dropped(placed_unit)
 	else
 		local deployable_settings = action_settings.deployable_settings
 		local unit_template = deployable_settings.unit_template

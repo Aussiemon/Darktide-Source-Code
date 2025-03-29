@@ -515,18 +515,22 @@ ScriptWorld.destroy_level = function (world, name)
 	levels[name] = nil
 end
 
-ScriptWorld.optimize_level_units = function (world)
+ScriptWorld.optimize_world_units = function (world)
 	local levels = World.get_data(world, "levels")
-	local Level_units = Level.units
-	local ScriptUnit_optimize = ScriptUnit.optimize
 
 	for _, level_data in pairs(levels) do
 		local level = level_data.level
-		local level_units = Level_units(level)
 
-		for i = 1, #level_units do
-			ScriptUnit_optimize(level_units[i])
-		end
+		ScriptWorld.optimize_level_units(level)
+	end
+end
+
+ScriptWorld.optimize_level_units = function (level)
+	local ScriptUnit_optimize = ScriptUnit.optimize
+	local level_units = Level.units(level)
+
+	for i = 1, #level_units do
+		ScriptUnit_optimize(level_units[i])
 	end
 end
 

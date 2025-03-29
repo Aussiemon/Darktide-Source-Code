@@ -56,8 +56,12 @@ HavocService.get_havoc_unlock_status = function (self)
 
 		return self.HAVOC_UNLOCK_STATUS[value + 1]
 	end):catch(function (err)
-		Log.error("HavocService", "Error getting havoc_unlock_status")
-		ferror(err)
+		local error_message = string.format("Error getting havoc_unlock_status: %s", err)
+
+		Log.error("HavocService", error_message)
+		ferror(error_message)
+
+		return nil
 	end)
 end
 
@@ -72,9 +76,11 @@ HavocService.set_havoc_unlock_status = function (self, value)
 		end
 	end
 
-	return Managers.backend.interfaces.account:set_havoc_unlock_status(backend_value):catch(function (err)
-		Log.error("HavocService", "Error setting havoc_unlock_status")
-		ferror(err)
+	Managers.backend.interfaces.account:set_havoc_unlock_status(backend_value):catch(function (err)
+		local error_message = string.format("Error setting havoc_unlock_status: %s", err)
+
+		Log.error("HavocService", error_message)
+		ferror(error_message)
 	end)
 end
 
@@ -85,6 +91,7 @@ HavocService.summary = function (self)
 		local error_string = tostring(err)
 
 		Log.error("HavocService", "Error fetching havoc summary: %s", error_string)
+		ferror(error_string)
 
 		return {}
 	end)
@@ -264,12 +271,37 @@ HavocService.refresh_havoc_rank = function (self)
 
 	return self._backend_interface.havoc:latest():next(function (result)
 		Managers.presence:set_havoc_rank_all_time_high(result.rank_all_time)
+		Managers.presence:set_havoc_rank_cadence_high(result.rank_cadence)
 	end):catch(function (err)
+		Managers.presence:set_havoc_rank_cadence_high(nil)
 		Managers.presence:set_havoc_rank_all_time_high(nil)
-		Log.error("HavocService", "Error fetching havoc rank all time high: %s", table.tostring(err, 5))
+		Log.error("HavocService", "Error fetching havoc data: %s", table.tostring(err, 5))
 
 		return Promise.rejected(err)
 	end)
+end
+
+HavocService.havoc_rank_cadence_high = function (self, account_id)
+	local rank_promise = Promise.new()
+
+	if not GameParameters.prod_like_backend or not math.is_uuid(account_id) then
+		rank_promise:resolve(nil)
+
+		return rank_promise
+	end
+
+	local _, presence_promise = Managers.presence:get_presence(account_id)
+
+	presence_promise:next(function (presence)
+		local rank = presence and presence:havoc_rank_cadence_high()
+
+		rank_promise:resolve(rank)
+	end):catch(function (err)
+		Log.error("HavocService", "Failed getting presence: %s", table.tostring(err, 5))
+		rank_promise:resolve(nil)
+	end)
+
+	return rank_promise
 end
 
 HavocService.havoc_rank_all_time_high = function (self, account_id)

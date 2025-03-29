@@ -119,7 +119,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 		for i = 1, #minion_spawner_radius_checks do
 			local radius = minion_spawner_radius_checks[i]
-			local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET, optional_only_search_forward)
+			local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side.valid_enemy_player_units_positions, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET, optional_only_search_forward)
 
 			if occluded_positions then
 				for j = 1, num_occluded_positions do
@@ -153,7 +153,12 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 			breed_list[#breed_list + 1] = breed_name
 		end
 
-		spawner:add_spawns(breed_list, side_id, target_side_id, nil, nil, group_id)
+		local param_table = spawner:request_param_table()
+
+		param_table.target_side_id = target_side_id
+		param_table.group_id = group_id
+
+		spawner:add_spawns(breed_list, side_id, param_table)
 	end
 
 	local spawns_left = num_to_spawn - num_spawned
@@ -167,7 +172,13 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 			if spawn_position then
 				local breed_name = spawn_list[i]
-				local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
+				local param_table = minion_spawn_manager:request_param_table()
+
+				param_table.optional_aggro_state = aggro_states.aggroed
+				param_table.optional_target_unit = target_unit
+				param_table.optional_group_id = group_id
+
+				minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
 
 				num_spawned = num_spawned + 1
 			end
@@ -206,8 +217,13 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 		if spawn_position then
 			local breed_name = spawn_list[i]
+			local param_table = minion_spawn_manager:request_param_table()
 
-			minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id)
+			param_table.optional_aggro_state = aggro_states.aggroed
+			param_table.optional_target_unit = target_unit
+			param_table.optional_group_id = group_id
+
+			minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
 
 			num_spawned = num_spawned + 1
 		end

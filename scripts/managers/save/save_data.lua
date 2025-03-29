@@ -96,6 +96,7 @@ SaveData.default_account_data = {
 	selected_sort_options = {},
 }
 SaveData.default_character_data = {
+	training_grounds_danger = 3,
 	new_items = {},
 	new_items_by_type = {},
 	new_item_notifications = {},

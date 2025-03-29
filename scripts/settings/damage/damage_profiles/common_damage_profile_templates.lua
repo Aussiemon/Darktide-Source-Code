@@ -9,9 +9,9 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local PushSettings = require("scripts/settings/damage/push_settings")
 local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
 local push_templates = PushSettings.push_templates
-local GibbingTypes = GibbingSettings.gibbing_types
-local GibbingPower = GibbingSettings.gibbing_power
 local damage_templates = {}
 local overrides = {}
 
@@ -813,8 +813,8 @@ damage_templates.kill_volume_with_gibbing = {
 		attack = 0.25,
 		impact = 0.25,
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.infinite,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.infinite,
 	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
 	targets = {
 		default_target = {
@@ -858,6 +858,80 @@ damage_templates.sticky_dodge_push = {
 	stagger_duration_modifier = {
 		0.5,
 		0.75,
+	},
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.ogryn_dodge_impact = {
+	is_push = true,
+	stagger_category = "explosion",
+	power_distribution = {
+		attack = 0,
+		impact = 0.5,
+	},
+	cleave_distribution = {
+		attack = 0,
+		impact = math.huge,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.slide_knockdown = {
+	is_push = true,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 0,
+		impact = 0.35,
+	},
+	cleave_distribution = {
+		attack = 0,
+		impact = math.huge,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0.5,
+			[armor_types.void_shield] = 0.5,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
 	},
 	targets = {
 		default_target = {},

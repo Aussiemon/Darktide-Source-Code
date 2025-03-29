@@ -8,6 +8,7 @@ local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local TextUtilities = require("scripts/utilities/ui/text")
 local TextUtils = require("scripts/utilities/ui/text")
@@ -80,7 +81,7 @@ GroupFinderView.init = function (self, settings, context)
 		{},
 	}
 	self._initial_party_id = self:party_id()
-	self._promises = {}
+	self._promise_container = PromiseContainer:new()
 	self._regions_latency = {}
 	self._show_group_loading = false
 	self._player_request_button_accept_input_action = "confirm_pressed"
@@ -417,7 +418,7 @@ GroupFinderView._get_group_finder_tags = function (self)
 		return formatted_response
 	end
 
-	local promise = self:_cancel_promise_on_exit(Managers.data_service.social:get_group_finder_tags():next(function (response)
+	local promise = self._promise_container:cancel_on_destroy(Managers.data_service.social:get_group_finder_tags():next(function (response)
 		return response
 	end):catch(function (error)
 		local error_string = tostring(error)
@@ -836,7 +837,7 @@ GroupFinderView._respond_to_join_request = function (self, element, accept)
 	local party_id = self:party_id()
 	local promise, id = party_immaterium:party_finder_respond_to_join_request(party_id, account_id, accept)
 
-	self:_cancel_promise_on_exit(promise)
+	self._promise_container:cancel_on_destroy(promise)
 end
 
 GroupFinderView._cb_on_player_request_accept_pressed = function (self, element)
@@ -1688,7 +1689,7 @@ GroupFinderView._cb_on_start_group_button_pressed = function (self)
 	local promise, id = party_immaterium:start_party_finder_advertise(metadata_config, tags_for_group_advertisement, region)
 
 	Log.info("Party advertisement initiated with ID:", id)
-	self:_cancel_promise_on_exit(promise)
+	self._promise_container:cancel_on_destroy(promise)
 	promise:next(function (result)
 		Log.info("Party advertisement successfully started with result:", result)
 		self:_set_state(STATE.advertising)
@@ -1850,7 +1851,7 @@ GroupFinderView._cb_on_cancel_group_button_pressed = function (self)
 
 	local promise, id = party_immaterium:cancel_party_finder_advertise()
 
-	self:_cancel_promise_on_exit(promise)
+	self._promise_container:cancel_on_destroy(promise)
 
 	self._cancel_group_promise = promise
 
@@ -1920,7 +1921,7 @@ GroupFinderView._set_state = function (self, new_state)
 		self:_set_group_browsing_widgets_visibility(false)
 		self:_set_tag_grid_visibility(false)
 		self:_update_party_statuses()
-		self:_cancel_promise_on_exit(Promise.all(self:fetch_regions(), self:_get_group_finder_tags():next(function (group_finder_tags_data)
+		self._promise_container:cancel_on_destroy(Promise.all(self:fetch_regions(), self:_get_group_finder_tags():next(function (group_finder_tags_data)
 			if not group_finder_tags_data or #group_finder_tags_data <= 0 then
 				local context = {
 					description_text = "loc_popup_unavailable_view_group_finder_description",
@@ -2306,11 +2307,7 @@ GroupFinderView.on_exit = function (self)
 		save_manager:queue_save()
 	end
 
-	local promises = self._promises
-
-	for promise, _ in pairs(promises) do
-		promise:cancel()
-	end
+	self._promise_container:delete()
 
 	if self._enter_animation_id then
 		self:_stop_animation(self._enter_animation_id)
@@ -2467,13 +2464,13 @@ GroupFinderView._update_listed_group = function (self)
 			local platform = player_info and player_info:platform() or ""
 			local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 			local character_level = tostring(profile.current_level) .. " "
-			local havoc_rank_all_time_high = player_info._presence:havoc_rank_all_time_high()
+			local havoc_rank_cadence_high = player_info._presence:havoc_rank_cadence_high()
 
-			if havoc_rank_all_time_high ~= nil and profile.current_level ~= nil and profile.current_level >= 30 then
+			if havoc_rank_cadence_high ~= nil and profile.current_level ~= nil and profile.current_level >= 30 then
 				local havoc_prefix_text = Localize("loc_havoc_highest_order_reached")
-				local havoc_highest_rank = "- " .. havoc_prefix_text .. " " .. tostring(havoc_rank_all_time_high) .. " "
+				local havoc_highest_cadence_rank = "- " .. havoc_prefix_text .. " " .. tostring(havoc_rank_cadence_high) .. " "
 
-				content.character_archetype_title = string.format("%s %s", character_archetype_title, havoc_highest_rank)
+				content.character_archetype_title = string.format("%s %s", character_archetype_title, havoc_highest_cadence_rank)
 			else
 				content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
 			end
@@ -2535,7 +2532,7 @@ GroupFinderView._update_listed_group = function (self)
 
 			members[i].account_id = player:account_id()
 			members[i].presence_info.archetype = archetype.name
-			members[i].havoc_rank_all_time_high = havoc_rank_all_time_high
+			members[i].havoc_rank_cadence_high = havoc_rank_cadence_high
 			members[i].presence_info.synced = true
 			content.slot_filled = true
 		else
@@ -2687,7 +2684,7 @@ GroupFinderView._reset_search = function (self)
 	self:_update_group_grid()
 
 	if self._search_connection_id then
-		local abort_promise, _ = self:_cancel_promise_on_exit(Managers.grpc:abort_operation(self._search_connection_id))
+		local abort_promise, _ = self._promise_container:cancel_on_destroy(Managers.grpc:abort_operation(self._search_connection_id))
 
 		abort_promise:next(function ()
 			Log.info("GroupFinderView", "STREAM CLOSED")
@@ -2734,7 +2731,7 @@ GroupFinderView._start_advertisements_stream = function (self)
 			return
 		end
 
-		self:_cancel_promise_on_exit(promise)
+		self._promise_container:cancel_on_destroy(promise)
 
 		self._search_connection_id = id
 
@@ -2942,7 +2939,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 
 							local _, promise = Managers.presence:get_presence(member_account_id)
 
-							self:_cancel_promise_on_exit(promise)
+							self._promise_container:cancel_on_destroy(promise)
 							promise:next(function (data)
 								if not data then
 									return
@@ -2976,7 +2973,7 @@ GroupFinderView._handle_incoming_advertisement_events = function (self)
 										presence_info.level = member_current_level
 										presence_info.archetype = archetype_name
 										presence_info.profile = parsed_character_profile
-										presence_info.havoc_rank_all_time_high = data:havoc_rank_all_time_high()
+										presence_info.havoc_rank_cadence_high = data:havoc_rank_cadence_high()
 										presence_info.synced = true
 									end
 								end
@@ -3305,13 +3302,13 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests_by
 			local current_level = profile.current_level
 			local archetype = profile.archetype
 			local archetype_name = archetype.name
-			local havoc_rank_all_time_high = presence:havoc_rank_all_time_high()
+			local havoc_rank_cadence_high = presence:havoc_rank_cadence_high()
 			local presence_info = {
 				name = name,
 				level = current_level,
 				archetype = archetype_name,
 				profile = profile,
-				havoc_rank_all_time_high = havoc_rank_all_time_high,
+				havoc_rank_cadence_high = havoc_rank_cadence_high,
 			}
 			local entry = {
 				widget_type = "player_request_entry",
@@ -3481,22 +3478,6 @@ GroupFinderView._update_grids_selection = function (self)
 	end
 end
 
-GroupFinderView._cancel_promise_on_exit = function (self, promise)
-	local promises = self._promises
-
-	if promise:is_pending() and not promises[promise] then
-		promises[promise] = true
-
-		promise:next(function ()
-			self._promises[promise] = nil
-		end, function ()
-			self._promises[promise] = nil
-		end)
-	end
-
-	return promise
-end
-
 GroupFinderView._callback_open_options = function (self, region_data)
 	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
 		on_destroy_callback = callback(self, "_callback_close_options"),
@@ -3597,11 +3578,11 @@ GroupFinderView.fetch_regions = function (self)
 
 	self._region_promise = region_promise
 
-	self:_cancel_promise_on_exit(region_promise):next(function (regions_data)
+	self._promise_container:cancel_on_destroy(region_promise):next(function (regions_data)
 		local prefered_region_promise
 
 		if BackendUtilities.prefered_mission_region == "" then
-			prefered_region_promise = self:_cancel_promise_on_exit(Managers.backend.interfaces.region_latency:get_preferred_reef())
+			prefered_region_promise = self._promise_container:cancel_on_destroy(Managers.backend.interfaces.region_latency:get_preferred_reef())
 		else
 			prefered_region_promise = Promise.resolved()
 		end

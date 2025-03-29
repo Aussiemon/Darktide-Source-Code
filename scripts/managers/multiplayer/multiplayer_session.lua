@@ -396,6 +396,7 @@ MultiplayerSession._remove_remote_players = function (self, peer_id, optional_ou
 					account_id = account_id,
 					character_id = character_id,
 					is_human = is_human,
+					peer_id = peer_id,
 					stat_id = stat_id,
 				}
 			end

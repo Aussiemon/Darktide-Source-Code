@@ -1117,7 +1117,6 @@ weapon_template.chain_speed_template = ChainSpeedTemplates.chainaxe
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1129,6 +1128,7 @@ weapon_template.weapon_special_tweak_data = {
 	active_duration = 4,
 	keep_active_on_sprint = true,
 	keep_active_on_stun = true,
+	keep_active_on_vault = true,
 	num_activations = 1,
 }
 weapon_template.fx_sources = {

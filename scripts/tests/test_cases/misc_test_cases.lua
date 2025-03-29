@@ -656,3 +656,28 @@ MiscTestCases.stress_alt_combinations = function (case_settings)
 		TestifySnippets.set_render_settings("screen_mode", "borderless_fullscreen", 1)
 	end)
 end
+
+MiscTestCases.equip_all_horde_mode_buffs = function (case_settings)
+	Testify:run_case(function (dt, t)
+		local settings = cjson.decode(case_settings or "{}")
+		local archetype = settings.archetype or "veteran"
+
+		TestifySnippets.skip_splash_and_title_screen()
+		TestifySnippets.wait_for_main_menu()
+		Testify:make_request("delete_character_by_name", "Testify")
+		TestifySnippets.create_character_from_main_menu(archetype)
+		TestifySnippets.load_mission("psykhanium")
+		Testify:make_request("wait_for_state_gameplay_reached")
+		TestifySnippets.wait(5)
+
+		local buffs_to_equip = Testify:make_request("all_hordes_buffs_names", "hordes_buff")
+
+		for _, buff_name in ipairs(buffs_to_equip) do
+			Log.info("Testify", "Trying to equip Hordes Buff: %s", buff_name)
+			Managers.event:trigger("mission_buffs_event_request_specific_buff", buff_name, true)
+			TestifySnippets.wait(2)
+		end
+
+		TestifySnippets.wait(10)
+	end)
+end

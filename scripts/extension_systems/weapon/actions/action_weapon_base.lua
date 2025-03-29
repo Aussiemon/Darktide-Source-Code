@@ -66,10 +66,9 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 	self:_setup_charge_template(action_settings)
 
 	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
-		local skip_unaim_anim = not not action_settings.skip_unaim_anim
 		local from_action_input = true
 
-		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skip_unaim_anim, self._player_unit, from_action_input)
+		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, self._player_unit, from_action_input)
 	end
 
 	local use_ability_charge = action_settings.use_ability_charge
@@ -177,6 +176,16 @@ ActionWeaponBase._check_for_lucky_strike = function (self, is_melee, is_ranged, 
 
 	if wielded_slot == "slot_combat_ability" or wielded_slot == "slot_grenade_ability" then
 		return
+	end
+
+	local buff_extension = self._buff_extension
+	local stat_buffs = buff_extension:stat_buffs()
+	local leadbelcher_chance_bonus = stat_buffs.leadbelcher_chance_bonus
+
+	chance = chance + leadbelcher_chance_bonus
+
+	if buff_extension:has_keyword("guaranteed_leadbelcher") then
+		chance = 1
 	end
 
 	local critical_strike_component = self._critical_strike_component

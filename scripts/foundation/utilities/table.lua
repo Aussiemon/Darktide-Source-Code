@@ -892,6 +892,8 @@ table.swap_delete = function (t, index)
 
 	t[index] = t[table_length]
 	t[table_length] = nil
+
+	return table_length
 end
 
 table.set_readonly = function (t)
@@ -994,9 +996,10 @@ table.make_strict = function (t, name, optional_error_message__index, optional_e
 end
 
 table.make_strict_with_interface = function (t, name, interface)
-	local valid_keys = {}
+	local num_fields = #interface
+	local valid_keys = Script.new_map(num_fields)
 
-	for i = 1, #interface do
+	for i = 1, num_fields do
 		local field_name = interface[i]
 
 		valid_keys[field_name] = true

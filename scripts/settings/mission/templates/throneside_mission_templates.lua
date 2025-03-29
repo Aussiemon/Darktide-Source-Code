@@ -34,9 +34,7 @@ local mission_templates = {
 			fire = 0.2,
 			none = 0.5,
 		},
-		testify_flags = {
-			run_through_mission = true,
-		},
+		testify_flags = {},
 		pickup_settings = {},
 		terror_event_templates = {
 			"terror_events_cm_archives",

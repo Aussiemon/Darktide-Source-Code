@@ -5,6 +5,7 @@ local sound_data = {
 	events = {
 		footstep = "wwise/events/minions/play_minion_footsteps_wrapped_feet",
 		footstep_land = "wwise/events/minions/play_minion_footsteps_barefoot_land",
+		pull_sprint = "wwise/events/minions/play_minion_frag_grenade_pull_sprint",
 		run_foley = "wwise/events/minions/play_shared_minion_cloth_leather_run_foley",
 		stop_vce = "wwise/events/minions/stop_all_enemy_cultist_rusher_male_vce",
 		swing = "wwise/events/weapon/play_minion_swing_1h_sword",
@@ -20,6 +21,7 @@ local sound_data = {
 		vce_switch_to_melee = "wwise/events/minions/play_enemy_cultist_rusher_male__switch_to_melee_vce",
 	},
 	use_proximity_culling = {
+		pull_sprint = false,
 		stop_vce = false,
 		vce_death = false,
 		vce_death_long = false,

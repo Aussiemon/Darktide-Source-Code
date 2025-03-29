@@ -31,6 +31,7 @@ local LUA_TYPES = {
 	fixed_frame_offset_start_t_7bit = "number",
 	fixed_frame_offset_start_t_9bit = "number",
 	fixed_frame_time = "number",
+	game_object_id = "number",
 	high_precision_direction = "Vector3",
 	high_precision_position_component = "number",
 	high_precision_velocity = "Vector3",

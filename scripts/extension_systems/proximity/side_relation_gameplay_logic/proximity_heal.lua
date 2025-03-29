@@ -10,22 +10,21 @@ local improved_medical_crate_settings = BuffSettings.keyword_settings[buff_keywo
 local ProximityHeal = class("ProximityHeal")
 
 ProximityHeal.init = function (self, logic_context, init_data, owner_unit_or_nil)
+	self._world = logic_context.world
+	self._physics_world = logic_context.physics_world
 	self._unit = logic_context.unit
 	self._side_name = logic_context.side_name
 	self._units_in_proximity = {}
 	self._units_healed = {}
+	self._fx_time_table = {}
 
 	local med_kit_settings = init_data
 
 	self._med_kit_settings = med_kit_settings
 	self._amount_of_damage_healed = 0
-	self._fx_time_table = {}
-
-	local t = Managers.time:time("gameplay")
-
-	self._start_time = t
-	self._current_t = t
 	self._owner_unit_or_nil = owner_unit_or_nil
+	self._start_time = nil
+	self._current_t = nil
 
 	local players_have_improved_keyword = false
 	local side_system = Managers.state.extension:system("side_system")
@@ -75,6 +74,10 @@ ProximityHeal.unit_in_proximity_deleted = function (self, unit)
 end
 
 ProximityHeal.update = function (self, dt, t)
+	if not self._started then
+		return
+	end
+
 	self._current_t = t
 
 	local healing_reserve = self._heal_reserve
@@ -150,7 +153,7 @@ ProximityHeal.update = function (self, dt, t)
 				end
 
 				if health_added > 0 then
-					self:play_fx_for_unit(unit, t)
+					self:_play_fx_for_unit(unit, t)
 				end
 
 				if not self._units_healed[unit] and health_added > 0 then
@@ -163,18 +166,34 @@ ProximityHeal.update = function (self, dt, t)
 	self._amount_of_damage_healed = self._amount_of_damage_healed + amount_healed_this_tick
 end
 
-ProximityHeal.play_fx_for_unit = function (self, unit, t)
+ProximityHeal._play_fx_for_unit = function (self, unit, t)
 	local last_play_time = self._fx_time_table[unit]
-	local fx_intervall = self._med_kit_settings.fx_intervall
+	local fx_interval = self._med_kit_settings.fx_interval
 
-	if not last_play_time or t > last_play_time + fx_intervall then
+	if not last_play_time or t > last_play_time + fx_interval then
 		self._fx_time_table[unit] = t
 
 		Health.play_fx(unit)
 	end
 end
 
+ProximityHeal.start_job = function (self)
+	if self:job_completed() or self:is_job_canceled() then
+		return
+	end
+
+	local t = Managers.time:time("gameplay")
+
+	self._start_time = t
+	self._current_t = t
+	self._started = true
+end
+
 ProximityHeal.job_completed = function (self)
+	if not self._started then
+		return false
+	end
+
 	local is_health_depleted = false
 	local healing_reserve = self._heal_reserve
 
@@ -201,7 +220,7 @@ ProximityHeal.cancel_job = function (self)
 end
 
 ProximityHeal.is_job_canceled = function (self)
-	return self._is_canceled or false
+	return not not self._is_canceled
 end
 
 return ProximityHeal

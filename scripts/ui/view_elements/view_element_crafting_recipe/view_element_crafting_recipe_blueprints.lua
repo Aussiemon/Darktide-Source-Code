@@ -483,7 +483,7 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 		local item = config.item
 		local rarity = config.rarity
 
-		content.description = Items.perk_description(item, rarity, config.value)
+		content.description = Items.trait_description(item, rarity, config.value)
 		content.rank = Items.perk_textures(item, rarity)
 		content.hotspot.pressed_callback = callback(parent, secondary_callback_name, widget, config)
 	end,

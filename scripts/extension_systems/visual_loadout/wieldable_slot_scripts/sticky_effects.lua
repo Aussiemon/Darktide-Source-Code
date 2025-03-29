@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sticky_effects.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Armor = require("scripts/utilities/attack/armor")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")

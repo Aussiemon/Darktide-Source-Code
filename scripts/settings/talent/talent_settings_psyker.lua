@@ -15,6 +15,7 @@ local talent_settings = {
 		max_stacks = 30,
 		post_stance_duration = 10,
 		second_per_weakspot = 1,
+		venting = 0.5,
 	},
 	mark_passive = {
 		weakspot_stacks = 3,
@@ -36,9 +37,9 @@ local talent_settings = {
 			stacks = 1,
 		},
 		melee_weaving = {
-			duration = 4,
-			vent_percentage = 0.05,
-			warp_generation = 0.8,
+			duration = 5,
+			vent_percentage = 0.1,
+			warp_generation = 0.75,
 		},
 		melee_attack_speed = {
 			attack_speed = 0.1,
@@ -60,9 +61,9 @@ local talent_settings = {
 			warp_charge_percent = 0.04,
 		},
 		reload_speed_warp = {
-			reload_speed = 0.25,
+			reload_speed = 0.3,
 			threshold = 0.75,
-			warp_charge = 0.25,
+			warp_charge = 0.15,
 		},
 		soulblaze_reduces_damage_taken = {
 			toughness_damage_taken_multiplier = 0.67,
@@ -169,7 +170,7 @@ local talent_settings = {
 			on_kill_proc_chance = 0.04,
 		},
 		coop_2 = {
-			percent = 0.05,
+			percent = 0.04,
 		},
 		coop_3 = {
 			damage_taken_multiplier = 1.25,
@@ -254,7 +255,7 @@ local talent_settings = {
 		},
 		passive_1 = {
 			chain_lightning_damage = 2,
-			empowered_chain_lightning_chance = 0.075,
+			empowered_chain_lightning_chance = 0.1,
 			max_stacks = 1,
 			psyker_smite_cost_multiplier = 0,
 		},
@@ -286,7 +287,7 @@ local talent_settings = {
 		},
 		offensive_3 = {
 			power_level = 500,
-			proc_chance = 0.1,
+			proc_chance = 0.2,
 			special_proc_chance = 1,
 		},
 		defensive_1 = {
@@ -316,10 +317,10 @@ local talent_settings = {
 			toughness_percentage = 0.05,
 		},
 		spec_passive_1 = {
-			toughness_for_allies = 0.15,
+			toughness_for_allies = 0.2,
 		},
 		spec_passive_2 = {
-			empowered_chain_lightning_chance = 0.125,
+			empowered_chain_lightning_chance = 0.15,
 		},
 		spec_passive_3 = {
 			attack_speed = 0.15,

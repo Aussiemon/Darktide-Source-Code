@@ -288,7 +288,14 @@ MutatorToxicGasTwins._spawn_twins = function (self, twin_spawn_data, section_id)
 		if not data.has_spawned then
 			local twin_spawn_position = data.spawn_position:unbox()
 			local twin_spawn_rotation = data.spawn_rotation:unbox()
-			local twin_unit = Managers.state.minion_spawn:spawn_minion(breed_name, twin_spawn_position, twin_spawn_rotation, 2, aggro_states.aggroed, ahead_unit, nil, nil, nil, nil, not self._is_last_spawn and TWIN_TRAVERSAL_SPAWN_HEALTH_MODIFIER)
+			local minion_spawn_manager = Managers.state.minion_spawn
+			local param_table = minion_spawn_manager:request_param_table()
+
+			param_table.optional_aggro_state = aggro_states.aggroed
+			param_table.optional_target_unit = ahead_unit
+			param_table.optional_health_modifier = not self._is_last_spawn and TWIN_TRAVERSAL_SPAWN_HEALTH_MODIFIER
+
+			local twin_unit = minion_spawn_manager:spawn_minion(breed_name, twin_spawn_position, twin_spawn_rotation, 2, param_table)
 
 			data.has_spawned = true
 			data.spawned_twin_unit = twin_unit
@@ -799,7 +806,12 @@ MutatorToxicGasTwins.spawn_boss_fight_twins = function (self)
 	local ahead_unit = main_path_manager:ahead_unit(TARGET_SIDE_ID)
 	local id = TWIN_IDS.renegade_twin_captain
 	local health_modifier = 1 - (self._boss_health[id] or 1)
-	local twin_unit = Managers.state.minion_spawn:spawn_minion("renegade_twin_captain", spawner_1_position, spawner_1_rotation, 2, aggro_states.aggroed, ahead_unit)
+	local param_table_twin_01 = Managers.state.minion_spawn:request_param_table()
+
+	param_table_twin_01.optional_aggro_state = aggro_states.aggroed
+	param_table_twin_01.optional_target_unit = ahead_unit
+
+	local twin_unit = Managers.state.minion_spawn:spawn_minion("renegade_twin_captain", spawner_1_position, spawner_1_rotation, 2, param_table_twin_01)
 	local reactivation_override = true
 	local spawned_unit_health_extension = ScriptUnit.extension(twin_unit, "health_system")
 	local spawned_unit_toughness_extension = ScriptUnit.extension(twin_unit, "toughness_system")
@@ -814,7 +826,12 @@ MutatorToxicGasTwins.spawn_boss_fight_twins = function (self)
 
 	local id_2 = TWIN_IDS.renegade_twin_captain_two
 	local health_modifier_2 = 1 - (self._boss_health[id_2] or 1)
-	local twin_unit_2 = Managers.state.minion_spawn:spawn_minion("renegade_twin_captain_two", spawner_2_position, spawner_2_rotation, 2, aggro_states.aggroed, ahead_unit)
+	local param_table_twin_02 = Managers.state.minion_spawn:request_param_table()
+
+	param_table_twin_02.optional_aggro_state = aggro_states.aggroed
+	param_table_twin_02.optional_target_unit = ahead_unit
+
+	local twin_unit_2 = Managers.state.minion_spawn:spawn_minion("renegade_twin_captain_two", spawner_2_position, spawner_2_rotation, 2, param_table_twin_02)
 	local spawned_unit_health_extension_2 = ScriptUnit.extension(twin_unit_2, "health_system")
 	local spawned_unit_toughness_extension_2 = ScriptUnit.extension(twin_unit_2, "toughness_system")
 

@@ -2,7 +2,7 @@
 
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
-local AimPlaceUtil = require("scripts/extension_systems/weapon/actions/utilities/aim_place_util")
+local AimPlacement = require("scripts/extension_systems/weapon/actions/utilities/aim_placement")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ActionPlaceBase = class("ActionPlaceBase", "ActionWeaponBase")
@@ -99,7 +99,7 @@ ActionPlaceBase._calculate_placement_data = function (self)
 	local first_person_component = self._first_person_component
 	local place_configuration = self._action_settings.place_configuration
 	local physics_world = self._physics_world
-	local can_place, position, rotation, placed_on_unit = AimPlaceUtil.aim_placement(physics_world, place_configuration, first_person_component)
+	local can_place, position, rotation, placed_on_unit = AimPlacement.from_configuration(physics_world, place_configuration, first_person_component)
 
 	return can_place, position, rotation, placed_on_unit
 end

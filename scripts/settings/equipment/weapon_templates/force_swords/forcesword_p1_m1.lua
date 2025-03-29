@@ -1,13 +1,13 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_swords/forcesword_p1_m1.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
-local ForceswordMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/forcesword_p1_m1_melee_action_input_setup")
+local ForceswordMeleeActionInputSetup = require("scripts/settings/equipment/weapon_templates/forcesword_melee_action_input_setup")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -1651,7 +1651,6 @@ weapon_template.weapon_box = base_sweep_box
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1660,6 +1659,7 @@ weapon_template.weapon_special_tweak_data = {
 	active_duration = 3,
 	keep_active_on_sprint = true,
 	keep_active_on_stun = true,
+	keep_active_on_vault = true,
 }
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
 weapon_template.damage_window_end_sweep_trail_offset = 0.45

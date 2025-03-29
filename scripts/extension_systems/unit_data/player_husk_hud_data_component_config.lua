@@ -2,9 +2,6 @@
 
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local husk_hud_data_component_config = {
-	action_heal_target_over_time = {
-		"target_unit",
-	},
 	action_module_position_finder = {
 		"position",
 		"normal",

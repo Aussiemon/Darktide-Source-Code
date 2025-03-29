@@ -18,7 +18,7 @@ DestructibleExtension.init = function (self, extension_init_context, unit, exten
 	self._time_to_despawn = nil
 	self._is_nav_gate = false
 	self._nav_layer_name = nil
-	self._broadphase_radius = nil
+	self._broadphase_radius = 0.5
 	self._visibility_info = {
 		fake_light = false,
 		lights_enabled = true,
@@ -29,6 +29,32 @@ end
 
 DestructibleExtension.destroy = function (self)
 	self:_disable_nav_volume()
+	self:remove_from_broadphase()
+
+	self._broadphase = nil
+	self._broadphase_system = nil
+	self._broadphase_position = nil
+end
+
+DestructibleExtension.add_to_broadphase = function (self)
+	if not self._broadphase_id then
+		local unit = self._unit
+		local broadphase = self._broadphase
+		local broadphase_radius = self._broadphase_radius
+		local broadphase_position = self._broadphase_position:unbox()
+
+		self._broadphase_id = Broadphase.add(broadphase, unit, broadphase_position, broadphase_radius or 1, "destructibles")
+	end
+
+	return self._broadphase_id
+end
+
+DestructibleExtension.remove_from_broadphase = function (self)
+	if self._broadphase_id then
+		Broadphase.remove(self._broadphase, self._broadphase_id)
+
+		self._broadphase_id = nil
+	end
 end
 
 DestructibleExtension._disable_nav_volume = function (self)
@@ -49,9 +75,21 @@ DestructibleExtension.setup_from_component = function (self, despawn_timer_durat
 
 	self._despawn_when_destroyed = despawn_when_destroyed
 	self._despawn_timer_duration = despawn_timer_duration
-	self._broadphase_radius = broadphase_radius
 	self._use_health_extension_health = use_health_extension_health
 	self._network_unit = network_unit
+
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+	local broadphase = broadphase_system.broadphase
+	local destructible_actor_index = Unit.find_actor(unit, "c_destructible") or 1
+	local destructible_actor = Unit.actor(unit, destructible_actor_index)
+	local position = Actor.position(destructible_actor)
+
+	self._broadphase = broadphase
+	self._broadphase_system = broadphase_system
+	self._broadphase_radius = broadphase_radius
+	self._broadphase_position = Vector3Box(position)
+
+	self:add_to_broadphase()
 
 	local parameters = {
 		parts_mass = mass,
@@ -280,6 +318,10 @@ DestructibleExtension.broadphase_radius = function (self)
 	return self._broadphase_radius
 end
 
+DestructibleExtension.broadphase_position = function (self)
+	return self._broadphase_position:unbox()
+end
+
 DestructibleExtension._set_stage = function (self, new_stage, from_hot_join_sync)
 	local current_stage_index = self._destruction_info.current_stage_index
 
@@ -395,6 +437,7 @@ end
 DestructibleExtension._handle_stage_zero = function (self, current_stage_index)
 	if current_stage_index == 0 then
 		self:_disable_nav_volume()
+		self:remove_from_broadphase()
 
 		if self._despawn_when_destroyed and (not self._network_unit or not not self._is_server) then
 			if self._timer_to_despawn == nil then

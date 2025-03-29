@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/settings/ability/ability_templates/veteran_stealth_combat_ability.lua
 
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local talent_settings = TalentSettings.veteran_3
 local RADIUS = talent_settings.combat_ability.radius
@@ -92,25 +91,17 @@ ability_template.actions = {
 	},
 	action_veteran_combat_ability = {
 		ability_type = "combat_ability",
+		abort_sprint = false,
 		allowed_during_sprint = true,
 		has_husk_sound = true,
 		kind = "veteran_combat_ability",
+		prevent_sprint = false,
+		shout_target_template = "veteran_shout",
 		total_time = 1,
 		uninterruptible = true,
 		use_ability_charge = true,
 		use_charge_at_start = true,
-		shout_settings = {
-			force_stagger_type_if_not_staggered = "heavy",
-			force_stagger_type_if_not_staggered_duration = 2.5,
-			revive_allies = true,
-			target_allies = true,
-			target_enemies = true,
-			radius = RADIUS,
-			damage_profile = DamageProfileTemplates.shout_stagger_veteran,
-			power_level = talent_settings.combat_ability.power_level,
-			cone_dot = talent_settings.combat_ability.cone_dot,
-			cone_range = talent_settings.combat_ability.cone_range,
-		},
+		radius = RADIUS,
 		vo_tags = {
 			base = "ability_ranger",
 			ranger = "ability_ranger",

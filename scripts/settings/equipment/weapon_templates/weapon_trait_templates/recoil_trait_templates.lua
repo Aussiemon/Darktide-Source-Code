@@ -1,8 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/weapon_trait_templates/recoil_trait_templates.lua
 
-local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_states
 local ALL_WEAPON_MOVEMENT_STATES = WeaponTweakTemplateSettings.ALL_WEAPON_MOVEMENT_STATES
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local recoil_trait_templates = {}

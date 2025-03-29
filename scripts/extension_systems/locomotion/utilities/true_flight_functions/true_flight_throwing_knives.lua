@@ -3,6 +3,7 @@
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
+local HALF_PI = math.pi * 0.5
 local hit_zone_names = HitZone.hit_zone_names
 local TrueFlightThrowingKnives = {}
 
@@ -13,7 +14,7 @@ TrueFlightThrowingKnives.throwing_knives_locomotion = function (physics_world, i
 	local new_rotation = Quaternion.look(velocity)
 	local rotation_speed = 12
 	local rotation_length = 30
-	local sin_test = math.sin(t * rotation_speed + (integration_data.time_since_start * 1)^2)
+	local sin_test = math.sin(t * rotation_speed + integration_data.time_since_start^2)
 	local cos_test = math.sin(t * rotation_speed * 0.65)
 	local test_vector = Vector3(sin_test, rotation_length, cos_test)
 	local test_look = Quaternion.look(test_vector)
@@ -91,13 +92,13 @@ local function _throwing_knives_find_best_target(integration_data, search_positi
 	local number_of_results, results = TrueFlightDefaults.broadphase_query(projectile_unit, search_position, radius)
 
 	if number_of_results > 0 then
-		for i = 1, number_of_results do
-			local unit = results[i]
+		for ii = 1, number_of_results do
+			local unit = results[ii]
 
 			if ScriptUnit.has_extension(unit, "health_system") then
 				local last_hit_unit = integration_data.last_hit_unit
 				local damage_extension = integration_data.damage_extension
-				local hit_units = damage_extension:get_hit_units()
+				local hit_units = damage_extension:hit_units()
 				local have_unit_been_hit = hit_units[unit]
 				local is_unit_ok = unit ~= optionl_ignore_unit and unit ~= last_hit_unit and HEALTH_ALIVE[unit] and not have_unit_been_hit
 
@@ -127,7 +128,7 @@ local function _throwing_knives_find_best_target(integration_data, search_positi
 	return best_unit, best_position, default_hit_zone
 end
 
-TrueFlightThrowingKnives.throwing_knives_find_highest_value_target = function (integration_data, position, is_valid_and_legitimate_targe_func)
+TrueFlightThrowingKnives.throwing_knives_find_highest_value_target = function (integration_data, position, is_valid_and_legitimate_target_func)
 	local true_flight_template = integration_data.true_flight_template
 	local forward_search_distance_to_find_target = true_flight_template.forward_search_distance_to_find_target
 	local skip_search_time = true_flight_template.skip_search_time
@@ -216,7 +217,7 @@ TrueFlightThrowingKnives.throwing_knives_on_impact = function (hit_unit, hit, in
 			local towards_target = Vector3.normalize(target_unit_position - hit_position)
 			local angle_to_target_from_hit = Vector3.angle(towards_target, hit_normal)
 
-			if angle_to_target_from_hit < math.pi / 2 then
+			if angle_to_target_from_hit < HALF_PI then
 				new_direction = Vector3.lerp(new_direction, towards_target, 0.5)
 			end
 		end

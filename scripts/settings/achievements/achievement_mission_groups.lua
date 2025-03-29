@@ -332,6 +332,15 @@ AchievementMissionGroups.missions = {
 			auric = path .. "mission_achievements/missions_achievement_0039",
 		},
 	},
+	{
+		local_variable = "loc_mission_name_psykhanium",
+		name = "psykhanium",
+		category = {
+			default = "endeavours_psykhanium",
+			puzzle = "exploration_psykhanium",
+		},
+		icon = {},
+	},
 }
 AchievementMissionGroups.level_overview_meta = {
 	{
@@ -605,6 +614,12 @@ AchievementMissionGroups.zones = {
 			zone_default = path .. "mission_achievements/missions_achievement_0038",
 		},
 	},
+	{
+		category = "exploration_horde",
+		local_variable = "loc_zone_name_horde_short",
+		name = "horde",
+		icon = {},
+	},
 }
 AchievementMissionGroups.zone_meta = {
 	{
@@ -689,6 +704,12 @@ AchievementMissionGroups.zone_meta = {
 		category = "exploration_operations",
 		local_variable = "loc_zone_name_operations_short",
 		name = "operations",
+		achievements = {},
+	},
+	{
+		category = "exploration_horde",
+		local_variable = "loc_zone_name_horde_short",
+		name = "horde",
 		achievements = {},
 	},
 }

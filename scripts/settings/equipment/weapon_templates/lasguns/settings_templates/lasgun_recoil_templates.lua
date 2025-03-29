@@ -707,11 +707,6 @@ recoil_templates.hip_lasgun_p2_killshot = {
 		},
 	},
 }
-
-local yaw_spread = 0.03
-local pitch_spread = 0.025
-local pitch_offset = 0.04
-
 recoil_templates.default_lasgun_killshot = {
 	still = {
 		camera_recoil_percentage = 0.2,
@@ -2171,9 +2166,6 @@ recoil_templates.default_lasgun_spraynpray = {
 		},
 	},
 }
-
-local p2_m1_pitch = 0.05
-
 recoil_templates.lasgun_p2_m1_ads_killshot = {
 	still = {
 		camera_recoil_percentage = 0.1,

@@ -1,15 +1,15 @@
 ﻿-- chunkname: @scripts/settings/damage/damage_profiles/demolitions_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
-local damage_types = DamageSettings.damage_types
+local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
 local damage_templates = {}
 local overrides = {}
 
@@ -87,7 +87,7 @@ damage_templates.default_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = gibbing_types.explosion,
 }
 damage_templates.close_grenade = {
 	damage_type = "grenade",
@@ -130,8 +130,8 @@ damage_templates.close_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.heavy,
 }
 damage_templates.frag_grenade = {
 	gibbing_power = 0,
@@ -204,7 +204,7 @@ damage_templates.frag_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = gibbing_types.explosion,
 	damage_type = damage_types.grenade_frag,
 	stat_buffs = {
 		"frag_damage",
@@ -250,8 +250,8 @@ damage_templates.close_frag_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.heavy,
 	damage_type = damage_types.grenade_frag,
 	stat_buffs = {
 		"frag_damage",
@@ -327,8 +327,8 @@ damage_templates.krak_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.medium,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.medium,
 	gib_push_force = GibbingSettings.gib_push_force.explosive,
 	damage_type = damage_types.grenade_krak,
 	stat_buffs = {
@@ -376,8 +376,8 @@ damage_templates.close_krak_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.infinite,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.infinite,
 	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
 	damage_type = damage_types.grenade_krak,
 	stat_buffs = {
@@ -455,7 +455,7 @@ damage_templates.ogryn_box_cluster_frag_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = gibbing_types.explosion,
 	damage_type = damage_types.grenade_frag,
 	stat_buffs = {
 		"frag_damage",
@@ -501,8 +501,8 @@ damage_templates.ogryn_box_cluster_close_frag_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.heavy,
 	damage_type = damage_types.grenade_frag,
 	stat_buffs = {
 		"frag_damage",
@@ -543,8 +543,8 @@ damage_templates.plasma_demolition = {
 		attack = 1,
 		impact = 3,
 	},
-	gibbing_type = GibbingTypes.plasma,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.plasma,
+	gibbing_power = gibbing_power.heavy,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.2,
@@ -597,8 +597,8 @@ damage_templates.smoke_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.heavy,
 }
 damage_templates.shock_grenade = {
 	damage_type = "grenade",
@@ -642,8 +642,8 @@ damage_templates.shock_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.heavy,
 }
 damage_templates.shock_grenade_stun_interval = {
 	ignore_shield = true,
@@ -710,6 +710,7 @@ ogryn_thumper_p1_m2_default.armor_damage_modifier_ranged.far.impact[armor_types.
 	0.4,
 }
 ogryn_thumper_p1_m2_default.opt_in_stagger_duration_multiplier = true
+ogryn_thumper_p1_m2_default.count_as_ranged_attack = true
 damage_templates.ogryn_thumper_p1_m2_default = ogryn_thumper_p1_m2_default
 
 local ogryn_thumper_p1_m2_close = table.clone(damage_templates.close_grenade)
@@ -724,6 +725,7 @@ ogryn_thumper_p1_m2_close.armor_damage_modifier.impact[armor_types.armored] = {
 }
 ogryn_thumper_p1_m2_close.opt_in_stagger_duration_multiplier = true
 ogryn_thumper_p1_m2_close.power_distribution.attack = 250
+ogryn_thumper_p1_m2_close.count_as_ranged_attack = true
 damage_templates.ogryn_thumper_p1_m2_close = ogryn_thumper_p1_m2_close
 
 local ogryn_thumper_p1_m2_default_instant = table.clone(damage_templates.default_grenade)
@@ -776,6 +778,7 @@ ogryn_thumper_p1_m2_default_instant.power_distribution_ranged.impact.near = {
 	0,
 	10,
 }
+ogryn_thumper_p1_m2_default_instant.count_as_ranged_attack = true
 damage_templates.ogryn_thumper_p1_m2_default_instant = ogryn_thumper_p1_m2_default_instant
 
 local ogryn_thumper_p1_m2_close_instant = table.clone(damage_templates.close_grenade)
@@ -804,6 +807,7 @@ ogryn_thumper_p1_m2_close_instant.power_distribution.impact = {
 	40,
 	80,
 }
+ogryn_thumper_p1_m2_close_instant.count_as_ranged_attack = true
 damage_templates.ogryn_thumper_p1_m2_close_instant = ogryn_thumper_p1_m2_close_instant
 
 local ogryn_grenade = table.clone(damage_templates.default_grenade)
@@ -877,8 +881,11 @@ ogryn_grenade.power_distribution_ranged.attack.far = 600
 ogryn_grenade.power_distribution_ranged.impact.near = 200
 ogryn_grenade.power_distribution_ranged.impact.far = 10
 ogryn_grenade.damage_type = damage_types.grenade_frag
-ogryn_grenade.gibbing_power = GibbingPower.heavy
+ogryn_grenade.gibbing_power = gibbing_power.heavy
 ogryn_grenade.ragdoll_push_force = 1200
+ogryn_grenade.stat_buffs = {
+	"frag_damage",
+}
 damage_templates.ogryn_grenade = ogryn_grenade
 
 local close_ogryn_grenade = table.clone(damage_templates.close_grenade)
@@ -913,8 +920,11 @@ close_ogryn_grenade.armor_damage_modifier.impact[armor_types.resistant] = {
 }
 close_ogryn_grenade.power_distribution.attack = 1500
 close_ogryn_grenade.damage_type = damage_types.grenade_frag
-close_ogryn_grenade.gibbing_power = GibbingPower.heavy
-ogryn_grenade.ragdoll_push_force = 2000
+close_ogryn_grenade.gibbing_power = gibbing_power.heavy
+close_ogryn_grenade.ragdoll_push_force = 2000
+close_ogryn_grenade.stat_buffs = {
+	"frag_damage",
+}
 damage_templates.close_ogryn_grenade = close_ogryn_grenade
 
 return {

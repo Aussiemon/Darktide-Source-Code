@@ -34,8 +34,14 @@ CosmeticsVendorBackgroundView.on_enter = function (self)
 		narrative_manager:complete_event(narrative_event_name)
 	end
 
-	self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_a", nil, 1)
-	self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_servitor_a", nil, 0)
+	local story_name = "path_of_trust"
+	local pot_completed = narrative_manager:is_story_complete(story_name)
+
+	if pot_completed then
+		self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_servitor_a", nil, 0)
+	else
+		self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_a", nil, 1)
+	end
 end
 
 CosmeticsVendorBackgroundView.on_exit = function (self)
@@ -100,6 +106,16 @@ CosmeticsVendorBackgroundView.draw_passes = function (self, dt, t, ui_renderer, 
 	self:_draw_widgets(dt, t, situational_input_service, ui_renderer, render_settings)
 	UIRenderer.end_pass(ui_renderer)
 	self:_draw_elements(dt, t, ui_renderer, render_settings, input_service)
+end
+
+CosmeticsVendorBackgroundView.cb_on_camera_zoom_toggled = function (self)
+	local view_instance = self._active_view and Managers.ui:view_instance(self._active_view)
+
+	if not view_instance or not view_instance.cb_on_camera_zoom_toggled then
+		return
+	end
+
+	view_instance:cb_on_camera_zoom_toggled()
 end
 
 return CosmeticsVendorBackgroundView

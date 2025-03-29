@@ -291,4 +291,4 @@ local crimes = {
 	},
 }
 
-return crimes
+return settings("Crimes", crimes)

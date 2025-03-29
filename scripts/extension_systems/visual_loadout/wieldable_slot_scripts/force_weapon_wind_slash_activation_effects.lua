@@ -2,7 +2,7 @@
 
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ForceWeaponWindSlashActivationEffects = class("ForceWeaponWindSlashActivationEffects", "ChargeEffects")
 local PARTICLE_ALIAS_ARM_CAGE = "psyker_hand_effects_arm_cage"

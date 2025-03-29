@@ -73,7 +73,7 @@ BtRandomNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, eva
 			local child_condition_name = child_node.condition_name
 			local child_tree_node = child_node.tree_node
 
-			if CONDITIONS[child_condition_name](unit, blackboard, scratchpad, child_tree_node.condition_args, child_tree_node.action_data, child_is_running) then
+			if CONDITIONS[child_condition_name](unit, blackboard, scratchpad, child_tree_node.condition_args, child_tree_node.action_data, child_is_running, dt) then
 				if child_node.evaluate then
 					leaf_node = child_node:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 				else
@@ -95,7 +95,7 @@ BtRandomNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, eva
 		local child_condition_name = child_node.condition_name
 		local child_tree_node = child_node.tree_node
 
-		if CONDITIONS[child_condition_name](unit, blackboard, scratchpad, child_tree_node.condition_args, child_tree_node.action_data, child_is_running) then
+		if CONDITIONS[child_condition_name](unit, blackboard, scratchpad, child_tree_node.condition_args, child_tree_node.action_data, child_is_running, dt) then
 			if child_node.evaluate then
 				leaf_node = child_node:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 			else

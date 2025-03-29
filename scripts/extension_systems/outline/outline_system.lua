@@ -76,6 +76,52 @@ local function _set_material_layers(unit, material_layers, enabled)
 	Unit.set_unit_culling(unit, not enabled, true)
 end
 
+local function _update_material_layers_color(unit, extension, wanted_outline_color, material_layers)
+	if wanted_outline_color then
+		local outline_config = extension.outline_config
+
+		if outline_config then
+			local color_unit = unit
+
+			for i = 1, #material_layers do
+				local material_layer_name = material_layers[i]
+				local material_variable_name = "outline_color"
+
+				Unit.set_vector3_for_material(color_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+			end
+
+			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+			local visual_loadout_slots = visual_loadout_extension:inventory_slots()
+
+			for slot_name, slot in pairs(visual_loadout_slots) do
+				local slot_unit, attachments = visual_loadout_extension:slot_unit(slot_name)
+
+				if slot.use_outline then
+					for j = 1, #material_layers do
+						local material_layer_name = material_layers[j]
+						local material_variable_name = "outline_color"
+
+						Unit.set_vector3_for_material(slot_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+					end
+
+					if attachments then
+						for j = 1, #attachments do
+							local attachment_unit = attachments[j]
+
+							for k = 1, #material_layers do
+								local material_layer_name = material_layers[k]
+								local material_variable_name = "outline_color"
+
+								Unit.set_vector3_for_material(attachment_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 OutlineSystem.on_remove_extension = function (self, unit, extension_name)
 	local extension = self._unit_extension_data[unit]
 	local visible_material_layers = extension.visible_material_layers
@@ -138,6 +184,7 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 		stack_count = 1,
 		name = outline_name,
 		priority = setting.priority,
+		color = setting.color,
 		material_layers = setting.material_layers,
 		visibility_check = setting.visibility_check,
 	}
@@ -156,50 +203,7 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 
 	local wanted_outline_color = setting.color
 
-	if wanted_outline_color then
-		local outline_config = extension.outline_config
-
-		if outline_config then
-			local color_unit = unit
-			local material_layers = outline.material_layers
-
-			for i = 1, #material_layers do
-				local material_layer_name = material_layers[i]
-				local material_variable_name = "outline_color"
-
-				Unit.set_vector3_for_material(color_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
-			end
-
-			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-			local visual_loadout_slots = visual_loadout_extension:inventory_slots()
-
-			for slot_name, slot in pairs(visual_loadout_slots) do
-				local slot_unit, attachments = visual_loadout_extension:slot_unit(slot_name)
-
-				if slot.use_outline then
-					for j = 1, #material_layers do
-						local material_layer_name = material_layers[j]
-						local material_variable_name = "outline_color"
-
-						Unit.set_vector3_for_material(slot_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
-					end
-
-					if attachments then
-						for j = 1, #attachments do
-							local attachment_unit = attachments[j]
-
-							for k = 1, #material_layers do
-								local material_layer_name = material_layers[k]
-								local material_variable_name = "outline_color"
-
-								Unit.set_vector3_for_material(attachment_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+	_update_material_layers_color(unit, extension, wanted_outline_color, outline.material_layers)
 end
 
 OutlineSystem.remove_outline = function (self, unit, outline_name)
@@ -307,6 +311,7 @@ OutlineSystem.update = function (self, context, dt, t)
 				extension.visible_material_layers = nil
 			elseif not visible_material_layers and should_show then
 				_set_material_layers(unit, top_outline.material_layers, true)
+				_update_material_layers_color(unit, extension, top_outline.color, top_outline.material_layers)
 
 				extension.visible_material_layers = top_outline.material_layers
 			end

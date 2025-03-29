@@ -60,6 +60,7 @@ weapon_template.action_inputs.start_attack.buffer_time = 0.5
 weapon_template.action_inputs.push_follow_up.buffer_time = 0.5
 weapon_template.action_inputs.push.buffer_time = 0.8
 weapon_template.action_inputs.special_action.buffer_time = 0.5
+weapon_template.action_inputs.wield.buffer_time = 0.3
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
@@ -73,7 +74,7 @@ weapon_template.actions = {
 		anim_event = "equip",
 		kind = "wield",
 		sprint_ready_up_time = 0,
-		total_time = 0.1,
+		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability",
@@ -91,9 +92,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-			},
-			special_action = {
-				action_name = "action_special_uppercut",
+				chain_time = 0.1,
 			},
 		},
 	},
@@ -262,6 +261,7 @@ weapon_template.actions = {
 		},
 	},
 	action_left_heavy = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_heavy_right",
 		anim_event_3p = "attack_swing_heavy_down_right",
@@ -594,7 +594,7 @@ weapon_template.actions = {
 				0,
 			},
 		},
-		damage_profile = DamageProfileTemplates.combat_blade_heavy_smiter,
+		damage_profile = DamageProfileTemplates.combat_blade_heavy_smiter_plus,
 		damage_type = damage_types.combat_blade,
 		herding_template = HerdingTemplates.smiter_down,
 		wounds_shape = wounds_shapes.horizontal_slash,
@@ -670,6 +670,7 @@ weapon_template.actions = {
 		end,
 	},
 	action_left_light_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_down_left",
 		damage_window_end = 0.3333333333333333,
@@ -767,7 +768,7 @@ weapon_template.actions = {
 		anim_end_event = "parry_finished",
 		anim_event = "parry_pose",
 		kind = "block",
-		minimum_hold_time = 0.3,
+		minimum_hold_time = 0.2,
 		start_input = "block",
 		stop_input = "block_release",
 		total_time = math.huge,
@@ -819,7 +820,7 @@ weapon_template.actions = {
 			},
 			push = {
 				action_name = "action_push",
-				chain_time = 0.25,
+				chain_time = 0.15,
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
@@ -839,7 +840,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_left_shake",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		power_level = 500,
+		power_level = 450,
 		range_mod = 1.4,
 		total_time = 1.42,
 		weapon_handling_template = "time_scale_1",
@@ -882,12 +883,12 @@ weapon_template.actions = {
 				action_name = "action_unwield",
 			},
 			start_attack = {
-				action_name = "action_melee_start_right",
-				chain_time = 0.4,
+				action_name = "action_melee_start_pushfollow_combo",
+				chain_time = 0.45,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1.05,
+				chain_time = 0.75,
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
@@ -907,7 +908,7 @@ weapon_template.actions = {
 				0,
 			},
 		},
-		damage_profile = DamageProfileTemplates.combat_blade_light_linesman,
+		damage_profile = DamageProfileTemplates.combat_blade_smiter_pushfollow,
 		damage_type = damage_types.combat_blade,
 		herding_template = HerdingTemplates.uppercut,
 		wounds_shape = wounds_shapes.right_45_slash,
@@ -984,6 +985,171 @@ weapon_template.actions = {
 		outer_damage_type = damage_types.ogryn_physical,
 		haptic_trigger_template = HapticTriggerTemplates.melee.push,
 	},
+	action_melee_start_pushfollow_combo = {
+		allowed_during_sprint = true,
+		anim_end_event = "attack_finished",
+		anim_event = "attack_swing_charge_right",
+		anim_event_3p = "attack_swing_charge_down_right",
+		chain_anim_event = "attack_swing_charge_right_pose",
+		chain_anim_event_3p = "attack_swing_charge_down_right",
+		first_person_hit_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
+		hit_stop_anim = "attack_hit_shield",
+		kind = "windup",
+		stop_input = "attack_cancel",
+		total_time = 3,
+		action_movement_curve = {
+			{
+				modifier = 0.8,
+				t = 0.05,
+			},
+			{
+				modifier = 0.25,
+				t = 0.1,
+			},
+			{
+				modifier = 0.2,
+				t = 0.25,
+			},
+			{
+				modifier = 0.35,
+				t = 0.4,
+			},
+			{
+				modifier = 0.8,
+				t = 1,
+			},
+			start_modifier = 1,
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability",
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability",
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+				},
+			},
+			wield = {
+				action_name = "action_unwield",
+			},
+			light_attack = {
+				action_name = "action_light_pushfollow_combo",
+			},
+			heavy_attack = {
+				action_name = "action_left_heavy",
+				chain_time = 0.5,
+			},
+			block = {
+				action_name = "action_block",
+			},
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+	},
+	action_light_pushfollow_combo = {
+		allowed_during_sprint = true,
+		anim_end_event = "attack_finished",
+		anim_event = "attack_swing_stab_01",
+		anim_event_3p = "attack_swing_stab",
+		damage_window_end = 0.26666666666666666,
+		damage_window_start = 0.2,
+		first_person_hit_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
+		hit_armor_anim = "attack_hit_shield",
+		kind = "sweep",
+		power_level = 550,
+		range_mod = 1.25,
+		total_time = 1.5,
+		weapon_handling_template = "time_scale_0_9",
+		action_movement_curve = {
+			{
+				modifier = 1,
+				t = 0.15,
+			},
+			{
+				modifier = 0.8,
+				t = 0.2,
+			},
+			{
+				modifier = 1.5,
+				t = 0.25,
+			},
+			{
+				modifier = 1.4,
+				t = 0.4,
+			},
+			{
+				modifier = 1,
+				t = 0.5,
+			},
+			{
+				modifier = 0.5,
+				t = 0.6,
+			},
+			{
+				modifier = 1,
+				t = 1,
+			},
+			start_modifier = 0.2,
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability",
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability",
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+				},
+			},
+			wield = {
+				action_name = "action_unwield",
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.55,
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.4,
+			},
+			special_action = {
+				action_name = "action_special_uppercut",
+				chain_time = 0.3,
+			},
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		hit_zone_priority = hit_zone_priority,
+		weapon_box = {
+			0.25,
+			0.25,
+			1.1,
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/swing_stab",
+			anchor_point_offset = {
+				0.25,
+				0,
+				-0.25,
+			},
+		},
+		damage_profile = DamageProfileTemplates.combat_blade_light_smiter_stab,
+		damage_type = damage_types.combat_blade,
+		wounds_shape = wounds_shapes.vertical_slash,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
+	},
 	action_special_uppercut = {
 		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
@@ -993,6 +1159,7 @@ weapon_template.actions = {
 		damage_window_end = 0.4666666666666667,
 		damage_window_start = 0.4,
 		first_person_hit_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		max_num_saved_entries = 20,
@@ -1035,14 +1202,15 @@ weapon_template.actions = {
 			},
 			wield = {
 				action_name = "action_unwield",
+				chain_time = 0.6,
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.7,
+				chain_time = 0.6,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.55,
+				chain_time = 0.7,
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
@@ -1066,7 +1234,7 @@ weapon_template.actions = {
 			},
 		},
 		herding_template = HerdingTemplates.uppercut,
-		damage_profile = DamageProfileTemplates.special_uppercut,
+		damage_profile = DamageProfileTemplates.special_uppercut_plus,
 		damage_type = damage_types.ogryn_punch,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -1100,7 +1268,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.2
 weapon_template.max_first_person_anim_movement_speed = 4.8
@@ -1121,7 +1288,7 @@ weapon_template.keywords = {
 	"p1",
 }
 weapon_template.damage_trait_templates = "ogryn"
-weapon_template.dodge_template = "ogryn"
+weapon_template.dodge_template = "ogryn_fast"
 weapon_template.sprint_template = "ogryn_assault"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
@@ -1186,6 +1353,9 @@ weapon_template.base_stats = {
 			action_special_uppercut = {
 				damage_trait_templates.default_melee_dps_stat,
 			},
+			action_light_pushfollow_combo = {
+				damage_trait_templates.default_melee_dps_stat,
+			},
 		},
 	},
 	ogryn_combatblade_p1_m1_armor_pierce_stat = {
@@ -1237,6 +1407,9 @@ weapon_template.base_stats = {
 			action_special_uppercut = {
 				damage_trait_templates.default_armor_pierce_stat,
 			},
+			action_light_pushfollow_combo = {
+				damage_trait_templates.default_armor_pierce_stat,
+			},
 		},
 	},
 	ogryn_combatblade_p1_m1_cleave_stat = {
@@ -1271,6 +1444,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat,
 			},
 			action_right_light_pushfollow = {
+				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat,
+			},
+			action_light_pushfollow_combo = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat,
 			},
 		},
@@ -1310,6 +1486,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_first_target_stat,
 			},
 			action_special_uppercut = {
+				damage_trait_templates.default_first_target_stat,
+			},
+			action_light_pushfollow_combo = {
 				damage_trait_templates.default_first_target_stat,
 			},
 		},
@@ -1380,12 +1559,12 @@ weapon_template.weapon_card_data = {
 	main = {
 		{
 			header = "light",
-			icon = "smiter",
+			icon = "linesman",
 			value_func = "primary_attack",
 		},
 		{
 			header = "heavy",
-			icon = "linesman",
+			icon = "smiter",
 			value_func = "secondary_attack",
 		},
 	},

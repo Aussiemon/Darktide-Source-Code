@@ -188,6 +188,23 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_brown_04 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_brown_04",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.02,
+			},
+			hair_rgb = {
+				0.16,
+				0.12,
+				0.1,
+			},
+		},
+	},
 	hair_red_01 = {
 		texture_overrides = {
 			hair_color_gradient = {

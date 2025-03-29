@@ -2,23 +2,24 @@
 
 local sway_templates = {}
 local overrides = {}
+local PI = math.pi
 
 table.make_unique(sway_templates)
 table.make_unique(overrides)
 
-local function default_shotgun_sway_pattern(dt, t, sway_settings, yaw, pitch)
+local function _default_shotgun_sway_pattern(dt, t, sway_settings, yaw, pitch)
 	local horizontal_speed = sway_settings.horizontal_speed
 	local rotation_speed = sway_settings.rotation_speed
-	local sin_angle = t * math.pi * horizontal_speed
+	local sin_angle = t * PI * horizontal_speed
 	local sin_wave = math.sin(sin_angle)
-	local new_angle = t * math.pi * rotation_speed
+	local new_angle = t * PI * rotation_speed
 	local yaw_angle = math.cos(new_angle)
 	local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
-	local yaw = math.degrees_to_radians(yaw)
-	local pitch = math.degrees_to_radians(pitch)
+	local wanted_yaw = math.degrees_to_radians(yaw)
+	local wanted_pitch = math.degrees_to_radians(pitch)
 	local intensity = sway_settings.intensity or 1
-	local aim_offset_y = pitch_angle * pitch * intensity
-	local aim_offset_x = yaw_angle * yaw * intensity
+	local aim_offset_y = pitch_angle * wanted_pitch * intensity
+	local aim_offset_x = yaw_angle * wanted_yaw * intensity
 
 	return aim_offset_x, aim_offset_y
 end
@@ -92,7 +93,7 @@ sway_templates.default_shotgun_killshot = {
 				},
 			},
 		},
-		sway_pattern = default_shotgun_sway_pattern,
+		sway_pattern = _default_shotgun_sway_pattern,
 	},
 	moving = {
 		rotation_speed = 0.4,

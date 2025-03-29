@@ -88,6 +88,12 @@ BtDieAction.init_values = function (self, blackboard)
 	death_component.killing_damage_type = ""
 	death_component.force_instant_ragdoll = false
 
+	local disable_component = Blackboard.write_component(blackboard, "disable")
+
+	disable_component.is_disabled = false
+	disable_component.type = ""
+	disable_component.attacker_unit = nil
+
 	local has_gib_override = Blackboard.has_component(blackboard, "gib_override")
 
 	if has_gib_override then

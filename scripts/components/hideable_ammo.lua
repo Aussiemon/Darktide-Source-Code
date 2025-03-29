@@ -7,6 +7,8 @@ HideableAmmo.init = function (self, unit)
 
 	local start_hidden = self:get_data(unit, "start_hidden")
 
+	self._use_random_rotation = self:get_data(unit, "use_random_rotation")
+
 	if start_hidden then
 		self:hide()
 	else
@@ -29,9 +31,12 @@ end
 local TWO_PI = math.pi * 2
 
 HideableAmmo.show = function (self)
-	local random_rotation = Quaternion.axis_angle(Vector3.forward(), math.random() * TWO_PI)
+	if self._use_random_rotation then
+		local random_rotation = Quaternion.axis_angle(Vector3.forward(), math.random() * TWO_PI)
 
-	Unit.set_local_rotation(self._unit, 1, random_rotation)
+		Unit.set_local_rotation(self._unit, 1, random_rotation)
+	end
+
 	Unit.set_unit_visibility(self._unit, true, true)
 end
 
@@ -44,6 +49,11 @@ HideableAmmo.component_data = {
 		ui_name = "Start Hidden",
 		ui_type = "check_box",
 		value = false,
+	},
+	use_random_rotation = {
+		ui_name = "Use Random Rotation",
+		ui_type = "check_box",
+		value = true,
 	},
 }
 

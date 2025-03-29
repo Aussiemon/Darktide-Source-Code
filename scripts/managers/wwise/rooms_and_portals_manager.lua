@@ -87,9 +87,9 @@ RoomsAndPortalsManager.remove_portal = function (self, portal)
 
 	if self:_check_portal_id(portal_id) then
 		WwiseWorld.remove_portal_unit(self._wwise_world, portal_id)
-
-		self._portals[portal] = -1
 	end
+
+	self._portals[portal] = nil
 end
 
 RoomsAndPortalsManager.toggle_portal = function (self, portal, enabled)

@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/player_unit_weapon_extension.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local ActionHandler = require("scripts/utilities/action/action_handler")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
@@ -26,7 +26,7 @@ local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local slot_configuration_by_type = PlayerCharacterConstants.slot_configuration_by_type
 local template_types = WeaponTweakTemplateSettings.template_types
-local _get_block_anim_event
+local _block_anim_event
 local PlayerUnitWeaponExtension = class("PlayerUnitWeaponExtension")
 
 PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -220,10 +220,6 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 
 	action_unwield.slot_to_wield = "none"
 
-	local action_heal_target_over_time = unit_data_extension:write_component("action_heal_target_over_time")
-
-	action_heal_target_over_time.target_unit = nil
-
 	local action_place = unit_data_extension:write_component("action_place")
 
 	action_place.position = Vector3.zero()
@@ -275,21 +271,22 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 
 	local weapon_tweak_templates = unit_data_extension:write_component("weapon_tweak_templates")
 
-	weapon_tweak_templates.sway_template_name = "none"
-	weapon_tweak_templates.spread_template_name = "none"
-	weapon_tweak_templates.suppression_template_name = "none"
-	weapon_tweak_templates.recoil_template_name = "none"
-	weapon_tweak_templates.weapon_handling_template_name = "none"
+	weapon_tweak_templates.ammo_template_name = "none"
+	weapon_tweak_templates.burninating_template_name = "none"
+	weapon_tweak_templates.charge_template_name = "none"
 	weapon_tweak_templates.dodge_template_name = "none"
+	weapon_tweak_templates.movement_curve_modifier_template_name = "none"
+	weapon_tweak_templates.recoil_template_name = "none"
+	weapon_tweak_templates.size_of_flame_template_name = "none"
+	weapon_tweak_templates.spread_template_name = "none"
 	weapon_tweak_templates.sprint_template_name = "none"
 	weapon_tweak_templates.stamina_template_name = "none"
+	weapon_tweak_templates.suppression_template_name = "none"
+	weapon_tweak_templates.sway_template_name = "none"
 	weapon_tweak_templates.toughness_template_name = "none"
-	weapon_tweak_templates.ammo_template_name = "none"
-	weapon_tweak_templates.movement_curve_modifier_template_name = "none"
-	weapon_tweak_templates.charge_template_name = "none"
 	weapon_tweak_templates.warp_charge_template_name = "none"
-	weapon_tweak_templates.burninating_template_name = "none"
-	weapon_tweak_templates.size_of_flame_template_name = "none"
+	weapon_tweak_templates.weapon_handling_template_name = "none"
+	weapon_tweak_templates.weapon_shout_template_name = "none"
 	self._weapon_tweak_templates_component = weapon_tweak_templates
 
 	local aim_assist_ramp = unit_data_extension:write_component("aim_assist_ramp")
@@ -461,7 +458,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	local alternate_fire_component = self._alternate_fire_write_component
 
 	if AlternateFire.check_exit(alternate_fire_component, weapon_template, self._input_extension, self._stunned_character_state_component, t) then
-		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit, true)
+		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, self._unit, true)
 	end
 
 	self:_update_overheat(dt, t)
@@ -572,9 +569,9 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 	self._base_ammo_by_slot[slot_name] = base_ammo
 	self._base_clip_by_slot[slot_name] = base_clip
 
-	local buffs = weapon.buffs
-
 	if not from_server_correction_occurred then
+		local buffs = weapon.buffs
+
 		self:_apply_buffs(buffs, buff_targets.on_equip, slot_name, inventory_slot_component, t, item)
 		self:_apply_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component, t, item)
 		self:_apply_stat_buffs(inventory_slot_component, config.slot_type)
@@ -623,20 +620,21 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 	local action_settings = Action.action_settings(weapon_template, action_name)
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 
+	weapon_tweak_templates_component.ammo_template_name = weapon_template.ammo_template or "none"
+	weapon_tweak_templates_component.burninating_template_name = weapon_template.burninating_template or "none"
+	weapon_tweak_templates_component.charge_template_name = weapon_template.charge_template or "none"
 	weapon_tweak_templates_component.dodge_template_name = weapon_template.dodge_template or "none"
+	weapon_tweak_templates_component.movement_curve_modifier_template_name = weapon_template.movement_curve_modifier_template or "none"
+	weapon_tweak_templates_component.recoil_template_name = weapon_template.recoil_template or "none"
+	weapon_tweak_templates_component.size_of_flame_template_name = weapon_template.size_of_flame_template or "none"
+	weapon_tweak_templates_component.spread_template_name = weapon_template.spread_template or "none"
 	weapon_tweak_templates_component.sprint_template_name = weapon_template.sprint_template or "none"
 	weapon_tweak_templates_component.stamina_template_name = weapon_template.stamina_template or "none"
-	weapon_tweak_templates_component.toughness_template_name = weapon_template.toughness_template or "none"
-	weapon_tweak_templates_component.ammo_template_name = weapon_template.ammo_template or "none"
-	weapon_tweak_templates_component.recoil_template_name = weapon_template.recoil_template or "none"
-	weapon_tweak_templates_component.sway_template_name = weapon_template.sway_template or "none"
 	weapon_tweak_templates_component.suppression_template_name = weapon_template.suppression_template or "none"
-	weapon_tweak_templates_component.spread_template_name = weapon_template.spread_template or "none"
-	weapon_tweak_templates_component.movement_curve_modifier_template_name = weapon_template.movement_curve_modifier_template or "none"
-	weapon_tweak_templates_component.charge_template_name = weapon_template.charge_template or "none"
+	weapon_tweak_templates_component.sway_template_name = weapon_template.sway_template or "none"
+	weapon_tweak_templates_component.toughness_template_name = weapon_template.toughness_template or "none"
 	weapon_tweak_templates_component.warp_charge_template_name = weapon_template.warp_charge_template or "none"
-	weapon_tweak_templates_component.burninating_template_name = weapon_template.burninating_template or "none"
-	weapon_tweak_templates_component.size_of_flame_template_name = weapon_template.size_of_flame_template or "none"
+	weapon_tweak_templates_component.weapon_shout_template_name = weapon_template.weapon_shout_template_name or "none"
 
 	action_handler:set_active_template("weapon_action", weapon_template.name)
 	Wwise.set_state("wielded_weapon", weapon_template.name)
@@ -656,28 +654,29 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	local alternate_fire = self._alternate_fire_write_component
 
 	if alternate_fire.is_active then
-		AlternateFire.stop(alternate_fire, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit, true)
+		AlternateFire.stop(alternate_fire, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, self._unit, true)
 	end
 
 	self._weapon_recoil_system:reset_recoil()
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 
+	weapon_tweak_templates_component.ammo_template_name = "none"
+	weapon_tweak_templates_component.burninating_template_name = "none"
+	weapon_tweak_templates_component.charge_template_name = "none"
 	weapon_tweak_templates_component.dodge_template_name = "none"
+	weapon_tweak_templates_component.movement_curve_modifier_template_name = "none"
+	weapon_tweak_templates_component.recoil_template_name = "none"
+	weapon_tweak_templates_component.size_of_flame_template_name = "none"
+	weapon_tweak_templates_component.spread_template_name = "none"
 	weapon_tweak_templates_component.sprint_template_name = "none"
 	weapon_tweak_templates_component.stamina_template_name = "none"
-	weapon_tweak_templates_component.toughness_template_name = "none"
-	weapon_tweak_templates_component.ammo_template_name = "none"
-	weapon_tweak_templates_component.recoil_template_name = "none"
-	weapon_tweak_templates_component.sway_template_name = "none"
 	weapon_tweak_templates_component.suppression_template_name = "none"
-	weapon_tweak_templates_component.spread_template_name = "none"
-	weapon_tweak_templates_component.movement_curve_modifier_template_name = "none"
-	weapon_tweak_templates_component.charge_template_name = "none"
+	weapon_tweak_templates_component.sway_template_name = "none"
+	weapon_tweak_templates_component.toughness_template_name = "none"
 	weapon_tweak_templates_component.warp_charge_template_name = "none"
-	weapon_tweak_templates_component.burninating_template_name = "none"
-	weapon_tweak_templates_component.size_of_flame_template_name = "none"
 	weapon_tweak_templates_component.weapon_handling_template_name = "none"
+	weapon_tweak_templates_component.weapon_shout_template_name = "none"
 
 	self._action_handler:set_active_template("weapon_action", "none")
 
@@ -773,7 +772,7 @@ PlayerUnitWeaponExtension.stop_action = function (self, reason, data, t, allow_r
 	end
 end
 
-function _get_block_anim_event(weapon_template, attack_type, event_name)
+function _block_anim_event(weapon_template, attack_type, event_name)
 	local block_override = weapon_template and weapon_template.block_override_anims
 
 	if not block_override then
@@ -800,16 +799,18 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 	local correct_weapon_wielded = current_weapon_template_name == wanted_weapon_template_name
 
 	if self._block_component.is_blocking and correct_weapon_wielded then
+		local animation_extension = self._animation_extension
+
 		if not block_broken then
-			local parry_hit_reaction_event = _get_block_anim_event(weapon_template, attack_type, "parry_hit_reaction")
+			local parry_hit_reaction_event = _block_anim_event(weapon_template, attack_type, "parry_hit_reaction")
 
-			self._animation_extension:anim_event_1p(parry_hit_reaction_event)
-			self._animation_extension:anim_event(parry_hit_reaction_event)
+			animation_extension:anim_event_1p(parry_hit_reaction_event)
+			animation_extension:anim_event(parry_hit_reaction_event)
 		else
-			local parry_break_event = _get_block_anim_event(weapon_template, attack_type, "parry_break")
+			local parry_break_event = _block_anim_event(weapon_template, attack_type, "parry_break")
 
-			self._animation_extension:anim_event_1p(parry_break_event)
-			self._animation_extension:anim_event(parry_break_event)
+			animation_extension:anim_event_1p(parry_break_event)
+			animation_extension:anim_event(parry_break_event)
 		end
 	end
 
@@ -838,10 +839,10 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 		end
 	end
 
-	local first_person = self._first_person_component
-	local fp_position = first_person.position
-	local hit_direction = Vector3.normalize(Vector3.flat(hit_world_position - fp_position))
-	local sound_position = fp_position + hit_direction * 0.5
+	local first_person_component = self._first_person_component
+	local fp_position = first_person_component.position
+	local flat_hit_direction = Vector3.normalize(Vector3.flat(hit_world_position - fp_position))
+	local sound_position = fp_position + flat_hit_direction * 0.5
 	local fx_sources = weapon.fx_sources
 	local block_source = fx_sources._block
 	local fx_extension = self._fx_extension
@@ -1410,6 +1411,16 @@ PlayerUnitWeaponExtension.weapon_handling_template = function (self)
 	end
 
 	return self:_weapon_tweak_template(template_types.weapon_handling, template_name)
+end
+
+PlayerUnitWeaponExtension.weapon_shout_template = function (self)
+	local template_name = self._weapon_tweak_templates_component.weapon_shout_template_name
+
+	if template_name == "none" then
+		return
+	end
+
+	return self:_weapon_tweak_template(template_types.weapon_shout, template_name)
 end
 
 PlayerUnitWeaponExtension.dodge_template = function (self)

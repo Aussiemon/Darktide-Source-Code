@@ -36,6 +36,7 @@ HubAimConstraints.init = function (self, unit, init_context)
 	self._passive_torso_speed = PASSIVE_SPEEDS.torso
 	self._head_aim_weight = 0
 	self._torso_aim_weight = 0
+	self._snap_big_angle = true
 end
 
 HubAimConstraints.is_moving = function (self)
@@ -156,15 +157,18 @@ HubAimConstraints._lerp_target = function (self, unit, unit_forward, unit_right,
 	local source_to_target = Vector3.normalize(target_pos - source_pos)
 	local current_target_rot = Quaternion.look(source_to_current_target)
 	local target_rot = Quaternion.look(source_to_target)
-	local same_look_side = math.sign(Vector3.dot(source_to_current_target, unit_right)) == math.sign(Vector3.dot(source_to_target, unit_right))
 
-	if not same_look_side then
-		local current_relative_angle = Vector3.length_squared(source_to_current_target) > 0 and Vector3.angle(source_to_current_target, unit_forward) or 0
-		local target_relative_angle = Vector3.length_squared(source_to_target) > 0 and Vector3.angle(unit_forward, source_to_target) or 0
-		local big_angle = current_relative_angle + target_relative_angle
+	if self._snap_big_angle then
+		local same_look_side = math.sign(Vector3.dot(source_to_current_target, unit_right)) == math.sign(Vector3.dot(source_to_target, unit_right))
 
-		if big_angle >= PI then
-			target_rot = Quaternion.lerp(Quaternion.look(unit_forward), target_rot, 0.4)
+		if not same_look_side then
+			local current_relative_angle = Vector3.length_squared(source_to_current_target) > 0 and Vector3.angle(source_to_current_target, unit_forward) or 0
+			local target_relative_angle = Vector3.length_squared(source_to_target) > 0 and Vector3.angle(unit_forward, source_to_target) or 0
+			local big_angle = current_relative_angle + target_relative_angle
+
+			if big_angle >= PI then
+				target_rot = Quaternion.lerp(Quaternion.look(unit_forward), target_rot, 0.4)
+			end
 		end
 	end
 

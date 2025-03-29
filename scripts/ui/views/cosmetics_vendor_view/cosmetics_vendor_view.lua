@@ -2,26 +2,26 @@
 
 require("scripts/ui/views/vendor_view_base/vendor_view_base")
 
+local Definitions = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_definitions")
+local Archetypes = require("scripts/settings/archetype/archetypes")
+local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CosmeticsVendorViewSettings = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_settings")
-local Definitions = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_definitions")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
+local Text = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local Breeds = require("scripts/settings/breed/breeds")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
+local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
 local CosmeticsVendorView = class("CosmeticsVendorView", "VendorViewBase")
 
 CosmeticsVendorView.init = function (self, settings, context)
@@ -30,6 +30,7 @@ CosmeticsVendorView.init = function (self, settings, context)
 	self._parent = parent
 	self._optional_store_service = context and context.optional_store_service
 	self._disable_equipped_status = true
+	self._zoom_speed, self._zoom_level, self._zoom_delay = 0, 0, 0
 	Definitions.grid_settings.grid_id = context and context.grid_id
 
 	CosmeticsVendorView.super.init(self, Definitions, settings, context)
@@ -37,8 +38,6 @@ end
 
 CosmeticsVendorView.on_enter = function (self)
 	CosmeticsVendorView.super.on_enter(self)
-
-	local parent = self._parent
 
 	self._render_settings.alpha_multiplier = 0
 
@@ -477,8 +476,8 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 		y_offset = y_offset + height
 	end
 
-	local properties_text = ItemUtils.item_property_text(item, true)
-	local restrictions_text, present_restrictions = ItemUtils.restriction_text(item)
+	local properties_text = Items.item_property_text(item, true)
+	local restrictions_text, present_restrictions = Items.restriction_text(item)
 
 	if not present_restrictions then
 		restrictions_text = nil
@@ -519,8 +518,6 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 end
 
 CosmeticsVendorView.on_exit = function (self)
-	local parent = self._parent
-
 	self:_destroy_side_panel()
 
 	if self._on_enter_anim_id then
@@ -642,8 +639,9 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	self:_initialize_background_profile(optional_archetype_name)
 
 	local presentation_profile = self._store_presentation_profile
+	local active_archetype = presentation_profile.archetype
 
-	self._active_archetype_name = presentation_profile.archetype.name
+	self._active_archetype_name = active_archetype.name
 
 	local ignore_focus_on_offer = true
 	local promises = {
@@ -656,13 +654,13 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	end
 
 	Promise.all(unpack(promises)):next(function (data)
-		local wallet, store_items, profiles_data = unpack(data)
+		local _, _, profiles_data = unpack(data)
 
 		if profiles_data then
 			self._player_available_archetypes = {}
 
-			for i = 1, #profiles_data.profiles do
-				local profile = profiles_data.profiles[i]
+			for ii = 1, #profiles_data.profiles do
+				local profile = profiles_data.profiles[ii]
 				local archetype_name = profile.archetype.name
 
 				self._player_available_archetypes[archetype_name] = true
@@ -676,7 +674,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 
 	local context = self._context
 	local optional_camera_breed_name = context and context.optional_camera_breed_name
-	local breed_name = presentation_profile.breed
+	local breed_name = active_archetype and active_archetype.breed or presentation_profile.breed
 	local default_camera_settings = self._breeds_default_camera_settings and self._breeds_default_camera_settings[optional_camera_breed_name or breed_name]
 
 	if default_camera_settings then
@@ -745,9 +743,6 @@ CosmeticsVendorView._setup_viewport_camera = function (self, camera_unit)
 	local shading_environment = level_settings.shading_environment
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
-
-	self._camera_zoomed_in = false
-
 	self:_trigger_zoom_logic(true)
 end
 
@@ -775,9 +770,8 @@ CosmeticsVendorView._get_store = function (self)
 		return Managers.data_service.gear:fetch_inventory(character_id):next(function (items)
 			local offers = data.offers
 
-			for i = 1, #offers do
-				local offer = offers[i]
-				local offer_id = offer.offerId
+			for ii = 1, #offers do
+				local offer = offers[ii]
 				local sku = offer.sku
 				local category = sku.category
 
@@ -879,8 +873,15 @@ CosmeticsVendorView._on_purchase_complete = function (self, items)
 	local parent = self._parent
 
 	if parent then
-		parent:play_vo_events(CosmeticsVendorViewSettings.vo_event_vendor_purchase, "reject_npc_a", nil, 1.4)
-		parent:play_vo_events(CosmeticsVendorViewSettings.vo_event_vendor_purchase, "reject_npc_servitor_a", nil, 0)
+		local narrative_manager = Managers.narrative
+		local story_name = "path_of_trust"
+		local pot_completed = narrative_manager:is_story_complete(story_name)
+
+		if pot_completed then
+			parent:play_vo_events(CosmeticsVendorViewSettings.vo_event_vendor_purchase, "reject_npc_servitor_a", nil, 0)
+		else
+			parent:play_vo_events(CosmeticsVendorViewSettings.vo_event_vendor_purchase, "reject_npc_a", nil, 1.4)
+		end
 	end
 end
 
@@ -889,6 +890,44 @@ CosmeticsVendorView.dialogue_system = function (self)
 
 	if parent then
 		return parent.dialogue_system and parent:dialogue_system()
+	end
+end
+
+CosmeticsVendorView._update_zoom_logic = function (self, dt, input_service)
+	self._zoom_delay = math.max(self._zoom_delay - dt, 0)
+
+	if not self:_can_zoom() then
+		return
+	end
+
+	local scroll_axis = input_service:get("scroll_axis")
+	local scroll_delta = scroll_axis and scroll_axis[2] or 0
+
+	if self._item_grid and self._item_grid:hovered() then
+		scroll_delta = 0
+	end
+
+	local zoom_speed, zoom_level = self._zoom_speed, self._zoom_level
+
+	zoom_speed = scroll_delta * zoom_speed < 0 and 0 or zoom_speed + scroll_delta / 20
+
+	if math.abs(zoom_speed) < 0.01 then
+		zoom_speed = 0
+	end
+
+	zoom_level = math.clamp(zoom_level + zoom_speed * 18 * dt, 0, 1)
+	zoom_speed = zoom_speed * math.pow(0.006, dt)
+
+	if zoom_level == 0 or zoom_level == 1 then
+		zoom_speed = 0
+	end
+
+	local has_changed = zoom_level ~= self._zoom_level
+
+	self._zoom_level, self._zoom_speed = zoom_level, zoom_speed
+
+	if has_changed then
+		self:_trigger_zoom_logic(true)
 	end
 end
 
@@ -904,6 +943,8 @@ CosmeticsVendorView.update = function (self, dt, t, input_service)
 		self._keep_current_rotation = nil
 		self._spawn_player = false
 	end
+
+	self:_update_zoom_logic(dt, input_service)
 
 	local profile_spawner = self._profile_spawner
 
@@ -984,6 +1025,7 @@ CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_renderer = self._ui_default_renderer
+	local null_service = input_service:null_service()
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
@@ -996,8 +1038,8 @@ CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 	local side_panel_widgets = self._side_panel_widgets
 	local side_panel_widget_count = side_panel_widgets and #side_panel_widgets or 0
 
-	for i = 1, side_panel_widget_count do
-		local widget = side_panel_widgets[i]
+	for ii = 1, side_panel_widget_count do
+		local widget = side_panel_widgets[ii]
 
 		UIWidget.draw(widget, ui_renderer)
 	end
@@ -1010,6 +1052,12 @@ CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 
 			UIWidget.draw(widget, ui_renderer)
 		end
+	end
+
+	local draw_parents_input_legend = self._context and self._context.draw_parents_input_legend
+
+	if draw_parents_input_legend then
+		self._parent:_element("input_legend"):draw(dt, t, ui_renderer, render_settings, null_service)
 	end
 
 	UIRenderer.end_pass(ui_renderer)
@@ -1026,8 +1074,8 @@ CosmeticsVendorView._draw_widgets = function (self, dt, t, input_service, ui_ren
 	if set_item_parts_representation_widgets then
 		local num_widgets = #set_item_parts_representation_widgets
 
-		for i = 1, num_widgets do
-			local widget = set_item_parts_representation_widgets[i]
+		for ii = 1, num_widgets do
+			local widget = set_item_parts_representation_widgets[ii]
 
 			UIWidget.draw(widget, ui_renderer)
 		end
@@ -1237,7 +1285,7 @@ CosmeticsVendorView.event_register_cosmetics_preview_character_spawn_point = fun
 	end
 end
 
-CosmeticsVendorView._set_camera_item_slot_focus = function (self, breed_name, slot_name, time, func_ptr)
+CosmeticsVendorView._set_camera_item_slot_focus = function (self, breed_name, slot_name, time, func_ptr, zoom_level)
 	local world_spawner = self._world_spawner
 	local breeds_item_camera_by_slot_id = self._breeds_item_camera_by_slot_id
 	local breed_item_camera_by_slot_id = breeds_item_camera_by_slot_id[breed_name]
@@ -1247,18 +1295,18 @@ CosmeticsVendorView._set_camera_item_slot_focus = function (self, breed_name, sl
 	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
 	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", camera_world_position.x - default_camera_world_position.x, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", camera_world_position.y - default_camera_world_position.y, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", camera_world_position.z - default_camera_world_position.z, time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("x", zoom_level * (camera_world_position.x - default_camera_world_position.x), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("y", zoom_level * (camera_world_position.y - default_camera_world_position.y), time, func_ptr)
+	world_spawner:set_camera_position_axis_offset("z", zoom_level * (camera_world_position.z - default_camera_world_position.z), time, func_ptr)
 
 	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
 	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
 	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
 
-	world_spawner:set_camera_rotation_axis_offset("x", camera_world_rotation_x - default_camera_world_rotation_x, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", camera_world_rotation_y - default_camera_world_rotation_y, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("x", zoom_level * (camera_world_rotation_x - default_camera_world_rotation_x), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("y", zoom_level * (camera_world_rotation_y - default_camera_world_rotation_y), time, func_ptr)
+	world_spawner:set_camera_rotation_axis_offset("z", zoom_level * (camera_world_rotation_z - default_camera_world_rotation_z), time, func_ptr)
 end
 
 CosmeticsVendorView._set_camera_node_focus = function (self, node_name, time, func_ptr)
@@ -1283,20 +1331,8 @@ CosmeticsVendorView._set_camera_rotation_axis_offset = function (self, axis, val
 	self._world_spawner:set_camera_rotation_axis_offset(axis, value, animation_time, func_ptr)
 end
 
-CosmeticsVendorView.cb_on_camera_zoom_toggled = function (self, id, input_pressed, instant)
-	self._camera_zoomed_in = not self._camera_zoomed_in
-
-	if self._camera_zoomed_in then
-		self:_play_sound(UISoundEvents.apparel_zoom_in)
-	else
-		self:_play_sound(UISoundEvents.apparel_zoom_out)
-	end
-
-	self:_trigger_zoom_logic(instant)
-end
-
 CosmeticsVendorView._can_zoom = function (self)
-	return self._profile_spawner and not self._disable_zoom
+	return self._profile_spawner and not self._disable_zoom and self._zoom_delay == 0
 end
 
 CosmeticsVendorView._trigger_zoom_logic = function (self, instant, optional_slot_name)
@@ -1313,22 +1349,16 @@ CosmeticsVendorView._trigger_zoom_logic = function (self, instant, optional_slot
 		return
 	end
 
-	local func_ptr = math.easeCubic
-	local duration = instant and 0 or 1
 	local profile = self._store_presentation_profile
 	local archetype = profile and profile.archetype
-	local breed_name = profile and archetype.breed or ""
+	local breed_name = archetype and archetype.breed or "human"
+	local duration = instant and 0 or 0.4
 
-	if self._camera_zoomed_in then
-		self:_set_camera_item_slot_focus(breed_name, selected_slot_name, duration, func_ptr)
-	else
-		world_spawner:set_camera_position_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("x", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("y", 0, duration, func_ptr)
-		world_spawner:set_camera_rotation_axis_offset("z", 0, duration, func_ptr)
-	end
+	self._zoom_delay = duration
+
+	local easing = math.easeCubic
+
+	self:_set_camera_item_slot_focus(breed_name, selected_slot_name, duration, easing, self._zoom_level)
 end
 
 CosmeticsVendorView._update_wallets_presentation = function (self, wallets_data)
@@ -1371,7 +1401,7 @@ CosmeticsVendorView._update_wallets_presentation = function (self, wallets_data)
 			amount = balance and balance.amount or 0
 		end
 
-		local text = TextUtilities.format_currency(amount)
+		local text = Text.format_currency(amount)
 
 		self._current_balance[wallet_type] = amount
 		widget.content.text = text
@@ -1400,6 +1430,13 @@ CosmeticsVendorView._update_wallets_presentation = function (self, wallets_data)
 	self:_set_wallet_background_width(total_width)
 
 	self._wallet_widgets = widgets
+end
+
+CosmeticsVendorView.cb_on_camera_zoom_toggled = function (self)
+	self._zoom_level = self._zoom_level > 0.5 and 0 or 1
+	self._zoom_speed = 0
+
+	self:_trigger_zoom_logic(false)
 end
 
 CosmeticsVendorView._set_wallet_background_width = function (self, width)

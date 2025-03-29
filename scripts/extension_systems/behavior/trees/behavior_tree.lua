@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_random_node")
 require("scripts/extension_systems/behavior/nodes/bt_selector_node")
 require("scripts/extension_systems/behavior/nodes/bt_sequence_node")
 require("scripts/extension_systems/behavior/nodes/bt_random_utility_node")
+require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_mutator_ritualist_chanting_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_cultist_ritualist_chanting_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_alerted_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_beast_of_nurgle_align_action")
@@ -21,8 +22,10 @@ require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_daemonhost_wa
 require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_daemonhost_warp_sweep_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_approach_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_leap_action")
+require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_roam_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_skulk_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_target_pounced_action")
+require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_mutator_daemonhost_passive_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_poxwalker_explode_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_chaos_spawn_grab_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_charge_action")
@@ -30,6 +33,7 @@ require("scripts/extension_systems/behavior/nodes/actions/bt_climb_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_combat_idle_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_dash_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_die_action")
+require("scripts/extension_systems/behavior/nodes/actions/bt_disable_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_erratic_follow_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_exit_spawner_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_flamer_approach_action")
@@ -91,6 +95,10 @@ require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_armored_inf
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_beast_of_nurgle_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_daemonhost_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_hound_selector_node")
+require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_lesser_mutated_poxwalker_selector_node")
+require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_mutated_poxwalker_selector_node")
+require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_mutator_daemonhost_selector_node")
+require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_mutator_ritualist_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_newly_infected_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_ogryn_bulwark_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_ogryn_executor_selector_node")
@@ -98,8 +106,6 @@ require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_ogryn_gunne
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_plague_ogryn_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_poxwalker_bomber_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_poxwalker_selector_node")
-require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_mutated_poxwalker_selector_node")
-require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_lesser_mutated_poxwalker_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_chaos_spawn_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_cultist_assault_selector_node")
 require("scripts/extension_systems/behavior/nodes/generated/bt_cultist_berzerker_selector_node")
@@ -159,11 +165,12 @@ local function _create_btnode_from_lua_node(lua_node, parent_btnode)
 	local condition_name = lua_node.condition or "always_true"
 	local enter_hook_name = lua_node.enter_hook
 	local leave_hook_name = lua_node.leave_hook
+	local run_hook = lua_node.run_hook
 	local action_data = lua_node.action_data
 	local class_type = CLASSES[class_name]
 
 	if class_type then
-		return class_type:new(identifier, parent_btnode, condition_name, enter_hook_name, leave_hook_name, lua_node), action_data
+		return class_type:new(identifier, parent_btnode, condition_name, enter_hook_name, leave_hook_name, run_hook, lua_node), action_data
 	else
 		ferror("[BehaviorTree] No class registered named %q.", class_name)
 	end

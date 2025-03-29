@@ -15,7 +15,8 @@ pickup_settings.pickup_pool_value = {
 	small_grenade = 2,
 	syringe_corruption_pocketable = 2,
 }
-pickup_settings.distribution_pool = {
+pickup_settings.empty_distribution_pool = {}
+pickup_settings.default_distribution_pool = {
 	rubberband_pool = {
 		ammo = {
 			small_clip = {
@@ -353,6 +354,40 @@ pickup_settings.operations_distribution_pool = {
 				0,
 				1,
 				2,
+			},
+		},
+	},
+}
+pickup_settings.horde_distribution_pool = {
+	primary = {
+		forge_material = {
+			small_metal = {
+				5,
+				3,
+				2,
+				2,
+				0,
+			},
+			large_metal = {
+				1,
+				2,
+				4,
+				15,
+				23,
+			},
+			small_platinum = {
+				3,
+				1,
+				4,
+				5,
+				0,
+			},
+			large_platinum = {
+				0,
+				1,
+				0,
+				1,
+				4,
 			},
 		},
 	},

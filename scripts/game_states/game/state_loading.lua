@@ -58,14 +58,16 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
-	Managers.event:register(self, "on_pre_suspend", "_on_pre_suspend")
 end
 
 StateLoading._start_loading_mission = function (self)
 	_info("[_start_loading] needs_load_level(%s), mission_name(%s), circumstance_name(%s), side_mission(%s)", self._needs_load_level, self._mission_name, self._circumstance_name, self._side_mission)
 
 	if self._needs_load_level then
-		Managers.loading:load_mission(self._mission_name, self._level_name, self._circumstance_name, self._havoc_data)
+		local mechanism_data = Managers.mechanism:mechanism_data()
+		local loading_context = mechanism_data
+
+		Managers.loading:load_mission(loading_context, self._level_name)
 		Managers.event:trigger("event_loading_resources_started", self._mission_name)
 	else
 		Managers.loading:no_level_needed()
@@ -115,7 +117,6 @@ end
 StateLoading.on_exit = function (self)
 	Managers.localization:reset_cache()
 	Managers.player:on_game_state_exit(self)
-	Managers.event:unregister(self, "on_pre_suspend")
 end
 
 StateLoading._reset_state_loading = function (self, params)
@@ -334,10 +335,6 @@ StateLoading._current_level = function (self)
 
 		return Missions[mission_name].level
 	end
-end
-
-StateLoading._on_pre_suspend = function (self)
-	Managers.loading:cleanup()
 end
 
 return StateLoading

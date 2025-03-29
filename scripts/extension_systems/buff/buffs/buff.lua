@@ -288,6 +288,15 @@ Buff.update = function (self, dt, t, portable_random)
 	end
 end
 
+Buff.post_update_keywords_and_stats_func = function (self, t)
+	local template = self._template
+	local post_update_keywords_and_stats_func = template.post_update_keywords_and_stats_func
+
+	if post_update_keywords_and_stats_func then
+		post_update_keywords_and_stats_func(self._template_data, self._template_context, t)
+	end
+end
+
 Buff.refresh_func = function (self, t, previous_stack_count)
 	local template = self._template
 	local refresh_func = template.refresh_func
@@ -480,7 +489,7 @@ Buff.set_start_time = function (self, start_time)
 		self._finished = false
 	end
 
-	if self._player and self._player.remote then
+	if self._player and (self._player.remote or template.predicted) then
 		self._need_to_sync_start_time = true
 	end
 end
@@ -689,6 +698,8 @@ Buff.get_hud_data = function (self)
 	return_table.is_negative = self:is_negative()
 	return_table.force_negative_frame = self:_force_negative_frame()
 	return_table.duration_progress = self:duration_progress()
+	return_table.title = self:title()
+	return_table.description = self:description()
 
 	return return_table
 end
@@ -850,6 +861,18 @@ Buff.visual_stack_count = function (self)
 	end
 
 	return self:stat_buff_stacking_count()
+end
+
+Buff.title = function (self)
+	local template = self._template
+
+	return template and (template.display_title and Localize(template.display_title) or template.title or template.name) or ""
+end
+
+Buff.description = function (self)
+	local template = self._template
+
+	return template and (template.display_description and Localize(template.display_description) or template.description) or ""
 end
 
 return Buff

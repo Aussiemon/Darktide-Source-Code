@@ -9,6 +9,40 @@ local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 
 templates.weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit = {
+	format_values = {
+		impact = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_impact_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit_parent = {
 			{
@@ -39,6 +73,40 @@ templates.weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit = {
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger = {
+	format_values = {
+		impact = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_impact_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger_parent = {
 			{
@@ -65,6 +133,41 @@ templates.weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger =
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_damage_debuff = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_damage_debuff",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "increase_damage_received_while_staggered",
+				find_value_type = "buff_template",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.damage_vs_staggered,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "increase_damage_received_while_staggered",
+				find_value_type = "buff_template",
+				path = {
+					"duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_damage_debuff = {
 			{
@@ -91,6 +194,41 @@ templates.weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_stagger_debuff = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_stagger_debuff",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		impact = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "increase_impact_received_while_staggered",
+				find_value_type = "buff_template",
+				path = {
+					"stat_buffs",
+					stat_buffs.impact_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "increase_impact_received_while_staggered",
+				find_value_type = "buff_template",
+				path = {
+					"duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_stagger_debuff = {
 			{
@@ -117,6 +255,20 @@ templates.weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_rending_vs_staggered = {
+	format_values = {
+		rending = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_rending_vs_staggered",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.rending_vs_staggered_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_rending_vs_staggered = {
 			{
@@ -143,6 +295,32 @@ templates.weapon_trait_bespoke_powermaul_p1_rending_vs_staggered = {
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot = {
+	format_values = {
+		stagger = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.stagger_weakspot_reduction_modifier,
+				},
+			},
+		},
+		ranged_stagger = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot",
+				find_value_type = "buff_template",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_impact_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot = {
 			{
@@ -169,6 +347,30 @@ templates.weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_windup_increases_power_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent = {
 			{
@@ -195,6 +397,40 @@ templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power = {
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		duration = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		cooldown_duration = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 			{
@@ -233,6 +469,38 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
+	format_values = {
+		light = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads",
+				find_value_type = "trait_override",
+				path = {
+					"light_proc",
+				},
+			},
+		},
+		heavy = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads",
+				find_value_type = "trait_override",
+				path = {
+					"heavy_proc",
+				},
+			},
+		},
+		special = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads",
+				find_value_type = "trait_override",
+				path = {
+					"special_proc",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 			{
@@ -259,6 +527,30 @@ templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
+	format_values = {
+		chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun",
+				find_value_type = "trait_override",
+				path = {
+					"proc_events",
+					proc_events.on_hit,
+				},
+			},
+		},
+		cooldown = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun",
+				find_value_type = "trait_override",
+				path = {
+					"cooldown_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
 			{
@@ -289,6 +581,20 @@ templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun =
 	},
 }
 templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_vs_electrocuted,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
 			{

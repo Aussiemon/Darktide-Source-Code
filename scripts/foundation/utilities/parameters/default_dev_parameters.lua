@@ -35,6 +35,7 @@ local categories = {
 	"Effects",
 	"Equipment",
 	"Error",
+	"Explosion Rework Testing",
 	"Event",
 	"Feature Info",
 	"FGRL",
@@ -49,6 +50,7 @@ local categories = {
 	"Hit Mass",
 	"Horde Picker",
 	"Hordes",
+	"Hordes Mode",
 	"Hub",
 	"Hud",
 	"Imgui",
@@ -374,7 +376,7 @@ params.debug_log_data_service_backend_cache = {
 	category = "Backend",
 	value = false,
 }
-params.auto_select_ps5_backend_environment = {
+params.auto_select_backend_environment = {
 	category = "Backend",
 	value = false,
 	options = {
@@ -530,7 +532,7 @@ params.debug_fill_pickup_spawners = {
 		"side_mission",
 	},
 }
-params.debug_medkits = {
+params.debug_proximity_heal = {
 	category = "Pickups",
 	value = false,
 }
@@ -659,8 +661,10 @@ params.physics_debug_filter = {
 		"filter_minion_shooting_geometry",
 		"filter_minion_throwing",
 		"filter_minion_shooting_no_friendly_fire",
+		"filter_minion_explosion",
 		"filter_player_character_melee_sweep",
 		"filter_player_character_ballistic_raycast",
+		"filter_player_character_explosion",
 		"filter_player_character_shooting_projectile",
 		"filter_player_character_shooting_raycast",
 		"filter_player_character_shooting_raycast_dynamics",
@@ -1466,6 +1470,8 @@ params.debug_buffs_show_categories = {
 		"weapon_traits",
 		"talents_secondary",
 		"gadget",
+		"hordes_buff",
+		"hordes_sub_buff",
 		"aura",
 	},
 }
@@ -2336,6 +2342,10 @@ params.debug_minion_aiming = {
 	category = "Minions",
 	value = false,
 }
+params.print_minion_spawn = {
+	category = "Minions",
+	value = false,
+}
 params.debug_minion_spawners = {
 	category = "Minions",
 	value = false,
@@ -2385,6 +2395,10 @@ params.enable_minion_auto_stagger = {
 	value = false,
 }
 params.ignore_stuck_minions_warning = {
+	category = "Minions",
+	value = false,
+}
+params.ignore_horde_failed_spawn_warning = {
 	category = "Minions",
 	value = false,
 }
@@ -2714,6 +2728,14 @@ params.debug_horde_pacing = {
 	category = "Hordes",
 	value = false,
 }
+params.hordes_mode_override_wave_number = {
+	category = "Hordes Mode",
+	value = false,
+}
+params.hordes_mode_wave_number = {
+	category = "Hordes Mode",
+	value = 3,
+}
 params.debug_groups = {
 	category = "Groups",
 	value = false,
@@ -2795,6 +2817,10 @@ params.disable_monster_pacing = {
 	value = false,
 }
 params.debug_monster_pacing = {
+	category = "Monsters",
+	value = false,
+}
+params.debug_mutator_monster_pacing = {
 	category = "Monsters",
 	value = false,
 }
@@ -3311,6 +3337,13 @@ params.perfhud_backend_server = {
 		Application.console_command("perfhud", "backend", "server")
 	end,
 }
+params.perfhud_io = {
+	category = "PerfHud",
+	value = false,
+	on_value_set = function (new_value)
+		Application.console_command("perfhud", "io")
+	end,
+}
 params.ui_developer_mode = {
 	category = "UI",
 	value = false,
@@ -3426,6 +3459,10 @@ params.ui_debug_lobby_screen = {
 	category = "UI",
 	value = false,
 }
+params.ui_debug_lobby_screen_havoc = {
+	category = "UI",
+	value = false,
+}
 params.ui_debug_mission_intro = {
 	category = "UI",
 	value = false,
@@ -3498,6 +3535,10 @@ params.ui_always_show_tutorial_popup = {
 	value = false,
 }
 params.debug_hud_element_fading = {
+	category = "UI",
+	value = false,
+}
+params.debug_draw_world_marker_component = {
 	category = "UI",
 	value = false,
 }
@@ -4069,6 +4110,10 @@ params.debug_grow_queue_callstacks = {
 	category = "Gameplay State",
 	value = false,
 }
+params.mission_seed_override = {
+	category = "Gameplay State",
+	value = "none",
+}
 params.debug_respawn_beacon = {
 	category = "Respawn",
 	value = false,
@@ -4139,6 +4184,10 @@ params.debug_matchmaking = {
 params.debug_time_since_last_transmit = {
 	category = "Network",
 	value = true,
+}
+params.disable_session_update_print = {
+	category = "Network",
+	value = false,
 }
 params.visualize_input_packets_received = {
 	category = "Network",
@@ -4394,6 +4443,10 @@ params.debug_load_wait_info = {
 	category = "Loading",
 	value = false,
 }
+params.show_perfhud_io_loading_screen = {
+	category = "Loading",
+	value = true,
+}
 params.debug_language_override = {
 	category = "Localization",
 	name = "Language Override",
@@ -4484,6 +4537,10 @@ params.use_localized_talent_names_in_debug_menu = {
 	value = false,
 }
 params.debug_skip_backend_talent_verification = {
+	category = "Talents",
+	value = false,
+}
+params.talent_tree_infinite_points = {
 	category = "Talents",
 	value = false,
 }
@@ -4612,6 +4669,10 @@ params.debug_looping_sound_components = {
 	value = false,
 }
 params.debug_draw_damage_profile_ranges = {
+	category = "Weapon",
+	value = false,
+}
+params.debug_always_ogryn_box_of_surprise = {
 	category = "Weapon",
 	value = false,
 }
@@ -5265,6 +5326,49 @@ params.debug_haptics = {
 	category = "Rumble & Haptics",
 	value = false,
 }
+
+local function _draw_broadphase_spheres_of_all_units_in_broadphase()
+	local destructible_system = Managers.state.extension:system("destructible_system")
+
+	if destructible_system then
+		destructible_system:debug_draw_destructibles_in_broadphase()
+	end
+
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+
+	if broadphase_system then
+		broadphase_system:debug_draw_units_in_broadphase()
+	end
+
+	local hazard_prop_system = Managers.state.extension:system("hazard_prop_system")
+
+	if hazard_prop_system then
+		hazard_prop_system:debug_draw_props_in_broadphase()
+	end
+end
+
+params.broadphase_use_seperate_query_for_destructibles = {
+	category = "Explosion Rework Testing",
+	value = true,
+}
+params.show_broadphase_sphere_upon_spawning = {
+	category = "Explosion Rework Testing",
+	value = false,
+}
+params.show_broadphase_spheres_for_explosion_targets = {
+	category = "Explosion Rework Testing",
+	value = false,
+	on_value_set = function (new_value, old_value)
+		if new_value then
+			_draw_broadphase_spheres_of_all_units_in_broadphase()
+			ParameterResolver.set_dev_parameter("show_broadphase_spheres_for_explosion_targets", false)
+		end
+	end,
+}
+params.switch_to_explosion_physics_overlap = {
+	category = "Explosion Rework Testing",
+	value = false,
+}
 params.category_log_levels = {
 	hidden = true,
 	value = {
@@ -5329,9 +5433,6 @@ params.debug_gadget_extension = {
 	value = false,
 }
 params.disable_beast_of_nurgle_consumed_effect = {
-	value = false,
-}
-params.enable_aim_labs_area_draw = {
 	value = false,
 }
 

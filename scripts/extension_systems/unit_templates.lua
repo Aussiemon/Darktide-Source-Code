@@ -219,6 +219,15 @@ end
 local function _resolve_minion_inventory_and_attacks(init_data, breed, game_object_data, attack_selection_seed, inventory_seed)
 	local mission = Managers.state.mission:mission()
 	local zone_id = mission.zone_id
+
+	if breed.has_havoc_inventory_override then
+		local havoc_mananger = Managers.state.havoc
+
+		if havoc_mananger:is_havoc() then
+			zone_id = breed.has_havoc_inventory_override
+		end
+	end
+
 	local attack_selection_template_name, selected_attack_names, used_weapon_slot_names, combat_range_multi_config_key = _resolve_minion_attacks(init_data, breed, game_object_data, attack_selection_seed)
 	local inventory
 
@@ -236,6 +245,15 @@ end
 local function _resolve_minion_husk_inventory(breed, game_session, game_object_id, attack_selection_seed, inventory_seed)
 	local mission = Managers.state.mission:mission()
 	local zone_id = mission.zone_id
+
+	if breed.has_havoc_inventory_override then
+		local havoc_mananger = Managers.state.havoc
+
+		if havoc_mananger:is_havoc() then
+			zone_id = breed.has_havoc_inventory_override
+		end
+	end
+
 	local used_weapon_slot_names
 
 	if GameSession.has_game_object_field(game_session, game_object_id, "minion_attack_selection_template_id") then
@@ -1889,7 +1907,7 @@ local unit_templates = {
 				config:add("MinionOutlineExtension", {
 					breed = breed,
 				})
-			elseif markable_target then
+			else
 				config:add("MinionOutlineExtension", {
 					breed = breed,
 				})
@@ -2085,7 +2103,7 @@ local unit_templates = {
 				config:add("MinionOutlineExtension", {
 					breed = breed,
 				})
-			elseif breed.volley_fire_target or breed.psyker_mark_target then
+			else
 				config:add("MinionOutlineExtension", {
 					breed = breed,
 				})
@@ -2197,6 +2215,7 @@ local unit_templates = {
 			local pickup_name = pickup_settings.name
 
 			Unit.set_data(unit, "pickup_type", pickup_name)
+			Unit.set_data(unit, "is_pickup", true)
 
 			local radius, categories = _pickup_broadphase_radius_and_categories(pickup_settings)
 
@@ -2308,6 +2327,7 @@ local unit_templates = {
 			local pickup_name = NetworkLookup.pickup_names[pickup_id]
 
 			Unit.set_data(unit, "pickup_type", pickup_name)
+			Unit.set_data(unit, "is_pickup", true)
 
 			local pickup_settings = Pickups.by_name[pickup_name]
 			local radius, categories = _pickup_broadphase_radius_and_categories(pickup_settings)
@@ -2606,13 +2626,13 @@ local unit_templates = {
 							class_name = "ProximityHeal",
 							use_as_job = true,
 							init_data = deployable.proximity_heal_init_data,
-							owner_unit_or_nil = owner_unit_or_nil,
 						},
 					},
 				},
 			}
 
 			config:add("SideRelationProximityExtension", {
+				owner_unit_or_nil = owner_unit_or_nil,
 				broadphase = broadphase,
 				relation_init_data = relation_init_data,
 			})
@@ -2658,7 +2678,7 @@ local unit_templates = {
 		local_unit_spawned = function (unit, template_context, game_object_data, side_id, deployable, placed_on_unit, owner_unit_or_nil)
 			local job_class = ScriptUnit.extension(unit, "proximity_system")
 
-			Managers.state.unit_job:register(unit, job_class)
+			Managers.state.unit_job:register_job(unit, job_class, true)
 		end,
 	},
 	smoke_fog = {

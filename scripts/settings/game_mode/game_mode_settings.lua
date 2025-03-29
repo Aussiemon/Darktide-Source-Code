@@ -62,6 +62,7 @@ _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_hub")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_prologue")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_prologue_hub")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_shooting_range")
+_add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_survival")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_training_grounds")
 
 game_mode_settings.hub_singleplay = table.clone(game_mode_settings.hub)

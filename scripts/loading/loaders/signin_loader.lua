@@ -16,7 +16,7 @@ SigninLoader.destroy = function (self)
 	return
 end
 
-SigninLoader.start_loading = function (self)
+SigninLoader.start_loading = function (self, context)
 	local package_manager = Managers.package
 	local package_ids = self._package_ids
 

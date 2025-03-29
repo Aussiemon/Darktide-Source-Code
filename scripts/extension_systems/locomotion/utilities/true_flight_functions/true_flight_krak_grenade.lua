@@ -66,7 +66,7 @@ end
 
 local broadphase_results = {}
 
-TrueFlightKrakGrenade.krak_find_armored_target = function (integration_data, position, is_valid_and_legitimate_targe_func)
+TrueFlightKrakGrenade.krak_find_armored_target = function (integration_data, position, is_valid_and_legitimate_target_func)
 	local true_flight_template = integration_data.true_flight_template
 	local skip_search_time = true_flight_template.skip_search_time
 	local time_since_start = integration_data.time_since_start
@@ -97,7 +97,7 @@ TrueFlightKrakGrenade.krak_find_armored_target = function (integration_data, pos
 		for ii = 1, number_of_results do
 			local unit = broadphase_results[ii]
 
-			if is_valid_and_legitimate_targe_func(integration_data, unit, position) then
+			if is_valid_and_legitimate_target_func(integration_data, unit, position) then
 				local can_stick, hit_zone, target_pos = _check_target_armor(unit, target_armor_types, default_hit_zone, position, check_all_hit_zones)
 
 				if can_stick then

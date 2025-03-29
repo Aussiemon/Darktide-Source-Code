@@ -81,14 +81,16 @@ MissionObjectiveZoneSystem.hot_join_sync = function (self, sender, channel)
 			local level_unit_id = Managers.state.unit_spawner:level_index(unit)
 
 			if level_unit_id then
-				local num_scanned_objects_per_player = extension:num_scanned_objects_per_player()
+				if extension:is_scanning_zone() then
+					local num_scanned_objects_per_player = extension:num_scanned_objects_per_player()
 
-				for player, num_scanned_objects in pairs(num_scanned_objects_per_player) do
-					if num_scanned_objects > 0 then
-						local peer_id = player:peer_id()
-						local local_player_id = player:local_player_id()
+					for player, num_scanned_objects in pairs(num_scanned_objects_per_player) do
+						if num_scanned_objects > 0 then
+							local peer_id = player:peer_id()
+							local local_player_id = player:local_player_id()
 
-						RPC.rpc_mission_objective_zone_scan_add_player_scanned_object(channel, level_unit_id, peer_id, local_player_id, num_scanned_objects)
+							RPC.rpc_mission_objective_zone_scan_add_player_scanned_object(channel, level_unit_id, peer_id, local_player_id, num_scanned_objects)
+						end
 					end
 				end
 
@@ -399,7 +401,7 @@ MissionObjectiveZoneSystem.register_scannable_unit = function (self, scannable_u
 	local scannable_unit_position = POSITION_LOOKUP[scannable_unit]
 
 	for _, extension in pairs(unit_to_extension_map) do
-		if extension:point_in_zone(scannable_unit_position) then
+		if extension:is_scanning_zone() and extension:point_in_zone(scannable_unit_position) then
 			extension:register_scannable_unit(scannable_unit)
 		end
 	end
@@ -430,7 +432,12 @@ MissionObjectiveZoneSystem.reset_progression = function (self)
 end
 
 MissionObjectiveZoneSystem.progression = function (self)
+	local extension = self:current_active_zone()
 	local progress = self._progress
+
+	if extension and extension:is_capture_zone() then
+		progress = extension:current_progression() or self._progress
+	end
 
 	return progress
 end

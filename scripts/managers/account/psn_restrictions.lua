@@ -2,6 +2,7 @@
 
 local Promise = require("scripts/foundation/utilities/promise")
 local PSNRestrictions = class("PSNRestrictions")
+local verify_premium_header = "verify_premium"
 
 local function _check_premium()
 	local request_started = false
@@ -115,7 +116,7 @@ PSNRestrictions.psn_signin = function (self)
 			return Promise.resolved()
 		else
 			return Promise.rejected({
-				header = "PSNRestrictions.psn_signin()",
+				header = "PSNRestrictions:psn_signin",
 				message = "loc_psn_not_connected",
 			})
 		end
@@ -132,8 +133,8 @@ PSNRestrictions.verify_premium = function (self)
 					return Promise.resolved()
 				else
 					return Promise.rejected({
-						header = "PSNRestrictions.verify_premium()",
 						message = "loc_psn_premium_fail_desc",
+						header = verify_premium_header,
 					})
 				end
 			end)
@@ -149,6 +150,10 @@ PSNRestrictions.fetch_communication_restrictions = function (self, web_api, acco
 	local content
 
 	return web_api:send_request(user_id, api_group, path, method, content)
+end
+
+PSNRestrictions.verify_premium_header = function (self)
+	return verify_premium_header
 end
 
 return PSNRestrictions

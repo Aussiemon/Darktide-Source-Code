@@ -1,30 +1,29 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local large_cleave = DamageProfileSettings.large_cleave
+local light_cleave = DamageProfileSettings.light_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local single_cleave = DamageProfileSettings.single_cleave
-local light_cleave = DamageProfileSettings.light_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local large_cleave = DamageProfileSettings.large_cleave
-local big_cleave = DamageProfileSettings.big_cleave
-local default_shield_override_stagger_strength = 4
+local DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH = 4
 
 damage_templates.default_ogryn_heavystubber_assault_snp = {
 	ragdoll_push_force = 600,
@@ -98,10 +97,10 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 			20,
 		},
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1,
@@ -185,10 +184,10 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m2 = {
 			40,
 		},
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1,
@@ -272,10 +271,10 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m3 = {
 			16,
 		},
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1,
@@ -349,8 +348,8 @@ damage_templates.default_ogryn_heavystubber_assault = {
 		},
 	},
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	power_distribution = {
 		attack = {
@@ -366,10 +365,10 @@ damage_templates.default_ogryn_heavystubber_assault = {
 		0.5,
 		1,
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
 		0.5,
 		1.5,
@@ -513,8 +512,8 @@ damage_templates.ogryn_heavystubber_damage_p2_m1 = {
 	wounds_template = WoundsTemplates.heavy_stubber,
 	armor_damage_modifier_ranged = heavy_stubber_armor_mod_p2,
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	crit_mod = {
 		attack = {
@@ -563,10 +562,10 @@ damage_templates.ogryn_heavystubber_damage_p2_m1 = {
 			25,
 		},
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1,
@@ -596,8 +595,8 @@ damage_templates.ogryn_heavystubber_damage_p2_m2 = {
 	wounds_template = WoundsTemplates.heavy_stubber,
 	armor_damage_modifier_ranged = heavy_stubber_armor_mod_p2,
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	crit_mod = {
 		attack = {
@@ -717,10 +716,10 @@ damage_templates.ogryn_heavystubber_damage_p2_m2 = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1,
@@ -745,8 +744,8 @@ damage_templates.ogryn_heavystubber_damage_p2_m3 = {
 	wounds_template = WoundsTemplates.heavy_stubber,
 	armor_damage_modifier_ranged = heavy_stubber_armor_mod_p2_m3,
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	crit_mod = {
 		attack = {
@@ -896,10 +895,10 @@ damage_templates.ogryn_heavystubber_damage_p2_m3 = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1,

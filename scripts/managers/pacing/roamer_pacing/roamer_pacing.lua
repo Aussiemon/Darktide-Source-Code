@@ -8,17 +8,17 @@ local Navigation = require("scripts/extension_systems/navigation/utilities/navig
 local NavQueries = require("scripts/utilities/nav_queries")
 local PatrolSettings = require("scripts/settings/roamer/patrol_settings")
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
-local RoamerSettings = require("scripts/settings/roamer/roamer_settings")
 local RoamerSlotPlacementFunctions = require("scripts/settings/roamer/roamer_slot_placement_functions")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RoamerPacing = class("RoamerPacing")
 
-RoamerPacing.init = function (self, nav_world, seed, sub_faction_types)
+RoamerPacing.init = function (self, nav_world, template, seed, sub_faction_types)
 	self._nav_world = nav_world
 	self._original_seed = seed
 	self._seed = seed
+	self._roamer_template = template
 
-	local available_sub_faction_types = RoamerSettings.sub_faction_types
+	local available_sub_faction_types = template.sub_faction_types
 	local roamer_sub_faction_types, num_roamer_sub_faction_types = {}, 0
 
 	for i = 1, #sub_faction_types do
@@ -96,6 +96,12 @@ local PATROL_NAV_TAG_LAYER_COSTS = {
 }
 
 RoamerPacing.on_gameplay_post_init = function (self, level)
+	if self._spawners_generated then
+		Log.error("RoamerPacing", "generate_roamers() called when already generated.")
+
+		return
+	end
+
 	local nav_world = self._nav_world
 	local traverse_logic, nav_tag_cost_table = Navigation.create_traverse_logic(nav_world, NAV_TAG_LAYER_COSTS, nil, false)
 
@@ -215,13 +221,14 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 
 	local num_zones = #spawn_point_positions
 	local zones = Script.new_array(num_zones)
-	local density_settings = Managers.state.difficulty:get_table_entry_by_resistance(RoamerSettings.density_settings)
-	local density_types = RoamerSettings.density_types
+	local roamer_template = self._roamer_template
+	local density_settings = Managers.state.difficulty:get_table_entry_by_resistance(roamer_template.density_settings)
+	local density_types = roamer_template.density_types
 	local density_type = density_types[self:_random(1, #density_types)]
 	local density_setting = density_settings[density_type]
 	local density_zone_range = density_setting.zone_range
 	local density_zone_count = self:_random(density_zone_range[1], density_zone_range[2])
-	local faction_zone_length_table = Managers.state.difficulty:get_table_entry_by_challenge(RoamerSettings.faction_zone_length)
+	local faction_zone_length_table = Managers.state.difficulty:get_table_entry_by_challenge(roamer_template.faction_zone_length)
 	local faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
 	local faction_types = self._sub_faction_types
 	local faction_index = self:_random(1, #faction_types)
@@ -233,7 +240,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 	local empty_zone_count = 0
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
-	local num_encampments_to_spawn = self._num_encampments_override or self:_random(RoamerSettings.num_encampments[1], RoamerSettings.num_encampments[2])
+	local num_encampments_to_spawn = self._num_encampments_override or self:_random(roamer_template.num_encampments[1], roamer_template.num_encampments[2])
 	local num_encampments, num_encampment_blocked_zones = 0, 0
 	local chosen_packs, pack_pick
 	local num_spawn_point_positions = #spawn_point_positions
@@ -261,9 +268,9 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 				chosen_packs = pack_override and pack_override[current_faction] or packs[pack_pick][current_faction]
 			end
 
-			local ambience_sfx = RoamerSettings.ambience_sfx[density_type]
-			local aggro_sfx = RoamerSettings.aggro_sfx[density_type]
-			local pause_spawn_type_when_aggroed = RoamerSettings.pause_spawn_type_when_aggroed[density_type]
+			local ambience_sfx = roamer_template.ambience_sfx[density_type]
+			local aggro_sfx = roamer_template.aggro_sfx[density_type]
+			local pause_spawn_type_when_aggroed = roamer_template.pause_spawn_type_when_aggroed[density_type]
 			local zone = {
 				aggro_sfx = aggro_sfx,
 				ambience_sfx = ambience_sfx,
@@ -292,17 +299,23 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 
 			if density_zone_count == 0 then
 				local new_density_type
-				local has_randomized_encampment = self:_random() <= (self._override_chance_of_encampment or RoamerSettings.chance_of_encampment)
+				local has_randomized_encampment = self:_random() <= (self._override_chance_of_encampment or roamer_template.chance_of_encampment)
 				local should_spawn_encampment = num_encampment_blocked_zones == 0 and num_encampments < num_encampments_to_spawn and has_randomized_encampment
 
 				if should_spawn_encampment then
-					local encampment_types = RoamerSettings.encampment_types
+					local encampment_types = roamer_template.encampment_types
 
 					new_density_type = encampment_types[self:_random(1, #encampment_types)]
 					num_encampments = num_encampments + 1
-					num_encampment_blocked_zones = RoamerSettings.num_encampment_blocked_zones
+					num_encampment_blocked_zones = roamer_template.num_encampment_blocked_zones
 				else
-					new_density_type = density_type == "low" and "high" or density_type == "none" and "low" or "none"
+					local density_order = roamer_template.density_order[density_type]
+
+					if density_order then
+						new_density_type = density_order
+					else
+						new_density_type = roamer_template.density_order.default
+					end
 				end
 
 				if density_type == "none" then
@@ -714,8 +727,9 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 	self:_update_density_type_switch(ahead_travel_distance)
 
 	local _, behind_travel_distance = main_path_manager:behind_unit(target_side_id)
+	local roamer_template = self._roamer_template
 	local roamers = self._roamers
-	local spawn_distance = RoamerSettings.spawn_distance
+	local spawn_distance = roamer_template.spawn_distance
 	local num_updates = math.min(NUM_ROAMERS_UPDATE_PER_FRAME, self._num_roamers)
 	local roamers_allowed = Managers.state.pacing:spawn_type_enabled("roamers")
 
@@ -827,7 +841,7 @@ RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, a
 		end
 	end
 
-	local trigger_horde_when_aggroed = RoamerSettings.trigger_horde_when_aggroed[aggroing_roamer.density_type]
+	local trigger_horde_when_aggroed = self._roamer_template.trigger_horde_when_aggroed[aggroing_roamer.density_type]
 
 	if trigger_horde_when_aggroed then
 		local horde_template_name = trigger_horde_when_aggroed.horde_template_name
@@ -939,13 +953,18 @@ RoamerPacing._deactivate_roamer = function (self, roamer)
 end
 
 RoamerPacing._spawn_roamer = function (self, breed_name, position, rotation, group_id, side_id)
-	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, position, rotation, side_id, nil, nil, nil, group_id)
+	local minion_spawn_manager = Managers.state.minion_spawn
+	local param_table = minion_spawn_manager:request_param_table()
+
+	param_table.optional_group_id = group_id
+
+	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, position, rotation, side_id, param_table)
 
 	return unit
 end
 
 RoamerPacing._despawn_roamer = function (self, unit)
-	Managers.state.minion_spawn:despawn(unit)
+	Managers.state.minion_spawn:despawn_minion(unit)
 end
 
 RoamerPacing._update_faction_switch = function (self, ahead_travel_distance)

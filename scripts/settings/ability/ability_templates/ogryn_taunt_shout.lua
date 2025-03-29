@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/ability/ability_templates/ogryn_taunt_shout.lua
 
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local RADIUS = 8
+local RADIUS = 12
 local ability_template = {}
 
 ability_template.action_inputs = {
@@ -73,16 +72,12 @@ ability_template.actions = {
 		ability_type = "combat_ability",
 		allowed_during_sprint = true,
 		anim = "ability_shout",
-		buff_to_add = "taunted",
-		force_stagger_duration = 1,
-		force_stagger_type = "light",
 		has_husk_sound = true,
 		kind = "ogryn_shout",
-		power_level = 500,
 		recover_toughness_effect = "content/fx/particles/abilities/squad_leader_ability_toughness_buff",
-		special_rule_buff_enemy = "ogryn_taunt_increased_damage_taken_buff",
+		refill_toughness = false,
+		shout_target_template = "ogryn_shout",
 		sprint_ready_up_time = 0,
-		target_enemies = true,
 		total_time = 0.75,
 		toughness_replenish_percent = 1,
 		uninterruptible = true,
@@ -90,10 +85,6 @@ ability_template.actions = {
 		use_charge_at_start = true,
 		vo_tag = "ability_bullgryn",
 		radius = RADIUS,
-		damage_profile = DamageProfileTemplates.shout_stagger_ogryn_taunt,
-		buff_ignored_breeds = {
-			chaos_daemonhost = true,
-		},
 	},
 }
 ability_template.fx_sources = {}

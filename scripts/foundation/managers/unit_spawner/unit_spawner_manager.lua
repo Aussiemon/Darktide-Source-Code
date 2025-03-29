@@ -6,7 +6,6 @@ local Unit_alive = Unit.alive
 local UNIT_TEMPLATE_GAME_OBJECT_TYPE = 1
 
 Level._unit_by_index = Level._unit_by_index or Level.unit_by_index
-Level.unit_by_index = nil
 Level._unit_index = Level._unit_index or Level.unit_index
 Level.unit_index = nil
 Level._name_hash_32 = Level._name_hash_32 or Level.name_hash_32
@@ -24,6 +23,10 @@ local CLIENT_RPCS = {
 
 if Managers.state and Managers.state.unit_spawner and Managers.state.unit_spawner._deletion_state ~= DELETION_STATES.default then
 	Managers.state.unit_spawner:set_deletion_state(DELETION_STATES.default)
+end
+
+local function _log_info(...)
+	Log.info("UnitSpawnerManager", ...)
 end
 
 UnitSpawnerManager.init = function (self, world, extension_manager, is_server, unit_templates, game_session, level_name, network_event_delegate)
@@ -57,6 +60,10 @@ UnitSpawnerManager.init = function (self, world, extension_manager, is_server, u
 	self._network_units = {}
 	self._husk_units = {}
 	self._game_object_ids = {}
+end
+
+UnitSpawnerManager.hot_join_sync = function (self, sender, channel_id)
+	return
 end
 
 UnitSpawnerManager.is_unit_template = function (self, game_object_type)
@@ -231,20 +238,37 @@ UnitSpawnerManager.game_object_id = function (self, unit)
 	return self._game_object_ids[unit]
 end
 
+UnitSpawnerManager.unit_index = function (self, unit)
+	return self:level_index(unit)
+end
+
 UnitSpawnerManager.level_index = function (self, unit)
+	if not Unit.level(unit) then
+		return nil, NetworkConstants.invalid_level_name_hash
+	end
+
+	local unit_index
 	local runtime_loaded_levels = self._runtime_loaded_levels
 
 	for level_name_hash, units in pairs(runtime_loaded_levels) do
-		for unit_index, runtime_unit in pairs(units) do
+		for level_unit_index, runtime_unit in pairs(units) do
 			if runtime_unit == unit then
-				return unit_index, level_name_hash
+				return level_unit_index, level_name_hash
 			end
 		end
 	end
 
-	local unit_index = Level._unit_index(self._main_level, unit)
+	unit_index = Level._unit_index(self._main_level, unit)
 
-	return unit_index, NetworkConstants.invalid_level_name_hash
+	if unit_index then
+		return unit_index, NetworkConstants.invalid_level_name_hash
+	end
+
+	if Unit.level(unit) then
+		Log.exception("UnitSpawnerManager", "Could not find a registered level for unit %s.", tostring(unit))
+	end
+
+	return nil, NetworkConstants.invalid_level_name_hash
 end
 
 UnitSpawnerManager.unit = function (self, game_object_id_or_level_index, is_level_unit_optional, level_name_hash_optional)
@@ -254,9 +278,9 @@ UnitSpawnerManager.unit = function (self, game_object_id_or_level_index, is_leve
 		return units_in_runtime_loaded_level[game_object_id_or_level_index]
 	elseif is_level_unit_optional then
 		return Level._unit_by_index(self._main_level, game_object_id_or_level_index)
-	else
-		return self._network_units[game_object_id_or_level_index]
 	end
+
+	return self._network_units[game_object_id_or_level_index]
 end
 
 UnitSpawnerManager.valid_unit_id = function (self, unit_id, is_level_unit)
@@ -420,7 +444,9 @@ UnitSpawnerManager.destroy_game_object_unit = function (self, game_object_id, ow
 	self:mark_for_deletion(unit)
 end
 
-UnitSpawnerManager.rpc_is_fully_hot_join_synced = function (self, channel_id)
+UnitSpawnerManager.rpc_is_fully_hot_join_synced = function (self, sender, channel_id)
+	_log_info("%s : rpc_is_fully_hot_join_synced", sender)
+
 	self.is_fully_hot_join_synced = true
 end
 

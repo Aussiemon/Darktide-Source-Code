@@ -1551,7 +1551,8 @@ HudElementPlayerPanelBase._update_player_name_prefix = function (self, player)
 
 		local profile = player and player:profile()
 		local archetype = profile and profile.archetype
-		local string_symbol = archetype and archetype.string_symbol
+		local archetype_name = archetype and archetype.name
+		local string_symbol = archetype_name and UISettings.archetype_font_icon[archetype_name]
 
 		if string_symbol then
 			local supported_features = self._supported_features

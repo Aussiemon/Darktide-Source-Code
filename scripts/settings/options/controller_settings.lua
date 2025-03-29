@@ -766,6 +766,9 @@ settings_definitions[#settings_definitions + 1] = {
 	save_location = "input_settings",
 	step_size_value = 0.01,
 	widget_type = "value_slider",
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_dead_zone", value)
+	end,
 }
 settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_setting_menu_group_horizontal_sensitivity",

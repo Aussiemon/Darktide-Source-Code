@@ -7,10 +7,11 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Missions = require("scripts/settings/mission/mission_templates")
 local Proximity = require("scripts/utilities/proximity")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local keywords = BuffSettings.keywords
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local CoherencySystem = class("CoherencySystem", "ExtensionSystemBase")
+local _release_daisy_chain
 
 CoherencySystem.init = function (self, extension_system_creation_context, ...)
 	local init_result = CoherencySystem.super.init(self, extension_system_creation_context, ...)
@@ -44,6 +45,7 @@ CoherencySystem.on_remove_extension = function (self, unit, extension_name)
 		local coherency_extension = ScriptUnit.extension(unit, self._name)
 
 		self:_exit_removed_extension(unit, coherency_extension)
+		_release_daisy_chain(unit)
 	end
 
 	return CoherencySystem.super.on_remove_extension(self, unit, extension_name)
@@ -130,6 +132,10 @@ local function _get_daisy_chain(unit)
 	end
 
 	return chain
+end
+
+function _release_daisy_chain(unit)
+	daisy_chain_cache[unit] = nil
 end
 
 local function _has_coherency_system_filter_function(filter_unit)

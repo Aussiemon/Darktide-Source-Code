@@ -519,14 +519,48 @@ HavocBackgroundView._set_intro_texts = function (self, intro_texts)
 end
 
 HavocBackgroundView._set_off_cadence_description_text_with_timer = function (self, next_cadence_start_date)
-	local server_time = Managers.backend:get_server_time(Managers.time:time("main")) / 1000
-	local time_remaining = next_cadence_start_date - server_time
-	local timer_text = Text.format_time_span_long_form_localized(time_remaining) or nil
-	local loc_string = self._base_definitions.intro_texts.off_cadence.description_text
+	if next_cadence_start_date ~= nil then
+		local server_time = Managers.backend:get_server_time(Managers.time:time("main")) / 1000
+		local time_remaining = next_cadence_start_date - server_time
 
-	self._widgets_by_name.description_text.content.text = Localize(loc_string, true, {
-		time = timer_text,
-	})
+		if time_remaining <= 0 then
+			self:reinitialize()
+
+			return
+		end
+
+		local timer_text = Text.format_time_span_long_form_localized(time_remaining) or nil
+		local loc_string = self._base_definitions.intro_texts.off_cadence.description_text
+
+		self._widgets_by_name.description_text.content.text = Localize(loc_string, true, {
+			time = timer_text,
+		})
+	else
+		self._widgets_by_name.description_text.content.text = Localize("loc_havoc_off_season_description_no_time")
+	end
+end
+
+HavocBackgroundView.reinitialize = function (self)
+	if self._destroyed then
+		return
+	end
+
+	self._rewards = nil
+
+	local on_complete_callback = callback(function ()
+		if self._rewards then
+			self:_setup_rewarding_ui()
+		elseif self._current_state == "off_cadence" then
+			self:_setup_off_cadence_ui()
+		elseif self._current_state == "no_key" then
+			self:_setup_no_key_ui()
+		elseif self._current_state == "key" then
+			self:_setup_key_ui()
+		end
+	end)
+
+	self:_close_active_view()
+	self:_initialize_havoc_state(on_complete_callback)
 end
 
 HavocBackgroundView.update = function (self, dt, t, input_service)

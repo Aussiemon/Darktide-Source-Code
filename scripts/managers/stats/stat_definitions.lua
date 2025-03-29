@@ -5,17 +5,17 @@ local Archetypes = require("scripts/settings/archetype/archetypes")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breeds = require("scripts/settings/breed/breeds")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local MechanicusEventWeapons = require("scripts/settings/live_event/mechanicus_event_weapons")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
+local MissionBuffsAllowed = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local StatFlags = require("scripts/managers/stats/stat_flags")
 local StatMacros = require("scripts/managers/stats/stat_macros")
-local StatNetworkTypes = require("scripts/settings/stats/stat_network_types")
 local StatsCircumstanceUtil = require("scripts/managers/stats/utility/stats_circumstance_util")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
-local NewWeapons = require("scripts/settings/equipment/weapon_templates/new_weapons")
 local Zones = require("scripts/settings/zones/zones")
 local _stat_count = 0
 local _stat_data = {}
@@ -2130,107 +2130,6 @@ do
 			},
 		},
 	}
-	StatDefinitions.debug_havoc_order = {
-		default = 10,
-		flags = {
-			StatFlags.backend,
-		},
-		data = {
-			player = "nil",
-		},
-		triggers = {
-			{
-				id = "mission_won",
-				trigger = function (self, stat_data, na, nu, user)
-					local is_havoc = Managers.state.havoc:is_havoc()
-
-					if is_havoc then
-						local user = Managers.stats:get_next_user()
-						local config = Managers.stats:get_stats_config()
-						local currently_highest_reached = read_stat(StatDefinitions.debug_havoc_order_highest_reached, stat_data)
-						local current_rank = Managers.state.havoc:get_current_rank()
-
-						if currently_highest_reached < current_rank then
-							set_to(StatDefinitions.debug_havoc_order_highest_reached, stat_data, current_rank)
-						end
-
-						if user.account_id == config.havoc_order_owner then
-							local new_seed = math.random(0, 16777215)
-
-							set_to(StatDefinitions.debug_havoc_order_seed, stat_data, new_seed)
-							set_to_max(StatDefinitions.debug_havoc_order_charges, stat_data, 2)
-
-							return increment(self, stat_data)
-						end
-					end
-				end,
-			},
-			{
-				id = "mission_failed",
-				trigger = function (self, stat_data)
-					local is_havoc = Managers.state.havoc:is_havoc()
-
-					if is_havoc then
-						local user = Managers.stats:get_next_user()
-						local config = Managers.stats:get_stats_config()
-
-						if user.account_id == config.havoc_order_owner then
-							local current_value = read_stat(StatDefinitions.debug_havoc_order_charges, stat_data)
-
-							if current_value >= 1 then
-								decrement(StatDefinitions.debug_havoc_order_charges, stat_data)
-							end
-
-							local new_value = read_stat(StatDefinitions.debug_havoc_order_charges, stat_data)
-
-							if new_value == 0 then
-								set_to_max(StatDefinitions.debug_havoc_order_charges, stat_data, 2)
-
-								local new_seed = math.random(0, 16777215)
-
-								set_to(StatDefinitions.debug_havoc_order_seed, stat_data, new_seed)
-
-								return decrement(self, stat_data)
-							end
-						end
-					end
-				end,
-			},
-		},
-	}
-	StatDefinitions.debug_havoc_order_charges = {
-		default = 2,
-		flags = {
-			StatFlags.backend,
-		},
-	}
-	StatDefinitions.debug_havoc_order_seed = {
-		default = 8388607,
-		flags = {
-			StatFlags.backend,
-		},
-		triggers = {
-			{
-				id = "hook_player_spawned",
-				trigger = function (self, stat_data)
-					local id = self.id
-					local stat_value = stat_data[id] or self.default
-
-					if stat_value == self.default then
-						local new_seed = math.random(0, 16777215)
-
-						return set_to(self, stat_data, new_seed)
-					end
-				end,
-			},
-		},
-	}
-	StatDefinitions.debug_havoc_order_highest_reached = {
-		default = 0,
-		flags = {
-			StatFlags.backend,
-		},
-	}
 	StatDefinitions.hook_havoc_win_assisted = {
 		flags = {
 			StatFlags.hook,
@@ -2847,55 +2746,111 @@ StatDefinitions.hook_objective_side_incremented_progression = {
 		StatFlags.team,
 	},
 }
-StatDefinitions.hook_on_syringe_use = {
+StatDefinitions.hook_game_mode_survival_island_completed = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+}
+StatDefinitions.hook_game_mode_survival_class_completed = {
 	flags = {
 		StatFlags.hook,
 	},
 }
-StatDefinitions.hook_red_stimm_deactivated = {
+StatDefinitions.hook_game_mode_survival_game_end = {
 	flags = {
 		StatFlags.hook,
+		StatFlags.team,
 	},
 }
-StatDefinitions.hook_red_stimm_active = {
+StatDefinitions.hook_game_mode_survival_waves_completed = {
 	flags = {
 		StatFlags.hook,
+		StatFlags.team,
 	},
 }
-StatDefinitions.hook_blue_stimm_deactivated = {
+StatDefinitions.hook_game_mode_mcguffins_returned = {
 	flags = {
 		StatFlags.hook,
-	},
-}
-StatDefinitions.hook_blue_stimm_active = {
-	flags = {
-		StatFlags.hook,
-	},
-}
-StatDefinitions.hook_green_stimm_corruption_healed = {
-	flags = {
-		StatFlags.hook,
-	},
-}
-StatDefinitions.hook_ability_time_saved_by_yellow_stimm = {
-	flags = {
-		StatFlags.hook,
-	},
-}
-StatDefinitions.total_syringes_used = {
-	flags = {
-		StatFlags.backend,
-	},
-	data = {},
-	triggers = {
-		{
-			id = "hook_on_syringe_use",
-			trigger = StatMacros.increment,
-		},
+		StatFlags.team,
 	},
 }
 
 do
+	local vo_stats = {
+		{
+			name = "hook_backstory_morrow_part_",
+			num_parts = 9,
+		},
+		{
+			name = "hook_backstory_zola_part_",
+			num_parts = 7,
+		},
+	}
+
+	for i = 1, #vo_stats do
+		local character = vo_stats[i]
+
+		for j = 1, character.num_parts do
+			local name = vo_stats[i].name .. j
+
+			StatDefinitions[name] = {
+				flags = {
+					StatFlags.hook,
+					StatFlags.team,
+				},
+			}
+		end
+	end
+
+	StatDefinitions.hook_on_syringe_use = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.hook_red_stimm_deactivated = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.hook_red_stimm_active = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.hook_blue_stimm_deactivated = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.hook_blue_stimm_active = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.hook_green_stimm_corruption_healed = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.hook_ability_time_saved_by_yellow_stimm = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	StatDefinitions.total_syringes_used = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_on_syringe_use",
+				trigger = StatMacros.increment,
+			},
+		},
+	}
+
 	local _syringe_data = {
 		{
 			color = "green",
@@ -6191,7 +6146,7 @@ do
 
 	local triggers = {}
 
-	for _, template_name in ipairs(NewWeapons) do
+	for _, template_name in ipairs(MechanicusEventWeapons) do
 		triggers[#triggers + 1] = {
 			id = template_name_to_id(template_name),
 			trigger = function (self, stat_data, attack_data)
@@ -6292,6 +6247,216 @@ do
 		},
 		data = {},
 	}
+end
+
+StatDefinitions.survival_currency = {
+	flags = {
+		StatFlags.team,
+		StatFlags.always_log,
+	},
+	triggers = {
+		{
+			id = "team_kill",
+			trigger = function (self, stat_data, attack_data)
+				return increment_by(self, stat_data, 10)
+			end,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "survival"
+	end,
+}
+StatDefinitions.game_mode_survival_waves_score = {
+	flags = {
+		StatFlags.team,
+	},
+	triggers = {
+		{
+			id = "hook_game_mode_survival_waves_completed",
+			trigger = function (self, stat_data, waves_completed)
+				local score = math.floor((waves_completed + 1e-06) / 4)
+
+				return set_to(self, stat_data, score)
+			end,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "survival"
+	end,
+}
+StatDefinitions.game_mode_survival_score_end_of_round = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {},
+	triggers = {
+		{
+			id = "hook_mission_ended",
+			trigger = function (self, stat_data)
+				local survival_waves_score = read_stat(StatDefinitions.game_mode_survival_waves_score, stat_data)
+
+				return set_to(self, stat_data, survival_waves_score)
+			end,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "survival"
+	end,
+}
+StatDefinitions.game_mode_survival_islands_completed = {
+	flags = {
+		StatFlags.backend,
+	},
+	data = {},
+	triggers = {
+		{
+			id = "hook_game_mode_survival_island_completed",
+			trigger = StatMacros.increment,
+		},
+	},
+}
+
+do
+	local islands = {
+		"island_void",
+		"island_rooftops",
+	}
+
+	for i = 1, #islands do
+		local island_name = islands[i]
+
+		stat_name = string.format("horde_win_%s", island_name)
+		StatDefinitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
+			},
+			stat_name = string.format("loc_horde_%s_name", island_name),
+			data = {
+				island_name = island_name,
+			},
+			triggers = {
+				{
+					id = "hook_game_mode_survival_island_completed",
+					trigger = function (self, stat_data, island_completed_name)
+						if island_completed_name == self.data.island_name then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = function (self, config)
+				local game_mode_name = config.game_mode_name
+
+				return game_mode_name == "survival"
+			end,
+		}
+	end
+
+	StatDefinitions.game_mode_survival_mcguffin_returned = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_game_mode_mcguffins_returned",
+				trigger = StatMacros.increment,
+			},
+		},
+	}
+	StatDefinitions.game_mode_survival_game_end_flawless = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_game_mode_survival_game_end",
+				trigger = function (self, stat_data, game_won, completion_time, difficulty)
+					if game_won and difficulty >= 3 and completion_time > 0 and completion_time <= 1500 then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+		include_condition = function (self, config)
+			local game_mode_name = config.game_mode_name
+
+			return game_mode_name == "survival"
+		end,
+	}
+
+	local survival_classes = MissionBuffsAllowed.available_family_builds
+
+	for i = 1, #survival_classes do
+		local class_name = survival_classes[i]
+
+		stat_name = string.format("horde_win_%s_archetype", class_name)
+		StatDefinitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {
+				class_name = class_name,
+			},
+			triggers = {
+				{
+					id = "hook_game_mode_survival_class_completed",
+					trigger = function (self, stat_data, buff_family_selected_by_player)
+						if buff_family_selected_by_player == self.data.class_name then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = function (self, config)
+				local game_mode_name = config.game_mode_name
+
+				return game_mode_name == "survival"
+			end,
+		}
+	end
+
+	local vo_stats = {
+		{
+			name = "backstory_morrow_part_",
+			num_parts = 9,
+		},
+		{
+			name = "backstory_zola_part_",
+			num_parts = 7,
+		},
+	}
+
+	for i = 1, #vo_stats do
+		local character = vo_stats[i]
+		local loc_prefix = "loc_horde_backstory_chapter_"
+
+		for j = 1, character.num_parts do
+			local name = vo_stats[i].name .. j
+			local loc_name = loc_prefix .. j
+
+			StatDefinitions[name] = {
+				flags = {
+					StatFlags.backend,
+				},
+				triggers = {
+					{
+						id = "hook_" .. name,
+						trigger = StatMacros.increment,
+					},
+				},
+				stat_name = loc_name,
+			}
+		end
+	end
 end
 
 StatDefinitions.live_event_darkness_twins_won = {

@@ -2,12 +2,12 @@
 
 local WeaponSpecialInterface = {
 	"fixed_update",
-	"process_hit",
+	"on_exit_damage_window",
 	"on_special_activation",
 	"on_special_deactivation",
-	"on_sweep_action_start",
 	"on_sweep_action_finish",
-	"on_exit_damage_window",
+	"on_sweep_action_start",
+	"process_hit",
 }
 
 return WeaponSpecialInterface

@@ -201,6 +201,43 @@ local RENDER_TEMPLATES = {
 	{
 		apply_on_startup = true,
 		default_value = 0,
+		display_name = "loc_setting_dlss_model",
+		id = "dlss_models",
+		indentation_level = 1,
+		require_apply = true,
+		save_location = "master_render_settings",
+		tooltip_text = "loc_setting_dlss_model_mouseover",
+		validation_function = function ()
+			return Application.render_caps("dlss_supported")
+		end,
+		options = {
+			{
+				display_name = "loc_setting_dlss_model_transformer",
+				id = 0,
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						dlss_model = "default",
+					},
+				},
+			},
+			{
+				display_name = "loc_setting_dlss_model_neural_network",
+				id = 1,
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						dlss_model = "f",
+					},
+				},
+			},
+		},
+	},
+	{
+		apply_on_startup = true,
+		default_value = 0,
 		display_name = "loc_setting_dlss_g",
 		id = "dlss_g",
 		indentation_level = 1,
@@ -223,13 +260,52 @@ local RENDER_TEMPLATES = {
 				},
 			},
 			{
-				display_name = "loc_rt_setting_on",
+				display_name = "loc_setting_dlss_g_2x",
 				id = 1,
 				require_apply = true,
 				require_restart = false,
 				values = {
 					render_settings = {
 						dlss_g_enabled = true,
+						dlss_g_frames_to_generate = 1,
+					},
+					master_render_settings = {
+						nv_reflex_low_latency = 1,
+						vsync = false,
+					},
+				},
+			},
+			{
+				display_name = "loc_setting_dlss_g_3x",
+				id = 2,
+				require_apply = true,
+				require_restart = false,
+				validation_function = function ()
+					return Application.render_caps("dlss_mfg_supported") and Application.render_caps("dlss_mfg_max_frames") >= 2
+				end,
+				values = {
+					render_settings = {
+						dlss_g_enabled = true,
+						dlss_g_frames_to_generate = 2,
+					},
+					master_render_settings = {
+						nv_reflex_low_latency = 1,
+						vsync = false,
+					},
+				},
+			},
+			{
+				display_name = "loc_setting_dlss_g_4x",
+				id = 3,
+				require_apply = true,
+				require_restart = false,
+				validation_function = function ()
+					return Application.render_caps("dlss_mfg_supported") and Application.render_caps("dlss_mfg_max_frames") >= 3
+				end,
+				values = {
+					render_settings = {
+						dlss_g_enabled = true,
+						dlss_g_frames_to_generate = 3,
 					},
 					master_render_settings = {
 						nv_reflex_low_latency = 1,
@@ -244,7 +320,7 @@ local RENDER_TEMPLATES = {
 				id = "vsync",
 				reason = "loc_disable_rule_dlss_g_vsync",
 				validation_function = function (value)
-					return value == 1
+					return value >= 1
 				end,
 			},
 			{
@@ -252,7 +328,7 @@ local RENDER_TEMPLATES = {
 				id = "nv_reflex_low_latency",
 				reason = "loc_disable_rule_dlss_g_reflex",
 				validation_function = function (value)
-					return value == 1
+					return value >= 1
 				end,
 			},
 			{
@@ -311,6 +387,53 @@ local RENDER_TEMPLATES = {
 					render_settings = {
 						nv_low_latency_boost = true,
 						nv_low_latency_mode = true,
+					},
+				},
+			},
+		},
+		disable_rules = {
+			{
+				disable_value = 0,
+				id = "nv_reflex_warp",
+				reason = "loc_disable_rule_reflex_warp",
+				validation_function = function (value)
+					return value == 0
+				end,
+			},
+		},
+	},
+	{
+		apply_on_startup = true,
+		default_value = 0,
+		display_name = "loc_setting_nv_reflex_warp",
+		id = "nv_reflex_warp",
+		indentation_level = 1,
+		require_apply = true,
+		save_location = "master_render_settings",
+		tooltip_text = "loc_setting_nv_reflex_warp_mouseover",
+		validation_function = function ()
+			return Application.render_caps("reflex_warp_supported")
+		end,
+		options = {
+			{
+				display_name = "loc_rt_setting_off",
+				id = 0,
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						reflex_warp_enabled = false,
+					},
+				},
+			},
+			{
+				display_name = "loc_rt_setting_on",
+				id = 1,
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						reflex_warp_enabled = true,
 					},
 				},
 			},
@@ -598,8 +721,25 @@ local RENDER_TEMPLATES = {
 				},
 			},
 			{
-				display_name = "loc_setting_dlss_quality_max_performance",
+				display_name = "loc_setting_xess_quality_ultra_performance",
 				id = 1,
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "ultra_performance",
+						xess_enabled = true,
+					},
+					master_render_settings = {
+						dlss = 0,
+						fsr = 0,
+						fsr2 = 0,
+					},
+				},
+			},
+			{
+				display_name = "loc_setting_xess_quality_performance",
+				id = 2,
 				require_apply = true,
 				require_restart = false,
 				values = {
@@ -615,8 +755,8 @@ local RENDER_TEMPLATES = {
 				},
 			},
 			{
-				display_name = "loc_setting_dlss_quality_balanced",
-				id = 2,
+				display_name = "loc_setting_xess_quality_balanced",
+				id = 3,
 				require_apply = true,
 				require_restart = false,
 				values = {
@@ -632,8 +772,8 @@ local RENDER_TEMPLATES = {
 				},
 			},
 			{
-				display_name = "loc_setting_dlss_quality_max_quality",
-				id = 3,
+				display_name = "loc_setting_xess_quality_quality",
+				id = 4,
 				require_apply = true,
 				require_restart = false,
 				values = {
@@ -649,13 +789,30 @@ local RENDER_TEMPLATES = {
 				},
 			},
 			{
-				display_name = "loc_setting_fsr_quality_ultra_quality",
-				id = 4,
+				display_name = "loc_setting_xess_quality_ultra_quality",
+				id = 5,
 				require_apply = true,
 				require_restart = false,
 				values = {
 					render_settings = {
 						upscaling_quality = "ultra_quality",
+						xess_enabled = true,
+					},
+					master_render_settings = {
+						dlss = 0,
+						fsr = 0,
+						fsr2 = 0,
+					},
+				},
+			},
+			{
+				display_name = "loc_setting_xess_quality_ultra_quality_plus",
+				id = 6,
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "ultra_quality_plus",
 						xess_enabled = true,
 					},
 					master_render_settings = {
@@ -2108,8 +2265,8 @@ local function create_render_settings_entry(template)
 		entry = {
 			options = options,
 			display_name = display_name,
-			on_activated = function (value, template)
-				SettingsUtilities.verify_and_apply_changes(template, value)
+			on_activated = function (value, template, startup)
+				SettingsUtilities.verify_and_apply_changes(template, value, startup)
 			end,
 			on_changed = on_changed or function (value, template)
 				local option
@@ -2197,16 +2354,16 @@ local function create_render_settings_entry(template)
 
 		entry = OptionsUtilities.create_value_slider_template(slider_params)
 
-		entry.on_activated = function (value, template)
-			SettingsUtilities.verify_and_apply_changes(template, value)
+		entry.on_activated = function (value, template, startup)
+			SettingsUtilities.verify_and_apply_changes(template, value, startup)
 		end
 
 		entry.type = "slider"
 	elseif default_value_type == "boolean" then
 		entry = {
 			display_name = display_name,
-			on_activated = function (value, template)
-				SettingsUtilities.verify_and_apply_changes(template, value)
+			on_activated = function (value, template, startup)
+				SettingsUtilities.verify_and_apply_changes(template, value, startup)
 			end,
 			on_changed = on_changed or function (value, template)
 				local dirty = false
@@ -2270,6 +2427,42 @@ local function get_render_resolution()
 	return 0, 0
 end
 
+local function create_resolution_table(index, adapter_index, output_screen, width, height, display_name)
+	display_name = display_name or string.format("%d x %d", width, height)
+
+	return {
+		ignore_localization = true,
+		id = index,
+		display_name = display_name,
+		adapter_index = adapter_index,
+		output_screen = output_screen,
+		width = width,
+		height = height,
+	}
+end
+
+local function create_resolution_options(adapter_index, output_screen, num_modes)
+	local options = {}
+
+	for i = 1, num_modes do
+		local width, height = DisplayAdapter.mode(adapter_index, output_screen, i)
+
+		if width >= DefaultGameParameters.lowest_resolution then
+			local index = #options + 1
+
+			if i == num_modes then
+				local display_name = string.format("%d x %d (%s)", width, height, Localize("loc_settings_resolution_native"))
+
+				options[index] = create_resolution_table(index, adapter_index, output_screen, width, height, display_name)
+			else
+				options[index] = create_resolution_table(index, adapter_index, output_screen, width, height)
+			end
+		end
+	end
+
+	return options
+end
+
 local function generate_resolution_options()
 	if not IS_WINDOWS then
 		return
@@ -2300,52 +2493,16 @@ local function generate_resolution_options()
 			end
 		end
 
-		local options = {}
 		local num_modes = DisplayAdapter.num_modes(adapter_index, output_screen)
-
-		for i = 1, num_modes do
-			local width, height = DisplayAdapter.mode(adapter_index, output_screen, i)
-
-			if width >= DefaultGameParameters.lowest_resolution then
-				local index = #options + 1
-				local display_name = tostring(width) .. " x " .. tostring(height)
-
-				if i == num_modes then
-					display_name = string.format("%d x %d (%s)", width, height, Localize("loc_settings_resolution_native"))
-				end
-
-				options[index] = {
-					ignore_localization = true,
-					id = index,
-					display_name = display_name,
-					adapter_index = adapter_index,
-					output_screen = output_screen,
-					width = width,
-					height = height,
-				}
-			end
-		end
-
+		local options = create_resolution_options(adapter_index, output_screen, num_modes)
 		local resolution_width, resolution_height = get_render_resolution()
 
 		if #options > 0 then
-			options[resolution_undefined_return_value] = {
-				display_name = "loc_setting_resolution_undefined",
-				height = 0,
-				width = 0,
-				id = resolution_undefined_return_value,
-				adapter_index = adapter_index,
-				output_screen = output_screen,
-			}
-			options[resolution_custom_return_value] = {
-				ignore_localization = true,
-				id = resolution_custom_return_value,
-				display_name = string.format("%s (%d x %d)", Localize("loc_setting_resolution_custom"), resolution_width, resolution_height),
-				width = resolution_width,
-				height = resolution_height,
-				adapter_index = adapter_index,
-				output_screen = output_screen,
-			}
+			local display_name = Localize("loc_setting_resolution_undefined")
+
+			options[resolution_undefined_return_value] = create_resolution_table(resolution_undefined_return_value, adapter_index, output_screen, 0, 0, display_name)
+			display_name = string.format("%s (%d x %d)", Localize("loc_setting_resolution_custom"), resolution_width, resolution_height)
+			options[resolution_custom_return_value] = create_resolution_table(resolution_custom_return_value, adapter_index, output_screen, resolution_width, resolution_height, display_name)
 		end
 
 		return options
@@ -2379,8 +2536,8 @@ render_settings[#render_settings + 1] = {
 	default_value = default_value,
 	min_value = min_value,
 	max_value = max_value,
-	on_activated = function (value, template)
-		SettingsUtilities.verify_and_apply_changes(template, value)
+	on_activated = function (value, template, startup)
+		SettingsUtilities.verify_and_apply_changes(template, value, startup)
 	end,
 	on_changed = function (value, template)
 		Application.set_user_setting("render_settings", "vertical_fov", value)
@@ -2436,8 +2593,8 @@ render_settings[#render_settings + 1] = {
 	validation_function = function ()
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
 	end,
-	on_activated = function (value, template)
-		SettingsUtilities.verify_and_apply_changes(template, value)
+	on_activated = function (value, template, startup)
+		SettingsUtilities.verify_and_apply_changes(template, value, startup)
 	end,
 	on_changed = function (value, template)
 		if value == resolution_undefined_return_value or value == resolution_custom_return_value then
@@ -2518,8 +2675,8 @@ if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA th
 				},
 			},
 		},
-		on_activated = function (value, template)
-			SettingsUtilities.verify_and_apply_changes(template, value)
+		on_activated = function (value, template, startup)
+			SettingsUtilities.verify_and_apply_changes(template, value, startup)
 		end,
 		on_changed = function (value, template)
 			local options = template.options
@@ -2584,8 +2741,8 @@ if IS_PLAYSTATION and not Application.is_trinity() then
 				},
 			},
 		},
-		on_activated = function (value, template)
-			SettingsUtilities.verify_and_apply_changes(template, value)
+		on_activated = function (value, template, startup)
+			SettingsUtilities.verify_and_apply_changes(template, value, startup)
 		end,
 		on_changed = function (value, template)
 			local options = template.options

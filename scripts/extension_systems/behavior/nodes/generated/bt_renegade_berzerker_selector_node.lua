@@ -47,7 +47,19 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_exit_spawner = children[2]
+		local node_disable = children[2]
+		local disable_component = blackboard.disable
+		local condition_result = disable_component.is_disabled
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_disable
+
+			return node_disable
+		end
+	end
+
+	do
+		local node_exit_spawner = children[3]
 		local spawn_component = blackboard.spawn
 		local condition_result = spawn_component.is_exiting_spawner
 
@@ -59,7 +71,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_smart_object = children[3]
+		local node_smart_object = children[4]
 		local condition_result
 
 		repeat
@@ -118,7 +130,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_stagger = children[4]
+		local node_stagger = children[5]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -131,7 +143,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_blocked = children[5]
+		local node_blocked = children[6]
 		local blocked_component = blackboard.blocked
 		local is_blocked = blocked_component.is_blocked
 		local condition_result = is_blocked
@@ -144,7 +156,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_follow = children[6]
+		local node_follow = children[7]
 		local tree_node = node_follow.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_follow
@@ -219,7 +231,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_assault_follow = children[7]
+		local node_assault_follow = children[8]
 		local tree_node = node_assault_follow.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_assault_follow
@@ -294,7 +306,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_melee_combat = children[8]
+		local node_melee_combat = children[9]
 		local tree_node = node_melee_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_melee_combat
@@ -373,7 +385,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_alerted = children[9]
+		local node_alerted = children[10]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted
 		local condition_result
 
@@ -422,7 +434,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 	end
 
 	do
-		local node_patrol = children[10]
+		local node_patrol = children[11]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -473,7 +485,7 @@ BtRenegadeBerzerkerSelectorNode.evaluate = function (self, unit, blackboard, scr
 		end
 	end
 
-	local node_idle = children[11]
+	local node_idle = children[12]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

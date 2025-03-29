@@ -5,13 +5,17 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
+local ProjectileSettings = require("scripts/settings/projectile/projectile_settings")
 local damage_types = DamageSettings.damage_types
+local projectile_types = ProjectileSettings.projectile_types
 local projectile_templates = {}
 
 projectile_templates.renegade_grenadier_fire_grenade = {
 	impact_damage_type = "minion_grenade",
+	item_name = "content/items/weapons/minions/ranged/renegade_grenade",
 	spawn_flow_event = "grenade_thrown",
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade,
+	projectile_type = projectile_types.minion_grenade,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.renegade_grenadier_grenade_blunt,
@@ -48,8 +52,10 @@ projectile_templates.renegade_grenadier_fire_grenade = {
 	},
 }
 projectile_templates.renegade_captain_frag_grenade = {
+	item_name = "content/items/weapons/minions/ranged/renegade_grenade",
 	spawn_flow_event = "grenade_thrown",
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade,
+	projectile_type = projectile_types.minion_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 1.2,
@@ -84,8 +90,10 @@ projectile_templates.renegade_captain_frag_grenade = {
 	},
 }
 projectile_templates.renegade_frag_grenade = {
+	item_name = "content/items/weapons/minions/ranged/renegade_grenade",
 	spawn_flow_event = "grenade_thrown",
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade,
+	projectile_type = projectile_types.minion_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 1.2,
@@ -104,24 +112,26 @@ projectile_templates.renegade_frag_grenade = {
 				particle_name = "content/fx/particles/weapons/grenades/grenadier_trail",
 			},
 			sfx = {
-				event_name = "wwise/events/weapon/play_minion_grenadier_fire_grenade_throw_beep",
+				event_name = "wwise/events/weapon/play_minion_frag_grenade_throw_beep",
 			},
 		},
 		impact = {
 			sfx = {
-				event_name = "wwise/events/weapon/stop_enemy_combat_grenadier_throw_beep",
+				event_name = "wwise/events/weapon/stop_minion_frag_grenade_throw_beep",
 			},
 		},
 		fuse = {
 			sfx = {
-				event_name = "wwise/events/weapon/play_minion_grenadier_fire_grenade_fuse",
+				event_name = "wwise/events/weapon/play_minion_frag_grenade_fuse",
 			},
 		},
 	},
 }
 projectile_templates.renegade_captain_fire_grenade = {
+	item_name = "content/items/weapons/minions/ranged/renegade_grenade",
 	spawn_flow_event = "grenade_thrown",
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade,
+	projectile_type = projectile_types.minion_grenade,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.renegade_grenadier_grenade_blunt,
@@ -157,8 +167,10 @@ projectile_templates.renegade_captain_fire_grenade = {
 	},
 }
 projectile_templates.cultist_grenadier_grenade = {
+	item_name = "content/items/weapons/minions/ranged/cultist_grenade",
 	spawn_flow_event = "grenade_thrown",
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade_cultist_grenadier,
+	projectile_type = projectile_types.minion_grenade,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.renegade_grenadier_grenade_blunt,
@@ -168,7 +180,7 @@ projectile_templates.cultist_grenadier_grenade = {
 			fuse_time = 2,
 			impact_triggered = true,
 			max_lifetime = 12,
-			skip_reset = true,
+			skip_fuse_reset = true,
 			explosion_template = ExplosionTemplates.cultist_grenadier_gas_grenade_impact,
 			liquid_area_template = LiquidAreaTemplates.cultist_grenadier_gas,
 		},
@@ -198,9 +210,11 @@ projectile_templates.cultist_grenadier_grenade = {
 	},
 }
 projectile_templates.twin_grenade = {
+	item_name = "content/items/weapons/minions/ranged/twin_grenade",
 	spawn_flow_event = "grenade_thrown",
 	uses_script_components = true,
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade_twin,
+	projectile_type = projectile_types.minion_grenade,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.renegade_grenadier_grenade_blunt,
@@ -216,7 +230,7 @@ projectile_templates.twin_grenade = {
 			max_lifetime = 180,
 			proximity_radius = 2,
 			proximity_triggered = true,
-			skip_reset = false,
+			skip_fuse_reset = false,
 			explosion_template = ExplosionTemplates.twin_gas_grenade_impact,
 		},
 	},
@@ -252,8 +266,10 @@ projectile_templates.twin_grenade = {
 	},
 }
 projectile_templates.renegade_shocktrooper_frag_grenade = {
+	item_name = "content/items/weapons/minions/ranged/renegade_grenade",
 	spawn_flow_event = "grenade_thrown",
 	locomotion_template = ProjectileLocomotionTemplates.minion_grenade,
+	projectile_type = projectile_types.minion_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 0,
@@ -270,6 +286,62 @@ projectile_templates.renegade_shocktrooper_frag_grenade = {
 				link = true,
 				orphaned_policy = "destroy",
 				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+		},
+	},
+}
+projectile_templates.mutator_pestilent_bauble_projectile = {
+	item_name = "content/items/weapons/minions/ranged/twin_grenade",
+	spawn_flow_event = "grenade_thrown",
+	uses_script_components = true,
+	locomotion_template = ProjectileLocomotionTemplates.mutator_pestilent_bauble,
+	projectile_type = projectile_types.minion_grenade,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.renegade_grenadier_grenade_blunt,
+			damage_type = damage_types.physical,
+		},
+		fuse = {
+			aoe_threat_duration = 1,
+			aoe_threat_size = 3,
+			arm_time = 3,
+			explosion_z_offset = 0.5,
+			fuse_time = 1,
+			kill_at_lifetime = 180,
+			max_lifetime = 180,
+			proximity_radius = 2,
+			proximity_triggered = true,
+			skip_fuse_reset = false,
+			explosion_template = ExplosionTemplates.twin_gas_grenade_impact,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/enemies/cultist_blight_grenadier/cultist_gas_grenade_trail",
+			},
+			sfx = {
+				event_name = "wwise/events/weapon/play_minion_twin_captain_throw_beep",
+			},
+		},
+		impact = {
+			flow_event = "on_impact",
+			num_impacts = 1,
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/enemies/cultist_blight_grenadier/cultist_gas_grenade_smoke",
+			},
+			sfx = {
+				event_name = "wwise/events/weapon/play_minion_gas_proximity_mine_impact_ground",
+			},
+		},
+		fuse = {
+			flow_event = "fuse_started",
+			sfx = {
+				event_name = "wwise/events/weapon/play_minion_gas_proximity_mine_fuse",
 			},
 		},
 	},

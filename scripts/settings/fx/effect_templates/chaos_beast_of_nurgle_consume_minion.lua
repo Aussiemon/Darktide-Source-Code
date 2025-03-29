@@ -29,7 +29,7 @@ local effect_template = {
 			local target_unit = template_data.target_unit
 
 			if ALIVE[target_unit] then
-				Managers.state.minion_spawn:despawn(template_data.target_unit)
+				Managers.state.minion_spawn:despawn_minion(template_data.target_unit)
 			end
 		end
 	end,

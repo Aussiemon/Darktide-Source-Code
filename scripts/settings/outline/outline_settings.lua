@@ -88,6 +88,25 @@ templates.MinionOutlineExtension = {
 			return true
 		end,
 	},
+	hordes_tagged_remaining_target = {
+		priority = 4,
+		material_layers = {
+			"minion_outline",
+			"minion_outline_reversed_depth",
+		},
+		color = {
+			0,
+			0.73,
+			1,
+		},
+		visibility_check = function (unit)
+			if not HEALTH_ALIVE[unit] then
+				return false
+			end
+
+			return true
+		end,
+	},
 }
 templates.PropOutlineExtension = {
 	scanning = {

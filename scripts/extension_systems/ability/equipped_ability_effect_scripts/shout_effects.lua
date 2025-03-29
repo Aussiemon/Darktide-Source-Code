@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/ability/equipped_ability_effect_scripts/shout_effects.lua
 
 local AbilityTemplate = require("scripts/utilities/ability/ability_template")
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local ShoutEffects = class("ShoutEffects")
 local AIM_EFFECT = "content/fx/particles/abilities/ability_radius_aoe"
 local DEFAULT_RADIUS = 8

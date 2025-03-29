@@ -21,6 +21,7 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 	self._dynamic_mesh_spawning = dynamic_mesh_spawning
 	self._sparse_graph_dirty = false
 	self._level_spawned = false
+	self._sparse_nav_graph_nav_data = nil
 	self._sparse_nav_graph_connected = false
 
 	local nav_tag_volume_data = self:_require_nav_tag_volume_data(level_name, {})
@@ -263,6 +264,9 @@ end
 NavMeshManager.destroy = function (self)
 	self:_destroy_nav_cost_maps()
 	self:_destroy_nav_tag_volumes()
+	GwNavWorld.disconnect_sparse_graph(self._nav_world, self._sparse_nav_graph_nav_data)
+
+	self._sparse_nav_graph_connected = false
 
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
@@ -432,6 +436,10 @@ NavMeshManager.update_time_slice_volumes_integration = function (self)
 	return done
 end
 
+NavMeshManager.nav_world = function (self)
+	return self._nav_world
+end
+
 NavMeshManager.on_gameplay_post_init = function (self)
 	self:_connect_sparse_graph()
 
@@ -441,8 +449,7 @@ end
 NavMeshManager._connect_sparse_graph = function (self)
 	local num_nav_tag_layers = #self._nav_tag_layer_lookup
 
-	GwNavWorld.connect_sparse_graph(self._nav_world)
-
+	self._sparse_nav_graph_nav_data = GwNavWorld.connect_sparse_graph(self._nav_world)
 	self._sparse_nav_graph_connected = true
 end
 

@@ -12,10 +12,16 @@ MechanismHub.init = function (self, ...)
 	MechanismHub.super.init(self, ...)
 
 	local mission_name = "hub_ship"
+	local level_name = Missions[mission_name].level
+	local circumstance_name = "default"
+	local data = self._mechanism_data
 
-	self._hub_mission_name = mission_name
-	self._hub_level_name = Missions[mission_name].level
-	self._hub_circumstance_name = "default"
+	data.challenge = DevParameters.challenge
+	data.resistance = DevParameters.resistance
+	data.level_name = level_name
+	data.mission_name = mission_name
+	data.circumstance_name = circumstance_name
+	data.side_mission = GameParameters.side_mission
 	self._hub_config_request = false
 	self._fetching_client_data = false
 	self._refresh_vo_story_stage = not DEDICATED_SERVER
@@ -113,6 +119,7 @@ end
 
 MechanismHub.wanted_transition = function (self)
 	local state = self._state
+	local mechanism_data = self._mechanism_data
 
 	if state == "init" then
 		if DEDICATED_SERVER then
@@ -148,7 +155,7 @@ MechanismHub.wanted_transition = function (self)
 		end
 	elseif state == "request_hub_config" then
 		if not DEDICATED_SERVER or GameParameters.circumstance and GameParameters.circumstance ~= "default" then
-			self._hub_circumstance_name = GameParameters.circumstance
+			mechanism_data.circumstance_name = GameParameters.circumstance
 
 			self:_set_state("init_hub")
 
@@ -160,20 +167,20 @@ MechanismHub.wanted_transition = function (self)
 				Managers.backend.interfaces.hub_session:get_hub_config():next(function (config)
 					Log.info("MechanismHub", "Loaded circumstance_name %s", config.circumstanceName)
 
-					self._hub_circumstance_name = config.circumstanceName
+					mechanism_data.circumstance_name = config.circumstanceName
 
 					self:_set_state("init_hub")
 				end):catch(function (error)
 					Log.error("MechanismHub", "Could not load hub_config from backend, falling back to default circumstance_name, error=%s", table.tostring(error, 3))
 
-					self._hub_circumstance_name = "default"
+					mechanism_data.circumstance_name = "default"
 
 					self:_set_state("init_hub")
 				end)
 			else
 				Log.error("MechanismHub", "Could not load hub_config from backend, not authenticated, falling back to default circumstance_name")
 
-				self._hub_circumstance_name = "default"
+				mechanism_data.circumstance_name = "default"
 
 				self:_set_state("init_hub")
 			end
@@ -185,23 +192,19 @@ MechanismHub.wanted_transition = function (self)
 	elseif state == "init_hub" then
 		self:_set_state("in_hub")
 
-		local challenge = DevParameters.challenge
-		local resistance = DevParameters.resistance
-		local side_mission = GameParameters.side_mission
+		local mission_name = mechanism_data.mission_name
+		local level_name = mechanism_data.level_name
+		local challenge = mechanism_data.challenge
+		local resistance = mechanism_data.resistance
+		local side_mission = mechanism_data.side_mission
+		local circumstance_name = mechanism_data.circumstance_name
 
 		Log.info("MechanismHub", "Using dev parameters for challenge and resistance (%s/%s)", challenge, resistance)
 
-		local mechanism_data = {
-			challenge = challenge,
-			resistance = resistance,
-			circumstance_name = self._hub_circumstance_name,
-			side_mission = side_mission,
-		}
-
 		return false, StateLoading, {
-			level = self._hub_level_name,
-			mission_name = self._hub_mission_name,
-			circumstance_name = self._hub_circumstance_name,
+			level = level_name,
+			mission_name = mission_name,
+			circumstance_name = circumstance_name,
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {

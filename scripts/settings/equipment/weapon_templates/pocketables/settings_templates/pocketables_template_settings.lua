@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/pocketables/settings_templates/pocketables_template_settings.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -102,7 +102,7 @@ pocketables_template_settings.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(pocketables_template_settings.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(pocketables_template_settings.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 pocketables_template_settings.actions = {
 	action_unwield = {

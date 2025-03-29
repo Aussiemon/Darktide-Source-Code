@@ -54,6 +54,10 @@ MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state, initiali
 		Managers.state.cinematic:stop_all_stories()
 	end
 
+	if Managers.state.game_mode then
+		Managers.state.game_mode:cleanup_game_mode_dynamic_lavels()
+	end
+
 	if world then
 		local level = shared_state.level
 		local themes = shared_state.themes
@@ -204,12 +208,23 @@ MissionCleanupUtilies._despawn_units = function (is_server, world, level, themes
 end
 
 MissionCleanupUtilies._destroy_nav_world = function (shared_state)
+	local nav_data = shared_state.nav_data
+
+	if nav_data then
+		for i = #nav_data, 1, -1 do
+			local data = nav_data[i]
+
+			GwNavWorld.remove_navdata(data)
+		end
+
+		shared_state.nav_data = nil
+	end
+
 	local nav_world = shared_state.nav_world
 
 	if nav_world then
 		GwNavWorld.destroy(nav_world)
 
-		shared_state.nav_data = nil
 		shared_state.nav_world = nil
 	end
 end

@@ -9,8 +9,9 @@ HazardProp.init = function (self, unit, is_server)
 
 	if hazard_prop_extension then
 		local hazard_shape = self:get_data(unit, "hazard_shape")
+		local broadphase_radius = self:get_data(unit, "broadphase_radius")
 
-		hazard_prop_extension:setup_from_component(hazard_shape)
+		hazard_prop_extension:setup_from_component(hazard_shape, broadphase_radius)
 
 		self._hazard_prop_extension = hazard_prop_extension
 	end
@@ -60,6 +61,15 @@ HazardProp.component_data = {
 			"barrel",
 			"sphere",
 		},
+	},
+	broadphase_radius = {
+		decimals = 2,
+		max = 40,
+		min = 0.1,
+		step = 0.1,
+		ui_name = "Broadphase Radius",
+		ui_type = "number",
+		value = 0.5,
 	},
 }
 

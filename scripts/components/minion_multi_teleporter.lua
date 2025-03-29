@@ -165,6 +165,10 @@ MinionMultiTeleporter.editor_destroy = function (self, unit)
 
 	teleporter_units[unit] = nil
 
+	if MinionMultiTeleporter._nav_info ~= nil then
+		SharedNav.destroy(MinionMultiTeleporter._nav_info)
+	end
+
 	local world, line_object = self._world, self._line_object
 
 	LineObject.reset(line_object)

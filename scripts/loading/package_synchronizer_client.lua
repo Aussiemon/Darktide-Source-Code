@@ -39,6 +39,7 @@ PackageSynchronizerClient.init = function (self, peer_id, is_host, network_deleg
 	self._host_channel_id = host_channel_id
 	self._packages = {}
 	self.NO_LOOKUP = 0
+	self._enabled_peers_cache = {}
 	self._pending_peers = {}
 	self._player_alias_versions = {}
 	self._player_profile_cache = {}
@@ -99,7 +100,7 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 	end
 
 	local data = {
-		enabled = false,
+		enabled = self._enabled_peers_cache[peer_id] or false,
 		peer_packages = packages,
 	}
 
@@ -122,6 +123,7 @@ PackageSynchronizerClient.remove_peer = function (self, peer_id)
 	self._pending_peers[peer_id] = nil
 	self._player_alias_versions[peer_id] = nil
 	self._player_profile_cache[peer_id] = nil
+	self._enabled_peers_cache[peer_id] = nil
 end
 
 PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
@@ -680,6 +682,7 @@ end
 
 PackageSynchronizerClient.enable_peers = function (self, peer_ids)
 	local packages = self._packages
+	local enabled_peers_cache = self._enabled_peers_cache
 
 	for i = 1, #peer_ids do
 		local peer_id = peer_ids[i]
@@ -687,6 +690,8 @@ PackageSynchronizerClient.enable_peers = function (self, peer_ids)
 		if packages[peer_id] then
 			packages[peer_id].enabled = true
 		end
+
+		enabled_peers_cache[peer_id] = true
 	end
 end
 

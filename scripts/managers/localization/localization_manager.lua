@@ -233,7 +233,7 @@ LocalizationManager.localize = function (self, key, no_cache, context)
 		end
 	end
 
-	local str, err = self:_process_string(raw_str, context)
+	local str, err = self:_process_string(key, raw_str, context)
 
 	if err then
 		return _handle_error(key, err)
@@ -244,7 +244,7 @@ LocalizationManager.localize = function (self, key, no_cache, context)
 	return str
 end
 
-local function _apply_macro_callback(errors, macro_name, macro_param)
+local function _apply_macro_callback(key, errors, macro_name, macro_param)
 	local macro_func = LocalizationMacros[macro_name]
 
 	if not macro_func then
@@ -260,13 +260,14 @@ local function _apply_macro_callback(errors, macro_name, macro_param)
 	return macro_func(macro_param)
 end
 
-local function _apply_interpolation_callback(errors, context, context_key, format)
+local function _apply_interpolation_callback(string_key, errors, context, context_key, format)
 	local context_value = context and context[context_key]
 
 	if not context_value then
-		errors[#errors + 1] = string.format("context.%s undefined", context_key)
+		Log.error("LocalizationManager", "Missing context value for key %q in %s", context_key, string_key)
 
-		return ""
+		format = "%s"
+		context_value = string.format("\"%s:N/A\"", context_key)
 	end
 
 	if format == "" then
@@ -284,17 +285,17 @@ local function _apply_interpolation_callback(errors, context, context_key, forma
 	end
 end
 
-local error_table = {}
+local _error_table = {}
 
-LocalizationManager._process_string = function (self, str, context)
-	table.clear(error_table)
+LocalizationManager._process_string = function (self, key, raw_str, context)
+	table.clear(_error_table)
 
-	str = string.gsub(str, "%$([%a%d_]*):*([%a%d,_]*)%$", callback(_apply_macro_callback, error_table))
-	str = string.gsub(str, "{([%a%d_]*):*([%a%d%.%%]*)}", callback(_apply_interpolation_callback, error_table, context))
+	raw_str = string.gsub(raw_str, "%$([%a%d_]*):*([%a%d,_]*)%$", callback(_apply_macro_callback, key, _error_table))
+	raw_str = string.gsub(raw_str, "{([%a%d_]*):*([%a%d%.%%]*)}", callback(_apply_interpolation_callback, key, _error_table, context))
 
-	local error_string = #error_table > 0 and table.concat(error_table, "; ") or nil
+	local error_string = #_error_table > 0 and table.concat(_error_table, "; ") or nil
 
-	return str, error_string
+	return raw_str, error_string
 end
 
 LocalizationManager.exists = function (self, key)

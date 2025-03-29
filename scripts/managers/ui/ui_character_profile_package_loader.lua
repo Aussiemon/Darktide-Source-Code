@@ -65,11 +65,11 @@ UICharacterProfilePackageLoader.is_slot_loaded = function (self, slot_id, item_n
 end
 
 UICharacterProfilePackageLoader.is_all_loaded = function (self)
-	for _, loading_data in pairs(self._slots_loading_data) do
+	if not table.is_empty(self._slots_loading_data) then
 		return false
 	end
 
-	for _, item_name in pairs(self._slots_item_loaded) do
+	if not table.is_empty(self._slots_item_loaded) then
 		return true
 	end
 
@@ -82,6 +82,8 @@ UICharacterProfilePackageLoader.unload_slot = function (self, slot_id)
 	self:_unload_slot(slot_id, packages_to_unload)
 	self:_unload_packages(packages_to_unload)
 end
+
+local item_instance_dependencies = Script.new_map(32)
 
 UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, complete_callback)
 	local packages_to_unload = {}
@@ -98,10 +100,13 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 
 	local item_definitions = self._item_definitions
 	local mission_template = self._mission_template
-	local dependencies = ItemPackage.compile_item_instance_dependencies(item, item_definitions, nil, mission_template)
+
+	table.clear(item_instance_dependencies)
+	ItemPackage.compile_item_instance_dependencies(item, item_definitions, item_instance_dependencies, mission_template)
+
 	local packages_to_load = {}
 
-	for package_name, _ in pairs(dependencies) do
+	for package_name, _ in pairs(item_instance_dependencies) do
 		packages_to_load[#packages_to_load + 1] = package_name
 	end
 
@@ -114,11 +119,11 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 
 		self._slots_item_loaded[slot_id] = nil
 		self._slots_loading_data[slot_id] = {
-			packages = table.clone(packages_to_load),
+			packages = packages_to_load,
 			item_name = item_name,
 		}
 
-		local package_ids = {}
+		local package_ids = Script.new_array(num_packages_to_load)
 		local use_resident_loading = true
 
 		if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
@@ -176,7 +181,6 @@ UICharacterProfilePackageLoader.cb_on_slot_item_package_loaded = function (self,
 end
 
 UICharacterProfilePackageLoader._unload_slot = function (self, slot_id, packages_to_unload)
-	local package_manager = Managers.package
 	local packages = self._slots_package_ids[slot_id]
 
 	if packages then

@@ -9,6 +9,23 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_powersword_2h_p1_power_bonus_scaled_on_heat = {
+	format_values = {
+		amount = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_power_bonus_scaled_on_heat",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+			value_manipulation = function (value)
+				return value * 5 * 100
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_power_bonus_scaled_on_heat = {
 			{
@@ -35,6 +52,29 @@ templates.weapon_trait_bespoke_powersword_2h_p1_power_bonus_scaled_on_heat = {
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_reduce_fixed_overheat_amount_parent = {
+	format_values = {
+		amount = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_reduce_fixed_overheat_amount_parent",
+				find_value_type = "trait_override",
+				path = {
+					"overheat_reduction",
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_reduce_fixed_overheat_amount_parent",
+				find_value_type = "trait_override",
+				path = {
+					"duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_reduce_fixed_overheat_amount_parent = {
 			{
@@ -57,6 +97,55 @@ templates.weapon_trait_bespoke_powersword_2h_p1_reduce_fixed_overheat_amount_par
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_chained_weakspot_hits_increase_finesse_and_reduce_overheat = {
+	format_values = {
+		buildup_amount = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_chained_weakspot_hits_increase_finesse_and_reduce_overheat_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.overheat_amount,
+				},
+			},
+			value_manipulation = function (value)
+				return 100 - value * 100
+			end,
+		},
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_chained_weakspot_hits_increase_finesse_and_reduce_overheat_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.finesse_modifier_bonus,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_chained_weakspot_hits_increase_finesse_and_reduce_overheat_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+		duration = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_chained_weakspot_hits_increase_finesse_and_reduce_overheat_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_chained_weakspot_hits_increase_finesse_and_reduce_overheat_parent = {
 			{
@@ -87,6 +176,41 @@ templates.weapon_trait_bespoke_powersword_2h_p1_chained_weakspot_hits_increase_f
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_increased_melee_damage_on_multiple_hits = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_increased_melee_damage_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		multiple_hit = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_increased_melee_damage_on_multiple_hits",
+				find_value_type = "buff_template",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_increased_melee_damage_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_increased_melee_damage_on_multiple_hits = {
 			{
@@ -117,6 +241,30 @@ templates.weapon_trait_bespoke_powersword_2h_p1_increased_melee_damage_on_multip
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_chained_hits_increases_melee_cleave = {
+	format_values = {
+		cleave = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_chained_hits_increases_melee_cleave_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.max_hit_mass_attack_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_chained_hits_increases_melee_cleave_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_chained_hits_increases_melee_cleave_parent = {
 			{
@@ -143,6 +291,30 @@ templates.weapon_trait_bespoke_powersword_2h_p1_chained_hits_increases_melee_cle
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_windup_increases_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_windup_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_windup_increases_power_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_windup_increases_power_parent = {
 			{
@@ -169,6 +341,30 @@ templates.weapon_trait_bespoke_powersword_2h_p1_windup_increases_power = {
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_infinite_melee_cleave_on_crit = {
+	format_values = {
+		hit_mass = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_infinite_melee_cleave_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.max_hit_mass_attack_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_infinite_melee_cleave_on_crit",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_infinite_melee_cleave_on_crit = {
 			{
@@ -195,6 +391,18 @@ templates.weapon_trait_bespoke_powersword_2h_p1_infinite_melee_cleave_on_crit = 
 	},
 }
 templates.weapon_trait_bespoke_bespoke_powersword_2h_p1_block_activate_weapon_special = {
+	format_values = {
+		cooldown = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_bespoke_powersword_2h_p1_block_activate_weapon_special",
+				find_value_type = "trait_override",
+				path = {
+					"cooldown_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_bespoke_powersword_2h_p1_block_activate_weapon_special = {
 			{
@@ -213,6 +421,30 @@ templates.weapon_trait_bespoke_bespoke_powersword_2h_p1_block_activate_weapon_sp
 	},
 }
 templates.weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_toughness_on_multiple_hits_by_weapon_special = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_toughness_on_multiple_hits_by_weapon_special",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+		num_hits = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_toughness_on_multiple_hits_by_weapon_special",
+				find_value_type = "buff_template",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_toughness_on_multiple_hits_by_weapon_special = {
 			{
@@ -231,6 +463,19 @@ templates.weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_toughness_on_mult
 	},
 }
 templates.weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_stamina_on_weapon_special_hit = {
+	format_values = {
+		stamina = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_stamina_on_weapon_special_hit",
+				find_value_type = "trait_override",
+				path = {
+					"stamina_fixed_percentage",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_stamina_on_weapon_special_hit = {
 			{
@@ -249,19 +494,57 @@ templates.weapon_trait_bespoke_bespoke_powersword_2h_p1_regain_stamina_on_weapon
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_block = {
+	format_values = {
+		heat_reduction = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_block",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.overheat_over_time_amount,
+				},
+			},
+			value_manipulation = function (value)
+				return 100 - value * 100
+			end,
+		},
+		heat_dissipation = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_block",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.overheat_dissipation_multiplier,
+				},
+			},
+			value_manipulation = function (value)
+				return value * 100 - 100
+			end,
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_block",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+		interval = {
+			format_type = "number",
+			value = 5,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_block = {
 			{
 				active_duration = 5,
-				cooldown_duration = 3,
-				proc_stat_buffs = {
-					[stat_buffs.overheat_over_time_amount] = 0.86,
-					[stat_buffs.overheat_dissipation_multiplier] = 1.02,
-				},
-			},
-			{
-				active_duration = 5,
-				cooldown_duration = 3,
+				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.overheat_over_time_amount] = 0.84,
 					[stat_buffs.overheat_dissipation_multiplier] = 1.03,
@@ -269,7 +552,7 @@ templates.weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_b
 			},
 			{
 				active_duration = 5,
-				cooldown_duration = 3,
+				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.overheat_over_time_amount] = 0.82,
 					[stat_buffs.overheat_dissipation_multiplier] = 1.04,
@@ -277,50 +560,99 @@ templates.weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_b
 			},
 			{
 				active_duration = 5,
-				cooldown_duration = 3,
+				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.overheat_over_time_amount] = 0.8,
 					[stat_buffs.overheat_dissipation_multiplier] = 1.05,
+				},
+			},
+			{
+				active_duration = 5,
+				cooldown_duration = 0,
+				proc_stat_buffs = {
+					[stat_buffs.overheat_over_time_amount] = 0.78,
+					[stat_buffs.overheat_dissipation_multiplier] = 1.06,
 				},
 			},
 		},
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_attack_speed_on_perfect_block = {
+	format_values = {
+		attack_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_attack_speed_on_perfect_block",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.melee_attack_speed,
+				},
+			},
+		},
+		duration = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_attack_speed_on_perfect_block",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+		interval = {
+			format_type = "number",
+			value = 5,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_attack_speed_on_perfect_block = {
 			{
-				active_duration = 3,
-				cooldown_duration = 5,
-				proc_stat_buffs = {
-					[stat_buffs.melee_attack_speed] = 0.04,
-				},
-			},
-			{
-				active_duration = 3,
-				cooldown_duration = 5,
+				active_duration = 5,
+				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.06,
 				},
 			},
 			{
-				active_duration = 3,
-				cooldown_duration = 5,
+				active_duration = 5,
+				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.08,
 				},
 			},
 			{
-				active_duration = 3,
-				cooldown_duration = 5,
+				active_duration = 5,
+				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.1,
+				},
+			},
+			{
+				active_duration = 5,
+				cooldown_duration = 0,
+				proc_stat_buffs = {
+					[stat_buffs.melee_attack_speed] = 0.12,
 				},
 			},
 		},
 	},
 }
 templates.weapon_trait_bespoke_powersword_2h_p1_explosion_on_overheat_lockout = {
+	format_values = {
+		overheat_reduction = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_powersword_2h_p1_explosion_on_overheat_lockout",
+				find_value_type = "trait_override",
+				path = {
+					"overheat_reduction",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_explosion_on_overheat_lockout = {
 			{

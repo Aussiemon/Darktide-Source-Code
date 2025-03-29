@@ -8,6 +8,19 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills = {
 			{
@@ -26,6 +39,50 @@ templates.weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills = {
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		rending = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"stat_buffs",
+					stat_buffs.rending_multiplier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"duration",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff = {
 			{
@@ -52,6 +109,24 @@ templates.weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff = {
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = {
 			{
@@ -78,6 +153,26 @@ templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = {
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge = {
+	format_values = {
+		charge_speed = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.charge_up_time,
+				},
+			},
+			value_manipulation = function (value)
+				return math.abs(value * 100)
+			end,
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge = {
 			{
@@ -104,6 +199,32 @@ templates.weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge =
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		ranged_crit_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.ranged_critical_strike_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat = {
 			{
@@ -134,6 +255,23 @@ templates.weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat = {
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_scaled_on_heat = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_power_bonus_scaled_on_heat",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+			value_manipulation = function (value)
+				return value * 5 * 100
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_power_bonus_scaled_on_heat = {
 			{
@@ -160,6 +298,23 @@ templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_scaled_on_heat = {
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike = {
+	format_values = {
+		heat_percentage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.overheat_immediate_amount_critical_strike,
+				},
+			},
+			value_manipulation = function (value)
+				return 100 - math.round(value * 100)
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike = {
 			{
@@ -186,6 +341,23 @@ templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike 
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire = {
+	format_values = {
+		overheat_reduction = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.overheat_amount,
+				},
+			},
+		},
+		stacks = {
+			format_type = "string",
+			value = "5",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire = {
 			{
@@ -212,6 +384,33 @@ templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire 
 	},
 }
 templates.weapon_trait_bespoke_plasmagun_p1_charge_level_increases_critical_strike_chance = {
+	format_values = {
+		crit_chance_min = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_charge_level_increases_critical_strike_chance",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		crit_chance_max = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_charge_level_increases_critical_strike_chance",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+			value_manipulation = function (value)
+				return value * 5 * 100
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_plasmagun_p1_charge_level_increases_critical_strike_chance = {
 			{

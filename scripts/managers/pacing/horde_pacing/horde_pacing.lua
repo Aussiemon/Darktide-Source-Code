@@ -20,6 +20,11 @@ end
 HordePacing.on_gameplay_post_init = function (self, level, template)
 	local template_first_spawn_timer_modifer = math.random_range(template.first_spawn_timer_modifer[1], template.first_spawn_timer_modifer[2])
 	local first_spawn_timer_modifer = template_first_spawn_timer_modifer and self._timer_modifier * template_first_spawn_timer_modifer
+	local template_override = Managers.state.pacing:get_horde_pacing_override_tempate()
+
+	if template_override then
+		template = template_override
+	end
 
 	self._coordinated_horde_strikes = {}
 
@@ -529,8 +534,6 @@ HordePacing._setup_next_horde = function (self, template, optional_timer_modifie
 		pre_stinger_delay = pre_stinger_delay * 0.5
 	end
 
-	local horde_started = self._horde_started
-
 	self._next_horde_pre_stinger_at = self._next_horde_at - pre_stinger_delay
 
 	local travel_distance_required_for_horde = template.travel_distance_required_for_horde
@@ -588,6 +591,16 @@ HordePacing._trigger_pre_stinger = function (self, template, side_id, optional_s
 	local optional_ambisonics = true
 
 	self._fx_system:trigger_wwise_event(stinger_sound_event, nil, nil, nil, nil, nil, optional_ambisonics)
+end
+
+HordePacing.force_next_horde = function (self)
+	local horde_started = self._horde_started
+
+	if horde_started then
+		return false
+	end
+
+	self._next_horde_at = 5
 end
 
 HordePacing._trigger_stinger = function (self, template, position, optional_stinger_override)

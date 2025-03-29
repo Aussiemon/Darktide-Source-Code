@@ -204,7 +204,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 
 				hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
 				target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
-				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
+				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, optional_is_critical_strike, attack_type)
 				stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
 
 				local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil

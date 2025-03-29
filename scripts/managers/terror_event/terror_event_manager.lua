@@ -510,6 +510,10 @@ TerrorEventManager._update_event = function (self, event, dt, t)
 		end
 	end
 
+	if node.should_restart then
+		node_index = node.target_step_index and node.target_step_index > 0 and node.target_step_index - 1 or 0
+	end
+
 	node_index = node_index + 1
 
 	if node_index > #nodes then

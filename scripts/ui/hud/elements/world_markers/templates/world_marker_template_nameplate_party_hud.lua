@@ -1,8 +1,9 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_party_hud.lua
 
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UiSettings = require("scripts/settings/ui/ui_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	400,
@@ -100,7 +101,8 @@ template.on_enter = function (widget, marker)
 			local player_profile = data:profile()
 			local title = player_profile and ProfileUtils.character_title(player_profile)
 			local archetype = profile and profile.archetype
-			local string_symbol = archetype and archetype.string_symbol or ""
+			local archetype_name = archetype and archetype.name
+			local string_symbol = archetype_name and UiSettings.archetype_font_icon[archetype_name] or ""
 			local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
 
 			if title then
@@ -110,7 +112,7 @@ template.on_enter = function (widget, marker)
 			marker.widget.content.header_text = text
 
 			if character_level >= 30 then
-				local rank_promise = Managers.data_service.havoc:havoc_rank_all_time_high(data:account_id())
+				local rank_promise = Managers.data_service.havoc:havoc_rank_cadence_high(data:account_id())
 
 				rank_promise:next(function (rank)
 					marker.rank_promise = nil
@@ -136,7 +138,8 @@ template.on_enter = function (widget, marker)
 	Managers.event:register(marker, "event_player_profile_updated", "cb_event_player_profile_updated")
 
 	local archetype = profile and profile.archetype
-	local string_symbol = archetype and archetype.string_symbol or ""
+	local archetype_name = archetype and archetype.name
+	local string_symbol = archetype_name and UiSettings.archetype_font_icon[archetype_name] or ""
 	local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
 
 	content.header_text = text

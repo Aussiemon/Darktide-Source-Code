@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/crosshair/hud_element_crosshair.lua
 
 local definition_path = "scripts/ui/hud/elements/crosshair/hud_element_crosshair_definitions"
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Crosshair = require("scripts/ui/utilities/crosshair")
 local Fov = require("scripts/utilities/camera/fov")
@@ -327,15 +327,16 @@ HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_sett
 			local inventory_comp = unit_data_extension:read_component("inventory")
 			local wielded_slot = inventory_comp.wielded_slot
 			local slot_type = slot_configuration[wielded_slot].slot_type
-			local is_special_active = false
+			local crosshair_type_func = crosshair_settings.crosshair_type_func
 
-			if slot_type == "weapon" then
-				local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
+			if crosshair_type_func and slot_type == "weapon" then
+				local weapon_extension = player_extensions.weapon
+				local condition_func_params = weapon_extension:condition_func_params(wielded_slot)
 
-				is_special_active = inventory_slot_component.special_active
+				crosshair_type = crosshair_type_func(condition_func_params)
 			end
 
-			crosshair_type = is_special_active and crosshair_settings.crosshair_type_special_active or crosshair_settings.crosshair_type
+			crosshair_type = crosshair_type or crosshair_settings.crosshair_type or "dot"
 			can_override = OVERRIDABLE_CROSSHAIRS[crosshair_type]
 		end
 	end

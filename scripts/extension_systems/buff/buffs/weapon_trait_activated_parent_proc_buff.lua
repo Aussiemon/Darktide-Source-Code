@@ -31,11 +31,12 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 		local params = proc_events[ii + 1]
 		local proc_chance = template_proc_events[proc_event_name]
 		local is_local_proc_event = params.is_local_proc_event
+		local is_predicted_buff = template.predicted
 		local template_data = self._template_data
 		local template_context = self._template_context
 
 		if proc_chance then
-			local portable_random_to_use = is_local_proc_event and local_portable_random or portable_random
+			local portable_random_to_use = (is_local_proc_event or not is_predicted_buff) and local_portable_random or portable_random
 			local random_value = portable_random_to_use:next_random()
 
 			if random_value < proc_chance then

@@ -64,7 +64,7 @@ archetype_toughness_templates.zealot = {
 	},
 }
 archetype_toughness_templates.ogryn = {
-	max = 50,
+	max = 75,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {

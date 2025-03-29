@@ -1,19 +1,19 @@
 ﻿-- chunkname: @scripts/settings/damage/damage_profiles/assault_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local single_cleave = DamageProfileSettings.single_cleave
 local assault_armor_mod = {
 	near = {
 		attack = {
@@ -75,7 +75,7 @@ damage_templates.default_assault = {
 		attack = 0.2,
 		impact = 0.35,
 	},
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = gibbing_power.medium,
 	on_kill_area_suppression = {
 		distance = 5,
 		suppression_value = 8,
@@ -145,7 +145,7 @@ damage_templates.autogun_assault = {
 		attack = 0.3,
 		impact = 0.4,
 	},
-	gibbing_power = GibbingPower.medium,
+	gibbing_power = gibbing_power.medium,
 	on_kill_area_suppression = {
 		distance = 5,
 		suppression_value = 8,
@@ -163,7 +163,7 @@ damage_templates.autopistol_assault.ragdoll_push_force = {
 }
 damage_templates.autopistol_assault.power_distribution.attack = 0.175
 damage_templates.autopistol_assault.power_distribution.impact = 0.25
-damage_templates.autopistol_assault.gibbing_power = GibbingPower.light
+damage_templates.autopistol_assault.gibbing_power = gibbing_power.light
 damage_templates.autopistol_assault.armor_damage_modifier_ranged = {
 	near = {
 		attack = {
@@ -277,8 +277,8 @@ damage_templates.ogryn_shotgun = {
 		attack = 3.5,
 		impact = 5,
 	},
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.plasma,
 	on_kill_area_suppression = {
 		distance = 5,
 		suppression_value = 8,
@@ -356,7 +356,7 @@ damage_templates.shotgun_assault = {
 		attack = 1.5,
 		impact = 1.75,
 	},
-	gibbing_power = GibbingPower.light,
+	gibbing_power = gibbing_power.light,
 	on_kill_area_suppression = {
 		distance = 5,
 		suppression_value = 8,

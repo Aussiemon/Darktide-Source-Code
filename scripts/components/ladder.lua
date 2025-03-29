@@ -201,6 +201,10 @@ Ladder.editor_destroy = function (self, unit)
 		return
 	end
 
+	if Ladder._nav_info ~= nil then
+		SharedNav.destroy(Ladder._nav_info)
+	end
+
 	local line_object = self._line_object
 	local world = self._world
 

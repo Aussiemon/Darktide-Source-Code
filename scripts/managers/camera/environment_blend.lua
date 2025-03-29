@@ -31,9 +31,11 @@ EnvironmentBlend.unregister_environment = function (self, blend)
 	local layer = blend:layer()
 	local layer_blends = self._blend_layers[layer]
 
-	for i = #layer_blends, 1, -1 do
-		if layer_blends[i] == blend then
-			table.remove(layer_blends, i)
+	if layer_blends then
+		for i = #layer_blends, 1, -1 do
+			if layer_blends[i] == blend then
+				table.remove(layer_blends, i)
+			end
 		end
 	end
 end

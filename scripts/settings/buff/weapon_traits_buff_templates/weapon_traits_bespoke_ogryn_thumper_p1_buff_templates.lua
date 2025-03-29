@@ -29,6 +29,9 @@ templates.weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after
 	class_name = "proc_buff",
 	max_stacks = 1,
 	predicted = false,
+	buff_data = {
+		required_num_hits = 3,
+	},
 	proc_events = {
 		[proc_events.on_shoot] = 1,
 	},

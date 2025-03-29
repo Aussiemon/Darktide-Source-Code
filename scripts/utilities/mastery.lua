@@ -358,7 +358,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 		if item then
 			local master_item = item and MasterItems.get_item(item)
 			local icon = master_item and master_item.hud_icon or default_icon
-			local display_name = master_item and ItemUtils.weapon_card_sub_display_name(master_item) or type
+			local display_name = master_item and ItemUtils.weapon_card_sub_display_name(master_item) or master_item and master_item.type
 
 			reward_data.icon = icon
 			reward_data.display_name = display_name
@@ -735,10 +735,13 @@ Mastery.get_masteries_by_archetype = function (masteries_data)
 		local mastery_data = masteries_data[id]
 		local master_item_name = data.marks[1].item
 		local master_item = MasterItems.get_item(master_item_name)
-		local allowed_archetypes = master_item.archetypes
 
-		if table.contains(allowed_archetypes, archetype_name) then
-			filtered_masteries[id] = mastery_data
+		if master_item then
+			local allowed_archetypes = master_item.archetypes
+
+			if table.contains(allowed_archetypes, archetype_name) then
+				filtered_masteries[id] = mastery_data
+			end
 		end
 	end
 

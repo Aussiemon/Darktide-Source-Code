@@ -85,8 +85,9 @@ local talent_settings = {
 			toughness_damage_taken_multiplier = 0.9,
 		},
 		toughness_3 = {
+			cooldown = 5,
 			time = 0.1,
-			toughness = 0.005,
+			toughness = 0.05,
 			range = DamageSettings.in_melee_range,
 		},
 		offensive_1_1 = {
@@ -115,7 +116,7 @@ local talent_settings = {
 			proc_chance = 0.05,
 		},
 		coop_3 = {
-			damage = 0.1,
+			damage = 0.2,
 			duration = 3,
 			range = 5,
 			toughness_percent = 0.15,
@@ -126,7 +127,7 @@ local talent_settings = {
 		offensive_2_2 = {
 			critical_strike_chance = 0.25,
 			recoil_modifier = -0.12,
-			shot_stamina = 0.25,
+			shot_stamina = 0.1,
 			spread_modifier = -0.19,
 			stamina_per_second = 0.75,
 			sway_modifier = 0.4,
@@ -141,14 +142,14 @@ local talent_settings = {
 		combat_ability_3 = {
 			damage_vs_ogryn_and_monsters = 0.75,
 		},
+		veteran_ranged_power_out_of_melee = {
+			cooldown = 8,
+		},
 	},
 	veteran_3 = {
 		combat_ability = {
-			cone_dot = 0.95,
-			cone_range = 30,
 			cooldown = 30,
 			max_charges = 1,
-			power_level = 500,
 			radius = 9,
 			toughness_replenish_percent = 0.5,
 		},

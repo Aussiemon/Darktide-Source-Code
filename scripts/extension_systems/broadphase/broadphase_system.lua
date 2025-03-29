@@ -11,6 +11,7 @@ local function _generate_broadphase_categories(system_init_data)
 	local broadphase_categories = table.append({
 		"doors",
 		"pickups",
+		"destructibles",
 	}, side_names)
 	local pickup_groups = Pickups.by_group
 

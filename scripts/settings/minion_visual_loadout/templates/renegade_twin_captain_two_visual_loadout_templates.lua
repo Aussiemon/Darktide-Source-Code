@@ -63,6 +63,11 @@ local renegade_twin_captain_two = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_fx_bubble",
 			},
 		},
+		slot_face = {
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+			},
+		},
 	},
 }
 local default_1 = table.clone(renegade_twin_captain_two)
@@ -78,6 +83,33 @@ foundry_1.slots.envrionmental_override.items = {
 }
 templates.renegade_twin_captain_two[zone_ids.tank_foundry] = {
 	foundry_1,
+}
+
+local havoc = table.clone(renegade_twin_captain_two)
+
+havoc.slots.envrionmental_override.items = {
+	"content/items/characters/minions/environment_overrides/dirt_02",
+}
+havoc.slots.slot_head = {
+	use_outline = true,
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_04",
+	},
+}
+havoc.slots.slot_variation_gear = {
+	use_outline = true,
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_var_02",
+	},
+}
+havoc.slots.slot_face = {
+	use_outline = true,
+	items = {
+		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_01",
+	},
+}
+templates.renegade_twin_captain_two.havoc_twin_visual_loadout = {
+	havoc,
 }
 
 local dust_1 = table.clone(renegade_twin_captain_two)

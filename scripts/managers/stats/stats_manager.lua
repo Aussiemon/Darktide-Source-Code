@@ -512,6 +512,13 @@ StatsManager._get_stashed_data = function (self, user)
 	return stashed_data
 end
 
+StatsManager.is_tracking_user = function (self, key)
+	local user = self._users[key]
+	local is_tracking = user and user.state == UserStates.tracking
+
+	return is_tracking
+end
+
 StatsManager.start_tracking_user = function (self, key, user_config)
 	local user = self._users[key]
 	local definitions = self._definitions
@@ -606,6 +613,30 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 	user.state = UserStates.tracking
 	user.config = parsed_user_config
 	user.trigger_queue = PriorityQueue:new()
+end
+
+StatsManager.hot_join_sync = function (self, sender, channel)
+	local player = Managers.player:player(sender, 1)
+
+	if self:has_session() then
+		local stat_id = player.stat_id
+
+		if not self:is_tracking_user(stat_id) then
+			local joined_at = 0
+
+			if Managers.state and Managers.state.main_path then
+				joined_at = Managers.state.main_path:furthest_travel_percentage(1)
+			end
+
+			local player_stats_config = {
+				archetype_name = player:archetype_name(),
+				character_id = player:character_id(),
+				joined_at = joined_at,
+			}
+
+			self:start_tracking_user(player.stat_id, player_stats_config)
+		end
+	end
 end
 
 StatsManager._parse_backend_value = function (self, x)
@@ -898,7 +929,7 @@ StatsManager.record_private = function (self, stat_name, player, ...)
 	local user = self._users[key]
 
 	if user and user.state == UserStates.tracking then
-		return self:_trigger(user, stat_name, ...)
+		self:_trigger(user, stat_name, ...)
 	end
 end
 
@@ -907,7 +938,7 @@ StatsManager.record_team = function (self, stat_name, ...)
 	local team = self._team
 
 	if self:has_session() then
-		return self:_trigger(team, stat_name, ...)
+		self:_trigger(team, stat_name, ...)
 	end
 end
 

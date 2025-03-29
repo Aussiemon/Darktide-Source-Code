@@ -83,6 +83,12 @@ local behavior_tree = {
 		name = "combat",
 	},
 	{
+		"BtChaosHoundRoamAction",
+		condition = "is_passive",
+		name = "roaming",
+		action_data = action_data.roaming,
+	},
+	{
 		"BtIdleAction",
 		name = "idle",
 		action_data = action_data.idle,

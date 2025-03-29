@@ -43,6 +43,12 @@ PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state,
 
 	health_ext:kill()
 
+	if is_server then
+		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
+		Managers.state.game_session:send_rpc_clients("rpc_kill_unit_health", game_object_id)
+	end
+
 	self._time_to_despawn = t + (params.time_to_despawn_corpse or 0)
 
 	if not self._triggered_ragdoll then
@@ -78,7 +84,7 @@ PlayerCharacterStateDead.fixed_update = function (self, unit, dt, t, next_state_
 	end
 
 	if self._time_to_despawn and t > self._time_to_despawn then
-		Managers.state.player_unit_spawn:despawn_safe(self._player)
+		Managers.state.player_unit_spawn:despawn_player_safe(self._player)
 
 		self._time_to_despawn = nil
 	end

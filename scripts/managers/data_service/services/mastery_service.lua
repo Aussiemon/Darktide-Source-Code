@@ -69,11 +69,11 @@ MasteryService._convert_mastery_data = function (self, mastery_data)
 		end
 
 		return {
-			current_xp = current_xp,
+			current_xp = math.floor(current_xp),
 			mastery_level = current_level or 0,
 			milestones = milestones,
-			start_xp = start_exp,
-			end_xp = end_exp,
+			start_xp = start_exp and math.floor(start_exp),
+			end_xp = end_exp and math.floor(end_exp),
 			mastery_id = pattern_name,
 			id = mastery_progress.id,
 			claimed_level = claimed_level,

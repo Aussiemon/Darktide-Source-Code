@@ -346,7 +346,7 @@ LuggableSynchronizerExtension._despawn_luggable = function (self, luggable_unit_
 
 	local pickup_extension = ScriptUnit.has_extension(spawner_unit, "pickup_system")
 
-	pickup_extension:unspawn_item(luggable_unit_to_del)
+	pickup_extension:despawn_item(luggable_unit_to_del)
 
 	if respawn_at_spawner then
 		if self._spawner_respawn_timers[spawner_unit] then

@@ -300,6 +300,63 @@ local horde_compositions = {
 			},
 		},
 	},
+	mutator_renegade_grenadier = {
+		{
+			breeds = {
+				{
+					name = "renegade_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_grenadier",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+	},
 	mutator_riflemen = {
 		{
 			breeds = {

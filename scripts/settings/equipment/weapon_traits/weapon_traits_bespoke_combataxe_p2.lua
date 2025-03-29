@@ -8,6 +8,40 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_combataxe_p2_increase_power_on_hit = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_increase_power_on_hit_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_increase_power_on_hit_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_increase_power_on_hit_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_increase_power_on_hit_parent = {
 			{
@@ -34,6 +68,30 @@ templates.weapon_trait_bespoke_combataxe_p2_increase_power_on_hit = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_chained_hits_increases_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_chained_hits_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_chained_hits_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_chained_hits_increases_power_parent = {
 			{
@@ -64,6 +122,30 @@ templates.weapon_trait_bespoke_combataxe_p2_chained_hits_increases_power = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_chained_hits_increases_crit_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_chained_hits_increases_crit_chance_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_chained_hits_increases_crit_chance_parent",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_chained_hits_increases_crit_chance_parent = {
 			{
@@ -90,6 +172,20 @@ templates.weapon_trait_bespoke_combataxe_p2_chained_hits_increases_crit_chance =
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_infinite_melee_cleave_on_weakspot_kill = {
+	format_values = {
+		weakspot_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_infinite_melee_cleave_on_weakspot_kill",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_weakspot_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_infinite_melee_cleave_on_weakspot_kill = {
 			{
@@ -116,6 +212,31 @@ templates.weapon_trait_bespoke_combataxe_p2_infinite_melee_cleave_on_weakspot_ki
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_switch_stat_buffs",
+					1,
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		cooldown = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack",
+				find_value_type = "trait_override",
+				path = {
+					"no_power_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
 			{
@@ -154,6 +275,20 @@ templates.weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_power_bonus_scaled_on_stamina = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_power_bonus_scaled_on_stamina",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_switch_stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_power_bonus_scaled_on_stamina = {
 			{
@@ -180,6 +315,23 @@ templates.weapon_trait_bespoke_combataxe_p2_power_bonus_scaled_on_stamina = {
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_guaranteed_melee_crit_after_crit_weakspot_kill = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_guaranteed_melee_crit_after_crit_weakspot_kill",
+				find_value_type = "trait_override",
+				path = {
+					"buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+			value_manipulation = function (value)
+				return math.abs(value) * 10
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_guaranteed_melee_crit_after_crit_weakspot_kill = {
 			{
@@ -206,6 +358,40 @@ templates.weapon_trait_bespoke_combataxe_p2_guaranteed_melee_crit_after_crit_wea
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_consecutive_melee_hits_same_target_increases_melee_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_consecutive_melee_hits_same_target_increases_melee_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_consecutive_melee_hits_same_target_increases_melee_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_consecutive_melee_hits_same_target_increases_melee_power_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_consecutive_melee_hits_same_target_increases_melee_power_parent = {
 			{
@@ -236,6 +422,20 @@ templates.weapon_trait_bespoke_combataxe_p2_consecutive_melee_hits_same_target_i
 	},
 }
 templates.weapon_trait_bespoke_combataxe_p2_weakspot_hit_resets_dodge_count = {
+	format_values = {
+		melee_weakspot_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_combataxe_p2_weakspot_hit_resets_dodge_count",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.melee_weakspot_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_combataxe_p2_weakspot_hit_resets_dodge_count = {
 			{

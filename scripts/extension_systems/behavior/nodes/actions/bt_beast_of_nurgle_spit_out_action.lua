@@ -278,14 +278,20 @@ local ABOVE = 1
 local BELOW = 2
 local LATERAL = 2
 local MAX_STEPS, MAX_TIME = 20, 1.25
-local THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5, 1.5
-local THROW_TELEPORT_FWD_OFFSET_HUMAN, THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2, 3.2
+local THROW_TELEPORT_UP_OFFSET = {
+	human = 1.5,
+	ogryn = 1.5,
+}
+local THROW_TELEPORT_FWD_OFFSET = {
+	human = 3.2,
+	ogryn = 3.2,
+}
 
 BtBeastOfNurgleSpitOutAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local unit_position = POSITION_LOOKUP[unit]
-	local is_human = scratchpad.consumed_unit_breed_name == "human"
-	local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
-	local fwd = test_direction * (is_human and THROW_TELEPORT_FWD_OFFSET_HUMAN or THROW_TELEPORT_FWD_OFFSET_OGRYN)
+	local consumed_unit_breed_name = scratchpad.consumed_unit_breed_name
+	local up = Vector3.up() * (THROW_TELEPORT_UP_OFFSET[consumed_unit_breed_name] or THROW_TELEPORT_UP_OFFSET.human)
+	local fwd = test_direction * (THROW_TELEPORT_FWD_OFFSET[consumed_unit_breed_name] or THROW_TELEPORT_FWD_OFFSET.human)
 	local from = unit_position + fwd + up
 	local physics_world = scratchpad.physics_world
 	local initial_ray_test = self:_ray_cast(physics_world, unit_position + up, from)

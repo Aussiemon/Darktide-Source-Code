@@ -5,14 +5,15 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local Explosion = require("scripts/utilities/attack/explosion")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
+local stat_buff_types = BuffSettings.stat_buff_types
+local stat_buff_base_values = BuffSettings.stat_buff_base_values
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local proc_events = BuffSettings.proc_events
 local templates = {}
@@ -124,10 +125,14 @@ local BOLSTERING_4_MINION_EFFECTS = table.clone(LOW_BOLSTERING_MINION_EFFECTS)
 
 BOLSTERING_4_MINION_EFFECTS.material_vector.value = BOLSTER_4_COLOR
 
-local BOLSTERING_RADIUS = 8
+local BOLSTERING_RADIUS = 4
 local DPLUS_RESULTS_1 = {}
 
 local function _bolstering_stop_function(template_context, template_data)
+	if not template_context.is_server then
+		return
+	end
+
 	local unit = template_context.unit
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
@@ -171,16 +176,87 @@ local function _bolstering_stop_function(template_context, template_data)
 	end
 end
 
-local function _bolstering_start_function(template_context, buff_template_index)
+local BOLSTERING_MULTIPLIER = {
+	captain = -0.02,
+	default = -0.1,
+	elite = -0.05,
+	monster = -0.03,
+	special = -0.06,
+}
+local BOLSTERING_STAT_BUFFS = {
+	"unarmored_damage",
+	"resistant_damage",
+	"disgustingly_resilient_damage",
+	"berserker_damage",
+	"armored_damage",
+	"super_armor_damage",
+}
+
+local function _get_breed_bolstering_multiplier(template_data, template_context)
+	local multiplier
+	local breed = template_context.breed
+	local tags = breed.tags
+	local captain_tag = tags.captain
+
+	if captain_tag then
+		multiplier = BOLSTERING_MULTIPLIER.captain
+
+		return multiplier
+	end
+
+	local elite = tags.elite
+
+	if elite then
+		multiplier = BOLSTERING_MULTIPLIER.elite
+
+		return multiplier
+	end
+
+	local special = tags.special
+
+	if special then
+		multiplier = BOLSTERING_MULTIPLIER.special
+
+		return multiplier
+	end
+
+	local monster = tags.monster
+
+	if monster then
+		multiplier = BOLSTERING_MULTIPLIER.monster
+
+		return multiplier
+	end
+
+	multiplier = BOLSTERING_MULTIPLIER.default
+
+	return multiplier
+end
+
+local function _bolstering_start_function(template_context, template_data)
+	local stack = template_data.stack
 	local unit = template_context.unit
-	local health_extension = ScriptUnit.extension(unit, "health_system")
-	local current_hit_mass = health_extension:hit_mass()
-
-	health_extension:set_hit_mass(math.min(current_hit_mass * (1 + 0.1 * buff_template_index), 100))
-
-	local scale = 1 + buff_template_index * 0.02
+	local scale = 1 + stack * 0.02
 
 	Unit.set_local_scale(unit, 1, Vector3(1, 1, 1) * scale)
+
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local value = template_data.multiplier * stack
+
+	for i = 1, #BOLSTERING_STAT_BUFFS do
+		local stat_buff = BOLSTERING_STAT_BUFFS[i]
+		local stat_buff_type = stat_buff_types[stat_buff]
+		local base_value = 1
+
+		if stat_buff_type == "multiplicative_multiplier" then
+			stat_buffs[stat_buff] = base_value * value
+		elseif stat_buff_type == "max_value" then
+			stat_buffs[stat_buff] = math.max(base_value, value)
+		else
+			stat_buffs[stat_buff] = base_value + value
+		end
+	end
 end
 
 templates.havoc_bolstering = {
@@ -189,36 +265,17 @@ templates.havoc_bolstering = {
 	keywords = {
 		"bolstered",
 	},
-	stat_buffs = {
-		[buff_stat_buffs.unarmored_damage] = -0.1,
-		[buff_stat_buffs.resistant_damage] = -0.1,
-		[buff_stat_buffs.disgustingly_resilient_damage] = -0.1,
-		[buff_stat_buffs.berserker_damage] = -0.1,
-		[buff_stat_buffs.armored_damage] = -0.1,
-		[buff_stat_buffs.super_armor_damage] = -0.1,
-	},
 	start_func = function (template_data, template_context)
-		template_data._start_bolstering = true
 		template_data.stack = 1
+		template_data.multiplier = _get_breed_bolstering_multiplier(template_data, template_context)
+
+		_bolstering_start_function(template_context, template_data)
 	end,
 	on_stack_added_func = function (template_data, template_context, new_stack_count)
 		if new_stack_count < 5 then
 			template_data.stack = new_stack_count
-			template_data._start_bolstering = true
-		end
-	end,
-	update_func = function (template_data, template_context)
-		if not template_data._start_bolstering then
-			return
-		end
 
-		template_data._start_bolstering = false
-
-		local current_time = FixedFrame.get_latest_fixed_time()
-		local current_time_delayed = current_time + 10
-
-		if current_time_delayed < current_time then
-			_bolstering_start_function(template_context, template_data.stack)
+			_bolstering_start_function(template_context, template_data)
 		end
 	end,
 	stop_func = function (template_data, template_context)
@@ -522,13 +579,12 @@ templates.havoc_sticky_poxburster = {
 		end
 
 		local result, num_players_hit = _apply_poxburster_bile(template_data, template_context)
-		local physics_world = template_context.physics_world
 		local mutator_manager = Managers.state.mutator
 		local nurgle_warp_mutator = mutator_manager:mutator("mutator_havoc_sticky_poxburster")
 
 		if result then
 			for i = 1, #num_players_hit do
-				nurgle_warp_mutator:spawn_group(5, physics_world, num_players_hit[i])
+				nurgle_warp_mutator:spawn_random_from_template(num_players_hit[i])
 			end
 		end
 	end,
@@ -578,6 +634,187 @@ templates.havoc_thorny_armor = {
 			return
 		end
 	end,
+}
+
+local GARDEN_BUFF_RADIUS = 5
+local GARDEN_HAVOC_RESULTS_ENEMIES = {}
+
+local function _healed_by_the_garden(template_data, template_context)
+	if not template_context.is_server then
+		return
+	end
+
+	table.clear(GARDEN_HAVOC_RESULTS_ENEMIES)
+
+	local unit = template_context.unit
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side_from_name("villains")
+	local target_side_names = side:relation_side_names("allied")
+	local player_side_names = side:relation_side_names("enemy")
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+	local buff_template_name = "blessed_by_the_garden"
+	local broadphase = broadphase_system.broadphase
+	local position = POSITION_LOOKUP[unit]
+	local allied_sied_num_results = broadphase.query(broadphase, position, GARDEN_BUFF_RADIUS, GARDEN_HAVOC_RESULTS_ENEMIES, target_side_names)
+	local current_time = FixedFrame.get_latest_fixed_time()
+	local t = Managers.time:time("gameplay")
+
+	for i = 1, allied_sied_num_results do
+		local nearby_unit = GARDEN_HAVOC_RESULTS_ENEMIES[i]
+
+		if HEALTH_ALIVE[nearby_unit] then
+			local buff_extension = ScriptUnit.extension(nearby_unit, "buff_system")
+
+			if not buff_extension:has_keyword("havoc_gardens_embrace") then
+				buff_extension:add_internally_controlled_buff(buff_template_name, t)
+				buff_extension:_update_stat_buffs_and_keywords(current_time)
+			end
+		end
+	end
+end
+
+templates.havoc_encroaching_garden = {
+	class_name = "buff",
+	predicted = false,
+	keywords = {
+		buff_keywords.havoc_gardens_embrace,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.max_health_modifier] = 100,
+	},
+	start_func = function (template_data, template_context)
+		local time_variation = 2
+
+		template_data.parasite_interval_time = time_variation
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
+		end
+
+		local next_check_time = template_data.next_check_time
+
+		if not next_check_time then
+			template_data.next_check_time = t + template_data.parasite_interval_time
+
+			return
+		end
+
+		if next_check_time < t then
+			_healed_by_the_garden(template_data, template_context)
+
+			template_data.next_check_time = t + template_data.parasite_interval_time
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_head",
+				vfx = {
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_gardens_embrace_head",
+					stop_type = "stop",
+				},
+			},
+		},
+	},
+}
+
+local NURGLE_ENCROACHING_COLOR = {
+	0.5568627450980392,
+	0.6313725490196078,
+	0.3215686274509804,
+}
+local NURGLE_PERCENTAGE_DEFAULT = 0.02
+local DEFAULT_MAX_DAMAGE_ALLOWED = 0.1
+
+templates.blessed_by_the_garden = {
+	class_name = "interval_buff",
+	duration = 2,
+	interval = 1,
+	max_stacks = 1,
+	refresh_duration_on_stack = true,
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local max_health = health_extension:max_health()
+
+		template_data.heal_percentage = max_health * NURGLE_PERCENTAGE_DEFAULT
+	end,
+	interval_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:add_heal(1200)
+	end,
+	stop_func = function (template_data, template_context)
+		return
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_flash_init",
+							variable_name = "material_variable_21872256",
+							value = NURGLE_ENCROACHING_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = NURGLE_ENCROACHING_COLOR,
+						},
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = NURGLE_ENCROACHING_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_flash_init",
+							variable_name = "material_variable_21872256",
+							value = NURGLE_ENCROACHING_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = NURGLE_ENCROACHING_COLOR,
+						},
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = NURGLE_ENCROACHING_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/screen_gardens_embrace",
+	},
 }
 
 local BUFF_RADIUS = 5
@@ -798,6 +1035,209 @@ templates.blessed_by_nurgle_parasite = {
 	},
 }
 
+local DEFAULT_DAMAGE_REQUIRED = 0.5
+local ENRAGED_TEMPLATE_NAME = "havoc_enraged_enemies"
+local ENRAGED_COLOR = {
+	1,
+	0,
+	0,
+}
+
+templates.havoc_enraged_enemies_trigger = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_minion_damage_taken] = 1,
+	},
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local current_health_percent = health_extension:current_health_percent()
+		local is_under_threshold = current_health_percent < DEFAULT_DAMAGE_REQUIRED
+
+		if is_under_threshold and HEALTH_ALIVE[unit] and not template_data.triggered then
+			template_data.triggered = true
+
+			local current_time = FixedFrame.get_latest_fixed_time()
+			local t = Managers.time:time("gameplay")
+			local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+			buff_extension:add_internally_controlled_buff(ENRAGED_TEMPLATE_NAME, t)
+			buff_extension:_update_stat_buffs_and_keywords(current_time)
+		end
+	end,
+}
+templates.havoc_enraged_enemies = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.melee_attack_speed] = 0.4,
+		[buff_stat_buffs.stagger_duration_multiplier] = 0.1,
+	},
+	keywords = {
+		"no_stagger",
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local color = Vector3(ENRAGED_COLOR[1], ENRAGED_COLOR[2], ENRAGED_COLOR[3])
+
+		Unit.set_vector3_for_materials(unit, "stimmed_color", color, true)
+
+		if not template_context.is_server then
+			return
+		end
+
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local hit_mass = breed.hit_mass
+
+		if type(hit_mass) == "table" then
+			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+		end
+
+		template_data.old_hit_mass = hit_mass
+
+		local new_hit_mass = hit_mass * 1.5
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(new_hit_mass)
+
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 1.25)
+		end
+
+		local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
+
+		if suppression_extension then
+			local blackboard = BLACKBOARDS[unit]
+			local suppression_component = Blackboard.write_component(blackboard, "suppression")
+
+			suppression_component.suppress_value = 0
+
+			suppression_extension:add_suppression_immunity_duration(999)
+		end
+
+		local attack_intensity_extension = ScriptUnit.has_extension(unit, "attack_intensity_system")
+
+		if attack_intensity_extension then
+			attack_intensity_extension:set_allow_all_attacks_duration(999)
+		end
+
+		local tags = breed.tags
+		local scale
+
+		scale = tags.ogryn and 1.1 or 1.2
+
+		Unit.set_local_scale(unit, 1, Vector3(1, 1, 1) * scale)
+
+		local position = POSITION_LOOKUP[unit]
+		local fx_system = Managers.state.extension:system("fx_system")
+		local sfx_shout = "wwise/events/minions/play_havoc_mutator_enraging_elites_buff_stinger"
+
+		fx_system:trigger_wwise_event(sfx_shout, position)
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		Unit.set_vector3_for_materials(unit, "stimmed_color", Vector3(0, 0, 0), true)
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_head",
+				vfx = {
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/enraged_elites_rage",
+					stop_type = "stop",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_flash_init",
+							variable_name = "material_variable_21872256",
+							value = ENRAGED_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = ENRAGED_COLOR,
+						},
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = ENRAGED_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_lefteyesocket",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_flash_init",
+							variable_name = "material_variable_21872256",
+							value = ENRAGED_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = ENRAGED_COLOR,
+						},
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = ENRAGED_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_flash_init",
+							variable_name = "material_variable_21872256",
+							value = ENRAGED_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = ENRAGED_COLOR,
+						},
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = ENRAGED_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
 local GREEN_STIM_COLOR = {
 	0,
 	0.75,
@@ -866,6 +1306,13 @@ templates.havoc_green_eyes = {
 		},
 	},
 }
+templates.havoc_no_stagger = {
+	class_name = "buff",
+	predicted = false,
+	keywords = {
+		"no_stagger",
+	},
+}
 templates.havoc_toughness_modifier_1 = {
 	class_name = "buff",
 	predicted = false,
@@ -899,6 +1346,13 @@ templates.havoc_toughness_modifier_5 = {
 	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.toughness] = -45,
+	},
+}
+templates.havoc_increased_cd_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.ability_cooldown_modifier] = 5,
 	},
 }
 templates.havoc_vent_speed_reduction_1 = {

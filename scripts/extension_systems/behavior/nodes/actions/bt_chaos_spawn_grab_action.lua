@@ -685,20 +685,30 @@ end
 local ABOVE = 1
 local BELOW = 2
 local LATERAL = 2
-local THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME = 2.7, 2.15, 20, 1.25
-local THROW_LEFT_OFFSET_HUMAN, THROW_LEFT_OFFSET_OGRYN = 1.65, 2
-local THROW_FWD_OFFSET_HUMAN, THROW_FWD_OFFSET_OGRYN = 2, 2
+local MAX_STEPS, MAX_TIME = 20, 1.25
+local THROW_TELEPORT_UP_OFFSET = {
+	human = 2.7,
+	ogryn = 2.15,
+}
+local THROW_LEFT_OFFSET = {
+	human = 1.65,
+	ogryn = 2,
+}
+local THROW_FWD_OFFSET = {
+	human = 2,
+	ogryn = 2,
+}
 
 BtChaosSpawnGrabAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local unit_position = POSITION_LOOKUP[unit]
-	local is_human = scratchpad.grabbed_unit_breed_name == "human"
-	local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
+	local grabbed_unit_breed_name = scratchpad.grabbed_unit_breed_name
+	local up = Vector3.up() * (THROW_TELEPORT_UP_OFFSET[grabbed_unit_breed_name] or THROW_TELEPORT_UP_OFFSET.human)
 	local left = -Vector3.cross(test_direction, Vector3.up())
 
-	left = is_human and left * THROW_LEFT_OFFSET_HUMAN or left * THROW_LEFT_OFFSET_OGRYN
+	left = left * (THROW_LEFT_OFFSET[grabbed_unit_breed_name] or THROW_LEFT_OFFSET.human)
 	to = to + left
 
-	local fwd_offset = Vector3.normalize(test_direction) * (is_human and THROW_FWD_OFFSET_HUMAN or THROW_FWD_OFFSET_OGRYN)
+	local fwd_offset = Vector3.normalize(test_direction) * (THROW_FWD_OFFSET[grabbed_unit_breed_name] or THROW_FWD_OFFSET.human)
 	local from = unit_position + up + left + fwd_offset
 	local catapult_force = action_data.catapult_force[scratchpad.grabbed_unit_breed_name]
 	local catapult_z_force = action_data.catapult_z_force[scratchpad.grabbed_unit_breed_name]

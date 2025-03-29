@@ -189,6 +189,7 @@ end
 
 local step_color_table = {}
 local direction_icon_color_table = {}
+local _empty_table = {}
 
 HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	HudElementPlayerCompass.super._draw_widgets(self, dt, t, input_service, ui_renderer)
@@ -276,7 +277,7 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 				position[1] = local_x - text_width * inverse_scale * 0.5 - 1
 				size[1] = text_width + 20
 
-				UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, size, step_color_table, {})
+				UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, size, step_color_table, _empty_table)
 			end
 
 			size[1] = step_width

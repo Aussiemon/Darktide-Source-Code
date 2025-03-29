@@ -20,7 +20,7 @@ catapulting_templates.renegade_captain_charge_catapult = {
 catapulting_templates.renegade_captain_void_shield_explosion_catapult = {
 	direction_from_node = "j_spine",
 	force = 14,
-	z_force = 4,
+	z_force = 0,
 }
 catapulting_templates.renegade_captain_frag_grenade_close_catapult = {
 	direction_from_node = "j_spine",

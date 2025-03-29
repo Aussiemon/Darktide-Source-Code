@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/behavior/utilities/conditions/bt_minion_conditions.lua
 
 local AttackIntensity = require("scripts/utilities/attack_intensity")
+local NavQueries = require("scripts/utilities/nav_queries")
 local conditions = {}
 
 conditions.has_target_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -612,6 +613,30 @@ conditions.daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, c
 	return wants_to_leave
 end
 
+local MUTATOR_DAEMONHOST_NUM_FOR_DESPAWN = {
+	1,
+	1,
+	1,
+	2,
+	3,
+}
+
+conditions.mutator_daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local statistics_component = blackboard.statistics
+	local player_deaths = statistics_component.player_deaths
+	local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
+	local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(ChaosDaemonhostSettings.mutator_num_player_kills_for_despawn)
+	local wants_to_leave = num_player_kills_for_despawn <= player_deaths
+
+	return wants_to_leave
+end
+
 conditions.daemonhost_is_passive = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local perception_component = blackboard.perception
 	local aggro_state = perception_component.aggro_state
@@ -687,6 +712,14 @@ conditions.should_patrol = function (unit, blackboard, scratchpad, condition_arg
 	local is_passive = aggro_state == "passive"
 
 	return is_passive and should_patrol
+end
+
+conditions.is_passive = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+	local aggro_state = perception_component.aggro_state
+	local is_passive = aggro_state == "passive"
+
+	return is_passive
 end
 
 conditions.captain_can_use_special_actions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -1426,6 +1459,12 @@ conditions.berzerker_leap_attack_allowed = function (unit, blackboard, scratchpa
 	local attack_allowed = AttackIntensity.minion_can_attack(unit, condition_args.attack_type, target_unit)
 
 	return attack_allowed
+end
+
+conditions.is_minion_disabled = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local disable_component = blackboard.disable
+
+	return disable_component.is_disabled
 end
 
 return conditions

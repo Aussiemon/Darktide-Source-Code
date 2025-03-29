@@ -65,7 +65,6 @@ weapon_template.hide_slot = true
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.not_player_wieldable = true
 

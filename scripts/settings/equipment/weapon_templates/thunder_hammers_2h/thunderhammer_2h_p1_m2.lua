@@ -1341,7 +1341,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.fx_sources = {
 	_block = "fx_block",
@@ -1377,6 +1376,8 @@ weapon_template.weapon_special_tweak_data = {
 	allow_reactivation_while_active = true,
 	disorientation_type = "thunder_hammer_m2_light",
 	keep_active_on_sprint = true,
+	keep_active_on_stun = true,
+	keep_active_on_vault = true,
 	only_deactive_on_abort = true,
 	special_active_hit_extra_time = 0.5,
 	push_template = push_templates.medium,

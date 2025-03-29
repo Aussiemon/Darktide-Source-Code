@@ -186,7 +186,7 @@ local StateGameplayTestify = {
 
 					navigation_extension:move_to(destination)
 				else
-					minion_spawn_manager:despawn(unit)
+					minion_spawn_manager:despawn_minion(unit)
 					table.swap_delete(minion_pathing_data, i)
 				end
 

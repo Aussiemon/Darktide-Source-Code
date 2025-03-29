@@ -26,6 +26,7 @@ ActionPlacePickup._place_unit = function (self, action_settings, position, rotat
 		equipped_pickup_data.on_drop_func(placed_unit)
 	end
 
+	pickup_system:dropped(placed_unit)
 	self:_register_stats_and_telemetry(pickup_name, player_or_nil)
 
 	local game_mode_name = Managers.state.game_mode:game_mode_name()

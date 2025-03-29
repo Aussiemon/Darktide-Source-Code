@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/action_input/action_input_parser.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local wield_inputs = PlayerCharacterConstants.wield_inputs

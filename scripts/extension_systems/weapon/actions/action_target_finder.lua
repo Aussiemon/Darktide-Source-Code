@@ -14,7 +14,7 @@ ActionTargetFinder.init = function (self, action_context, action_params, action_
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local targeting_component = unit_data_extension:write_component("action_module_targeting")
 
-	self._targeting_module = ActionModules[target_finder_module_class_name]:new(self._physics_world, player_unit, targeting_component, action_settings)
+	self._target_finder_module = ActionModules[target_finder_module_class_name]:new(self._physics_world, player_unit, targeting_component, action_settings)
 
 	if action_settings.use_alternate_fire then
 		self._spread_control_component = unit_data_extension:write_component("spread_control")
@@ -25,7 +25,7 @@ end
 
 ActionTargetFinder.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionTargetFinder.super.start(self, action_settings, t, time_scale, action_start_params)
-	self._targeting_module:start(t)
+	self._target_finder_module:start(t)
 
 	local weapon_template = self._weapon_template
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
@@ -41,20 +41,19 @@ ActionTargetFinder.start = function (self, action_settings, t, time_scale, actio
 end
 
 ActionTargetFinder.fixed_update = function (self, dt, t, time_in_action)
-	self._targeting_module:fixed_update(dt, t)
+	self._target_finder_module:fixed_update(dt, t)
 end
 
 ActionTargetFinder.finish = function (self, reason, data, t, time_in_action)
 	ActionTargetFinder.super.finish(self, reason, data, t, time_in_action)
-	self._targeting_module:finish(reason, data, t)
+	self._target_finder_module:finish(reason, data, t)
 
 	local action_settings = self._action_settings
 
 	if action_settings.use_alternate_fire and self._alternate_fire_component.is_active then
-		local skip_unaim_anim = action_settings.skip_unaim_anim
 		local from_action_input = reason == "new_interrupting_action"
 
-		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skip_unaim_anim, self._player_unit, from_action_input)
+		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, self._player_unit, from_action_input)
 	end
 end
 

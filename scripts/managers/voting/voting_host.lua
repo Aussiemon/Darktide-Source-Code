@@ -25,6 +25,8 @@ VotingHost.init = function (self, voting_id, initiator_peer, template, optional_
 
 	self._duration = duration
 	self._time = 0
+	self._agreement_duration = template.agreement_duration
+	self._agreement_time = nil
 	self._member_list = {}
 	self._votes = {}
 	self._result = nil
@@ -210,13 +212,26 @@ VotingHost.votes = function (self)
 end
 
 VotingHost.time_left = function (self)
+	if self._agreement_time then
+		local duration = self._agreement_duration
+
+		if not duration then
+			return nil, nil
+		end
+
+		local time_left = math.max(duration - self._agreement_time, 0)
+		local time_left_normalized = math.max(time_left / duration, 0)
+
+		return time_left, time_left_normalized
+	end
+
 	local duration = self._duration
 
 	if not duration then
 		return nil, nil
 	end
 
-	local time_left = math.max(self._duration - self._time, 0)
+	local time_left = math.max(duration - self._time, 0)
 	local time_left_normalized = math.max(time_left / duration, 0)
 
 	return time_left, time_left_normalized
@@ -233,6 +248,33 @@ VotingHost.register_vote = function (self, voter_peer_id, option)
 	local template = self._template
 
 	_info("Registered vote %q casted by %s in voting %q (%s)", option, voter_peer_id, voting_id, template.name)
+
+	self._agreement_time = nil
+end
+
+VotingHost._is_current_votes_in_argeement = function (self)
+	local votes = self._votes
+	local num_total_votes = table.size(votes)
+
+	if num_total_votes > 0 then
+		local last_vote_option
+
+		for _, option in pairs(votes) do
+			if option == StrictNil then
+				return false
+			end
+
+			if last_vote_option and last_vote_option ~= option then
+				return false
+			end
+
+			last_vote_option = option
+		end
+
+		return true
+	end
+
+	return false
 end
 
 VotingHost.update = function (self, dt, t)
@@ -240,29 +282,43 @@ VotingHost.update = function (self, dt, t)
 		return
 	end
 
+	local template = self._template
 	local time = self._time + dt
 
 	self._time = time
 
-	local template = self._template
 	local evaluate_delay = template.evaluate_delay
 
 	if evaluate_delay and time < evaluate_delay then
 		return
 	end
 
+	local agreement_time_left
+
+	if self._agreement_duration then
+		if self:_is_current_votes_in_argeement() then
+			self._agreement_time = (self._agreement_time or 0) + dt
+			agreement_time_left = self._agreement_duration - self._agreement_time
+		else
+			self._agreement_time = nil
+		end
+	end
+
 	local duration = self._duration
+	local duration_ended = false
 
 	if duration then
 		local time_left = duration - time
 
-		if time_left <= 0 then
+		if time_left <= 0 or agreement_time_left and agreement_time_left <= 0 then
+			duration_ended = true
+
 			_info("Voting %q timed out", self._voting_id)
 			self:_handle_undecided_votes()
 		end
 	end
 
-	local result = template.evaluate(self._votes)
+	local result = template.evaluate(self._votes, duration_ended)
 
 	if result then
 		self._state = STATES.completed

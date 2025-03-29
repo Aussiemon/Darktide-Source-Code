@@ -50,6 +50,9 @@ local ErrorCodesLookup = {
 		description = "loc_disconnect_by_kick",
 		title = false,
 	},
+	loading_host_sync_error = {
+		code = 1016,
+	},
 	nonexisting_channel = {
 		code = 2001,
 	},

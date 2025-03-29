@@ -17,7 +17,10 @@ CinematicLevelLoader.destroy = function (self)
 	self:cleanup()
 end
 
-CinematicLevelLoader.start_loading = function (self, cinematic_name, level_names, callback)
+CinematicLevelLoader.start_loading = function (self, context)
+	local cinematic_name = context.cinematic_name
+	local level_names = context.level_names
+	local callback = context.callback
 	local ready_callbacks = self._level_ready_callbacks
 
 	ready_callbacks[#ready_callbacks + 1] = callback

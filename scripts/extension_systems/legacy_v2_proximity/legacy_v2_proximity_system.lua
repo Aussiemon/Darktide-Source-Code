@@ -57,6 +57,8 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 end
 
 LegacyV2ProximitySystem.destroy = function (self)
+	self._raycast_object = nil
+
 	if not DEDICATED_SERVER then
 		FxProximityCulling.destroy()
 	end

@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/minigame/minigame_extension.lua
 
+local LevelProps = require("scripts/settings/level_prop/level_props")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local MinigameClasses = require("scripts/settings/minigame/minigame_classes")
 local MinigameExtension = class("MinigameExtension")
@@ -8,7 +9,7 @@ MinigameExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
 local STATES = MinigameSettings.states
 
-MinigameExtension.init = function (self, extension_init_context, unit, ...)
+MinigameExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_session, prop_settings_or_game_object_id)
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
 	self._seed = nil
@@ -17,6 +18,40 @@ MinigameExtension.init = function (self, extension_init_context, unit, ...)
 	self._current_state = STATES.none
 	self._owner_system = extension_init_context.owner_system
 	self._action_held = nil
+	self._is_game_object = game_object_data_or_session ~= nil
+	self._is_side_mission = false
+	self._mutator_on_minigame_complete = nil
+	self._minigame_angle_check = true
+
+	if self._is_server and prop_settings_or_game_object_id then
+		local prop_settings = prop_settings_or_game_object_id
+
+		if prop_settings.is_side_mission_prop then
+			self._is_side_mission = true
+		end
+
+		if prop_settings.minigame_angle_check ~= nil then
+			self._minigame_angle_check = prop_settings.minigame_angle_check
+		end
+
+		if prop_settings.mutator_on_minigame_complete then
+			self._mutator_on_minigame_complete = prop_settings.mutator_on_minigame_complete
+		end
+	elseif not self._is_server and prop_settings_or_game_object_id then
+		local game_object_id = prop_settings_or_game_object_id
+		local session = game_object_data_or_session
+		local prop_id = GameSession.game_object_field(session, game_object_id, "prop_id")
+		local prop_name = NetworkLookup.level_props_names[prop_id]
+		local prop_settings = LevelProps[prop_name]
+
+		if prop_settings.is_side_mission_prop then
+			self._is_side_mission = true
+		end
+
+		if prop_settings.minigame_angle_check ~= nil then
+			self._minigame_angle_check = prop_settings.minigame_angle_check
+		end
+	end
 end
 
 MinigameExtension.hot_join_sync = function (self, unit, sender, channel)
@@ -40,7 +75,23 @@ MinigameExtension.setup_from_component = function (self, minigame_type)
 
 	self._minigame_type = minigame_type
 
-	local minigame_class = MinigameClasses[minigame_type]
+	if not self._is_game_object then
+		self:setup_minigame()
+	end
+end
+
+MinigameExtension.game_object_initialized = function (self, session, object_id)
+	if self._is_game_object then
+		self:setup_minigame()
+	end
+end
+
+MinigameExtension.on_game_object_created = function (self, game_object_id)
+	self:setup_minigame()
+end
+
+MinigameExtension.setup_minigame = function (self)
+	local minigame_class = MinigameClasses[self._minigame_type]
 
 	self._minigame = minigame_class:new(self._unit, self._is_server, self._seed)
 end
@@ -69,6 +120,10 @@ end
 
 MinigameExtension.unit = function (self)
 	return self._unit
+end
+
+MinigameExtension.angle_check = function (self)
+	return self._minigame_angle_check
 end
 
 MinigameExtension.decode_interrupt = function (self)
@@ -118,6 +173,10 @@ MinigameExtension.completed = function (self)
 		local is_level_unit, unit_id = unit_spawner_manager:game_object_id_or_level_index(self._unit)
 
 		Managers.state.game_session:send_rpc_clients("rpc_minigame_sync_completed", unit_id, is_level_unit)
+
+		if self._is_side_mission then
+			-- Nothing
+		end
 	end
 end
 

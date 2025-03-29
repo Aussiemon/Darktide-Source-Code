@@ -65,7 +65,8 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 	local valid_combat_ranges = self._valid_aim_combat_ranges
 	local behavior_component = self._behavior_component
 	local aim_config = self._aim_config
-	local dont_have_target = not aim_config.ignore_require_target and not ALIVE[target_unit]
+	local aim_component = self._aim_component
+	local dont_have_target = not aim_config.ignore_require_target and not aim_component.controlled_aiming and not ALIVE[target_unit]
 
 	if dont_have_target or self._require_line_of_sight and not perception_component.has_line_of_sight or valid_combat_ranges and not valid_combat_ranges[behavior_component.combat_range] then
 		local perception_extension = self._perception_extension
@@ -101,7 +102,6 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 		return
 	end
 
-	local aim_component = self._aim_component
 	local target_position
 
 	if aim_component.controlled_aiming then

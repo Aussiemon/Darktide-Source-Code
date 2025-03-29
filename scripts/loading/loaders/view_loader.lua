@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/loading/loaders/view_loader.lua
 
 local Loader = require("scripts/loading/loader")
+local MissionIntroView = require("scripts/ui/views/mission_intro_view/mission_intro_view")
 local Missions = require("scripts/settings/mission/mission_templates")
 local Views = require("scripts/ui/views/views")
 local ViewLoader = class("ViewLoader")
@@ -13,7 +14,8 @@ ViewLoader.destroy = function (self)
 	self:cleanup()
 end
 
-ViewLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name)
+ViewLoader.start_loading = function (self, context)
+	local mission_name = context.mission_name
 	local ui_manager = Managers.ui
 
 	if ui_manager then
@@ -41,7 +43,11 @@ ViewLoader.start_loading = function (self, mission_name, level_editor_level, cir
 				self:_load_done_callback()
 			end
 
-			ui_manager:load_view(view_name, "ViewLoader", callback)
+			local dynamic_package
+
+			dynamic_package = self._get_dynamic_package_for_view(view_name, mission_name)
+
+			ui_manager:load_view(view_name, "ViewLoader", callback, dynamic_package)
 		end
 
 		if view_loading_count == 0 then
@@ -90,6 +96,18 @@ ViewLoader._load_done_callback = function (self)
 			ui_manager:release_packages()
 		end
 	end
+end
+
+ViewLoader._get_dynamic_package_for_view = function (view_name, mission_name)
+	local dynamic_package
+
+	if view_name == "mission_intro_view" then
+		local _, level_package = MissionIntroView.select_target_intro_level(mission_name)
+
+		dynamic_package = level_package
+	end
+
+	return dynamic_package
 end
 
 ViewLoader.dont_destroy = function (self)

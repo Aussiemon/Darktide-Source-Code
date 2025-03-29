@@ -2,13 +2,11 @@
 
 local definition_path = "scripts/ui/views/main_menu_background_view/main_menu_background_view_definitions"
 local MainMenuBackgroundViewSettings = require("scripts/ui/views/main_menu_background_view/main_menu_background_view_settings")
-local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
-local WorldRenderUtils = require("scripts/utilities/world_render")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
-local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local MasterItems = require("scripts/backend/master_items")
+local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
+local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
+local WorldRender = require("scripts/utilities/world_render")
 local MainMenuBackgroundView = class("MainMenuBackgroundView", "BaseView")
 
 MainMenuBackgroundView.init = function (self, settings, context)
@@ -295,9 +293,9 @@ MainMenuBackgroundView._handle_background_blur = function (self)
 		self._game_world_fullscreen_blur_amount = blur_amount
 
 		if apply_blur then
-			WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, blur_amount)
+			WorldRender.enable_world_fullscreen_blur(world_name, viewport_name, blur_amount)
 		else
-			WorldRenderUtils.disable_world_fullscreen_blur(world_name, viewport_name)
+			WorldRender.disable_world_fullscreen_blur(world_name, viewport_name)
 		end
 	end
 end

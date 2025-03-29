@@ -15,9 +15,9 @@ local function _include_ability_definition(file_name)
 	end
 end
 
-_include_ability_definition("scripts/settings/ability/player_abilities/veteran_abilities")
-_include_ability_definition("scripts/settings/ability/player_abilities/zealot_abilities")
-_include_ability_definition("scripts/settings/ability/player_abilities/ogryn_abilities")
-_include_ability_definition("scripts/settings/ability/player_abilities/psyker_abilities")
+_include_ability_definition("scripts/settings/ability/player_abilities/abilities/ogryn_abilities")
+_include_ability_definition("scripts/settings/ability/player_abilities/abilities/psyker_abilities")
+_include_ability_definition("scripts/settings/ability/player_abilities/abilities/veteran_abilities")
+_include_ability_definition("scripts/settings/ability/player_abilities/abilities/zealot_abilities")
 
 return settings(player_abilities_name, player_abilities)

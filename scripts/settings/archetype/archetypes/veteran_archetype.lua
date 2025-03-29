@@ -6,7 +6,7 @@ local ArchetypeStaminaTemplates = require("scripts/settings/stamina/archetype_st
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local ArchetypeToughnessTemplates = require("scripts/settings/toughness/archetype_toughness_templates")
 local ArchetypeWarpChargeTemplates = require("scripts/settings/warp_charge/archetype_warp_charge_templates")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
 local archetype_data = {
 	archetype_background_large = "content/ui/materials/icons/classes/large/veteran",
 	archetype_badge = "content/ui/materials/icons/class_badges/veteran_01_01",
@@ -25,7 +25,6 @@ local archetype_data = {
 	health = 150,
 	knocked_down_health = 1000,
 	name = "veteran",
-	string_symbol = "",
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/veteran_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/veteran",
 	ui_selection_order = 1,
@@ -41,7 +40,7 @@ local archetype_data = {
 		veteran_cover_peeking = 1,
 		veteran_frag_grenade = 1,
 	},
-	selection_sound_event = UISoundEvents.character_create_archetype_veteran,
+	selection_sound_event = UiSoundEvents.character_create_archetype_veteran,
 	unique_weapons = {
 		{
 			display_name = "loc_class_selection_unique_weapon_veteran_melee_1",

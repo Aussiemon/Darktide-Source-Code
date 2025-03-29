@@ -1,32 +1,29 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/power_swords_2h/settings_templates/power_sword_2h_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local melee_attack_strengths = AttackSettings.melee_attack_strength
+local big_cleave = DamageProfileSettings.big_cleave
+local large_cleave = DamageProfileSettings.large_cleave
+local light_cleave = DamageProfileSettings.light_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local melee_attack_strengths = AttackSettings.melee_attack_strength
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local light_cleave = DamageProfileSettings.light_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local large_cleave = DamageProfileSettings.large_cleave
-local big_cleave = DamageProfileSettings.big_cleave
 local cutting_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -143,8 +140,8 @@ damage_templates.light_powersword_2h = {
 	stagger_category = "melee",
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword,
@@ -260,8 +257,8 @@ damage_templates.light_powersword_2h_active = {
 	weapon_special = true,
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword_active,
@@ -404,8 +401,8 @@ damage_templates.light_powersword_2h_smiter = {
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword,
@@ -509,8 +506,8 @@ damage_templates.light_powersword_2h_smiter_active = {
 	weapon_special = true,
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword_active,
@@ -588,8 +585,8 @@ damage_templates.light_powersword_2h_stab = {
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword,
@@ -690,8 +687,8 @@ damage_templates.light_powersword_2h_stab_active = {
 	weapon_special = true,
 	cleave_distribution = light_cleave,
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_sword_active,
@@ -770,8 +767,8 @@ damage_templates.powersword_2h_heavy_smiter = {
 	stagger_category = "melee",
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.power_sword,
@@ -843,8 +840,8 @@ damage_templates.powersword_2h_heavy_smiter_active = {
 	weapon_special = true,
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.power_sword,
@@ -940,8 +937,8 @@ damage_templates.powersword_2h_heavy_stab = {
 	stagger_category = "melee",
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.power_sword,
@@ -1013,8 +1010,8 @@ damage_templates.powersword_2h_heavy_stab_active = {
 	weapon_special = true,
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.power_sword,
@@ -1085,8 +1082,8 @@ damage_templates.powersword_2h_heavy_linesman = {
 	stagger_category = "melee",
 	cleave_distribution = large_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.power_sword,
@@ -1201,8 +1198,8 @@ damage_templates.powersword_2h_heavy_linesman_active = {
 	weapon_special = true,
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.power_sword,
@@ -1325,6 +1322,114 @@ damage_templates.powersword_2h_heavy_linesman_active = {
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
+	},
+}
+damage_templates.powersword_explosion = {
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_only = true,
+	ragdoll_push_force = 1200,
+	stagger_category = "uppercut",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 25,
+		impact = 62,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	stagger_duration_modifier = {
+		0.5,
+		1.5,
+	},
+	damage_type = damage_types.kinetic,
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.powersword_explosion_outer = {
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "uppercut",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 0,
+		impact = 35,
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 0.2,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 0.2,
+			},
+		},
+	},
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	gibbing_power = gibbing_power.always,
+	damage_type = damage_types.plasma,
+	targets = {
+		default_target = {},
 	},
 }
 

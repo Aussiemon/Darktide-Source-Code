@@ -6,10 +6,10 @@ local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local Pickups = require("scripts/settings/pickup/pickups")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
 local buff_proc_events = BuffSettings.proc_events
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
 local AmmunitionInteraction = class("AmmunitionInteraction", "PickupInteraction")
 local _can_interact, _can_refill_grenades
 

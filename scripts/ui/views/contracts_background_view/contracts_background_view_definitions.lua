@@ -1,11 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/contracts_background_view/contracts_background_view_definitions.lua
 
-local ItemUtils = require("scripts/utilities/items")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local WalletSettings = require("scripts/settings/wallet_settings")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 }

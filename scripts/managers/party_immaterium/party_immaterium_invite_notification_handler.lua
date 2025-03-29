@@ -91,13 +91,22 @@ PartyImmateriumInviteNotificationHandler._activate_next_invite = function (self)
 
 	self._active_invite = invite
 
+	local description
+	local inviter_name = invite.inviter_name
+
+	if inviter_name and inviter_name ~= "" then
+		description = Localize("loc_social_party_invite_received_description", true, {
+			player_name = inviter_name,
+		})
+	else
+		description = Localize("loc_social_party_invite_received_description_no_player_name")
+	end
+
 	local color_tint_text = true
 	local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, ACCEPT_INPUT_ALIAS, color_tint_text)
 	local texts = {
 		Localize("loc_social_party_invite_received_header"),
-		Localize("loc_social_party_invite_received_description", true, {
-			player_name = invite.inviter_name,
-		}),
+		description,
 		(Localize("loc_social_party_invite_accept", true, {
 			input = input_text,
 		})),

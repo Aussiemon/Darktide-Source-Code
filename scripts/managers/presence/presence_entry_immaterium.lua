@@ -261,6 +261,12 @@ PresenceEntryImmaterium.havoc_status = function (self)
 	return self:_key_value_string("havoc_status") or "none"
 end
 
+PresenceEntryImmaterium.havoc_rank_cadence_high = function (self)
+	local rank = self:_key_value_string("havoc_rank_cadence_high")
+
+	return rank ~= "none" and tonumber(rank) or nil
+end
+
 PresenceEntryImmaterium.havoc_rank_all_time_high = function (self)
 	local rank = self:_key_value_string("havoc_rank_all_time_high")
 

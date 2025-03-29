@@ -63,53 +63,45 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 		if not data then
 			return nil
 		end
+	end
 
-		if num_args == i then
-			if data.value then
-				return data.value
-			elseif data.values then
-				return data.values
-			elseif data.size then
-				if string.lower(data_type) == "text_box_array" then
-					local result = {}
+	if data.values then
+		return data.values
+	elseif data.size then
+		local result = Script.new_array(data.size)
 
-					for j = 1, data.size do
-						table.insert(result, "")
-					end
-
-					return result
-				elseif string.lower(data_type) == "check_box_array" then
-					local result = {}
-
-					for j = 1, data.size do
-						table.insert(result, false)
-					end
-
-					return result
-				elseif string.lower(data_type) == "number_array" then
-					local result = {}
-
-					for j = 1, data.size do
-						table.insert(result, 0)
-					end
-
-					return result
-				elseif string.lower(data_type) == "resource_array" then
-					local result = {}
-
-					for j = 1, data.size do
-						table.insert(result, "")
-					end
-
-					return result
-				end
-			elseif data.is_optional then
-				return nil
+		if data_type == "text_box_array" then
+			for j = 1, data.size do
+				result[j] = ""
 			end
 
-			Log.error("Component", "[_component_data_default_array_values][Unit: %s][Component: %s] Missing default values for array(%s)", Unit.id_string(unit), guid, key)
+			return result
+		elseif data_type == "check_box_array" then
+			for j = 1, data.size do
+				result[j] = false
+			end
+
+			return result
+		elseif data_type == "number_array" then
+			for j = 1, data.size do
+				result[j] = 0
+			end
+
+			return result
+		elseif data_type == "resource_array" then
+			for j = 1, data.size do
+				result[j] = ""
+			end
+
+			return result
 		end
+	elseif data.is_optional then
+		return nil
 	end
+
+	local path = select(num_args, ...)
+
+	Log.error("Component", "[_component_data_default_array_values][Unit: %s][Component: %s] Missing default values for array(%s)", Unit.id_string(unit), guid, path)
 
 	return nil
 end
@@ -138,24 +130,26 @@ local function _component_data_type(component_data, ...)
 end
 
 local function _is_vector3(type_name)
-	return string.lower(type_name) == "vector"
+	return type_name == "vector"
 end
 
 local function _is_struct_array(type_name)
-	return string.lower(type_name) == "struct_array"
+	return type_name == "struct_array"
 end
 
 local function _is_color(type_name)
-	return string.lower(type_name) == "color"
+	return type_name == "color"
 end
 
 local function _is_resource(type_name)
-	return string.lower(type_name) == "resource"
+	return type_name == "resource"
 end
 
 local function _is_array(type_name)
-	return string.lower(type_name) == "text_box_array" or string.lower(type_name) == "check_box_array" or string.lower(type_name) == "combo_box_array" or string.lower(type_name) == "number_array" or string.lower(type_name) == "resource_array"
+	return type_name == "text_box_array" or type_name == "check_box_array" or type_name == "combo_box_array" or type_name == "number_array" or type_name == "resource_array"
 end
+
+local EMPTY_TABLE = {}
 
 local function _component_data_get_array(self, unit, data_type, ...)
 	local unit_array_size = Unit.data_table_size(unit, "components", self.guid, "component_data", ...) or 0
@@ -164,29 +158,65 @@ local function _component_data_get_array(self, unit, data_type, ...)
 		return nil
 	end
 
-	local array = Script.new_array(unit_array_size)
+	local default_data = self.component_data
 
-	if string.lower(data_type) == "resource_array" then
-		for ii = 1, unit_array_size do
-			local resource_data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii, "resource")
+	for i = 1, select("#", ...) do
+		local key = select(i, ...)
 
-			if resource_data ~= nil then
-				array[#array + 1] = resource_data
-			else
-				local data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii)
+		default_data = default_data[key]
 
-				if data ~= nil then
-					array[#array + 1] = data
-				end
+		if not default_data then
+			break
+		end
+	end
+
+	local default_values = default_data and default_data.values or EMPTY_TABLE
+	local default_size = default_data and default_data.size or 0
+	local default_value
+
+	if default_size > 0 then
+		default_value = data_type == "text_box_array" and "" or (data_type ~= "check_box_array" or true) and (data_type == "number_array" and 0 or data_type == "resource_array" and "")
+	end
+
+	local num_default_values = #default_values
+	local array = Script.new_array(unit_array_size + math.max(num_default_values, default_size))
+	local found_array_elements = 0
+	local data
+	local index = 1
+	local ii = 1
+
+	if data_type == "resource_array" then
+		while found_array_elements < unit_array_size or ii <= num_default_values or ii <= default_size do
+			data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii, "resource") or Unit.get_data(unit, "components", self.guid, "component_data", ..., ii)
+
+			if data then
+				found_array_elements = found_array_elements + 1
+				array[index] = data
+				index = index + 1
+			elseif index <= num_default_values then
+				array[index] = default_values[index]
+				index = index + 1
 			end
+
+			ii = ii + 1
 		end
 	else
-		for ii = 1, unit_array_size do
-			local data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii)
+		while found_array_elements < unit_array_size or ii <= num_default_values or ii <= default_size do
+			data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii)
 
-			if data ~= nil then
-				array[#array + 1] = data
+			if data then
+				found_array_elements = found_array_elements + 1
+				array[index] = data
+				index = index + 1
+			elseif index <= num_default_values then
+				array[index] = default_values[index]
+				index = index + 1
+			elseif index <= default_size then
+				array[index] = default_value
+				index = index + 1
 			end
+
+			ii = ii + 1
 		end
 	end
 
@@ -387,24 +417,26 @@ function component(component_name, super_name, ...)
 		component_table.get_data = function (self, unit, ...)
 			local data_type, array_struct_definition = _component_data_type(self.component_data, ...)
 
-			if data_type ~= nil and _is_vector3(data_type) then
-				return _component_data_get_vector3(self, unit, self.guid, ...)
-			end
+			if data_type ~= nil then
+				if _is_resource(data_type) then
+					return _component_data_get_resource(self.component_data, unit, self.guid, ...) or _component_data_default_value(self.component_data, unit, self.guid, ...)
+				end
 
-			if data_type ~= nil and _is_struct_array(data_type) then
-				return _component_data_get_struct_array(self, array_struct_definition, unit, self.guid, ...)
-			end
+				if _is_vector3(data_type) then
+					return _component_data_get_vector3(self, unit, self.guid, ...)
+				end
 
-			if data_type ~= nil and _is_color(data_type) then
-				return _component_data_get_color(self, unit, self.guid, ...)
-			end
+				if _is_struct_array(data_type) then
+					return _component_data_get_struct_array(self, array_struct_definition, unit, self.guid, ...)
+				end
 
-			if data_type ~= nil and _is_array(data_type) then
-				return _component_data_get_array(self, unit, data_type, ...) or _component_data_default_array_values(self.component_data, unit, self.guid, data_type, ...)
-			end
+				if _is_color(data_type) then
+					return _component_data_get_color(self, unit, self.guid, ...)
+				end
 
-			if data_type ~= nil and _is_resource(data_type) then
-				return _component_data_get_resource(self.component_data, unit, self.guid, ...) or _component_data_default_value(self.component_data, unit, self.guid, ...)
+				if _is_array(data_type) then
+					return _component_data_get_array(self, unit, data_type, ...) or _component_data_default_array_values(self.component_data, unit, self.guid, data_type, ...)
+				end
 			end
 
 			local value = Unit.get_data(unit, "components", self.guid, "component_data", ...)
@@ -510,6 +542,7 @@ _require_component("scripts/components/kill_synchronizer")
 _require_component("scripts/components/ladder")
 _require_component("scripts/components/level_prop_customization")
 _require_component("scripts/components/level_scriptdata_tester_component")
+_require_component("scripts/components/light_array")
 _require_component("scripts/components/light_controller")
 _require_component("scripts/components/light_cycle")
 _require_component("scripts/components/liquid_spawner")
@@ -584,9 +617,10 @@ _require_component("scripts/components/weapon_customization")
 _require_component("scripts/components/weapon_flashlight")
 _require_component("scripts/components/weapon_material_variables")
 _require_component("scripts/components/weather_volume")
+_require_component("scripts/components/world_marker")
 _require_component("scripts/components/wwise_emitter_occlusion")
 _require_component("scripts/components/wwise_portal_volume")
 _require_component("scripts/components/wwise_room_volume")
-Component.parse_components(Components)
+Component.parse_components(Components, _is_array, _is_struct_array)
 
 return Components

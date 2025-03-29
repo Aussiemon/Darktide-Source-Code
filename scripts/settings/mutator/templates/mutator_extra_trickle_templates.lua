@@ -320,20 +320,20 @@ local mutator_templates = {
 					},
 					{
 						1,
-						1,
-					},
-					{
-						1,
 						2,
 					},
 					{
 						2,
 						3,
 					},
+					{
+						3,
+						4,
+					},
 				},
 				time_between_waves = {
-					2,
-					5,
+					15,
+					25,
 				},
 			},
 		},
@@ -378,6 +378,116 @@ local mutator_templates = {
 							},
 							poxwalkers = {
 								HordeCompositions.mutator_cultist_grenadier,
+							},
+						},
+					},
+				},
+				trickle_horde_travel_distance_range = {
+					110,
+					230,
+				},
+				trickle_horde_cooldown = {
+					40,
+					45,
+				},
+				optional_main_path_offset = {
+					30,
+					70,
+				},
+				pause_pacing_on_spawn = {
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						trickle_hordes = 20,
+					},
+					{
+						trickle_hordes = 10,
+					},
+				},
+				num_trickle_waves = {
+					{
+						4,
+						7,
+					},
+					{
+						5,
+						8,
+					},
+					{
+						6,
+						9,
+					},
+					{
+						7,
+						10,
+					},
+					{
+						9,
+						14,
+					},
+				},
+				time_between_waves = {
+					2,
+					5,
+				},
+			},
+		},
+	},
+	mutator_renegade_grenadier = {
+		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
+		trickle_horde_templates = {
+			{
+				cant_be_ramped = true,
+				disallow_spawning_too_close_to_other_spawn = true,
+				ignore_disallowance = true,
+				not_during_terror_events = true,
+				num_trickle_hordes_active_for_cooldown = 20,
+				optional_num_tries = 6,
+				stinger = "wwise/events/minions/play_minion_special_sniper_spawn_circumstance",
+				stinger_duration = 8,
+				horde_compositions = {
+					trickle_horde = {
+						renegade = {
+							none = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							low = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							high = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							poxwalkers = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+						},
+						cultist = {
+							none = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							low = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							high = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							poxwalkers = {
+								HordeCompositions.mutator_renegade_grenadier,
 							},
 						},
 					},

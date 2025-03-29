@@ -31,6 +31,13 @@ local VIEW_SETTINGS = {
 				return false
 			end
 
+			local mechanism_data = Managers.mechanism:mechanism_data()
+			local mission_name = mechanism_data and mechanism_data.mission_name
+
+			if mission_name == nil then
+				return false
+			end
+
 			return true
 		end,
 	},

@@ -13,7 +13,7 @@ ReloadStates.reset = function (reload_template, inventory_slot_component)
 	_reset_state(reload_template, inventory_slot_component)
 end
 
-ReloadStates.start_reload_state = function (reload_template, inventory_slot_component)
+ReloadStates.start_reload_state = function (reload_template, inventory_slot_component, condition_func_params)
 	local state_name = inventory_slot_component.reload_state
 	local state_config = reload_template[state_name]
 	local anim_1p = state_config.anim_1p
@@ -21,11 +21,11 @@ ReloadStates.start_reload_state = function (reload_template, inventory_slot_comp
 	local action_time_offset = state_config.action_time_offset
 
 	if type(anim_1p) == "function" then
-		anim_1p = anim_1p(inventory_slot_component)
+		anim_1p = anim_1p(condition_func_params)
 	end
 
 	if type(anim_3p) == "function" then
-		anim_3p = anim_3p(inventory_slot_component)
+		anim_3p = anim_3p(condition_func_params)
 	end
 
 	return anim_1p, anim_3p, action_time_offset

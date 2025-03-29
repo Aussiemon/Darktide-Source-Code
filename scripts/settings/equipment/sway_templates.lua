@@ -3,24 +3,20 @@
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
 local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_states
+local PI = math.pi
 local sway_templates = {}
 local loaded_template_files = {}
 
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_sway_templates", sway_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_sway_templates", sway_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_sway_templates", sway_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_sway_templates", sway_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_sway_templates", sway_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_sway_templates", sway_templates, loaded_template_files)
 
 sway_templates.lasgun_zoomed = {
 	[weapon_movement_states.still] = {
@@ -113,9 +109,9 @@ sway_templates.lasgun_zoomed = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -211,9 +207,9 @@ sway_templates.lasgun_zoomed = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -314,9 +310,9 @@ sway_templates.autogun_zoomed = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -412,9 +408,9 @@ sway_templates.autogun_zoomed = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -515,9 +511,9 @@ sway_templates.autogun_fullauto_zoomed = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * (1 - math.abs(yaw_angle * yaw_angle)))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -613,9 +609,9 @@ sway_templates.autogun_fullauto_zoomed = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -711,9 +707,9 @@ sway_templates.bolter_alternate_fire = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -890,9 +886,9 @@ sway_templates.shotgun_alternate_fire = {
 			local max_sway = sway_settings.max_sway
 			local pitch_scalar = pitch / max_sway.pitch
 			local yaw_scalar = yaw / max_sway.yaw
-			local sin_angle = t * math.pi * horizontal_speed
+			local sin_angle = t * PI * horizontal_speed
 			local sin_wave = math.sin(sin_angle)
-			local new_angle = t * math.pi * rotation_speed
+			local new_angle = t * PI * rotation_speed
 			local yaw_angle = math.cos(new_angle)
 			local pitch_angle = 0.25 * sin_wave * sin_wave + math.sin(3 * new_angle) * (0.5 + 0.5 * math.abs(yaw_angle * yaw_angle))
 			local aim_offset_y = pitch_angle * pitch_scalar * intensity
@@ -982,13 +978,6 @@ sway_templates.shotgun_alternate_fire = {
 			},
 		},
 	},
-}
-
-local _movement_states = {
-	"still",
-	"moving",
-	"crouch_still",
-	"crouch_moving",
 }
 
 local function _inherit(move_state_settings, inheritance_settings)

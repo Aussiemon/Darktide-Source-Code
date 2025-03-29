@@ -85,7 +85,7 @@ local widget_definitions = {
 			style = {
 				hdr = true,
 				horizontal_alignment = "center",
-				color = Color.ui_hud_green_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true),
 				size = {
 					nil,
 					2,
@@ -97,6 +97,28 @@ local widget_definitions = {
 				offset = {
 					0,
 					-3,
+					1,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/faded_line_01",
+			style = {
+				hdr = true,
+				horizontal_alignment = "center",
+				color = Color.ui_hud_green_medium(255, true),
+				size = {
+					nil,
+					2,
+				},
+				size_addition = {
+					100,
+					0,
+				},
+				offset = {
+					0,
+					-2,
 					0,
 				},
 			},

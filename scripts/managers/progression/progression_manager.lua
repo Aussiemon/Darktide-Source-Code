@@ -295,8 +295,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 		self._session_report.character.havoc_highest_rank = self:_get_havoc_highest_rank(account_data)
 		self._session_report.character.havoc_week_rank = self:_get_havoc_week_rank(account_data)
 
-		local is_order_owner = my_account_id == self._session_report.eor.mission.gameModeDetails.ownerId
-		local havoc_history_promise = is_order_owner and Managers.data_service.havoc:history() or Promise.resolved()
+		local havoc_history_promise = Managers.data_service.havoc:history() or Promise.resolved()
 
 		table.insert(promise_list, havoc_history_promise)
 	end
@@ -542,7 +541,7 @@ ProgressionManager._get_havoc_order_rewards = function (self, account_data, havo
 
 	if modify_previous_reward then
 		havoc_session.previous.rank = havoc_session.current.rank
-		havoc_session.previous.charges = havoc_session.current.charges + (round_won and -1 or 1)
+		havoc_session.previous.charges = havoc_session.current.charges + (not round_won and 1 or 0)
 	end
 
 	local current_rank = havoc_session.current.rank

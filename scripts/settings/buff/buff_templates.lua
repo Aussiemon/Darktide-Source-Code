@@ -28,6 +28,7 @@ _create_entry("scripts/settings/buff/player_buff_templates", buff_categories.gen
 _create_entry("scripts/settings/buff/syringe_buff_templates", buff_categories.generic)
 _create_entry("scripts/settings/buff/training_grounds_buff_templates", buff_categories.generic)
 _create_entry("scripts/settings/buff/weapon_buff_templates", buff_categories.generic)
+_create_entry("scripts/settings/buff/hordes_buff_templates", buff_categories.hordes_buff)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_trait_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_buff_examples", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_melee_activated_buff_templates", buff_categories.weapon_traits)

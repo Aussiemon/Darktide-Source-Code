@@ -22,6 +22,11 @@ explosion_templates.plasma_rifle = {
 	close_damage_type = damage_types.laser,
 	damage_profile = DamageProfileTemplates.light_plasma_demolition,
 	damage_type = damage_types.laser,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
 	explosion_area_suppression = {
 		instant_aggro = true,
 		suppression_falloff = true,
@@ -57,6 +62,11 @@ explosion_templates.plasma_rifle_exit = {
 	close_damage_type = damage_types.plasma,
 	damage_profile = DamageProfileTemplates.light_plasma_demolition,
 	damage_type = damage_types.plasma,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
 	scalable_vfx = {},
 }
 

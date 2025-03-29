@@ -7,6 +7,7 @@ local end_view_settings = {
 	character_spacing_width = 1.6,
 	delay_after_summary = 10,
 	delay_before_summary = 5,
+	horde_level_name = "content/levels/ui/horde_end_of_round/horde_end_of_round",
 	level_name = "content/levels/ui/end_of_round/ui_eor_background",
 	max_duration = 120,
 	min_delay_before_summary = 2,

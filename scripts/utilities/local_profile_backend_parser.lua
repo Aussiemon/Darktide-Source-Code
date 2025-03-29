@@ -36,14 +36,14 @@ LocalProfileBackendParser.parse_profile = function (profile, character_id)
 	local archetype = Archetypes[archetype_name]
 	local num_talents = #talents
 
-	for i = num_talents, 1, -1 do
-		local talent_name = talents[i]
+	for ii = num_talents, 1, -1 do
+		local talent_name = talents[ii]
 		local segments = string.split(talent_name, "--")
 		local selected_name = segments[1] or talent_name
 		local tier = tonumber(segments[2]) or 0
 
 		talents[selected_name] = tier
-		talents[i] = nil
+		talents[ii] = nil
 	end
 
 	PlayerTalents.add_archetype_base_talents(archetype, talents)

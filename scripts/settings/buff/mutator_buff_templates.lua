@@ -235,29 +235,6 @@ templates.headshot_parasite_enemies = {
 			end
 		end
 	end,
-	minion_effects = {
-		node_effects = {
-			{
-				node_name = "j_head",
-				vfx = {
-					orphaned_policy = "destroy",
-					particle_effect = "content/fx/particles/enemies/buff_taunted_1p",
-					stop_type = "stop",
-					material_variables = {
-						{
-							material_name = "outline",
-							variable_name = "Color1",
-							value = {
-								0,
-								10.75,
-								0.005,
-							},
-						},
-					},
-				},
-			},
-		},
-	},
 }
 templates.mutator_minion_nurgle_blessing_tougher = {
 	class_name = "buff",

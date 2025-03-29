@@ -43,110 +43,106 @@ local function _collect_forcesword_wind_slash_hits(template_data, template_conte
 	template_data.power_level = power_level
 	template_data.attack_type = attack_type
 
-	local slash_shape = slash_settings.shape
+	local slash_dot = slash_settings.dot_check
+	local slash_range = slash_settings.range
+	local slash_direction = template_data.slash_direction
+	local thickness = slash_settings.thickness
+	local half_thickness = thickness * 0.5
+	local hit_positions = template_data.hit_positions
+	local hit_distances = template_data.hit_distances
+	local total_range = slash_range
+	local previous_range = 0
 
-	if slash_shape and slash_shape == "cone" then
-		local slash_dot = slash_settings.dot_check
-		local slash_range = slash_settings.range
-		local slash_direction = template_data.slash_direction
-		local thickness = slash_settings.thickness
-		local half_thickness = thickness * 0.5
-		local hit_positions = template_data.hit_positions
-		local hit_distances = template_data.hit_distances
-		local total_range = slash_range
-		local previous_range = 0
+	while total_range > 0 do
+		local range = previous_range > 0 and previous_range * 2 or 2.5
+		local slice_radius = range - previous_range
 
-		while total_range > 0 do
-			local range = previous_range > 0 and previous_range * 2 or 2.5
-			local slice_radius = range - previous_range
+		total_range = total_range - range
+		previous_range = range
 
-			total_range = total_range - range
-			previous_range = range
+		local position = start_position + slash_direction * range
+		local player = template_context.player
+		local is_local_unit = not player.remote
+		local rewind_ms = LagCompensation.rewind_ms(true, is_local_unit, player)
+		local world = template_context.world
+		local physics_world = World.physics_world(world)
+		local hit_actors, num_hit_actors = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", slice_radius, "collision_filter", "filter_player_character_shooting_raycast_dynamics", "rewind_ms", rewind_ms)
 
-			local position = start_position + slash_direction * range
-			local player = template_context.player
-			local is_local_unit = not player.remote
-			local rewind_ms = LagCompensation.rewind_ms(true, is_local_unit, player)
-			local world = template_context.world
-			local physics_world = World.physics_world(world)
-			local hit_actors, num_hit_actors = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", slice_radius, "collision_filter", "filter_player_character_shooting_raycast_dynamics", "rewind_ms", rewind_ms)
+		for ii = 1, num_hit_actors do
+			repeat
+				local hit_actor = hit_actors[ii]
+				local hit_unit = Actor.unit(hit_actor)
 
-			for ii = 1, num_hit_actors do
-				repeat
-					local hit_actor = hit_actors[ii]
-					local hit_unit = Actor.unit(hit_actor)
+				if not _hit_units[hit_unit] then
+					_hit_units[hit_unit] = true
 
-					if not _hit_units[hit_unit] then
-						_hit_units[hit_unit] = true
+					local hit_unit_position = POSITION_LOOKUP[hit_unit] or Unit.world_position(hit_unit, 1)
+					local lower_z = hit_unit_position.z
+					local upper_z, highest_position
+					local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+					local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
+					local is_damagable = Health.is_damagable(hit_unit)
 
-						local hit_unit_position = POSITION_LOOKUP[hit_unit] or Unit.world_position(hit_unit, 1)
-						local lower_z = hit_unit_position.z
-						local upper_z, highest_position
-						local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
-						local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
-						local is_damagable = Health.is_damagable(hit_unit)
-
-						if not is_damagable then
-							break
-						end
-
-						local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
-						local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
-						local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
-						local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
-
-						if not should_deal_damage then
-							break
-						end
-
-						local breed_or_nil = Breed.unit_breed_or_nil(hit_unit)
-
-						if Breed.is_minion(breed_or_nil) then
-							local enemy_head_position = HitZone.hit_zone_center_of_mass(hit_unit, "head")
-
-							upper_z = enemy_head_position.z
-							highest_position = enemy_head_position
-						elseif Breed.is_prop(breed_or_nil) or Breed.is_living_prop(breed_or_nil) then
-							local enemy_center_position = HitZone.hit_zone_center_of_mass(hit_unit, "center_mass")
-							local half_height = math.abs(enemy_center_position.z - hit_unit_position.z)
-
-							upper_z = hit_unit_position.z + half_height * 2
-							highest_position = hit_unit_position + Vector3.up() * half_height * 2
-						end
-
-						if not upper_z or math.abs(lower_z - upper_z) <= 0.001 then
-							local _, half_extents = Unit.box(hit_unit)
-							local height = half_extents.z * 2
-
-							upper_z = hit_unit_position.z + height
-							highest_position = hit_unit_position + Vector3.up() * height
-						end
-
-						upper_z = upper_z + half_thickness
-						lower_z = lower_z - half_thickness
-
-						local closest_point = Geometry.closest_point_on_line(highest_position, start_position, start_position + slash_direction * slash_range)
-						local closest_z = closest_point.z
-						local distance_squared = Vector3.distance_squared(hit_unit_position, start_position)
-						local attack_direction = Vector3.normalize(hit_unit_position - start_position)
-
-						if Vector3.length_squared(attack_direction) == 0 then
-							attack_direction = fallback_attack_direction
-						end
-
-						local dot = Vector3.dot(slash_direction, attack_direction)
-						local within_angle = slash_dot < dot or distance_squared < CLOSE_RANGE_SQUARED
-						local within_height = lower_z <= closest_z and closest_z <= upper_z
-						local can_hit = within_angle and within_height
-
-						if can_hit and not hit_distances[hit_unit] then
-							template_data.slash_num_hits = template_data.slash_num_hits + 1
-							hit_positions[hit_unit] = Vector3Box(hit_unit_position.x, hit_unit_position.y, closest_z)
-							hit_distances[hit_unit] = distance_squared
-						end
+					if not is_damagable then
+						break
 					end
-				until true
-			end
+
+					local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
+					local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
+					local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
+					local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
+
+					if not should_deal_damage then
+						break
+					end
+
+					local breed_or_nil = Breed.unit_breed_or_nil(hit_unit)
+
+					if Breed.is_minion(breed_or_nil) then
+						local enemy_head_position = HitZone.hit_zone_center_of_mass(hit_unit, "head")
+
+						upper_z = enemy_head_position.z
+						highest_position = enemy_head_position
+					elseif Breed.is_prop(breed_or_nil) or Breed.is_living_prop(breed_or_nil) then
+						local enemy_center_position = HitZone.hit_zone_center_of_mass(hit_unit, "center_mass")
+						local half_height = math.abs(enemy_center_position.z - hit_unit_position.z)
+
+						upper_z = hit_unit_position.z + half_height * 2
+						highest_position = hit_unit_position + Vector3.up() * half_height * 2
+					end
+
+					if not upper_z or math.abs(lower_z - upper_z) <= 0.001 then
+						local _, half_extents = Unit.box(hit_unit)
+						local height = half_extents.z * 2
+
+						upper_z = hit_unit_position.z + height
+						highest_position = hit_unit_position + Vector3.up() * height
+					end
+
+					upper_z = upper_z + half_thickness
+					lower_z = lower_z - half_thickness
+
+					local closest_point = Geometry.closest_point_on_line(highest_position, start_position, start_position + slash_direction * slash_range)
+					local closest_z = closest_point.z
+					local distance_squared = Vector3.distance_squared(hit_unit_position, start_position)
+					local attack_direction = Vector3.normalize(hit_unit_position - start_position)
+
+					if Vector3.length_squared(attack_direction) == 0 then
+						attack_direction = fallback_attack_direction
+					end
+
+					local dot = Vector3.dot(slash_direction, attack_direction)
+					local within_angle = slash_dot < dot or distance_squared < CLOSE_RANGE_SQUARED
+					local within_height = lower_z <= closest_z and closest_z <= upper_z
+					local can_hit = within_angle and within_height
+
+					if can_hit and not hit_distances[hit_unit] then
+						template_data.slash_num_hits = template_data.slash_num_hits + 1
+						hit_positions[hit_unit] = Vector3Box(hit_unit_position.x, hit_unit_position.y, closest_z)
+						hit_distances[hit_unit] = distance_squared
+					end
+				end
+			until true
 		end
 	end
 end
@@ -360,11 +356,8 @@ local function _forcesword_wind_slash_effect_generator_func(level)
 					local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
 					local side_system = Managers.state.extension:system("side_system")
 					local side = side_system.side_by_unit[player_unit]
-					local target_enemies = slash_settings.target_enemies
 
-					if target_enemies then
-						_collect_forcesword_wind_slash_hits(template_data, template_context, side, t, talent_extension)
-					end
+					_collect_forcesword_wind_slash_hits(template_data, template_context, side, t, talent_extension)
 
 					template_data.sweep_start_t = nil
 				end

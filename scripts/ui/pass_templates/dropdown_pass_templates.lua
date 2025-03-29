@@ -652,7 +652,11 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				offset[2] = offset_y - size_addition
 				style.hdr = focus_alpha == 255
 			end,
-			visibility_function = content_visibility_function,
+			visibility_function = function (content, style)
+				local hotspot = content[hotspot_id]
+
+				return content_visibility_function(content) and not hotspot.is_disabled
+			end,
 		}
 		options_passes[#options_passes + 1] = {
 			pass_type = "texture",
@@ -706,15 +710,22 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local hover_color = style.hover_color
 				local text_color = style.text_color
 				local hotspot = content[hotspot_id]
-				local focus_progress = math.easeCubic(content.anim_exclusive_focus_progress)
-				local alpha_progress = math.clamp((focus_progress - current_fraction) / option_fraction, 0, 1)
+				local is_disabled = hotspot.is_disabled
 
-				text_color[1] = 255 * math.easeCubic(alpha_progress)
+				if is_disabled then
+					style.text_color = table.clone(default_color)
+					style.text_color[1] = style.text_color[1] * 0.5
+				else
+					local focus_progress = math.easeCubic(content.anim_exclusive_focus_progress)
+					local alpha_progress = math.clamp((focus_progress - current_fraction) / option_fraction, 0, 1)
 
-				local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
-				local exclude_alpha = true
+					text_color[1] = 255 * math.easeCubic(alpha_progress)
 
-				ColorUtilities.color_lerp(default_color, hover_color, highlight_progress, text_color, exclude_alpha)
+					local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
+					local exclude_alpha = true
+
+					ColorUtilities.color_lerp(default_color, hover_color, highlight_progress, text_color, exclude_alpha)
+				end
 			end,
 			visibility_function = content_visibility_function,
 		}

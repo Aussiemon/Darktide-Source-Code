@@ -26,8 +26,8 @@ AccountManagerBase.do_re_signin = function (self)
 	return false
 end
 
-AccountManagerBase.signin_profile = function (self)
-	return
+AccountManagerBase.signin_profile = function (self, signin_callback, optional_input_device)
+	signin_callback()
 end
 
 AccountManagerBase.user_detached = function (self)

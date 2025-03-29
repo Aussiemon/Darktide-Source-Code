@@ -15,6 +15,7 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local breed_name = "renegade_netgunner"
 local armor_types = ArmorSettings.types
 local breed_terror_event_settings = BreedTerrorEventSettings[breed_name]

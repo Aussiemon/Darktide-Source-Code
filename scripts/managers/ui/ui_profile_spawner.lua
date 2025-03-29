@@ -72,7 +72,7 @@ UIProfileSpawner._node = function (self, node_name)
 	end
 end
 
-UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine)
+UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale, state_machine_or_nil, animation_event_or_nil, face_state_machine_key_or_nil, face_animation_event_or_nil, force_highest_mip_or_nil, disable_hair_state_machine_or_nil, optional_unit_3p, optional_ignore_state_machine)
 	if self._loading_profile_data then
 		self._loading_profile_data.profile_loader:destroy()
 
@@ -82,8 +82,9 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 	self._profile_loader_index = (self._profile_loader_index or 0) + 1
 
 	local reference_name = self._reference_name .. "_profile_loader_" .. tostring(self._profile_loader_index)
-	local character_profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template)
-	local loading_items = character_profile_loader:load_profile(profile)
+	local character_profile_package_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template)
+	local loading_items = character_profile_package_loader:load_profile(profile)
+	local state_machine = state_machine_or_nil
 
 	if not state_machine then
 		local archetype = profile.archetype
@@ -95,18 +96,18 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 
 	self._loading_profile_data = {
 		profile = profile,
-		profile_loader = character_profile_loader,
+		profile_loader = character_profile_package_loader,
 		reference_name = reference_name,
 		position = position and Vector3.to_array(position),
 		rotation = rotation and QuaternionBox(rotation),
 		scale = scale and Vector3.to_array(scale),
 		loading_items = loading_items,
 		state_machine = state_machine,
-		animation_event = animation_event,
-		face_state_machine_key = face_state_machine_key,
-		face_animation_event = face_animation_event,
-		force_highest_mip = force_highest_mip,
-		disable_hair_state_machine = disable_hair_state_machine or false,
+		animation_event = animation_event_or_nil,
+		face_state_machine_key = face_state_machine_key_or_nil,
+		face_animation_event = face_animation_event_or_nil,
+		force_highest_mip = force_highest_mip_or_nil,
+		disable_hair_state_machine = not not disable_hair_state_machine_or_nil,
 		optional_unit_3p = optional_unit_3p,
 		optional_ignore_state_machine = optional_ignore_state_machine,
 	}
@@ -241,12 +242,12 @@ UIProfileSpawner._change_slot_item = function (self, slot_id, item)
 	loading_items[slot_id] = item
 
 	local loader = use_loader_version and loading_profile_data.profile_loader or self._single_item_profile_loader
-	local complete_callback = callback(self, "cb_on_single_slot_item_loaded", slot_id, item)
+	local on_complete_callback = callback(self, "cb_on_single_slot_item_loaded", slot_id, item)
 
 	if item then
-		loader:load_slot_item(slot_id, item, complete_callback)
+		loader:load_slot_item(slot_id, item, on_complete_callback)
 	else
-		complete_callback()
+		on_complete_callback()
 	end
 end
 
@@ -261,7 +262,7 @@ UIProfileSpawner.cb_on_single_slot_item_loaded = function (self, slot_id, item)
 	loadout[slot_id] = item
 
 	if not use_loader_version then
-		self:_equip_item_for_spawn_character(slot_id, item)
+		self:_equip_item_for_spawned_character(slot_id, item)
 	end
 
 	if item then
@@ -291,7 +292,6 @@ end
 
 UIProfileSpawner._sync_profile_changes = function (self)
 	local loading_profile_data = self._loading_profile_data
-	local use_loader_version = loading_profile_data ~= nil
 	local character_spawn_data = self._character_spawn_data
 	local data = loading_profile_data or character_spawn_data
 
@@ -304,6 +304,7 @@ UIProfileSpawner._sync_profile_changes = function (self)
 		for slot_id, config in pairs(ItemSlotSettings) do
 			if not ignored_slots[slot_id] and not config.ignore_character_spawning then
 				local item = loadout[slot_id]
+				local use_loader_version = loading_profile_data ~= nil
 
 				if use_loader_version then
 					if loading_items[slot_id] ~= item then
@@ -464,20 +465,20 @@ UIProfileSpawner._despawn_players_gear = function (self)
 	end
 end
 
-UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item)
-	local spawn_data = self._character_spawn_data
-	local unit_3p = spawn_data.unit_3p
-	local equipment_component = spawn_data.equipment_component
-	local equipped_items = spawn_data.equipped_items
-	local loading_items = spawn_data.loading_items
-	local breed_name = spawn_data.breed_name
-	local profile = spawn_data.profile
-	local slot_dependency_items
-	local force_highest_mip = spawn_data.force_highest_mip
-	local slots = spawn_data.slots
+UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, item)
+	local character_spawn_data = self._character_spawn_data
+	local unit_3p = character_spawn_data.unit_3p
+	local equipment_component = character_spawn_data.equipment_component
+	local equipped_items = character_spawn_data.equipped_items
+	local loading_items = character_spawn_data.loading_items
+	local breed_name = character_spawn_data.breed_name
+	local profile = character_spawn_data.profile
+	local force_highest_mip = character_spawn_data.force_highest_mip
+	local slots = character_spawn_data.slots
 	local slot = slots[slot_id]
 	local slot_config = PlayerCharacterConstants.slot_configuration[slot_id]
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
+	local slot_dependency_items
 
 	if slot.equipped then
 		slot_dependency_items = equipment_component:unequip_slot_dependencies(slot_config, slots, slot_equip_order)
@@ -544,12 +545,12 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 			Unit.set_unit_visibility(parent_item_unit, false, true)
 		end
 
-		local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete_equip_item", parent_item_unit)
+		local on_complete_callback = callback(self, "cb_on_unit_3p_streaming_complete_equip_item", parent_item_unit)
 
 		if force_highest_mip then
-			Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
+			Unit.force_stream_meshes(unit_3p, on_complete_callback, true, GameParameters.force_stream_mesh_timeout)
 		else
-			complete_callback()
+			on_complete_callback()
 		end
 	end
 end
@@ -563,8 +564,8 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local archetype = profile.archetype
 	local archetype_name = archetype and archetype.name
 	local breed_name = archetype and archetype.breed or profile.breed
-	local optional_base_unit = profile.optional_base_unit
 	local breed_settings = Breeds[breed_name]
+	local optional_base_unit = profile.optional_base_unit
 	local base_unit = optional_base_unit or breed_settings.base_unit
 
 	position = position or Vector3.zero()
@@ -592,7 +593,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		end
 	end
 
-	local equipment_component = EquipmentComponent:new(self._world, self._item_definitions, self._unit_spawner, unit_3p, nil, nil, self._force_highest_lod_step)
+	local equipment_component = EquipmentComponent:new(self._world, self._item_definitions, self._unit_spawner, unit_3p, nil, nil, self._force_highest_lod_step, true)
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 	local gear_slots = {}
 	local ignored_slots = self._ignored_slots
@@ -617,8 +618,8 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 	local equipped_items = {}
 
-	for i = 1, #slot_equip_order do
-		local slot_id = slot_equip_order[i]
+	for ii = 1, #slot_equip_order do
+		local slot_id = slot_equip_order[ii]
 		local slot = slots[slot_id]
 		local item = loadout[slot_id]
 
@@ -694,7 +695,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		end
 	end
 
-	local spawn_data = {
+	local character_spawn_data = {
 		streaming_complete = false,
 		slots = slots,
 		archetype_name = archetype_name,
@@ -711,7 +712,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		force_highest_mip = force_highest_mip,
 	}
 
-	self._character_spawn_data = spawn_data
+	self._character_spawn_data = character_spawn_data
 
 	local wield_slot_id = self._request_wield_slot_id
 
@@ -721,12 +722,12 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 	self:wield_slot(wield_slot_id)
 
-	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", unit_3p)
+	local on_complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", unit_3p)
 
 	if force_highest_mip then
-		Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
+		Unit.force_stream_meshes(unit_3p, on_complete_callback, true, GameParameters.force_stream_mesh_timeout)
 	else
-		complete_callback()
+		on_complete_callback()
 	end
 end
 
@@ -770,9 +771,9 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p, tim
 end
 
 UIProfileSpawner.wield_slot = function (self, slot_id)
-	local spawn_data = self._character_spawn_data
+	local character_spawn_data = self._character_spawn_data
 
-	if not spawn_data then
+	if not character_spawn_data then
 		self._request_wield_slot_id = slot_id
 
 		return
@@ -780,14 +781,14 @@ UIProfileSpawner.wield_slot = function (self, slot_id)
 
 	self._request_wield_slot_id = nil
 
-	local equipment_component = spawn_data.equipment_component
-	local first_person_mode = spawn_data.first_person_mode
-	local slots = spawn_data.slots
+	local equipment_component = character_spawn_data.equipment_component
+	local first_person_mode = character_spawn_data.first_person_mode
+	local slots = character_spawn_data.slots
 	local wield_slot = slots[slot_id]
 
 	equipment_component.wield_slot(wield_slot, first_person_mode)
 
-	spawn_data.wielded_slot = wield_slot
+	character_spawn_data.wielded_slot = wield_slot
 
 	if self._visible then
 		self:_update_items_visibility()
@@ -960,11 +961,11 @@ UIProfileSpawner._is_character_pressed = function (self, input_service)
 			return
 		end
 
-		local cursor_name = "cursor"
-		local cursor = input_service:get(cursor_name) or NilCursor
 		local camera = self._camera
 
 		if physics_world and camera then
+			local cursor_name = "cursor"
+			local cursor = input_service:get(cursor_name) or NilCursor
 			local screen_height = RESOLUTION_LOOKUP.height
 
 			cursor[2] = screen_height - cursor[2]
@@ -973,7 +974,7 @@ UIProfileSpawner._is_character_pressed = function (self, input_service)
 			local direction = Camera.screen_to_world(camera, cursor, 1) - from
 			local to = Vector3.normalize(direction)
 			local collision_filter = "filter_player_detection"
-			local hit_unit, hit_actor = self:_get_raycast_hit(from, to, physics_world, collision_filter)
+			local hit_unit, _ = self:_get_raycast_hit(from, to, physics_world, collision_filter)
 
 			if hit_unit then
 				return true
@@ -982,24 +983,23 @@ UIProfileSpawner._is_character_pressed = function (self, input_service)
 	end
 end
 
-UIProfileSpawner._get_raycast_hit = function (self, from, to, physics_world, collision_filter)
-	local result, other = PhysicsWorld.raycast(physics_world, from, to, 10, "all", "collision_filter", collision_filter)
+local INDEX_DISTANCE = 2
+local INDEX_ACTOR = 4
 
-	if not result then
-		return
+UIProfileSpawner._get_raycast_hit = function (self, from, to, physics_world, collision_filter)
+	local results = PhysicsWorld.raycast(physics_world, from, to, 10, "all", "collision_filter", collision_filter)
+
+	if not results then
+		return nil, nil
 	end
 
 	local closest_distance = math.huge
 	local closest_hit
-	local INDEX_DISTANCE = 2
-	local INDEX_ACTOR = 4
-	local num_hits = #result
+	local num_hits = #results
 
-	for i = 1, num_hits do
-		local hit = result[i]
+	for ii = 1, num_hits do
+		local hit = results[ii]
 		local hit_distance = hit[INDEX_DISTANCE]
-		local hit_actor = hit[INDEX_ACTOR]
-		local hit_unit = Actor.unit(hit_actor)
 
 		if hit_distance < closest_distance then
 			closest_distance = hit_distance
@@ -1029,10 +1029,6 @@ end
 
 UIProfileSpawner.rotation_angle = function (self)
 	return self._rotation_angle
-end
-
-UIProfileSpawner.default_rotation_angle = function (self)
-	return self._default_rotation_angle
 end
 
 UIProfileSpawner.set_character_scale = function (self, scale_value)

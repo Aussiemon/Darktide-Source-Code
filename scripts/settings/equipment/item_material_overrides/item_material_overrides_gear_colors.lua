@@ -2536,6 +2536,32 @@ local material_overrides = {
 			},
 		},
 	},
+	color_3_colour_twitch_02 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_twitch_02",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_twitch_02",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_twitch_02",
+			},
+		},
+	},
+	color_3_colour_twitch_02_darker = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_twitch_02_darker",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_twitch_02_darker",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_twitch_02_darker",
+			},
+		},
+	},
 	color_3_colour_navy_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -2650,6 +2676,19 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/3_colour_enforcer_01",
+			},
+		},
+	},
+	color_3_colour_inquisition_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_inquisition_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_inquisition_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_inquisition_01",
 			},
 		},
 	},

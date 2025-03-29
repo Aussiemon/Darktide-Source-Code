@@ -7,7 +7,6 @@ local function lerpable_timescale(value)
 	}
 end
 
-local multiplier
 local ninja_crit_bump = 0.15
 local hatchet_crit_bump = {
 	lerp_basic = 0,
@@ -775,6 +774,32 @@ local weapon_handling_templates = {
 			auto_fire_time = 0.0005,
 			fire_time = 0,
 			max_shots = 2,
+		},
+	},
+	heavy_stubber_p1_m1_hip = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_basic = 0.09999999999999999,
+				lerp_perfect = 0.08,
+			},
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 2,
+		},
+	},
+	heavy_stubber_p1_m1_brace = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_basic = 0.09999999999999999,
+				lerp_perfect = 0.08,
+			},
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 2,
 		},
 	},
 }

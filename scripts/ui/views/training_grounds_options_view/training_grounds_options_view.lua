@@ -1,15 +1,13 @@
 ﻿-- chunkname: @scripts/ui/views/training_grounds_options_view/training_grounds_options_view.lua
 
-local TrainingGroundsOptionsViewSettings = require("scripts/ui/views/training_grounds_options_view/training_grounds_options_view_settings")
 local definition_path = "scripts/ui/views/training_grounds_options_view/training_grounds_options_view_definitions"
+local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
-local MasterItems = require("scripts/backend/master_items")
-local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
+local TrainingGroundsOptionsViewSettings = require("scripts/ui/views/training_grounds_options_view/training_grounds_options_view_settings")
+local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local TrainingGroundsOptionsView = class("TrainingGroundsOptionsView", "BaseView")
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local view_settings = TrainingGroundsOptionsViewSettings
 
 local function get_input_text(action_name, input_service_name)
@@ -126,7 +124,14 @@ TrainingGroundsOptionsView._start_training_grounds = function (self, mechanism_c
 
 	local widgets_by_name = self._widgets_by_name
 	local difficulty_stepper = widgets_by_name.difficulty_stepper
-	local challenge_level = difficulty_stepper.content.danger
+	local difficulty_setting = DangerSettings[difficulty_stepper.content.danger]
+	local challenge_level = difficulty_setting and difficulty_setting.challenge
+
+	if not challenge_level then
+		Log.warning("TrainingGroundsOptionsView", "Missing challenge: %s", difficulty_stepper.content.danger)
+
+		challenge_level = 1
+	end
 
 	mechanism_context.challenge_level = challenge_level
 
@@ -153,6 +158,15 @@ TrainingGroundsOptionsView._start_training_grounds = function (self, mechanism_c
 end
 
 TrainingGroundsOptionsView.on_exit = function (self)
+	local save_data = Managers.save:character_data()
+	local danger = self._widgets_by_name.difficulty_stepper.content.danger
+
+	if danger then
+		save_data.training_grounds_danger = danger
+
+		Managers.save:queue_save()
+	end
+
 	TrainingGroundsOptionsView.super.on_exit(self)
 end
 
@@ -177,7 +191,9 @@ TrainingGroundsOptionsView._setup_info = function (self)
 		play_button_content.hotspot.disabled = true
 	end
 
-	widgets_by_name.difficulty_stepper.content.danger = 3
+	local save_data = Managers.save:character_data()
+
+	widgets_by_name.difficulty_stepper.content.danger = save_data and save_data.training_grounds_danger or 3
 	widgets_by_name.select_difficulty_text.content.text = Localize("loc_mission_board_select_difficulty")
 
 	if self.training_grounds_settings ~= "shooting_range" then

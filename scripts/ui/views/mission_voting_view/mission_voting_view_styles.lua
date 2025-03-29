@@ -65,7 +65,7 @@ local mission_detail_top = {
 	},
 	offset = {
 		5,
-		-5,
+		-7,
 		0,
 	},
 }
@@ -77,7 +77,7 @@ local mission_detail_bottom = {
 	},
 	offset = {
 		5,
-		5,
+		7,
 		0,
 	},
 }
@@ -164,12 +164,7 @@ rank_text_font_style.offset = {
 	0,
 }
 rank_text_font_style.text_horizontal_alignment = "left"
-rank_text_font_style.text_color = {
-	255,
-	216,
-	229,
-	207,
-}
+rank_text_font_style.text_color = Color.terminal_text_body(255, true)
 rank_text_font_style.horizontal_alignment = "left"
 rank_text_font_style.vertical_alignment = "center"
 rank_text_font_style.size = {
@@ -426,6 +421,51 @@ diffulty_icon_background_frame_style.color = {
 diffulty_icon_background_frame_style.amount = 5
 diffulty_icon_background_frame_style.offset = {
 	40,
+	10,
+	3,
+}
+difficulty.rankup_icon = {
+	amount = 0,
+	axis = 2,
+	direction = -0.5,
+	horizontal_alignment = "left",
+	spacing = 8,
+	vertical_alignment = "center",
+	offset = {
+		105,
+		20,
+		0,
+	},
+	size = {
+		20,
+		10,
+	},
+	color = {
+		255,
+		169,
+		191,
+		153,
+	},
+}
+difficulty.rankup_icon_background = table.clone(difficulty.rankup_icon)
+
+local static_rankup_icon_background_style = difficulty.rankup_icon_background
+
+static_rankup_icon_background_style.color = Color.terminal_background_dark(255, true)
+static_rankup_icon_background_style.amount = 0
+difficulty.rankup_icon_background_frame = table.clone(difficulty.rankup_icon)
+
+local rankup_icon_background_frame_style = difficulty.rankup_icon_background_frame
+
+rankup_icon_background_frame_style.color = {
+	255,
+	169,
+	191,
+	153,
+}
+rankup_icon_background_frame_style.amount = 0
+rankup_icon_background_frame_style.offset = {
+	80,
 	10,
 	3,
 }

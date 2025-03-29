@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/live_event/skulls.lua
 
-local Skulls = {
+local skulls = {
 	condition = "loc_skulls_condition",
 	description = "loc_skulls_description",
 	icon = "",
@@ -9,4 +9,4 @@ local Skulls = {
 	stat = "session_weakspot_kills",
 }
 
-return Skulls
+return skulls

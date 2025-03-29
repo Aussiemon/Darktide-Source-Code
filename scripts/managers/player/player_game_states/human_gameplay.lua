@@ -202,7 +202,7 @@ HumanGameplay.destroy = function (self)
 	if self._is_server then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
-		player_unit_spawn_manager:despawn(player)
+		player_unit_spawn_manager:despawn_player(player)
 	end
 
 	local event_manager = Managers.event
@@ -494,13 +494,13 @@ HumanGameplay._handle_huds = function (self, camera_follow_unit_or_nil)
 
 	if self._has_own_hud and not should_have_own_hud then
 		self:_destroy_player_hud()
-	elseif self._has_spectator_hud and not following_spectated_player_unit then
+	elseif self._has_spectator_hud and (not following_spectated_player_unit or should_have_own_hud) then
 		self:_destroy_spectator_hud()
 	end
 
 	if should_have_own_hud and not self._has_own_hud then
 		self:_create_player_hud(own_player)
-	elseif following_spectated_player_unit and not self._has_spectator_hud then
+	elseif following_spectated_player_unit and not should_have_own_hud and not self._has_spectator_hud then
 		self:_create_spectator_hud(spectated_player_or_nil)
 	end
 end

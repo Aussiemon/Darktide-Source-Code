@@ -986,6 +986,10 @@ ViewElementGrid.set_handle_grid_navigation = function (self, allow)
 	grid:set_handle_grid_navigation(allow)
 end
 
+ViewElementGrid.get_loading_state = function (self)
+	return self._widgets_by_name.grid_loading.content.is_loading
+end
+
 ViewElementGrid.set_loading_state = function (self, is_loading)
 	self._widgets_by_name.grid_loading.content.is_loading = is_loading
 

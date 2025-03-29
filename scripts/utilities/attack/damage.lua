@@ -37,7 +37,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	local is_prop = Breed.is_prop(breed_or_nil) or Breed.is_living_prop(breed_or_nil)
 	local side_system = Managers.state.extension:system("side_system")
 	local is_ally = side_system:is_ally(attacking_unit, unit)
-	local actual_damage_dealt
+	local actual_damage_dealt, actual_toughness_damage_dealt
 	local boss_extension_or_nil = ScriptUnit.has_extension(unit, "boss_system")
 
 	if not is_ally and boss_extension_or_nil then
@@ -45,10 +45,10 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	end
 
 	if toughness_extension then
-		toughness_extension:add_damage(tougness_damage, attack_result, hit_actor, damage_profile, attack_type, attack_direction, hit_world_position_or_nil)
+		actual_toughness_damage_dealt = toughness_extension:add_damage(tougness_damage, attack_result, hit_actor, damage_profile, attack_type, attack_direction, hit_world_position_or_nil)
 	end
 
-	if breed_or_nil and breed_or_nil.clamp_health_percent_damage then
+	if breed_or_nil and breed_or_nil.clamp_health_percent_damage and not instakill then
 		local health_percent_clamp = breed_or_nil.clamp_health_percent_damage
 		local max_health = health_extension:max_health()
 		local damage_clamp = max_health * health_percent_clamp
@@ -57,14 +57,24 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	end
 
 	if attack_result == attack_results.toughness_broken then
-		if is_player and buff_extension then
-			local param_table = buff_extension:request_proc_event_param_table()
+		if is_player then
+			local side = ScriptUnit.extension(unit, "side_system").side
+			local player_units = side.valid_player_units
 
-			if param_table then
-				param_table.unit = unit
-				param_table.melee_attack = attack_type == "melee"
+			for i = 1, #player_units do
+				local player_unit = player_units[i]
+				local player_buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
 
-				buff_extension:add_proc_event(proc_events.on_player_toughness_broken, param_table)
+				if player_buff_extension then
+					local param_table = player_buff_extension:request_proc_event_param_table()
+
+					if param_table then
+						param_table.unit = unit
+						param_table.melee_attack = attack_type == "melee"
+
+						player_buff_extension:add_proc_event(proc_events.on_player_toughness_broken, param_table)
+					end
+				end
 			end
 		end
 
@@ -139,6 +149,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 						param_table.attacking_unit_owner_unit = attacking_unit_owner_unit
 						param_table.attacked_unit = unit
 						param_table.damage_amount = damage
+						param_table.toughness_damage_amount = actual_toughness_damage_dealt
 						param_table.damage_profile_name = damage_profile and damage_profile.name or "none"
 						param_table.permanent_damage = permanent_damage
 						param_table.attack_type = attack_type
@@ -158,11 +169,39 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 				param_table.attacked_unit = unit
 				param_table.hit_zone_name_or_nil = hit_zone_name
 				param_table.damage_amount = damage
+				param_table.toughness_damage_amount = actual_toughness_damage_dealt or 0
 				param_table.damage_profile_name = damage_profile and damage_profile.name or "none"
 				param_table.permanent_damage = permanent_damage
 				param_table.attack_type = attack_type
 
 				buff_extension:add_proc_event(proc_events.on_minion_damage_taken, param_table)
+			end
+		end
+	elseif actual_toughness_damage_dealt and actual_toughness_damage_dealt > 0 then
+		if is_player and not damage_profile.skip_on_hit_proc then
+			local side = ScriptUnit.extension(unit, "side_system").side
+			local player_units = side.valid_player_units
+
+			for i = 1, #player_units do
+				local player_unit = player_units[i]
+				local player_buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+				if player_buff_extension then
+					local param_table = player_buff_extension:request_proc_event_param_table()
+
+					if param_table then
+						param_table.attacking_unit = attacking_unit
+						param_table.attacking_unit_owner_unit = attacking_unit_owner_unit
+						param_table.attacked_unit = unit
+						param_table.damage_amount = damage
+						param_table.toughness_damage_amount = actual_toughness_damage_dealt or 0
+						param_table.damage_profile_name = damage_profile and damage_profile.name or "none"
+						param_table.permanent_damage = permanent_damage
+						param_table.attack_type = attack_type
+
+						player_buff_extension:add_proc_event(proc_events.on_damage_taken, param_table)
+					end
+				end
 			end
 		end
 	elseif health_extension.tried_adding_damage then

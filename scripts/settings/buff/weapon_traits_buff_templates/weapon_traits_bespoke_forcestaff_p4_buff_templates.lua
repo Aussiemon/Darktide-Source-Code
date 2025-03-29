@@ -24,7 +24,7 @@ templates.weapon_trait_bespoke_forcestaff_p4_warp_charge_critical_strike_chance_
 	},
 }, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
 templates.weapon_trait_bespoke_forcestaff_p4_uninterruptable_while_charging = table.clone(BaseWeaponTraitBuffTemplates.uninterruptable_while_charging)
-templates.weapon_trait_bespoke_forcestaff_p4_uninterruptable_while_charging.uninteruptable_actions = {
+templates.weapon_trait_bespoke_forcestaff_p4_uninterruptable_while_charging.uninterruptable_actions = {
 	action_charge = true,
 	action_shoot_charged = true,
 }

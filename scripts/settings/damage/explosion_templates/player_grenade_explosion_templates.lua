@@ -17,6 +17,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.frag_grenade,
 		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
@@ -54,6 +59,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.electrocution,
 		damage_profile = DamageProfileTemplates.shock_grenade,
 		damage_type = damage_types.electrocution,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
@@ -79,6 +89,11 @@ local explosion_templates = {
 		static_power_level = 600,
 		damage_profile = DamageProfileTemplates.default_grenade,
 		damage_type = damage_types.laser,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 10,
 			instant_aggro = true,
@@ -107,6 +122,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.plasma,
 		damage_profile = DamageProfileTemplates.krak_grenade,
 		damage_type = damage_types.plasma,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 6,
 			instant_aggro = true,
@@ -135,6 +155,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.physical,
 		damage_profile = DamageProfileTemplates.smoke_grenade,
 		damage_type = damage_types.physical,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,
@@ -162,6 +187,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.ogryn_grenade,
 		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 25,
 			instant_aggro = true,
@@ -174,6 +204,13 @@ local explosion_templates = {
 				radius_variable_name = "radius",
 				effects = {
 					"content/fx/particles/explosions/frag_grenade_ogryn",
+				},
+			},
+			{
+				min_radius = 31,
+				radius_variable_name = "radius",
+				effects = {
+					"content/fx/particles/player_buffs/buff_ogryn_biggest_boom_grenade",
 				},
 			},
 		},
@@ -195,6 +232,11 @@ local explosion_templates = {
 		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.ogryn_box_cluster_frag_grenade,
 		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
 		explosion_area_suppression = {
 			distance = 15,
 			instant_aggro = true,

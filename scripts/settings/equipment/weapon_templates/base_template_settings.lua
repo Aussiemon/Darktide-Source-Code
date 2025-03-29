@@ -2,8 +2,8 @@
 
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local special_rules = SpecialRulesSetting.special_rules
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
+local special_rules = SpecialRulesSettings.special_rules
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 
 local function _quick_throw_allowed(action_settings, condition_func_params, used_input)

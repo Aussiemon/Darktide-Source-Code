@@ -1,17 +1,11 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_background_view/inventory_background_view_definitions.lua
 
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputDevice = require("scripts/managers/input/input_device")
-local InventoryBackgroundViewSettings = require("scripts/ui/views/inventory_background_view/inventory_background_view_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemUtils = require("scripts/utilities/items")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Items = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local character_experience_bar_size = {
 	188,
@@ -441,7 +435,7 @@ local legend_inputs = {
 		input_action = "hotkey_menu_special_1",
 		on_pressed_callback = "cb_on_weapon_swap_pressed",
 		visibility_function = function (parent)
-			return parent:_can_swap_weapon() and not parent._is_readonly and parent:is_inventory_synced()
+			return not parent._is_readonly and parent:_can_swap_weapon() and parent:is_inventory_synced()
 		end,
 	},
 	{

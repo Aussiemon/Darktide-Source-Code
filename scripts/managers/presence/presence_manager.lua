@@ -199,6 +199,13 @@ PresenceManager.set_havoc_status = function (self, value)
 	})
 end
 
+PresenceManager.set_havoc_rank_cadence_high = function (self, value)
+	self._myself:set_havoc_rank_cadence_high(value)
+	self:_update_my_presence({
+		havoc_rank_cadence_high = true,
+	})
+end
+
 PresenceManager.set_havoc_rank_all_time_high = function (self, value)
 	self._myself:set_havoc_rank_all_time_high(value)
 	self:_update_my_presence({

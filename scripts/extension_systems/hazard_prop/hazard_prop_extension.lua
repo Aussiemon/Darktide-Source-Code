@@ -21,19 +21,55 @@ HazardPropExtension.init = function (self, extension_init_context, unit, extensi
 	self._trigger_timer = 0
 	self._trigger_direction = Vector3Box()
 	self._fuse_active = false
+	self._running_update = false
 	self._world = extension_init_context.world
 	self._nav_world = extension_init_context.nav_world
 	self._intact_colliders = {}
 	self._broken_colliders = {}
 	self._hazard_shape = nil
+	self._broadphase_radius = 1
 	self._owner_system = extension_init_context.owner_system
 end
 
-HazardPropExtension.setup_from_component = function (self, hazard_shape)
+HazardPropExtension.add_to_broadphase = function (self)
+	if not self._broadphase_id then
+		local unit = self._unit
+		local broadphase = self._broadphase
+		local broadphase_radius = self._broadphase_radius
+		local broadphase_position = self._broadphase_position:unbox()
+
+		self._broadphase_id = Broadphase.add(broadphase, unit, broadphase_position, broadphase_radius or 1, "destructibles")
+	end
+
+	return self._broadphase_id
+end
+
+HazardPropExtension.remove_from_broadphase = function (self)
+	if self._broadphase_id then
+		Broadphase.remove(self._broadphase, self._broadphase_id)
+
+		self._broadphase_id = nil
+	end
+end
+
+HazardPropExtension.setup_from_component = function (self, hazard_shape, broadphase_radius)
+	local unit = self._unit
+
 	self._hazard_shape = hazard_shape
 
 	self:_sort_colliders()
 	self:_update_mesh_visuals()
+
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+	local broadphase = broadphase_system.broadphase
+	local destructible_actor_index = Unit.find_actor(unit, "c_destructible") or 1
+	local destructible_actor = Unit.actor(unit, destructible_actor_index)
+	local position = Actor.position(destructible_actor)
+
+	self._broadphase = broadphase
+	self._broadphase_system = broadphase_system
+	self._broadphase_radius = broadphase_radius
+	self._broadphase_position = Vector3Box(position)
 end
 
 HazardPropExtension._sort_colliders = function (self)
@@ -69,19 +105,24 @@ HazardPropExtension.set_content = function (self, content)
 
 	if content == hazard_content.none then
 		Unit.set_material(self._unit, "hazard_paint", hazard_material.empty_paint)
+		Unit.set_material(self._unit, "hazard_il", hazard_material.empty_il)
 		Unit.flow_event(self._unit, "lua_content_set_none")
+		self:remove_from_broadphase()
 	elseif content == hazard_content.explosion then
 		Unit.set_material(self._unit, "hazard_paint", hazard_material.explosion_paint)
 		Unit.set_material(self._unit, "hazard_il", hazard_material.explosion_il)
 		Unit.flow_event(self._unit, "lua_content_set_explosion")
+		self:add_to_broadphase()
 	elseif content == hazard_content.fire then
 		Unit.set_material(self._unit, "hazard_paint", hazard_material.fire_paint)
 		Unit.set_material(self._unit, "hazard_il", hazard_material.fire_il)
 		Unit.flow_event(self._unit, "lua_content_set_fire")
+		self:add_to_broadphase()
 	elseif content == hazard_content.gas then
 		Unit.set_material(self._unit, "hazard_paint", hazard_material.gas_paint)
 		Unit.set_material(self._unit, "hazard_il", hazard_material.gas_il)
 		Unit.flow_event(self._unit, "lua_content_set_gas")
+		self:add_to_broadphase()
 	else
 		Log.error("HazardPropExtension", "[set_content][Unit: %s] set the hazard prop to unknown content: %s", Unit.id_string(self._unit), content)
 	end
@@ -120,6 +161,8 @@ HazardPropExtension.set_current_state = function (self, state)
 				self:start_trigger_timer()
 				self._owner_system:enable_update_function(self.__class_name, "update", unit, self)
 
+				self._running_update = true
+
 				local shape = "sphere"
 				local size = explosion_settings.explosion_template.radius
 				local rotation = Quaternion.identity()
@@ -148,11 +191,26 @@ HazardPropExtension.set_current_state = function (self, state)
 		if self._is_server then
 			self:_trigger_hazard()
 			self._owner_system:disable_update_function(self.__class_name, "update", unit, self)
+
+			self._running_update = false
 		end
 
 		self._content = hazard_content.none
 
 		Unit.set_material(unit, "hazard_paint", hazard_material.empty_paint)
+		self:remove_from_broadphase()
+	elseif state == hazard_state.idle then
+		if self._fuse_active then
+			Unit.flow_event(unit, "lua_fuse_stop")
+
+			self._fuse_active = false
+		end
+
+		if self._running_update then
+			self._owner_system:disable_update_function(self.__class_name, "update", unit, self)
+
+			self._running_update = false
+		end
 	end
 
 	self:_update_mesh_visuals()
@@ -253,6 +311,14 @@ HazardPropExtension.start_trigger_timer = function (self)
 	self._trigger_timer = TRIGGER_TIME
 end
 
+HazardPropExtension.broadphase_radius = function (self)
+	return self._broadphase_radius
+end
+
+HazardPropExtension.broadphase_position = function (self)
+	return self._broadphase_position:unbox()
+end
+
 HazardPropExtension.update = function (self, unit, dt, t)
 	if self._current_state == hazard_state.triggered then
 		if self._is_server and self._trigger_timer > 0 then
@@ -265,6 +331,14 @@ HazardPropExtension.update = function (self, unit, dt, t)
 	elseif self._current_state == hazard_state.exploding and self._is_server then
 		self:set_current_state(hazard_state.broken)
 	end
+end
+
+HazardPropExtension.destroy = function (self)
+	self:remove_from_broadphase()
+
+	self._broadphase = nil
+	self._broadphase_system = nil
+	self._broadphase_position = nil
 end
 
 return HazardPropExtension

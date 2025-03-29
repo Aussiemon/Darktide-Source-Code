@@ -2291,11 +2291,11 @@ base_templates.uninterruptable_while_charging = {
 		template_data.weapon_action_component = weapon_action_component
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
-		local uninteruptable_actions = template_context.template.uninteruptable_actions
+		local uninterruptable_actions = template_context.template.uninterruptable_actions
 		local weapon_action_component = template_data.weapon_action_component
 		local current_action_name = weapon_action_component.current_action_name
 
-		return uninteruptable_actions[current_action_name] and ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
+		return uninterruptable_actions[current_action_name] and ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
 	end,
 }
 base_templates.stacking_buff_on_charge_level = {

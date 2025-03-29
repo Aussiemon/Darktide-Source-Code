@@ -11,8 +11,9 @@ NetworkedTimer.init = function (self, unit, is_server)
 		local duration = self:get_data(unit, "duration")
 		local hud_description = self:get_data(unit, "hud_description")
 		local max_speed_modifier = self:get_data(unit, "max_speed_modifier")
+		local reset_speed_modifier_on_state_change = self:get_data(unit, "reset_speed_modifier_on_state_change")
 
-		networked_timer_extension:setup_from_component(duration, hud_description, max_speed_modifier)
+		networked_timer_extension:setup_from_component(duration, hud_description, max_speed_modifier, reset_speed_modifier_on_state_change)
 
 		self._networked_timer_extension = networked_timer_extension
 	end
@@ -99,6 +100,11 @@ NetworkedTimer.component_data = {
 		ui_name = "Max Speed Modifier",
 		ui_type = "number",
 		value = 1,
+	},
+	reset_speed_modifier_on_state_change = {
+		ui_name = "Max Speed Modifier",
+		ui_type = "check_box",
+		value = true,
 	},
 	inputs = {
 		start = {

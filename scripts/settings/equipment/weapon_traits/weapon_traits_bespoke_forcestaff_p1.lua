@@ -8,6 +8,18 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
+	format_values = {
+		warp_charge = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits",
+				find_value_type = "trait_override",
+				path = {
+					"vent_percentage",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
 			{
@@ -26,6 +38,20 @@ templates.weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits =
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
+	format_values = {
+		range = {
+			format_type = "string",
+			find_value = {
+				find_value_type = "rarity_value",
+				trait_value = {
+					"5m",
+					"6m",
+					"7m",
+					"8m",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 			{
@@ -64,6 +90,32 @@ templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting = {
+	format_values = {
+		weapon_spread = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.spread_modifier,
+				},
+			},
+		},
+		damage_near = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting = {
 			{
@@ -102,6 +154,20 @@ templates.weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting = {
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 			{
@@ -128,6 +194,19 @@ templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_warp_burninating_on_crits = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_warp_burninating_on_crits",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_warp_burninating_on_crits = {
 			{
@@ -154,6 +233,34 @@ templates.weapon_trait_bespoke_forcestaff_p1_warp_burninating_on_crits = {
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		crit_chance_max = {
+			format_type = "number",
+			suffix = "%",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+			value_manipulation = function (value)
+				return math.abs(value * 100) * 4
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus = {
 			{
@@ -180,6 +287,50 @@ templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		rending = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"stat_buffs",
+					stat_buffs.rending_multiplier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"duration",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 			{
@@ -206,6 +357,23 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = {
+	format_values = {
+		reduction = {
+			format_type = "percentage",
+			num_decimals = 0,
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.charge_movement_reduction_multiplier,
+				},
+			},
+			value_manipulation = function (value)
+				return 100 - math.round(value * 100)
+			end,
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = {
 			{
@@ -232,6 +400,29 @@ templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = {
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = {
+	format_values = {
+		charge_time = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.charge_up_time,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks_parent = {
 			{
@@ -258,6 +449,24 @@ templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_
 	},
 }
 templates.weapon_trait_bespoke_forcestaff_p1_double_shot_on_crit = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcestaff_p1_double_shot_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.ranged_critical_strike_chance,
+				},
+			},
+		},
+		value = {
+			format_type = "string",
+			value = "2",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_forcestaff_p1_double_shot_on_crit = {
 			{

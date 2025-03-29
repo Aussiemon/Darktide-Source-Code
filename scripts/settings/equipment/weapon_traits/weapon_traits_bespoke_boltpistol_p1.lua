@@ -8,6 +8,30 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_boltpistol_p1_crit_chance_bonus_on_melee_kills = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_crit_chance_bonus_on_melee_kills",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.ranged_critical_strike_chance,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_crit_chance_bonus_on_melee_kills",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_crit_chance_bonus_on_melee_kills = {
 			{
@@ -38,6 +62,32 @@ templates.weapon_trait_bespoke_boltpistol_p1_crit_chance_bonus_on_melee_kills = 
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting = {
+	format_values = {
+		weapon_spread = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.spread_modifier,
+				},
+			},
+		},
+		damage_near = {
+			format_type = "percentage",
+			prefix = "-",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting = {
 			{
@@ -76,6 +126,20 @@ templates.weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_crit_weakspot_finesse = {
+	format_values = {
+		crit_weakspot_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_crit_weakspot_finesse",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_weakspot_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_crit_weakspot_finesse = {
 			{
@@ -102,6 +166,34 @@ templates.weapon_trait_bespoke_boltpistol_p1_crit_weakspot_finesse = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_crit_chance_based_on_aim_time = {
+	format_values = {
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_crit_chance_based_on_aim_time",
+				find_value_type = "trait_override",
+				path = {
+					"duration_per_stack",
+				},
+			},
+		},
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_crit_chance_based_on_aim_time",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "string",
+			value = "10",
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_crit_chance_based_on_aim_time = {
 			{
@@ -132,6 +224,20 @@ templates.weapon_trait_bespoke_boltpistol_p1_crit_chance_based_on_aim_time = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_suppression_on_close_kill = {
+	format_values = {
+		range = {
+			format_type = "string",
+			find_value = {
+				find_value_type = "rarity_value",
+				trait_value = {
+					"5m",
+					"6m",
+					"7m",
+					"8m",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_suppression_on_close_kill = {
 			{
@@ -170,6 +276,19 @@ templates.weapon_trait_bespoke_boltpistol_p1_suppression_on_close_kill = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_toughness_on_elite_kills = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_toughness_on_elite_kills",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_toughness_on_elite_kills = {
 			{
@@ -188,6 +307,20 @@ templates.weapon_trait_bespoke_boltpistol_p1_toughness_on_elite_kills = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_rending_on_crit = {
+	format_values = {
+		rend = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_rending_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_rending_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_rending_on_crit = {
 			{
@@ -214,6 +347,19 @@ templates.weapon_trait_bespoke_boltpistol_p1_rending_on_crit = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_bleed_on_ranged = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_bleed_on_ranged",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_bleed_on_ranged = {
 			{
@@ -240,6 +386,20 @@ templates.weapon_trait_bespoke_boltpistol_p1_bleed_on_ranged = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_stagger_bonus_damage = {
+	format_values = {
+		vs_stagger = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_stagger_bonus_damage",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_vs_staggered,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_stagger_bonus_damage = {
 			{
@@ -266,6 +426,20 @@ templates.weapon_trait_bespoke_boltpistol_p1_stagger_bonus_damage = {
 	},
 }
 templates.weapon_trait_bespoke_boltpistol_p1_close_explosion = {
+	format_values = {
+		radius = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_close_explosion",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.explosion_radius_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_boltpistol_p1_close_explosion = {
 			{

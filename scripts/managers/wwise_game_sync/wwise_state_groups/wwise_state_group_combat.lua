@@ -17,6 +17,13 @@ WwiseStateGroupCombat.init = function (self, wwise_world, wwise_state_group_name
 	self._next_slow_parameter_update = 0
 end
 
+WwiseStateGroupCombat.on_gameplay_shutdown = function (self)
+	WwiseStateGroupCombat.super.on_gameplay_shutdown(self)
+
+	self._next_fast_parameter_update = 0
+	self._next_slow_parameter_update = 0
+end
+
 WwiseStateGroupCombat.update = function (self, dt, t)
 	WwiseStateGroupCombat.super.update(self)
 

@@ -64,6 +64,10 @@ local default_debug_input_settings = {
 			raw = "mouse_wheel",
 			type = "axis",
 		},
+		timer_speed_change_reset = {
+			raw = "mouse_middle",
+			type = "pressed",
+		},
 		toggle_time_pause = {
 			raw = "keyboard_pause-keyboard_right shift",
 			type = "pressed",
@@ -351,6 +355,42 @@ local default_debug_input_settings = {
 			raw = "keyboard_left ctrl+mouse_middle",
 			type = "pressed",
 		},
+		mission_buffs_trigger_catchup_for_player = {
+			raw = "keyboard_left shift+keyboard_left ctrl+keyboard_k",
+			type = "pressed",
+		},
+		mission_buffs_family_buff_for_all = {
+			raw = "keyboard_left shift+keyboard_left ctrl+keyboard_m",
+			type = "pressed",
+		},
+		mission_buffs_legendary_buff_choice = {
+			raw = "keyboard_left alt+keyboard_left ctrl+keyboard_m",
+			type = "pressed",
+		},
+		mission_buffs_buff_choice_one = {
+			type = "pressed",
+			raw = {
+				"keyboard_left alt+keyboard_left ctrl+keyboard_1",
+				"xbox_controller_left_thumb+xbox_controller_d_left",
+				"ps4_controller_l3+ps4_controller_d_left",
+			},
+		},
+		mission_buffs_buff_choice_two = {
+			type = "pressed",
+			raw = {
+				"keyboard_left alt+keyboard_left ctrl+keyboard_2",
+				"xbox_controller_left_thumb+xbox_controller_d_up",
+				"ps4_controller_l3+ps4_controller_d_up",
+			},
+		},
+		mission_buffs_buff_choice_three = {
+			type = "pressed",
+			raw = {
+				"keyboard_left alt+keyboard_left ctrl+keyboard_3",
+				"xbox_controller_left_thumb+xbox_controller_d_right",
+				"ps4_controller_l3+ps4_controller_d_right",
+			},
+		},
 		self_assist = {
 			hold_threshold = 0.8,
 			type = "pressed",
@@ -388,6 +428,10 @@ local default_debug_input_settings = {
 		player_speed_change = {
 			raw = "mouse_wheel",
 			type = "axis",
+		},
+		player_speed_change_reset = {
+			raw = "mouse_middle",
+			type = "pressed",
 		},
 		play_debug_vo = {
 			raw = "keyboard_left alt+keyboard_1",
@@ -443,6 +487,10 @@ local default_debug_input_settings = {
 		},
 		disconnect_lost_session = {
 			raw = "keyboard_left shift+keyboard_0",
+			type = "pressed",
+		},
+		open_selected = {
+			raw = "keyboard_f5",
 			type = "pressed",
 		},
 	},

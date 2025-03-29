@@ -610,7 +610,7 @@ ProfileUtils.replace_profile_for_prologue = function (profile)
 	local item_definitions = MasterItems.get_cached()
 	local override_profiles = PrologueCharacterProfileOverride(item_definitions)
 	local archetype = profile.archetype
-	local override_table = override_profiles[archetype]
+	local override_table = override_profiles[archetype.name]
 
 	if not override_table then
 		return profile

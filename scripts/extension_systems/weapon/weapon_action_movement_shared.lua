@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/weapon_action_movement_shared.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponActionMovementSharedFunctions = {}
 

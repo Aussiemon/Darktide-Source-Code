@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/settings/damage/damage_profiles/bfg_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
 local damage_templates = {}
 local overrides = {}
 
@@ -76,8 +76,8 @@ damage_templates.default_bfg = {
 		attack = 2,
 		impact = 4,
 	},
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.plasma,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10,
@@ -156,8 +156,8 @@ damage_templates.plasma_killshot = {
 		attack = 1.5,
 		impact = 1,
 	},
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.plasma,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10,
@@ -236,8 +236,8 @@ damage_templates.light_bfg = {
 		attack = 2,
 		impact = 3,
 	},
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.plasma,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10,

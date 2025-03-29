@@ -37,7 +37,6 @@ weapon_action_data.actions = {
 	flamer_gas = _require_weapon_action("action_flamer_gas"),
 	flamer_gas_burst = _require_weapon_action("action_flamer_gas_burst"),
 	give_pocketable = _require_weapon_action("action_give_pocketable"),
-	heal_target_over_time = _require_weapon_action("action_heal_target_over_time"),
 	inspect = _require_weapon_action("action_inspect"),
 	melee_explosive = _require_weapon_action("action_melee_explosive"),
 	overload_charge = _require_weapon_action("action_overload_charge"),

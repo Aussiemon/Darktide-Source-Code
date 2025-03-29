@@ -101,13 +101,13 @@ local events = {
 		},
 	},
 	sfx_player_extra_slot = {
-		has_husk_events = false,
+		has_husk_events = true,
 		no_default = true,
 		switch = {
-			"sfx_body_material",
+			"sfx_player_extra_slot",
 		},
 		events = {
-			backpack = "wwise/events/player/play_gear_light_gen_a",
+			backpack = "wwise/events/player/play_gear_backpack_fire_foley",
 			chains = "wwise/events/player/play_gear_chain_med",
 			skulls = "wwise/events/player/play_gear_skulls_med",
 		},
@@ -1537,6 +1537,10 @@ local events = {
 			bot_zola_laspistol = "wwise/events/weapon/play_rifle_wpn_up",
 			chainaxe_p1_m1 = "wwise/events/weapon/play_chainaxe_special_start",
 			chainaxe_p1_m2 = "wwise/events/weapon/play_chainaxe_special_start",
+			chainsword_2h_p1_m1 = "wwise/events/weapon/play_2h_chainsword_special_start",
+			chainsword_2h_p1_m2 = "wwise/events/weapon/play_2h_chainsword_special_start",
+			chainsword_p1_m1 = "wwise/events/weapon/play_combat_weapon_chainsword_special_start",
+			chainsword_p1_m2 = "wwise/events/weapon/play_combat_weapon_chainsword_special_start",
 			default = "wwise/events/weapon/play_rifle_wpn_up",
 			flamer_p1_m1 = "wwise/events/weapon/play_flamethrower_reload_lift",
 			high_bot_lasgun_killshot = "wwise/events/weapon/play_rifle_wpn_up",

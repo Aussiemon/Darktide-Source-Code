@@ -99,6 +99,9 @@ local action_data = {
 			death_strike_chest_right = 1.2666666666666666,
 		},
 	},
+	disable = {
+		disable_anims = {},
+	},
 	stagger = {
 		stagger_duration_mods = {
 			stagger_explosion_front_2 = 0.8,

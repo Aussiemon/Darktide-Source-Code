@@ -12,8 +12,9 @@ HudLoader.destroy = function (self)
 	self:cleanup()
 end
 
-HudLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name)
+HudLoader.start_loading = function (self, context)
 	local ui_manager = Managers.ui
+	local mission_name = context.mission_name
 
 	if ui_manager then
 		local mission_settings = Missions[mission_name]

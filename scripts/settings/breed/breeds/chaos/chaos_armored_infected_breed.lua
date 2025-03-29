@@ -15,6 +15,7 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
@@ -29,7 +30,7 @@ local breed_data = {
 	broadphase_radius = 1,
 	challenge_rating = 0.4,
 	detection_radius = 15,
-	display_name = "loc_breed_display_name_chaos_newly_infected",
+	display_name = "loc_chaos_armored_infected_breed_name",
 	explosion_power_multiplier = 0.3,
 	faction_name = "chaos",
 	fx_proximity_culling_weight = 1,
@@ -400,6 +401,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.2,
 		},
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.melee_can_be_suppressed,
 }
 

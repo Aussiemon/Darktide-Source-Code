@@ -153,6 +153,19 @@ dialogue_breed_settings.chaos_daemonhost = {
 		"enemy_daemonhost_a",
 	},
 }
+dialogue_breed_settings.chaos_mutator_daemonhost = {
+	dialogue_memory_faction_name = "enemy",
+	has_dialogue_extension = true,
+	is_network_synced = false,
+	trigger_heard_vo = true,
+	trigger_seen_vo = true,
+	vo_class_name = "enemy_daemonhost",
+	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = "switch_voice_enemy_chaos_daemonhost",
+	wwise_voices = {
+		"enemy_daemonhost_a",
+	},
+}
 dialogue_breed_settings.chaos_spawn = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
@@ -862,6 +875,7 @@ dialogue_breed_settings.cultist_melee = {
 	},
 }
 dialogue_breed_settings.cultist_ritualist = table.clone(dialogue_breed_settings.cultist_melee)
+dialogue_breed_settings.chaos_mutator_ritualist = table.clone(dialogue_breed_settings.cultist_ritualist)
 dialogue_breed_settings.cultist_assault = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
@@ -1159,6 +1173,43 @@ dialogue_breed_settings.warp_echo = {
 	wwise_voices = {
 		"warp_echo_moebian_a",
 		"warp_echo_moebian_b",
+	},
+}
+dialogue_breed_settings.past = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "past",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"past_armourer_a",
+		"past_auspex_operator_a",
+		"past_brother_a",
+		"past_cartel_tough_a",
+		"past_cartel_tough_c",
+		"past_enemy_nemesis_wolfer_a",
+		"past_explicator_a",
+		"past_explicator_b",
+		"past_interrogator_a",
+		"past_interrogator_b",
+		"past_legion_captain_a",
+		"past_legion_commissar_a",
+		"past_legion_trooper_a",
+		"past_legion_trooper_b",
+		"past_legion_trooper_c",
+		"past_magos_biologis_a",
+		"past_ragged_king_a",
+		"past_sergeant_a",
+		"past_tertium_enforcer_a",
+		"past_tertium_enforcer_b",
+		"past_world_eater_a",
+		"past_young_explicator_a",
+		"past_young_sergeant_a",
+		"fx",
 	},
 }
 dialogue_breed_settings.cargo_pilot = {

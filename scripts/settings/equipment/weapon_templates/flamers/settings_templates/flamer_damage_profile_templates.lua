@@ -1,28 +1,20 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
-local damage_types = DamageSettings.damage_types
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
-
-local melee_attack_strengths = AttackSettings.melee_attack_strength
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
 
 damage_templates.default_flamer_killshot = {
 	ignore_shield = false,
@@ -89,8 +81,8 @@ damage_templates.default_flamer_killshot = {
 		impact = 1.5,
 	},
 	damage_type = damage_types.plasma,
-	gibbing_power = GibbingPower.medium,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.plasma,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10,
@@ -170,8 +162,8 @@ damage_templates.default_flamer_bfg = {
 		impact = 4,
 	},
 	damage_type = damage_types.plasma,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.plasma,
 	on_kill_area_suppression = {
 		distance = 8,
 		suppression_value = 10,
@@ -250,8 +242,8 @@ damage_templates.default_flamer_demolition = {
 		impact = 3,
 	},
 	damage_type = damage_types.laser,
-	gibbing_type = GibbingTypes.plasma,
-	gibbing_power = GibbingPower.heavy,
+	gibbing_type = gibbing_types.plasma,
+	gibbing_power = gibbing_power.heavy,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.2,
@@ -388,7 +380,7 @@ damage_templates.default_flamer_assault = {
 	},
 	armor_damage_modifier_ranged = assault_flamer_armor_mod,
 	damage_type = damage_types.burning,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_type = gibbing_types.plasma,
 	targets = {
 		{
 			power_distribution = {
@@ -493,7 +485,7 @@ damage_templates.default_flamer_assault_burst = {
 	},
 	armor_damage_modifier_ranged = assault_flamer_burst_armor_mod,
 	damage_type = damage_types.burning,
-	gibbing_type = GibbingTypes.plasma,
+	gibbing_type = gibbing_types.plasma,
 	power_distribution = {
 		attack = {
 			5,

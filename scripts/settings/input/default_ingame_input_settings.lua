@@ -174,6 +174,26 @@ local default_ingame_input_settings = {
 			group = "input_group_combat",
 			sort_order = 19,
 		},
+		tactical_overlay_scroll_down = {
+			"mouse_wheel_down",
+			"ps4_controller_d_down",
+			"xbox_controller_d_down",
+			bindable = false,
+			description = "loc_ingame_tactical_overlay_scroll_down",
+			group = "input_group_combat",
+			hide_in_controller_layout = true,
+			hide_in_keybindings_menu = true,
+		},
+		tactical_overlay_scroll_up = {
+			"mouse_wheel_up",
+			"ps4_controller_d_up",
+			"xbox_controller_d_up",
+			bindable = false,
+			description = "loc_ingame_tactical_overlay_scroll_up",
+			group = "input_group_combat",
+			hide_in_controller_layout = true,
+			hide_in_keybindings_menu = true,
+		},
 		menu = {
 			"ps4_controller_options",
 			"xbox_controller_start",
@@ -369,16 +389,12 @@ local default_ingame_input_settings = {
 			key_alias = "tactical_overlay_swap",
 			type = "pressed",
 		},
-		jump = {
-			key_alias = "jump",
+		tactical_overlay_scroll_down = {
+			key_alias = "tactical_overlay_scroll_down",
 			type = "pressed",
 		},
-		jump_held = {
-			key_alias = "jump",
-			type = "held",
-		},
-		dodge = {
-			key_alias = "dodge",
+		tactical_overlay_scroll_up = {
+			key_alias = "tactical_overlay_scroll_up",
 			type = "pressed",
 		},
 		weapon_reload = {
@@ -393,17 +409,29 @@ local default_ingame_input_settings = {
 			key_alias = "weapon_extra",
 			type = "pressed",
 		},
-		weapon_extra_hold = {
-			key_alias = "weapon_extra",
-			type = "held",
-		},
 		weapon_extra_release = {
 			key_alias = "weapon_extra",
 			type = "released",
 		},
+		weapon_extra_hold = {
+			key_alias = "weapon_extra",
+			type = "held",
+		},
 		weapon_inspect_hold = {
 			key_alias = "weapon_inspect",
 			type = "held",
+		},
+		jump = {
+			key_alias = "jump",
+			type = "pressed",
+		},
+		jump_held = {
+			key_alias = "jump",
+			type = "held",
+		},
+		dodge = {
+			key_alias = "dodge",
+			type = "pressed",
 		},
 		crouch = {
 			key_alias = "crouch",

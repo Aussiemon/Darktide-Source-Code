@@ -30,6 +30,7 @@ Havoc.latest = function (self, optional_account_id)
 
 				if havoc_stats then
 					parsed_data.rank_all_time = havoc_stats.rank and havoc_stats.rank.allTime
+					parsed_data.rank_cadence = havoc_stats.rank and havoc_stats.rank.cadence
 					parsed_data.rank_week = havoc_stats.rank and havoc_stats.rank.week
 				end
 
@@ -81,9 +82,7 @@ Havoc.summary = function (self, optional_account_id)
 
 				local cadence_status = {
 					active = true,
-					current_cadence = {
-						next_cadence_start_date = 9999999999,
-					},
+					current_cadence = {},
 				}
 
 				if data.body.cadenceStatus ~= nil then
@@ -229,6 +228,18 @@ Havoc.refresh_settings = function (self)
 					normal = havoc_settings.rankSystem.startingRank,
 					auric = havoc_settings.rankSystem.startingRankAuric,
 				}
+
+				if havoc_settings.rankSystem.gapBasedPromotionRateMultiplier then
+					self._havoc_settings.gap_based_promotion_rate_multiplier = {}
+
+					for i, element in ipairs(havoc_settings.rankSystem.gapBasedPromotionRateMultiplier) do
+						self._havoc_settings.gap_based_promotion_rate_multiplier[i] = {
+							min_gap = element.minGap,
+							max_gap = element.maxGap,
+							rate_multiplier = element.rateMultiplier,
+						}
+					end
+				end
 			end
 
 			return self._havoc_settings

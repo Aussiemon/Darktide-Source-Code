@@ -11,6 +11,7 @@ local mood_status = MoodSettings.status
 local num_moods = MoodSettings.num_moods
 local CLIENT_RPCS = {
 	"rpc_trigger_timed_mood",
+	"rpc_remove_mood",
 }
 local PlayerUnitMoodExtension = class("PlayerUnitMoodExtension")
 
@@ -65,6 +66,8 @@ PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, ext
 
 		self._unit_rpcs_registered = true
 	end
+
+	self._was_alive = true
 end
 
 PlayerUnitMoodExtension.destroy = function (self)
@@ -104,14 +107,28 @@ PlayerUnitMoodExtension.update = function (self, unit, dt, t)
 end
 
 PlayerUnitMoodExtension._update_active_moods = function (self, t)
+	local health_extension = self._health_extension
+
+	if not health_extension:is_alive() and self._was_alive then
+		self._was_alive = false
+
+		self:remove_all_moods()
+
+		return
+	elseif not health_extension:is_alive() and not self._was_alive then
+		return
+	end
+
+	self._was_alive = true
+
+	local toughness_extension = self._toughness_extension
 	local is_knocked_down = PlayerUnitStatus.is_knocked_down(self._character_state_read_component)
-	local is_in_critical_health, critical_health_status = PlayerUnitStatus.is_in_critical_health(self._health_extension, self._toughness_extension)
+	local is_in_critical_health, critical_health_status = PlayerUnitStatus.is_in_critical_health(health_extension, toughness_extension)
 	local critical_health = is_in_critical_health and critical_health_status >= CRITICAL_HEALTH_LIMIT
-	local no_toughness_left = PlayerUnitStatus.no_toughness_left(self._toughness_extension)
+	local no_toughness_left = PlayerUnitStatus.no_toughness_left(toughness_extension)
 	local entered_toughness_cooldown = self._entered_toughness_cooldown and t < self._entered_toughness_cooldown
 	local is_suppressed = self._suppression_extension:has_high_suppression()
 	local player = self._player
-	local unit = self._unit
 	local buff_extension = self._buff_extension
 	local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 	local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
@@ -129,7 +146,6 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local warped_low_to_high = warped_low_threshold < current_warp_percentage
 	local warped_high_to_critical = warped_high_threshold < current_warp_percentage
 	local warped_critical = warped_critical_threshold < current_warp_percentage
-	local health_extension = self._health_extension
 	local num_wounds = health_extension:num_wounds()
 	local max_wounds = health_extension:max_wounds()
 	local last_wound = num_wounds == 1 and max_wounds > 1
@@ -137,9 +153,11 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_aiming_lunge = PlayerUnitStatus.is_aiming_lunge(self._combat_ability_action_read_component)
 	local veteran_combat_ability_stance_active = buff_extension:has_keyword(buff_keywords.veteran_combat_ability_stance)
 	local ogryn_combat_ability_stance_active = buff_extension:has_keyword(buff_keywords.ogryn_combat_ability_stance)
-	local is_in_stealth = archetype_name == "zealot" and buff_extension:has_keyword(buff_keywords.invisible)
-	local is_in_veteran_stealth = archetype_name == "veteran" and buff_extension:has_keyword(buff_keywords.invisible)
+	local has_invisible_keyword = buff_extension:has_keyword(buff_keywords.invisible)
+	local is_in_stealth = archetype_name == "zealot" and has_invisible_keyword
+	local is_in_veteran_stealth = archetype_name == "veteran" and has_invisible_keyword
 	local is_in_veteran_stealth_and_stance = is_in_veteran_stealth and veteran_combat_ability_stance_active
+	local is_in_stealth_from_outside_source = archetype_name ~= "zealot" and archetype_name ~= "veteran" and has_invisible_keyword
 	local syringe_ability = buff_extension:has_keyword(buff_keywords.syringe_ability)
 	local syringe_power = buff_extension:has_keyword(buff_keywords.syringe_power)
 	local syringe_speed = buff_extension:has_keyword(buff_keywords.syringe_speed)
@@ -254,7 +272,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 
 	if is_in_veteran_stealth then
 		self:_add_mood(t, mood_types.veteran_stealth)
-	elseif not is_in_stealth then
+	elseif not is_in_veteran_stealth then
 		self:_remove_mood(t, mood_types.veteran_stealth)
 	end
 
@@ -316,6 +334,12 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_add_mood(t, mood_types.syringe_speed)
 	elseif not syringe_speed then
 		self:_remove_mood(t, mood_types.syringe_speed)
+	end
+
+	if is_in_stealth_from_outside_source then
+		self:_add_mood(t, mood_types.generic_stealth)
+	elseif not is_in_stealth_from_outside_source then
+		self:_remove_mood(t, mood_types.generic_stealth)
 	end
 end
 
@@ -412,6 +436,23 @@ PlayerUnitMoodExtension.rpc_trigger_timed_mood = function (self, channel_id, go_
 	local mood_type = NetworkLookup.moods_types[mood_type_id]
 
 	self:add_timed_mood(t, mood_type)
+end
+
+PlayerUnitMoodExtension.remove_mood = function (self, t, mood_type)
+	self:_remove_mood(t, mood_type)
+
+	if self._is_server then
+		local mood_type_id = NetworkLookup.moods_types[mood_type]
+
+		Managers.state.game_session:send_rpc_clients("rpc_remove_mood", self._game_object_id, mood_type_id)
+	end
+end
+
+PlayerUnitMoodExtension.rpc_remove_mood = function (self, channel_id, go_id, mood_type_id)
+	local mood_type = NetworkLookup.moods_types[mood_type_id]
+	local t = Managers.time:time("gameplay")
+
+	self:_remove_mood(t, mood_type)
 end
 
 return PlayerUnitMoodExtension

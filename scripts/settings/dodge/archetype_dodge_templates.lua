@@ -150,7 +150,7 @@ archetype_dodge_templates.ogryn = {
 	dodge_jump_override_timer = 0.25,
 	dodge_linger_time = 0,
 	minimum_dodge_input = 0.25,
-	stop_threshold = 0.25,
+	stop_threshold = 0.15,
 	dodge_speed_at_times = speed_curve_ogryn,
 }
 

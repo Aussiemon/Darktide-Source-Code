@@ -330,9 +330,9 @@ end
 ViewElementNewsSlide._get_text_dimensions = function (self, pass_name, ui_renderer)
 	local news_button = self._widgets_by_name.news_button
 	local style = news_button.style[pass_name]
-	local title_text_options = UIFonts.get_font_options_by_style(style)
+	local text_options = UIFonts.get_font_options_by_style(style)
 
-	return UIRenderer.text_size(ui_renderer, news_button.content[pass_name], style.font_type, style.font_size, style.size, title_text_options)
+	return UIRenderer.text_size(ui_renderer, news_button.content[pass_name], style.font_type, style.font_size, style.size, text_options)
 end
 
 ViewElementNewsSlide._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)

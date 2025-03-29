@@ -128,6 +128,10 @@ LiquidSpawner.editor_destroy = function (self, unit)
 		return
 	end
 
+	if LiquidSpawner._nav_info ~= nil then
+		SharedNav.destroy(LiquidSpawner._nav_info)
+	end
+
 	local line_object, world = self._line_object, self._world
 
 	LineObject.reset(line_object)

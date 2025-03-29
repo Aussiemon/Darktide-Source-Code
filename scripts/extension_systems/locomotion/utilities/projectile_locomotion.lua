@@ -238,7 +238,7 @@ ProjectileLocomotion.impact_detection_and_resolution = function (integration_dat
 								coefficient_of_restitution = coefficient_of_restitution * 0.5
 							end
 
-							if coefficient_of_restitution == 0 then
+							if coefficient_of_restitution <= 0 then
 								new_position = bounce_pos
 								integration_data.has_hit = true
 								integration_data.last_hit_unit = hit_unit

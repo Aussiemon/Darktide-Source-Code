@@ -9,15 +9,12 @@ LocalLoadersState.init = function (self, state_machine, shared_state)
 
 	self._loaders = loaders
 
-	local mission_name = shared_state.mission_name
-	local level_name = shared_state.level_name
-	local circumstance_name = shared_state.circumstance_name
-	local havoc_data = shared_state.havoc_data
-
 	for _, loader in ipairs(loaders) do
 		loader:cleanup()
-		loader:start_loading(mission_name, level_name, circumstance_name, havoc_data)
+		loader:start_loading(shared_state)
 	end
+
+	shared_state.mission_seed = nil
 end
 
 LocalLoadersState.update = function (self, dt)

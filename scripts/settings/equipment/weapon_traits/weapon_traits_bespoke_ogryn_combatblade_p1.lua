@@ -8,6 +8,30 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.melee_critical_strike_chance,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
 			{
@@ -34,6 +58,40 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent",
+				find_value_type = "buff_template",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent = {
 			{
@@ -60,6 +118,41 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill = {
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits = {
+	format_values = {
+		cleave = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.max_hit_mass_attack_modifier,
+				},
+			},
+		},
+		multiple_hit = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits",
+				find_value_type = "buff_template",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits = {
 			{
@@ -86,6 +179,20 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_m
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_special_follow_up_hits = {
+	format_values = {
+		power = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_special_follow_up_hits",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_special_follow_up_hits = {
 			{
@@ -112,6 +219,20 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_attack = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_attack",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_fully_charged_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_attack = {
 			{
@@ -138,6 +259,30 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
+	format_values = {
+		hit_mass = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.max_hit_mass_attack_modifier,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
 			{
@@ -164,6 +309,19 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_cri
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks = {
 			{
@@ -182,6 +340,31 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chaine
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multiple_hits = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"buff_data",
+					"replenish_percentage",
+				},
+			},
+		},
+		multiple_hit = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multiple_hits",
+				find_value_type = "trait_override",
+				path = {
+					"buff_data",
+					"required_num_hits",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multiple_hits = {
 			{
@@ -212,6 +395,30 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multip
 	},
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_windup_increases_power = {
+	format_values = {
+		power_level = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_windup_increases_power_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.melee_power_level_modifier,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_ogryn_combatblade_p1_windup_increases_power_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_combatblade_p1_windup_increases_power_parent = {
 			{

@@ -3,9 +3,10 @@
 local Breeds = require("scripts/settings/breed/breeds")
 local Definitions = require("scripts/ui/views/inventory_background_view/inventory_background_view_definitions")
 local InventoryBackgroundViewSettings = require("scripts/ui/views/inventory_background_view/inventory_background_view_settings")
+local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Mastery = require("scripts/utilities/mastery")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -22,7 +23,7 @@ local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_in
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
 local ViewElementProfilePresets = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets")
 local Views = require("scripts/ui/views/views")
-local MasteryUtils = require("scripts/utilities/mastery")
+local ITEM_TYPES = UISettings.ITEM_TYPES
 local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
 
 InventoryBackgroundView.init = function (self, settings, context)
@@ -55,7 +56,6 @@ end
 InventoryBackgroundView.on_enter = function (self)
 	InventoryBackgroundView.super.on_enter(self)
 
-	local context = self._context
 	local player = self._preview_player
 	local profile = player:profile()
 	local player_unit = player.player_unit
@@ -70,6 +70,7 @@ InventoryBackgroundView.on_enter = function (self)
 
 	self:_register_event("event_inventory_view_equip_item", "event_inventory_view_equip_item")
 	self:_register_event("event_equip_local_changes", "event_equip_local_changes")
+	self:_register_event("event_force_refresh_inventory", "event_force_refresh_inventory")
 	self:_register_event("event_change_wield_slot", "event_change_wield_slot")
 	self:_register_event("event_discard_item", "event_discard_item")
 	self:_register_event("event_discard_items", "event_discard_items")
@@ -260,15 +261,15 @@ InventoryBackgroundView._cb_set_player_icon = function (self, grid_index, rows, 
 end
 
 InventoryBackgroundView._cb_unset_player_icon = function (self, widget)
-	local widget = self._widgets_by_name.character_portrait
-	local material_values = widget.style.texture_portrait.material_values
+	local portrait_widget = self._widgets_by_name.character_portrait
+	local material_values = portrait_widget.style.texture_portrait.material_values
 
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
-	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+	portrait_widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
 InventoryBackgroundView._request_player_frame = function (self, item, ui_renderer)
@@ -313,7 +314,6 @@ InventoryBackgroundView._unload_portrait_frame = function (self, ui_renderer)
 end
 
 InventoryBackgroundView._cb_set_player_frame = function (self, item)
-	local profile = self._presentation_profile
 	local icon
 
 	if item.icon then
@@ -374,8 +374,6 @@ end
 
 InventoryBackgroundView._cb_set_player_insignia = function (self, item)
 	local widget = self._widgets_by_name.character_insigna
-	local profile = self._presentation_profile
-	local loadout = profile and profile.loadout
 	local icon_style = widget.style.texture_insignia
 	local material_values = icon_style.material_values
 
@@ -404,8 +402,9 @@ InventoryBackgroundView._fetch_character_progression = function (self, player)
 
 	local profiles_promise
 	local character_id = player:character_id()
+	local authenticated = Managers.backend:authenticated()
 
-	if Managers.backend:authenticated() then
+	if authenticated then
 		local backend_interface = Managers.backend.interfaces
 
 		profiles_promise = backend_interface.progression:get_progression("character", character_id):next(function (results)
@@ -447,20 +446,20 @@ end
 
 InventoryBackgroundView._set_experience_bar = function (self, experience_fraction, duration)
 	local is_nan = experience_fraction ~= experience_fraction
-	local experience_fraction = not is_nan and experience_fraction or 0
+	local experience_fraction_number = not is_nan and experience_fraction or 0
 
 	if duration then
 		self._experience_fraction_duration_time = 0
 		self._experience_fraction_duration_delay = duration
-		self._target_experience_fraction = experience_fraction
-		experience_fraction = 0
+		self._target_experience_fraction = experience_fraction_number
+		experience_fraction_number = 0
 	end
 
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.character_experience
 
-	widget.content.progress = experience_fraction
-	self._current_experience_fraction = experience_fraction
+	widget.content.progress = experience_fraction_number
+	self._current_experience_fraction = experience_fraction_number
 end
 
 InventoryBackgroundView._update_experience_bar_fill_animation = function (self, dt)
@@ -575,12 +574,12 @@ InventoryBackgroundView.event_discard_items = function (self, gear_ids)
 		local total_rewards = {}
 
 		if result then
-			for i = 1, #result do
-				local operation = result[i]
+			for ii = 1, #result do
+				local operation = result[ii]
 				local rewards = operation.rewards
 
-				for i = 1, #rewards do
-					local reward = rewards[i]
+				for jj = 1, #rewards do
+					local reward = rewards[jj]
 					local reward_type = reward.type
 
 					total_rewards[reward_type] = (total_rewards[reward_type] or 0) + reward.amount
@@ -701,15 +700,15 @@ InventoryBackgroundView._equip_local_changes = function (self)
 	local promises = {}
 
 	if equip_items and not table.is_empty(equip_items_by_slot) then
-		promises[#promises + 1] = ItemUtils.equip_slot_items(equip_items_by_slot)
+		promises[#promises + 1] = Items.equip_slot_items(equip_items_by_slot)
 	end
 
 	if equip_items and not table.is_empty(equip_local_items_by_slot) then
-		promises[#promises + 1] = ItemUtils.equip_slot_master_items(equip_local_items_by_slot)
+		promises[#promises + 1] = Items.equip_slot_master_items(equip_local_items_by_slot)
 	end
 
 	if equip_items and not table.is_empty(unequip_slots) then
-		promises[#promises + 1] = ItemUtils.unequip_slots(unequip_slots)
+		promises[#promises + 1] = Items.unequip_slots(unequip_slots)
 	end
 
 	if #promises > 0 then
@@ -811,7 +810,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					return false
 				end
 
-				local ITEM_TYPES = UISettings.ITEM_TYPES
 				local has_new_items = false
 
 				if self:has_new_items_by_type(ITEM_TYPES.WEAPON_MELEE) then
@@ -893,7 +891,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									1,
 									1,
 								},
-								item_type = UISettings.ITEM_TYPES.WEAPON_MELEE,
+								item_type = ITEM_TYPES.WEAPON_MELEE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -909,7 +907,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									2,
 									1,
 								},
-								item_type = UISettings.ITEM_TYPES.WEAPON_RANGED,
+								item_type = ITEM_TYPES.WEAPON_RANGED,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -918,7 +916,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								display_name = "loc_inventory_loadout_group_attachments",
 								scenegraph_id = "slot_attachments_header",
 								widget_type = "item_sub_header",
-								item_type = UISettings.ITEM_TYPES.GADGET,
+								item_type = ITEM_TYPES.GADGET,
 								size = {
 									840,
 									50,
@@ -944,7 +942,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									3,
 									1,
 								},
-								item_type = UISettings.ITEM_TYPES.GADGET,
+								item_type = ITEM_TYPES.GADGET,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -961,7 +959,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									3,
 									2,
 								},
-								item_type = UISettings.ITEM_TYPES.GADGET,
+								item_type = ITEM_TYPES.GADGET,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -978,7 +976,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									3,
 									3,
 								},
-								item_type = UISettings.ITEM_TYPES.GADGET,
+								item_type = ITEM_TYPES.GADGET,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -987,7 +985,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								display_name = "loc_inventory_loadout_group_primary_weapon",
 								scenegraph_id = "slot_primary_header",
 								widget_type = "item_sub_header",
-								item_type = UISettings.ITEM_TYPES.WEAPON_MELEE,
+								item_type = ITEM_TYPES.WEAPON_MELEE,
 								size = {
 									840,
 									50,
@@ -1005,7 +1003,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								display_name = "loc_inventory_loadout_group_secondary_weapon",
 								scenegraph_id = "slot_secondary_header",
 								widget_type = "item_sub_header",
-								item_type = UISettings.ITEM_TYPES.WEAPON_RANGED,
+								item_type = ITEM_TYPES.WEAPON_RANGED,
 								size = {
 									840,
 									50,
@@ -1063,7 +1061,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					return false
 				end
 
-				local ITEM_TYPES = UISettings.ITEM_TYPES
 				local has_new_items = false
 
 				if self:has_new_items_by_type(ITEM_TYPES.GEAR_HEAD) then
@@ -1163,7 +1160,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									4,
 									1,
 								},
-								item_type = UISettings.ITEM_TYPES.CHARACTER_TITLE,
+								item_type = ITEM_TYPES.CHARACTER_TITLE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1180,7 +1177,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									1,
 									1,
 								},
-								item_type = UISettings.ITEM_TYPES.GEAR_HEAD,
+								item_type = ITEM_TYPES.GEAR_HEAD,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1197,7 +1194,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									2,
 									1,
 								},
-								item_type = UISettings.ITEM_TYPES.GEAR_UPPERBODY,
+								item_type = ITEM_TYPES.GEAR_UPPERBODY,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1214,7 +1211,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									3,
 									1,
 								},
-								item_type = UISettings.ITEM_TYPES.GEAR_LOWERBODY,
+								item_type = ITEM_TYPES.GEAR_LOWERBODY,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1232,7 +1229,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									2,
 								},
 								initial_rotation = math.pi,
-								item_type = UISettings.ITEM_TYPES.GEAR_EXTRA_COSMETIC,
+								item_type = ITEM_TYPES.GEAR_EXTRA_COSMETIC,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1248,7 +1245,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									2,
 									2,
 								},
-								item_type = UISettings.ITEM_TYPES.PORTRAIT_FRAME,
+								item_type = ITEM_TYPES.PORTRAIT_FRAME,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1264,7 +1261,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									3,
 									2,
 								},
-								item_type = UISettings.ITEM_TYPES.CHARACTER_INSIGNIA,
+								item_type = ITEM_TYPES.CHARACTER_INSIGNIA,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1285,7 +1282,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									6,
 									3,
 								},
-								item_type = UISettings.ITEM_TYPES.END_OF_ROUND,
+								item_type = ITEM_TYPES.END_OF_ROUND,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1312,7 +1309,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									index = "in_menu",
 									value = 1,
 								},
-								item_type = UISettings.ITEM_TYPES.EMOTE,
+								item_type = ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1339,7 +1336,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									index = "in_menu",
 									value = 1,
 								},
-								item_type = UISettings.ITEM_TYPES.EMOTE,
+								item_type = ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1366,7 +1363,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									index = "in_menu",
 									value = 1,
 								},
-								item_type = UISettings.ITEM_TYPES.EMOTE,
+								item_type = ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1393,7 +1390,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									index = "in_menu",
 									value = 1,
 								},
-								item_type = UISettings.ITEM_TYPES.EMOTE,
+								item_type = ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1420,7 +1417,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 									index = "in_menu",
 									value = 1,
 								},
-								item_type = UISettings.ITEM_TYPES.EMOTE,
+								item_type = ITEM_TYPES.EMOTE,
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end,
@@ -1902,7 +1899,7 @@ InventoryBackgroundView.remove_new_item_mark = function (self, item)
 	local gear_id = item.gear_id
 	local item_type = item.item_type
 
-	ItemUtils.unmark_item_id_as_new(gear_id)
+	Items.unmark_item_id_as_new(gear_id)
 
 	if item_type then
 		self._new_items_gear_ids_by_type[item_type][gear_id] = nil
@@ -1953,12 +1950,18 @@ InventoryBackgroundView._load_profile = function (self, profile)
 	camera_position_default_offset[3] = is_ogryn and 0.5 or 0
 end
 
+local BREED_TO_EVENT_SUFFIX = {
+	human = "human",
+	ogryn = "ogryn",
+}
+
 InventoryBackgroundView._setup_background_world = function (self)
 	local player = self._preview_player
 	local player_profile = player:profile()
 	local archetype = player_profile.archetype
 	local breed_name = archetype.breed
-	local default_camera_event_id = "event_register_inventory_default_camera_" .. breed_name
+	local event_suffix = BREED_TO_EVENT_SUFFIX[breed_name] or breed_name
+	local default_camera_event_id = "event_register_inventory_default_camera_" .. event_suffix
 
 	self[default_camera_event_id] = function (self, camera_unit)
 		if self._context then
@@ -1992,7 +1995,7 @@ InventoryBackgroundView._setup_background_world = function (self)
 
 	for slot_name, slot in pairs(ItemSlotSettings) do
 		if slot.slot_type == "gear" then
-			local item_camera_event_id = "event_register_inventory_item_camera_" .. breed_name .. "_" .. slot_name
+			local item_camera_event_id = "event_register_inventory_item_camera_" .. event_suffix .. "_" .. slot_name
 
 			self[item_camera_event_id] = function (self, camera_unit)
 				self._item_camera_by_slot_id[slot_name] = camera_unit
@@ -2485,8 +2488,10 @@ InventoryBackgroundView._setup_inventory = function (self)
 end
 
 InventoryBackgroundView._spawn_profile = function (self, profile)
-	if self._profile_spawner then
-		self._profile_spawner:destroy()
+	local profile_spawner = self._profile_spawner
+
+	if profile_spawner then
+		profile_spawner:destroy()
 
 		self._profile_spawner = nil
 	end
@@ -2495,19 +2500,20 @@ InventoryBackgroundView._spawn_profile = function (self, profile)
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
 
-	self._profile_spawner = UIProfileSpawner:new("InventoryBackgroundView", world, camera, unit_spawner)
+	profile_spawner = UIProfileSpawner:new("InventoryBackgroundView", world, camera, unit_spawner)
 
 	local ignored_slots = InventoryBackgroundViewSettings.ignored_slots
 
-	for i = 1, #ignored_slots do
-		local slot_name = ignored_slots[i]
+	for ii = 1, #ignored_slots do
+		local slot_name = ignored_slots[ii]
 
-		self._profile_spawner:ignore_slot(slot_name)
+		profile_spawner:ignore_slot(slot_name)
 	end
 
 	local camera_position = ScriptCamera.position(camera)
-	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
-	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
+	local spawn_point_unit = self._spawn_point_unit
+	local spawn_position = Unit.world_position(spawn_point_unit, 1)
+	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
 
 	camera_position.z = 0
 
@@ -2516,8 +2522,9 @@ InventoryBackgroundView._spawn_profile = function (self, profile)
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 
-	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, inventory_state_machine)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, inventory_state_machine)
 
+	self._profile_spawner = profile_spawner
 	self._spawned_profile = profile
 
 	self:_update_presentation_wield_item()
@@ -2591,6 +2598,19 @@ InventoryBackgroundView.set_item_position = function (self, position)
 	end
 end
 
+InventoryBackgroundView.event_force_refresh_inventory = function (self)
+	local player = self._preview_player
+	local character_id = player:character_id()
+
+	Managers.data_service.gear:fetch_inventory(character_id):next(function (items)
+		if self._destroyed then
+			return
+		end
+
+		self._inventory_items = items
+	end)
+end
+
 InventoryBackgroundView._fetch_inventory_items = function (self)
 	local player = self._preview_player
 	local character_id = player:character_id()
@@ -2621,10 +2641,10 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 				self._syncing_mastery[id] = nil
 			end
 
-			self._has_mastery_points_available = MasteryUtils.has_available_points(self.masteries_data, self._mastery_traits)
+			self._has_mastery_points_available = Mastery.has_available_points(self.masteries_data, self._mastery_traits)
 		end)
 
-		self._has_mastery_points_available = MasteryUtils.has_available_points(self.masteries_data, self._mastery_traits)
+		self._has_mastery_points_available = Mastery.has_available_points(self.masteries_data, self._mastery_traits)
 		self._inventory_synced = true
 
 		for id, mastery_data in pairs(masteries_data) do
@@ -2658,7 +2678,7 @@ InventoryBackgroundView.event_mastery_traits_update = function (self, mastery_id
 			end
 		end
 
-		self._has_mastery_points_available = MasteryUtils.has_available_points(self.masteries_data, self._mastery_traits)
+		self._has_mastery_points_available = Mastery.has_available_points(self.masteries_data, self._mastery_traits)
 	end
 end
 
@@ -2683,6 +2703,14 @@ InventoryBackgroundView._check_mastery_sync_status = function (self)
 		self._mastery_previous_state = nil
 	end
 end
+
+local ALLOWED_DUPLICATE_SLOTS = {
+	slot_animation_emote_1 = true,
+	slot_animation_emote_2 = true,
+	slot_animation_emote_3 = true,
+	slot_animation_emote_4 = true,
+	slot_animation_emote_5 = true,
+}
 
 InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 	local invalid_slots = {}
@@ -2709,19 +2737,11 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 			elseif item and not item.always_owned and fallback_item and item.name == fallback_item.name then
 				invalid_slots[slot_name] = true
 			else
-				local allowed_duplicates = {
-					slot_animation_emote_1 = true,
-					slot_animation_emote_2 = true,
-					slot_animation_emote_3 = true,
-					slot_animation_emote_4 = true,
-					slot_animation_emote_5 = true,
-				}
-
 				for checked_slot_name, checked_load_data in pairs(loadout) do
 					local checked_gear_id = type(checked_load_data) == "table" and checked_load_data.gear_id or type(checked_load_data) == "string" and checked_load_data
 					local item_gear_id = type(item_data) == "table" and item_data.gear_id or type(item_data) == "string" and item_data
 
-					if checked_gear_id == item_gear_id and checked_slot_name ~= slot_name and not invalid_slots[slot_name] and (not allowed_duplicates[checked_slot_name] or not allowed_duplicates[slot_name]) then
+					if checked_gear_id == item_gear_id and checked_slot_name ~= slot_name and not invalid_slots[slot_name] and (not ALLOWED_DUPLICATE_SLOTS[checked_slot_name] or not ALLOWED_DUPLICATE_SLOTS[slot_name]) then
 						duplicated_slots[checked_slot_name] = true
 
 						goto label_1_0
@@ -2730,10 +2750,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 				local player = self._preview_player
 				local profile = player:profile()
-				local item = type(item_data) == "table" and self:_get_inventory_item_by_id(gear_id) or self:_get_inventory_item_by_id(item_data)
+				local item_or_nil = type(item_data) == "table" and self:_get_inventory_item_by_id(gear_id) or self:_get_inventory_item_by_id(item_data)
 
-				if item then
-					local compatible_profile = ItemUtils.is_item_compatible_with_profile(item, profile)
+				if item_or_nil then
+					local compatible_profile = Items.is_item_compatible_with_profile(item_or_nil, profile)
 
 					if not compatible_profile then
 						only_show_slot_as_invalid[slot_name] = true
@@ -2835,9 +2855,9 @@ InventoryBackgroundView._get_valid_new_items = function (self, inventory_items)
 			local item = inventory_items[gear_id]
 
 			if not item then
-				ItemUtils.unmark_item_id_as_new(gear_id)
+				Items.unmark_item_id_as_new(gear_id)
 			else
-				local compatible_profile = ItemUtils.is_item_compatible_with_profile(item, profile)
+				local compatible_profile = Items.is_item_compatible_with_profile(item, profile)
 
 				if compatible_profile then
 					new_gear_items[gear_id] = true
@@ -2849,7 +2869,7 @@ InventoryBackgroundView._get_valid_new_items = function (self, inventory_items)
 						new_gear_items_by_type[item_type][gear_id] = true
 					end
 				elseif new_items_list.is_character_data then
-					ItemUtils.unmark_item_id_as_new(gear_id)
+					Items.unmark_item_id_as_new(gear_id)
 				end
 			end
 		end

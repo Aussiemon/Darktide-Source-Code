@@ -301,7 +301,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	end
 end
 
-StateGame.on_exit = function (self, on_shutdown)
+StateGame.on_exit = function (self, exit_params)
 	if not DEDICATED_SERVER then
 		Managers.wwise_game_sync:set_game_state_machine(nil)
 	end
@@ -314,7 +314,7 @@ StateGame.on_exit = function (self, on_shutdown)
 		self._sm:unregister_on_state_change_callback("PresenceManager")
 	end
 
-	self._sm:delete(on_shutdown)
+	self._sm:delete(exit_params)
 	self._vo_sources_cache:destroy()
 	Managers.event:unregister(self, "on_suspend")
 	Managers:destroy()
@@ -472,8 +472,11 @@ end
 StateGame._on_suspend = function (self)
 	local error_state = CLASSES.StateError
 	local params = {}
+	local exit_params = {
+		on_suspend = true,
+	}
 
-	self._sm:force_change_state(error_state, params)
+	self._sm:force_change_state(error_state, params, exit_params)
 end
 
 return StateGame

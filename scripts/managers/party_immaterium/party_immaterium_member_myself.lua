@@ -80,6 +80,10 @@ PartyImmateriumMemberMyself.havoc_status = function (self)
 	return self._presence_entry:havoc_status()
 end
 
+PartyImmateriumMemberMyself.havoc_rank_cadence_high = function (self)
+	return self._presence_entry:havoc_rank_cadence_high()
+end
+
 PartyImmateriumMemberMyself.havoc_rank_all_time_high = function (self)
 	return self._presence_entry:havoc_rank_all_time_high()
 end

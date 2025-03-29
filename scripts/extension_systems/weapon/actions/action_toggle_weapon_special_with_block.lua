@@ -14,7 +14,9 @@ ActionToggleWeaponSpecialWithBlock.init = function (self, action_context, action
 end
 
 ActionToggleWeaponSpecialWithBlock.start = function (self, action_settings, t, ...)
-	self._perfect_block_ends_at_t = Block.start_block_action(t, self._block_component)
+	local perfect_block_ends_at_t = Block.start_block_action(t, self._block_component, action_settings.skip_update_perfect_blocking)
+
+	self._perfect_block_ends_at_t = perfect_block_ends_at_t or self._perfect_block_ends_at_t
 
 	ActionToggleWeaponSpecialWithBlock.super.start(self, action_settings, t, ...)
 end
@@ -24,7 +26,9 @@ ActionToggleWeaponSpecialWithBlock.fixed_update = function (self, dt, t, time_in
 	local block_component = self._block_component
 
 	if block_component.is_blocking then
-		Block.update_perfect_blocking(t, self._perfect_block_ends_at_t, self._block_component)
+		if not action_settings.skip_update_perfect_blocking then
+			Block.update_perfect_blocking(t, self._perfect_block_ends_at_t, self._block_component)
+		end
 
 		local is_block_ended = not action_settings.block_duration or time_in_action >= action_settings.block_duration
 
@@ -38,6 +42,7 @@ end
 
 ActionToggleWeaponSpecialWithBlock.finish = function (self, reason, data, t, time_in_action)
 	self._block_component.is_blocking = false
+	self._perfect_block_ends_at_t = nil
 
 	ActionToggleWeaponSpecialWithBlock.super.finish(self, reason, data, t, time_in_action)
 end

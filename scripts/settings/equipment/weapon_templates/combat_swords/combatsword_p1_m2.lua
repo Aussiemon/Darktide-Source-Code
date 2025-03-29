@@ -48,7 +48,10 @@ combat_sword_action_inputs.parry = {
 
 local combat_sword_action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 
-combat_sword_action_input_hierarchy.parry = "base"
+combat_sword_action_input_hierarchy[#combat_sword_action_input_hierarchy + 1] = {
+	input = "parry",
+	transition = "base",
+}
 weapon_template.action_inputs = combat_sword_action_inputs
 weapon_template.action_input_hierarchy = combat_sword_action_input_hierarchy
 weapon_template.action_inputs.block.buffer_time = 0.1
@@ -1094,7 +1097,7 @@ weapon_template.actions = {
 	},
 	action_push = {
 		anim_event = "attack_push",
-		block_duration = 0.2,
+		block_duration = 0.5,
 		kind = "push",
 		push_radius = 2.5,
 		total_time = 1,
@@ -1318,7 +1321,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8
@@ -1340,7 +1342,7 @@ weapon_template.keywords = {
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
-weapon_template.stamina_template = "default"
+weapon_template.stamina_template = "linesman"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default

@@ -36,6 +36,7 @@ local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
 weapon_template.action_inputs.grenade_ability.buffer_time = 0.4
+weapon_template.action_inputs.wield.buffer_time = 0.3
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
 
 local hit_zone_priority = {
@@ -232,25 +233,25 @@ weapon_template.actions = {
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
-					chain_time = 0.8,
+					chain_time = 0.7,
 				},
 				{
 					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
+					chain_time = 0.7,
 				},
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.8,
+				chain_time = 0.7,
 			},
 			start_attack = {
 				{
 					action_name = "action_melee_start_left_special",
-					chain_time = 1.3,
+					chain_time = 0.8,
 				},
 				{
 					action_name = "action_melee_start_right",
-					chain_time = 1.3,
+					chain_time = 0.7,
 				},
 			},
 			special_action = {
@@ -259,7 +260,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.8,
+				chain_time = 0.7,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -348,16 +349,16 @@ weapon_template.actions = {
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 1.3,
+				chain_time = 0.9,
 			},
 			start_attack = {
 				{
 					action_name = "action_melee_start_left_special",
-					chain_time = 1.95,
+					chain_time = 1.45,
 				},
 				{
 					action_name = "action_melee_start_right",
-					chain_time = 1.5,
+					chain_time = 1.32,
 				},
 			},
 			special_action = {
@@ -366,7 +367,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1.1,
+				chain_time = 0.9,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -537,7 +538,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.68,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -554,7 +555,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				0,
+				-0.15,
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_linesman,
@@ -614,7 +615,7 @@ weapon_template.actions = {
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.17,
+				chain_time = 0.4,
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
@@ -641,7 +642,7 @@ weapon_template.actions = {
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_down_left",
 			anchor_point_offset = {
-				-0,
+				0.18,
 				0,
 				0,
 			},
@@ -793,7 +794,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -834,6 +835,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "attack_hit",
 		kind = "sweep",
+		power_level = 525,
 		range_mod = 1.25,
 		total_time = 2,
 		uninterruptible = true,
@@ -871,6 +873,7 @@ weapon_template.actions = {
 			},
 			wield = {
 				action_name = "action_unwield",
+				chain_time = 0.4,
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
@@ -882,7 +885,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.46,
+				chain_time = 0.4,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -983,6 +986,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "attack_hit",
 		kind = "sweep",
+		power_level = 530,
 		range_mod = 1.25,
 		total_time = 1,
 		uninterruptible = true,
@@ -1043,7 +1047,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.5,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1152,6 +1156,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "attack_hit",
 		kind = "sweep",
+		power_level = 530,
 		range_mod = 1.25,
 		total_time = 1.5,
 		uninterruptible = true,
@@ -1212,7 +1217,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
+				chain_time = 0.1,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1526,7 +1531,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.2
 weapon_template.max_first_person_anim_movement_speed = 4.8

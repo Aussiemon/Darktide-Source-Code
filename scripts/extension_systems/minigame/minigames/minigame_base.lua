@@ -16,22 +16,7 @@ MinigameBase.init = function (self, unit, is_server, seed)
 	if is_server then
 		local unit_spawner_manager = Managers.state.unit_spawner
 
-		self._is_leve_unit = false
-		self._minigame_unit_id = nil
-
-		local game_object_id = unit_spawner_manager:game_object_id(unit)
-
-		if game_object_id then
-			self._is_leve_unit = false
-			self._minigame_unit_id = game_object_id
-		else
-			local unit_index, _ = unit_spawner_manager:level_index(unit)
-
-			if unit_index then
-				self._is_leve_unit = true
-				self._minigame_unit_id = unit_index
-			end
-		end
+		self._is_level_unit, self._minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(unit)
 	end
 end
 
@@ -95,6 +80,10 @@ MinigameBase.complete = function (self)
 	return
 end
 
+MinigameBase.player_session_id = function (self)
+	return self._player_session_id
+end
+
 MinigameBase.is_completed = function (self)
 	local stage_amount = self._stage_amount
 	local current_stage = self._current_stage
@@ -135,13 +124,13 @@ MinigameBase.on_axis_set = function (self, t, x, y)
 end
 
 MinigameBase.send_rpc = function (self, rpc_name, ...)
-	Managers.state.game_session:send_rpc_clients(rpc_name, self._minigame_unit_id, self._is_leve_unit, ...)
+	Managers.state.game_session:send_rpc_clients(rpc_name, self._minigame_unit_id, self._is_level_unit, ...)
 end
 
 MinigameBase.send_rpc_to_channel = function (self, channel, rpc_name, ...)
 	local rpc = RPC[rpc_name]
 
-	rpc(channel, self._minigame_unit_id, self._is_leve_unit, ...)
+	rpc(channel, self._minigame_unit_id, self._is_level_unit, ...)
 end
 
 MinigameBase.play_sound = function (self, alias, sync_with_clients, include_client)

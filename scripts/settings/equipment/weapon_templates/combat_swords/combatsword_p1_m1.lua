@@ -47,7 +47,10 @@ combat_sword_action_inputs.parry = {
 
 local combat_sword_action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 
-combat_sword_action_input_hierarchy.parry = "base"
+combat_sword_action_input_hierarchy[#combat_sword_action_input_hierarchy + 1] = {
+	input = "parry",
+	transition = "base",
+}
 weapon_template.action_inputs = combat_sword_action_inputs
 weapon_template.action_input_hierarchy = combat_sword_action_input_hierarchy
 weapon_template.action_inputs.block.buffer_time = 0.1
@@ -172,7 +175,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.75,
+				chain_time = 0.65,
 			},
 			block = {
 				action_name = "action_block",
@@ -929,9 +932,10 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event = "attack_special",
 		attack_direction_override = "push",
-		block_duration = 0.2,
+		block_duration = 0.5,
 		damage_window_end = 0.3,
 		damage_window_start = 0.15,
+		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		num_frames_before_process = 4,
@@ -969,6 +973,10 @@ weapon_template.actions = {
 				action_name = "action_block",
 				chain_time = 0.45,
 			},
+			special_action = {
+				action_name = "action_parry_special",
+				chain_time = 0.45,
+			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -989,6 +997,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.combatsword_parry_special,
 		damage_type = damage_types.metal_slashing_light,
+		wounds_shape = wounds_shapes.right_45_slash,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
@@ -1156,7 +1165,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.3
 weapon_template.max_first_person_anim_movement_speed = 5.8

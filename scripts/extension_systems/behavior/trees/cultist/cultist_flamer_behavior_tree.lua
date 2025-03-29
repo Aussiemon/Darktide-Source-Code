@@ -46,6 +46,12 @@ local behavior_tree = {
 		name = "death_sequence",
 	},
 	{
+		"BtDisableAction",
+		condition = "is_minion_disabled",
+		name = "disable",
+		action_data = action_data.disable,
+	},
+	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
 		name = "exit_spawner",

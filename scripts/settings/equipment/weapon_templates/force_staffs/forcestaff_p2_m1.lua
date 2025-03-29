@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/forcestaff_p2_m1.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -109,7 +109,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	vent_release = {
-		buffer_time = 0.1,
+		buffer_time = 0.301,
 		input_sequence = {
 			{
 				input = "weapon_reload_hold",
@@ -278,7 +278,7 @@ weapon_template.action_input_hierarchy = {
 weapon_template.burninating_template = "forcestaff_p2_m1"
 weapon_template.size_of_flame_template = "forcestaff_p2_m1"
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -385,7 +385,7 @@ weapon_template.actions = {
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.3,
+				chain_time = 0.4,
 			},
 		},
 		fx = {
@@ -1125,6 +1125,7 @@ weapon_template.actions = {
 		anim_end_event = "vent_end",
 		anim_event = "vent_start",
 		kind = "vent_warp_charge",
+		minimum_hold_time = 0.3,
 		prevent_sprint = true,
 		start_input = "vent",
 		stop_input = "vent_release",
@@ -1207,7 +1208,6 @@ weapon_template.spread_template = "default_force_staff_killshot"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

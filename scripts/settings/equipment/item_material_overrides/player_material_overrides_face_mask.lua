@@ -673,6 +673,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_hide_lower_neck = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0.61,
+				0.77,
+				0,
+			},
+			negative_mask = {
+				0,
+				0,
+				0.05,
+				0,
+			},
+		},
+	},
 	mask_face_ogryn_head_plate_a = {
 		property_overrides = {
 			positive_mask = {

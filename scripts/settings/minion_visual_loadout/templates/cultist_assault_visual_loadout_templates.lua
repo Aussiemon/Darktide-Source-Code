@@ -8,6 +8,7 @@ local templates = {
 local basic_cultist_assault_template = {
 	slots = {
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/upperbody_a",
 				"content/items/characters/minions/chaos_cultists/attachments_base/upperbody_a_color_var_01",
@@ -15,6 +16,7 @@ local basic_cultist_assault_template = {
 			},
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/lowerbody_a",
 				"content/items/characters/minions/chaos_cultists/attachments_base/lowerbody_a_color_var_01",
@@ -22,6 +24,7 @@ local basic_cultist_assault_template = {
 			},
 		},
 		slot_face = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/face_02",
 				"content/items/characters/minions/chaos_cultists/attachments_base/face_02_tattoo_01",
@@ -31,6 +34,7 @@ local basic_cultist_assault_template = {
 			},
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_c",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_c_var_01",
@@ -52,6 +56,7 @@ local basic_cultist_assault_template = {
 			drop_on_death = true,
 			is_ranged_weapon = true,
 			is_weapon = true,
+			use_outline = true,
 			items = {
 				"content/items/weapons/minions/ranged/renegade_autogun_ak",
 			},
@@ -59,6 +64,7 @@ local basic_cultist_assault_template = {
 		slot_melee_weapon = {
 			drop_on_death = true,
 			is_weapon = true,
+			use_outline = true,
 			items = {
 				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01",
 				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_05",
@@ -67,6 +73,7 @@ local basic_cultist_assault_template = {
 			},
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/midrange_a",
 				"content/items/characters/minions/chaos_cultists/attachments_gear/midrange_a_color_var_01",
@@ -109,6 +116,7 @@ default_2.gib_variations = {
 	"face_03",
 }
 default_2.slots.slot_face = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_cultists/attachments_base/face_03",
 		"content/items/characters/minions/chaos_cultists/attachments_base/face_03_tattoo_01",

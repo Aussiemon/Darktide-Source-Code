@@ -28,6 +28,11 @@ explosion_templates.default_gauntlet_grenade = {
 	close_damage_type = damage_types.grenade_frag,
 	damage_profile = DamageProfileTemplates.default_gauntlet_demolitions,
 	damage_type = damage_types.grenade_frag,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
 	explosion_area_suppression = {
 		distance = 15,
 		instant_aggro = true,
@@ -68,6 +73,11 @@ explosion_templates.special_gauntlet_grenade = {
 	close_damage_type = damage_types.grenade_frag,
 	damage_profile = DamageProfileTemplates.default_gauntlet_demolitions,
 	damage_type = damage_types.grenade_frag,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
 	explosion_area_suppression = {
 		distance = 15,
 		instant_aggro = true,

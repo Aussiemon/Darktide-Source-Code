@@ -26,7 +26,7 @@ local function _handle_error(error_data)
 	return Promise.rejected(error_data)
 end
 
-ExternalPaymentPlatformXbox.get_payment_platform = function (self)
+ExternalPaymentPlatformXbox._get_payment_platform = function (self)
 	return "xbox"
 end
 

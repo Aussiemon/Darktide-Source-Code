@@ -442,7 +442,7 @@ templates.weapon_trait_melee_common_wield_on_hit_staggered_power_bonus_buff = {
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_meelee_stagger_hit,
+	check_proc_func = CheckProcFunctions.on_melee_stagger_hit,
 }
 templates.weapon_trait_melee_common_wield_on_heavy_attack_grant_power_bonus_buff = {
 	class_name = "proc_buff",

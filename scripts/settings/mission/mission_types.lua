@@ -40,12 +40,16 @@ local MissionTypes = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_operations",
 		name = "loc_mission_type_operations_name",
 	},
+	horde = {
+		icon = "content/ui/materials/icons/mission_types/mission_type_horde",
+		name = "loc_horde_mission_type",
+	},
 	undefined = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_operations",
+		icon = "content/ui/materials/icons/mission_types/mission_type_undefined",
 		name = "loc_mission_type_undefined_name",
 	},
 	hub = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_operations",
+		icon = "content/ui/materials/icons/mission_types/mission_type_undefined",
 		name = "loc_mission_type_undefined_name",
 	},
 }

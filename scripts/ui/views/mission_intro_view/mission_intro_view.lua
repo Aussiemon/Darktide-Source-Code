@@ -1,15 +1,15 @@
 ﻿-- chunkname: @scripts/ui/views/mission_intro_view/mission_intro_view.lua
 
-local Breeds = require("scripts/settings/breed/breeds")
 local Definitions = require("scripts/ui/views/mission_intro_view/mission_intro_view_definitions")
+local Breeds = require("scripts/settings/breed/breeds")
 local MissionIntroViewSettings = require("scripts/ui/views/mission_intro_view/mission_intro_view_settings")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local Vo = require("scripts/utilities/vo")
 local ViewElementVideo = require("scripts/ui/view_elements/view_element_video/view_element_video")
+local Vo = require("scripts/utilities/vo")
 local MissionIntroView = class("MissionIntroView", "BaseView")
 
 local function _generate_seed(mission_id)
@@ -36,12 +36,17 @@ MissionIntroView.init = function (self, settings, context)
 	self._camera = nil
 	self._profile_loaders = {}
 	self._spawn_slots = {}
+	self._prioritized_ogryn_slots = table.clone(MissionIntroViewSettings.prioritized_ogryn_slots)
 
 	local backend_mission_id = Managers.mechanism:backend_mission_id()
 
 	self._seed = _generate_seed(backend_mission_id)
 
-	MissionIntroView.super.init(self, Definitions, settings, context)
+	local intro_level, dynamic_level_package = self.select_target_intro_level()
+
+	self._intro_level = intro_level
+
+	MissionIntroView.super.init(self, Definitions, settings, context, dynamic_level_package)
 
 	self._pass_draw = false
 	self._can_exit = not context or context.can_exit
@@ -83,6 +88,16 @@ MissionIntroView.event_register_mission_intro_spawn_point_4 = function (self, sp
 	self:_register_mission_intro_spawn_point(spawn_point_unit, 4)
 end
 
+MissionIntroView.event_register_mission_intro_spawn_point_5 = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_mission_intro_spawn_point_5")
+	self:_register_mission_intro_spawn_point(spawn_point_unit, 5)
+end
+
+MissionIntroView.event_register_mission_intro_spawn_point_6 = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_mission_intro_spawn_point_6")
+	self:_register_mission_intro_spawn_point(spawn_point_unit, 6)
+end
+
 MissionIntroView._register_mission_intro_spawn_point = function (self, spawn_point_unit, index)
 	self._spawn_point_units[index] = spawn_point_unit
 end
@@ -90,12 +105,30 @@ end
 MissionIntroView.event_register_mission_intro_camera = function (self, camera_unit)
 	self:_unregister_event("event_register_mission_intro_camera")
 
+	local intro_level = self._intro_level
 	local viewport_name = MissionIntroViewSettings.viewport_name
 	local viewport_type = MissionIntroViewSettings.viewport_type
 	local viewport_layer = MissionIntroViewSettings.viewport_layer
-	local shading_environment = MissionIntroViewSettings.shading_environment
+	local shading_environment = intro_level.shading_environment
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
+end
+
+MissionIntroView.select_target_intro_level = function (mission_name)
+	if not mission_name then
+		local mechanism_data = Managers.mechanism:mechanism_data()
+
+		mission_name = mechanism_data and mechanism_data.mission_name
+	end
+
+	local mission_zone_id = mission_name and Missions[mission_name].zone_id or "default"
+	local intro_level = MissionIntroViewSettings.intro_levels_by_zone_id[mission_zone_id] or MissionIntroViewSettings.intro_levels_by_zone_id.default
+	local intro_level_packages = {
+		is_level_package = true,
+		name = intro_level.level_name,
+	}
+
+	return intro_level, intro_level_packages
 end
 
 MissionIntroView._initialize_background_world = function (self)
@@ -104,6 +137,8 @@ MissionIntroView._initialize_background_world = function (self)
 	self:_register_event("event_register_mission_intro_spawn_point_2")
 	self:_register_event("event_register_mission_intro_spawn_point_3")
 	self:_register_event("event_register_mission_intro_spawn_point_4")
+	self:_register_event("event_register_mission_intro_spawn_point_5")
+	self:_register_event("event_register_mission_intro_spawn_point_6")
 
 	local world_name = MissionIntroViewSettings.world_name
 	local world_layer = MissionIntroViewSettings.world_layer
@@ -112,15 +147,15 @@ MissionIntroView._initialize_background_world = function (self)
 
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name, optional_flags)
 
-	local level_name = MissionIntroViewSettings.level_name
+	local game_state_context = Managers.player:game_state_context()
+	local mission_name = game_state_context and game_state_context.mission_name
+	local mission_giver_vo = game_state_context and game_state_context.mission_giver_vo
+	local target_intro_level = self._intro_level
+	local level_name = target_intro_level.level_name
 
 	self._world_spawner:spawn_level(level_name)
 
 	self._world_initialized = true
-
-	local game_state_context = Managers.player:game_state_context()
-	local mission_name = game_state_context and game_state_context.mission_name
-	local mission_giver_vo = game_state_context and game_state_context.mission_giver_vo
 
 	if mission_name then
 		self:_play_mission_brief_vo(mission_name, mission_giver_vo)
@@ -215,9 +250,10 @@ MissionIntroView._get_free_slot_id = function (self, player)
 	local archetype_settings = profile.archetype
 	local breed_name = archetype_settings.breed
 	local is_ogryn = breed_name == "ogryn"
-	local prioritized_ogryn_slots = MissionIntroViewSettings.prioritized_ogryn_slots
+	local prioritized_ogryn_slots = self._prioritized_ogryn_slots
+	local back_slots_decided = #prioritized_ogryn_slots == 2
 
-	if is_ogryn then
+	if is_ogryn and back_slots_decided then
 		for i = 1, #prioritized_ogryn_slots do
 			local slot_index = prioritized_ogryn_slots[i]
 			local slot = spawn_slots[slot_index]
@@ -228,12 +264,18 @@ MissionIntroView._get_free_slot_id = function (self, player)
 		end
 	else
 		for i = 1, #spawn_slots do
-			if not table.find(prioritized_ogryn_slots, i) then
-				local slot = spawn_slots[i]
+			local slot = spawn_slots[i]
 
-				if not slot.occupied then
-					return i
+			if not slot.occupied then
+				if not back_slots_decided then
+					if is_ogryn then
+						table.remove(prioritized_ogryn_slots, i)
+					else
+						table.remove(prioritized_ogryn_slots, i + 1)
+					end
 				end
+
+				return i
 			end
 		end
 	end
@@ -266,9 +308,9 @@ MissionIntroView._setup_spawn_slots = function (self)
 	local unit_spawner = self._world_spawner:unit_spawner()
 	local ignored_slots = MissionIntroViewSettings.ignored_slots
 	local spawn_slots = {}
-	local num_players = 4
+	local num_slots = 6
 
-	for i = 1, num_players do
+	for i = 1, num_slots do
 		local spawn_point_unit = spawn_point_units[i]
 		local initial_position = Unit.world_position(spawn_point_unit, 1)
 		local initial_rotation = Unit.world_rotation(spawn_point_unit, 1)
@@ -328,9 +370,16 @@ MissionIntroView._assign_player_slots = function (self)
 	local player_manager = Managers.player
 	local players = player_manager:players()
 
-	local function sort_function(a, b)
+	local function bot_sort_function(a, b)
 		local a_slot_index = a:slot() + (a:is_human_controlled() and 0 or 100)
 		local b_slot_index = b:slot() + (b:is_human_controlled() and 0 or 100)
+
+		return a_slot_index < b_slot_index
+	end
+
+	local function ogryn_sort_function(a, b)
+		local a_slot_index = a:slot() + (a:breed_name() == "human" and 0 or 100)
+		local b_slot_index = b:slot() + (b:breed_name() == "human" and 0 or 100)
 
 		return a_slot_index < b_slot_index
 	end
@@ -342,7 +391,8 @@ MissionIntroView._assign_player_slots = function (self)
 	end
 
 	if #temp_sorted_players > 1 then
-		table.sort(temp_sorted_players, sort_function)
+		table.sort(temp_sorted_players, bot_sort_function)
+		table.sort(temp_sorted_players, ogryn_sort_function)
 	end
 
 	local spawn_slots = self._spawn_slots
@@ -422,7 +472,7 @@ MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_
 
 	local mission_brief_vo = mission.mission_brief_vo
 
-	if not mission_brief_vo then
+	if not mission_brief_vo or not mission_brief_vo.vo_events then
 		self.mission_briefing_done = true
 
 		return

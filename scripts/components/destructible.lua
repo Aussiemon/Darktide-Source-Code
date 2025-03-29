@@ -392,13 +392,13 @@ Destructible.component_data = {
 		value = false,
 	},
 	broadphase_radius = {
-		decimals = 0,
-		max = 100,
-		min = 10,
-		step = 1,
+		decimals = 2,
+		max = 40,
+		min = 0.1,
+		step = 0.1,
 		ui_name = "Broadphase Radius",
 		ui_type = "number",
-		value = 40,
+		value = 1,
 	},
 	mass = {
 		category = "Force on Destroy",
@@ -489,6 +489,7 @@ Destructible.component_data = {
 	},
 	extensions = {
 		"DestructibleExtension",
+		"BroadphaseExtension",
 	},
 }
 

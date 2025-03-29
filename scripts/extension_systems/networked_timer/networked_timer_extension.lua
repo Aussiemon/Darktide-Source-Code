@@ -8,13 +8,14 @@ NetworkedTimerExtension.init = function (self, extension_init_context, unit, ext
 	self._duration = 0
 	self._hud_description = "loc_description"
 	self._max_speed_modifier = 1
+	self._reset_speed_modifier_on_state_change = true
 	self._active = false
 	self._counting = false
 	self._total_timer = 0
 	self._speed_modifier = 1
 end
 
-NetworkedTimerExtension.setup_from_component = function (self, duration, hud_description, max_speed_modifier)
+NetworkedTimerExtension.setup_from_component = function (self, duration, hud_description, max_speed_modifier, reset_speed_modifier_on_state_change)
 	if duration ~= nil then
 		self._duration = duration
 	end
@@ -25,6 +26,10 @@ NetworkedTimerExtension.setup_from_component = function (self, duration, hud_des
 
 	if max_speed_modifier ~= nil then
 		self._max_speed_modifier = max_speed_modifier
+	end
+
+	if reset_speed_modifier_on_state_change ~= nil then
+		self._reset_speed_modifier_on_state_change = reset_speed_modifier_on_state_change
 	end
 end
 
@@ -45,22 +50,23 @@ NetworkedTimerExtension.hot_join_sync = function (self, unit, sender, channel)
 	local active = self._active
 	local counting = self._counting
 	local total_timer = self._total_timer
-	local speed_modifier = self._speed_modifier
+	local speed_modifier_normalized = self._speed_modifier / self._max_speed_modifier
 
-	Managers.state.game_session:send_rpc_clients("rpc_networked_timer_sync_state", unit_id, active, counting, total_timer, speed_modifier)
+	Managers.state.game_session:send_rpc_clients("rpc_networked_timer_sync_state", unit_id, active, counting, total_timer, speed_modifier_normalized)
 end
 
-NetworkedTimerExtension.sync_state = function (self, active, counting, total_timer, speed_modifier)
+NetworkedTimerExtension.sync_state = function (self, active, counting, total_timer, speed_modifier_normalized)
 	self._active = active
 	self._counting = counting
 	self._total_timer = total_timer
-	self._speed_modifier = speed_modifier
+
+	self:set_speed_modifier_with_normalized_value(speed_modifier_normalized)
 end
 
 NetworkedTimerExtension.start = function (self)
 	self._active = true
 	self._counting = true
-	self._speed_modifier = 1
+	self._speed_modifier = self._reset_speed_modifier_on_state_change and 1 or self._speed_modifier
 
 	Unit.flow_event(self._unit, "lua_timer_started")
 
@@ -73,7 +79,9 @@ end
 
 NetworkedTimerExtension.pause = function (self)
 	self._counting = false
-	self._speed_modifier = 1
+	self._speed_modifier = self._reset_speed_modifier_on_state_change and 1 or self._speed_modifier
+
+	Unit.flow_event(self._unit, "lua_timer_paused")
 
 	if self._is_server then
 		local unit_id = Managers.state.unit_spawner:level_index(self._unit)
@@ -86,13 +94,31 @@ NetworkedTimerExtension.stop = function (self)
 	self._active = false
 	self._counting = false
 	self._total_timer = 0
-	self._speed_modifier = 1
+	self._speed_modifier = self._reset_speed_modifier_on_state_change and 1 or self._speed_modifier
 
 	if self._is_server then
 		local unit_id = Managers.state.unit_spawner:level_index(self._unit)
 
 		Managers.state.game_session:send_rpc_clients("rpc_networked_timer_stop", unit_id)
 	end
+end
+
+NetworkedTimerExtension.set_speed_modifier_with_normalized_value = function (self, speed_modifier_normalized)
+	speed_modifier_normalized = math.clamp01(speed_modifier_normalized)
+	self._speed_modifier = self._max_speed_modifier * speed_modifier_normalized
+end
+
+NetworkedTimerExtension.set_speed_modifier = function (self, new_speed_modifier)
+	if not self._is_server then
+		return
+	end
+
+	self._speed_modifier = math.min(new_speed_modifier, self._max_speed_modifier)
+
+	local unit_id = Managers.state.unit_spawner:level_index(self._unit)
+	local speed_modifier_normalized = new_speed_modifier / self._max_speed_modifier
+
+	Managers.state.game_session:send_rpc_clients("rpc_networked_timer_set_speed_modifier", unit_id, speed_modifier_normalized)
 end
 
 NetworkedTimerExtension.fast_forward = function (self)

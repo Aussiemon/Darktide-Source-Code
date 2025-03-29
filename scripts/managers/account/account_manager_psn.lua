@@ -244,16 +244,6 @@ AccountManagerPSN.signin_profile = function (self, signin_callback, optional_inp
 		self._account_id = account_id
 		self._signed_in = true
 
-		local check_reachability = Playstation.check_reachability()
-
-		if check_reachability ~= 0 then
-			return
-		end
-
-		return PSNRestrictions:verify_premium()
-	end):next(function (_)
-		self._premium_verified = true
-
 		self:cb_signin_complete()
 	end):catch(function (error)
 		local fail_cb
@@ -326,6 +316,10 @@ end
 
 AccountManagerPSN.signin_state = function (self)
 	return self._signin_state
+end
+
+AccountManagerPSN.set_premium_verified = function (self, new_value)
+	self._premium_verified = new_value
 end
 
 AccountManagerPSN.is_guest = function (self)

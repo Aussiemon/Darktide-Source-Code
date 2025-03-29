@@ -9,12 +9,13 @@ local function _add_live_event(event_name)
 	live_events[id] = event_config
 end
 
-_add_live_event("skulls")
-_add_live_event("mechanicus")
+_add_live_event("abhuman")
 _add_live_event("darkness")
+_add_live_event("get_em_in_shape")
+_add_live_event("mechanicus")
 _add_live_event("moebian_21")
 _add_live_event("nurgle_explosion")
-_add_live_event("get_em_in_shape")
-_add_live_event("abhuman")
+_add_live_event("skulls")
+_add_live_event("survival")
 
 return settings("LiveEvents", live_events)

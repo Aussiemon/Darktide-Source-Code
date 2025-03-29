@@ -7,15 +7,13 @@ local ActionUtility = require("scripts/extension_systems/weapon/actions/utilitie
 local AimAssist = require("scripts/utilities/aim_assist")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Component = require("scripts/utilities/component")
-local InputDevice = require("scripts/managers/input/input_device")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Recoil = require("scripts/utilities/recoil")
-local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local SmartTargeting = require("scripts/utilities/smart_targeting")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Spread = require("scripts/utilities/spread")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
@@ -24,7 +22,8 @@ local Vo = require("scripts/utilities/vo")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
-local special_rules = SpecialRulesSetting.special_rules
+local special_rules = SpecialRulesSettings.special_rules
+local talent_settings_ogryn_1 = TalentSettings.ogryn_1
 local DEFUALT_NUM_CRITICAL_SHOTS = 1
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local EMPTY_TABLE = {}
@@ -119,9 +118,9 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 		local leadbelcher_chance = 0
 
 		if check_leadbelcher then
-			leadbelcher_chance = TalentSettings.ogryn_1.passive_1.free_ammo_proc_chance
+			leadbelcher_chance = talent_settings_ogryn_1.passive_1.free_ammo_proc_chance
 		elseif check_leadbelcher_improved then
-			leadbelcher_chance = TalentSettings.ogryn_1.spec_passive_2.increased_passive_proc_chance
+			leadbelcher_chance = talent_settings_ogryn_1.spec_passive_2.increased_passive_proc_chance
 		end
 
 		self._leadbelcher_shot = self:_check_for_lucky_strike(false, true, leadbelcher_chance)
@@ -898,9 +897,9 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 		local leadbelcher_chance = 0
 
 		if check_leadbelcher then
-			leadbelcher_chance = TalentSettings.ogryn_1.passive_1.free_ammo_proc_chance
+			leadbelcher_chance = talent_settings_ogryn_1.passive_1.free_ammo_proc_chance
 		elseif check_leadbelcher_improved then
-			leadbelcher_chance = TalentSettings.ogryn_1.spec_passive_2.increased_passive_proc_chance
+			leadbelcher_chance = talent_settings_ogryn_1.spec_passive_2.increased_passive_proc_chance
 		end
 
 		self._leadbelcher_shot = self:_check_for_lucky_strike(false, true, leadbelcher_chance)

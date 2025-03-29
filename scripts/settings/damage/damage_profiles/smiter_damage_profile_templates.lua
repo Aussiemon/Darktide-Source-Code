@@ -2,29 +2,27 @@
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
 local melee_attack_strengths = AttackSettings.melee_attack_strength
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local single_cleave = DamageProfileSettings.single_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-
 damage_templates.medium_smiter = {
 	ragdoll_only = true,
 	ragdoll_push_force = 350,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	targets = {
 		{
@@ -142,17 +140,14 @@ damage_templates.medium_smiter_pushfollow.cleave_distribution = {
 	attack = 0.1,
 	impact = 0.1,
 }
-
-local medium_smiter_combat_blade = table.clone(damage_templates.medium_smiter)
-
-damage_templates.medium_smiter_combat_blade = medium_smiter_combat_blade
+damage_templates.medium_smiter_combat_blade = table.clone(damage_templates.medium_smiter)
 damage_templates.spell_smiter = {
 	ragdoll_only = true,
 	ragdoll_push_force = 350,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
-	gibbing_power = GibbingPower.heavy,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.crushing,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,

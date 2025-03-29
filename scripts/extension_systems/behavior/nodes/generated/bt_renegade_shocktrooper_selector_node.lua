@@ -47,7 +47,19 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_exit_spawner = children[2]
+		local node_disable = children[2]
+		local disable_component = blackboard.disable
+		local condition_result = disable_component.is_disabled
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_disable
+
+			return node_disable
+		end
+	end
+
+	do
+		local node_exit_spawner = children[3]
 		local spawn_component = blackboard.spawn
 		local condition_result = spawn_component.is_exiting_spawner
 
@@ -59,7 +71,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_smart_object = children[3]
+		local node_smart_object = children[4]
 		local condition_result
 
 		repeat
@@ -118,7 +130,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_stagger = children[4]
+		local node_stagger = children[5]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -131,7 +143,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_blocked = children[5]
+		local node_blocked = children[6]
 		local blocked_component = blackboard.blocked
 		local is_blocked = blocked_component.is_blocked
 		local condition_result = is_blocked
@@ -144,7 +156,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_switch_weapon = children[6]
+		local node_switch_weapon = children[7]
 		local condition_result
 		local weapon_switch_component = blackboard.weapon_switch
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
@@ -163,7 +175,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_melee_combat = children[7]
+		local node_melee_combat = children[8]
 		local tree_node = node_melee_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_melee_combat
@@ -242,7 +254,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_assault = children[8]
+		local node_assault = children[9]
 		local tree_node = node_assault.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_assault
@@ -317,7 +329,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_close_combat = children[9]
+		local node_close_combat = children[10]
 		local tree_node = node_close_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_close_combat
@@ -396,7 +408,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_alerted = children[10]
+		local node_alerted = children[11]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted
 		local condition_result
 
@@ -445,7 +457,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 	end
 
 	do
-		local node_patrol = children[11]
+		local node_patrol = children[12]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -496,7 +508,7 @@ BtRenegadeShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, 
 		end
 	end
 
-	local node_idle = children[12]
+	local node_idle = children[13]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

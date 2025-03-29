@@ -16,7 +16,22 @@ ShadingEnvironmentExtension.init = function (self, extension_init_context, unit,
 	self._slot = -1
 end
 
+ShadingEnvironmentExtension._clear_previous_shading_environment_resource = function (self)
+	if self._shading_environment_resource then
+		World.destroy_shading_environment_resource(self._world, self._shading_environment_resource)
+
+		self._shading_environment_resource = nil
+		self._shading_environment_resource_name = nil
+
+		Managers.state.camera:remove_environment(self)
+
+		self._enabled = false
+	end
+end
+
 ShadingEnvironmentExtension.setup_from_component = function (self, fade_in_distance, layer, blend_mask, shading_environment_resource_name, shading_environment_slot, start_enabled)
+	self:_clear_previous_shading_environment_resource()
+
 	self._shading_environment_resource_name_default = shading_environment_resource_name
 	self._fade_in_distance = fade_in_distance
 	self._layer = layer
@@ -40,14 +55,17 @@ ShadingEnvironmentExtension.setup_from_component = function (self, fade_in_dista
 	end
 end
 
+ShadingEnvironmentExtension.set_slot = function (self, shading_environment_slot)
+	self._slot = shading_environment_slot
+end
+
+ShadingEnvironmentExtension.slot = function (self)
+	return self._slot
+end
+
 ShadingEnvironmentExtension.destroy = function (self, unit)
 	self:disable()
-
-	if self._shading_environment_resource then
-		World.destroy_shading_environment_resource(self._world, self._shading_environment_resource)
-
-		self._shading_environment_resource = nil
-	end
+	self:_clear_previous_shading_environment_resource()
 end
 
 ShadingEnvironmentExtension.enable = function (self)
@@ -70,7 +88,11 @@ ShadingEnvironmentExtension.disable = function (self)
 	self._enabled = false
 end
 
-ShadingEnvironmentExtension.setup_theme = function (self, shading_environment_system)
+ShadingEnvironmentExtension.setup_theme = function (self, shading_environment_system, force_reset)
+	if force_reset then
+		self:_clear_previous_shading_environment_resource()
+	end
+
 	local slot_id = self._slot
 
 	if slot_id > -1 then

@@ -22,9 +22,11 @@ BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchp
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = navigation_extension
 
-	local speed = breed.run_speed
+	if action_data.enable_disable_locomotion_speed then
+		local speed = breed.run_speed
 
-	navigation_extension:set_enabled(true, speed)
+		navigation_extension:set_enabled(true, speed)
+	end
 
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	local move_to_position = behavior_component.move_to_position:unbox()
@@ -33,6 +35,10 @@ BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchp
 
 	scratchpad.move_to_position = Vector3Box(move_to_position)
 	scratchpad.behavior_component = behavior_component
+
+	if action_data.adapt_speed then
+		scratchpad.current_speed_timer = 0
+	end
 
 	local slot_system = Managers.state.extension:system("slot_system")
 
@@ -46,9 +52,9 @@ end
 BtMoveToPositionAction.init_values = function (self, blackboard)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 
-	behavior_component.has_move_to_position = false
-
 	behavior_component.move_to_position:store(0, 0, 0)
+
+	behavior_component.has_move_to_position = false
 end
 
 BtMoveToPositionAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -56,13 +62,19 @@ BtMoveToPositionAction.leave = function (self, unit, breed, blackboard, scratchp
 		MinionMovement.set_anim_driven(scratchpad, false)
 	end
 
-	scratchpad.navigation_extension:set_enabled(false)
+	if action_data.enable_disable_locomotion_speed then
+		scratchpad.navigation_extension:set_enabled(false)
+	end
 
 	if scratchpad.reset_slot_system then
 		local slot_system = Managers.state.extension:system("slot_system")
 
 		slot_system:do_slot_search(unit, true)
 	end
+
+	local behavior_component = scratchpad.behavior_component
+
+	behavior_component.has_move_to_position = false
 end
 
 local ARRIVED_AT_POSITION_THRESHOLD_SQ = 0.5625
@@ -72,8 +84,6 @@ BtMoveToPositionAction.run = function (self, unit, breed, blackboard, scratchpad
 	local distance_sq = Vector3.distance_squared(self_position, move_to_position)
 
 	if distance_sq <= ARRIVED_AT_POSITION_THRESHOLD_SQ then
-		scratchpad.behavior_component.has_move_to_position = false
-
 		return "done"
 	end
 
@@ -88,16 +98,26 @@ BtMoveToPositionAction.run = function (self, unit, breed, blackboard, scratchpad
 		return "running"
 	end
 
-	if scratchpad.start_move_event_anim_speed_duration and t < scratchpad.start_move_event_anim_speed_duration then
-		local navigation_extension = scratchpad.navigation_extension
+	if scratchpad.start_move_event_anim_speed_duration then
+		if t < scratchpad.start_move_event_anim_speed_duration then
+			local navigation_extension = scratchpad.navigation_extension
 
-		MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
+			MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
+		else
+			scratchpad.navigation_extension:set_max_speed(action_data.speed)
+
+			scratchpad.start_move_event_anim_speed_duration = nil
+		end
 	end
 
 	local move_state = behavior_component.move_state
 
 	if move_state ~= "moving" then
 		self:_start_move_anim(unit, t, behavior_component, scratchpad, action_data)
+	end
+
+	if not scratchpad.start_move_event_anim_speed_duration and action_data.adapt_speed then
+		MinionMovement.smooth_speed_based_on_distance(unit, scratchpad, dt, action_data)
 	end
 
 	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
@@ -143,10 +163,6 @@ BtMoveToPositionAction._start_move_anim = function (self, unit, t, behavior_comp
 	end
 
 	behavior_component.move_state = "moving"
-
-	local new_speed = action_data.speeds[start_move_event]
-
-	scratchpad.navigation_extension:set_max_speed(new_speed)
 end
 
 return BtMoveToPositionAction

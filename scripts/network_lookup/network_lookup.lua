@@ -13,13 +13,13 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local CorruptorSettings = require("scripts/settings/corruptor/corruptor_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local HavocSettings = require("scripts/settings/havoc_settings")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueLookup = require("scripts/settings/dialogue/dialogue_lookup")
 local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_lookup_concepts")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FlowEvents = require("scripts/settings/fx/flow_events")
+local HavocSettings = require("scripts/settings/havoc_settings")
 local HazardPropSettings = require("scripts/settings/hazard_prop/hazard_prop_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -134,6 +134,8 @@ NetworkLookup.dialogue_names = DialogueLookup
 NetworkLookup.dialogues_all_concepts = table.clone(DialogueLookupConcepts.all_concepts)
 NetworkLookup.dynamic_smart_tags = _create_lookup({}, DialogueSettings.dynamic_smart_tags)
 NetworkLookup.manual_subtitles = _create_lookup({}, DialogueSettings.manual_subtitles)
+NetworkLookup.backend_vo_groups = _create_lookup({}, DialogueSettings.backend_vo_groups)
+NetworkLookup.horde_mode_vo = _create_lookup({}, DialogueSettings.horde_mode)
 NetworkLookup.door_control_panel_states = {
 	"active",
 	"inactive",
@@ -173,6 +175,15 @@ NetworkLookup.hazard_prop_content = _create_lookup({}, HazardPropSettings.hazard
 NetworkLookup.hazard_prop_states = _create_lookup({}, HazardPropSettings.hazard_state)
 NetworkLookup.herding_templates = _create_lookup({}, HerdingTemplates)
 NetworkLookup.hit_zones = _create_lookup({}, HitZone.hit_zone_names)
+NetworkLookup.hordes_build_families = {
+	"fire",
+	"electric",
+	"armor_piercing",
+	"elementalist",
+	"unkillable",
+	"grenade",
+	"cowboy",
+}
 NetworkLookup.host_types = _create_lookup({}, MatchmakingConstants.HOST_TYPES)
 NetworkLookup.impact_fx_names = _create_lookup({}, ImpactEffectSettings.impact_fx_templates)
 NetworkLookup.interaction_result = {
@@ -288,6 +299,13 @@ local player_character_sounds = {
 	["wwise/events/player/play_backstab_indicator_melee_elite"] = true,
 	["wwise/events/player/play_backstab_indicator_ranged"] = true,
 	["wwise/events/player/play_foley_fall_wind_2D"] = true,
+	["wwise/events/player/play_horde_mode_buff_ammo_refill"] = true,
+	["wwise/events/player/play_horde_mode_buff_dublicate"] = true,
+	["wwise/events/player/play_horde_mode_buff_electric_crit"] = true,
+	["wwise/events/player/play_horde_mode_buff_grenade_refill"] = true,
+	["wwise/events/player/play_horde_mode_buff_rock_charge_finish"] = true,
+	["wwise/events/player/play_horde_mode_buff_rock_charge_loop"] = true,
+	["wwise/events/player/play_horde_mode_buff_super_crit"] = true,
 	["wwise/events/player/play_pick_up_ammo_01"] = true,
 	["wwise/events/player/play_player_dodge_melee_success"] = true,
 	["wwise/events/player/play_player_dodge_ranged_success"] = true,
@@ -307,6 +325,7 @@ local player_character_sounds = {
 	["wwise/events/player/play_toughness_hits"] = true,
 	["wwise/events/player/play_vault"] = true,
 	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
+	["wwise/events/player/stop_horde_mode_buff_rock_charge_loop"] = true,
 	["wwise/events/ui/play_hud_coherency_off"] = true,
 	["wwise/events/ui/play_hud_coherency_on"] = true,
 	["wwise/events/ui/play_hud_heal_2d"] = true,
@@ -315,6 +334,9 @@ local player_character_sounds = {
 	["wwise/events/weapon/play_enemy_netgunner_net_trapped"] = true,
 	["wwise/events/weapon/play_explosion_flamer_tank"] = true,
 	["wwise/events/weapon/play_explosion_force_med"] = true,
+	["wwise/events/weapon/play_horde_mode_buff_fire_burst"] = true,
+	["wwise/events/weapon/play_horde_mode_buff_shield"] = true,
+	["wwise/events/weapon/play_horde_mode_heal_self_confirmation"] = true,
 	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,
 	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,

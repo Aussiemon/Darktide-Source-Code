@@ -20,6 +20,7 @@ MinigameScanView.init = function (self, context)
 	self._scanning_intensity = 0
 	self._blinking = false
 	self._blink_time = 0
+	self._intense_blink_alpha = 0
 
 	self:_create_skull_widgets()
 	self:_create_cog_widgets()
@@ -31,8 +32,10 @@ MinigameScanView.init = function (self, context)
 	local player_visual_loadout_extension = ScriptUnit.extension(owner_unit, "visual_loadout_system")
 	local fx_sources = player_visual_loadout_extension:source_fx_for_slot(SLOT_NAME)
 
-	self._player_fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
-	self._fx_source_name = fx_sources[FX_SOURCE_NAME]
+	if fx_sources then
+		self._player_fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+		self._fx_source_name = fx_sources[FX_SOURCE_NAME]
+	end
 
 	local unit_data_extension = ScriptUnit.extension(context.device_owner_unit, "unit_data_system")
 
@@ -109,11 +112,13 @@ MinigameScanView.update = function (self, dt, t, widgets_by_name)
 	self._blinking = blinking
 	self._blink_time = self._blink_time + dt
 
-	local sfx_source = self._player_fx_extension:sound_source(self._fx_source_name)
-	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, sfx_source)
-	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
+	if self._fx_source_name then
+		local sfx_source = self._player_fx_extension:sound_source(self._fx_source_name)
+		local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, sfx_source)
+		local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
 
-	self._intense_blink_alpha = current_beep_normalized > 0.7 and 1 or 0
+		self._intense_blink_alpha = current_beep_normalized > 0.7 and 1 or 0
+	end
 end
 
 MinigameScanView.set_local_player = function (self, local_player)
@@ -229,7 +234,7 @@ MinigameScanView._create_wallet_widgets = function (self, material_name, widget_
 end
 
 MinigameScanView._create_segment_widgets = function (self)
-	local scenegraph_id = "segments_center_pivot"
+	local scenegraph_id = "center_pivot"
 	local num_segments = ScannerDisplayViewScanSettings.scan_num_segments
 	local widget_size = ScannerDisplayViewScanSettings.scan_segment_widget_size
 	local widget_offset = ScannerDisplayViewScanSettings.scan_segment_widget_offset

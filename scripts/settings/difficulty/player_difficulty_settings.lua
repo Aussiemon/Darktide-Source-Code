@@ -10,13 +10,6 @@ player_difficulty_settings.archetype_wounds = {
 		1,
 		1,
 	},
-	veteran = {
-		4,
-		3,
-		3,
-		2,
-		2,
-	},
 	ogryn = {
 		5,
 		4,
@@ -24,14 +17,21 @@ player_difficulty_settings.archetype_wounds = {
 		3,
 		3,
 	},
-	zealot = {
+	psyker = {
 		4,
 		3,
 		3,
 		2,
 		2,
 	},
-	psyker = {
+	veteran = {
+		4,
+		3,
+		3,
+		2,
+		2,
+	},
+	zealot = {
 		4,
 		3,
 		3,

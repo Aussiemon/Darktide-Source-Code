@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/boss/boss_extension.lua
 
 local BossExtension = class("BossExtension")
+local BossNameTemplates = require("scripts/settings/boss/boss_name_templates")
+local _setup_twins_special_names
 
 BossExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._unit = unit
@@ -143,6 +145,7 @@ BossExtension._generate_display_name = function (self)
 			self._seed = next_seed
 		end
 
+		display_name = _setup_twins_special_names(display_name, breed)
 		self._display_name = display_name
 	end
 end
@@ -170,6 +173,37 @@ BossExtension._start_boss_template = function (self, boss_template)
 	boss_template.start(self._template_data, self._template_context)
 
 	self._boss_template = boss_template
+end
+
+local ALLOWED_BREEDS = {
+	renegade_twin_captain = true,
+	renegade_twin_captain_two = true,
+}
+
+function _setup_twins_special_names(display_name, breed)
+	local havoc_mananger = Managers.state.havoc
+
+	if not havoc_mananger:is_havoc() then
+		return display_name
+	end
+
+	local name = breed.name
+
+	if not ALLOWED_BREEDS[name] then
+		return display_name
+	end
+
+	local concatenated_name = "havoc_" .. name
+	local possible_display_names = BossNameTemplates[concatenated_name]
+
+	if type(possible_display_names) == "table" then
+		local next_seed = math.random(1, #possible_display_names)
+
+		display_name = possible_display_names[next_seed]
+		breed.display_name = display_name
+	end
+
+	return display_name
 end
 
 return BossExtension

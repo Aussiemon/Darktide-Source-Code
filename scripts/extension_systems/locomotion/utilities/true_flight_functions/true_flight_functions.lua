@@ -11,8 +11,8 @@ local function _extract_true_flight_functions(path)
 end
 
 _extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
-_extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_smite")
 _extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_krak_grenade")
+_extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_smite")
 _extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_throwing_knives")
 
 return settings("TrueFlightFunctions", true_flight_functions)

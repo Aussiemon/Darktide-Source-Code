@@ -1,53 +1,27 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thunder_hammers_2h/settings_templates/thunder_hammer_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local melee_attack_strengths = AttackSettings.melee_attack_strength
+local double_cleave = DamageProfileSettings.double_cleave
+local large_cleave = DamageProfileSettings.large_cleave
+local single_cleave = DamageProfileSettings.single_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local melee_attack_strengths = AttackSettings.melee_attack_strength
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local light_cleave = DamageProfileSettings.light_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local large_cleave = DamageProfileSettings.large_cleave
-local hammer_smiter_light_am = {
-	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_5,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
-		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-	},
-	impact = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_75,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
-		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-	},
-}
 local hammer_smiter_light_active_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -166,8 +140,8 @@ damage_templates.thunderhammer_light = {
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer,
 	armor_damage_modifier = hammer_smiter_light_default_am,
@@ -275,8 +249,8 @@ damage_templates.thunderhammer_light_plus = {
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer,
 	armor_damage_modifier = hammer_smiter_light_default_am,
@@ -384,8 +358,8 @@ damage_templates.thunderhammer_light_linesman = {
 	stagger_category = "melee",
 	cleave_distribution = large_cleave,
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer,
 	armor_damage_modifier = hammer_smiter_light_default_am,
@@ -554,8 +528,8 @@ damage_templates.thunderhammer_light_tank = {
 	stagger_category = "melee",
 	cleave_distribution = large_cleave,
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer,
 	armor_damage_modifier = hammer_smiter_light_default_am,
@@ -696,7 +670,7 @@ damage_templates.thunderhammer_light_active = {
 		impact = 0.01,
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_type = GibbingTypes.default,
+	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
 	armor_damage_modifier = hammer_smiter_light_default_am,
@@ -813,8 +787,8 @@ damage_templates.thunderhammer_heavy = {
 		},
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer,
 	stagger_duration_modifier = {
@@ -1218,7 +1192,7 @@ damage_templates.thunderhammer_m2_heavy_active_strikedown = {
 		impact = 0.01,
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = gibbing_types.explosion,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
 	targets = {
@@ -1279,8 +1253,8 @@ damage_templates.thunderhammer_heavy_smiter = {
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = double_cleave,
 	damage_type = damage_types.blunt_thunder,
-	gibbing_power = GibbingPower.always,
-	gibbing_type = GibbingTypes.crushing,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer,
 	stagger_duration_modifier = {
@@ -1376,7 +1350,7 @@ damage_templates.thunderhammer_heavy_active = {
 		impact = 0.01,
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = gibbing_types.explosion,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
 	targets = {
@@ -1483,7 +1457,7 @@ damage_templates.thunderhammer_m1_heavy_active = {
 		impact = 0.01,
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = gibbing_types.explosion,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
 	targets = {
@@ -1523,7 +1497,7 @@ damage_templates.thunderhammer_m2_heavy_active = {
 		impact = 0.01,
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_type = GibbingTypes.explosion,
+	gibbing_type = gibbing_types.explosion,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
 	targets = {
@@ -1562,7 +1536,7 @@ damage_templates.thunderhammer_m2_light_active = {
 		impact = 0.01,
 	},
 	damage_type = damage_types.blunt_thunder,
-	gibbing_type = GibbingTypes.default,
+	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.thunder_hammer_active,
 	armor_damage_modifier = hammer_smiter_light_default_am,

@@ -23,6 +23,11 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	self._world = world
 
 	local template = PacingTemplates.default
+	local is_havoc = Managers.state.difficulty:get_parsed_havoc_data()
+
+	if is_havoc then
+		template = PacingTemplates.havoc
+	end
 
 	self._template = template
 
@@ -37,7 +42,7 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	local side_sub_faction_types = game_mode_settings.side_sub_faction_types
 	local sub_faction_types = side_sub_faction_types[side_name]
 
-	self._roamer_pacing = RoamerPacing:new(nav_world, level_seed, sub_faction_types)
+	self._roamer_pacing = RoamerPacing:new(nav_world, template.roamer_pacing_template, level_seed, sub_faction_types)
 	self._horde_pacing = HordePacing:new(nav_world)
 	self._specials_pacing = SpecialsPacing:new(nav_world)
 	self._monster_pacing = MonsterPacing:new(nav_world)
@@ -101,7 +106,7 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 	local cinematic_playing = Managers.state.cinematic:is_playing()
 	local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
-	self._disabled = not main_path_available or cinematic_playing or not cinematic_scene_system:intro_played()
+	self._disabled = not main_path_available or cinematic_playing or not cinematic_scene_system:intro_played() or self._disabled
 
 	Managers.event:register(self, "intro_cinematic_started", "_event_intro_cinematic_started")
 	Managers.event:register(self, "intro_cinematic_played", "_event_intro_cinematic_played")
@@ -301,6 +306,10 @@ PacingManager.set_in_safe_zone = function (self, in_safe_zone)
 	self._in_safe_zone = in_safe_zone
 end
 
+PacingManager.get_in_safe_zone = function (self)
+	return self._in_safe_zone
+end
+
 PacingManager._event_intro_cinematic_started = function (self, cinematic_name)
 	self._disabled = true
 end
@@ -316,7 +325,7 @@ PacingManager._event_intro_cinematic_played = function (self, cinematic_name)
 end
 
 PacingManager.spawn_type_enabled = function (self, spawn_type)
-	if self._disabled then
+	if self._disabled and spawn_type ~= "terror_events" then
 		return false, "pacing_is_disabled"
 	end
 
@@ -774,6 +783,18 @@ end
 
 PacingManager.set_travel_distance_spawning_override = function (self, travel_distance_spawning)
 	self._specials_pacing:set_travel_distance_spawning_override(travel_distance_spawning)
+end
+
+PacingManager.override_horde_pacing = function (self, template)
+	self._horde_pacing_overide_template = template
+end
+
+PacingManager.get_horde_pacing_override_tempate = function (self)
+	return self._horde_pacing_overide_template
+end
+
+PacingManager.force_horde_pacing_spawn = function (self)
+	self._horde_pacing:force_next_horde()
 end
 
 PacingManager.add_pacing_modifiers = function (self, modify_settings)

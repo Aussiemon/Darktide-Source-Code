@@ -24,6 +24,7 @@ local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = 300
 local SPEED_EPSILON = 0.001
 local HIT_WEAKSPOT = false
+local IS_CRITICAL_STRIKE = false
 local slide_knock_down_damage_settings = {
 	radius = 2,
 	damage_profile = DamageProfileTemplates.slide_knockdown,
@@ -305,11 +306,12 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 			end
 
 			local hit_world_position = Actor.position(hit_actor)
-			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", 1000, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
+			local attack_type = AttackSettings.attack_types.melee
+			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", 1000, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
-			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT)
+			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT, IS_CRITICAL_STRIKE, attack_type)
 		end
 	end
 

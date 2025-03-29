@@ -1,12 +1,11 @@
 ﻿-- chunkname: @scripts/ui/views/player_character_options_view/player_character_options_view.lua
 
-local Breeds = require("scripts/settings/breed/breeds")
 local Definitions = require("scripts/ui/views/player_character_options_view/player_character_options_view_definitions")
+local Breeds = require("scripts/settings/breed/breeds")
 local PlayerCharacterOptionsViewSettings = require("scripts/ui/views/player_character_options_view/player_character_options_view_settings")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local UiSettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
-local OnlineStatus = SocialConstants.OnlineStatus
 local PlayerCharacterOptionsView = class("PlayerCharacterOptionsView", "BaseView")
 
 PlayerCharacterOptionsView.init = function (self, settings, context)
@@ -69,8 +68,7 @@ PlayerCharacterOptionsView.on_enter = function (self)
 
 	self._widgets_by_name.class_badge.style.badge.material_values.badge = PlayerCharacterOptionsViewSettings.archetype_badge_texture_by_name[archetype_name]
 
-	local archetype = profile and profile.archetype
-	local string_symbol = archetype and archetype.string_symbol
+	local string_symbol = archetype_name and UiSettings.archetype_font_icon[archetype_name] or ""
 	local character_archetype_title = string_symbol .. " " .. ProfileUtils.character_archetype_title(profile, true)
 
 	self:_set_class_name(character_archetype_title)

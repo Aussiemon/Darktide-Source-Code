@@ -28,8 +28,9 @@ PowerLevel.power_level_buff_modifier = function (stat_buffs_or_nil, attack_type_
 	local power_level_modifier_stat_buff = stat_buffs_or_nil.power_level_modifier or 1
 	local melee_power_level_modifier_stat_buff = attack_type_or_nil == attack_types.melee and stat_buffs_or_nil.melee_power_level_modifier or 1
 	local weakspot_power_level_modifier = weakspot_or_nil and stat_buffs_or_nil.weakspot_power_level_modifier or 1
+	local melee_weakspot_power_level_modifier_stat_buff = weakspot_or_nil and attack_type_or_nil == attack_types.melee and stat_buffs_or_nil.melee_weakspot_power_modifier or 1
 	local ranged_power_level_modifier_stat_buff = attack_type_or_nil == attack_types.ranged and stat_buffs_or_nil.ranged_power_level_modifier or 1
-	local power_level_modifier = power_level_modifier_stat_buff + melee_power_level_modifier_stat_buff + ranged_power_level_modifier_stat_buff + weakspot_power_level_modifier - 3
+	local power_level_modifier = power_level_modifier_stat_buff + melee_power_level_modifier_stat_buff + ranged_power_level_modifier_stat_buff + weakspot_power_level_modifier + melee_weakspot_power_level_modifier_stat_buff - 4
 
 	return power_level_modifier
 end

@@ -122,6 +122,10 @@ MonsterSpawner.editor_destroy = function (self, unit)
 	LineObject.dispatch(world, line_object)
 	World.destroy_line_object(world, line_object)
 
+	if MonsterSpawner._nav_info ~= nil then
+		SharedNav.destroy(MonsterSpawner._nav_info)
+	end
+
 	local gui = self._gui
 
 	if self._debug_text_id then

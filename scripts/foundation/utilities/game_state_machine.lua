@@ -69,14 +69,16 @@ end
 GameStateMachine._change_state = function (self)
 	local new_state = self._next_state
 	local params = self._next_state_params
+	local exit_params = self._exit_params
 
 	self._next_state = nil
 	self._next_state_params = nil
+	self._exit_params = nil
 
 	local current_state_name = self:current_state_name()
 
 	if self._state and self._state.on_exit then
-		self._state:on_exit()
+		self._state:on_exit(exit_params)
 		self._state:delete()
 	end
 
@@ -98,13 +100,14 @@ GameStateMachine._change_state = function (self)
 	end
 end
 
-GameStateMachine.force_change_state = function (self, state, params)
+GameStateMachine.force_change_state = function (self, state, params, exit_params)
 	if self._state == state then
 		return
 	end
 
 	self._next_state = state
 	self._next_state_params = params
+	self._exit_params = exit_params
 
 	self:_log_state_change(self._state, self._next_state)
 	self:_change_state()

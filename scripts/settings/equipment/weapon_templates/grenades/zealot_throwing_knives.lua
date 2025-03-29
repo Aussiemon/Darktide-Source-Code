@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/zealot_throwing_knives.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
@@ -59,7 +59,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_wield = {
@@ -92,8 +92,8 @@ weapon_template.actions = {
 		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
 		anim_event_last = "attack_shoot_last",
+		anim_event_no_ammo = "to_noammo",
 		anim_event_non_last = "attack_shoot_right",
-		anim_noammo_event = "to_noammo",
 		anim_time_scale = 1.5,
 		fire_time = 0.1,
 		kind = "spawn_projectile",
@@ -200,7 +200,6 @@ weapon_template.ammo_template = "no_ammo"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

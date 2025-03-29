@@ -1,31 +1,28 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_knives/settings_templates/combat_knife_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local melee_attack_strengths = AttackSettings.melee_attack_strength
+local double_cleave = DamageProfileSettings.double_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
+local no_cleave = DamageProfileSettings.no_cleave
+local DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH = 4
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local melee_attack_strengths = AttackSettings.melee_attack_strength
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local no_cleave = DamageProfileSettings.no_cleave
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local default_shield_override_stagger_strength = 4
 local ninja_fencer_crit_mod = {
 	attack = {
 		[armor_types.unarmored] = 0,
@@ -77,12 +74,12 @@ damage_templates.light_combat_knife_ninja_fencer = {
 	stagger_category = "melee",
 	cleave_distribution = double_cleave,
 	damage_type = damage_types.metal_slashing_light,
-	gibbing_type = GibbingTypes.sawing,
-	gibbing_power = GibbingPower.always,
+	gibbing_type = gibbing_types.sawing,
+	gibbing_power = gibbing_power.always,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.combat_knife,
 	crit_mod = ninja_fencer_crit_mod,
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	targets = {
 		{
 			crit_boost = 0.75,
@@ -239,11 +236,11 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 	crit_mod = medium_ninja_fencer_crit_mod,
 	cleave_distribution = no_cleave,
 	damage_type = damage_types.metal_slashing_light,
-	gibbing_type = GibbingTypes.sawing,
-	gibbing_power = GibbingPower.always,
+	gibbing_type = gibbing_types.sawing,
+	gibbing_power = gibbing_power.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.combat_knife,
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	targets = {
 		{
 			crit_boost = 0.75,
@@ -370,11 +367,11 @@ damage_templates.medium_combat_knife_linesman = {
 	crit_mod = medium_ninja_fencer_crit_mod,
 	cleave_distribution = medium_cleave,
 	damage_type = damage_types.metal_slashing_light,
-	gibbing_type = GibbingTypes.sawing,
-	gibbing_power = GibbingPower.always,
+	gibbing_type = gibbing_types.sawing,
+	gibbing_power = gibbing_power.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.combat_knife,
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	targets = {
 		{
 			crit_boost = 0.75,
@@ -557,7 +554,7 @@ damage_templates.jab_special = {
 		0.25,
 		0.5,
 	},
-	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,

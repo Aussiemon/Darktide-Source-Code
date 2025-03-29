@@ -14,7 +14,9 @@ DecodingInteraction.stop = function (self, world, interactor_unit, unit_data_com
 		local target_unit = unit_data_component.target_unit
 		local minigame_character_state = unit_data_extension:write_component("minigame_character_state")
 
-		minigame_character_state.interface_unit_id = Managers.state.unit_spawner:level_index(target_unit)
+		minigame_character_state.interface_level_unit_id = Managers.state.unit_spawner:level_index(target_unit)
+		minigame_character_state.interface_game_object_id = NetworkConstants.invalid_game_object_id
+		minigame_character_state.interface_is_level_unit = true
 
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 		local item = interactee_extension:interactor_item_to_equip()

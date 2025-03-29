@@ -255,7 +255,7 @@ RespawnBeaconExtension.despawn_guards = function (self)
 	for i = 1, #self._guards do
 		local guard_unit = self._guards[i]
 
-		minion_spawn_manager:despawn(guard_unit)
+		minion_spawn_manager:despawn_minion(guard_unit)
 	end
 end
 

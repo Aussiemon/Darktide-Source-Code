@@ -227,12 +227,12 @@ local templates = {
 	ranged_base = ranged_base,
 	ranged_cover_user = ranged_cover_user,
 	ranged_patroller = ranged_patroller,
-	renegade_flamer = renegade_flamer,
 	ranged_patroller_no_suppression = ranged_patroller_no_suppression,
-	riflemen = riflemen,
-	sniper = sniper,
+	renegade_flamer = renegade_flamer,
 	renegade_twin_captain = renegade_twin_captain,
 	renegade_twin_captain_two = renegade_twin_captain_two,
+	riflemen = riflemen,
+	sniper = sniper,
 }
 
 return templates

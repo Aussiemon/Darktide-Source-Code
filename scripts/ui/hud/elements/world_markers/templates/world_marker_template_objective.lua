@@ -238,6 +238,83 @@ local template_visual_definitions = {
 		},
 		textures = {},
 	},
+	resupply = {
+		template_settings_overrides = {
+			screen_clamp = true,
+			position_offset = {
+				0,
+				0,
+				0.2,
+			},
+		},
+		colors = {
+			frame = UIHudSettings.color_tint_main_1,
+			arrow = {
+				0,
+				0,
+				0,
+				0,
+			},
+			icon = UIHudSettings.color_tint_main_1,
+			text = {
+				0,
+				0,
+				0,
+				0,
+			},
+			indicator = {
+				0,
+				0,
+				0,
+				0,
+			},
+			background = {
+				0,
+				0,
+				0,
+				0,
+			},
+			demolition_marker_1 = {
+				0,
+				0,
+				0,
+				0,
+			},
+			demolition_marker_2 = {
+				0,
+				0,
+				0,
+				0,
+			},
+			demolition_marker_3 = {
+				0,
+				0,
+				0,
+				0,
+			},
+			demolition_marker_shadow_1 = {
+				0,
+				0,
+				0,
+				0,
+			},
+			demolition_marker_shadow_2 = {
+				0,
+				0,
+				0,
+				0,
+			},
+			demolition_marker_shadow_3 = {
+				0,
+				0,
+				0,
+				0,
+			},
+		},
+		textures = {
+			icon = "content/ui/materials/hud/interactions/icons/resupply",
+		},
+	},
 }
 
 local function setup_marker_by_visual_type(widget, marker, visual_type)
@@ -520,10 +597,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	}, scenegraph_id)
 end
 
-template.on_enter = function (widget)
+template.on_enter = function (widget, marker)
 	local content = widget.content
 
 	content.spawn_progress_timer = 0
+
+	local data = marker.data
+
+	if data.icon then
+		widget.content.icon = data.icon
+	end
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)

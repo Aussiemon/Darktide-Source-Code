@@ -9,6 +9,20 @@ local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_attack = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increased_attack_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increased_attack_buff = {
 			{
@@ -35,6 +49,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_attack = 
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_unarmored_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increased_unarmored_damage_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.unarmored_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increased_unarmored_damage_buff = {
 			{
@@ -61,6 +89,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_unarmored
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_armored_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increased_armored_damage_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.armored_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increased_armored_damage_buff = {
 			{
@@ -87,6 +129,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_armored_d
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_resistant_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increased_resistant_damage_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.resistant_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increased_resistant_damage_buff = {
 			{
@@ -113,6 +169,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_resistant
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_berserker_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increased_berserker_damage_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.berserker_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increased_berserker_damage_buff = {
 			{
@@ -139,6 +209,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_berserker
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_super_armor_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increased_super_armor_damage_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.super_armor_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increased_super_armor_damage_buff = {
 			{
@@ -165,6 +249,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_super_arm
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_disgustingly_resilient_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increased_disgustingly_resilient_damage_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.disgustingly_resilient_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increased_disgustingly_resilient_damage_buff = {
 			{
@@ -191,6 +289,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_disgustin
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_crit_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_crit_chance",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_crit_chance = {
 			{
@@ -217,6 +329,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_crit_chance = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_crit_damage = {
+	format_values = {
+		crit_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_crit_damage",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_crit_damage = {
 			{
@@ -243,6 +369,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_crit_damage = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_stamina = {
+	format_values = {
+		stamina = {
+			format_type = "number",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_stamina",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.stamina_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_stamina = {
 			{
@@ -269,6 +409,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_stamina = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_weakspot_damage = {
+	format_values = {
+		weakspot_damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_weakspot_damage",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.weakspot_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_weakspot_damage = {
 			{
@@ -295,6 +449,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_weakspot_damage = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_damage",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_damage = {
 			{
@@ -321,6 +489,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_damage = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_finesse = {
+	format_values = {
+		finesse_modifier = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_finesse",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.finesse_modifier_bonus,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_finesse = {
 			{
@@ -347,6 +529,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_finesse = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_power = {
+	format_values = {
+		power_mod = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_power",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_power = {
 			{
@@ -373,6 +569,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_power = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_elites = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_damage_elites",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_vs_elites,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_damage_elites = {
 			{
@@ -399,6 +609,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_elites = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_hordes = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_damage_hordes",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_vs_horde,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_damage_hordes = {
 			{
@@ -425,6 +649,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_hordes = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_specials = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increase_damage_specials",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_vs_specials,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increase_damage_specials = {
 			{
@@ -451,6 +689,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_damage_specials = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_increased_reload_speed = {
+	format_values = {
+		reload_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_increased_reload_speed",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.reload_speed,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_increased_reload_speed = {
 			{
@@ -477,6 +729,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_increased_reload_speed = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_corruption_damage_taken = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_equip_decrease_corruption_damage_taken_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.corruption_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_equip_decrease_corruption_damage_taken_buff = {
 			{
@@ -503,6 +769,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_corruption
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_corruption_damage_taken = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_decrease_corruption_damage_taken_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.corruption_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_decrease_corruption_damage_taken_buff = {
 			{
@@ -529,6 +809,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_corruption
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_toughness_damage_taken = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_equip_decrease_toughness_damage_taken_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.toughness_damage_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_equip_decrease_toughness_damage_taken_buff = {
 			{
@@ -555,6 +849,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_toughness_
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_toughness_damage_taken = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_decrease_toughness_damage_taken_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.toughness_damage_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_decrease_toughness_damage_taken_buff = {
 			{
@@ -581,6 +889,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_toughness_
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_damage_taken = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_equip_decrease_damage_taken_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_equip_decrease_damage_taken_buff = {
 			{
@@ -607,6 +929,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_decrease_damage_tak
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_damage_taken = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_decrease_damage_taken_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_decrease_damage_taken_buff = {
 			{
@@ -633,6 +969,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_decrease_damage_tak
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_equip_increase_movement_speed = {
+	format_values = {
+		movement_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_equip_increase_movement_speed_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.movement_speed,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_equip_increase_movement_speed_buff = {
 			{
@@ -659,6 +1009,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_increase_movement_s
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_movement_speed = {
+	format_values = {
+		movement_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increase_movement_speed_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.movement_speed,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increase_movement_speed_buff = {
 			{
@@ -685,6 +1049,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_movement_s
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_crit_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increase_crit_chance_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increase_crit_chance_buff = {
 			{
@@ -711,6 +1089,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_crit_chanc
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_ranged_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increase_ranged_damage_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.ranged_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increase_ranged_damage_buff = {
 			{
@@ -737,6 +1129,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_ranged_dam
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_impact = {
+	format_values = {
+		impact = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increase_impact_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.ranged_impact_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increase_impact_buff = {
 			{
@@ -763,6 +1169,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_impact = {
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_stamina_regen = {
+	format_values = {
+		regen_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_increase_stamina_regen_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.stamina_regeneration_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_increase_stamina_regen_buff = {
 			{
@@ -789,6 +1209,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increase_stamina_re
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_power_modifier_bonus = {
+	format_values = {
+		power = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_power_modifier_bonus_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_power_modifier_bonus_buff = {
 			{
@@ -815,6 +1249,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_power_modifier_bonu
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_finesse_modifier_bonus = {
+	format_values = {
+		finesse = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_finesse_modifier_bonus_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.finesse_modifier_bonus,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_finesse_modifier_bonus_buff = {
 			{
@@ -841,6 +1289,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_finesse_modifier_bo
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_power_modifier_bonus_on_full_toughness = {
+	format_values = {
+		power = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_power_modifier_bonus_on_full_toughness_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_power_modifier_bonus_on_full_toughness_buff = {
 			{
@@ -907,6 +1369,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_suppression_immune_
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_low_health_grant_power_modifier = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_low_health_grant_power_modifier_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_low_health_grant_power_modifier_buff = {
 			{
@@ -933,6 +1409,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_low_health_grant_po
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_equip_last_wound_grant_damage_reduction = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_equip_last_wound_grant_damage_reduction_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_equip_last_wound_grant_damage_reduction_buff = {
 			{
@@ -959,6 +1449,40 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_equip_last_wound_grant_da
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_player_toughness_broken_grant_power_level = {
+	format_values = {
+		power = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_on_player_toughness_broken_grant_power_level_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.power_level_modifier,
+				},
+			},
+		},
+		duration = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_on_player_toughness_broken_grant_power_level_buff",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+		cooldown = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_on_player_toughness_broken_grant_power_level_buff",
+				find_value_type = "trait_override",
+				path = {
+					"cooldown_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_on_player_toughness_broken_grant_power_level_buff = {
 			{
@@ -1005,6 +1529,30 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_player_toughness
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_kill_suppression_immune = {
+	format_values = {
+		chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_on_kill_suppression_immune_buff",
+				find_value_type = "trait_override",
+				path = {
+					"proc_events",
+					proc_events.on_hit,
+				},
+			},
+		},
+		duration = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_on_kill_suppression_immune_buff",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_on_kill_suppression_immune_buff = {
 			{
@@ -1035,6 +1583,20 @@ weapon_traits_ranged_common.weapon_trait_ranged_common_wield_on_kill_suppression
 	},
 }
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_reduce_damage_while_reloading = {
+	format_values = {
+		damage_taken = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_ranged_common_wield_reduce_damage_while_reloading_buff",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_taken_multiplier,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_ranged_common_wield_reduce_damage_while_reloading_buff = {
 			{

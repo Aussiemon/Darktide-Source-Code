@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/ui/view_content_blueprints/item_stats_blueprints.lua
 
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local InputDevice = require("scripts/managers/input/input_device")
 local Items = require("scripts/utilities/items")
@@ -3655,7 +3655,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_item = element.perk_item
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
-				local description = Items.perk_description(perk_item, perk_rarity, perk_value)
+				local description = Items.trait_description(perk_item, perk_rarity, perk_value)
 				local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
 				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height + 14)
 
@@ -3773,7 +3773,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_item = preview_perk and preview_perk.preview_perk_item or element.perk_item
 				local perk_value = preview_perk and preview_perk.preview_perk_value or element.perk_value
 				local perk_rarity = preview_perk and preview_perk.preview_perk_rarity or element.perk_rarity
-				local description = Items.perk_description(perk_item, perk_rarity, perk_value)
+				local description = Items.trait_description(perk_item, perk_rarity, perk_value)
 
 				content.text = description
 				content.rank = Items.perk_textures(perk_item, perk_rarity)

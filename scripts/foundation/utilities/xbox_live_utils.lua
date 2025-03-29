@@ -67,6 +67,40 @@ XboxLiveUtils.user_info = function ()
 	end)
 end
 
+XboxLiveUtils.create_user_context = function ()
+	return XboxLiveUtils.user_id():next(function (user_id)
+		local has_user_context = XboxLive.has_user_context(user_id)
+
+		if has_user_context then
+			return user_id
+		else
+			local async_result, error_code, error_message = XboxLive.create_user_context(user_id)
+
+			if error_code then
+				return Promise.rejected({
+					header = "XboxLive.create_user_context",
+					error_code = error_code,
+				})
+			elseif error_message then
+				return Promise.rejected({
+					header = "XboxLive.create_user_context",
+					message = error_message,
+				})
+			else
+				return Managers.xasync:wrap(async_result):next(function ()
+					return user_id
+				end)
+			end
+		end
+	end)
+end
+
+XboxLiveUtils.close_user_context = function ()
+	return XboxLiveUtils.user_id():next(function (user_id)
+		XboxLive.close_user_context(user_id)
+	end)
+end
+
 XboxLiveUtils.get_user_profiles = function (xuids)
 	return XboxLiveUtils.user_id():next(function (user_id)
 		local profiles_async, error_code, error_message = XboxLiveProfile.get_user_profiles(user_id, xuids)
@@ -405,31 +439,7 @@ XboxLiveUtils.get_all_achievements = function ()
 end
 
 XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_type, buffer_size)
-	return XboxLiveUtils.user_id():next(function (user_id)
-		local has_user_context = XboxLive.has_user_context(user_id)
-
-		if has_user_context then
-			return user_id
-		else
-			local async_result, error_code, error_message = XboxLive.create_user_context(user_id)
-
-			if error_code then
-				return Promise.rejected({
-					header = "XboxLive.create_user_context",
-					error_code = error_code,
-				})
-			elseif error_message then
-				return Promise.rejected({
-					header = "XboxLive.create_user_context",
-					message = error_message,
-				})
-			else
-				return Managers.xasync:wrap(async_result):next(function ()
-					return user_id
-				end)
-			end
-		end
-	end):next(function (user_id)
+	return XboxLiveUtils.create_user_context():next(function (user_id)
 		local async_result, error_code = TitleStorage.blob_download_async(user_id, blob_path, blob_type, storage_type, buffer_size)
 
 		if error_code then

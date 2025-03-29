@@ -3,11 +3,10 @@
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -44,7 +43,7 @@ local function is_item_equipped_in_slot(parent, item, slot_name)
 			return true
 		end
 
-		local item_name = item.gear.masterDataInstance.id
+		local item_name = item.gear and item.gear.masterDataInstance.id
 
 		equipped = item_name == equipped_item_name
 	end
@@ -137,7 +136,7 @@ local function generate_blueprints_function(grid_size)
 
 	local function _apply_package_item_icon_cb_func(widget, item)
 		local icon_style = widget.style.icon
-		local item_slot = ItemUtils.item_slot(item)
+		local item_slot = Items.item_slot(item)
 		local item_icon_size = item_slot and table.clone(item_slot.item_icon_size)
 		local material_values = icon_style.material_values
 
@@ -291,13 +290,13 @@ local function generate_blueprints_function(grid_size)
 					local item = element.item
 
 					content.item = item
-					content.properties = ItemUtils.item_property_icons(item) or ""
+					content.properties = Items.item_property_icons(item) or ""
 
 					local display_name = item and item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.display_name(item)
-						content.sub_display_name = ItemUtils.sub_display_name(item)
+						content.display_name = Items.display_name(item)
+						content.sub_display_name = Items.sub_display_name(item)
 					end
 
 					local item_icon_size = slot.item_icon_size
@@ -332,7 +331,7 @@ local function generate_blueprints_function(grid_size)
 					local rarity = item and item.rarity
 
 					if rarity then
-						local _, rarity_color_dark = ItemUtils.rarity_color(item)
+						local _, rarity_color_dark = Items.rarity_color(item)
 
 						if rarity_color_dark then
 							style.background_gradient.color = table.clone(rarity_color_dark)
@@ -353,7 +352,7 @@ local function generate_blueprints_function(grid_size)
 
 				if hotspot and item then
 					local gear_id = item.gear_id or item.name
-					local favorite_state = ItemUtils.is_item_id_favorited(gear_id)
+					local favorite_state = Items.is_item_id_favorited(gear_id)
 
 					if not hotspot.is_hover and hotspot.is_selected then
 						-- Nothing
@@ -434,7 +433,7 @@ local function generate_blueprints_function(grid_size)
 					local rarity = item and item.rarity
 
 					if rarity then
-						local _, rarity_color_dark = ItemUtils.rarity_color(item)
+						local _, rarity_color_dark = Items.rarity_color(item)
 
 						if rarity_color_dark then
 							style.background_gradient.color = table.clone(rarity_color_dark)
@@ -484,7 +483,7 @@ local function generate_blueprints_function(grid_size)
 
 				if hotspot and item then
 					local gear_id = item.gear_id or item.name
-					local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+					local previous_state = Items.is_item_id_favorited(gear_id)
 
 					content.favorite = previous_state
 				end
@@ -549,19 +548,19 @@ local function generate_blueprints_function(grid_size)
 					local item = element.item
 
 					content.item = item
-					content.properties = ItemUtils.item_property_icons(item) or ""
+					content.properties = Items.item_property_icons(item) or ""
 
 					local display_name = item and item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.display_name(item)
-						content.sub_display_name = ItemUtils.sub_display_name(item)
+						content.display_name = Items.display_name(item)
+						content.sub_display_name = Items.sub_display_name(item)
 					end
 
 					local rarity = item and item.rarity
 
 					if rarity then
-						local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+						local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
 						style.background_gradient.color = table.clone(rarity_color_dark)
 					end
@@ -575,7 +574,7 @@ local function generate_blueprints_function(grid_size)
 					local price_data = offer.price.amount
 					local type = price_data.type
 					local price = price_data.discounted_price or price_data.amount
-					local price_text = TextUtilities.format_currency(price)
+					local price_text = Text.format_currency(price)
 
 					content.has_price_tag = true
 					content.price_text = price_text
@@ -618,7 +617,7 @@ local function generate_blueprints_function(grid_size)
 
 				if hotspot and item then
 					local gear_id = item.gear_id
-					local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+					local previous_state = Items.is_item_id_favorited(gear_id)
 
 					content.favorite = previous_state
 				end
@@ -634,7 +633,7 @@ local function generate_blueprints_function(grid_size)
 					local price_data = offer.price.amount
 					local type = price_data.type
 					local price = price_data.discounted_price or price_data.amount
-					local price_text = TextUtilities.format_currency(price)
+					local price_text = Text.format_currency(price)
 
 					content.price_text = price_text
 
@@ -729,7 +728,7 @@ local function generate_blueprints_function(grid_size)
 					local price_data = offer.price.amount
 					local type = price_data.type
 					local price = price_data.amount
-					local price_text = TextUtilities.format_currency(price)
+					local price_text = Text.format_currency(price)
 
 					content.has_price_tag = true
 					content.price_text = price_text
@@ -800,7 +799,7 @@ local function generate_blueprints_function(grid_size)
 						local gear_id = item.gear_id
 
 						if gear_id then
-							local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+							local previous_state = Items.is_item_id_favorited(gear_id)
 
 							content.favorite = previous_state
 						end
@@ -813,8 +812,12 @@ local function generate_blueprints_function(grid_size)
 
 				if not content.icon_load_id and item then
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
+					local render_context = {
+						alignment_key = element.alignment_key,
+						alignment_key_value = element.alignment_key_value,
+					}
 
-					content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -881,7 +884,7 @@ local function generate_blueprints_function(grid_size)
 				end
 
 				if style.item_level then
-					local item_level, has_level = ItemUtils.expertise_level(item)
+					local item_level, has_level = Items.expertise_level(item)
 
 					content.item_level = has_level and item_level or ""
 				end
@@ -889,7 +892,7 @@ local function generate_blueprints_function(grid_size)
 				local item_type = item.item_type
 				local ITEM_TYPES = UISettings.ITEM_TYPES
 				local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
-				local required_level = ItemUtils.character_level(item)
+				local required_level = Items.character_level(item)
 				local view_instance = parent._parent or parent
 				local character_level = view_instance and view_instance.character_level and view_instance:character_level()
 				local level_requirement_met = not item and true or required_level and required_level <= character_level
@@ -910,16 +913,16 @@ local function generate_blueprints_function(grid_size)
 					required_level_background_style.size[1] = required_level_text_width + 40
 				end
 
-				local rarity_color = ItemUtils.rarity_color(item)
+				local rarity_color = Items.rarity_color(item)
 
 				if is_weapon then
-					content.display_name = ItemUtils.weapon_card_display_name(item)
-					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(item)
-					content.rarity_name = ItemUtils.rarity_display_name(item)
+					content.display_name = Items.weapon_card_display_name(item)
+					content.sub_display_name = Items.weapon_card_sub_display_name(item)
+					content.rarity_name = Items.rarity_display_name(item)
 					style.rarity_name.text_color = table.clone(rarity_color)
 				else
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.display_name = Items.display_name(item)
+					content.sub_display_name = Items.sub_display_name(item)
 					content.rarity_name = ""
 					style.sub_display_name.text_color = table.clone(rarity_color)
 				end
@@ -938,7 +941,7 @@ local function generate_blueprints_function(grid_size)
 
 				if hotspot and item then
 					local gear_id = item.gear_id
-					local previous_state = ItemUtils.is_item_id_favorited(gear_id)
+					local previous_state = Items.is_item_id_favorited(gear_id)
 
 					content.favorite = previous_state
 				end
@@ -1027,7 +1030,7 @@ local function generate_blueprints_function(grid_size)
 
 				local item = element.item
 				local rarity = item and item.rarity
-				local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+				local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
 				if rarity then
 					style.background_gradient.color = table.clone(rarity_color_dark)
@@ -1039,7 +1042,7 @@ local function generate_blueprints_function(grid_size)
 					local price_data = offer.price.amount
 					local type = price_data.type
 					local price = price_data.discounted_price or price_data.amount
-					local price_text = TextUtilities.format_currency(price)
+					local price_text = Text.format_currency(price)
 
 					content.has_price_tag = true
 					content.price_text = price_text
@@ -1081,7 +1084,7 @@ local function generate_blueprints_function(grid_size)
 					local price_data = offer.price.amount
 					local type = price_data.type
 					local price = price_data.discounted_price or price_data.amount
-					local price_text = TextUtilities.format_currency(price)
+					local price_text = Text.format_currency(price)
 
 					content.has_price_tag = true
 					content.price_text = price_text
@@ -1178,14 +1181,14 @@ local function generate_blueprints_function(grid_size)
 				local presentation_item = real_item or item
 				local slots = presentation_item and presentation_item.slots
 				local rarity = presentation_item and presentation_item.rarity
-				local rarity_color = ItemUtils.rarity_color(presentation_item)
+				local rarity_color = Items.rarity_color(presentation_item)
 				local offer = element.offer
 
 				if offer and offer.price then
 					local price_data = offer.price.amount
 					local type = price_data.type
 					local price = price_data.amount
-					local price_text = TextUtilities.format_currency(price)
+					local price_text = Text.format_currency(price)
 
 					content.has_price_tag = true
 					content.price_text = price_text
@@ -1223,14 +1226,14 @@ local function generate_blueprints_function(grid_size)
 				local item_rating, has_item_rating
 
 				if presentation_item then
-					item_rating, has_item_rating = ItemUtils.expertise_level(presentation_item)
+					item_rating, has_item_rating = Items.expertise_level(presentation_item)
 				end
 
 				if content.item_level then
 					content.item_level = has_item_rating and item_rating or ""
 				end
 
-				local required_level = presentation_item and ItemUtils.character_level(presentation_item)
+				local required_level = presentation_item and Items.character_level(presentation_item)
 				local view_instance = parent._parent or parent
 				local character_level = view_instance and view_instance.character_level and view_instance:character_level()
 				local level_requirement_met = not presentation_item and true or required_level and required_level <= character_level
@@ -1247,12 +1250,12 @@ local function generate_blueprints_function(grid_size)
 				local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
 
 				if is_weapon then
-					content.display_name = ItemUtils.weapon_card_display_name(item)
-					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(item)
-					content.rarity_name = ItemUtils.rarity_display_name(item)
+					content.display_name = Items.weapon_card_display_name(item)
+					content.sub_display_name = Items.weapon_card_sub_display_name(item)
+					content.rarity_name = Items.rarity_display_name(item)
 				else
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.display_name = Items.display_name(item)
+					content.sub_display_name = Items.sub_display_name(item)
 					content.rarity_name = ""
 					style.sub_display_name.text_color = table.clone(rarity_color)
 				end
@@ -1388,7 +1391,7 @@ local function generate_blueprints_function(grid_size)
 					local price_data = offer.price.amount
 					local type = price_data.type
 					local price = price_data.amount
-					local price_text = TextUtilities.format_currency(price)
+					local price_text = Text.format_currency(price)
 
 					content.has_price_tag = true
 					content.price_text = price_text
@@ -1567,16 +1570,22 @@ local function generate_blueprints_function(grid_size)
 				if item.item_type and item.item_type == "CHARACTER_TITLE" then
 					display_name = ProfileUtils.title_item_name_no_color(item, profile)
 				else
-					display_name = ignore_localization and item.display_name or ItemUtils.display_name(item)
+					display_name = ignore_localization and item.display_name or Items.display_name(item)
 				end
 
-				local item_type = ignore_localization and item.item_type or ItemUtils.type_display_name(item)
+				local item_type = ignore_localization and item.item_type or Items.type_display_name(item)
 
 				widget.content.title = display_name
 
-				if item.rarity then
-					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
-					local rarity_display_name = ignore_localization and item.rarity_name or ItemUtils.rarity_display_name(item)
+				local rarity = item.rarity
+
+				if element.ignore_negative_rarity and rarity and rarity < 0 then
+					rarity = nil
+				end
+
+				if rarity then
+					local rarity_color, rarity_color_dark = Items.rarity_color(item)
+					local rarity_display_name = ignore_localization and item.rarity_name or Items.rarity_display_name(item)
 
 					widget.style.background.material_values.line_color = {
 						rarity_color[2] / 255,

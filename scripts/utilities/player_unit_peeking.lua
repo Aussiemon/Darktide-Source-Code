@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/utilities/player_unit_peeking.lua
 
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local special_rules = SpecialRulesSetting.special_rules
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
+local special_rules = SpecialRulesSettings.special_rules
 local PlayerUnitPeeking = {}
 local _initialize_3p, _initialize_1p
 

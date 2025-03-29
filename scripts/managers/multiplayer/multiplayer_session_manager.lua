@@ -2,11 +2,8 @@
 
 require("scripts/foundation/utilities/parameters/parameter_resolver")
 
-local BreedLoader = require("scripts/loading/loaders/breed_loader")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local SingleplayerSessionBoot = require("scripts/multiplayer/singleplayer_session_boot")
-local HudLoader = require("scripts/loading/loaders/hud_loader")
-local LevelLoader = require("scripts/loading/loaders/level_loader")
 local LoadingClient = require("scripts/loading/loading_client")
 local LoadingHost = require("scripts/loading/loading_host")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
@@ -20,7 +17,7 @@ local PartyImmateriumMissionSessionBoot = require("scripts/multiplayer/party_imm
 local PartyImmateriumHubSessionBoot = require("scripts/multiplayer/party_immaterium_hub_session_boot")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local StateLoading = require("scripts/game_states/game/state_loading")
-local ViewLoader = require("scripts/loading/loaders/view_loader")
+local BreedLoader = require("scripts/loading/loaders/breed_loader")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local MultiplayerSessionManager = class("MultiplayerSessionManager")
 
@@ -222,6 +219,26 @@ MultiplayerSessionManager._handle_session_error = function (self, session)
 	self._session_errors = session_errors
 end
 
+MultiplayerSessionManager._get_loaders = function (self)
+	local loaders = {}
+	local loader_paths = {
+		"scripts/loading/loaders/hud_loader",
+		"scripts/loading/loaders/level_loader",
+		"scripts/loading/loaders/view_loader",
+	}
+
+	for i = 1, #loader_paths do
+		local path = loader_paths[i]
+		local loader_class = require(path)
+
+		loaders[#loaders + 1] = loader_class:new()
+	end
+
+	loaders[#loaders + 1] = self._breed_loader
+
+	return loaders
+end
+
 MultiplayerSessionManager.update = function (self, dt)
 	local current_session = self._session
 	local session_boot = self._session_boot
@@ -265,12 +282,7 @@ MultiplayerSessionManager.update = function (self, dt)
 
 				self._session = session_object
 
-				local loaders = {
-					ViewLoader:new(),
-					LevelLoader:new(),
-					self._breed_loader,
-					HudLoader:new(),
-				}
+				local loaders = self:_get_loaders()
 				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
 
 				Managers.loading:set_host(loading_host)
@@ -279,12 +291,7 @@ MultiplayerSessionManager.update = function (self, dt)
 
 				self._session = session_object
 
-				local loaders = {
-					ViewLoader:new(),
-					LevelLoader:new(),
-					self._breed_loader,
-					HudLoader:new(),
-				}
+				local loaders = self:_get_loaders()
 				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
 
 				Managers.loading:set_host(loading_host)
@@ -300,12 +307,7 @@ MultiplayerSessionManager.update = function (self, dt)
 				end
 
 				local host_channel_id = Managers.connection:host_channel()
-				local loaders = {
-					ViewLoader:new(),
-					LevelLoader:new(),
-					self._breed_loader,
-					HudLoader:new(),
-				}
+				local loaders = self:_get_loaders()
 				local loading_client = LoadingClient:new(Managers.connection:network_event_delegate(), host_channel_id, loaders)
 
 				Managers.loading:set_client(loading_client)

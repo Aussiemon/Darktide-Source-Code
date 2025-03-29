@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_throwing_knives.lua
 
-local ActionInputHierarchy = require("scripts/utilities/weapon/action_input_hierarchy")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
@@ -255,7 +255,7 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 
-ActionInputHierarchy.add_missing_ordered(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
 	action_unwield = {
@@ -355,12 +355,10 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		start_input = "shoot",
 		target_finder_module_class_name = "smart_target_targeting",
-		target_position_distance = 50,
-		total_time = 1,
+		total_time = 0.8,
+		track_towards_target = true,
 		uninterruptible = true,
 		use_ability_charge = true,
-		use_target = true,
-		use_target_position = false,
 		vo_tag = "ability_gunslinger",
 		weapon_handling_template = "time_scale_1_5",
 		action_movement_curve = {
@@ -423,12 +421,10 @@ weapon_template.actions = {
 		should_crit = true,
 		sprint_requires_press_to_interrupt = true,
 		target_finder_module_class_name = "smart_target_targeting",
-		target_position_distance = 50,
-		total_time = 1,
+		total_time = 0.8,
+		track_towards_target = true,
 		uninterruptible = true,
 		use_ability_charge = true,
-		use_target = true,
-		use_target_position = false,
 		vo_tag = "ability_gunslinger",
 		weapon_handling_template = "time_scale_1_5",
 		action_movement_curve = {
@@ -493,12 +489,9 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		sticky_targeting = true,
 		target_finder_module_class_name = "smart_target_targeting",
-		target_position_distance = 100,
-		total_time = 1.5,
+		total_time = 1.25,
 		uninterruptible = true,
 		use_ability_charge = true,
-		use_target = true,
-		use_target_position = false,
 		vo_tag = "ability_gunslinger",
 		weapon_handling_template = "time_scale_1_5",
 		action_movement_curve = {
@@ -775,7 +768,6 @@ weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8

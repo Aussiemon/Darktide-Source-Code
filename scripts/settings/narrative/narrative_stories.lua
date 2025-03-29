@@ -314,6 +314,13 @@ local narrative = {
 				requirement = event_done("onboarding_step_mission_board_introduction"),
 			},
 		},
+		horde_intro = {
+			{
+				backend_id = 1,
+				name = "horde_intro",
+				requirement = level_at_least(PlayerProgressionUnlocks.horde_mode),
+			},
+		},
 		level_unlock_popups = {
 			{
 				backend_id = 1,

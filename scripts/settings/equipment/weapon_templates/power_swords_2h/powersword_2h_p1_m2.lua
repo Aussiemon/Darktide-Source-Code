@@ -1347,7 +1347,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.5,
+				-0.35,
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_powersword_2h,
@@ -2318,7 +2318,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.fx_sources = {
 	_block = "fx_block",

@@ -8,6 +8,30 @@ table.make_unique(templates)
 local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting = {
+	format_values = {
+		weapon_spread = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.spread_modifier,
+				},
+			},
+		},
+		damage_near = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting",
+				find_value_type = "trait_override",
+				path = {
+					"conditional_stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting = {
 			{
@@ -46,6 +70,40 @@ templates.weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting = {
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
+	format_values = {
+		reload_speed = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.reload_speed,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide_parent",
+				find_value_type = "trait_override",
+				path = {
+					"child_duration",
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide_parent = {
 			{
@@ -76,6 +134,30 @@ templates.weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
+	format_values = {
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_burninating_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		max_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_burninating_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
 			{
@@ -106,6 +188,20 @@ templates.weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_allow_flanking_and_increased_damage_when_flanking = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_allow_flanking_and_increased_damage_when_flanking",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.flanking_damage,
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_allow_flanking_and_increased_damage_when_flanking = {
 			{
@@ -132,6 +228,18 @@ templates.weapon_trait_bespoke_laspistol_p1_allow_flanking_and_increased_damage_
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_suppression_negation_on_weakspot = {
+	format_values = {
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_suppression_negation_on_weakspot",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_suppression_negation_on_weakspot = {
 			{
@@ -150,6 +258,18 @@ templates.weapon_trait_bespoke_laspistol_p1_suppression_negation_on_weakspot = {
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_count_as_dodge_vs_ranged_on_weakspot = {
+	format_values = {
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_count_as_dodge_vs_ranged_on_weakspot",
+				find_value_type = "trait_override",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_count_as_dodge_vs_ranged_on_weakspot = {
 			{
@@ -168,6 +288,30 @@ templates.weapon_trait_bespoke_laspistol_p1_count_as_dodge_vs_ranged_on_weakspot
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_damage = {
+	format_values = {
+		damage = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_damage_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.damage_near,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_damage_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_damage_parent = {
 			{
@@ -194,6 +338,19 @@ templates.weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_dam
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_toughness_on_crit_kills = {
+	format_values = {
+		toughness = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_toughness_on_crit_kills",
+				find_value_type = "trait_override",
+				path = {
+					"toughness_fixed_percentage",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_toughness_on_crit_kills = {
 			{
@@ -212,6 +369,30 @@ templates.weapon_trait_bespoke_laspistol_p1_toughness_on_crit_kills = {
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_dodge_grants_critical_strike_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_dodge_grants_critical_strike_chance",
+				find_value_type = "trait_override",
+				path = {
+					"proc_stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		time = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_dodge_grants_critical_strike_chance",
+				find_value_type = "buff_template",
+				path = {
+					"active_duration",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_dodge_grants_critical_strike_chance = {
 			{
@@ -238,6 +419,30 @@ templates.weapon_trait_bespoke_laspistol_p1_dodge_grants_critical_strike_chance 
 	},
 }
 templates.weapon_trait_bespoke_laspistol_p1_chained_weakspot_hits_increases_crit_chance = {
+	format_values = {
+		crit_chance = {
+			format_type = "percentage",
+			prefix = "+",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_chained_weakspot_hits_increases_crit_chance_parent",
+				find_value_type = "trait_override",
+				path = {
+					"stat_buffs",
+					stat_buffs.critical_strike_chance,
+				},
+			},
+		},
+		stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_laspistol_p1_chained_weakspot_hits_increases_crit_chance_child",
+				find_value_type = "buff_template",
+				path = {
+					"max_stacks",
+				},
+			},
+		},
+	},
 	buffs = {
 		weapon_trait_bespoke_laspistol_p1_chained_weakspot_hits_increases_crit_chance_parent = {
 			{

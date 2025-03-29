@@ -116,6 +116,10 @@ PartyImmateriumMember.havoc_status = function (self)
 	return self:_get_presence():havoc_status()
 end
 
+PartyImmateriumMember.havoc_rank_cadence_high = function (self)
+	return self:_get_presence():havoc_rank_cadence_high()
+end
+
 PartyImmateriumMember.havoc_rank_all_time_high = function (self)
 	return self:_get_presence():havoc_rank_all_time_high()
 end

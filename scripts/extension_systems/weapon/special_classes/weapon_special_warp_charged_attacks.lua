@@ -48,6 +48,19 @@ WeaponSpecialWarpChargedAttacks.process_hit = function (self, t, weapon, action_
 		return
 	end
 
+	local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(target_unit)
+
+	if target_is_hazard_prop and not hazard_prop_is_active then
+		return
+	end
+
+	local hit_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+	local target_breed_or_nil = hit_unit_data_extension and hit_unit_data_extension:breed()
+
+	if not target_breed_or_nil then
+		return
+	end
+
 	self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "max_activations")
 end
 

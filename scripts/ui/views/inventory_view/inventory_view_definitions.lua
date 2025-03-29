@@ -1,12 +1,12 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_view/inventory_view_definitions.lua
 
-local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
-local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
+local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
+local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local item_stats_grid_settings = InventoryViewSettings.item_stats_grid_settings
 local scrollbar_width = InventoryViewSettings.scrollbar_width
 local grid_size = InventoryViewSettings.grid_size
@@ -29,17 +29,6 @@ local scenegraph_definition = {
 			0,
 			0,
 			0,
-		},
-	},
-	grid_background = {
-		horizontal_alignment = "left",
-		parent = "canvas",
-		vertical_alignment = "center",
-		size = grid_size,
-		position = {
-			grid_start_offset_x,
-			0,
-			1,
 		},
 	},
 	grid_background = {
@@ -773,15 +762,15 @@ local animations = {
 
 				parent:_set_scenegraph_position("slot_gear_head", scenegraph_definition.slot_gear_head.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("slot_gear_upperbody", scenegraph_definition.slot_gear_upperbody.position[1] - x_anim_distance - extra_amount)
-				parent:_set_scenegraph_position("slot_gear_lowerbody", scenegraph_definition.slot_gear_lowerbody.position[1] - x_anim_distance - extra_amount - extra_amount - extra_amount)
+				parent:_set_scenegraph_position("slot_gear_lowerbody", scenegraph_definition.slot_gear_lowerbody.position[1] - x_anim_distance - extra_amount * 3)
 				parent:_set_scenegraph_position("slot_gear_extra_cosmetic", scenegraph_definition.slot_gear_extra_cosmetic.position[1] + x_anim_distance)
 				parent:_set_scenegraph_position("slot_portrait_frame", scenegraph_definition.slot_portrait_frame.position[1] + x_anim_distance + extra_amount)
-				parent:_set_scenegraph_position("slot_insignia", scenegraph_definition.slot_insignia.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount)
+				parent:_set_scenegraph_position("slot_insignia", scenegraph_definition.slot_insignia.position[1] + x_anim_distance + extra_amount * 3)
 				parent:_set_scenegraph_position("button_emote_1", scenegraph_definition.button_emote_1.position[1] + x_anim_distance)
 				parent:_set_scenegraph_position("button_emote_2", scenegraph_definition.button_emote_2.position[1] + x_anim_distance + extra_amount)
-				parent:_set_scenegraph_position("button_emote_3", scenegraph_definition.button_emote_3.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount)
-				parent:_set_scenegraph_position("button_emote_4", scenegraph_definition.button_emote_4.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount + extra_amount)
-				parent:_set_scenegraph_position("button_emote_5", scenegraph_definition.button_emote_5.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount + extra_amount + extra_amount)
+				parent:_set_scenegraph_position("button_emote_3", scenegraph_definition.button_emote_3.position[1] + x_anim_distance + extra_amount * 3)
+				parent:_set_scenegraph_position("button_emote_4", scenegraph_definition.button_emote_4.position[1] + x_anim_distance + extra_amount * 4)
+				parent:_set_scenegraph_position("button_emote_5", scenegraph_definition.button_emote_5.position[1] + x_anim_distance + extra_amount * 5)
 				parent:_set_scenegraph_position("button_skin_sets", scenegraph_definition.button_skin_sets.position[1] + x_anim_distance + extra_amount * 2)
 				parent:_set_scenegraph_position("button_expressions", scenegraph_definition.button_expressions.position[1] + x_anim_distance + extra_amount * 4)
 			end,

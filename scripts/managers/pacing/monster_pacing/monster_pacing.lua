@@ -484,6 +484,7 @@ MonsterPacing._get_captain_faction = function (self, monster)
 	local correct_captain = captain_breeds[current_faction]
 
 	monster.breed_name = correct_captain
+	monster.stinger = self._template.spawn_stingers[correct_captain]
 
 	return monster
 end
@@ -627,7 +628,7 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 				if despawn_distance_when_passive <= travel_distance_diff then
 					local minion_spawn_manager = Managers.state.minion_spawn
 
-					minion_spawn_manager:despawn(spawned_unit)
+					minion_spawn_manager:despawn_minion(spawned_unit)
 					table.remove(alive_monsters, i)
 
 					local aggroed_index = table.find(aggroed_monster_units, spawned_unit)
@@ -669,15 +670,27 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 	local aggro_state = aggro_states[breed_name]
 	local spawned_unit
 	local spawn_max_health_modifier = self._health_modifier
+	local minion_spawn_manager = Managers.state.minion_spawn
+	local param_table = minion_spawn_manager:request_param_table()
+
+	param_table.optional_health_modifier = spawn_max_health_modifier
 
 	if aggro_state then
-		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_state, ahead_target_unit, nil, nil, nil, nil, spawn_max_health_modifier)
+		param_table.optional_aggro_state = aggro_states.aggroed
+		param_table.optional_target_unit = ahead_target_unit
+		spawned_unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, param_table)
 
 		if aggro_state == perception_aggro_states.aggroed then
 			self._aggroed_monster_units[#self._aggroed_monster_units + 1] = spawned_unit
 		end
 	else
-		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, nil, nil, nil, nil, nil, nil, spawn_max_health_modifier)
+		spawned_unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, param_table)
+	end
+
+	local force_horde_on_spawn = template.force_horde
+
+	if force_horde_on_spawn then
+		Managers.state.pacing:force_horde_pacing_spawn()
 	end
 
 	if monster.set_enraged then
@@ -743,7 +756,12 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 	for i = 1, num_positions do
 		local breed_name = spawn_list[i]
 		local spawn_position = flood_fill_positions[i]
-		local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, perception_aggro_states.passive, nil, nil, group_id, nil, nil)
+		local param_table = minion_spawn_manager:request_param_table()
+
+		param_table.optional_aggro_state = perception_aggro_states.passive
+		param_table.optional_group_id = group_id
+
+		local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, param_table)
 		local blackboard = BLACKBOARDS[unit]
 		local patrol_component = Blackboard.write_component(blackboard, "patrol")
 

@@ -2,24 +2,22 @@
 
 local archetypes = {}
 
-local function _fill_required_entries(archetype)
+local function _create_archetype_entry(archetype_name)
+	local path = string.format("scripts/settings/archetype/archetypes/%s_archetype", archetype_name)
+	local exists = Application.can_get_resource("lua", path)
+	local archetype = require(path)
+
+	archetype.name = archetype_name
 	archetype.base_talents = archetype.base_talents or {}
-end
 
-local function _create_archetype_entry(path)
-	local archetype_data = require(path)
-	local archetype_name = archetype_data.name
-
-	_fill_required_entries(archetype_data)
-
-	local entry = archetype_data
+	local entry = archetype
 
 	archetypes[archetype_name] = entry
 end
 
-_create_archetype_entry("scripts/settings/archetype/archetypes/veteran_archetype")
-_create_archetype_entry("scripts/settings/archetype/archetypes/ogryn_archetype")
-_create_archetype_entry("scripts/settings/archetype/archetypes/zealot_archetype")
-_create_archetype_entry("scripts/settings/archetype/archetypes/psyker_archetype")
+_create_archetype_entry("ogryn")
+_create_archetype_entry("psyker")
+_create_archetype_entry("veteran")
+_create_archetype_entry("zealot")
 
 return settings("Archetypes", archetypes)

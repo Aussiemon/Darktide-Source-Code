@@ -24,7 +24,10 @@ LevelLoader.destroy = function (self)
 	self:cleanup()
 end
 
-LevelLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name)
+LevelLoader.start_loading = function (self, context)
+	local mission_name = context.mission_name
+	local level_editor_level = context.level_name
+	local circumstance_name = context.circumstance_name
 	local level_name = Missions[mission_name].level or level_editor_level
 
 	self._level_name = level_name
@@ -45,7 +48,11 @@ LevelLoader.start_loading = function (self, mission_name, level_editor_level, ci
 	self._level_package_id = Managers.package:load(level_name, self._reference_name, callback)
 end
 
-LevelLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name, havoc_data)
+LevelLoader.start_loading = function (self, context)
+	local mission_name = context.mission_name
+	local level_editor_level = context.level_name
+	local circumstance_name = context.circumstance_name
+	local havoc_data = context.havoc_data
 	local level_name = Missions[mission_name].level or level_editor_level
 
 	self._level_name = level_name

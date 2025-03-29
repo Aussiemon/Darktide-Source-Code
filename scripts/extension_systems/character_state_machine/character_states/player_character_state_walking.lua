@@ -3,7 +3,7 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local AcceleratedLocalSpaceMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement")
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")

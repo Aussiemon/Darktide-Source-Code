@@ -1,29 +1,28 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
-local GibbingPower = GibbingSettings.gibbing_power
-local GibbingTypes = GibbingSettings.gibbing_types
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local crit_armor_mod = DamageProfileSettings.crit_armor_mod
+local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local damage_types = DamageSettings.damage_types
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
+local big_cleave = DamageProfileSettings.big_cleave
+local double_cleave = DamageProfileSettings.double_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
 local damage_templates = {}
 local overrides = {}
 
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
-local single_cleave = DamageProfileSettings.single_cleave
-local double_cleave = DamageProfileSettings.double_cleave
-local medium_cleave = DamageProfileSettings.medium_cleave
-local big_cleave = DamageProfileSettings.big_cleave
 local armor_modifiers = {
 	p1_m1 = {
 		near = {
@@ -177,8 +176,8 @@ damage_templates.default_stub_pistol_bfg = {
 	},
 	armor_damage_modifier_ranged = armor_modifiers.p1_m1,
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	crit_mod = {
 		attack = {
@@ -230,8 +229,8 @@ damage_templates.default_stub_pistol_bfg = {
 	herding_template = HerdingTemplates.shot,
 	damage_type = damage_types.auto_bullet,
 	wounds_template = WoundsTemplates.stubrevolver,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.ballistic,
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
 	on_kill_area_suppression = {
 		distance = 4,
@@ -262,8 +261,8 @@ damage_templates.stub_pistol_p1_m2 = {
 	},
 	armor_damage_modifier_ranged = armor_modifiers.p1_m2,
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	crit_mod = {
 		attack = {
@@ -315,8 +314,8 @@ damage_templates.stub_pistol_p1_m2 = {
 	herding_template = HerdingTemplates.shot,
 	damage_type = damage_types.auto_bullet,
 	wounds_template = WoundsTemplates.stubrevolver,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.ballistic,
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
 	on_kill_area_suppression = {
 		distance = 2,
@@ -346,8 +345,8 @@ damage_templates.stub_pistol_p1_m3 = {
 	},
 	armor_damage_modifier_ranged = armor_modifiers.p1_m3,
 	critical_strike = {
-		gibbing_power = GibbingPower.medium,
-		gibbing_type = GibbingTypes.ballistic,
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.ballistic,
 	},
 	crit_mod = {
 		attack = crit_armor_mod,
@@ -364,8 +363,8 @@ damage_templates.stub_pistol_p1_m3 = {
 		},
 	},
 	damage_type = damage_types.auto_bullet,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.ballistic,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 2,

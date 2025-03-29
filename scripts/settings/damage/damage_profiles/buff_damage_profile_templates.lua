@@ -298,6 +298,9 @@ damage_templates.burning = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
 	},
+	stat_buffs = {
+		"burning_damage",
+	},
 }
 damage_templates.corruptor_liquid_corruption = {
 	ignore_toughness = true,

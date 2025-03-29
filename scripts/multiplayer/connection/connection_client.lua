@@ -10,6 +10,7 @@ local ConnectionLocalStateMachine = require("scripts/multiplayer/connection/conn
 local JWTTicketUtils = require("scripts/multiplayer/utilities/jwt_ticket_utils")
 local ProfileSynchronizerClient = require("scripts/loading/profile_synchronizer_client")
 local EACError = require("scripts/managers/error/errors/eac_error")
+local LoadingHostSyncError = require("scripts/managers/error/errors/loading_host_sync_error")
 local ConnectionClient = class("ConnectionClient")
 
 ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lobby_function, network_hash, host_type, optional_reservations, jwt_ticket, optional_matched_game_session_id, optional_accelerated_endpoint, optional_initial_party_id)
@@ -36,8 +37,10 @@ ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lo
 			self._region = instance_id_split[2]
 			self._deployment_id = instance_id_split[3]
 			self._unique_instance_id = instance_id_split[4] .. "--" .. instance_id_split[5]
+		elseif type(jwt_payload.instanceId) == "string" and string.find(jwt_payload.instanceId, "dev") == 1 then
+			Log.info("ConnectionClient", "Instance is prodlike, no info about region, deployment_id or unique_instance_id")
 		else
-			Log.exception("ConnectionClient", "Broken JWT Ticket, instance id: '%s'", jwt_payload.instanceId ~= nil or "nil")
+			Log.exception("ConnectionClient", "Broken JWT Ticket, instance id: '%s'", tostring(jwt_payload.instanceId))
 		end
 
 		local instance_id = jwt_payload.instanceId
@@ -306,6 +309,8 @@ ConnectionClient.rpc_kicked = function (self, channel_id, reason, optional_detai
 
 	if reason == "EAC_KICK" then
 		Managers.error:report_error(EACError:new("loc_popup_description_eac_kick", optional_details))
+	elseif reason == "loading_host_sync_error" then
+		Managers.error:report_error(LoadingHostSyncError:new(optional_details))
 	end
 end
 

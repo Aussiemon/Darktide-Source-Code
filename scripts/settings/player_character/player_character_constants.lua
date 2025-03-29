@@ -592,6 +592,10 @@ local constants = {
 				default_value = 0,
 				network_type = "num_special_charges",
 			},
+			max_num_special_charges = {
+				default_value = 0,
+				network_type = "num_special_charges",
+			},
 			special_active_start_t = {
 				default_value = 0,
 				network_type = "fixed_frame_offset_start_t_6bit",
@@ -755,13 +759,13 @@ end
 
 local buff_component_key_lookup = {}
 
-for i = 1, constants.max_component_buffs do
-	buff_component_key_lookup[i] = {
-		template_name_key = "buff_" .. i .. "_template_name",
-		start_time_key = "buff_" .. i .. "_start_time",
-		active_start_time_key = "buff_" .. i .. "_active_start_time",
-		stack_count_key = "buff_" .. i .. "_stack_count",
-		proc_count_key = "buff_" .. i .. "_proc_count",
+for ii = 1, constants.max_component_buffs do
+	buff_component_key_lookup[ii] = {
+		template_name_key = "buff_" .. ii .. "_template_name",
+		start_time_key = "buff_" .. ii .. "_start_time",
+		active_start_time_key = "buff_" .. ii .. "_active_start_time",
+		stack_count_key = "buff_" .. ii .. "_stack_count",
+		proc_count_key = "buff_" .. ii .. "_proc_count",
 	}
 end
 

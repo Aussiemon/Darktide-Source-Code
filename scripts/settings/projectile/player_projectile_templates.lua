@@ -8,19 +8,24 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
+local ProjectileSettings = require("scripts/settings/projectile/projectile_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
+local projectile_types = ProjectileSettings.projectile_types
 local projectile_templates = {}
 
 projectile_templates.ogryn_gauntlet_grenade = {
+	item_name = "content/items/weapons/player/ranged/bullets/grenade_thumper_frag",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_gauntlet_grenade,
+	projectile_type = projectile_types.weapon_grenade,
 	damage = {
 		fuse = {
-			fuse_time = 0.75,
+			fuse_time = 1,
 			explosion_template = ExplosionTemplates.default_gauntlet_grenade,
 		},
 		impact = {
-			damage_profile = DamageProfileTemplates.default_gauntlet_bfg,
+			damage_profile = DamageProfileTemplates.default_gauntlet_bfg_ignore_hitzone,
 			damage_type = damage_types.grenade_frag,
 			explosion_template = ExplosionTemplates.default_gauntlet_grenade,
 		},
@@ -49,7 +54,9 @@ local function _ogryn_thumper_sticks_to_check(projectile_unit, hit_unit, hit_zon
 end
 
 projectile_templates.ogryn_thumper_grenade_hip_fire = {
+	item_name = "content/items/weapons/player/ranged/bullets/grenade_thumper_frag",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_thumper_grenade,
+	projectile_type = projectile_types.weapon_grenade,
 	sticks_to_tags = {
 		monster = true,
 		ogryn = true,
@@ -89,7 +96,9 @@ projectile_templates.ogryn_thumper_grenade_hip_fire = {
 	},
 }
 projectile_templates.ogryn_thumper_grenade_aim = {
+	item_name = "content/items/weapons/player/ranged/bullets/grenade_thumper_frag",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_thumper_grenade_aimed,
+	projectile_type = projectile_types.weapon_grenade,
 	sticks_to_tags = {
 		monster = true,
 		ogryn = true,
@@ -124,7 +133,9 @@ projectile_templates.ogryn_thumper_grenade_aim = {
 	},
 }
 projectile_templates.ogryn_grenade_frag = {
+	item_name = "content/items/weapons/player/grenade_ogryn_frag",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_frag_grenade,
+	projectile_type = projectile_types.ogryn_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 2,
@@ -153,7 +164,9 @@ projectile_templates.ogryn_grenade_frag = {
 	},
 }
 projectile_templates.frag_grenade = {
+	item_name = "content/items/weapons/player/grenade_frag",
 	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 1.7,
@@ -179,7 +192,9 @@ projectile_templates.frag_grenade = {
 	},
 }
 projectile_templates.fire_grenade = {
+	item_name = "content/items/weapons/player/grenade_fire",
 	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 1.7,
@@ -206,7 +221,9 @@ projectile_templates.fire_grenade = {
 	},
 }
 projectile_templates.krak_grenade = {
+	item_name = "content/items/weapons/player/grenade_krak",
 	locomotion_template = ProjectileLocomotionTemplates.krak_grenade,
+	projectile_type = projectile_types.player_grenade,
 	sticks_to_armor_types = {
 		[armor_types.resistant] = true,
 		[armor_types.armored] = true,
@@ -269,7 +286,9 @@ projectile_templates.krak_grenade = {
 	},
 }
 projectile_templates.shock_grenade = {
+	item_name = "content/items/weapons/player/grenade_shock",
 	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 1.5,
@@ -295,11 +314,13 @@ projectile_templates.shock_grenade = {
 	},
 }
 projectile_templates.ogryn_grenade_box_cluster_grenade = {
+	item_name = "content/items/weapons/player/grenade_frag",
 	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 2,
-			skip_reset = true,
+			skip_fuse_reset = true,
 			explosion_template = ExplosionTemplates.ogryn_box_cluster_frag,
 		},
 		impact = {
@@ -322,7 +343,9 @@ projectile_templates.ogryn_grenade_box_cluster_grenade = {
 	},
 }
 projectile_templates.ogryn_grenade_box = {
+	item_name = "content/items/weapons/player/grenade_box_ogryn",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_grenade_box,
+	projectile_type = projectile_types.ogryn_box,
 	damage = {
 		fuse = {
 			fuse_time = 2,
@@ -349,8 +372,10 @@ projectile_templates.ogryn_grenade_box = {
 	},
 }
 projectile_templates.ogryn_grenade_friend_rock = {
+	item_name = "content/items/weapons/player/grenade_ogryn_friend_rock",
 	play_vce = true,
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_friendly_rock,
+	projectile_type = projectile_types.ogryn_rock,
 	damage = {
 		fuse = {
 			fuse_time = 2,
@@ -377,8 +402,10 @@ projectile_templates.ogryn_grenade_friend_rock = {
 	},
 }
 projectile_templates.zealot_throwing_knives = {
+	item_name = "content/items/weapons/player/zealot_throwing_knives",
 	play_vce = true,
 	locomotion_template = ProjectileLocomotionTemplates.zealot_throwing_knife_projectile,
+	projectile_type = projectile_types.throwing_knife,
 	sticks_to_armor_types = {},
 	damage = {
 		use_suppression = true,
@@ -413,9 +440,11 @@ projectile_templates.zealot_throwing_knives = {
 	},
 }
 projectile_templates.psyker_throwing_knives = {
+	item_name = "content/items/weapons/player/psyker_throwing_knives",
 	play_vce = true,
 	psyker_smite = true,
 	locomotion_template = ProjectileLocomotionTemplates.psyker_throwing_knife_projectile,
+	projectile_type = projectile_types.throwing_knife,
 	sticks_to_armor_types = {},
 	damage = {
 		use_suppression = true,
@@ -434,7 +463,7 @@ projectile_templates.psyker_throwing_knives = {
 			fuse_time = 1.5,
 			impact_triggered = true,
 			kill_at_lifetime = 2.5,
-			skip_reset = true,
+			skip_fuse_reset = true,
 		},
 	},
 	effects = {
@@ -465,7 +494,9 @@ projectile_templates.psyker_throwing_knives_aimed_piercing.damage.impact.damage_
 projectile_templates.psyker_throwing_knives_aimed_piercing.locomotion_template = ProjectileLocomotionTemplates.psyker_throwing_knife_projectile_aimed
 projectile_templates.force_staff_ball = {
 	always_hidden = true,
+	item_name = "content/items/weapons/player/ranged/bullets/force_staff_projectile_01",
 	locomotion_template = ProjectileLocomotionTemplates.force_staff_ball,
+	projectile_type = projectile_types.force_staff_ball,
 	sticks_to_armor_types = {},
 	damage = {
 		use_suppression = true,
@@ -501,7 +532,9 @@ projectile_templates.force_staff_ball = {
 }
 projectile_templates.force_staff_ball_heavy = {
 	always_hidden = true,
+	item_name = "content/items/weapons/player/ranged/bullets/force_staff_projectile_01",
 	locomotion_template = ProjectileLocomotionTemplates.force_staff_ball_heavy,
+	projectile_type = projectile_types.force_staff_ball,
 	sticks_to_armor_types = {},
 	damage = {
 		impact = {
@@ -537,7 +570,9 @@ projectile_templates.force_staff_ball_heavy = {
 	},
 }
 projectile_templates.smoke_grenade = {
+	item_name = "content/items/weapons/player/grenade_smoke",
 	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
 	damage = {
 		fuse = {
 			fuse_time = 1.5,
@@ -578,7 +613,9 @@ projectile_templates.smoke_grenade = {
 	},
 }
 projectile_templates.ogryn_grenade_box_cluster = {
+	item_name = "content/items/weapons/player/grenade_box_ogryn_cluster",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_grenade_box,
+	projectile_type = projectile_types.ogryn_box,
 	damage = {
 		fuse = {
 			fuse_time = 2,
@@ -593,6 +630,7 @@ projectile_templates.ogryn_grenade_box_cluster = {
 				item = "content/items/weapons/player/grenade_frag",
 				number = 6,
 				start_fuse_time = 0.8,
+				stat_buff = "ogryn_grenade_box_cluster_amount",
 				fuse_time_steps = {
 					max = 0.8,
 					min = 0.4,
@@ -603,6 +641,30 @@ projectile_templates.ogryn_grenade_box_cluster = {
 				},
 				randomized_angular_velocity = math.pi / 10,
 				projectile_template = projectile_templates.ogryn_grenade_box_cluster_grenade,
+				randomized_settings = {
+					buff_keyword = "ogryn_box_of_surprise",
+					chance = 1,
+					list = {
+						{
+							projectile_template = projectile_templates.ogryn_grenade_box_cluster_grenade,
+						},
+						{
+							projectile_template = projectile_templates.krak_grenade,
+						},
+						{
+							projectile_template = projectile_templates.fire_grenade,
+						},
+						{
+							projectile_template = projectile_templates.ogryn_grenade_frag,
+						},
+						{
+							projectile_template = projectile_templates.smoke_grenade,
+						},
+						{
+							projectile_template = projectile_templates.shock_grenade,
+						},
+					},
+				},
 			},
 		},
 	},
@@ -620,8 +682,10 @@ projectile_templates.ogryn_grenade_box_cluster = {
 		},
 	},
 }
+projectile_templates.ogryn_grenade_box.damage.impact.conditional_cluster = projectile_templates.ogryn_grenade_box_cluster.damage.impact.cluster
 projectile_templates.luggable = {
 	locomotion_template = ProjectileLocomotionTemplates.luggable_battery,
+	projectile_type = projectile_types.luggable,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.luggable_battery,

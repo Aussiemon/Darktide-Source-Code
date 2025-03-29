@@ -2,7 +2,7 @@
 
 local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
 local CharacterSheet = {}
-local _fill_ability_blitz_or_aura
+local _fill_ability_blitz_or_aura, _add_modifier
 local TRASH_TABLE = {}
 local PASSIVES_BEST_IDENTIFIER = {}
 local COHERENCY_BEST_IDENTIFIER = {}
@@ -12,7 +12,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	local ability = destination.ability or TRASH_TABLE
 	local blitz = destination.blitz or TRASH_TABLE
 	local ability, blitz, aura = ability, blitz, destination.aura or TRASH_TABLE
-	local passives, coherency_buffs, special_rules, buff_template_tiers, iconics = destination.passives, destination.coherency, destination.special_rules, destination.buff_template_tiers, destination.iconics
+	local passives, coherency_buffs, special_rules, buff_template_tiers, iconics, modifiers = destination.passives, destination.coherency, destination.special_rules, destination.buff_template_tiers, destination.iconics, destination.modifiers
 
 	table.clear(ability)
 	table.clear(blitz)
@@ -43,6 +43,10 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 	if iconics then
 		table.clear(iconics)
+	end
+
+	if modifiers then
+		table.clear(modifiers)
 	end
 
 	local archetype = profile.archetype
@@ -222,116 +226,122 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						end
 					end
 
-					if passives then
-						local passive = talent.passive
+					if talent then
+						if passives then
+							local passive = talent.passive
 
-						if passive then
-							local identifier = passive.identifier
+							if passive then
+								local identifier = passive.identifier
 
-							if type(identifier) == "table" then
-								local buff_template_names = passive.buff_template_name
+								if type(identifier) == "table" then
+									local buff_template_names = passive.buff_template_name
 
-								for jj = 1, #identifier do
-									local buff_template_name = buff_template_names[jj]
-									local sub_identifier = identifier[jj]
+									for jj = 1, #identifier do
+										local buff_template_name = buff_template_names[jj]
+										local sub_identifier = identifier[jj]
+										local prev_best_identifier = PASSIVES_BEST_IDENTIFIER[identifier]
+
+										if not prev_best_identifier or prev_best_identifier < step_count then
+											PASSIVES_BEST_IDENTIFIER[sub_identifier] = step_count
+											passives[sub_identifier] = buff_template_name
+											buff_template_tiers[buff_template_name] = points_in_node
+										else
+											Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", sub_identifier, prev_best_identifier, step_count)
+										end
+									end
+								else
+									local buff_template_name = passive.buff_template_name
 									local prev_best_identifier = PASSIVES_BEST_IDENTIFIER[identifier]
 
 									if not prev_best_identifier or prev_best_identifier < step_count then
-										PASSIVES_BEST_IDENTIFIER[sub_identifier] = step_count
-										passives[sub_identifier] = buff_template_name
+										PASSIVES_BEST_IDENTIFIER[identifier] = step_count
+										passives[identifier] = buff_template_name
 										buff_template_tiers[buff_template_name] = points_in_node
 									else
-										Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", sub_identifier, prev_best_identifier, step_count)
+										Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
 									end
 								end
-							else
-								local buff_template_name = passive.buff_template_name
-								local prev_best_identifier = PASSIVES_BEST_IDENTIFIER[identifier]
+							end
+						end
+
+						if coherency_buffs then
+							local coherency = talent.coherency
+
+							if coherency then
+								local identifier = coherency.identifier
+								local prev_best_identifier = COHERENCY_BEST_IDENTIFIER[identifier]
 
 								if not prev_best_identifier or prev_best_identifier < step_count then
-									PASSIVES_BEST_IDENTIFIER[identifier] = step_count
-									passives[identifier] = buff_template_name
-									buff_template_tiers[buff_template_name] = points_in_node
+									COHERENCY_BEST_IDENTIFIER[identifier] = step_count
+
+									local buff_template_name = coherency.buff_template_name
+
+									if buff_template_name then
+										coherency_buffs[identifier] = buff_template_name
+										buff_template_tiers[buff_template_name] = points_in_node
+									end
 								else
 									Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
 								end
 							end
 						end
-					end
 
-					if coherency_buffs then
-						local coherency = talent.coherency
+						if special_rules then
+							local special_rule = talent.special_rule
 
-						if coherency then
-							local identifier = coherency.identifier
-							local prev_best_identifier = COHERENCY_BEST_IDENTIFIER[identifier]
+							if special_rule then
+								local identifier = special_rule.identifier
+								local special_rule_name = special_rule.special_rule_name
 
-							if not prev_best_identifier or prev_best_identifier < step_count then
-								COHERENCY_BEST_IDENTIFIER[identifier] = step_count
+								if type(identifier) == "table" then
+									for jj = 1, #identifier do
+										local sub_identifier = identifier[jj]
+										local prev_best_identifier = SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier]
 
-								local buff_template_name = coherency.buff_template_name
-
-								if buff_template_name then
-									coherency_buffs[identifier] = buff_template_name
-									buff_template_tiers[buff_template_name] = points_in_node
-								end
-							else
-								Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
-							end
-						end
-					end
-
-					if special_rules then
-						local special_rule = talent.special_rule
-
-						if special_rule then
-							local identifier = special_rule.identifier
-							local special_rule_name = special_rule.special_rule_name
-
-							if type(identifier) == "table" then
-								for jj = 1, #identifier do
-									local sub_identifier = identifier[jj]
-									local prev_best_identifier = SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier]
+										if not prev_best_identifier or prev_best_identifier < step_count then
+											SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier] = step_count
+											special_rules[sub_identifier] = special_rule_name[jj]
+										else
+											Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", sub_identifier, prev_best_identifier, step_count)
+										end
+									end
+								else
+									local prev_best_identifier = SPECIAL_RULE_BEST_IDENTIFIER[identifier]
 
 									if not prev_best_identifier or prev_best_identifier < step_count then
-										SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier] = step_count
-										special_rules[sub_identifier] = special_rule_name[jj]
+										SPECIAL_RULE_BEST_IDENTIFIER[identifier] = step_count
+										special_rules[identifier] = special_rule_name
 									else
-										Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", sub_identifier, prev_best_identifier, step_count)
+										Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
 									end
-								end
-							else
-								local prev_best_identifier = SPECIAL_RULE_BEST_IDENTIFIER[identifier]
-
-								if not prev_best_identifier or prev_best_identifier < step_count then
-									SPECIAL_RULE_BEST_IDENTIFIER[identifier] = step_count
-									special_rules[identifier] = special_rule_name
-								else
-									Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
 								end
 							end
 						end
-					end
 
-					local player_ability = talent.player_ability
+						local player_ability = talent.player_ability
 
-					if player_ability then
-						if player_ability.ability_type == "combat_ability" then
-							if combat_ability_step_count < step_count then
-								combat_ability_step_count = step_count
-								combat_ability = player_ability.ability
+						if player_ability then
+							if player_ability.ability_type == "combat_ability" then
+								if combat_ability_step_count < step_count then
+									combat_ability_step_count = step_count
+									combat_ability = player_ability.ability
+
+									_add_modifier(modifiers, "ability", talent)
+								else
+									Log.error("CharacterSheet", "skipping combat ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, combat_ability.name, combat_ability_step_count, step_count)
+								end
+							elseif player_ability.ability_type == "grenade_ability" then
+								if grenade_ability_step_count < step_count then
+									grenade_ability_step_count = step_count
+									grenade_ability = player_ability.ability
+
+									_add_modifier(modifiers, "blitz", talent)
+								else
+									Log.error("CharacterSheet", "skipping combat ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, grenade_ability.name, grenade_ability_step_count, step_count)
+								end
 							else
-								Log.error("CharacterSheet", "skipping combat ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, combat_ability.name, combat_ability_step_count, step_count)
+								Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
 							end
-						elseif player_ability.ability_type == "grenade_ability" then
-							if grenade_ability_step_count < step_count then
-								grenade_ability_step_count = step_count
-								grenade_ability = player_ability.ability
-							else
-								Log.error("CharacterSheet", "skipping combat ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, grenade_ability.name, grenade_ability_step_count, step_count)
-							end
-						else
-							Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
 						end
 					end
 				end
@@ -341,6 +351,31 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 	destination.combat_ability = combat_ability
 	destination.grenade_ability = grenade_ability
+
+	if modifiers then
+		for talent_type, talents_data in pairs(modifiers) do
+			local table_looped = false
+			local current_index = 1
+
+			while current_index <= #talents_data do
+				local talent_data = talents_data[current_index]
+
+				for f = current_index + 1, #talents_data do
+					local checked_talent_data = talents_data[f]
+
+					if talent_data.display_name == checked_talent_data then
+						table.remove(talents_data, f)
+					end
+				end
+
+				if talent_data.display_name == destination[talent_type].talent.display_name then
+					table.remove(talents_data, current_index)
+				end
+
+				current_index = current_index + 1
+			end
+		end
+	end
 end
 
 CharacterSheet.convert_talents_to_node_layout = function (profile, selected_talents)
@@ -373,6 +408,14 @@ end
 function _fill_ability_blitz_or_aura(dest, talent, icon)
 	dest.talent = talent
 	dest.icon = icon
+end
+
+function _add_modifier(dest, name, talent)
+	if dest then
+		dest[name] = dest[name] or {}
+
+		table.insert(dest[name], talent)
+	end
 end
 
 return CharacterSheet

@@ -619,6 +619,10 @@ ItemGridViewBase._setup_item_grid = function (self, optional_grid_settings)
 	self:_setup_sort_options()
 end
 
+ItemGridViewBase.get_loading_state = function (self)
+	return self._item_grid and self._item_grid:get_loading_state()
+end
+
 ItemGridViewBase.set_loading_state = function (self, is_loading)
 	if self._item_grid then
 		self._item_grid:set_loading_state(is_loading)
@@ -739,51 +743,62 @@ ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
 	end
 end
 
-ItemGridViewBase._cb_on_present = function (self)
-	local new_selection_index
+ItemGridViewBase._requested_index_on_present = function (self)
 	local grid_widgets = self._item_grid:widgets()
 	local selected_gear_id = self._selected_gear_id
+	local new_selection_index
 
-	if grid_widgets then
-		for i = 1, #grid_widgets do
-			local widget = grid_widgets[i]
+	for i = 1, #grid_widgets do
+		local widget = grid_widgets[i]
 
-			if widget then
-				local content = widget.content
-				local element = content.element
+		if widget then
+			local content = widget.content
+			local element = content.element
 
-				if element then
-					local item = element.item
+			if element then
+				local item = element.item
 
-					if item then
-						if item.gear_id == selected_gear_id then
-							new_selection_index = i
+				if item then
+					if item.gear_id == selected_gear_id then
+						new_selection_index = i
 
+						break
+					elseif not new_selection_index then
+						new_selection_index = i
+
+						if not selected_gear_id then
 							break
-						elseif not new_selection_index then
-							new_selection_index = i
-
-							if not selected_gear_id then
-								break
-							end
 						end
 					end
 				end
 			end
 		end
-
-		self._selected_gear_id = nil
-
-		if new_selection_index then
-			self._item_grid:focus_grid_index(new_selection_index)
-		else
-			self._item_grid:select_first_index()
-		end
-
-		self._item_grid:scroll_to_grid_index(new_selection_index or 1, true)
 	end
 
+	self._selected_gear_id = nil
+
+	return new_selection_index
+end
+
+ItemGridViewBase._cb_on_present = function (self)
 	self._synced_grid_index = nil
+
+	local item_grid = self._item_grid
+	local grid_widgets = item_grid and item_grid:widgets()
+
+	if not grid_widgets then
+		return
+	end
+
+	local new_selection_index = self:_requested_index_on_present()
+
+	if new_selection_index then
+		item_grid:focus_grid_index(new_selection_index)
+	else
+		item_grid:select_first_index()
+	end
+
+	item_grid:scroll_to_grid_index(new_selection_index or 1, true)
 end
 
 ItemGridViewBase._sort_grid_layout = function (self, sort_function, optional_filter_layout)
@@ -1081,26 +1096,42 @@ ItemGridViewBase.focus_on_item = function (self, item)
 	end
 end
 
-ItemGridViewBase.item_grid_index = function (self, item)
-	if not item then
-		return
-	end
-
+ItemGridViewBase._index_by_condition = function (self, condition)
 	local item_grid = self._item_grid
-	local widgets = item_grid:widgets()
+	local widgets = item_grid and item_grid:widgets()
+	local widget_count = widgets and #widgets or 0
 
-	for i = 1, #widgets do
+	for i = 1, widget_count do
 		local widget = widgets[i]
 		local content = widget.content
 		local element = content.element
-		local element_item = element.item
 
-		if element_item and element_item.gear_id == item.gear_id then
-			local widget_index = item_grid:widget_index(widget) or 1
-
-			return widget_index
+		if element and condition(element) then
+			return i
 		end
 	end
+end
+
+ItemGridViewBase.index_by_item_name = function (self, item_name)
+	return self:_index_by_condition(function (element)
+		return element and element.item.name and element.item.name == item_name
+	end)
+end
+
+ItemGridViewBase.index_by_gear_id = function (self, gear_id)
+	return self:_index_by_condition(function (element)
+		return element and element.item.gear_id and element.item.gear_id == gear_id
+	end)
+end
+
+ItemGridViewBase.item_grid_index = function (self, item)
+	local target_gear_id = item and item.gear_id
+
+	if not target_gear_id then
+		return
+	end
+
+	return self:index_by_gear_id(target_gear_id)
 end
 
 ItemGridViewBase.first_grid_item = function (self)

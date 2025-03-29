@@ -187,6 +187,10 @@ GameModeManager.game_mode_name = function (self)
 	return self._game_mode:name()
 end
 
+GameModeManager.game_mode = function (self)
+	return self._game_mode
+end
+
 GameModeManager.side_compositions = function (self)
 	local game_mode_settings = self._game_mode:settings()
 	local side_compositions = game_mode_settings.side_compositions
@@ -339,12 +343,24 @@ GameModeManager.player_time_until_spawn = function (self, player)
 	return self._game_mode:player_time_until_spawn(player)
 end
 
+GameModeManager.cleanup_game_mode_dynamic_lavels = function (self)
+	self._game_mode:cleanup_game_mode_dynamic_lavels()
+end
+
 GameModeManager.cleanup_game_mode_units = function (self)
 	self._game_mode:cleanup_game_mode_units()
 end
 
 GameModeManager.should_spawn_dead = function (self, player)
 	return self._game_mode:should_spawn_dead(player)
+end
+
+GameModeManager.on_gameplay_init = function (self)
+	self._game_mode:on_gameplay_init()
+end
+
+GameModeManager.can_player_enter_game = function (self)
+	return self._game_mode:can_player_enter_game()
 end
 
 GameModeManager.game_mode_ready = function (self)

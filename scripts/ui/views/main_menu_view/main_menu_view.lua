@@ -645,6 +645,11 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 
 				self._delete_popup_id = nil
 			end),
+			template_options = {
+				start_delay = 2,
+				start_input_action = "confirm_pressed",
+				timer = 3,
+			},
 		},
 		{
 			close_on_pressed = true,

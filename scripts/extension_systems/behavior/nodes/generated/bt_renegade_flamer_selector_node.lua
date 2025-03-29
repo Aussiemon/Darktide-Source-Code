@@ -51,7 +51,19 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_exit_spawner = children[2]
+		local node_disable = children[2]
+		local disable_component = blackboard.disable
+		local condition_result = disable_component.is_disabled
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_disable
+
+			return node_disable
+		end
+	end
+
+	do
+		local node_exit_spawner = children[3]
 		local spawn_component = blackboard.spawn
 		local condition_result = spawn_component.is_exiting_spawner
 
@@ -63,7 +75,7 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_smart_object = children[3]
+		local node_smart_object = children[4]
 		local condition_result
 
 		repeat
@@ -122,7 +134,7 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_stagger = children[4]
+		local node_stagger = children[5]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -135,7 +147,7 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_melee_attack = children[5]
+		local node_melee_attack = children[6]
 		local tree_node = node_melee_attack.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_melee_attack
@@ -210,7 +222,7 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_combat = children[6]
+		local node_combat = children[7]
 		local is_running = last_leaf_node_running and last_running_node == node_combat
 		local condition_result
 
@@ -262,7 +274,7 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 		end
 	end
 
-	local node_idle = children[7]
+	local node_idle = children[8]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

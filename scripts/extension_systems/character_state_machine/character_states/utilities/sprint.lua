@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/sprint.lua
 
 local AbilityTemplate = require("scripts/utilities/ability/ability_template")
-local Action = require("scripts/utilities/weapon/action")
+local Action = require("scripts/utilities/action/action")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local Breed = require("scripts/utilities/breed")

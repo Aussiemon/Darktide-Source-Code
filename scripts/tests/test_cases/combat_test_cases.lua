@@ -464,8 +464,15 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 			end
 		end
 
+		TestifySnippets.wait(5)
+
 		if not table.is_empty(faulty_minions_spawned) then
-			result = "-Minion unit not alive at spawn: " .. table.concat(faulty_minions_spawned, ", ")
+			local message = "Enem" .. (table.getn(faulty_minions_spawned) > 1 and "ies" or "y") .. " spawned incorrectly: " .. table.concat(faulty_minions_spawned, ", ")
+
+			result = message
+
+			Testify.expect:fail("invalid_enemy_spawn", message)
+			TestifySnippets.wait(5)
 		end
 
 		if not spawn_simultaneously and not table.is_empty(minions_auto_killed) then

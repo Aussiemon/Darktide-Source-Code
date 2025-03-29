@@ -45,6 +45,7 @@ PresenceEntryMyself.reset = function (self)
 	self._is_cross_playing = nil
 	self._psn_session_id = nil
 	self._havoc_status = nil
+	self._havoc_rank_cadence_high = nil
 	self._havoc_rank_all_time_high = nil
 end
 
@@ -198,8 +199,18 @@ PresenceEntryMyself.havoc_status = function (self)
 	return self._havoc_status or "none"
 end
 
+PresenceEntryMyself.set_havoc_rank_cadence_high = function (self, value)
+	self._havoc_rank_cadence_high = value or "none"
+end
+
 PresenceEntryMyself.set_havoc_rank_all_time_high = function (self, value)
 	self._havoc_rank_all_time_high = value or "none"
+end
+
+PresenceEntryMyself.havoc_rank_cadence_high = function (self)
+	local rank = self._havoc_rank_cadence_high
+
+	return rank ~= "none" and tonumber(rank) or nil
 end
 
 PresenceEntryMyself.havoc_rank_all_time_high = function (self)
@@ -255,6 +266,10 @@ PresenceEntryMyself.create_key_values = function (self, white_list)
 
 	if not white_list or white_list.havoc_status then
 		key_values.havoc_status = self._havoc_status
+	end
+
+	if not white_list or white_list.havoc_rank_cadence_high then
+		key_values.havoc_rank_cadence_high = self._havoc_rank_cadence_high
 	end
 
 	if not white_list or white_list.havoc_rank_all_time_high then

@@ -18,7 +18,9 @@ end
 ActionBlock.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionBlock.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	self._perfect_block_ends_at_t = Block.start_block_action(t, self._block_component)
+	local perfect_block_ends_at_t = Block.start_block_action(t, self._block_component, action_settings.skip_update_perfect_blocking)
+
+	self._perfect_block_ends_at_t = perfect_block_ends_at_t or self._perfect_block_ends_at_t
 
 	if action_settings.can_jump ~= nil then
 		self._movement_state_component.can_jump = action_settings.can_jump
@@ -61,7 +63,9 @@ ActionBlock.fixed_update = function (self, dt, t, time_in_action)
 		self._dodge_character_state_component.cooldown = t + 0.1
 	end
 
-	Block.update_perfect_blocking(t, self._perfect_block_ends_at_t, self._block_component)
+	if not action_settings.skip_update_perfect_blocking then
+		Block.update_perfect_blocking(t, self._perfect_block_ends_at_t, self._block_component)
+	end
 end
 
 ActionBlock.running_action_state = function (self, t, time_in_action)
@@ -75,12 +79,23 @@ end
 ActionBlock.finish = function (self, reason, data, t, time_in_action)
 	ActionBlock.super.finish(self, reason, data, t)
 
-	local will_do_push = reason == "new_interrupting_action" and data.new_action_kind == "push"
-	local will_do_sweep = reason == "new_interrupting_action" and data.new_action_kind == "sweep"
+	local stop_blocking = true
 
-	if not will_do_push and not will_do_sweep then
-		self._block_component.is_blocking = false
-		self._block_component.has_blocked = false
+	if reason == "new_interrupting_action" then
+		local new_action_kind = data.new_action_kind
+		local want_push = new_action_kind == "push"
+		local want_sweep = new_action_kind == "sweep"
+
+		stop_blocking = not want_push
+		stop_blocking = stop_blocking and not want_sweep
+	end
+
+	if stop_blocking then
+		local block_component = self._block_component
+
+		block_component.is_blocking = false
+		block_component.has_blocked = false
+		self._perfect_block_ends_at_t = nil
 	end
 
 	local action_settings = self._action_settings

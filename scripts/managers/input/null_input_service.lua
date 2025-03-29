@@ -24,4 +24,12 @@ NullInputService.get_default = function (self, action_name)
 	return self._parent:get_default(action_name)
 end
 
+NullInputService.get_with_filters = function (self, action_name)
+	return self._parent:get_default(action_name)
+end
+
+NullInputService.get_keys_from_alias = function (self, action_name)
+	return {}
+end
+
 return NullInputService

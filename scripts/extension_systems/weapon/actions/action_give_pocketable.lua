@@ -7,6 +7,7 @@ local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Pocketable = require("scripts/utilities/pocketable")
+local PocketableUtils = require("scripts/settings/equipment/weapon_templates/pocketables/pockatables_utils")
 local Vo = require("scripts/utilities/vo")
 local ActionGivePocketable = class("ActionGivePocketable", "ActionWeaponBase")
 local RECIEVE_GIFTED_ITEM_ALIAS = "recieve_gifted_item"
@@ -54,28 +55,33 @@ ActionGivePocketable.fixed_update = function (self, dt, t, time_in_action)
 
 			if inventory_item then
 				PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
-				PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, wielded_slot, t)
 
-				if self._is_server then
-					local assist_notification_type = action_settings.assist_notification_type
+				local give_valid = ALIVE[target_unit] and PocketableUtils.validate_slot_not_equipped(target_unit, wielded_slot)
 
-					if assist_notification_type and ALIVE[target_unit] then
-						PlayerAssistNotifications.show_notification(target_unit, self._player_unit, assist_notification_type)
-					end
+				if give_valid then
+					PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, wielded_slot, t)
 
-					PlayerUnitVisualLoadout.equip_item_to_slot(target_unit, inventory_item, inventory_slot_name, nil, t)
-					table.clear(external_properties)
+					if self._is_server then
+						local assist_notification_type = action_settings.assist_notification_type
 
-					external_properties.pocketable_name = pickup_name
+						if assist_notification_type then
+							PlayerAssistNotifications.show_notification(target_unit, self._player_unit, assist_notification_type)
+						end
 
-					local fx_extension = ScriptUnit.extension(target_unit, "fx_system")
+						PlayerUnitVisualLoadout.equip_item_to_slot(target_unit, inventory_item, inventory_slot_name, nil, t)
+						table.clear(external_properties)
 
-					fx_extension:trigger_exclusive_gear_wwise_event(RECIEVE_GIFTED_ITEM_ALIAS, external_properties)
+						external_properties.pocketable_name = pickup_name
 
-					local voice_event_data = action_settings.voice_event_data
+						local fx_extension = ScriptUnit.extension(target_unit, "fx_system")
 
-					if voice_event_data then
-						Vo.on_demand_vo_event(player_unit, voice_event_data.voice_tag_concept, voice_event_data.voice_tag_id)
+						fx_extension:trigger_exclusive_gear_wwise_event(RECIEVE_GIFTED_ITEM_ALIAS, external_properties)
+
+						local voice_event_data = action_settings.voice_event_data
+
+						if voice_event_data then
+							Vo.on_demand_vo_event(player_unit, voice_event_data.voice_tag_concept, voice_event_data.voice_tag_id)
+						end
 					end
 				end
 			end

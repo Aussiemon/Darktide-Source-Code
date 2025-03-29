@@ -222,6 +222,9 @@ BackendManager.logout = function (self)
 		end
 
 		Backend.logout()
+
+		self._initialized = false
+		self._initialize_promise = nil
 	end
 end
 
@@ -438,7 +441,7 @@ BackendManager.title_request = function (self, path, options)
 	return promise
 end
 
-BackendManager.send_telemetry_events = function (self, data, headers, compress_body)
+BackendManager.send_telemetry_events = function (self, data, headers, compress_body, shutdown)
 	if not self._initialized then
 		return self:_not_initialized()
 	end
@@ -448,7 +451,7 @@ BackendManager.send_telemetry_events = function (self, data, headers, compress_b
 	local promise = Promise:new()
 	local operation_identifier, error = Backend.send_telemetry_events({
 		events = data,
-	}, headers, compress_body)
+	}, headers, compress_body, shutdown)
 
 	if operation_identifier then
 		self._promises[operation_identifier] = promise

@@ -2,61 +2,155 @@
 
 local WeaponTemplateResourceDependencies = require("scripts/utilities/weapon_template_resource_dependencies")
 local ItemPackage = {}
+local dynamic_data_path = {}
+local component_item_data_fields = {}
+local next = next
 
-local function _require_level_items(level_name, item_data)
+ItemPackage._require_level_items = function (level_name, item_data)
 	local num_nested_levels = LevelResource.nested_level_count(level_name)
 
 	for i = 1, num_nested_levels do
 		local nested_level_name = LevelResource.nested_level_resource_name(level_name, i)
 
-		_require_level_items(nested_level_name, item_data)
+		ItemPackage._require_level_items(nested_level_name, item_data)
 	end
 
-	local file_path = level_name .. "_item_dep"
+	local components = rawget(_G, "Components") or require("scripts/components/components")
 
-	if Application.can_get_resource("lua", file_path) then
-		local file_data = require(file_path)
+	if next(component_item_data_fields) == nil then
+		for component_name, component in pairs(components) do
+			if component.component_data then
+				for data_name, data_info in pairs(component.component_data) do
+					if data_info.filter == "item" then
+						component_item_data_fields[component_name] = component_item_data_fields[component_name] or {}
+						component_item_data_fields[component_name][data_name] = data_info.ui_type
+					end
 
-		table.merge(item_data.minion_items, file_data.minion_items)
-		table.merge(item_data.player_items, file_data.player_items)
+					if data_name == "editor_only" then
+						component_item_data_fields[component_name] = component_item_data_fields[component_name] or {}
+						component_item_data_fields[component_name][data_name] = data_info.value or false
+					end
+				end
+			end
+		end
+	end
 
-		if file_data.weapon_items then
-			table.merge(item_data.weapon_items, file_data.weapon_items)
+	local num_units = LevelResource.unit_count(level_name)
+
+	for u = 1, num_units do
+		local unit_data = LevelResource.unit_data(level_name, u)
+		local num_components = DynamicData.get_table_size(unit_data, "component_guids") or 0
+
+		for guid_i = 1, num_components do
+			local component_id = DynamicData.get(unit_data, "component_guids", guid_i)
+			local component_name = DynamicData.get(unit_data, "components", component_id, "name")
+
+			table.clear(dynamic_data_path)
+
+			dynamic_data_path[1] = "components"
+			dynamic_data_path[2] = component_id
+			dynamic_data_path[3] = "component_data"
+
+			if component_item_data_fields[component_name] then
+				for data_field, data_type in pairs(component_item_data_fields[component_name]) do
+					dynamic_data_path[4] = data_field
+
+					local editor_only_component_default = component_item_data_fields[component_name].editor_only
+
+					if data_type == "resource" then
+						ItemPackage._get_item_data_from_component(item_data, unit_data, editor_only_component_default, dynamic_data_path)
+					elseif data_type == "resource_array" then
+						ItemPackage._get_items_data_from_component(item_data, unit_data, editor_only_component_default, dynamic_data_path)
+					end
+				end
+			end
 		end
 	end
 
 	return item_data
 end
 
-ItemPackage.level_resource_dependency_packages = function (item_definitions, level_name, item_data)
-	item_data = item_data or {
-		minion_items = {},
-		player_items = {},
-		weapon_items = {},
-	}
-	item_data = _require_level_items(level_name, item_data)
+ItemPackage._get_item_data_from_component = function (items, unit_data, editor_only_component_default, path)
+	local data_field = path[#path]
 
-	local packages_to_load = {}
+	path[#path] = "editor_only"
 
-	if item_data.player_items then
-		local player_dependencies = ItemPackage.compile_items_dependencies(item_data.player_items, item_definitions)
+	local editor_only = DynamicData.get(unit_data, unpack(path)) or editor_only_component_default
 
-		table.merge(packages_to_load, player_dependencies)
+	path[#path] = data_field
+
+	if not editor_only then
+		path[#path + 1] = "resource"
+
+		local field_value = DynamicData.get(unit_data, unpack(path)) or ""
+
+		if field_value ~= "" then
+			ItemPackage._add_item_ref(items, field_value)
+		end
+
+		table.remove(path, #path)
+	end
+end
+
+ItemPackage._get_items_data_from_component = function (items, unit_data, editor_only_component_default, path)
+	local data_field = path[#path]
+
+	path[#path] = "editor_only"
+
+	local editor_only = DynamicData.get(unit_data, unpack(path)) or editor_only_component_default
+
+	path[#path] = data_field
+
+	if not editor_only then
+		local num_items = DynamicData.get_table_size(unit_data, unpack(path)) or 0
+		local i = 1
+		local found_items = 0
+
+		while found_items <= num_items do
+			path[#path + 1] = i
+			path[#path + 1] = "resource"
+
+			local field_value = DynamicData.get(unit_data, unpack(path)) or ""
+
+			if field_value ~= nil then
+				if field_value ~= "" then
+					ItemPackage._add_item_ref(items, field_value)
+				end
+
+				found_items = found_items + 1
+			end
+
+			table.remove(path, #path)
+			table.remove(path, #path)
+
+			i = i + 1
+		end
+	end
+end
+
+ItemPackage._add_item_ref = function (items, item_name)
+	local _item_table = items
+	local ref_count = _item_table[item_name]
+
+	if ref_count then
+		ref_count = ref_count + 1
+	else
+		ref_count = 1
 	end
 
-	if item_data.minion_items then
-		local minion_dependencies = ItemPackage.compile_items_dependencies(item_data.minion_items, item_definitions)
+	_item_table[item_name] = ref_count
+end
 
-		table.merge(packages_to_load, minion_dependencies)
-	end
+local item_data = {}
 
-	if item_data.weapon_items then
-		local weapon_dependencies = ItemPackage.compile_items_dependencies(item_data.weapon_items, item_definitions)
+ItemPackage.level_resource_dependency_packages = function (item_definitions, level_name)
+	table.clear(item_data)
 
-		table.merge(packages_to_load, weapon_dependencies)
-	end
+	item_data = ItemPackage._require_level_items(level_name, item_data)
 
-	return packages_to_load
+	local item_dependencies = ItemPackage.compile_items_dependencies(item_data, item_definitions)
+
+	return item_dependencies
 end
 
 ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_dependencies)

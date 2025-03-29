@@ -175,6 +175,9 @@ local action_data = {
 			jump_up_fence_5m = 0.2,
 		},
 	},
+	disable = {
+		disable_anims = {},
+	},
 	jump_across = {
 		rotation_duration = 0.1,
 		stagger_immune = true,
@@ -248,7 +251,7 @@ local action_data = {
 	},
 	melee_attack = {
 		aoe_threat_timing = 0.4,
-		ignore_blocked = true,
+		ignore_blocked = false,
 		max_z_diff = 3,
 		utility_weight = 5,
 		considerations = UtilityConsiderations.chaos_ogryn_executor_melee_attack,
@@ -341,7 +344,7 @@ local action_data = {
 		},
 	},
 	melee_attack_pommel = {
-		ignore_blocked = true,
+		ignore_blocked = false,
 		utility_weight = 0.4,
 		weapon_reach = 3.5,
 		considerations = UtilityConsiderations.melee_attack,
@@ -362,7 +365,7 @@ local action_data = {
 		damage_type = damage_types.minion_ogryn_executor_pommel,
 	},
 	melee_attack_kick = {
-		ignore_blocked = true,
+		ignore_blocked = false,
 		utility_weight = 3,
 		weapon_reach = 3.5,
 		considerations = UtilityConsiderations.melee_attack,
@@ -387,7 +390,7 @@ local action_data = {
 		damage_type = damage_types.minion_ogryn_kick,
 	},
 	melee_attack_punch = {
-		ignore_blocked = true,
+		ignore_blocked = false,
 		utility_weight = 0.4,
 		weapon_reach = 3.5,
 		considerations = UtilityConsiderations.melee_attack,
@@ -429,7 +432,7 @@ local action_data = {
 	moving_melee_attack = {
 		aoe_threat_timing = 0.4,
 		assault_vo_interval_t = 3,
-		ignore_blocked = true,
+		ignore_blocked = false,
 		move_speed = 4,
 		move_speed_variable_lerp_speed = 4,
 		move_speed_variable_name = "moving_attack_fwd_speed",
@@ -521,7 +524,7 @@ local action_data = {
 		dodge_range = 2.75,
 		dodge_width = 1.1,
 		height = 3,
-		ignore_blocked = true,
+		ignore_blocked = false,
 		move_speed = 4,
 		move_speed_variable_lerp_speed = 4,
 		move_speed_variable_name = "moving_attack_fwd_speed",

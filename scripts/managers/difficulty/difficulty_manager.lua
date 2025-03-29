@@ -3,22 +3,15 @@
 local Havoc = require("scripts/utilities/havoc")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerDifficultySettings = require("scripts/settings/difficulty/player_difficulty_settings")
+local Danger = require("scripts/utilities/danger")
 local DifficultyManager = class("DifficultyManager")
-
-DifficultyManager.init = function (self, is_server, resistance, challenge)
-	self._is_server = is_server
-	self._resistance = resistance
-	self._challenge = challenge
-	self._initial_challenge = challenge
-
-	Log.info("DifficultyManager", "Difficulty initialized to challenge %s, resistance %s", challenge, resistance)
-end
 
 DifficultyManager.init = function (self, is_server, resistance, challenge, havoc_data)
 	self._is_server = is_server
-	self._resistance = resistance
 	self._challenge = challenge
+	self._resistance = resistance
 	self._initial_challenge = challenge
+	self._initial_resistance = resistance
 	self._ammo_modifier = 1
 
 	Log.info("DifficultyManager", "Difficulty initialized to challenge %s, resistance %s", challenge, resistance)
@@ -80,8 +73,16 @@ DifficultyManager.get_resistance = function (self)
 	return self._resistance
 end
 
-DifficultyManager.get_difficulty = function (self)
+DifficultyManager.get_initial_challenge = function (self)
 	return self._initial_challenge
+end
+
+DifficultyManager.get_initial_resistance = function (self)
+	return self._initial_resistance
+end
+
+DifficultyManager.get_danger_settings = function (self)
+	return Danger.danger_by_difficulty(self._initial_challenge, self._initial_resistance)
 end
 
 DifficultyManager.get_dummy_challenge = function (self)

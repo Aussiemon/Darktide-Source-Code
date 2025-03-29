@@ -1857,7 +1857,6 @@ weapon_template.weapon_box = {
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
-	uses_weapon_special_charges = false,
 }
 weapon_template.weapon_special_class = "WeaponSpecialExplodeOnImpact"
 weapon_template.weapon_special_tweak_data = {

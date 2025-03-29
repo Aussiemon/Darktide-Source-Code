@@ -183,6 +183,66 @@ local action_data = {
 			"idle",
 		},
 	},
+	roaming = {
+		controlled_stagger = true,
+		controlled_stagger_max_distance = 6,
+		controlled_stagger_min_speed = 2,
+		default_lean_value = 1,
+		is_assaulting = true,
+		lean_variable_name = "gallop_lean",
+		left_lean_value = 0,
+		max_dot_lean_value = 0.25,
+		path_lean_node_offset = 8,
+		right_lean_value = 2,
+		rotation_speed = 10,
+		running_stagger_anim_left = "stagger_running_left",
+		running_stagger_anim_right = "stagger_running_right",
+		running_stagger_duration = 1.1666666666666667,
+		speed = 10,
+		start_move_anim_events = {
+			bwd = "run_start_bwd",
+			fwd = "run_start_fwd",
+			left = "run_start_left",
+			right = "run_start_right",
+		},
+		start_move_anim_data = {
+			run_start_fwd = {},
+			run_start_bwd = {
+				sign = 1,
+				rad = math.pi,
+			},
+			run_start_left = {
+				sign = 1,
+				rad = math.pi / 2,
+			},
+			run_start_right = {
+				sign = -1,
+				rad = math.pi / 2,
+			},
+		},
+		start_move_rotation_timings = {
+			run_start_bwd = 0.06666666666666667,
+			run_start_fwd = 0.06666666666666667,
+			run_start_left = 0.06666666666666667,
+			run_start_right = 0.06666666666666667,
+		},
+		start_rotation_durations = {
+			run_start_bwd = 0.4666666666666667,
+			run_start_fwd = 0.4666666666666667,
+			run_start_left = 0.3333333333333333,
+			run_start_right = 0.4666666666666667,
+		},
+		start_move_event_anim_speed_durations = {
+			run_start_fwd = 1.2666666666666666,
+		},
+		idle_anim_events = {
+			"idle",
+		},
+		idle_wait_timings = {
+			[1] = 3,
+			[2] = 6,
+		},
+	},
 	target_pounced = {
 		damage_frequency = 1.3333333333333333,
 		damage_start_time = 1,

@@ -49,6 +49,14 @@ BaseView.dialogue_system = function (self)
 	return nil
 end
 
+BaseView._is_event_registered = function (self, event_name)
+	if self._event_list[event_name] then
+		return true
+	end
+
+	return false
+end
+
 BaseView._register_event = function (self, event_name, function_name)
 	function_name = function_name or event_name
 
