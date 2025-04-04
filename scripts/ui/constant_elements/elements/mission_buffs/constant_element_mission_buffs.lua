@@ -15,6 +15,7 @@ local TextUtilities = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local MissionBuffs = class("ConstantElementMissionBuffs", "ConstantElementBase")
@@ -346,12 +347,7 @@ MissionBuffs._are_animations_running = function (self)
 	return buff_anim or text_anim
 end
 
-MissionBuffs._should_force_inactivate = function (self)
-	if self._states.view == "inactive" then
-		return false
-	end
-
-	local not_in_mission = self._current_game_mode ~= "survival"
+MissionBuffs._is_player_alive = function (self)
 	local player
 
 	if Managers.connection:is_initialized() then
@@ -361,9 +357,24 @@ MissionBuffs._should_force_inactivate = function (self)
 		player = Managers.player:player(peer_id, local_player_id)
 	end
 
+	local unit = player and player.player_unit
+	local unit_data_extension = unit and ScriptUnit.extension(unit, "unit_data_system")
+	local is_spectating = unit_data_extension and PlayerUnitStatus.is_hogtied(unit_data_extension:read_component("character_state"))
 	local player_not_alive = not player or player and not player:unit_is_alive()
 
-	return not_in_mission or player_not_alive
+	return not player_not_alive and not is_spectating
+end
+
+MissionBuffs._is_player_in_mission = function (self)
+	return self._current_game_mode == "survival"
+end
+
+MissionBuffs._should_force_inactivate = function (self)
+	if self._states.view == "inactive" then
+		return false
+	end
+
+	return not self:_is_player_in_mission() and not self:_is_player_alive()
 end
 
 MissionBuffs._check_cutscene_state = function (self)
@@ -479,7 +490,7 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 			self._states.text = "active"
 		end
 	elseif self._states.text == "active" then
-		if not self._texts_timer or (self._context.is_buff_family or self._context.wave_num <= 0) and self._context.buff_chosen then
+		if not self._texts_timer or self._context.is_buff_family and not self._context.is_catchup and self._context.buff_chosen then
 			self._texts_timer = nil
 
 			self:_reset_text_animations()
@@ -648,6 +659,10 @@ MissionBuffs._update_buffs_state = function (self, dt, ui_renderer)
 			self._states.buffs = "inactive"
 		end
 	elseif buffs_state == "force_inactive" then
+		if self._context.is_choice and not self._context.buff_chosen then
+			self:_force_choice_resolution()
+		end
+
 		self:_reset_text_animations()
 
 		if self._cursor_pushed then
@@ -725,7 +740,6 @@ end
 MissionBuffs.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	if self._queue_context[1] and table.is_empty(self._context) then
 		self._context = table.clone(self._queue_context[1])
-		self._context.is_choice = self._context.buffs and #self._context.buffs > 1
 		self._texts_timer = self._context.texts_timer
 		self._buffs_timer = self._context.buffs_timer
 		self._update_view = true
@@ -872,8 +886,6 @@ MissionBuffs._update_presentation = function (self, context)
 
 	local timer = context and context.timer or DEFAULT_TIMER
 	local num_waves_per_island = HordesModeSettings.waves_per_island
-	local is_before_first_wave_start = context.wave_num == nil
-	local is_after_last_wave_end = context.state == "completed" and num_waves_per_island <= context.wave_num
 	local queue_context = {}
 
 	if buffs_data and #buffs_data == 1 then
@@ -882,6 +894,10 @@ MissionBuffs._update_presentation = function (self, context)
 		queue_context.buffs_timer = timer
 	end
 
+	local is_before_first_wave_start = context.wave_num == nil
+	local is_after_last_wave_end = context.state == "completed" and num_waves_per_island <= context.wave_num
+	local is_choice = context.buffs and #context.buffs > 1
+	local is_catchup = context.state == "completed" and self._previous_context_revceived_state == context.state
 	local is_wave_title
 	local pre_queue_context = {}
 
@@ -890,7 +906,12 @@ MissionBuffs._update_presentation = function (self, context)
 			wave = context.wave_num or 1,
 		})
 		is_wave_title = true
-		queue_context.title = Localize("loc_horde_buff_big_pick")
+
+		if context.is_buff_family then
+			queue_context.title = Localize("loc_horde_buff_family_pick")
+		else
+			queue_context.title = Localize("loc_horde_buff_big_pick")
+		end
 	elseif context.wave_num and context.state == "completed" then
 		pre_queue_context.title = Localize("loc_horde_wave_completed", true, {
 			wave = context.wave_num or 1,
@@ -905,10 +926,10 @@ MissionBuffs._update_presentation = function (self, context)
 		queue_context.title = Localize("loc_horde_buff_family_pick")
 	end
 
-	if context and buffs_data and #buffs_data > 1 and (context.is_buff_family or is_before_first_wave_start) then
+	if context and buffs_data and #buffs_data > 1 and is_before_first_wave_start then
 		queue_context.sub_title = Localize("loc_horde_buff_family_time")
 		queue_context.use_timer = true
-	elseif not is_before_first_wave_start and not is_after_last_wave_end and timer > DEFAULT_TIMER then
+	elseif not is_before_first_wave_start and not is_after_last_wave_end and timer > DEFAULT_TIMER or is_catchup then
 		queue_context.sub_title = Localize("loc_horde_buff_big_time", true, {
 			wave = context.wave_num and context.wave_num + 1 or 1,
 		})
@@ -930,32 +951,26 @@ MissionBuffs._update_presentation = function (self, context)
 	queue_context.texts_timer = timer
 	queue_context.wave_num = context.wave_num or 0
 	queue_context.state = context.state
+	queue_context.is_choice = is_choice
+	queue_context.is_catchup = is_catchup
 
 	local queues_to_add = {}
-	local add_pre_queue = not table.is_empty(pre_queue_context)
+	local add_pre_queue = not table.is_empty(pre_queue_context) and self._previous_context_revceived_state ~= context.state and context.state == "completed"
 	local add_queue = not table.is_empty(queue_context)
 
-	if not table.is_empty(self._context) and queue_context.buffs and #queue_context.buffs > 1 and self._texts_timer then
-		self._texts_timer = queue_context.texts_timer
-		self._buffs_timer = queue_context.texts_timer
-		self._context.buffs = queue_context.buffs
-		self._context.is_choice = true
-		self._context.buff_chosen = false
-		self._context.use_timer = queue_context.use_timer
-		self._context.title = queue_context.title
-		self._context.sub_title = queue_context.sub_title
-		self._context.is_wave_title = false
-		self._context.is_catchup = true
-		self._update_view = true
+	if is_catchup then
+		if context.is_buff_family or table.is_empty(self._context) then
+			-- Nothing
+		elseif not table.is_empty(self._context) then
+			self._buffs_timer = nil
+			self._texts_timer = nil
+		end
 
-		Log.info("ConstantElementMissionBuffs", "Update view bypassing queue. ItemsLeftInQueue[%d] | WaveNum[%d] | HasBuffs[%s] | Is Choice[%s]", self._queue_context and #self._queue_context or 0, self._context.wave_num or 0, self._context.is_choice and "Y" or "N", self._context.buffs and "Y" or "N")
+		self._queue_context = {}
 
 		if self._context.buffs then
 			Log.info("ConstantElementMissionBuffs", "Buffs in context: Buff1[%s] | Buff2[%s] | Buff2[%s]", self._context.buffs[1] and self._context.buffs[1].buff_name, self._context.buffs[2] and self._context.buffs[2].buff_name, self._context.buffs[3] and self._context.buffs[3].buff_name)
 		end
-
-		add_pre_queue = false
-		add_queue = false
 	elseif not table.is_empty(self._context) and not self._context.is_choice then
 		self._buffs_timer = nil
 		self._texts_timer = nil
@@ -977,6 +992,8 @@ MissionBuffs._update_presentation = function (self, context)
 
 		Log.info("ConstantElementMissionBuffs", "Add context to queue. WaveNum[%d] | Buffs[%d] | IsFamilyChoice[%s]", queue_context.wave_num or 0, queue_context.buffs and #queue_context.buffs or 0, queue_context.is_buff_family and "Y" or "N")
 	end
+
+	self._previous_context_revceived_state = context.state
 end
 
 MissionBuffs._force_choice_resolution = function (self)
@@ -1025,9 +1042,7 @@ MissionBuffs._handle_choice_resolution = function (self, choice_index, is_random
 		widget.content.hotspot.disabled = true
 	end
 
-	if self._context.is_catchup then
-		self._context.title = nil
-	end
+	self._context.title = nil
 
 	Managers.event:trigger("event_surival_mode_buff_choice", choice_index)
 end
@@ -1128,7 +1143,7 @@ MissionBuffs.should_update = function (self)
 end
 
 MissionBuffs.should_draw = function (self)
-	return not self._cutscene_fade and self._is_visible and self._states.view ~= "inactive"
+	return not self._cutscene_fade and self._is_visible and self._states.view ~= "inactive" and self:_is_player_in_mission() and self:_is_player_alive()
 end
 
 return MissionBuffs

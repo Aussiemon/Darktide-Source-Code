@@ -14,17 +14,6 @@ local math_min = math.min
 local math_max = math.max
 local math_ease_out_exp = math.ease_out_exp
 local math_pi = math.pi
-
-local function _input_threshold(input_axis, threshold)
-	local length = Vector3.length(input_axis)
-
-	if length < threshold then
-		input_axis.x = 0
-		input_axis.y = 0
-		input_axis.z = 0
-	end
-end
-
 local min, max = -100, 100
 
 local function _k_value(k_min, k_max, strength)
@@ -139,8 +128,6 @@ InputFilters.scale_vector3 = {
 
 		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
 
-		_input_threshold(val, settings[filter_data.input_threshold] or 0)
-
 		return val * scale
 	end,
 	edit_types = {
@@ -170,8 +157,6 @@ InputFilters.scale_vector3_xy_accelerated_x = {
 		local val = input_service:get(filter_data.input_mappings)
 
 		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
-
-		_input_threshold(val, settings[filter_data.input_threshold] or 0)
 
 		local mean_dt = Managers.time:mean_dt()
 		local time = Application.time_since_launch()

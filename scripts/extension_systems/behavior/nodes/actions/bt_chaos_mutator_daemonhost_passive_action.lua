@@ -344,6 +344,10 @@ BtChaosMutatorDaemonhostPassiveAction._update = function (self, unit, breed, bla
 			self:_kill(scratchpad, action_data, unit)
 		end
 
+		if Managers.state.terror_event:num_active_events() > 0 then
+			return
+		end
+
 		_setup_progress_bar(unit, breed, blackboard, scratchpad, action_data, t)
 
 		local half_time_multiplier = action_data.half_time_multiplier
@@ -465,7 +469,16 @@ BtChaosMutatorDaemonhostPassiveAction._get_closest_player = function (self, unit
 		return
 	end
 
-	local _, ahead_travel_distance = Managers.state.main_path:ahead_unit(1)
+	local ahead_unit, ahead_travel_distance = Managers.state.main_path:ahead_unit(1)
+
+	if not ahead_travel_distance then
+		return false
+	end
+
+	if Managers.state.extension:system("perception_system"):is_untargetable(ahead_unit) then
+		return false
+	end
+
 	local nav_mesh_position = NavQueries.position_on_mesh(nav_world, POSITION_LOOKUP[unit], NAV_MESH_ABOVE, NAV_MESH_BELOW)
 	local _, travel_distance = MainPathQueries.closest_position(nav_mesh_position)
 	local damage_override = self:_check_damage(scratchpad)

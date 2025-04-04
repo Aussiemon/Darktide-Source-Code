@@ -452,6 +452,7 @@ end
 GameModeSurvival.on_mcguffin_picked_up = function (self)
 	if self._is_server then
 		self:_horde_game_completed_server()
+		self:_give_game_end_damage_immunity_buff()
 	end
 end
 
@@ -557,6 +558,16 @@ GameModeSurvival._handle_game_end_server = function (self, game_won)
 			Managers.telemetry_events:player_hordes_mode_ended(player, game_won, self._completition_time, self._current_island or "NONE", total_waves_completed or 0)
 		end
 	end
+end
+
+GameModeSurvival._give_game_end_damage_immunity_buff = function (self)
+	local players = Managers.player:human_players()
+
+	for _, player in pairs(players) do
+		self._mission_buffs_manager:give_player_silent_buff_not_saved_to_player_data(player, "hordes_buff_damage_immunity_after_game_end")
+	end
+
+	self._game_end_immunity_buff_given_to_players = true
 end
 
 local TWIN_BREEDS = {
@@ -776,6 +787,11 @@ GameModeSurvival.on_player_unit_spawn = function (self, player, unit, is_respawn
 
 	if self._is_server then
 		Managers.event:trigger("mission_buffs_event_player_spawned", player, is_respawn)
+
+		if self._game_end_immunity_buff_given_to_players then
+			self._mission_buffs_manager:give_player_silent_buff_not_saved_to_player_data(player, "hordes_buff_damage_immunity_after_game_end")
+		end
+
 		self:_set_ready_time_to_spawn(player, nil)
 
 		if is_respawn then

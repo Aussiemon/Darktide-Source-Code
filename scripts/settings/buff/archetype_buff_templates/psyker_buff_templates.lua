@@ -14,6 +14,7 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
+local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
@@ -1046,6 +1047,7 @@ templates.psyker_overcharge_stance = {
 	keywords = {
 		keywords.psyker_overcharge,
 		keywords.suppression_immune,
+		keywords.psychic_fortress,
 	},
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -2573,6 +2575,14 @@ templates.psyker_stun_effect = {
 	},
 	interval = talent_settings_3.grenade.stun_interval,
 	duration = talent_settings_3.grenade.duration,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
 	interval_func = function (template_data, template_context, template)
 		local is_server = template_context.is_server
 
@@ -2581,8 +2591,9 @@ templates.psyker_stun_effect = {
 		end
 
 		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
 
-		if HEALTH_ALIVE[unit] then
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
 			local damage_template = DamageProfileTemplates.psyker_stun
 			local owner_unit = template_context.owner_unit
 			local attack_direction
@@ -3302,6 +3313,14 @@ templates.psyker_reload_speed_warp = {
 		template_data.warp_charge_component = warp_charge_component
 		template_data.inventory_slot_secondary_component = unit_data_extension:read_component("slot_secondary")
 	end,
+	specific_check_proc_funcs = {
+		[proc_events.on_reload_start] = function (params, template_data)
+			return true
+		end,
+		[proc_events.on_reload] = function (params, template_data)
+			return template_data.warp_charge_component.current_percentage <= talent_settings.reload_speed_warp.threshold
+		end,
+	},
 	specific_proc_func = {
 		on_reload_start = function (params, template_data, template_context, t)
 			local inventory_slot_secondary_component = template_data.inventory_slot_secondary_component

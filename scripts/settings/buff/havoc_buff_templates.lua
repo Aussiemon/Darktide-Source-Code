@@ -673,6 +673,13 @@ local function _healed_by_the_garden(template_data, template_context)
 	end
 end
 
+templates.blessed_by_the_garden_immunity = {
+	class_name = "buff",
+	predicted = false,
+	keywords = {
+		buff_keywords.havoc_gardens_embrace,
+	},
+}
 templates.havoc_encroaching_garden = {
 	class_name = "buff",
 	predicted = false,
@@ -733,6 +740,8 @@ templates.blessed_by_the_garden = {
 	duration = 2,
 	interval = 1,
 	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
 	refresh_duration_on_stack = true,
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then

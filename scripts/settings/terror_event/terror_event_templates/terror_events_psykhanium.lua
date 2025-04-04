@@ -284,7 +284,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -406,7 +406,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -539,7 +539,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -658,7 +658,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -706,7 +706,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -827,7 +827,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -875,7 +875,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -973,7 +973,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -1016,7 +1016,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 35,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -1497,7 +1497,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -1651,7 +1651,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -1779,7 +1779,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 50,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2093,7 +2093,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2118,7 +2118,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2306,7 +2306,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 25,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2577,7 +2577,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 35,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2586,7 +2586,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 13,
 				limit_spawners = 4,
-				max_breed_amount = 20,
+				max_breed_amount = 30,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -2610,7 +2610,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 1,
-				max_breed_amount = 3,
+				max_breed_amount = 5,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -2659,7 +2659,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 15,
 				limit_spawners = 4,
-				max_breed_amount = 25,
+				max_breed_amount = 35,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -2671,7 +2671,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2696,7 +2696,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2705,7 +2705,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 13,
 				limit_spawners = 4,
-				max_breed_amount = 20,
+				max_breed_amount = 40,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -2798,7 +2798,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 18,
-				max_breed_amount = 25,
+				max_breed_amount = 60,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -2815,7 +2815,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
@@ -2823,7 +2823,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 25,
-				max_breed_amount = 30,
+				max_breed_amount = 60,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -2882,7 +2882,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2907,7 +2907,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -2926,7 +2926,7 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 5,
+				breed_amount = 7,
 				breed_name = "cultist_mutant",
 				spawner_group = "spawner_wave_horde",
 			},
@@ -2951,7 +2951,7 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 5,
+				breed_amount = 7,
 				breed_name = "cultist_assault",
 				spawner_group = "spawner_wave_horde",
 			},
@@ -2995,7 +2995,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 15,
 				limit_spawners = 4,
-				max_breed_amount = 25,
+				max_breed_amount = 40,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -3032,7 +3032,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 35,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -3063,7 +3063,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 1,
-				max_breed_amount = 3,
+				max_breed_amount = 5,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3132,7 +3132,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -3157,7 +3157,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -3165,7 +3165,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 10,
-				max_breed_amount = 25,
+				max_breed_amount = 55,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3255,7 +3255,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 6,
-				max_breed_amount = 11,
+				max_breed_amount = 14,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3267,7 +3267,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 10,
-				max_breed_amount = 20,
+				max_breed_amount = 25,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3302,7 +3302,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 5,
 				limit_spawners = 4,
-				max_breed_amount = 6,
+				max_breed_amount = 8,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -3513,7 +3513,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 12,
 				max_breed_amount = 12,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -3542,7 +3542,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 12,
 				max_breed_amount = 12,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -3583,7 +3583,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 12,
 				max_breed_amount = 12,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -3655,7 +3655,7 @@ local template = {
 		horde_wave_10_a = {
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 35,
 				max_breed_amount = 65,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -3685,14 +3685,14 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 50,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 50,
+				breed_amount = 45,
 				max_breed_amount = 65,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -3711,7 +3711,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 2,
+				max_breed_amount = 4,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3722,14 +3722,14 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 70,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 50,
+				breed_amount = 45,
 				max_breed_amount = 65,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -3748,7 +3748,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 2,
+				max_breed_amount = 4,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3795,7 +3795,7 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 30,
+				breed_amount = 20,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 30,
 				spawner_group = "spawner_wave_horde",
@@ -3836,14 +3836,14 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 40,
+				breed_amount = 35,
 				breed_name = "chaos_mutated_poxwalker",
 				max_breed_amount = 50,
 				spawner_group = "spawner_wave_horde",
 			},
 			{
 				"continue_when",
-				duration = 15,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -3851,7 +3851,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 3,
+				max_breed_amount = 4,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3875,7 +3875,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 5,
-				max_breed_amount = 6,
+				max_breed_amount = 8,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -3889,7 +3889,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 1,
 				limit_spawners = 4,
-				max_breed_amount = 6,
+				max_breed_amount = 8,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -3960,7 +3960,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
@@ -3968,7 +3968,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 50,
-				max_breed_amount = 50,
+				max_breed_amount = 60,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4001,7 +4001,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
@@ -4009,7 +4009,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 50,
-				max_breed_amount = 50,
+				max_breed_amount = 60,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4020,8 +4020,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
-				max_breed_amount = 14,
+				breed_amount = 15,
+				max_breed_amount = 15,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4084,7 +4084,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 85,
+				breed_amount = 50,
 				max_breed_amount = 85,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -4096,7 +4096,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -4111,7 +4111,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 2,
+				breed_amount = 3,
 				max_breed_amount = 3,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -4123,7 +4123,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 3,
+				breed_amount = 1,
 				max_breed_amount = 3,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -4149,7 +4149,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 2,
 				limit_spawners = 4,
-				max_breed_amount = 5,
+				max_breed_amount = 8,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -4244,7 +4244,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 3,
+				max_breed_amount = 4,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4256,7 +4256,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 3,
-				max_breed_amount = 4,
+				max_breed_amount = 6,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4337,9 +4337,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 15,
 				limit_spawners = 4,
-				max_breed_amount = 12,
+				max_breed_amount = 30,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -4380,9 +4380,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 15,
 				limit_spawners = 4,
-				max_breed_amount = 12,
+				max_breed_amount = 30,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -4423,9 +4423,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 15,
 				limit_spawners = 4,
-				max_breed_amount = 12,
+				max_breed_amount = 15,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -4465,7 +4465,7 @@ local template = {
 		horde_wave_12_a = {
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				limit_spawners = 4,
 				max_breed_amount = 45,
 				points = 1000,
@@ -4523,7 +4523,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 2,
+				max_breed_amount = 4,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4562,7 +4562,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
@@ -4581,7 +4581,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 40,
+				breed_amount = 20,
 				max_breed_amount = 40,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -4611,7 +4611,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				limit_spawners = 4,
 				max_breed_amount = 30,
 				points = 1000,
@@ -4650,7 +4650,7 @@ local template = {
 				breed_amount = 40,
 				max_breed_amount = 70,
 				points = 1000,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
 						"horde",
@@ -4683,7 +4683,7 @@ local template = {
 		horde_wave_12_b = {
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 30,
 				limit_spawners = 4,
 				max_breed_amount = 55,
 				points = 1000,
@@ -4713,7 +4713,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -4753,7 +4753,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 4,
-				max_breed_amount = 4,
+				max_breed_amount = 6,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4767,7 +4767,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 2,
 				limit_spawners = 4,
-				max_breed_amount = 4,
+				max_breed_amount = 6,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -4780,7 +4780,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
@@ -4835,9 +4835,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				limit_spawners = 4,
-				max_breed_amount = 30,
+				max_breed_amount = 40,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_horde",
@@ -4919,7 +4919,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -4947,7 +4947,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 2,
+				max_breed_amount = 3,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -4986,7 +4986,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
@@ -5009,7 +5009,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 5,
-				max_breed_amount = 15,
+				max_breed_amount = 20,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -5036,7 +5036,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 5,
-				max_breed_amount = 15,
+				max_breed_amount = 20,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
 				breed_tags = {
@@ -5051,7 +5051,7 @@ local template = {
 				breed_amount = 40,
 				max_breed_amount = 70,
 				points = 1000,
-				spawner_group = "spawner_wave_rooftops_horde",
+				spawner_group = "spawner_wave_horde",
 				breed_tags = {
 					{
 						"horde",
@@ -5078,7 +5078,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 50,
+				breed_amount = 40,
 				max_breed_amount = 70,
 				points = 1000,
 				spawner_group = "spawner_wave_horde",
@@ -5190,7 +5190,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5309,7 +5309,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5384,7 +5384,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5432,7 +5432,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5566,7 +5566,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5681,7 +5681,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5773,7 +5773,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5848,7 +5848,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 15,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -5881,7 +5881,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6225,7 +6225,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6285,7 +6285,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6373,7 +6373,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6419,7 +6419,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6507,7 +6507,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6610,7 +6610,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6656,7 +6656,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6730,7 +6730,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6787,7 +6787,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6877,7 +6877,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6902,7 +6902,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -6979,7 +6979,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 25,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -7373,7 +7373,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 20,
-				max_breed_amount = 25,
+				max_breed_amount = 40,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7390,7 +7390,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 35,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -7421,7 +7421,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 3,
-				max_breed_amount = 3,
+				max_breed_amount = 5,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7498,7 +7498,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 18,
-				max_breed_amount = 25,
+				max_breed_amount = 30,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7515,7 +7515,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
@@ -7523,7 +7523,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 25,
-				max_breed_amount = 30,
+				max_breed_amount = 40,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7576,7 +7576,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				max_breed_amount = 30,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -7632,7 +7632,7 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 8,
+				breed_amount = 9,
 				breed_name = "chaos_poxwalker_bomber",
 				spawner_group = "spawner_wave_rooftops_horde",
 			},
@@ -7646,7 +7646,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 3,
-				max_breed_amount = 3,
+				max_breed_amount = 5,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7681,7 +7681,7 @@ local template = {
 		horde_wave_rooftops_8_a = {
 			{
 				"spawn_by_points",
-				breed_amount = 50,
+				breed_amount = 40,
 				max_breed_amount = 65,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -7699,7 +7699,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 50,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
@@ -7707,7 +7707,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 15,
-				max_breed_amount = 25,
+				max_breed_amount = 40,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7724,7 +7724,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 70,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 2
 				end,
@@ -7732,7 +7732,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 10,
-				max_breed_amount = 25,
+				max_breed_amount = 40,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7807,7 +7807,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -7826,13 +7826,13 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 8,
+				breed_amount = 9,
 				breed_name = "cultist_flamer",
 				spawner_group = "spawner_wave_rooftops_horde",
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
@@ -7840,7 +7840,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 10,
-				max_breed_amount = 25,
+				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -7893,7 +7893,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 35,
+				breed_amount = 30,
 				limit_spawners = 4,
 				max_breed_amount = 40,
 				points = 1000,
@@ -7914,7 +7914,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 50,
+				breed_amount = 40,
 				max_breed_amount = 65,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -7928,7 +7928,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 13,
 				limit_spawners = 4,
-				max_breed_amount = 20,
+				max_breed_amount = 40,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8038,7 +8038,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 2,
+				max_breed_amount = 4,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -8365,7 +8365,7 @@ local template = {
 		horde_wave_rooftops_10_a = {
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				max_breed_amount = 75,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8383,14 +8383,14 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 1
 				end,
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				max_breed_amount = 75,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8402,7 +8402,7 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 8,
+				breed_amount = 9,
 				breed_name = "chaos_hound",
 				spawner_group = "spawner_wave_rooftops_horde",
 			},
@@ -8452,7 +8452,7 @@ local template = {
 			},
 			{
 				"spawn_by_breed_name",
-				breed_amount = 9,
+				breed_amount = 12,
 				breed_name = "cultist_assault",
 				spawner_group = "spawner_wave_rooftops_horde",
 			},
@@ -8512,7 +8512,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8566,7 +8566,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 2,
 				limit_spawners = 4,
-				max_breed_amount = 4,
+				max_breed_amount = 6,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8579,7 +8579,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
@@ -8598,8 +8598,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
-				max_breed_amount = 40,
+				breed_amount = 20,
+				max_breed_amount = 50,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -8614,7 +8614,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 2,
-				max_breed_amount = 6,
+				max_breed_amount = 8,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -8694,7 +8694,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8748,7 +8748,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 1,
 				limit_spawners = 4,
-				max_breed_amount = 4,
+				max_breed_amount = 6,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8761,7 +8761,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 40,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
@@ -8780,7 +8780,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 40,
+				breed_amount = 20,
 				max_breed_amount = 40,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -8912,7 +8912,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 4,
-				max_breed_amount = 10,
+				max_breed_amount = 12,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -8994,7 +8994,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 25,
-				max_breed_amount = 65,
+				max_breed_amount = 85,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -9047,7 +9047,7 @@ local template = {
 				"spawn_by_points",
 				breed_amount = 1,
 				limit_spawners = 4,
-				max_breed_amount = 5,
+				max_breed_amount = 7,
 				points = 1000,
 				proximity_spawners = true,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -9102,7 +9102,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				max_breed_amount = 25,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -9143,8 +9143,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
-				max_breed_amount = 20,
+				breed_amount = 20,
+				max_breed_amount = 30,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -9184,8 +9184,8 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
-				max_breed_amount = 25,
+				breed_amount = 20,
+				max_breed_amount = 30,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -9252,7 +9252,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -9268,7 +9268,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 3,
-				max_breed_amount = 5,
+				max_breed_amount = 7,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -9317,7 +9317,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
@@ -9382,7 +9382,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				limit_spawners = 4,
 				max_breed_amount = 30,
 				points = 1000,
@@ -9464,7 +9464,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -9480,7 +9480,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 3,
-				max_breed_amount = 4,
+				max_breed_amount = 6,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -9529,14 +9529,14 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 30,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 40,
+				breed_amount = 20,
 				max_breed_amount = 60,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -9593,7 +9593,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 15,
 				limit_spawners = 4,
 				max_breed_amount = 30,
 				points = 1000,
@@ -9675,7 +9675,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 45,
+				breed_amount = 20,
 				max_breed_amount = 45,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
@@ -9691,7 +9691,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 3,
-				max_breed_amount = 4,
+				max_breed_amount = 6,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -9740,7 +9740,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 60,
+				duration = 20,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
 				end,
@@ -9763,7 +9763,7 @@ local template = {
 			{
 				"spawn_by_points",
 				breed_amount = 10,
-				max_breed_amount = 15,
+				max_breed_amount = 25,
 				points = 1000,
 				spawner_group = "spawner_wave_rooftops_horde",
 				breed_tags = {
@@ -9799,7 +9799,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				breed_amount = 30,
+				breed_amount = 20,
 				limit_spawners = 4,
 				max_breed_amount = 35,
 				points = 1000,

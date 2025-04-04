@@ -323,8 +323,6 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, i
 			else
 				self:_sort_grid_layout(nil, filtered_layout)
 			end
-
-			self:_cb_on_present()
 		end)
 	end
 end

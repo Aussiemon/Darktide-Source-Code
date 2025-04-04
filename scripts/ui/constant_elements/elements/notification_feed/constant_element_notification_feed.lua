@@ -522,9 +522,11 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		elseif item_type == "CHARACTER_INSIGNIA" then
 			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "insignia"
-		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "WEAPON_TRINKET" then
-			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
-			icon_size = "large_weapon"
+		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" then
+			-- Nothing
+		elseif item_type == "WEAPON_TRINKET" then
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
+			icon_size = "large_item"
 		elseif item_type == "WEAPON_SKIN" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "weapon_skin"
@@ -1014,9 +1016,12 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		elseif item_type == "CHARACTER_INSIGNIA" then
 			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "insignia"
-		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "WEAPON_TRINKET" then
+		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
-			icon_size = "large_weapon"
+			icon_size = "large_item"
+		elseif item_type == "WEAPON_TRINKET" then
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
+			icon_size = "trinket"
 		elseif item_type == "WEAPON_SKIN" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "weapon_skin"

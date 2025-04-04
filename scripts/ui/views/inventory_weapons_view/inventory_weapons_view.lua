@@ -247,7 +247,15 @@ InventoryWeaponsView.cb_on_discard_pressed = function (self)
 				widget.content.multi_selected = false
 			end
 
-			local index = self._item_grid:first_interactable_grid_index()
+			local index
+
+			if self._preselected_item then
+				index = self:item_grid_index(self._preselected_item)
+				self._preselected_item = nil
+			end
+
+			index = index or self._item_grid:first_interactable_grid_index()
+
 			local widget = index and self:widget_by_index(index)
 
 			if widget then
@@ -307,6 +315,8 @@ InventoryWeaponsView.cb_on_discard_pressed = function (self)
 
 			table.sort(new_layout, selected_sort_function)
 		end
+
+		self._preselected_item = self._previewed_item
 
 		self:present_grid_layout(new_layout, function ()
 			self:_stop_previewing()

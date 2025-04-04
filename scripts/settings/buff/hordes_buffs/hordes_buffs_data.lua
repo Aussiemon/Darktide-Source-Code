@@ -14,9 +14,16 @@ local function _create_entry(path, is_family_buff)
 	end
 end
 
+hordes_buffs_data.hordes_buff_damage_immunity_after_game_end = {
+	description = "",
+	icon = "",
+	is_family_buff = false,
+	title = "",
+}
 hordes_buffs_data.hordes_buff_ogryn_basic_box_spawns_cluster = {
 	description = "",
 	icon = "",
+	is_family_buff = false,
 	title = "",
 }
 

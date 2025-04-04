@@ -167,6 +167,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 					default_packs.none,
+					default_packs.none,
 				},
 			},
 			poxwalkers = {
@@ -199,6 +200,7 @@ local roamer_pacing_template = {
 					},
 				},
 				packs = {
+					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
@@ -308,6 +310,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 					default_packs.none,
+					default_packs.none,
 				},
 			},
 			poxwalkers = {
@@ -340,6 +343,7 @@ local roamer_pacing_template = {
 					},
 				},
 				packs = {
+					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
@@ -451,6 +455,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 					default_packs.none,
+					default_packs.none,
 				},
 				limits = RoamerLimits.none,
 			},
@@ -484,6 +489,7 @@ local roamer_pacing_template = {
 					},
 				},
 				packs = {
+					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
@@ -595,6 +601,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 					default_packs.none,
+					default_packs.none,
 				},
 				limits = RoamerLimits.none,
 			},
@@ -628,6 +635,7 @@ local roamer_pacing_template = {
 					},
 				},
 				packs = {
+					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
@@ -740,6 +748,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 					default_packs.none,
+					default_packs.none,
 				},
 				limits = RoamerLimits.none,
 			},
@@ -773,6 +782,7 @@ local roamer_pacing_template = {
 					},
 				},
 				packs = {
+					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,
 					default_packs.encampment,

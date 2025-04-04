@@ -122,6 +122,10 @@ MissionBuffsManager.check_if_all_players_chosen_family = function (self)
 	self._mission_buffs_handler:check_if_all_players_chosen_family()
 end
 
+MissionBuffsManager.does_player_have_buff_saved = function (self, player, buff_name)
+	return self._mission_buffs_handler:does_player_have_buff_saved(player, buff_name)
+end
+
 MissionBuffsManager.try_show_new_ui_notification = function (self)
 	self._mission_buffs_ui_manager:try_show_new_ui_notification()
 end
@@ -156,6 +160,10 @@ MissionBuffsManager.cb_backend_buffs_to_exclude_failed = function (self, err)
 	self._backend_buffs_to_exclude = {}
 
 	self:_manage_delayed_data_initialization_for_players()
+end
+
+MissionBuffsManager.give_player_silent_buff_not_saved_to_player_data = function (self, player, buff_name)
+	self._mission_buffs_handler:give_buff_to_player(player, buff_name, true, true)
 end
 
 MissionBuffsManager.check_catchup_for_new_player = function (self, player, override_waves_completed_num)

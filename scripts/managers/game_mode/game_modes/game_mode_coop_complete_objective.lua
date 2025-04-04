@@ -583,9 +583,42 @@ GameModeCoopCompleteObjective.hot_join_sync = function (self, sender, channel)
 		if order_owner_id then
 			local order_joiner_id = sender_account_id
 
-			Managers.backend.interfaces.orders:join_personal_mission(order_owner_id, mission_id, order_joiner_id)
+			self:_queue_join_personal_mission(order_owner_id, mission_id, order_joiner_id)
 		end
 	end)
+end
+
+GameModeCoopCompleteObjective._queue_join_personal_mission = function (self, order_owner_id, mission_id, order_joiner_id)
+	if not self._join_personal_mission_queue then
+		self._join_personal_mission_queue = {}
+	end
+
+	local queue = self._join_personal_mission_queue
+	local new_entry = {
+		order_owner_id = order_owner_id,
+		mission_id = mission_id,
+		order_joiner_id = order_joiner_id,
+	}
+
+	table.insert(queue, new_entry)
+
+	if not self._join_personal_mission_queue_active then
+		self._join_personal_mission_queue_active = true
+
+		self:_next_join_personal_mission()
+	end
+end
+
+GameModeCoopCompleteObjective._next_join_personal_mission = function (self)
+	local queue = self._join_personal_mission_queue
+
+	if table.is_empty(queue) then
+		self._join_personal_mission_queue_active = false
+	else
+		local args = table.remove(queue)
+
+		Managers.backend.interfaces.orders:join_personal_mission(args.order_owner_id, args.mission_id, args.order_joiner_id):next(self:_next_join_personal_mission())
+	end
 end
 
 implements(GameModeCoopCompleteObjective, GameModeBase.INTERFACE)

@@ -414,14 +414,6 @@ MutatorMonsterSpawnerSettings.spawn_locations = {
 			section = 3,
 			position = Vector3Box(-220, 103, -1),
 		},
-		{
-			section = 3,
-			position = Vector3Box(-268, 142, 69),
-		},
-		{
-			section = 3,
-			position = Vector3Box(-281, 101, 69),
-		},
 	},
 	lm_scavenge = {
 		{
@@ -650,10 +642,6 @@ MutatorMonsterSpawnerSettings.spawn_locations = {
 		},
 		{
 			section = 2,
-			position = Vector3Box(135, -149, 3),
-		},
-		{
-			section = 2,
 			position = Vector3Box(111, -148, 4),
 		},
 		{
@@ -716,7 +704,7 @@ MutatorMonsterSpawnerSettings.spawn_locations = {
 		},
 		{
 			section = 3,
-			position = Vector3Box(-397, -61, 17),
+			position = Vector3Box(-396.378, -59.0339, 17.65),
 		},
 	},
 	lm_cooling = {
@@ -818,10 +806,6 @@ MutatorMonsterSpawnerSettings.spawn_locations = {
 		},
 		{
 			section = 1,
-			position = Vector3Box(177, 3, -9),
-		},
-		{
-			section = 1,
 			position = Vector3Box(120, -24, -10),
 		},
 		{
@@ -830,7 +814,7 @@ MutatorMonsterSpawnerSettings.spawn_locations = {
 		},
 		{
 			section = 2,
-			position = Vector3Box(4, -18, -23),
+			position = Vector3Box(-51, -73, -22),
 		},
 		{
 			section = 2,

@@ -22,6 +22,7 @@ local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
+local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shared_buff_functions")
@@ -105,6 +106,16 @@ table.make_unique(templates)
 
 local _compute_fire_pulse, _give_passive_grenade_replenishment_buff, _pull_enemies_towards_position
 
+templates.hordes_buff_damage_immunity_after_game_end = {
+	class_name = "buff",
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	buff_category = buff_categories.hordes_sub_buff,
+	keywords = {
+		buff_keywords.invulnerable,
+	},
+}
 templates.hordes_buff_max_grenades_increase = {
 	class_name = "buff",
 	max_stacks = 1,
@@ -4716,6 +4727,14 @@ templates.hordes_ailment_shock = {
 		0.3,
 		0.8,
 	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
 	interval_func = function (template_data, template_context, template, dt, t)
 		local is_server = template_context.is_server
 
@@ -4724,8 +4743,9 @@ templates.hordes_ailment_shock = {
 		end
 
 		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
 
-		if HEALTH_ALIVE[unit] then
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
 			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
 			local owner_unit = template_context.owner_unit
 			local power_level = DEFAULT_POWER_LEVEL

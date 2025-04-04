@@ -60,6 +60,10 @@ PsykerThrowingKnivesEffects.init = function (self, context, slot, weapon_templat
 end
 
 PsykerThrowingKnivesEffects.fixed_update = function (self, unit, dt, t)
+	return
+end
+
+PsykerThrowingKnivesEffects.update = function (self, unit, dt, t, frame)
 	self._remaining_ability_charges = self._ability_extension:remaining_ability_charges("grenade_ability")
 	self._t = t
 
@@ -70,10 +74,6 @@ PsykerThrowingKnivesEffects.fixed_update = function (self, unit, dt, t)
 	else
 		self:_destroy_passive_sfx()
 	end
-end
-
-PsykerThrowingKnivesEffects.update = function (self, unit, dt, t, frame)
-	return
 end
 
 PsykerThrowingKnivesEffects.update_first_person_mode = function (self, first_person_mode)

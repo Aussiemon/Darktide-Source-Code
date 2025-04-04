@@ -170,6 +170,9 @@ local breed_data = {
 		max_height_difference = 1,
 		min_distance = 0.2,
 	},
+	spawn_buffs = {
+		"blessed_by_the_garden_immunity",
+	},
 	hit_zones = {
 		{
 			name = hit_zone_names.head,

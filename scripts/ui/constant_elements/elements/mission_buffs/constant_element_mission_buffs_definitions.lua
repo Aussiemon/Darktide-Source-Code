@@ -128,7 +128,7 @@ local widget_definitions = {
 				},
 			},
 			visibility_function = function (content, style)
-				return not content.show_background and content.text ~= ""
+				return not content.show_background and content.text and content.text ~= ""
 			end,
 		},
 		{
@@ -155,7 +155,7 @@ local widget_definitions = {
 				},
 			},
 			visibility_function = function (content, style)
-				return content.show_background and content.title ~= ""
+				return content.show_background and content.text and content.text ~= ""
 			end,
 		},
 	}, "title"),

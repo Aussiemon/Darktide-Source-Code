@@ -19,6 +19,8 @@ MissionObjectiveZoneCaptureExtension.init = function (self, extension_init_conte
 
 	self._player_side = side_system:get_default_player_side_name()
 	self._side_system = side_system
+	self._is_local_objective_marker_enabled = true
+	self._mission_objective_target_extension = nil
 end
 
 MissionObjectiveZoneCaptureExtension.setup_from_component = function (self, num_player_in_zone, time_in_zone, zone_type)
@@ -29,6 +31,10 @@ MissionObjectiveZoneCaptureExtension.setup_from_component = function (self, num_
 	self._networked_timer_extension:setup_from_component(time_in_zone, nil, 1, false)
 end
 
+MissionObjectiveZoneCaptureExtension.extensions_ready = function (self, world, unit)
+	self._mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
+end
+
 MissionObjectiveZoneCaptureExtension.update = function (self, dt, t)
 	if not self._activated then
 		return
@@ -36,6 +42,10 @@ MissionObjectiveZoneCaptureExtension.update = function (self, dt, t)
 
 	if self._is_server then
 		self:_update_server()
+	end
+
+	if not DEDICATED_SERVER then
+		self:_update_client()
 	end
 end
 
@@ -61,6 +71,25 @@ MissionObjectiveZoneCaptureExtension._update_server = function (self)
 
 	if new_state then
 		self:_set_server_state(new_state)
+	end
+end
+
+MissionObjectiveZoneCaptureExtension._update_client = function (self)
+	if not self._mission_objective_target_extension then
+		return
+	end
+
+	local is_local_player_in_zone = self:_is_local_player_in_zone()
+	local is_local_objective_marker_enabled = self._is_local_objective_marker_enabled
+
+	if is_local_player_in_zone and is_local_objective_marker_enabled then
+		self._mission_objective_target_extension:remove_unit_marker()
+
+		self._is_local_objective_marker_enabled = false
+	elseif not is_local_player_in_zone and not is_local_objective_marker_enabled then
+		self._mission_objective_target_extension:add_unit_marker()
+
+		self._is_local_objective_marker_enabled = true
 	end
 end
 
@@ -113,6 +142,20 @@ MissionObjectiveZoneCaptureExtension._players_fulfill_in_zone_check = function (
 	local percentage_players_in_zone = players_in_zone / total_players
 
 	return all_inside or num_players_to_trigger <= players_in_zone, players_in_zone, percentage_players_in_zone
+end
+
+MissionObjectiveZoneCaptureExtension._is_local_player_in_zone = function (self)
+	local local_player = Managers.player:local_player(1)
+	local player_unit = local_player.player_unit
+
+	if not player_unit or not ALIVE[player_unit] then
+		return false
+	end
+
+	local player_position = POSITION_LOOKUP[player_unit]
+	local in_zone = self:point_in_zone(player_position)
+
+	return in_zone
 end
 
 MissionObjectiveZoneCaptureExtension._set_server_state = function (self, state)

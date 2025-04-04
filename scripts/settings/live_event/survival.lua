@@ -8,7 +8,7 @@ local survival = {
 	name = "loc_survival_event_name",
 	stat = "game_mode_survival_score_end_of_round",
 	item_rewards = {
-		"content/items/titles/title_test_9",
+		"content/items/2d/insignias/insignia_event_hordes",
 	},
 }
 

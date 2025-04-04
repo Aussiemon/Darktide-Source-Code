@@ -1539,7 +1539,7 @@ local function _create_dim_havoc_animation(animation_table)
 				end
 			end
 
-			if widget_style.havoc_order_text and positions_size == 1 then
+			if widget_style.havoc_order_text and positions_size == 1 and positions[1] == "order" then
 				widget_style.havoc_order_text.text_color = Color.black(0, true)
 				params.pass_params.havoc_order_text.pass_color = widget_style.havoc_order_text.text_color
 				params.pass_params.havoc_order_text.target_color = table.clone(params.pass_params.havoc_order_text.pass_color)

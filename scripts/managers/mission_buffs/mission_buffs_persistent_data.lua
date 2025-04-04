@@ -238,6 +238,18 @@ MissionBuffsPersistentData.get_player_buffs = function (self, player)
 	return
 end
 
+MissionBuffsPersistentData.does_player_have_buff_saved = function (self, player, buff_name)
+	local target_player_data = self:_get_player_data(player)
+
+	if not target_player_data then
+		return false
+	end
+
+	local player_buffs = target_player_data.buffs_received
+
+	return player_buffs[buff_name] ~= nil
+end
+
 MissionBuffsPersistentData.get_current_choice_for_player = function (self, player)
 	local target_player_data = self:_get_or_create_player_data(player)
 

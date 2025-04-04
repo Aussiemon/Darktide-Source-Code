@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/managers/mission_buffs/mission_buffs_ui_manager.lua
 
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local MissionBuffsUIManager = class("MissionBuffsUIManager")
 
 MissionBuffsUIManager.init = function (self, mission_buffs_manager, game_mode, is_server, network_event_delegate)
@@ -63,6 +64,19 @@ MissionBuffsUIManager.try_show_new_ui_notification = function (self)
 	local time_left = self:get_time_left_between_waves()
 	local waves_completed = self._game_mode:get_last_wave_completed()
 	local is_after_last_wave_end = num_waves_per_island <= waves_completed
+	local player
+
+	if Managers.connection:is_initialized() then
+		local peer_id = Network.peer_id()
+		local local_player_id = 1
+
+		player = Managers.player:player(peer_id, local_player_id)
+	end
+
+	local unit = player and player.player_unit
+	local unit_data_extension = unit and ScriptUnit.extension(unit, "unit_data_system")
+	local is_spectating = unit_data_extension and PlayerUnitStatus.is_hogtied(unit_data_extension:read_component("character_state"))
+	local player_not_alive = not player or player and not player:unit_is_alive()
 
 	if waves_completed > 0 and not is_after_last_wave_end and not time_left then
 		Log.info("MissionBuffsUIManager", string.format("Tried to show UI notification outside the pause between waves."))
@@ -70,6 +84,10 @@ MissionBuffsUIManager.try_show_new_ui_notification = function (self)
 		return
 	elseif is_new_notification_a_choice and time_left and time_left < 5 then
 		Log.info("MissionBuffsUIManager", string.format("Tried to show Choice UI notification with little time left before wave start. Time left: %f.", time_left))
+
+		return
+	elseif is_new_notification_a_choice and player_not_alive or is_spectating then
+		Log.info("MissionBuffsUIManager", string.format("Tried to show Choice UI notification while player is not alive or waiting for rescue"))
 
 		return
 	end
@@ -80,6 +98,7 @@ MissionBuffsUIManager.try_show_new_ui_notification = function (self)
 
 	new_ui_notification.timer = time_left or default_timer
 	new_ui_notification.wave_num = waves_completed > 0 and waves_completed or nil
+	new_ui_notification.state = new_ui_notification.is_buff_family and waves_completed > 0 and "completed" or new_ui_notification.state
 
 	Log.info("MissionBuffsUIManager", "New notification triggered. Type: %s | Timer: %f | Wave Num: %d", is_new_notification_a_choice and "Choice" or "Buff Received", new_ui_notification.timer, waves_completed)
 

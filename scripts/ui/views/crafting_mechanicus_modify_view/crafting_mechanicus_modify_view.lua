@@ -235,14 +235,6 @@ CraftingMechanicusModifyView._update_weapon_stats_position = function (self, sce
 	self:_set_scenegraph_size(scenegraph_id, nil, weapon_stats:grid_height())
 end
 
-CraftingMechanicusModifyView._cb_on_present = function (self)
-	CraftingMechanicusModifyView.super._cb_on_present(self)
-
-	local index = self._item_grid:selected_grid_index()
-
-	self:scroll_to_grid_index(index, true)
-end
-
 CraftingMechanicusModifyView.on_back_pressed = function (self)
 	return not self._using_cursor_navigation and self._selected_grid == "crafting_recipe"
 end
@@ -436,6 +428,43 @@ CraftingMechanicusModifyView._cb_fetch_inventory_items = function (self, items, 
 	end
 
 	self:cb_switch_tab(tab_index)
+end
+
+CraftingMechanicusModifyView.cb_switch_tab = function (self, tab_index)
+	if self._preselected_item then
+		self._preselected_item = nil
+	else
+		local start_index = 1
+		local equipped_item
+		local tabs_content = CraftingMechanicusModifyViewDefinitions.item_category_tabs_content
+		local tab_slots = tabs_content[tab_index].slot_types
+
+		for i = 1, #tab_slots do
+			local tab_slot = tab_slots[i]
+
+			equipped_item = self:equipped_item_in_slot(tab_slot)
+
+			if equipped_item then
+				break
+			end
+		end
+
+		if equipped_item then
+			start_index = self:item_grid_index(equipped_item) or start_index
+
+			if start_index then
+				self._selected_gear_id = equipped_item and equipped_item.gear_id
+			end
+		else
+			local first_item = self:first_grid_item()
+
+			if first_item then
+				self._selected_gear_id = first_item and first_item.gear_id
+			end
+		end
+	end
+
+	CraftingMechanicusModifyView.super.cb_switch_tab(self, tab_index)
 end
 
 CraftingMechanicusModifyView.equipped_item_in_slot = function (self, slot_name)

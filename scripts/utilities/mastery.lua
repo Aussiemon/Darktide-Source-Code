@@ -43,6 +43,29 @@ Mastery.get_weapon_xp_per_level = function (mastery_data)
 	return exp_per_level
 end
 
+Mastery.get_max_points = function (mastery_data)
+	local milestones = mastery_data and mastery_data.milestones
+	local points = 0
+
+	if not milestones then
+		return points
+	end
+
+	for i = 1, #milestones do
+		local milestone = milestones[i]
+
+		if milestone.rewards then
+			for id, data in pairs(milestone.rewards) do
+				local reward_points = data.stats and data.stats.points
+
+				if id == "mastery_points" and type(reward_points) == "number" then
+					points = points + reward_points
+				end
+			end
+		end
+	end
+end
+
 Mastery.get_all_unlocked_points = function (mastery_data)
 	local milestones = mastery_data and mastery_data.milestones
 	local current_level = mastery_data and mastery_data.claimed_level and mastery_data.claimed_level + 1 or -1
@@ -644,9 +667,32 @@ Mastery.get_spent_points = function (traits)
 	return points_spent
 end
 
+Mastery.get_max_trait_points = function (traits)
+	local points = 0
+	local costs = Mastery.get_trait_costs()
+
+	for i = 1, #traits do
+		local trait = traits[i]
+		local trait_status = trait.trait_status
+		local rarity = 1
+		local unlocked = false
+
+		for i = 1, RankSettings.max_trait_rank do
+			local current_trait_status = trait_status[i]
+			local cost = costs.trait_costs[tostring(i)] or 0
+
+			points = points + cost
+		end
+	end
+
+	return points
+end
+
 Mastery.get_available_points = function (mastery_data, traits)
 	local spent_points = Mastery.get_spent_points(traits)
-	local total_points = Mastery.get_all_unlocked_points(mastery_data)
+	local max_trait_points = Mastery.get_max_trait_points(traits)
+	local unlocked_points = Mastery.get_all_unlocked_points(mastery_data)
+	local total_points = math.min(unlocked_points, max_trait_points)
 
 	return math.clamp(total_points - spent_points, 0, total_points)
 end

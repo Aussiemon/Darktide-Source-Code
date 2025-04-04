@@ -322,6 +322,8 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 					local random_add_step = pack_pick + self:_random(1, #packs - 1)
 
 					pack_pick = random_add_step > 6 and random_add_step % 6 or random_add_step
+				else
+					pack_pick = nil
 				end
 
 				density_setting = density_settings[new_density_type]

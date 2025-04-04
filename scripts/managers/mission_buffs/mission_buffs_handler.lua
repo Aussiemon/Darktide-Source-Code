@@ -39,6 +39,10 @@ MissionBuffsHandler.get_num_legendary_buff_choices_pending_for_player = function
 	return self._persistent_data:get_num_legendary_buff_choices_pending_for_player(player)
 end
 
+MissionBuffsHandler.does_player_have_buff_saved = function (self, player, buff_name)
+	return self._persistent_data:does_player_have_buff_saved(player, buff_name)
+end
+
 MissionBuffsHandler.save_buff_family_choice_for_player = function (self, player, family_name_choices)
 	self._persistent_data:add_choice_for_player(player, family_name_choices, true)
 end

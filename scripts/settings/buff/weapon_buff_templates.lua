@@ -358,6 +358,14 @@ templates.shock_grenade_interval = {
 		0.3,
 		0.8,
 	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
 	interval_func = function (template_data, template_context, template, dt, t)
 		local is_server = template_context.is_server
 
@@ -366,8 +374,9 @@ templates.shock_grenade_interval = {
 		end
 
 		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
 
-		if HEALTH_ALIVE[unit] then
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
 			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
 			local owner_unit = template_context.owner_unit
 			local power_level = DEFAULT_POWER_LEVEL
