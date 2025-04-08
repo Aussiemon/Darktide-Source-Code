@@ -298,6 +298,7 @@ templates.weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot
 	format_values = {
 		stagger = {
 			format_type = "percentage",
+			num_decimals = 0,
 			prefix = "+",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot",
@@ -307,6 +308,9 @@ templates.weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot
 					stat_buffs.stagger_weakspot_reduction_modifier,
 				},
 			},
+			value_manipulation = function (value)
+				return 100 - math.round(value * 100)
+			end,
 		},
 		ranged_stagger = {
 			format_type = "percentage",

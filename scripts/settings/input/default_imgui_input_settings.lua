@@ -75,8 +75,12 @@ local default_imgui_input_settings = {
 			},
 		},
 		hotkey_mesh_streamer_gui = {
-			raw = "keyboard_right shift+keyboard_r",
 			type = "pressed",
+			raw = {
+				"keyboard_right shift+keyboard_r",
+				"xbox_controller_right_thumb+xbox_controller_d_up",
+				"ps4_controller_l3+ps4_controller_d_up",
+			},
 		},
 		hotkey_behavior_tree = {
 			raw = "keyboard_right shift+keyboard_t",

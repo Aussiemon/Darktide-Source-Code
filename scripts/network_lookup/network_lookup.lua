@@ -184,6 +184,10 @@ NetworkLookup.hordes_build_families = {
 	"grenade",
 	"cowboy",
 }
+NetworkLookup.hordes_island_names = {
+	"island_void",
+	"island_rooftops",
+}
 NetworkLookup.host_types = _create_lookup({}, MatchmakingConstants.HOST_TYPES)
 NetworkLookup.impact_fx_names = _create_lookup({}, ImpactEffectSettings.impact_fx_templates)
 NetworkLookup.interaction_result = {
@@ -381,6 +385,11 @@ NetworkLookup.respawn_beacon_states = {
 NetworkLookup.force_field_unit_names = {
 	"content/characters/player/human/attachments_combat/psyker_shield/psyker_shield_flat_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional",
+}
+NetworkLookup.force_field_shape_overrides = {
+	"none",
+	"flat",
+	"sphere",
 }
 NetworkLookup.smoke_fog_unit = {
 	"content/characters/player/human/attachments_combat/smoke_fog/smoke_fog_volume",

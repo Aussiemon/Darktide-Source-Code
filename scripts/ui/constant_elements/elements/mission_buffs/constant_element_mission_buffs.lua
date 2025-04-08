@@ -492,6 +492,7 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 	elseif self._states.text == "active" then
 		if not self._texts_timer or self._context.is_buff_family and not self._context.is_catchup and self._context.buff_chosen then
 			self._texts_timer = nil
+			self._previous_texts_timer = nil
 
 			self:_reset_text_animations()
 
@@ -525,7 +526,7 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 	if self._states.text == "starting" or self._states.text == "active" then
 		local title_text = self._context.title or ""
 		local original_sub_title_text = self._context.sub_title or ""
-		local sub_title_text = self._context.use_timer and string.format("%s\n%s", original_sub_title_text, TextUtilities.format_time_span_localized(self._texts_timer, false, true)) or original_sub_title_text
+		local sub_title_text = self._context.use_timer and self._texts_timer and string.format("%s\n%s", original_sub_title_text, TextUtilities.format_time_span_localized(self._texts_timer, false, true)) or original_sub_title_text
 
 		if title_text ~= self._widgets_by_name.title.content.text then
 			self._widgets_by_name.title.content.text = title_text
@@ -1079,6 +1080,7 @@ MissionBuffs._reset_view = function (self, ui_renderer)
 	end
 
 	self._texts_timer = nil
+	self._previous_texts_timer = nil
 	self._buffs_timer = nil
 	self._blur_timer = nil
 	self._cutscene_fade = nil

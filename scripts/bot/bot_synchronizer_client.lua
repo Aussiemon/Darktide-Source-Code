@@ -27,13 +27,19 @@ end
 
 BotSynchronizerClient.rpc_add_bot_player = function (self, channel_id, local_player_id, slot)
 	local peer_id = Network.peer_id(channel_id)
+	local player_manager = Managers.player
+
+	if player_manager:player_exists(peer_id, local_player_id) then
+		return
+	end
+
 	local profile_synchronizer_client = Managers.profile_synchronization:synchronizer_client()
 	local profile_json = profile_synchronizer_client:player_profile_json(peer_id, local_player_id)
 	local profile = ProfileUtils.unpack_profile(profile_json)
 	local human_controlled = false
 	local is_server = false
 
-	Managers.player:add_bot_player(RemotePlayer, nil, peer_id, local_player_id, profile, slot, human_controlled, is_server)
+	player_manager:add_bot_player(RemotePlayer, nil, peer_id, local_player_id, profile, slot, human_controlled, is_server)
 
 	local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 
@@ -43,6 +49,10 @@ end
 BotSynchronizerClient.rpc_remove_bot_player = function (self, channel_id, local_player_id)
 	local peer_id = Network.peer_id(channel_id)
 	local player_manager = Managers.player
+
+	if not player_manager:player_exists(peer_id, local_player_id) then
+		return
+	end
 
 	player_manager:remove_player(peer_id, local_player_id)
 

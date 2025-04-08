@@ -4,6 +4,10 @@ local hordes_mode_settings = {
 	num_family_buffs_per_island = 7,
 	num_legendary_buffs_per_island = 3,
 	waves_per_island = 12,
+	island_names = {
+		"island_void",
+		"island_rooftops",
+	},
 	give_legendary_buffs_at_waves = {
 		3,
 		6,

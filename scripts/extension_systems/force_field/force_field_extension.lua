@@ -91,8 +91,9 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 
 	self.buff_extension = buff_extension
 	self.talent_extension = ScriptUnit.extension(owner_unit, "talent_system")
+	self._shape_override = extension_init_data.shape_override
 
-	local override_shield_as_sphere = buff_extension and buff_extension:has_keyword(buff_keywords.grenade_spawn_sphere_shield)
+	local override_shield_as_sphere = extension_init_data.shape_override == "sphere"
 	local sphere_shield = override_shield_as_sphere or self.talent_extension:has_special_rule(special_rules.psyker_sphere_shield)
 
 	self._sphere_shield = sphere_shield

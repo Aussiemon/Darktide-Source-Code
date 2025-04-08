@@ -2782,14 +2782,19 @@ local unit_templates = {
 		game_object_type = function ()
 			return "force_field"
 		end,
-		local_init = function (unit, config, template_context, game_object_data, husk_unit_name, placed_on_unit, owner_unit)
+		local_init = function (unit, config, template_context, game_object_data, husk_unit_name, placed_on_unit, owner_unit, shape_override)
 			local is_server = template_context.is_server
+
+			if shape_override == nil then
+				shape_override = "none"
+			end
 
 			config:add("DeployableUnitLocomotionExtension", {
 				placed_on_unit = placed_on_unit,
 			})
 			config:add("ForceFieldExtension", {
 				owner_unit = owner_unit,
+				shape_override = shape_override,
 			})
 			config:add("ForceFieldHealthExtension", {
 				owner_unit = owner_unit,
@@ -2798,6 +2803,7 @@ local unit_templates = {
 			local rotation = Unit.local_rotation(unit, 1)
 
 			game_object_data.unit_name_id = NetworkLookup.force_field_unit_names[husk_unit_name]
+			game_object_data.shape_override = NetworkLookup.force_field_shape_overrides[shape_override]
 			game_object_data.position = Unit.local_position(unit, 1)
 			game_object_data.yaw = Quaternion.yaw(rotation)
 			game_object_data.pitch = 0
@@ -2824,9 +2830,13 @@ local unit_templates = {
 				owner_unit = Managers.state.unit_spawner:unit(owner_unit_id)
 			end
 
+			local shape_override_id = GameSession.game_object_field(game_session, game_object_id, "shape_override")
+			local shape_override = NetworkLookup.force_field_shape_overrides[shape_override_id]
+
 			config:add("DeployableHuskLocomotionExtension", {})
 			config:add("ForceFieldExtension", {
 				owner_unit = owner_unit,
+				shape_override = shape_override,
 			})
 			config:add("ForceFieldHuskHealthExtension", {})
 		end,

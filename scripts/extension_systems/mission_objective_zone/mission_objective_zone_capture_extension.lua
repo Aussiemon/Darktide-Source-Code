@@ -35,6 +35,11 @@ MissionObjectiveZoneCaptureExtension.extensions_ready = function (self, world, u
 	self._mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 end
 
+MissionObjectiveZoneCaptureExtension.activate_zone = function (self)
+	MissionObjectiveZoneCaptureExtension.super.activate_zone(self)
+	self._networked_timer_extension:start_paused()
+end
+
 MissionObjectiveZoneCaptureExtension.update = function (self, dt, t)
 	if not self._activated then
 		return

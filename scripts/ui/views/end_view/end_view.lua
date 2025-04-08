@@ -925,12 +925,13 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 
 	if self._round_won and team_session_report then
 		local mission_time_in_sec = team_session_report.play_time_seconds
+		local game_mode_completion_time_seconds = team_session_report.game_mode_completion_time_seconds or nil
 		local mission_sub_header_style = widget.style.mission_sub_header
 		local stats_text_color = mission_sub_header_style.stats_text_color
 		local text_params = {
 			total_kills = team_session_report.total_kills,
 			total_deaths = team_session_report.total_deaths,
-			mission_time = Text.format_time_span_long_form_localized(mission_time_in_sec),
+			mission_time = Text.format_time_span_long_form_localized(game_mode_completion_time_seconds or mission_time_in_sec),
 			font_size = mission_sub_header_style.stats_font_size * render_scale,
 			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4]),
 		}

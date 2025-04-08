@@ -763,6 +763,10 @@ ProgressionManager._parse_mission_stats = function (self, eor)
 	local play_time_seconds = mission.playTimeSeconds
 
 	self._session_report.team.play_time_seconds = play_time_seconds
+
+	if mission.additionalData and mission.additionalData.hordeData then
+		self._session_report.team.game_mode_completion_time_seconds = mission.additionalData.hordeData.completionTime
+	end
 end
 
 ProgressionManager._parse_reward_cards = function (self, account_data, item_rewards)

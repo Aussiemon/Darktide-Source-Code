@@ -175,6 +175,19 @@ end
 
 HavocService.get_rewards_if_available = function (self)
 	return Managers.backend.interfaces.havoc:sync():next(function (data)
+		if data and data.rewards and not table.is_empty(data.rewards) then
+			for i = 1, #data.rewards do
+				local reward = data.rewards[i]
+				local amount = reward.amount or 0
+
+				if amount > 0 then
+					Managers.data_service.store:invalidate_wallets_cache()
+
+					break
+				end
+			end
+		end
+
 		return data
 	end):catch(function (error)
 		local error_string = tostring(error)

@@ -148,7 +148,7 @@ StateGame.on_enter = function (self, parent, params)
 	local program_name = string.format("darktide-%s-%s", app_type, tostring(APPLICATION_SETTINGS.content_revision))
 
 	Profiler.set_program_name(program_name)
-	Managers.event:register(self, "on_suspend", "_on_suspend")
+	Managers.event:register(self, "on_pre_suspend", "_on_pre_suspend")
 end
 
 local function _connection_options(is_dedicated_hub_server, is_dedicated_mission_server)
@@ -316,7 +316,7 @@ StateGame.on_exit = function (self, exit_params)
 
 	self._sm:delete(exit_params)
 	self._vo_sources_cache:destroy()
-	Managers.event:unregister(self, "on_suspend")
+	Managers.event:unregister(self, "on_pre_suspend")
 	Managers:destroy()
 	self._approve_channel_delegate:delete()
 	self._event_delegate:delete()
@@ -469,7 +469,7 @@ StateGame.state_machine = function (self)
 	return self._sm
 end
 
-StateGame._on_suspend = function (self)
+StateGame._on_pre_suspend = function (self)
 	local error_state = CLASSES.StateError
 	local params = {}
 	local exit_params = {

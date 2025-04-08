@@ -8,11 +8,11 @@ LoadingManager.init = function (self)
 	self._loading_host = nil
 	self._shelved_clients_loaders = {}
 
-	Managers.event:register(self, "on_pre_suspend", "_on_pre_suspend")
+	Managers.event:register(self, "on_suspend", "_on_suspend")
 end
 
 LoadingManager.destroy = function (self)
-	Managers.event:unregister(self, "on_pre_suspend")
+	Managers.event:unregister(self, "on_suspend")
 	self:cleanup()
 	self:_cleanup_shelved_loaders()
 end
@@ -178,7 +178,7 @@ LoadingManager.spawn_group_id = function (self)
 	return nil
 end
 
-LoadingManager._on_pre_suspend = function (self)
+LoadingManager._on_suspend = function (self)
 	self:cleanup()
 end
 

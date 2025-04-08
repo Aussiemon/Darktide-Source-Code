@@ -11,6 +11,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local DEFAULT_RESPAWN_TIME = 30
 local GameModeSurvival = class("GameModeSurvival", "GameModeBase")
+local SERVER_RPCS = {}
 local CLIENT_RPCS = {
 	"rpc_set_player_respawn_time",
 	"rpc_fetch_session_report",
@@ -142,11 +143,13 @@ GameModeSurvival.init = function (self, game_mode_context, game_mode_name, netwo
 
 		self._persistent_data_humans = {}
 		self._persistent_data_bots = {}
+
+		network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
 	else
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
-
-		self._network_event_delegate = network_event_delegate
 	end
+
+	self._network_event_delegate = network_event_delegate
 end
 
 GameModeSurvival.hot_join_sync = function (self, sender, channel)
@@ -175,6 +178,7 @@ GameModeSurvival.destroy = function (self)
 
 	if self._is_server then
 		Managers.event:unregister(self, "in_safe_volume")
+		self._network_event_delegate:unregister_events(unpack(SERVER_RPCS))
 	else
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -266,24 +270,13 @@ GameModeSurvival._gamemode_complete = function (self, result, reason)
 	_log("gamemode_complete, result: %s, reason: %s", result, reason)
 	self:_fetch_session_report()
 	Managers.state.game_session:send_rpc_clients("rpc_fetch_session_report")
-
-	if self._first_wave_start_time == nil then
-		self._completion_time = 0
-	else
-		local current_time = Managers.time:time("gameplay")
-
-		self._completion_time = math.floor(current_time - self._first_wave_start_time)
-	end
-
-	if self._is_server then
-		self:_handle_game_end_server(result == "won")
-	end
+	self:_handle_game_end_server(result == "won")
 
 	if Managers.mission_server then
 		local total_waves_completed = self:get_total_waves_completed()
 
 		Managers.mission_server:on_gamemode_completed(result, reason, {
-			completion_time = self._completion_time,
+			completion_time = self._completition_time,
 			current_island = self._current_island or "NONE",
 			waves_completed = total_waves_completed or 0,
 		})
@@ -523,6 +516,8 @@ end
 
 GameModeSurvival._handle_horde_game_start = function (self)
 	self._first_wave_start_time = Managers.time:time("gameplay")
+
+	Log.info("GameModeSurvival", "Game Mode Timer started (%f)", self._first_wave_start_time)
 end
 
 GameModeSurvival._horde_game_completed_server = function (self)
@@ -535,6 +530,8 @@ GameModeSurvival._horde_game_completed_server = function (self)
 	local current_time = Managers.time:time("gameplay")
 
 	self._completition_time = math.floor(current_time - self._first_wave_start_time)
+
+	Log.info("GameModeSurvival", "Game Mode Timer stopped by picking up Relic: Completion Time [%f](seconds)", self._completition_time or -1)
 end
 
 GameModeSurvival._handle_game_end_server = function (self, game_won)
@@ -549,7 +546,7 @@ GameModeSurvival._handle_game_end_server = function (self, game_won)
 
 	local total_waves_completed = self:get_total_waves_completed()
 
-	Log.info("GameModeSurvival", "Game Mode Ended: Island played [%s] | Total Waves Completed [%d] | Islands Completed [%d]", self._current_island or "NONE", total_waves_completed or -1, self._islands_completed or -1)
+	Log.info("GameModeSurvival", "Game Mode Ended: Island played [%s] | Total Waves Completed [%d] | Islands Completed [%d] | Completition Time [%f]", self._current_island or "NONE", total_waves_completed or -1, self._islands_completed or -1, self._completition_time or -1)
 
 	if Managers.telemetry_events then
 		local players = Managers.player:human_players()

@@ -3428,7 +3428,7 @@ local function _spawn_telekine_dome_at_position(physics_world, owner_unit, targe
 	local unit_template = "force_field"
 	local material
 	local rotation = Quaternion.identity()
-	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, spawn_position, rotation, material, husk_unit_name, nil, owner_unit)
+	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, spawn_position, rotation, material, husk_unit_name, nil, owner_unit, "sphere")
 end
 
 local shock_on_toughness_broken_range = HordesBuffsData.hordes_buff_shock_pulse_on_toughness_broken.buff_stats.range.value
@@ -3495,9 +3495,6 @@ templates.hordes_buff_spawn_dome_shield_on_grenade_explosion = {
 	max_stacks_cap = 1,
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
-	keywords = {
-		buff_keywords.grenade_spawn_sphere_shield,
-	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
 			return

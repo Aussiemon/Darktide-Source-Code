@@ -90,7 +90,6 @@ local explosion_templates = {
 		},
 	},
 	heresy_shield_1_explosion = {
-		broadphase_explosion_filter = "heroes",
 		close_radius = 2,
 		collision_filter = "filter_explosion_player_only",
 		damage_falloff = false,
@@ -101,9 +100,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+		},
 	},
 	heresy_shield_2_explosion = {
-		broadphase_explosion_filter = "heroes",
 		close_radius = 2,
 		collision_filter = "filter_explosion_player_only",
 		damage_falloff = false,
@@ -114,9 +115,11 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+		},
 	},
 	heresy_shield_3_explosion = {
-		broadphase_explosion_filter = "heroes",
 		close_radius = 2,
 		collision_filter = "filter_explosion_player_only",
 		damage_falloff = false,
@@ -127,6 +130,9 @@ local explosion_templates = {
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+		},
 	},
 }
 

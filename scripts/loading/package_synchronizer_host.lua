@@ -1000,7 +1000,7 @@ PackageSynchronizerHost.enable_peers = function (self, peer_ids)
 	end
 
 	for peer_id, data in pairs(sync_states) do
-		if peer_id ~= self._peer_id then
+		if peer_id ~= self._peer_id and data.enabled then
 			local channel_id = data.channel_id
 
 			RPC.rpc_package_synchronizer_enable_peers(channel_id, peer_ids)

@@ -753,18 +753,12 @@ local action_data = {
 		width = 1.75,
 		considerations = UtilityConsiderations.renegade_captain_power_sword_melee_combo_attack,
 		attack_anim_events = {
-			"attack_swing_combo_01",
 			"attack_swing_combo_02",
 			"attack_swing_combo_03",
 			"attack_swing_combo_04",
 			"attack_swing_combo_05",
 		},
 		attack_anim_damage_timings = {
-			attack_swing_combo_01 = {
-				0.6236559139784946,
-				1.075268817204301,
-				1.8709677419354838,
-			},
 			attack_swing_combo_02 = {
 				0.6021505376344086,
 				1.075268817204301,
@@ -791,18 +785,10 @@ local action_data = {
 			},
 		},
 		attack_anim_durations = {
-			attack_swing_combo_01 = 2.4,
 			attack_swing_combo_02 = 3.466666666666667,
 			attack_swing_combo_03 = 2.8533333333333335,
 			attack_swing_combo_04 = 2.6666666666666665,
 			attack_swing_combo_05 = 2.8,
-		},
-		attack_override_damage_data = {
-			attack_swing_combo_01 = {
-				[3] = {
-					override_damage_type = damage_types.minion_ogryn_kick,
-				},
-			},
 		},
 		attack_intensities = {
 			melee = 0.25,
@@ -811,7 +797,6 @@ local action_data = {
 			running_melee = 2,
 		},
 		move_start_timings = {
-			attack_swing_combo_01 = 0,
 			attack_swing_combo_02 = 0,
 			attack_swing_combo_03 = 0,
 			attack_swing_combo_04 = 0,
@@ -829,7 +814,6 @@ local action_data = {
 		},
 		effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		effect_template_start_timings = {
-			attack_swing_combo_01 = 0.16666666666666666,
 			attack_swing_combo_02 = 0.16666666666666666,
 			attack_swing_combo_03 = 0.16666666666666666,
 			attack_swing_combo_04 = 0.16666666666666666,

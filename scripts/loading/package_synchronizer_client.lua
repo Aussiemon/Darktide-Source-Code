@@ -92,9 +92,11 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 
 		packages[local_player_id] = profile_packages
 
-		local profile_clone = table.clone_instance(profile)
+		local player_string = player:is_human_controlled() and "Player" or "Bot Player"
 
-		_debug_print("Player Profile Initial Cache, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
+		_debug_print("%s Profile Initial Cache, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
+
+		local profile_clone = table.clone_instance(profile)
 
 		self._player_profile_cache[peer_id][local_player_id] = profile_clone
 	end

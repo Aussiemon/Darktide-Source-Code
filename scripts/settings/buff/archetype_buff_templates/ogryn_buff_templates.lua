@@ -183,7 +183,7 @@ templates.ogryn_passive_heavy_hitter = {
 		local buff_extension = template_data.buff_extension
 		local damage_buff_name = "ogryn_heavy_hitter_damage_effect"
 		local current_stacks = buff_extension:current_stacks(damage_buff_name)
-		local at_max_stacks = current_stacks == max_stacks
+		local at_max_stacks = max_stacks <= current_stacks
 
 		heavy_hitter_lerp_value = math.clamp(current_stacks / max_stacks, 0, 1)
 
@@ -216,12 +216,13 @@ templates.ogryn_passive_heavy_hitter = {
 		local max_stacks = template_data.max_stacks
 		local current_stacks = buff_extension:current_stacks(damage_buff_name)
 		local at_max_stacks = current_stacks == max_stacks
-		local will_be_max_stacks = current_stacks == max_stacks - 1
 		local max_stacks_improves_toughness = template_data.max_stacks_improves_toughness
 		local max_stacks_improves_attack_speed = template_data.max_stacks_improves_attack_speed
 		local stacks = is_heavy_hit and talent_settings_shared.ogryn_heavy_hitter.heavy_stacks or talent_settings_shared.ogryn_heavy_hitter.stacks
 
 		buff_extension:add_internally_controlled_buff_with_stacks(damage_buff_name, stacks, t)
+
+		local will_be_max_stacks = max_stacks <= current_stacks + stacks
 
 		if will_be_max_stacks then
 			Managers.stats:record_private("hook_ogryn_heavy_hitter_at_max_stacks", template_context.player)
@@ -1412,11 +1413,19 @@ templates.ogryn_cooldown_on_elite_kills_buff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings_2.coop_3.duration,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
 	update_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
 		local t = FixedFrame.get_latest_fixed_time()
 
 		if not template_data.timer then

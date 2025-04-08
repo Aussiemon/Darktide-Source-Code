@@ -377,11 +377,7 @@ ProfileSynchronizerHost.peer_disconnected = function (self, peer_id, channel_id)
 	profile_sync_states[peer_id] = nil
 
 	for _, peer_states in pairs(profile_sync_states) do
-		for sync_peer_id, _ in pairs(peer_states) do
-			if sync_peer_id == peer_id then
-				peer_states[sync_peer_id] = nil
-			end
-		end
+		peer_states[peer_id] = nil
 	end
 
 	for _, other_channel_id in pairs(self._connected_peers) do
@@ -487,6 +483,11 @@ ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, 
 	end
 
 	local peer_states = self._profile_sync_states[peer_id]
+
+	if not peer_states[profile_peer_id] then
+		return
+	end
+
 	local current_state = peer_states[profile_peer_id][profile_local_player_id]
 
 	if current_state == SYNC_STATES.syncing_need_resync then

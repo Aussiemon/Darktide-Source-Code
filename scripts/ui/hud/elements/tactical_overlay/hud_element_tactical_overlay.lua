@@ -579,8 +579,11 @@ HudElementTacticalOverlay._setup_buffs_presentation = function (self, ui_rendere
 	if buff_extension then
 		local display_buffs = self:_add_player_buffs()
 		local layout = self:_generate_buffs_layout(display_buffs)
+		local layout_size = #layout
 
-		if #layout > 0 then
+		self._buffs_layout_size = layout_size
+
+		if layout_size > 0 then
 			local widgets, alignment_widgets = self:_create_buff_panel_widgets(layout, ui_renderer)
 
 			self._buff_panel_widgets = widgets
@@ -623,6 +626,7 @@ HudElementTacticalOverlay._update_buff_input_text = function (self)
 		local device_type = last_pressed_device and last_pressed_device:type()
 
 		self._widgets_by_name.buff_panel_scrollbar_input_icon.content.visible = self._buff_panel_grid:can_scroll()
+		self._widgets_by_name.buff_panel_scrollbar.content.visible = self._buff_panel_grid:can_scroll()
 		self._widgets_by_name.buff_panel_scrollbar_input_icon.content.text = input_icon[device_type] or ""
 	else
 		self._widgets_by_name.buff_panel_scrollbar_input_icon.content.visible = false
@@ -630,6 +634,17 @@ HudElementTacticalOverlay._update_buff_input_text = function (self)
 end
 
 HudElementTacticalOverlay._remove_buffs_presentation = function (self)
+	if self._buff_panel_grid then
+		local ingame_service_name = "Ingame"
+
+		Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_scroll_down", ingame_service_name)
+		Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_scroll_up", ingame_service_name)
+
+		self._widgets_by_name.buff_panel_scrollbar_input_icon.content.visible = false
+		self._widgets_by_name.buff_panel_background.content.visible = false
+		self._widgets_by_name.buff_panel_scrollbar.content.visible = false
+	end
+
 	if self._buff_panel_widgets then
 		for i = 1, #self._buff_panel_widgets do
 			local widget = self._buff_panel_widgets[i]
@@ -639,16 +654,10 @@ HudElementTacticalOverlay._remove_buffs_presentation = function (self)
 		end
 
 		self._buff_panel_widgets = nil
-		self._buff_panel_grid = nil
 	end
 
-	local ingame_service_name = "Ingame"
-
-	Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_scroll_down", ingame_service_name)
-	Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_scroll_up", ingame_service_name)
-
-	self._widgets_by_name.buff_panel_scrollbar_input_icon.content.visible = false
-	self._widgets_by_name.buff_panel_background.content.visible = false
+	self._buffs_layout_size = nil
+	self._buff_panel_grid = nil
 end
 
 HudElementTacticalOverlay._create_buff_panel_widgets = function (self, configs, ui_renderer)
@@ -826,20 +835,22 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 		self:_update_left_panel_elements(ui_renderer)
 		self:_start_animation("enter", self._left_panel_widgets)
 		Managers.telemetry_reporters:reporter("tactical_overlay"):register_event(self._tracked_achievements)
-
-		if self._game_mode_name ~= "hub" and self._game_mode_name ~= "prologue_hub" then
-			self:_setup_buffs_presentation(ui_renderer)
-		end
 	elseif self._active and not active then
 		Managers.event:trigger("event_set_tactical_overlay_state", false)
 		self:_start_animation("exit", self._left_panel_widgets)
-		self:_remove_buffs_presentation()
 	end
 
 	if self._active then
 		self:_update_materials_collected()
 		self:_update_right_timer_text(dt, t, ui_renderer)
+
+		if self._game_mode_name ~= "hub" and self._game_mode_name ~= "prologue_hub" and not self._buffs_layout_size then
+			self:_setup_buffs_presentation(ui_renderer)
+		end
+
 		self:_buffs_navigation(dt, t, input_service)
+	elseif self._buffs_layout_size then
+		self:_remove_buffs_presentation()
 	end
 
 	self._active = active
@@ -1783,6 +1794,18 @@ HudElementTacticalOverlay.on_resolution_modified = function (self)
 
 	self:_set_scenegraph_size("background", w, h)
 	HudElementTacticalOverlay.super.on_resolution_modified(self)
+end
+
+HudElementTacticalOverlay.set_visible = function (self, visible, ui_renderer, use_retained_mode)
+	if not visible and self._active then
+		self._active = false
+
+		Managers.event:trigger("event_set_tactical_overlay_state", false)
+
+		if self._buffs_layout_size then
+			self:_remove_buffs_presentation()
+		end
+	end
 end
 
 return HudElementTacticalOverlay

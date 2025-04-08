@@ -81,6 +81,7 @@ ForceWeaponWindSlashActivationEffects.destroy = function (self)
 	end
 
 	self:_stop_cage_vfx()
+	self:_stop_finger_vfx()
 end
 
 ForceWeaponWindSlashActivationEffects.wield = function (self)
@@ -91,6 +92,7 @@ ForceWeaponWindSlashActivationEffects.wield = function (self)
 	end
 
 	self:_stop_cage_vfx()
+	self:_stop_finger_vfx()
 end
 
 ForceWeaponWindSlashActivationEffects.unwield = function (self)
@@ -101,6 +103,7 @@ ForceWeaponWindSlashActivationEffects.unwield = function (self)
 	end
 
 	self:_stop_cage_vfx()
+	self:_stop_finger_vfx()
 end
 
 ForceWeaponWindSlashActivationEffects.update_unit_position = function (self, unit, dt, t)

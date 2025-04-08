@@ -6,6 +6,7 @@ local DebugSingleton = require("scripts/foundation/utilities/debug/debug_singlet
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
+local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -431,6 +432,34 @@ functions.horde_mode_tag_all_enemies_local = {
 	name = "Tag All Enemies (Local Client)",
 	on_activated = function ()
 		Managers.event:trigger("event_surival_mode_tag_remaining_enemies")
+	end,
+}
+
+local horde_mode_island_names = HordesModeSettings.island_names
+
+functions.horde_mode_select_island_to_play = {
+	category = "Horde Mode",
+	name = "Select Island To Play",
+	options_function = function ()
+		return horde_mode_island_names
+	end,
+	on_activated = function (selected_option)
+		if Managers.state.game_session:is_server() then
+			local level = Managers.state.mission:mission_level()
+			local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
+
+			if game_mode_name and level then
+				Log.info("GameModeSurvival", "Server changes Island to play: ", selected_option)
+
+				local island_selected_level_event_name = "debug_horde_mode_" .. selected_option .. "_selected"
+
+				Level.trigger_event(level, island_selected_level_event_name)
+			end
+		else
+			local island_name_id = NetworkLookup.hordes_island_names[selected_option]
+
+			Managers.connection:send_rpc_server("rpc_server_hordes_debug_select_island", island_name_id)
+		end
 	end,
 }
 
