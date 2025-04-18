@@ -131,6 +131,7 @@ local ui_sound_events = {
 	havoc_eor_card_short = "wwise/events/ui/play_ui_havoc_eor_card_short",
 	havoc_eor_rank_down = "wwise/events/ui/play_ui_havoc_eor_card_rank_down",
 	havoc_eor_rank_up = "wwise/events/ui/play_ui_havoc_eor_card_rank_up",
+	havoc_terminal_deny_mission = "wwise/events/ui/play_ui_mission_request_declined",
 	havoc_terminal_enter = "wwise/events/ui/play_ui_npc_interacts_havoc_terminal_enter",
 	havoc_terminal_exit = "wwise/events/ui/play_ui_npc_interacts_havoc_terminal_exit",
 	havoc_terminal_rank_down = "wwise/events/ui/play_ui_npc_interacts_havoc_terminal_rank_down",

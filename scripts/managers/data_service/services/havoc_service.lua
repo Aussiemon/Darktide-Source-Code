@@ -26,6 +26,12 @@ end
 
 HavocService.order_by_id = function (self, order_id)
 	return Managers.backend.interfaces.orders:order_by_id(order_id):next(function (data)
+		if data and data.charges and data.charges < 0 then
+			local err = string.format("Backend returned an order with charge count below zero: %i\n", data.charges)
+
+			Log.error("HavocService", err)
+		end
+
 		return data.body.order
 	end):catch(function (error)
 		local error_string = tostring(error)
@@ -141,11 +147,13 @@ HavocService.activate_havoc_mission = function (self, order_id)
 	return Managers.backend.interfaces.orders:activate_order_by_id(order_id, participants):next(function (data)
 		return data
 	end):catch(function (error)
-		local error_string = tostring(error)
+		if error and error.code == 400 and string.find(error.description, "already_has_ongoing_mission") then
+			Log.warning("HavocService", "Aborting Havoc mission activation; strike team member already has ongoing mission\n%s", error)
+		else
+			Log.warning("HavocService", "Exception activating havoc order:\n%s", tostring(error))
+		end
 
-		Log.error("HavocService", "Error fetching havoc orders: %s", error_string)
-
-		return {}
+		return Promise.rejected(error)
 	end)
 end
 

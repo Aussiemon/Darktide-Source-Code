@@ -89,8 +89,11 @@ LobbyView.init = function (self, settings, context)
 	self._use_gamepad_tooltip_navigation = false
 
 	local definitions = require(definition_path)
+	local level, dynamic_level_package = self:select_target_level()
 
-	LobbyView.super.init(self, definitions, settings, context)
+	self._level = level
+
+	LobbyView.super.init(self, definitions, settings, context, dynamic_level_package)
 
 	self._pass_draw = false
 	self._can_exit = not context or context.can_exit
@@ -184,6 +187,20 @@ LobbyView._setup_havoc_info = function (self)
 	end
 end
 
+LobbyView.select_target_level = function (self)
+	local level_name
+
+	level_name = self._havoc_data and "havoc" or self._mission_data and self._mission_data.mission_name == "psykhanium" and "horde" or "default"
+
+	local level = LobbyViewSettings.levels_by_id[level_name] or LobbyViewSettings.levels_by_id.default
+	local level_packages = {
+		is_level_package = true,
+		name = level.level_name,
+	}
+
+	return level, level_packages
+end
+
 LobbyView._initialize_background_world = function (self)
 	self:_register_event("event_register_lobby_camera")
 
@@ -230,14 +247,9 @@ LobbyView._initialize_background_world = function (self)
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	local level_name
+	local target_level = self._level
 
-	if self._havoc_data then
-		level_name = LobbyViewSettings.havoc_level_name
-	elseif self._mission_data and self._mission_data.mission_name == "psykhanium" then
-		level_name = LobbyViewSettings.horde_level_name
-	else
-		level_name = LobbyViewSettings.level_name
-	end
+	level_name = self._level.level_name
 
 	self._world_spawner:spawn_level(level_name)
 
@@ -250,7 +262,7 @@ LobbyView.event_register_lobby_camera = function (self, camera_unit)
 	local viewport_name = LobbyViewSettings.viewport_name
 	local viewport_type = LobbyViewSettings.viewport_type
 	local viewport_layer = LobbyViewSettings.viewport_layer
-	local shading_environment = LobbyViewSettings.shading_environment
+	local shading_environment = self._level.shading_environment
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 end

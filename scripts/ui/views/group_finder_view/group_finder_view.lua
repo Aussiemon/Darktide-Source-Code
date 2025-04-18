@@ -74,6 +74,7 @@ GroupFinderView.init = function (self, settings, context)
 	self._sent_requests = {}
 	self._sent_requests_duration = {}
 	self._advertisement_join_requests_version = -1
+	self._join_requests = {}
 	self._lowest_party_member_level = 0
 	self._highest_tag_level_requirement = 0
 	self._anim_preview_progress = 1
@@ -1954,6 +1955,8 @@ GroupFinderView._set_state = function (self, new_state)
 		self:_set_tag_grid_visibility(true)
 		self:_update_party_statuses()
 	elseif new_state == STATE.advertising then
+		self._join_requests = {}
+
 		self:_update_grids_selection()
 
 		self._show_group_loading = false
@@ -2131,7 +2134,39 @@ GroupFinderView._update_incoming_join_requests = function (self, t)
 	if version ~= self._advertisement_join_requests_version then
 		self._advertisement_join_requests_version = version
 
-		self:_populate_player_request_grid(join_requests or {})
+		local join_requests_update = {}
+
+		for i = 1, #self._join_requests do
+			local stored_join_request = self._join_requests[i]
+			local stored_account_id = stored_join_request.account_id
+
+			if join_requests[stored_account_id] then
+				join_requests_update[#join_requests_update + 1] = stored_join_request
+			end
+		end
+
+		for account_id, join_request in pairs(join_requests) do
+			local found = false
+
+			for i = 1, #self._join_requests do
+				local stored_join_request = self._join_requests[i]
+				local stored_account_id = stored_join_request.account_id
+
+				if stored_account_id == account_id then
+					found = true
+
+					break
+				end
+			end
+
+			if not found then
+				join_requests_update[#join_requests_update + 1] = join_request
+			end
+		end
+
+		self._join_requests = join_requests_update
+
+		self:_populate_player_request_grid(self._join_requests)
 	end
 end
 
@@ -3246,7 +3281,7 @@ GroupFinderView._populate_group_grid = function (self, groups, optional_complete
 	grid:set_handle_grid_navigation(true)
 end
 
-GroupFinderView._populate_player_request_grid = function (self, join_requests_by_account_id)
+GroupFinderView._populate_player_request_grid = function (self, join_requests)
 	local definitions = self._definitions
 	local grid_scenegraph_id = "player_request_grid"
 	local scenegraph_definition = definitions.scenegraph_definition
@@ -3293,7 +3328,8 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests_by
 		},
 	}
 
-	for account_id, join_request in pairs(join_requests_by_account_id) do
+	for i = 1, #join_requests do
+		local join_request = join_requests[i]
 		local presence = join_request.presence
 
 		if presence then
@@ -3314,7 +3350,7 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests_by
 				widget_type = "player_request_entry",
 				presence_info = presence_info,
 				join_request = join_request,
-				account_id = account_id,
+				account_id = join_request.account_id,
 			}
 
 			entry.accept_callback = callback(self, "_cb_on_player_request_accept_pressed", entry)
@@ -3332,25 +3368,33 @@ GroupFinderView._populate_player_request_grid = function (self, join_requests_by
 	}
 
 	local current_selected_grid_index = grid:selected_grid_index()
-	local cb_on_grid_layout_updated = callback(self, "_on_populate_player_request_grid_completed", current_selected_grid_index)
+	local scrollbar_progress = grid:length_scrolled()
+	local cb_on_grid_layout_updated = callback(self, "_on_populate_player_request_grid_completed", current_selected_grid_index, scrollbar_progress)
 
 	grid:present_grid_layout(layout, GroupFinderViewDefinitions.grid_blueprints, nil, nil, nil, nil, cb_on_grid_layout_updated)
 	grid:set_handle_grid_navigation(true)
 end
 
-GroupFinderView._on_populate_player_request_grid_completed = function (self, current_selected_grid_index)
-	if not self:using_cursor_navigation() and self._state == STATE.advertising then
-		local grid = self._player_request_grid
+GroupFinderView._on_populate_player_request_grid_completed = function (self, current_selected_grid_index, scrollbar_progress)
+	if not self:using_cursor_navigation() then
+		if self._state == STATE.advertising then
+			local grid = self._player_request_grid
 
-		if current_selected_grid_index then
-			grid:select_grid_index(current_selected_grid_index)
+			if current_selected_grid_index then
+				grid:select_grid_index(current_selected_grid_index)
 
-			if not grid:selected_grid_index() then
+				if not grid:selected_grid_index() then
+					grid:select_first_index()
+				end
+			else
 				grid:select_first_index()
 			end
-		else
-			grid:select_first_index()
 		end
+	else
+		local grid = self._player_request_grid
+		local scroll_length = grid:scroll_length()
+
+		grid:set_scrollbar_progress(scrollbar_progress / scroll_length, true)
 	end
 end
 
@@ -3370,6 +3414,8 @@ GroupFinderView._update_player_request_button_decline = function (self)
 
 	if self:using_cursor_navigation() then
 		widget.alpha_multiplier = 0
+	else
+		widget.alpha_multiplier = 1
 	end
 
 	local width = self:_text_size_for_style(text, widget.style.text, _dummy_text_size)
@@ -3389,6 +3435,8 @@ GroupFinderView._update_player_request_button_accept = function (self)
 
 	if self:using_cursor_navigation() then
 		widget.alpha_multiplier = 0
+	else
+		widget.alpha_multiplier = 1
 	end
 
 	local width = self:_text_size_for_style(text, widget.style.text, _dummy_text_size)

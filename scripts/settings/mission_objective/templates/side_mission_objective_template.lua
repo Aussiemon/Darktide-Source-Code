@@ -63,6 +63,18 @@ local mission_objective_templates = {
 				side_objective_type = "luggable",
 				unit_name = "battery_01_luggable",
 			},
+			side_mission_hack_communications = {
+				collect_amount = 3,
+				description = "loc_objective_side_mission_communications_hack_desc",
+				evaluate_at_level_end = true,
+				header = "loc_objective_side_mission_communications_hack",
+				icon = "content/ui/materials/icons/mission_types/mission_type_side",
+				is_testable = true,
+				mission_objective_type = "side",
+				objective_category = "side_mission",
+				side_objective_type = "collect",
+				unit_name = "communications_hack_device",
+			},
 		},
 	},
 }

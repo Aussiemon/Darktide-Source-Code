@@ -3164,6 +3164,40 @@ do
 			},
 		},
 	}
+	StatDefinitions.side_communication_hack_device_completed = {
+		flags = {
+			StatFlags.team,
+		},
+		triggers = {
+			{
+				id = "hook_objective_side_incremented_progression",
+				trigger = function (self, stat_data, objective_name, value)
+					if objective_name == "side_mission_hack_communications" then
+						return set_to(self, stat_data, value)
+					end
+				end,
+			},
+		},
+	}
+	StatDefinitions.side_communication_hack_device_end_of_round = {
+		flags = {
+			StatFlags.team,
+			StatFlags.no_sync,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "mission_won",
+				trigger = function (self, stat_data)
+					local minigame_complete_count = read_stat(StatDefinitions.side_communication_hack_device_completed, stat_data)
+
+					if minigame_complete_count >= 1 then
+						return set_to(self, stat_data, minigame_complete_count)
+					end
+				end,
+			},
+		},
+	}
 	StatDefinitions.scripture_recovered_mission_won = {
 		flags = {
 			StatFlags.backend,

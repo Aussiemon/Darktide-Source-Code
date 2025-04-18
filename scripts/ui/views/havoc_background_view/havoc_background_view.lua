@@ -110,7 +110,7 @@ HavocBackgroundView.revoke_mission = function (self)
 		self:_initialize_havoc_state(on_complete_callback)
 	end
 
-	local function catch_function(data)
+	local function catch_function()
 		if self._destroyed then
 			return
 		end
@@ -136,8 +136,16 @@ HavocBackgroundView.revoke_mission = function (self)
 	local ongoing_mission_id = self.havoc_order.ongoing_mission_id
 	local order_id = self.havoc_order.id
 
-	if ongoing_mission_id and charges_left > 1 then
-		Managers.data_service.havoc:delete_personal_mission(ongoing_mission_id):next(next_function):catch(catch_function)
+	if ongoing_mission_id then
+		Managers.data_service.havoc:delete_personal_mission(ongoing_mission_id):next(function ()
+			Managers.data_service.havoc:order_by_id(order_id):next(function (data)
+				if order_id and data.charges == 0 then
+					Managers.data_service.havoc:reject_order(order_id):next(next_function):catch(catch_function)
+				else
+					next_function()
+				end
+			end):catch(catch_function)
+		end):catch(catch_function)
 	elseif order_id then
 		Managers.data_service.havoc:reject_order(order_id):next(next_function):catch(catch_function)
 	end

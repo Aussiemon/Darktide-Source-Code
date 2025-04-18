@@ -254,6 +254,7 @@ minion_difficulty_settings.health = {
 	renegade_twin_captain = _monster_health_steps(24000),
 	renegade_twin_captain_two = _monster_health_steps(24000),
 	renegade_gunner = _elite_health_steps(600),
+	renegade_radio_operator = _elite_health_steps(1000),
 	renegade_berzerker = _elite_health_steps(1000),
 	cultist_berzerker = _elite_health_steps(1000),
 	cultist_ritualist = _roamer_health_steps(1000),
@@ -388,6 +389,14 @@ minion_difficulty_settings.hit_mass = {
 		5,
 		8,
 	},
+	renegade_radio_operator = {
+		5,
+		5,
+		5,
+		5,
+		5,
+		8,
+	},
 	renegade_melee = {
 		3.5,
 		3.5,
@@ -446,6 +455,7 @@ minion_difficulty_settings.power_level = {
 	renegade_default_shot = _step_dmg_ranged(275),
 	renegade_executor_melee = _step_dmg_melee(300),
 	renegade_gunner_shot = _step_dmg_ranged(325),
+	renegade_radio_operator_shot = _step_dmg_ranged(325),
 	renegade_shotgun_shot = _step_dmg_ranged(300),
 	renegade_assault_shot = _step_dmg_ranged(225),
 	cultist_assault_shot = _step_dmg_ranged(250),
@@ -653,6 +663,13 @@ minion_difficulty_settings.shooting = {
 		shoot_dodge_window = _equal_difficulty_values(0.5, 0.5),
 	},
 	renegade_gunner = {
+		aim_durations = _shoot_steps_desc(0.5, 0.75),
+		shoot_cooldown = _shoot_steps_desc(2, 3),
+		time_per_shot = _equal_difficulty_values(0.0923, 0.0923),
+		num_shots = _shoot_steps_asc(50, 50, true),
+		num_shots_cover = _shoot_steps_asc(50, 50, true),
+	},
+	renegade_radio_operator = {
 		aim_durations = _shoot_steps_desc(0.5, 0.75),
 		shoot_cooldown = _shoot_steps_desc(2, 3),
 		time_per_shot = _equal_difficulty_values(0.0923, 0.0923),
@@ -1045,6 +1062,29 @@ minion_difficulty_settings.suppression = {
 		},
 	},
 	renegade_gunner = {
+		above_threshold_decay_multiplier = 2,
+		disable_cover_threshold = 35,
+		max_value = {
+			melee = _sup_scale(40),
+			close = _sup_scale(40),
+			far = _sup_scale(40),
+		},
+		threshold = {
+			melee = _sup_scale(27.5),
+			close = _sup_scale(27.5),
+			far = _sup_scale(27.5),
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.3),
+			far = _sup_div_scale(0.5),
+		},
+		immunity_duration = {
+			0.25,
+			0.5,
+		},
+	},
+	renegade_radio_operator = {
 		above_threshold_decay_multiplier = 2,
 		disable_cover_threshold = 35,
 		max_value = {

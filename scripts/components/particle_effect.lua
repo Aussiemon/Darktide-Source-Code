@@ -96,6 +96,8 @@ ParticleEffect._create_particle = function (self)
 	local world_scale = Unit.world_scale(unit, 1)
 	local particle_id = World.create_particles(world, particle_name, world_position, world_rotation, world_scale)
 
+	World.link_particles(world, particle_id, unit, self._particle_node, Matrix4x4.identity(), "unlink")
+
 	self._particle_id = particle_id
 
 	local scalar_parameters = self:get_data(unit, "scalar_parameters")

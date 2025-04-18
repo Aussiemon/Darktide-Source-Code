@@ -262,11 +262,14 @@ MissionBuffsManager._manage_player_spawn = function (self, player, is_respawn)
 	local mission_buffs_handler = self._mission_buffs_handler
 	local mission_buffs_selector = self._mission_buffs_selector
 	local player_has_existing_data = mission_buffs_handler:does_player_have_existing_data(player)
+	local player_has_legendary_buffs_pool = mission_buffs_handler:does_player_have_legendary_buffs_pool(player)
+
+	if not player_has_legendary_buffs_pool then
+		mission_buffs_selector:init_legendary_buffs_pool_for_player(player, self._backend_buffs_to_exclude)
+	end
 
 	if player_has_existing_data then
 		mission_buffs_handler:restore_buffs_given_to_player(player)
-	else
-		mission_buffs_selector:_init_legendary_buffs_pool_for_player(player, self._backend_buffs_to_exclude)
 	end
 
 	local player_needs_buff_family, player_has_existing_family_choice_pending = mission_buffs_handler:check_player_buff_family_state(player)
@@ -282,6 +285,7 @@ MissionBuffsManager._manage_player_spawn = function (self, player, is_respawn)
 	end
 
 	self:check_catchup_for_new_player(player, self._game_mode:get_last_wave_completed())
+	mission_buffs_handler:log_player_data(player)
 end
 
 MissionBuffsManager._request_specific_buff = function (self, buff_name, target_self)

@@ -109,6 +109,7 @@ local _pickup_name_to_tag_template_name = {
 	ammo_cache_pocketable = "pocketable_ammo_cache_over_here",
 	battery_01_luggable = "luggable_battery_over_here",
 	battery_02_luggable = "luggable_battery_over_here",
+	communications_hack_device = "side_mission_communication_device_over_here",
 	consumable = "side_mission_consumable_over_here",
 	container_01_luggable = "luggable_container_over_here",
 	container_02_luggable = "luggable_container_over_here",

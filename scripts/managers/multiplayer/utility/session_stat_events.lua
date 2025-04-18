@@ -7,6 +7,7 @@ local SessionStatEvents = {}
 local collectible_missions = {
 	side_mission_consumable = "relic",
 	side_mission_grimoire = "grimoire",
+	side_mission_hack_communications = "communications_hack_device",
 	side_mission_tome = "tome",
 }
 

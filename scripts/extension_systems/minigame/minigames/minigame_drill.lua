@@ -45,19 +45,12 @@ MinigameDrill.start = function (self, player)
 	MinigameDrill.super.start(self, player)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_start")
 
-	local is_server = self._is_server
+	if player then
+		self:_setup_sound(player, FX_SOURCE_NAME)
 
-	if is_server then
 		local player_unit = player.player_unit
-		local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
-		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-		local inventory_component = unit_data_extension:read_component("inventory")
-		local fx_sources = visual_loadout_extension:source_fx_for_slot(inventory_component.wielded_slot)
 
 		Unit.set_flow_variable(self._minigame_unit, "player_unit", player_unit)
-
-		self._fx_extension = ScriptUnit.extension(player_unit, "fx_system")
-		self._fx_source_name = fx_sources[FX_SOURCE_NAME]
 	end
 end
 

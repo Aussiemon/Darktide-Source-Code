@@ -412,6 +412,11 @@ NetworkLookup.sound_parameters = {
 	"charge_level",
 	"psyker_overload_global",
 	"auspex_scanner_speed",
+	"auspex_a_h",
+	"auspex_a_w",
+	"auspex_b_h",
+	"auspex_b_w",
+	"auspex_b_goal",
 }
 NetworkLookup.sound_switches = {
 	"surface_material",

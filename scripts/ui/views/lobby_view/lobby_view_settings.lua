@@ -12,13 +12,9 @@ local lobby_view_settings = {
 	debug_character_count = 4,
 	delay_ready_exit = 3,
 	field_of_view = 40,
-	havoc_level_name = "content/levels/ui/havoc_lobby/havoc_lobby",
-	horde_level_name = "content/levels/ui/horde_lobby/horde_lobby",
-	level_name = "content/levels/ui/lobby/lobby",
 	list_button_spacing = 10,
 	max_player_slots = 4,
 	raycast_delay_duration = 0.15,
-	shading_environment = "content/shading_environments/ui/lobby",
 	timer_name = "ui",
 	tooltip_fade_delay = 0.3,
 	tooltip_fade_speed = 7,
@@ -50,6 +46,20 @@ local lobby_view_settings = {
 	loadout_size = {
 		270,
 		200,
+	},
+	levels_by_id = {
+		default = {
+			level_name = "content/levels/ui/lobby/lobby",
+			shading_environment = "content/shading_environments/ui/lobby",
+		},
+		havoc = {
+			level_name = "content/levels/ui/havoc_lobby/havoc_lobby",
+			shading_environment = "content/shading_environments/ui/lobby",
+		},
+		horde = {
+			level_name = "content/levels/ui/horde_lobby/horde_lobby",
+			shading_environment = "content/shading_environments/ui/lobby",
+		},
 	},
 	ignored_slots = {
 		"slot_pocketable",

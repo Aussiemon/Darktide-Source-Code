@@ -1208,7 +1208,7 @@ Items.is_item_compatible_with_profile = function (item, profile)
 		item_gender = wanted_gender
 	end
 
-	local item_breeds = item.breed
+	local item_breeds = item.breeds
 	local wanted_breed = profile.breed
 
 	if item_breeds and not table.is_empty(item_breeds) then

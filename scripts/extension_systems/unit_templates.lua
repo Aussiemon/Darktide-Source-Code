@@ -1845,6 +1845,12 @@ local unit_templates = {
 				})
 			end
 
+			if breed.summon_minions_template then
+				config:add("SummonedMinionsExtension", {
+					breed = breed,
+				})
+			end
+
 			if breed.slot_template then
 				config:add("SlotUserExtension", {
 					breed = breed,
@@ -2314,12 +2320,6 @@ local unit_templates = {
 				game_object_data.yaw = Quaternion.yaw(rotation)
 				game_object_data.pitch = Quaternion.pitch(rotation)
 			end
-
-			local spawn_flow_event = pickup_settings.spawn_flow_event
-
-			if spawn_flow_event then
-				Unit.flow_event(unit, spawn_flow_event)
-			end
 		end,
 		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
 			local go_field = GameSession.game_object_field
@@ -2379,16 +2379,14 @@ local unit_templates = {
 			end
 
 			config:add("ComponentExtension")
-
-			local spawn_flow_event = pickup_settings.spawn_flow_event
-
-			if spawn_flow_event then
-				Unit.flow_event(unit, spawn_flow_event)
-			end
 		end,
 		local_unit_spawned = function (unit, template_context, game_object_data, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
 			if pickup_settings and pickup_settings.spawn_unit_component_event then
 				Component.event(unit, pickup_settings.spawn_unit_component_event, pickup_settings)
+			end
+
+			if pickup_settings and pickup_settings.spawn_flow_event then
+				Unit.flow_event(unit, pickup_settings.spawn_flow_event)
 			end
 		end,
 		husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
@@ -2397,6 +2395,10 @@ local unit_templates = {
 
 			if pickup_settings and pickup_settings.spawn_unit_component_event then
 				Component.event(unit, pickup_settings.spawn_unit_component_event, pickup_settings)
+			end
+
+			if pickup_settings and pickup_settings.spawn_flow_event then
+				Unit.flow_event(unit, pickup_settings.spawn_flow_event)
 			end
 		end,
 	},

@@ -65,18 +65,14 @@ MinigameDecodeSymbols.start = function (self, player)
 	local is_server = self._is_server
 
 	if is_server then
+		self:_setup_sound(player, FX_SOURCE_NAME)
+
 		local player_unit = player.player_unit
-		local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
-		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-		local inventory_component = unit_data_extension:read_component("inventory")
-		local fx_sources = visual_loadout_extension:source_fx_for_slot(inventory_component.wielded_slot)
 
 		Unit.set_flow_variable(self._minigame_unit, "player_unit", player_unit)
 
-		self._fx_extension = ScriptUnit.extension(player_unit, "fx_system")
-		self._fx_source_name = fx_sources[FX_SOURCE_NAME]
-
 		local fixed_frame_t = FixedFrame.get_latest_fixed_time()
+		local is_server = self._is_server
 		local rewind_ms = LagCompensation.rewind_ms(is_server, not player.remote, player)
 		local decode_start_time = fixed_frame_t + rewind_ms
 		local unit_spawner_manager = Managers.state.unit_spawner

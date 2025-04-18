@@ -313,18 +313,27 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			end
 
 			return Promise.all(unpack(promises)):next(function (orders)
+				local cached_havoc_settings = Managers.data_service.havoc:get_settings()
+				local havoc_settings = {
+					min_charges = 1,
+					min_rank = 1,
+					max_rank = cached_havoc_settings.max_rank or 40,
+					max_charges = cached_havoc_settings.max_charges or 3,
+				}
 				local havoc_session = {
 					current = {
 						rank = havoc_data.items[1].rank,
 						charges = orders[1].charges,
 					},
 					previous = {
-						rank = havoc_data.items[2] and havoc_data.items[2].rank or 1,
-						charges = orders[2] and orders[2].charges or 3,
+						rank = havoc_data.items[2] and havoc_data.items[2].rank or havoc_settings.min_rank,
+						charges = orders[2] and orders[2].charges or havoc_settings.max_charges,
 					},
 				}
-				local havoc_order_reward = self:_get_havoc_order_rewards(account_data, havoc_session)
-				local should_present_reward = havoc_order_reward.current_rank and havoc_order_reward.current_rank ~= havoc_order_reward.previous_rank or havoc_order_reward.current_charges and havoc_order_reward.current_rank and havoc_order_reward.current_rank ~= havoc_order_reward.min_rank and havoc_order_reward.current_charges ~= havoc_order_reward.previous_charges
+				local havoc_order_reward = self:_get_havoc_order_rewards(account_data, havoc_session, havoc_settings)
+				local rank_changed = havoc_order_reward.current_rank ~= havoc_order_reward.previous_rank or false
+				local charges_changed = havoc_order_reward.current_charges ~= havoc_order_reward.previous_charges or false
+				local should_present_reward = charges_changed or rank_changed
 
 				if should_present_reward then
 					self._session_report.character.havoc_order_reward = havoc_order_reward
@@ -515,14 +524,14 @@ ProgressionManager._has_won_mission = function (self, account_data)
 	return false
 end
 
-ProgressionManager._get_havoc_order_rewards = function (self, account_data, havoc_session)
-	local havoc_info = Managers.data_service.havoc:get_settings()
-	local min_rank = 1
-	local max_rank = havoc_info.max_rank
-	local max_charges = havoc_info.max_charges
+ProgressionManager._get_havoc_order_rewards = function (self, account_data, havoc_session, havoc_settings)
+	local min_rank = havoc_settings.min_rank
+	local max_rank = havoc_settings.max_rank
+	local min_charges = havoc_settings.min_charges
+	local max_charges = havoc_settings.max_charges
 	local round_won = self:_has_won_mission(account_data)
 	local reward_cards = account_data.rewardCards
-	local modify_previous_reward = true
+	local received_new_order = false
 
 	for i = 1, #reward_cards do
 		local reward_card = reward_cards[i]
@@ -532,25 +541,37 @@ ProgressionManager._get_havoc_order_rewards = function (self, account_data, havo
 			local reward = rewards[1]
 
 			if reward and reward.rewardType == "havocOrder" then
-				modify_previous_reward = false
+				received_new_order = true
 
 				break
 			end
 		end
 	end
 
-	if modify_previous_reward then
+	if not received_new_order then
 		havoc_session.previous.rank = havoc_session.current.rank
-		havoc_session.previous.charges = havoc_session.current.charges + (not round_won and 1 or 0)
+
+		if not round_won and havoc_session.current.rank == min_rank then
+			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
+		elseif not round_won and havoc_session.current_rank == max_rank then
+			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
+		elseif not round_won and min_charges <= havoc_session.current.charges and max_charges > havoc_session.current.charges then
+			havoc_session.previous.charges = math.clamp(havoc_session.current.charges + 1, min_charges, max_charges)
+		elseif round_won and havoc_session.current_rank == max_rank then
+			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
+		else
+			local error_message = string.format("ProgressionManager:_get_havoc_order_rewards ended up in a state unaccounted for:\nhavoc_info: %s\nhavoc_session: %s\nround_won: %s\nreward_cards: %s\n", table.tostring(havoc_settings), table.tostring(havoc_session), tostring(round_won), table.tostring(reward_cards))
+
+			Log.error("ProgressionManager", error_message)
+
+			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
+		end
 	end
 
 	local current_rank = havoc_session.current.rank
 	local current_charges = havoc_session.current.charges
 	local previous_charges = havoc_session.previous.charges
 	local previous_rank = havoc_session.previous.rank
-	local max_charges = max_charges
-	local min_rank = min_rank
-	local max_rank = max_rank
 
 	return {
 		previous_charges = previous_charges,

@@ -77,6 +77,8 @@ Device.wield = function (self)
 			Unit.set_visibility(self._item_unit_3p, HOLO_SCREEN_VISIBILITY_GROUP, true)
 		end
 	end
+
+	Unit.flow_event(self._item_unit_1p, "lua_device_wield")
 end
 
 Device.unwield = function (self)
@@ -89,6 +91,8 @@ Device.unwield = function (self)
 			scanner_display_extension:deactivate()
 		end
 	end
+
+	Unit.flow_event(self._item_unit_1p, "lua_device_unwield")
 end
 
 Device.destroy = function (self)

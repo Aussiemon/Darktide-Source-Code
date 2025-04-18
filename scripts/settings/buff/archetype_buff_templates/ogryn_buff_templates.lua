@@ -1656,6 +1656,7 @@ local breed_name_size = {
 	renegade_gunner = 2,
 	renegade_melee = 1,
 	renegade_netgunner = 2,
+	renegade_radio_operator = 2,
 	renegade_rifleman = 1,
 	renegade_shocktrooper = 2,
 	renegade_sniper = 1,

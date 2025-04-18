@@ -27,6 +27,7 @@ local sound_events = {
 	"wwise/events/minions/play_horde_group_sfx_poxwalkers",
 	"wwise/events/minions/play_loc_captain_twin_male_a__mission_twins_arrival_04_a_01_ambisonics",
 	"wwise/events/minions/play_mid_event_horde_signal",
+	"wwise/events/minions/play_minion_captain__force_field_overload_vce",
 	"wwise/events/minions/play_minion_captain_spawn_stinger",
 	"wwise/events/minions/play_enemy_radio_operator_pre_stinger",
 	"wwise/events/minions/play_enemy_radio_operator_stinger",

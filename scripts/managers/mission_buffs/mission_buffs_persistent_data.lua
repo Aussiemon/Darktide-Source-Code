@@ -20,6 +20,7 @@ MissionBuffsPersistentData.init_player_data = function (self, player)
 	local player_account_id = player:account_id()
 
 	players_data[player_account_id] = {
+		legendary_buffs_initialized = false,
 		num_family_buffs_received = 0,
 		num_legendary_buffs_received = 0,
 		account_id = player_account_id,
@@ -39,6 +40,16 @@ MissionBuffsPersistentData.does_player_have_existing_data = function (self, play
 	local player_account_id = player:account_id()
 
 	return players_data[player_account_id] ~= nil
+end
+
+MissionBuffsPersistentData.does_player_have_legendary_buffs_pool = function (self, player)
+	local player_data = self:_get_player_data(player)
+
+	if player_data == nil then
+		return false
+	end
+
+	return player_data.legendary_buffs_initialized
 end
 
 MissionBuffsPersistentData.check_player_buff_family_state = function (self, player)
@@ -155,6 +166,7 @@ MissionBuffsPersistentData.set_legendary_buffs_available_for_player = function (
 	local target_player_data = self:_get_or_create_player_data(player)
 
 	target_player_data.legendary_buffs_available = legendary_buffs
+	target_player_data.legendary_buffs_initialized = true
 end
 
 MissionBuffsPersistentData.get_legendary_buffs_available_for_player = function (self, player)
@@ -327,6 +339,63 @@ MissionBuffsPersistentData.restore_unselected_legendary_buffs_to_player_pool = f
 			table.insert(target_pool, buff_name)
 		end
 	end
+end
+
+MissionBuffsPersistentData.log_player_data = function (self, player)
+	local player_account_id = player:account_id()
+	local player_peer_id = player:peer_id()
+	local player_data = self:_get_player_data(player)
+
+	if not player_data then
+		Log.info("MissionBuffsPersistentData", "No existing data for Player with AccountID[%s] and PeerID[%s]", player_account_id, player_peer_id)
+
+		return
+	end
+
+	Log.info("MissionBuffsPersistentData", "============================================================")
+	Log.info("MissionBuffsPersistentData", "Data for Player with AccountID[%s] and PeerID[%s]", player_account_id, player_peer_id)
+
+	local player_buffs = player_data.buffs_received
+	local buffs_received = ""
+
+	for buff_name, buff_data in pairs(player_buffs) do
+		buffs_received = buffs_received .. buff_name .. "||"
+	end
+
+	Log.info("MissionBuffsPersistentData", "Buffs Received for Player[%s]:\n%s", player_account_id, buffs_received)
+
+	local player_legendary_buffs_pool = player_data.legendary_buffs_available
+
+	Log.info("MissionBuffsPersistentData", "Legendary Buffs Pool for Player %s", player_account_id)
+
+	for filter_category, buffs in pairs(player_legendary_buffs_pool) do
+		Log.info("MissionBuffsPersistentData", "Buffs left in category %s", filter_category)
+
+		local buff_names = ""
+
+		for _, buff_name in pairs(buffs) do
+			buff_names = buff_names .. buff_name .. "||"
+		end
+
+		Log.info("MissionBuffsPersistentData", "%s", buff_names)
+	end
+
+	local player_current_choice = player_data.current_choice
+
+	if player_current_choice then
+		local is_family_choice = player_current_choice.is_buff_family_choice
+		local options = player_current_choice.options
+		local buff_names = ""
+
+		for _, buff_name in ipairs(options) do
+			buff_names = buff_names .. buff_name .. "||"
+		end
+
+		Log.info("MissionBuffsPersistentData", "Current Choice: IsFamilyChoice[%s] - Choices: %s", is_family_choice and "Y" or "N", buff_names)
+	end
+
+	Log.info("MissionBuffsPersistentData", "End of Data for Player with AccountID[%s] and PeerID[%s]", player_account_id, player_peer_id)
+	Log.info("MissionBuffsPersistentData", "============================================================")
 end
 
 return MissionBuffsPersistentData

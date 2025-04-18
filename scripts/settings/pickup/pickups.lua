@@ -45,6 +45,7 @@ _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_ability
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_corruption_pocketable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_power_boost_pocketable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_speed_boost_pocketable_pickup")
+_create_pickup_entry("scripts/settings/pickup/pickups/side_mission/communications_hack_device_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/consumable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/grimoire_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/tome_pickup")

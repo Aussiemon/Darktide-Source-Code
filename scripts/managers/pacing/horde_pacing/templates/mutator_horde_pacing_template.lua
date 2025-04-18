@@ -195,7 +195,7 @@ local function low_coherency(target_side_id)
 	return false
 end
 
-local ALLOWED_BACKTRACK_DISTANCE = 20
+local ALLOWED_BACKTRACK_DISTANCE = 50
 
 local function players_backtracking(target_side_id)
 	local main_path_manager = Managers.state.main_path

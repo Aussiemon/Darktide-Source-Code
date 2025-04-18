@@ -207,7 +207,7 @@ HordePlayView._cb_on_mission_start = function (self)
 	local mission_id = mission.id
 	local private_match = self._private_match
 
-	Managers.party_immaterium:wanted_mission_selected(mission_id, private_match)
+	Managers.party_immaterium:wanted_mission_selected(mission_id, private_match, BackendUtilities.prefered_mission_region)
 end
 
 HordePlayView._update_fetch_missions = function (self, t)

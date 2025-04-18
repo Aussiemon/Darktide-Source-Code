@@ -79,9 +79,9 @@ Orders.activate_order_by_id = function (self, order_id, participants, optional_a
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
 			if data.status == 200 then
 				return data.body.mission
-			else
-				return Promise.rejected(data)
 			end
+		end):catch(function (error)
+			return Promise.rejected(error)
 		end)
 	end):catch(function (error)
 		return Promise.rejected(error)

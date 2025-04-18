@@ -421,8 +421,10 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 	local packages = self._packages
 	local player_alias_versions = self._player_alias_versions
 	local required_package_aliases = template.required_package_aliases
-	local anything_loading = false
+	local remaining_package_aliases = template.remaining_package_aliases
 	local all_required_packages_loaded = true
+	local local_peer_id = self._peer_id
+	local all_required_packages_for_local_peer_loaded = packages[local_peer_id] ~= nil
 
 	for peer_id, data in pairs(packages) do
 		local enabled = data.enabled
@@ -437,25 +439,41 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 					local previous_state = package_data.state
 					local prioritize = true
 
-					if package_data.state ~= LOADING_STATES.loaded then
-						anything_loading = true
-					end
-
 					self:_handle_dependency_loading(package_data, prioritize)
 
 					if package_data.state ~= LOADING_STATES.loaded then
 						all_required_packages_loaded = false
+
+						if peer_id == local_peer_id then
+							all_required_packages_for_local_peer_loaded = false
+						end
 					elseif previous_state ~= LOADING_STATES.loaded then
 						if hosted_synchronizer_host then
-							hosted_synchronizer_host:alias_loading_complete(self._peer_id, peer_id, local_player_id, alias)
+							hosted_synchronizer_host:alias_loading_complete(local_peer_id, peer_id, local_player_id, alias)
 						else
 							local alias_index = table.index_of(PlayerPackageAliases, alias)
 							local alias_version = player_alias_versions[peer_id] and player_alias_versions[peer_id][local_player_id] or 1
 
-							RPC.rpc_alias_loading_complete(self._host_channel_id, self._peer_id, peer_id, local_player_id, alias_index, alias_version)
+							RPC.rpc_alias_loading_complete(self._host_channel_id, local_peer_id, peer_id, local_player_id, alias_index, alias_version)
 						end
 					end
 				end
+			end
+		elseif peer_id == local_peer_id then
+			all_required_packages_for_local_peer_loaded = false
+		end
+	end
+
+	if all_required_packages_for_local_peer_loaded then
+		local data = packages[local_peer_id]
+		local peer_packages = data.peer_packages
+
+		for local_player_id, player_packages in pairs(peer_packages) do
+			for i = 1, #remaining_package_aliases do
+				local alias = remaining_package_aliases[i]
+				local package_data = player_packages[alias]
+
+				self:_handle_dependency_loading(package_data)
 			end
 		end
 	end
@@ -463,8 +481,6 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 	local all_remaining_packages_loaded = true
 
 	if all_required_packages_loaded then
-		local remaining_package_aliases = template.remaining_package_aliases
-
 		for peer_id, data in pairs(packages) do
 			local enabled = data.enabled
 
@@ -475,10 +491,6 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 					for i = 1, #remaining_package_aliases do
 						local alias = remaining_package_aliases[i]
 						local package_data = player_packages[alias]
-
-						if package_data.state ~= LOADING_STATES.loaded then
-							anything_loading = true
-						end
 
 						self:_handle_dependency_loading(package_data)
 

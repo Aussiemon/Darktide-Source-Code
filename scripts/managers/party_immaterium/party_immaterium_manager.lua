@@ -811,17 +811,8 @@ PartyImmateriumManager._handle_party_vote_update_event = function (self, event)
 		local params = event.params
 
 		if params.mission_data and string.find(params.mission_data, "havoc-rank", nil, true) then
-			Managers.data_service.havoc:personal_mission(params.backend_mission_id):next(function (data)
-				if data and data.start then
-					local server_time = Managers.backend:get_server_time(Managers.time:time("main"))
-					local server_cancel_max_time = 60
-
-					if server_cancel_max_time > (server_time - data.start) / 1000 then
-						Managers.data_service.havoc:delete_personal_mission(params.backend_mission_id):next(function ()
-							Managers.event:trigger("event_auto_cancel_havoc_mission")
-						end)
-					end
-				end
+			Managers.data_service.havoc:delete_personal_mission(params.backend_mission_id):next(function ()
+				Managers.event:trigger("event_auto_cancel_havoc_mission")
 			end)
 		end
 	end

@@ -114,6 +114,8 @@ ComponentSystem.flow_call_component = function (self, unit, guid, function_name,
 
 	if extension then
 		extension:flow_call_component(guid, function_name, ...)
+	else
+		Log.warning("ComponentSystem", "[flow_call_component] call failed. unit: %s, guid: %s, function: %s", unit, guid, function_name)
 	end
 end
 

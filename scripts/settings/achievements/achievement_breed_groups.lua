@@ -43,6 +43,7 @@ AchievementBreedGroups.all = {
 	"renegade_gunner",
 	"renegade_melee",
 	"renegade_netgunner",
+	"renegade_radio_operator",
 	"renegade_rifleman",
 	"renegade_shocktrooper",
 	"renegade_sniper",
@@ -97,6 +98,7 @@ AchievementBreedGroups.renegade = {
 	"renegade_gunner",
 	"renegade_melee",
 	"renegade_netgunner",
+	"renegade_radio_operator",
 	"renegade_rifleman",
 	"renegade_shocktrooper",
 	"renegade_sniper",
@@ -111,6 +113,7 @@ AchievementBreedGroups.renegade_elite = {
 	"renegade_berzerker",
 	"renegade_executor",
 	"renegade_gunner",
+	"renegade_radio_operator",
 	"renegade_shocktrooper",
 }
 AchievementBreedGroups.special_and_elite_breed_lookup = {

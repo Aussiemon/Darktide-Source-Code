@@ -23,6 +23,10 @@ MinigameExtension.init = function (self, extension_init_context, unit, extension
 	self._mutator_on_minigame_complete = nil
 	self._minigame_angle_check = true
 
+	local wwise_world = extension_init_context.wwise_world
+
+	self._wwise_world = wwise_world
+
 	if self._is_server and prop_settings_or_game_object_id then
 		local prop_settings = prop_settings_or_game_object_id
 
@@ -93,7 +97,7 @@ end
 MinigameExtension.setup_minigame = function (self)
 	local minigame_class = MinigameClasses[self._minigame_type]
 
-	self._minigame = minigame_class:new(self._unit, self._is_server, self._seed)
+	self._minigame = minigame_class:new(self._unit, self._is_server, self._seed, self._wwise_world)
 end
 
 MinigameExtension.update = function (self, unit, dt, t)
@@ -175,8 +179,42 @@ MinigameExtension.completed = function (self)
 		Managers.state.game_session:send_rpc_clients("rpc_minigame_sync_completed", unit_id, is_level_unit)
 
 		if self._is_side_mission then
-			-- Nothing
+			self:_update_side_mission_progression()
 		end
+
+		local mutator_on_minigame_complete = self._mutator_on_minigame_complete
+
+		if mutator_on_minigame_complete then
+			local mutator_manager = Managers.state.mutator
+			local communication_hack_mutator = mutator_manager:mutator(mutator_on_minigame_complete)
+
+			if communication_hack_mutator then
+				local player_unit
+				local player_session_id = self._minigame:player_session_id()
+
+				if player_session_id then
+					local player = Managers.player:player_from_session_id(self._minigame._player_session_id)
+
+					player_unit = player.player_unit
+				end
+
+				communication_hack_mutator:spawn_random_from_template(player_unit)
+			end
+		end
+	end
+end
+
+MinigameExtension._update_side_mission_progression = function (self)
+	local mission_objective_target_extension = ScriptUnit.extension(self._unit, "mission_objective_target_system")
+	local objective_name = mission_objective_target_extension:objective_name()
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+	if mission_objective_system:is_current_active_objective(objective_name) then
+		local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name)
+		local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
+		local increment_value = 1
+
+		synchronizer_extension:add_progression(increment_value)
 	end
 end
 

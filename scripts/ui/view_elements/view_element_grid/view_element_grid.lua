@@ -1170,7 +1170,7 @@ end
 ViewElementGrid.scrollbar_progress = function (self)
 	local grid = self._grid
 
-	return grid:scrollbar_progress()
+	return grid and grid:scrollbar_progress()
 end
 
 ViewElementGrid.set_scrollbar_progress = function (self, scroll_progress, instant_scroll)
@@ -1443,12 +1443,28 @@ ViewElementGrid.get_sort_button_world_position = function (self)
 	return self:scenegraph_world_position(scenegraph_id)
 end
 
-ViewElementGrid.force_update_list_size_keeping_scroll = function (self)
+ViewElementGrid.length_scrolled = function (self)
 	local grid = self._grid
-	local current_scroll = grid:length_scrolled()
+	local current_scroll = grid and grid:length_scrolled() or 0
+
+	return current_scroll
+end
+
+ViewElementGrid.scroll_length = function (self)
+	local grid = self._grid
+	local scroll_length = grid and grid:scroll_length() or 0
+
+	return scroll_length
+end
+
+ViewElementGrid.force_update_list_size_keeping_scroll = function (self)
+	local current_scroll = self:length_scrolled()
 
 	self:force_update_list_size()
-	self:set_scrollbar_progress(current_scroll / grid:scroll_length(), true)
+
+	local scrol_length = self:scroll_length()
+
+	self:set_scrollbar_progress(current_scroll / scrol_length, true)
 end
 
 ViewElementGrid.hovered_grid_index = function (self)

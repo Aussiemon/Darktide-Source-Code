@@ -790,6 +790,17 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_communication_hack_event = {
+		class = "scripts/managers/mutator/mutators/mutator_nurgle_warp",
+		compositions = {
+			{
+				"renegade_radio_operator",
+				"renegade_netgunner",
+				"renegade_executor",
+				"renegade_executor",
+			},
+		},
+	},
 }
 
 return mutator_templates

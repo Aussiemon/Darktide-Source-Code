@@ -722,6 +722,35 @@ conditions.is_passive = function (unit, blackboard, scratchpad, condition_args, 
 	return is_passive
 end
 
+conditions.can_summon_minions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local summon_component = blackboard.summon
+	local next_summon_t = summon_component.next_summon_t
+	local t = Managers.time:time("gameplay")
+	local minion_amount = summon_component.amount
+
+	if minion_amount ~= 0 then
+		return false
+	end
+
+	if next_summon_t < t then
+		return true
+	else
+		return false
+	end
+end
+
+conditions.can_summon_timer_only = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local summon_component = blackboard.summon
+	local next_summon_t = summon_component.next_summon_t
+	local t = Managers.time:time("gameplay")
+
+	if next_summon_t < t then
+		return true
+	else
+		return false
+	end
+end
+
 conditions.captain_can_use_special_actions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local captain_can_use_special_action = not scratchpad.is_blocking_captain_special_actions
 

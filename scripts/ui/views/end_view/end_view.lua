@@ -51,7 +51,11 @@ EndView.init = function (self, settings, context)
 	self._has_shown_summary_view = false
 	self._fetch_party_done = false
 
-	EndView.super.init(self, definitions, settings, context)
+	local level, dynamic_level_package = self:select_target_level()
+
+	self._level = level
+
+	EndView.super.init(self, definitions, settings, context, dynamic_level_package)
 
 	self._pass_draw = false
 	self._pass_input = true
@@ -327,7 +331,7 @@ EndView.event_register_end_of_round_camera = function (self, camera_unit)
 	local viewport_name = EndViewSettings.viewport_name
 	local viewport_type = EndViewSettings.viewport_type
 	local viewport_layer = EndViewSettings.viewport_layer
-	local shading_environment = EndViewSettings.shading_environment
+	local shading_environment = self._level.shading_environment
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 end
@@ -569,6 +573,21 @@ EndView._setup_stay_in_party_vote = function (self)
 	hotspot.pressed_callback = callback(self, "_cb_on_stay_in_party_pressed")
 end
 
+EndView.select_target_level = function (self)
+	local level_name
+	local played_mission = self._context.played_mission
+
+	level_name = played_mission == "psykhanium" and "horde" or "default"
+
+	local level = EndViewSettings.levels_by_id[level_name] or EndViewSettings.levels_by_id.default
+	local level_packages = {
+		is_level_package = true,
+		name = level.level_name,
+	}
+
+	return level, level_packages
+end
+
 EndView._setup_background_world = function (self)
 	self:_register_event("event_register_end_of_round_camera", "event_register_end_of_round_camera")
 
@@ -608,13 +627,9 @@ EndView._setup_background_world = function (self)
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	local level_name
-	local played_mission = self._context.played_mission
+	local target_level = self._level
 
-	if played_mission == "psykhanium" then
-		level_name = EndViewSettings.horde_level_name
-	else
-		level_name = EndViewSettings.level_name
-	end
+	level_name = self._level.level_name
 
 	self._world_spawner:spawn_level(level_name)
 	self:_register_event("end_of_round_blur_background_world", "_end_of_round_blur_background_world")

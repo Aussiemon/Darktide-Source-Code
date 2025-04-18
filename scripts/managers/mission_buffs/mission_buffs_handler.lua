@@ -23,6 +23,10 @@ MissionBuffsHandler.does_player_have_existing_data = function (self, player)
 	return self._persistent_data:does_player_have_existing_data(player)
 end
 
+MissionBuffsHandler.does_player_have_legendary_buffs_pool = function (self, player)
+	return self._persistent_data:does_player_have_legendary_buffs_pool(player)
+end
+
 MissionBuffsHandler.check_player_buff_family_state = function (self, player)
 	return self._persistent_data:check_player_buff_family_state(player)
 end
@@ -167,6 +171,10 @@ MissionBuffsHandler.get_family_buffs_available_for_player = function (self, play
 	end
 
 	return priority_buffs_available, family_buffs_available
+end
+
+MissionBuffsHandler.log_player_data = function (self, player)
+	self._persistent_data:log_player_data(player)
 end
 
 return MissionBuffsHandler

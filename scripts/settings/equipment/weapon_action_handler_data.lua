@@ -72,6 +72,7 @@ weapon_action_data.actions = {
 	unwield = _require_weapon_action("action_unwield"),
 	unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
 	unwield_to_specific = _require_weapon_action("action_unwield_to_specific"),
+	use_auspex = _require_weapon_action("action_use_auspex"),
 	use_syringe = _require_weapon_action("action_use_syringe"),
 	vent_overheat = _require_weapon_action("action_vent_overheat"),
 	vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),

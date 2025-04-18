@@ -110,7 +110,7 @@ MissionBuffsSelector._get_family_buffs_pool = function (self, family_name)
 	return MissionBuffsAllowedBuffs.buff_families[family_name].buffs
 end
 
-MissionBuffsSelector._init_legendary_buffs_pool_for_player = function (self, player, buffs_to_exclude)
+MissionBuffsSelector.init_legendary_buffs_pool_for_player = function (self, player, buffs_to_exclude)
 	local valid_categorized_buffs = {}
 
 	for _, filtering_category in pairs(filtering_categories) do

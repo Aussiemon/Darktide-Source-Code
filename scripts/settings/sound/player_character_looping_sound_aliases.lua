@@ -200,6 +200,30 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_sfx_minigame_loop",
 		},
 	},
+	sfx_minigame_sinus_loop = {
+		start = {
+			event_alias = "play_sfx_minigame_sinus_loop",
+		},
+		stop = {
+			event_alias = "stop_sfx_minigame_loop",
+		},
+	},
+	sfx_minigame_sinus_loop_a = {
+		start = {
+			event_alias = "play_sfx_minigame_sinus_loop_a",
+		},
+		stop = {
+			event_alias = "stop_sfx_minigame_loop",
+		},
+	},
+	sfx_minigame_sinus_loop_b = {
+		start = {
+			event_alias = "play_sfx_minigame_sinus_loop_b",
+		},
+		stop = {
+			event_alias = "stop_sfx_minigame_loop",
+		},
+	},
 }
 
 return PlayerCharacterLoopingSoundAliases

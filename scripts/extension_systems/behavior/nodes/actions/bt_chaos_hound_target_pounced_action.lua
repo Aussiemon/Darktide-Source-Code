@@ -114,6 +114,15 @@ BtChaosHoundTargetPouncedAction.run = function (self, unit, breed, blackboard, s
 			scratchpad.attempting_pounce = false
 
 			self:_pounce_achieved(scratchpad, action_data, t, pounce_target)
+
+			local summon_unit_component = Blackboard.write_component(blackboard, "summon_unit")
+			local owner_unit = summon_unit_component.owner
+
+			if owner_unit and HEALTH_ALIVE[owner_unit] then
+				local summon_extension = ScriptUnit.extension(summon_unit_component.owner, "summon_minions_system")
+
+				summon_extension:wwise_on_minion_success()
+			end
 		else
 			local disabled_state_input_component = scratchpad.disabled_state_input_component
 			local attempting_pounce = disabled_state_input_component.wants_disable

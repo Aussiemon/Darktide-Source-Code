@@ -2,7 +2,7 @@
 
 local minigame_settings = {}
 
-minigame_settings.types = table.enum("none", "balance", "decode_symbols", "defuse", "drill", "scan")
+minigame_settings.types = table.enum("none", "balance", "decode_symbols", "defuse", "drill", "frequency", "scan")
 minigame_settings.states = table.enum("none", "active", "completed")
 minigame_settings.game_states = table.enum("none", "intro", "gameplay", "transition", "outro")
 minigame_settings.default_minigame_type = minigame_settings.types.decode_symbols
@@ -23,6 +23,20 @@ minigame_settings.disengage_view_angle_v = math.degrees_to_radians(62)
 minigame_settings.decode_symbols_stage_amount = num_stages
 minigame_settings.decode_symbols_items_per_stage = num_symbols_per_stage
 minigame_settings.decode_symbols_total_items = num_stages * num_symbols_per_stage
+minigame_settings.frequency_search_stage_amount = 3
+minigame_settings.frequency_width_min_scale = 1.5
+minigame_settings.frequency_width_max_scale = 3
+minigame_settings.frequency_height_min_scale = 1.5
+minigame_settings.frequency_height_max_scale = 3.5
+minigame_settings.frequency_speed = 1.5
+
+local frequency_change_ratio = 0.75
+
+minigame_settings.frequency_change_ratio_x = (minigame_settings.frequency_width_max_scale - minigame_settings.frequency_width_min_scale) * frequency_change_ratio
+minigame_settings.frequency_change_ratio_y = (minigame_settings.frequency_height_max_scale - minigame_settings.frequency_height_min_scale) * frequency_change_ratio
+minigame_settings.frequency_help_margin = 0.6
+minigame_settings.frequency_help_power = 1
+minigame_settings.frequency_success_margin = 0.1
 minigame_settings.drill_transition_time = 0.6
 minigame_settings.drill_search_time = 0.5
 minigame_settings.drill_stage_amount = 3

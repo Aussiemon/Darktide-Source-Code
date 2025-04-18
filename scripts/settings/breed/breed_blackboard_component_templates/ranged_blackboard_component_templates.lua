@@ -220,6 +220,13 @@ renegade_twin_captain_two.nearby_units_broadphase = {
 	num_units = "number",
 }
 
+local renegade_radio_operator = table.clone(riflemen)
+
+renegade_radio_operator.summon = {
+	amount = "number",
+	next_summon_t = "number",
+}
+
 local templates = {
 	cultist_flamer = cultist_flamer,
 	grenadier = grenadier,
@@ -229,6 +236,7 @@ local templates = {
 	ranged_patroller = ranged_patroller,
 	ranged_patroller_no_suppression = ranged_patroller_no_suppression,
 	renegade_flamer = renegade_flamer,
+	renegade_radio_operator = renegade_radio_operator,
 	renegade_twin_captain = renegade_twin_captain,
 	renegade_twin_captain_two = renegade_twin_captain_two,
 	riflemen = riflemen,

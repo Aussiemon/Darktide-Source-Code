@@ -510,7 +510,12 @@ HavocPlayView._cb_on_mission_start = function (self)
 
 		Managers.party_immaterium:wanted_mission_selected(mission_id, private_match)
 	end):catch(function (error)
-		Log.error("DebugFunctions", "Could not create mission " .. table.tostring(error, 5))
+		if error and error.code == 400 and string.find(error.description, "already_has_ongoing_mission") then
+			self:_play_sound(UISoundEvents.havoc_terminal_deny_mission)
+			Managers.event:trigger("event_add_notification_message", "alert", {
+				text = Localize("loc_havoc_must_cancel_ongoing_mission"),
+			})
+		end
 	end)
 end
 

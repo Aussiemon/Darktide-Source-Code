@@ -634,6 +634,19 @@ dialogue_breed_settings.renegade_gunner = {
 		"enemy_traitor_gunner_a",
 	},
 }
+dialogue_breed_settings.renegade_radio_operator = {
+	dialogue_memory_faction_name = "enemy",
+	has_dialogue_extension = true,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	trigger_seen_vo = true,
+	vo_class_name = "renegade_radio_operator",
+	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = "switch_voice_enemy_traitor_gunner",
+	wwise_voices = {
+		"enemy_traitor_gunner_a",
+	},
+}
 dialogue_breed_settings.renegade_melee = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,

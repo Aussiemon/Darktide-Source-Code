@@ -139,7 +139,7 @@ templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus = {
 			format_type = "number",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus",
-				find_value_type = "buff_template",
+				find_value_type = "trait_override",
 				path = {
 					"active_duration",
 				},

@@ -297,6 +297,7 @@ local template_groups = {
 		"pocketables",
 		"ammo_cache_pocketable",
 		"breach_charge_pocketable",
+		"communications_hack_device_pocketable",
 		"grimoire_pocketable",
 		"medical_crate_pocketable",
 		"syringe_ability_boost_pocketable",

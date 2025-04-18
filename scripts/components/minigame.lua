@@ -47,6 +47,7 @@ Minigame.component_data = {
 			"Decode Symbols",
 			"Defuse",
 			"Drill",
+			"Find Frequency",
 		},
 		options_values = {
 			"none",
@@ -56,6 +57,7 @@ Minigame.component_data = {
 			"decode_symbols",
 			"defuse",
 			"drill",
+			"frequency",
 		},
 	},
 	extensions = {

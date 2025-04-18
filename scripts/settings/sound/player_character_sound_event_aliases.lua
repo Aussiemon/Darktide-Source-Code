@@ -2994,6 +2994,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_progress",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_progress",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3004,6 +3005,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_progress_last",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_progress_last",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3014,6 +3016,40 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_fail",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_fail",
+			default = "wwise/events/weapon/play_weapon_silence",
+		},
+	},
+	sfx_minigame_sinus_adjust_x = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template",
+		},
+		events = {
+			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_adjust_x",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_adjust_x",
+			default = "wwise/events/weapon/play_weapon_silence",
+		},
+	},
+	sfx_minigame_sinus_adjust_y = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template",
+		},
+		events = {
+			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_adjust_y",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_adjust_y",
+			default = "wwise/events/weapon/play_weapon_silence",
+		},
+	},
+	sfx_minigame_sinus_success_last = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template",
+		},
+		events = {
+			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_aligned",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_aligned",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3024,6 +3060,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_selection",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_bio_minigame_selection",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3034,6 +3071,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_selection_right",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_bio_minigame_selection_right",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3044,6 +3082,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_selection_wrong",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_bio_minigame_selection_wrong",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3054,6 +3093,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_progress",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_bio_minigame_progress",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3064,6 +3104,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_progress_last",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_bio_minigame_progress_last",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3074,6 +3115,7 @@ local events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_fail",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_bio_minigame_fail",
 			default = "wwise/events/weapon/play_weapon_silence",
 		},
 	},
@@ -3924,6 +3966,43 @@ local looping_events = {
 		},
 		events = {
 			auspex_scanner = "wwise/events/player/%s_device_auspex_scanner_minigame_loop",
+			communications_hack_device_pocketable = "wwise/events/player/%s_device_auspex_scanner_minigame_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
+		},
+	},
+	sfx_minigame_sinus_loop = {
+		has_stop_event = true,
+		switch = {
+			"wielded_weapon_template",
+			"loop_type",
+		},
+		events = {
+			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_background_loop",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_background_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
+		},
+	},
+	sfx_minigame_sinus_loop_a = {
+		has_stop_event = true,
+		switch = {
+			"wielded_weapon_template",
+			"loop_type",
+		},
+		events = {
+			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_loop_a",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_loop_a",
+			default = "wwise/events/weapon/%s_weapon_silence",
+		},
+	},
+	sfx_minigame_sinus_loop_b = {
+		has_stop_event = true,
+		switch = {
+			"wielded_weapon_template",
+			"loop_type",
+		},
+		events = {
+			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_loop_b",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_sinus_loop_b",
 			default = "wwise/events/weapon/%s_weapon_silence",
 		},
 	},

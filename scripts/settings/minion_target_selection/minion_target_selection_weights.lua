@@ -227,6 +227,16 @@ minion_target_selection_weights.renegade_gunner = {
 	near_distance_bonus = 30,
 	occupied_slots = -1,
 }
+minion_target_selection_weights.renegade_radio_operator = {
+	attack_not_allowed = -2,
+	disabled = -8,
+	distance_to_target = 22,
+	line_of_sight_weight = 8,
+	max_distance = 50,
+	near_distance = 10,
+	near_distance_bonus = 30,
+	occupied_slots = -1,
+}
 minion_target_selection_weights.renegade_melee = {
 	disabled = -2,
 	distance_to_target = 2,

@@ -13,6 +13,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_l
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_target_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/communication_hack_device_interface")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/deployable_device_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/device")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flamer_gas_effects")

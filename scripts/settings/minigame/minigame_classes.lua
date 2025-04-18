@@ -14,6 +14,7 @@ local minigame_classes = {
 	decode_symbols = _require_minigame_class("decode_symbols"),
 	defuse = _require_minigame_class("defuse"),
 	drill = _require_minigame_class("drill"),
+	frequency = _require_minigame_class("frequency"),
 	scan = _require_minigame_class("scan"),
 }
 

@@ -97,6 +97,7 @@ _system_require("smoke_fog", "smoke_fog_system", "smoke_fog_extension", "smoke_f
 _system_require("spline_group", "spline_group_system")
 _system_require("spread", "player_unit_weapon_spread_extension")
 _system_require("suppression", "minion_suppression_extension", "minion_suppression_husk_extension", "player_suppression_extension")
+_system_require("summoned_minions", "summoned_minions_extension")
 _system_require("scripted_scenario", "scripted_scenario_system")
 _system_require("talent", "talent_system")
 _system_require("trigger", "trigger_system")
@@ -362,6 +363,18 @@ local systems = {
 			"MinionShieldExtension",
 			"MinionHuskShieldExtension",
 			"PropShieldExtension",
+		},
+	},
+	{
+		"summon_minions_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		enabled_in_runtime_loaded_levels,
+		{
+			"SummonedMinionsExtension",
 		},
 	},
 	{

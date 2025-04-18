@@ -207,6 +207,18 @@ local templates = {
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
 		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_tome,
 	},
+	side_mission_communication_device_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_side_mission_communication_device,
+	},
 	luggable_battery_over_here = {
 		group = "object",
 		is_cancelable = true,
