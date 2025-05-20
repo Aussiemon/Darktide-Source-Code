@@ -975,32 +975,6 @@ local guidance_vo_veteran_female_b = {
 		},
 		randomize_indexes = {},
 	},
-	info_asset_nurgle_growth = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_veteran_female_b__asset_nurgle_growth_01",
-			"loc_veteran_female_b__asset_nurgle_growth_02",
-			"loc_veteran_female_b__asset_nurgle_growth_03",
-			"loc_veteran_female_b__asset_nurgle_growth_04",
-			"loc_veteran_female_b__asset_nurgle_growth_05",
-		},
-		sound_events_duration = {
-			3.131917,
-			2.652771,
-			2.386938,
-			2.852313,
-			3.295667,
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-		},
-		randomize_indexes = {},
-	},
 }
 
 return settings("guidance_vo_veteran_female_b", guidance_vo_veteran_female_b)

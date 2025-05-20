@@ -57,10 +57,10 @@ local mission_vo_km_station_enemy_nemesis_wolfer_a = {
 			"loc_enemy_nemesis_wolfer_a__mission_station_contrabrand_lockers_a_04",
 		},
 		sound_events_duration = {
-			6.599302,
-			5.521146,
-			3.703042,
-			5.443417,
+			7.299302,
+			6.221146,
+			4.403042,
+			6.143416,
 		},
 		sound_event_weights = {
 			0.25,

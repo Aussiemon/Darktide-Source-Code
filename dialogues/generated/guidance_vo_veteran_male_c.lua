@@ -978,32 +978,6 @@ local guidance_vo_veteran_male_c = {
 		},
 		randomize_indexes = {},
 	},
-	info_asset_nurgle_growth = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_veteran_male_c__asset_nurgle_growth_01",
-			"loc_veteran_male_c__asset_nurgle_growth_02",
-			"loc_veteran_male_c__asset_nurgle_growth_03",
-			"loc_veteran_male_c__asset_nurgle_growth_04",
-			"loc_veteran_male_c__asset_nurgle_growth_05",
-		},
-		sound_events_duration = {
-			1.809344,
-			0.933146,
-			2.536583,
-			3.741365,
-			0.935406,
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-		},
-		randomize_indexes = {},
-	},
 }
 
 return settings("guidance_vo_veteran_male_c", guidance_vo_veteran_male_c)

@@ -10,6 +10,9 @@ local mission_themes = {
 	ventilation_purge = {
 		"content/levels/tank_foundry/missions/fm_cargo_themes/ventilation_purge_01/theme_ventilation_purge_01_fm_cargo",
 	},
+	ember = {
+		"content/levels/tank_foundry/missions/fm_cargo_themes/ember_01/theme_ember_01_fm_cargo",
+	},
 }
 
 return mission_themes

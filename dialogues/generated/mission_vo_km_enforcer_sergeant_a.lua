@@ -35,6 +35,28 @@ local mission_vo_km_enforcer_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_enforcer_elevator_conversation_journey_02_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__mission_enforcer_elevator_conversation_journey_02_a_01",
+		},
+		sound_events_duration = {
+			[1] = 7.009,
+		},
+		randomize_indexes = {},
+	},
+	mission_enforcer_elevator_conversation_journey_02_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__mission_enforcer_elevator_conversation_journey_02_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.009229,
+		},
+		randomize_indexes = {},
+	},
 	mission_enforcer_enforcer_station = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

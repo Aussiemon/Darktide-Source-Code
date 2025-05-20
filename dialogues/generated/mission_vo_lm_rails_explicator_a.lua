@@ -213,6 +213,23 @@ local mission_vo_lm_rails_explicator_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_rails_proceed_to_logistratum = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_rails_proceed_to_logistratum_01",
+			"loc_explicator_a__mission_rails_proceed_to_logistratum_02",
+			"loc_explicator_a__mission_rails_proceed_to_logistratum_03",
+			"loc_explicator_a__mission_rails_proceed_to_logistratum_04",
+		},
+		sound_events_duration = {
+			4.716375,
+			4.423229,
+			4.474229,
+			5.343479,
+		},
+		randomize_indexes = {},
+	},
 	mission_rails_refectory = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

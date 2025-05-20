@@ -1,6 +1,29 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_dm_propaganda_pilot_a.lua
 
 local mission_vo_dm_propaganda_pilot_a = {
+	info_asset_cult_breaking_wheel = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_pilot_a__asset_cult_breaking_wheel_01",
+			"loc_pilot_a__asset_cult_breaking_wheel_02",
+			"loc_pilot_a__asset_cult_breaking_wheel_03",
+			"loc_pilot_a__asset_cult_breaking_wheel_04",
+		},
+		sound_events_duration = {
+			6.176458,
+			5.594917,
+			6.678958,
+			4.656583,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	mission_propaganda_bypass_security = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

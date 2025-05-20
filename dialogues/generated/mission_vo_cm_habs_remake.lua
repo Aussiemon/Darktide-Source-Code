@@ -4,6 +4,38 @@ return function ()
 	define_rule({
 		category = "conversations_prio_0",
 		database = "mission_vo_cm_habs_remake",
+		name = "info_extraction_response",
+		response = "info_extraction_response",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"level_hab_block_collapse",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "mission_vo_cm_habs_remake",
 		name = "level_hab_block_apartments",
 		response = "level_hab_block_apartments",
 		wwise_route = 0,

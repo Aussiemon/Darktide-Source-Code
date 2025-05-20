@@ -8,7 +8,7 @@ local veteran_a_zealot_female_a = {
 			[1] = "loc_zealot_female_a__combat_pause_limited_bolt_on_a_veteran_a_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
+			[1] = 5.089938,
 		},
 		randomize_indexes = {},
 	},
@@ -19,7 +19,7 @@ local veteran_a_zealot_female_a = {
 			[1] = "loc_zealot_female_a__combat_pause_limited_bolt_on_a_veteran_a_04_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
+			[1] = 4.347896,
 		},
 		randomize_indexes = {},
 	},

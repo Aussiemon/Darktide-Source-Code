@@ -978,32 +978,6 @@ local guidance_vo_psyker_male_c = {
 		},
 		randomize_indexes = {},
 	},
-	info_asset_nurgle_growth = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_psyker_male_c__asset_nurgle_growth_01",
-			"loc_psyker_male_c__asset_nurgle_growth_02",
-			"loc_psyker_male_c__asset_nurgle_growth_03",
-			"loc_psyker_male_c__asset_nurgle_growth_04",
-			"loc_psyker_male_c__asset_nurgle_growth_05",
-		},
-		sound_events_duration = {
-			1.88174,
-			1.477573,
-			2.264479,
-			1.65024,
-			3.379729,
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-		},
-		randomize_indexes = {},
-	},
 }
 
 return settings("guidance_vo_psyker_male_c", guidance_vo_psyker_male_c)

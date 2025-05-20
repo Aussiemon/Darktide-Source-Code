@@ -80,6 +80,25 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	almost_there = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_b__almost_there_01",
+			"loc_psyker_male_b__almost_there_02",
+			"loc_psyker_male_b__almost_there_03",
+			"loc_psyker_male_b__almost_there_04",
+			"loc_psyker_male_b__almost_there_05",
+		},
+		sound_events_duration = {
+			1.605188,
+			2.36325,
+			4.090771,
+			1.842521,
+			3.923229,
+		},
+		randomize_indexes = {},
+	},
 	away_from_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -333,6 +352,35 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_one_liner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__combat_pause_one_liner_01",
+			"loc_psyker_male_b__combat_pause_one_liner_02",
+			"loc_psyker_male_b__combat_pause_one_liner_03",
+			"loc_psyker_male_b__combat_pause_one_liner_04",
+			"loc_psyker_male_b__combat_pause_one_liner_05",
+			"loc_psyker_male_b__combat_pause_one_liner_06",
+			"loc_psyker_male_b__combat_pause_one_liner_07",
+			"loc_psyker_male_b__combat_pause_one_liner_08",
+			"loc_psyker_male_b__combat_pause_one_liner_09",
+			"loc_psyker_male_b__combat_pause_one_liner_10",
+		},
+		sound_events_duration = {
+			2.48,
+			1.988333,
+			2.434375,
+			3.269083,
+			2.077042,
+			2.736167,
+			2.076375,
+			3.584438,
+			3.398813,
+			3.999771,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_quirk_ammo_hog_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
@@ -420,6 +468,201 @@ local gameplay_vo_psyker_male_b = {
 			1.422354,
 			1.33425,
 			2.755771,
+		},
+		randomize_indexes = {},
+	},
+	conversation_beast_of_nurgle_weakpoint_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_beast_of_nurgle_weakpoint_a_01",
+			[2] = "loc_psyker_male_b__conversation_beast_of_nurgle_weakpoint_a_02",
+		},
+		sound_events_duration = {
+			[1] = 2.085042,
+			[2] = 2.053,
+		},
+		randomize_indexes = {},
+	},
+	conversation_beast_of_nurgle_weakpoint_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_beast_of_nurgle_weakpoint_b_01",
+			[2] = "loc_psyker_male_b__conversation_beast_of_nurgle_weakpoint_b_02",
+		},
+		sound_events_duration = {
+			[1] = 2.78375,
+			[2] = 2.489688,
+		},
+		randomize_indexes = {},
+	},
+	conversation_beast_of_nurgle_weakpoint_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_beast_of_nurgle_weakpoint_c_01",
+			[2] = "loc_psyker_male_b__conversation_beast_of_nurgle_weakpoint_c_02",
+		},
+		sound_events_duration = {
+			[1] = 2.098896,
+			[2] = 1.931875,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_beast_of_nurgle_swallow_a_01",
+			[2] = "loc_psyker_male_b__conversation_combat_beast_of_nurgle_swallow_a_02",
+		},
+		sound_events_duration = {
+			[1] = 1.750479,
+			[2] = 1.544458,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_beast_of_nurgle_swallow_b_01",
+			[2] = "loc_psyker_male_b__conversation_combat_beast_of_nurgle_swallow_b_02",
+		},
+		sound_events_duration = {
+			[1] = 3.230438,
+			[2] = 3.258188,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_beast_of_nurgle_swallow_c_01",
+			[2] = "loc_psyker_male_b__conversation_combat_beast_of_nurgle_swallow_c_02",
+		},
+		sound_events_duration = {
+			[1] = 3.208167,
+			[2] = 3.537292,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_chaos_spawn_a_01",
+			[2] = "loc_psyker_male_b__conversation_combat_chaos_spawn_a_02",
+		},
+		sound_events_duration = {
+			[1] = 2.979167,
+			[2] = 1.865063,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_chaos_spawn_b_01",
+			[2] = "loc_psyker_male_b__conversation_combat_chaos_spawn_b_02",
+		},
+		sound_events_duration = {
+			[1] = 2.047042,
+			[2] = 2.328667,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_chaos_spawn_c_01",
+			[2] = "loc_psyker_male_b__conversation_combat_chaos_spawn_c_02",
+		},
+		sound_events_duration = {
+			[1] = 2.411563,
+			[2] = 1.935583,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_chaos_spawn_chew_a_01",
+			[2] = "loc_psyker_male_b__conversation_combat_chaos_spawn_chew_a_02",
+		},
+		sound_events_duration = {
+			[1] = 3.287167,
+			[2] = 4.165792,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_chaos_spawn_chew_b_01",
+			[2] = "loc_psyker_male_b__conversation_combat_chaos_spawn_chew_b_02",
+		},
+		sound_events_duration = {
+			[1] = 2.2765,
+			[2] = 3.231438,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_combat_chaos_spawn_chew_c_01",
+			[2] = "loc_psyker_male_b__conversation_combat_chaos_spawn_chew_c_02",
+		},
+		sound_events_duration = {
+			[1] = 2.928313,
+			[2] = 2.777646,
+		},
+		randomize_indexes = {},
+	},
+	conversation_plague_ogryn_weakpoint_01 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_plague_ogryn_weakpoint_01_01",
+			[2] = "loc_psyker_male_b__conversation_plague_ogryn_weakpoint_01_02",
+		},
+		sound_events_duration = {
+			[1] = 1.790833,
+			[2] = 2.781833,
+		},
+		randomize_indexes = {},
+	},
+	conversation_plague_ogryn_weakpoint_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_plague_ogryn_weakpoint_02_01",
+			[2] = "loc_psyker_male_b__conversation_plague_ogryn_weakpoint_02_02",
+		},
+		sound_events_duration = {
+			[1] = 1.564542,
+			[2] = 3.684604,
+		},
+		randomize_indexes = {},
+	},
+	conversation_plague_ogryn_weakpoint_03 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_male_b__conversation_plague_ogryn_weakpoint_03_01",
+			[2] = "loc_psyker_male_b__conversation_plague_ogryn_weakpoint_03_02",
+		},
+		sound_events_duration = {
+			[1] = 1.582417,
+			[2] = 2.770917,
 		},
 		randomize_indexes = {},
 	},
@@ -684,6 +927,17 @@ local gameplay_vo_psyker_male_b = {
 			2.988167,
 			3.077542,
 			2.607917,
+		},
+		randomize_indexes = {},
+	},
+	enemy_kill_berserker_ext_01_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__enemy_kill_berserker_ext_01_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.648708,
 		},
 		randomize_indexes = {},
 	},
@@ -1133,6 +1387,28 @@ local gameplay_vo_psyker_male_b = {
 			2.226146,
 			2.382125,
 			1.240917,
+		},
+		randomize_indexes = {},
+	},
+	enemy_kill_poxwalker_bomber_ext_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__enemy_kill_poxwalker_bomber_ext_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.375896,
+		},
+		randomize_indexes = {},
+	},
+	enemy_kill_poxwalker_bomber_ext_02_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__enemy_kill_poxwalker_bomber_ext_02_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.728604,
 		},
 		randomize_indexes = {},
 	},
@@ -4414,32 +4690,26 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
-	seen_enemy_bulwark_custom = {
+	seen_enemy_bulwark = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_psyker_male_b__seen_enemy_bulwark_02",
-			"loc_psyker_male_b__seen_enemy_bulwark_03",
 			"loc_psyker_male_b__smart_tag_vo_enemy_chaos_ogryn_bulwark_01",
 			"loc_psyker_male_b__smart_tag_vo_enemy_chaos_ogryn_bulwark_02",
 			"loc_psyker_male_b__smart_tag_vo_enemy_chaos_ogryn_bulwark_03",
 			"loc_psyker_male_b__smart_tag_vo_enemy_chaos_ogryn_bulwark_04",
 		},
 		sound_events_duration = {
-			0.54775,
-			0.797146,
 			0.757125,
 			0.731521,
 			0.557063,
 			0.732583,
 		},
 		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
+			0.25,
+			0.25,
+			0.25,
+			0.25,
 		},
 		randomize_indexes = {},
 	},

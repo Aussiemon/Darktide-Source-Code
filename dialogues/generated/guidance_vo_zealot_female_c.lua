@@ -978,32 +978,6 @@ local guidance_vo_zealot_female_c = {
 		},
 		randomize_indexes = {},
 	},
-	info_asset_nurgle_growth = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_zealot_female_c__asset_nurgle_growth_01",
-			"loc_zealot_female_c__asset_nurgle_growth_02",
-			"loc_zealot_female_c__asset_nurgle_growth_03",
-			"loc_zealot_female_c__asset_nurgle_growth_04",
-			"loc_zealot_female_c__asset_nurgle_growth_05",
-		},
-		sound_events_duration = {
-			1.769125,
-			2.543604,
-			2.573104,
-			3.840958,
-			4.81201,
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-		},
-		randomize_indexes = {},
-	},
 }
 
 return settings("guidance_vo_zealot_female_c", guidance_vo_zealot_female_c)

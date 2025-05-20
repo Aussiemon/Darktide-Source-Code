@@ -142,7 +142,7 @@ return function ()
 			},
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "disabled",
 		},
 	})
 	define_rule({

@@ -82,40 +82,6 @@ local mission_vo_hm_strain_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
-	mission_strain_daemonic_overgrowth_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_sergeant_a__mission_strain_daemonic_overgrowth_b_01",
-			"loc_sergeant_a__mission_strain_daemonic_overgrowth_b_02",
-			"loc_sergeant_a__mission_strain_daemonic_overgrowth_b_03",
-			"loc_sergeant_a__mission_strain_daemonic_overgrowth_b_04",
-		},
-		sound_events_duration = {
-			3.541583,
-			3.411792,
-			2.456688,
-			2.71975,
-		},
-		randomize_indexes = {},
-	},
-	mission_strain_demolish_door = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_sergeant_a__mission_strain_demolish_door_01",
-			"loc_sergeant_a__mission_strain_demolish_door_02",
-			"loc_sergeant_a__mission_strain_demolish_door_03",
-			"loc_sergeant_a__mission_strain_demolish_door_04",
-		},
-		sound_events_duration = {
-			3.459792,
-			4.240917,
-			2.714521,
-			5.523417,
-		},
-		randomize_indexes = {},
-	},
 	mission_strain_elevator_found = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -163,10 +129,10 @@ local mission_vo_hm_strain_sergeant_a = {
 			"loc_sergeant_a__mission_strain_end_event_start_04",
 		},
 		sound_events_duration = {
-			4.698188,
-			4.048688,
-			3.441104,
-			4.423208,
+			5.098188,
+			4.448688,
+			3.841104,
+			4.823208,
 		},
 		randomize_indexes = {},
 	},
@@ -352,6 +318,20 @@ local mission_vo_hm_strain_sergeant_a = {
 			3.163688,
 			5.571313,
 			3.323146,
+		},
+		randomize_indexes = {},
+	},
+	mission_strain_wait_for_elevator = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__mission_stockpile_survive_event_start_03",
+		},
+		sound_events_duration = {
+			[1] = 4.236917,
+		},
+		sound_event_weights = {
+			[1] = 1,
 		},
 		randomize_indexes = {},
 	},

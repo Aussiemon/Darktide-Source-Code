@@ -69,6 +69,17 @@ local mission_vo_hm_cartel_explicator_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_cartel_elevator_conversation_journey_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_explicator_a__mission_cartel_elevator_conversation_journey_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.299979,
+		},
+		randomize_indexes = {},
+	},
 	mission_cartel_elevator_conversation_one_line_two = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

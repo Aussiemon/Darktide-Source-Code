@@ -1,6 +1,29 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_dm_propaganda_tech_priest_a.lua
 
 local mission_vo_dm_propaganda_tech_priest_a = {
+	info_asset_cult_breaking_wheel = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_tech_priest_a__asset_cult_breaking_wheel_01",
+			"loc_tech_priest_a__asset_cult_breaking_wheel_02",
+			"loc_tech_priest_a__asset_cult_breaking_wheel_03",
+			"loc_tech_priest_a__asset_cult_breaking_wheel_04",
+		},
+		sound_events_duration = {
+			5.493438,
+			7.055979,
+			4.219896,
+			6.476896,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	mission_propaganda_bypass_security = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

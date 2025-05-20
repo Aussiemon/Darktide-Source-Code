@@ -166,6 +166,23 @@ local mission_vo_lm_rails_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_rails_proceed_to_logistratum = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__mission_rails_proceed_to_logistratum_01",
+			"loc_sergeant_a__mission_rails_proceed_to_logistratum_02",
+			"loc_sergeant_a__mission_rails_proceed_to_logistratum_03",
+			"loc_sergeant_a__mission_rails_proceed_to_logistratum_04",
+		},
+		sound_events_duration = {
+			5.329729,
+			4.755667,
+			5.379479,
+			5.080625,
+		},
+		randomize_indexes = {},
+	},
 	mission_rails_refectory = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

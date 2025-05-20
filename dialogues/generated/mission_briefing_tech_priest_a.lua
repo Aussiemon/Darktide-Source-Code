@@ -78,12 +78,6 @@ local mission_briefing_tech_priest_a = {
 			6.947708,
 			7.728375,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 	mission_cargo_briefing_c = {
@@ -100,12 +94,6 @@ local mission_briefing_tech_priest_a = {
 			7.686208,
 			12.219,
 			12.07085,
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
 		},
 		randomize_indexes = {},
 	},

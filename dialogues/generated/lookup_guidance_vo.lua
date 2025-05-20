@@ -25,6 +25,4 @@ DialogueLookup[DialogueLookup_n + 22] = "guidance_stairs_sighted_4"
 DialogueLookup[DialogueLookup_n + 23] = "guidance_stairs_up"
 DialogueLookup[DialogueLookup_n + 24] = "guidance_starting_area"
 DialogueLookup[DialogueLookup_n + 25] = "guidance_switch"
-DialogueLookup[DialogueLookup_n + 26] = "info_asset_cult_breaking_wheel"
-DialogueLookup[DialogueLookup_n + 27] = "info_asset_nurgle_growth"
-DialogueLookup_n = DialogueLookup_n + 27
+DialogueLookup_n = DialogueLookup_n + 25

@@ -10,9 +10,39 @@ local mission_briefing_tech_priest_b = {
 			"loc_tech_priest_b__mission_cargo_briefing_a_03",
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
+			9.529354,
+			6.697458,
+			10.81348,
+		},
+		randomize_indexes = {},
+	},
+	mission_cargo_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_b__mission_cargo_briefing_b_01",
+			"loc_tech_priest_b__mission_cargo_briefing_b_02",
+			"loc_tech_priest_b__mission_cargo_briefing_b_03",
+		},
+		sound_events_duration = {
+			10.18458,
+			8.873814,
+			7.144875,
+		},
+		randomize_indexes = {},
+	},
+	mission_cargo_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_b__mission_cargo_briefing_c_01",
+			"loc_tech_priest_b__mission_cargo_briefing_c_02",
+			"loc_tech_priest_b__mission_cargo_briefing_c_03",
+		},
+		sound_events_duration = {
+			11.8921,
+			12.78862,
+			13.99433,
 		},
 		randomize_indexes = {},
 	},

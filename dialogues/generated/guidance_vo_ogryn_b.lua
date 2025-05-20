@@ -978,32 +978,6 @@ local guidance_vo_ogryn_b = {
 		},
 		randomize_indexes = {},
 	},
-	info_asset_nurgle_growth = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_ogryn_b__asset_nurgle_growth_01",
-			"loc_ogryn_b__asset_nurgle_growth_02",
-			"loc_ogryn_b__asset_nurgle_growth_03",
-			"loc_ogryn_b__asset_nurgle_growth_04",
-			"loc_ogryn_b__asset_nurgle_growth_05",
-		},
-		sound_events_duration = {
-			3.53076,
-			2.27349,
-			3.626208,
-			2.056292,
-			2.773469,
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-		},
-		randomize_indexes = {},
-	},
 }
 
 return settings("guidance_vo_ogryn_b", guidance_vo_ogryn_b)

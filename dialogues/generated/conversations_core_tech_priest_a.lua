@@ -35,23 +35,6 @@ local conversations_core_tech_priest_a = {
 		},
 		randomize_indexes = {},
 	},
-	info_to_extraction_through_pipes = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_tech_priest_a__info_to_extraction_through_pipes_01",
-			"loc_tech_priest_a__info_to_extraction_through_pipes_02",
-			"loc_tech_priest_a__info_to_extraction_through_pipes_03",
-			"loc_tech_priest_a__info_to_extraction_through_pipes_04",
-		},
-		sound_events_duration = {
-			4.097021,
-			4.319333,
-			3.133396,
-			5.403167,
-		},
-		randomize_indexes = {},
-	},
 }
 
 return settings("conversations_core_tech_priest_a", conversations_core_tech_priest_a)

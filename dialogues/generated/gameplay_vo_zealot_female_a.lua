@@ -40,6 +40,25 @@ local gameplay_vo_zealot_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	almost_there = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_female_a__almost_there_01",
+			"loc_zealot_female_a__almost_there_02",
+			"loc_zealot_female_a__almost_there_03",
+			"loc_zealot_female_a__almost_there_04",
+			"loc_zealot_female_a__almost_there_05",
+		},
+		sound_events_duration = {
+			1.463729,
+			1.094313,
+			3.468229,
+			2.808563,
+			3.264229,
+		},
+		randomize_indexes = {},
+	},
 	away_from_squad = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -265,6 +284,35 @@ local gameplay_vo_zealot_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_one_liner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_female_a__combat_pause_one_liner_01",
+			"loc_zealot_female_a__combat_pause_one_liner_02",
+			"loc_zealot_female_a__combat_pause_one_liner_03",
+			"loc_zealot_female_a__combat_pause_one_liner_04",
+			"loc_zealot_female_a__combat_pause_one_liner_05",
+			"loc_zealot_female_a__combat_pause_one_liner_06",
+			"loc_zealot_female_a__combat_pause_one_liner_07",
+			"loc_zealot_female_a__combat_pause_one_liner_08",
+			"loc_zealot_female_a__combat_pause_one_liner_09",
+			"loc_zealot_female_a__combat_pause_one_liner_10",
+		},
+		sound_events_duration = {
+			3.7635,
+			2.254542,
+			3.163042,
+			2.627875,
+			2.871063,
+			3.572479,
+			3.067729,
+			3.113021,
+			3.310271,
+			3.065479,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_quirk_ammo_hog_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
@@ -352,6 +400,201 @@ local gameplay_vo_zealot_female_a = {
 			1.398875,
 			1.23975,
 			1.499104,
+		},
+		randomize_indexes = {},
+	},
+	conversation_beast_of_nurgle_weakpoint_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_beast_of_nurgle_weakpoint_a_01",
+			[2] = "loc_zealot_female_a__conversation_beast_of_nurgle_weakpoint_a_02",
+		},
+		sound_events_duration = {
+			[1] = 1.670375,
+			[2] = 2.701958,
+		},
+		randomize_indexes = {},
+	},
+	conversation_beast_of_nurgle_weakpoint_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_beast_of_nurgle_weakpoint_b_01",
+			[2] = "loc_zealot_female_a__conversation_beast_of_nurgle_weakpoint_b_02",
+		},
+		sound_events_duration = {
+			[1] = 1.900271,
+			[2] = 2.696438,
+		},
+		randomize_indexes = {},
+	},
+	conversation_beast_of_nurgle_weakpoint_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_beast_of_nurgle_weakpoint_c_01",
+			[2] = "loc_zealot_female_a__conversation_beast_of_nurgle_weakpoint_c_02",
+		},
+		sound_events_duration = {
+			[1] = 2.574063,
+			[2] = 2.547958,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_beast_of_nurgle_swallow_a_01",
+			[2] = "loc_zealot_female_a__conversation_combat_beast_of_nurgle_swallow_a_02",
+		},
+		sound_events_duration = {
+			[1] = 2.174,
+			[2] = 2.645521,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_beast_of_nurgle_swallow_b_01",
+			[2] = "loc_zealot_female_a__conversation_combat_beast_of_nurgle_swallow_b_02",
+		},
+		sound_events_duration = {
+			[1] = 2.931438,
+			[2] = 2.894708,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_beast_of_nurgle_swallow_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_beast_of_nurgle_swallow_c_01",
+			[2] = "loc_zealot_female_a__conversation_combat_beast_of_nurgle_swallow_c_02",
+		},
+		sound_events_duration = {
+			[1] = 3.616917,
+			[2] = 2.059604,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_chaos_spawn_a_01",
+			[2] = "loc_zealot_female_a__conversation_combat_chaos_spawn_a_02",
+		},
+		sound_events_duration = {
+			[1] = 2.773729,
+			[2] = 2.558146,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_chaos_spawn_b_01",
+			[2] = "loc_zealot_female_a__conversation_combat_chaos_spawn_b_02",
+		},
+		sound_events_duration = {
+			[1] = 3.396,
+			[2] = 1.285063,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_chaos_spawn_c_01",
+			[2] = "loc_zealot_female_a__conversation_combat_chaos_spawn_c_02",
+		},
+		sound_events_duration = {
+			[1] = 1.619771,
+			[2] = 3.090688,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_chaos_spawn_chew_a_01",
+			[2] = "loc_zealot_female_a__conversation_combat_chaos_spawn_chew_a_02",
+		},
+		sound_events_duration = {
+			[1] = 5.004104,
+			[2] = 3.350042,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_chaos_spawn_chew_b_01",
+			[2] = "loc_zealot_female_a__conversation_combat_chaos_spawn_chew_b_02",
+		},
+		sound_events_duration = {
+			[1] = 1.68125,
+			[2] = 1.802167,
+		},
+		randomize_indexes = {},
+	},
+	conversation_combat_chaos_spawn_chew_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_combat_chaos_spawn_chew_c_01",
+			[2] = "loc_zealot_female_a__conversation_combat_chaos_spawn_chew_c_02",
+		},
+		sound_events_duration = {
+			[1] = 2.060458,
+			[2] = 4.394146,
+		},
+		randomize_indexes = {},
+	},
+	conversation_plague_ogryn_weakpoint_01 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_plague_ogryn_weakpoint_01_01",
+			[2] = "loc_zealot_female_a__conversation_plague_ogryn_weakpoint_01_02",
+		},
+		sound_events_duration = {
+			[1] = 2.820208,
+			[2] = 2.888417,
+		},
+		randomize_indexes = {},
+	},
+	conversation_plague_ogryn_weakpoint_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_plague_ogryn_weakpoint_02_01",
+			[2] = "loc_zealot_female_a__conversation_plague_ogryn_weakpoint_02_02",
+		},
+		sound_events_duration = {
+			[1] = 2.007375,
+			[2] = 3.980792,
+		},
+		randomize_indexes = {},
+	},
+	conversation_plague_ogryn_weakpoint_03 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_female_a__conversation_plague_ogryn_weakpoint_03_01",
+			[2] = "loc_zealot_female_a__conversation_plague_ogryn_weakpoint_03_02",
+		},
+		sound_events_duration = {
+			[1] = 2.158729,
+			[2] = 1.920542,
 		},
 		randomize_indexes = {},
 	},
@@ -624,6 +867,39 @@ local gameplay_vo_zealot_female_a = {
 			2.918688,
 			2.876292,
 			1.915729,
+		},
+		randomize_indexes = {},
+	},
+	enemy_kill_berserker_ext_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__enemy_kill_berserker_ext_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.354813,
+		},
+		randomize_indexes = {},
+	},
+	enemy_kill_berserker_ext_03_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__enemy_kill_berserker_ext_03_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.282583,
+		},
+		randomize_indexes = {},
+	},
+	enemy_kill_berserker_ext_05_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__enemy_kill_berserker_ext_05_c_01",
+		},
+		sound_events_duration = {
+			[1] = 5.173958,
 		},
 		randomize_indexes = {},
 	},
@@ -1073,6 +1349,17 @@ local gameplay_vo_zealot_female_a = {
 			2.352188,
 			2.386708,
 			1.248542,
+		},
+		randomize_indexes = {},
+	},
+	enemy_kill_poxwalker_bomber_ext_01_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__enemy_kill_poxwalker_bomber_ext_01_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.345792,
 		},
 		randomize_indexes = {},
 	},
@@ -4032,41 +4319,26 @@ local gameplay_vo_zealot_female_a = {
 		},
 		randomize_indexes = {},
 	},
-	seen_enemy_bulwark_custom = {
+	seen_enemy_bulwark = {
 		randomize_indexes_n = 0,
-		sound_events_n = 9,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_zealot_female_a__seen_enemy_bulwark_01",
-			"loc_zealot_female_a__seen_enemy_bulwark_02",
-			"loc_zealot_female_a__seen_enemy_bulwark_03",
-			"loc_zealot_female_a__seen_enemy_bulwark_04",
-			"loc_zealot_female_a__seen_enemy_bulwark_05",
 			"loc_zealot_female_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_01",
 			"loc_zealot_female_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_02",
 			"loc_zealot_female_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_03",
 			"loc_zealot_female_a__smart_tag_vo_enemy_chaos_ogryn_bulwark_04",
 		},
 		sound_events_duration = {
-			0.737896,
-			0.862792,
-			1.937063,
-			1.701688,
-			1.474792,
 			0.779021,
 			0.691458,
 			0.613458,
 			0.638583,
 		},
 		sound_event_weights = {
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
+			0.25,
+			0.25,
+			0.25,
+			0.25,
 		},
 		randomize_indexes = {},
 	},

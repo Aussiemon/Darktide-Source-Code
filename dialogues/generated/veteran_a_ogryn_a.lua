@@ -8,7 +8,7 @@ local veteran_a_ogryn_a = {
 			[1] = "loc_ogryn_a__combat_pause_limited_bolt_on_a_veteran_a_03_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
+			[1] = 3.344979,
 		},
 		randomize_indexes = {},
 	},

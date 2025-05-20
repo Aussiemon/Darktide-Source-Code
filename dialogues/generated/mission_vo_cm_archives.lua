@@ -2,6 +2,39 @@
 
 return function ()
 	define_rule({
+		category = "npc_prio_0",
+		database = "mission_vo_cm_archives",
+		name = "mission_archives_activate_from_hibernation_a",
+		response = "mission_archives_activate_from_hibernation_a",
+		wwise_route = 50,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"mission_archives_activate_from_hibernation_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"archive_servitor",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
 		category = "player_prio_0",
 		database = "mission_vo_cm_archives",
 		name = "mission_archives_alarm",
@@ -961,6 +994,39 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players",
+		},
+	})
+	define_rule({
+		category = "npc_prio_0",
+		database = "mission_vo_cm_archives",
+		name = "mission_archives_task_complete_a",
+		response = "mission_archives_task_complete_a",
+		wwise_route = 50,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"mission_archives_task_complete_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"archive_servitor",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
 		},
 	})
 	define_rule({

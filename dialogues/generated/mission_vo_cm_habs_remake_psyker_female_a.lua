@@ -1,6 +1,19 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_remake_psyker_female_a.lua
 
 local mission_vo_cm_habs_remake_psyker_female_a = {
+	info_extraction_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_psyker_female_a__info_extraction_response_01",
+			[2] = "loc_psyker_female_a__info_extraction_response_02",
+		},
+		sound_events_duration = {
+			[1] = 2.528833,
+			[2] = 2.524292,
+		},
+		randomize_indexes = {},
+	},
 	level_hab_block_apartments = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

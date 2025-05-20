@@ -23,6 +23,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_captain_taunt",
+					"cultist_captain_taunt",
 				},
 			},
 			{

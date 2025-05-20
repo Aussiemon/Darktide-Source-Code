@@ -204,6 +204,67 @@ return function ()
 		},
 	})
 	define_rule({
+		category = "player_prio_0",
+		database = "gameplay_vo",
+		name = "almost_there",
+		response = "almost_there",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at",
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"almost_there",
+			},
+			{
+				"query_context",
+				"distance",
+				OP.GT,
+				1,
+			},
+			{
+				"query_context",
+				"distance",
+				OP.LT,
+				17,
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran",
+					"zealot",
+					"psyker",
+					"ogryn",
+				},
+			},
+			{
+				"user_memory",
+				"almost_there",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"almost_there",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
 		category = "player_prio_1",
 		database = "gameplay_vo",
 		name = "away_from_squad",
@@ -891,6 +952,149 @@ return function ()
 		},
 	})
 	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "combat_pause_one_liner",
+		response = "combat_pause_one_liner",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				20,
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c",
+				},
+			},
+			{
+				"faction_memory",
+				"combat_pause_one_liner",
+				OP.LTEQ,
+				4,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"combat_pause_one_liner",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0",
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.SUB,
+				40,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1,
+			},
+		},
+	})
+	define_rule({
 		category = "player_prio_1",
 		database = "gameplay_vo",
 		name = "combat_pause_quirk_ammo_hog_a",
@@ -1133,6 +1337,649 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"away_from_squad",
+				},
+			},
+		},
+		on_done = {},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_beast_of_nurgle_weakpoint_a",
+		response = "conversation_beast_of_nurgle_weakpoint_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"combat_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				20,
+			},
+			{
+				"query_context",
+				"story_type",
+				OP.EQ,
+				"chaos_beast_of_nurgle",
+			},
+			{
+				"user_context",
+				"health",
+				OP.LTEQ,
+				1,
+			},
+			{
+				"faction_memory",
+				"chaos_beast_of_nurgle",
+				OP.LT,
+				3,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMEDIFF,
+				OP.GT,
+				180,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"chaos_beast_of_nurgle",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_beast_of_nurgle_weakpoint_b",
+		response = "conversation_beast_of_nurgle_weakpoint_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_beast_of_nurgle_weakpoint_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_beast_of_nurgle_weakpoint_c",
+		response = "conversation_beast_of_nurgle_weakpoint_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_beast_of_nurgle_weakpoint_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "player_prio_1",
+		database = "gameplay_vo",
+		name = "conversation_combat_beast_of_nurgle_swallow_a",
+		response = "conversation_combat_beast_of_nurgle_swallow_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"beast_of_nurgle_swallow",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.LTEQ,
+				4,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"conversation_combat_beast_of_nurgle_swallow_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"conversation_combat_beast_of_nurgle_swallow_a",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_beast_of_nurgle_swallow_b",
+		response = "conversation_combat_beast_of_nurgle_swallow_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_beast_of_nurgle_swallow_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_beast_of_nurgle_swallow_c",
+		response = "conversation_combat_beast_of_nurgle_swallow_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_beast_of_nurgle_swallow_b",
+				},
+			},
+			{
+				"faction_memory",
+				"beast_spit",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_chaos_spawn_a",
+		response = "conversation_combat_chaos_spawn_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"combat_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				20,
+			},
+			{
+				"query_context",
+				"story_type",
+				OP.EQ,
+				"chaos_spawn",
+			},
+			{
+				"user_context",
+				"health",
+				OP.LTEQ,
+				1,
+			},
+			{
+				"faction_memory",
+				"chaos_spawn",
+				OP.LT,
+				3,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMEDIFF,
+				OP.GT,
+				180,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"chaos_spawn",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_chaos_spawn_b",
+		response = "conversation_combat_chaos_spawn_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_chaos_spawn_c",
+		response = "conversation_combat_chaos_spawn_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "player_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_chaos_spawn_chew_a",
+		response = "conversation_combat_chaos_spawn_chew_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"pounced_by_special_attack",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_spawn",
+			},
+			{
+				"faction_memory",
+				"conversation_combat_chaos_spawn_chew_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"conversation_combat_chaos_spawn_chew_a",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_chaos_spawn_chew_b",
+		response = "conversation_combat_chaos_spawn_chew_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_chew_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_combat_chaos_spawn_chew_c",
+		response = "conversation_combat_chaos_spawn_chew_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_combat_chaos_spawn_chew_b",
+				},
+			},
+			{
+				"user_memory",
+				"conversation_combat_chaos_spawn_chew_a_user",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+			{
+				"faction_memory",
+				"chaos_spawn_throw",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_plague_ogryn_weakpoint_01",
+		response = "conversation_plague_ogryn_weakpoint_01",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"combat_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				20,
+			},
+			{
+				"query_context",
+				"story_type",
+				OP.EQ,
+				"chaos_plague_ogryn",
+			},
+			{
+				"user_context",
+				"health",
+				OP.LTEQ,
+				1,
+			},
+			{
+				"faction_memory",
+				"chaos_plague_ogryn",
+				OP.LT,
+				3,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMEDIFF,
+				OP.GT,
+				180,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"chaos_plague_ogryn",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"last_monster_fight",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_plague_ogryn_weakpoint_02",
+		response = "conversation_plague_ogryn_weakpoint_02",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_plague_ogryn_weakpoint_01",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_0",
+		database = "gameplay_vo",
+		name = "conversation_plague_ogryn_weakpoint_03",
+		response = "conversation_plague_ogryn_weakpoint_03",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"conversation_plague_ogryn_weakpoint_02",
 				},
 			},
 		},
@@ -1666,6 +2513,1033 @@ return function ()
 		},
 	})
 	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_01_b",
+		response = "enemy_kill_berserker_ext_01_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker",
+					"enemy_kill_renegade_berserker",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_b",
+					"veteran_male_a",
+					"zealot_male_a",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_a",
+					"veteran_male_a",
+					"zealot_female_c",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_01_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.1,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_01_c",
+		response = "enemy_kill_berserker_ext_01_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_01_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+					"zealot_male_a",
+					"psyker_male_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_01_d",
+		response = "enemy_kill_berserker_ext_01_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_01_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b",
+					"zealot_female_c",
+					"psyker_male_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_01_e",
+		response = "enemy_kill_berserker_ext_01_e",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_01_d",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_01_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_02_b",
+		response = "enemy_kill_berserker_ext_02_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker",
+					"enemy_kill_renegade_berserker",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b",
+					"veteran_male_a",
+					"veteran_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a",
+					"veteran_male_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_c",
+					"psyker_male_a",
+					"zealot_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_02_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.3,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_02_c",
+		response = "enemy_kill_berserker_ext_02_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_02_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a",
+					"veteran_male_c",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_02_d",
+		response = "enemy_kill_berserker_ext_02_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_02_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_c",
+					"psyker_male_a",
+					"zealot_male_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_02_e",
+		response = "enemy_kill_berserker_ext_02_e",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_02_d",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b",
+					"veteran_male_b",
+					"veteran_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_02_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_03_b",
+		response = "enemy_kill_berserker_ext_03_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker",
+					"enemy_kill_renegade_berserker",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_a",
+					"zealot_female_a zealot_male_b",
+					"zealot_male_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b",
+					"psyker_female_b",
+					"psyker_female_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b",
+					"psyker_female_b",
+					"psyker_female_c",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_03_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.2,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_03_c",
+		response = "enemy_kill_berserker_ext_03_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_03_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b",
+					"psyker_female_b",
+					"psyker_female_c",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_03_d",
+		response = "enemy_kill_berserker_ext_03_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_03_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_a",
+					"zealot_female_a zealot_male_b",
+					"zealot_male_c",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_03_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_04_b",
+		response = "enemy_kill_berserker_ext_04_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker",
+					"enemy_kill_renegade_berserker",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_a",
+					"veteran_female_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_a",
+					"ogryn_a",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_a",
+					"ogryn_a",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_04_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.2,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_04_c",
+		response = "enemy_kill_berserker_ext_04_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_04_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+					"ogryn_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_04_d",
+		response = "enemy_kill_berserker_ext_04_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_04_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_a",
+					"veteran_female_b",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_berserker_ext_04_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_05_b",
+		response = "enemy_kill_berserker_ext_05_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker",
+					"enemy_kill_renegade_berserker",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+					"veteran_male_c",
+					"ogryn_a",
+					"ogryn_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_c",
+					"zealot_female_a",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b",
+					"ogryn_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_a",
+					"psyker_female_b",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_berserker_ext",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.3,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_05_c",
+		response = "enemy_kill_berserker_ext_05_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_05_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_c",
+					"zealot_female_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_05_d",
+		response = "enemy_kill_berserker_ext_05_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_05_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b",
+					"ogryn_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_berserker_ext_05_e",
+		response = "enemy_kill_berserker_ext_05_e",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_berserker_ext_05_d",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+					"psyker_female_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
 		category = "enemy_alerts_prio_1",
 		database = "gameplay_vo",
 		name = "enemy_kill_berserker_quick_agnostic",
@@ -2190,6 +4064,178 @@ return function ()
 		},
 	})
 	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_monster_ext_01_b",
+		response = "enemy_kill_monster_ext_01_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"response_for_ogryn_enemy_kill_monster",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_monster_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_monster_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_monster_ext_01_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.4,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_monster_ext_01_c",
+		response = "enemy_kill_monster_ext_01_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_monster_ext_01_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_monster_ext_01_d",
+		response = "enemy_kill_monster_ext_01_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_monster_ext_01_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_b",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_monster_ext_01_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
 		category = "enemy_alerts_prio_1",
 		database = "gameplay_vo",
 		name = "enemy_kill_mutant_charger",
@@ -2424,6 +4470,927 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.5,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_01_b",
+		response = "enemy_kill_poxwalker_bomber_ext_01_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"veteran_male_b",
+					"zealot_female_a",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_c",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_01_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.3,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_01_c",
+		response = "enemy_kill_poxwalker_bomber_ext_01_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_01_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+					"veteran_male_b",
+					"zealot_female_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_01_d",
+		response = "enemy_kill_poxwalker_bomber_ext_01_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_01_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_b",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_01_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_01_e",
+		response = "enemy_kill_poxwalker_bomber_ext_01_e",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_01_d",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_c",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_02_b",
+		response = "enemy_kill_poxwalker_bomber_ext_02_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_b",
+					"psyker_male_a",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_male_a",
+					"zealot_female_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_male_a",
+					"zealot_female_b",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_02_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.3,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_02_c",
+		response = "enemy_kill_poxwalker_bomber_ext_02_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_02_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_a",
+					"zealot_female_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_02_d",
+		response = "enemy_kill_poxwalker_bomber_ext_02_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_02_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_b",
+					"psyker_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_02_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_03_b",
+		response = "enemy_kill_poxwalker_bomber_ext_03_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+					"veteran_female_a",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_c",
+					"psyker_female_a",
+					"zealot_male_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_c",
+					"psyker_female_a",
+					"zealot_male_c",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_03_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.2,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_03_c",
+		response = "enemy_kill_poxwalker_bomber_ext_03_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_03_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_c",
+					"psyker_female_a",
+					"zealot_male_c",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_03_d",
+		response = "enemy_kill_poxwalker_bomber_ext_03_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_03_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+					"veteran_female_a",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_03_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_04_b",
+		response = "enemy_kill_poxwalker_bomber_ext_04_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_a",
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_b",
+					"veteran_male_c",
+					"psyker_female_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_c",
+					"psyker_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.3,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_04_c",
+		response = "enemy_kill_poxwalker_bomber_ext_04_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_04_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b",
+					"veteran_male_c",
+					"psyker_female_c",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_04_d",
+		response = "enemy_kill_poxwalker_bomber_ext_04_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_04_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_c",
+					"psyker_male_a",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_05_b",
+		response = "enemy_kill_poxwalker_bomber_ext_05_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_c",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_female_a",
+					"veteran_female_a",
+					"ogryn_a",
+					"veteran_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_female_a",
+					"veteran_female_a",
+					"ogryn_a",
+					"veteran_male_b",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_kill_poxwalker_bomber_ext",
+				OP.ADD,
+				1,
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_05_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+			random_ignore_vo = {
+				chance = 0.3,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_05_c",
+		response = "enemy_kill_poxwalker_bomber_ext_05_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_05_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_a",
+					"veteran_female_a",
+					"ogryn_a",
+					"veteran_male_b",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "gameplay_vo",
+		name = "enemy_kill_poxwalker_bomber_ext_05_d",
+		response = "enemy_kill_poxwalker_bomber_ext_05_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"enemy_kill_poxwalker_bomber_ext_05_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_c",
+				},
+			},
+			{
+				"user_memory",
+				"enemy_kill_poxwalker_bomber_ext_05_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
 			},
 		},
 	})
@@ -6523,72 +9490,6 @@ return function ()
 				1,
 			},
 		},
-		heard_speak_routing = {
-			target = "disabled",
-		},
-	})
-	define_rule({
-		category = "npc_prio_0",
-		database = "gameplay_vo",
-		name = "mission_archives_activate_from_hibernation_a",
-		response = "mission_archives_activate_from_hibernation_a",
-		wwise_route = 50,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"npc_vo",
-			},
-			{
-				"query_context",
-				"vo_event",
-				OP.EQ,
-				"mission_archives_activate_from_hibernation_a",
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"archive_servitor",
-				},
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "disabled",
-		},
-	})
-	define_rule({
-		category = "npc_prio_0",
-		database = "gameplay_vo",
-		name = "mission_archives_task_complete_a",
-		response = "mission_archives_task_complete_a",
-		wwise_route = 50,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"npc_vo",
-			},
-			{
-				"query_context",
-				"vo_event",
-				OP.EQ,
-				"mission_archives_task_complete_a",
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"archive_servitor",
-				},
-			},
-		},
-		on_done = {},
 		heard_speak_routing = {
 			target = "disabled",
 		},
@@ -13981,8 +16882,8 @@ return function ()
 	define_rule({
 		category = "enemy_alerts_prio_1",
 		database = "gameplay_vo",
-		name = "seen_enemy_bulwark_custom",
-		response = "seen_enemy_bulwark_custom",
+		name = "seen_enemy_bulwark",
+		response = "seen_enemy_bulwark",
 		wwise_route = 0,
 		criterias = {
 			{

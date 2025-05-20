@@ -16,6 +16,9 @@ local mission_themes = {
 	toxic_gas = {
 		"content/levels/tank_foundry/missions/lm_cooling_themes/toxic_gas_01/theme_toxic_gas_01_lm_cooling",
 	},
+	ember = {
+		"content/levels/tank_foundry/missions/lm_cooling_themes/ember_01/theme_ember_01_lm_cooling",
+	},
 	hunting_grounds = {
 		"content/levels/tank_foundry/missions/lm_cooling_themes/hunting_grounds_01/theme_hunting_grounds_01_lm_cooling",
 	},

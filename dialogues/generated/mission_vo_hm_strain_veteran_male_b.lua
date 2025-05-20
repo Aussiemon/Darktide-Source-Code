@@ -37,6 +37,19 @@ local mission_vo_hm_strain_veteran_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	mission_strain_cross_hangar_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_veteran_male_b__mission_strain_cross_hangar_b_01",
+			[2] = "loc_veteran_male_b__mission_strain_cross_hangar_b_02",
+		},
+		sound_events_duration = {
+			[1] = 3.45678,
+			[2] = 3.45678,
+		},
+		randomize_indexes = {},
+	},
 	mission_strain_crossroads = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -47,19 +60,6 @@ local mission_vo_hm_strain_veteran_male_b = {
 		sound_events_duration = {
 			[1] = 3.302938,
 			[2] = 3.373833,
-		},
-		randomize_indexes = {},
-	},
-	mission_strain_daemonic_overgrowth_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_veteran_male_b__mission_strain_daemonic_overgrowth_a_01",
-			[2] = "loc_veteran_male_b__mission_strain_daemonic_overgrowth_a_02",
-		},
-		sound_events_duration = {
-			[1] = 5.016229,
-			[2] = 3.691396,
 		},
 		randomize_indexes = {},
 	},
@@ -101,19 +101,6 @@ local mission_vo_hm_strain_veteran_male_b = {
 			0.1,
 			0.1,
 			0.1,
-		},
-		randomize_indexes = {},
-	},
-	mission_strain_inert_tanks = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_veteran_male_b__mission_strain_inert_tanks_01",
-			[2] = "loc_veteran_male_b__mission_strain_inert_tanks_02",
-		},
-		sound_events_duration = {
-			[1] = 3.651125,
-			[2] = 2.727583,
 		},
 		randomize_indexes = {},
 	},
