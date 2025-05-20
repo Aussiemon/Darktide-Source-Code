@@ -35,6 +35,17 @@ BotPlayer.character_id = function (self)
 	return self._local_player_id
 end
 
+BotPlayer.set_profile = function (self, profile)
+	self._profile = profile
+	self._telemetry_subject = {
+		bot = true,
+		account_id = self._debug_name,
+		character_id = self:local_player_id(),
+	}
+
+	Managers.event:trigger("event_player_set_profile", self, profile)
+end
+
 implements(BotPlayer, PlayerManager.PLAYER_INTERFACE)
 
 return BotPlayer

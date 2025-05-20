@@ -64,10 +64,10 @@ InteractorExtension._init_action_components = function (self, unit_data_extensio
 	self._interaction_component = unit_data_extension:write_component("interaction")
 	self._first_person_component = unit_data_extension:read_component("first_person")
 
-	self:_reset_interaction()
+	self:reset_interaction()
 end
 
-InteractorExtension._reset_interaction = function (self)
+InteractorExtension.reset_interaction = function (self)
 	local interaction_component = self._interaction_component
 
 	interaction_component.target_unit = nil
@@ -200,7 +200,7 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 		local interaction_type = interactee_extension:interaction_type()
 		local interaction_duration = self:calculate_duration(interactee_extension)
 
-		self:_reset_interaction()
+		self:reset_interaction()
 
 		interaction_component.type = interaction_type
 		interaction_component.target_unit = chosen_target
@@ -209,7 +209,7 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 	elseif chosen_target and chosen_target_actor_node_index ~= interaction_component.target_actor_node_index then
 		interaction_component.target_actor_node_index = chosen_target_actor_node_index
 	elseif not chosen_target and chosen_target ~= current_target and state == interaction_states.waiting_to_interact then
-		self:_reset_interaction()
+		self:reset_interaction()
 	elseif chosen_target and chosen_target == current_target then
 		local interactee_extension = ScriptUnit.extension(chosen_target, "interactee_system")
 		local interaction_duration = self:calculate_duration(interactee_extension)
@@ -328,7 +328,7 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 
 			if interaction_result ~= interaction_results.ongoing then
 				interaction:stop(world, unit, interaction_component, t, interaction_result, is_server)
-				self:_reset_interaction()
+				self:reset_interaction()
 
 				if is_server then
 					interactee_extension:stopped(interaction_result)
@@ -346,7 +346,7 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 			local interaction_result = interaction_results.interaction_cancelled
 
 			interaction:stop(world, unit, interaction_component, t, interaction_result, is_server)
-			self:_reset_interaction()
+			self:reset_interaction()
 		end
 	end
 end
@@ -374,7 +374,7 @@ InteractorExtension.cancel_interaction = function (self, t)
 		end
 
 		interaction:stop(world, unit, interaction_component, t, interaction_result, is_server)
-		self:_reset_interaction()
+		self:reset_interaction()
 	end
 end
 
@@ -809,12 +809,10 @@ end
 InteractorExtension.hud_block_text = function (self)
 	local interaction_component = self._interaction_component
 	local target_unit = interaction_component.target_unit
-	local actor_node_index = interaction_component.target_actor_node_index
 	local interaction_type = self._interaction_component.type
 
 	if not target_unit then
 		target_unit = self._focus_unit
-		actor_node_index = self._focus_actor_node_index
 
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 
@@ -826,7 +824,7 @@ InteractorExtension.hud_block_text = function (self)
 	end
 
 	local interaction = self:interaction(interaction_type)
-	local hud_block_text, hud_block_text_context = interaction:hud_block_text(self._unit, target_unit, actor_node_index)
+	local hud_block_text, hud_block_text_context = interaction:hud_block_text(self._unit, target_unit)
 
 	return hud_block_text, hud_block_text_context
 end

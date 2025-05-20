@@ -254,6 +254,16 @@ TestifySnippets.check_flags_for_mission = function (flags, mission_key)
 	end
 end
 
+TestifySnippets.mission_exists = function (mission_key)
+	local exists = Testify:make_request("mission_exists", mission_key)
+
+	if exists == false then
+		local output = string.format("The mission %s does not exist in mission templates. The test was not run", mission_key)
+
+		return output
+	end
+end
+
 TestifySnippets.all_mission_flags = function (mission)
 	local flags = Testify:make_request("all_mission_flags", mission)
 
@@ -361,133 +371,6 @@ TestifySnippets.memory_usage = function ()
 	else
 		return Testify:make_request("memory_usage")
 	end
-end
-
-TestifySnippets.trigger_vo_query_player_look_at = function (look_at_tag, distance, num_dialogues)
-	local look_at_data = {
-		look_at_tag = look_at_tag,
-		distance = distance,
-	}
-
-	Testify:make_request("trigger_vo_query_player_look_at", look_at_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or look_at_tag
-end
-
-TestifySnippets.trigger_vo_query_faction_look_at = function (faction, look_at_tag, distance, num_dialogues)
-	local look_at_data = {
-		faction = faction,
-		look_at_tag = look_at_tag,
-		distance = distance,
-	}
-
-	Testify:make_request("trigger_vo_query_faction_look_at", look_at_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or look_at_tag
-end
-
-TestifySnippets.trigger_vo_query_mission_brief = function (mission_brief_starter_line, voice_profile, num_dialogues)
-	local mission_brief_data = {
-		mission_brief_starter_line = mission_brief_starter_line,
-		voice_profile = voice_profile,
-	}
-
-	Testify:make_request("trigger_vo_query_mission_brief", mission_brief_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or mission_brief_starter_line
-end
-
-TestifySnippets.trigger_vo_query_mission_giver_mission_info = function (trigger_id, voice_profile, num_dialogues)
-	local mission_giver_data = {
-		trigger_id = trigger_id,
-		voice_profile = voice_profile,
-	}
-
-	Testify:make_request("trigger_vo_query_mission_giver_mission_info", mission_giver_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or trigger_id
-end
-
-TestifySnippets.trigger_vo_query_player_generic_vo = function (trigger_id, num_dialogues)
-	local player_generic_vo_data = {
-		trigger_id = trigger_id,
-	}
-
-	Testify:make_request("trigger_vo_query_player_generic_vo", player_generic_vo_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or trigger_id
-end
-
-TestifySnippets.trigger_vo_query_player_environmental_story_vo = function (trigger_id, num_dialogues)
-	local player_environmental_story_vo_data = {
-		trigger_id = trigger_id,
-	}
-
-	Testify:make_request("trigger_vo_query_player_environmental_story_vo", player_environmental_story_vo_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or trigger_id
-end
-
-TestifySnippets.trigger_mission_giver_conversation_starter = function (trigger_id, voice_profile, num_dialogues)
-	local mission_giver_conversation_starter_vo_data = {
-		trigger_id = trigger_id,
-		voice_profile = voice_profile,
-	}
-
-	Testify:make_request("trigger_mission_giver_conversation_starter", mission_giver_conversation_starter_vo_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or trigger_id
-end
-
-TestifySnippets.trigger_vo_query_player_start_banter = function (trigger_id, num_dialogues)
-	local player_start_banter_vo_data = {
-		trigger_id = trigger_id,
-	}
-
-	Testify:make_request("trigger_vo_query_player_start_banter", player_start_banter_vo_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or trigger_id
-end
-
-TestifySnippets.trigger_vo_on_demand = function (vo_concept, trigger_id, num_dialogues)
-	local player_vo_on_demand_starter_data = {
-		vo_concept = vo_concept,
-		trigger_id = trigger_id,
-	}
-
-	Testify:make_request("trigger_vo_on_demand", player_vo_on_demand_starter_data)
-
-	return TestifySnippets.wait_for_end_of_dialogue(num_dialogues or 1) and "success" or trigger_id
-end
-
-TestifySnippets.wait_for_end_of_dialogue = function (num_dialogues)
-	local has_played = true
-	local SOUND_MINIMUM_TIME = 0.1
-
-	for i = 1, num_dialogues do
-		if num_dialogues > 1 then
-			Log.info("Testify", "Playing dialogue %s of %s.", i, num_dialogues)
-		end
-
-		local time = os.clock()
-		local has_dialogue_started = Testify:make_request("wait_for_dialogue_playing", time)
-
-		if has_dialogue_started then
-			time = os.clock()
-
-			Testify:make_request("wait_for_dialogue_played")
-
-			if SOUND_MINIMUM_TIME > os.clock() - time then
-				Log.error("Testify", "The dialogue took %ss to play, which is less than %ss. It looks like there is a problem with it.", os.clock() - time, SOUND_MINIMUM_TIME)
-
-				has_played = false
-			end
-		else
-			has_played = false
-		end
-	end
-
-	return has_played
 end
 
 TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, traits, has_local_profile, weapon_name, units_to_spawn)

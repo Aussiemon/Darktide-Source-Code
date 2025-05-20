@@ -1034,6 +1034,32 @@ ConstantElementChat._on_connect_to_channel = function (self, channel_handle)
 
 	local show_notification = true
 
+	if channel.tag == ChatManagerConstants.ChannelTag.HUB then
+		for _, other_channel in pairs(Managers.chat:sessions()) do
+			if channel_handle ~= other_channel.session_handle and channel.tag ~= other_channel.tag and other_channel.tag == ChatManagerConstants.ChannelTag.PARTY then
+				if self._selected_channel_handle then
+					local selected_channel = Managers.chat:sessions()[self._selected_channel_handle]
+
+					if selected_channel then
+						local selected_channel_tag = selected_channel.tag
+
+						self._selected_channel_handle = other_channel.session_handle
+					end
+				else
+					self._selected_channel_handle = other_channel.session_handle
+				end
+			end
+		end
+	end
+
+	if channel.tag == ChatManagerConstants.ChannelTag.PARTY then
+		for _, other_channel in pairs(Managers.chat:sessions()) do
+			if channel_handle ~= other_channel.session_handle and channel.tag ~= other_channel.tag and other_channel.tag == ChatManagerConstants.ChannelTag.HUB then
+				self._selected_channel_handle = channel.session_handle
+			end
+		end
+	end
+
 	if channel.tag == ChatManagerConstants.ChannelTag.MISSION or channel.tag == ChatManagerConstants.ChannelTag.PARTY then
 		for _, other_channel in pairs(Managers.chat:sessions()) do
 			if channel_handle ~= other_channel.session_handle and channel.tag ~= other_channel.tag and (other_channel.tag == ChatManagerConstants.ChannelTag.MISSION or other_channel.tag == ChatManagerConstants.ChannelTag.PARTY) then

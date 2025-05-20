@@ -319,7 +319,7 @@ PlayerCharacterStateFalling._check_transition = function (self, unit, t, next_st
 			end
 
 			return "sliding"
-		elseif Sprint.check(t, unit, self._movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+		elseif Sprint.check(t, unit, self._movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants, self._buff_extension) then
 			if is_sprint_jumping then
 				next_state_params.disable_sprint_start_slowdown = true
 			end

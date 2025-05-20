@@ -28,7 +28,6 @@ local RoomsAndPortalsManager = require("scripts/managers/wwise/rooms_and_portals
 local TerrorEventManager = require("scripts/managers/terror_event/terror_event_manager")
 local UnitJobManager = require("scripts/managers/unit_job/unit_job_manager")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
-local VideoManager = require("scripts/managers/video/video_manager")
 local VoiceOverSpawnManager = require("scripts/managers/voice_over/voice_over_spawn_manager")
 local WorldInteractionManager = require("scripts/managers/world_interaction/world_interaction_manager")
 local GameplayInitStepManagers = class("GameplayInitStepManagers")
@@ -100,7 +99,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 		Managers.state.minion_spawn = MinionSpawnManager:new(level_seed, soft_cap_out_of_bounds_units, network_event_delegate)
 		Managers.state.voice_over_spawn = VoiceOverSpawnManager:new(is_server, mission_giver_vo)
 		Managers.state.horde = HordeManager:new(nav_world, physics_world)
-		Managers.state.pacing = PacingManager:new(world, nav_world, level_seed, pacing_control)
+		Managers.state.pacing = PacingManager:new(world, nav_world, level_seed, pacing_control, mission_template.pacing_template)
 	end
 
 	Managers.player:set_network(is_server, network_event_delegate)
@@ -109,7 +108,6 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.terror_event = TerrorEventManager:new(world, is_server, network_event_delegate, mission_template, level_name)
 	Managers.state.havoc = HavocManager:new(is_server, world, nav_world, level_name, level_seed)
 	Managers.state.cinematic = CinematicManager:new(world, is_server, network_event_delegate)
-	Managers.state.video = VideoManager:new()
 	Managers.state.blood = BloodManager:new(world, is_server, network_event_delegate)
 	Managers.state.attack_report = AttackReportManager:new(is_server, network_event_delegate)
 	Managers.state.rooms_and_portals = RoomsAndPortalsManager:new(world)

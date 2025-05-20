@@ -7,7 +7,6 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local FixedFrame = require("scripts/utilities/fixed_frame")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
@@ -19,7 +18,7 @@ local templates = {}
 
 table.make_unique(templates)
 
-nurgle_parasite_settings = {
+local nurgle_parasite_settings = {
 	specific_head_gib_settings = {
 		random_radius = 2,
 		hit_zones = {
@@ -238,6 +237,7 @@ templates.headshot_parasite_enemies = {
 }
 templates.mutator_minion_nurgle_blessing_tougher = {
 	class_name = "buff",
+	predicted = false,
 	target = buff_targets.minion_only,
 	keywords = {
 		buff_keywords.empowered,
@@ -289,6 +289,7 @@ local CORRUPTION_PERMANENT_POWER_LEVEL = {
 templates.mutator_corruption_over_time = {
 	class_name = "interval_buff",
 	interval = 7,
+	predicted = false,
 	target = buff_targets.player_only,
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -313,6 +314,7 @@ local CORRUPTION_PERMANENT_POWER_LEVEL_2 = {
 templates.mutator_corruption_over_time_2 = {
 	class_name = "interval_buff",
 	interval = 7,
+	predicted = false,
 	target = buff_targets.player_only,
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -327,6 +329,7 @@ templates.mutator_corruption_over_time_2 = {
 }
 templates.mutator_player_cooldown_reduction = {
 	class_name = "buff",
+	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
 		[buff_stat_buffs.ability_cooldown_modifier] = -0.2,
@@ -336,6 +339,7 @@ templates.mutator_movement_speed_on_spawn = {
 	class_name = "buff",
 	duration = 30,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud",
+	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = 1,
@@ -344,6 +348,7 @@ templates.mutator_movement_speed_on_spawn = {
 }
 templates.mutator_player_enhanced_grenade_abilities = {
 	class_name = "buff",
+	predicted = false,
 	target = buff_targets.player_only,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -383,6 +388,7 @@ local RED_STIM_COLOR = {
 
 templates.empowered_poxwalker = {
 	class_name = "buff",
+	predicted = false,
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
@@ -535,6 +541,7 @@ templates.empowered_poxwalker = {
 templates.empowered_poxwalker_with_duration = {
 	class_name = "buff",
 	duration = 6,
+	predicted = false,
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
@@ -671,6 +678,7 @@ templates.empowered_poxwalker_with_duration = {
 }
 templates.empowered_by_pox_gas = {
 	class_name = "buff",
+	predicted = false,
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
@@ -830,6 +838,7 @@ templates.empowered_by_pox_gas = {
 }
 templates.empowered_twin = {
 	class_name = "buff",
+	predicted = false,
 	target = buff_targets.minion_only,
 	keywords = {
 		buff_keywords.stimmed,
@@ -898,6 +907,7 @@ templates.empowered_twin = {
 }
 templates.mutant_mutator = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = 0.10000000000000009,
 	},
@@ -992,6 +1002,29 @@ templates.mutant_mutator = {
 			},
 		},
 	},
+}
+templates.drop_pickup_on_death = {
+	class_name = "buff",
+	predicted = false,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local position = Unit.world_position(unit, 1)
+		local rotation = Unit.local_rotation(unit, 1)
+		local pickup_system = Managers.state.extension:system("pickup_system")
+
+		pickup_system:spawn_pickup("skulls_01_pickup", position, rotation, nil, nil, nil, nil, "skull_reward")
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
 }
 
 return templates

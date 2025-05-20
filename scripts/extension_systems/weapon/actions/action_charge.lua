@@ -15,7 +15,7 @@ ActionCharge.init = function (self, action_context, action_params, action_settin
 	local action_module_charge_component = unit_data_extension:write_component("action_module_charge")
 
 	self._action_module_charge_component = action_module_charge_component
-	self._charge_module = ActionModules.charge:new(physics_world, player_unit, first_person_unit, action_module_charge_component, action_settings)
+	self._charge_module = ActionModules.charge:new(self._is_server, physics_world, player_unit, first_person_unit, action_module_charge_component, action_settings)
 	self._action_settings = action_settings
 
 	local weapon = action_params.weapon

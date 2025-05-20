@@ -382,6 +382,91 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 	else
 		Log.info("ImpactFxInjector", "Found override for \"void_shield\" impact fx on damage_type: %s", damage_type)
 	end
+
+	local has_nurgle_totem_overrides = armor_config[hit_effect_armor_type.nurgle_totem] ~= nil
+
+	if not has_nurgle_totem_overrides then
+		armor_config[hit_effect_armor_type.nurgle_totem] = {
+			sfx = {
+				damage = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_event_skull_totem_hit",
+					},
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_melee_hits_axe_light",
+					},
+				},
+				damage_reduced = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_event_skull_totem_hit",
+					},
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_melee_hits_axe_light",
+					},
+				},
+				damage_negated = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_melee_hits_axe_light",
+					},
+				},
+			},
+			vfx = {
+				damage = {
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_penetrate",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/surfaces/impact_metal",
+						},
+					},
+				},
+				damage_reduced = {
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_penetrate",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/surfaces/impact_metal",
+						},
+					},
+				},
+				damage_negated = {
+					{
+						effects = {
+							"content/fx/particles/impacts/damage_blocked",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_ricochet",
+						},
+					},
+				},
+			},
+		}
+	else
+		Log.info("ImpactFxInjector", "Found override for \"nurgle_totem\" impact fx on damage_type: %s", damage_type)
+	end
 end
 
 function _inject_surface_impact_fx(damage_type, surface_config)

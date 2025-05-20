@@ -11,6 +11,7 @@ local LocalLoadersState = require("scripts/loading/local_states/local_loaders_st
 local LocalLoadFailState = require("scripts/loading/local_states/local_load_fail_state")
 local LocalResetState = require("scripts/loading/local_states/local_reset_state")
 local LocalThemeState = require("scripts/loading/local_states/local_theme_state")
+local LocalRequestMissionSeedState = require("scripts/loading/local_states/local_request_mission_seed_state")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local LocalWaitForMissionBriefingDoneState = require("scripts/loading/local_states/local_wait_for_mission_briefing_done_state")
@@ -53,11 +54,14 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 	state_machine:add_transition("LocalThemeState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalThemeState", "reset", LocalResetState)
 	state_machine:add_transition("LocalThemeState", "disconnected", LocalLoadFailState)
-	state_machine:add_transition("LocalLevelState", "mission_load_done", LocalMechanismLevelState)
+	state_machine:add_transition("LocalLevelState", "mission_load_done", LocalRequestMissionSeedState)
 	state_machine:add_transition("LocalLevelState", "hub_load_done", LocalDetermineSpawnGroupState)
 	state_machine:add_transition("LocalLevelState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalLevelState", "reset", LocalResetState)
 	state_machine:add_transition("LocalLevelState", "disconnected", LocalLoadFailState)
+	state_machine:add_transition("LocalRequestMissionSeedState", "mission_seed_received", LocalMechanismLevelState)
+	state_machine:add_transition("LocalRequestMissionSeedState", "reset", LocalResetState)
+	state_machine:add_transition("LocalRequestMissionSeedState", "disconnected", LocalLoadFailState)
 	state_machine:add_transition("LocalMechanismLevelState", "spawning_done", LocalWaitForMissionBriefingDoneState)
 	state_machine:add_transition("LocalMechanismLevelState", "no_level_needed", StateMachine.IGNORE_EVENT)
 	state_machine:add_transition("LocalMechanismLevelState", "reset", LocalResetState)
@@ -79,14 +83,6 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 
 	self._state_machine = state_machine
 	self._shared_state = shared_state
-
-	network_delegate:register_connection_channel_events(self, host_channel_id, "rpc_set_mission_seed")
-end
-
-LoadingClient.rpc_set_mission_seed = function (self, channel_id, mission_seed)
-	local shared_state = self._shared_state
-
-	shared_state.mission_seed = mission_seed
 end
 
 LoadingClient.destroy = function (self)
@@ -104,7 +100,6 @@ LoadingClient.destroy = function (self)
 	end
 
 	table.clear(shared_state.loaders)
-	self._network_delegate:unregister_channel_events(shared_state.host_channel_id, "rpc_set_mission_seed")
 	self._state_machine:delete()
 
 	self._state_machine = nil

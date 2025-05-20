@@ -2488,7 +2488,10 @@ local function generate_resolution_options()
 
 			if not found_valid_adapter then
 				return {
-					display_name = "n/a",
+					{
+						display_name = "n/a",
+						id = 1,
+					},
 				}
 			end
 		end

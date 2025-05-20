@@ -459,7 +459,7 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 			}
 			local item = MasterItems.get_item_instance(gear, item_id)
 
-			if item.base_unit then
+			if item and item.base_unit then
 				visual_items[slot_name] = {
 					item = item,
 					gear = gear,

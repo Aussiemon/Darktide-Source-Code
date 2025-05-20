@@ -4,7 +4,9 @@ local Breed = require("scripts/utilities/breed")
 
 local function _init_breed_settings(Breeds)
 	for breed_name, breed_data in pairs(Breeds) do
-		if Breed.is_minion(breed_data) then
+		local need_initial_settings = Breed.is_minion(breed_data)
+
+		if need_initial_settings then
 			local line_of_sight_data = breed_data.line_of_sight_data
 
 			for i = 1, #line_of_sight_data do

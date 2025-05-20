@@ -1,21 +1,22 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported.lua
 
 local SweepSplineExported = class("SweepSplineExported")
-local _find_frame, _apply_first_person_context, _damage_window_frames, _build_matrix
+local _find_frame, _apply_reference_context, _damage_window_frames, _build_matrix
 
-SweepSplineExported.init = function (self, action_settings, first_person_component)
-	self._first_person_component = first_person_component
+SweepSplineExported.init = function (self, action_settings, matrices_data_location, anchor_point_offset)
 	self._action_settings = action_settings
+	self._matrices_data_location = matrices_data_location
+	self._anchor_point_offset = anchor_point_offset
 
 	self:_build(action_settings)
 end
 
-SweepSplineExported.position_and_rotation = function (self, t)
+SweepSplineExported.position_and_rotation = function (self, t, reference_position, reference_rotation)
 	local frame = t == 0 and 1 or math.ceil(self._num_frames * t)
 	local local_matrix = Matrix4x4Box.unbox(self._matrices[frame])
 	local local_point = Matrix4x4.translation(local_matrix)
 	local local_rotation = Matrix4x4.rotation(local_matrix)
-	local sweep_position, sweep_rotation = _apply_first_person_context(local_point, local_rotation, self._first_person_component, self._action_settings.spline_settings.anchor_point_offset)
+	local sweep_position, sweep_rotation = _apply_reference_context(local_point, local_rotation, reference_position, reference_rotation, self._anchor_point_offset)
 
 	return sweep_position, sweep_rotation
 end
@@ -27,9 +28,7 @@ SweepSplineExported.rebuild = function (self, action_settings)
 end
 
 SweepSplineExported._build = function (self, action_settings)
-	local spline_settings = action_settings.spline_settings
-	local matrices_data_location = spline_settings.matrices_data_location
-	local matrices_data = dofile(matrices_data_location)
+	local matrices_data = dofile(self._matrices_data_location)
 	local num_frames = 0
 	local full_frame_to_time_map = {}
 	local max_time = 0
@@ -101,9 +100,9 @@ function _find_frame(time, frame_to_time_map, num_frames)
 	end
 end
 
-function _apply_first_person_context(local_point, local_rotation, first_person, anchor_point_offset)
-	local pos = first_person.position
-	local rot = first_person.rotation
+function _apply_reference_context(local_point, local_rotation, reference_position, reference_rotation, anchor_point_offset)
+	local pos = reference_position
+	local rot = reference_rotation
 
 	if anchor_point_offset then
 		local local_anchor_point_offset = Vector3(anchor_point_offset[1], anchor_point_offset[2], anchor_point_offset[3])

@@ -275,7 +275,6 @@ local breed_data = {
 			"j_spine1",
 			"j_spine2",
 			"j_rightshoulder",
-			"j_leftarm",
 			"j_rightarm",
 			"j_rightforearm",
 			"j_righthand",

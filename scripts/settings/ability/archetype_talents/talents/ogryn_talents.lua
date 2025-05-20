@@ -2206,7 +2206,7 @@ local archetype_talents = {
 		},
 		ogryn_dodge_stagger = {
 			description = "loc_talent_ogryn_dodge_stagger_desc",
-			display_name = "loc_talent_ogryn_dodge_stagger_name",
+			display_name = "loc_talent_ogryn_dodge_stagger",
 			name = "ogryn_dodge_stagger",
 			format_values = {},
 			passive = {

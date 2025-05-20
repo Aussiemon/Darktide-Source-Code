@@ -34,7 +34,7 @@ local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
 local damage_types = DamageSettings.damage_types
 local toughness_replenish_types = ToughnessSettings.replenish_types
-local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, _trigger_flank_interfacing, _trigger_training_grounds_events, ARGS, NUM_ARGS
+local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, _trigger_training_grounds_events, ARGS, NUM_ARGS
 local Attack = {}
 local attack_args_temp = {}
 
@@ -226,7 +226,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	local is_server = Managers.state.game_session:is_server()
-	local calculated_damage, damage_efficiency
+	local calculated_damage, damage_efficiency, was_staggered_before_attack
 
 	if instakill then
 		local target_health_extension = ScriptUnit.extension(attacked_unit, "health_system")
@@ -243,6 +243,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 
 			target_stagger_count = stagger_component.count
 			num_triggered_staggers = stagger_component.num_triggered_staggers
+			was_staggered_before_attack = num_triggered_staggers > 0
 
 			local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
 			local current_stagger_type = stagger_component.type
@@ -305,7 +306,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
-		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, attacker_instigator_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position, item, close_explosion_hit)
+		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack or false, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, attacker_instigator_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position, item, close_explosion_hit)
 
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
@@ -466,7 +467,7 @@ function _already_procced(triggered_proc_events_or_nil, proc_event)
 	return triggered_proc_events_or_nil[proc_event]
 end
 
-function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, attacker_instigator_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil, attacking_item_or_nil, close_explosion_hit)
+function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, attacker_instigator_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil, attacking_item_or_nil, close_explosion_hit)
 	if not attacker_owner_buff_extension_or_nil and not target_buff_extension_or_nil then
 		return
 	end
@@ -532,7 +533,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.alternative_fire = alternative_fire
 			attacker_param_table.attack_direction = attack_direction_box
 			attacker_param_table.attack_instigator_unit = attacking_unit
-			attacker_param_table.attack_instigator_unit_breed_name = attacker_breed_or_nil and attacker_breed_or_nil.name
+			attacker_param_table.attack_instigator_unit_breed_name = attacker_instigator_breed_or_nil and attacker_instigator_breed_or_nil.name
 			attacker_param_table.attack_type = attack_type
 			attacker_param_table.attacked_unit = attacked_unit
 			attacker_param_table.attacked_unit_position = Vector3Box(POSITION_LOOKUP[attacked_unit])
@@ -551,6 +552,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.one_hit_kill = one_hit_kill
 			attacker_param_table.attack_result = attack_result
 			attacker_param_table.stagger_result = stagger_result
+			attacker_param_table.was_staggered_before_attack = was_staggered_before_attack
 			attacker_param_table.sticky_attack = damage_profile.sticky_attack
 			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
 			attacker_param_table.target_index = target_index

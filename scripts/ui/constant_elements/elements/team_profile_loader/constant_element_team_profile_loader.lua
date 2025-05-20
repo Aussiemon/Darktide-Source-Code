@@ -72,7 +72,7 @@ end
 
 ConstantElementTeamProfileLoader.destroy = function (self)
 	if self._event_listeners_initialized then
-		Managers.event:unregister(self, "event_player_profile_updated")
+		Managers.event:unregister(self, "event_player_set_profile")
 	end
 end
 
@@ -95,15 +95,16 @@ ConstantElementTeamProfileLoader.update = function (self, dt, t, ui_renderer, re
 
 	if not self._event_listeners_initialized then
 		local player_manager = Managers.player
-		local local_player = player_manager and player_manager:local_player(self._local_player_id or 1)
+		local local_player_id = 1
+		local local_player = player_manager and player_manager:local_player(local_player_id)
 
-		if local_player then
-			self._event_listeners_initialized = true
-
-			Managers.event:register(self, "event_player_profile_updated", "event_player_profile_updated")
-		else
+		if not local_player then
 			return
 		end
+
+		self._event_listeners_initialized = true
+
+		Managers.event:register(self, "event_player_set_profile", "_event_player_set_profile")
 	end
 
 	if self._delay_timer then
@@ -167,16 +168,6 @@ ConstantElementTeamProfileLoader._sync_player_template_instances = function (sel
 	for account_id, instance in pairs(player_instance_templates_by_account_id) do
 		if not instance.synced then
 			if instance.active then
-				local sync_on_events = instance.sync_on_events
-
-				if sync_on_events then
-					for j = 1, #sync_on_events do
-						local event_name = sync_on_events[j]
-
-						Managers.event:unregister(instance, event_name)
-					end
-				end
-
 				instance.on_deactivation(instance)
 
 				instance.active = false
@@ -189,28 +180,30 @@ ConstantElementTeamProfileLoader._sync_player_template_instances = function (sel
 	end
 end
 
-ConstantElementTeamProfileLoader.event_player_profile_updated = function (self, peer_id, local_player_id, updated_profile)
-	local character_id = updated_profile and updated_profile.character_id
+ConstantElementTeamProfileLoader._event_player_set_profile = function (self, player, profile)
+	if player:local_player_id() ~= 1 then
+		return
+	end
 
-	if character_id then
-		local player_instance_templates_by_account_id = self._player_instance_templates_by_account_id
+	local account_id = player:account_id()
+	local player_instance_templates_by_account_id = self._player_instance_templates_by_account_id
+	local instance = player_instance_templates_by_account_id[account_id]
 
-		for account_id, instance in pairs(player_instance_templates_by_account_id) do
-			local player_template_instance = player_instance_templates_by_account_id[account_id]
+	if not instance or not instance.active then
+		return
+	end
 
-			if player_template_instance then
-				local instance_player = instance.player
+	local instance_profile = instance.loading_data.profile
+	local instance_character_profile_id = instance_profile and instance_profile.character_id
+	local character_id = profile and profile.character_id
 
-				if instance_player and not instance_player.__deleted then
-					local instance_profile = instance_player:profile()
-					local instance_character_profile_id = instance_profile and instance_profile.character_id
+	if instance_character_profile_id == character_id then
+		instance.sync_profile_changes(instance, profile)
+	else
+		instance.on_deactivation(instance)
 
-					if instance_character_profile_id == character_id then
-						player_template_instance.sync_profile_changes(player_template_instance, updated_profile)
-					end
-				end
-			end
-		end
+		instance.active = false
+		player_instance_templates_by_account_id[account_id] = nil
 	end
 
 	self._delay_timer = nil

@@ -28,24 +28,20 @@ end
 
 CollectiblesManager.on_gameplay_post_init = function (self, level_seed)
 	self._seed = level_seed
-
-	local destructibles = {}
-
 	self._num_destructibles = 0
 
 	for section_id = 1, #self._destructible_data do
 		local section = self._destructible_data[section_id]
-		local num_ids = #section
-		local random_id = self:_random(1, num_ids)
+		local num_collectible = #section
+		local random_id = self:_random(1, num_collectible)
 
-		if not destructibles[section_id] then
-			destructibles[section_id] = {}
+		if num_collectible < 4 then
+			Log.error("CollectiblesManager", "There are only %s destructible collectibles in section %s", num_collectible, section_id)
 		end
 
 		local new_entry = table.clone(self._destructible_data[section_id][random_id])
 
 		new_entry.id = 1
-		destructibles[section_id][#destructibles[section_id] + 1] = new_entry
 
 		local destructible_extension = ScriptUnit.has_extension(new_entry.unit, "destructible_system")
 
@@ -68,8 +64,6 @@ CollectiblesManager.on_gameplay_post_init = function (self, level_seed)
 			Unit.set_unit_visibility(unit, false)
 		end
 	end
-
-	self._destructibles = destructibles
 end
 
 CollectiblesManager.destroy = function (self)
@@ -89,16 +83,14 @@ end
 CollectiblesManager.register_destructible = function (self, data)
 	local destructible_data = self._destructible_data
 	local section_id = data.section_id
-	local id = data.id
 
 	if not destructible_data[section_id] then
 		destructible_data[section_id] = {}
 	end
 
-	if not destructible_data[section_id][id] then
-		destructible_data[section_id][id] = data
-	end
+	local section_destructibles = destructible_data[section_id]
 
+	section_destructibles[#section_destructibles + 1] = data
 	self._num_destructibles = self._num_destructibles + 1
 end
 
@@ -244,28 +236,11 @@ CollectiblesManager._show_destructible_notification = function (self, peer_id, s
 		player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
 	end
 
-	local collectible_data = self._destructibles
-	local section_data = collectible_data[section_id]
-	local data = section_data[id]
-
-	data.collected = true
-
-	local num_collected_in_section = 0
-
-	for i = 1, #section_data do
-		if section_data[i].collected then
-			num_collected_in_section = num_collected_in_section + 1
-		end
-	end
-
-	local num_in_section = #collectible_data[section_id]
 	local num_total = self._num_destructibles
 
 	Managers.event:trigger("event_add_notification_message", "destructible", {
 		player_name = player_name,
 		player = player,
-		num_in_section = num_in_section,
-		num_collected_in_section = num_collected_in_section,
 		num_collected = self._num_destructibles_destroyed,
 		num_total = num_total,
 	})

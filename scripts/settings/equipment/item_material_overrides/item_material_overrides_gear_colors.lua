@@ -846,6 +846,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_2_colour_black_10 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_black_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_black_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_red_01",
+			},
+		},
+	},
 	color_2_colour_city_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -2679,6 +2692,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_3_colour_burgundy_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_burgundy_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_burgundy_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_burgundy_01",
+			},
+		},
+	},
 	color_3_colour_inquisition_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -2689,6 +2715,19 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/3_colour_inquisition_01",
+			},
+		},
+	},
+	color_2_colour_inquisition_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_inquisition_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_inquisition_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_inquisition_01",
 			},
 		},
 	},

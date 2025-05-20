@@ -129,6 +129,7 @@ end
 local game_object_id = Network.type_info("game_object_id")
 
 NetworkConstants.invalid_game_object_id = game_object_id.min
+NetworkConstants.game_object_id = game_object_id
 
 local level_name_hash = Network.type_info("level_name_hash")
 

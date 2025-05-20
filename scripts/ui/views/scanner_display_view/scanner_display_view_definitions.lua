@@ -13,10 +13,8 @@ end
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_none")
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_balance")
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_decode_symbols")
-_extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_defuse")
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_drill")
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_frequency")
-_extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_scan")
 
 for name, definition_data in pairs(scanner_display_view_definitions) do
 	definition_data.name = name

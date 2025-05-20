@@ -267,7 +267,7 @@ local function _apply_interpolation_callback(string_key, errors, context, contex
 		Log.error("LocalizationManager", "Missing context value for key %q in %s", context_key, string_key)
 
 		format = "%s"
-		context_value = string.format("\"%s:N/A\"", context_key)
+		context_value = string.format("\"%s:undefined\"", context_key)
 	end
 
 	if format == "" then

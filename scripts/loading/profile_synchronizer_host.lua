@@ -501,12 +501,12 @@ ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, 
 		self:sync_player_profile(channel_id, profile_peer_id, profile_local_player_id, profile_chunks)
 	else
 		peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.synced
-	end
 
-	local initial_syncs = self._initial_syncs
+		local initial_syncs = self._initial_syncs
 
-	if initial_syncs[channel_id] and initial_syncs[channel_id][profile_peer_id] then
-		initial_syncs[channel_id][profile_peer_id][profile_local_player_id] = true
+		if initial_syncs[channel_id] and initial_syncs[channel_id][profile_peer_id] then
+			initial_syncs[channel_id][profile_peer_id][profile_local_player_id] = true
+		end
 	end
 end
 

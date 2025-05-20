@@ -175,6 +175,26 @@ local mission_templates = {
 		mission_brief_vo = {
 			vo_profile = "sergeant_a",
 			wwise_route_key = 1,
+			mission_giver_packs = {
+				explicator_a = {
+					"explicator",
+					"tech_priest",
+					"pilot",
+				},
+				sergeant_a = {
+					"sergeant",
+					"tech_priest",
+					"pilot",
+				},
+				tech_priest_a = {
+					"tech_priest",
+					"pilot",
+				},
+				tech_priest_b = {
+					"tech_priest",
+					"interrogator",
+				},
+			},
 			vo_events = {
 				"mission_cargo_briefing_a",
 				"mission_cargo_briefing_b",

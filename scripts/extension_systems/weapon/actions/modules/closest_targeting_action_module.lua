@@ -2,7 +2,8 @@
 
 local ClosestTargetingActionModule = class("ClosestTargetingActionModule")
 
-ClosestTargetingActionModule.init = function (self, physics_world, player_unit, component, action_settings)
+ClosestTargetingActionModule.init = function (self, is_server, physics_world, player_unit, component, action_settings)
+	self._is_server = is_server
 	self._physics_world = physics_world
 	self._player_unit = player_unit
 	self._component = component

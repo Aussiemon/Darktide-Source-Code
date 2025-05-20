@@ -205,12 +205,12 @@ local archetype_talents = {
 				identifier = {
 					"no_grenades",
 					"ammo_gives_grenades",
-					"quick_throw_grenades",
+					"zealot_throwing_knives",
 				},
 				special_rule_name = {
 					special_rules.disable_grenade_pickups,
 					special_rules.ammo_pickups_refills_grenades,
-					special_rules.enable_quick_throw_grenades,
+					special_rules.zealot_throwing_knives,
 				},
 			},
 			passive = {

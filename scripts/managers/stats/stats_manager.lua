@@ -768,7 +768,7 @@ StatsManager.read_user_stat = function (self, key, stat_name, ...)
 end
 
 StatsManager._attach_listener = function (self, key, listener_id)
-	local user = self._users[key]
+	local user = key == "TEAM" and self._team or self._users[key]
 	local listener = self._listeners[listener_id]
 	local definitions = self._definitions
 	local stat_names = listener.stat_names
@@ -784,7 +784,7 @@ StatsManager._attach_listener = function (self, key, listener_id)
 end
 
 StatsManager._detach_listener = function (self, key, listener_id)
-	local user = self._users[key]
+	local user = key == "TEAM" and self._team or self._users[key]
 	local listener = self._listeners[listener_id]
 	local stat_names = listener.stat_names
 	local user_listeners = user.listeners
@@ -818,7 +818,7 @@ StatsManager.add_listener = function (self, key, stat_names, callback_fn)
 		callback_fn = callback_fn,
 	}
 
-	local user = self._users[key]
+	local user = key == "TEAM" and self._team or self._users[key]
 
 	if user then
 		self:_attach_listener(key, listener_id)

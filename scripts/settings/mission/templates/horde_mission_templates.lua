@@ -14,6 +14,7 @@ local mission_templates = {
 		not_needed_for_penance = true,
 		objectives = "psykhanium",
 		pacing_template = "terror_events_only",
+		path_type = "open",
 		pickup_pool = "empty_distribution_pool",
 		texture_big = "content/ui/textures/missions/psykhanium_big",
 		texture_medium = "content/ui/textures/missions/psykhanium_medium",

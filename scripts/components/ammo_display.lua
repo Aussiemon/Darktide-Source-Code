@@ -7,6 +7,7 @@ AmmoDisplay.editor_init = function (self, unit)
 	self._ammo = self:get_data(unit, "ammo")
 	self._ammo_display_steps = self:get_data(unit, "ammo_display_steps")
 	self._critical_threshold = self:get_data(unit, "critical_threshold")
+	self._material_slot_name = self:get_data(unit, "material_slot_name")
 
 	self:enable(unit)
 end
@@ -20,12 +21,13 @@ AmmoDisplay.init = function (self, unit)
 	self._ammo = self:get_data(unit, "ammo")
 	self._ammo_display_steps = self:get_data(unit, "ammo_display_steps")
 	self._critical_threshold = self:get_data(unit, "critical_threshold")
+	self._material_slot_name = self:get_data(unit, "material_slot_name")
 
 	self:enable(unit)
 end
 
 AmmoDisplay.enable = function (self, unit)
-	self:_update_charge(unit)
+	self:_update_material_values(unit, 0, false)
 end
 
 AmmoDisplay.disable = function (self, unit)
@@ -53,27 +55,22 @@ AmmoDisplay.set_ammo = function (self, unit, ammo, max_ammo, critical_threshold)
 		self._ammo = ammo
 		self._critical_threshold = critical_threshold
 
-		self:_update_charge(unit)
+		local charge_value = ammo / max_ammo
+		local critical_value = critical_threshold / max_ammo
+		local is_critical = charge_value <= critical_value
+
+		self:_update_material_values(unit, charge_value, is_critical, is_critical and Vector3(0.5, 0, 0), Vector3(0, 0.5, 0))
 	end
 end
 
-AmmoDisplay._update_charge = function (self, unit)
-	local max_ammo = self._max_ammo
-	local charge_value = self._ammo / max_ammo
-	local critical_value = self._critical_threshold / max_ammo
+AmmoDisplay._update_material_values = function (self, unit, charge_value, is_critical, color)
+	local material_slot_name = self._material_slot_name
+	local num_steps = self._ammo_display_steps
 
-	Unit.set_scalar_for_material(unit, "display_01", "charge", charge_value)
-
-	local is_critical = charge_value <= critical_value
-
-	Unit.set_scalar_for_material(unit, "display_01", "warning", is_critical and 1 or 0)
-	Unit.set_scalar_for_material(unit, "display_01", "steps", 30)
-
-	if is_critical then
-		Unit.set_vector3_for_material(unit, "display_01", "color", Vector3(0.5, 0, 0))
-	else
-		Unit.set_vector3_for_material(unit, "display_01", "color", Vector3(0, 0.5, 0))
-	end
+	Unit.set_scalar_for_material(unit, material_slot_name, "charge", charge_value)
+	Unit.set_scalar_for_material(unit, material_slot_name, "warning", is_critical and 1 or 0)
+	Unit.set_scalar_for_material(unit, material_slot_name, "steps", num_steps)
+	Unit.set_vector3_for_material(unit, material_slot_name, "color", color or Vector3(0, 0.5, 0))
 end
 
 AmmoDisplay.component_data = {
@@ -106,6 +103,11 @@ AmmoDisplay.component_data = {
 		ui_name = "Critical Threshold",
 		ui_type = "slider",
 		value = 3,
+	},
+	material_slot_name = {
+		ui_name = "Material Slot Name",
+		ui_type = "text_box",
+		value = "display_01",
 	},
 }
 

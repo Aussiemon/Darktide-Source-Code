@@ -520,9 +520,24 @@ templates.hordes_buff_no_ammo_consumption_on_crits = {
 	max_stacks_cap = 1,
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
-	keywords = {
+	conditional_keywords = {
 		buff_keywords.no_ammo_consumption_on_crits,
 	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
+		template_data.inventory_slot_component = unit_data_extension:read_component("slot_secondary")
+	end,
+	conditional_stat_buffs_func = function (template_data, template_context, t)
+		local inventory_slot_component = template_data.inventory_slot_component
+
+		if inventory_slot_component and inventory_slot_component.current_ammunition_clip < 1 then
+			return false
+		end
+
+		return true
+	end,
 }
 templates.hordes_buff_windup_is_uninterruptible = {
 	class_name = "buff",
@@ -4686,7 +4701,6 @@ templates.hordes_ailment_infinite_minion_bleed.duration = nil
 templates.hordes_ailment_infinite_minion_bleed.interval_stack_removal = false
 templates.hordes_ailment_infinite_minion_bleed.refresh_duration_on_stack = false
 templates.hordes_ailment_shock = {
-	buff_id = "shock_grenade_shock",
 	class_name = "interval_buff",
 	duration = 2,
 	max_stacks = 1,
@@ -4698,7 +4712,6 @@ templates.hordes_ailment_shock = {
 	buff_category = buff_categories.hordes_sub_buff,
 	keywords = {
 		buff_keywords.electrocuted,
-		buff_keywords.shock_grenade_shock,
 	},
 	interval = {
 		0.3,

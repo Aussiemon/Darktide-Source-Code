@@ -120,8 +120,6 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 	local slot_extension = ScriptUnit.extension(self._unit, "slot_system")
 	local num_occupied_slots = slot_extension.num_occupied_slots
 	local toughness_regen_disabled = self:_toughness_regen_disabled()
-	local max_toughness = self:max_toughness()
-	local starting_amount = max_toughness - toughness_damage
 
 	if num_occupied_slots == 0 and toughness_damage > 0 and toughness_regen_delay < t and not toughness_regen_disabled then
 		local weapon_toughness_template = self._weapon_extension:toughness_template()
@@ -203,7 +201,6 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	local toughness_template = self._toughness_template
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_amount = max_toughness - toughness_damage
 	local weapon_toughness_template = self._weapon_extension:toughness_template()
 	local modifier = weapon_toughness_template and weapon_toughness_template.recovery_percentage_modifiers[recovery_type] or 1
 	local stat_buffs = self._buff_extension:stat_buffs()
@@ -238,7 +235,6 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_amount = max_toughness - toughness_damage
 
 	if not ignore_stat_buffs then
 		local stat_buffs = self._buff_extension:stat_buffs()
@@ -280,9 +276,7 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 		return 0
 	end
 
-	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_amount = max_toughness - toughness_damage
 
 	if not ignore_stat_buffs then
 		local stat_buffs = self._buff_extension:stat_buffs()
@@ -313,7 +307,6 @@ PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ign
 
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_amount = max_toughness - toughness_damage
 
 	self._toughness_damage = 0
 

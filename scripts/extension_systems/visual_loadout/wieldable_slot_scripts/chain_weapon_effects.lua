@@ -10,7 +10,7 @@ local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
 local SPECIAL_OFF_SOUND_ALIAS = "weapon_special_end"
 local INTENSITY_DECAY_SPEED = 1
 
-ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sources)
+ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local is_husk = context.is_husk
 
 	self._is_husk = is_husk
@@ -47,7 +47,7 @@ ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._special_active_end_t = nil
 	self._force_update = true
 
-	ChainWeaponEffects.super.init(self, context, slot, weapon_template, fx_sources)
+	ChainWeaponEffects.super.init(self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 end
 
 ChainWeaponEffects.destroy = function (self)

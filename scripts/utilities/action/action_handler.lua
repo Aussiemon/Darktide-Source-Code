@@ -291,7 +291,7 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	end
 
 	action:start(action_settings, t, time_scale, action_start_params)
-	self:_anim_event(action_settings, action, is_chain_action, condition_func_params)
+	self:_anim_event(action_settings, action, condition_func_params, is_chain_action, running_action)
 	self:_update_combo_count(running_action, action_settings, component, automatic_input, reset_combo_override)
 
 	local buff_extension = self._buff_extension
@@ -419,17 +419,17 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	return time_scale
 end
 
-ActionHandler._anim_event = function (self, action_settings, action, is_chain, condition_func_params)
+ActionHandler._anim_event = function (self, action_settings, action, condition_func_params, is_chain_action, running_action)
 	local anim_event, anim_event_3p
 	local action_time_offset = action_settings.action_time_offset or 0
 	local chain_anim_event = action_settings.chain_anim_event
 
-	if chain_anim_event and is_chain then
+	if action_settings.anim_event_func then
+		anim_event, anim_event_3p = action_settings.anim_event_func(action_settings, condition_func_params, is_chain_action, running_action)
+		anim_event_3p = anim_event_3p or anim_event
+	elseif chain_anim_event and is_chain_action then
 		anim_event = chain_anim_event
 		anim_event_3p = action_settings.chain_anim_event_3p or chain_anim_event
-	elseif action_settings.anim_event_func then
-		anim_event, anim_event_3p = action_settings.anim_event_func(action_settings, condition_func_params)
-		anim_event_3p = anim_event_3p or anim_event
 	else
 		anim_event = action_settings.anim_event
 		anim_event_3p = action_settings.anim_event_3p or anim_event

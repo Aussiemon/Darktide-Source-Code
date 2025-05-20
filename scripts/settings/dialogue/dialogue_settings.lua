@@ -6,21 +6,20 @@ DialogueSettings.default_rule_path = "dialogues/generated/"
 DialogueSettings.default_voSources_path = "dialogues/generated/"
 DialogueSettings.default_lookup_path = "dialogues/generated/"
 DialogueSettings.auto_load_files = {
-	"gameplay_vo",
-	"mission_giver_vo",
-	"conversations_core",
-	"guidance_vo",
+	"asset_vo",
+	"class_rework",
 	"enemy_vo",
 	"event_vo_fortification",
 	"event_vo_kill",
 	"event_vo_demolition",
 	"event_vo_delivery",
-	"asset_vo",
 	"event_vo_survive",
 	"event_vo_hacking",
 	"event_vo_scan",
+	"gameplay_vo",
+	"guidance_vo",
+	"mission_giver_vo",
 	"on_demand_vo",
-	"class_rework",
 }
 DialogueSettings.menu_vo_files = {
 	"conversations_hub",
@@ -50,57 +49,75 @@ DialogueSettings.level_specific_load_files = {
 	},
 	dm_forge = {
 		"mission_vo_dm_forge",
+		"conversations_core",
 	},
 	lm_rails = {
 		"mission_vo_lm_rails",
+		"conversations_core",
 	},
 	lm_cooling = {
 		"mission_vo_lm_cooling",
+		"conversations_core",
 	},
 	fm_cargo = {
 		"mission_vo_fm_cargo",
+		"conversations_core",
 	},
 	fm_armoury = {
 		"mission_vo_fm_armoury",
+		"conversations_core",
 	},
 	cm_raid = {
 		"mission_vo_cm_raid",
+		"conversations_core",
 	},
 	fm_resurgence = {
 		"mission_vo_fm_resurgence",
+		"conversations_core",
 	},
 	hm_complex = {
 		"mission_vo_hm_complex",
+		"conversations_core",
 	},
 	cm_archives = {
 		"mission_vo_cm_archives",
+		"conversations_core",
 	},
 	km_station = {
 		"mission_vo_km_station",
+		"conversations_core",
 	},
 	hm_strain = {
 		"mission_vo_hm_strain",
+		"conversations_core",
 	},
 	lm_scavenge = {
 		"mission_vo_lm_scavenge",
+		"conversations_core",
 	},
 	dm_propaganda = {
 		"mission_vo_dm_propaganda",
+		"conversations_core",
 	},
 	dm_stockpile = {
 		"mission_vo_dm_stockpile",
+		"conversations_core",
 	},
 	km_enforcer = {
 		"mission_vo_km_enforcer",
+		"conversations_core",
 	},
 	hm_cartel = {
 		"mission_vo_hm_cartel",
+		"conversations_core",
 	},
 	cm_habs = {
 		"mission_vo_cm_habs_remake",
+		"conversations_core",
 	},
 	dm_rise = {
 		"mission_vo_dm_rise",
+		"conversations_core",
 	},
 	km_enforcer_twins = {
 		"mission_vo_km_enforcer_twins",
@@ -111,12 +128,14 @@ DialogueSettings.level_specific_load_files = {
 	},
 	core_research = {
 		"mission_vo_core_research",
+		"conversations_core",
 	},
 	op_train = {
 		"mission_vo_op_train",
 	},
 	km_heresy = {
 		"mission_vo_km_heresy",
+		"conversations_core",
 	},
 	psykhanium = {
 		"mission_vo_psykhanium",
@@ -229,6 +248,9 @@ DialogueSettings.decaying_tension_delay = 2
 DialogueSettings.npc_story_ticker_enabled = true
 DialogueSettings.npc_story_ticker_start_delay = 127
 DialogueSettings.npc_story_tick_time = 10
+DialogueSettings.player_load_files_game_modes = {
+	coop_complete_objective = true,
+}
 DialogueSettings.store_npc_cooldown_time = 5
 DialogueSettings.sound_event_default_length = 3.4567
 DialogueSettings.knocked_down_vo_interval = 11

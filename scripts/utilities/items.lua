@@ -945,7 +945,7 @@ end
 Items.class_requirement_text = function (item, prefer_iconography)
 	local entries = _class_requirement_entries(item, table.keys(Archetypes))
 
-	if #entries == 0 or #entries == #Archetypes then
+	if #entries == 0 or #entries == table.size(Archetypes) then
 		return nil, false
 	end
 
@@ -1209,7 +1209,7 @@ Items.is_item_compatible_with_profile = function (item, profile)
 	end
 
 	local item_breeds = item.breeds
-	local wanted_breed = profile.breed
+	local wanted_breed = profile.breed or profile.archetype and profile.archetype.breed
 
 	if item_breeds and not table.is_empty(item_breeds) then
 		for ii = 1, #item_breeds do
@@ -1240,10 +1240,6 @@ Items.is_item_compatible_with_profile = function (item, profile)
 		end
 	else
 		item_archetype = wanted_archetype
-	end
-
-	if not item_breed and not profile.breed then
-		item_breed = profile.archetype and profile.archetype.breed
 	end
 
 	return not not item_gender and not not item_breed and not not item_archetype

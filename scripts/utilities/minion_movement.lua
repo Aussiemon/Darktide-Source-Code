@@ -591,6 +591,10 @@ MinionMovement.update_ground_normal_rotation = function (unit, scratchpad, optio
 			fwd_direction = Vector3.normalize(current_velocity)
 		end
 
+		if not fwd_direction then
+			return
+		end
+
 		local wanted_direction = Vector3.normalize(navmesh_position_1 - navmesh_position_2)
 
 		wanted_direction[1] = fwd_direction[1]
@@ -636,22 +640,38 @@ MinionMovement.rotate_towards_target_unit = function (unit, scratchpad)
 	end
 end
 
-MinionMovement.smooth_speed_based_on_distance = function (unit, scratchpad, dt, action_data)
+MinionMovement.smooth_speed_based_on_distance = function (unit, scratchpad, dt, action_data, breed, use_slow_action_data)
 	local self_position, move_to_position = POSITION_LOOKUP[unit], scratchpad.move_to_position:unbox()
-	local speed_timer = action_data.adapt_speed.speed_timer
+	local adapt_speed = action_data.adapt_speed
+	local speed_timer = adapt_speed.speed_timer
 
 	scratchpad.current_speed_timer = math.clamp(scratchpad.current_speed_timer + dt, 0, speed_timer)
 
 	if speed_timer <= scratchpad.current_speed_timer then
-		local length = Vector3.length(move_to_position - self_position)
-		local adapt_speed = action_data.adapt_speed
-		local speed_multiplier = math.clamp(length * adapt_speed.length_multiplier, adapt_speed.min_speed_multiplier, adapt_speed.max_speed_multiplier)
-		local new_speed = action_data.speed * speed_multiplier
+		local current_speed = scratchpad.navigation_extension:max_speed()
+		local max_deceleration = use_slow_action_data and adapt_speed.slow_max_deceleration or adapt_speed.max_acceleration
+		local max_acceleration_per_second = adapt_speed.max_acceleration * dt
+		local max_deceleration_per_second = max_deceleration * dt
+		local distance = Vector3.length(move_to_position - self_position)
+		local epsilon = use_slow_action_data and adapt_speed.slow_epsilon or adapt_speed.epsilon
+		local v_target = math.sqrt(2 * max_deceleration * distance) * (distance / (distance + epsilon))
 
-		scratchpad.old_max_speed = scratchpad.navigation_extension:max_speed()
-		scratchpad.current_speed_timer = 0
+		v_target = math.clamp(v_target, breed.run_speed * adapt_speed.min_speed_multiplier, breed.run_speed * adapt_speed.max_speed_multiplier)
 
-		scratchpad.navigation_extension:set_max_speed(new_speed)
+		local speed_diff = v_target - current_speed
+		local delta_speed
+
+		if speed_diff > 0 then
+			delta_speed = math.min(speed_diff, max_acceleration_per_second)
+		else
+			delta_speed = math.max(speed_diff, -max_deceleration_per_second)
+		end
+
+		local new_velocity
+
+		new_velocity = current_speed + delta_speed
+
+		scratchpad.navigation_extension:set_max_speed(new_velocity)
 	end
 end
 

@@ -260,7 +260,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 			local sub_zones, total_roamer_slots = self:_create_sub_zones(spawn_positions, density_setting, group_id, num_to_spawn)
 			local packs = density_setting.packs
 
-			if not chosen_packs then
+			if not chosen_packs and num_to_spawn > 0 then
 				pack_pick = pack_pick or self:_random(1, #packs)
 
 				local pack_override = self._all_pack_override or self._packs_override and self._packs_override[density_type]
@@ -318,10 +318,11 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 					end
 				end
 
-				if density_type == "none" then
-					local random_add_step = pack_pick + self:_random(1, #packs - 1)
+				if density_type == "none" and #packs > 0 then
+					local num_none_packs = #packs
+					local random_add_step = pack_pick + self:_random(1, num_none_packs - 1)
 
-					pack_pick = random_add_step > 6 and random_add_step % 6 or random_add_step
+					pack_pick = num_none_packs < random_add_step and random_add_step % num_none_packs or random_add_step
 				else
 					pack_pick = nil
 				end
@@ -490,9 +491,10 @@ RoamerPacing._limit_roamer_breeds = function (self, breed_name, limit_settings, 
 end
 
 RoamerPacing._generate_roamers = function (self, zones, roamers)
+	local roamer_template = self._roamer_template
 	local num_zones = #zones
 	local max_tries = 100
-	local start_zone_index = 2
+	local start_zone_index = roamer_template.start_zone_index
 	local roamer_pack_probabilities = self._roamer_pack_probabilities
 	local old_group_id = math.huge
 	local current_faction = self._current_faction
@@ -507,7 +509,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 			local zone = zones[i]
 			local num_to_spawn = zone.num_to_spawn
 
-			if not num_to_spawn then
+			if not num_to_spawn or num_to_spawn <= 0 then
 				break
 			end
 
@@ -711,6 +713,7 @@ local function _roamer_is_aggroed(roamer_unit)
 	return false
 end
 
+local ACTIVE_TARGET_POSITIONS = {}
 local NUM_ROAMERS_UPDATE_PER_FRAME = 1
 
 RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
@@ -735,46 +738,110 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 	local num_updates = math.min(NUM_ROAMERS_UPDATE_PER_FRAME, self._num_roamers)
 	local roamers_allowed = Managers.state.pacing:spawn_type_enabled("roamers")
 
-	for i = 1, num_updates do
-		local roamer_update_index = self._roamer_update_index
-		local roamer = roamers[roamer_update_index]
-		local roamer_got_removed = false
+	if main_path_manager:path_type() == "open" then
+		local players = Managers.state.player_unit_spawn:alive_players()
+		local side_system = Managers.state.extension:system("side_system")
 
-		if not roamer.disabled then
-			local roamer_travel_distance = roamer.travel_distance
-			local ahead_travel_distance_diff = math.abs(ahead_travel_distance - roamer_travel_distance)
-			local behind_travel_distance_diff = math.abs(behind_travel_distance - roamer_travel_distance)
-			local is_between_ahead_and_behind = roamer_travel_distance < ahead_travel_distance and behind_travel_distance < roamer_travel_distance
-			local should_activate = is_between_ahead_and_behind or ahead_travel_distance_diff < spawn_distance or behind_travel_distance_diff < spawn_distance
-			local is_active = roamer.active
+		table.clear(ACTIVE_TARGET_POSITIONS)
 
-			if should_activate and not is_active and not roamers_allowed then
-				roamer_got_removed = self:_deactivate_roamer(roamer)
-			elseif should_activate and not is_active then
-				local activated_roamer = self:_try_activate_roamer(roamer, roamer.side_id or side_id)
+		for _, player in pairs(players) do
+			local player_unit = player.player_unit
 
-				if not activated_roamer then
-					roamer_got_removed = self:_deactivate_roamer(roamer)
-				end
-			elseif not should_activate and is_active or is_active and not HEALTH_ALIVE[roamer.spawned_unit] then
-				roamer_got_removed = self:_deactivate_roamer(roamer)
-			end
-
-			if is_active and roamer.shared_aggro_trigger then
-				local spawned_unit = roamer.spawned_unit
-
-				if _roamer_is_aggroed(spawned_unit) then
-					local blackboard = BLACKBOARDS[spawned_unit]
-					local perception_component = blackboard.perception
-					local target_unit = perception_component.target_unit
-
-					self:_alert_roamer_group(spawned_unit, target_unit, roamer, side_id, target_side_id)
-				end
+			if player_unit and side_system.side_by_unit[player_unit] then
+				ACTIVE_TARGET_POSITIONS[#ACTIVE_TARGET_POSITIONS + 1] = POSITION_LOOKUP[player_unit]
 			end
 		end
 
-		if not roamer_got_removed or roamer_update_index > self._num_roamers then
-			self._roamer_update_index = roamer_update_index % self._num_roamers + 1
+		for i = 1, num_updates do
+			local roamer_update_index = self._roamer_update_index
+			local roamer = roamers[roamer_update_index]
+			local roamer_got_removed = false
+
+			if not roamer.disabled then
+				local roamer_position = roamer.position:unbox()
+				local should_activate = false
+
+				for j = 1, #ACTIVE_TARGET_POSITIONS do
+					if spawn_distance > Vector3.distance(roamer_position, ACTIVE_TARGET_POSITIONS[j]) then
+						should_activate = true
+
+						break
+					end
+				end
+
+				local is_active = roamer.active
+
+				if should_activate and not is_active and not roamers_allowed then
+					roamer_got_removed = self:_deactivate_roamer(roamer)
+				elseif should_activate and not is_active then
+					local activated_roamer = self:_try_activate_roamer(roamer, roamer.side_id or side_id)
+
+					if not activated_roamer then
+						roamer_got_removed = self:_deactivate_roamer(roamer)
+					end
+				elseif not should_activate and is_active or is_active and not HEALTH_ALIVE[roamer.spawned_unit] then
+					roamer_got_removed = self:_deactivate_roamer(roamer)
+				end
+
+				if is_active and roamer.shared_aggro_trigger then
+					local spawned_unit = roamer.spawned_unit
+
+					if _roamer_is_aggroed(spawned_unit) then
+						local blackboard = BLACKBOARDS[spawned_unit]
+						local perception_component = blackboard.perception
+						local target_unit = perception_component.target_unit
+
+						self:_alert_roamer_group(spawned_unit, target_unit, roamer, side_id, target_side_id)
+					end
+				end
+			end
+
+			if not roamer_got_removed or roamer_update_index > self._num_roamers then
+				self._roamer_update_index = roamer_update_index % self._num_roamers + 1
+			end
+		end
+	else
+		for i = 1, num_updates do
+			local roamer_update_index = self._roamer_update_index
+			local roamer = roamers[roamer_update_index]
+			local roamer_got_removed = false
+
+			if not roamer.disabled then
+				local roamer_travel_distance = roamer.travel_distance
+				local ahead_travel_distance_diff = math.abs(ahead_travel_distance - roamer_travel_distance)
+				local behind_travel_distance_diff = math.abs(behind_travel_distance - roamer_travel_distance)
+				local is_between_ahead_and_behind = roamer_travel_distance < ahead_travel_distance and behind_travel_distance < roamer_travel_distance
+				local should_activate = is_between_ahead_and_behind or ahead_travel_distance_diff < spawn_distance or behind_travel_distance_diff < spawn_distance
+				local is_active = roamer.active
+
+				if should_activate and not is_active and not roamers_allowed then
+					roamer_got_removed = self:_deactivate_roamer(roamer)
+				elseif should_activate and not is_active then
+					local activated_roamer = self:_try_activate_roamer(roamer, roamer.side_id or side_id)
+
+					if not activated_roamer then
+						roamer_got_removed = self:_deactivate_roamer(roamer)
+					end
+				elseif not should_activate and is_active or is_active and not HEALTH_ALIVE[roamer.spawned_unit] then
+					roamer_got_removed = self:_deactivate_roamer(roamer)
+				end
+
+				if is_active and roamer.shared_aggro_trigger then
+					local spawned_unit = roamer.spawned_unit
+
+					if _roamer_is_aggroed(spawned_unit) then
+						local blackboard = BLACKBOARDS[spawned_unit]
+						local perception_component = blackboard.perception
+						local target_unit = perception_component.target_unit
+
+						self:_alert_roamer_group(spawned_unit, target_unit, roamer, side_id, target_side_id)
+					end
+				end
+			end
+
+			if not roamer_got_removed or roamer_update_index > self._num_roamers then
+				self._roamer_update_index = roamer_update_index % self._num_roamers + 1
+			end
 		end
 	end
 

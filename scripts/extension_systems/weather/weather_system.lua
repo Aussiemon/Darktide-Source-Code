@@ -58,6 +58,8 @@ WeatherSystem.get_current_particles = function (self, position)
 			local volume_priority, world_particles, screen_particles = extension:get_settings()
 
 			if priority < volume_priority then
+				priority = volume_priority
+
 				if world_particles ~= "" then
 					world_particles_name = world_particles
 				end

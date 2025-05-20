@@ -2569,6 +2569,25 @@ local material_overrides = {
 			},
 		},
 	},
+	facial_hair_mask_chin_sides_04 = {
+		property_overrides = {
+			facial_hair_mask_x = {
+				-0.98,
+				-0.98,
+			},
+			facial_hair_mask_y = {
+				-0.583,
+				-0.848,
+			},
+			facial_hair_mask_z = {
+				-1,
+				-0.93,
+			},
+			use_alpha_masking = {
+				1,
+			},
+		},
+	},
 	facial_hair_mask_sides_01 = {
 		property_overrides = {
 			facial_hair_mask_x = {

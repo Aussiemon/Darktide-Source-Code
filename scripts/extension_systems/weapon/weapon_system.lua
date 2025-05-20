@@ -216,6 +216,7 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 		local sticking_to_unit = data.sticking_to_unit
 		local optional_attacking_unit_owner_unit = data.optional_attacking_unit_owner_unit
 		local optional_apply_owner_buffs = data.optional_apply_owner_buffs
+		local target_number = 1
 		local num_hit_units = data.num_hit_units
 
 		for hit_units_i = data[0], num_hit_units do
@@ -289,7 +290,10 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 								attack_power_level = attack_power_level * explosion_template.boss_power_level_modifier
 							end
 
-							local _, attack_result = Attack.execute(hit_unit, damage_profile, "power_level", attack_power_level, "charge_level", charge_level, "attack_direction", direction, "dropoff_scalar", dropoff_scalar, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "attack_type", attack_type, "attacking_unit", attacking_unit, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", item_or_nil, "hit_world_position", source_position, "attacking_unit_owner_unit", optional_attacking_unit_owner_unit, "apply_owner_buffs", optional_apply_owner_buffs, "close_explosion_hit", close_hit)
+							local _, attack_result = Attack.execute(hit_unit, damage_profile, "power_level", attack_power_level, "charge_level", charge_level, "attack_direction", direction, "dropoff_scalar", dropoff_scalar, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "attack_type", attack_type, "attacking_unit", attacking_unit, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", item_or_nil, "hit_world_position", source_position, "attacking_unit_owner_unit", optional_attacking_unit_owner_unit, "apply_owner_buffs", optional_apply_owner_buffs, "close_explosion_hit", close_hit, "target_number", target_number)
+
+							target_number = target_number + 1
+
 							local on_hit_buff_template_name = explosion_template.on_hit_buff_template_name
 
 							if on_hit_buff_template_name and HEALTH_ALIVE[hit_unit] and ALIVE[attacking_unit_owner_unit] then

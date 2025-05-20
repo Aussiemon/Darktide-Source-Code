@@ -139,6 +139,12 @@ local function read_stat(stat_definition, stat_data)
 	return stat_data[id] or stat_definition.default
 end
 
+local function constant(stat_definition, _, amount)
+	local id = stat_definition.id
+
+	return id, amount
+end
+
 local function increment_by(stat_definition, stat_data, amount)
 	local id = stat_definition.id
 
@@ -2722,6 +2728,12 @@ StatDefinitions.enemies_killed_with_poxburster_explosion = {
 				end
 			end,
 		},
+	},
+}
+StatDefinitions.hook_picked_up_item = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.always_log,
 	},
 }
 StatDefinitions.hook_placed_item = {
@@ -6286,7 +6298,6 @@ end
 StatDefinitions.survival_currency = {
 	flags = {
 		StatFlags.team,
-		StatFlags.always_log,
 	},
 	triggers = {
 		{
@@ -6365,8 +6376,8 @@ do
 
 	for i = 1, #islands do
 		local island_name = islands[i]
+		local stat_name = string.format("horde_win_%s", island_name)
 
-		stat_name = string.format("horde_win_%s", island_name)
 		StatDefinitions[stat_name] = {
 			flags = {
 				StatFlags.backend,
@@ -6431,8 +6442,8 @@ do
 
 	for i = 1, #survival_classes do
 		local class_name = survival_classes[i]
+		local stat_name = string.format("horde_win_%s_archetype", class_name)
 
-		stat_name = string.format("horde_win_%s_archetype", class_name)
 		StatDefinitions[stat_name] = {
 			flags = {
 				StatFlags.backend,
@@ -6651,6 +6662,78 @@ StatDefinitions.live_event_abhuman_won = {
 		{
 			id = "mission_won",
 			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
+StatDefinitions.hook_destroy_skull_totem = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+}
+StatDefinitions.live_event_skulls_forward = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_destroy_skull_totem",
+			trigger = function (self, stat_data, amount)
+				return constant(self, stat_data, amount or 1)
+			end,
+		},
+		{
+			id = "hook_picked_up_item",
+			trigger = function (self, stat_data, item_name)
+				if item_name == "skulls_01_pickup" then
+					return constant(self, stat_data, 1)
+				end
+			end,
+		},
+	},
+	data = {
+		circumstances = {
+			skulls_event_01 = true,
+			skulls_event_01_02 = true,
+			skulls_event_01_03 = true,
+			skulls_event_01_04 = true,
+			skulls_event_01_05 = true,
+			skulls_event_01_06 = true,
+			skulls_event_01_07 = true,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
+StatDefinitions.live_event_skulls_count = {
+	flags = {
+		StatFlags.always_log,
+		StatFlags.no_recover,
+	},
+	triggers = {
+		{
+			id = "live_event_skulls_forward",
+			trigger = StatMacros.increment_by,
+		},
+	},
+	data = {
+		circumstances = {
+			skulls_event_01 = true,
+			skulls_event_01_02 = true,
+			skulls_event_01_03 = true,
+			skulls_event_01_04 = true,
+			skulls_event_01_05 = true,
+			skulls_event_01_06 = true,
+			skulls_event_01_07 = true,
 		},
 	},
 	include_condition = function (self, config)

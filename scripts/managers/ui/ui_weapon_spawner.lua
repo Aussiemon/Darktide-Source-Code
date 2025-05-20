@@ -167,7 +167,8 @@ UIWeaponSpawner._despawn_weapon = function (self)
 	local weapon_spawn_data = self._weapon_spawn_data
 
 	if weapon_spawn_data then
-		local item_unit_3p, attachment_units_3p = weapon_spawn_data.item_unit_3p, weapon_spawn_data.attachment_units_3p
+		local item_unit_3p = weapon_spawn_data.item_unit_3p
+		local attachment_units_3p = weapon_spawn_data.attachment_units_3p and weapon_spawn_data.attachment_units_3p[item_unit_3p]
 		local link_unit = weapon_spawn_data.link_unit
 
 		if attachment_units_3p then
@@ -225,7 +226,8 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 		extension_manager = extension_manager,
 		spawn_with_extensions = extension_manager ~= nil,
 	}
-	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit, nil, nil, nil)
+	local mission_template, equipment
+	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit, false, false, false, mission_template, equipment)
 	local spawn_data = {
 		streaming_complete = false,
 		visible = false,

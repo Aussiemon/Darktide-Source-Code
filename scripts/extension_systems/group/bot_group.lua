@@ -501,12 +501,9 @@ end
 local function _fetch_nav_tag_volume_points(nav_tag_volume)
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local nav_tag_volume_data = nav_mesh_manager:nav_tag_volume_data()
-	local num_nav_tag_volume_data = #nav_tag_volume_data
 
-	for i = 1, num_nav_tag_volume_data do
-		local data = nav_tag_volume_data[i]
-
-		if data.nav_tag_volume == nav_tag_volume then
+	for volume, data in pairs(nav_tag_volume_data) do
+		if volume == nav_tag_volume then
 			return data.bottom_points
 		end
 	end

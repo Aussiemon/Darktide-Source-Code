@@ -21,6 +21,7 @@ local function _create_pickup_entry(path)
 	pickups.by_group[group_name][pickup_name] = pickup_data
 end
 
+_create_pickup_entry("scripts/settings/pickup/pickups/consumable/hordes_mcguffin_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/large_clip_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/large_metal_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/large_platinum_pickup")
@@ -28,7 +29,6 @@ _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_clip_pick
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_grenade_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_metal_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_platinum_pickup")
-_create_pickup_entry("scripts/settings/pickup/pickups/consumable/hordes_mcguffin_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/deployable/ammo_cache_deployable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/deployable/medical_crate_deployable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/luggable/battery_01_luggable_pickup")
@@ -45,6 +45,7 @@ _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_ability
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_corruption_pocketable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_power_boost_pocketable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_speed_boost_pocketable_pickup")
+_create_pickup_entry("scripts/settings/pickup/pickups/reward/skulls_01_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/communications_hack_device_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/consumable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/grimoire_pickup")

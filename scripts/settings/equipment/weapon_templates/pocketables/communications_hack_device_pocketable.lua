@@ -211,14 +211,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -291,6 +284,7 @@ weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/sma
 weapon_template.swap_pickup_name = "communications_hack_device"
 weapon_template.give_pickup_name = "communications_hack_device"
 weapon_template.require_minigame = true
+weapon_template.auto_start_minigame = false
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,

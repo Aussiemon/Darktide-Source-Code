@@ -49,7 +49,6 @@ ScannerDisplayExtension._open_view = function (self, ui_manager, device_owner_un
 		view_context.minigame_extension = minigame_extension
 	else
 		view_context.device_owner_unit = device_owner_unit
-		view_context.minigame_type = "scan"
 		view_context.minigame_extension = nil
 	end
 

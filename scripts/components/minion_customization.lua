@@ -122,17 +122,17 @@ MinionCustomization._spawn_items = function (self, items)
 
 			if item_data then
 				if not is_first_person or item_data.show_in_1p then
-					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit, nil, nil, nil)
+					local mission_template, equipment
+					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit, false, false, false, mission_template, equipment)
 
 					if item_unit then
 						Unit.set_data(unit, "attached_items", i, item_unit)
-					end
 
-					if attachment_units then
-						local num_attachments = #attachment_units
+						local all_attachment_units = attachment_units[item_unit]
+						local num_attachments = #all_attachment_units
 
 						for j = 1, num_attachments do
-							Unit.set_data(item_unit, "attached_items", #attachment_units - j + 1, attachment_units[j])
+							Unit.set_data(item_unit, "attached_items", num_attachments - j + 1, all_attachment_units[j])
 						end
 					end
 

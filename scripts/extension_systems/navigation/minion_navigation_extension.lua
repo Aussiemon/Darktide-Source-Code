@@ -2,6 +2,7 @@
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
+local Breed = require("scripts/utilities/breed")
 local MinionNavigationExtension = class("MinionNavigationExtension")
 local MAX_NUM_MOVEMENT_MODIFERS = 8
 local FAR_PATHING_ALLOWED = true

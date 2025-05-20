@@ -24,7 +24,6 @@ end
 
 BodyShopView._setup_background_world = function (self)
 	self:_register_event("event_register_crafting_view_camera")
-	self:_register_event("event_crafting_view_set_camera_axis_offset")
 
 	local world_name = BodyShopViewSettings.world_name
 	local world_layer = BodyShopViewSettings.world_layer
@@ -50,12 +49,6 @@ BodyShopView.event_register_crafting_view_camera = function (self, camera_unit)
 	local shading_environment = BodyShopViewSettings.shading_environment
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
-end
-
-BodyShopView.event_crafting_view_set_camera_axis_offset = function (self, axis, value, animation_duration, func_ptr)
-	if self._world_spawner then
-		self._world_spawner:set_camera_position_axis_offset(axis, value, animation_duration, func_ptr)
-	end
 end
 
 BodyShopView.can_exit = function (self)

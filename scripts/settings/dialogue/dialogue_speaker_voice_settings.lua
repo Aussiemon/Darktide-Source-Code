@@ -143,6 +143,14 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_sergeant_a",
 		subtitles_enabled = true,
 	},
+	sergeant_c = {
+		full_name = "loc_npc_full_name_sergeant_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/sergeant_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/sergeant_a_small",
+		player_voice = true,
+		short_name = "loc_npc_short_name_sergeant_a",
+		subtitles_enabled = true,
+	},
 	pilot_a = {
 		full_name = "loc_npc_full_name_pilot_a",
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/pilot_a",

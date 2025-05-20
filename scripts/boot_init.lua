@@ -4,6 +4,10 @@ if jit then
 	jit.off()
 end
 
+function printf(...)
+	return print(string.format(...))
+end
+
 if not LEVEL_EDITOR_TEST then
 	LEVEL_EDITOR_TEST = false
 end

@@ -7,7 +7,7 @@ local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_l
 local _components
 local RevolverSpeedloader = class("RevolverSpeedloader")
 
-RevolverSpeedloader.init = function (self, context, slot, weapon_template, fx_sources)
+RevolverSpeedloader.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local owner_unit = context.owner_unit
 
 	self._weapon_template = weapon_template
@@ -56,8 +56,8 @@ RevolverSpeedloader.init = function (self, context, slot, weapon_template, fx_so
 	self._components_lookup_1p = {}
 	self._components_lookup_3p = {}
 
-	_components(self._components_1p, self._components_lookup_1p, slot.attachments_1p, slot.attachments_name_lookup_1p)
-	_components(self._components_3p, self._components_lookup_3p, slot.attachments_3p, slot.attachments_name_lookup_3p)
+	_components(self._components_1p, self._components_lookup_1p, slot.attachments_by_unit_1p[unit_1p], slot.attachment_map_by_unit_1p[unit_1p])
+	_components(self._components_3p, self._components_lookup_3p, slot.attachments_by_unit_3p[unit_3p], slot.attachment_map_by_unit_3p[unit_3p])
 end
 
 RevolverSpeedloader.fixed_update = function (self, unit, dt, t)
@@ -159,7 +159,7 @@ RevolverSpeedloader._update_ammo_count = function (self, t, force_update)
 	end
 end
 
-function _components(destination, destination_lookup, attachments, attachments_name_lookup)
+function _components(destination, destination_lookup, attachments, attachment_name_lookup)
 	local num_attachments = #attachments
 
 	for ii = 1, num_attachments do
@@ -167,7 +167,7 @@ function _components(destination, destination_lookup, attachments, attachments_n
 		local components = Component.get_components_by_name(attachment_unit, "HideableAmmo")
 
 		for _, component in ipairs(components) do
-			local lookup_name = attachments_name_lookup[attachment_unit]
+			local lookup_name = attachment_name_lookup[attachment_unit]
 			local data = {
 				unit = attachment_unit,
 				lookup_name = lookup_name,

@@ -275,11 +275,11 @@ local breed_data = {
 	hit_zone_ragdoll_actors = {
 		[hit_zone_names.head] = {
 			"j_head",
-			"j_neck",
+			"j_neck1",
 		},
 		[hit_zone_names.torso] = {
 			"j_head",
-			"j_neck",
+			"j_neck1",
 			"j_spine",
 			"j_spine1",
 			"j_leftarm",

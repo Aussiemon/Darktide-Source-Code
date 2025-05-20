@@ -597,7 +597,18 @@ HordePacing.force_next_horde = function (self)
 	local horde_started = self._horde_started
 
 	if horde_started then
-		return false
+		return
+	end
+
+	local target_side_id = 1
+	local pacing_manager = Managers.state.pacing
+	local main_path_manager = Managers.state.main_path
+	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
+	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
+	local allowed_hordes_per_travel_distance = math.ceil(furthest_travel_distance / self._required_travel_distance) - self._triggered_hordes
+
+	if allowed_hordes_per_travel_distance == 0 then
+		self._triggered_hordes = self._triggered_hordes - 1
 	end
 
 	self._next_horde_at = 5

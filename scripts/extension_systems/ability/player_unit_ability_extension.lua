@@ -13,9 +13,9 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
-local special_rules = SpecialRulesSettings.special_rules
-local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
+local proc_events = BuffSettings.proc_events
+local special_rules = SpecialRulesSettings.special_rules
 local PlayerUnitAbilityExtension = class("PlayerUnitAbilityExtension")
 
 PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -520,8 +520,6 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 				if pause_fulfilled_func and pause_fulfilled_func(pause_cooldown_context) then
 					component.cooldown_paused = false
 				else
-					local ability_cooldown = max_ability_cooldown
-
 					cooldown = cooldown + dt
 				end
 			else
@@ -569,9 +567,9 @@ PlayerUnitAbilityExtension.can_be_scroll_wielded = function (self, slot_name)
 
 	for _, ability_slot_name in pairs(ability_configuration) do
 		if ability_slot_name == slot_name then
-			local allows_quick_throwing = talent_extension:has_special_rule(special_rules.enable_quick_throw_grenades)
+			local disable_scroll_wield = talent_extension:has_special_rule(special_rules.zealot_throwing_knives)
 
-			if allows_quick_throwing then
+			if disable_scroll_wield then
 				return false
 			end
 		end

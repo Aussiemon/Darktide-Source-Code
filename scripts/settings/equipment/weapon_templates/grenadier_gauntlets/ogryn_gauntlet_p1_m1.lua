@@ -291,14 +291,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -328,14 +321,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -363,14 +349,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -396,14 +375,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -501,16 +473,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.25,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.25,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.25,
+			}),
 			special_action_start = {
 				action_name = "action_start_special",
 				chain_time = 0.25,
@@ -575,16 +540,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -647,16 +605,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -719,16 +670,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -809,16 +753,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.6,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.6,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.6,
+			}),
 		},
 		weapon_box = {
 			0.3,
@@ -911,16 +848,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.6,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.6,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.6,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1014,16 +944,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1102,16 +1025,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1190,16 +1106,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1278,16 +1187,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1357,14 +1259,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
@@ -1443,16 +1338,9 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 		},
 		weapon_box = {
 			0.3,

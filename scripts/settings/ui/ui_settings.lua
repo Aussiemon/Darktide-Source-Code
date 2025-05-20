@@ -1141,14 +1141,6 @@ local ui_settings = {
 					item = "content/items/weapons/player/melee/ogryn_powermaul_p1_m1",
 					name = "ogryn_powermaul_p1_m1",
 				},
-				{
-					item = "content/items/weapons/player/melee/ogryn_powermaul_p1_m2",
-					name = "ogryn_powermaul_p1_m2",
-				},
-				{
-					item = "content/items/weapons/player/melee/ogryn_powermaul_p1_m3",
-					name = "ogryn_powermaul_p1_m3",
-				},
 			},
 		},
 		ogryn_combatblade_p1 = {

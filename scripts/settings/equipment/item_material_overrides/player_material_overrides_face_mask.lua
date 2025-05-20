@@ -177,6 +177,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_face_ski_low = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0.509,
+				0,
+				0,
+			},
+			negative_mask = {
+				0,
+				0,
+				0.195,
+				0,
+			},
+		},
+	},
 	mask_face_hide_jaw_neck_nose = {
 		property_overrides = {
 			positive_mask = {

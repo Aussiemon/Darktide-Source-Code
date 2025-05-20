@@ -65,11 +65,7 @@ end
 ExtensionManager._units_added_and_registered = function (self)
 	local time_slice_unit_registration_data = self._time_slice_unit_registration_data
 
-	if time_slice_unit_registration_data then
-		return time_slice_unit_registration_data.ready
-	end
-
-	return true
+	return not time_slice_unit_registration_data or time_slice_unit_registration_data.ready
 end
 
 ExtensionManager.update_time_slice_init = function (self)
@@ -280,6 +276,33 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 	return true
 end
 
+ExtensionManager.on_unit_id_resolved = function (self, unit, is_level_unit, unit_id)
+	local extensions = self._units[unit]
+
+	if extensions then
+		local ignore_extensions_list = self._ignore_extensions_list
+		local unit_extensions_list = self._unit_extensions_list
+		local extension_list = unit_extensions_list[unit]
+		local num_extensions = #extension_list
+
+		for i = 1, num_extensions do
+			repeat
+				local name = extension_list[i]
+
+				if ignore_extensions_list[name] then
+					break
+				end
+
+				local extension = extensions[name]
+
+				if extension.on_unit_id_resolved ~= nil then
+					extension:on_unit_id_resolved(unit, is_level_unit, unit_id)
+				end
+			until true
+		end
+	end
+end
+
 ExtensionManager.sync_unit_extensions = function (self, unit, session, object_id)
 	local extensions = self._units[unit]
 
@@ -349,48 +372,6 @@ ExtensionManager.register_unit = function (self, world, unit, optional_category)
 	end
 end
 
-ExtensionManager.add_and_register_units = function (self, world, unit_list, num_units, optional_category)
-	num_units = num_units or #unit_list
-
-	local added_list = TEMP_TABLE
-	local num_added = 0
-
-	for i = 1, num_units do
-		local unit = unit_list[i]
-		local unit_template_name = Unit.get_data(unit, "unit_template")
-
-		if unit_template_name then
-			local unit_template = self._unit_templates[unit_template_name]
-			local init_function = unit_template.local_init
-			local unit_spawned_function_or_nil = unit_template.local_unit_spawned
-
-			if self:add_unit_extensions_from_template(world, unit, init_function, unit_spawned_function_or_nil, nil, nil) then
-				num_added = num_added + 1
-				added_list[num_added] = unit
-			end
-		elseif self:add_unit_extensions_from_script_data(world, unit) then
-			num_added = num_added + 1
-			added_list[num_added] = unit
-		end
-	end
-
-	if optional_category then
-		local category_table = self._unit_categories[optional_category]
-
-		for i = 1, num_units do
-			local unit = unit_list[i]
-
-			category_table[unit] = unit
-
-			Unit.set_data(unit, "__unit_category", optional_category)
-		end
-	end
-
-	if num_added > 0 then
-		self:register_units_extensions(added_list, num_added)
-	end
-end
-
 ExtensionManager.init_time_slice_add_and_register_level_units = function (self, world, unit_list, optional_category)
 	local time_slice_unit_registration_data = self._time_slice_unit_registration_data
 
@@ -409,50 +390,31 @@ ExtensionManager.update_time_slice_add_and_register_level_units = function (self
 	local unit_list = time_slice_unit_registration_data.parameters.unit_list_to_register
 	local num_units = time_slice_unit_registration_data.parameters.num_units
 	local optional_category = time_slice_unit_registration_data.parameters.optional_category
-	local category_table
-
-	if optional_category then
-		category_table = self._unit_categories[optional_category]
-	end
-
 	local added_list = TEMP_TABLE
 	local num_added = 0
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
+	local step_size = 128
 
-	for index = last_index + 1, num_units do
+	for index = last_index + 1, num_units, step_size do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
 
 		if not start_timer then
 			break
 		end
 
-		local unit = unit_list[index]
-		local unit_template_name = Unit.get_data(unit, "unit_template")
+		local end_at = math.min(index + step_size - 1, num_units)
 
-		if unit_template_name then
-			local unit_template = self._unit_templates[unit_template_name]
-			local init_function = unit_template.local_init
-			local unit_spawned_function_or_nil = unit_template.local_unit_spawned
-
-			if self:add_unit_extensions_from_template(world, unit, init_function, unit_spawned_function_or_nil, nil, nil) then
-				num_added = num_added + 1
-				added_list[num_added] = unit
-				self._registered_level_units[#self._registered_level_units + 1] = unit
-			end
-		elseif self:add_unit_extensions_from_script_data(world, unit) then
-			num_added = num_added + 1
-			added_list[num_added] = unit
-			self._registered_level_units[#self._registered_level_units + 1] = unit
-		end
-
-		if category_table then
-			category_table[unit] = unit
-
-			Unit.set_data(unit, "__unit_category", optional_category)
-		end
-
-		time_slice_unit_registration_data.last_index = index
+		num_added = self:_add_and_register_units(world, unit_list, index, end_at, optional_category, added_list, num_added)
+		time_slice_unit_registration_data.last_index = end_at
 		duration_ms = GameplayInitTimeSlice.post_process(performance_counter_handle, start_timer, duration_ms)
+	end
+
+	table.append(self._registered_level_units, added_list, num_added)
+
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	for i = 1, num_added do
+		self:on_unit_id_resolved(added_list[i], true, unit_spawner_manager:unit_index(added_list[i]))
 	end
 
 	if num_added > 0 then
@@ -464,6 +426,58 @@ ExtensionManager.update_time_slice_add_and_register_level_units = function (self
 	end
 
 	return self:_units_added_and_registered()
+end
+
+ExtensionManager.add_and_register_units = function (self, world, unit_list, num_units, optional_category)
+	local added_list, num_added = TEMP_TABLE, 0
+
+	num_added = self:_add_and_register_units(world, unit_list, 1, num_units or #unit_list, optional_category, added_list, num_added)
+
+	if num_added > 0 then
+		self:register_units_extensions(added_list, num_added)
+	end
+end
+
+ExtensionManager._add_and_register_units = function (self, world, unit_list, from_index, to_index, optional_category, added_list, num_added)
+	from_index = from_index or 1
+	to_index = to_index or #unit_list
+
+	local unit_templates = self._unit_templates
+
+	for i = from_index, to_index do
+		local unit = unit_list[i]
+		local unit_template_name = Unit.get_data(unit, "unit_template")
+		local added
+
+		if unit_template_name then
+			local unit_template = unit_templates[unit_template_name]
+			local init_function = unit_template.local_init
+			local unit_spawned_function_or_nil = unit_template.local_unit_spawned
+
+			added = self:add_unit_extensions_from_template(world, unit, init_function, unit_spawned_function_or_nil, nil, nil)
+		else
+			added = self:add_unit_extensions_from_script_data(world, unit)
+		end
+
+		if added then
+			num_added = num_added + 1
+			added_list[num_added] = unit
+		end
+	end
+
+	if optional_category then
+		local category_table = self._unit_categories[optional_category]
+
+		for i = from_index, to_index do
+			local unit = unit_list[i]
+
+			category_table[unit] = unit
+
+			Unit.set_data(unit, "__unit_category", optional_category)
+		end
+	end
+
+	return num_added
 end
 
 ExtensionManager.register_units_extensions = function (self, unit_list, num_units)

@@ -91,14 +91,14 @@ SmartTagExtension._setup_display_name = function (self, unit)
 	end
 end
 
-SmartTagExtension.can_tag = function (self, tagger_unit)
-	local template_name = self:_contextual_tag_template_name(tagger_unit)
+SmartTagExtension.can_tag = function (self, tagger_unit, alternate)
+	local template_name = self:_contextual_tag_template_name(tagger_unit, alternate)
 
 	return template_name ~= nil
 end
 
-SmartTagExtension.contextual_tag_template = function (self, tagger_unit)
-	local template_name = self:_contextual_tag_template_name(tagger_unit)
+SmartTagExtension.contextual_tag_template = function (self, tagger_unit, alternate)
+	local template_name = self:_contextual_tag_template_name(tagger_unit, alternate)
 	local template = template_name and smart_tag_templates[template_name]
 
 	return template
@@ -132,7 +132,7 @@ local _pickup_name_to_tag_template_name = {
 	tome = "side_mission_tome_over_here",
 }
 
-SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
+SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, alternate)
 	local target_type = self._target_type
 
 	if not target_type then
@@ -169,9 +169,9 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 
 			if veteran_tag then
 				return "enemy_over_here_veteran"
-			else
-				return "enemy_over_here"
 			end
+
+			return "enemy_over_here"
 		end
 	elseif target_type == "health_station" then
 		local health_station_extension = ScriptUnit.extension(unit, "health_station_system")

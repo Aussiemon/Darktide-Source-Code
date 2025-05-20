@@ -8,7 +8,7 @@ local FX_SOURCE_NAME = "_speaker"
 local WWISE_PARAMETER_NAME = "auspex_scanner_speed"
 local PARAMETER_VALUE = 2
 
-AuspexEffects.init = function (self, context, slot, weapon_template, fx_sources)
+AuspexEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local is_husk = context.is_husk
 	local owner_unit = context.owner_unit
 

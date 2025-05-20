@@ -6,7 +6,7 @@ local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
 local FX_SOURCE_NAME = "_pilot"
 local EXTERNAL_PROPERTIES = {}
 
-FlamerPilotLightEffects.init = function (self, context, slot, weapon_template, fx_sources)
+FlamerPilotLightEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	self._world = context.world
 
 	local fx_extension = context.fx_extension

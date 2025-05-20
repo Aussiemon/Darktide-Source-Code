@@ -109,7 +109,7 @@ TerrorEventNodes.start_terror_event = {
 		local start_event_name = node.start_event_name
 		local seed
 
-		terror_event_manager:start_event(start_event_name, seed)
+		terror_event_manager:start_event(start_event_name, seed, event.data.level)
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
@@ -150,7 +150,7 @@ TerrorEventNodes.flow_event = {
 	init = function (node, event, t)
 		local flow_event_name = node.flow_event_name
 
-		Managers.state.terror_event:trigger_network_synced_level_flow(flow_event_name)
+		Managers.state.terror_event:trigger_network_synced_level_flow(flow_event_name, event.data.level)
 	end,
 	update = function (node, scratchpad, t, dt)
 		return true
@@ -301,6 +301,7 @@ local MAX_POINTS = 60
 TerrorEventNodes.spawn_by_points = {
 	init = function (node, event, t)
 		event.scratchpad.spawned_minion_data = event.spawned_minion_data
+		event.scratchpad.level = event.data.level
 	end,
 	update = function (node, scratchpad, t, dt)
 		local terror_events_allowed = Managers.state.pacing:spawn_type_allowed("terror_events")
@@ -423,9 +424,9 @@ TerrorEventNodes.spawn_by_points = {
 
 					local optional_inverse = inverse_proximity_spawners
 
-					spawners = minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position, optional_inverse)
+					spawners = minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position, optional_inverse, node.group_in_level_data, scratchpad.level)
 				else
-					spawners = minion_spawn_system:spawners_in_group(spawner_group)
+					spawners = minion_spawn_system:spawners_in_group(spawner_group, node.group_in_level_data, scratchpad.level)
 				end
 			end
 
@@ -529,7 +530,7 @@ TerrorEventNodes.spawn_by_breed_name = {
 		local spawners
 
 		if spawner_group then
-			spawners = minion_spawn_system:spawners_in_group(spawner_group)
+			spawners = minion_spawn_system:spawners_in_group(spawner_group, node.group_in_level_data, event.data.level)
 		end
 
 		table.shuffle(spawners)

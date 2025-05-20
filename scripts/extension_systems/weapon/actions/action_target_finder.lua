@@ -14,7 +14,7 @@ ActionTargetFinder.init = function (self, action_context, action_params, action_
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local targeting_component = unit_data_extension:write_component("action_module_targeting")
 
-	self._target_finder_module = ActionModules[target_finder_module_class_name]:new(self._physics_world, player_unit, targeting_component, action_settings)
+	self._target_finder_module = ActionModules[target_finder_module_class_name]:new(self._is_server, self._physics_world, player_unit, targeting_component, action_settings)
 
 	if action_settings.use_alternate_fire then
 		self._spread_control_component = unit_data_extension:write_component("spread_control")

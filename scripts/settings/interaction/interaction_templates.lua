@@ -464,6 +464,21 @@ local interaction_templates = {
 		taggable = true,
 		ui_interaction_type = "pickup",
 	},
+	tainted_skull = {
+		action_text = "loc_action_interaction_tainted_skull",
+		anim_duration_variable_name_3p = "assist_interaction_duration",
+		description = "loc_pickup_tainted_skull",
+		duration = 0,
+		interaction_class_name = "pickup",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/enemy",
+		interaction_priority = 1,
+		start_anim_event = "arms_down",
+		start_anim_event_3p = "interaction_revive",
+		stop_anim_event = "arms_down",
+		stop_anim_event_3p = "interaction_end",
+		taggable = false,
+		ui_interaction_type = "pickup",
+	},
 }
 
 for interaction_type, template in pairs(interaction_templates) do

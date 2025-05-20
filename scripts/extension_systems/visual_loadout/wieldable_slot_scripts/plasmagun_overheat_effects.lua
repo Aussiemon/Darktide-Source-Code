@@ -6,11 +6,11 @@ local PlasmagunOverheatEffects = class("PlasmagunOverheatEffects")
 local SFX_ALIAS = "weapon_overload"
 local LOOPING_SFX_ALIAS = "weapon_overload_loop"
 local LOOPING_VFX_ALIAS = "weapon_overload_loop"
-local vfx_external_properties = {}
+local _vfx_external_properties = {}
 local _sfx_external_properties = {}
 local _slot_components, _is_cinematic_active
 
-PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, fx_sources)
+PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local wwise_world = context.wwise_world
 	local owner_unit = context.owner_unit
 	local unit_data_extension = context.unit_data_extension
@@ -48,8 +48,8 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	self._on_screen_cloud_name = overheat_fx.on_screen_cloud_name
 	self._on_screen_variable_name = overheat_fx.on_screen_variable_name
 	self._on_screen_effect_id = nil
-	self._plasma_coil_components_1p = _slot_components(slot.attachments_1p)
-	self._plasma_coil_components_3p = _slot_components(slot.attachments_3p)
+	self._plasma_coil_components_1p = _slot_components(slot.attachments_by_unit_1p[unit_1p])
+	self._plasma_coil_components_3p = _slot_components(slot.attachments_by_unit_3p[unit_3p])
 	self._material_overheat_percentage = 0
 end
 
@@ -89,9 +89,9 @@ PlasmagunOverheatEffects._update_vfx = function (self, overheat_configuration, o
 		local is_above_threshold = threshold < overheat_percentage
 
 		if is_above_threshold and not was_above_threshold then
-			vfx_external_properties.stage = stage
+			_vfx_external_properties.stage = stage
 
-			local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_VFX_ALIAS, vfx_external_properties)
+			local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_VFX_ALIAS, _vfx_external_properties)
 
 			if resolved then
 				local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())

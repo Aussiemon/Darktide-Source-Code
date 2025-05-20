@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_clubs/ogryn_club_p1_m3.lua
 
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -39,6 +40,35 @@ weapon_template.action_inputs.grenade_ability.buffer_time = 0.4
 weapon_template.action_inputs.wield.buffer_time = 0.3
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
 
+local new_start_attack_action_transition = {
+	{
+		input = "attack_cancel",
+		transition = "base",
+	},
+	{
+		input = "light_attack",
+		transition = "base",
+	},
+	{
+		input = "heavy_attack",
+		transition = "base",
+	},
+	{
+		input = "wield",
+		transition = "base",
+	},
+	{
+		input = "grenade_ability",
+		transition = "base",
+	},
+	{
+		input = "block",
+		transition = "base",
+	},
+}
+
+ActionInputHierarchy.update_hierarchy_entry(weapon_template.action_input_hierarchy, "start_attack", new_start_attack_action_transition)
+
 local hit_zone_priority = {
 	[hit_zone_names.head] = 1,
 	[hit_zone_names.torso] = 2,
@@ -66,7 +96,7 @@ weapon_template.actions = {
 		sprint_ready_up_time = 0,
 		total_time = 0.1,
 		uninterruptible = true,
-		anim_event_func = function (action_settings, condition_func_params)
+		anim_event_func = function (action_settings, condition_func_params, is_chain_action, previous_action)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 			local special_active = inventory_slot_component.special_active
 			local anim_event = special_active and "equip_activated" or "equip"
@@ -77,14 +107,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -142,14 +165,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -228,16 +244,9 @@ weapon_template.actions = {
 				action_name = "combat_ability",
 				chain_time = 0.4,
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.7,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.7,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.7,
+			}),
 			wield = {
 				action_name = "action_unwield",
 				chain_time = 0.7,
@@ -335,16 +344,9 @@ weapon_template.actions = {
 				action_name = "combat_ability",
 				chain_time = 0.4,
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-					chain_time = 0.8,
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-					chain_time = 0.8,
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions({
+				chain_time = 0.8,
+			}),
 			wield = {
 				action_name = "action_unwield",
 				chain_time = 0.9,
@@ -436,14 +438,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -514,14 +509,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -603,14 +591,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 				chain_time = 0.17,
@@ -692,14 +673,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -772,14 +746,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -860,14 +827,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -945,14 +905,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -1022,14 +975,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -1107,14 +1053,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -1183,14 +1122,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -1307,14 +1239,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -1371,14 +1296,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -1450,14 +1368,7 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},

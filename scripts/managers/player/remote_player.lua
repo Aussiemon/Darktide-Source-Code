@@ -185,6 +185,8 @@ RemotePlayer.set_profile = function (self, profile)
 		account_id = self._account_id,
 		character_id = profile.character_id,
 	}
+
+	Managers.event:trigger("event_player_set_profile", self, profile)
 end
 
 RemotePlayer.profile = function (self)

@@ -167,7 +167,7 @@ end
 MinigameDecodeSymbols.on_action_pressed = function (self, t)
 	MinigameDecodeSymbols.super.on_action_pressed(self, t)
 
-	if self:is_completed() then
+	if self:is_completed() or not self._is_server then
 		return
 	end
 

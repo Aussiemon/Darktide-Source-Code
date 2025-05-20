@@ -194,6 +194,17 @@ local StateGameTestify = {
 
 		return flags
 	end,
+	mission_exists = function (_, mission_key)
+		local exists = false
+
+		for mission_name, _ in pairs(Missions) do
+			if mission_name == mission_key then
+				exists = true
+			end
+		end
+
+		return exists
+	end,
 	all_missions_with_flag_of_type = function (_, flag_type)
 		local missions = {}
 

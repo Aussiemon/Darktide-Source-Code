@@ -262,6 +262,10 @@ CinematicManager.update = function (self, dt, t)
 
 				if not self._is_server then
 					self:_check_last_played_on_client(cinematic_scene_name)
+
+					if cinematic_scene_name == CINEMATIC_NAMES.intro_abc then
+						Managers.telemetry_events:memory_usage("mission_start")
+					end
 				end
 			end
 		end

@@ -727,14 +727,23 @@ HudElementTacticalOverlay._buffs_navigation = function (self, dt, t, input_servi
 		input_service = Managers.input:get_input_service(service_type)
 
 		local scroll_axis = 0
+		local scroll_multiplier = 0.8
+		local using_controler = not Managers.ui:using_cursor_navigation()
 
-		if input_service:get("tactical_overlay_scroll_down") then
+		if using_controler then
+			if input_service:get("tactical_overlay_scroll_down") then
+				scroll_axis = -1
+			elseif input_service:get("tactical_overlay_scroll_up") then
+				scroll_axis = 1
+			end
+
+			scroll_multiplier = 0.2
+		elseif input_service:get("wield_scroll_down") then
 			scroll_axis = -1
-		elseif input_service:get("tactical_overlay_scroll_up") then
+		elseif input_service:get("wield_scroll_up") then
 			scroll_axis = 1
 		end
 
-		local scroll_multiplier = 0.8
 		local scroll_amount = (content.scroll_amount or 0.1) * scroll_multiplier
 
 		if scroll_axis ~= 0 then

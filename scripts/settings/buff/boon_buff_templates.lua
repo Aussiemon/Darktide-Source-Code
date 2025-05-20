@@ -9,24 +9,28 @@ table.make_unique(templates)
 
 templates.boon_mission_xp_increase = {
 	meta_buff = true,
+	predicted = false,
 	meta_stat_buffs = {
 		[meta_stat_buffs.mission_reward_xp_modifier] = 0.2,
 	},
 }
 templates.boon_mission_credits_increase = {
 	meta_buff = true,
+	predicted = false,
 	meta_stat_buffs = {
 		[meta_stat_buffs.mission_reward_credit_modifier] = 0.2,
 	},
 }
 templates.boon_mission_drop_chance_increase = {
 	meta_buff = true,
+	predicted = false,
 	meta_stat_buffs = {
 		[meta_stat_buffs.mission_reward_drop_chance_modifier] = 0.2,
 	},
 }
 templates.boon_mission_weapon_drop_rarity_increase = {
 	meta_buff = true,
+	predicted = false,
 	meta_stat_buffs = {
 		[meta_stat_buffs.mission_reward_weapon_drop_rarity_modifier] = 0.2,
 	},

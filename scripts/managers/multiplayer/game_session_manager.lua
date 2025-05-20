@@ -242,8 +242,9 @@ GameSessionManager.game_object_created = function (self, game_object_id, owner_p
 
 		scanning_event_extension:on_game_object_created(game_object_id)
 	elseif game_object_type == "prop_health" then
-		local level_unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "level_unit_id")
-		local unit = unit_spawner:unit(level_unit_id, true)
+		local is_level_unit = GameSession.game_object_field(self._engine_game_session, game_object_id, "is_level_unit")
+		local unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_id")
+		local unit = unit_spawner:unit(unit_id, is_level_unit)
 		local health_extension = ScriptUnit.extension(unit, "health_system")
 
 		health_extension:on_game_object_created(self._engine_game_session, game_object_id)
@@ -306,11 +307,12 @@ GameSessionManager.game_object_destroyed = function (self, game_object_id, owner
 			end
 		end
 	elseif game_object_type == "prop_health" then
-		local level_unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "level_unit_id")
+		local is_level_unit = GameSession.game_object_field(self._engine_game_session, game_object_id, "is_level_unit")
+		local unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_id")
 		local unit
 
-		if unit_spawner:valid_unit_id(level_unit_id, true) then
-			unit = unit_spawner:unit(level_unit_id, true)
+		if unit_spawner:valid_unit_id(unit_id, is_level_unit) then
+			unit = unit_spawner:unit(unit_id, is_level_unit)
 		end
 
 		if unit then

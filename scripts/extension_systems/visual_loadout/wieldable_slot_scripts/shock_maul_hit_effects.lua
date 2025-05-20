@@ -5,10 +5,9 @@ local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_l
 local ShockMaulHitEffects = class("ShockMaulHitEffects")
 local external_properties = {}
 local BURST_PARTICLE_ALIAS = "vfx_weapon_special_start"
-local LOOP_PARTICLE_ALIAS = "weapon_special_loop"
 local BURST_SOUND_ALIAS = "sfx_special_activate"
 
-ShockMaulHitEffects.init = function (self, context, slot, weapon_template, fx_sources)
+ShockMaulHitEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local is_husk = context.is_husk
 
 	self._is_husk = is_husk
@@ -50,15 +49,7 @@ ShockMaulHitEffects.fixed_update = function (self, unit, dt, t)
 end
 
 ShockMaulHitEffects.update = function (self, unit, dt, t, frame)
-	local world = self._world
-	local effect_id = self._effect_id
-	local is_not_playing_effect = effect_id and not World.are_particles_playing(world, effect_id)
-	local use_1p = self:_use_1p()
-	local switch_mode = use_1p ~= self._using_1p
-
-	if is_not_playing_effect or switch_mode then
-		self:_start_particle_effect(LOOP_PARTICLE_ALIAS)
-	end
+	return
 end
 
 ShockMaulHitEffects.update_first_person_mode = function (self, first_person_mode)
@@ -69,13 +60,10 @@ ShockMaulHitEffects.wield = function (self)
 	self:_register()
 
 	self._is_wielded = true
-
-	self:_start_particle_effect(LOOP_PARTICLE_ALIAS)
 end
 
 ShockMaulHitEffects.unwield = function (self)
 	self:_unregister()
-	self:_stop_particle_effect()
 	self:_stop_sound()
 
 	self._is_wielded = false
@@ -83,7 +71,6 @@ end
 
 ShockMaulHitEffects.destroy = function (self)
 	self:_unregister()
-	self:_stop_particle_effect()
 	self:_stop_sound()
 
 	self._is_wielded = false

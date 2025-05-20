@@ -11,6 +11,7 @@ local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local level_trigger_event = Level.trigger_event
 local ui_manager
 local WEAPON_CATEGORY = "Player Equipment - Weapons"
@@ -38,6 +39,7 @@ local categories = {
 	"Immaterium (Party)",
 	"Level & Mission",
 	"Marketing",
+	"Memory",
 	"Micro Transaction (\"Premium\") Store",
 	"Navigation",
 	"Network",
@@ -350,64 +352,6 @@ functions.remove_specific_buff_from_selected_unit = {
 	on_activated = remove_specific_buff_from_selected_unit,
 }
 
-local function buff_group_options()
-	local BuffSettings = require("scripts/settings/buff/buff_settings")
-	local buff_group_names = table.keys(BuffSettings.debug_buff_groups)
-
-	table.sort(buff_group_names)
-
-	return buff_group_names
-end
-
-local function _apply_buff_group(unit, new_value)
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-
-	if not buff_extension then
-		return
-	end
-
-	local BuffSettings = require("scripts/settings/buff/buff_settings")
-	local group = BuffSettings.debug_buff_groups[new_value]
-	local fixed_t = FixedFrame.get_latest_fixed_time()
-
-	for i = 1, #group do
-		local buff_name = group[i]
-
-		buff_extension:debug_add_buff(buff_name, fixed_t)
-	end
-end
-
-local function apply_buff_group_to_self(new_value)
-	local local_player = Managers.player:local_player(1)
-	local local_player_unit = local_player.player_unit
-
-	_apply_buff_group(local_player_unit, new_value)
-end
-
-functions.apply_buff_group_to_self = {
-	category = "Buffs",
-	name = "Apply Buff Group To Self",
-	options_function = buff_group_options,
-	on_activated = apply_buff_group_to_self,
-}
-
-local function apply_buff_group_to_selected_unit(new_value)
-	local selected_unit = Debug.selected_unit
-
-	if not ALIVE[selected_unit] then
-		return
-	end
-
-	_apply_buff_group(selected_unit, new_value)
-end
-
-functions.apply_buff_group_to_selected_unit = {
-	category = "Buffs",
-	name = "Apply Buff Group To Selected Unit",
-	options_function = buff_group_options,
-	on_activated = apply_buff_group_to_selected_unit,
-}
-
 local function horde_mode_request_buff(buff_name, give_buff_to_self)
 	if not buff_name or buff_name == "" then
 		Log.error("DebugFunctions", "Invalid Buff Name to give to players.")
@@ -426,6 +370,11 @@ functions.horde_mode_apply_buff_to_all_players = {
 	name = "Horde Mode Request Buff",
 	on_activated = horde_mode_request_buff,
 	buff_options = hordes_mode_buff_options,
+}
+functions.debug_memory_snapshot = {
+	category = "Memory",
+	debug_memory_snapshot = true,
+	name = "Take Memory Snapshot",
 }
 functions.horde_mode_tag_all_enemies_local = {
 	category = "Horde Mode",
@@ -996,7 +945,6 @@ functions.set_havoc_unlock_status = {
 	name = "Reset havoc_unlock_status",
 	on_activated = function ()
 		Managers.data_service.havoc:set_havoc_unlock_status("locked")
-		Managers.narrative:set_havoc_unlock_status("locked")
 	end,
 }
 functions.start_havoc_test_session_voting = {
@@ -2687,10 +2635,6 @@ functions.copy_parameters = {
 	name = "Copy Parameters",
 	on_activated = _copy_parameters,
 }
-
-local function _print_dev_combat_stats()
-	DevCombatStats.print_stats()
-end
 
 local function _next_level()
 	local local_player = Managers.player:local_player(1)

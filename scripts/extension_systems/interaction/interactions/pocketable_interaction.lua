@@ -20,7 +20,7 @@ PocketableInteraction.stop = function (self, world, interactor_unit, interaction
 		end
 
 		if pickup_data.on_pickup_func then
-			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data)
+			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data, t)
 		end
 
 		local inventory_item = Pocketable.item_from_name(pickup_data.inventory_item)
@@ -77,7 +77,7 @@ PocketableInteraction.interactor_condition_func = function (self, interactor_uni
 	return PocketableInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
 end
 
-PocketableInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
+PocketableInteraction.hud_block_text = function (self, interactor_unit, interactee_unit)
 	local unit_data_extension = ScriptUnit.extension(interactor_unit, "unit_data_system")
 	local inventory_component = unit_data_extension:read_component("inventory")
 	local pickup_name = Unit.has_data(interactee_unit, "pickup_type") and Unit.get_data(interactee_unit, "pickup_type")
@@ -102,7 +102,7 @@ PocketableInteraction.hud_block_text = function (self, interactor_unit, interact
 		end
 	end
 
-	return PocketableInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, interactable_actor_node_index)
+	return PocketableInteraction.super.hud_block_text(self, interactor_unit, interactee_unit)
 end
 
 return PocketableInteraction

@@ -284,7 +284,7 @@ PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, n
 				end
 
 				return "sliding"
-			elseif Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_extension, locomotion_component, self._weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants) then
+			elseif Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_extension, locomotion_component, self._weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants, self._buff_extension) then
 				if self._ledge_vaulting_character_state_component.was_sprinting then
 					next_state_params.disable_sprint_start_slowdown = true
 				end

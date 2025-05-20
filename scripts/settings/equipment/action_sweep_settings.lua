@@ -59,6 +59,7 @@ local action_sweep_settings = {
 			end
 		end,
 	},
+	multi_sweep_process_mode = table.enum("shared", "separate"),
 }
 
 return settings("ActionSweepSettings", action_sweep_settings)

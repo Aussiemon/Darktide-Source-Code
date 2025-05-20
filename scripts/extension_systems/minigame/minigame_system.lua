@@ -17,12 +17,13 @@ local CLIENT_RPCS = {
 	"rpc_minigame_sync_decode_symbols_set_start_time",
 	"rpc_minigame_sync_decode_symbols_set_symbols",
 	"rpc_minigame_sync_decode_symbols_set_target",
-	"rpc_minigame_sync_defuse_set_selection",
 	"rpc_minigame_sync_drill_generate_targets",
 	"rpc_minigame_sync_drill_set_cursor",
 	"rpc_minigame_sync_drill_set_search",
-	"rpc_minigame_sync_frequency_set_frequency",
 	"rpc_minigame_sync_frequency_set_target_frequency",
+}
+local SERVER_RPCS = {
+	"rpc_minigame_sync_frequency_test_frequency",
 }
 
 MinigameSystem.init = function (self, context, system_init_data, ...)
@@ -33,16 +34,24 @@ MinigameSystem.init = function (self, context, system_init_data, ...)
 
 	local network_event_delegate = self._network_event_delegate
 
-	if not self._is_server and network_event_delegate then
-		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	if network_event_delegate then
+		if self._is_server then
+			network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
+		else
+			network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+		end
 	end
 end
 
 MinigameSystem.destroy = function (self, ...)
 	local network_event_delegate = self._network_event_delegate
 
-	if not self._is_server and network_event_delegate then
-		network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	if network_event_delegate then
+		if self._is_server then
+			network_event_delegate:unregister_events(unpack(SERVER_RPCS))
+		else
+			network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+		end
 	end
 
 	MinigameSystem.super.destroy(self, ...)
@@ -151,14 +160,6 @@ MinigameSystem.rpc_minigame_sync_decode_symbols_set_target = function (self, cha
 	minigame:set_target(stage, target)
 end
 
-MinigameSystem.rpc_minigame_sync_defuse_set_selection = function (self, channel_id, unit_id, is_level_unit, selection)
-	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-	local extension = self._unit_to_extension_map[unit]
-	local minigame = extension:minigame(MinigameSettings.types.defuse)
-
-	minigame:set_selection(selection)
-end
-
 MinigameSystem.rpc_minigame_sync_drill_generate_targets = function (self, channel_id, unit_id, is_level_unit, seed)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
@@ -183,18 +184,41 @@ MinigameSystem.rpc_minigame_sync_drill_set_search = function (self, channel_id, 
 	minigame:set_searching(searching and time)
 end
 
-MinigameSystem.rpc_minigame_sync_frequency_set_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
+MinigameSystem.rpc_minigame_sync_frequency_test_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
+	local peer_id = Network.peer_id(channel_id)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
 	local minigame = extension:minigame(MinigameSettings.types.frequency)
 
-	minigame:set_frequency(frequency_x, frequency_y)
+	minigame:test_frequency(frequency_x, frequency_y)
 end
 
 MinigameSystem.rpc_minigame_sync_frequency_set_target_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
+	if is_level_unit then
+		if unit_id == NetworkConstants.invalid_level_unit_id then
+			return
+		end
+	elseif unit_id == NetworkConstants.invalid_game_object_id then
+		return
+	end
+
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+
+	if not unit then
+		return
+	end
+
 	local extension = self._unit_to_extension_map[unit]
+
+	if not extension then
+		return
+	end
+
 	local minigame = extension:minigame(MinigameSettings.types.frequency)
+
+	if not minigame then
+		return
+	end
 
 	minigame:set_target_frequency(frequency_x, frequency_y)
 end

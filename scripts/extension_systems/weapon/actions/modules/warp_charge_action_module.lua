@@ -3,7 +3,8 @@
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WarpChargeActionModule = class("WarpChargeActionModule")
 
-WarpChargeActionModule.init = function (self, player_unit, action_settings, inventory_slot_component)
+WarpChargeActionModule.init = function (self, is_server, player_unit, action_settings, inventory_slot_component)
+	self._is_server = is_server
 	self._player_unit = player_unit
 	self._action_settings = action_settings
 

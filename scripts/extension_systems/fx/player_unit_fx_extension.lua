@@ -5,6 +5,7 @@ local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particles/player_character_looping_particle_aliases")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local PlayerUnitFxExtension = class("PlayerUnitFxExtension")
 local PARTICLE_INDEX_MIN = NetworkConstants.particle_index_min
 local PARTICLE_INDEX_MAX = NetworkConstants.particle_index_max
@@ -120,12 +121,9 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 	end
 
 	local base_unit_sound_sources = extension_init_data.breed.base_unit_sound_sources
-	local temp = {
-		unit,
-	}
 
 	for source_name, node_name in pairs(base_unit_sound_sources) do
-		self:register_sound_source(source_name, unit, temp, node_name)
+		self:register_sound_source(source_name, unit, nil, nil, node_name)
 	end
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -151,6 +149,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 		if not config.exclude_from_unit_data_components then
 			looping_sounds[alias_name] = {
 				is_playing = false,
+				source_attach_name = "n/a",
 				source_name = "n/a",
 			}
 
@@ -187,6 +186,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 		if not config.exclude_from_unit_data_components then
 			looping_particles[alias_name] = {
 				is_playing = false,
+				spawner_attach_name = "n/a",
 				spawner_name = "n/a",
 				external_properties = {},
 			}
@@ -243,7 +243,7 @@ PlayerUnitFxExtension.extensions_ready = function (self, world, unit)
 	local parent_unit = is_in_first_person_mode and first_person_unit or unit
 
 	for spawner_name, node_name in pairs(base_unit_fx_sources) do
-		self:register_vfx_spawner(spawner_name, parent_unit, nil, node_name, should_add_3p_node)
+		self:register_vfx_spawner(spawner_name, parent_unit, nil, nil, node_name, should_add_3p_node)
 	end
 
 	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
@@ -331,7 +331,7 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 		end
 	end
 
-	for sound_source, _ in pairs(self._sources) do
+	for sound_source in pairs(self._sources) do
 		self:_unregister_sound_source(sound_source)
 	end
 
@@ -378,7 +378,7 @@ PlayerUnitFxExtension.update = function (self, unit, dt, t)
 		local parent_unit = is_in_first_person_mode and first_person_unit or unit
 
 		for spawner_name, node_name in pairs(base_unit_fx_sources) do
-			self:move_vfx_spawner(spawner_name, parent_unit, nil, node_name)
+			self:move_vfx_spawner(spawner_name, parent_unit, nil, nil, node_name)
 		end
 	end
 
@@ -397,8 +397,10 @@ PlayerUnitFxExtension._update_first_person_mode_all_sources = function (self, fi
 	local WwiseWorld_set_source_parameter = WwiseWorld.set_source_parameter
 	local parameter_value = first_person_mode and 1 or 0
 
-	for source_name, source in pairs(sources) do
-		WwiseWorld_set_source_parameter(wwise_world, source, "first_person_mode", parameter_value)
+	for source_name, source_group in pairs(sources) do
+		for _, source in pairs(source_group) do
+			WwiseWorld_set_source_parameter(wwise_world, source, "first_person_mode", parameter_value)
+		end
 	end
 end
 
@@ -427,8 +429,12 @@ PlayerUnitFxExtension._update_first_person_mode_looping_particles = function (se
 	end
 end
 
-PlayerUnitFxExtension._update_first_person_mode = function (self, source_name, first_person_mode)
+PlayerUnitFxExtension._update_first_person_mode = function (self, source_name, first_person_mode, optional_attachment_name)
 	local sound_source = self._sources[source_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	sound_source = sound_source[reference_attachment_name]
+
 	local wwise_world = self._wwise_world
 	local parameter_value = first_person_mode and 1 or 0
 
@@ -481,8 +487,9 @@ PlayerUnitFxExtension._update_aligned_vfx = function (self)
 		local variable_index = data.variable_index
 		local width = data.width
 		local spawner_name = data.spawner_name
+		local reference_attachment_name = data.spawner_attach_name
 		local end_position = data.end_position:unbox()
-		local vfx_spawner = vfx_spawners[spawner_name]
+		local vfx_spawner = vfx_spawners[spawner_name] and vfx_spawners[spawner_name][reference_attachment_name]
 
 		if vfx_spawner and World.are_particles_playing(world, particle_id) then
 			local unit = vfx_spawner.unit
@@ -505,6 +512,7 @@ PlayerUnitFxExtension._update_aligned_vfx = function (self)
 			buffer[index].variable_index = buffer[size].variable_index
 			buffer[index].width = buffer[size].width
 			buffer[index].spawner_name = buffer[size].spawner_name
+			buffer[index].spawner_attach_name = buffer[size].spawner_attach_name
 
 			buffer[index].end_position:store(buffer[size].end_position:unbox())
 
@@ -729,7 +737,7 @@ PlayerUnitFxExtension.server_correction_occurred = function (self, unit, from_fr
 			end
 
 			if should_be_playing then
-				self:_trigger_looping_wwise_event(alias_name, source_name_or_nil)
+				self:_trigger_looping_wwise_event(alias_name, source_name_or_nil, nil)
 			end
 		end
 	end
@@ -782,7 +790,7 @@ PlayerUnitFxExtension.server_correction_occurred = function (self, unit, from_fr
 					link = true
 				end
 
-				self:_spawn_looping_particles(alias_name, spawner_name_or_nil, server_correction_external_properties, link, position_offset, rotation_offset, scale)
+				self:_spawn_looping_particles(alias_name, spawner_name_or_nil, server_correction_external_properties, link, position_offset, rotation_offset, scale, nil)
 			end
 		end
 	end
@@ -796,7 +804,7 @@ local function _register_sound_source(wwise_source_node_cache, unit, node_name, 
 	local unit_cache = wwise_source_node_cache[unit]
 
 	if not unit_cache[node_name] then
-		local node = node_name == "root" and 1 or Unit.node(unit, node_name)
+		local node = tonumber(node_name) or Unit.node(unit, node_name)
 		local source = WwiseWorld.make_manual_source(wwise_world, unit, node)
 
 		unit_cache[node_name] = {
@@ -819,46 +827,62 @@ local function _register_sound_source(wwise_source_node_cache, unit, node_name, 
 	return cache.source
 end
 
-local function _register_sound_source_from_attachments(wwise_source_node_cache, parent_unit, attachments, node_name, wwise_world, source_name)
-	local num_attachments = #attachments
+local function _register_sound_sources(wwise_source_node_cache, parent_unit, attachments_by_unit, attachment_name_lookup, node_name, wwise_world, source_name)
+	local has_any_attachments = false
+	local sources = {}
 
-	for ii = 1, num_attachments do
-		local unit = attachments[ii]
+	if attachments_by_unit then
+		for unit, attachments in pairs(attachments_by_unit) do
+			local num_attachments = #attachments
 
-		if Unit.has_node(unit, node_name) then
-			local source = _register_sound_source(wwise_source_node_cache, unit, node_name, wwise_world, source_name)
+			for ii = 1, num_attachments do
+				has_any_attachments = true
 
-			return source
+				local attachment_unit = attachments[ii]
+
+				if Unit.has_node(attachment_unit, node_name) then
+					local attachment_name = attachment_name_lookup[unit]
+
+					sources[attachment_name] = _register_sound_source(wwise_source_node_cache, attachment_unit, node_name, wwise_world, source_name)
+
+					break
+				end
+			end
 		end
 	end
 
 	if Unit.has_node(parent_unit, node_name) then
-		local source = _register_sound_source(wwise_source_node_cache, parent_unit, node_name, wwise_world, source_name)
+		local parent_id_name = attachment_name_lookup and attachment_name_lookup[parent_unit] or VisualLoadoutCustomization.ROOT_ATTACH_NAME
 
-		if source then
-			return source
+		sources[parent_id_name] = _register_sound_source(wwise_source_node_cache, parent_unit, node_name, wwise_world, source_name)
+	end
+
+	if not table.is_empty(sources) then
+		return sources
+	end
+
+	if has_any_attachments then
+		local attachment_string = ""
+		local attachments = attachments_by_unit[parent_unit]
+
+		for ii = 1, #attachments do
+			local unit = attachments[ii]
+
+			attachment_string = string.format("%s%s, ", attachment_string, tostring(unit))
 		end
+
+		Log.exception("PlayerUnitFxExtension", "Could not register sound source %q. Node %q could not be found in any of the given attachment (%q) units nor parent unit (%q)", source_name, node_name, attachment_string, tostring(parent_unit))
 	end
 
-	local attachment_string = ""
+	sources[VisualLoadoutCustomization.ROOT_ATTACH_NAME] = _register_sound_source(wwise_source_node_cache, parent_unit, 1, wwise_world, source_name)
 
-	for ii = 1, num_attachments do
-		local unit = attachments[ii]
-
-		attachment_string = string.format("%s%s, ", attachment_string, tostring(unit))
-	end
-
-	Log.exception("PlayerUnitFxExtension", "Could not register sound source %q. Node %q could not be found in any of the given attachment (%q) units nor parent unit (%q)", source_name, node_name, attachment_string, tostring(parent_unit))
-
-	local fallback_source = _register_sound_source(wwise_source_node_cache, parent_unit, "root", wwise_world, source_name)
-
-	return fallback_source
+	return sources
 end
 
-PlayerUnitFxExtension.register_sound_source = function (self, source_name, parent_unit, attachments, node_name)
+PlayerUnitFxExtension.register_sound_source = function (self, source_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name)
 	local sources = self._sources
 
-	self:_register_sound_source(sources, source_name, parent_unit, attachments, node_name)
+	self:_register_sound_source(sources, source_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name)
 
 	local first_person_extension = self._first_person_extension
 
@@ -869,24 +893,17 @@ PlayerUnitFxExtension.register_sound_source = function (self, source_name, paren
 	end
 end
 
-PlayerUnitFxExtension._register_sound_source = function (self, sources, source_name, parent_unit, attachments, node_name)
+PlayerUnitFxExtension._register_sound_source = function (self, sources, source_name, parent_unit, attachments_by_unit, attachment_name_lookup, optional_node_name)
 	local wwise_source_node_cache = self._wwise_source_node_cache
 	local wwise_world = self._wwise_world
+	local source_by_attachment = _register_sound_sources(wwise_source_node_cache, parent_unit, attachments_by_unit, attachment_name_lookup, optional_node_name or 1, wwise_world, source_name)
 
-	if attachments then
-		local source = _register_sound_source_from_attachments(wwise_source_node_cache, parent_unit, attachments, node_name, wwise_world, source_name)
-
-		sources[source_name] = source
-	else
-		local source = _register_sound_source(wwise_source_node_cache, parent_unit, "root", wwise_world, source_name)
-
-		sources[source_name] = source
-	end
+	sources[source_name] = source_by_attachment
 end
 
 local temp_playing_looping_sounds = {}
 
-PlayerUnitFxExtension.move_sound_source = function (self, source_name, parent_unit, attachments, node_name)
+PlayerUnitFxExtension.move_sound_source = function (self, source_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name)
 	local sources = self._sources
 
 	table.clear(temp_playing_looping_sounds)
@@ -895,42 +912,56 @@ PlayerUnitFxExtension.move_sound_source = function (self, source_name, parent_un
 
 	for sound_alias, data in pairs(looping_sounds) do
 		if data.is_playing and data.source_name == source_name then
-			temp_playing_looping_sounds[sound_alias] = true
+			temp_playing_looping_sounds[sound_alias] = data.source_attach_name
 
 			self:_stop_looping_wwise_event(sound_alias)
 		end
 	end
 
 	self:_unregister_sound_source(source_name)
-	self:_register_sound_source(sources, source_name, parent_unit, attachments, node_name)
+	self:_register_sound_source(sources, source_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name)
 
-	for sound_alias, _ in pairs(temp_playing_looping_sounds) do
-		self:_trigger_looping_wwise_event(sound_alias, source_name)
+	for sound_alias, attachment_name in pairs(temp_playing_looping_sounds) do
+		self:_trigger_looping_wwise_event(sound_alias, source_name, attachment_name)
 	end
 end
 
-PlayerUnitFxExtension.sound_source = function (self, source_name)
+PlayerUnitFxExtension.sound_source = function (self, source_name, optional_attachment_name)
 	local sound_source = self._sources[source_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	sound_source = sound_source[reference_attachment_name]
 
 	return sound_source
 end
 
-PlayerUnitFxExtension.vfx_spawner = function (self, spawner_name)
+PlayerUnitFxExtension.vfx_spawner = function (self, spawner_name, optional_attachment_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	vfx_spawner = vfx_spawner[reference_attachment_name]
 
 	return vfx_spawner
 end
 
-PlayerUnitFxExtension.vfx_spawner_unit_and_node = function (self, spawner_name)
+PlayerUnitFxExtension.vfx_spawner_unit_and_node = function (self, spawner_name, optional_attachment_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	vfx_spawner = vfx_spawner[reference_attachment_name]
+
 	local unit_3p = vfx_spawner.node_3p and self._unit or vfx_spawner.unit
 	local node_3p = vfx_spawner.node_3p or vfx_spawner.node
 
 	return vfx_spawner.unit, vfx_spawner.node, unit_3p, node_3p
 end
 
-PlayerUnitFxExtension.vfx_spawner_pose = function (self, spawner_name)
+PlayerUnitFxExtension.vfx_spawner_pose = function (self, spawner_name, optional_attachment_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	vfx_spawner = vfx_spawner[reference_attachment_name]
+
 	local unit = vfx_spawner.unit
 	local node = vfx_spawner.node
 
@@ -939,7 +970,6 @@ end
 
 PlayerUnitFxExtension.unregister_sound_source = function (self, source_name)
 	local sources = self._sources
-	local source = sources[source_name]
 
 	self:_unregister_sound_source(source_name)
 
@@ -1172,24 +1202,30 @@ PlayerUnitFxExtension._spawn_moving_player_fx = function (self, particle_name, e
 	self:_add_moving_sfx(position, direction, speed, range, event_name, nil)
 end
 
-PlayerUnitFxExtension.spawn_unit_fx_line = function (self, line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
-	self:_spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
+PlayerUnitFxExtension.spawn_unit_fx_line = function (self, line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, optional_attachment_name)
+	local attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	self:_spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, attachment_name)
 
 	if self._is_server then
 		local channel_id, game_object_id = self._player:channel_id(), self._game_object_id
 
-		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_fx_line", channel_id, game_object_id, NetworkLookup.line_effects[line_effect.name], is_critical_strike, NetworkLookup.player_character_fx_sources[source_name], end_position, link, scale or Vector3(1, 1, 1), not not append_husk_to_event_name)
+		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_fx_line", channel_id, game_object_id, NetworkLookup.line_effects[line_effect.name], is_critical_strike, NetworkLookup.player_character_fx_sources[source_name], NetworkLookup.player_attachment_names[attachment_name], end_position, link, scale or Vector3(1, 1, 1), not not append_husk_to_event_name)
 	end
 end
 
 local MAX_EMITTERS = 100
 
-PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_critical_strike, spawner_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
+PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_critical_strike, spawner_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, optional_attachment_name)
 	if DEDICATED_SERVER then
 		return
 	end
 
 	local spawner = self._vfx_spawners[spawner_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	spawner = spawner[reference_attachment_name]
+
 	local spawner_unit = spawner.unit
 	local spawner_node = spawner.node
 	local spawner_pose = Unit.world_pose(spawner_unit, spawner_node)
@@ -1213,7 +1249,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 		local delta_pose = Matrix4x4.multiply(line_pose, Matrix4x4.inverse(spawner_pose))
 		local position_offset = link and Matrix4x4.translation(delta_pose)
 		local rotation_offset = Matrix4x4.rotation(delta_pose)
-		local particle_id = self:_spawn_unit_particles(effect_to_use, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, false)
+		local particle_id = self:_spawn_unit_particles(effect_to_use, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, false, reference_attachment_name)
 		local variable_index = World.find_particles_variable(self._world, effect_to_use, "hit_distance")
 
 		World.set_particles_variable(self._world, particle_id, variable_index, Vector3(width, line_length, line_length))
@@ -1245,6 +1281,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			data.variable_index = variable_index
 			data.width = width
 			data.spawner_name = spawner_name
+			data.spawner_attach_name = reference_attachment_name
 
 			data.end_position:store(end_position)
 		end
@@ -1493,7 +1530,6 @@ PlayerUnitFxExtension.spawn_gear_particle_effect_with_source = function (self, p
 		return
 	end
 
-	local vfx_spawner = self._vfx_spawners[source_name]
 	local resolved, particle_name = self._visual_loadout_extension:resolve_gear_particle(particle_alias, external_properties)
 
 	if not resolved then
@@ -1517,7 +1553,7 @@ PlayerUnitFxExtension.trigger_gear_wwise_event = function (self, sound_alias, ex
 	end
 end
 
-PlayerUnitFxExtension.trigger_gear_wwise_event_with_source = function (self, sound_alias, external_properties, source_name, sync_to_clients, include_client)
+PlayerUnitFxExtension.trigger_gear_wwise_event_with_source = function (self, sound_alias, external_properties, source_name, sync_to_clients, include_client, optional_attachment_name)
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if is_resim then
@@ -1528,16 +1564,20 @@ PlayerUnitFxExtension.trigger_gear_wwise_event_with_source = function (self, sou
 
 	if resolved then
 		local source = self._sources[source_name]
+		local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+		source = source[reference_attachment_name]
 
 		if sync_to_clients and self._is_server then
 			local channel_id, game_object_id = self._player:channel_id(), self._game_object_id
 			local event_id = NetworkLookup.player_character_sounds[event_name]
 			local source_id = NetworkLookup.player_character_fx_sources[source_name]
+			local attachment_id = NetworkLookup.player_attachment_names[reference_attachment_name]
 
 			if include_client then
-				Managers.state.game_session:send_rpc_clients("rpc_play_player_sound", game_object_id, event_id, source_id, not not has_husk_events)
+				Managers.state.game_session:send_rpc_clients("rpc_play_player_sound", game_object_id, event_id, source_id, attachment_id, not not has_husk_events)
 			else
-				Managers.state.game_session:send_rpc_clients_except("rpc_play_player_sound", channel_id, game_object_id, event_id, source_id, not not has_husk_events)
+				Managers.state.game_session:send_rpc_clients_except("rpc_play_player_sound", channel_id, game_object_id, event_id, source_id, attachment_id, not not has_husk_events)
 			end
 		end
 
@@ -1576,7 +1616,7 @@ PlayerUnitFxExtension.trigger_voice_wwise_event_with_source = function (self, ev
 	return self:trigger_wwise_event_with_source(event_name, source_name, append_husk_to_event_name, include_client)
 end
 
-PlayerUnitFxExtension.trigger_wwise_event_with_source = function (self, event_name, source_name, append_husk_to_event_name, include_client)
+PlayerUnitFxExtension.trigger_wwise_event_with_source = function (self, event_name, source_name, append_husk_to_event_name, include_client, optional_attachment_name)
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if is_resim then
@@ -1584,24 +1624,29 @@ PlayerUnitFxExtension.trigger_wwise_event_with_source = function (self, event_na
 	end
 
 	local source = self._sources[source_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	source = source[reference_attachment_name]
+
 	local wwise_event_name = self:_resolve_wwise_event(event_name, append_husk_to_event_name)
 	local id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
 
 	if self._is_server then
 		local channel_id, game_object_id = self._player:channel_id(), self._game_object_id
 		local sound_id, source_id = NetworkLookup.player_character_sounds[event_name], NetworkLookup.player_character_fx_sources[source_name]
+		local attachment_id = NetworkLookup.player_attachment_names[reference_attachment_name]
 
 		if include_client then
-			Managers.state.game_session:send_rpc_clients("rpc_play_player_sound", game_object_id, sound_id, source_id, not not append_husk_to_event_name)
+			Managers.state.game_session:send_rpc_clients("rpc_play_player_sound", game_object_id, sound_id, source_id, attachment_id, not not append_husk_to_event_name)
 		else
-			Managers.state.game_session:send_rpc_clients_except("rpc_play_player_sound", channel_id, game_object_id, sound_id, source_id, not not append_husk_to_event_name)
+			Managers.state.game_session:send_rpc_clients_except("rpc_play_player_sound", channel_id, game_object_id, sound_id, source_id, attachment_id, not not append_husk_to_event_name)
 		end
 	end
 
 	return id
 end
 
-PlayerUnitFxExtension.trigger_wwise_event_non_synced = function (self, dialogue_extension, event_name, source_name, append_husk_to_event_name)
+PlayerUnitFxExtension.trigger_wwise_event_non_synced = function (self, dialogue_extension, event_name, source_name, append_husk_to_event_name, optional_attachment_name)
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if is_resim then
@@ -1609,6 +1654,10 @@ PlayerUnitFxExtension.trigger_wwise_event_non_synced = function (self, dialogue_
 	end
 
 	local source = self._sources[source_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	source = source[reference_attachment_name]
+
 	local wwise_event_name = self:_resolve_wwise_event(event_name, append_husk_to_event_name)
 	local id = dialogue_extension:trigger_voice(wwise_event_name, source)
 
@@ -1627,8 +1676,11 @@ PlayerUnitFxExtension._resolve_wwise_event = function (self, event_name, append_
 	return wwise_event_name
 end
 
-PlayerUnitFxExtension.set_source_parameter = function (self, parameter_name, parameter_value, source_name)
+PlayerUnitFxExtension.set_source_parameter = function (self, parameter_name, parameter_value, source_name, optional_attachment_name)
 	local source = self._sources[source_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	source = source[reference_attachment_name]
 
 	WwiseWorld.set_source_parameter(self._wwise_world, source, parameter_name, parameter_value)
 
@@ -1636,8 +1688,9 @@ PlayerUnitFxExtension.set_source_parameter = function (self, parameter_name, par
 		local channel_id, game_object_id = self._player:channel_id(), self._game_object_id
 		local source_id = NetworkLookup.player_character_fx_sources[source_name]
 		local parameter_id = NetworkLookup.sound_parameters[parameter_name]
+		local attachment_id = NetworkLookup.player_attachment_names[reference_attachment_name]
 
-		Managers.state.game_session:send_rpc_clients_except("rpc_set_source_parameter", channel_id, game_object_id, source_id, parameter_id, parameter_value)
+		Managers.state.game_session:send_rpc_clients_except("rpc_set_source_parameter", channel_id, game_object_id, source_id, attachment_id, parameter_id, parameter_value)
 	end
 end
 
@@ -1724,7 +1777,7 @@ PlayerUnitFxExtension.spawn_exclusive_particle = function (self, particle_name, 
 	end
 end
 
-PlayerUnitFxExtension.trigger_looping_wwise_event = function (self, sound_alias, optional_source_name)
+PlayerUnitFxExtension.trigger_looping_wwise_event = function (self, sound_alias, optional_source_name, optional_attachment_name)
 	local is_server, is_local = self._is_server, self._is_local_unit
 	local config = PlayerCharacterLoopingSoundAliases[sound_alias]
 	local trigger_event = true
@@ -1734,7 +1787,7 @@ PlayerUnitFxExtension.trigger_looping_wwise_event = function (self, sound_alias,
 	end
 
 	if trigger_event then
-		self:_trigger_looping_wwise_event(sound_alias, optional_source_name)
+		self:_trigger_looping_wwise_event(sound_alias, optional_source_name, optional_attachment_name)
 	end
 
 	local component = self._looping_sounds_components[sound_alias]
@@ -1753,7 +1806,7 @@ PlayerUnitFxExtension.trigger_looping_wwise_event = function (self, sound_alias,
 	end
 end
 
-PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias, optional_source_name)
+PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias, optional_source_name, optional_attachment_name)
 	local data = self._looping_sounds[sound_alias]
 	local sound_config = PlayerCharacterLoopingSoundAliases[sound_alias]
 	local has_husk_events = not not sound_config.has_husk_events
@@ -1779,6 +1832,8 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 			else
 				local source = self._sources[optional_source_name]
 
+				optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+				source = source[optional_attachment_name]
 				event_id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
 			end
 
@@ -1797,7 +1852,7 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 		end
 	end
 
-	data.is_playing, data.is_husk, data.source_name = true, is_husk, optional_source_name
+	data.is_playing, data.is_husk, data.source_name, data.source_attach_name = true, is_husk, optional_source_name, optional_attachment_name
 end
 
 PlayerUnitFxExtension.stop_looping_wwise_event = function (self, sound_alias)
@@ -1841,7 +1896,8 @@ PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias, f
 			WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name)
 		else
 			local source_name = data.source_name
-			local source = self._sources[source_name]
+			local attachment_name = data.source_attach_name
+			local source = self._sources[source_name][attachment_name]
 
 			WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
 		end
@@ -1849,7 +1905,7 @@ PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias, f
 		WwiseWorld.stop_event(self._wwise_world, event_id)
 	end
 
-	data.is_playing, data.is_husk, data.id, data.event_alias, data.event_name, data.stop_event_name, data.source_name = false
+	data.is_playing, data.is_husk, data.id, data.event_alias, data.event_name, data.stop_event_name, data.source_name, data.source_attach_name = false
 end
 
 PlayerUnitFxExtension.is_looping_wwise_event_playing = function (self, looping_sound_alias)
@@ -1858,36 +1914,45 @@ PlayerUnitFxExtension.is_looping_wwise_event_playing = function (self, looping_s
 	return component and component.is_playing
 end
 
-local function _register_vfx_spawner_from_attachments(parent_unit, attachments, node_name, spawner_name)
-	local num_attachments = #attachments
+local function _register_vfx_spawner_from_attachments(parent_unit, attachments_by_unit, attachment_name_lookup, node_name, spawner_name)
+	local spawners = {}
 
-	for ii = 1, num_attachments do
-		local unit = attachments[ii]
+	for unit, attachments in pairs(attachments_by_unit) do
+		for i = 1, #attachments do
+			local attachment_unit = attachments[i]
 
-		if Unit.has_node(unit, node_name) then
-			local node = Unit.node(unit, node_name)
-			local spawner = {
-				unit = unit,
-				node = node,
-			}
+			if Unit.has_node(attachment_unit, node_name) then
+				local attachment_name = attachment_name_lookup[unit]
+				local node = Unit.node(attachment_unit, node_name)
 
-			return spawner
+				spawners[attachment_name] = {
+					unit = attachment_unit,
+					node = node,
+				}
+
+				break
+			end
 		end
 	end
 
 	if Unit.has_node(parent_unit, node_name) then
+		local parent_id_name = attachment_name_lookup[parent_unit]
 		local node = Unit.node(parent_unit, node_name)
-		local spawner = {
+
+		spawners[parent_id_name] = {
 			unit = parent_unit,
 			node = node,
 		}
+	end
 
-		return spawner
+	if not table.is_empty(spawners) then
+		return spawners
 	end
 
 	local attachment_string = ""
+	local attachments = attachments_by_unit[parent_unit]
 
-	for ii = 1, num_attachments do
+	for ii = 1, #attachments do
 		local unit = attachments[ii]
 
 		attachment_string = string.format("%s%s, ", attachment_string, tostring(unit))
@@ -1895,61 +1960,47 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments, 
 
 	Log.exception("PlayerUnitFxExtension", "Could not register vfx spawner %q. Node %q could not be found in any of the given attachment (%q) units nor parent unit (%q)", spawner_name, node_name, attachment_string, tostring(parent_unit))
 
-	local fallback_spawner = {
+	spawners[VisualLoadoutCustomization.ROOT_ATTACH_NAME] = {
 		node = 1,
 		unit = parent_unit,
 	}
 
-	return fallback_spawner
+	return spawners
 end
 
-PlayerUnitFxExtension.register_vfx_spawner = function (self, spawner_name, parent_unit, attachments, node_name, should_add_3p_node)
+PlayerUnitFxExtension.register_vfx_spawner = function (self, spawner_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name, should_add_3p_node)
 	local spawners = self._vfx_spawners
 
-	self:_register_vfx_spawner(spawners, spawner_name, parent_unit, attachments, node_name, should_add_3p_node)
+	self:_register_vfx_spawner(spawners, spawner_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name, should_add_3p_node)
 end
 
-PlayerUnitFxExtension._register_vfx_spawner = function (self, spawners, spawner_name, parent_unit, attachments, node_name, should_add_3p_node)
-	if attachments then
-		local spawner = _register_vfx_spawner_from_attachments(parent_unit, attachments, node_name, spawner_name)
+PlayerUnitFxExtension._register_vfx_spawner = function (self, spawners, spawner_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name, should_add_3p_node)
+	if attachments_by_unit and not table.is_empty(attachments_by_unit[parent_unit]) then
+		local spawner = _register_vfx_spawner_from_attachments(parent_unit, attachments_by_unit, attachment_name_lookup, node_name, spawner_name)
 
 		spawners[spawner_name] = spawner
 	else
-		if Unit.has_node(parent_unit, node_name) then
-			local node = Unit.node(parent_unit, node_name)
+		spawners[spawner_name] = {}
 
-			spawners[spawner_name] = {
-				unit = parent_unit,
-				node = node,
-			}
-		else
-			spawners[spawner_name] = {
-				node = 1,
-				unit = parent_unit,
-			}
-		end
+		local node = Unit.has_node(parent_unit, node_name) and Unit.node(parent_unit, node_name) or 1
+		local node_3p
 
 		if should_add_3p_node then
-			local unit_3p = self._unit
-
-			if Unit.has_node(unit_3p, node_name) then
-				local node = Unit.node(unit_3p, node_name)
-				local spawner = spawners[spawner_name]
-
-				spawner.node_3p = node
-			else
-				local spawner = spawners[spawner_name]
-
-				spawner.node_3p = 1
-			end
+			node_3p = Unit.has_node(self._unit, node_name) and Unit.node(self._unit, node_name) or 1
 		end
+
+		spawners[spawner_name][VisualLoadoutCustomization.ROOT_ATTACH_NAME] = {
+			unit = parent_unit,
+			node = node,
+			node_3p = node_3p,
+		}
 	end
 end
 
 local temp_playing_looping_particles = {}
 local temp_external_properties = {}
 
-PlayerUnitFxExtension.move_vfx_spawner = function (self, spawner_name, parent_unit, attachments, node_name)
+PlayerUnitFxExtension.move_vfx_spawner = function (self, spawner_name, parent_unit, attachments, attachment_name_lookup, node_name)
 	local spawners = self._vfx_spawners
 
 	table.clear(temp_playing_looping_particles)
@@ -1958,7 +2009,7 @@ PlayerUnitFxExtension.move_vfx_spawner = function (self, spawner_name, parent_un
 	local looping_particles = self._looping_particles
 
 	for particle_alias, data in pairs(looping_particles) do
-		if data.is_playing and data.spawner_name == spawner_name then
+		if data.is_playing and data.spawner_attach_name == spawner_name then
 			temp_playing_looping_particles[particle_alias] = true
 			temp_external_properties[particle_alias] = data.external_properties
 
@@ -1968,7 +2019,7 @@ PlayerUnitFxExtension.move_vfx_spawner = function (self, spawner_name, parent_un
 		end
 	end
 
-	self:_register_vfx_spawner(spawners, spawner_name, parent_unit, attachments, node_name)
+	self:_register_vfx_spawner(spawners, spawner_name, parent_unit, attachments, attachment_name_lookup, node_name)
 
 	local link = true
 	local position_offset, rotation_offset, scale
@@ -1994,12 +2045,12 @@ PlayerUnitFxExtension.stop_looping_wwise_events_for_source_on_mispredict = funct
 	end
 end
 
-PlayerUnitFxExtension.spawn_looping_particles = function (self, looping_particle_alias, optional_spawner_name, external_properties)
+PlayerUnitFxExtension.spawn_looping_particles = function (self, looping_particle_alias, optional_spawner_name, external_properties, optional_attachment_name)
 	local is_server, is_local = self._is_server, self._is_local_unit
 	local link = true
 	local position_offset, rotation_offset, scale
 
-	self:_spawn_looping_particles(looping_particle_alias, optional_spawner_name, external_properties, link, position_offset, rotation_offset, scale)
+	self:_spawn_looping_particles(looping_particle_alias, optional_spawner_name, external_properties, link, position_offset, rotation_offset, scale, optional_attachment_name)
 
 	local component = self._looping_particles_components[looping_particle_alias]
 
@@ -2029,7 +2080,7 @@ PlayerUnitFxExtension.spawn_looping_particles = function (self, looping_particle
 	end
 end
 
-PlayerUnitFxExtension._spawn_looping_particles = function (self, looping_particle_alias, optional_spawner_name, external_properties, link, position_offset, rotation_offset, scale)
+PlayerUnitFxExtension._spawn_looping_particles = function (self, looping_particle_alias, optional_spawner_name, external_properties, link, position_offset, rotation_offset, scale, optional_attachment_name)
 	local data = self._looping_particles[looping_particle_alias]
 	local particle_config = PlayerCharacterLoopingParticleAliases[looping_particle_alias]
 	local particle_alias = particle_config.particle_alias
@@ -2054,12 +2105,13 @@ PlayerUnitFxExtension._spawn_looping_particles = function (self, looping_particl
 	else
 		local orphaned_policy = "unlink"
 
-		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, false)
+		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, false, optional_attachment_name)
 	end
 
 	data.id = particle_id
 	data.is_playing = true
 	data.spawner_name = optional_spawner_name
+	data.spawner_attach_name = nil
 	data.particle_name = particle_name
 
 	local external_properties_config = particle_config.external_properties
@@ -2118,6 +2170,7 @@ PlayerUnitFxExtension._stop_looping_particles = function (self, looping_particle
 	data.id = nil
 	data.is_playing = false
 	data.spawner_name = "n/a"
+	data.source_attach_name = "n/a"
 	data.particle_name = nil
 end
 
@@ -2143,14 +2196,14 @@ PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position,
 				World.set_particles_variable(world, particle_id, variable_index, optional_variable_value)
 
 				if not all_clients then
-					Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles_with_variable", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
+					Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles_with_variable", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], NetworkLookup.player_attachment_names["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
 				else
-					Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles_with_variable", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
+					Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles_with_variable", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], NetworkLookup.player_attachment_names["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
 				end
 			elseif not all_clients then
-				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
+				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], NetworkLookup.player_attachment_names["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			else
-				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
+				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], NetworkLookup.player_attachment_names["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			end
 		end
 
@@ -2158,19 +2211,20 @@ PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position,
 	end
 end
 
-PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index)
+PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index, optional_attachment_name)
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if not is_resim then
-		local particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, create_network_index)
+		local attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+		local particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, create_network_index, attachment_name)
 
 		if self._is_server then
 			local server_particle_index_or_nil = self._particle_id_to_index[particle_id]
 
 			if not all_clients then
-				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
+				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], NetworkLookup.player_attachment_names[attachment_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			else
-				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
+				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources[spawner_name], NetworkLookup.player_attachment_names[attachment_name], link, position_offset or Vector3.zero(), rotation_offset or Quaternion.identity(), scale or Vector3(1, 1, 1), server_particle_index_or_nil)
 			end
 		end
 
@@ -2178,7 +2232,7 @@ PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spaw
 	end
 end
 
-PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, create_network_index)
+PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, create_network_index, optional_attachment_name)
 	local world = self._world
 	local pose = Matrix4x4.identity()
 
@@ -2195,6 +2249,10 @@ PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spa
 	end
 
 	local spawner = self._vfx_spawners[spawner_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	spawner = spawner[reference_attachment_name]
+
 	local unit = self._unit
 	local is_first_person = self._is_in_first_person_mode
 	local node_unit, node
@@ -2261,10 +2319,13 @@ PlayerUnitFxExtension.stop_player_particles = function (self, particle_id, all_c
 	end
 end
 
-PlayerUnitFxExtension.rpc_play_player_sound = function (self, channel_id, game_object_id, event_id, source_id, append_husk_to_event_name)
+PlayerUnitFxExtension.rpc_play_player_sound = function (self, channel_id, game_object_id, event_id, source_id, attachment_id, append_husk_to_event_name)
 	local event_name = NetworkLookup.player_character_sounds[event_id]
 	local source_name = NetworkLookup.player_character_fx_sources[source_id]
+	local attachment_name = NetworkLookup.player_attachment_names[attachment_id]
 	local source = self._sources[source_name]
+
+	source = source and source[attachment_name]
 
 	if not source then
 		return
@@ -2309,10 +2370,13 @@ PlayerUnitFxExtension.rpc_play_player_server_controlled_explosion_sound = functi
 	self:_trigger_explosion_wwise_event(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
 end
 
-PlayerUnitFxExtension.rpc_set_source_parameter = function (self, channel_id, game_object_id, source_id, parameter_id, parameter_value)
+PlayerUnitFxExtension.rpc_set_source_parameter = function (self, channel_id, game_object_id, source_id, attachment_id, parameter_id, parameter_value)
 	local parameter_name = NetworkLookup.sound_parameters[parameter_id]
 	local source_name = NetworkLookup.player_character_fx_sources[source_id]
+	local attachment_name = NetworkLookup.player_attachment_names[attachment_id]
 	local source = self._sources[source_name]
+
+	source = source[attachment_name]
 
 	WwiseWorld.set_source_parameter(self._wwise_world, source, parameter_name, parameter_value)
 end
@@ -2349,15 +2413,16 @@ PlayerUnitFxExtension.rpc_stop_looping_player_sound = function (self, channel_id
 	self:_stop_looping_wwise_event(sound_alias)
 end
 
-PlayerUnitFxExtension.rpc_spawn_player_particles = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, link, position_offset, rotation_offset, scale, optional_server_particle_index)
+PlayerUnitFxExtension.rpc_spawn_player_particles = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, attachment_id, link, position_offset, rotation_offset, scale, optional_server_particle_index)
 	local particle_name = NetworkLookup.player_character_particles[particle_name_id]
 	local spawner_name = NetworkLookup.player_character_fx_sources[particle_spawner_id]
+	local attachment_name = NetworkLookup.player_attachment_names[attachment_id]
 	local particle_id
 
 	if spawner_name == "n/a" then
 		particle_id = self:_create_particles_wrapper(self._world, particle_name, position_offset, rotation_offset, scale, false)
 	else
-		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale, false)
+		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale, false, attachment_name)
 	end
 
 	if optional_server_particle_index then
@@ -2385,16 +2450,17 @@ PlayerUnitFxExtension.rpc_stop_player_particles = function (self, channel_id, ga
 	end
 end
 
-PlayerUnitFxExtension.rpc_spawn_player_particles_with_variable = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, link, position_offset, rotation_offset, scale, variable_name_id, variable_value)
+PlayerUnitFxExtension.rpc_spawn_player_particles_with_variable = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, attachment_id, link, position_offset, rotation_offset, scale, variable_name_id, variable_value)
 	local particle_name = NetworkLookup.player_character_particles[particle_name_id]
 	local spawner_name = NetworkLookup.player_character_fx_sources[particle_spawner_id]
+	local attachment_name = NetworkLookup.player_attachment_names[attachment_id]
 	local world = self._world
 	local particle_id
 
 	if spawner_name == "n/a" then
 		particle_id = self:_create_particles_wrapper(world, particle_name, position_offset, rotation_offset, scale, false)
 	else
-		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale, false)
+		particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, "unlink", position_offset, rotation_offset, scale, false, attachment_name)
 	end
 
 	local variable_name = NetworkLookup.player_character_particle_variable_names[variable_name_id]
@@ -2415,7 +2481,7 @@ PlayerUnitFxExtension.rpc_spawn_looping_player_particles = function (self, chann
 			particle_id = self:_create_particles_wrapper(self._world, particle_name, nil, nil, Vector3(0, 0, 1), false)
 		end
 	else
-		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, "unlink", nil, nil, nil, false)
+		particle_id = self:_spawn_unit_particles(particle_name, optional_spawner_name, link, "unlink", nil, nil, nil, false, nil)
 	end
 
 	local data = self._looping_particles[looping_particle_alias]
@@ -2423,6 +2489,7 @@ PlayerUnitFxExtension.rpc_spawn_looping_player_particles = function (self, chann
 	data.id = particle_id
 	data.is_playing = true
 	data.spawner_name = optional_spawner_name
+	data.spawner_attach_name = nil
 	data.particle_name = particle_name
 end
 
@@ -2442,16 +2509,18 @@ PlayerUnitFxExtension.rpc_stop_looping_particles = function (self, channel_id, g
 	data.id = nil
 	data.is_playing = false
 	data.spawner_name = nil
+	data.spawner_attach_name = nil
 	data.particle_name = nil
 end
 
-PlayerUnitFxExtension.rpc_spawn_player_fx_line = function (self, channel_id, game_object_id, line_effect_id, is_critical_strike, source_id, end_position, link, scale, append_husk_to_event_name)
+PlayerUnitFxExtension.rpc_spawn_player_fx_line = function (self, channel_id, game_object_id, line_effect_id, is_critical_strike, source_id, attachment_id, end_position, link, scale, append_husk_to_event_name)
 	local line_effect_name = NetworkLookup.line_effects[line_effect_id]
 	local line_effect = LineEffects[line_effect_name]
 	local source_name = NetworkLookup.player_character_fx_sources[source_id]
+	local attachment_name = NetworkLookup.player_attachment_names[attachment_id]
 	local orphaned_policy = "stop"
 
-	self:_spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
+	self:_spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, attachment_name)
 end
 
 function _closest_point_on_line(player_position, start_position, end_position)

@@ -79,6 +79,9 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 			},
 		},
 	}
+
+	table.add_missing(base_template.action_inputs, BaseTemplateSettings.action_inputs)
+
 	base_template.action_input_hierarchy = {
 		{
 			input = "aim_force_field",
@@ -205,14 +208,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 				cancel = {
 					action_name = "action_cancel",
 				},
-				grenade_ability = {
-					{
-						action_name = "grenade_ability",
-					},
-					{
-						action_name = "grenade_ability_quick_throw",
-					},
-				},
+				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			},
 		},
 		action_instant_aim_force_field = {

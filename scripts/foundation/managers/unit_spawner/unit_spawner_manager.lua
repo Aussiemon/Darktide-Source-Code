@@ -320,14 +320,16 @@ UnitSpawnerManager.spawn_network_unit = function (self, unit_name, unit_template
 	local unit = self:_spawn_unit_with_extensions(unit_name, unit_template_name, position, rotation, material, game_object_data, ...)
 	local unit_template = self._unit_templates[unit_template_name]
 	local game_object_id
+	local game_session = self._game_session
 
-	if self._game_session then
+	if game_session then
 		local game_object_type = unit_template.game_object_type(...)
 
-		game_object_id = GameSession.create_game_object(self._game_session, game_object_type, game_object_data)
+		game_object_id = GameSession.create_game_object(game_session, game_object_type, game_object_data)
 
 		self:_add_network_unit(unit, game_object_id, false)
-		self._extension_manager:sync_unit_extensions(unit, self._game_session, game_object_id)
+		self._extension_manager:on_unit_id_resolved(unit, false, game_object_id)
+		self._extension_manager:sync_unit_extensions(unit, game_session, game_object_id)
 	end
 
 	return unit, game_object_id

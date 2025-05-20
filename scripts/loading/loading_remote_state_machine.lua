@@ -5,6 +5,7 @@ local RemoteDetermineSpawnGroupState = require("scripts/loading/remote_states/re
 local RemoteIngameState = require("scripts/loading/remote_states/remote_ingame_state")
 local RemoteLoadFailState = require("scripts/loading/remote_states/remote_load_fail_state")
 local RemoteLoadState = require("scripts/loading/remote_states/remote_load_state")
+local RemoteInitState = require("scripts/loading/remote_states/remote_init_state")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local LoadingRemoteStateMachine = class("LoadingRemoteStateMachine")
 
@@ -30,6 +31,8 @@ LoadingRemoteStateMachine.init = function (self, network_delegate, client_channe
 	local parent
 	local state_machine = StateMachine:new("LoadingRemoteStateMachine", parent, shared_state)
 
+	state_machine:add_transition("RemoteInitState", "init_done", RemoteDetermineSpawnGroupState)
+	state_machine:add_transition("RemoteInitState", "disconnected", RemoteLoadFailState)
 	state_machine:add_transition("RemoteDetermineSpawnGroupState", "spawn_group_done", RemoteLoadState)
 	state_machine:add_transition("RemoteDetermineSpawnGroupState", "disconnected", RemoteLoadFailState)
 	state_machine:add_transition("RemoteLoadState", "load_done", RemoteCreateSessionState)
@@ -38,7 +41,7 @@ LoadingRemoteStateMachine.init = function (self, network_delegate, client_channe
 	state_machine:add_transition("RemoteCreateSessionState", "disconnected", RemoteLoadFailState)
 	state_machine:add_transition("RemoteIngameState", "disconnected", RemoteLoadFailState)
 	state_machine:add_transition("RemoteLoadFailState", "disconnected", StateMachine.IGNORE_EVENT)
-	state_machine:set_initial_state(RemoteDetermineSpawnGroupState)
+	state_machine:set_initial_state(RemoteInitState)
 
 	self._state_machine = state_machine
 
@@ -46,7 +49,12 @@ LoadingRemoteStateMachine.init = function (self, network_delegate, client_channe
 end
 
 LoadingRemoteStateMachine.rpc_request_mission_seed = function (self, channel_id)
-	RPC.rpc_set_mission_seed(channel_id, self._shared_state.mission_seed)
+	if self._shared_state.mission_seed then
+		RPC.rpc_set_mission_seed(channel_id, self._shared_state.mission_seed)
+		Log.info("LoadingRemoteStateMachine", "[rpc_request_mission_seed] Sent mission seed to peer(%s)", self._shared_state.client_peer_id)
+	else
+		Log.info("LoadingRemoteStateMachine", "[rpc_request_mission_seed] Mission seed not available yet, ignoring request")
+	end
 end
 
 LoadingRemoteStateMachine.destroy = function (self)

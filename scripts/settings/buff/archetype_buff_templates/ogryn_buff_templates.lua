@@ -123,7 +123,6 @@ templates.ogryn_toughness_restored_aura_tracking_buff = {
 		template_data.amount = 0
 		template_data.threshold = 50
 		template_data.last_num_in_coherency = 0
-		template_data.valid_buff_owners = {}
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -139,7 +138,7 @@ templates.ogryn_toughness_restored_aura_tracking_buff = {
 			local hook_name = "hook_ogryn_toughness_restored_aura"
 			local parent_buff_name = "ogryn_toughness_regen_aura"
 
-			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, template_data.amount)
+			template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name, template_data.amount)
 			template_data.amount = template_data.amount - template_data.threshold
 		end
 	end,
@@ -739,7 +738,7 @@ templates.ogryn_targets_recieve_damage_taken_increase_debuff = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_targets_recieve_damage_taken_increase_debuff",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 3,
-	predicted = true,
+	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},
@@ -860,10 +859,11 @@ templates.ogryn_fully_charged_attacks_gain_damage_and_stagger = {
 }
 templates.ogryn_charge_speed_on_lunge = {
 	class_name = "proc_buff",
+	force_predicted_proc = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_bull_rush",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	hud_priority = 3,
-	predicted = true,
+	predicted = false,
 	active_duration = talent_settings_2.combat_ability.active_duration,
 	proc_events = {
 		[proc_events.on_lunge_end] = talent_settings_2.combat_ability.on_lunge_end_proc_chance,
@@ -1181,7 +1181,7 @@ templates.ogryn_friend_grenade_replenishment = {
 			if first_person_extension and first_person_extension:is_in_first_person_mode() then
 				external_properties.indicator_type = "ogryn_grenade_friend_rock"
 
-				template_data.fx_extension:trigger_gear_wwise_event("grenade_recover_indicator", external_properties)
+				template_data.fx_extension:trigger_gear_wwise_event("charge_ready_indicator", external_properties)
 			end
 		end
 	end,
@@ -1283,7 +1283,7 @@ templates.ogryn_allied_movement_speed_buff = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ally_movement_boost_on_ability",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
-	predicted = true,
+	predicted = false,
 	refresh_duration_on_stack = true,
 	duration = talent_settings_2.coop_2.duration,
 	buff_category = buff_categories.talents_secondary,
@@ -1347,7 +1347,6 @@ templates.ogryn_heavy_kills_in_coherency_tracking_buff = {
 
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		template_data.last_num_in_coherency = 0
-		template_data.valid_buff_owners = {}
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -1366,7 +1365,7 @@ templates.ogryn_heavy_kills_in_coherency_tracking_buff = {
 			local hook_name = "hook_ogryn_heavy_aura_kills"
 			local parent_buff_name = "ogryn_melee_damage_coherency_improved"
 
-			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name)
+			template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name)
 		end
 	end,
 }
@@ -2099,7 +2098,6 @@ templates.ogryn_suppressed_kills_aura_tracking_buff = {
 
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		template_data.last_num_in_coherency = 0
-		template_data.valid_buff_owners = {}
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -2121,7 +2119,7 @@ templates.ogryn_suppressed_kills_aura_tracking_buff = {
 		local hook_name = "hook_ogryn_suppressed_aura_kills"
 		local parent_buff_name = "ogryn_damage_vs_suppressed_coherency"
 
-		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name)
+		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name)
 	end,
 }
 templates.ogryn_increased_damage_after_reload = {
@@ -3180,7 +3178,7 @@ templates.ogryn_big_box_of_hurt_more_bombs = {
 }
 templates.ogryn_staggering_increases_damage_taken = {
 	class_name = "proc_buff",
-	predicted = true,
+	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_push_hit] = 1,
@@ -3610,7 +3608,6 @@ templates.ogryn_blo_stacking_buff = {
 	duration = talent_settings_1.passive_1.duration,
 	stat_buffs = {
 		[stat_buffs.ranged_damage] = talent_settings_1.passive_1.ranged_damage,
-		[stat_buffs.ranged_attack_speed] = talent_settings_1.passive_1.fire_rate,
 	},
 	update_func = function (template_data, template_context)
 		local stacks = template_context.stack_count

@@ -46,7 +46,6 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 		attach_node = Unit.node(unit, item_data.unwielded_attach_node or item_data.attach_node)
 	end
 
-	local extract_attachment_units_bind_poses = false
 	local item_unit, attachments
 
 	if DEDICATED_SERVER and not item_slot_data.is_weapon then
@@ -69,7 +68,9 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 			_attach_settings.spawn_with_extensions = nil
 		end
 
-		item_unit, attachments = VisualLoadoutCustomization.spawn_item(item_data, _attach_settings, unit, nil, extract_attachment_units_bind_poses, nil)
+		local mission_template, equipment
+
+		item_unit, attachments = VisualLoadoutCustomization.spawn_item(item_data, _attach_settings, unit, false, false, false, mission_template, equipment)
 	end
 
 	local drop_on_death = item_slot_data.drop_on_death
@@ -77,7 +78,7 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 		state = "unwielded",
 		visible = true,
 		unit = item_unit,
-		attachments = attachments,
+		attachments = attachments and attachments[item_unit],
 		item_data = item_data,
 		drop_on_death = drop_on_death,
 		starts_invisible = item_slot_data.starts_invisible,

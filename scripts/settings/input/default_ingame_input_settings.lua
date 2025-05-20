@@ -391,11 +391,11 @@ local default_ingame_input_settings = {
 		},
 		tactical_overlay_scroll_down = {
 			key_alias = "tactical_overlay_scroll_down",
-			type = "pressed",
+			type = "held",
 		},
 		tactical_overlay_scroll_up = {
 			key_alias = "tactical_overlay_scroll_up",
-			type = "pressed",
+			type = "held",
 		},
 		weapon_reload = {
 			key_alias = "weapon_reload",

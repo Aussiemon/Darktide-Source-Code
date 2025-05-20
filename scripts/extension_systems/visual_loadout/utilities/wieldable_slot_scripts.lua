@@ -53,47 +53,102 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_ch
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_temperature_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/zealot_relic_effects")
 
+local MasterItems = require("scripts/backend/master_items")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WieldableSlotScripts = {}
-local _all_wieldable_slot_scripts = {}
+local _slot_scripts_to_create = {}
 local EMPTY_TABLE = {}
+local SCRIPT_INDEX = table.mirror_array({
+	"SCRIPT_NAME",
+	"UNIT_1P",
+	"UNIT_3P",
+	"STRIDE",
+})
 
-WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldable_slot_scripts, fx_sources, slot, item)
-	table.clear(_all_wieldable_slot_scripts)
-
-	local item_wieldable_slot_scripts = item.wieldable_slot_scripts or EMPTY_TABLE
-	local num_scripts = #item_wieldable_slot_scripts
-
-	for ii = 1, num_scripts do
-		_all_wieldable_slot_scripts[ii] = item_wieldable_slot_scripts[ii]
+WieldableSlotScripts._register_script = function (script_name, unit_1p, unit_3p, num_scripts)
+	if script_name == "" then
+		return num_scripts
 	end
 
-	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-	local weapon_template_wieldable_slot_scripts = weapon_template.wieldable_slot_scripts or EMPTY_TABLE
+	local n = num_scripts * SCRIPT_INDEX.STRIDE
 
-	for ii = 1, #weapon_template_wieldable_slot_scripts do
-		local script_name = weapon_template_wieldable_slot_scripts[ii]
-		local already_defined = table.find(_all_wieldable_slot_scripts, script_name)
+	_slot_scripts_to_create[n + SCRIPT_INDEX.SCRIPT_NAME] = script_name
+	_slot_scripts_to_create[n + SCRIPT_INDEX.UNIT_1P] = unit_1p
+	_slot_scripts_to_create[n + SCRIPT_INDEX.UNIT_3P] = unit_3p
 
-		if not already_defined then
-			num_scripts = num_scripts + 1
-			_all_wieldable_slot_scripts[num_scripts] = script_name
+	return num_scripts + 1
+end
+
+WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldable_slot_scripts, fx_sources, slot)
+	local num_scripts = 0
+	local root_unit_1p, root_unit_3p = slot.unit_1p, slot.unit_3p
+	local item_definitions = MasterItems.get_cached()
+
+	if slot.attachments_by_unit_1p then
+		local attachments = slot.attachments_by_unit_1p[root_unit_1p]
+
+		for attachment_i = 1, #attachments do
+			local unit_1p = attachments[attachment_i]
+			local item_name = slot.item_name_by_unit_1p[unit_1p]
+			local item = item_definitions[item_name]
+
+			if item then
+				local slot_scripts = item.wieldable_slot_scripts
+
+				if slot_scripts then
+					for slot_script_i = 1, #slot_scripts do
+						local script_name = slot_scripts[slot_script_i]
+						local attachment_path = slot.attachment_id_lookup_1p[unit_1p]
+						local unit_3p = slot.attachment_id_lookup_3p[attachment_path]
+
+						num_scripts = WieldableSlotScripts._register_script(script_name, unit_1p, unit_3p, num_scripts)
+					end
+				end
+			end
+		end
+	end
+
+	local root_item = slot.item
+	local weapon_template = WeaponTemplate.weapon_template_from_item(root_item)
+
+	if root_item then
+		local slot_scripts = root_item.wieldable_slot_scripts
+
+		if slot_scripts then
+			for slot_script_i = 1, #slot_scripts do
+				local script_name = slot_scripts[slot_script_i]
+
+				num_scripts = WieldableSlotScripts._register_script(script_name, root_unit_1p, root_unit_3p, num_scripts)
+			end
+		end
+
+		local weapon_template_wieldable_slot_scripts = weapon_template.wieldable_slot_scripts or EMPTY_TABLE
+
+		for ii = 1, #weapon_template_wieldable_slot_scripts do
+			local script_name = weapon_template_wieldable_slot_scripts[ii]
+
+			num_scripts = WieldableSlotScripts._register_script(script_name, root_unit_1p, root_unit_3p, num_scripts)
 		end
 	end
 
 	local actual_num_scripts = 0
 
-	for ii = num_scripts, 1, -1 do
-		local script_name = _all_wieldable_slot_scripts[ii]
+	for script_i = num_scripts, 1, -1 do
+		local n = (script_i - 1) * SCRIPT_INDEX.STRIDE
+		local script_name = _slot_scripts_to_create[n + SCRIPT_INDEX.SCRIPT_NAME]
 		local script_class = CLASSES[script_name]
 
 		if script_class then
-			local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, item)
+			local unit_1p = _slot_scripts_to_create[n + SCRIPT_INDEX.UNIT_1P]
+			local unit_3p = _slot_scripts_to_create[n + SCRIPT_INDEX.UNIT_3P]
+			local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, root_item, unit_1p, unit_3p)
 
 			actual_num_scripts = actual_num_scripts + 1
 			wieldable_slot_scripts[slot.name][actual_num_scripts] = script
 		end
 	end
+
+	table.clear(_slot_scripts_to_create)
 end
 
 WieldableSlotScripts.destroy = function (wieldable_slot_scripts)

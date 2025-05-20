@@ -463,5 +463,9 @@ end
 pickup_settings.pickup_selector = {
 	syringe_generic_pocketable = _syringe_selector,
 }
+pickup_settings.skip_group = {
+	hard_cap = 24,
+	soft_cap = 16,
+}
 
 return settings("PickupSettings", pickup_settings)

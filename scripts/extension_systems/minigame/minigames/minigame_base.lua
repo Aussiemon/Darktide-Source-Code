@@ -17,11 +17,11 @@ MinigameBase.init = function (self, unit, is_server, seed, wwise_world)
 	if is_server then
 		self._fx_extension = nil
 		self._fx_source_name = nil
-
-		local unit_spawner_manager = Managers.state.unit_spawner
-
-		self._is_level_unit, self._minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(unit)
 	end
+
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	self._is_level_unit, self._minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(unit)
 end
 
 MinigameBase.setup_game = function (self)
@@ -129,6 +129,10 @@ end
 
 MinigameBase.send_rpc = function (self, rpc_name, ...)
 	Managers.state.game_session:send_rpc_clients(rpc_name, self._minigame_unit_id, self._is_level_unit, ...)
+end
+
+MinigameBase.send_rpc_to_server = function (self, rpc_name, ...)
+	Managers.state.game_session:send_rpc_server(rpc_name, self._minigame_unit_id, self._is_level_unit, ...)
 end
 
 MinigameBase.send_rpc_to_channel = function (self, channel, rpc_name, ...)

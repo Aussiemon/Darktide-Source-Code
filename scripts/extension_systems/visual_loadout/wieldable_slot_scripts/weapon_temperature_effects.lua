@@ -28,7 +28,7 @@ local CHARGE_ACTIONS = {
 }
 local _external_properties = {}
 
-WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, fx_sources)
+WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	self._is_husk = context.is_husk
 	self._wwise_world = context.wwise_world
 	self._weapon_template = weapon_template

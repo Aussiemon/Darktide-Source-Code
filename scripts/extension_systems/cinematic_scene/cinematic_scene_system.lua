@@ -260,16 +260,17 @@ CinematicSceneSystem._on_level_loaded = function (self, cinematic_name)
 end
 
 CinematicSceneSystem.load_cutscene = function (self, cinematic_name, preload_id)
+	local load_only = true
 	local origin_level_names = _origin_level_names(cinematic_name)
 
 	if #origin_level_names == 0 then
-		Managers.event:trigger("cutscene_loaded_all_clients", true, preload_id)
+		Managers.event:trigger("cutscene_loaded_all_clients", load_only, preload_id)
 	else
 		local template = CinematicSceneTemplates[cinematic_name]
 		local hotjoin_only = template.hotjoin_only
 		local on_level_loaded_cb = callback(self, "_on_level_loaded", cinematic_name)
 
-		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_loaded_cb, nil, hotjoin_only, true, preload_id)
+		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_loaded_cb, nil, hotjoin_only, load_only, preload_id)
 
 		self._intro_loading_started = true
 	end

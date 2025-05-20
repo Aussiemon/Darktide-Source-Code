@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/managers/game_mode/game_modes/game_mode_base.lua
 
-local AFKChecker = require("scripts/managers/game_mode/afk_checker")
+local AfkChecker = require("scripts/managers/game_mode/afk_checker")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local GameModeBase = class("GameModeBase")
 
@@ -55,11 +55,15 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 	end
 
 	if settings.afk_check then
-		self._afk_checker = AFKChecker:new(self._is_server, settings.afk_check, network_event_delegate)
+		self._afk_checker = AfkChecker:new(self._is_server, settings.afk_check, network_event_delegate)
 	end
 end
 
 GameModeBase.on_gameplay_init = function (self)
+	return
+end
+
+GameModeBase.on_gameplay_post_init = function (self)
 	return
 end
 

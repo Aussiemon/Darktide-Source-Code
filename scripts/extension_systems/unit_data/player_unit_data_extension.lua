@@ -7,6 +7,7 @@ local PlayerHuskHudDataComponentConfig = require("scripts/extension_systems/unit
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitDataComponentConfig = require("scripts/extension_systems/unit_data/player_unit_data_component_config")
 local UnitDataComponentConfigFormatter = require("scripts/extension_systems/unit_data/unit_data_component_config_formatter")
+local Breed = require("scripts/utilities/breed")
 local PlayerUnitDataExtension = class("PlayerUnitDataExtension")
 local FORMATTED_CONFIG, FIELD_NETWORK_LOOKUP, FORMATTED_HUSK_CONFIG, FORMATTED_HUSK_HUD_CONFIG = UnitDataComponentConfigFormatter.format(PlayerUnitDataComponentConfig, "server_unit_data_state", PlayerHuskDataComponentConfig, "server_husk_data_state", PlayerHuskHudDataComponentConfig, "server_husk_hud_data_state")
 local NUM_FIELDS = #FIELD_NETWORK_LOOKUP
@@ -20,6 +21,8 @@ local math_min = math.min
 local math_max = math.max
 local vector3_unbox = Vector3Box.unbox
 local quaternion_unbox = QuaternionBox.unbox
+local max_level_unit_id = NetworkConstants.level_unit_id.max
+local max_game_object_id = NetworkConstants.game_object_id.max
 local NUMBER_NETWORK_TYPE_TOLERANCES = {
 	action_time_scale = 0.01,
 	character_height = 0.01,
@@ -433,8 +436,8 @@ local READ_ONLY_META = {
 		elseif data_type == "Unit" then
 			if not data or data == -1 then
 				return nil
-			elseif data > 65535 then
-				return Managers.state.unit_spawner:unit(data - 65535, true)
+			elseif data > max_game_object_id then
+				return Managers.state.unit_spawner:unit(data - max_game_object_id - 1, true)
 			else
 				return Managers.state.unit_spawner:unit(data, false)
 			end
@@ -548,8 +551,8 @@ local WRITE_META = {
 				local is_level_index, id = Managers.state.unit_spawner:game_object_id_or_level_index(value)
 
 				if is_level_index then
-					data[rawget(t, "__blackboard").index][field_name] = id + 65535
-					networked_value = id + 65535
+					data[rawget(t, "__blackboard").index][field_name] = id + max_game_object_id + 1
+					networked_value = id + max_game_object_id + 1
 				else
 					data[rawget(t, "__blackboard").index][field_name] = id
 					networked_value = id

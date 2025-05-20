@@ -265,6 +265,10 @@ local default_debug_input_settings = {
 			raw = "keyboard_left ctrl+keyboard_left alt+keyboard_j",
 			type = "pressed",
 		},
+		teleport_to_next_mutator_spawner = {
+			raw = "keyboard_left shift+keyboard_k",
+			type = "pressed",
+		},
 		add_pacing_tension = {
 			raw = "keyboard_l",
 			type = "pressed",

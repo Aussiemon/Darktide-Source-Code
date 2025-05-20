@@ -8,14 +8,15 @@ local ActionOverloadChargeTargetFinder = class("ActionOverloadChargeTargetFinder
 ActionOverloadChargeTargetFinder.init = function (self, action_context, action_params, action_settings)
 	ActionOverloadChargeTargetFinder.super.init(self, action_context, action_params, action_settings)
 
+	local is_server = self._is_server
 	local player_unit = self._player_unit
 	local unit_data_extension = action_context.unit_data_extension
 	local overload_module_class_name = action_settings.overload_module_class_name
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local targeting_component = unit_data_extension:write_component("action_module_targeting")
 
-	self._overload_module = ActionModules[overload_module_class_name]:new(player_unit, action_settings, self._inventory_slot_component)
-	self._targeting_module = ActionModules[target_finder_module_class_name]:new(self._physics_world, player_unit, targeting_component, action_settings)
+	self._overload_module = ActionModules[overload_module_class_name]:new(is_server, player_unit, action_settings, self._inventory_slot_component)
+	self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, self._physics_world, player_unit, targeting_component, action_settings)
 end
 
 ActionOverloadChargeTargetFinder.start = function (self, action_settings, t, time_scale, action_start_params)

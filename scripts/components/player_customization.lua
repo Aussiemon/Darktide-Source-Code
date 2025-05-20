@@ -192,17 +192,27 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 			local item_data_clone = table.clone_instance(item)
 
 			if not is_first_person or item_data_clone.show_in_1p then
-				local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data_clone, attach_settings, unit, nil, nil, optional_mission_template)
+				local equipment
+				local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data_clone, attach_settings, unit, false, false, false, optional_mission_template, equipment)
+				local all_attachment_units = attachment_units and attachment_units[item_unit]
 
 				if item_unit then
 					attachment_count = attachment_count + 1
 
 					Unit.set_data(unit, "attached_items", attachment_count, item_unit)
+
+					local num_attachments = #all_attachment_units
+
+					for j = num_attachments, 1, -1 do
+						attachment_count = attachment_count + 1
+
+						Unit.set_data(item_unit, "attached_items", attachment_count, all_attachment_units[j])
+					end
 				end
 
 				item_units[item] = {
 					item_unit,
-					attachment_units,
+					all_attachment_units,
 				}
 
 				local slots = item_data_clone.slots
@@ -213,16 +223,6 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 
 					if slot_name then
 						units_by_slot_name[slot_name] = item_unit
-					end
-				end
-
-				if attachment_units then
-					local num_attachments = #attachment_units
-
-					for j = num_attachments, 1, -1 do
-						attachment_count = attachment_count + 1
-
-						Unit.set_data(item_unit, "attached_items", attachment_count, attachment_units[j])
 					end
 				end
 
@@ -271,21 +271,22 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 			face_item_data_clone.attachments[k].item = item
 		end
 
-		face_unit, face_attachment_units = VisualLoadoutCustomization.spawn_item(face_item_data_clone, self._attach_settings, self._unit, nil, nil, nil)
+		local mission_template, equipment
+
+		face_unit, face_attachment_units = VisualLoadoutCustomization.spawn_item(face_item_data_clone, self._attach_settings, self._unit, false, false, false, mission_template, equipment)
 
 		if face_unit then
 			attachment_count = attachment_count + 1
 
 			Unit.set_data(self._unit, "attached_items", attachment_count, face_unit)
-		end
 
-		if face_attachment_units then
-			local num_attachments = #face_attachment_units
+			local all_face_attachment_units = face_attachment_units[face_unit]
+			local num_attachments = #all_face_attachment_units
 
 			for j = num_attachments, 1, -1 do
 				attachment_count = attachment_count + 1
 
-				Unit.set_data(face_unit, "attached_items", attachment_count, face_attachment_units[j])
+				Unit.set_data(face_unit, "attached_items", attachment_count, all_face_attachment_units[j])
 			end
 		end
 

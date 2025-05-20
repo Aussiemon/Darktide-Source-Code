@@ -51,7 +51,7 @@ MinigameFrequencyView.draw_widgets = function (self, dt, t, input_service, ui_re
 		return
 	end
 
-	local on_target = minigame:is_on_target()
+	local on_target = minigame:is_visually_on_target()
 	local target_frequency = minigame:target_frequency()
 	local frequency
 

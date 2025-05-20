@@ -24,7 +24,7 @@ local SOUND_ALIAS_OFF = "flashlight_off"
 local SOUND_ALIAS_FLICKER = "flashlight_flicker"
 local sfx_external_properties = {}
 
-Flashlight.init = function (self, context, slot, weapon_template, fx_sources)
+Flashlight.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	self._world = context.world
 	self._physics_world = context.physics_world
 	self._wwise_world = context.wwise_world
@@ -56,8 +56,8 @@ Flashlight.init = function (self, context, slot, weapon_template, fx_sources)
 	self._flashlights_3p = {}
 	self._last_aggro_time = 0
 
-	_components(self._flashlights_1p, slot.attachments_1p)
-	_components(self._flashlights_3p, slot.attachments_3p)
+	_components(self._flashlights_1p, slot.attachments_by_unit_1p[unit_1p])
+	_components(self._flashlights_3p, slot.attachments_by_unit_3p[unit_3p])
 	_disable_light(self._flashlights_1p)
 	_disable_light(self._flashlights_3p)
 	_set_template(self._flashlights_1p, flashlight_template.light.first_person)

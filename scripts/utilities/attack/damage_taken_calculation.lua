@@ -151,7 +151,6 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 	local ranged_attack = attack_type == "ranged"
 	local remaining_damage = 0
 	local toughness_damage, absorbed_attack, toughness_broken
-	local zealot_toughness = attacked_unit_keywords.zealot_toughness
 	local toughness_melee_damage_modifier = weapon_toughness_template and weapon_toughness_template.melee_damage_modifier or toughness_template.melee_damage_modifier or 1
 	local damage_modifier = toughness_template.state_damage_modifiers[movement_state] or 1
 	local toughness_multiplier = damage_profile.toughness_multiplier or 1

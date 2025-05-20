@@ -435,44 +435,41 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 
 					if position_on_navmesh then
 						local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_navmesh)
+						local alternating_min_range = wanted_component:get_data(cloud_unit, "alternating_min_range")
+						local alternating_max_range = wanted_component:get_data(cloud_unit, "alternating_max_range")
 
-						if spawn_point_group_index then
-							local alternating_min_range = wanted_component:get_data(cloud_unit, "alternating_min_range")
-							local alternating_max_range = wanted_component:get_data(cloud_unit, "alternating_max_range")
+						alternating_timers[i][k].min_range = alternating_min_range
+						alternating_timers[i][k].max_range = alternating_max_range
 
-							alternating_timers[i][k].min_range = alternating_min_range
-							alternating_timers[i][k].max_range = alternating_max_range
+						local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index)
+						local end_index = start_index + 1
+						local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
+						local boxed_position = Vector3Box(position)
+						local corals_for_cloud = corals[i] and corals[i][k]
 
-							local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index)
-							local end_index = start_index + 1
-							local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
-							local boxed_position = Vector3Box(position)
-							local corals_for_cloud = corals[i] and corals[i][k]
-
-							if not alternating_timers[i][k].travel_distance or travel_distance < alternating_timers[i][k].travel_distance then
-								alternating_timers[i][k].travel_distance = travel_distance
-							end
-
-							local cloud_entry = {
-								should_be_active = false,
-								cloud_unit = cloud_unit,
-								phase = GasPhases.dormant,
-								section_id = i,
-								cloud_id = k,
-								alternating_min_range = alternating_min_range,
-								alternating_max_range = alternating_max_range,
-								corals = corals_for_cloud,
-								travel_distance = travel_distance,
-								position = boxed_position,
-								max_liquid = max_liquid,
-								fog_component = wanted_component,
-								buff_volume_component = wanted_buff_volume_component,
-							}
-
-							sound_position = sound_position + position
-							num_active_clouds = num_active_clouds + 1
-							alternating_gas_clouds[#alternating_gas_clouds + 1] = cloud_entry
+						if not alternating_timers[i][k].travel_distance or travel_distance < alternating_timers[i][k].travel_distance then
+							alternating_timers[i][k].travel_distance = travel_distance
 						end
+
+						local cloud_entry = {
+							should_be_active = false,
+							cloud_unit = cloud_unit,
+							phase = GasPhases.dormant,
+							section_id = i,
+							cloud_id = k,
+							alternating_min_range = alternating_min_range,
+							alternating_max_range = alternating_max_range,
+							corals = corals_for_cloud,
+							travel_distance = travel_distance,
+							position = boxed_position,
+							max_liquid = max_liquid,
+							fog_component = wanted_component,
+							buff_volume_component = wanted_buff_volume_component,
+						}
+
+						sound_position = sound_position + position
+						num_active_clouds = num_active_clouds + 1
+						alternating_gas_clouds[#alternating_gas_clouds + 1] = cloud_entry
 					end
 				end
 

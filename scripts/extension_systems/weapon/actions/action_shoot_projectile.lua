@@ -25,10 +25,9 @@ ActionShootProjectile.init = function (self, action_context, action_params, acti
 	self._side_system = Managers.state.extension:system("side_system")
 end
 
-ActionShootProjectile._shoot = function (self)
+ActionShootProjectile._shoot = function (self, position, rotation, power_level, charge_level, t, fire_config)
 	local item = self:_get_projectile_item()
 	local action_settings = self._action_settings
-	local fire_config = action_settings.fire_configuration
 	local projectile_template = fire_config.projectile
 	local locomotion_template = projectile_template.locomotion_template
 	local buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")

@@ -834,46 +834,14 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						draw_wallet = self._is_own_player and not self._is_readonly,
 						camera_settings = {
 							{
-								"event_inventory_set_camera_position_axis_offset",
-								"x",
+								"event_inventory_set_target_camera_offset",
 								0,
-								0.5,
-								math.easeCubic,
+								0,
+								0,
 							},
 							{
-								"event_inventory_set_camera_position_axis_offset",
-								"y",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_position_axis_offset",
-								"z",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_rotation_axis_offset",
-								"x",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_rotation_axis_offset",
-								"y",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_rotation_axis_offset",
-								"z",
-								0,
-								0.5,
-								math.easeCubic,
+								"event_inventory_set_target_camera_rotation",
+								false,
 							},
 							{
 								"event_inventory_set_camera_default_focus",
@@ -1099,46 +1067,14 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						ui_animation = "cosmetics_on_enter",
 						camera_settings = {
 							{
-								"event_inventory_set_camera_position_axis_offset",
-								"x",
+								"event_inventory_set_target_camera_offset",
 								is_ogryn and 1.2 or 0.85,
-								0.5,
-								math.easeCubic,
+								0,
+								0,
 							},
 							{
-								"event_inventory_set_camera_position_axis_offset",
-								"y",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_position_axis_offset",
-								"z",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_rotation_axis_offset",
-								"x",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_rotation_axis_offset",
-								"y",
-								0,
-								0.5,
-								math.easeCubic,
-							},
-							{
-								"event_inventory_set_camera_rotation_axis_offset",
-								"z",
-								0,
-								0.5,
-								math.easeCubic,
+								"event_inventory_set_target_camera_rotation",
+								false,
 							},
 							{
 								"event_inventory_set_camera_default_focus",
@@ -1467,6 +1403,12 @@ InventoryBackgroundView._setup_top_panel = function (self)
 				draw_wallet = false,
 				player_mode = true,
 				mastery_traits = self._mastery_traits,
+				camera_settings = {
+					{
+						"event_mastery_set_camera",
+						true,
+					},
+				},
 			},
 		}
 	end
@@ -1513,46 +1455,14 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			player_mode = true,
 			camera_settings = {
 				{
-					"event_inventory_set_camera_position_axis_offset",
-					"x",
+					"event_inventory_set_target_camera_offset",
 					is_ogryn and 5.2 or 3.5,
-					0.5,
-					math.easeCubic,
+					0,
+					0,
 				},
 				{
-					"event_inventory_set_camera_position_axis_offset",
-					"y",
-					0,
-					0.5,
-					math.easeCubic,
-				},
-				{
-					"event_inventory_set_camera_position_axis_offset",
-					"z",
-					0,
-					0.5,
-					math.easeCubic,
-				},
-				{
-					"event_inventory_set_camera_rotation_axis_offset",
-					"x",
-					0,
-					0.5,
-					math.easeCubic,
-				},
-				{
-					"event_inventory_set_camera_rotation_axis_offset",
-					"y",
-					0,
-					0.5,
-					math.easeCubic,
-				},
-				{
-					"event_inventory_set_camera_rotation_axis_offset",
-					"z",
-					0,
-					0.5,
-					math.easeCubic,
+					"event_inventory_set_target_camera_rotation",
+					false,
 				},
 				{
 					"event_inventory_set_camera_default_focus",
@@ -2018,10 +1928,9 @@ InventoryBackgroundView._setup_background_world = function (self)
 	local level_name = InventoryBackgroundViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)
-	self:_register_event("event_inventory_set_camera_position_axis_offset")
-	self:_register_event("event_inventory_set_camera_rotation_axis_offset")
+	self:_register_event("event_inventory_set_target_camera_offset")
+	self:_register_event("event_inventory_set_target_camera_rotation")
 	self:_register_event("event_inventory_set_camera_item_slot_focus")
-	self:_register_event("event_inventory_set_camera_node_focus")
 	self:_register_event("event_inventory_set_camera_default_focus")
 	self:_register_event("event_mastery_set_camera")
 	self:_update_viewport_resolution()
@@ -2065,86 +1974,30 @@ InventoryBackgroundView.event_register_character_spawn_point = function (self, s
 	end
 end
 
-InventoryBackgroundView.event_inventory_set_camera_item_slot_focus = function (self, slot_name, time, func_ptr)
+InventoryBackgroundView.event_inventory_set_camera_item_slot_focus = function (self, slot_name, instant_change)
 	local world_spawner = self._world_spawner
 	local slot_camera = self._item_camera_by_slot_id[slot_name] or self._default_camera_unit
-	local camera_world_position = Unit.world_position(slot_camera, 1)
-	local camera_world_rotation = Unit.world_rotation(slot_camera, 1)
-	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
-	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", camera_world_position.x - default_camera_world_position.x, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", camera_world_position.y - default_camera_world_position.y, time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", camera_world_position.z - default_camera_world_position.z, time, func_ptr)
-
-	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
-	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
-	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
-	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
-
-	world_spawner:set_camera_rotation_axis_offset("x", camera_world_rotation_x - default_camera_world_rotation_x, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", camera_world_rotation_y - default_camera_world_rotation_y, time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, time, func_ptr)
+	world_spawner:interpolate_to_camera(slot_camera, 1, instant_change and 0 or InventoryBackgroundViewSettings.camera_time, math.easeCubic)
 end
 
-InventoryBackgroundView.event_inventory_set_camera_node_focus = function (self, node_name, time, func_ptr)
-	if node_name then
-		local profile_spawner = self._profile_spawner
-		local world_spawner = self._world_spawner
-		local base_world_position = profile_spawner:node_world_position(1)
-		local node_world_position = profile_spawner:node_world_position(node_name)
-		local target_position = node_world_position - base_world_position
-
-		world_spawner:set_camera_position_axis_offset("x", target_position.x, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", target_position.y, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", target_position.z, time, func_ptr)
-	end
-end
-
-InventoryBackgroundView.event_mastery_set_camera = function (self)
+InventoryBackgroundView.event_mastery_set_camera = function (self, instant_change)
 	local world_spawner = self._world_spawner
 	local camera = self._mastery_camera
-	local camera_world_position = Unit.world_position(camera, 1)
-	local camera_world_rotation = Unit.world_rotation(camera, 1)
-	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
-	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", camera_world_position.x - default_camera_world_position.x, 0)
-	world_spawner:set_camera_position_axis_offset("y", camera_world_position.y - default_camera_world_position.y, 0)
-	world_spawner:set_camera_position_axis_offset("z", camera_world_position.z - default_camera_world_position.z, 0)
-
-	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
-	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
-	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
-	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
-
-	world_spawner:set_camera_rotation_axis_offset("x", camera_world_rotation_x - default_camera_world_rotation_x, 0)
-	world_spawner:set_camera_rotation_axis_offset("y", camera_world_rotation_y - default_camera_world_rotation_y, 0)
-	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, 0)
-
-	self._default_fov = self._default_fov or math.radians_to_degrees(Camera.vertical_fov(world_spawner:camera()))
-
-	local mastery_fov = math.radians_to_degrees(Camera.vertical_fov(Unit.camera(camera, "camera")))
-
-	world_spawner:_set_fov(mastery_fov)
+	world_spawner:interpolate_to_camera(camera, 1, instant_change and 0 or InventoryBackgroundViewSettings.camera_time, math.easeCubic)
 end
 
-InventoryBackgroundView.event_inventory_set_camera_default_focus = function (self)
-	local world_spawner = self._world_spawner
-
-	if self._default_fov then
-		world_spawner:_set_fov(self._default_fov)
-
-		self._default_fov = nil
-	end
+InventoryBackgroundView.event_inventory_set_camera_default_focus = function (self, instant_change)
+	self._world_spawner:reset_target_camera_fov(instant_change and 0 or InventoryBackgroundViewSettings.camera_time, math.easeCubic)
 end
 
-InventoryBackgroundView.event_inventory_set_camera_rotation_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_rotation_axis_offset(axis, value, animation_time, func_ptr)
+InventoryBackgroundView.event_inventory_set_target_camera_rotation = function (self, rotation, instant_change)
+	self._world_spawner:set_target_camera_rotation(rotation, instant_change and 0 or InventoryBackgroundViewSettings.camera_time, math.easeCubic)
 end
 
-InventoryBackgroundView.event_inventory_set_camera_position_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_position_axis_offset(axis, value, animation_time, func_ptr)
+InventoryBackgroundView.event_inventory_set_target_camera_offset = function (self, x, y, z, instant_change)
+	self._world_spawner:set_target_camera_offset(x, y, z, instant_change and 0 or InventoryBackgroundViewSettings.camera_time, math.easeCubic)
 end
 
 InventoryBackgroundView.on_exit = function (self)

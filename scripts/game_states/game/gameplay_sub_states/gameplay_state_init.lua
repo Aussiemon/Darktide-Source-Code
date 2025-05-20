@@ -10,6 +10,10 @@ local PositionLookupManager = require("scripts/managers/position_lookup/position
 local GameplayStateInit = class("GameplayStateInit")
 
 GameplayStateInit.on_enter = function (self, parent, params)
+	if params and params.shared_state and params.shared_state.havoc_data and params.shared_state.havoc_data ~= "" then
+		Crashify.print_property("in_havoc_mission", true)
+	end
+
 	local shared_state = params.shared_state
 	local start_params = {
 		shared_state = shared_state,
@@ -46,7 +50,11 @@ GameplayStateInit.on_exit = function (self, exit_params)
 end
 
 GameplayStateInit.update = function (self, main_dt, main_t)
-	Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.dedicated_server)
+	local before_last_step = self._state_machine:current_state_name() ~= "GameplayInitStepStateLast"
+
+	if before_last_step then
+		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.dedicated_server)
+	end
 
 	local shared_state = self._shared_state
 
@@ -54,7 +62,11 @@ GameplayStateInit.update = function (self, main_dt, main_t)
 	Managers.state.position_lookup:pre_update()
 	self._state_machine:update(main_dt, main_t)
 
-	if self._state_machine:current_state_name() ~= "GameplayInitStepStateLast" then
+	local view = "video_view"
+	local ui_manager = Managers.ui
+	local video_view_active_not_closing = ui_manager and ui_manager:view_active(view) and not ui_manager:is_view_closing(view)
+
+	if before_last_step or video_view_active_not_closing then
 		return nil, nil
 	end
 

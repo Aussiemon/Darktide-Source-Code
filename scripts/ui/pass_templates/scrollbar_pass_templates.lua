@@ -310,7 +310,7 @@ table.append(ScrollbarPassTemplates.default_scrollbar, {
 			ColorUtilities.color_lerp(style.idle_color, style.highlight_color, hover_progress, style.color, true)
 		end,
 	},
-}, scrollbar_base)
+})
 
 ScrollbarPassTemplates.default_scrollbar.default_width = 10
 ScrollbarPassTemplates.metal_scrollbar = table.clone(scrollbar_base)
@@ -442,7 +442,7 @@ table.append(ScrollbarPassTemplates.terminal_scrollbar, {
 			ColorUtilities.color_lerp(style.idle_color, style.highlight_color, hover_progress, style.color, true)
 		end,
 	},
-}, scrollbar_base)
+})
 
 ScrollbarPassTemplates.terminal_scrollbar.default_width = 8
 

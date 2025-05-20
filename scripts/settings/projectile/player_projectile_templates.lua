@@ -10,9 +10,11 @@ local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_te
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local ProjectileSettings = require("scripts/settings/projectile/projectile_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local projectile_types = ProjectileSettings.projectile_types
+local special_rules = SpecialRulesSettings.special_rules
 local projectile_templates = {}
 
 projectile_templates.ogryn_gauntlet_grenade = {

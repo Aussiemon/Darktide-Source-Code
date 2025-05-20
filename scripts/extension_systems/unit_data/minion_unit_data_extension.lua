@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/unit_data/minion_unit_data_extension.lua
 
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local Breed = require("scripts/utilities/breed")
 local MinionUnitDataExtension = class("MinionUnitDataExtension")
 local CLIENT_RPCS = {
 	"rpc_destroy_hit_zone",

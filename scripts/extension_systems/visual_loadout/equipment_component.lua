@@ -30,7 +30,7 @@ EquipmentComponent.init = function (self, world, item_definitions, unit_spawner,
 	end
 end
 
-local function _create_slot_from_configuration(configuration, slot_options)
+local function _create_slot_from_configuration(configuration, breed_settings, slot_options)
 	local slot_name = configuration.name
 	local slot = Script.new_map(32)
 
@@ -41,8 +41,8 @@ local function _create_slot_from_configuration(configuration, slot_options)
 	slot.unit_1p = nil
 	slot.parent_unit_3p = nil
 	slot.parent_unit_1p = nil
-	slot.attachments_3p = nil
-	slot.attachments_1p = nil
+	slot.attachments_by_unit_3p = nil
+	slot.attachments_by_unit_1p = nil
 	slot.hidden_3p = nil
 	slot.hidden_1p = nil
 	slot.wants_hidden_by_gameplay_1p = false
@@ -66,12 +66,12 @@ end
 local NO_OPTIONS = {}
 local NO_SLOT_OPTIONS = {}
 
-EquipmentComponent.initialize_equipment = function (slot_configuration, optional_slot_options)
+EquipmentComponent.initialize_equipment = function (slot_configuration, breed_settings, optional_slot_options)
 	local equipment = {}
 	local slot_options = optional_slot_options or NO_SLOT_OPTIONS
 
 	for slot_name, config in pairs(slot_configuration) do
-		local slot = _create_slot_from_configuration(config, slot_options[slot_name] or NO_OPTIONS)
+		local slot = _create_slot_from_configuration(config, breed_settings, slot_options[slot_name] or NO_OPTIONS)
 
 		equipment[slot_name] = slot
 	end
@@ -135,7 +135,7 @@ EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, op
 	self:_spawn_item_units(slot, unit_3p, unit_1p, attach_settings, optional_mission_template, optional_equipment)
 
 	if slot.use_existing_unit_3p then
-		slot.unit_3p, slot.attachments_3p = optional_existing_unit_3p
+		slot.unit_3p, slot.attachments_by_unit_3p = optional_existing_unit_3p
 
 		local smart_tagging_id = Unit.find_actor(optional_existing_unit_3p, "smart_tagging")
 
@@ -168,32 +168,20 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 	if self:_should_spawn_3p(unit_3p, slot, item) then
 		self:_fill_attach_settings_3p(unit_3p, attach_settings, slot)
 
-		local item_unit_3p, attachment_units_3p, attachment_name_to_unit_3p, _
+		local item_unit_3p, attachment_units_3p, unit_attachment_id_3p, unit_attachment_name_3p, item_name_by_unit_3p, _
 		local item_data = slot.item
 
 		if skip_attachments then
 			item_unit_3p = VisualLoadoutCustomization.spawn_base_unit(item_data, attach_settings, unit_3p, optional_mission_template)
 		else
-			item_unit_3p, attachment_units_3p, _, attachment_name_to_unit_3p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_3p, true, nil, optional_mission_template, optional_equipment)
+			item_unit_3p, attachment_units_3p, _, unit_attachment_id_3p, unit_attachment_name_3p, _, item_name_by_unit_3p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_3p, true, false, true, optional_mission_template, optional_equipment)
 		end
 
 		slot.unit_3p = item_unit_3p
-		slot.attachments_3p = attachment_units_3p
-
-		if attachment_name_to_unit_3p then
-			local keys = {}
-
-			table.keys(attachment_name_to_unit_3p, keys)
-
-			for ii = 1, #keys do
-				local key = keys[ii]
-				local unit = attachment_name_to_unit_3p[key]
-
-				attachment_name_to_unit_3p[unit] = key
-			end
-
-			slot.attachments_name_lookup_3p = attachment_name_to_unit_3p
-		end
+		slot.attachments_by_unit_3p = attachment_units_3p
+		slot.attachment_id_lookup_3p = unit_attachment_id_3p
+		slot.attachment_map_by_unit_3p = unit_attachment_name_3p
+		slot.item_name_by_unit_3p = item_name_by_unit_3p
 
 		local dynamic_id = Unit.find_actor(item_unit_3p, "dynamic")
 
@@ -225,32 +213,22 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 	if self:_should_spawn_1p(unit_1p, item, slot) then
 		self:_fill_attach_settings_1p(unit_1p, attach_settings, slot)
 
-		local item_unit_1p, attachment_units_1p, attachment_name_to_unit_1p, _
+		local item_unit_1p, attachments_by_unit_1p, unit_attachment_id_1p, unit_attachment_name_1p, item_name_by_unit_1p, _
 		local item_data = slot.item
 
 		if skip_attachments then
 			item_unit_1p = VisualLoadoutCustomization.spawn_base_unit(item_data, attach_settings, unit_1p, optional_mission_template)
 		else
-			item_unit_1p, attachment_units_1p, _, attachment_name_to_unit_1p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_1p, true, nil, optional_mission_template)
+			local equipment
+
+			item_unit_1p, attachments_by_unit_1p, _, unit_attachment_id_1p, unit_attachment_name_1p, _, item_name_by_unit_1p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_1p, true, false, true, optional_mission_template, equipment)
 		end
 
 		slot.unit_1p = item_unit_1p
-		slot.attachments_1p = attachment_units_1p
-
-		if attachment_name_to_unit_1p then
-			local keys = {}
-
-			table.keys(attachment_name_to_unit_1p, keys)
-
-			for ii = 1, #keys do
-				local key = keys[ii]
-				local unit = attachment_name_to_unit_1p[key]
-
-				attachment_name_to_unit_1p[unit] = key
-			end
-
-			slot.attachments_name_lookup_1p = attachment_name_to_unit_1p
-		end
+		slot.attachments_by_unit_1p = attachments_by_unit_1p
+		slot.attachment_id_lookup_1p = unit_attachment_id_1p
+		slot.attachment_map_by_unit_1p = unit_attachment_name_1p
+		slot.item_name_by_unit_1p = item_name_by_unit_1p
 
 		local dynamic_id = Unit.find_actor(item_unit_1p, "dynamic")
 
@@ -289,7 +267,8 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 		local weapon_skin_item = item.slot_weapon_skin
 		local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
 		local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item, skin_data)
-		local attachment_units_3p, attachment_name_to_unit_3p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_3p, true, nil, optional_mission_template)
+		local equipment
+		local attachments_by_unit_3p, unit_attachment_id_3p, unit_attachment_name_3p, _, item_name_by_unit_3p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_3p, true, false, true, optional_mission_template, equipment)
 
 		VisualLoadoutCustomization.apply_material_overrides(item, unit_3p, parent_unit_3p, attach_settings)
 
@@ -297,7 +276,7 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 			VisualLoadoutCustomization.apply_material_overrides(skin_data, unit_3p, parent_unit_3p, attach_settings)
 		end
 
-		VisualLoadoutCustomization.add_extensions(nil, attachment_units_3p, attach_settings)
+		VisualLoadoutCustomization.add_extensions(nil, attachments_by_unit_3p and attachments_by_unit_3p[unit_3p], attach_settings)
 
 		local deform_overrides = slot.deform_overrides
 
@@ -307,22 +286,10 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 			end
 		end
 
-		slot.attachments_3p = attachment_units_3p
-
-		if attachment_name_to_unit_3p then
-			local keys = {}
-
-			table.keys(attachment_name_to_unit_3p, keys)
-
-			for ii = 1, #keys do
-				local key = keys[ii]
-				local unit = attachment_name_to_unit_3p[key]
-
-				attachment_name_to_unit_3p[unit] = key
-			end
-
-			slot.attachments_name_lookup_3p = attachment_name_to_unit_3p
-		end
+		slot.attachments_by_unit_3p = attachments_by_unit_3p
+		slot.attachment_id_lookup_3p = unit_attachment_id_3p
+		slot.item_name_by_unit_3p = item_name_by_unit_3p
+		slot.attachment_map_by_unit_3p = unit_attachment_name_3p
 	end
 
 	local parent_unit_1p = slot.parent_unit_1p
@@ -336,7 +303,8 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 		local weapon_skin_item = item.slot_weapon_skin
 		local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
 		local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item, skin_data)
-		local attachment_units_1p, attachment_name_to_unit_1p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_1p, true, nil, optional_mission_template)
+		local equipment
+		local attachments_by_unit_1p, unit_attachment_id_1p, unit_attachment_name_1p, _, item_name_by_unit_1p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_1p, true, false, true, optional_mission_template, equipment)
 
 		VisualLoadoutCustomization.apply_material_overrides(item, unit_1p, parent_unit_1p, attach_settings)
 
@@ -344,7 +312,7 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 			VisualLoadoutCustomization.apply_material_overrides(skin_data, unit_1p, parent_unit_1p, attach_settings)
 		end
 
-		VisualLoadoutCustomization.add_extensions(nil, attachment_units_1p, attach_settings)
+		VisualLoadoutCustomization.add_extensions(nil, attachments_by_unit_1p and attachments_by_unit_1p[unit_1p], attach_settings)
 		Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(unit_1p, "custom_fov", true)
 
 		local deform_overrides = slot.deform_overrides
@@ -355,22 +323,10 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 			end
 		end
 
-		slot.attachments_1p = attachment_units_1p
-
-		if attachment_name_to_unit_1p then
-			local keys = {}
-
-			table.keys(attachment_name_to_unit_1p, keys)
-
-			for ii = 1, #keys do
-				local key = keys[ii]
-				local unit = attachment_name_to_unit_1p[key]
-
-				attachment_name_to_unit_1p[unit] = key
-			end
-
-			slot.attachments_name_lookup_1p = attachment_name_to_unit_1p
-		end
+		slot.attachments_by_unit_1p = attachments_by_unit_1p
+		slot.attachment_id_lookup_1p = unit_attachment_id_1p
+		slot.attachment_map_by_unit_1p = unit_attachment_name_1p
+		slot.item_name_by_unit_1p = item_name_by_unit_1p
 	end
 
 	slot.attachment_spawn_status = ATTACHMENT_SPAWN_STATUS.fully_spawned
@@ -398,7 +354,7 @@ EquipmentComponent.unequip_item = function (self, slot)
 	slot.deform_overrides = nil
 	slot.breed_name = nil
 
-	local unit_3p, attachments_3p, unit_spawner = slot.unit_3p, slot.attachments_3p, self._unit_spawner
+	local unit_3p, attachments_by_unit_3p, unit_spawner = slot.unit_3p, slot.attachments_by_unit_3p, self._unit_spawner
 
 	if slot.use_existing_unit_3p then
 		if unit_alive(unit_3p) then
@@ -411,19 +367,19 @@ EquipmentComponent.unequip_item = function (self, slot)
 			end
 		end
 	else
-		_despawn_item_units(unit_spawner, unit_3p, attachments_3p)
+		_despawn_item_units(unit_spawner, unit_3p, attachments_by_unit_3p and attachments_by_unit_3p[unit_3p])
 	end
 
 	slot.unit_3p = nil
-	slot.attachments_3p = nil
+	slot.attachments_by_unit_3p = nil
 
 	local unit_1p = slot.unit_1p
 
 	if unit_1p then
-		_despawn_item_units(unit_spawner, unit_1p, slot.attachments_1p)
+		_despawn_item_units(unit_spawner, unit_1p, slot.attachments_by_unit_1p and slot.attachments_by_unit_1p[unit_1p])
 
 		slot.unit_1p = nil
-		slot.attachments_1p = nil
+		slot.attachments_by_unit_1p = nil
 	end
 
 	slot.parent_unit_1p = nil
@@ -547,12 +503,14 @@ local function _slot_flow_event_1p(slot, event_name)
 
 	unit_flow_event(base_unit, event_name)
 
-	local attachment_units = slot.attachments_1p or {}
+	local attachment_units = slot.attachments_by_unit_1p and slot.attachments_by_unit_1p[base_unit]
 
-	for i = 1, #attachment_units do
-		local attachment_unit = attachment_units[i]
+	if attachment_units then
+		for i = 1, #attachment_units do
+			local attachment_unit = attachment_units[i]
 
-		unit_flow_event(attachment_unit, event_name)
+			unit_flow_event(attachment_unit, event_name)
+		end
 	end
 end
 
@@ -561,12 +519,14 @@ local function _slot_flow_event_3p(slot, event_name)
 
 	unit_flow_event(base_unit, event_name)
 
-	local attachment_units = slot.attachments_3p or {}
+	if slot.attachments_by_unit_3p then
+		local attachment_units = slot.attachments_by_unit_3p[base_unit]
 
-	for i = 1, #attachment_units do
-		local attachment_unit = attachment_units[i]
+		for i = 1, #attachment_units do
+			local attachment_unit = attachment_units[i]
 
-		unit_flow_event(attachment_unit, event_name)
+			unit_flow_event(attachment_unit, event_name)
+		end
 	end
 end
 
@@ -929,7 +889,7 @@ EquipmentComponent.send_component_event = function (slot, event_name, ...)
 
 	Component_event(unit_3p, event_name, ...)
 
-	local attachments_3p = slot.attachments_3p
+	local attachments_3p = slot.attachments_by_unit_3p[unit_3p]
 
 	for i = 1, #attachments_3p do
 		local attachment_unit = attachments_3p[i]
@@ -942,7 +902,7 @@ EquipmentComponent.send_component_event = function (slot, event_name, ...)
 	if unit_1p then
 		Component_event(unit_1p, event_name, ...)
 
-		local attachments_1p = slot.attachments_1p
+		local attachments_1p = slot.attachments_by_unit_1p[unit_1p]
 
 		for i = 1, #attachments_1p do
 			local attachment_unit = attachments_1p[i]

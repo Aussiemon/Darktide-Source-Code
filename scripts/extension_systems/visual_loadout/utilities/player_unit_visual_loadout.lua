@@ -282,14 +282,16 @@ PlayerUnitVisualLoadout.slot_flow_event = function (first_person_extension, visu
 	end
 
 	local is_first_person = first_person_extension:is_in_first_person_mode()
-	local unit_1p, unit_3p, attachments_1p, attachments_3p = visual_loadout_extension:unit_and_attachments_from_slot(inventory_slot)
+	local unit_1p, unit_3p, attachments_by_unit_1p, attachments_by_unit_3p = visual_loadout_extension:unit_and_attachments_from_slot(inventory_slot)
 
 	if is_first_person then
 		if unit_1p then
 			unit_flow_event(unit_1p, flow_event_name)
 		end
 
-		if attachments_1p then
+		if attachments_by_unit_1p then
+			local attachments_1p = attachments_by_unit_1p[unit_1p]
+
 			for i = 1, #attachments_1p do
 				local attachment_unit = attachments_1p[i]
 
@@ -301,7 +303,9 @@ PlayerUnitVisualLoadout.slot_flow_event = function (first_person_extension, visu
 			unit_flow_event(unit_3p, flow_event_name)
 		end
 
-		if attachments_3p then
+		if attachments_by_unit_3p then
+			local attachments_3p = attachments_by_unit_3p[unit_3p]
+
 			for i = 3, #attachments_3p do
 				local attachment_unit = attachments_3p[i]
 

@@ -220,12 +220,12 @@ HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, 
 	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit)
 end
 
-HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit)
+HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit, alternate)
 	local parent = self._parent
 	local player_unit = parent:player_unit()
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-	smart_tag_system:set_contextual_unit_tag(player_unit, target_unit)
+	smart_tag_system:set_contextual_unit_tag(player_unit, target_unit, alternate)
 end
 
 HudElementSmartTagging._on_tag_stop = function (self, t, ui_renderer, render_settings)
@@ -245,6 +245,7 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 		return
 	end
 
+	local tag_context = self._tag_context
 	local target_marker, target_unit, target_position
 	local parent = self._parent
 	local player_unit = parent:player_unit()
@@ -260,7 +261,7 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 		target_marker, target_unit, target_position = self:_find_best_smart_tag_interaction(ui_renderer, render_settings, force_update_targets)
 	end
 
-	local tag_context = self._tag_context
+	local double_tap = tag_context.is_double_tap
 
 	if target_unit then
 		self:_handle_selected_unit(target_unit)

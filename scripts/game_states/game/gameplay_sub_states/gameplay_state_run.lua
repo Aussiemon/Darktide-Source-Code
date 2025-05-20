@@ -38,6 +38,11 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	}
 
 	Managers.telemetry_events:gameplay_started(telemetry_params)
+
+	if is_server or Managers.state.cinematic:mission_intro_played() then
+		Managers.telemetry_events:memory_usage("mission_start")
+	end
+
 	TaskbarFlash.flash_window()
 end
 
@@ -46,6 +51,7 @@ GameplayStateRun.on_exit = function (self)
 	local gameplay_state = self._gameplay_state
 	local is_server = shared_state.is_server
 
+	Managers.telemetry_events:memory_usage("mission_end")
 	Managers.telemetry_events:gameplay_stopped()
 	MissionCleanupUtilies.cleanup(shared_state, gameplay_state)
 	self:_unregister_run_network_events(is_server)
@@ -99,7 +105,6 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 		Managers.state.blood:update(dt, t)
 		Managers.state.decal:update(dt, t)
 		Managers.state.cinematic:update(dt, t)
-		Managers.state.video:update(dt, t)
 		Managers.state.network_story:update(dt, t)
 		Managers.state.rooms_and_portals:update(dt, t)
 		Managers.state.mutator:update(dt, t)

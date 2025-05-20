@@ -59,7 +59,7 @@ local function _calculate_attack_direction(action_settings, start_rotation, end_
 		attack_direction = Quaternion.rotate(player_rotation, direction)
 	else
 		local rotation = Quaternion.lerp(start_rotation, end_rotation, 0.5)
-		local quaternion_axis = action_settings.attack_direction or action_settings.spline_settings.matrices_data_location and "forward" or "right"
+		local quaternion_axis = (action_settings.attack_direction or action_settings.multi_sweep or action_settings.spline_settings.matrices_data_location) and "forward" or "right"
 
 		attack_direction = Quaternion[quaternion_axis](rotation)
 	end
@@ -100,13 +100,7 @@ local ActionSweep = class("ActionSweep", "ActionWeaponBase")
 ActionSweep.init = function (self, action_context, action_params, action_settings)
 	ActionSweep.super.init(self, action_context, action_params, action_settings)
 
-	self._hit_units = {}
-
-	if action_settings.spline_settings.matrices_data_location then
-		self._sweep_spline = SweepSplineExported:new(action_settings, self._first_person_component)
-	else
-		self._sweep_spline = SweepSpline:new(action_settings.spline_settings, self._first_person_component)
-	end
+	self._sweep_splines, self._all_sweeps_aborted_mask, self._hit_units, self._sweep_process_mode = self:_init_splines(action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
 
@@ -154,6 +148,51 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	self._sweep_fx_source_name = weapon.fx_sources._sweep
 end
 
+ActionSweep._init_splines = function (self, action_settings)
+	local multi_sweep = action_settings.multi_sweep
+	local spline_settings = action_settings.spline_settings
+	local sweep_process_mode = action_settings.sweep_process_mode or ActionSweepSettings.multi_sweep_process_mode.shared
+	local hit_units = {
+		{},
+	}
+
+	if multi_sweep then
+		local all_sweeps_aborted_mask = 1
+		local sweep_splines = {}
+
+		for sweep_index = 1, #spline_settings do
+			local matrices_data_location = spline_settings[sweep_index].matrices_data_location
+			local anchor_point_offset = spline_settings[sweep_index].anchor_point_offset
+
+			sweep_splines[sweep_index] = SweepSplineExported:new(action_settings, matrices_data_location, anchor_point_offset)
+			all_sweeps_aborted_mask = bit.bor(all_sweeps_aborted_mask, bit.lshift(1, sweep_index - 1))
+
+			if sweep_process_mode == ActionSweepSettings.multi_sweep_process_mode.separate then
+				hit_units[sweep_index] = {}
+			else
+				hit_units[sweep_index] = hit_units[1]
+			end
+		end
+
+		return sweep_splines, all_sweeps_aborted_mask, hit_units, sweep_process_mode
+	else
+		local all_sweeps_aborted_mask = 1
+		local matrices_data_location = action_settings.spline_settings.matrices_data_location
+
+		if matrices_data_location then
+			local anchor_point_offset = action_settings.spline_settings.anchor_point_offset
+
+			return {
+				SweepSplineExported:new(action_settings, matrices_data_location, anchor_point_offset),
+			}, all_sweeps_aborted_mask, hit_units, sweep_process_mode
+		end
+
+		return {
+			SweepSpline:new(action_settings),
+		}, all_sweeps_aborted_mask, hit_units, sweep_process_mode
+	end
+end
+
 ActionSweep.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionSweep.super.start(self, action_settings, t, time_scale, action_start_params)
 
@@ -166,7 +205,10 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 	self._combo_count = combo_count
 
 	self:_check_for_critical_strike(true, false)
-	table.clear(self._hit_units)
+
+	for i = 1, #self._hit_units do
+		table.clear(self._hit_units[i])
+	end
 
 	self._num_saved_entries = 0
 	self._time_before_processing_saved_entries = 0
@@ -224,12 +266,11 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 end
 
 ActionSweep._reset_sweep_component = function (self)
-	local sweep_position, sweep_rotation = self._sweep_spline:position_and_rotation(0)
 	local action_sweep_component = self._action_sweep_component
 
-	action_sweep_component.sweep_position = sweep_position
-	action_sweep_component.sweep_rotation = sweep_rotation
-	action_sweep_component.sweep_aborted = false
+	action_sweep_component.reference_position = self._first_person_component.position
+	action_sweep_component.reference_rotation = self._first_person_component.rotation
+	action_sweep_component.sweep_aborted_bit_array = 0
 	action_sweep_component.sweep_aborted_t = 0
 	action_sweep_component.sweep_aborted_unit = nil
 	action_sweep_component.sweep_aborted_actor_index = nil
@@ -271,7 +312,9 @@ ActionSweep._calculate_max_hit_mass = function (self, damage_profile, power_leve
 end
 
 ActionSweep.server_correction_occurred = function (self)
-	table.clear(self._hit_units)
+	for i = 1, #self._hit_units do
+		table.clear(self._hit_units[i])
+	end
 
 	self._num_saved_entries = 0
 	self._time_before_processing_saved_entries = 0
@@ -291,7 +334,9 @@ ActionSweep.server_correction_occurred = function (self)
 end
 
 ActionSweep.finish = function (self, reason, data, t, time_in_action)
-	table.clear(self._hit_units)
+	for i = 1, #self._hit_units do
+		table.clear(self._hit_units[i])
+	end
 
 	local action_settings = self._action_settings
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
@@ -305,7 +350,7 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 	local action_sweep_component = self._action_sweep_component
 
 	if action_sweep_component.sweep_state == "during_damage_window" then
-		self:_exit_damage_window(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
+		self:_exit_damage_window(t, self._num_hit_enemies, self:_any_sweep_aborted())
 
 		if not is_sticky then
 			self:_handle_exit_procs()
@@ -317,7 +362,7 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 	local weapon_special_implementation = self._weapon.weapon_special_implementation
 
 	if weapon_special_implementation then
-		weapon_special_implementation:on_sweep_action_finish(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
+		weapon_special_implementation:on_sweep_action_finish(t, self._num_hit_enemies, self:_any_sweep_aborted())
 	end
 
 	self._block_component.is_blocking = false
@@ -375,33 +420,45 @@ ActionSweep.fixed_update = function (self, dt, t, time_in_action)
 	self:_update_sweep(dt, t, time_in_action, action_settings, self._action_sweep_component)
 end
 
-ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settings, action_sweep_component)
+ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settings)
 	local time_scale = self._weapon_action_component.time_scale
 	local is_within_damage_window, damage_window_t, before_damage_window, damage_window_total_t = self:_is_within_damage_window(time_in_action, action_settings, time_scale)
-	local was_within_damage_window = self:_is_within_damage_window(time_in_action - dt, action_settings, time_scale)
-	local sweep_spline = self._sweep_spline
+	local was_within_damage_window, last_damage_window_t = self:_is_within_damage_window(time_in_action - dt, action_settings, time_scale)
+	local action_sweep_component = self._action_sweep_component
 
 	if before_damage_window then
-		local position, rotation = sweep_spline:position_and_rotation(0)
-
-		action_sweep_component.sweep_position = position
-		action_sweep_component.sweep_rotation = rotation
+		action_sweep_component.reference_position = self._first_person_component.position
+		action_sweep_component.reference_rotation = self._first_person_component.rotation
 	end
 
 	local is_final_frame = not is_within_damage_window and was_within_damage_window
-	local should_do_overlap = not action_sweep_component.sweep_aborted and (is_within_damage_window or was_within_damage_window)
+	local start_reference_pos, start_reference_rot = action_sweep_component.reference_position, action_sweep_component.reference_rotation
+	local end_reference_pos, end_reference_rot = self._first_person_component.position, self._first_person_component.rotation
+	local should_do_any_overlap = not self:_all_sweeps_aborted() and (is_within_damage_window or was_within_damage_window)
 
-	if should_do_overlap then
-		damage_window_t = is_final_frame and 1 or damage_window_t
-		action_sweep_component.sweep_state = "during_damage_window"
+	if should_do_any_overlap then
+		local sweep_splines = self._sweep_splines
 
-		local start_position, start_rotation = action_sweep_component.sweep_position, action_sweep_component.sweep_rotation
-		local end_position, end_rotation = sweep_spline:position_and_rotation(damage_window_t)
+		for sweep_index = 1, #sweep_splines do
+			local sweep_spline = sweep_splines[sweep_index]
+			local should_do_overlap = not self:_is_sweep_aborted(sweep_index)
 
-		self:_do_overlap(t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, action_sweep_component)
+			if should_do_overlap then
+				damage_window_t = is_final_frame and 1 or damage_window_t
+				action_sweep_component.sweep_state = "during_damage_window"
+				last_damage_window_t = was_within_damage_window and last_damage_window_t or 0
+				damage_window_t = is_final_frame and 1 or damage_window_t
+				action_sweep_component.sweep_state = "during_damage_window"
 
-		if is_final_frame or action_sweep_component.sweep_aborted then
-			self:_exit_damage_window(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
+				local start_position, start_rotation = sweep_spline:position_and_rotation(last_damage_window_t, start_reference_pos, start_reference_rot)
+				local end_position, end_rotation = sweep_spline:position_and_rotation(damage_window_t, end_reference_pos, end_reference_rot)
+
+				self:_do_overlap(t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, sweep_index)
+			end
+		end
+
+		if is_final_frame or self:_all_sweeps_aborted() then
+			self:_exit_damage_window(t, self._num_hit_enemies, self:_any_sweep_aborted())
 
 			if not self:_is_currently_sticky() then
 				self:_handle_exit_procs()
@@ -409,9 +466,6 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 
 			action_sweep_component.sweep_state = "after_damage_window"
 		end
-
-		action_sweep_component.sweep_position = end_position
-		action_sweep_component.sweep_rotation = end_rotation
 	end
 
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
@@ -419,6 +473,42 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 
 	if hit_stickyness_settings and self:_is_currently_sticky() then
 		self:_update_hit_stickyness(dt, t, action_sweep_component, hit_stickyness_settings)
+	end
+
+	action_sweep_component.reference_position = end_reference_pos
+	action_sweep_component.reference_rotation = end_reference_rot
+end
+
+ActionSweep._any_sweep_aborted = function (self)
+	local action_sweep_component = self._action_sweep_component
+
+	return action_sweep_component.sweep_aborted_bit_array ~= 0
+end
+
+ActionSweep._all_sweeps_aborted = function (self)
+	local action_sweep_component = self._action_sweep_component
+
+	return action_sweep_component.sweep_aborted_bit_array == self._all_sweeps_aborted_mask
+end
+
+ActionSweep._is_sweep_aborted = function (self, sweep_index)
+	local action_sweep_component = self._action_sweep_component
+	local bit_array = action_sweep_component.sweep_aborted_bit_array
+
+	return bit.band(bit.rshift(bit_array, sweep_index - 1), 1) == 1
+end
+
+ActionSweep._abort_sweep = function (self, sweep_index, t, hit_unit, hit_actor)
+	local action_sweep_component = self._action_sweep_component
+	local bit_array = action_sweep_component.sweep_aborted_bit_array
+	local first_abort = bit_array == 0
+
+	action_sweep_component.sweep_aborted_bit_array = bit.bor(bit_array, bit.lshift(1, sweep_index - 1))
+
+	if first_abort then
+		action_sweep_component.sweep_aborted_t = t
+		action_sweep_component.sweep_aborted_unit = hit_unit
+		action_sweep_component.sweep_aborted_actor_index = HitZone.actor_index(hit_unit, hit_actor)
 	end
 end
 
@@ -472,7 +562,10 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	end
 
 	self:_add_weapon_blood(stick_to_unit, "full")
-	self:_exit_damage_window(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
+
+	local any_sweep_aborted = self:_any_sweep_aborted()
+
+	self:_exit_damage_window(t, self._num_hit_enemies, any_sweep_aborted)
 
 	if not self:_is_currently_sticky() then
 		self:_handle_exit_procs()
@@ -795,7 +888,7 @@ ActionSweep._handle_exit_procs = function (self)
 	Managers.stats:record_private("hook_sweep_finished", self._player, num_hit_enemies, num_killed_enemies, combo_count, hit_weakspot, is_heavy)
 end
 
-ActionSweep._do_overlap = function (self, t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, action_sweep_component)
+ActionSweep._do_overlap = function (self, t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, sweep_index)
 	PhysicsWorld.start_reusing_sweep_tables()
 
 	local use_sphere_sweep = action_settings.use_sphere_sweep
@@ -822,7 +915,7 @@ ActionSweep._do_overlap = function (self, t, start_position, start_rotation, end
 		end
 
 		if num_sweep_results > 0 then
-			self:_process_sweep_results(t, sweep_results, num_sweep_results, action_settings, attack_direction, action_sweep_component)
+			self:_process_sweep_results(t, sweep_results, num_sweep_results, action_settings, attack_direction, sweep_index)
 		end
 	end
 
@@ -920,8 +1013,8 @@ ActionSweep._merge_saved_entries = function (self, sweep_results, num_sweep_resu
 	return merged_results, num_merged_results
 end
 
-ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep_results, action_settings, attack_direction, action_sweep_component)
-	local hit_units = self._hit_units
+ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep_results, action_settings, attack_direction, sweep_index)
+	local hit_units = self._hit_units[sweep_index]
 	local unit_best_result, actor_to_unit = self:_pick_best_sweep_result_per_unit(sweep_results, num_sweep_results, hit_units)
 	local ordered_units = self:_order_by_significance(unit_best_result, sweep_results, actor_to_unit, action_settings)
 	local num_ordered_units = #ordered_units
@@ -940,13 +1033,16 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 			hit_zone_name = hit_zone.name
 		end
 
-		abort_attack, armor_aborted_attack = self:_process_hit(t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name, hit_normal, action_sweep_component)
+		abort_attack, armor_aborted_attack = self:_process_hit(t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name, hit_normal)
 
 		if abort_attack then
-			action_sweep_component.sweep_aborted = true
-			action_sweep_component.sweep_aborted_t = t
-			action_sweep_component.sweep_aborted_unit = hit_unit
-			action_sweep_component.sweep_aborted_actor_index = HitZone.actor_index(hit_unit, hit_actor)
+			local already_partially_aborted = self:_any_sweep_aborted()
+
+			if not already_partially_aborted then
+				-- Nothing
+			end
+
+			self:_abort_sweep(sweep_index, t, hit_unit, hit_actor)
 
 			break
 		end
@@ -1009,9 +1105,6 @@ ActionSweep._pick_best_sweep_result_per_unit = function (self, sweep_results, nu
 						break
 					end
 
-					local previous_result = sweep_results[previous_result_id]
-					local prev_actor = previous_result.actor
-					local prev_hit_zone = HitZone.get(hit_unit, prev_actor)
 					local new_hit_zone_name = hit_zone.name
 					local new_hit_zone_prio, new_hit_zone_priority_function = hit_zone_priority[new_hit_zone_name], hit_zone_priority_functions[new_hit_zone_name]
 
@@ -1019,6 +1112,9 @@ ActionSweep._pick_best_sweep_result_per_unit = function (self, sweep_results, nu
 						new_hit_zone_prio = new_hit_zone_priority_function(hit_unit, player_position, new_hit_zone_prio)
 					end
 
+					local previous_result = sweep_results[previous_result_id]
+					local prev_actor = previous_result.actor
+					local prev_hit_zone = HitZone.get(hit_unit, prev_actor)
 					local prev_hit_zone_name = prev_hit_zone.name
 					local prev_hit_zone_prio, prev_hit_zone_priority_function = hit_zone_priority[prev_hit_zone_name], hit_zone_priority_functions[prev_hit_zone_name]
 
@@ -1037,7 +1133,9 @@ ActionSweep._pick_best_sweep_result_per_unit = function (self, sweep_results, nu
 				break
 			end
 
-			unit_best_result[hit_unit] = i
+			if HitZone.get(hit_unit, hit_actor) then
+				unit_best_result[hit_unit] = i
+			end
 		until true
 	end
 
@@ -1150,7 +1248,7 @@ local attack_intensities = {
 	ranged = 15,
 }
 
-ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal, action_sweep_component)
+ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal)
 	hit_units[hit_unit] = true
 
 	local critical_strike_component = self._critical_strike_component
@@ -1320,7 +1418,7 @@ end
 ActionSweep._modify_sweep_position = function (self, position, rotation, weapon_half_extents, action_settings)
 	local dir, distance
 
-	if action_settings.spline_settings.matrices_data_location then
+	if action_settings.multi_sweep or action_settings.spline_settings.matrices_data_location then
 		distance = weapon_half_extents.z
 		dir = Quaternion.up(rotation)
 	else
@@ -1441,7 +1539,7 @@ ActionSweep._weapon_half_extents = function (self, weapon_template, action_setti
 	local weapon_box = action_settings.weapon_box or weapon_template.weapon_box
 	local _, weapon_half_extents = nil, Vector3(weapon_box[1], weapon_box[2], weapon_box[3])
 
-	if action_settings.spline_settings.matrices_data_location then
+	if action_settings.multi_sweep or action_settings.spline_settings.matrices_data_location then
 		weapon_half_extents.x = weapon_half_extents.x * width_mod
 		weapon_half_extents.y = weapon_half_extents.y * height_mod
 		weapon_half_extents.z = weapon_half_extents.z * range_mod

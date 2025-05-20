@@ -10,21 +10,25 @@ table.make_unique(templates)
 
 templates.tg_player_unperceivable = {
 	class_name = "buff",
+	predicted = false,
 	keywords = {
 		keywords.unperceivable,
 	},
 }
 templates.tg_health_station_scenario_corruption = {
 	class_name = "buff",
+	predicted = false,
 }
 templates.tg_player_resist_death = {
 	class_name = "buff",
+	predicted = false,
 	keywords = {
 		keywords.resist_death,
 	},
 }
 templates.tg_player_nerfed_damage = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.damage] = -0.95,
 	},
@@ -61,48 +65,56 @@ templates.tg_on_ammo_consumed_hook = {
 }
 templates.tg_player_short_ability_cooldown = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.ability_cooldown_modifier] = -0.6,
 	},
 }
 templates.tg_increased_coherency_veteran = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 25,
 	},
 }
 templates.tg_increased_coherency_ogryn = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 12,
 	},
 }
 templates.tg_increased_coherency_zealot = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 7,
 	},
 }
 templates.tg_increased_coherency_psyker = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 7,
 	},
 }
 templates.tg_increased_coherency = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 10,
 	},
 }
 templates.tg_no_coherency = {
 	class_name = "buff",
+	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 0,
 	},
 }
 templates.tg_no_overcharge = {
 	class_name = "buff",
+	predicted = false,
 	keywords = {
 		keywords.psychic_fortress,
 	},

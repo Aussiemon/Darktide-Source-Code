@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/components/gyroscope_particle_effect.lua
 
-local Component = require("scripts/utilities/component")
 local GyroscopeParticleEffect = component("GyroscopeParticleEffect")
 
 GyroscopeParticleEffect.init = function (self, unit)

@@ -18,6 +18,7 @@ end
 templates.light_stun_movement_slow = {
 	class_name = "buff",
 	duration = 0.3,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 3,
 	lerped_stat_buffs = {
@@ -31,6 +32,7 @@ templates.light_stun_movement_slow = {
 templates.medium_stun_movement_slow = {
 	class_name = "buff",
 	duration = 0.4,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 3,
 	lerped_stat_buffs = {
@@ -44,6 +46,7 @@ templates.medium_stun_movement_slow = {
 templates.heavy_stun_movement_slow = {
 	class_name = "buff",
 	duration = 0.6,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 2,
 	lerped_stat_buffs = {
@@ -57,6 +60,7 @@ templates.heavy_stun_movement_slow = {
 templates.ogryn_stun_movement_speed_up = {
 	class_name = "buff",
 	duration = 0.5,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 2,
 	lerped_stat_buffs = {
@@ -70,6 +74,7 @@ templates.ogryn_stun_movement_speed_up = {
 templates.fumbled_stun_movement_slow = {
 	class_name = "buff",
 	duration = 1,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 2,
 	lerped_stat_buffs = {
@@ -83,6 +88,7 @@ templates.fumbled_stun_movement_slow = {
 templates.grenadier_stun_movement_slow = {
 	class_name = "buff",
 	duration = 1,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 1,
 	lerped_stat_buffs = {
@@ -96,6 +102,7 @@ templates.grenadier_stun_movement_slow = {
 templates.fortitude_broken_stun_movement_slow = {
 	class_name = "buff",
 	duration = 0.4,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 2,
 	lerped_stat_buffs = {
@@ -109,6 +116,7 @@ templates.fortitude_broken_stun_movement_slow = {
 templates.sniper_stun_movement_slow = {
 	class_name = "buff",
 	duration = 2,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 1,
 	lerped_stat_buffs = {
@@ -122,6 +130,7 @@ templates.sniper_stun_movement_slow = {
 templates.toughness_stun_movement_slow = {
 	class_name = "buff",
 	duration = 0.2,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 4,
 	lerped_stat_buffs = {
@@ -135,6 +144,7 @@ templates.toughness_stun_movement_slow = {
 templates.ranged_stun_movement_slow = {
 	class_name = "buff",
 	duration = 0.3,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 3,
 	lerped_stat_buffs = {
@@ -148,6 +158,7 @@ templates.ranged_stun_movement_slow = {
 templates.ranged_sprinting_stun_movement_slow = {
 	class_name = "buff",
 	duration = 0.5,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 3,
 	lerped_stat_buffs = {
@@ -161,6 +172,7 @@ templates.ranged_sprinting_stun_movement_slow = {
 templates.ogryn_powermaul_stun_movement_slow = {
 	class_name = "buff",
 	duration = 2,
+	predicted = true,
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 1,
 	lerped_stat_buffs = {
@@ -174,47 +186,47 @@ templates.ogryn_powermaul_stun_movement_slow = {
 templates.stun_immune_ultra_short = {
 	class_name = "buff",
 	duration = 0.4,
+	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
 		buff_keywords.stun_immune,
 	},
-	stat_buffs = {},
 }
 templates.stun_immune_short = {
 	class_name = "buff",
 	duration = 1,
+	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
 		buff_keywords.stun_immune,
 	},
-	stat_buffs = {},
 }
 templates.stun_immune_medium = {
 	class_name = "buff",
 	duration = 1.5,
+	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
 		buff_keywords.stun_immune,
 	},
-	stat_buffs = {},
 }
 templates.stun_immune_long = {
 	class_name = "buff",
 	duration = 1.75,
+	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
 		buff_keywords.stun_immune,
 	},
-	stat_buffs = {},
 }
 templates.stun_immune_very_long = {
 	class_name = "buff",
 	duration = 2,
+	predicted = true,
 	unique_buff_id = "stun_immunity",
 	keywords = {
 		buff_keywords.stun_immune,
 	},
-	stat_buffs = {},
 }
 
 return templates

@@ -25,11 +25,6 @@ MinigameFrequency.init = function (self, unit, is_server, seed, context)
 		y = 0,
 	}
 	self._last_axis_set = 0
-	self._last_frequency_rpc_time = 0
-	self._frequency_rpc_throttle_time = 0.03333333333333333
-	self._pending_frequency_update = false
-	self._cached_on_target = nil
-	self._freq_changed = false
 	self._stage_amount = MinigameSettings.frequency_search_stage_amount
 end
 
@@ -37,8 +32,8 @@ MinigameFrequency.hot_join_sync = function (self, sender, channel)
 	MinigameFrequency.super.hot_join_sync(self, sender, channel)
 
 	if self._current_stage then
-		self:send_rpc_to_channel(channel, "rpc_minigame_sync_frequency_set_frequency", self._frequency.x, self._frequency.y)
 		self:send_rpc_to_channel(channel, "rpc_minigame_sync_frequency_set_target_frequency", self._target_frequency.x, self._target_frequency.y)
+		self:send_rpc("rpc_minigame_sync_generate_board", self._start_seed)
 	end
 end
 
@@ -54,14 +49,10 @@ MinigameFrequency.start = function (self, player)
 	end
 
 	if self._is_server then
-		self._current_stage = 1
-		self._seed, self._frequency = self:_get_random_frequency(self._seed)
-
-		self:send_rpc("rpc_minigame_sync_frequency_set_frequency", self._frequency.x, self._frequency.y)
 		self:_change_target_frequency()
-		self:_update_frequency_sound(self._frequency)
-		self:_set_frequency_target_sound(self._target_frequency)
 	end
+
+	self:_update_frequency_sound(self._frequency)
 end
 
 MinigameFrequency.stop = function (self)
@@ -88,12 +79,17 @@ end
 
 MinigameFrequency.setup_game = function (self)
 	MinigameFrequency.super.setup_game(self)
+	self:generate_board(self._seed)
+	self:send_rpc("rpc_minigame_sync_generate_board", self._start_seed)
 
-	if self._is_server then
-		self._current_stage = 1
+	self._current_stage = 1
 
-		self:send_rpc("rpc_minigame_sync_set_stage", self._current_stage)
-	end
+	self:send_rpc("rpc_minigame_sync_set_stage", self._current_stage)
+end
+
+MinigameFrequency.generate_board = function (self, seed)
+	self._seed = seed
+	self._seed, self._frequency = self:_get_random_frequency(self._seed)
 end
 
 MinigameFrequency._change_target_frequency = function (self)
@@ -105,8 +101,6 @@ MinigameFrequency._change_target_frequency = function (self)
 
 	self:send_rpc("rpc_minigame_sync_frequency_set_target_frequency", self._target_frequency.x, self._target_frequency.y)
 	self:_set_frequency_target_sound(self._target_frequency)
-
-	self._cached_on_target = nil
 end
 
 MinigameFrequency.on_action_pressed = function (self, t)
@@ -116,40 +110,22 @@ MinigameFrequency.on_action_pressed = function (self, t)
 		return
 	end
 
-	local is_action_on_target = self:is_on_target(t)
+	local is_action_on_target = self:is_visually_on_target()
 
 	if is_action_on_target then
-		local stage_amount = self._stage_amount
-
-		self._current_stage = math.min(self._current_stage + 1, stage_amount + 1)
-
-		if self._current_stage > self._stage_amount then
-			Unit.flow_event(self._minigame_unit, "lua_minigame_success_last")
-			self:play_sound("sfx_minigame_sinus_success_last")
+		if self._is_server then
+			self:test_frequency(self._frequency.x, self._frequency.y)
 		else
-			self:_change_target_frequency()
-			Unit.flow_event(self._minigame_unit, "lua_minigame_success")
-			self:play_sound("sfx_minigame_success")
+			self:send_rpc_to_server("rpc_minigame_sync_frequency_test_frequency", self._frequency.x, self._frequency.y)
 		end
-	else
-		if self._current_stage > 1 then
-			self:_change_target_frequency()
-		end
-
-		self._current_stage = math.max(self._current_stage - 1, 1)
-
-		Unit.flow_event(self._minigame_unit, "lua_minigame_fail")
-		self:play_sound("sfx_minigame_bio_fail")
 	end
-
-	self:send_rpc("rpc_minigame_sync_set_stage", self._current_stage)
 end
 
 MinigameFrequency._adjust_value_with_auto_aim = function (self, current_value, target_value, change_ratio, dt, min_scale, max_scale, input)
 	local new_value = math.clamp(current_value + input * change_ratio * dt, min_scale, max_scale)
 	local to_target = math.abs(new_value - target_value)
 
-	if to_target < MinigameSettings.frequency_help_margin then
+	if MinigameSettings.frequency_help_enabled and to_target < MinigameSettings.frequency_help_margin then
 		local adjustment = (1 - to_target / MinigameSettings.frequency_help_margin) * MinigameSettings.frequency_help_power * dt
 
 		if to_target < adjustment then
@@ -204,30 +180,45 @@ MinigameFrequency.on_axis_set = function (self, t, x, y)
 	end
 
 	if changed then
-		self._cached_on_target = nil
-		self._freq_changed = true
-
 		self:_update_frequency_sound(self._frequency)
-
-		if t - self._last_frequency_rpc_time >= self._frequency_rpc_throttle_time then
-			self:send_rpc("rpc_minigame_sync_frequency_set_frequency", self._frequency.x, self._frequency.y)
-
-			self._last_frequency_rpc_time = t
-			self._pending_frequency_update = false
-		else
-			self._pending_frequency_update = true
-		end
 	end
 end
 
 MinigameFrequency.update = function (self, dt, t)
 	MinigameFrequency.super.update(self, dt, t)
 
-	if self._pending_frequency_update and t - self._last_frequency_rpc_time >= self._frequency_rpc_throttle_time then
-		self:send_rpc("rpc_minigame_sync_frequency_set_frequency", self._frequency.x, self._frequency.y)
+	if MinigameSettings.frequency_directional_control and not DEDICATED_SERVER then
+		local local_player = Managers.player:local_player(1)
+		local viewport_name = local_player.viewport_name
+		local camera_rotation = Managers.state.camera:camera_rotation(viewport_name)
+		local yaw = Quaternion.yaw(camera_rotation)
+		local pitch = Quaternion.pitch(camera_rotation)
+		local yaw_change = yaw - (self._old_yaw or 0)
 
-		self._last_frequency_rpc_time = t
-		self._pending_frequency_update = false
+		if yaw_change > math.pi then
+			yaw_change = yaw_change - math.pi * 2
+		end
+
+		if yaw_change < -math.pi then
+			yaw_change = yaw_change + math.pi * 2
+		end
+
+		local pitch_change = pitch - (self._old_pitch or 0)
+
+		if pitch_change > math.pi then
+			pitch_change = pitch_change - math.pi * 2
+		end
+
+		if pitch_change < -math.pi then
+			pitch_change = pitch_change + math.pi * 2
+		end
+
+		self._old_yaw = yaw
+		self._old_pitch = pitch
+
+		local change_ratio = MinigameSettings.frequency_driection_change_ratio
+
+		self:on_axis_set(t, yaw_change * change_ratio, pitch_change * change_ratio)
 	end
 end
 
@@ -235,42 +226,67 @@ MinigameFrequency.uses_joystick = function (self)
 	return true
 end
 
-MinigameFrequency.is_on_target = function (self)
-	if self._cached_on_target ~= nil then
-		return self._cached_on_target
+MinigameFrequency.is_visually_on_target = function (self)
+	if not self._frequency then
+		return false
 	end
 
-	local result = false
-
-	if self._frequency and self._target_frequency and math.abs(self._frequency.x - self._target_frequency.x) < MinigameSettings.frequency_success_margin and math.abs(self._frequency.y - self._target_frequency.y) < MinigameSettings.frequency_success_margin then
-		result = true
+	if self:_is_frequency_on_target(self._frequency.x, self._frequency.y) then
+		return true
 	end
 
-	self._cached_on_target = result
+	return false
+end
 
-	return result
+MinigameFrequency._is_frequency_on_target = function (self, x, y)
+	if not self._target_frequency then
+		return false
+	end
+
+	if math.abs(x - self._target_frequency.x) < MinigameSettings.frequency_success_margin and math.abs(y - self._target_frequency.y) < MinigameSettings.frequency_success_margin then
+		return true
+	end
 end
 
 MinigameFrequency.frequency = function (self)
 	return self._frequency
 end
 
-MinigameFrequency.set_frequency = function (self, x, y)
-	self._frequency.x = x
-	self._frequency.y = y
-	self._cached_on_target = nil
-
-	self:_update_frequency_sound(self._frequency)
-end
-
 MinigameFrequency.target_frequency = function (self)
 	return self._target_frequency
+end
+
+MinigameFrequency.test_frequency = function (self, x, y)
+	if self:_is_frequency_on_target(x, y) then
+		local stage_amount = self._stage_amount
+
+		self._current_stage = math.min(self._current_stage + 1, stage_amount + 1)
+
+		if self._current_stage > self._stage_amount then
+			Unit.flow_event(self._minigame_unit, "lua_minigame_success_last")
+			self:play_sound("sfx_minigame_sinus_success_last")
+		else
+			self:_change_target_frequency()
+			Unit.flow_event(self._minigame_unit, "lua_minigame_success")
+			self:play_sound("sfx_minigame_success")
+		end
+	else
+		if self._current_stage > 1 then
+			self:_change_target_frequency()
+		end
+
+		self._current_stage = math.max(self._current_stage - 1, 1)
+
+		Unit.flow_event(self._minigame_unit, "lua_minigame_fail")
+		self:play_sound("sfx_minigame_bio_fail")
+	end
+
+	self:send_rpc("rpc_minigame_sync_set_stage", self._current_stage)
 end
 
 MinigameFrequency.set_target_frequency = function (self, x, y)
 	self._target_frequency.x = x
 	self._target_frequency.y = y
-	self._cached_on_target = nil
 
 	self:_set_frequency_target_sound(self._target_frequency)
 end

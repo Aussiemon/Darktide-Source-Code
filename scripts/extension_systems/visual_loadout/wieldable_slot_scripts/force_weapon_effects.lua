@@ -14,7 +14,7 @@ local INVENTORY_EVENT_WIELD = "special_disabled"
 local SOUND_PARAMETER_NAME = "power_resource"
 local FX_SOURCE_NAME = "_special_active"
 
-ForceWeaponEffects.init = function (self, context, slot, weapon_template, fx_sources)
+ForceWeaponEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local is_husk = context.is_husk
 	local owner_unit = context.owner_unit
 
@@ -38,8 +38,8 @@ ForceWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._looping_playing_id = nil
 	self._looping_stop_event_name = nil
 
-	_unit_components(self._weapon_material_variables_1p, slot.attachments_1p)
-	_unit_components(self._weapon_material_variables_3p, slot.attachments_3p)
+	_unit_components(self._weapon_material_variables_1p, slot.attachments_by_unit_1p[unit_1p])
+	_unit_components(self._weapon_material_variables_3p, slot.attachments_by_unit_3p[unit_3p])
 end
 
 ForceWeaponEffects.destroy = function (self)

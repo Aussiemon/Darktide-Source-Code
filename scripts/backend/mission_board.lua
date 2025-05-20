@@ -57,6 +57,36 @@ MissionBoard.get_rewards = function (self, on_expiry, pause_time)
 	end)
 end
 
+MissionBoard.get_unlocked_missions = function (self, account_id, character_id)
+	if not account_id or not character_id then
+		return nil
+	end
+
+	local data_path = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/characters/"):path(character_id):path("/access")
+	local request_option = {
+		method = "GET",
+	}
+
+	return Managers.backend:title_request(data_path:to_string(), request_option):next(function (data)
+		return data.body and data.body.access or {}
+	end)
+end
+
+MissionBoard.get_difficulty_progress = function (self, account_id, character_id)
+	if not account_id or not character_id then
+		return nil
+	end
+
+	local data_path = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/characters/"):path(character_id):path("/difficulty")
+	local request_option = {
+		method = "GET",
+	}
+
+	return Managers.backend:title_request(data_path:to_string(), request_option):next(function (data)
+		return data.body and data.body.difficulty or {}
+	end)
+end
+
 implements(MissionBoard, Interface)
 
 return MissionBoard

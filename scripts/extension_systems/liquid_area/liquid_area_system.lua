@@ -3,6 +3,8 @@
 require("scripts/extension_systems/liquid_area/liquid_area_extension")
 require("scripts/extension_systems/liquid_area/husk_liquid_area_extension")
 
+local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
+local LiquidAreaDrawer = require("scripts/extension_systems/liquid_area/liquid_area_drawer")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local LiquidAreaSystem = class("LiquidAreaSystem", "ExtensionSystemBase")
 local NAV_TAG_LAYER_COSTS = {}
@@ -12,6 +14,16 @@ LiquidAreaSystem.init = function (self, ...)
 
 	self._liquid_paint_id = 0
 	self._liquid_paint_id_to_unit_map = {}
+
+	local drawers = {}
+
+	for name, template in pairs(LiquidAreaTemplates) do
+		if template.use_liquid_drawer then
+			drawers[name] = LiquidAreaDrawer:new(self._world, template)
+		end
+	end
+
+	self._drawers = drawers
 end
 
 LiquidAreaSystem.update = function (self, context, dt, t)
@@ -44,6 +56,9 @@ end
 
 LiquidAreaSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	local extension = LiquidAreaSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
+
+	extension:set_drawer(self._drawers)
+
 	local liquid_paint_id = extension_init_data.optional_liquid_paint_id
 
 	if liquid_paint_id then
@@ -75,6 +90,10 @@ LiquidAreaSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 LiquidAreaSystem.destroy = function (self)
+	for _, drawer in pairs(self._drawers) do
+		drawer:delete()
+	end
+
 	if self._is_server and self._traverse_logic then
 		GwNavTraverseLogic.destroy(self._traverse_logic)
 		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)

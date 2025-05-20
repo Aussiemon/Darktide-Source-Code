@@ -38,7 +38,7 @@ ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lo
 			self._deployment_id = instance_id_split[3]
 			self._unique_instance_id = instance_id_split[4] .. "--" .. instance_id_split[5]
 		elseif type(jwt_payload.instanceId) == "string" and string.find(jwt_payload.instanceId, "dev") == 1 then
-			Log.info("ConnectionClient", "Instance is prodlike, no info about region, deployment_id or unique_instance_id")
+			self._region = "region-dev"
 		else
 			Log.exception("ConnectionClient", "Broken JWT Ticket, instance id: '%s'", tostring(jwt_payload.instanceId))
 		end

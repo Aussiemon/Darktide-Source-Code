@@ -1649,6 +1649,7 @@ local function _follow_up_shots_start(template_data, template_context)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
 	template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
+	template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 end
 
 local function _follow_up_shots_conditional_stat_buff_func(template_data, template_context)
@@ -1656,9 +1657,21 @@ local function _follow_up_shots_conditional_stat_buff_func(template_data, templa
 		return false
 	end
 
+	local template = template_context.template
+	local use_combo = template.use_combo
 	local shooting_status_component = template_data.shooting_status_component
-	local num_shots_fired = shooting_status_component.num_shots
-	local is_follow_up_shots = num_shots_fired == 1 or num_shots_fired == 2 or num_shots_fired == 3
+	local is_follow_up_shots
+
+	if not use_combo then
+		local num_shots_fired = shooting_status_component.num_shots
+
+		is_follow_up_shots = num_shots_fired == 1 or num_shots_fired == 2 or num_shots_fired == 3
+	else
+		local shooting_status_component_two = template_data.weapon_action_component
+		local combo_count = shooting_status_component_two.combo_count
+
+		is_follow_up_shots = combo_count == 1 or combo_count == 2
+	end
 
 	return is_follow_up_shots
 end

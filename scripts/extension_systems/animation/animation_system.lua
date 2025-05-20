@@ -118,8 +118,21 @@ AnimationSystem.rpc_minion_anim_event = function (self, channel_id, unit_id, eve
 	Unit.animation_event_by_index(unit, event_index)
 end
 
-AnimationSystem.rpc_minion_anim_event_variable_float = function (self, channel_id, unit_id, event_index, variable_index, variable_value)
+AnimationSystem.rpc_minion_anim_event_variable_float = function (self, channel_id, unit_id, event_index, variable_index, variable_value, variable_name)
 	local unit = Managers.state.unit_spawner:unit(unit_id)
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+
+	if unit_data_extension then
+		local breed = unit_data_extension:breed()
+
+		if breed then
+			local variable_bounds = breed.animation_variable_bounds
+
+			if variable_bounds and variable_bounds[variable_name] then
+				variable_value = math.clamp(variable_value, variable_bounds[variable_name][1], variable_bounds[variable_name][2])
+			end
+		end
+	end
 
 	Unit.animation_set_variable(unit, variable_index, variable_value)
 	Unit.animation_event_by_index(unit, event_index)

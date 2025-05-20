@@ -34,7 +34,7 @@ BaseInteraction.hud_description = function (self, interactor_unit, interactee_un
 	return interactee_extension:description()
 end
 
-BaseInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, target_node)
+BaseInteraction.hud_block_text = function (self, interactor_unit, interactee_unit)
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 
 	return interactee_extension:block_text(interactor_unit)

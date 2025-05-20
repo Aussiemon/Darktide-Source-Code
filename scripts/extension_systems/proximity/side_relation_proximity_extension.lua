@@ -36,7 +36,22 @@ SideRelationProximityExtension.init = function (self, extension_init_context, un
 end
 
 SideRelationProximityExtension.destroy = function (self)
-	if self._job_logic then
+	for relation_name, data in pairs(self._relation_data) do
+		local data_logic = data.logic
+		local num_logic = data.num_logic
+
+		for ii = 1, num_logic do
+			local logic = data_logic[ii]
+
+			if logic.destroy then
+				logic:destroy()
+			end
+		end
+	end
+
+	local job_logic = self._job_logic
+
+	if job_logic then
 		Managers.state.unit_job:unregister_job(self._unit)
 	end
 end
@@ -90,11 +105,23 @@ SideRelationProximityExtension.update = function (self, unit, dt, t)
 end
 
 SideRelationProximityExtension.start_job = function (self)
-	return self._job_logic:start_job()
+	for relation_name, data in pairs(self._relation_data) do
+		local data_logic = data.logic
+		local num_logic = data.num_logic
+
+		for ii = 1, num_logic do
+			local logic = data_logic[ii]
+			local is_job = logic == self._job_logic
+
+			if logic.start_job then
+				logic:start_job(is_job)
+			end
+		end
+	end
 end
 
-SideRelationProximityExtension.job_completed = function (self)
-	return self._job_logic:job_completed()
+SideRelationProximityExtension.is_job_completed = function (self)
+	return self._job_logic:is_job_completed()
 end
 
 SideRelationProximityExtension.cancel_job = function (self)
@@ -189,7 +216,7 @@ SideRelationProximityExtension._update_proximity = function (self, unit, dt, t)
 					local logic = data_logic[ii]
 
 					if logic.unit_entered_proximity ~= nil then
-						logic:unit_entered_proximity(enter_unit, t)
+						logic:unit_entered_proximity(t, enter_unit)
 					end
 				end
 
@@ -213,9 +240,10 @@ SideRelationProximityExtension._update_logic = function (self, unit, dt, t)
 
 		for ii = 1, num_logic do
 			local logic = data_logic[ii]
+			local job_logic = logic == self._job_logic
 
 			if logic.update then
-				logic:update(dt, t)
+				logic:update(dt, t, job_logic)
 			end
 		end
 	end

@@ -6,7 +6,7 @@ local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_l
 local ChainLightningTargetEffects = class("ChainLightningTargetEffects")
 local Unit_world_position = Unit.world_position
 
-ChainLightningTargetEffects.init = function (self, context, slot, weapon_template, fx_sources)
+ChainLightningTargetEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local wwise_world = context.wwise_world
 
 	self._world = context.world

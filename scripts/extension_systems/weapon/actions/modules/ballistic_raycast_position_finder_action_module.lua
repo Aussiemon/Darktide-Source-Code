@@ -3,7 +3,8 @@
 local BallisticRaycast = require("scripts/extension_systems/weapon/actions/utilities/ballistic_raycast")
 local BallisticRaycastPostionFinderActionModule = class("BallisticRaycastPostionFinderActionModule")
 
-BallisticRaycastPostionFinderActionModule.init = function (self, physics_world, player_unit, position_finder_component, action_settings)
+BallisticRaycastPostionFinderActionModule.init = function (self, is_server, physics_world, player_unit, position_finder_component, action_settings)
+	self._is_server = is_server
 	self._physics_world = physics_world
 	self._player_unit = player_unit
 	self._position_finder_component = position_finder_component

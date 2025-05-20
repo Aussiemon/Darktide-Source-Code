@@ -42,7 +42,7 @@ UnitJobManager.update = function (self, dt, t)
 	local units = self._units
 
 	for unit, job_class in pairs(units) do
-		if job_class:job_completed() or job_class:is_job_canceled() then
+		if job_class:is_job_completed() or job_class:is_job_canceled() then
 			unit_spawner_manager:mark_for_deletion(unit)
 
 			units[unit] = nil

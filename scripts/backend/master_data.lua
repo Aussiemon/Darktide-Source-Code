@@ -37,10 +37,12 @@ end
 
 local function create_network_lookup(items)
 	NetworkLookup.create_item_names_lookup(items)
+	NetworkLookup.create_attachment_names_lookup(items)
 
 	local NetworkConstants = require("scripts/network_lookup/network_constants")
 
 	NetworkConstants.check_network_lookup_boundaries("player_item_name", "player_item_names")
+	NetworkConstants.check_network_lookup_boundaries("player_attachment_name", "player_attachment_names")
 end
 
 MasterData.refresh_network_lookup = function (self)
@@ -83,6 +85,10 @@ local function _process_batch_slice(data, max_events_per_batch, process_func)
 	return promise:next(function ()
 		return data
 	end)
+end
+
+local function _patch_non_released_dlcs(item_data)
+	return
 end
 
 local function _include_item_definition(item_data)

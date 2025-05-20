@@ -156,7 +156,7 @@ HealthStationExtension.use_charge = function (self)
 end
 
 HealthStationExtension.battery_in_slot = function (self)
-	if self._luggable_socket_extension then
+	if self._luggable_socket_extension and Unit.alive(self._socket_unit) then
 		return self._luggable_socket_extension:is_occupied()
 	end
 

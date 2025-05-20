@@ -55,7 +55,7 @@ LuggableInteraction.stop = function (self, world, interactor_unit, unit_data_com
 		Luggable.equip_to_player_unit(interactor_unit, interactee_unit, t)
 
 		if pickup_data.on_pickup_func then
-			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data)
+			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data, t)
 		end
 
 		if pickup_data.pickup_sound then
@@ -71,6 +71,10 @@ LuggableInteraction.stop = function (self, world, interactor_unit, unit_data_com
 
 		pickup_system:picked_up(interactee_unit, session_id_or_nil)
 	end
+end
+
+LuggableInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, target_node)
+	return LuggableInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, target_node)
 end
 
 return LuggableInteraction

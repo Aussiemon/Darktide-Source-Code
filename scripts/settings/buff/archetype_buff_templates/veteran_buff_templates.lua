@@ -557,6 +557,7 @@ templates.veteran_bonus_crit_chance_on_ammo = {
 }
 templates.veteran_no_ammo_consumption_on_lasweapon_crit = {
 	class_name = "buff",
+	predicted = false,
 	conditional_keywords = {
 		keywords.no_ammo_consumption_on_crits,
 	},
@@ -797,7 +798,6 @@ templates.veteran_damage_coherency_tracking_buff = {
 
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		template_data.last_num_in_coherency = 0
-		template_data.valid_buff_owners = {}
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -813,7 +813,7 @@ templates.veteran_damage_coherency_tracking_buff = {
 		local hook_name = "hook_veteran_damage_aura"
 		local parent_buff_name = "veteran_increased_damage_coherency"
 
-		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name)
+		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name)
 	end,
 }
 templates.veteran_movement_speed_coherency = {
@@ -848,7 +848,6 @@ templates.veteran_movement_speed_coherency_tracking_buff = {
 		template_data.inair_component = unit_data_extension:read_component("inair_state")
 		template_data.distance = 0
 		template_data.last_num_in_coherency = 0
-		template_data.valid_buff_owners = {}
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
@@ -868,7 +867,7 @@ templates.veteran_movement_speed_coherency_tracking_buff = {
 				local hook_name = "hook_veteran_movement_aura"
 				local parent_buff_name = "veteran_movement_speed_coherency"
 
-				template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, template_data.distance)
+				template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name, template_data.distance)
 				template_data.distance = 0
 			end
 		end
@@ -975,7 +974,7 @@ templates.veteran_rending_bonus = {
 }
 templates.veteran_bolter_proficiency = {
 	class_name = "buff",
-	predicted = true,
+	predicted = false,
 	keywords = {
 		keywords.bolter_proficiency,
 	},
@@ -1814,7 +1813,7 @@ templates.veteran_grenade_replenishment = {
 				if first_person_extension and first_person_extension:is_in_first_person_mode() then
 					external_properties.indicator_type = "human_grenade"
 
-					template_data.fx_extension:trigger_gear_wwise_event("grenade_recover_indicator", external_properties)
+					template_data.fx_extension:trigger_gear_wwise_event("charge_ready_indicator", external_properties)
 				end
 			end
 
@@ -2242,6 +2241,7 @@ templates.veteran_increased_move_speed_when_moving_towards_disabled_allies = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_movement_speed_towards_downed",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
+	predicted = false,
 	proc_events = {
 		[proc_events.on_revive] = 1,
 	},

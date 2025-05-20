@@ -7,8 +7,8 @@ local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AimProjectileAdsEffects = class("AimProjectileAdsEffects", "AimProjectileEffects")
 
-AimProjectileAdsEffects.init = function (self, context, slot, weapon_template, fx_sources)
-	AimProjectileAdsEffects.super.init(self, context, slot, weapon_template, fx_sources)
+AimProjectileAdsEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
+	AimProjectileAdsEffects.super.init(self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")

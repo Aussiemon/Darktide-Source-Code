@@ -34,8 +34,6 @@ LocalLevelState.update = function (self, dt)
 		local mission_template = MissionTemplates[mission_name]
 		local is_hub = mission_template.is_hub
 
-		RPC.rpc_request_mission_seed(shared_state.host_channel_id)
-
 		if is_hub then
 			return "hub_load_done"
 		else

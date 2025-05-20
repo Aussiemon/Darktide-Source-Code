@@ -8,7 +8,7 @@ local communication_hack = {
 	name = "loc_communication_hack_name",
 	stat = "side_communication_hack_device_end_of_round",
 	item_rewards = {
-		"content/items/titles/title_test_9",
+		"content/items/2d/insignias/insignia_event_hack",
 	},
 }
 

@@ -66,6 +66,7 @@ local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/wea
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 
 local function _create_lookup(lookup, hashtable)
 	local existing_keys = {}
@@ -524,12 +525,13 @@ for name, lookup_table in pairs(NetworkLookup) do
 end
 
 local DynamicLookup = {
+	player_attachment_names = "player_attachment_names",
 	player_item_names = "player_item_names",
 }
 
-NetworkLookup._create_dynamic_lookup = function (name, hashtable)
+NetworkLookup._create_dynamic_lookup = function (name, hashtable, ...)
 	local lookup = {
-		"not_equipped",
+		...,
 	}
 
 	_create_lookup(lookup, hashtable)
@@ -539,7 +541,51 @@ NetworkLookup._create_dynamic_lookup = function (name, hashtable)
 end
 
 NetworkLookup.create_item_names_lookup = function (items)
-	NetworkLookup._create_dynamic_lookup(DynamicLookup.player_item_names, items)
+	NetworkLookup._create_dynamic_lookup(DynamicLookup.player_item_names, items, "not_equipped")
+end
+
+NetworkLookup._create_attachment_names_lookup_recursive = function (attachment_names, items, item)
+	local attachments = item.attachments
+
+	if attachments then
+		for attachment_name, child in pairs(attachments) do
+			attachment_names[attachment_name] = true
+
+			NetworkLookup._create_attachment_names_lookup_recursive(attachment_names, items, child)
+
+			local child_item = items[child.item]
+
+			if child_item then
+				NetworkLookup._create_attachment_names_lookup_recursive(attachment_names, items, child_item)
+			end
+		end
+	end
+
+	local children = item.children
+
+	if children then
+		for child_name, child in pairs(children) do
+			attachment_names[child_name] = true
+
+			NetworkLookup._create_attachment_names_lookup_recursive(attachment_names, items, child)
+
+			local child_item = items[child.item]
+
+			if child_item then
+				NetworkLookup._create_attachment_names_lookup_recursive(attachment_names, items, child_item)
+			end
+		end
+	end
+end
+
+NetworkLookup.create_attachment_names_lookup = function (items)
+	local attachment_names = {}
+
+	for _, item in pairs(items) do
+		NetworkLookup._create_attachment_names_lookup_recursive(attachment_names, items, item)
+	end
+
+	NetworkLookup._create_dynamic_lookup(DynamicLookup.player_attachment_names, attachment_names, "n/a", VisualLoadoutCustomization.ROOT_ATTACH_NAME)
 end
 
 return NetworkLookup

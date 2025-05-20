@@ -122,10 +122,6 @@ Store.get_premium_storefront = function (self, storefront, t)
 	end)
 end
 
-Store.get_debug_store = function (self, t, character_id)
-	return self:_get_storefront(t, "debug_store", character_id, character_id)
-end
-
 Store._get_storefront = function (self, t, store_name, wallet_owner, character_id, include_personal_offers)
 	return Managers.backend:authenticate():next(function (account)
 		local builder = BackendUtilities.url_builder():path("/store/storefront/"):path(store_name):query("accountId", account.sub)

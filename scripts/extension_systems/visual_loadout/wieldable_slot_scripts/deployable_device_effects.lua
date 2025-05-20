@@ -5,7 +5,7 @@ local DeployableDeviceEffects = class("DeployableDeviceEffects")
 local FX_SOURCE_NAME = "_source"
 local SFX_STOP_ALIAS = "sfx_device_stop"
 
-DeployableDeviceEffects.init = function (self, context, slot, weapon_template, fx_sources)
+DeployableDeviceEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local owner_unit = context.owner_unit
 
 	self._wwise_world = context.wwise_world

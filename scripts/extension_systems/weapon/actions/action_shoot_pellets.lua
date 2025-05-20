@@ -141,10 +141,8 @@ ActionShootPellets.start = function (self, ...)
 	self._number_of_pellets_hit = 0
 end
 
-ActionShootPellets._shoot = function (self, position, rotation, power_level, charge_level, t)
+ActionShootPellets._shoot = function (self, position, rotation, power_level, charge_level, t, fire_config)
 	local weapon_spread_extension = self._weapon_spread_extension
-	local action_settings = self._action_settings
-	local fire_config = action_settings.fire_configuration
 	local shotshell_template = _shotshell_template(fire_config, self._inventory_slot_component)
 	local num_spread_circles = shotshell_template.num_spread_circles
 	local bullseye = shotshell_template.bullseye
@@ -180,7 +178,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 	local process_hits = num_pellets_total <= num_pellets_fired
 
 	if process_hits then
-		local num_hit_units = self:_process_hits(power_level, t)
+		local num_hit_units = self:_process_hits(power_level, t, fire_config)
 		local hit_all_pellets_on_same = false
 
 		for hit_unit, number_of_hits in pairs(self._num_hits_per_unit) do
@@ -337,13 +335,12 @@ local unit_to_index_lookup = {
 }
 local triggered_proc_events = {}
 
-ActionShootPellets._process_hits = function (self, power_level, t)
+ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 	local is_server = self._is_server
 	local player_unit = self._player_unit
 	local world = self._world
 	local physics_world = self._physics_world
 	local action_settings = self._action_settings
-	local fire_config = action_settings.fire_configuration
 	local shotshell_template = _shotshell_template(fire_config, self._inventory_slot_component)
 	local damage_config = shotshell_template.damage
 	local weapon_item = self._weapon.item
@@ -382,6 +379,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 	table.clear(surface_impact_num_hits_per_unit.stop)
 
 	local scaled_power_levels = self:_scale_power_level_with_num_hits(shotshell_template, power_level)
+	local target_number = 1
 
 	table.clear(self._hit_ragdoll_units)
 
@@ -498,8 +496,9 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 								local percentage__of_pellets_hit = num_pellets_hits / shotshell_template.num_pellets
 								local scaled_damage_profile = _damage_template_from_impact_config(impact_config, percentage__of_pellets_hit)
 								local scaled_damage_profile_lerp_values = DamageProfile.lerp_values(scaled_damage_profile, player_unit)
-								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, scaled_damage_profile, scaled_damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item, triggered_proc_events)
+								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, scaled_damage_profile, scaled_damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item, triggered_proc_events, target_number)
 
+								target_number = target_number + 1
 								total_damage_dealt = total_damage_dealt + damage_dealt
 								damage_per_unit[hit_unit] = (damage_per_unit[hit_unit] or 0) + damage_dealt
 								best_attack_result = attack_result
@@ -657,7 +656,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 				if stop and hit_position then
 					local line_effect = _line_effect(action_settings.fx, self._inventory_slot_component)
 
-					self:_play_line_fx(line_effect, position, hit_position)
+					self:_play_line_fx(line_effect, position, hit_position, self:_reference_attachment_id(fire_config))
 				end
 
 				self._hit_units[hit_unit] = true

@@ -3,36 +3,33 @@
 local templates = {}
 
 templates.outline_types = table.enum("special_target", "psyker_marked_target", "smart_tagged_enemy", "smart_tagged_enemy_passive", "scanning", "knocked_down", "buff")
+
+local function _minion_alive_check(unit)
+	if not HEALTH_ALIVE[unit] then
+		return false
+	end
+
+	return true
+end
+
 templates.MinionOutlineExtension = {
 	special_target = {
-		priority = 2,
+		priority = 3,
 		material_layers = {
 			"minion_outline_combat_ability",
 			"minion_outline_combat_ability_reversed_depth",
 		},
-		visibility_check = function (unit)
-			if not HEALTH_ALIVE[unit] then
-				return false
-			end
-
-			return true
-		end,
+		visibility_check = _minion_alive_check,
 	},
 	psyker_marked_target = {
 		priority = 1,
 		material_layers = {
 			"minion_outline_psyker",
 		},
-		visibility_check = function (unit)
-			if not HEALTH_ALIVE[unit] then
-				return false
-			end
-
-			return true
-		end,
+		visibility_check = _minion_alive_check,
 	},
 	smart_tagged_enemy = {
-		priority = 2,
+		priority = 3,
 		material_layers = {
 			"minion_outline",
 			"minion_outline_reversed_depth",
@@ -42,13 +39,7 @@ templates.MinionOutlineExtension = {
 			0.005,
 			0,
 		},
-		visibility_check = function (unit)
-			if not HEALTH_ALIVE[unit] then
-				return false
-			end
-
-			return true
-		end,
+		visibility_check = _minion_alive_check,
 	},
 	smart_tagged_enemy_passive = {
 		priority = 1,
@@ -80,13 +71,7 @@ templates.MinionOutlineExtension = {
 			0.8,
 			0.4,
 		},
-		visibility_check = function (unit)
-			if not HEALTH_ALIVE[unit] then
-				return false
-			end
-
-			return true
-		end,
+		visibility_check = _minion_alive_check,
 	},
 	hordes_tagged_remaining_target = {
 		priority = 4,
@@ -99,13 +84,7 @@ templates.MinionOutlineExtension = {
 			0.73,
 			1,
 		},
-		visibility_check = function (unit)
-			if not HEALTH_ALIVE[unit] then
-				return false
-			end
-
-			return true
-		end,
+		visibility_check = _minion_alive_check,
 	},
 }
 templates.PropOutlineExtension = {

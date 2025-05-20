@@ -21,6 +21,7 @@ ActionSmiteTargeting.init = function (self, action_context, action_params, actio
 	local player_unit = self._player_unit
 	local unit_data_extension = action_context.unit_data_extension
 	local physics_world = self._physics_world
+	local is_server = self._is_server
 	local inventory_slot_component = self._inventory_slot_component
 	local warp_charge_component = unit_data_extension:read_component("warp_charge")
 
@@ -33,8 +34,8 @@ ActionSmiteTargeting.init = function (self, action_context, action_params, actio
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local overload_module_class_name = action_settings.overload_module_class_name
 
-	self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_component, action_settings)
-	self._overload_module = ActionModules[overload_module_class_name]:new(player_unit, action_settings, inventory_slot_component)
+	self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, physics_world, player_unit, targeting_component, action_settings)
+	self._overload_module = ActionModules[overload_module_class_name]:new(is_server, player_unit, action_settings, inventory_slot_component)
 end
 
 ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, action_start_params)

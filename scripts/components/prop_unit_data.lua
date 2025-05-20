@@ -85,6 +85,7 @@ PropUnitData.component_data = {
 			"heresy_altar",
 			"ice_chunk",
 			"icicle",
+			"nurgle_totem",
 			"train_cogitator",
 		},
 		options_values = {
@@ -98,6 +99,7 @@ PropUnitData.component_data = {
 			"heresy_altar",
 			"ice_chunk",
 			"icicle",
+			"nurgle_totem",
 			"train_cogitator",
 		},
 	},

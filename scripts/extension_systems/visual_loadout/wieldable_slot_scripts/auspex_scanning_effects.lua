@@ -25,7 +25,7 @@ local EMISSIVE_SCREEN_ON = 0.3
 local EMISSIVE_SCREEN_OFF = 0.05
 local AuspexScanningEffects = class("AuspexScanningEffects")
 
-AuspexScanningEffects.init = function (self, context, slot, weapon_template, fx_sources)
+AuspexScanningEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	self._is_local_unit = context.is_local_unit
 	self._first_person_unit = context.first_person_unit
 	self._wwise_world = context.wwise_world

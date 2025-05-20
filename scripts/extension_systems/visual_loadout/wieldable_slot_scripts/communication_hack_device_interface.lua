@@ -9,7 +9,7 @@ local SINUS_LOOPING_SOUND_ALIAS_A = "sfx_minigame_sinus_loop_a"
 local SINUS_LOOPING_SOUND_ALIAS_B = "sfx_minigame_sinus_loop_b"
 local FX_SOURCE_NAME = "_speaker"
 
-CommunicationHackInterfaceDevice.init = function (self, context, slot, weapon_template, fx_sources)
+CommunicationHackInterfaceDevice.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local is_server = context.is_server
 	local is_husk = context.is_husk
 	local owner_unit = context.owner_unit
@@ -45,18 +45,18 @@ CommunicationHackInterfaceDevice.init = function (self, context, slot, weapon_te
 			if minigame_type == "frequency" then
 				self._play_sinus_loop = true
 
-				local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+				local owner_unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 				local sinus_looping_sound_component_name = PlayerUnitData.looping_sound_component_name(SINUS_LOOPING_SOUND_ALIAS)
 
-				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS] = unit_data_extension:read_component(sinus_looping_sound_component_name)
+				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS] = owner_unit_data_extension:read_component(sinus_looping_sound_component_name)
 
 				local sinus_looping_sound_component_name_a = PlayerUnitData.looping_sound_component_name(SINUS_LOOPING_SOUND_ALIAS_A)
 
-				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS_A] = unit_data_extension:read_component(sinus_looping_sound_component_name_a)
+				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS_A] = owner_unit_data_extension:read_component(sinus_looping_sound_component_name_a)
 
 				local sinus_looping_sound_component_name_b = PlayerUnitData.looping_sound_component_name(SINUS_LOOPING_SOUND_ALIAS_B)
 
-				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS_B] = unit_data_extension:read_component(sinus_looping_sound_component_name_b)
+				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS_B] = owner_unit_data_extension:read_component(sinus_looping_sound_component_name_b)
 			end
 		end
 	end
@@ -95,7 +95,6 @@ CommunicationHackInterfaceDevice.wield = function (self)
 		if not self._is_husk and self._play_sinus_loop then
 			local fx_extension = self._fx_extension
 			local fx_source_name = self._fx_source_name
-			local fx_source = self._fx_extension:sound_source(fx_source_name)
 
 			for alias, sound_component in pairs(self._sinus_looping_sound_components) do
 				if not sound_component.is_playing then

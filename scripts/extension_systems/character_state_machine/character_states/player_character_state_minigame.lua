@@ -182,9 +182,7 @@ PlayerCharacterStateMinigame._update_input = function (self, t)
 		if minigame_extension:uses_joystick() then
 			local move_input = input_extension:get("move")
 
-			if self._is_server then
-				minigame_extension:on_axis_set(t, move_input.x, move_input.y)
-			end
+			minigame_extension:on_axis_set(t, move_input.x, move_input.y)
 
 			if not Vector3.equal(move_input, Vector3.zero()) then
 				if move_input.y > 0 or move_input.x > 0 then

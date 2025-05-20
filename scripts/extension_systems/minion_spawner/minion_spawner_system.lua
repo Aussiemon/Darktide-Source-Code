@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/minion_spawner/minion_spawner_extension")
 
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local MinionSpawnerSystem = class("MinionSpawnerSystem", "ExtensionSystemBase")
 local BROADPHASE_CELL_RADIUS = 50
 local BROADPHASE_MAX_NUM_ENTITIES = 256
@@ -25,6 +26,7 @@ MinionSpawnerSystem.init = function (self, extension_system_creation_context, ..
 
 	extension_init_context.nav_tag_cost_table = nav_tag_cost_table
 	extension_init_context.traverse_logic = traverse_logic
+	self._main_level = ScriptWorld.level(extension_system_creation_context.world, extension_system_creation_context.level_name)
 	self._nav_tag_cost_table = nav_tag_cost_table
 	self._traverse_logic = traverse_logic
 	self._extension_broadphase_lookup = {}
@@ -81,11 +83,26 @@ MinionSpawnerSystem._remove_spawner_groups = function (self, unit)
 	end
 end
 
-MinionSpawnerSystem.spawners_in_group = function (self, group)
-	local spawners = self._spawner_group_extensions[group]
+MinionSpawnerSystem.spawners_in_group = function (self, group, optional_in_level_data, optional_level)
+	if optional_in_level_data then
+		local spawners = {}
+		local level = optional_level or self._main_level
+		local num_spawners = Level.get_data(level, "spawner_groups", group, "num_spawners")
 
-	if spawners then
-		return table.shallow_copy(spawners)
+		for i = 1, num_spawners do
+			local unit = Level.get_data(level, "spawner_groups", group, i)
+			local extension = self._unit_to_extension_map[unit]
+
+			spawners[i] = extension
+		end
+
+		return spawners
+	else
+		local spawners = self._spawner_group_extensions[group]
+
+		if spawners then
+			return table.shallow_copy(spawners)
+		end
 	end
 end
 
@@ -103,17 +120,37 @@ local function _sort_spawners_by_inverse_distance(s1, s2)
 	return distance_2 < distance_1
 end
 
-MinionSpawnerSystem.spawners_in_group_distance_sorted = function (self, group, position, optional_inverse)
-	local spawners = self._spawner_group_extensions[group]
+MinionSpawnerSystem.spawners_in_group_distance_sorted = function (self, group, position, optional_inverse, optional_in_level_data, optional_level)
+	local spawners, spawners_table
 
-	if spawners then
-		local spawners_table = table.shallow_copy(spawners)
+	if optional_in_level_data then
+		spawners_table = {}
 
+		local level = optional_level or self._main_level
+		local num_spawners = Level.get_data(level, "spawner_groups", group, "num_spawners")
+
+		for i = 1, num_spawners do
+			local unit = Level.get_data(level, "spawner_groups", group, i)
+			local extension = self._unit_to_extension_map[unit]
+
+			spawners_table[i] = extension
+		end
+
+		spawners = spawners_table
+	else
+		spawners = self._spawner_group_extensions[group]
+
+		if spawners then
+			spawners_table = table.shallow_copy(spawners)
+		end
+	end
+
+	if spawners_table then
 		for i = #spawners_table, 1, -1 do
 			local spawner = spawners[i]
 			local distance = Vector3.distance(position, spawner:position())
 
-			spawner.distance = distance
+			spawners_table[i].distance = distance
 		end
 
 		table.sort(spawners_table, optional_inverse and _sort_spawners_by_inverse_distance or _sort_spawners_by_distance)

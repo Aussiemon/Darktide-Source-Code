@@ -2,6 +2,7 @@
 
 require("scripts/foundation/utilities/parameters/parameter_resolver")
 
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local SingleplayerSessionBoot = require("scripts/multiplayer/singleplayer_session_boot")
 local LoadingClient = require("scripts/loading/loading_client")

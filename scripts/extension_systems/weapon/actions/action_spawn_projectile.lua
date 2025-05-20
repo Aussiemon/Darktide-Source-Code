@@ -27,6 +27,7 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 	self._ability_extension = action_context.ability_extension
 	self._weapon_extension = action_context.weapon_extension
 
+	local is_server = self._is_server
 	local player_unit = self._player_unit
 	local physics_world = self._physics_world
 	local unit_data_extension = action_context.unit_data_extension
@@ -48,7 +49,7 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 
 		local target_finder_module_class_name = action_settings.target_finder_module_class_name
 
-		self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_component, action_settings)
+		self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, physics_world, player_unit, targeting_component, action_settings)
 	end
 
 	if action_settings.track_towards_position then
@@ -58,7 +59,7 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 
 		local position_finder_module_class_name = action_settings.position_finder_module_class_name
 
-		self._position_finder_module = ActionModules[position_finder_module_class_name]:new(physics_world, player_unit, position_finder_component, action_settings)
+		self._position_finder_module = ActionModules[position_finder_module_class_name]:new(is_server, physics_world, player_unit, position_finder_component, action_settings)
 	end
 
 	self._side_system = Managers.state.extension:system("side_system")

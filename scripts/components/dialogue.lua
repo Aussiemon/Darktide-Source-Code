@@ -8,20 +8,43 @@ Dialogue.init = function (self, unit)
 	local player_selected_voice = self:get_data(unit, "player_selected_voice")
 	local faction_memory_name = self:get_data(unit, "faction_memory_name")
 	local enabled = self:get_data(unit, "enabled")
+	local delay_until_extensions_ready = self:get_data(unit, "delay_until_extensions_ready")
 
+	self._unit = unit
 	self._dialogue_class = dialogue_class
 	self._dialogue_profile = dialogue_profile
 	self._player_selected_voice = player_selected_voice
 	self._faction_memory_name = faction_memory_name
 	self._enabled = enabled
 
+	if not delay_until_extensions_ready then
+		self:_initialize_dialogue_extension()
+		self:enable(unit)
+	end
+end
+
+Dialogue._initialize_dialogue_extension = function (self)
+	local unit = self._unit
+	local dialogue_class = self._dialogue_class
+	local dialogue_profile = self._dialogue_profile
+	local player_selected_voice = self._player_selected_voice
+	local faction_memory_name = self._faction_memory_name
+	local enabled = self._enabled
+
+	self._initialized = true
+
 	local dialogue_extension = ScriptUnit.fetch_component_extension(unit, "dialogue_system")
 
 	if dialogue_extension then
 		dialogue_extension:setup_from_component(dialogue_class, dialogue_profile, player_selected_voice, faction_memory_name, enabled)
 	end
+end
 
-	self:enable(unit)
+Dialogue.extensions_ready = function (self, world, unit)
+	if not self._initialized then
+		self:_initialize_dialogue_extension()
+		self:enable(unit)
+	end
 end
 
 Dialogue.editor_init = function (self, unit)
@@ -186,6 +209,7 @@ Dialogue.component_data = {
 			"Purser A",
 			"Sergeant Morrow, Male",
 			"Sergeant Morrow B, Male",
+			"Sergeant Morrow C, Male",
 			"Servitor, The Confessor Servitorum",
 			"Steelhead A",
 			"Steelhead B",
@@ -262,6 +286,7 @@ Dialogue.component_data = {
 			"purser_a",
 			"sergeant_a",
 			"sergeant_b",
+			"sergeant_c",
 			"confessional_a",
 			"steelhead_a",
 			"steelhead_b",
@@ -335,6 +360,11 @@ Dialogue.component_data = {
 		ui_name = "Enabled",
 		ui_type = "check_box",
 		value = true,
+	},
+	delay_until_extensions_ready = {
+		ui_name = "Delayed Initialization",
+		ui_type = "check_box",
+		value = false,
 	},
 	extensions = {
 		"DialogueExtension",

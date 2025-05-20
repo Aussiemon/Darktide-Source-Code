@@ -3,7 +3,6 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local SummonedMinionsExtension = class("SummonedMinionsExtension")
-local DEFAULT_PROBABILITY = 0
 
 SummonedMinionsExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local breed = extension_init_data.breed
@@ -79,7 +78,7 @@ SummonedMinionsExtension._wwise_on_death = function (self)
 	end
 
 	local probability = template.wwise_event_probability
-	local chance = math.random(0, 100) * 0.01
+	local chance = math.random()
 
 	if probability < chance then
 		local unit = self._unit
@@ -100,7 +99,7 @@ SummonedMinionsExtension.wwise_on_minion_success = function (self)
 	end
 
 	local probability = template.wwise_event_probability
-	local chance = math.random(0, 100) * 0.01
+	local chance = math.random()
 
 	if probability < chance then
 		local unit = self._unit
@@ -110,6 +109,40 @@ SummonedMinionsExtension.wwise_on_minion_success = function (self)
 
 		fx_system:trigger_wwise_event(random_event, position)
 	end
+end
+
+SummonedMinionsExtension.can_summon_minions = function (self, action_data, is_running)
+	local t = Managers.time:time("gameplay")
+	local amount = self._amount
+
+	if is_running then
+		return true
+	end
+
+	if amount ~= 0 then
+		return false
+	end
+
+	if not self._timer then
+		if not self._initial_delay and self._template.initial_delay then
+			self._initial_delay = true
+			self._timer = t + self._template.initial_delay
+
+			return false
+		else
+			local interval_til_next_summon = action_data.interval_til_next_summon
+
+			self._timer = t + math.random(interval_til_next_summon[1], interval_til_next_summon[2])
+
+			return false
+		end
+	elseif t > self._timer then
+		self._timer = nil
+
+		return true
+	end
+
+	return false
 end
 
 return SummonedMinionsExtension

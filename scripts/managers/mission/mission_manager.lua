@@ -43,6 +43,10 @@ MissionManager.init = function (self, mission_name, level, level_name, side_miss
 	Crashify.print_property("num_missions_started", MissionManager._num_missions_started)
 end
 
+MissionManager.num_missions_started = function (self)
+	return MissionManager._num_missions_started
+end
+
 MissionManager.destroy = function (self)
 	rawset(_G, "SPAWNED_LEVEL_NAME", nil)
 end

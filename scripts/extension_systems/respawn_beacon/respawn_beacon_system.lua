@@ -15,6 +15,7 @@ RespawnBeaconSystem.init = function (self, ...)
 
 	self._beacon_main_path_data = {}
 	self._priority_respawn_beacon = nil
+	self._current_active_respawn_beacon = nil
 	self._in_hub = Managers.state.game_mode:is_social_hub()
 	self._beacon_main_path_distance_lookup = {}
 	self._current_update_unit = nil

@@ -102,7 +102,7 @@ local circumstance_templates = {
 		},
 		mutators = {
 			"mutator_havoc_sticky_poxburster",
-			"mutator_poxwalker_bombers",
+			"mutator_armored_bombers",
 		},
 		mission_overrides = {},
 	},

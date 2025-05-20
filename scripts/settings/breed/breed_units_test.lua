@@ -67,7 +67,8 @@ local function _init_and_run_tests()
 				for i = 1, #items do
 					local item_name = items[i]
 					local item = item_definitions[item_name]
-					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item, attach_settings, unit, nil, nil, nil)
+					local mission_template, equipment
+					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item, attach_settings, unit, false, false, false, mission_template, equipment)
 
 					for _, node_name in ipairs(REQUIRED_MINION_RANGED_NODES) do
 						if not Unit.has_node(item_unit, node_name) then
@@ -79,7 +80,7 @@ local function _init_and_run_tests()
 					local test_data = {
 						unit = item_unit,
 						item_data = item,
-						attachments = attachment_units,
+						attachments = attachment_units and attachment_units[item_unit],
 					}
 					local attachment_unit, node_index = MinionVisualLoadout.attachment_unit_and_node_from_node_name(test_data, FX_SOURCE_NAME)
 

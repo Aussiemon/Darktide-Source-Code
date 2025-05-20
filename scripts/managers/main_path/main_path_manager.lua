@@ -6,15 +6,23 @@ local MainPathManagerTestify = GameParameters.testify and require("scripts/manag
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MainPathSettings = require("scripts/settings/main_path/main_path_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
+local PATH_TYPES = {}
+
+for name, class_file_name in pairs(MainPathSettings.path_types) do
+	local class = require(class_file_name)
+
+	PATH_TYPES[name] = class
+end
+
 local MainPathManager = class("MainPathManager")
 
-MainPathManager.init = function (self, world, nav_world, level_name, level_seed, mission_name, num_sides, is_server, use_nav_point_time_slice)
+MainPathManager.init = function (self, world, nav_world, level_seed, main_path_resource_name, path_type, num_sides, is_server, use_nav_point_time_slice)
 	self._is_server = is_server
+	self._path_type = path_type
+	self._path = PATH_TYPES[path_type]:new(world, nav_world, num_sides, is_server, use_nav_point_time_slice)
 	self._world = world
 	self._nav_world = nav_world
 	self._level_seed = level_seed
-
-	local main_path_resource_name = level_name .. "_main_path"
 
 	if Application.can_get_resource("lua", main_path_resource_name) then
 		local path_markers, crossroads, main_path_segments, main_path_version = self:_load_main_path_data(main_path_resource_name)
@@ -37,25 +45,6 @@ MainPathManager.init = function (self, world, nav_world, level_name, level_seed,
 		self.main_path_breaks_order = breaks_order
 		self._path_markers, self._main_path_segments, self._main_path_version = path_markers, main_path_segments, main_path_version
 
-		local invalid_vector = Vector3.invalid_vector()
-		local side_progress_on_path = Script.new_array(num_sides)
-
-		for i = 1, num_sides do
-			side_progress_on_path[i] = {
-				behind_travel_changed_t = 0,
-				forward_travel_changed_t = 0,
-				furthest_travel_distance = 0,
-				furthest_worst_travel_distance = 0,
-				ahead_path_position = Vector3Box(invalid_vector),
-				behind_path_position = Vector3Box(invalid_vector),
-			}
-		end
-
-		self._side_progress_on_path = side_progress_on_path
-		self._segment_index_by_unit = {}
-		self._group_index_by_unit = {}
-		self._previous_frame_group_index_by_unit = {}
-
 		if use_nav_point_time_slice then
 			local spawn_points_time_slice_data = {
 				last_index = 0,
@@ -65,6 +54,10 @@ MainPathManager.init = function (self, world, nav_world, level_name, level_seed,
 			self._spawn_points_time_slice_data = spawn_points_time_slice_data
 		end
 	end
+end
+
+MainPathManager.path_type = function (self)
+	return self._path_type
 end
 
 MainPathManager.spawn_point_positions = function (self)
@@ -175,26 +168,15 @@ MainPathManager.main_path_segments = function (self)
 end
 
 MainPathManager.ahead_unit = function (self, side_id)
-	local side_progress_on_path = self._side_progress_on_path
-	local progress_on_path = side_progress_on_path[side_id]
-	local path_position = progress_on_path.ahead_unit and progress_on_path.ahead_path_position:unbox() or nil
-
-	return progress_on_path.ahead_unit, progress_on_path.ahead_travel_distance, path_position
+	return self._path:ahead_unit(side_id)
 end
 
 MainPathManager.behind_unit = function (self, side_id)
-	local side_progress_on_path = self._side_progress_on_path
-	local progress_on_path = side_progress_on_path[side_id]
-	local path_position = progress_on_path.behind_unit and progress_on_path.behind_path_position:unbox() or nil
-
-	return progress_on_path.behind_unit, progress_on_path.behind_travel_distance, path_position
+	return self._path:behind_unit(side_id)
 end
 
 MainPathManager.furthest_travel_distance = function (self, side_id)
-	local side_progress_on_path = self._side_progress_on_path
-	local progress_on_path = side_progress_on_path[side_id]
-
-	return progress_on_path.furthest_travel_distance
+	return self._path:furthest_travel_distance(side_id)
 end
 
 MainPathManager.furthest_travel_percentage = function (self, side_id)
@@ -202,35 +184,19 @@ MainPathManager.furthest_travel_percentage = function (self, side_id)
 		return 1
 	end
 
-	local furthest_travel_distance = self:furthest_travel_distance(side_id)
-	local total_path_distance = MainPathQueries.total_path_distance()
-	local percentage = furthest_travel_distance / total_path_distance
-
-	return percentage
+	return self._path:furthest_travel_percentage(side_id)
 end
 
 MainPathManager.time_since_forward_travel_changed = function (self, side_id)
-	local side_progress_on_path = self._side_progress_on_path
-	local progress_on_path = side_progress_on_path[side_id]
-	local forward_travel_changed_t = progress_on_path.forward_travel_changed_t
-	local t = Managers.time:time("gameplay")
-	local diff = t - forward_travel_changed_t
-
-	return diff
+	return self._path:time_since_forward_travel_changed(side_id)
 end
 
 MainPathManager.time_since_behind_travel_changed = function (self, side_id)
-	local side_progress_on_path = self._side_progress_on_path
-	local progress_on_path = side_progress_on_path[side_id]
-	local behind_travel_changed_t = progress_on_path.behind_travel_changed_t
-	local t = Managers.time:time("gameplay")
-	local diff = t - behind_travel_changed_t
-
-	return diff
+	return self._path:time_since_behind_travel_changed(side_id)
 end
 
 MainPathManager.segment_index_by_unit = function (self, unit)
-	return self._segment_index_by_unit[unit]
+	return self._path:segment_index_by_unit(unit)
 end
 
 MainPathManager.node_index_by_nav_group_index = function (self, group_index)
@@ -310,8 +276,10 @@ MainPathManager.generate_spawn_points = function (self)
 		min_free_radius = MainPathSettings.spawn_point_min_free_radius,
 		min_distance_to_others = MainPathSettings.spawn_point_min_distance_to_others,
 		num_spawn_points_per_subgroup = MainPathSettings.num_spawn_points_per_subgroup,
+		num_spawn_points_per_triangle = MainPathSettings.num_spawn_points_per_triangle,
 		nav_tag_cost_table = spawn_point_cost_table,
 		seed = self._level_seed,
+		path_type = self._path_type,
 	}
 
 	if self._spawn_points_time_slice_data then
@@ -371,97 +339,11 @@ MainPathManager.update = function (self, dt, t)
 	end
 
 	if self._nav_spawn_points then
-		self:_update_progress_on_path(t)
+		self._path:update_progress_on_path(t)
 	end
 
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(MainPathManagerTestify, self)
-	end
-end
-
-MainPathManager._update_progress_on_path = function (self, t)
-	local side_system = Managers.state.extension:system("side_system")
-	local sides = side_system:sides()
-	local segment_index_by_unit = self._segment_index_by_unit
-
-	table.clear(segment_index_by_unit)
-
-	self._group_index_by_unit, self._previous_frame_group_index_by_unit = self._previous_frame_group_index_by_unit, self._group_index_by_unit
-
-	table.clear(self._group_index_by_unit)
-
-	local group_index_by_unit, previous_frame_group_index_by_unit = self._group_index_by_unit, self._previous_frame_group_index_by_unit
-	local side_progress_on_path = self._side_progress_on_path
-	local invalid_vector = Vector3.invalid_vector()
-	local nav_world = self._nav_world
-	local nav_spawn_points = self._nav_spawn_points
-	local num_sides = #sides
-
-	for i = 1, num_sides do
-		local ahead_unit, behind_unit
-		local ahead_path_position, behind_path_position = invalid_vector, invalid_vector
-		local best_travel_distance, worst_travel_distance = -math.huge, math.huge
-		local side = sides[i]
-		local valid_player_units = side.valid_player_units
-		local num_valid_player_units = #valid_player_units
-
-		for j = 1, num_valid_player_units do
-			local player_unit = valid_player_units[j]
-			local player_position = POSITION_LOOKUP[player_unit]
-			local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, player_position)
-
-			if not group_index then
-				local navigation_extension = ScriptUnit.extension(player_unit, "navigation_system")
-				local latest_position_on_nav_mesh = navigation_extension:latest_position_on_nav_mesh()
-
-				if latest_position_on_nav_mesh then
-					group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
-				end
-
-				group_index = group_index or previous_frame_group_index_by_unit[player_unit]
-			end
-
-			local start_index = self:node_index_by_nav_group_index(group_index or 1)
-			local end_index = start_index + 1
-			local path_position, travel_distance, _, _, segment_index = MainPathQueries.closest_position_between_nodes(player_position, start_index, end_index)
-
-			if best_travel_distance < travel_distance then
-				ahead_unit = player_unit
-				ahead_path_position = path_position
-				best_travel_distance = travel_distance
-			end
-
-			if travel_distance < worst_travel_distance then
-				behind_unit = player_unit
-				behind_path_position = path_position
-				worst_travel_distance = travel_distance
-			end
-
-			segment_index_by_unit[player_unit] = segment_index
-			group_index_by_unit[player_unit] = group_index
-		end
-
-		local progress_on_path = side_progress_on_path[i]
-
-		progress_on_path.ahead_unit = ahead_unit
-		progress_on_path.ahead_travel_distance = ahead_unit and best_travel_distance or nil
-
-		progress_on_path.ahead_path_position:store(ahead_path_position)
-
-		if best_travel_distance > progress_on_path.furthest_travel_distance then
-			progress_on_path.furthest_travel_distance = best_travel_distance
-			progress_on_path.forward_travel_changed_t = t
-		end
-
-		progress_on_path.behind_unit = behind_unit
-		progress_on_path.behind_travel_distance = behind_unit and worst_travel_distance or nil
-
-		progress_on_path.behind_path_position:store(behind_path_position)
-
-		if worst_travel_distance > progress_on_path.furthest_worst_travel_distance then
-			progress_on_path.furthest_worst_travel_distance = worst_travel_distance
-			progress_on_path.behind_travel_changed_t = t
-		end
 	end
 end
 

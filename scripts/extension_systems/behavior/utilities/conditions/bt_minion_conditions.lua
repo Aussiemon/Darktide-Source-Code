@@ -723,20 +723,10 @@ conditions.is_passive = function (unit, blackboard, scratchpad, condition_args, 
 end
 
 conditions.can_summon_minions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	local summon_component = blackboard.summon
-	local next_summon_t = summon_component.next_summon_t
-	local t = Managers.time:time("gameplay")
-	local minion_amount = summon_component.amount
+	local summoned_minions_extension = ScriptUnit.extension(unit, "summon_minions_system")
+	local result = summoned_minions_extension:can_summon_minions(action_data, is_running)
 
-	if minion_amount ~= 0 then
-		return false
-	end
-
-	if next_summon_t < t then
-		return true
-	else
-		return false
-	end
+	return result
 end
 
 conditions.can_summon_timer_only = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)

@@ -70,4 +70,12 @@ MissionBoardService.get_rewards = function (self)
 	return self._backend_interface.mission_board:get_rewards()
 end
 
+MissionBoardService.get_unlocked_missions = function (self, account_id, character_id)
+	return self._backend_interface.mission_board:get_unlocked_missions(account_id, character_id)
+end
+
+MissionBoardService.get_difficulty_progress = function (self, account_id, character_id)
+	return self._backend_interface.mission_board:get_difficulty_progress(account_id, character_id)
+end
+
 return MissionBoardService

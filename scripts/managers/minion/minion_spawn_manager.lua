@@ -32,6 +32,18 @@ MinionSpawnManager.mutator_breed_init = function (self, mutator_context)
 	self._mutator_breed_data = mutator_context
 end
 
+MinionSpawnManager.replacement_breed = function (self, breed_name)
+	local replacement_breed
+
+	if self._mutator_breed_data then
+		local breedlookup = self._mutator_breed_data.breed_replacement
+
+		replacement_breed = breedlookup[breed_name]
+	end
+
+	return replacement_breed
+end
+
 MinionSpawnManager.delete_units = function (self)
 	local spawned_minions = self._spawned_minions
 	local num_spawned = self._num_spawned_minions
@@ -71,14 +83,10 @@ MinionSpawnManager.request_param_table = function (self)
 end
 
 MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_param_table)
-	if self._mutator_breed_data then
-		local breedlookup = self._mutator_breed_data.breed_replacement
+	local replacement_breed = self:replacement_breed(breed_name)
 
-		if breedlookup[breed_name] then
-			local replacement_breed = breedlookup[breed_name]
-
-			breed_name = replacement_breed
-		end
+	if replacement_breed then
+		breed_name = replacement_breed
 	end
 
 	local temp_data = optional_param_table or self:request_param_table()

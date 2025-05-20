@@ -7,11 +7,7 @@ PlayerVoiceGrunts.SOURCE_NAME = "voice"
 local SOURCE_NAME = PlayerVoiceGrunts.SOURCE_NAME
 
 PlayerVoiceGrunts.create_voice = function (fx_extension, unit, node_name)
-	local attachments = {
-		unit,
-	}
-
-	fx_extension:register_sound_source(SOURCE_NAME, unit, attachments, node_name)
+	fx_extension:register_sound_source(SOURCE_NAME, unit, nil, nil, node_name)
 end
 
 PlayerVoiceGrunts.destroy_voice = function (fx_extension)

@@ -8,8 +8,8 @@ local ProjectileTrajectory = require("scripts/utilities/projectile_trajectory")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AimLuggableEffects = class("AimLuggableEffects", "AimProjectileEffects")
 
-AimLuggableEffects.init = function (self, context, slot, weapon_template, fx_sources)
-	AimLuggableEffects.super.init(self, context, slot, weapon_template, fx_sources)
+AimLuggableEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
+	AimLuggableEffects.super.init(self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")

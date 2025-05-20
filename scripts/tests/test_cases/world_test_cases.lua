@@ -19,7 +19,7 @@ WorldTestCases.load_mission = function (case_settings)
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 		end
 
-		local output = TestifySnippets.check_flags_for_mission(flags, mission_key)
+		local output = TestifySnippets.check_flags_for_mission(flags, mission_key) or TestifySnippets.mission_exists(mission_key)
 
 		if output then
 			return output
@@ -64,7 +64,7 @@ WorldTestCases.load_mission_circumstances = function (case_settings)
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 		end
 
-		local output = TestifySnippets.check_flags_for_mission(flags, mission_name)
+		local output = TestifySnippets.check_flags_for_mission(flags, mission_name) or TestifySnippets.mission_exists(mission_name)
 
 		if output then
 			return output
@@ -115,7 +115,7 @@ WorldTestCases.load_mission_side_missions = function (case_settings)
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 		end
 
-		local output = TestifySnippets.check_flags_for_mission(flags, mission_name)
+		local output = TestifySnippets.check_flags_for_mission(flags, mission_name) or TestifySnippets.mission_exists(mission_name)
 
 		if output then
 			return output
@@ -187,7 +187,7 @@ WorldTestCases.screenshots_for_timelapse_videos = function (case_settings)
 			Testify:make_request("wait_for_state_gameplay_reached")
 
 			for _, mission in pairs(missions) do
-				local output = TestifySnippets.check_flags_for_mission(flags, mission)
+				local output = TestifySnippets.check_flags_for_mission(flags, mission) or TestifySnippets.mission_exists(missions)
 
 				if output then
 					result = result .. "\n" .. output

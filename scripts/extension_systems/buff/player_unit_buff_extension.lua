@@ -6,7 +6,6 @@ local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_extension_interface")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
-local FixedFrame = require("scripts/utilities/fixed_frame")
 local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local MAX_COMPONENT_BUFFS = PlayerCharacterConstants.max_component_buffs

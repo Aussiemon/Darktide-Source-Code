@@ -19,11 +19,11 @@ RangedAction.target_index = function (target_index, penetrated, penetration_conf
 	return new_target_index
 end
 
-RangedAction.execute_attack = function (target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, attack_direction, hit_normal, hit_zone_name_or_nil, damage_profile, lerp_values, power_level, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item_or_nil, triggered_proc_events_or_nil)
+RangedAction.execute_attack = function (target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, attack_direction, hit_normal, hit_zone_name_or_nil, damage_profile, lerp_values, power_level, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item_or_nil, triggered_proc_events_or_nil, target_number)
 	local dropoff_scalar = DamageProfile.dropoff_scalar(hit_distance, damage_profile, lerp_values)
 	local attack_type = AttackSettings.attack_types.ranged
 	local herding_template = damage_profile.herding_template
-	local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, damage_profile, "target_index", target_index, "target_number", target_index, "power_level", power_level, "charge_level", charge_level, "dropoff_scalar", dropoff_scalar, "attack_direction", attack_direction, "instakill", instakill, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", attacker_unit, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", weapon_item_or_nil, "triggered_proc_events", triggered_proc_events_or_nil)
+	local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, damage_profile, "target_index", target_index, "target_number", target_number, "power_level", power_level, "charge_level", charge_level, "dropoff_scalar", dropoff_scalar, "attack_direction", attack_direction, "instakill", instakill, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", attacker_unit, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", weapon_item_or_nil, "triggered_proc_events", triggered_proc_events_or_nil)
 
 	return damage_dealt, attack_result, damage_efficiency, hit_weakspot
 end

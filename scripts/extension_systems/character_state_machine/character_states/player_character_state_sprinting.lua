@@ -431,14 +431,14 @@ function _abort_sprint(action_settings, has_allow_sprint_buff)
 
 	local action_buff_keywords = action_settings.buff_keywords
 	local buff_allows_sprint = has_allow_sprint_buff and action_buff_keywords and table.contains(action_buff_keywords, buff_keywords.allow_hipfire_during_sprint)
-	local action_settings_abort_sprint = action_settings.abort_sprint
+	local action_settings_abort_sprint = action_settings.abort_sprint and not action_settings.override_allow_during_sprint
 
 	if action_settings_abort_sprint ~= nil then
 		return action_settings_abort_sprint and not buff_allows_sprint
 	end
 
 	local action_kind = action_settings.kind
-	local action_kind_abort_sprint = _abort_sprint_table[action_kind]
+	local action_kind_abort_sprint = _abort_sprint_table[action_kind] and not action_settings.override_allow_during_sprint
 
 	return action_kind_abort_sprint and not buff_allows_sprint
 end

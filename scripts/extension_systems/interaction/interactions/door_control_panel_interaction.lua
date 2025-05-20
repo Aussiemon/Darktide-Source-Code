@@ -20,7 +20,7 @@ DoorControlPanelInteraction.interactor_condition_func = function (self, interact
 	return door_control_panel_interactable and not self:_interactor_disabled(interactor_unit)
 end
 
-DoorControlPanelInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
+DoorControlPanelInteraction.hud_block_text = function (self, interactor_unit, interactee_unit)
 	local door_control_panel_extension = ScriptUnit.extension(interactee_unit, "door_control_panel_system")
 
 	if door_control_panel_extension:is_on_hold() then

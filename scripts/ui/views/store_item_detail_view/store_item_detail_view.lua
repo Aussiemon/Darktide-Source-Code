@@ -1731,23 +1731,8 @@ StoreItemDetailView._set_camera_item_slot_focus = function (self, breed_name, sl
 	local breeds_item_camera_by_slot_id = self._breeds_item_camera_by_slot_id
 	local breed_item_camera_by_slot_id = breeds_item_camera_by_slot_id[breed_name]
 	local slot_camera = breed_item_camera_by_slot_id and breed_item_camera_by_slot_id[slot_name]
-	local camera_world_position = Unit.world_position(slot_camera, 1)
-	local camera_world_rotation = Unit.world_rotation(slot_camera, 1)
-	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
-	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", zoom_percentage * (camera_world_position.x - default_camera_world_position.x), time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", zoom_percentage * (camera_world_position.y - default_camera_world_position.y), time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", zoom_percentage * (camera_world_position.z - default_camera_world_position.z), time, func_ptr)
-
-	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
-	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
-	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
-	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
-
-	world_spawner:set_camera_rotation_axis_offset("x", zoom_percentage * (camera_world_rotation_x - default_camera_world_rotation_x), time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", zoom_percentage * (camera_world_rotation_y - default_camera_world_rotation_y), time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", zoom_percentage * (camera_world_rotation_z - default_camera_world_rotation_z), time, func_ptr)
+	world_spawner:interpolate_to_camera(slot_camera, zoom_percentage, time, func_ptr)
 end
 
 StoreItemDetailView._set_initial_viewport_camera_position = function (self, default_camera_settings)
@@ -1763,8 +1748,6 @@ StoreItemDetailView._set_initial_viewport_camera_position = function (self, defa
 
 	world_spawner:set_camera_position(camera_world_position)
 	world_spawner:set_camera_rotation(camera_world_rotation)
-	world_spawner:reset_camera_rotation_axis_offset()
-	world_spawner:reset_camera_position_axis_offset()
 end
 
 StoreItemDetailView.on_exit = function (self)

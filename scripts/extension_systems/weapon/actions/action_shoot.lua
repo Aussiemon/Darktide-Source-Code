@@ -19,6 +19,7 @@ local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Vo = require("scripts/utilities/vo")
+local MultiFireModes = require("scripts/settings/equipment/weapon_templates/multi_fire_modes")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
@@ -59,7 +60,7 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	local first_person_unit = self._first_person_unit
 	local physics_world = self._physics_world
 
-	self._charge_module = ActionModules.charge:new(physics_world, player_unit, first_person_unit, self._action_module_charge_component, action_settings)
+	self._charge_module = ActionModules.charge:new(self._is_server, physics_world, player_unit, first_person_unit, self._action_module_charge_component, action_settings)
 
 	local weapon = action_params.weapon
 
@@ -83,6 +84,10 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	end
 
 	self._shot_result = {}
+	self._fire_configurations = action_settings.fire_configurations or {
+		action_settings.fire_configuration,
+	}
+	self._multi_fire_mode = action_settings.multi_fire_mode or MultiFireModes.single
 end
 
 ActionShoot.start = function (self, action_settings, t, time_scale, params)
@@ -144,7 +149,9 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 		local pre_shoot_sfx_alias = fx_settings.pre_shoot_sfx_alias
 
 		if pre_shoot_sfx_alias then
-			_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_shoot_sfx_alias, self._action_module_charge_component)
+			for i = 1, #self._fire_configurations do
+				_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_shoot_sfx_alias, self._action_module_charge_component, self:_reference_attachment_id(self._fire_configurations[i]))
+			end
 		end
 	end
 
@@ -196,6 +203,17 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	end
 end
 
+ActionShoot._update_delta_charge = function (self, fire_config, dt)
+	if fire_config.charge_cost then
+		local charge_component = self._action_module_charge_component
+		local charge_template = self._weapon_extension:charge_template()
+		local charge_cost = charge_template.charge_cost or 0
+		local new_charge = charge_component.charge_level - charge_cost * dt
+
+		charge_component.charge_level = math.clamp01(new_charge)
+	end
+end
+
 ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
@@ -221,15 +239,14 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
-	local fire_config = action_settings.fire_configuration
+	local fire_config = self._fire_configurations[action_component.current_fire_config]
 
-	if fire_config.charge_cost then
-		local charge_component = self._action_module_charge_component
-		local charge_template = self._weapon_extension:charge_template()
-		local charge_cost = charge_template.charge_cost or 0
-		local new_charge = charge_component.charge_level - charge_cost * dt
-
-		charge_component.charge_level = math.clamp01(new_charge)
+	if self._multi_fire_mode == MultiFireModes.simultaneous then
+		for i = 1, #self._fire_configurations do
+			self:_update_delta_charge(fire_config, dt)
+		end
+	else
+		self:_update_delta_charge(fire_config, dt)
 	end
 
 	if action_component.fire_state == "waiting_to_shoot" and t >= action_component.fire_at_time then
@@ -259,7 +276,7 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 
 		if not self._unit_data_extension.is_resimulating then
 			table.clear(self._shot_result)
-			self:_shoot(position, rotation, DEFAULT_POWER_LEVEL, charge_level, t)
+			self:_shoot(position, rotation, DEFAULT_POWER_LEVEL, charge_level, t, fire_config)
 
 			if IS_PLAYSTATION and self._is_local_unit and self._is_human_controlled then
 				local fire_rate_settings = self:_fire_rate_settings()
@@ -284,8 +301,8 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 
 		local next_fire_state = self:_next_fire_state(dt, t)
 
-		if next_fire_state == "waiting_to_shoot" or next_fire_state == "shot" then
-			self:_spend_ammunition(dt, t, charge_level)
+		if next_fire_state == "waiting_to_shoot" or next_fire_state == "shot" or next_fire_state == "shooting" and self._multi_fire_mode == MultiFireModes.simultaneous then
+			self:_spend_ammunition(dt, t, charge_level, fire_config)
 			self:_add_heat(dt, t, charge_level)
 			self:_pay_warp_charge_cost_immediate(t, charge_level)
 			self:_trigger_new_charge(t)
@@ -301,8 +318,11 @@ ActionShoot._next_fire_state = function (self, dt, t)
 	local fire_rate_settings = self:_fire_rate_settings()
 	local max_num_shots = fire_rate_settings.max_shots or math.huge
 	local auto_fire_time = fire_rate_settings.auto_fire_time
+	local current_fire_config = action_component.current_fire_config
 
-	if max_num_shots <= action_component.num_shots_fired then
+	if self._multi_fire_mode == MultiFireModes.simultaneous and current_fire_config < #self._fire_configurations then
+		return "shooting"
+	elseif max_num_shots <= action_component.num_shots_fired then
 		return "shot"
 	elseif auto_fire_time then
 		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
@@ -314,14 +334,45 @@ ActionShoot._next_fire_state = function (self, dt, t)
 	end
 end
 
+ActionShoot._prepare_fire_config = function (self, fire_config, weapon_extension)
+	local unit_data_ext = self._unit_data_extension
+	local inventory_component = self._inventory_component
+	local action_module_charge_component = self._action_module_charge_component
+
+	if fire_config.prepare_shooting_func then
+		fire_config.prepare_shooting_func(weapon_extension, unit_data_ext, inventory_component)
+	end
+
+	local anim_event = fire_config.anim_event
+	local anim_event_3p = fire_config.anim_event_3p or anim_event
+
+	if fire_config.anim_event_func then
+		anim_event, anim_event_3p = fire_config.anim_event_func(self._inventory_slot_component, inventory_component, weapon_extension)
+		anim_event_3p = anim_event_3p or anim_event
+	end
+
+	self:trigger_anim_event(anim_event, anim_event_3p)
+
+	local override_charge_level
+
+	if fire_config.use_charge then
+		override_charge_level = action_module_charge_component.charge_level
+		action_module_charge_component.charge_level = 0
+	end
+
+	if fire_config.reset_charge then
+		action_module_charge_component.charge_level = 0
+	end
+
+	return override_charge_level
+end
+
 ActionShoot._prepare_shooting = function (self, dt, t)
-	local action_settings = self._action_settings
 	local first_person_unit = self._first_person_unit
 	local player_unit = self._player_unit
 	local weapon_extension = self._weapon_extension
 	local weapon_template = self._weapon_template
 	local action_component = self._action_component
-	local action_module_charge_component = self._action_module_charge_component
 	local first_person_component = self._first_person_component
 	local movement_state_component = self._movement_state_component
 	local recoil_component = self._recoil_component
@@ -330,32 +381,25 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	local weapon_action_component = self._weapon_action_component
 	local position = first_person_component.position
 	local rotation = first_person_component.rotation
-	local smart_targeting_template = SmartTargeting.smart_targeting_template(t, weapon_action_component)
-	local fire_config = action_settings.fire_configuration
-	local anim_event = fire_config.anim_event
-	local anim_event_3p = fire_config.anim_event_3p or anim_event
-
-	if fire_config.anim_event_func then
-		anim_event, anim_event_3p = fire_config.anim_event_func(self._inventory_slot_component)
-		anim_event_3p = anim_event_3p or anim_event
-	end
-
 	local charge_level = 1
 
-	if fire_config.use_charge then
-		charge_level = action_module_charge_component.charge_level
-		action_module_charge_component.charge_level = 0
-	end
+	if self._multi_fire_mode == MultiFireModes.simultaneous then
+		for i = 1, #self._fire_configurations do
+			local override_charge_level = self:_prepare_fire_config(self._fire_configurations[i])
 
-	if fire_config.reset_charge then
-		action_module_charge_component.charge_level = 0
+			charge_level = override_charge_level or charge_level
+		end
+	else
+		local override_charge_level = self:_prepare_fire_config(self._fire_configurations[action_component.current_fire_config])
+
+		charge_level = override_charge_level or charge_level
 	end
 
 	action_component.shooting_charge_level = charge_level
 
 	self:_set_charge_animation_variable(first_person_unit, charge_level)
-	self:trigger_anim_event(anim_event, anim_event_3p)
 
+	local smart_targeting_template = SmartTargeting.smart_targeting_template(t, weapon_action_component)
 	local recoil_template = weapon_extension:recoil_template()
 	local sway_template = weapon_extension:sway_template()
 
@@ -373,7 +417,6 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	action_component.shooting_position = position
 	action_component.shooting_rotation = rotation
 
-	self:_play_muzzle_flash_vfx(rotation, charge_level)
 	self:_update_sound_reflection()
 
 	local num_shots = shooting_status_component.num_shots
@@ -387,18 +430,38 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	Spread.add_immediate_spread_from_shooting(t, spread_template, self._spread_control_component, movement_state_component, shooting_status_component, "shooting", player_unit)
 	Recoil.add_recoil(t, recoil_template, recoil_component, self._recoil_control_component, movement_state_component, first_person_component.rotation, player_unit)
 
-	if self._is_server then
-		local suppression_settings = fire_config.close_range_suppression
+	if self._multi_fire_mode == MultiFireModes.simultaneous then
+		for i = 1, #self._fire_configurations do
+			local fire_config = self._fire_configurations[i]
 
-		if suppression_settings then
-			Suppression.apply_area_minion_suppression(player_unit, suppression_settings, position)
+			self:_play_muzzle_flash_vfx(fire_config, rotation, charge_level)
+
+			if self._is_server then
+				local suppression_settings = fire_config.close_range_suppression
+
+				if suppression_settings then
+					Suppression.apply_area_minion_suppression(player_unit, suppression_settings, position)
+				end
+			end
+		end
+	else
+		local fire_config = self._fire_configurations[action_component.current_fire_config]
+
+		self:_play_muzzle_flash_vfx(fire_config, rotation, charge_level)
+
+		if self._is_server then
+			local suppression_settings = fire_config.close_range_suppression
+
+			if suppression_settings then
+				Suppression.apply_area_minion_suppression(player_unit, suppression_settings, position)
+			end
 		end
 	end
 
 	action_component.num_shots_fired = action_component.num_shots_fired + 1
 end
 
-ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
+ActionShoot._spend_ammunition = function (self, dt, t, charge_level, fire_config)
 	local action_settings = self._action_settings
 	local inventory_slot_component = self._inventory_slot_component
 	local use_charge = action_settings.use_charge
@@ -468,7 +531,7 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 	local out_of_ammo_sfx_alias = fx_settings.out_of_ammo_sfx_alias
 
 	if new_ammunition == 0 and inventory_slot_component.current_ammunition_clip > 0 and out_of_ammo_sfx_alias then
-		_trigger_gear_sound(self._fx_extension, self:_muzzle_fx_source(), out_of_ammo_sfx_alias, self._action_module_charge_component)
+		_trigger_gear_sound(self._fx_extension, self:_muzzle_fx_source(), out_of_ammo_sfx_alias, self._action_module_charge_component, self:_reference_attachment_id(fire_config))
 	end
 
 	inventory_slot_component.current_ammunition_clip = new_ammunition
@@ -520,23 +583,39 @@ ActionShoot._set_fire_state = function (self, t, new_fire_state)
 
 	if not still_shooting then
 		shooting_status_component.shooting_end_time = t
-
-		self:_play_muzzle_smoke()
 	end
-
-	if not unit_data_extension.is_resimulating then
-		self:_play_shoot_sound()
-	end
-
-	self:_update_looping_shoot_sound()
 
 	if new_fire_state == "prepare_shooting" then
 		self:_check_for_auto_critical_strike()
+	elseif new_fire_state == "waiting_to_shoot" then
+		self:_check_for_auto_critical_strike_end(t, new_fire_state)
+
+		action_component.current_fire_config = math.index_wrapper(action_component.current_fire_config + 1, #self._fire_configurations)
+	elseif new_fire_state == "shooting" then
+		if self._multi_fire_mode == MultiFireModes.simultaneous then
+			action_component.current_fire_config = action_component.current_fire_config + 1
+		end
+	elseif new_fire_state == "shot" then
+		self:_check_for_auto_critical_strike_end(t, new_fire_state)
+
+		if self._multi_fire_mode == MultiFireModes.simultaneous then
+			for i = 1, #self._fire_configurations do
+				self:_play_muzzle_smoke(self._fire_configurations[i])
+			end
+		else
+			local fire_config = self._fire_configurations[action_component.current_fire_config]
+
+			self:_play_muzzle_smoke(fire_config)
+		end
 	end
 
-	if new_fire_state == "shot" or new_fire_state == "waiting_to_shoot" then
-		self:_check_for_auto_critical_strike_end(t, new_fire_state)
+	local fire_config = self._fire_configurations[action_component.current_fire_config]
+
+	if not unit_data_extension.is_resimulating then
+		self:_play_shoot_sound(fire_config)
 	end
+
+	self:_update_looping_shoot_sound(fire_config)
 
 	if IS_PLAYSTATION and new_fire_state == "shot" and self._is_local_unit and self._is_human_controlled then
 		Managers.input.haptic_trigger_effects:stop_vibration()
@@ -584,7 +663,9 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 		local pre_shoot_abort_sfx_alias = fx_settings.pre_shoot_abort_sfx_alias
 
 		if pre_shoot_abort_sfx_alias and not past_fire_time then
-			_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_shoot_abort_sfx_alias, self._action_module_charge_component)
+			for i = 1, #self._fire_configurations do
+				_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_shoot_abort_sfx_alias, self._action_module_charge_component, self:_reference_attachment_id(self._fire_configurations[i]))
+			end
 		end
 	end
 
@@ -618,26 +699,7 @@ ActionShoot._rewind_ms = function (self, is_local_unit, player, position, direct
 	return rewind_ms
 end
 
-ActionShoot._trigger_wwise_event = function (self, event_name, tail_event_name, source_name, append_husk_to_event_name, charge_level_parameter_name, charge_level)
-	local fx_extension = self._fx_extension
-
-	fx_extension:trigger_wwise_event_with_source(event_name, source_name, append_husk_to_event_name)
-
-	if charge_level_parameter_name then
-		fx_extension:set_source_parameter(charge_level_parameter_name, charge_level, source_name)
-	end
-
-	local alternate_fire_is_active = self._alternate_fire_component.is_active
-	local muzzle_source = fx_extension:sound_source(source_name)
-
-	WwiseWorld.set_switch(self._wwise_world, "alt_fire_active", ALT_FIRE_WWISE_SWITCH[alternate_fire_is_active], muzzle_source)
-
-	if tail_event_name then
-		fx_extension:trigger_exclusive_wwise_event(tail_event_name, Vector3(0, 0, 0), true)
-	end
-end
-
-ActionShoot._play_shoot_sound = function (self)
+ActionShoot._play_shoot_sound = function (self, fire_config)
 	local action_settings = self._action_settings
 	local muzzle_fx_source_name = self:_muzzle_fx_source()
 	local wwise_world = self._wwise_world
@@ -669,18 +731,20 @@ ActionShoot._play_shoot_sound = function (self)
 	local trigger_no_ammo_sound = not shooting and no_ammo_shoot_sfx_alias and not has_ammunition
 
 	if trigger_single_shot_sound then
+		local reference_attachment_id = self:_reference_attachment_id(fire_config)
+
 		if looping_shoot_sound_component and num_shots_fired < num_pre_loop_events then
 			if pre_loop_shoot_sfx_alias then
-				_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_loop_shoot_sfx_alias, action_module_charge_component)
+				_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_loop_shoot_sfx_alias, action_module_charge_component, reference_attachment_id)
 				_trigger_gear_tail_sound(fx_extension, muzzle_fx_source_name, pre_loop_tail_alias)
-				_set_charge_level(fx_extension, muzzle_fx_source_name, charge_level_parameter_name, action_module_charge_component)
-				_update_alt_fire_state(wwise_world, fx_extension, alternate_fire_component, muzzle_fx_source_name)
+				_set_charge_level(fx_extension, muzzle_fx_source_name, charge_level_parameter_name, action_module_charge_component, reference_attachment_id)
+				_update_alt_fire_state(wwise_world, fx_extension, alternate_fire_component, muzzle_fx_source_name, reference_attachment_id)
 			end
 		elseif shoot_sfx_alias then
-			_trigger_gear_sound(fx_extension, muzzle_fx_source_name, shoot_sfx_alias, action_module_charge_component)
+			_trigger_gear_sound(fx_extension, muzzle_fx_source_name, shoot_sfx_alias, action_module_charge_component, reference_attachment_id)
 			_trigger_gear_tail_sound(fx_extension, muzzle_fx_source_name, tail_alias)
-			_set_charge_level(fx_extension, muzzle_fx_source_name, charge_level_parameter_name, action_module_charge_component)
-			_update_alt_fire_state(wwise_world, fx_extension, alternate_fire_component, muzzle_fx_source_name)
+			_set_charge_level(fx_extension, muzzle_fx_source_name, charge_level_parameter_name, action_module_charge_component, reference_attachment_id)
+			_update_alt_fire_state(wwise_world, fx_extension, alternate_fire_component, muzzle_fx_source_name, reference_attachment_id)
 
 			local has_special_shot = self._inventory_slot_component.special_active
 
@@ -688,7 +752,7 @@ ActionShoot._play_shoot_sound = function (self)
 				local shoot_sfx_special_extra_with_offset = fx_settings.shoot_sfx_special_extra_with_offset
 
 				if shoot_sfx_special_extra_with_offset then
-					local spawner_pose = fx_extension:vfx_spawner_pose(muzzle_fx_source_name)
+					local spawner_pose = fx_extension:vfx_spawner_pose(muzzle_fx_source_name, reference_attachment_id)
 					local from_pos = Matrix4x4.translation(spawner_pose)
 					local aim_rotation = self._first_person_component.rotation
 					local aim_direction = Quaternion.forward(aim_rotation)
@@ -704,19 +768,21 @@ ActionShoot._play_shoot_sound = function (self)
 
 					fx_extension:trigger_gear_wwise_event_with_position(shoot_sfx_special_extra_alias, EXTERNAL_PROPERTIES, from_pos + aim_direction * distance, sync_to_clients)
 				else
-					_trigger_gear_sound(fx_extension, muzzle_fx_source_name, shoot_sfx_special_extra_alias, action_module_charge_component)
+					_trigger_gear_sound(fx_extension, muzzle_fx_source_name, shoot_sfx_special_extra_alias, action_module_charge_component, reference_attachment_id)
 				end
 			end
 		end
 	elseif trigger_no_ammo_sound then
-		_trigger_gear_sound(fx_extension, muzzle_fx_source_name, no_ammo_shoot_sfx_alias, action_module_charge_component)
+		local reference_attachment_id = self:_reference_attachment_id(fire_config)
+
+		_trigger_gear_sound(fx_extension, muzzle_fx_source_name, no_ammo_shoot_sfx_alias, action_module_charge_component, reference_attachment_id)
 		Vo.out_of_ammo_event(inventory_slot_component, visual_loadout_extension)
 	end
 
 	_trigger_critical_sound(fx_extension, crit_shoot_sfx_alias, critical_strike_component, fire_state)
 end
 
-ActionShoot._update_looping_shoot_sound = function (self)
+ActionShoot._update_looping_shoot_sound = function (self, fire_config)
 	local looping_shoot_sound_component = self._looping_shoot_sound_component
 
 	if not looping_shoot_sound_component then
@@ -732,6 +798,7 @@ ActionShoot._update_looping_shoot_sound = function (self)
 	local looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
 	local post_loop_tail_alias = fx_settings.post_loop_shoot_tail_sfx_alias
 	local num_pre_loop_events = fx_settings.num_pre_loop_events or 0
+	local reference_attachment_id = self:_reference_attachment_id(fire_config)
 	local has_ammo = ActionUtility.has_ammunition(inventory_slot_component, action_settings)
 	local fire_state = action_component.fire_state
 	local is_looping_shoot_sfx_playing = looping_shoot_sound_component.is_playing
@@ -749,7 +816,7 @@ ActionShoot._update_looping_shoot_sound = function (self)
 		if auto_fire_time and parameter_name then
 			auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
 
-			fx_extension:set_source_parameter(parameter_name, auto_fire_time, muzzle_fx_source_name)
+			fx_extension:set_source_parameter(parameter_name, auto_fire_time, muzzle_fx_source_name, reference_attachment_id)
 		end
 
 		fx_extension:trigger_looping_wwise_event(looping_shoot_sfx_alias, muzzle_fx_source_name)
@@ -759,7 +826,7 @@ ActionShoot._update_looping_shoot_sound = function (self)
 	end
 end
 
-ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation, charge_level)
+ActionShoot._play_muzzle_flash_vfx = function (self, fire_config, shoot_rotation, charge_level)
 	if self._unit_data_extension.is_resimulating then
 		return
 	end
@@ -816,10 +883,11 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation, charge_leve
 	local link = true
 	local orphaned_policy = "stop"
 	local position_offset, rotation_offset
+	local reference_attachment_id = self:_reference_attachment_id(fire_config)
 	local spread_rotated_muzzle_flash = fx.spread_rotated_muzzle_flash
 
 	if spread_rotated_muzzle_flash then
-		local spawner_pose = fx_extension:vfx_spawner_pose(muzzle_spawner_name)
+		local spawner_pose = fx_extension:vfx_spawner_pose(muzzle_spawner_name, reference_attachment_id)
 		local spawner_position = Matrix4x4.translation(spawner_pose)
 		local shoot_pose = Matrix4x4.from_quaternion_position(shoot_rotation, spawner_position)
 		local delta_pose = Matrix4x4.multiply(shoot_pose, Matrix4x4.inverse(spawner_pose))
@@ -828,10 +896,11 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation, charge_leve
 		rotation_offset = Matrix4x4.rotation(delta_pose)
 	end
 
-	local particle_id = fx_extension:spawn_unit_particles(effect_to_play, muzzle_spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+	local scale, all_clients, create_network_index
+	local particle_id = fx_extension:spawn_unit_particles(effect_to_play, muzzle_spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index, reference_attachment_id)
 
 	if secondary_muzzle_spawner_name and effect_name_secondary then
-		fx_extension:spawn_unit_particles(effect_name_secondary, secondary_muzzle_spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+		fx_extension:spawn_unit_particles(effect_name_secondary, secondary_muzzle_spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index, reference_attachment_id)
 	end
 
 	local muzzle_flash_size_variable_name = fx.muzzle_flash_size_variable_name
@@ -849,11 +918,11 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation, charge_leve
 	local shell_casing_effect = fx.shell_casing_effect
 
 	if shell_casing_effect then
-		fx_extension:spawn_unit_particles(shell_casing_effect, eject_spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+		fx_extension:spawn_unit_particles(shell_casing_effect, eject_spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index, reference_attachment_id)
 	end
 end
 
-ActionShoot._play_muzzle_smoke = function (self)
+ActionShoot._play_muzzle_smoke = function (self, fire_config)
 	local fx = self._action_settings.fx
 
 	if not fx then
@@ -878,8 +947,10 @@ ActionShoot._play_muzzle_smoke = function (self)
 	local link = true
 	local orphaned_policy = "stop"
 	local position_offset, rotation_offset
+	local reference_attachment_id = self:_reference_attachment_id(fire_config)
+	local scale, all_clients, create_network_index
 
-	fx_extension:spawn_unit_particles(effect_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+	fx_extension:spawn_unit_particles(effect_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index, reference_attachment_id)
 end
 
 ActionShoot._check_for_auto_critical_strike = function (self)
@@ -990,7 +1061,7 @@ ActionShoot.trigger_anim_event = function (self, anim_event, anim_event_3p)
 	end
 end
 
-ActionShoot._play_line_fx = function (self, line_effect, position, end_position)
+ActionShoot._play_line_fx = function (self, line_effect, position, end_position, optional_attachment_id)
 	if not line_effect then
 		return
 	end
@@ -1011,7 +1082,7 @@ ActionShoot._play_line_fx = function (self, line_effect, position, end_position)
 	local scale
 	local append_husk_to_event_name = true
 
-	self._fx_extension:spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name)
+	self._fx_extension:spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, optional_attachment_id)
 end
 
 ActionShoot._muzzle_fx_source = function (self)
@@ -1089,22 +1160,22 @@ ActionShoot._scale_auto_fire_time_with_buffs = function (self, auto_fire_time)
 	return scaled_auto_fire_time
 end
 
-function _set_charge_level(fx_extension, fx_source_name, parameter_name, action_module_charge_component)
+function _set_charge_level(fx_extension, fx_source_name, parameter_name, action_module_charge_component, optional_attachment_id)
 	if parameter_name then
 		local charge_level = action_module_charge_component.charge_level * 100
 
-		fx_extension:set_source_parameter(parameter_name, charge_level, fx_source_name)
+		fx_extension:set_source_parameter(parameter_name, charge_level, fx_source_name, optional_attachment_id)
 	end
 end
 
-function _trigger_gear_sound(fx_extension, fx_source_name, sound_alias, action_module_charge_component)
+function _trigger_gear_sound(fx_extension, fx_source_name, sound_alias, action_module_charge_component, optional_attachment_id)
 	table.clear(EXTERNAL_PROPERTIES)
 
 	local charge_level = action_module_charge_component.charge_level
 
 	EXTERNAL_PROPERTIES.charge_level = charge_level >= 1 and "fully_charged"
 
-	fx_extension:trigger_gear_wwise_event_with_source(sound_alias, EXTERNAL_PROPERTIES, fx_source_name, SYNC_TO_CLIENTS)
+	fx_extension:trigger_gear_wwise_event_with_source(sound_alias, EXTERNAL_PROPERTIES, fx_source_name, SYNC_TO_CLIENTS, optional_attachment_id)
 end
 
 function _trigger_gear_tail_sound(fx_extension, fx_source_name, sound_alias)
@@ -1129,9 +1200,9 @@ function _trigger_critical_sound(fx_extension, crit_shoot_sfx_alias, critical_st
 	_trigger_exclusive_gear_sound(fx_extension, crit_shoot_sfx_alias)
 end
 
-function _update_alt_fire_state(wwise_world, fx_extension, alternate_fire_component, fx_source_name)
+function _update_alt_fire_state(wwise_world, fx_extension, alternate_fire_component, fx_source_name, optional_attachment_id)
 	local alternate_fire_is_active = alternate_fire_component.is_active
-	local fx_source = fx_extension:sound_source(fx_source_name)
+	local fx_source = fx_extension:sound_source(fx_source_name, optional_attachment_id)
 
 	WwiseWorld.set_switch(wwise_world, "alt_fire_active", ALT_FIRE_WWISE_SWITCH[alternate_fire_is_active], fx_source)
 end

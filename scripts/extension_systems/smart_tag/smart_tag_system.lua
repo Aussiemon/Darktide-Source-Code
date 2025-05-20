@@ -198,9 +198,9 @@ SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit
 	end
 end
 
-SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_unit)
+SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_unit, alternate)
 	local target_extension = self._unit_extension_data[target_unit]
-	local template = target_extension:contextual_tag_template(tagger_unit)
+	local template = target_extension:contextual_tag_template(tagger_unit, alternate)
 
 	if template then
 		self:set_tag(template.name, tagger_unit, target_unit, nil)
@@ -435,7 +435,7 @@ SmartTagSystem._remove_tag_locally = function (self, tag_id, reason)
 
 	local target_unit = tag:target_unit()
 
-	if target_unit then
+	if target_unit and ALIVE[target_unit] then
 		local target_extension = self._unit_extension_data[target_unit]
 
 		target_extension:unregister_tag()
@@ -591,7 +591,7 @@ SmartTagSystem.rpc_request_set_smart_tag = function (self, channel_id, template_
 	if target_unit then
 		local target_extension = self._unit_extension_data[target_unit]
 
-		if not target_extension or target_extension:tag_id() then
+		if not target_extension or target_extension:tag_id() and not template.can_override then
 			return
 		end
 	end

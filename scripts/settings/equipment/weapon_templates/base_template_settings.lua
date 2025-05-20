@@ -6,28 +6,19 @@ local SpecialRulesSettings = require("scripts/settings/ability/special_rules_set
 local special_rules = SpecialRulesSettings.special_rules
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 
-local function _quick_throw_allowed(action_settings, condition_func_params, used_input)
+local function _can_wield_grenade_slot(action_settings, condition_func_params, used_input)
 	local slot_to_wield = "slot_grenade_ability"
 	local weapon_extension = condition_func_params.weapon_extension
 	local visual_loadout_extension = condition_func_params.visual_loadout_extension
 	local ability_extension = condition_func_params.ability_extension
 
-	if not weapon_extension:can_wield(slot_to_wield) then
-		return false
-	end
+	return weapon_extension:can_wield(slot_to_wield) and visual_loadout_extension:can_wield(slot_to_wield) and ability_extension:can_wield(slot_to_wield)
+end
 
-	if not visual_loadout_extension:can_wield(slot_to_wield) then
-		return false
-	end
-
-	if not ability_extension:can_wield(slot_to_wield) then
-		return false
-	end
-
+local function _has_talent_special_rule(condition_func_params, special_rule)
 	local talent_extension = condition_func_params.talent_extension
-	local has_special_rule = talent_extension:has_special_rule(special_rules.enable_quick_throw_grenades)
 
-	return has_special_rule
+	return talent_extension:has_special_rule(special_rule)
 end
 
 local base_template_settings = {}
@@ -114,10 +105,10 @@ base_template_settings.grenade_ability_actions = {
 		uninterruptible = true,
 		allowed_chain_actions = {},
 		action_condition_func = function (action_settings, condition_func_params, used_input)
-			return not _quick_throw_allowed(action_settings, condition_func_params, used_input)
+			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and not _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives)
 		end,
 	},
-	grenade_ability_quick_throw = {
+	grenade_ability_zealot_throwing_knives = {
 		ability_type = "grenade_ability",
 		action_priority = 2,
 		allowed_during_sprint = true,
@@ -150,7 +141,7 @@ base_template_settings.grenade_ability_actions = {
 		},
 		projectile_template = ProjectileTemplates.zealot_throwing_knives,
 		action_condition_func = function (action_settings, condition_func_params, used_input)
-			return _quick_throw_allowed(action_settings, condition_func_params, used_input)
+			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives)
 		end,
 	},
 }
@@ -178,5 +169,26 @@ base_template_settings.action_input_hierarchy = {
 		},
 	},
 }
+
+base_template_settings.generate_grenade_ability_chain_actions = function (chain_settings)
+	local chain_actions = {
+		{
+			action_name = "grenade_ability",
+		},
+		{
+			action_name = "grenade_ability_zealot_throwing_knives",
+		},
+	}
+
+	if chain_settings then
+		for key, value in pairs(chain_settings) do
+			for ii = 1, #chain_actions do
+				chain_actions[ii][key] = value
+			end
+		end
+	end
+
+	return chain_actions
+end
 
 return base_template_settings

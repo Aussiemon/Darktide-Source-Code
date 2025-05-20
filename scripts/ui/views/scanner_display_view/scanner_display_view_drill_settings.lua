@@ -1,37 +1,30 @@
 ﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view_drill_settings.lua
 
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local size_factor = 1.75
-local screen_ratio = UIWorkspaceSettings.screen.size[1] / UIWorkspaceSettings.screen.size[2]
-local target_widget_size = {
-	screen_ratio * 60 * size_factor,
-	60 * size_factor,
-}
-local stage_widget_size = {
-	screen_ratio * 70,
-	70,
-}
-local background_rings_size = {
-	screen_ratio * 800,
-	800,
-}
-local edge_fade_widget_size = {
-	screen_ratio * size_factor * 670,
-	size_factor * 670,
-}
+local render_size = 1024
 local scanner_display_view_drill_settings = {
-	board_height = 400,
 	board_starting_offset_x = 0,
 	board_starting_offset_y = 0,
-	stage_spacing = 30,
-	stages_starting_offset_x = 260,
-	stages_starting_offset_y = 300,
-	size_factor = size_factor,
-	target_widget_size = target_widget_size,
-	stage_widget_size = stage_widget_size,
-	edge_fade_widget_size = edge_fade_widget_size,
-	background_rings_size = background_rings_size,
-	board_width = 400 * screen_ratio,
+	target_widget_size = {
+		render_size * 0.097,
+		render_size * 0.097,
+	},
+	edge_fade_widget_size = {
+		render_size * 1.08,
+		render_size * 1.08,
+	},
+	background_rings_size = {
+		render_size * 0.74,
+		render_size * 0.74,
+	},
+	board_width = render_size * 0.37,
+	board_height = render_size * 0.37,
+	stage_widget_size = {
+		render_size * 0.08,
+		render_size * 0.08,
+	},
+	stages_starting_offset_x = render_size * 0.1,
+	stages_starting_offset_y = render_size * 0.25,
+	stage_spacing = render_size * 0.03,
 }
 
 return settings("ScannerDisplayViewDrillSettings", scanner_display_view_drill_settings)

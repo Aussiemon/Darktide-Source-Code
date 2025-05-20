@@ -9,7 +9,7 @@ local LOOPING_VFX_ALIAS = "force_weapon_block"
 local _sfx_external_properties = {}
 local _vfx_external_properties = {}
 
-ForceWeaponBlockEffects.init = function (self, context, slot, weapon_template, fx_sources)
+ForceWeaponBlockEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	self._world = context.world
 	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions

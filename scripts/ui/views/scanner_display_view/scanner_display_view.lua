@@ -2,24 +2,21 @@
 
 local MinigameBalanceView = require("scripts/ui/views/scanner_display_view/minigame_balance_view")
 local MinigameDecodeSymbolsView = require("scripts/ui/views/scanner_display_view/minigame_decode_symbols_view")
-local MinigameDefuseView = require("scripts/ui/views/scanner_display_view/minigame_defuse_view")
 local MinigameDrillView = require("scripts/ui/views/scanner_display_view/minigame_drill_view")
 local MinigameFrequencyView = require("scripts/ui/views/scanner_display_view/minigame_frequency_view")
 local MinigameNoneView = require("scripts/ui/views/scanner_display_view/minigame_none_view")
-local MinigameScanView = require("scripts/ui/views/scanner_display_view/minigame_scan_view")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local ScannerDisplayViewDefinitions = require("scripts/ui/views/scanner_display_view/scanner_display_view_definitions")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local DEBUG_RENDERING = false
+local RENDER_SIZE = 1024
 local ScannerDisplayView = class("ScannerDisplayView", "BaseView")
 
 ScannerDisplayView.MINIGAMES = {
 	[MinigameSettings.types.none] = MinigameNoneView,
-	[MinigameSettings.types.scan] = MinigameScanView,
 	[MinigameSettings.types.balance] = MinigameBalanceView,
 	[MinigameSettings.types.decode_symbols] = MinigameDecodeSymbolsView,
-	[MinigameSettings.types.defuse] = MinigameDefuseView,
 	[MinigameSettings.types.drill] = MinigameDrillView,
 	[MinigameSettings.types.frequency] = MinigameFrequencyView,
 }
@@ -102,7 +99,7 @@ ScannerDisplayView._setup_offscreen_gui = function (self)
 	local renderer_name = self._render_name
 
 	self._offscreen_viewport = ui_manager:create_viewport(world, viewport_name, viewport_type, viewport_layer)
-	self._offscreen_ui_renderer = Managers.ui:create_renderer(renderer_name, nil, true, self._ui_renderer.gui, self._ui_renderer.gui_retained, "content/ui/materials/mission_board/render_target_scanlines", 1920, 1080, true)
+	self._offscreen_ui_renderer = Managers.ui:create_renderer(renderer_name, nil, true, self._ui_renderer.gui, self._ui_renderer.gui_retained, "content/ui/materials/mission_board/render_target_scanlines", RENDER_SIZE, RENDER_SIZE, true)
 end
 
 ScannerDisplayView._create_offscreen_world = function (self)
@@ -181,7 +178,7 @@ ScannerDisplayView.draw = function (self, dt, t, input_service, layer)
 	else
 		self._render_scale = 1
 
-		self:_set_scenegraph_position("center_pivot", (1920 - RESOLUTION_LOOKUP.width) / 2, 100)
+		self:_set_scenegraph_position("center_pivot", (RENDER_SIZE - RESOLUTION_LOOKUP.width) / 2, RENDER_SIZE * 0.09)
 
 		local render_scale = self._render_scale
 		local render_settings = self._render_settings

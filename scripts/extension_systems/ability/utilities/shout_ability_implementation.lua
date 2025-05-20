@@ -26,19 +26,19 @@ local ShoutAbilityImplementation = {}
 local _handle_enemy_targets, _handle_allied_targets
 local broadphase_results = {}
 
-ShoutAbilityImplementation.execute = function (radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction)
+ShoutAbilityImplementation.execute = function (radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction, backup_position, backup_rotation)
 	local side_system = Managers.state.extension:system("side_system")
 	local player_side = side_system.side_by_unit[player_unit]
 	local player_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local shout_target_template = ShoutTargetTemplates[shout_target_template_name]
-	local enemies_hit = _handle_enemy_targets(t, radius, shout_target_template.enemies, player_unit, locomotion_component, player_side, player_buff_extension)
+	local enemies_hit = _handle_enemy_targets(t, radius, shout_target_template.enemies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
 
-	_handle_allied_targets(t, radius, shout_target_template.allies, player_unit, locomotion_component, player_side, player_buff_extension)
+	_handle_allied_targets(t, radius, shout_target_template.allies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
 
 	return enemies_hit
 end
 
-function _handle_enemy_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension)
+function _handle_enemy_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
 	if not target_settings then
 		return 0
 	end
@@ -48,8 +48,8 @@ function _handle_enemy_targets(t, radius, target_settings, player_unit, locomoti
 	end
 
 	local units_hit = 0
-	local player_position = locomotion_component.position
-	local player_rotation = locomotion_component.rotation
+	local player_position = locomotion_component and locomotion_component.position or backup_position
+	local player_rotation = locomotion_component and locomotion_component.rotation or backup_rotation
 	local player_stat_buffs = player_buff_extension:stat_buffs()
 	local enemy_side_names = player_side:relation_side_names("enemy")
 	local ai_target_units = player_side.ai_target_units
@@ -67,6 +67,7 @@ function _handle_enemy_targets(t, radius, target_settings, player_unit, locomoti
 	local buff_to_add = target_settings.buff_to_add
 	local buff_to_add_non_monster = target_settings.buff_to_add_non_monster
 	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
+	local target_number = 1
 
 	for ii = 1, num_hits do
 		repeat
@@ -157,8 +158,9 @@ function _handle_enemy_targets(t, radius, target_settings, player_unit, locomoti
 					local lerp_t = math.clamp01(1 - length_squared / (radius_to_use * radius_to_use), 0, 1)
 					local scaled_power_level = math.lerp(power_level * 0.1, power_level, lerp_t)
 					local hit_zone_name = "torso"
-					local _, _, _, shout_stagger_result = Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attacking_unit", player_unit, "attack_type", attack_types.shout)
+					local _, _, _, shout_stagger_result = Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attacking_unit", player_unit, "attack_type", attack_types.shout, "target_number", target_number)
 
+					target_number = target_number + 1
 					stagger_result = shout_stagger_result
 				end
 
@@ -195,7 +197,7 @@ function _handle_enemy_targets(t, radius, target_settings, player_unit, locomoti
 	return units_hit
 end
 
-function _handle_allied_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension)
+function _handle_allied_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
 	if not target_settings then
 		return
 	end
@@ -204,7 +206,7 @@ function _handle_allied_targets(t, radius, target_settings, player_unit, locomot
 		return
 	end
 
-	local player_position = locomotion_component.position
+	local player_position = locomotion_component and locomotion_component.position or backup_position
 	local player_stat_buffs = player_buff_extension:stat_buffs()
 	local buff_to_add = target_settings.buff_to_add
 	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
@@ -219,7 +221,9 @@ function _handle_allied_targets(t, radius, target_settings, player_unit, locomot
 				if buff_to_add then
 					local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
-					buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", player_unit)
+					if buff_extension then
+						buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", player_unit)
+					end
 				end
 
 				if shout_restores_toughness then

@@ -893,12 +893,16 @@ local function havoc_concat_init_by_id(id, widget, parent, params)
 	local positions_size = #positions
 	local id_position = get_havoc_position_by_id(widget, id)
 	local widget_style = widget.style
+	local widget_content = widget.content
 
 	if id == "order" then
 		if positions_size > 1 then
-			widget_style.havoc_charge_1.vertical_alignment = "top"
-			widget_style.havoc_charge_2.vertical_alignment = "top"
-			widget_style.havoc_charge_3.vertical_alignment = "top"
+			if widget_content.uses_charges then
+				widget_style.havoc_charge_1.vertical_alignment = "top"
+				widget_style.havoc_charge_2.vertical_alignment = "top"
+				widget_style.havoc_charge_3.vertical_alignment = "top"
+			end
+
 			widget_style.havoc_badge_background.vertical_alignment = "top"
 			widget_style.havoc_rank_badge.vertical_alignment = "top"
 			widget_style.previous_havoc_rank_value_1.vertical_alignment = "top"
@@ -942,12 +946,15 @@ local function havoc_concat_init_by_id(id, widget, parent, params)
 					widget_style.current_havoc_rank_value_2.offset[2] = start_badge_offset + numbers_added_offset
 				end
 
-				widget_style.havoc_charge_1.offset[1] = -20
-				widget_style.havoc_charge_2.offset[1] = 0
-				widget_style.havoc_charge_3.offset[1] = 20
-				widget_style.havoc_charge_1.offset[2] = start_badge_offset + charges_added_offset
-				widget_style.havoc_charge_2.offset[2] = start_badge_offset + charges_added_offset
-				widget_style.havoc_charge_3.offset[2] = start_badge_offset + charges_added_offset
+				if widget_content.uses_charges then
+					widget_style.havoc_charge_1.offset[1] = -20
+					widget_style.havoc_charge_2.offset[1] = 0
+					widget_style.havoc_charge_3.offset[1] = 20
+					widget_style.havoc_charge_1.offset[2] = start_badge_offset + charges_added_offset
+					widget_style.havoc_charge_2.offset[2] = start_badge_offset + charges_added_offset
+					widget_style.havoc_charge_3.offset[2] = start_badge_offset + charges_added_offset
+				end
+
 				badge_scale = 0.8
 				charge_scale = 0.4
 			else
@@ -975,28 +982,34 @@ local function havoc_concat_init_by_id(id, widget, parent, params)
 					widget_style.current_havoc_rank_value_2.offset[2] = start_badge_offset + numbers_added_offset
 				end
 
-				widget_style.havoc_charge_1.offset[1] = -40
-				widget_style.havoc_charge_2.offset[1] = 0
-				widget_style.havoc_charge_3.offset[1] = 40
-				widget_style.havoc_charge_1.offset[2] = start_badge_offset + charges_added_offset
-				widget_style.havoc_charge_2.offset[2] = start_badge_offset + charges_added_offset
-				widget_style.havoc_charge_3.offset[2] = start_badge_offset + charges_added_offset
+				if widget_content.uses_charges then
+					widget_style.havoc_charge_1.offset[1] = -40
+					widget_style.havoc_charge_2.offset[1] = 0
+					widget_style.havoc_charge_3.offset[1] = 40
+					widget_style.havoc_charge_1.offset[2] = start_badge_offset + charges_added_offset
+					widget_style.havoc_charge_2.offset[2] = start_badge_offset + charges_added_offset
+					widget_style.havoc_charge_3.offset[2] = start_badge_offset + charges_added_offset
+				end
+
 				badge_scale = 0.9
 				charge_scale = 0.6
 			end
 
-			widget_style.havoc_charge_1.size = {
-				widget_style.havoc_charge_1.size[1] * charge_scale,
-				widget_style.havoc_charge_1.size[2] * charge_scale,
-			}
-			widget_style.havoc_charge_2.size = {
-				widget_style.havoc_charge_2.size[1] * charge_scale,
-				widget_style.havoc_charge_2.size[2] * charge_scale,
-			}
-			widget_style.havoc_charge_3.size = {
-				widget_style.havoc_charge_3.size[1] * charge_scale,
-				widget_style.havoc_charge_3.size[2] * charge_scale,
-			}
+			if widget_content.uses_charges then
+				widget_style.havoc_charge_1.size = {
+					widget_style.havoc_charge_1.size[1] * charge_scale,
+					widget_style.havoc_charge_1.size[2] * charge_scale,
+				}
+				widget_style.havoc_charge_2.size = {
+					widget_style.havoc_charge_2.size[1] * charge_scale,
+					widget_style.havoc_charge_2.size[2] * charge_scale,
+				}
+				widget_style.havoc_charge_3.size = {
+					widget_style.havoc_charge_3.size[1] * charge_scale,
+					widget_style.havoc_charge_3.size[2] * charge_scale,
+				}
+			end
+
 			widget_style.havoc_badge_background.size = {
 				widget_style.havoc_badge_background.size[1] * badge_scale,
 				widget_style.havoc_badge_background.size[2] * badge_scale,
@@ -1292,36 +1305,39 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 		start_time = reward_1_end_time,
 		end_time = reward_2_start_time,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local widget_content = widget.content
 			local widget_style = widget.style
 			local start_id = get_havoc_id_by_wanted_position(widget, 1)
 			local positions = get_havoc_positions(widget)
 			local positions_size = #positions
 
 			if start_id == "order" then
-				widget_style.havoc_charge_ghost_1.color[1] = 0
-				widget_style.havoc_charge_ghost_2.color[1] = 0
-				widget_style.havoc_charge_ghost_3.color[1] = 0
-				widget_style.havoc_charge_1.in_focus_color = table.clone(widget_style.havoc_charge_1.color)
-				widget_style.havoc_charge_2.in_focus_color = table.clone(widget_style.havoc_charge_2.color)
-				widget_style.havoc_charge_3.in_focus_color = table.clone(widget_style.havoc_charge_3.color)
-				widget_style.havoc_charge_1.start_color = table.clone(widget_style.havoc_charge_1.color)
-				widget_style.havoc_charge_2.start_color = table.clone(widget_style.havoc_charge_2.color)
-				widget_style.havoc_charge_3.start_color = table.clone(widget_style.havoc_charge_3.color)
-				widget_style.havoc_charge_1.start_color[1] = 0
-				widget_style.havoc_charge_2.start_color[1] = 0
-				widget_style.havoc_charge_3.start_color[1] = 0
-				params.pass_params.havoc_charge_1 = params.pass_params.havoc_charge_1 or {}
-				params.pass_params.havoc_charge_1.pass_color = widget_style.havoc_charge_1.color
-				params.pass_params.havoc_charge_1.start_color = widget_style.havoc_charge_1.start_color
-				params.pass_params.havoc_charge_1.target_color = widget_style.havoc_charge_1.in_focus_color
-				params.pass_params.havoc_charge_2 = params.pass_params.havoc_charge_2 or {}
-				params.pass_params.havoc_charge_2.pass_color = widget_style.havoc_charge_2.color
-				params.pass_params.havoc_charge_2.start_color = widget_style.havoc_charge_2.start_color
-				params.pass_params.havoc_charge_2.target_color = widget_style.havoc_charge_2.in_focus_color
-				params.pass_params.havoc_charge_3 = params.pass_params.havoc_charge_3 or {}
-				params.pass_params.havoc_charge_3.pass_color = widget_style.havoc_charge_3.color
-				params.pass_params.havoc_charge_3.start_color = widget_style.havoc_charge_3.start_color
-				params.pass_params.havoc_charge_3.target_color = widget_style.havoc_charge_3.in_focus_color
+				if widget_content.uses_charges then
+					widget_style.havoc_charge_ghost_1.color[1] = 0
+					widget_style.havoc_charge_ghost_2.color[1] = 0
+					widget_style.havoc_charge_ghost_3.color[1] = 0
+					widget_style.havoc_charge_1.in_focus_color = table.clone(widget_style.havoc_charge_1.color)
+					widget_style.havoc_charge_2.in_focus_color = table.clone(widget_style.havoc_charge_2.color)
+					widget_style.havoc_charge_3.in_focus_color = table.clone(widget_style.havoc_charge_3.color)
+					widget_style.havoc_charge_1.start_color = table.clone(widget_style.havoc_charge_1.color)
+					widget_style.havoc_charge_2.start_color = table.clone(widget_style.havoc_charge_2.color)
+					widget_style.havoc_charge_3.start_color = table.clone(widget_style.havoc_charge_3.color)
+					widget_style.havoc_charge_1.start_color[1] = 0
+					widget_style.havoc_charge_2.start_color[1] = 0
+					widget_style.havoc_charge_3.start_color[1] = 0
+					params.pass_params.havoc_charge_1 = params.pass_params.havoc_charge_1 or {}
+					params.pass_params.havoc_charge_1.pass_color = widget_style.havoc_charge_1.color
+					params.pass_params.havoc_charge_1.start_color = widget_style.havoc_charge_1.start_color
+					params.pass_params.havoc_charge_1.target_color = widget_style.havoc_charge_1.in_focus_color
+					params.pass_params.havoc_charge_2 = params.pass_params.havoc_charge_2 or {}
+					params.pass_params.havoc_charge_2.pass_color = widget_style.havoc_charge_2.color
+					params.pass_params.havoc_charge_2.start_color = widget_style.havoc_charge_2.start_color
+					params.pass_params.havoc_charge_2.target_color = widget_style.havoc_charge_2.in_focus_color
+					params.pass_params.havoc_charge_3 = params.pass_params.havoc_charge_3 or {}
+					params.pass_params.havoc_charge_3.pass_color = widget_style.havoc_charge_3.color
+					params.pass_params.havoc_charge_3.start_color = widget_style.havoc_charge_3.start_color
+					params.pass_params.havoc_charge_3.target_color = widget_style.havoc_charge_3.in_focus_color
+				end
 
 				if widget_style.current_havoc_rank_value_1 then
 					params.pass_params.current_havoc_rank_value_1 = params.pass_params.current_havoc_rank_value_1 or {}
@@ -1484,6 +1500,7 @@ local function _create_dim_havoc_animation(animation_table)
 			params.pass_params = params.pass_params or {}
 
 			local widget_style = widget.style
+			local widget_content = widget.content
 			local positions = get_havoc_positions(widget)
 			local max_positions = table.size(havoc_concat_passes_by_id)
 			local positions_size = #positions
@@ -1504,7 +1521,7 @@ local function _create_dim_havoc_animation(animation_table)
 				end
 			end
 
-			if widget_style.havoc_charge_1 then
+			if widget_content.uses_charges then
 				if positions_size == max_positions then
 					local charge_styles = {
 						"havoc_charge_1",

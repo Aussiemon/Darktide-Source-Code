@@ -4,7 +4,7 @@ local Action = require("scripts/utilities/action/action")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ChargeEffects = class("ChargeEffects")
 
-ChargeEffects.init = function (self, context, slot, weapon_template, fx_sources)
+ChargeEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._fx_sources = fx_sources

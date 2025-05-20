@@ -206,6 +206,10 @@ local function _update_target(template_data, template_context)
 	local settings = variant_settings[effect_template_variation_id]
 	local vfx = settings.vfx
 
+	if not HEALTH_ALIVE[target_unit] then
+		return
+	end
+
 	if vfx and vfx_data then
 		local local_scale = Unit.local_scale(target_unit, 1)
 		local target_pose, half_extents = Unit.box(target_unit)

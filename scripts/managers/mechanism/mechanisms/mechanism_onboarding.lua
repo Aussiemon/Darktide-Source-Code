@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_onboarding.lua
 
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -19,13 +20,21 @@ MechanismOnboarding.init = function (self, ...)
 	local mission_name = context.mission_name
 	local mission_settings = Missions[mission_name]
 	local level_name = mission_settings.level
+	local circumstance_name = GameParameters.circumstance
+
+	if not CircumstanceTemplates[circumstance_name] then
+		Log.error("MechanismOnboarding", "[init] circumstance_name '%s' does not exists. Fallback to 'default'", circumstance_name)
+
+		circumstance_name = "default"
+	end
+
 	local data = self._mechanism_data
 
 	data.challenge = context.challenge_level or DevParameters.challenge
 	data.resistance = DevParameters.resistance
 	data.level_name = level_name
 	data.mission_name = mission_name
-	data.circumstance_name = GameParameters.circumstance
+	data.circumstance_name = circumstance_name
 	data.side_mission = GameParameters.side_mission
 	self._init_scenario = context.init_scenario
 end

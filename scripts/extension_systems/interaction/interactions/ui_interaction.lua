@@ -43,14 +43,14 @@ UIInteraction._is_blocked = function (self, interactor_unit, interactee_unit)
 	return false
 end
 
-UIInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, target_node)
+UIInteraction.hud_block_text = function (self, interactor_unit, interactee_unit)
 	local blocked, reason_loc_key, reason_loc_context = self:_is_blocked(interactor_unit, interactee_unit)
 
 	if blocked then
 		return reason_loc_key, reason_loc_context
 	end
 
-	return UIInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, target_node)
+	return UIInteraction.super.hud_block_text(self, interactor_unit, interactee_unit)
 end
 
 UIInteraction.interactee_show_marker_func = function (self, interactor_unit, interactee_unit)

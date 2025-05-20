@@ -4,7 +4,7 @@ local Component = require("scripts/utilities/component")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local RandomizedFriendRockUnit = class("RandomizedFriendRockUnit")
 
-RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, fx_sources)
+RandomizedFriendRockUnit.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local owner_unit = context.owner_unit
 
 	self._weapon_actions = weapon_template.actions

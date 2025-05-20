@@ -3,6 +3,7 @@
 local decal_table = {
 	decal_atlas_atoma_01 = "content/textures/gear_decals/decal_atlas_atoma_01",
 	decal_atlas_cadia_01 = "content/textures/gear_decals/decal_atlas_cadia_01",
+	decal_atlas_cadia_02 = "content/textures/gear_decals/decal_atlas_cadia_02",
 	decal_atlas_christmas_01 = "content/textures/gear_decals/decal_atlas_christmas_01",
 	decal_atlas_common_01 = "content/textures/gear_decals/decal_atlas_common_01",
 	decal_atlas_d7 = "content/textures/gear_decals/decal_atlas_d7",

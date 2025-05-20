@@ -53,6 +53,15 @@ HuskLiquidAreaExtension.init = function (self, extension_init_context, unit, ext
 	if additional_unit_vfx then
 		self._additional_unit_particle_id = World.create_particles(self._world, additional_unit_vfx, position, Quaternion.identity())
 	end
+
+	self._area_template_name = template.name
+	self._use_liquid_drawer = template.use_liquid_drawer
+end
+
+HuskLiquidAreaExtension.set_drawer = function (self, drawers)
+	if self._use_liquid_drawer and self._area_template_name then
+		self._drawer = drawers[self._area_template_name]
+	end
 end
 
 HuskLiquidAreaExtension.destroy = function (self)
@@ -81,7 +90,11 @@ HuskLiquidAreaExtension.destroy = function (self)
 		local filled_particle_id = liquid.filled_particle_id
 
 		if filled_particle_id then
-			World.stop_spawning_particles(world, filled_particle_id)
+			if self._drawer then
+				self._drawer:remove_cell(filled_particle_id)
+			else
+				World.stop_spawning_particles(world, filled_particle_id)
+			end
 		end
 	end
 
@@ -226,7 +239,11 @@ HuskLiquidAreaExtension.rpc_remove_liquid_multiple = function (self, channel, go
 		local filled_particle_id = liquid.filled_particle_id
 
 		if filled_particle_id then
-			World.stop_spawning_particles(self._world, filled_particle_id)
+			if self._drawer then
+				self._drawer:remove_cell(filled_particle_id)
+			else
+				World.stop_spawning_particles(self._world, filled_particle_id)
+			end
 		end
 
 		self._flow[real_index] = nil
@@ -253,9 +270,12 @@ HuskLiquidAreaExtension._set_liquid_filled = function (self, real_index)
 	if not liquid.filled_particle_id then
 		if vfx_name_filled then
 			local position, rotation = liquid.position:unbox(), liquid.rotation:unbox()
-			local filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
 
-			liquid.filled_particle_id = filled_particle_id
+			if self._drawer then
+				liquid.filled_particle_id = self._drawer:add_cell(position, rotation)
+			else
+				liquid.filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
+			end
 		else
 			liquid.filled_particle_id = nil
 		end

@@ -7,6 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local TextUtilities = require("scripts/utilities/ui/text")
 local HudElementMissionObjectiveFeed = class("HudElementMissionObjectiveFeed", "HudElementBase")
 
 HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -329,11 +330,26 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 	end
 
 	if hud_objective:progress_timer() then
-		content.show_timer = true
+		local max_counter_amount = hud_objective:max_counter_amount()
+		local minutes = math.floor(max_counter_amount / 60 % 60)
+		local show_minutes = minutes > 0
+		local show_hours = minutes > 60
+		local realign = show_hours
 
-		self:_update_timer_progress(hud_objective)
+		if content.max_counter_amount ~= max_counter_amount then
+			content.max_counter_amount = max_counter_amount
+			content.show_minutes = show_minutes
+			content.show_hours = show_hours
+			content.show_timer = true
+			realign = true
+		end
+
+		self:_update_timer_progress(hud_objective, nil, realign)
 	else
+		content.max_counter_amount = nil
 		content.show_timer = false
+		content.show_minutes = false
+		content.show_hours = false
 		content.timer_text = ""
 	end
 
@@ -400,14 +416,52 @@ HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_object
 	icon_style.offset[1] = 40 + default_length * progression
 end
 
-HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_objective, dt)
+HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_objective, dt, realign)
 	local objective_name = hud_objective:objective_name()
 	local widget = self._widgets_by_name[objective_name]
 	local content = widget.content
+	local show_minutes = content.show_minutes
+	local show_hours = content.show_hours
 	local time_left = math.max(hud_objective:time_left(dt), 0)
-	local text = string.format("%.2f", time_left)
+	local text
 
-	text = text:gsub("%.", ":")
+	if show_hours then
+		local use_short = true
+		local allow_skip = false
+		local max_detail
+
+		text = TextUtilities.format_time_span_localized(time_left, use_short, allow_skip, max_detail)
+	elseif show_minutes then
+		local millis = math.floor(time_left % 1 * 100)
+
+		text = string.format("%.2d:%.2d:%.2d", time_left / 60 % 60, time_left % 60, millis)
+	else
+		local millis = math.floor(time_left % 1 * 100)
+
+		text = string.format("%.2d:%.2d", time_left % 60, millis)
+	end
+
+	if realign then
+		local realignment_text
+
+		if show_hours then
+			realignment_text = text
+		else
+			realignment_text = show_minutes and "00:00:00" or "00:00"
+		end
+
+		local style = widget.style
+		local text_style = style.timer_text
+		local optional_size = {
+			500,
+			40,
+		}
+		local ui_renderer = self._parent:ui_renderer()
+		local width = self:_text_size_for_style(ui_renderer, realignment_text, text_style, optional_size)
+
+		text_style.offset[1] = text_style.default_offset[1] - width
+	end
+
 	content.timer_text = text
 end
 

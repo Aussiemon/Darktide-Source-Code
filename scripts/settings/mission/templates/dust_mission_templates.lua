@@ -179,6 +179,23 @@ local mission_templates = {
 				"mission_strain_briefing_b",
 				"mission_strain_briefing_c",
 			},
+			mission_giver_packs = {
+				sergeant_a = {
+					"sergeant",
+					"tech_priest",
+				},
+				tech_priest_a = {
+					"tech_priest",
+				},
+				pilot_a = {
+					"tech_priest",
+					"pilot",
+				},
+				sergeant_b = {
+					"sergeant",
+					"dreg_lector",
+				},
+			},
 		},
 		dialogue_settings = {
 			npc_story_ticker_enabled = false,

@@ -236,7 +236,7 @@ FxDataTables.return_table = function (self, fx_data_table)
 	fx_data_table:clear()
 end
 
-ChainLightningLinkEffects.init = function (self, context, slot, weapon_template, fx_sources)
+ChainLightningLinkEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local owner_unit = context.owner_unit
 
 	self._world = context.world

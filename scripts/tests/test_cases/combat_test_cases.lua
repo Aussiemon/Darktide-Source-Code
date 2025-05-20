@@ -739,7 +739,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 					}
 
 					for hit_zone_name, data in pairs(gib_template) do
-						if hit_zone_name ~= "name" then
+						if hit_zone_name ~= "name" and hit_zone_name ~= "forced_fallback_gibbing_hit_zone_name" then
 							if hit_zone_name == "fallback_hit_zone" then
 								hit_zone_name = nil
 							end

@@ -158,6 +158,10 @@ end
 MinigameBalance.on_axis_set = function (self, t, x, y)
 	MinigameBalance.super.on_axis_set(self, t, x, y)
 
+	if not self._is_server then
+		return
+	end
+
 	y = -y
 
 	local dt = t - self._last_axis_set

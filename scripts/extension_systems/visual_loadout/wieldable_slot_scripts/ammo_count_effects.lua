@@ -4,7 +4,7 @@ local AmmoCountEffects = class("AmmoCountEffects")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local WWISE_PARAMETER_NAME = "weapon_ammo_count"
 
-AmmoCountEffects.init = function (self, context, slot, weapon_template, fx_sources)
+AmmoCountEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local unit_data_extension = context.unit_data_extension
 
 	self._owner_unit = context.owner_unit

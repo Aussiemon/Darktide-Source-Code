@@ -28,6 +28,7 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
@@ -131,9 +132,10 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		end
 	end
 
+	local wielded_slot = self._visual_loadout_extension:currently_wielded_slot()
 	local slot_to_wield = lunge_template.slot_to_wield
 
-	if slot_to_wield then
+	if slot_to_wield and wielded_slot ~= slot_to_wield then
 		PlayerUnitVisualLoadout.wield_slot(slot_to_wield, unit, t)
 	end
 
@@ -259,7 +261,15 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	local on_exit_anim = anim_settings and anim_settings.on_exit
 
 	if on_exit_anim then
-		self:_play_animation(self._animation_extension, on_exit_anim)
+		if type(on_exit_anim) ~= "table" then
+			self:_play_animation(self._animation_extension, on_exit_anim)
+		else
+			for ii = 1, #on_exit_anim do
+				local anim = on_exit_anim[ii]
+
+				self:_play_animation(self._animation_extension, anim)
+			end
+		end
 	end
 
 	local lunge_end_camera_shake = lunge_template.lunge_end_camera_shake
@@ -445,7 +455,7 @@ PlayerCharacterStateLunging._check_transition = function (self, unit, t, input_e
 
 	if not still_lunging then
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-		local wants_sprint = Sprint.check(t, unit, self._movement_state_component, self._sprint_character_state_component, input_extension, self._locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants)
+		local wants_sprint = Sprint.check(t, unit, self._movement_state_component, self._sprint_character_state_component, input_extension, self._locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants, self._buff_extension)
 
 		if wants_sprint then
 			next_state_params.disable_sprint_start_slowdown = true

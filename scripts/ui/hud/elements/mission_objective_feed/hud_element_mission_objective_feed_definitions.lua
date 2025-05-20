@@ -238,11 +238,12 @@ local function create_mission_objective(scenegraph_id)
 			value = "",
 			value_id = "counter_text",
 			style = {
+				horizontal_alignment = "right",
 				text_horizontal_alignment = "right",
 				text_vertical_alignment = "center",
 				vertical_alignment = "top",
 				offset = {
-					bar_offset[1],
+					-(side_offset * 2),
 					0,
 					6,
 				},
@@ -267,7 +268,12 @@ local function create_mission_objective(scenegraph_id)
 				text_vertical_alignment = "center",
 				vertical_alignment = "top",
 				offset = {
-					header_size[1] - 90,
+					0,
+					0,
+					6,
+				},
+				default_offset = {
+					header_size[1] - side_offset * 2,
 					0,
 					6,
 				},
@@ -276,7 +282,7 @@ local function create_mission_objective(scenegraph_id)
 				default_text_color = header_font_color,
 				drop_shadow = drop_shadow,
 				size = {
-					bar_size[1],
+					header_size[1],
 				},
 			},
 		},

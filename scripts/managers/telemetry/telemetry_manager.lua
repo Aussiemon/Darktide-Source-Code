@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/telemetry/telemetry_manager.lua
 
+local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local TelemetryManagerTestify = GameParameters.testify and require("scripts/managers/telemetry/telemetry_manager_testify")
 local TelemetrySettings = require("scripts/managers/telemetry/telemetry_settings")
 local POST_INTERVAL = TelemetrySettings.batch.post_interval
@@ -103,7 +104,7 @@ TelemetryManager.post_batch = function (self, shutdown)
 		Managers.telemetry_events:post_batch(batch_size, time_since_last_post, events, false)
 	end
 
-	Log.debug("TelemetryManager", "Posting batch of %d events", #self._events)
+	Log.info("TelemetryManager", "Posting batch of %d events", #self._events)
 
 	if GameParameters.testify then
 		Log.debug("TelemetryManager", cjson.encode(self._events))
@@ -125,7 +126,13 @@ TelemetryManager.post_batch = function (self, shutdown)
 
 		self._batch_in_flight = nil
 	end):catch(function (error)
-		Log.exception("TelemetryManager", "Error posting batch: %s", error)
+		if error.code ~= BackendError.NotInitialized then
+			Log.exception("TelemetryManager", "Error posting batch: %s", error)
+		else
+			Log.info("TelemetryManager", "Error posting batch as we're not logged in")
+		end
+
+		self:_remove_events_of_type(self._events_in_flight, "post_batch")
 		table.merge_array(self._events, self._events_in_flight)
 		table.clear(self._events_in_flight)
 
@@ -148,6 +155,14 @@ TelemetryManager.destroy = function (self)
 	local shutdown = true
 
 	self:post_batch(shutdown)
+end
+
+TelemetryManager._remove_events_of_type = function (self, events, event_type)
+	for ii = #events, 1, -1 do
+		if events[ii].type == event_type then
+			table.remove(events, ii)
+		end
+	end
 end
 
 TelemetryManager._event_telemetry_change = function (self, value)

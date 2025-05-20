@@ -26,7 +26,9 @@ ActionBuffTarget.start = function (self, action_settings, t, time_scale, action_
 	local _, self_cast = self:_get_target()
 	local anim_event = self_cast and action_settings.self_cast_anim_event or action_settings.ally_anim_event
 
-	self:trigger_anim_event(anim_event)
+	if anim_event then
+		self:trigger_anim_event(anim_event)
+	end
 
 	local vo_tag = action_settings.vo_tag
 
@@ -39,8 +41,6 @@ ActionBuffTarget.start = function (self, action_settings, t, time_scale, action_
 	if gear_sound_alias then
 		self._fx_extension:trigger_gear_wwise_event(gear_sound_alias)
 	end
-
-	self._spell_cast = false
 end
 
 ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
@@ -49,69 +49,17 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 	end
 
 	local action_settings = self._action_settings
-	local cast_time = action_settings.cast_time
+	local total_time = action_settings.total_time
 
-	if cast_time < time_in_action and not self._spell_cast then
-		self._spell_cast = true
-
+	if total_time < time_in_action then
 		local target_unit, self_cast = self:_get_target()
-		local action_module_targeting_component = self._action_module_targeting_component
-
-		action_module_targeting_component.target_unit_1 = nil
-		action_module_targeting_component.target_unit_2 = nil
-		action_module_targeting_component.target_unit_3 = nil
 
 		if self._is_server then
-			local has_override_buff_rule = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
-			local has_override_buff_rule_two = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
-			local buff_name = has_override_buff_rule and action_settings.override_buff_name_one or has_override_buff_rule_two and action_settings.override_buff_name_two or action_settings.buff_name
+			local buff_name = action_settings.buff_name
 			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 			if buff_extension then
 				buff_extension:add_internally_controlled_buff(buff_name, t)
-			end
-
-			local has_always_self_cast_rule = self._talent_extension:has_special_rule(special_rules.buff_always_self_cast)
-
-			if has_always_self_cast_rule and not self_cast then
-				local own_buff_extension = self._buff_extension
-
-				if own_buff_extension then
-					own_buff_extension:add_internally_controlled_buff(buff_name, t)
-				end
-			end
-
-			local has_coherency_cast_rule = self._talent_extension:has_special_rule(special_rules.buff_coherency_units)
-
-			if has_coherency_cast_rule then
-				local coherency_buff_name = action_settings.coherency_buff_name
-
-				CoherencyUtils.add_buff_to_all_in_coherency(target_unit, coherency_buff_name, t)
-			end
-
-			local restore_toughness = self._talent_extension:has_special_rule(special_rules.buff_restore_coherency_toughness)
-
-			if restore_toughness then
-				local coherency_toughness = action_settings.coherency_toughness
-				local coherency_extension = ScriptUnit.extension(self._player_unit, "coherency_system")
-				local units_in_coherence = coherency_extension:in_coherence_units()
-
-				for coherency_unit, _ in pairs(units_in_coherence) do
-					Toughness.replenish_percentage(coherency_unit, coherency_toughness, false, "buff_restore_coherency_toughness")
-				end
-			end
-
-			local has_revive_rule = self._talent_extension:has_special_rule(special_rules.buff_revives_allies)
-
-			if has_revive_rule then
-				local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-				local character_state_component = unit_data_extension:read_component("character_state")
-
-				if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
-					local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
-
-					assisted_state_input_component.force_assist = true
-				end
 			end
 		end
 	end

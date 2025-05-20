@@ -261,5 +261,19 @@ PickupOverrides.extra_ammo_pickups = {
 		},
 	},
 }
+PickupOverrides.add_skulls_pickup = {
+	pickup_settings = {
+		primary = {
+			rewards = {
+				skulls_01_pickup = flat(35),
+			},
+		},
+		secondary = {
+			rewards = {
+				skulls_01_pickup = flat(35),
+			},
+		},
+	},
+}
 
 return PickupOverrides

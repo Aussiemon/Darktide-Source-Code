@@ -712,18 +712,8 @@ end
 CosmeticsVendorView._set_initial_viewport_camera_position = function (self, default_camera_settings)
 	local world_spawner = self._world_spawner
 	local camera_unit = default_camera_settings.camera_unit
-	local default_camera_position_boxed = default_camera_settings.original_position_boxed
-	local default_camera_rotation_boxed = default_camera_settings.original_rotation_boxed
 
-	world_spawner:change_camera_unit(camera_unit)
-
-	local camera_world_position = default_camera_position_boxed:unbox()
-	local camera_world_rotation = default_camera_rotation_boxed:unbox()
-
-	world_spawner:set_camera_position(camera_world_position)
-	world_spawner:set_camera_rotation(camera_world_rotation)
-	world_spawner:reset_camera_rotation_axis_offset()
-	world_spawner:reset_camera_position_axis_offset()
+	world_spawner:change_camera_unit(camera_unit, nil, true)
 
 	self._next_zoom_instant = true
 end
@@ -1290,45 +1280,8 @@ CosmeticsVendorView._set_camera_item_slot_focus = function (self, breed_name, sl
 	local breeds_item_camera_by_slot_id = self._breeds_item_camera_by_slot_id
 	local breed_item_camera_by_slot_id = breeds_item_camera_by_slot_id[breed_name]
 	local slot_camera = breed_item_camera_by_slot_id and breed_item_camera_by_slot_id[slot_name]
-	local camera_world_position = Unit.world_position(slot_camera, 1)
-	local camera_world_rotation = Unit.world_rotation(slot_camera, 1)
-	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
-	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", zoom_level * (camera_world_position.x - default_camera_world_position.x), time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", zoom_level * (camera_world_position.y - default_camera_world_position.y), time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", zoom_level * (camera_world_position.z - default_camera_world_position.z), time, func_ptr)
-
-	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
-	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
-	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
-	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
-
-	world_spawner:set_camera_rotation_axis_offset("x", zoom_level * (camera_world_rotation_x - default_camera_world_rotation_x), time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", zoom_level * (camera_world_rotation_y - default_camera_world_rotation_y), time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", zoom_level * (camera_world_rotation_z - default_camera_world_rotation_z), time, func_ptr)
-end
-
-CosmeticsVendorView._set_camera_node_focus = function (self, node_name, time, func_ptr)
-	if node_name then
-		local profile_spawner = self._profile_spawner
-		local world_spawner = self._world_spawner
-		local base_world_position = profile_spawner:node_world_position(1)
-		local node_world_position = profile_spawner:node_world_position(node_name)
-		local target_position = node_world_position - base_world_position
-
-		world_spawner:set_camera_position_axis_offset("x", target_position.x, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", target_position.y, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", target_position.z, time, func_ptr)
-	end
-end
-
-CosmeticsVendorView._set_camera_position_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_position_axis_offset(axis, value, animation_time, func_ptr)
-end
-
-CosmeticsVendorView._set_camera_rotation_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_rotation_axis_offset(axis, value, animation_time, func_ptr)
+	world_spawner:interpolate_to_camera(slot_camera, zoom_level, time, func_ptr)
 end
 
 CosmeticsVendorView._can_zoom = function (self)

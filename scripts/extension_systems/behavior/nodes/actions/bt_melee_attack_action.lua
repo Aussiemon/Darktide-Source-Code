@@ -45,7 +45,7 @@ BtMeleeAttackAction.enter = function (self, unit, breed, blackboard, scratchpad,
 	local stat_buffs = buff_extension:stat_buffs()
 	local melee_attack_speed = stat_buffs.melee_attack_speed or 1
 
-	if melee_attack_speed > 1 then
+	if melee_attack_speed ~= 1 then
 		scratchpad.melee_attack_speed = melee_attack_speed
 	end
 

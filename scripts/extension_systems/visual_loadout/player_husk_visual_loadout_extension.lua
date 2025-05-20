@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/player_husk_visual_loadout_extension.lua
 
+local Breeds = require("scripts/settings/breed/breeds")
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local MasterItems = require("scripts/backend/master_items")
@@ -17,25 +18,30 @@ local RPCS = {
 	"rpc_player_unequip_item_from_slot",
 }
 
-local function _register_fx_sources(fx_extension, unit_1p, unit_3p, attachments_1p, attachments_3p, source_config, slot_name, is_in_first_person_mode)
+local function _register_fx_sources(fx_extension, slot, source_config, slot_name, is_in_first_person_mode)
+	local unit_1p = slot.unit_1p
+	local attachments_by_unit_1p = slot.attachments_by_unit_1p
+	local attachment_id_lookup_1p = slot.attachment_id_lookup_1p
 	local sources = {}
 
 	for alias, node_name in pairs(source_config) do
 		local source_name = slot_name .. alias
 
-		fx_extension:register_sound_source(source_name, unit_1p, attachments_1p, node_name)
+		fx_extension:register_sound_source(source_name, unit_1p, attachments_by_unit_1p, attachment_id_lookup_1p, node_name)
 
-		local parent_unit, vfx_attachments
+		local parent_unit, vfx_attachments, attachment_id_lookup
 
 		if is_in_first_person_mode then
 			parent_unit = unit_1p
-			vfx_attachments = attachments_1p
+			vfx_attachments = attachments_by_unit_1p
+			attachment_id_lookup = attachment_id_lookup_1p
 		else
-			parent_unit = unit_3p
-			vfx_attachments = attachments_3p
+			parent_unit = slot.unit_3p
+			vfx_attachments = slot.attachments_by_unit_3p
+			attachment_id_lookup = slot.attachment_id_lookup_3p
 		end
 
-		fx_extension:register_vfx_spawner(source_name, parent_unit, vfx_attachments, node_name)
+		fx_extension:register_vfx_spawner(source_name, parent_unit, vfx_attachments, attachment_id_lookup, node_name)
 
 		sources[alias] = source_name
 	end
@@ -45,22 +51,23 @@ end
 
 local function _move_fx_sources(fx_extension, source_config, sources, slot, is_in_first_person_mode)
 	local unit_1p, unit_3p = slot.unit_1p, slot.unit_3p
-	local attachments_1p, attachments_3p = slot.attachments_1p, slot.attachments_3p
-	local parent_unit, attachments
+	local parent_unit, attachments, attachment_id_lookup
 
 	if is_in_first_person_mode then
 		parent_unit = unit_1p
-		attachments = attachments_1p
+		attachments = slot.attachments_by_unit_1p
+		attachment_id_lookup = slot.attachment_id_lookup_1p
 	else
 		parent_unit = unit_3p
-		attachments = attachments_3p
+		attachments = slot.attachments_by_unit_3p
+		attachment_id_lookup = slot.attachment_id_lookup_3p
 	end
 
 	for alias, source_name in pairs(sources) do
 		local node_name = source_config[alias]
 
-		fx_extension:move_sound_source(source_name, parent_unit, attachments, node_name)
-		fx_extension:move_vfx_spawner(source_name, parent_unit, attachments, node_name)
+		fx_extension:move_sound_source(source_name, parent_unit, attachments, attachment_id_lookup, node_name)
+		fx_extension:move_vfx_spawner(source_name, parent_unit, attachments, attachment_id_lookup, node_name)
 	end
 end
 
@@ -100,7 +107,9 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 
 	self._equipment_component = equipment_component
 
-	local equipment = equipment_component.initialize_equipment(slot_configuration)
+	local breed_name = self._player:profile()
+	local breed_settings = Breeds[breed_name]
+	local equipment = equipment_component.initialize_equipment(slot_configuration, breed_settings)
 
 	self._equipment = equipment
 	self._wielded_slot = PlayerHuskVisualLoadoutExtension.NO_WIELDABLE_SLOT
@@ -204,9 +213,8 @@ PlayerHuskVisualLoadoutExtension.update = function (self, unit, dt, t)
 		for slot_name, slot in pairs(spawned_slots) do
 			if slot.wieldable then
 				local slot_fx_sources = fx_sources[slot_name]
-				local item = slot.item
 
-				WieldableSlotScripts.create(self._wieldable_slot_scripts_context, wieldable_slot_scripts, slot_fx_sources, slot, item)
+				WieldableSlotScripts.create(self._wieldable_slot_scripts_context, wieldable_slot_scripts, slot_fx_sources, slot)
 
 				local slot_scripts = wieldable_slot_scripts[slot_name]
 
@@ -355,12 +363,12 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	if slot.wieldable then
 		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 		local weapon_template_fx_sources = weapon_template.fx_sources
-		local fx_sources = _register_fx_sources(self._fx_extension, slot.unit_1p, slot.unit_3p, slot.attachments_1p, slot.attachments_3p, weapon_template_fx_sources, slot_name, is_in_first_person_mode)
+		local fx_sources = _register_fx_sources(self._fx_extension, slot, weapon_template_fx_sources, slot_name, is_in_first_person_mode)
 
 		self._fx_sources[slot_name] = fx_sources
 
 		if slot.attachment_spawn_status == "fully_spawned" then
-			WieldableSlotScripts.create(self._wieldable_slot_scripts_context, self._wieldable_slot_scripts, fx_sources, slot, item)
+			WieldableSlotScripts.create(self._wieldable_slot_scripts_context, self._wieldable_slot_scripts, fx_sources, slot)
 		end
 
 		local template_name = weapon_template.name
@@ -380,7 +388,7 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._archetype_property, self._selected_voice_property)
 end
 
-PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = function (self, channel_id, go_id, slot_id, item_id)
+PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = function (self, channel_id, go_id, slot_id, debug_item_id)
 	local slot_name = NetworkLookup.player_inventory_slot_names[slot_id]
 	local player = self._player
 	local peer_id = player:peer_id()
@@ -390,14 +398,16 @@ PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = fu
 	local visual_loadout = profile.visual_loadout
 	local item = visual_loadout[slot_name]
 	local optional_existing_unit_3p
-	local item_name = NetworkLookup.player_item_names[item_id]
+	local item_name = NetworkLookup.player_item_names[debug_item_id]
+	local client_item_name = item and item.name
 
-	if item then
-		local client_item_name = item.name
+	if client_item_name ~= item_name then
+		client_item_name = client_item_name or "N/A"
 
-		if client_item_name ~= item_name then
-			Crashify.print_exception("PlayerHuskVisualLoadoutExtension", "Client has a different item cached than server has in player profile.")
-		end
+		Crashify.print_exception("PlayerHuskVisualLoadoutExtension", "Client has a different item cached than server has in player profile.")
+		Log.warning("PlayerHuskVisualLoadoutExtension", "Failed to equip item `%s` in slot `%s`, cached profile item was `%s`", item_name, slot_name, client_item_name)
+
+		return
 	end
 
 	self:_equip_item_to_slot(slot_name, item, optional_existing_unit_3p)
@@ -511,7 +521,7 @@ end
 PlayerHuskVisualLoadoutExtension.unit_and_attachments_from_slot = function (self, slot_name)
 	local slot = self._equipment[slot_name]
 
-	return slot.unit_1p, slot.unit_3p, slot.attachments_1p, slot.attachments_3p
+	return slot.unit_1p, slot.unit_3p, slot.attachments_by_unit_1p, slot.attachments_by_unit_3p
 end
 
 PlayerHuskVisualLoadoutExtension.telemetry_wielded_weapon = function (self)

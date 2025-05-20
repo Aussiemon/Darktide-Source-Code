@@ -37,7 +37,7 @@ for ii = 1, #ActionHandlerSettings.allowed_action_kinds_during_sprint do
 end
 
 ActionAvailability.available_in_sprint = function (action_settings, buff_extension)
-	local buff_keyword_allows_action_during_sprint = _buff_keyword_allows_action_during_sprint(action_settings, buff_extension)
+	local buff_keyword_allows_action_during_sprint = _buff_keyword_allows_action_during_sprint(action_settings, buff_extension) or action_settings.override_allow_during_sprint
 	local action_settings_allowed_during_sprint = action_settings.allowed_during_sprint
 
 	if not buff_keyword_allows_action_during_sprint then

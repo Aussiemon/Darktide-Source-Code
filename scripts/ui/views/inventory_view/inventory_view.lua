@@ -438,24 +438,22 @@ InventoryView.event_inventory_view_set_camera_focus = function (self, slot_name)
 end
 
 InventoryView._set_camera_focus_by_slot_name = function (self, slot_name, optional_camera_settings, force_instant_camera)
-	local func_ptr = math.easeCubic
-
 	if slot_name then
-		Managers.event:trigger("event_inventory_set_camera_item_slot_focus", slot_name, 1.5, func_ptr)
+		Managers.event:trigger("event_inventory_set_camera_item_slot_focus", slot_name, force_instant_camera)
 	elseif optional_camera_settings then
 		for i = 1, #optional_camera_settings do
 			local camera_settings = optional_camera_settings[i]
 
-			Managers.event:trigger(camera_settings[1], camera_settings[2], camera_settings[3], not force_instant_camera and camera_settings[4] or 0, camera_settings[5])
+			camera_settings[#camera_settings + 1] = force_instant_camera
+
+			Managers.event:trigger(unpack(camera_settings))
+
+			camera_settings[#camera_settings] = nil
 		end
 	else
-		Managers.event:trigger("event_inventory_set_camera_position_axis_offset", "x", 0, 1, func_ptr)
-		Managers.event:trigger("event_inventory_set_camera_position_axis_offset", "y", 0, 1, func_ptr)
-		Managers.event:trigger("event_inventory_set_camera_position_axis_offset", "z", 0, 1, func_ptr)
-		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "x", 0, 1, func_ptr)
-		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "y", 0, 1, func_ptr)
-		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "z", 0, 1, func_ptr)
-		Managers.event:trigger("event_inventory_set_camera_default_focus")
+		Managers.event:trigger("event_inventory_set_target_camera_offset", 0, 0, 0, force_instant_camera)
+		Managers.event:trigger("event_inventory_set_target_camera_rotation", false, force_instant_camera)
+		Managers.event:trigger("event_inventory_set_camera_default_focus", force_instant_camera)
 	end
 end
 

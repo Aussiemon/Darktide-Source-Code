@@ -46,6 +46,7 @@ GameplayInitStepGameMode._init_game_mode = function (self, mission_name, world, 
 		world = world,
 		physics_world = physics_world,
 		is_server = is_server,
+		mission_template = mission,
 	}
 	local game_mode_manager = GameModeManager:new(game_mode_context, game_mode_name, gameplay_modifiers, network_event_delegate)
 

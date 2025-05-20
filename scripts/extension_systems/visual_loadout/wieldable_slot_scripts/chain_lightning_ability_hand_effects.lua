@@ -29,8 +29,8 @@ local CHARGE_FX_SOURCE_LOOKUP = {
 }
 local _vfx_external_properties = {}
 
-ChainLightningAbilityHandEffects.init = function (self, context, slot, weapon_template, fx_sources)
-	ChainLightningAbilityHandEffects.super.init(self, context, slot, weapon_template, fx_sources)
+ChainLightningAbilityHandEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
+	ChainLightningAbilityHandEffects.super.init(self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 
 	if DEDICATED_SERVER then
 		return

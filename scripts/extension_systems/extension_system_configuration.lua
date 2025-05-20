@@ -49,7 +49,7 @@ _system_require("hazard_prop", "hazard_prop_system")
 _system_require("health", "health_system")
 _system_require("health_station", "health_station_system")
 _system_require("input", "player_unit_input_extension")
-_system_require("interaction", "interactee_system", "interactor_extension")
+_system_require("interaction", "interactee_system", "interactor_system")
 _system_require("ledge_finder", "player_unit_ledge_finder_extension")
 _system_require("legacy_v2_proximity", "legacy_v2_proximity_system")
 _system_require("liquid_area", "liquid_area_system")
@@ -305,7 +305,7 @@ local systems = {
 	},
 	{
 		"interactor_system",
-		"ExtensionSystemBase",
+		"InteractorSystem",
 		false,
 		true,
 		true,

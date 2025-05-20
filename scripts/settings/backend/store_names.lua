@@ -33,12 +33,6 @@ StoreNames.by_archetype = {
 		veteran = "get_veteran_marks_store",
 		zealot = "get_zealot_marks_store",
 	},
-	debug = {
-		ogryn = "get_debug_ogryn_store",
-		psyker = "get_debug_human_store",
-		veteran = "get_debug_human_store",
-		zealot = "get_debug_human_store",
-	},
 	premium = {
 		ogryn = "premium_store_skins_ogryn",
 		psyker = "premium_store_skins_psyker",

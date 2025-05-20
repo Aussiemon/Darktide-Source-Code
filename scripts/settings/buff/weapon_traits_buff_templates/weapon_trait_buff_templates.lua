@@ -373,6 +373,7 @@ templates.weapon_trait_melee_weapon_special_max_activations = {
 templates.weapon_trait_reload_unwielded_weapons = {
 	active_duration = 1,
 	class_name = "timed_trigger_buff",
+	predicted = true,
 	trigger_function = function (data, context)
 		local unit = context.unit
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")

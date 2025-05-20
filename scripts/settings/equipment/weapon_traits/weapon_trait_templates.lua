@@ -55,6 +55,7 @@ _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_po
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powermaul_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_2h_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_p1")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_p2")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p2")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_stubrevolver_p1")

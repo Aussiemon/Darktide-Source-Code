@@ -21,7 +21,7 @@ local zone_image_panel_size = {
 }
 local zone_image_size = {
 	zone_image_panel_size[1],
-	200,
+	183,
 }
 local body_size = {
 	inner_panel_size[1],
@@ -197,7 +197,7 @@ local zone_image_panel_position = {
 }
 local zone_image_position = {
 	0,
-	0,
+	10,
 	6,
 }
 local info_panel_position = {

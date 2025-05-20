@@ -17,6 +17,10 @@ NavBlockExtension.destroy = function (self)
 			end
 		end
 	end
+
+	if self._nav_tag_volume then
+		Managers.state.nav_mesh:remove_nav_tag_volume(self._nav_tag_volume)
+	end
 end
 
 NavBlockExtension.setup_from_component = function (self, unit, volume_name, start_blocked)
@@ -34,8 +38,7 @@ NavBlockExtension.setup_from_component = function (self, unit, volume_name, star
 	local volume_height = Unit.volume_height(unit, volume_name)
 	local volume_alt_min, volume_alt_max = self:_get_volume_alt_min_max(unit, volume_points, volume_height)
 
-	Managers.state.nav_mesh:add_nav_tag_volume(volume_points, volume_alt_min, volume_alt_max, layer_name, volume_layer_allowed)
-
+	self._nav_tag_volume = Managers.state.nav_mesh:add_nav_tag_volume(volume_points, volume_alt_min, volume_alt_max, layer_name, volume_layer_allowed)
 	self._layer_names[volume_name] = layer_name
 end
 

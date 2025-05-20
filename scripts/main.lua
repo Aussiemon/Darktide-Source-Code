@@ -19,7 +19,6 @@ local StateLoadAudioSettings = require("scripts/game_states/boot/state_load_audi
 local StateLoadBootAssets = require("scripts/game_states/boot/state_load_boot_assets")
 local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_render_settings")
 local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
-local GameStateDebug = require("scripts/utilities/game_state_debug")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local GAME_RESUME_COUNT = 0
 

@@ -256,12 +256,17 @@ end
 
 PlayerCharacterStateBase._is_wielding_minigame_device = function (self)
 	local wielded_slot = self._inventory_component.wielded_slot
-	local pocketable_device_active = self._minigame_character_state_component.pocketable_device_active
 
-	if wielded_slot == "slot_device" or wielded_slot == "slot_pocketable_small" and pocketable_device_active then
+	if wielded_slot == "slot_device" or wielded_slot == "slot_pocketable_small" then
 		local weapon_template = self._visual_loadout_extension:weapon_template_from_slot(wielded_slot)
 
-		return weapon_template and weapon_template.require_minigame or false
+		if not weapon_template or not weapon_template.require_minigame then
+			return false
+		end
+
+		local pocketable_device_active = self._minigame_character_state_component.pocketable_device_active
+
+		return pocketable_device_active or weapon_template.not_player_wieldable
 	end
 
 	return false

@@ -41,6 +41,7 @@ local roamer_pacing_template = {
 	name = "default_roamers",
 	num_encampment_blocked_zones = 30,
 	spawn_distance = 75,
+	start_zone_index = 2,
 	zone_length = 10,
 	density_types = {
 		"none",

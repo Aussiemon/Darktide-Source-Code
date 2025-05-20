@@ -189,7 +189,7 @@ CoherencySystem.update = function (self, context, dt, t, ...)
 		local direct_neighbours = coherency_data.units_in_direct_coherence
 		local my_chain = daisy_chains[unit]
 
-		for neighbour, _ in pairs(direct_neighbours) do
+		for neighbour, neighbour_coherency_extension in pairs(direct_neighbours) do
 			local neighbours_chain = daisy_chains[neighbour]
 
 			if my_chain ~= neighbours_chain then

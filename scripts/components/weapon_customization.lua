@@ -141,7 +141,6 @@ end
 WeaponCustomization._spawn_item_attachments = function (self, unit, item_data, skin_data)
 	local attach_settings = self._attach_settings
 	local attachments = item_data.attachments
-	local attachment_units = {}
 	local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item_data, skin_data)
 
 	if unit and attachments then
@@ -149,19 +148,21 @@ WeaponCustomization._spawn_item_attachments = function (self, unit, item_data, s
 
 		table.sort(sorted_attachments)
 
+		local num_attached_units = 0
+
 		for i = 1, #sorted_attachments do
 			local key = sorted_attachments[i]
 			local attachment_slot_data = attachments[key]
+			local mission_template
+			local attachments_by_unit = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, item_data.name, key, false, false, false, mission_template)
+			local all_attachment_units = attachments_by_unit[unit]
+			local num_attachments = #all_attachment_units
 
-			attachment_units = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, attachment_units)
-
-			if attachment_units then
-				local num_attachments = #attachment_units
-
-				for j = 1, num_attachments do
-					Unit.set_data(unit, "attached_items", #attachment_units - j + 1, attachment_units[j])
-				end
+			for j = 1, num_attachments do
+				Unit.set_data(unit, "attached_items", num_attached_units + (num_attachments - j + 1), all_attachment_units[j])
 			end
+
+			num_attached_units = num_attached_units + num_attachments
 		end
 	end
 end

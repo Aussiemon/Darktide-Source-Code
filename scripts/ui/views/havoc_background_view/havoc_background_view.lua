@@ -13,10 +13,7 @@ HavocBackgroundView.init = function (self, settings, context)
 	local promotion_info = Managers.data_service.havoc:show_promotion_info()
 
 	if promotion_info then
-		local havoc_info = Managers.data_service.havoc:get_settings()
 		local min_rank = 1
-		local max_rank = havoc_info.max_rank
-		local max_charges = havoc_info.max_charges
 		local current_rank = promotion_info.current and promotion_info.current.rank
 		local previous_rank = promotion_info.previous and promotion_info.previous.rank
 		local current_charges = promotion_info.current and promotion_info.current.charges
@@ -37,8 +34,6 @@ HavocBackgroundView.init = function (self, settings, context)
 end
 
 HavocBackgroundView.auto_cancel_mission = function (self)
-	local charges_left = self.havoc_order.charges
-
 	self._rewards = {
 		type = "promotion",
 		current = {},
@@ -71,8 +66,6 @@ HavocBackgroundView.auto_cancel_mission = function (self)
 end
 
 HavocBackgroundView.revoke_mission = function (self)
-	local charges_left = self.havoc_order.charges
-
 	self._rewards = {
 		type = "promotion",
 		current = {},

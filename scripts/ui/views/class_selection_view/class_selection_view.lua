@@ -138,6 +138,7 @@ ClassSelectionView.draw = function (self, dt, t, input_service, layer)
 	local ui_scenegraph = self._ui_scenegraph
 	local render_settings = self._render_settings
 	local archetype_options_widgets = self._archetype_options_widgets
+	local archetype_options_frame_widgets = self._archetype_options_frame_widgets
 	local class_details_widgets = self._class_details_widgets
 	local class_options_widgets = self._class_options_widgets
 
@@ -150,6 +151,14 @@ ClassSelectionView.draw = function (self, dt, t, input_service, layer)
 			if self._using_cursor_navigation then
 				widget.content.hotspot.is_focused = widget.content.hotspot.is_hover
 			end
+
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
+	if archetype_options_frame_widgets then
+		for i = 1, #archetype_options_frame_widgets do
+			local widget = archetype_options_frame_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
 		end
@@ -288,7 +297,7 @@ ClassSelectionView._handle_input = function (self, input_service)
 
 			input_handled = true
 		elseif input_service:get("confirm_pressed") then
-			self:_on_continue_pressed()
+			self._widgets_by_name.continue_button.content.hotspot.pressed_callback()
 
 			input_handled = true
 		end
@@ -332,50 +341,124 @@ end
 ClassSelectionView._create_archetype_option_widgets = function (self)
 	self:_destroy_archetype_option_widgets()
 
+	local archetype_option_frame_definition = Definitions.archetype_option_frame_definition
 	local archetype_option_definition = Definitions.archetype_option_definition
 	local archetype_selection_definition = Definitions.archetype_selection_definition
-	local size = archetype_option_definition.size
-	local widgets = {}
+	local frame_widgets = {}
+	local icon_widgets = {}
 	local options = self._archetype_options
 	local num_options = #options
-	local widget_width = size[1]
 	local spacing = ClassSelectionViewSettings.archetype_option_spacing
-	local start_offset_x = 0
 	local widget_left = self:_create_widget("archetype_select_left", archetype_selection_definition.left)
 
 	widget_left.offset[1] = -ClassSelectionViewSettings.archetype_select_spacing
 
+	local max_frame_height = 0
+	local min_frame_width = math.huge
+	local max_frame_width = 0
+	local options_data = {}
+
 	for i = 1, num_options do
 		local option = options[i]
-		local name = "archetype_option_" .. i
-		local widget = self:_create_widget(name, archetype_option_definition)
-		local content = widget.content
+		local frame_data
 
-		content.icon_highlight = option.archetype_selection_icon
+		if i == 1 then
+			frame_data = ClassSelectionViewSettings.archetype_frames_textures.left
+		elseif i == num_options then
+			frame_data = ClassSelectionViewSettings.archetype_frames_textures.right
+		else
+			local random_value = math.random(1, 3)
 
-		content.hotspot.pressed_callback = function ()
+			frame_data = ClassSelectionViewSettings.archetype_frames_textures["mid_" .. random_value]
+		end
+
+		max_frame_height = math.max(frame_data.size[2], max_frame_height)
+		min_frame_width = math.min(frame_data.size[1], min_frame_width)
+		max_frame_width = math.max(frame_data.size[1], max_frame_width)
+
+		local data = {
+			frame = frame_data,
+			option = option,
+		}
+
+		options_data[#options_data + 1] = data
+	end
+
+	local start_margin = max_frame_width - min_frame_width
+	local archetype_info_width, archetype_info_height = self:_scenegraph_size("archetype_info")
+	local archetypes_total_size = (min_frame_width + spacing) * num_options - spacing
+	local size_ratio = archetypes_total_size and archetypes_total_size > 0 and archetype_info_width / archetypes_total_size or 1
+	local start_offset_x = 0
+
+	for i = 1, #options_data do
+		local option = options_data[i].option
+		local frame_data = options_data[i].frame
+		local frame_name = "archetype_option_frame_" .. i
+		local frame_widget = self:_create_widget(frame_name, archetype_option_frame_definition)
+		local frame_content = frame_widget.content
+		local frame_style = frame_widget.style
+		local frame_size = {
+			frame_data.size[1] * size_ratio,
+			frame_data.size[2] * size_ratio,
+		}
+		local frame_texture = frame_data.texture
+		local frame_offset = {
+			frame_data.offset[1] * size_ratio,
+			frame_data.offset[2] * size_ratio,
+		}
+		local icon_offset = {
+			frame_data.icon_offset[1] * size_ratio,
+			frame_data.icon_offset[2] * size_ratio,
+		}
+		local icon_size = {
+			ClassSelectionViewSettings.archetype_option_icon_size[1] * size_ratio,
+			ClassSelectionViewSettings.archetype_option_icon_size[2] * size_ratio,
+		}
+
+		frame_style.frame.material_values.texture_map = frame_texture
+		frame_widget.content.size = frame_size
+		frame_widget.offset[1] = start_offset_x + frame_offset[1]
+		frame_widget.offset[2] = frame_offset[2]
+		frame_widgets[#frame_widgets + 1] = frame_widget
+		start_offset_x = start_offset_x + frame_widget.content.size[1] + spacing
+
+		local icon_name = "archetype_option_icon_" .. i
+		local icon_widget = self:_create_widget(icon_name, archetype_option_definition)
+
+		icon_widget.content.size = icon_size
+
+		local icon_content = icon_widget.content
+		local icon_style = icon_widget.style
+
+		icon_content.archetype_title = option.archetype_title
+
+		icon_content.hotspot.pressed_callback = function ()
 			if self._using_cursor_navigation then
 				self:_on_archetype_pressed(option)
 			end
 		end
 
-		content.archetype_title = option.archetype_title
-		widgets[#widgets + 1] = widget
-		widget.offset[1] = start_offset_x
-		start_offset_x = start_offset_x + widget_width + spacing
+		icon_style.icon.material_values.texture_map = option.archetype_selection_icon
+		icon_style.icon_highlight.material_values.texture_map = option.archetype_selection_highlight_icon
+		icon_widget.offset[1] = frame_widget.offset[1] + icon_offset[1]
+		icon_widget.offset[2] = frame_widget.offset[2] + icon_offset[2]
+		icon_widgets[#icon_widgets + 1] = icon_widget
 	end
 
 	local widget_right = self:_create_widget("archetype_select_right", archetype_selection_definition.right)
 
 	widget_right.offset[1] = start_offset_x
-	self._archetype_options_widgets = widgets
-
-	self:_set_scenegraph_size("archetype_options", start_offset_x - spacing, nil)
-
+	self._archetype_options_widgets = icon_widgets
+	self._archetype_options_frame_widgets = frame_widgets
 	self._archetype_options_select_widget = {
 		widget_left,
 		widget_right,
 	}
+
+	local archetype_width, archetype_height = self:_scenegraph_size("archetype_info")
+	local added_height_margin = 60
+
+	self:_set_scenegraph_position("archetype_options", -start_margin * size_ratio, (-max_frame_height + added_height_margin) * size_ratio)
 end
 
 ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
@@ -407,9 +490,10 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 	for i = 1, #archetype_options_widgets do
 		local widget = archetype_options_widgets[i]
 		local content = widget.content
+		local is_selected = selected_archetype.archetype_title == content.archetype_title
 
-		content.hotspot.is_selected = selected_archetype.archetype_title == content.archetype_title
-		content.hotspot.is_focused = selected_archetype.archetype_title == content.archetype_title
+		content.hotspot.is_selected = is_selected
+		content.hotspot.is_focused = is_selected
 	end
 
 	if self._archetype_details_visible then
@@ -530,6 +614,14 @@ ClassSelectionView._destroy_archetype_option_widgets = function (self)
 		end
 	end
 
+	if self._archetype_options_frame_widgets then
+		for i = 1, #self._archetype_options_frame_widgets do
+			local widget = self._archetype_options_frame_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+	end
+
 	if self._archetype_options_select_widget then
 		for i = 1, #self._archetype_options_select_widget do
 			local widget = self._archetype_options_select_widget[i]
@@ -539,6 +631,7 @@ ClassSelectionView._destroy_archetype_option_widgets = function (self)
 	end
 
 	self._archetype_options_widgets = nil
+	self._archetype_options_frame_widgets = nil
 	self._archetype_options_select_widget = nil
 end
 
@@ -896,8 +989,9 @@ end
 ClassSelectionView.on_continue_pressed = function (self)
 	local selected_specialization_name = temp_archetype_to_specialization_lookup[self._selected_archetype.name]
 
+	self._character_create:set_specialization(self._selected_specialization.name)
+
 	if self._archetype_details_visible then
-		self._character_create:set_specialization(self._selected_specialization.name)
 		self:_play_sound(UISoundEvents.character_create_class_confirm)
 		Managers.event:trigger("event_create_new_character_continue")
 	else

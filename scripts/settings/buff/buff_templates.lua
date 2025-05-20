@@ -29,7 +29,6 @@ _create_entry("scripts/settings/buff/syringe_buff_templates", buff_categories.ge
 _create_entry("scripts/settings/buff/training_grounds_buff_templates", buff_categories.generic)
 _create_entry("scripts/settings/buff/weapon_buff_templates", buff_categories.generic)
 _create_entry("scripts/settings/buff/hordes_buff_templates", buff_categories.hordes_buff)
-_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_trait_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_buff_examples", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_melee_activated_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_melee_common_buff_templates", buff_categories.weapon_traits)
@@ -82,6 +81,7 @@ _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powermaul_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_2h_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_p1_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_p2_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p2_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_stubrevolver_p1_buff_templates", buff_categories.weapon_traits)
@@ -93,14 +93,25 @@ _create_entry("scripts/settings/buff/archetype_buff_templates/veteran_buff_templ
 _create_entry("scripts/settings/buff/archetype_buff_templates/zealot_buff_templates", buff_categories.talents)
 
 local default_buff_icon = "content/ui/materials/icons/abilities/default"
+local TEMPLATE_LOOKUPS = {
+	NON_PREDICTED = {},
+	PREDICTED = {},
+}
 
 for buff_name, template in pairs(templates) do
 	template.name = buff_name
-	template.predicted = template.predicted == nil and true or template.predicted
+	template.predicted = not not template.predicted
+
+	local target_lookup_table_name = template.predicted and "PREDICTED" or "NON_PREDICTED"
+
+	TEMPLATE_LOOKUPS[target_lookup_table_name][buff_name] = buff_name
 
 	if not template.icon then
 		template.icon = default_buff_icon
 	end
 end
+
+templates.NON_PREDICTED = TEMPLATE_LOOKUPS.NON_PREDICTED
+templates.PREDICTED = TEMPLATE_LOOKUPS.PREDICTED
 
 return settings("BuffTemplates", templates)

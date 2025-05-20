@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_sandbox.lua
 
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
@@ -32,13 +33,21 @@ MechanismSandbox.init = function (self, ...)
 		level_name = Missions[mission_name].level
 	end
 
+	local circumstance_name = GameParameters.circumstance
+
+	if not CircumstanceTemplates[circumstance_name] then
+		Log.error("MechanismSandbox", "[init] circumstance_name '%s' does not exists. Fallback to 'default'", circumstance_name)
+
+		circumstance_name = "default"
+	end
+
 	local mechanism_data = self._mechanism_data
 
 	mechanism_data.level_name = level_name
 	mechanism_data.mission_name = mission_name
 	mechanism_data.challenge = DevParameters.challenge
 	mechanism_data.resistance = DevParameters.resistance
-	mechanism_data.circumstance_name = GameParameters.circumstance
+	mechanism_data.circumstance_name = circumstance_name
 	mechanism_data.side_mission = GameParameters.side_mission
 end
 

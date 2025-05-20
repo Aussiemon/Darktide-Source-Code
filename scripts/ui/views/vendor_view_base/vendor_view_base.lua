@@ -97,21 +97,31 @@ VendorViewBase._register_button_callbacks = function (self)
 end
 
 VendorViewBase._cb_on_purchase_pressed = function (self)
-	local offer = self._previewed_offer
+	local acquire_type = self._widgets_by_name.purchase_button.content.acquire_type
 
-	if not offer then
-		return
-	end
+	if acquire_type then
+		local callback_func = ItemUtils.class_acquire_callback(acquire_type)
 
-	local price_data = offer.price.amount
-	local price = price_data.discounted_price or price_data.amount
-	local can_afford = self:can_afford(price, price_data.type)
+		if callback_func then
+			callback_func()
+		end
+	else
+		local offer = self._previewed_offer
 
-	if can_afford then
-		local is_active = offer.state == "active"
+		if not offer then
+			return
+		end
 
-		if is_active then
-			self:_purchase_item(offer)
+		local price_data = offer.price.amount
+		local price = price_data.discounted_price or price_data.amount
+		local can_afford = self:can_afford(price, price_data.type)
+
+		if can_afford then
+			local is_active = offer.state == "active"
+
+			if is_active then
+				self:_purchase_item(offer)
+			end
 		end
 	end
 end
@@ -542,7 +552,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 			for k = 1, #bundled do
 				local info = bundled[k]
 				local gear_id = info.description.gearId
-				local set_item = MasterItems.get_store_item_instance(info.description, gear_id)
+				local set_item = MasterItems.get_store_item_instance(info.description)
 
 				if set_item then
 					items[#items + 1] = set_item
@@ -713,15 +723,17 @@ VendorViewBase._update_button_disable_state = function (self)
 				for k = 1, #bundled do
 					local info = bundled[k]
 					local gear_id = info.description.gearId
-					local set_item = MasterItems.get_store_item_instance(info.description, gear_id)
+					local set_item = MasterItems.get_store_item_instance(info.description)
 
-					items[#items + 1] = set_item
+					if set_item then
+						items[#items + 1] = set_item
 
-					if self:is_item_owned(gear_id) then
-						owned_count = owned_count + 1
+						if self:is_item_owned(gear_id) then
+							owned_count = owned_count + 1
+						end
+
+						total_count = total_count + 1
 					end
-
-					total_count = total_count + 1
 				end
 
 				button_disabled = owned_count == total_count
@@ -729,11 +741,17 @@ VendorViewBase._update_button_disable_state = function (self)
 				local gear_id = offer.description.gearId
 
 				button_disabled = self:is_item_owned(gear_id)
+
+				local item = MasterItems.get_store_item_instance(offer.description)
 			end
 		end
 
 		if button_widget then
 			button_widget.content.hotspot.disabled = button_disabled
+
+			if not button_disabled then
+				-- Nothing
+			end
 		end
 	end
 end

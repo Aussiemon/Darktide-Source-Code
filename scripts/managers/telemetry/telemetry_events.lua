@@ -1221,16 +1221,30 @@ TelemetryEvents.post_batch = function (self, batch_size, time_since_last_post, e
 end
 
 TelemetryEvents.crashify_properties = function (self)
-	local func = Application.get_crash_properties
-
-	if not func then
-		return
-	end
-
+	local crashify_properties = Application.get_crash_properties()
 	local event = self:_create_event("crashify_properties")
-	local crashify_properties = func()
 
 	event:set_data(crashify_properties)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.memory_usage = function (self, tag)
+	local missions_started = Managers.state.mission:num_missions_started()
+	local mission_id = Managers.state.mission:mission_name()
+	local usage = Memory.usage("B")
+
+	for key, value in pairs(usage) do
+		usage[key] = string.format("%d", value)
+	end
+
+	local event = self:_create_event("memory_usage")
+
+	event:set_data({
+		tag = tag,
+		mission_id = mission_id,
+		missions_started = missions_started,
+		usage = usage,
+	})
 	self._manager:register_event(event)
 end
 

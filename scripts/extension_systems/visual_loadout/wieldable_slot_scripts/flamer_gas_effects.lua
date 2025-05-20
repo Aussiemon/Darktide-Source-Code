@@ -4,7 +4,7 @@ local Action = require("scripts/utilities/action/action")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local FlamerGasEffects = class("FlamerGasEffects")
 
-FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sources)
+FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local wwise_world = context.wwise_world
 
 	self._world = context.world
@@ -73,7 +73,7 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 	local world = self._world
 	local weapon_action_component = self._weapon_action_component
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
-	local fire_configuration = action_settings and action_settings.fire_configuration
+	local fire_configuration = action_settings and (action_settings.fire_configurations or action_settings.fire_configuration)
 	local fx_source_name = self._fx_source_name
 	local spawner_pose = self._fx_extension:vfx_spawner_pose(fx_source_name)
 	local from_pos = Matrix4x4.translation(spawner_pose)

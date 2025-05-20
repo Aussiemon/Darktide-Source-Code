@@ -1807,6 +1807,34 @@ end_player_view_blueprints.havoc = {
 			local max_rank = order_reward.max_rank
 			local animation_state
 
+			content.previous_rank = previous_rank
+			content.current_rank = current_rank
+			content.max_charges = max_charges
+			content.min_rank = min_rank
+			content.max_rank = max_rank
+
+			local uses_charges = not not style.havoc_charge_1
+
+			content.uses_charges = uses_charges
+
+			if uses_charges then
+				content.current_charges = current_charges
+				content.previous_charges = previous_charges
+
+				for i = 1, max_charges do
+					local charge_style = style["havoc_charge_" .. i]
+
+					if charge_style then
+						local no_charges_color = charge_style.no_charges_color
+
+						if no_charges_color and i > content.previous_charges then
+							ColorUtilities.color_copy(no_charges_color, charge_style.start_color, true)
+							ColorUtilities.color_copy(no_charges_color, charge_style.in_focus_color)
+						end
+					end
+				end
+			end
+
 			if current_rank and previous_rank then
 				if previous_rank < current_rank then
 					animation_state = "rank_increase"
@@ -1814,33 +1842,16 @@ end_player_view_blueprints.havoc = {
 				elseif current_rank < previous_rank then
 					animation_state = "rank_decrease"
 					content.havoc_order_text = Localize("loc_havoc_eor_demotion")
-				else
+				elseif current_rank == previous_rank and uses_charges and content.previous_charges > content.current_charges then
 					animation_state = "charge_change"
 					content.havoc_order_text = Localize("loc_havoc_eor_charge_used")
+				else
+					animation_state = "charge_change"
+					content.havoc_order_text = ""
 				end
 			end
 
-			content.current_charges = current_charges
-			content.previous_charges = previous_charges
-			content.previous_rank = previous_rank
-			content.current_rank = current_rank
-			content.max_charges = max_charges
-			content.min_rank = min_rank
-			content.max_rank = max_rank
 			content.order_reward_state = animation_state
-
-			for i = 1, max_charges do
-				local charge_style = style["havoc_charge_" .. i]
-
-				if charge_style then
-					local no_charges_color = charge_style.no_charges_color
-
-					if no_charges_color and i > content.previous_charges then
-						ColorUtilities.color_copy(no_charges_color, charge_style.start_color, true)
-						ColorUtilities.color_copy(no_charges_color, charge_style.in_focus_color)
-					end
-				end
-			end
 
 			local previous_rank_to_string = content.previous_rank and tostring(content.previous_rank)
 			local current_rank_to_string = content.current_rank and tostring(content.current_rank)

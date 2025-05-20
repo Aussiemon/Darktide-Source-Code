@@ -2,6 +2,7 @@
 
 local PropData = require("scripts/settings/prop_data/prop_data")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local Breed = require("scripts/utilities/breed")
 local PropUnitDataExtension = class("PropUnitDataExtension")
 
 PropUnitDataExtension.init = function (self, extension_init_context, unit)

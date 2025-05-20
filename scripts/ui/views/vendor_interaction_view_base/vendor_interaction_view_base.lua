@@ -627,12 +627,6 @@ VendorInteractionViewBase._set_wallet_background_width = function (self, total_w
 	self:_set_scenegraph_size("corner_top_right", total_corner_width, nil)
 end
 
-VendorInteractionViewBase.set_camera_position_axis_offset = function (self, axis, value, animation_duration, func_ptr)
-	if self._world_spawner then
-		self._world_spawner:set_camera_position_axis_offset(axis, value, animation_duration, func_ptr)
-	end
-end
-
 VendorInteractionViewBase._update_vo = function (self, dt, t)
 	local queued_vo_event_request = self._queued_vo_event_request
 	local character_cooldowns = self._character_cooldowns

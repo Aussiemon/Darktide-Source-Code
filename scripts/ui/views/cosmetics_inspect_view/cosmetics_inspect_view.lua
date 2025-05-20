@@ -634,21 +634,6 @@ CosmeticsInspectView._spawn_profile = function (self, profile, initial_rotation,
 
 	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
 
-	local selected_archetype = profile.archetype
-	local archetype_name = selected_archetype.name
-	local animation_duration = 0.01
-	local world_spawner = self._world_spawner
-
-	if archetype_name == "ogryn" then
-		world_spawner:set_camera_position_axis_offset("x", -0.5, animation_duration, math.easeOutCubic)
-		world_spawner:set_camera_position_axis_offset("y", -1.5, animation_duration, math.easeOutCubic)
-		world_spawner:set_camera_position_axis_offset("z", 0.5, animation_duration, math.easeOutCubic)
-	else
-		world_spawner:set_camera_position_axis_offset("x", 0, animation_duration, math.easeOutCubic)
-		world_spawner:set_camera_position_axis_offset("y", 0, animation_duration, math.easeOutCubic)
-		world_spawner:set_camera_position_axis_offset("z", 0, animation_duration, math.easeOutCubic)
-	end
-
 	self._spawned_profile = profile
 end
 
@@ -1346,45 +1331,8 @@ end
 CosmeticsInspectView._set_camera_item_slot_focus = function (self, slot_name, time, func_ptr, zoom_percentage)
 	local world_spawner = self._world_spawner
 	local slot_camera = self._item_camera_by_slot_id[slot_name] or self._default_camera_unit
-	local camera_world_position = Unit.world_position(slot_camera, 1)
-	local camera_world_rotation = Unit.world_rotation(slot_camera, 1)
-	local boxed_camera_start_position = world_spawner:boxed_camera_start_position()
-	local default_camera_world_position = Vector3.from_array(boxed_camera_start_position)
 
-	world_spawner:set_camera_position_axis_offset("x", zoom_percentage * (camera_world_position.x - default_camera_world_position.x), time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("y", zoom_percentage * (camera_world_position.y - default_camera_world_position.y), time, func_ptr)
-	world_spawner:set_camera_position_axis_offset("z", zoom_percentage * (camera_world_position.z - default_camera_world_position.z), time, func_ptr)
-
-	local boxed_camera_start_rotation = world_spawner:boxed_camera_start_rotation()
-	local default_camera_world_rotation = boxed_camera_start_rotation:unbox()
-	local default_camera_world_rotation_x, default_camera_world_rotation_y, default_camera_world_rotation_z = Quaternion.to_euler_angles_xyz(default_camera_world_rotation)
-	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
-
-	world_spawner:set_camera_rotation_axis_offset("x", zoom_percentage * (camera_world_rotation_x - default_camera_world_rotation_x), time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("y", zoom_percentage * (camera_world_rotation_y - default_camera_world_rotation_y), time, func_ptr)
-	world_spawner:set_camera_rotation_axis_offset("z", zoom_percentage * (camera_world_rotation_z - default_camera_world_rotation_z), time, func_ptr)
-end
-
-CosmeticsInspectView._set_camera_node_focus = function (self, node_name, time, func_ptr)
-	if node_name then
-		local profile_spawner = self._profile_spawner
-		local world_spawner = self._world_spawner
-		local base_world_position = profile_spawner:node_world_position(1)
-		local node_world_position = profile_spawner:node_world_position(node_name)
-		local target_position = node_world_position - base_world_position
-
-		world_spawner:set_camera_position_axis_offset("x", target_position.x, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", target_position.y, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", target_position.z, time, func_ptr)
-	end
-end
-
-CosmeticsInspectView._set_camera_position_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_position_axis_offset(axis, value, animation_time, func_ptr)
-end
-
-CosmeticsInspectView._set_camera_rotation_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_rotation_axis_offset(axis, value, animation_time, func_ptr)
+	world_spawner:interpolate_to_camera(slot_camera, zoom_percentage, time, func_ptr)
 end
 
 return CosmeticsInspectView

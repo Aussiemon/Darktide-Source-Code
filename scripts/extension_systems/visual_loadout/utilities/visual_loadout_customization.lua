@@ -16,6 +16,8 @@ local Unit_set_vector3_for_materials = Unit.set_vector3_for_materials
 local Unit_set_vector4_for_materials = Unit.set_vector4_for_materials
 local Unit_set_texture_for_materials = Unit.set_texture_for_materials
 
+VisualLoadoutCustomization.ROOT_ATTACH_NAME = ""
+
 VisualLoadoutCustomization.apply_material_override = function (unit, parent_unit, apply_to_parent, material_override, in_editor)
 	if material_override and material_override ~= "" then
 		local material_override_data
@@ -40,7 +42,7 @@ VisualLoadoutCustomization.apply_material_override = function (unit, parent_unit
 	end
 end
 
-VisualLoadoutCustomization.spawn_item = function (item_data, attach_settings, parent_unit, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_mission_template, optional_equipment)
+VisualLoadoutCustomization.spawn_item = function (item_data, attach_settings, parent_unit, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template, optional_equipment)
 	local weapon_skin = _validate_item_name(item_data.slot_weapon_skin)
 
 	if type(weapon_skin) == "string" then
@@ -57,7 +59,7 @@ VisualLoadoutCustomization.spawn_item = function (item_data, attach_settings, pa
 
 	local item_unit, bind_pose = VisualLoadoutCustomization.spawn_base_unit(item_data, attach_settings, parent_unit, optional_mission_template)
 	local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item_data, weapon_skin)
-	local attachment_units, attachment_name_to_unit, attachment_units_bind_poses = VisualLoadoutCustomization.spawn_item_attachments(item_data, skin_overrides, attach_settings, item_unit, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_mission_template, optional_equipment)
+	local attachment_units_by_unit, attachment_id_lookup, attachment_name_lookup, attachment_units_bind_poses, item_name_by_unit = VisualLoadoutCustomization.spawn_item_attachments(item_data, skin_overrides, attach_settings, item_unit, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template, optional_equipment)
 
 	VisualLoadoutCustomization.apply_material_overrides(item_data, item_unit, parent_unit, attach_settings)
 
@@ -65,27 +67,109 @@ VisualLoadoutCustomization.spawn_item = function (item_data, attach_settings, pa
 		VisualLoadoutCustomization.apply_material_overrides(weapon_skin, item_unit, parent_unit, attach_settings)
 	end
 
-	VisualLoadoutCustomization.add_extensions(item_unit, attachment_units, attach_settings)
+	VisualLoadoutCustomization.add_extensions(item_unit, attachment_units_by_unit and attachment_units_by_unit[item_unit], attach_settings)
 	VisualLoadoutCustomization.play_item_on_spawn_anim_event(item_data, parent_unit)
 
-	return item_unit, attachment_units, bind_pose, attachment_name_to_unit, attachment_units_bind_poses
+	return item_unit, attachment_units_by_unit, bind_pose, attachment_id_lookup, attachment_name_lookup, attachment_units_bind_poses, item_name_by_unit
 end
 
 VisualLoadoutCustomization.spawn_base_unit = function (item_data, attach_settings, parent_unit, optional_mission_template, optional_equipment)
 	return _spawn_attachment(item_data, attach_settings, parent_unit, optional_mission_template, optional_equipment)
 end
 
+VisualLoadoutCustomization._create_extract_data = function (map_attachment_units, map_bind_poses, map_item_names)
+	local extract_data = {
+		parents = {},
+		attachment_units_by_unit = {},
+		item_name_by_unit = map_item_names and {} or nil,
+		bind_poses_by_unit = map_bind_poses and {} or nil,
+		attachment_id_lookup = map_attachment_units and {} or nil,
+		attachment_name_lookup = map_attachment_units and {} or nil,
+	}
+
+	return extract_data
+end
+
+VisualLoadoutCustomization._push_extract_data = function (extract_data, item_unit, item_name, attachment_key_or_nil)
+	if extract_data.attachment_id_lookup then
+		local parent_id = extract_data.attachment_id_lookup[extract_data.parents[#extract_data.parents]]
+		local unique_id
+
+		if not parent_id then
+			unique_id = VisualLoadoutCustomization.ROOT_ATTACH_NAME
+		elseif parent_id == VisualLoadoutCustomization.ROOT_ATTACH_NAME then
+			unique_id = attachment_key_or_nil
+		else
+			unique_id = string.format("%s.%s", parent_id, attachment_key_or_nil)
+		end
+
+		extract_data.attachment_id_lookup[item_unit] = unique_id
+		extract_data.attachment_id_lookup[unique_id] = item_unit
+	end
+
+	extract_data.parents[#extract_data.parents + 1] = item_unit
+	extract_data.attachment_units_by_unit[item_unit] = {}
+
+	if extract_data.item_name_by_unit then
+		extract_data.item_name_by_unit[item_unit] = item_name
+	end
+
+	if extract_data.attachment_name_lookup then
+		extract_data.attachment_name_lookup[item_unit] = {}
+	end
+
+	if extract_data.bind_poses_by_unit then
+		extract_data.bind_poses_by_unit[item_unit] = {}
+	end
+end
+
+VisualLoadoutCustomization._pop_extract_data = function (extract_data, expected_parent)
+	extract_data.parents[#extract_data.parents] = nil
+end
+
+VisualLoadoutCustomization._fill_extract_data = function (extract_data, attachment_name, attachment_unit, bind_pose)
+	local parents = extract_data.parents
+	local attachment_units_by_unit = extract_data.attachment_units_by_unit
+	local attachment_name_lookup = extract_data.attachment_name_lookup
+	local bind_poses_by_unit = extract_data.bind_poses_by_unit
+	local bind_pose_boxed = Matrix4x4Box(bind_pose)
+
+	for i = 1, #parents do
+		local parent_unit = parents[i]
+
+		attachment_units_by_unit[parent_unit][#attachment_units_by_unit[parent_unit] + 1] = attachment_unit
+
+		if attachment_name_lookup then
+			local attachments = attachment_name_lookup[parent_unit]
+
+			if not attachments[attachment_name] then
+				attachments[attachment_name] = attachment_unit
+				attachments[attachment_unit] = attachment_name
+			end
+		end
+
+		if bind_poses_by_unit then
+			local bind_poses = bind_poses_by_unit[parent_unit]
+
+			bind_poses[attachment_unit] = bind_pose_boxed
+		end
+	end
+end
+
 local _empty_overrides_table = table.set_readonly({})
 
-VisualLoadoutCustomization.spawn_item_attachments = function (item_data, override_lookup, attach_settings, item_unit, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_mission_template, optional_equipment)
-	local attachment_units, attachment_units_bind_poses, attachment_name_to_unit
+VisualLoadoutCustomization.spawn_item_attachments = function (item_data, override_lookup, attach_settings, item_unit, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template, optional_equipment)
+	if not item_unit then
+		return nil, nil, nil, nil
+	end
+
+	local extract_data = VisualLoadoutCustomization._create_extract_data(optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names)
+
+	VisualLoadoutCustomization._push_extract_data(extract_data, item_unit, item_data.name, nil)
+
 	local attachments = item_data.attachments
 
-	if item_unit and attachments then
-		attachment_name_to_unit = optional_map_attachment_name_to_unit and {}
-		attachment_units_bind_poses = optional_extract_attachment_units_bind_poses and {}
-		attachment_units = {}
-
+	if attachments then
 		local attachment_names = table.keys(attachments)
 
 		table.sort(attachment_names)
@@ -103,11 +187,13 @@ VisualLoadoutCustomization.spawn_item_attachments = function (item_data, overrid
 			local name = attachment_names[i]
 			local attachment_slot_data = attachments[name]
 
-			attachment_units, attachment_name_to_unit, attachment_units_bind_poses = _attach_hierarchy(attachment_slot_data, override_lookup, attach_settings, item_unit, attachment_units, name, attachment_name_to_unit, attachment_units_bind_poses, optional_mission_template, optional_equipment)
+			_attach_hierarchy(attachment_slot_data, override_lookup, attach_settings, item_unit, name, extract_data, optional_mission_template, optional_equipment)
 		end
 	end
 
-	return attachment_units, attachment_name_to_unit, attachment_units_bind_poses
+	VisualLoadoutCustomization._pop_extract_data(extract_data, item_unit)
+
+	return extract_data.attachment_units_by_unit, extract_data.attachment_id_lookup, extract_data.attachment_name_lookup, extract_data.bind_poses_by_unit, extract_data.item_name_by_unit
 end
 
 VisualLoadoutCustomization.apply_material_overrides = function (item_data, item_unit, parent_unit, attach_settings)
@@ -148,8 +234,14 @@ VisualLoadoutCustomization.play_item_on_spawn_anim_event = function (item_data, 
 	end
 end
 
-VisualLoadoutCustomization.attach_hierarchy = function (attachment_slot_data, override_lookup, settings, parent_unit, attached_units, attachment_name_or_nil, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil, optional_mission_template)
-	return _attach_hierarchy(attachment_slot_data, override_lookup, settings, parent_unit, attached_units, attachment_name_or_nil, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil, optional_mission_template)
+VisualLoadoutCustomization.attach_hierarchy = function (attachment_slot_data, override_lookup, settings, parent_unit, parent_item_name, attachment_name, optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names, optional_mission_template)
+	local extract_data = VisualLoadoutCustomization._create_extract_data(optional_map_attachment_name_to_unit, optional_extract_attachment_units_bind_poses, optional_extract_item_names)
+
+	VisualLoadoutCustomization._push_extract_data(extract_data, parent_unit, parent_item_name, attachment_name)
+	_attach_hierarchy(attachment_slot_data, override_lookup, settings, parent_unit, attachment_name, extract_data, optional_mission_template)
+	VisualLoadoutCustomization._pop_extract_data(extract_data, parent_unit)
+
+	return extract_data.attachment_units_by_unit
 end
 
 VisualLoadoutCustomization.generate_attachment_overrides_lookup = function (item_data, override_item_data)
@@ -203,7 +295,7 @@ function _validate_item_name(item)
 	return item
 end
 
-function _spawn_attachment(item_data, settings, parent_unit, optional_mission_template)
+function _spawn_attachment(item_data, settings, parent_unit, optional_mission_template, optional_as_leaf_override_attach_node, optional_as_leaf_map_mode)
 	if not item_data then
 		return nil
 	end
@@ -227,7 +319,7 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 	end
 
 	local breed_attach_node = not settings.is_minion and item_data.breed_attach_node and item_data.breed_attach_node[settings.breed_name]
-	local attach_node = breed_attach_node or item_data.attach_node
+	local attach_node = optional_as_leaf_override_attach_node or breed_attach_node or item_data.attach_node
 	local attach_node_index
 
 	if tonumber(attach_node) ~= nil then
@@ -240,6 +332,8 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		end
 	elseif attach_node then
 		attach_node_index = Unit.has_node(parent_unit, attach_node) and Unit.node(parent_unit, attach_node) or 1
+	else
+		attach_node_index = 1
 	end
 
 	local spawned_unit
@@ -295,8 +389,17 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		Unit.set_unit_objects_visibility(spawned_unit, false, true, VisibilityContexts.RAYTRACING_CONTEXT)
 	end
 
-	local skip_link_children = not not not settings.skip_link_children
-	local map_mode = skip_link_children and World.LINK_MODE_NODE_NAME or World.LINK_MODE_NONE
+	local map_mode
+
+	if optional_as_leaf_map_mode then
+		map_mode = optional_as_leaf_map_mode
+	elseif World[item_data.link_map_mode] then
+		map_mode = World[item_data.link_map_mode]
+	elseif settings.skip_link_children then
+		map_mode = World.LINK_MODE_NONE
+	else
+		map_mode = World.LINK_MODE_NODE_NAME
+	end
 
 	World.link_unit(settings.world, spawned_unit, 1, parent_unit, attach_node_index, map_mode)
 
@@ -324,7 +427,12 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 	return spawned_unit, bind_pose
 end
 
-function _attach_hierarchy(attachment_slot_data, override_lookup, settings, parent_unit, attached_units, attachment_name_or_nil, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil, optional_mission_template, optional_equipment)
+local ignore_slot_item_assigning = table.set({
+	"slot_primary",
+	"slot_secondary",
+})
+
+function _attach_hierarchy(attachment_slot_data, override_lookup, settings, parent_unit, attachment_name, extract_data, optional_mission_template, optional_equipment)
 	local item_name = attachment_slot_data.item
 	local item = _validate_item_name(item_name)
 	local override_item = override_lookup[attachment_slot_data]
@@ -341,40 +449,38 @@ function _attach_hierarchy(attachment_slot_data, override_lookup, settings, pare
 		else
 			item = settings.item_definitions[item]
 		end
+	elseif item then
+		item_name = item.name
 	end
 
 	if not item then
-		return attached_units, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil
+		return
 	end
 
-	local attachment_unit, bind_pose = _spawn_attachment(item, settings, parent_unit, optional_mission_template)
+	local override_attach_node = attachment_slot_data.leaf_attach_node_override
+	local override_map_mode = World[attachment_slot_data.link_map_mode_override]
+	local attachment_unit, bind_pose = _spawn_attachment(item, settings, parent_unit, optional_mission_template, override_attach_node, override_map_mode)
 
 	if optional_equipment and item.slots then
 		for _, slot_name in ipairs(item.slots) do
-			if optional_equipment[slot_name] then
+			if optional_equipment[slot_name] and not ignore_slot_item_assigning[slot_name] then
 				optional_equipment[slot_name].item = item
 			end
 		end
 	end
 
 	if attachment_unit then
-		attached_units[#attached_units + 1] = attachment_unit
-
-		if attachment_name_to_unit_or_nil and attachment_name_or_nil then
-			attachment_name_to_unit_or_nil[attachment_name_or_nil] = attachment_unit
-		end
-
-		if attached_units_bind_poses_or_nil then
-			attached_units_bind_poses_or_nil[attachment_unit] = Matrix4x4Box(bind_pose)
-		end
+		VisualLoadoutCustomization._fill_extract_data(extract_data, attachment_name, attachment_unit, bind_pose)
+		VisualLoadoutCustomization._push_extract_data(extract_data, attachment_unit, item_name, attachment_name)
 
 		local attachments = item and item.attachments
 
-		attached_units = _attach_hierarchy_children(attachments, override_lookup, settings, attachment_unit, attached_units, attachment_name_or_nil, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil, optional_mission_template)
+		_attach_hierarchy_children(attachments, override_lookup, settings, attachment_unit, extract_data, optional_mission_template)
+		VisualLoadoutCustomization._pop_extract_data(extract_data, attachment_unit)
 
 		local children = attachment_slot_data.children
 
-		attached_units = _attach_hierarchy_children(children, override_lookup, settings, attachment_unit, attached_units, attachment_name_or_nil, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil, optional_mission_template)
+		_attach_hierarchy_children(children, override_lookup, settings, attachment_unit, extract_data, optional_mission_template)
 
 		local material_overrides = {}
 		local item_material_overrides = item.material_overrides
@@ -397,18 +503,14 @@ function _attach_hierarchy(attachment_slot_data, override_lookup, settings, pare
 			end
 		end
 	end
-
-	return attached_units, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil
 end
 
-function _attach_hierarchy_children(children, override_lookup, settings, parent_unit, attached_units, attachment_name_or_nil, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil, optional_mission_template)
+function _attach_hierarchy_children(children, override_lookup, settings, parent_unit, extract_data, optional_mission_template)
 	if children then
-		for _, child_attachment_slot_data in pairs(children) do
-			attached_units, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil = _attach_hierarchy(child_attachment_slot_data, override_lookup, settings, parent_unit, attached_units, attachment_name_or_nil, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil, optional_mission_template)
+		for attachment_name, child_attachment_slot_data in pairs(children) do
+			_attach_hierarchy(child_attachment_slot_data, override_lookup, settings, parent_unit, attachment_name, extract_data, optional_mission_template)
 		end
 	end
-
-	return attached_units, attachment_name_to_unit_or_nil, attached_units_bind_poses_or_nil
 end
 
 function _apply_material_override(unit, material_override_data)
@@ -434,7 +536,20 @@ function _apply_material_override(unit, material_override_data)
 
 	if material_override_data.texture_overrides ~= nil then
 		for texture_slot, texture_override_data in pairs(material_override_data.texture_overrides) do
-			Unit_set_texture_for_materials(unit, texture_slot, texture_override_data.resource, true)
+			if texture_override_data.resource_by_item == nil then
+				Unit_set_texture_for_materials(unit, texture_slot, texture_override_data.resource, true)
+			else
+				local resources = texture_override_data.resource_by_item
+				local items_array_size = Unit.data_table_size(unit, "attached_item_names") or 0
+
+				for i = 1, items_array_size do
+					local resource = resources[Unit.get_data(unit, "attached_item_names", i)]
+
+					if resource ~= nil then
+						Unit_set_texture_for_materials(unit, texture_slot, resource, true)
+					end
+				end
+			end
 		end
 	end
 end

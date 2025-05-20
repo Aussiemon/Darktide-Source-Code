@@ -54,21 +54,63 @@ HavocService.available_orders = function (self)
 	end)
 end
 
-HavocService.get_havoc_unlock_status = function (self)
+HavocService.refresh_havoc_unlock_status = function (self)
 	return Managers.backend.interfaces.account:get_havoc_unlock_status():next(function (value)
 		if value == nil then
-			return self.HAVOC_UNLOCK_STATUS[1]
+			Log.info("Backend provided nil value for havoc_unlock_status")
+			self:_set_fallback_havoc_unlock_status()
+
+			return
 		end
 
-		return self.HAVOC_UNLOCK_STATUS[value + 1]
+		local adjusted_value = value + 1
+
+		if adjusted_value < 1 then
+			local err = string.format("Backend provided index for havoc_unlock_status that was too low: %i", value)
+
+			Log.exception("HavocService", err)
+			self:_set_fallback_havoc_unlock_status()
+
+			return
+		end
+
+		if adjusted_value > #HavocService.HAVOC_UNLOCK_STATUS then
+			local err = string.format("Backend provided index for havoc_unlock_status that was out of bounds for HavocService.HAVOC_UNLOCK_STATUS: %i\n", value)
+
+			Log.exception("HavocService", err)
+			self:_set_fallback_havoc_unlock_status()
+
+			return
+		end
+
+		self._havoc_unlock_status = self.HAVOC_UNLOCK_STATUS[adjusted_value]
 	end):catch(function (err)
-		local error_message = string.format("Error getting havoc_unlock_status: %s", err)
-
-		Log.error("HavocService", error_message)
-		ferror(error_message)
-
-		return nil
+		Log.exception("HavocService", err)
+		self:_set_fallback_havoc_unlock_status()
 	end)
+end
+
+HavocService.get_havoc_unlock_status = function (self)
+	if not self._havoc_unlock_status then
+		local err = "HavocService:get_havoc_unlock_status() called before HavocService:refresh_havoc_status() was ever called"
+
+		Log.error("HavocService", err)
+		self:_set_fallback_havoc_unlock_status()
+	end
+
+	return self._havoc_unlock_status
+end
+
+HavocService.refresh_and_get_havoc_unlock_status = function (self)
+	return self:refresh_havoc_unlock_status():next(function ()
+		return self:get_havoc_unlock_status()
+	end)
+end
+
+HavocService._set_fallback_havoc_unlock_status = function (self)
+	self._havoc_unlock_status = self.HAVOC_UNLOCK_STATUS[1]
+
+	Log.info("Using fallback havoc_unlock_status.")
 end
 
 HavocService.set_havoc_unlock_status = function (self, value)
@@ -82,11 +124,12 @@ HavocService.set_havoc_unlock_status = function (self, value)
 		end
 	end
 
-	Managers.backend.interfaces.account:set_havoc_unlock_status(backend_value):catch(function (err)
+	Managers.backend.interfaces.account:set_havoc_unlock_status(backend_value):next(function ()
+		self._havoc_unlock_status = value
+	end):catch(function (err)
 		local error_message = string.format("Error setting havoc_unlock_status: %s", err)
 
 		Log.error("HavocService", error_message)
-		ferror(error_message)
 	end)
 end
 

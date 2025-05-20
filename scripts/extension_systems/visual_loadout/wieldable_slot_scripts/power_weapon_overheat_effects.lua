@@ -16,7 +16,7 @@ local STAGE_RANKING = {
 }
 local _external_properties = {}
 
-PowerWeaponOverheatEffects.init = function (self, context, slot, weapon_template, fx_sources)
+PowerWeaponOverheatEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local owner_unit = context.owner_unit
 	local unit_data_extension = context.unit_data_extension
 	local fx_extension = context.fx_extension

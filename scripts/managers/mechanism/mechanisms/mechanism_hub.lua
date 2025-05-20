@@ -26,10 +26,22 @@ MechanismHub.init = function (self, ...)
 	self._fetching_client_data = false
 	self._refresh_vo_story_stage = not DEDICATED_SERVER
 	self._last_auto_joined_game_session_id = nil
+
+	local context = self._context
+	local server_channel = context.server_channel
+
+	self._is_owner = server_channel == nil
+	self._is_syncing = not self._is_owner
+
+	if self._is_syncing then
+		self._network_event_delegate:register_connection_channel_events(self, server_channel, "rpc_sync_mechanism_data_hub")
+	end
 end
 
-MechanismHub.sync_data = function (self)
-	return
+MechanismHub.sync_data = function (self, channel_id)
+	local data = self._mechanism_data
+
+	RPC.rpc_sync_mechanism_data_hub(channel_id, NetworkLookup.circumstance_templates[data.circumstance_name])
 end
 
 MechanismHub.client_exit_gameplay = function (self)
@@ -86,14 +98,11 @@ local function _fetch_client_data()
 		end)
 	end
 
-	local havoc_latest_promise, havoc_unlock_status_promise, havoc_cadence_status_promise
+	local havoc_latest_promise, havoc_cadence_status_promise
 
 	if Managers.data_service.havoc and Managers.narrative then
 		havoc_latest_promise = Managers.data_service.havoc:latest():next(function (results)
 			Managers.narrative:set_ever_received_havoc_order(results)
-		end)
-		havoc_unlock_status_promise = Managers.data_service.havoc:get_havoc_unlock_status():next(function (results)
-			Managers.narrative:set_havoc_unlock_status(results)
 		end)
 		havoc_cadence_status_promise = Managers.data_service.havoc:summary():next(function (results)
 			local cadence_status = results.cadence_status
@@ -109,7 +118,7 @@ local function _fetch_client_data()
 	promises[#promises + 1] = Managers.data_service.havoc:refresh_havoc_status()
 	promises[#promises + 1] = Managers.data_service.havoc:refresh_havoc_rank()
 	promises[#promises + 1] = havoc_latest_promise
-	promises[#promises + 1] = havoc_unlock_status_promise
+	promises[#promises + 1] = Managers.data_service.havoc:refresh_havoc_unlock_status()
 	promises[#promises + 1] = havoc_cadence_status_promise
 
 	Managers.data_service.store:invalidate_wallets_cache()
@@ -154,9 +163,11 @@ MechanismHub.wanted_transition = function (self)
 			return false
 		end
 	elseif state == "request_hub_config" then
-		if not DEDICATED_SERVER or GameParameters.circumstance and GameParameters.circumstance ~= "default" then
-			mechanism_data.circumstance_name = GameParameters.circumstance
+		if self._is_syncing then
+			return false
+		end
 
+		if self._is_synced then
 			self:_set_state("init_hub")
 
 			return false
@@ -173,14 +184,14 @@ MechanismHub.wanted_transition = function (self)
 				end):catch(function (error)
 					Log.error("MechanismHub", "Could not load hub_config from backend, falling back to default circumstance_name, error=%s", table.tostring(error, 3))
 
-					mechanism_data.circumstance_name = "default"
+					mechanism_data.circumstance_name = GameParameters.circumstance or "default"
 
 					self:_set_state("init_hub")
 				end)
 			else
 				Log.error("MechanismHub", "Could not load hub_config from backend, not authenticated, falling back to default circumstance_name")
 
-				mechanism_data.circumstance_name = "default"
+				mechanism_data.circumstance_name = GameParameters.circumstance or "default"
 
 				self:_set_state("init_hub")
 			end
@@ -194,12 +205,10 @@ MechanismHub.wanted_transition = function (self)
 
 		local mission_name = mechanism_data.mission_name
 		local level_name = mechanism_data.level_name
-		local challenge = mechanism_data.challenge
-		local resistance = mechanism_data.resistance
 		local side_mission = mechanism_data.side_mission
 		local circumstance_name = mechanism_data.circumstance_name
 
-		Log.info("MechanismHub", "Using dev parameters for challenge and resistance (%s/%s)", challenge, resistance)
+		Log.info("MechanismHub", "Loading hub level %s with mission %s and circumstance %s.", level_name, mission_name, circumstance_name)
 
 		return false, StateLoading, {
 			level = level_name,
@@ -317,6 +326,10 @@ MechanismHub.peer_freed_slot = function (self, peer_id)
 end
 
 MechanismHub.destroy = function (self)
+	if self._is_syncing then
+		self._network_event_delegate:unregister_channel_events(self._context.server_channel, "rpc_sync_mechanism_data_hub")
+	end
+
 	if self._client_data_promise and self._client_data_promise:is_pending() then
 		self._client_data_promise:cancel()
 
@@ -330,6 +343,18 @@ MechanismHub.destroy = function (self)
 
 		self._retry_popup_id = nil
 	end
+end
+
+MechanismHub.rpc_sync_mechanism_data_hub = function (self, channel_id, circumstance_name_id)
+	local circumstance_name = NetworkLookup.circumstance_templates[circumstance_name_id]
+	local data = self._mechanism_data
+
+	data.circumstance_name = circumstance_name
+
+	self._network_event_delegate:unregister_channel_events(self._context.server_channel, "rpc_sync_mechanism_data_hub")
+
+	self._is_syncing = false
+	self._is_synced = true
 end
 
 implements(MechanismHub, MechanismBase.INTERFACE)

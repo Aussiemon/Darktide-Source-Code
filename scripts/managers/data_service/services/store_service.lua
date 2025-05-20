@@ -197,10 +197,8 @@ StoreService._get_archetype_store_catalogue = function (self, store_by_archetype
 		if store_front then
 			local store_data = store_front.data
 
-			if store_data then
-				offers = store_data[catalogue_name]
-				current_rotation_end = store_data.currentRotationEnd
-			end
+			offers = store_data[catalogue_name]
+			current_rotation_end = store_data.currentRotationEnd
 		end
 
 		local event_manager = Managers.event

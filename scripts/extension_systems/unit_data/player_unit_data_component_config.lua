@@ -329,27 +329,27 @@ for interaction_state_name_index = 1, #interaction_state_names do
 	end
 end
 
-local BUFF_TEMPLATES = {
+local PREDICTED_BUFF_TEMPLATES = {
 	"none",
 }
-local buff_template_names = {}
+local predicted_buff_template_names = {}
 
-for name, _ in pairs(BuffTemplates) do
-	if not table.find(BUFF_TEMPLATES, name) then
-		table.insert(buff_template_names, name)
+for name, _ in pairs(BuffTemplates.PREDICTED) do
+	if not table.find(PREDICTED_BUFF_TEMPLATES, name) then
+		table.insert(predicted_buff_template_names, name)
 	end
 end
 
-table.sort(buff_template_names)
+table.sort(predicted_buff_template_names)
 
-local BUFF_TEMPLATES = {
+local PREDICTED_BUFF_TEMPLATES = {
 	"none",
 }
 
-for buff_template_name_index = 1, #buff_template_names do
-	local buff_template_name = buff_template_names[buff_template_name_index]
+for buff_template_name_index = 1, #predicted_buff_template_names do
+	local buff_template_name = predicted_buff_template_names[buff_template_name_index]
 
-	BUFF_TEMPLATES[#BUFF_TEMPLATES + 1] = buff_template_name
+	PREDICTED_BUFF_TEMPLATES[#PREDICTED_BUFF_TEMPLATES + 1] = buff_template_name
 end
 
 local LUNGE_TEMPLATES = {
@@ -826,12 +826,12 @@ local PlayerComponentConfig = {
 	action_sweep = {
 		attack_direction = "Vector3",
 		is_sticky = "bool",
-		sweep_aborted = "bool",
+		reference_position = "Vector3",
+		reference_rotation = "Quaternion",
 		sweep_aborted_actor_index = "hit_zone_actor_index",
+		sweep_aborted_bit_array = "lookup_2bit0",
 		sweep_aborted_t = "fixed_frame_offset",
 		sweep_aborted_unit = "Unit",
-		sweep_position = "Vector3",
-		sweep_rotation = "Quaternion",
 		sweep_state = {
 			"before_damage_window",
 			"during_damage_window",
@@ -839,6 +839,7 @@ local PlayerComponentConfig = {
 		},
 	},
 	action_shoot = {
+		current_fire_config = "lookup_1bit",
 		fire_at_time = "fixed_frame_offset",
 		fire_last_t = "fixed_frame_offset_start_t_9bit",
 		num_shots_fired = "ammunition_small",
@@ -1066,7 +1067,7 @@ for ii = 1, max_component_buffs do
 	local stack_count_key = key_lookup.stack_count_key
 	local proc_count_key = key_lookup.proc_count_key
 
-	buff_component_config[template_name_key] = BUFF_TEMPLATES
+	buff_component_config[template_name_key] = PREDICTED_BUFF_TEMPLATES
 	buff_component_config[start_time_key] = "fixed_frame_offset"
 	buff_component_config[active_start_time_key] = "fixed_frame_offset"
 	buff_component_config[stack_count_key] = "buff_stack_count"

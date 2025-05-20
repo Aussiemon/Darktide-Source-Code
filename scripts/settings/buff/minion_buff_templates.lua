@@ -93,6 +93,7 @@ templates.hit_by_poxburster_bile = {
 }
 templates.cultist_flamer_liquid_immunity = {
 	class_name = "buff",
+	predicted = false,
 	unique_buff_id = "cultist_flamer_liquid_immunity",
 	unique_buff_priority = 1,
 	keywords = {
@@ -125,6 +126,7 @@ templates.renegade_flamer_hit_by_flame = {
 }
 templates.renegade_flamer_liquid_immunity = {
 	class_name = "buff",
+	predicted = false,
 	unique_buff_id = "renegade_flamer_liquid_immunity",
 	unique_buff_priority = 1,
 	keywords = {
@@ -133,6 +135,7 @@ templates.renegade_flamer_liquid_immunity = {
 }
 templates.renegade_grenadier_liquid_immunity = {
 	class_name = "buff",
+	predicted = false,
 	unique_buff_id = "renegade_grenadier_liquid_immunity",
 	unique_buff_priority = 1,
 	keywords = {
@@ -141,6 +144,7 @@ templates.renegade_grenadier_liquid_immunity = {
 }
 templates.beast_of_nurgle_liquid_immunity = {
 	class_name = "buff",
+	predicted = false,
 	unique_buff_id = "beast_of_nurgle_liquid_immunity",
 	unique_buff_priority = 1,
 	keywords = {
@@ -166,7 +170,6 @@ templates.daemonhost_corruption_aura = {
 	max_stacks = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	keywords = {},
 	duration = math.huge,
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -475,6 +478,7 @@ templates.flamer_backpack_counter = {
 templates.renegade_flamer_backpack_damaged = {
 	class_name = "buff",
 	max_stacks = 4,
+	predicted = false,
 	start_func = function (template_data, template_context)
 		template_data.is_triggered = false
 		template_data.fuse_timer = nil

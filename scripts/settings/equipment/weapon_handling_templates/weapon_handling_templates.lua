@@ -780,8 +780,8 @@ local weapon_handling_templates = {
 		fire_rate = {
 			fire_time = 0,
 			auto_fire_time = {
-				lerp_basic = 0.09999999999999999,
-				lerp_perfect = 0.08,
+				lerp_basic = 0.08,
+				lerp_perfect = 0.060000000000000005,
 			},
 		},
 		critical_strike = {
@@ -793,8 +793,8 @@ local weapon_handling_templates = {
 		fire_rate = {
 			fire_time = 0,
 			auto_fire_time = {
-				lerp_basic = 0.09999999999999999,
-				lerp_perfect = 0.08,
+				lerp_basic = 0.08,
+				lerp_perfect = 0.060000000000000005,
 			},
 		},
 		critical_strike = {

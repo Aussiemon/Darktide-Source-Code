@@ -60,6 +60,9 @@ weapon_template.action_inputs = {
 		},
 	},
 }
+
+table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
+
 weapon_template.action_input_hierarchy = {
 	{
 		input = "wield",
@@ -117,14 +120,7 @@ weapon_template.actions = {
 			channel = {
 				action_name = "action_zealot_channel",
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		conditional_state_to_action_input = {
 			auto_chain = {
@@ -167,14 +163,7 @@ weapon_template.actions = {
 				action_name = "action_unwield_to_previous",
 				chain_time = 0.5,
 			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability",
-				},
-				{
-					action_name = "grenade_ability_quick_throw",
-				},
-			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		conditional_state_to_action_input = {
 			auto_chain = {
@@ -192,13 +181,13 @@ weapon_template.actions = {
 		allowed_chain_actions = {},
 	},
 }
-weapon_template.actions.grenade_ability_quick_throw = table.clone_instance(BaseTemplateSettings.actions.grenade_ability_quick_throw)
-weapon_template.actions.grenade_ability_quick_throw.conditional_state_to_action_input = {
+weapon_template.actions.grenade_ability_zealot_throwing_knives = table.clone_instance(BaseTemplateSettings.actions.grenade_ability_zealot_throwing_knives)
+weapon_template.actions.grenade_ability_zealot_throwing_knives.conditional_state_to_action_input = {
 	auto_chain = {
 		input_name = "wield_previous",
 	},
 }
-weapon_template.actions.grenade_ability_quick_throw.allowed_chain_actions = {
+weapon_template.actions.grenade_ability_zealot_throwing_knives.allowed_chain_actions = {
 	wield_previous = {
 		action_name = "action_unwield_to_previous",
 	},

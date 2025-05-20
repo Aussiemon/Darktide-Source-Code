@@ -20,7 +20,7 @@ HealthStationInteraction.interactor_condition_func = function (self, interactor_
 	return has_charges and is_damaged and not self:_interactor_disabled(interactor_unit)
 end
 
-HealthStationInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
+HealthStationInteraction.hud_block_text = function (self, interactor_unit, interactee_unit)
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 	local block_text = interactee_extension:block_text(interactor_unit)
 
@@ -35,7 +35,7 @@ HealthStationInteraction.hud_block_text = function (self, interactor_unit, inter
 		return "loc_health_station_full_health"
 	end
 
-	return nil
+	return HealthStationInteraction.super.hud_block_text(self, interactor_unit, interactee_unit)
 end
 
 HealthStationInteraction.start = function (self, world, interactor_unit, unit_data_component, t, is_server)

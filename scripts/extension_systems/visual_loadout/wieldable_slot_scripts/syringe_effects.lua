@@ -29,7 +29,7 @@ local CONFIG = {
 	},
 }
 
-SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources)
+SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	self._world = context.world
 	self._weapon_template = weapon_template
 

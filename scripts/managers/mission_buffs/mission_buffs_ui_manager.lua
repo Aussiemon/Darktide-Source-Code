@@ -294,9 +294,7 @@ MissionBuffsUIManager.get_time_left_between_waves = function (self)
 	local between_waves_mission_objective = mission_objective_system:active_objective(inbetween_waves_objective_name)
 
 	if between_waves_mission_objective then
-		local objective_progression = between_waves_mission_objective:progression()
-		local objective_duration = between_waves_mission_objective._duration
-		local time_remaining = objective_duration - objective_progression * objective_duration
+		local time_remaining = between_waves_mission_objective:get_time_left() or 0
 
 		return time_remaining >= 0 and time_remaining or 0
 	end

@@ -5,7 +5,7 @@ local LasgunIronSight = class("LasgunIronSight")
 local SHOW_DELAY = 0.04
 local HIDE_DELAY = 0.1
 
-LasgunIronSight.init = function (self, context, slot, weapon_template, fx_sources)
+LasgunIronSight.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	if not context.is_husk then
 		local owner_unit = context.owner_unit
 		local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
@@ -13,10 +13,11 @@ LasgunIronSight.init = function (self, context, slot, weapon_template, fx_source
 		self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 		self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 
-		local num_attachments = #slot.attachments_1p
+		local attachments_1p = slot.attachments_by_unit_1p[unit_1p]
+		local num_attachments = #attachments_1p
 
 		for i = 1, num_attachments do
-			local attachment_unit = slot.attachments_1p[i]
+			local attachment_unit = attachments_1p[i]
 			local has_front_walls = Unit.has_visibility_group(attachment_unit, "front_walls")
 
 			if has_front_walls then

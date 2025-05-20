@@ -9,6 +9,7 @@ local discard_items_popup_grid_size = {
 	discard_items_popup_window_size[2] - 100,
 }
 local inventory_background_view = {
+	camera_time = 0.5,
 	default_slot = "slot_primary",
 	level_name = "content/levels/ui/inventory/inventory",
 	loadout_update_timeout = 3,

@@ -8,7 +8,7 @@ local MainPathQueries = require("scripts/utilities/main_path_queries")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local Vo = require("scripts/utilities/vo")
 local BtSummonMinionsAction = class("BtSummonMinionsAction", "BtNode")
-local play_wwise, _has_active_minions_and_refill
+local _play_wwise, _has_active_minions_and_refill, _check_player_los
 
 BtSummonMinionsAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local active_timer = _has_active_minions_and_refill(blackboard, action_data)
@@ -48,6 +48,7 @@ BtSummonMinionsAction.enter = function (self, unit, breed, blackboard, scratchpa
 	end
 
 	scratchpad.summoned_minions_extension = ScriptUnit.extension(unit, "summon_minions_system")
+	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 end
 
 BtSummonMinionsAction.init_values = function (self, blackboard)
@@ -88,7 +89,7 @@ BtSummonMinionsAction.run = function (self, unit, breed, blackboard, scratchpad,
 		if not scratchpad.pre_stinger then
 			scratchpad.pre_stinger = action_data.pre_stinger
 
-			play_wwise(unit, scratchpad.pre_stinger)
+			_play_wwise(unit, scratchpad.pre_stinger)
 		end
 	end
 
@@ -124,23 +125,31 @@ BtSummonMinionsAction._summon_minions = function (self, unit, breed, blackboard,
 	local side = side_system:get_side_from_name("villains")
 	local enemy_side = side_system:get_side_from_name("heroes")
 	local nav_world = scratchpad.nav_world
-	local success, random_occluded_position, target_direction
+	local success, random_occluded_position, target_direction, spawn_rotation
+	local players_in_los = _check_player_los(scratchpad, side)
+	local should_close_spawn_outside_los = action_data.should_close_spawn_outside_los and not players_in_los
 
-	for i = 1, DEFAULT_TRIES do
-		local occluded_spawn_range = DEFAULT_OCCLUSION_SPAWN_RANGE[i]
+	if should_close_spawn_outside_los then
+		random_occluded_position = POSITION_LOOKUP[unit]
+		spawn_rotation = Quaternion.look(Vector3(0, 0, 0))
+	else
+		for i = 1, DEFAULT_TRIES do
+			local occluded_spawn_range = DEFAULT_OCCLUSION_SPAWN_RANGE[i]
 
-		success, random_occluded_position, target_direction = self:_try_find_occluded_position(nav_world, side, enemy_side, occluded_spawn_range, true, nil, nil)
+			success, random_occluded_position, target_direction = self:_try_find_occluded_position(nav_world, side, enemy_side, occluded_spawn_range, true, nil, nil)
 
-		if success then
-			break
+			if success then
+				spawn_rotation = Quaternion.look(Vector3(target_direction.x, target_direction.y, 0))
+
+				break
+			end
+		end
+
+		if not success then
+			return
 		end
 	end
 
-	if not success then
-		return
-	end
-
-	local spawn_rotation = Quaternion.look(Vector3(target_direction.x, target_direction.y, 0))
 	local aggro_state = action_data.spawn_aggro_state
 	local optional_target_unit
 
@@ -217,7 +226,7 @@ BtSummonMinionsAction._summon_minions = function (self, unit, breed, blackboard,
 
 	local stinger = action_data.stinger
 
-	play_wwise(unit, stinger)
+	_play_wwise(unit, stinger)
 end
 
 BtSummonMinionsAction._try_find_occluded_position = function (self, nav_world, side, target_side, occluded_spawn_range, try_find_on_main_path, optional_main_path_offset, optional_disallowed_positions)
@@ -259,7 +268,7 @@ BtSummonMinionsAction._try_find_occluded_position = function (self, nav_world, s
 	return true, random_occluded_position, target_direction, target_unit
 end
 
-function play_wwise(unit, event)
+function _play_wwise(unit, event)
 	local fx_system = Managers.state.extension:system("fx_system")
 	local position = Unit.world_position(unit, 1)
 
@@ -276,6 +285,23 @@ function _has_active_minions_and_refill(blackboard, action_data)
 	else
 		return false
 	end
+end
+
+function _check_player_los(scratchpad, side)
+	local valid_enemy_player_units = side.valid_enemy_player_units
+	local perception_extension = scratchpad.perception_extension
+	local num_enemies = #valid_enemy_player_units
+
+	for i = 1, num_enemies do
+		local target_unit = valid_enemy_player_units[i]
+		local has_line_of_sight = perception_extension:has_line_of_sight(target_unit)
+
+		if has_line_of_sight then
+			return true
+		end
+	end
+
+	return false
 end
 
 return BtSummonMinionsAction
