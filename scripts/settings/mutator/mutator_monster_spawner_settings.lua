@@ -235,6 +235,56 @@ MutatorMonsterSpawnerSettings.default_locations = {
 			position = Vector3Box(157, -132, -30),
 		},
 	},
+	dm_stockpile = {
+		{
+			section = 1,
+			position = Vector3Box(198, 209, 35),
+		},
+		{
+			section = 1,
+			position = Vector3Box(212, 179, 34),
+		},
+		{
+			section = 1,
+			position = Vector3Box(212, 131, 32),
+		},
+		{
+			section = 1,
+			position = Vector3Box(167, 29, 33),
+		},
+		{
+			section = 2,
+			position = Vector3Box(104, 47, 32),
+		},
+		{
+			section = 2,
+			position = Vector3Box(37, 87, 5),
+		},
+		{
+			section = 2,
+			position = Vector3Box(15, 7, 11),
+		},
+		{
+			section = 2,
+			position = Vector3Box(14, 33, 10),
+		},
+		{
+			section = 2,
+			position = Vector3Box(-35, 89, 9),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-69, 128, 9),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-96, 172, 9),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-179, 248, 5),
+		},
+	},
 	hm_strain = {
 		{
 			section = 1,
@@ -1069,6 +1119,56 @@ MutatorMonsterSpawnerSettings.skulls_locations = {
 		{
 			section = 3,
 			position = Vector3Box(157, -132, -30),
+		},
+	},
+	dm_stockpile = {
+		{
+			section = 1,
+			position = Vector3Box(198, 209, 35),
+		},
+		{
+			section = 1,
+			position = Vector3Box(212, 179, 34),
+		},
+		{
+			section = 1,
+			position = Vector3Box(212, 131, 32),
+		},
+		{
+			section = 1,
+			position = Vector3Box(167, 29, 33),
+		},
+		{
+			section = 2,
+			position = Vector3Box(104, 47, 32),
+		},
+		{
+			section = 2,
+			position = Vector3Box(37, 87, 5),
+		},
+		{
+			section = 2,
+			position = Vector3Box(15, 7, 11),
+		},
+		{
+			section = 2,
+			position = Vector3Box(14, 33, 10),
+		},
+		{
+			section = 2,
+			position = Vector3Box(-35, 89, 9),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-69, 128, 9),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-96, 172, 9),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-179, 248, 5),
 		},
 	},
 	hm_strain = {

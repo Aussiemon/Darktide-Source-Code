@@ -145,8 +145,6 @@ local template_groups = {
 		"power_swords",
 		"powersword_p1_m1",
 		"powersword_p1_m2",
-		"powersword_p2_m1",
-		"powersword_p2_m2",
 	},
 	{
 		"thunder_hammers_2h",

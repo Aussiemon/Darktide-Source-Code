@@ -417,6 +417,11 @@ end
 
 SmartTagSystem._remove_tag_locally = function (self, tag_id, reason)
 	local tag = self._all_tags[tag_id]
+
+	if not tag then
+		return
+	end
+
 	local tagger_unit = tag:tagger_unit()
 
 	if tagger_unit then

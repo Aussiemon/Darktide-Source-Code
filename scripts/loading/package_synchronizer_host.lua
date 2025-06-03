@@ -198,6 +198,17 @@ PackageSynchronizerHost.event_updated_player_profile_synced = function (self, pe
 end
 
 PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, sync_local_player_id, old_profile)
+	local sync_states = self._sync_states
+	local my_peer_id = self._peer_id
+
+	for peer_id, data in pairs(sync_states) do
+		if data.ready and peer_id ~= my_peer_id then
+			local channel_id = data.channel_id
+
+			RPC.rpc_cache_player_profile(channel_id, sync_peer_id, sync_local_player_id)
+		end
+	end
+
 	local syncs = self._syncs
 	local player = Managers.player:player(sync_peer_id, sync_local_player_id)
 	local new_profile = player:profile()
@@ -215,7 +226,7 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 	syncs[sync_peer_id] = syncs[sync_peer_id] or {}
 
 	local sync_data = {
-		handled_notified_clients = false,
+		handled_notify_clients = false,
 		handled_profile_changes = false,
 		changed_profile_fields = changed_profile_fields,
 	}
@@ -223,8 +234,6 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 	syncs[sync_peer_id][sync_local_player_id] = sync_data
 
 	self:_handle_profile_changes_before_sync(player, sync_data)
-
-	local sync_states = self._sync_states
 
 	for peer_id, data in pairs(sync_states) do
 		local peer_states = data.peer_states
@@ -484,20 +493,18 @@ PackageSynchronizerHost.update = function (self, dt)
 
 	for peer_id, players_data in pairs(syncs) do
 		for local_player_id, sync_data in pairs(players_data) do
-			if sync_data.handled_profile_changes and sync_data.handled_notified_clients then
-				local is_player_synced_by_notified_clients = self:_is_player_synced_by_all(peer_id, local_player_id, sync_data.notified_clients)
+			if sync_data.handled_profile_changes and sync_data.handled_notify_clients then
+				local is_player_synced_by_all = self:_is_player_synced_by_all(peer_id, local_player_id)
 
-				if is_player_synced_by_notified_clients then
+				if is_player_synced_by_all then
 					self:_handle_profile_changes_after_sync(peer_id, local_player_id, sync_data)
 
 					players_data[local_player_id] = nil
 				end
 			end
 
-			if sync_data.handled_profile_changes and not sync_data.handled_notified_clients then
+			if sync_data.handled_profile_changes and not sync_data.handled_notify_clients then
 				local sync_states = self._sync_states
-
-				sync_data.notified_clients = {}
 
 				for sync_peer_id, data in pairs(sync_states) do
 					if data.ready then
@@ -507,17 +514,13 @@ PackageSynchronizerHost.update = function (self, dt)
 							local alias_version = data.peer_states[peer_id].player_states[local_player_id].alias_version
 
 							RPC.rpc_player_profile_packages_changed(channel_id, peer_id, local_player_id, alias_version)
-
-							sync_data.notified_clients[sync_peer_id] = true
 						end
 					end
 				end
 
-				sync_data.notified_clients[peer_id] = true
-
 				self._hosted_synchronizer_client:player_profile_packages_changed(peer_id, local_player_id)
 
-				sync_data.handled_notified_clients = true
+				sync_data.handled_notify_clients = true
 			end
 
 			if not sync_data.handled_profile_changes then

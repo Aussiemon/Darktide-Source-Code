@@ -11,6 +11,10 @@ local hud_element_player_buffs_settings = {
 			"event_player_buff_added",
 		},
 		{
+			"event_player_buff_stack_added",
+			"event_player_buff_stack_added",
+		},
+		{
 			"event_player_buff_removed",
 			"event_player_buff_removed",
 		},

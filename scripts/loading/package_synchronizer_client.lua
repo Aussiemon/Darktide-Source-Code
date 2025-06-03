@@ -20,6 +20,7 @@ local RPCS = {
 	"rpc_reevaluate_all_profile_packages",
 	"rpc_package_synchronizer_set_mission_name",
 	"rpc_set_alias_version",
+	"rpc_cache_player_profile",
 }
 local PACKAGE_MANAGER_REFERENCE = "PackageSynchronizer"
 
@@ -73,6 +74,25 @@ PackageSynchronizerClient.set_mission_name = function (self, mission_name)
 	self._mission_name = mission_name
 end
 
+PackageSynchronizerClient.rpc_cache_player_profile = function (self, channel_id, peer_id, local_player_id)
+	local data = self._packages[peer_id]
+
+	if data then
+		local player_profile_cache = self._player_profile_cache
+		local player = Managers.player:player(peer_id, local_player_id)
+		local profile = player:profile()
+		local profile_clone = table.clone_instance(profile)
+
+		player_profile_cache[peer_id][local_player_id] = profile_clone
+
+		local player_string = player:is_human_controlled() and "Player" or "Bot Player"
+
+		_debug_print("[rpc_cache_player_profile] %s: Profile Cached, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
+	else
+		_debug_print("[rpc_cache_player_profile] No data for player when caching profile, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
+	end
+end
+
 PackageSynchronizerClient.add_peer = function (self, peer_id)
 	if not self._item_definitions then
 		self._pending_peers[#self._pending_peers + 1] = peer_id
@@ -91,13 +111,13 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 
 		packages[local_player_id] = profile_packages
 
-		local player_string = player:is_human_controlled() and "Player" or "Bot Player"
-
-		_debug_print("%s: Initial Profile Cached, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
-
 		local profile_clone = table.clone_instance(profile)
 
 		self._player_profile_cache[peer_id][local_player_id] = profile_clone
+
+		local player_string = player:is_human_controlled() and "Player" or "Bot Player"
+
+		_debug_print("%s: Initial Profile Cached, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
 	end
 
 	local data = {
@@ -145,9 +165,9 @@ PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
 
 		local profile_clone = table.clone_instance(profile)
 
-		_debug_print("Bot Player: Initial Profile Cached, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
-
 		self._player_profile_cache[peer_id][local_player_id] = profile_clone
+
+		_debug_print("Bot Player: Initial Profile Cached, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
 	end
 end
 
@@ -589,15 +609,6 @@ end
 PackageSynchronizerClient.player_profile_packages_changed = function (self, peer_id, local_player_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 	local profile = player:profile()
-	local player_profile_cache = self._player_profile_cache
-	local profile_clone = table.clone_instance(profile)
-
-	player_profile_cache[peer_id][local_player_id] = profile_clone
-
-	local player_string = player:is_human_controlled() and "Player" or "Bot Player"
-
-	_debug_print("[player_profile_packages_changed] %s: Profile Cached, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
-
 	local new_profile_packages = self:resolve_profile_packages(profile)
 	local data = self._packages[peer_id]
 	local player_packages = data.peer_packages[local_player_id]

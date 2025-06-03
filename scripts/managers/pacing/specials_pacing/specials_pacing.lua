@@ -910,7 +910,7 @@ SpecialsPacing._check_stuck_special = function (self, unit, specials_slot, templ
 		end
 
 		local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, self._nav_spawn_points, navmesh_position)
-		local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
+		local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
 		local end_index = start_index + 1
 		local _, enemy_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(navmesh_position, start_index, end_index)
 
@@ -1268,7 +1268,7 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 
 				if navmesh_position then
 					local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, navmesh_position)
-					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
+					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
 					local end_index = start_index + 1
 					local _, enemy_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(navmesh_position, start_index, end_index)
 

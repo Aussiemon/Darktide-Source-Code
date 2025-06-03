@@ -19,8 +19,6 @@ local MINIMUM_SPEED_TO_SLEEP = ProjectileLocomotionSettings.MINIMUM_SPEED_TO_SLE
 local ProjectileUnitLocomotionExtension = class("ProjectileUnitLocomotionExtension")
 
 ProjectileUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
-	self._soft_cap_out_of_bounds_units = extension_init_context.soft_cap_out_of_bounds_units
-
 	local owner_unit = extension_init_data.owner_unit
 
 	self._owner_unit = owner_unit
@@ -148,6 +146,7 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	self:_hide_grenade_pin()
+	Managers.state.out_of_bounds:register_soft_oob_unit(unit, self, "_cb_update_soft_oob")
 end
 
 ProjectileUnitLocomotionExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -156,8 +155,13 @@ ProjectileUnitLocomotionExtension.game_object_initialized = function (self, game
 	self._is_level_unit = false
 end
 
+ProjectileUnitLocomotionExtension.destroy = function (self)
+	Managers.state.out_of_bounds:unregister_soft_oob_unit(self._projectile_unit, self)
+end
+
 ProjectileUnitLocomotionExtension.mark_for_deletion = function (self)
 	if not self._marked_for_deletion then
+		Managers.state.out_of_bounds:unregister_soft_oob_unit(self._projectile_unit, self)
 		Managers.state.unit_spawner:mark_for_deletion(self._projectile_unit)
 
 		self._marked_for_deletion = true
@@ -218,17 +222,19 @@ ProjectileUnitLocomotionExtension._update_out_of_bounds = function (self)
 
 	for ii = 1, 3 do
 		if math.abs(position[ii]) > safe_extents[ii] then
-			self:switch_to_sleep(Vector3.zero(), Quaternion.identity())
-
-			if self._handle_oob_despawning and not self._marked_for_deletion then
-				Log.info("ProjectileUnitLocomotionExtension", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
-				Managers.state.unit_spawner:mark_for_deletion(unit)
-
-				self._marked_for_deletion = true
-			end
+			self:_cb_update_soft_oob(unit)
 
 			break
 		end
+	end
+end
+
+ProjectileUnitLocomotionExtension._cb_update_soft_oob = function (self, unit)
+	self:switch_to_sleep(Vector3.zero(), Quaternion.identity())
+
+	if self._handle_oob_despawning and not self._marked_for_deletion then
+		Log.info("ProjectileUnitLocomotionExtension", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
+		self:mark_for_deletion()
 	end
 end
 
